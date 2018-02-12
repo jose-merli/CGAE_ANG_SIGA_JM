@@ -1,0 +1,26 @@
+<h1>Buscador de sociedades</h1>
+<section class="content">
+    <div class="contentHead">
+        <!--span>Inicio</span>
+        <span class="separador"> | </span>
+        <span class="tituloContent"> Sociedades </span-->
+        <nav>
+            <a routerLink="/" routerLinkActive="active">Inicio</a>
+            <a routerLink="/home" routerLinkActive="active">Home</a>
+            <a routerLink="/search" routerLinkActive="active">Buscador</a>
+        </nav>
+    </div>
+    <div class="contentBody">
+        <!--app-my-iframe url="https://www.ecolegio.org/ecensofront/html/homeColegiados.iface?ica=2010&lang=es_ES"></app-my-iframe-->
+        <router-outlet></router-outlet>
+    </div>
+</section>
+
+
+<!--button (click)="getTestServlet()">Llamar servidor</button>
+<button (click)="getTestServletByName()">Preguntar por: </button>
+<input type="text" class="form-control" id="name" [(ngModel)]="name" name="name"> Nombre: {{this.name}}
+<div>{{respuestaServidor | json}}</div
+
+https://www.ecolegio.org/ecensofront/html/homeColegiados.iface?ica=2010&lang=es_ES"
+-->
