@@ -1,2 +1,9 @@
 <h1>SIGA</h1>
-<app-main></app-main>
+<app-menubar *ngIf="canShowMenu()"></app-menubar>
+<section class="content">
+    <div class="contentHead">
+        <router-outlet></router-outlet>
+    </div>
+    <div class="contentBody">
+    </div>
+</section>

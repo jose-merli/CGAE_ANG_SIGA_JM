@@ -1,3 +1,4 @@
+baseUrl = "https://sigademo.redabogacia.org.local"
 window.jQueryTop=window.jQuery;
 
 (function() {
@@ -49,7 +50,7 @@ function mainSub(msg){
 		var mainWorkAreaJquery = jQuery("#mainWorkArea")[0].contentWindow.jQuery;
 		try{
 			mainWorkAreaJquery.blockUI({
-			message: '<div id="barraBloqueante"><span class="labelText">'+msg+'</span><br><img src="http://localhost/SIGA/html/imagenes/loadingBar.gif"/></div>', 
+			message: '<div id="barraBloqueante"><span class="labelText">'+msg+'</span><br><img src="'+baseUrl+'/SIGA/html/imagenes/loadingBar.gif"/></div>', 
 			css:{border:0, background:'transparent'},
 			overlayCSS: { backgroundColor:'#FFF', opacity: .0} });
 		}catch (e) {
@@ -83,17 +84,17 @@ jQuery.noConflict();
 			
 			function inicio()
 			{
-				MM_preloadImages('http://localhost/SIGA/html/imagenes/botonSession_ilum.gif',
-								 'http://localhost/SIGA/html/imagenes/botonSession_activo.gif',
-								 'http://localhost/SIGA/html/imagenes/botonSession.gif',
-								 'http://localhost/SIGA/html/imagenes/botonAyuda.gif',
-								 'http://localhost/SIGA/html/imagenes/botonAyuda_ilum.gif',
-								 'http://localhost/SIGA/html/imagenes/botonAyuda_activo.gif');
+				MM_preloadImages(baseUrl+'/SIGA/html/imagenes/botonSession_ilum.gif',
+								 baseUrl+'/SIGA/html/imagenes/botonSession_activo.gif',
+								 baseUrl+'/SIGA/html/imagenes/botonSession.gif',
+								 baseUrl+'/SIGA/html/imagenes/botonAyuda.gif',
+								 baseUrl+'/SIGA/html/imagenes/botonAyuda_ilum.gif',
+								 baseUrl+'/SIGA/html/imagenes/botonAyuda_activo.gif');
 			}
 
 			function cerrarSession()
 			{
-				MM_swapImage('closeSession','','http://localhost/SIGA/html/imagenes/botonSession_activo.gif',1);
+				MM_swapImage('closeSession','',baseUrl+'/SIGA/html/imagenes/botonSession_activo.gif',1);
 				
 				document.formularioOcultoCerrarSesion.submit();
 				
@@ -151,7 +152,7 @@ jQuery.noConflict();
 			
 			function ayuda()
 			{
-				MM_swapImage('AbrirAyuda','','http://localhost/SIGA/html/imagenes/botonAyuda_activo.gif',1);
+				MM_swapImage('AbrirAyuda','',baseUrl+'/SIGA/html/imagenes/botonAyuda_activo.gif',1);
 				window.open('<%=pathAyuda%>', 'Ayuda', 'width=800px,height=600px,scrollbars=1;resizable:no;top=100px;left=100px;Directories=no;Location=no;Menubar=no;Status=yes;Toolbar=no;');
 				window.top.focus();
 				return false;
@@ -159,7 +160,7 @@ jQuery.noConflict();
 
 			function version()
 			{
-				MM_swapImage('AbrirAyuda','','http://localhost/SIGA/html/imagenes/botonAyuda_activo.gif',1);
+				MM_swapImage('AbrirAyuda','',baseUrl+'/SIGA/html/imagenes/botonAyuda_activo.gif',1);
 				window.open('<%=pathVersiones%>', 'Versiones');
 				window.top.focus();				
 				return false;
@@ -167,7 +168,7 @@ jQuery.noConflict();
 			
 			function cerrarAplicacion()
 			{
-				MM_swapImage('closeApp','','http://localhost/SIGA/html/imagenes/botonCerrar_activo.gif',1);
+				MM_swapImage('closeApp','',baseUrl+'/SIGA/html/imagenes/botonCerrar_activo.gif',1);
 				
 				if(confirm('<siga:Idioma key="general.cerrarAplicacion"/>')){
 					window.top.close();
@@ -177,7 +178,7 @@ jQuery.noConflict();
 			}
 			function interfaz()
 			{
-				mainWorkArea.location='http://localhost/SIGA/Dispatcher.do?proceso=80';				
+				mainWorkArea.location=baseUrl+'/SIGA/Dispatcher.do?proceso=80';				
 				return false;
 			}	
 			function establecerIP(dirIP) {		
@@ -195,7 +196,7 @@ jQuery.noConflict();
 						var mainWorkAreaJquery = jQueryTop("#mainWorkArea")[0].contentWindow.jQuery;
 						try{
 							mainWorkAreaJquery.blockUI({
-								message: '<div id="barraBloqueante"><span class="labelText">'+msg+'</span><br><img src="http://localhost/SIGA/html/imagenes/loadingBar.gif"/></div>', 
+								message: '<div id="barraBloqueante"><span class="labelText">'+msg+'</span><br><img src="'+baseUrl+'/SIGA/html/imagenes/loadingBar.gif"/></div>', 
 								css:{border:0, background:'transparent'},
 								overlayCSS: { backgroundColor:'#FFF', opacity: .0} });
 						}catch (e) {
