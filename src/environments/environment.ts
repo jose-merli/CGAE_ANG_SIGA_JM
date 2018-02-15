@@ -5,6 +5,6 @@
 
 export const environment = {
   production: false,
-  protocol:'http://',
-  env:'siga.local'
+  protocol:'https://',
+  env:'sigademo.redabogacia.org.local'
 };

@@ -1,4 +1,5 @@
 window.jQueryTop=window.jQuery;
+
 (function() {
 	// Para los navegadores sin console
     var method;
@@ -243,7 +244,7 @@ if (window == window.top && window.jQuery){
 
 var jqueryFileUri = 	"/SIGA/html/js/jquery.js";
 var jqueryUIfileUri = 	"/SIGA/html/js/jquery.ui/js/jquery-ui-1.10.3.custom.min.js";
-var jqueryUICSSfileUri = "/SIGA/html/js/jquery.ui/css/smoothness/jquery-ui-1.10.3.custom.min.css";
+//var jqueryUICSSfileUri = "/SIGA/html/js/jquery.ui/css/smoothness/jquery-ui-1.10.3.custom.min.css";
 
 var defaultDateFormat = "dd/mm/yy";//FORMATO DATEPICKER SE CORRESPONDE CON dd/mm/yyyy: http://api.jqueryui.com/datepicker/#utility-formatDate 
 
@@ -282,7 +283,7 @@ if (typeof jQuery == "undefined"){
 	var waitForLoad = function () {
 	    if (typeof jQuery != "undefined") {
 	    	// Inicializa script
-	    	jQueryLoaded();
+			jQueryLoaded();
 	    } else if (intento < maxIntentos){
 	    	intento++;
 	        window.setTimeout(waitForLoad, 500);
@@ -1835,9 +1836,9 @@ function jQueryLoaded(){
 						options.regional = datepickerInput.data("regional");
 						//options.draggable = true;
 						// AUNQUE ESTO NO DEBERIA PASAR, SI EXISTE YA UN DATEPICKER SE DESTRUYE
-						if (typeof jQueryTop.datepicker._curInst != "undefined" && jQueryTop.datepicker._curInst != null){
-							jQueryTop.datepicker._destroyDatepicker(jQueryTop.datepicker._curInst);
-						}
+						// if (typeof jQueryTop.datepicker._curInst != "undefined" && jQueryTop.datepicker._curInst != null){
+						// 	jQueryTop.datepicker._destroyDatepicker(jQueryTop.datepicker._curInst);
+						// }
 						// CREACION DEL DATEPICKER DIALOG
 						datepickerInput.datepicker("dialog",
 								formatDate(datepickerInput.val(),datepickerInput.data("datepickerformat")),
@@ -2448,26 +2449,26 @@ function jQueryUILoaded(){
 	var css = document.styleSheets;
 	var bFound = false;
 	var i = 0;
-    while (!bFound && i < css.length) {
-    	var cssHref = css[i].href;	    	
-        if (cssHref &&  css[i].href.endsWith(jqueryUICSSfileUri))
-        	bFound = true;
-        else
-        	i++;
-    }
+    // while (!bFound && i < css.length) {
+    // 	var cssHref = css[i].href;	    	
+    //     if (cssHref &&  css[i].href.endsWith(jqueryUICSSfileUri))
+    //     	bFound = true;
+    //     else
+    //     	i++;
+    // }
     if (!bFound){
     	//JQUERY UI CSS NO ECONTRADA, LA CARGAMOS
     	console.debug("[jQueryUILoaded] JQUERY UI CSS NO ECONTRADA, LA CARGAMOS");
     	var link = document.createElement("link");
         link.rel = "stylesheet";
-        link.href = jqueryUICSSfileUri;
+        // link.href = jqueryUICSSfileUri;
 
         document.getElementsByTagName("head")[0].appendChild(link);
     }
     // CONFIGURACI�N POR DEFECTO DE DATEPICKER
 	if (jQueryTop!=null&&jQueryTop.fn.datepicker){
 		console.debug("[jQueryUILoaded] JQUERY datepicker INI");		
-		
+		window.jQueryTop.datepicker = new Datepicker();
 		jQueryTop.datepicker.setDefaults(jQueryTop.datepicker.regional['es']);
 		jQueryTop.datepicker.setDefaults({
 			changeMonth: true,
