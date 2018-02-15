@@ -21,15 +21,4 @@ export class AppComponent implements OnInit {
   ngOnInit() {        
   }
 
-  getTestServlet() {
-    this._testService.getTestServlet().subscribe(res => {
-      this.respuestaServidor = res;
-    })
-  }
-
-  getTestServletByName() {
-    this._testService.getTestServletByName(this.name).subscribe(res => {
-      this.respuestaServidor = res;
-    })
-  }
 }
