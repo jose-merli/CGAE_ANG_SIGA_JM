@@ -1,6 +1,3 @@
-baseUrl = "https://sigademo.redabogacia.org.local"
-window.jQueryTop=window.jQuery;
-
 (function() {
 	// Para los navegadores sin console
     var method;
@@ -38,203 +35,6 @@ if (typeof String.prototype.endsWith !== 'function') {
     };
 }
 
-var bloqueado;
-
-function mainSub(msg){
-	if(!bloqueado){
-		if (typeof msg == "undefined")
-		msg = "";
-		if (jQuery("#mainWorkArea").length > 0 && 
-			typeof jQuery("#mainWorkArea")[0].contentWindow != "undefined" && 
-			typeof jQuery("#mainWorkArea")[0].contentWindow.jQuery != "undefined"){
-		var mainWorkAreaJquery = jQuery("#mainWorkArea")[0].contentWindow.jQuery;
-		try{
-			mainWorkAreaJquery.blockUI({
-			message: '<div id="barraBloqueante"><span class="labelText">'+msg+'</span><br><img src="'+baseUrl+'/SIGA/html/imagenes/loadingBar.gif"/></div>', 
-			css:{border:0, background:'transparent'},
-			overlayCSS: { backgroundColor:'#FFF', opacity: .0} });
-		}catch (e) {
-			console.debug("[mainSub] blockUI");
-			jQuery("#divEspera").show();
-		}
-		
-		} else{
-		jQuery("#divEspera").show();
-		}
-		bloqueado=true;
-	}
-}
-
-jQuery.noConflict();
-	  var _gaq = _gaq || [];
-	  _gaq.push(['_setAccount', '<%=idAnalytics%>']);
-	  _gaq.push(['_trackPageview']);
-	
-	  (function() {
-	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-	  })();	
-
-			var user, psswd, profile, loc, bloqueado=false;
-			user='<%=userBean.getUserName()%>';
-			psswd='clavecita';
-			loc='<%=userBean.getLocation()%>';
-
-			
-			function inicio()
-			{
-				MM_preloadImages(baseUrl+'/SIGA/html/imagenes/botonSession_ilum.gif',
-								 baseUrl+'/SIGA/html/imagenes/botonSession_activo.gif',
-								 baseUrl+'/SIGA/html/imagenes/botonSession.gif',
-								 baseUrl+'/SIGA/html/imagenes/botonAyuda.gif',
-								 baseUrl+'/SIGA/html/imagenes/botonAyuda_ilum.gif',
-								 baseUrl+'/SIGA/html/imagenes/botonAyuda_activo.gif');
-			}
-
-			function cerrarSession()
-			{
-				MM_swapImage('closeSession','',baseUrl+'/SIGA/html/imagenes/botonSession_activo.gif',1);
-				
-				document.formularioOcultoCerrarSesion.submit();
-				
-				return false;
-			}
-
-			function usuario()
-			{
-			
-					jQuery.ajax({ //Comunicación jQuery hacia JSP  
-							type: "POST",
-					url: "/SIGA/GEN_InformacionUsuario.do?modo=getAjaxObtenerInfoUsuario",
-					data: "idCombo=",
-					dataType: "json",
-					success: function(json){	
-						if(json.Encontrado =="SI"){
-							$("#dialogoInsercion").html("");
-							$("#dialogoInsercion").append("<b>Nombre: </b>");
-							$("#dialogoInsercion").append(json.Nombre + "</br>");
-							$("#dialogoInsercion").append("<b>DNI: </b>");
-							$("#dialogoInsercion").append(json.DNI + "</br>");
-							$("#dialogoInsercion").append("<b>Grupo: </b>");
-							$("#dialogoInsercion").append(json.Grupo+ "</br>");
-							$("#dialogoInsercion").append("<b>Institución: </b>");
-							$("#dialogoInsercion").append(json.Institucion+ "</br>");
-							$("#dialogoInsercion").append("<b>Fecha último acceso: </b>");
-							$("#dialogoInsercion").append(json.FechaAcceso);
-							$("#dialogoInsercion").dialog(
-									{
-									      height: 270,
-									      width: 525,
-									      modal: true,
-									      resizable: false,
-									      buttons: {
-									    	  "Cerrar": function() {
-													$(this).dialog("close");
-												}
-									      }
-									}
-								);
-						}else{
-							alert('No existe Usuario de acceso en el sistema ');
-						}
-					},
-					error: function(e){
-						alert('Error de comunicación: ' + e);
-						fin();
-					}
-				});				
-				$(".ui-widget-overlay").css("opacity","0");
-				window.top.focus();
-				return false;
-			}
-			
-			
-			function ayuda()
-			{
-				MM_swapImage('AbrirAyuda','',baseUrl+'/SIGA/html/imagenes/botonAyuda_activo.gif',1);
-				window.open('<%=pathAyuda%>', 'Ayuda', 'width=800px,height=600px,scrollbars=1;resizable:no;top=100px;left=100px;Directories=no;Location=no;Menubar=no;Status=yes;Toolbar=no;');
-				window.top.focus();
-				return false;
-			}
-
-			function version()
-			{
-				MM_swapImage('AbrirAyuda','',baseUrl+'/SIGA/html/imagenes/botonAyuda_activo.gif',1);
-				window.open('<%=pathVersiones%>', 'Versiones');
-				window.top.focus();				
-				return false;
-			}
-			
-			function cerrarAplicacion()
-			{
-				MM_swapImage('closeApp','',baseUrl+'/SIGA/html/imagenes/botonCerrar_activo.gif',1);
-				
-				if(confirm('<siga:Idioma key="general.cerrarAplicacion"/>')){
-					window.top.close();
-				}
-				
-				return false;
-			}
-			function interfaz()
-			{
-				mainWorkArea.location=baseUrl+'/SIGA/Dispatcher.do?proceso=80';				
-				return false;
-			}	
-			function establecerIP(dirIP) {		
-			    document.formularioOcultoParaIP.IPCLIENTE.value=dirIP;		
-		    	document.formularioOcultoParaIP.submit();     
-		    }
-
-			function mainSub(msg){
-				if(!bloqueado){
-					if (typeof msg == "undefined")
-						msg = "";
-					if (jQueryTop("#mainWorkArea").length > 0 && 
-							typeof jQueryTop("#mainWorkArea")[0].contentWindow != "undefined" && 
-							typeof jQueryTop("#mainWorkArea")[0].contentWindow.jQuery != "undefined"){
-						var mainWorkAreaJquery = jQueryTop("#mainWorkArea")[0].contentWindow.jQuery;
-						try{
-							mainWorkAreaJquery.blockUI({
-								message: '<div id="barraBloqueante"><span class="labelText">'+msg+'</span><br><img src="'+baseUrl+'/SIGA/html/imagenes/loadingBar.gif"/></div>', 
-								css:{border:0, background:'transparent'},
-								overlayCSS: { backgroundColor:'#FFF', opacity: .0} });
-						}catch (e) {
-							console.debug("[mainSub] blockUI");
-							jQuery("#divEspera").show();
-						}
-						
-					} else{
-						jQuery("#divEspera").show();
-					}
-					bloqueado=true;
-				}
-			}
-
-			function mainFin(){
-				if(bloqueado){
-					if (jQueryTop("#mainWorkArea").length > 0 && 
-							typeof jQueryTop("#mainWorkArea")[0].contentWindow != "undefined" && 
-							typeof jQueryTop("#mainWorkArea")[0].contentWindow.jQuery != "undefined"){
-						var mainWorkAreaJquery = jQueryTop("#mainWorkArea")[0].contentWindow.jQuery;
-						try {
-							mainWorkAreaJquery.unblockUI();
-						} catch (e) {
-							console.debug("[mainFin] unblockUI");
-						}
-					}
-					jQuery("#divEspera").hide();
-					bloqueado=false; 
-				} 
-			}
-			
-			function growl(msg,type){
-				jQuery('.notice-item-wrapper').remove();
-				jQuery.noticeAdd({
-					text: msg,
-					type: type
-				});
-			}
 
 // CARGA JQUERY SOLO EN EL TOP
 if (window == window.top && window.jQuery){
@@ -245,7 +45,7 @@ if (window == window.top && window.jQuery){
 
 var jqueryFileUri = 	"/SIGA/html/js/jquery.js";
 var jqueryUIfileUri = 	"/SIGA/html/js/jquery.ui/js/jquery-ui-1.10.3.custom.min.js";
-//var jqueryUICSSfileUri = "/SIGA/html/js/jquery.ui/css/smoothness/jquery-ui-1.10.3.custom.min.css";
+var jqueryUICSSfileUri = "/SIGA/html/js/jquery.ui/css/smoothness/jquery-ui-1.10.3.custom.min.css";
 
 var defaultDateFormat = "dd/mm/yy";//FORMATO DATEPICKER SE CORRESPONDE CON dd/mm/yyyy: http://api.jqueryui.com/datepicker/#utility-formatDate 
 
@@ -284,7 +84,7 @@ if (typeof jQuery == "undefined"){
 	var waitForLoad = function () {
 	    if (typeof jQuery != "undefined") {
 	    	// Inicializa script
-			jQueryLoaded();
+	    	jQueryLoaded();
 	    } else if (intento < maxIntentos){
 	    	intento++;
 	        window.setTimeout(waitForLoad, 500);
@@ -1454,7 +1254,6 @@ function jQueryLoaded(){
 	//*** ONLOAD ***//
 	
 	jQuery(document).ready(function(){
-		window.jQueryTop=window.jQuery;
 		if (jQuery("table.tablaLineaPestanasArriba").length>0){
 			jQuery("table.tablaLineaPestanasArriba").css("float", "left");
 		}
@@ -1837,9 +1636,9 @@ function jQueryLoaded(){
 						options.regional = datepickerInput.data("regional");
 						//options.draggable = true;
 						// AUNQUE ESTO NO DEBERIA PASAR, SI EXISTE YA UN DATEPICKER SE DESTRUYE
-						// if (typeof jQueryTop.datepicker._curInst != "undefined" && jQueryTop.datepicker._curInst != null){
-						// 	jQueryTop.datepicker._destroyDatepicker(jQueryTop.datepicker._curInst);
-						// }
+						if (typeof jQueryTop.datepicker._curInst != "undefined" && jQueryTop.datepicker._curInst != null){
+							jQueryTop.datepicker._destroyDatepicker(jQueryTop.datepicker._curInst);
+						}
 						// CREACION DEL DATEPICKER DIALOG
 						datepickerInput.datepicker("dialog",
 								formatDate(datepickerInput.val(),datepickerInput.data("datepickerformat")),
@@ -2450,26 +2249,26 @@ function jQueryUILoaded(){
 	var css = document.styleSheets;
 	var bFound = false;
 	var i = 0;
-    // while (!bFound && i < css.length) {
-    // 	var cssHref = css[i].href;	    	
-    //     if (cssHref &&  css[i].href.endsWith(jqueryUICSSfileUri))
-    //     	bFound = true;
-    //     else
-    //     	i++;
-    // }
+    while (!bFound && i < css.length) {
+    	var cssHref = css[i].href;	    	
+        if (cssHref &&  css[i].href.endsWith(jqueryUICSSfileUri))
+        	bFound = true;
+        else
+        	i++;
+    }
     if (!bFound){
     	//JQUERY UI CSS NO ECONTRADA, LA CARGAMOS
     	console.debug("[jQueryUILoaded] JQUERY UI CSS NO ECONTRADA, LA CARGAMOS");
     	var link = document.createElement("link");
         link.rel = "stylesheet";
-        // link.href = jqueryUICSSfileUri;
+        link.href = jqueryUICSSfileUri;
 
         document.getElementsByTagName("head")[0].appendChild(link);
     }
     // CONFIGURACI�N POR DEFECTO DE DATEPICKER
 	if (jQueryTop!=null&&jQueryTop.fn.datepicker){
 		console.debug("[jQueryUILoaded] JQUERY datepicker INI");		
-		window.jQueryTop.datepicker = new Datepicker();
+		
 		jQueryTop.datepicker.setDefaults(jQueryTop.datepicker.regional['es']);
 		jQueryTop.datepicker.setDefaults({
 			changeMonth: true,
@@ -5370,7 +5169,15 @@ function getElementAbsolutePos(element) {
 	
     return res;
 }
-	
+function validarNig( nig ) 
+{
+	if (nig.length == 19){
+		var objRegExp  = /^([a-zA-Z0-9]{19})?$/;
+		return objRegExp.test(nig);
+	}else{
+		return true;
+	}
+}	
 function formateaNig(strValue) 
 {
 	strValue = replaceAll(strValue,' ','');
@@ -5424,60 +5231,5 @@ function sumarDias(fechaInput,dias){
 	return (dia+"/"+mes+"/"+anyo); 
 }	
 
-var letras=" abcdefghijklmn�opqrstuvwxyzABCDEFGHIJKLMN�OPQRSTUVWXYZ������������������������������������������^'�\-";
-
-function validarNombreApellido(nombre){
-   for(i=0; i<nombre.length; i++){
-      if (letras.indexOf(nombre.charAt(i))==-1){
-         return false;
-      }
-   }
-   return true;
-}
-
-function validarDenominacion(nombre){
-   return true;
-}
-
-function calcularEdad(fecha){
-
-	 // Si la fecha es correcta, calculamos la edad
-	var values=fecha.split("/");
-	var dia = values[0];
-	var mes = values[1];
-	var ano = values[2];
-
-	fecha_hoy = new Date();
-	ahora_ano = fecha_hoy.getYear();
-	ahora_mes = fecha_hoy.getMonth();
-	ahora_dia = fecha_hoy.getDate();
-	edad = (ahora_ano + 1900) - ano;
-		
-	if ( ahora_mes < (mes - 1)){
-	  edad--;
-	}
-	if (((mes - 1) == ahora_mes) && (ahora_dia < dia)){ 
-	  edad--;
-	}
-	if (edad > 1900){
-		edad -= 1900;
-	}
-	if(edad == 1900){
-		edad = 0;
-	}
-	return edad;
-
-}
-
-function pad (n, length,derecha) {
-    var  n = n.toString();
-    while(n.length < length){
-    	if(derecha)
-    		n =  n +"0";
-    	else
-    		n = "0" + n;
-    }
-    return n;
-}
 
 fin();

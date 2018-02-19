@@ -159,3 +159,17 @@ function growl(msg, type) {
         type: type
     });
 }
+
+function jAlert(texto, ancho, alto){
+    jQuery.noConflict();
+    $("#dialog-message").html(texto);
+    $("#dialog-message").height(alto);
+    $("#dialog-message").dialog({
+        modal: true,
+        resizable: false,
+        width: ancho,
+        height: alto,
+        buttons: { "Ok": function() { $(this).dialog("close"); $(this).dialog("destroy"); } }
+    });
+    $("#dialog-message").scrollTop(0);
+}

@@ -7,6 +7,7 @@ import { TestService } from './_services/test.service';
 import { AuthenticationService } from './_services/authentication.service';
 import { routing } from './app.routing';
 import { MenubarModule } from 'primeng/menubar';
+import { TieredMenuModule } from 'primeng/tieredmenu';
 import { MenuItem } from 'primeng/api';
 //import {MyDatePickerModule} from '../../node_features/angular2-datepicker'; Problema de version
 
@@ -14,6 +15,7 @@ import { AppComponent } from './app.component';
 import { MyIframeComponent } from './commons/my-iframe/my-iframe.component';
 import { SearchComponent } from './features/search/search.component';
 import { MenubarComponent } from './features/menubar/menubar.component';
+import { TieredMenuComponent } from './features/tieredMenu/tieredMenu.component';
 import { HomeComponent } from './features/home/home.component';
 import { SearchColegiadosComponent } from './features/search-colegiados/search-colegiados.component';
 import { SearchNoColegiadosComponent } from './features/search-no-colegiados/search-no-colegiados.component';
@@ -38,6 +40,7 @@ import { Globals } from './_services/globals.service'
     HomeComponent,
     SearchComponent,
     MenubarComponent,
+    TieredMenuComponent,
     SearchColegiadosComponent,
     SearchNoColegiadosComponent,
     CertificadosAcaComponent,
@@ -58,7 +61,8 @@ import { Globals } from './_services/globals.service'
     FormsModule,
     ReactiveFormsModule,
     routing,
-    MenubarModule
+    MenubarModule,
+    TieredMenuModule
   ],
   providers: [
     TestService,
