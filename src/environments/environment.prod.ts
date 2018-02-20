@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
-  protocol:'http://',
-  env:'localhost'
+  protocol:'https://',
+  env:'sigademo.redabogacia.org.local',
+  baseHref: '/'
 };

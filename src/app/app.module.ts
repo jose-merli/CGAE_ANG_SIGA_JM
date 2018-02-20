@@ -32,6 +32,9 @@ import { BusquedaSancionesComponent } from './features/busqueda-sanciones/busque
 import { LoginComponent } from './features/login/login.component';
 import { AuthGuard } from './_guards/auth.guards';
 import { Globals } from './_services/globals.service'
+import { APP_BASE_HREF } from '@angular/common';
+import { environment } from '../environments/environment';
+import { MainComponent } from './commons/main-component/main-component.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +56,8 @@ import { Globals } from './_services/globals.service'
     MantenimientoGruposFijosComponent,
     MantenimientoMandatosComponent,
     BusquedaSancionesComponent,
-    LoginComponent
+    LoginComponent,
+    MainComponent
   ],
   imports: [
     BrowserModule,
@@ -68,7 +72,11 @@ import { Globals } from './_services/globals.service'
     TestService,
     AuthenticationService,
     AuthGuard,
-    Globals
+    Globals,
+    {
+      provide: APP_BASE_HREF,
+      useValue: environment.baseHref
+    }
   ],
   bootstrap: [AppComponent]
 })

@@ -19,7 +19,7 @@ import { LoginComponent } from './features/login/login.component';
 import { AuthGuard } from './_guards/auth.guards'
 
 const appRoutes: Routes = [
-    { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+    { path: 'home', component: HomeComponent},//, canActivate: [AuthGuard] },
     { path: 'search', component: SearchComponent },
     { path: 'searchColegiados', component: SearchColegiadosComponent },
     { path: 'searchNoColegiados', component: SearchNoColegiadosComponent },

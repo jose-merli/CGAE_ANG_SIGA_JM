@@ -25,12 +25,12 @@
         "../node_modules/primeng/resources/primeng.min.css"
       ],
       "scripts": [
-        "../jquery.js",
-        "../jquery-ui-1.10.3.custom.min.js",
-        "../ui.dropdownchecklist-1.4-min.js",
-        "../SIGA.js",       
-        "../mainjsp.js",
-        "../calendar.js"
+        "../resources/js/jquery.js",
+        "../resources/js/jquery-ui-1.10.3.custom.min.js",
+        "../resources/js/ui.dropdownchecklist-1.4-min.js",
+        "../resources/js/SIGA.js",       
+        "../resources/js/mainjsp.js",
+        "../resources/js/calendar.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
