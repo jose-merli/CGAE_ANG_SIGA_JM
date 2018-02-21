@@ -1,9 +1,11 @@
-<!-- <app-tieredMenu *ngIf="canShowMenu()"></app-tieredMenu> -->
-<app-tieredMenu></app-tieredMenu>
-<section class="content">
-    <div class="contentHead">
-        <router-outlet></router-outlet>
+<div class="siga-app-container">
+    <app-header></app-header>
+    <div class="wrapper-menu-sidebar">
+        <div class="menu-sidebar ">
+            <app-menu *ngIf="canShowMenu()"></app-menu>
+        </div>
+        <div class="content">
+            <router-outlet></router-outlet>
+        </div>
     </div>
-    <div class="contentBody">
-    </div>
-</section>
+</div>

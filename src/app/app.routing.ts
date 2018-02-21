@@ -1,26 +1,39 @@
 import { Routes, RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
-import { SearchComponent } from './features/search/search.component';
-import { HomeComponent } from './features/home/home.component';
-import { SearchColegiadosComponent } from './features/search-colegiados/search-colegiados.component';
-import { SearchNoColegiadosComponent } from './features/search-no-colegiados/search-no-colegiados.component';
-import { CertificadosAcaComponent } from './features/certificados-aca/certificados-aca.component';
-import { ComisionesCargosComponent } from './features/comisiones-cargos/comisiones-cargos.component';
-import { SolicitudesGenericasComponent } from './features/solicitudes-genericas/solicitudes-genericas.component';
-import { SolicitudesEspecificasComponent } from './features/solicitudes-especificas/solicitudes-especificas.component';
-import { SolicitudesIncorporacionComponent } from './features/solicitudes-incorporacion/solicitudes-incorporacion.component';
-import { NuevaIncorporacionComponent } from './features/nueva-incorporacion/nueva-incorporacion.component';
-import { DocumentacionSolicitudesComponent } from './features/documentacion-solicitudes/documentacion-solicitudes.component';
-import { MantenimientoGruposFijosComponent } from './features/mantenimiento-grupos-fijos/mantenimiento-grupos-fijos.component';
-import { MantenimientoMandatosComponent } from './features/mantenimiento-mandatos/mantenimiento-mandatos.component';
-import { BusquedaSancionesComponent } from './features/busqueda-sanciones/busqueda-sanciones.component';
-import { LoginComponent } from './features/login/login.component';
 import { AuthGuard } from './_guards/auth.guards'
+import { SearchComponent } from './commons/search/search.component';
+import { LoginComponent } from './commons/login/login.component';
+import { HomeComponent } from './features/home/home.component';
+
+// Censo
+import { SearchColegiadosComponent } from './features/censo/search-colegiados/search-colegiados.component';
+import { SearchNoColegiadosComponent } from './features/censo/search-no-colegiados/search-no-colegiados.component';
+import { CertificadosAcaComponent } from './features/censo/certificados-aca/certificados-aca.component';
+import { ComisionesCargosComponent } from './features/censo/comisiones-cargos/comisiones-cargos.component';
+import { SolicitudesGenericasComponent } from './features/censo/solicitudes-genericas/solicitudes-genericas.component';
+import { SolicitudesEspecificasComponent } from './features/censo/solicitudes-especificas/solicitudes-especificas.component';
+import { SolicitudesIncorporacionComponent } from './features/censo/solicitudes-incorporacion/solicitudes-incorporacion.component';
+import { NuevaIncorporacionComponent } from './features/censo/nueva-incorporacion/nueva-incorporacion.component';
+import { DocumentacionSolicitudesComponent } from './features/censo/documentacion-solicitudes/documentacion-solicitudes.component';
+import { MantenimientoGruposFijosComponent } from './features/censo/mantenimiento-grupos-fijos/mantenimiento-grupos-fijos.component';
+import { MantenimientoMandatosComponent } from './features/censo/mantenimiento-mandatos/mantenimiento-mandatos.component';
+import { BusquedaSancionesComponent } from './features/censo/busqueda-sanciones/busqueda-sanciones.component';
+
+// Administracion
+import { CatalogosMaestros } from './features/administracion/catalogos-maestros/catalogos-maestros.component';
+import { GruposUsuarios } from './features/administracion/grupos-usuarios/grupos-usuarios.component';
+import { Etiquetas } from './features/administracion/etiquetas/etiquetas.component';
+import { SeleccionarIdioma } from './features/administracion/seleccionar-idioma/seleccionar-idioma.component';
+import { Usuarios } from './features/administracion/usuarios/usuarios.component';
+import { UsingObservable } from 'rxjs/observable/UsingObservable';
 
 const appRoutes: Routes = [
-    { path: 'home', component: HomeComponent},//, canActivate: [AuthGuard] },
+    { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+    { path: 'login', component: LoginComponent },
     { path: 'search', component: SearchComponent },
+
+    // Censo
     { path: 'searchColegiados', component: SearchColegiadosComponent },
     { path: 'searchNoColegiados', component: SearchNoColegiadosComponent },
     { path: 'certificadosAca', component: CertificadosAcaComponent },
@@ -33,12 +46,14 @@ const appRoutes: Routes = [
     { path: 'mantenimientoGruposFijos', component: MantenimientoGruposFijosComponent },
     { path: 'mantenimientoMandatos', component: MantenimientoMandatosComponent },
     { path: 'busquedaSanciones', component: BusquedaSancionesComponent },
-    //{ path: 'signup', component: SignupComponent },
-    { path: 'login', component: LoginComponent },
-    //{ path: 'servicios', component: EntityComponent, data: { name: "servicios" } },
-    //{ path: 'entity/:name', component: EntityComponent },
-    //{ path: 'entity/:name/:id', component: RecordComponent },
-    //{ path: 'entities', component: EntitiesComponent },
+
+    // Administracion
+    { path: 'catalogosMaestros', component: CatalogosMaestros },
+    { path: 'gruposUsuarios', component: GruposUsuarios },
+    { path: 'etiquetas', component: Etiquetas },
+    { path: 'usuarios', component: Usuarios },
+    { path: 'seleccionarIdioma', component: SeleccionarIdioma },
+
     { path: '**', redirectTo: 'home' }
 
 ];

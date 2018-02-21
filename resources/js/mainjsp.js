@@ -13,16 +13,16 @@ loc = '';
 
 
 function inicio() {
-    MM_preloadImages('http://localhost/SIGA/html/imagenes/botonSession_ilum.gif',
-        'http://localhost/SIGA/html/imagenes/botonSession_activo.gif',
-        'http://localhost/SIGA/html/imagenes/botonSession.gif',
-        'http://localhost/SIGA/html/imagenes/botonAyuda.gif',
-        'http://localhost/SIGA/html/imagenes/botonAyuda_ilum.gif',
-        'http://localhost/SIGA/html/imagenes/botonAyuda_activo.gif');
+    MM_preloadImages('/SIGA/html/imagenes/botonSession_ilum.gif',
+        '/SIGA/html/imagenes/botonSession_activo.gif',
+        '/SIGA/html/imagenes/botonSession.gif',
+        '/SIGA/html/imagenes/botonAyuda.gif',
+        '/SIGA/html/imagenes/botonAyuda_ilum.gif',
+        '/SIGA/html/imagenes/botonAyuda_activo.gif');
 }
 
 function cerrarSession() {
-    MM_swapImage('closeSession', '', 'http://localhost/SIGA/html/imagenes/botonSession_activo.gif', 1);
+    MM_swapImage('closeSession', '', '/SIGA/html/imagenes/botonSession_activo.gif', 1);
 
     document.formularioOcultoCerrarSesion.submit();
 
@@ -78,21 +78,21 @@ function usuario() {
 
 
 function ayuda() {
-    MM_swapImage('AbrirAyuda', '', 'http://localhost/SIGA/html/imagenes/botonAyuda_activo.gif', 1);
+    MM_swapImage('AbrirAyuda', '', '/SIGA/html/imagenes/botonAyuda_activo.gif', 1);
     window.open('<%=pathAyuda%>', 'Ayuda', 'width=800px,height=600px,scrollbars=1;resizable:no;top=100px;left=100px;Directories=no;Location=no;Menubar=no;Status=yes;Toolbar=no;');
     window.top.focus();
     return false;
 }
 
 function version() {
-    MM_swapImage('AbrirAyuda', '', 'http://localhost/SIGA/html/imagenes/botonAyuda_activo.gif', 1);
+    MM_swapImage('AbrirAyuda', '', '/SIGA/html/imagenes/botonAyuda_activo.gif', 1);
     window.open('<%=pathVersiones%>', 'Versiones');
     window.top.focus();
     return false;
 }
 
 function cerrarAplicacion() {
-    MM_swapImage('closeApp', '', 'http://localhost/SIGA/html/imagenes/botonCerrar_activo.gif', 1);
+    MM_swapImage('closeApp', '', '/SIGA/html/imagenes/botonCerrar_activo.gif', 1);
 
     if (confirm('<siga:Idioma key="general.cerrarAplicacion"/>')) {
         window.top.close();
@@ -101,7 +101,7 @@ function cerrarAplicacion() {
     return false;
 }
 function interfaz() {
-    mainWorkArea.location = 'http://localhost/SIGA/Dispatcher.do?proceso=80';
+    mainWorkArea.location = '/SIGA/Dispatcher.do?proceso=80';
     return false;
 }
 function establecerIP(dirIP) {
@@ -119,7 +119,7 @@ function mainSub(msg) {
             var mainWorkAreaJquery = jQueryTop("#mainWorkArea")[0].contentWindow.jQuery;
             try {
                 mainWorkAreaJquery.blockUI({
-                    message: '<div id="barraBloqueante"><span class="labelText">' + msg + '</span><br><img src="http://localhost/SIGA/html/imagenes/loadingBar.gif"/></div>',
+                    message: '<div id="barraBloqueante"><span class="labelText">' + msg + '</span><br><img src="/SIGA/html/imagenes/loadingBar.gif"/></div>',
                     css: { border: 0, background: 'transparent' },
                     overlayCSS: { backgroundColor: '#FFF', opacity: .0 }
                 });
@@ -160,7 +160,7 @@ function growl(msg, type) {
     });
 }
 
-function jAlert(texto, ancho, alto){
+function jAlert(texto, ancho, alto) {
     jQuery.noConflict();
     $("#dialog-message").html(texto);
     $("#dialog-message").height(alto);
@@ -169,7 +169,7 @@ function jAlert(texto, ancho, alto){
         resizable: false,
         width: ancho,
         height: alto,
-        buttons: { "Ok": function() { $(this).dialog("close"); $(this).dialog("destroy"); } }
+        buttons: { "Ok": function () { $(this).dialog("close"); $(this).dialog("destroy"); } }
     });
     $("#dialog-message").scrollTop(0);
 }

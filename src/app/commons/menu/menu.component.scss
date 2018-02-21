@@ -1,0 +1,119 @@
+@import "../../../sass/variables.scss";
+
+
+    .menu-censo{
+        height: 100%;
+        padding-top: 7rem;   
+          
+        .container-fluid{
+            padding:0;
+            height: 100%;
+            display: flex;
+            box-shadow: 0 0 2px $grey4;
+            border-left: none;
+            background: white;  
+                .col-items{
+                    padding:0;
+                    width: 20em;
+                    flex-grow: 1;
+                    li{
+                        // padding: 1.5em 1.5em;
+                        font-family: $general-font;
+                        margin: 0; 
+                        font-size: .9rem;
+                        &:hover{
+                            color: white;
+                            transition: all .5s;
+                            cursor: pointer; 
+                            background: $gradientBlue;
+                        }
+                    }
+                    .menu-item-active{
+                        color: white;
+                        background:  $gradientBlue;
+                    }
+                }
+                .menu-arrow{
+                    padding:0;
+                    border-left: 1px solid $lightGrey;
+                    text-align: center;   
+                    flex-grow: 1;                 
+                    i{                      
+                        margin: .5em auto;   
+                        color: $grey1;       
+                        cursor: pointer;              
+                    }
+                }
+            
+        }    
+        
+    }
+
+    .closedMenu{
+        margin-left: -20em;
+        transition: all 1s;
+    }
+
+    
+    .openedMenu{
+        margin-left: 0;
+        transition: all 1s;
+    }
+
+    @media screen and (max-width: 1200px){
+        .menu-censo{
+            height: 100%;
+            position: fixed;
+            z-index: 100;
+            .col-items{
+                padding:0;
+            }
+
+        }
+        .openedMenu{
+            margin-left: -20em;
+            transition: all 1s;
+        }
+         .closedMenu{
+            margin-left: 0;
+            transition: all 1s;
+        }
+
+        .icono-menu{
+            :before{
+                content: "\f060"
+            }
+        }
+
+        .icono-menu-flecha{
+            :before{
+                content: "\f00a"
+            }
+        }
+
+    }
+
+
+    @media screen and (max-width: 768px){
+         .menu-censo{
+            padding-top: 9rem;
+         }
+    }
+
+    @media screen and (max-width: 400px){
+         .menu-censo{    
+             padding-top: 7rem;
+            .container-fluid{
+                .col-items{
+                    padding:0;
+                    width: 18em;
+                }
+            }
+        }
+
+        .openedMenu{
+            margin-left: -18em;
+        }
+      
+    }
+    

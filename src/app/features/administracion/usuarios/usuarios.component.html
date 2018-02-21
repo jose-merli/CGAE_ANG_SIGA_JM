@@ -1,0 +1,107 @@
+<fieldset>
+  <table class="tablaCentralCampos" align="center">
+    <form name="listadoUsuariosForm" method="POST" action="/SIGA/ADM_GestionarUsuarios.do" target="resultado"></form>
+    <input type="hidden" name="modo" value="">
+    <input type="hidden" name="limpiarFilaSeleccionada" value="">
+
+    <tbody>
+      <tr>
+        <td class="labelText">Nombre y Apellidos</td>
+        <td>
+          <input type="text" name="descripcion" maxlength="50" size="40" value="" class="box">
+        </td>
+
+        <td class="labelText">NIF</td>
+        <td colspan="3">
+          <input type="text" name="NIF" maxlength="10" size="15" value="" class="box">
+        </td>
+      </tr>
+      <tr>
+        <td class="labelText">Rol</td>
+        <td>
+          <div id="idRolBusqueda_tagSelectDiv" class="tagSelect tagSelectDiv" data-width="185px" data-readonly="false" style="display:inline;">
+            <div id="idRolBusqueda_loader" class="tagSelect tagSelect_loader" style="display:inline;">
+              <select id="idRolBusqueda" class="tagSelect boxCombo" name="idRolBusqueda" data-queryid="getRoles" data-inival="null" data-required="false"
+                data-readonly="false" data-searchkey="" data-hideifnooptions="false" style="display:inline;">
+                <option value=""></option>
+                <option value="1">ABOGADO</option>
+                <option value="9">Abogado Advocat Avogado Abokatu</option>
+                <option value="8">Abogado inscrito</option>
+                <option value="2">Colegiado No Ejerciente</option>
+                <option value="3">Consejero</option>
+                <option value="4">Decano</option>
+                <option value="5">Directivo</option>
+                <option value="6">Miembro de Junta</option>
+                <option value="10">null010</option>
+                <option value="7">Personal</option>
+              </select>
+              <img id="idRolBusqueda_loading" src="html/imagenes/loading-spinner.gif" alt="Cargando..." style="visibility:hidden">
+            </div>
+            <input type="text" readonly="readonly" class="tagSelect boxConsulta tagSelect_disabled" style="display:none; width:165px;"
+              id="idRolBusqueda_disabled" name="idRolBusqueda_disabled" value="">
+          </div>
+        </td>
+
+        <td class="labelText">Grupo</td>
+        <td>
+          <div id="idGrupoBusqueda_tagSelectDiv" class="tagSelect tagSelectDiv" data-width="185px" data-readonly="false" style="display:inline;">
+            <div id="idGrupoBusqueda_loader" class="tagSelect tagSelect_loader" style="display:inline;">
+              <select id="idGrupoBusqueda" class="tagSelect boxCombo" name="idGrupoBusqueda" data-queryid="getPerfilesDeInstitucion" data-inival="null"
+                data-required="false" data-readonly="false" data-searchkey="" data-hideifnooptions="false" style="display:inline;">
+                <option value=""></option>
+                <option value="ABG">Abogado</option>
+                <option value="ADM">Administrador</option>
+                <option value="ADG">Administrador General</option>
+                <option value="AS">Archivado Sanciones</option>
+                <option value="CEF">Certificados y Facturacion</option>
+                <option value="CJG">Comisión Justicia Gratuita</option>
+                <option value="CER">Consulta de certificados</option>
+                <option value="CON">Consultas</option>
+                <option value="DAC">Dpto. Administración y Contabilidad</option>
+                <option value="DC">Dpto. Certificaciones</option>
+                <option value="DCA">Dpto. Certificaciones - Jefe</option>
+                <option value="DCC">Dpto. Certificaciones/Conserjería</option>
+                <option value="JUS">Dpto. Jurídico Sanciones</option>
+                <option value="JSL">Dpto. Jurídico Sanciones - Sólo Lectura</option>
+                <option value="FC">Facturar Certificados</option>
+                <option value="GPB">Gestión Pack Bienvenida</option>
+                <option value="GD">Grupo Deontológico</option>
+                <option value="JUN">Juntas de Gobierno</option>
+                <option value="NCL">Nuevo Colegiado</option>
+                <option value="ACB">Personal Acceso Básico</option>
+                <option value="AGE">Personal Administrativo</option>
+                <option value="JOS">PRUEBA JOSE</option>
+              </select>
+              <img id="idGrupoBusqueda_loading" src="html/imagenes/loading-spinner.gif" alt="Cargando..." style="visibility:hidden">
+            </div>
+            <input type="text" readonly="readonly" class="tagSelect boxConsulta tagSelect_disabled" style="display:none; width:165px;"
+              id="idGrupoBusqueda_disabled" name="idGrupoBusqueda_disabled" value="">
+          </div>
+        </td>
+
+        <td class="labelText">Activo</td>
+        <td>
+          <select name="activoConsulta" class="boxCombo">
+            <option value=""></option>
+            <option value="S">Sí</option>
+            <option value="N">No</option>
+          </select>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+</fieldset>
+<table class="botonesSeguido" id="idBotonesBusqueda" align="center">
+  <tbody>
+    <tr>
+      <td class="titulitos">
+
+      </td>
+      <td class="tdBotones">
+        <input type="button" alt="Buscar" name="idButton" onclick="setFilaSeleccionadaD('true'); buscar(); setFilaSeleccionadaD('false');"
+          class="button" value="Buscar">
+      </td>
+    </tr>
+  </tbody>
+</table>

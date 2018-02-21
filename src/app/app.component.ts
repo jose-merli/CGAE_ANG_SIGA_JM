@@ -6,7 +6,7 @@ import { AuthenticationService } from './_services/authentication.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 
 export class AppComponent implements OnInit {
@@ -16,10 +16,10 @@ export class AppComponent implements OnInit {
 
   }
 
-  ngOnInit() {        
+  ngOnInit() {
   }
 
-  canShowMenu(){
+  canShowMenu() {
     return this.autenticateService.isAutenticated();
   }
 
