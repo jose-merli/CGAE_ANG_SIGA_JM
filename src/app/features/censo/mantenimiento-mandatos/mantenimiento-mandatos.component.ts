@@ -1,14 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { MainComponent } from '../../../commons/main-component/main-component.component';
+import { OldSigaServices } from '../../../_services/oldSiga.service'
 
 @Component({
   selector: 'app-mantenimiento-mandatos',
   templateUrl: './mantenimiento-mandatos.component.html',
   styleUrls: ['./mantenimiento-mandatos.component.scss']
 })
-export class MantenimientoMandatosComponent extends MainComponent {
+export class MantenimientoMandatosComponent {
 
-  url = this._globals.getBaseUrl() + "/SIGA/Dispatcher.do?proceso=19";
+  url;
+
+  constructor(private sigaServices: OldSigaServices) {
+    this.url = sigaServices.getOldSigaUrl("mantenimientoMandatos");
+  }
 
   ngOnInit() {
   }

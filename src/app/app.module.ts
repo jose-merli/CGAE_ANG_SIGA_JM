@@ -10,9 +10,10 @@ import { PanelMenuModule } from 'primeng/panelmenu';
 import { MenuItem } from 'primeng/api';
 
 import { AuthGuard } from './_guards/auth.guards';
-import { TestService } from './_services/test.service';
+import { OldSigaServices } from './_services/oldSiga.service';
+import { SigaServices } from './_services/siga.service';
 import { AuthenticationService } from './_services/authentication.service';
-import { Globals } from './_services/globals.service'
+import { JwtInterceptor } from './_interceptor/jwt.interceptor'
 
 // Componentes comunes
 import { routing } from './app.routing';
@@ -20,12 +21,10 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './commons/header/header.component';
 import { MyIframeComponent } from './commons/my-iframe/my-iframe.component';
-import { SearchComponent } from './commons/search/search.component';
 import { MenubarComponent } from './commons/menubar/menubar.component';
 import { MenuComponent } from './commons/menu/menu.component';
 import { HomeComponent } from './features/home/home.component';
 import { LoginComponent } from './commons/login/login.component';
-import { MainComponent } from './commons/main-component/main-component.component';
 
 // Modulo de censo
 import { SearchColegiadosComponent } from './features/censo/search-colegiados/search-colegiados.component';
@@ -47,16 +46,15 @@ import { GruposUsuarios } from './features/administracion/grupos-usuarios/grupos
 import { Etiquetas } from './features/administracion/etiquetas/etiquetas.component';
 import { SeleccionarIdioma } from './features/administracion/seleccionar-idioma/seleccionar-idioma.component';
 import { Usuarios } from './features/administracion/usuarios/usuarios.component';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
     MyIframeComponent,
-    SearchComponent,
     MenubarComponent,
     MenuComponent,
     LoginComponent,
-    MainComponent,
     HeaderComponent,
     HomeComponent,
 
@@ -84,7 +82,7 @@ import { Usuarios } from './features/administracion/usuarios/usuarios.component'
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    HttpModule,
+    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     routing,
@@ -92,13 +90,17 @@ import { Usuarios } from './features/administracion/usuarios/usuarios.component'
     PanelMenuModule
   ],
   providers: [
-    TestService,
+    OldSigaServices,
+    SigaServices,
     AuthenticationService,
     AuthGuard,
-    Globals,
     {
       provide: APP_BASE_HREF,
       useValue: environment.baseHref
+    }, {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true
     }
   ],
   bootstrap: [AppComponent]

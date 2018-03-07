@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { SigaServices } from '../../../_services/siga.service'
+
 @Component({
   selector: 'app-grupos-usuarios',
   templateUrl: './grupos-usuarios.component.html',
@@ -6,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GruposUsuarios implements OnInit {
 
-  constructor() { }
+  constructor(private service: SigaServices) { }
 
   ngOnInit() {
+  }
+
+  callService() {
+    this.service.get("db").subscribe();
   }
 
 }

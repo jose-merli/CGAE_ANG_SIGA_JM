@@ -1,14 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { MainComponent } from '../../../commons/main-component/main-component.component'
+import { OldSigaServices } from '../../../_services/oldSiga.service';
 
 @Component({
   selector: 'app-solicitudes-incorporacion',
   templateUrl: './solicitudes-incorporacion.component.html',
   styleUrls: ['./solicitudes-incorporacion.component.scss']
 })
-export class SolicitudesIncorporacionComponent extends MainComponent {
+export class SolicitudesIncorporacionComponent {
 
-  url = this._globals.getBaseUrl() + "/SIGA/Dispatcher.do?proceso=3";
+  url;
+
+  constructor(public sigaServices: OldSigaServices) {
+    this.url = sigaServices.getOldSigaUrl("solicitudesIncorporacion");
+  }
+
   ngOnInit() {
   }
 
