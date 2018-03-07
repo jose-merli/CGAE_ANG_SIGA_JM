@@ -8,6 +8,6 @@ export const environment = {
   protocol: '',
   env: '',
   baseHref: '/',
-  oldSigaUrl: '',
-  newSigaUrl: ''
+  oldSigaUrl: '/SIGA/',
+  newSigaUrl: '/siga-web/'
 };

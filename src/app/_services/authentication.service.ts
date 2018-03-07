@@ -78,18 +78,23 @@ export class AuthenticationService {
             });
         }
 
-        return forkJoin([newSigaRquest, oldSigaRquest]).map(
+        return forkJoin([oldSigaRquest]).map(
             (response) => {
-                let newSigaResponse = response[0].headers.get("Authorization");
-                let oldSigaResponse = response[1].status;
+                // let newSigaResponse = response[0].headers.get("Authorization");
+                let oldSigaResponse = response[0].status;
                 if (oldSigaResponse == 200) {
                     sessionStorage.setItem('osAutenticated', 'true');
-                }
-                if (newSigaResponse) {
+
                     sessionStorage.setItem('authenticated', 'true');
-                    sessionStorage.setItem('Authorization', newSigaResponse);
+                    sessionStorage.setItem('Authorization', 'developToken');
+
                     return true;
                 }
+                // if (newSigaResponse) {
+                //     sessionStorage.setItem('authenticated', 'true');
+                //     sessionStorage.setItem('Authorization', newSigaResponse);
+                //     return true;
+                // }
             }
         )
 
