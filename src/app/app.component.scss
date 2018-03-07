@@ -1,0 +1,42 @@
+.siga-app-container{         
+    position: relative;
+    height: 100vh;
+    .wrapper-menu-sidebar {
+        display: flex;          
+        height: 100%;
+        position: relative;
+       
+        .menu-sidebar { 
+            background: white;
+        }
+        .content{
+            flex-grow: 1;
+            margin: 7rem 1rem 1rem 1rem;
+            overflow-y: scroll;
+            font-size: .85rem;
+        }
+    }   
+}
+
+
+ @media screen and (max-width: 1200px){
+        .content{
+            margin-left: 2.2rem;
+            margin: 9rem 1rem 1rem 1rem;
+        }
+
+ }
+
+ @media screen and (max-width: 768px){
+        .content{            
+           margin-top: 3rem;
+        }
+ }
+
+ @media screen and (max-width: 400px){
+     .content{            
+           margin-top: 2rem;
+    }
+ }
+
+

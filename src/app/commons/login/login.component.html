@@ -1,0 +1,56 @@
+<form [formGroup]='form'>
+    <br>
+
+    <p class="titulos" style="text-align:center">BIENVENIDO AL SISTEMA DE GESTIÓN DE LA ABOGACÍA (S.I.G.A)</p>
+
+
+    <table align="center" class="table-login">
+        <tr>
+            <td class="labelText">Institución</td>
+            <td>
+                <select formControlName="tmpLoginInstitucion" style="width:300px">
+                    <option *ngFor="let i of instituciones" [ngValue]="i.value">{{ i.name }}</option>
+                </select>
+            </td>
+            <td valign="middle" align="center">
+                <button (click)='submit()' title="Entrar con los datos de los combos">Entrar</button>
+                <!-- <input type="button" class="button" value="Entrar" onClick="entrar()" > -->
+            </td>
+        </tr>
+        <tr>
+            <td class="labelText">¿Letrado?</td>
+            <td colspan="2">
+                <select formControlName="sLetrado" class="boxCombo" style="width:300px;">
+                    <option value=N selected="">NO, no soy Letrado</option>
+                    <option value=S>SÍ, soy Letrado</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="labelText">Perfil</td>
+            <td colspan="2">
+                <select formControlName="tmpLoginPerfil" style="width:300px;width:300px;" size="20">
+                    <option value="ABG">Abogado</option>
+                    <option value="ADM">Administrador</option>
+                    <option value="ADG" selected="">Administrador General</option>
+                    <option value="CJG">Comisión Justicia Gratuita</option>
+                    <option value="NCL">Nuevo Colegiado</option>
+                    <option value="AGE">Personal Administrativo</option>
+                    <option value="SAC">Sin Acceso</option>
+                </select>
+            </td>
+        </tr>
+
+    </table>
+
+
+    <!-- <input type="hidden" formControlName="tmpLoginInstitucion"> -->
+    <input type="hidden" formControlName="location">
+    <!-- <input type="hidden" formControlName="sLetrado"> -->
+    <input type="hidden" formControlName="user">
+    <input type="hidden" formControlName="profile">
+    <!-- <input type="hidden" formControlName="tmpLoginPerfil"> -->
+    <input type="hidden" formControlName="letrado">
+    <input type="hidden" formControlName="posMenu">
+
+</form>

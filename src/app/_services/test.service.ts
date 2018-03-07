@@ -1,70 +1,42 @@
-import { Injectable } from '@angular/core';
-import { Http, Headers, Response, URLSearchParams, ResponseType, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
-import 'rxjs/add/operator/map'
+// import { Injectable } from '@angular/core';
+// import { HttpClient, HttpHeaders, HttpResponse, HttpParams, HttpResponseBase } from '@angular/common/http';
+// import { Observable } from 'rxjs';
+// import { Router } from '@angular/router';
+// import 'rxjs/add/operator/map';
+// import { Globals } from './globals.service';
 
 
-@Injectable()
-export class TestService {
+// @Injectable()
+// export class TestService {
 
-    constructor(private http: Http) {
-    }
+//     constructor(private http: HttpClient, private globals: Globals) {
+//     }
 
-    getTestServlet(): Observable<string> {
+//     getTestServlet(): Observable<any> {
 
-        return this.http.get("http://localhost:7001/sspp-cargas/db")
-            .map((response: Response) => {
-                console.log(response);
-                if (response.ok) {
-                    let respuestaServidor = response.json();
-                    // if (response.json()) {
-                    //     return response.json()
-                    // } else {
-                    //     return response.text();
+//         return this.http.get(this.globals.getNewSigaUrl() + "/siga-web/db")
+//             .map((response) => {
+//                 // console.log(response);
+//                 return response;
+//             })
+//     }
 
-                    // }
-                    return respuestaServidor;
+//     getTestServletByName(name): Observable<any> {
 
-                }
-            })
-    }
+//         return this.http.get("http://localhost:7001/siga-cargas/db/" + name)
+//             .map((response: Response) => {
+//                 console.log(response);
+//                 return response;
+//             })
+//     }
 
-    getTestServletByName(name): Observable<string> {
+//     getTestServletByForm(name, lastName, address): Observable<any> {
 
-        return this.http.get("http://localhost:7001/sspp-cargas/db/" + name)
-            .map((response: Response) => {
-                console.log(response);
-                if (response.ok) {
-                    let respuestaServidor = response.json();
-                    // if (response.json()) {
-                    //     return response.json()
-                    // } else {
-                    //     return response.text();
+//         return this.http.get("http://localhost:7001/siga-cargas/db/" + name + "/" + lastName + "/" + address)
+//             .map((response: Response) => {
+//                 console.log(response);
+//                 return response;
+//             })
+//     }
 
-                    // }
-                    return respuestaServidor;
-
-                }
-            })
-    }
-
-    getTestServletByForm(name, lastName, address): Observable<string> {
-
-        return this.http.get("http://localhost:7001/sspp-cargas/db/" + name + "/" + lastName + "/" + address)
-            .map((response: Response) => {
-                console.log(response);
-                if (response.ok) {
-                    let respuestaServidor = response.json();
-                    // if (response.json()) {
-                    //     return response.json()
-                    // } else {
-                    //     return response.text();
-
-                    // }
-                    return respuestaServidor;
-
-                }
-            })
-    }
-}
+// }

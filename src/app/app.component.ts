@@ -1,35 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { TestService } from './_services/test.service';
-import { MenubarModule } from 'primeng/menubar';
-import { MenuItem } from 'primeng/api';
+// import { MenubarModule } from 'primeng/menubar';
+// import { MenuItem } from 'primeng/api';
+import { AuthenticationService } from './_services/authentication.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 
 export class AppComponent implements OnInit {
-  respuestaServidor: string = "";
-  name: string = "";
-  url;  
+
   constructor(
-    private _testService: TestService) {
+    private autenticateService: AuthenticationService) {
 
   }
 
-  ngOnInit() {        
+  ngOnInit() {
   }
 
-  getTestServlet() {
-    this._testService.getTestServlet().subscribe(res => {
-      this.respuestaServidor = res;
-    })
+  canShowMenu() {
+    return this.autenticateService.isAutenticated();
   }
 
-  getTestServletByName() {
-    this._testService.getTestServletByName(this.name).subscribe(res => {
-      this.respuestaServidor = res;
-    })
-  }
 }

@@ -1,0 +1,486 @@
+/* You can add global styles to this file, and also import other style files */
+/* .menuInicial{
+    float: left;
+    width: 11%;
+} */
+
+@import "sass/variables.scss";
+
+/*** TIPOGRAFÍAS ***/
+
+@font-face {
+    font-family: OpenSansCondensedBold;
+    src: url('./assets/fonts/OpenSansCondensedBold.eot');
+    src: url('./assets/fonts/OpenSansCondensedBold.eot?#iefix') format('embedded-opentype'),
+    url('./assets/fonts/OpenSansCondensedBold.woff') format('woff'),
+    url('./assets/fonts/OpenSansCondensedBold.ttf') format('truetype');
+
+}
+@font-face {
+    font-family:OpenSansCondensedLight;
+    src: url('./assets/fonts/OpenSansCondensedLight.eot');
+    src: url('./assets/fonts/OpenSansCondensedLight.eot?#iefix') format('embedded-opentype'),
+    url('./assets/fonts/OpenSansCondensedLight.woff') format('woff'),
+    url('./assets/fonts/OpenSansCondensedLight.ttf') format('truetype');
+
+}
+@font-face {
+    font-family:Ubuntu;
+    src: url('./assets/fonts/Ubuntu.eot');
+    src: url('./assets/fonts/Ubuntu.eot?#iefix') format('embedded-opentype'),
+    url('./assets/fonts/Ubuntu.woff') format('woff'),
+    url('./assets/fonts/OpenSansCondensedLight.ttf') format('truetype');
+}
+
+
+
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+html,body{
+    width: 100%;
+    color: $grey1;
+    font-family: $general-font;
+    
+}
+
+h2{
+    font-family: $title-fontLight;
+    font-size:1.82rem;
+}
+
+h3{
+    font-family: $title-fontBold;
+    font-size:1.5rem;
+}
+
+p{
+    font-size: .9rem;
+    margin-bottom: 0;
+}
+
+
+li{
+    list-style: none;
+}
+
+label{
+    
+    margin-bottom: 0;
+}
+
+
+/**CARDS BOTONES Y FORMULARIOS**/
+
+.header-title{
+    display: flex;
+    align-items: center;
+    margin-bottom: .5rem;
+    border-bottom: 1px solid $secondary-color;        
+    i{
+        margin-right: .5rem;
+        font-size: .6rem;     
+        color: $secondary-color;
+    }
+    p{
+        color: $secondary-color;
+        font-size: .9rem;
+            
+    }
+}
+
+.card{
+    box-shadow: 0 0 2px #c6c7c8;
+    border:none;
+    .card-header{
+        background-color: $blue3;
+        font-weight: bold;
+        padding: .33rem 1.25rem;
+        border-bottom: 1px solid $lightGrey;
+        .menu-plantillas{
+            display: inline-block;
+            
+            a{
+                padding: 0;
+            }
+            .ui-menubar-custom{
+                display: none;
+            }
+            .ui-submenu-icon{
+               display: none;
+            }
+            
+             .ui-menuitem-link{
+                 background: none !important;     
+                 color: $grey1;    
+                 &:hover{
+                      color: $primary-color;  
+                 }        
+             }    
+
+            .ui-widget-content{
+                border: none;
+                background: none;               
+            }
+
+            .ui-submenu-list {
+                background: white;
+                margin: .33rem 0 0 0;
+                font-weight: normal;
+                li{
+                    padding: .33rem 0;
+                    &:hover a{
+                        color: $lightOrange;
+                        transition: color .2s;                   
+                    }
+                }
+            }
+        }
+        
+        i{
+            cursor: pointer;
+            &:hover{
+                color: $primary-color;
+            }
+        }
+    }
+    .subtitulo-form{
+        border-bottom: 1px solid $blue3;
+        padding-bottom: .33rem;
+        i{
+            cursor: pointer;
+        }        
+    }
+}
+
+.icon-color{
+    color: $grey1;
+    display: block;
+    text-align: center;
+}
+.icon-pointer{
+    cursor:pointer;
+    transition: color .2s;
+    &:hover{
+        color: $lightOrange;
+    }
+}
+
+.filter-table-listado{
+    i{
+        float: right;
+    }
+}
+
+.tabla-listado {
+    
+    .ui-datatable th.ui-state-default{
+        background: $blue3 !important;    
+        color: $grey1 !important;    
+        padding: 0.5rem;
+        border: 1px solid $blue3 !important;
+        .ui-sortable-column-icon{
+            font-size: .85rem;
+        }
+    }  
+ 
+
+
+    .ui-datatable .ui-datatable-tfoot>tr>td, .ui-datatable .ui-datatable-data>tr>td{
+        color: $grey1;
+        padding: .5rem;
+        font-size: .8rem;
+    }
+    td:last-child{        
+        text-align: center;
+        i{
+            display: inline-block;
+            padding:0 .33rem;            
+        }
+    }   
+   
+    tr:nth-child(even){
+        background: $lightBlue3;    
+    }
+    
+    .ui-column-filter{
+        font-family: Ubuntu, FontAwesome;
+        text-align: left;   
+        padding-left: .5rem; 
+    }
+    .ui-paginator{
+        background: none;    
+        text-align: right;
+        padding: .5rem;
+        font-size: .7rem;
+        border:none;
+        a{
+            background: none;
+            border:none;
+        }
+    }
+     .ui-paginator-page.ui-state-active{
+         color: $secondary-color;
+         background: none;
+     }
+    
+}
+
+.main-button .ui-button{
+    background: $gradientBlue !important;    
+    font-size: .9rem;
+    padding: .2rem;
+    border: none !important;
+    span{
+        color: white;
+    }
+}
+
+.upload-button .ui-button{
+    background: $grey2 !important;    
+    font-size: .9rem;
+    padding: .2rem;
+    border: none !important;
+    span{
+        color: white;
+    }
+}
+
+.select-form .ui-dropdown {
+    width:100% !important;
+    
+}
+
+.select-dialog .ui-dropdown {
+    width:100% !important;
+}
+
+
+
+.listado-colegios .vistaT-active .ui-submenu li:first-child a{
+    color: $lightOrange !important;
+}
+
+.listado-colegios .vistaS-active .ui-submenu li:last-child a{
+    color: $lightOrange !important;
+}
+
+.listado-colegios .menu-plantillas{
+    .ui-menubar{
+        padding: 0;
+        .ui-submenu-list {
+            right:0 !important;
+            left: auto !important;
+        }
+    }
+      
+}
+
+.icon-estado{
+    font-size: .7em;
+    cursor: inherit;
+    display: inline-block;         
+    padding: 0 .33em;
+}
+
+.icon-procesado{
+    color: $green;
+}
+.icon-error{
+    color: red;
+}
+.icon-incidencia{
+    color: orange;
+}
+.icon-pendiente{
+    color: $secondary-color;
+}
+
+
+/*MODIFICACIONES DE PRIMENG*/
+
+.ui-widget{
+    font-family: $general-font;
+    
+}
+
+.ui-state-highlight{
+    background: none;
+    color: $secondary-color;
+}
+
+.ui-button, .ui-widget.ui-button, .ui-button{
+    background-color: $blue3;
+    border: 1px solid $grey4;
+    color: $grey1;
+    border-left: none;
+   
+}
+
+.ui-button:enabled:hover, .ui-button:enabled:hover, 
+.ui-widget.ui-button:enabled:hover,.ui-button:enabled:hover{
+    background-color:  $blue3;
+    border: 1px solid $grey4;
+    color: $grey1;
+    border: 1px solid $grey4;
+    border-left: none;
+}
+
+
+.ui-calendar{
+    width: 100%;  
+}
+.ui-calendar.ui-calendar-w-btn input{
+    width: calc(100% - 2em);
+}
+
+.ui-state-default{
+    border: 1px solid $grey4;
+}
+
+.ui-inputtext.ui-state-focus, .ui-inputtext:focus {
+    box-shadow: 0 0 2px $primary-color;
+}
+
+.ui-chkbox-box.ui-state-active, .ui-radiobutton-box.ui-state-active, .ui-chkbox-box.ui-state-focus, .ui-chkbox-box.ui-state-focus.ui-state-active{
+    background: white;
+    color: $primary-color;
+    box-shadow: none;
+    border:1px solid $grey4;
+}
+
+
+.ui-dialog .ui-dialog-titlebar{
+    background: none;
+    border-bottom: 1px solid $grey4;
+}
+
+.ui-dialog .ui-dialog-titlebar-icon{
+    color: $grey4;
+
+    &:hover, &:focus{
+        background: none;
+        color: $grey4;
+        border-color: white;
+    }
+}
+
+.ui-dialog .ui-dialog-footer{
+    border-top: 1px solid $grey4;
+}
+
+.ui-dialog .ui-dialog-content{
+    overflow: inherit;
+}
+
+.ui-datatable tbody > tr.ui-widget-content.ui-state-highlight{
+    background: none;
+}
+
+.ui-datatable tbody.ui-datatable-hoverable-rows > tr.ui-widget-content:not(.ui-state-highlight):hover{
+    background: #fafafb;
+}
+
+.ui-confirmdialog .ui-button{
+    background: $primary-color !important;
+    color: white;
+    border: none;
+    &:hover{
+        color: white !important;
+        border: none;
+    }
+}    
+
+.ui-menubar .ui-menubar-root-list>.ui-menuitem>.ui-menuitem-link{
+    padding: 0;
+}
+
+
+.far{
+    font-weight: 400 !important;
+}
+
+
+
+
+@media ( max-width: 55em ) { /* Default 35em */
+    .ui-datatable-reflow thead th,
+    .ui-datatable-reflow tfoot td {
+        display: none;
+        border: none;
+    }
+
+    .ui-datatable-reflow .ui-datatable-data td { 
+        text-align: left;
+        display: block;
+        border: none !important;
+        width: 100%;
+	      -webkit-box-sizing: border-box;
+	      -moz-box-sizing: border-box;
+	      box-sizing: border-box;
+	      float: left;
+	      clear: left;
+    }
+    
+    .ui-datatable-reflow .ui-datatable-data.ui-widget-content {
+        border: 0px none;
+    }
+    
+    .ui-datatable-reflow .ui-datatable-data tr.ui-widget-content {
+        border-left: 0px none;
+        border-right: 0px none;
+    }
+
+    .ui-datatable-reflow .ui-datatable-data td .ui-column-title { 
+        padding: .4em; 
+        min-width: 30%; 
+        display: inline-block;
+        margin: -.4em 1em -.4em -.4em;
+    }
+
+    .icon-color, .icons-estados{
+        display: inline-block;
+    }
+}
+
+body .ui-panelmenu{
+    .ui-panelmenu-header{
+        a{
+            background-color: white;
+            &:hover{
+                color: white;
+                transition: all .5s;
+                cursor: pointer; 
+                background: $gradientBlue;
+            }
+        }
+    }
+    .ui-panelmenu-header.ui-state-active{
+        a{
+            color: #fafafb;
+            background-color: $secondary-color;
+        }
+    } 
+}
+
+iframe {
+    margin: 0 auto;
+    border: none;
+  }
+  .mainFrameWrapper{
+    // height: 86vh;
+    height: 100%;
+    #mainWorkArea{
+      // min-height: 500px;
+      height: 100%;
+      width: 100%;
+      display: block;
+    }
+  }
+  
+
+

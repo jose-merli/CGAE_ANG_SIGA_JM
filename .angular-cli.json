@@ -19,16 +19,19 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "styles.css",
+        "../node_modules/bootstrap/scss/bootstrap.scss",
         "../node_modules/font-awesome/css/font-awesome.min.css",
-        "../node_modules/primeng/resources/themes/cruze/theme.css",
-        "../node_modules/primeng/resources/primeng.min.css"
+        "../node_modules/primeng/resources/themes/bootstrap/theme.css",
+        "../node_modules/primeng/resources/primeng.min.css",
+        "styles.scss"
       ],
       "scripts": [
-        "../demojquery.js",
-        "../SIGA.js",       
-        "../jquery-ui-1.10.3.custom.min.js",
-        "../ui.dropdownchecklist-1.4-min.js"
+        "../resources/js/jquery.js",
+        "../resources/js/jquery-ui-1.10.3.custom.min.js",
+        "../resources/js/ui.dropdownchecklist-1.4-min.js",
+        "../resources/js/SIGA.js",
+        "../resources/js/mainjsp.js",
+        "../resources/js/calendar.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
@@ -62,7 +65,7 @@
     }
   },
   "defaults": {
-    "styleExt": "css",
+    "styleExt": "scss",
     "component": {}
   }
 }

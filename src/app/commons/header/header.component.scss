@@ -1,0 +1,132 @@
+@import "../../../sass/variables.scss";
+
+
+header{
+    width: 100%;    
+    background: white;
+    border-bottom: 2px solid $primary-color;
+    padding: 1.5em;
+    overflow: hidden;
+    height: 5rem;
+    position: fixed;
+    z-index: 10;
+    .logo{
+        float: left;     
+        display: table;      
+        .logo-img {
+            display: table-cell;
+            vertical-align: middle;
+            img{                
+                width: 2em;         
+                margin-right: .33em;
+                
+            }
+        }
+        h1{
+            display: table-cell;
+            vertical-align: middle;
+            font-family: Arial;
+            font-weight: lighter;
+            color: $primary-color;
+            font-size: 2rem;
+        }
+            
+    }
+    .datos{
+        float: right;
+        display: table;
+        p{            
+            color: $secondary-color;
+            display: table-cell;
+            vertical-align: middle;
+            span{
+                display: block;
+            }
+        }
+        .datos-img{
+            display: table-cell;
+            vertical-align: middle;
+            img{                     
+                width: 6rem;     
+                margin-left: 3em;
+            }
+        }
+            
+
+    }        
+
+}
+
+@media screen and (max-width: 768px){
+
+    header{   
+        height: 9rem;
+        .logo{   
+            display: block;
+            width: 100%;
+            .logo-img {
+                img{                   
+                    width: 1.5rem;        
+                }
+            }
+            h1{
+                font-size: 1.8rem;
+            }
+        }
+
+        .datos{
+            width: 100%;
+            float: left;    
+            padding-top: 1rem; 
+            p{
+                font-size: .9rem;
+            }
+
+            .datos-img{
+                display: table-cell;
+                vertical-align: middle;
+               
+                img{                     
+                    width: 6rem;     
+                    margin-left: 3em;
+                    float: right;
+                }
+            }
+        }
+    }
+
+}
+
+ @media screen and (max-width: 400px){
+    header{   
+            height: 7rem;
+            .logo{   
+                display: block;
+                width: 100%;
+                .logo-img {
+                    img{                   
+                        width: 1.2rem;        
+                    }
+                }
+                h1{
+                    font-size: 1.5rem;
+                }
+            }
+
+            .datos{
+                padding-top: .5rem; 
+                p{
+                    font-size: .8rem;
+                }
+
+                .datos-img{
+                
+                    img{                     
+                        width: 5rem;     
+                        margin-left: 3em;
+                        float: right;
+                    }
+                }
+        }
+    }
+ }
