@@ -1,5 +1,5 @@
 <div class="siga-app-container">
-    <app-header></app-header>
+    <app-header *ngIf="canShowMenu()"></app-header>
     <div class="wrapper-menu-sidebar">
         <div class="menu-sidebar ">
             <app-menu *ngIf="canShowMenu()"></app-menu>

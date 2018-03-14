@@ -16,14 +16,19 @@
                     padding:0;
                     width: 20em;
                     flex-grow: 1;
+                    .ui-state-default{
+                        border: none;
+                        
+                    }
                     li{
-                        // padding: 1.5em 1.5em;
+                        padding: 1rem ;
+                        margin: 0 ;
                         font-family: $general-font;
-                        margin: 0; 
                         font-size: .9rem;
+                        border-bottom: 1px solid $lightGrey;
                         &:hover{
                             color: white;
-                            transition: all .5s;
+                            transition: all .2s;
                             cursor: pointer; 
                             background: $gradientBlue;
                         }
@@ -49,6 +54,19 @@
         
     }
 
+    // body .ui-panelmenu {
+    //     .ui-panelmenu-header{
+    //         // border: none;
+    //         border-bottom: 1px solid $grey4;
+    //     }
+    //       .ui-panelmenu-panel{
+    //             border: none;  
+    //         &:last-child{
+    //              border: none;  
+    //         } 
+    //     }
+        
+    // }
     .closedMenu{
         margin-left: -20em;
         transition: all 1s;

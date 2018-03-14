@@ -13,6 +13,13 @@ export class MenuComponent implements OnInit {
 
   items: MenuItem[];
   closeMenu: boolean = false;
+  showChild: boolean = false;
+  selectedItem: any;
+  selectedLabel: any;
+  showChildOfChild: boolean = false;
+  selectedItemOfChild: any;
+  selectedLabelOfChild: any;
+
 
   constructor(private router: Router) { }
 
@@ -85,6 +92,7 @@ export class MenuComponent implements OnInit {
       {
         label: 'Certificados',
         items: [
+          { title: 'Censo' },
           { label: 'Solicitud Certificado' },
           { label: 'Solicitud Comunicación y Diligencia' },
           { label: 'Gestión Solicitudes' },
@@ -347,6 +355,35 @@ export class MenuComponent implements OnInit {
     this.router.navigate([ruta]);
   }
 
+  viewChild(e, i) {
+    console.log(e)
+    if (e) {
+      this.showChild = true;
+      this.selectedItem = e;
+      console.log(i)
+      this.selectedLabel = i;
+    }
 
+  }
+
+  viewChildOfChild(e, i) {
+    console.log(e)
+    if (e) {
+      this.showChildOfChild = true;
+      this.selectedItemOfChild = e;
+      console.log(i)
+      this.selectedLabelOfChild = i;
+    }
+
+  }
+
+
+  backMenu() {
+    this.showChild = false;
+  }
+
+  backMenuChild() {
+    this.showChildOfChild = false;
+  }
 
 }
