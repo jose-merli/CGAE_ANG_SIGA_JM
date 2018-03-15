@@ -27,12 +27,16 @@ import { SeleccionarIdioma } from './features/administracion/seleccionar-idioma/
 import { Usuarios } from './features/administracion/usuarios/usuarios.component';
 import { UsingObservable } from 'rxjs/observable/UsingObservable';
 
+
+//new censo
+import { BusquedaColegiadosComponent } from './content/censo/busqueda-colegiados/busqueda-colegiados.component';
+
 const appRoutes: Routes = [
     { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
     { path: 'login', component: LoginComponent },
 
     // Censo
-    { path: 'searchColegiados', component: SearchColegiadosComponent },
+    { path: 'busquedaColegiados', component: BusquedaColegiadosComponent },
     { path: 'searchNoColegiados', component: SearchNoColegiadosComponent },
     { path: 'certificadosAca', component: CertificadosAcaComponent },
     { path: 'comisionesCargos', component: ComisionesCargosComponent },

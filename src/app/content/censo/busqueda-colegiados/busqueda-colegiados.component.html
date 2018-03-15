@@ -1,0 +1,226 @@
+<div class="busqueda-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>Búsqueda de Colegiados</p>
+  </div>
+  <div class="breadCrumb">
+    <p>Censo <i class="fa fa-angle-right"></i> Búsqueda de Colegiados</p>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <label>Búsqueda de Colegiados</label>
+      <p-radioButton label="Simple" name="groupname" value="simple" class="float-right" [(ngModel)]="selectedValue"></p-radioButton>
+      <p-radioButton label="Avanzada" name="groupname" value="avanzada" class="pr-3 float-right" [(ngModel)]="selectedValue"></p-radioButton>
+
+    </div>
+    <div class="card-body">
+      <p class="title-module">Datos generales<i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-minus float-right"></i><i
+          (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i></p>
+      <div *ngIf="selectedValue === 'simple' && showDatosGenerales" class="module vista-simple">
+        <div class="form-row">
+          <div class="form-group col-lg-3 col-md-4">
+            <label>Colegio</label>
+            <span class="nombre-colegio">Nombre colegio</span>
+            <!--<input type="text" class="form-control" pInputText >-->
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Nº Colegiado</label>
+            <input type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-3 col-md-3 ">
+            <label></label>
+            <p-checkbox binary="true" label="Búsqueda exacta " name="groupname "></p-checkbox>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-3 col-md-3">
+            <label>NIF/CIF</label>
+            <input type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Nombre</label>
+            <input type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Primer apellido</label>
+            <input type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Segundo apellido</label>
+            <input type="text" class="form-control" pInputText>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="selectedValue !== 'simple' && showDatosGenerales" class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group col-lg-3 col-md-3">
+            <label>NIF/CIF</label>
+            <input type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Nombre</label>
+            <input type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Primer apellido</label>
+            <input type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Segundo apellido</label>
+            <input type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-3 col-md-3 form-group-date">
+            <label>Fecha nacimiento desde</label>
+            <p-calendar [locale]="es" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+          </div>
+          <div class="form-group col-lg-3 col-md-3 form-group-date">
+            <label>Fecha nacimiento hasta</label>
+            <p-calendar [locale]="es" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+          </div>
+          <div class="form-group col-lg-2 col-md-2">
+            <label>Sexo</label>
+            <p-dropdown class="select-form" [options]="select"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-1 col-md-1">
+            <label>C.P</label>
+            <input type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Domicilio</label>
+            <input type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Teléfono</label>
+            <input type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Fax</label>
+            <input type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Correo electrónico</label>
+            <input type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Grupos fijos</label>
+            <p-dropdown class="select-form" [options]="select"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Tipo apunte CV</label>
+            <p-dropdown class="select-form" [options]="select"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label></label>
+            <p-dropdown class="select-form" [options]="select"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label></label>
+            <p-dropdown class="select-form" [options]="select"></p-dropdown>
+          </div>
+        </div>
+      </div>
+      <p *ngIf="selectedValue !== 'simple'" class="title-module">Datos colegiales<i (click)="onHideDatosColegiales()" *ngIf="showDatosColegiales" class="fa fa-minus float-right"></i><i
+          (click)="onHideDatosColegiales()" *ngIf="!showDatosColegiales" class="fa fa-angle-down float-right"></i>
+      </p>
+      <div *ngIf="selectedValue !== 'simple' && showDatosColegiales" class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Nº Colegiado</label>
+            <input type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>Tipo colegiación</label>
+            <p-dropdown class="select-form" [options]="select"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label class="d-block pb-2">Ejerciente</label>
+            <!--<p-dropdown class="select-form" [options]="select"></p-dropdown>-->
+            <p-radioButton label="Sí" name="groupname" value="true" class="pr-3"></p-radioButton>
+            <p-radioButton label="No" name="groupname" value="false"></p-radioButton>
+          </div>
+          <div class="form-group col-lg-3 col-md-3 form-group-date">
+            <label>Fecha incorporación desde</label>
+            <p-calendar [locale]="es" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+          </div>
+          <div class="form-group col-lg-3 col-md-3 form-group-date">
+            <label>Fecha incorporación hasta</label>
+            <p-calendar [locale]="es" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <!--<label>Residente</label>
+            <p-dropdown class="select-form" [options]="select"></p-dropdown>-->
+            <label class="d-block pb-2">Residente</label>
+            <p-radioButton label="Sí" name="groupname" value="true" class="pr-3"></p-radioButton>
+            <p-radioButton label="No" name="groupname" value="false"></p-radioButton>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Abogado inscrito</label>
+            <p-dropdown class="select-form" [options]="select"></p-dropdown>
+          </div>
+
+        </div>
+      </div>
+
+      <p *ngIf="selectedValue !== 'simple'" class="title-module">Datos de facturación<i (click)="onHideDatosFacturacion()" *ngIf="showDatosFacturacion" class="fa fa-minus float-right"></i><i
+          (click)="onHideDatosFacturacion()" *ngIf="!showDatosFacturacion" class="fa fa-angle-down float-right"></i></p>
+      <div *ngIf="selectedValue !== 'simple' && showDatosFacturacion" class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group col-lg-3 col-md-3 form-group-date">
+            <label>Fecha factura desde</label>
+            <p-calendar [locale]="es" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+          </div>
+          <div class="form-group col-lg-3 col-md-3 form-group-date">
+            <label>Fecha factura hasta</label>
+            <p-calendar [locale]="es" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="text-right main-button ">
+        <button pButton type="button " icon="fa fa-eraser " iconPos="left" label="Limpiar "></button>
+        <button pButton type="button " icon="fa fa-search " iconPos="left" label="Buscar"></button>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+  <!--<div class="card mt-3 ">
+    <div class="card-header ">
+      <label>Lista de sociedades importadas</label>
+    </div>
+    <div class="card-body ">
+      <div class="filter-table-listado mb-3 ">
+        <label>Mostrar <p-dropdown placeholder="1-10 "></p-dropdown>registros de {{table.totalRecords}}</label>
+      </div>
+      <p-dataTable [responsive]="true" #table [totalRecords]="10" class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true"
+        [rows]="3">
+        <p-column [sortable]="true" field="nifSociedad" header="NIF sociedad" filterPlaceholder="&#xf002;"></p-column>
+        <p-column [sortable]="true" field="denominacion" header="Denominación" filterPlaceholder="&#xf002;"></p-column>
+        <p-column [sortable]="true" field="numSocios" header="Nº socios" filterPlaceholder="&#xf002;"></p-column>
+        <p-column [sortable]="true" field="estado" header="Estado" filterPlaceholder="&#xf002;"></p-column>
+        <p-column [sortable]="true" field="infoEstado" header="Info. Estado" filterPlaceholder="&#xf002;">
+          <ng-template let-dato="rowData" pTemplate="body">
+            <div class="text-center icons-estados">
+              <i pTooltip="{{dato.estado}}" tooltipPosition="left" *ngIf="dato.procesado" class="icon-procesado icon-estado icon-pointer icon-color fa fa-circle"></i>
+              <i pTooltip="{{dato.estado}}" tooltipPosition="left" *ngIf="dato.conIncidencia" class="icon-incidencia icon-estado icon-pointer icon-color fa fa-exclamation-triangle"></i>
+            </div>
+          </ng-template>
+        </p-column>
+        <p-column [sortable]="false" field="acciones" header="Acciones" [filter]="false">
+          <ng-template let-dato="rowData" pTemplate="body">
+            <div class="icon-acciones">
+              <i class=" icon-pointer far fa-edit"></i>
+              <i class="icon-pointer fa fa-eye"></i>
+              <i class="icon-pointer far fa-trash-alt"></i>
+            </div>
+          </ng-template>
+        </p-column>
+        </p-dataTable>
+    </div>
+  </div>-->
+</div>

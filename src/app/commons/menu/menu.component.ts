@@ -30,7 +30,7 @@ export class MenuComponent implements OnInit {
         items: [
           {
             label: 'Buscar Colegiados',
-            routerLink: 'searchColegiados'
+            routerLink: 'busquedaColegiados'
           },
           {
             label: 'Buscar No Colegiados',
@@ -376,7 +376,6 @@ export class MenuComponent implements OnInit {
     }
 
   }
-
 
   backMenu() {
     this.showChild = false;

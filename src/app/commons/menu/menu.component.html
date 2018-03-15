@@ -5,11 +5,11 @@
         <li *ngFor="let opcion of items" (click)="viewChild(opcion.items, opcion.label)">{{opcion.label}} <i *ngIf="opcion.items" class="fa fa-angle-right float-right"></i></li>
       </ul>
       <ul *ngIf="showChild && !showChildOfChild" class="nav navbar-nav ">
-        <p (click)="backMenu()" class="breadCrumbMenu">{{selectedLabel}}</p>
-        <li *ngFor="let opcion of selectedItem" (click)="viewChildOfChild(opcion.items, opcion.label)">{{opcion.label}} <i *ngIf="opcion.items" class="fa fa-angle-right float-right"></i></li>
+        <li (click)="backMenu()" class="breadCrumbMenu">{{selectedLabel}} <i class="fa fa-angle-right"></i></li>
+        <li *ngFor="let opcion of selectedItem" (click)="viewChildOfChild(opcion.items, opcion.label) || navigateTo(opcion.routerLink)">{{opcion.label}} <i *ngIf="opcion.items" class="fa fa-angle-right float-right"></i></li>
       </ul>
       <ul *ngIf="showChildOfChild" class="nav navbar-nav ">
-        <p (click)="backMenuChild()" class="breadCrumbMenu">{{selectedLabelOfChild}}</p>
+        <li (click)="backMenuChild()" class="breadCrumbMenu">{{selectedLabel}} <i class="fa fa-angle-right"></i> {{selectedLabelOfChild}}</li>
         <li *ngFor="let opcion of selectedItemOfChild">{{opcion.label}} <i *ngIf="opcion.items" class="fa fa-angle-right float-right"></i></li>
       </ul>
     </div>

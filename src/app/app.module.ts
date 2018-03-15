@@ -40,6 +40,7 @@ import { MantenimientoGruposFijosComponent } from './features/censo/mantenimient
 import { MantenimientoMandatosComponent } from './features/censo/mantenimiento-mandatos/mantenimiento-mandatos.component';
 import { BusquedaSancionesComponent } from './features/censo/busqueda-sanciones/busqueda-sanciones.component';
 
+
 // Modulo de administracion
 import { CatalogosMaestros } from './features/administracion/catalogos-maestros/catalogos-maestros.component';
 import { GruposUsuarios } from './features/administracion/grupos-usuarios/grupos-usuarios.component';
@@ -47,6 +48,10 @@ import { Etiquetas } from './features/administracion/etiquetas/etiquetas.compone
 import { SeleccionarIdioma } from './features/administracion/seleccionar-idioma/seleccionar-idioma.component';
 import { Usuarios } from './features/administracion/usuarios/usuarios.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+
+
+/***NEW modules censo***/
+import { BusquedaColegiadosModule } from './content/censo/busqueda-colegiados/busqueda-colegiados.module';
 
 @NgModule({
   declarations: [
@@ -87,7 +92,8 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
     ReactiveFormsModule,
     routing,
     MenubarModule,
-    PanelMenuModule
+    PanelMenuModule,
+    BusquedaColegiadosModule
   ],
   providers: [
     OldSigaServices,
