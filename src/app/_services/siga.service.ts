@@ -10,7 +10,8 @@ export class SigaServices {
 
     endpoints = {
         testDb: "db",
-        login: "login"
+        login: "login",
+        diccionarios: "diccionarios"
     }
 
     constructor(private http: HttpClient) {

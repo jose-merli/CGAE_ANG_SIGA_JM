@@ -16,6 +16,8 @@ export class MenuComponent implements OnInit {
 
   constructor(private router: Router) { }
 
+  // TODO: Revisar si tiene sentido que las rutas las devuelva el back 
+  //o revisar si se pude instanciar el router de forma dinámica al arrancar el angular
   ngOnInit() {
     this.items = [
       {

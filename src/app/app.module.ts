@@ -25,6 +25,7 @@ import { MenubarComponent } from './commons/menubar/menubar.component';
 import { MenuComponent } from './commons/menu/menu.component';
 import { HomeComponent } from './features/home/home.component';
 import { LoginComponent } from './commons/login/login.component';
+import { TranslatePipe, TranslateService } from './commons/translate'
 
 // Modulo de censo
 import { SearchColegiadosComponent } from './features/censo/search-colegiados/search-colegiados.component';
@@ -51,6 +52,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
     AppComponent,
+    TranslatePipe,
     MyIframeComponent,
     MenubarComponent,
     MenuComponent,
@@ -90,6 +92,8 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
     PanelMenuModule
   ],
   providers: [
+    // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
+    TranslateService,
     OldSigaServices,
     SigaServices,
     AuthenticationService,

@@ -67,26 +67,16 @@ export class AuthenticationService {
         let newSigaRquest = this.newSigaLogin();
         let oldSigaRquest = this.oldSigaLogin(formValues);
 
-        if (!environment.production) {
-            return oldSigaRquest.map(response => {
-                if (response.status == 200) {
-                    sessionStorage.setItem('osAutenticated', 'true');
-                    sessionStorage.setItem('authenticated', 'true');
-                    sessionStorage.setItem('Authorization', 'developToken');
-                    return true;
-                }
-            });
-        }
 
-        return forkJoin([oldSigaRquest]).map(
+        return forkJoin([oldSigaRquest, newSigaRquest]).map(
             (response) => {
-                // let newSigaResponse = response[0].headers.get("Authorization");
+                let newSigaResponse = response[1].headers.get("Authorization");
                 let oldSigaResponse = response[0].status;
                 if (oldSigaResponse == 200) {
                     sessionStorage.setItem('osAutenticated', 'true');
 
                     sessionStorage.setItem('authenticated', 'true');
-                    sessionStorage.setItem('Authorization', 'developToken');
+                    sessionStorage.setItem('Authorization', newSigaResponse);
 
                     return true;
                 }
