@@ -23,7 +23,8 @@ export class HeaderComponent implements OnInit {
         dni: '92938293',
         grupo: '',
         institucion: 'Consejo General de la Abogacía Española',
-        idioma: 'Español'
+        idioma: 'Español',
+        ultimaConex: '16:30 | 22/02/2018'
       },
 
     ]

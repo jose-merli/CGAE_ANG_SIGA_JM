@@ -14,7 +14,7 @@
 
     </div>
     <div class="card-body">
-      <p class="title-module">Datos generales<i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-minus float-right"></i><i
+      <p class="title-module">Datos generales<i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i><i
           (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i></p>
       <div *ngIf="selectedValue === 'simple' && showDatosGenerales" class="module vista-simple">
         <div class="form-row">
@@ -119,7 +119,7 @@
           </div>
         </div>
       </div>
-      <p *ngIf="selectedValue !== 'simple'" class="title-module">Datos colegiales<i (click)="onHideDatosColegiales()" *ngIf="showDatosColegiales" class="fa fa-minus float-right"></i><i
+      <p *ngIf="selectedValue !== 'simple'" class="title-module">Datos colegiales<i (click)="onHideDatosColegiales()" *ngIf="showDatosColegiales" class="fa fa-angle-up float-right"></i><i
           (click)="onHideDatosColegiales()" *ngIf="!showDatosColegiales" class="fa fa-angle-down float-right"></i>
       </p>
       <div *ngIf="selectedValue !== 'simple' && showDatosColegiales" class="module vista-avanzada">
@@ -161,7 +161,7 @@
         </div>
       </div>
 
-      <p *ngIf="selectedValue !== 'simple'" class="title-module">Datos de facturación<i (click)="onHideDatosFacturacion()" *ngIf="showDatosFacturacion" class="fa fa-minus float-right"></i><i
+      <p *ngIf="selectedValue !== 'simple'" class="title-module">Datos de facturación<i (click)="onHideDatosFacturacion()" *ngIf="showDatosFacturacion" class="fa fa-angle-up float-right"></i><i
           (click)="onHideDatosFacturacion()" *ngIf="!showDatosFacturacion" class="fa fa-angle-down float-right"></i></p>
       <div *ngIf="selectedValue !== 'simple' && showDatosFacturacion" class="module vista-avanzada">
         <div class="form-row">
@@ -179,7 +179,7 @@
     <div class="card-footer">
       <div class="text-right main-button ">
         <button pButton type="button " icon="fa fa-eraser " iconPos="left" label="Limpiar "></button>
-        <button pButton type="button " icon="fa fa-search " iconPos="left" label="Buscar"></button>
+        <button (click)="isBuscar()" pButton type="button " icon="fa fa-search " iconPos="left" label="Buscar"></button>
       </div>
     </div>
   </div>
@@ -189,38 +189,30 @@
 
 
 
-  <!--<div class="card mt-3 ">
-    <div class="card-header ">
-      <label>Lista de sociedades importadas</label>
-    </div>
-    <div class="card-body ">
-      <div class="filter-table-listado mb-3 ">
-        <label>Mostrar <p-dropdown placeholder="1-10 "></p-dropdown>registros de {{table.totalRecords}}</label>
-      </div>
-      <p-dataTable [responsive]="true" #table [totalRecords]="10" class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true"
-        [rows]="3">
-        <p-column [sortable]="true" field="nifSociedad" header="NIF sociedad" filterPlaceholder="&#xf002;"></p-column>
-        <p-column [sortable]="true" field="denominacion" header="Denominación" filterPlaceholder="&#xf002;"></p-column>
-        <p-column [sortable]="true" field="numSocios" header="Nº socios" filterPlaceholder="&#xf002;"></p-column>
-        <p-column [sortable]="true" field="estado" header="Estado" filterPlaceholder="&#xf002;"></p-column>
-        <p-column [sortable]="true" field="infoEstado" header="Info. Estado" filterPlaceholder="&#xf002;">
-          <ng-template let-dato="rowData" pTemplate="body">
-            <div class="text-center icons-estados">
-              <i pTooltip="{{dato.estado}}" tooltipPosition="left" *ngIf="dato.procesado" class="icon-procesado icon-estado icon-pointer icon-color fa fa-circle"></i>
-              <i pTooltip="{{dato.estado}}" tooltipPosition="left" *ngIf="dato.conIncidencia" class="icon-incidencia icon-estado icon-pointer icon-color fa fa-exclamation-triangle"></i>
-            </div>
-          </ng-template>
-        </p-column>
-        <p-column [sortable]="false" field="acciones" header="Acciones" [filter]="false">
-          <ng-template let-dato="rowData" pTemplate="body">
-            <div class="icon-acciones">
-              <i class=" icon-pointer far fa-edit"></i>
-              <i class="icon-pointer fa fa-eye"></i>
-              <i class="icon-pointer far fa-trash-alt"></i>
-            </div>
-          </ng-template>
-        </p-column>
+  <div *ngIf="buscar == true" class="card mt-3">
+    <div class="card-body p-0">
+      <p-dataTable [(selection)]="selectedDatos" dataKey="nif" selectionMode="multiple" [responsive]="true" #table class="tabla-listado"
+        [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+        <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header"></p-column>
+        <!--<p-column [sortable]="true " field="numColegiado " header="Nº colegiado" filterPlaceholder="&#xf002; "></p-column>
+        <p-column [sortable]="true " field="apellidos " header="Apellidos" filterPlaceholder="&#xf002; "></p-column>
+        <p-column [sortable]="true " field="nombre" header="Nombre" filterPlaceholder="&#xf002; "></p-column>
+        <p-column [sortable]="true " field="fechaIngreso" header="fecha de ingreso" filterPlaceholder="&#xf002; "></p-column>
+        <p-column [sortable]="true " field="estadoColegial" header="Estado colegial" filterPlaceholder="&#xf002; "></p-column>
+        <p-column [sortable]="true " field="residente" header="Residente" filterPlaceholder="&#xf002; "></p-column>
+        <p-column [sortable]="true " field="nombre" header="Nombre" filterPlaceholder="&#xf002; "></p-column>-->
+        <ng-template pTemplate="paginatorLeft">
+          <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+          <label>Mostrar <p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> registros</label>
+        </ng-template>
+
+        <p-footer *ngIf="selectedDatos">
+          <div class="text-right main-button">
+            <button pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="Eliminar"></button>
+            <button (click)="irFichaColegial(selectedDatos)" pButton type="button" label="Enviar"></button>
+          </div>
+        </p-footer>
         </p-dataTable>
     </div>
-  </div>-->
+  </div>
 </div>

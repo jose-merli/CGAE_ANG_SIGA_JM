@@ -51,7 +51,8 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 
 /***NEW modules censo***/
-import { BusquedaColegiadosModule } from './content/censo/busqueda-colegiados/busqueda-colegiados.module';
+import { BusquedaColegiadosModule } from './new-features/censo/busqueda-colegiados/busqueda-colegiados.module';
+import { FichaColegialModule } from './new-features/censo/ficha-colegial/ficha-colegial.module';
 
 @NgModule({
   declarations: [
@@ -93,7 +94,8 @@ import { BusquedaColegiadosModule } from './content/censo/busqueda-colegiados/bu
     routing,
     MenubarModule,
     PanelMenuModule,
-    BusquedaColegiadosModule
+    BusquedaColegiadosModule,
+    FichaColegialModule
   ],
   providers: [
     OldSigaServices,

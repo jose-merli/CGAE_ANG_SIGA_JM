@@ -29,7 +29,8 @@ import { UsingObservable } from 'rxjs/observable/UsingObservable';
 
 
 //new censo
-import { BusquedaColegiadosComponent } from './content/censo/busqueda-colegiados/busqueda-colegiados.component';
+import { BusquedaColegiadosComponent } from './new-features/censo/busqueda-colegiados/busqueda-colegiados.component';
+import { FichaColegialComponent } from './new-features/censo/ficha-colegial/ficha-colegial.component';
 
 const appRoutes: Routes = [
     { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -37,6 +38,7 @@ const appRoutes: Routes = [
 
     // Censo
     { path: 'busquedaColegiados', component: BusquedaColegiadosComponent },
+    { path: 'fichaColegial/:id', component: FichaColegialComponent },
     { path: 'searchNoColegiados', component: SearchNoColegiadosComponent },
     { path: 'certificadosAca', component: CertificadosAcaComponent },
     { path: 'comisionesCargos', component: ComisionesCargosComponent },

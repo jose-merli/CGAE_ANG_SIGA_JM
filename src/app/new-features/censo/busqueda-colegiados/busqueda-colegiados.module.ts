@@ -8,9 +8,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
 import { DataTableModule } from 'primeng/datatable';
-import { MenubarModule } from 'primeng/menubar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DialogModule } from 'primeng/dialog';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TooltipModule } from 'primeng/tooltip';
@@ -31,10 +29,8 @@ import { BusquedaColegiadosComponent } from './busqueda-colegiados.component';
     CheckboxModule,
     ButtonModule,
     DataTableModule,
-    MenubarModule,
     FormsModule,
     ReactiveFormsModule,
-    DialogModule,
     AutoCompleteModule,
     ConfirmDialogModule,
     TooltipModule,

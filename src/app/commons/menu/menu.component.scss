@@ -30,12 +30,12 @@
                             color: white;
                             transition: all .2s;
                             cursor: pointer; 
-                            background: $secondary-color;
+                            background: $primary-color;
                         }
                     }
                     .menu-item-active{
                         color: white;
-                        background:  $secondary-color;
+                        background:  $primary-color;
                     }
 
                     .breadCrumbMenu{                            
@@ -104,13 +104,13 @@
 
         .icono-menu{
             :before{
-                content: "\f060"
+                content: "\f0C9"
             }
         }
 
         .icono-menu-flecha{
             :before{
-                content: "\f00a"
+                content: "\f00D"
             }
         }
 
@@ -119,7 +119,7 @@
 
     @media screen and (max-width: 768px){
          .menu-censo{
-            padding-top: 9rem;
+            padding-top: 7rem;
          }
     }
 
