@@ -1,14 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { MainComponent } from '../../../commons/main-component/main-component.component'
+import { OldSigaServices } from '../../../_services/oldSiga.service'
 
 @Component({
   selector: 'app-certificados-aca',
   templateUrl: './certificados-aca.component.html',
   styleUrls: ['./certificados-aca.component.scss']
 })
-export class CertificadosAcaComponent extends MainComponent {
+export class CertificadosAcaComponent {
 
-  url = this._globals.getBaseUrl() + "/SIGA/Dispatcher.do?proceso=130";
+  url;
+
+  constructor(public sigaServices: OldSigaServices) {
+    this.url = sigaServices.getOldSigaUrl("certificadosAca");
+  }
 
   ngOnInit() {
   }

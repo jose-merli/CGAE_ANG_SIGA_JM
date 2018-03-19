@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { AuthenticationService } from '../../_services/authentication.service'
+import { SigaServices } from '../../_services/siga.service';
 import { Router } from '@angular/router'
+import { LoginCombo } from './login.combo';
 
 
 @Component({
@@ -13,22 +15,29 @@ export class LoginComponent implements OnInit {
 
     form: FormGroup;
 
-    constructor(private fb: FormBuilder, private service: AuthenticationService, private router: Router) { }
+    instituciones: any[];
+    perfiles: any[];
+
+    constructor(private fb: FormBuilder, private service: AuthenticationService, private sigaServices: SigaServices, private router: Router) { }
 
 
 
     onSubmit() { }
 
     ngOnInit() {
+
+        this.sigaServices.get("instituciones").subscribe(n => {
+            this.instituciones = n.get("combooItems");
+        });
         this.form = this.fb.group({
-            tmpLoginInstitucion: new FormControl(),
-            tmpLoginPerfil: new FormControl(),
-            sLetrado: new FormControl(),
+            tmpLoginInstitucion: new FormControl("2000"),
+            tmpLoginPerfil: new FormControl("ADG"),
+            sLetrado: new FormControl("N"),
 
             user: new FormControl(),
-            letrado: new FormControl(),
-            location: new FormControl(),
-            profile: new FormControl(),
+            letrado: new FormControl("N"),
+            location: new FormControl("2000"),
+            profile: new FormControl("ADG"),
 
             posMenu: new FormControl(0),
 
@@ -53,7 +62,7 @@ export class LoginComponent implements OnInit {
 
     submit() {
         this.service.autenticate(this.form.value).subscribe(response => {
-            if (response == 200) {
+            if (response) {
                 this.router.navigate(['/home'])
             } else {
                 this.router.navigate(['/landpage'])
@@ -62,6 +71,19 @@ export class LoginComponent implements OnInit {
     }
 
 
+    onChange(newValue) {
+        this.sigaServices.getPerfil("perfiles", newValue.id).subscribe(n => {
+            this.perfiles = n.get("combooItems");
+        });
+        //console.log(newValue);
+        //let combo = new LoginCombo();
+        //combo.setValue(newValue.id);
+        //this.sigaServices.post("perfilespost", combo).subscribe(n => {
+        //if (n) {
+        //this.perfiles = JSON.parse(n['body']);;
+        //}
+        //});
+    }
 
 
 }

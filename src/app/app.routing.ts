@@ -2,7 +2,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { AuthGuard } from './_guards/auth.guards'
-import { SearchComponent } from './commons/search/search.component';
 import { LoginComponent } from './commons/login/login.component';
 import { HomeComponent } from './features/home/home.component';
 
@@ -31,7 +30,6 @@ import { UsingObservable } from 'rxjs/observable/UsingObservable';
 const appRoutes: Routes = [
     { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
     { path: 'login', component: LoginComponent },
-    { path: 'search', component: SearchComponent },
 
     // Censo
     { path: 'searchColegiados', component: SearchColegiadosComponent },

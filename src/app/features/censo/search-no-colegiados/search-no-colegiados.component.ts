@@ -1,15 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { MainComponent } from '../../../commons/main-component/main-component.component'
+import { OldSigaServices } from '../../../_services/oldSiga.service';
+
 
 @Component({
   selector: 'app-search-no-colegiados',
   templateUrl: './search-no-colegiados.component.html',
   styleUrls: ['./search-no-colegiados.component.scss']
 })
-export class SearchNoColegiadosComponent extends MainComponent {
+export class SearchNoColegiadosComponent {
 
-  url = this._globals.getBaseUrl() + "/SIGA/Dispatcher.do?proceso=2"
+  url;
 
+  constructor(public sigaServices: OldSigaServices) {
+    this.url = sigaServices.getOldSigaUrl("busquedaNoColegiados");
+  }
   ngOnInit() {
   }
 
