@@ -141,8 +141,9 @@ label{
         .icon-ficha{
             font-size: 2.5rem;
             color: $grey4;
+            cursor: inherit;
         }
-        .img-colegiado{
+        .img-colegiado,.icon-colegiado{
             text-align: center;
            
             img{
@@ -175,7 +176,7 @@ label{
         }
          .header-ficha-open{
              padding-left: .67rem;
-            .img-colegiado{
+            .img-colegiado,.icon-colegiado{
                 text-align: center;
                 display: inline-block;
                 margin-right: .5rem;
@@ -216,9 +217,18 @@ label{
                    
             .img-colegiado{
                 border-radius: 0%;
-                
+                width: 10rem;
+                position: relative;
+                .edit{
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                    padding: .5rem;
+                    color: white;
+                    cursor: pointer;
+                }
                 img{
-                    width: 10rem;
+                    width: 100%;
                 }
             }
         }
@@ -342,7 +352,9 @@ label{
    .ui-datatable-footer{
        padding: 0.75rem 1.25rem;
    }
-    
+    .ui-datatable .ui-datatable-data>tr>td.ui-editable-column.ui-cell-editing{
+        padding: .5rem;
+    }
 }
 
 .main-button{ 
@@ -378,6 +390,10 @@ label{
 
 .ui-dropdown-filter-container{
     color: $grey1;
+}
+
+.customCursor td{
+    cursor: cell;
 }
 
 

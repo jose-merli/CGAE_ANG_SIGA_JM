@@ -27,17 +27,33 @@ export class FichaColegialComponent implements OnInit {
   fichasActivas: Array<any> = [];
   todo: boolean = false;
 
-  // selectedDatos: any = []
+  selectedDatos: any = []
 
   showDatosGenerales: boolean = true;
   showDatosColegiales: boolean = false;
   showDatosFacturacion: boolean = false;
   rowsPerPage: any = [];
+  showAll: boolean = false;
 
   selectedItem: number = 4;
   selectedDoc: string = 'NIF'
+  newDireccion: boolean = false;
+
+  editar: boolean = false
+
   @ViewChild('table')
   table
+
+  fichasPosibles = [
+    {
+      key: "generales",
+      activa: false
+    },
+    {
+      key: "direcciones",
+      activa: false
+    }
+  ]
 
 
   constructor(private formBuilder: FormBuilder, private router: Router, private changeDetectorRef: ChangeDetectorRef) {
@@ -79,6 +95,7 @@ export class FichaColegialComponent implements OnInit {
 
     this.datosDirecciones = [
       {
+        id: 0,
         tipoDireccion: 'CensoWeb, Despacho, Facturación, Guardia, Guía Judicial, Pública, Revista, Traspaso a organos judiciales',
         direccion: 'C/ CARDENAL CISNEROS 42-1º',
         cp: '03660',
@@ -145,39 +162,61 @@ export class FichaColegialComponent implements OnInit {
   // }
 
 
-  abrirFicha(ref) {
-    this.fichasActivas.push(ref)
-    /*this.mostrarPanel = ref;*/
-    console.log(ref)
+  abrirFicha(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    fichaPosible.activa = true;
   }
 
-  cerrarFicha(ref) {
-    let indexBorrar;
-    for (let i = 0; i < this.fichasActivas.length; i++) {
-      if (this.fichasActivas[i] === ref) {
-        indexBorrar = i;
-        break
-      }
-    }
-
-    if (indexBorrar >= 0) {
-      this.fichasActivas.splice(indexBorrar, 1);
-    }
-
-    /*this.mostrarPanel = null;*/
+  cerrarFicha(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    fichaPosible.activa = false;
   }
 
-  esFichaActiva(ref) {
+  esFichaActiva(key) {
 
-    for (let ficha of this.fichasActivas) {
-      if (ficha === ref) {
-        return true;
-      }
-    }
-    return false;
-
-    /*return mostrarPanel === ref*/
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    return fichaPosible.activa;
   }
+
+  onAbrirTodoClick() {
+    this.showAll = !this.showAll
+    this.fichasPosibles.forEach((ficha: any) => {
+      ficha.activa = this.showAll;
+    })
+  }
+
+  getFichaPosibleByKey(key): any {
+    let fichaPosible = this.fichasPosibles.filter((elto) => {
+      return elto.key === key;
+    })
+    if (fichaPosible && fichaPosible.length) {
+      return fichaPosible[0];
+    }
+    return {}
+  }
+
+  addDireccion() {
+    this.datosDirecciones = [...this.datosDirecciones, {
+      tipoDireccion: '',
+      direccion: '',
+      new: true,
+      cp: '',
+      poblacion: '',
+      telefono: '',
+      fax: '',
+      movil: '',
+      email: '',
+      preferente: ''
+    }];
+    this.newDireccion = true;
+
+  }
+
+
+  isEditar() {
+    this.editar = true;
+  }
+
 
 
 

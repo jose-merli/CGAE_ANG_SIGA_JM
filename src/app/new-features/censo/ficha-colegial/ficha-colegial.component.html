@@ -4,14 +4,13 @@
     <p>Datos generales: María José Abella Mestanza | Nº Colegiado: 1170 (Baja Colegial)</p>
   </div>
   <div class="breadCrumb d-flex justify-content-between">
-    <label>Censo <i class="fa fa-angle-right"></i> Ficha <i class="fa fa-angle-right"></i> Facturaciones <i class="fa fa-angle-right"></i>Facturación</label>
-    <label class="desplegar-todo">Desplegar todo <i (click)="abrirFicha(direcciones) || abrirFicha(generales)" *ngIf="!esFichaActiva(direcciones) && !esFichaActiva(generales)" class="fa fa-angle-down"></i>
-    <i (click)="cerrarFicha(direcciones) || cerrarFicha(generales)" *ngIf="esFichaActiva(direcciones) || esFichaActiva(generales)" class="fa fa-angle-up"></i></label>
+    <label>Censo <i class="fa fa-angle-right"></i> Ficha colegial </label>
+    <label class="desplegar-todo">Desplegar todo <i (click)="onAbrirTodoClick()" class="fa" [ngClass]="{'fa-angle-down':!showAll,'fa-angle-up':showAll}"></i></label>
   </div>
   <!--DATOS GENERALES-->
-  <div #generales class="card">
+  <div class="card">
     <div class="card-header header-ficha">
-      <div *ngIf="!esFichaActiva(generales)" class="form-row">
+      <div *ngIf="!esFichaActiva('generales')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
             <img src="../../assets/images/img-colegiado.PNG">
@@ -27,26 +26,149 @@
             <label>Nombre: <span>María José Abella Mestanza</span></label>
             <label>Fecha nacimiento: <span>18/03/1970</span></label>
             <label>Fecha alta: <span>04/02/1997</span></label>
-            <i *ngIf="!esFichaActiva(generales)" (click)="abrirFicha(generales)" class="fa fa-angle-down float-right"></i>
+            <i *ngIf="!esFichaActiva('generales')" (click)="abrirFicha('generales')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
-      <div *ngIf="esFichaActiva(generales)" class=" header-ficha-open d-flex justify-content-start align-items-center">
+      <div *ngIf="esFichaActiva('generales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
           <img src="../../assets/images/img-colegiado.PNG">
         </div>
         <label class="title-ficha">Datos generales</label>
-        <i (click)="cerrarFicha(generales)" class="fa fa-angle-up ml-auto"></i>
+        <i (click)="cerrarFicha('generales')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <!--cuerpo datos generales-->
 
-    <div *ngIf="esFichaActiva(generales)" class="card-body card-body-ficha">
+    <div *ngIf="esFichaActiva('generales')" class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque col-lg-3 col-md-3">
           <label class="d-block">Foto</label>
           <div class="img-colegiado my-2">
             <img src="../../assets/images/img-colegiado.PNG">
+            <div class="fa fa-pencil-alt edit"></div>
+          </div>
+          <!--<div class="main-button mb-3">
+            <button pButton type="button" icon="fae fa-image" iconPos="left" label="Subir foto"></button>
+          </div>-->
+          <p-checkbox binary="true" label="Permitir utilizar mi foto de Guía Colegial" name="groupname "></p-checkbox>
+        </div>
+        <div class="bloque col-lg-5 col-md-5">
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Identificación</label>
+              <input value="38475777C" type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label></label>
+              <p-dropdown placeholder="NIF" class="select-form" [(ngModel)]="selectedDoc" [options]="select"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Apellidos</label>
+              <input value="Abella" type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label></label>
+              <input value="Mestanza" type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-12 col-md-12">
+              <label>Nombre</label>
+              <input value="María José" type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 form-group-date">
+              <label>Fecha nacimiento</label>
+              <p-calendar [locale]="es" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+            </div>
+            <div class="d-flex mb-0 align-items-center form-group col-lg-6 col-md-6">
+              <label>Edad: 66</label>
+            </div>
+            <div class="form-group col-lg-12 col-md-12">
+              <label>Lugar de nacimiento</label>
+              <input value="España" type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Tratamiento</label>
+              <p-dropdown placeholder="Mujer" class="select-form"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label></label>
+              <p-dropdown placeholder="Doña" class="select-form"></p-dropdown>
+            </div>
+          </div>
+        </div>
+
+        <div class="bloque col-lg-4 col-md-4">
+          <div class="form-row">
+            <div class="form-group col-lg-8 col-md-8">
+              <label>Situación general: Activo</label>
+            </div>
+            <div class="form-group col-lg-8 col-md-8">
+              <label>Alta en el sistema: 10/02/1984</label>
+            </div>
+            <div class="form-group col-lg-8 col-md-8">
+              <label>Idioma de preferencia</label>
+              <p-dropdown class="select-form" placeholder="Castellano"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-12 col-md-12">
+              <label>Cuenta contable</label>
+              <input value="1170" type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-12 col-md-12">
+              <p-checkbox binary="true" label="No exportar datos (LOPD)" name="groupname " class="ml-0"></p-checkbox>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="esFichaActiva('generales')" class="card-footer">
+      <div class="text-right main-button ">
+        <button (click)="cerrarFicha('generales')" pButton type="button " icon="far fa-save " iconPos="left" label="Guardar"></button>
+        <button (click)="cerrarFicha('generales')" pButton type="button " icon="fa fa-redo " iconPos="left" label="Restablecer"></button>
+      </div>
+    </div>
+  </div>
+  <!--END DATOS GENERALES-->
+
+
+  <!--DATOS COLEGIALES-->
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div *ngIf="!esFichaActiva('generales')" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha">Datos colegiales</label>
+            <label class="registros-ficha">(0 registros)</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>NIF: <span>21489943J</span></label>
+            <label>Nombre: <span>María José Abella Mestanza</span></label>
+            <label>Fecha nacimiento: <span>18/03/1970</span></label>
+            <label>Fecha alta: <span>04/02/1997</span></label>
+            <i *ngIf="!esFichaActiva('generales')" (click)="abrirFicha('generales')" class="fa fa-angle-down float-right"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="esFichaActiva('generales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <img src="../../assets/images/img-colegiado.PNG">
+        </div>
+        <label class="title-ficha">Datos colegiales</label>
+        <i (click)="cerrarFicha('generales')" class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <!--cuerpo datos colegiales-->
+
+    <div *ngIf="esFichaActiva('generales')" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-3 col-md-3">
+          <label class="d-block">Foto</label>
+          <div class="icon-colegiado my-2">
+            <i class="far fa-address-book icon-ficha"></i>
           </div>
           <div class="main-button mb-3">
             <button pButton type="button" icon="fae fa-image" iconPos="left" label="Subir foto"></button>
@@ -120,47 +242,21 @@
         </div>
       </div>
     </div>
-    <div *ngIf="esFichaActiva(generales)" class="card-footer">
+    <div *ngIf="esFichaActiva('generales')" class="card-footer">
       <div class="text-right main-button ">
-        <button (click)="cerrarFicha(generales)" pButton type="button " icon="far fa-save " iconPos="left" label="Guardar"></button>
-        <button (click)="cerrarFicha(generales)" pButton type="button " icon="fa fa-redo " iconPos="left" label="Restablecer"></button>
+        <button (click)="cerrarFicha('generales')" pButton type="button " icon="far fa-save " iconPos="left" label="Guardar"></button>
+        <button (click)="cerrarFicha('generales')" pButton type="button " icon="fa fa-redo " iconPos="left" label="Restablecer"></button>
       </div>
     </div>
   </div>
-  <!--END DATOS GENERALES-->
-
-
-  <div class="card">
-    <div class="card-header header-ficha">
-      <div class="form-row">
-        <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
-            <i class="fa fa-address-book icon-ficha"></i>
-          </div>
-        </div>
-        <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-end mb-1">
-            <label class="mr-auto title-ficha">Datos colegiales</label>
-            <label class="registros-ficha">(2 registros)</label>
-          </div>
-          <div class="d-flex  justify-content-between">
-            <label>Nº Colegiado: <span>4688</span></label>
-            <label>Situación: <span>Ejerciente residente</span></label>
-            <label>Fecha incorporación: <span>04/02/2018</span></label>
-            <label>Residente: <span>Sí</span></label>
-            <i class="fa fa-angle-down float-right"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!--END DATOS COLEGIALES-->
 
   <!--DIRECCIONES-->
-  <div #direcciones class="card">
+  <div class="card">
     <div class="card-header header-ficha">
-      <div *ngIf="!esFichaActiva(direcciones)" class="form-row">
+      <div *ngIf="!esFichaActiva('direcciones')" class="form-row">
         <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
+          <div class="icon-colegiado">
             <i class="far fa-map icon-ficha"></i>
           </div>
         </div>
@@ -169,82 +265,92 @@
             <label class="mr-auto title-ficha">Direcciones</label>
             <label class="registros-ficha">(0 registros)</label>
           </div>
-          <div *ngFor="let opcion of datosDirecciones" class="d-flex justify-content-between">
-            <label>Dirección postal: <span>{{opcion.cp}}</span></label>
-            <label>Preferente: <span>{{opcion.preferente}}</span></label>
-            <label>Fecha nacimiento: <span>{{opcion.email}}</span></label>
-            <label>Fecha alta: <span>{{opcion.movil}}</span></label>
-            <i *ngIf="!esFichaActiva(direcciones)" (click)="abrirFicha(direcciones)" class="fa fa-angle-down float-right"></i>
+          <div *ngFor="let opcion of datosDirecciones">
+            <div class="d-flex justify-content-between" *ngIf="opcion.id === 0">
+              <label>Dirección postal: <span >{{opcion.cp}}</span></label>
+              <label>Preferente: <span>{{opcion.preferente}}</span></label>
+              <label>Fecha nacimiento: <span>{{opcion.email}}</span></label>
+              <label>Fecha alta: <span>{{opcion.movil}}</span></label>
+              <i *ngIf="!esFichaActiva('direcciones')" (click)="abrirFicha('direcciones')" class="fa fa-angle-down float-right"></i>
+            </div>
           </div>
         </div>
       </div>
-      <div *ngIf="esFichaActiva(direcciones)" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
+      <div *ngIf="esFichaActiva('direcciones')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="icon-colegiado">
           <i class="far fa-map icon-ficha"></i>
         </div>
         <label class="title-ficha">Direcciones</label>
-        <i (click)="cerrarFicha(direcciones)" class="fa fa-angle-up ml-auto"></i>
+        <i (click)="cerrarFicha('direcciones')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <!--cuerpo direcciones-->
 
-    <div *ngIf="esFichaActiva(direcciones)" class="card-body p-0 card-body-ficha">
-      <p-dataTable [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true" #table class="tabla-listado" [value]="datosDirecciones"
+    <div *ngIf="esFichaActiva('direcciones')" class="card-body p-0 card-body-ficha">
+      <p-dataTable (onRowSelect)="isEditar()" [editable]="true" [responsive]="true" #table class="tabla-listado" [value]="datosDirecciones"
         [sortOrder]="1" paginatorPosition="both" [rows]="selectedItem">
-        <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header"></p-column>
+        <p-column [editable]="true" *ngFor="let col of cols" [field]="col.field" [header]="col.header">
+          <ng-template let-col let-car="rowData" pTemplate="body">
+            <!--<p-dropdown [(ngModel)]="car[col.field]"  [autoWidth]="false" [style]="{'width':'100%'}" required="true"
+              appendTo="body"></p-dropdown>-->
+            <span>{{car[col.field]}}</span>
+            <input *ngIf="car[col.field] == '' " [value]="car[col.field]" type="text" class="form-control" pInputText>
+          </ng-template>
+
+        </p-column>
         </p-dataTable>
     </div>
-    <div *ngIf="esFichaActiva(direcciones)" class="card-footer">
-      <div class="text-right main-button ">
-        <button (click)="cerrarFicha(direcciones)" pButton type="button " icon="fa fa-plus " iconPos="left" label="Nuevo"></button>
-        <button (click)="cerrarFicha(direcciones)" pButton type="button " icon="far fa-save " iconPos="left" label="Guardar"></button>
+    <div *ngIf="esFichaActiva( 'direcciones')" class="card-footer ">
+      <div class="text-right main-button">
+        <button (click)=" addDireccion()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"></button>
+        <button (click)="cerrarFicha( 'direcciones') " pButton type="button " icon="far fa-save " iconPos="left" label="Guardar"></button>
       </div>
     </div>
   </div>
   <!--END DIRECCIONES-->
-  <div class="card">
-    <div class="card-header header-ficha">
-      <div class="form-row">
-        <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
-            <i class="far fa-credit-card icon-ficha"></i>
+  <div class="card ">
+    <div class="card-header header-ficha ">
+      <div class="form-row ">
+        <div class="col-lg-1 col-md-2 ">
+          <div class="icon-colegiado ">
+            <i class="far fa-credit-card icon-ficha "></i>
           </div>
         </div>
-        <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-end mb-1">
-            <label class="mr-auto title-ficha">Datos bancarios</label>
-            <label class="registros-ficha">(0 registros)</label>
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-end mb-1 ">
+            <label class="mr-auto title-ficha ">Datos bancarios</label>
+            <label class="registros-ficha ">(0 registros)</label>
           </div>
-          <div class="d-flex  justify-content-between">
+          <div class="d-flex justify-content-between ">
             <label>Titular: <span>María José Abella Mestanza</span></label>
             <label>Cuenta: <span>ES78 2038 ... ... ... 2909</span></label>
             <label>Uso: <span>Abono/Cargo</span></label>
             <label>Verificado: <span>Sí</span></label>
-            <i class="fa fa-angle-down float-right"></i>
+            <i class="fa fa-angle-down float-right "></i>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="card">
-    <div class="card-header header-ficha">
-      <div class="form-row">
-        <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
-            <i class="fa fa-certificate icon-ficha"></i>
+  <div class="card ">
+    <div class="card-header header-ficha ">
+      <div class="form-row ">
+        <div class="col-lg-1 col-md-2 ">
+          <div class="img-colegiado ">
+            <i class="fa fa-certificate icon-ficha "></i>
           </div>
         </div>
-        <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-end mb-1">
-            <label class="mr-auto title-ficha">Datos curriculares</label>
-            <label class="registros-ficha">(0 registros)</label>
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-end mb-1 ">
+            <label class="mr-auto title-ficha ">Datos curriculares</label>
+            <label class="registros-ficha ">(0 registros)</label>
           </div>
-          <div class="d-flex  justify-content-between">
+          <div class="d-flex justify-content-between ">
             <label>Apunte: <span>Listados colegiales</span></label>
             <label>Periodo: <span>01/01/2012 - 31/12(2012</span></label>
             <label>Descripción: <span>04/02/2018</span></label>
             <label>Verificado: <span>No</span></label>
-            <i class="fa fa-angle-down float-right"></i>
+            <i class="fa fa-angle-down float-right "></i>
           </div>
         </div>
       </div>

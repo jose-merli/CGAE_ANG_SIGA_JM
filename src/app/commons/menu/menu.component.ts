@@ -92,7 +92,7 @@ export class MenuComponent implements OnInit {
       {
         label: 'Certificados',
         items: [
-          { title: 'Censo' },
+          { label: 'Censo' },
           { label: 'Solicitud Certificado' },
           { label: 'Solicitud Comunicación y Diligencia' },
           { label: 'Gestión Solicitudes' },

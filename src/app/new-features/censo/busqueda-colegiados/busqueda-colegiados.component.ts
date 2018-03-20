@@ -31,6 +31,7 @@ export class BusquedaColegiadosComponent implements OnInit {
   showDatosColegiales: boolean = false;
   showDatosFacturacion: boolean = false;
   rowsPerPage: any = [];
+  selectMultiple: boolean = false;
 
   buscar: boolean = false;
 
@@ -77,7 +78,7 @@ export class BusquedaColegiadosComponent implements OnInit {
     this.datos = [
       { nif: '239123', numColegiado: '6578', apellidos: 'Andrés MAaestre', nombre: 'Ana', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
       { nif: '12122', numColegiado: '6578', apellidos: 'Abellan sirvent', nombre: 'Javier', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
-      { nif: '213223', numColegiado: '6578', apellidos: 'Andrés MAaestre', nombre: 'Ana', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
+      { nif: '213223', numColegiado: '5454', apellidos: 'Andrés MAaestre', nombre: 'Ana', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
       { nif: '53434', numColegiado: '6578', apellidos: 'Abellan sirvent', nombre: 'Javier', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
       { nif: '54534', numColegiado: '6578', apellidos: 'Andrés MAaestre', nombre: 'Ana', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
       { nif: '554331', numColegiado: '6578', apellidos: 'Abellan sirvent', nombre: 'Javier', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
@@ -152,11 +153,19 @@ export class BusquedaColegiadosComponent implements OnInit {
 
 
   irFichaColegial(id) {
-    var ir = null;
-    if (id && id.length > 0) {
-      ir = id[0].numColegiado
+    if (!this.selectMultiple) {
+      var ir = null;
+      if (id && id.length > 0) {
+        ir = id[0].numColegiado
+      }
+      this.router.navigate(['/fichaColegial', ir]);
     }
-    this.router.navigate(['/fichaColegial', ir]);
+
+  }
+
+  isSelectMultiple() {
+    this.selectMultiple = !this.selectMultiple;
+    console.log(this.selectMultiple)
   }
 
 
