@@ -8,8 +8,9 @@
         <tr>
             <td class="labelText">Institución</td>
             <td>
-                <select formControlName="tmpLoginInstitucion" style="width:300px">
-                    <option *ngFor="let i of instituciones" [ngValue]="i.value">{{ i.name }}</option>
+                <select formControlName="tmpLoginInstitucion" style="width:300px" (ngModelChange)="onChange($event)">
+                    <option value="" selected></option>
+                    <option *ngFor="let i of instituciones" [ngValue]="i">{{ i.value }}</option>
                 </select>
             </td>
             <td valign="middle" align="center">
@@ -30,13 +31,7 @@
             <td class="labelText">Perfil</td>
             <td colspan="2">
                 <select formControlName="tmpLoginPerfil" style="width:300px;width:300px;" size="20">
-                    <option value="ABG">Abogado</option>
-                    <option value="ADM">Administrador</option>
-                    <option value="ADG" selected="">Administrador General</option>
-                    <option value="CJG">Comisión Justicia Gratuita</option>
-                    <option value="NCL">Nuevo Colegiado</option>
-                    <option value="AGE">Personal Administrativo</option>
-                    <option value="SAC">Sin Acceso</option>
+                    <option *ngFor="let i of perfiles" [ngValue]="i.value">{{ i.value }}</option>
                 </select>
             </td>
         </tr>

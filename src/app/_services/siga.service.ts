@@ -11,6 +11,9 @@ export class SigaServices {
     endpoints = {
         testDb: "db",
         login: "login",
+        menu: "menu",
+        instituciones: "instituciones",
+        perfiles: "perfiles",
         diccionarios: "diccionarios"
     }
 
@@ -27,6 +30,25 @@ export class SigaServices {
 
     getNewSigaUrl() {
         return environment.newSigaUrl;
+    }
+
+
+    getPerfil(service: string, institucion: string): Observable<any> {
+
+        return this.http.get(environment.newSigaUrlCertificate + this.endpoints[service] + "?institucion=" + institucion)
+            .map((response) => {
+                return response;
+            })
+    }
+
+    post(service: string, body: any): Observable<any> {
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+        });
+        return this.http.post(environment.newSigaUrl + this.endpoints[service], body, { headers: headers, observe: 'response', responseType: 'text' }).map((response) => {
+            return response;
+        })
+
     }
 
 }
