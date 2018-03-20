@@ -2,3 +2,8 @@ iframe {
   margin: 0 auto;
   border: none;
 }
+
+#mainWorkArea{
+  /* min-height: 500px; */
+  width: 100%;
+}

@@ -46,6 +46,7 @@ export class MenubarComponent {
       {
         label: 'Censo',
         icon: 'fa-file-o',
+        style: 'menu-item-header',
         items: [
           {
             label: 'Buscar Colegiados',
@@ -76,10 +77,14 @@ export class MenubarComponent {
               },
             ]
           },
-          { label: 'Solicitudes Incorporación',
-            routerLink: 'solicitudesIncorporacion' },
-          { label: 'Nueva incorporación',
-            routerLink: 'nuevaIncorporacion' },
+          {
+            label: 'Solicitudes Incorporación',
+            routerLink: 'solicitudesIncorporacion'
+          },
+          {
+            label: 'Nueva incorporación',
+            routerLink: 'nuevaIncorporacion'
+          },
           {
             label: 'Busqueda Sanciones',
             routerLink: 'busquedaSanciones'
@@ -87,12 +92,18 @@ export class MenubarComponent {
           {
             label: 'Maestros y Mantenimientos',
             items: [
-              { label: 'Documentación Solicitudes',
-                routerLink: 'documentacionSolicitudes' },
-              { label: 'Mantenimiento Grupos Fijos',
-                routerLink: 'mantenimientoGruposFijos' },
-              { label: 'Mantenimiento Mandatos',
-                routerLink: 'mantenimientoMandatos' }
+              {
+                label: 'Documentación Solicitudes',
+                routerLink: 'documentacionSolicitudes'
+              },
+              {
+                label: 'Mantenimiento Grupos Fijos',
+                routerLink: 'mantenimientoGruposFijos'
+              },
+              {
+                label: 'Mantenimiento Mandatos',
+                routerLink: 'mantenimientoMandatos'
+              }
             ]
           },
           //{ separator: true },

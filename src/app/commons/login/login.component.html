@@ -1,0 +1,155 @@
+<form [formGroup]='form'>
+    <br>
+
+    <p class="titulos" style="text-align:center">BIENVENIDO AL SISTEMA DE GESTIÓN DE LA ABOGACÍA (S.I.G.A)</p>
+
+
+    <table align="center" class="table-login">
+        <tr>
+            <td class="labelText">Institución</td>
+            <td>
+                <select formControlName="tmpLoginInstitucion" style="width:300px">
+                    <option value="" selected=""></option>
+                    <option value="2037">A CORUÑA</option>
+                    <option value="2001">ALAVA</option>
+                    <option value="2002">ALBACETE (En producción: 23/09/14)</option>
+                    <option value="2003">ALCALÁ DE HENARES (En producción: 11/09/07)</option>
+                    <option value="2004">ALCOY (En producción: 05/07/10)</option>
+                    <option value="2005">ALICANTE (En producción: 30/06/08)</option>
+                    <option value="2006">ALMERÍA (En producción: 20/09/10)</option>
+                    <option value="2007">ALZIRA</option>
+                    <option value="2008">ANTEQUERA (En producción: 08/02/08)</option>
+                    <option value="2009">AVILA (En producción: 22/05/13)</option>
+                    <option value="2010">BADAJOZ (En producción: 29/08/08)</option>
+                    <option value="2011">BALEARES (En producción: 11/04/07)</option>
+                    <option value="2012">BARCELONA</option>
+                    <option value="2013">BURGOS (En producción: 13/07/09)</option>
+                    <option value="3003">C.ANDALUZ (En producción: 06/08/07)</option>
+                    <option value="3010">C.ARAGÓN</option>
+                    <option value="3009">C.CANARIO</option>
+                    <option value="3007">C.CASTILLA LA MANCHA</option>
+                    <option value="3006">C.CASTILLA Y LEÓN</option>
+                    <option value="3001">C.CATALUNYA (En producción: 20/03/13)</option>
+                    <option value="3005">C.GALEGA</option>
+                    <option value="3008">C.MADRID</option>
+                    <option value="3004">C.VALENCI (En producción: 02/08/07)</option>
+                    <option value="2014">CÁCERES (En producción: 01/07/08)</option>
+                    <option value="2015">CÁDIZ</option>
+                    <option value="2016">CANTABRIA (En producción: 29/01/08)</option>
+                    <option value="2017">CARTAGENA (En producción: 13/06/12)</option>
+                    <option value="2018">CASTELLÓN (En producción: 22/07/09)</option>
+                    <option value="2019">CEUTA (En producción: 14/09/10)</option>
+                    <option value="2020">CIUDAD REAL (En producción: 27/11/09)</option>
+                    <option value="2500">COMISION ASTURIANA (En producción: 07/04/14)</option>
+                    <option value="2501">COMISION MURCIANA (En producción: 06/05/16)</option>
+                    <option value="2502">Comisión Toledo (En producción: 14/11/16)</option>
+                    <option value="2021">CÓRDOBA (En producción: 01/12/09)</option>
+                    <option value="2022">CUENCA</option>
+                    <option value="2023">ELCHE (En producción: 23/06/10)</option>
+                    <option value="2024">ESTELLA (En producción: 01/04/08)</option>
+                    <option value="3002">EUSKAL K.</option>
+                    <option value="2025">FERROL (En producción: 28/05/12)</option>
+                    <option value="2026">FIGUERES (En producción: 22/04/08)</option>
+                    <option value="2000">GENERAL (En producción: 11/05/07)</option>
+                    <option value="2027">GIJÓN (En producción: 02/09/08)</option>
+                    <option value="2032">GIPUZKOA (En producción: 12/09/11)</option>
+                    <option value="2028">GIRONA</option>
+                    <option value="2029">GRANADA</option>
+                    <option value="2030">GRANOLLERS (En producción: 28/02/08)</option>
+                    <option value="2031">GUADALAJARA (En producción: 02/07/10)</option>
+                    <option value="2033">HUELVA</option>
+                    <option value="2034">HUESCA (En producción: 22/11/11)</option>
+                    <option value="3500">IT-CGAE (En producción: 07/08/07)</option>
+                    <option value="2035">JAÉN (En producción: 12/03/08)</option>
+                    <option value="2036">JEREZ DE LA FRONTERA (En producción: 09/10/08)</option>
+                    <option value="2058">LA RIOJA (En producción: 06/02/12)</option>
+                    <option value="2038">LANZAROTE (En producción: 01/04/08)</option>
+                    <option value="2039">LAS PALMAS</option>
+                    <option value="2040">LEÓN (En producción: 06/06/08)</option>
+                    <option value="2041">LLEIDA (En producción: 07/05/08)</option>
+                    <option value="2042">LORCA</option>
+                    <option value="2043">LUCENA (En producción: 19/02/08)</option>
+                    <option value="2044">LUGO (En producción: 26/04/12)</option>
+                    <option value="2045">MADRID</option>
+                    <option value="2046">MÁLAGA</option>
+                    <option value="2047">MANRESA (En producción: 20/11/07)</option>
+                    <option value="2048">MATARÓ (En producción: 06/03/08)</option>
+                    <option value="2049">MELILLA (En producción: 11/04/07)</option>
+                    <option value="2050">MURCIA (En producción: 21/05/09)</option>
+                    <option value="2051">ORIHUELA (En producción: 10/06/08)</option>
+                    <option value="2052">OURENSE</option>
+                    <option value="2053">OVIEDO (En producción: 10/05/12)</option>
+                    <option value="2054">PALENCIA (En producción: 28/02/08)</option>
+                    <option value="2055">PAMPLONA (En producción: 09/03/09)</option>
+                    <option value="2056">PONTEVEDRA</option>
+                    <option value="2057">REUS (En producción: 28/01/08)</option>
+                    <option value="2059">SABADELL (En producción: 13/02/08)</option>
+                    <option value="2060">SALAMANCA (En producción: 19/12/11)</option>
+                    <option value="2061">SANT FELIU (En producción: 28/01/08)</option>
+                    <option value="2062">SANTA CRUZ DE LA PALMA (En producción: 01/04/08)</option>
+                    <option value="2063">SANTA CRUZ DE TENERIFE (En producción: 06/04/09)</option>
+                    <option value="2064">SANTIAGO (En producción: 02/07/10)</option>
+                    <option value="2065">SEGOVIA (En producción: 31/05/10)</option>
+                    <option value="2066">SEVILLA</option>
+                    <option value="2067">SORIA</option>
+                    <option value="2068">SUECA (En producción: 28/05/14)</option>
+                    <option value="2069">TAFALLA (En producción: 30/01/08)</option>
+                    <option value="2070">TALAVERA DE LA REINA</option>
+                    <option value="2071">TARRAGONA</option>
+                    <option value="2072">TERRASSA (En producción: 03/12/08)</option>
+                    <option value="2073">TERUEL</option>
+                    <option value="2074">TOLEDO (En producción: 25/08/16)</option>
+                    <option value="2075">TORTOSA (En producción: 19/02/08)</option>
+                    <option value="2077">TUDELA (En producción: 22/02/08)</option>
+                    <option value="2076">VALENCIA</option>
+                    <option value="2078">VALLADOLID (En producción: 20/06/08)</option>
+                    <option value="2079">VIC (En producción: 16/04/08)</option>
+                    <option value="2080">VIGO</option>
+                    <option value="2081">VIZCAYA</option>
+                    <option value="2082">ZAMORA</option>
+                    <option value="2083">ZARAGOZA (En producción: 13/03/09)</option>
+
+                </select>
+            </td>
+            <td valign="middle" align="center">
+                <button (click)='submit()' title="Entrar con los datos de los combos">Entrar</button>
+                <!-- <input type="button" class="button" value="Entrar" onClick="entrar()" > -->
+            </td>
+        </tr>
+        <tr>
+            <td class="labelText">¿Letrado?</td>
+            <td colspan="2">
+                <select formControlName="sLetrado" class="boxCombo" style="width:300px;">
+                    <option value=N>NO, no soy Letrado</option>
+                    <option value=S>SÍ, soy Letrado</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="labelText">Perfil</td>
+            <td colspan="2">
+                <select formControlName="tmpLoginPerfil" style="width:300px;width:300px;" size="20">
+                    <option value="ABG">Abogado</option>
+                    <option value="ADM">Administrador</option>
+                    <option value="ADG" selected="">Administrador General</option>
+                    <option value="CJG">Comisión Justicia Gratuita</option>
+                    <option value="NCL">Nuevo Colegiado</option>
+                    <option value="AGE">Personal Administrativo</option>
+                    <option value="SAC">Sin Acceso</option>
+                </select>
+            </td>
+        </tr>
+
+    </table>
+
+
+    <!-- <input type="hidden" formControlName="tmpLoginInstitucion"> -->
+    <input type="hidden" formControlName="location">
+    <!-- <input type="hidden" formControlName="sLetrado"> -->
+    <input type="hidden" formControlName="user">
+    <input type="hidden" formControlName="profile">
+    <!-- <input type="hidden" formControlName="tmpLoginPerfil"> -->
+    <input type="hidden" formControlName="letrado">
+    <input type="hidden" formControlName="posMenu">
+
+</form>
