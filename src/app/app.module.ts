@@ -21,7 +21,6 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './commons/header/header.component';
 import { MyIframeComponent } from './commons/my-iframe/my-iframe.component';
-import { MenubarComponent } from './commons/menubar/menubar.component';
 import { MenuComponent } from './commons/menu/menu.component';
 import { HomeComponent } from './features/home/home.component';
 import { LoginComponent } from './commons/login/login.component';
@@ -54,7 +53,6 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
     AppComponent,
     TranslatePipe,
     MyIframeComponent,
-    MenubarComponent,
     MenuComponent,
     LoginComponent,
     HeaderComponent,
