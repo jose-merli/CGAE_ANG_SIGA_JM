@@ -7,8 +7,7 @@ export const environment = {
   production: false,
   protocol: '',
   env: '',
-  baseHref: '/',
-  oldSigaUrl: 'http://vmdxdarsap028.cloud.es.deloitte.com/SIGA/',
-  newSigaUrl: 'http://localhost:7001/siga-web/',
-  newSigaUrlCertificate: 'http://sigademo.redabogacia.org.local/siga-web/'
+  baseHref: '/ang/',
+  oldSigaUrl: 'https://7plus.demo.deloitte.es/SIGA/',
+  newSigaUrl: 'http://localhost:7001/siga-web/'
 };

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpResponse, HttpParams, HttpResponseBase, HttpBackend } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse, HttpParams, HttpResponseBase } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import 'rxjs/add/operator/map'
@@ -14,17 +14,15 @@ export class SigaServices {
         menu: "menu",
         instituciones: "instituciones",
         perfiles: "perfiles",
-        perfilespost: "perfilespost"
-
+        diccionarios: "diccionarios"
     }
 
-    constructor(private http: HttpClient, handler: HttpBackend) {
-        this.http = new HttpClient(handler);
+    constructor(private http: HttpClient) {
     }
 
     get(service: string): Observable<any> {
 
-        return this.http.get(environment.newSigaUrlCertificate + this.endpoints[service])
+        return this.http.get(environment.newSigaUrl + this.endpoints[service])
             .map((response) => {
                 return response;
             })

@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment'
+import { Observable, Subscriber } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpResponse, HttpParams, HttpResponseBase } from '@angular/common/http';
 
 @Injectable()
 export class OldSigaServices {
@@ -21,10 +23,41 @@ export class OldSigaServices {
 
     }
 
-
+    constructor(private http: HttpClient) {
+    }
 
     getOldSigaUrl(service: string) {
         return environment.oldSigaUrl + this.oldServices[service];
+    }
+
+
+    get(url: string): Observable<any> {
+        let headers = new HttpHeaders({
+            "X-UA-Compatible": "IE=EmulateIE7"
+        });
+
+        // let options = { headers: headers, responseType: 'blob' }
+        // options.responseType = ResponseContentType.Blob;
+
+        // return this.http.get(url, { headers: headers, responseType: 'blob' });
+
+        return new Observable((observer: Subscriber<any>) => {
+            let objectUrl: string = null;
+
+            this.http
+                .get(url, { headers: headers, responseType: 'blob' })
+                .subscribe(m => {
+                    objectUrl = URL.createObjectURL(m);
+                    observer.next(objectUrl);
+                });
+
+            return () => {
+                if (objectUrl) {
+                    URL.revokeObjectURL(objectUrl);
+                    objectUrl = null;
+                }
+            };
+        });
     }
 
 }
