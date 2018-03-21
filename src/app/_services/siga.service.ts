@@ -35,7 +35,7 @@ export class SigaServices {
 
     getPerfil(service: string, institucion: string): Observable<any> {
 
-        return this.http.get(environment.newSigaUrlCertificate + this.endpoints[service] + "?institucion=" + institucion)
+        return this.http.get(environment.newSigaUrl + this.endpoints[service] + "?institucion=" + institucion)
             .map((response) => {
                 return response;
             })
