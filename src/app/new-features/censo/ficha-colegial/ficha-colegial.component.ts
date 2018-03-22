@@ -6,6 +6,8 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 import { SelectItem } from 'primeng/api';
 import { esCalendar } from '../../../utils/calendar';
 import { Router } from '@angular/router';
+import { DatosGeneralesComponent } from './datos-generales/datos-generales.component';
+import { Message } from 'primeng/components/common/api';
 
 
 
@@ -17,12 +19,13 @@ import { Router } from '@angular/router';
 })
 export class FichaColegialComponent implements OnInit {
 
-
+  uploadedFiles: any[] = [];
   formBusqueda: FormGroup;
   cols: any = [];
   datosDirecciones: any[];
   select: any[];
   es: any = esCalendar;
+  msgs: Message[];
 
   fichasActivas: Array<any> = [];
   todo: boolean = false;
@@ -41,6 +44,8 @@ export class FichaColegialComponent implements OnInit {
 
   editar: boolean = false
 
+  @ViewChild(DatosGeneralesComponent) datosGeneralesComponent: DatosGeneralesComponent
+
   @ViewChild('table')
   table
 
@@ -51,6 +56,18 @@ export class FichaColegialComponent implements OnInit {
     },
     {
       key: "direcciones",
+      activa: false
+    },
+    {
+      key: "colegiales",
+      activa: false
+    },
+    {
+      key: "bancarios",
+      activa: false
+    },
+    {
+      key: "cv",
       activa: false
     }
   ]
@@ -216,6 +233,16 @@ export class FichaColegialComponent implements OnInit {
   isEditar() {
     this.editar = true;
   }
+
+  // onUpload(event) {
+  //   for (let file of event.files) {
+  //     this.uploadedFiles.push(file);
+  //   }
+
+  //   this.msgs = [];
+  //   this.msgs.push({ severity: 'info', summary: 'File Uploaded', detail: '' });
+  // }
+
 
 
 

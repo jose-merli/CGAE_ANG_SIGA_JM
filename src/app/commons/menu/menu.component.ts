@@ -19,70 +19,76 @@ export class MenuComponent implements OnInit {
   showChildOfChild: boolean = false;
   selectedItemOfChild: any;
   selectedLabelOfChild: any;
-
+  encontrado: boolean;
 
   constructor(private router: Router) { }
 
   ngOnInit() {
+
     this.items = [
       {
         label: 'Censo',
         items: [
           {
             label: 'Buscar Colegiados',
-            routerLink: 'busquedaColegiados'
+            routerLink: '/busquedaColegiados'
           },
           {
             label: 'Buscar No Colegiados',
-            routerLink: 'searchNoColegiados'
+            routerLink: '/searchNoColegiados'
           },
           {
             label: 'Certificados ACA',
-            routerLink: 'certificadosAca'
+            routerLink: '/certificadosAca'
           },
           {
             label: 'Comisiones y Cargos',
-            routerLink: 'comisionesCargos'
+            routerLink: '/comisionesCargos'
+          },
+
+          {
+            label: 'Ficha colegial',
+            routerLink: '/fichaColegial'
           },
           {
             label: 'Solicitudes Modificación',
             items: [
               {
                 label: 'Solicitudes Genéricas',
-                routerLink: 'solicitudesGenericas'
+                routerLink: '/solicitudesGenericas'
               },
               {
                 label: 'Solicitudes Específicas',
-                routerLink: 'solicitudesEspecificas'
+                routerLink: '/solicitudesEspecificas'
               },
             ]
           },
           {
             label: 'Solicitudes Incorporación',
-            routerLink: 'solicitudesIncorporacion'
+            routerLink: '/solicitudesIncorporacion'
           },
           {
             label: 'Nueva incorporación',
-            routerLink: 'nuevaIncorporacion'
+            routerLink: '/nuevaIncorporacion'
           },
           {
             label: 'Busqueda Sanciones',
-            routerLink: 'busquedaSanciones'
+            routerLink: '/busquedaSanciones'
           },
           {
             label: 'Maestros y Mantenimientos',
             items: [
               {
                 label: 'Documentación Solicitudes',
-                routerLink: 'documentacionSolicitudes'
+                routerLink: '/documentacionSolicitudes'
               },
               {
                 label: 'Mantenimiento Grupos Fijos',
-                routerLink: 'mantenimientoGruposFijos'
+                routerLink: '/mantenimientoGruposFijos'
               },
               {
                 label: 'Mantenimiento Mandatos',
-                routerLink: 'mantenimientoMandatos'
+                routerLink: '/mantenimientoMandatos'
               }
             ]
           },
@@ -211,22 +217,22 @@ export class MenuComponent implements OnInit {
         items: [
           {
             label: 'Gestión Catálogos Maestros',
-            routerLink: 'catalogosMaestros'
+            routerLink: '/catalogosMaestros'
           },
           {
             label: 'Seleccionar Idioma',
-            routerLink: 'seleccionarIdioma'
+            routerLink: '/seleccionarIdioma'
           },
           {
             label: 'Gestión Multiidioma',
             items: [
               {
                 label: 'Etiquetas',
-                routerLink: 'etiquetas'
+                routerLink: '/etiquetas'
               },
               {
                 label: 'Catálogos Maestros',
-                routerLink: 'catalogosMaestros'
+                routerLink: '/catalogosMaestros'
               }
             ]
           },
@@ -235,11 +241,11 @@ export class MenuComponent implements OnInit {
             items: [
               {
                 label: 'Usuarios',
-                routerLink: 'usuarios'
+                routerLink: '/usuarios'
               },
               {
                 label: 'Grupos de Usuarios',
-                routerLink: 'gruposUsuarios'
+                routerLink: '/gruposUsuarios'
               },
               {
                 label: 'Asignación de Grupo por Defecto'
@@ -348,30 +354,33 @@ export class MenuComponent implements OnInit {
 
   isRoute(ruta) {
     var currentRoute = this.router.url;
-    return (currentRoute === ruta);
+
+    this.encontrado = false;
+    if (currentRoute.indexOf(ruta) != -1) {
+      this.encontrado = true;
+    }
+    return (currentRoute === ruta || this.encontrado);
   }
 
   navigateTo(ruta) {
     this.router.navigate([ruta]);
+    console.log(ruta)
+
   }
 
   viewChild(e, i) {
-    console.log(e)
     if (e) {
       this.showChild = true;
       this.selectedItem = e;
-      console.log(i)
       this.selectedLabel = i;
     }
 
   }
 
   viewChildOfChild(e, i) {
-    console.log(e)
     if (e) {
       this.showChildOfChild = true;
       this.selectedItemOfChild = e;
-      console.log(i)
       this.selectedLabelOfChild = i;
     }
 

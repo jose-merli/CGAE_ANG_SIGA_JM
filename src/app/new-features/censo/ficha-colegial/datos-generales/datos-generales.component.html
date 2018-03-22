@@ -1,0 +1,121 @@
+<!--DATOS GENERALES-->
+<div class="card">
+  <div class="card-header header-ficha">
+    <div *ngIf="!esFichaActiva('generales')" class="form-row">
+      <div class="col-lg-1 col-md-2">
+        <div class="img-colegiado">
+          <img src="../../../assets/images/img-colegiado.PNG">
+        </div>
+      </div>
+      <div class="col-lg-11 col-md-10">
+        <div class="d-flex justify-content-end mb-1">
+          <label class="mr-auto title-ficha">Datos generales</label>
+          <label class="registros-ficha">(0 registros)</label>
+        </div>
+        <div class="d-flex justify-content-between">
+          <label>NIF: <span>21489943J</span></label>
+          <label>Nombre: <span>María José Abella Mestanza</span></label>
+          <label>Fecha nacimiento: <span>18/03/1970</span></label>
+          <label>Fecha alta: <span>04/02/1997</span></label>
+          <i *ngIf="!esFichaActiva('generales')" (click)="abrirFicha('generales')" class="fa fa-angle-down float-right"></i>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="esFichaActiva('generales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+      <div class="img-colegiado">
+        <img src="../../../assets/images/img-colegiado.PNG">
+      </div>
+      <label class="title-ficha">Datos generales</label>
+      <i (click)="cerrarFicha('generales')" class="fa fa-angle-up ml-auto"></i>
+    </div>
+  </div>
+  <!--cuerpo datos generales-->
+
+  <div *ngIf="esFichaActiva('generales')" class="card-body card-body-ficha">
+    <div class="row">
+      <div class="bloque col-lg-3 col-md-3">
+        <label class="d-block">Foto</label>
+        <div class="img-colegiado my-2">
+          <img src="../../../assets/images/img-colegiado.PNG">
+          <div class="fa fa-pencil-alt edit"></div>
+        </div>
+        <!--<div class="main-button mb-3">
+            <button pButton type="button" icon="fae fa-image" iconPos="left" label="Subir foto"></button>
+          </div>-->
+        <p-checkbox binary="true" label="Permitir utilizar mi foto de Guía Colegial" name="groupname "></p-checkbox>
+      </div>
+      <div class="bloque col-lg-5 col-md-5">
+        <div class="form-row">
+          <div class="form-group col-lg-6 col-md-6">
+            <label>Identificación</label>
+            <input value="38475777C" type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label></label>
+            <p-dropdown placeholder="NIF" class="select-form" [(ngModel)]="selectedDoc" [options]="select"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>Apellidos</label>
+            <input value="Abella" type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label></label>
+            <input value="Mestanza" type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-12 col-md-12">
+            <label>Nombre</label>
+            <input value="María José" type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-6 col-md-6 form-group-date">
+            <label>Fecha nacimiento</label>
+            <p-calendar [locale]="es" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+          </div>
+          <div class="d-flex mb-0 align-items-center form-group col-lg-6 col-md-6">
+            <label>Edad: 66</label>
+          </div>
+          <div class="form-group col-lg-12 col-md-12">
+            <label>Lugar de nacimiento</label>
+            <input value="España" type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>Tratamiento</label>
+            <p-dropdown placeholder="Mujer" class="select-form"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label></label>
+            <p-dropdown placeholder="Doña" class="select-form"></p-dropdown>
+          </div>
+        </div>
+      </div>
+
+      <div class="bloque col-lg-4 col-md-4">
+        <div class="form-row">
+          <div class="form-group col-lg-8 col-md-8">
+            <label>Situación general: Activo</label>
+          </div>
+          <div class="form-group col-lg-8 col-md-8">
+            <label>Alta en el sistema: 10/02/1984</label>
+          </div>
+          <div class="form-group col-lg-8 col-md-8">
+            <label>Idioma de preferencia</label>
+            <p-dropdown class="select-form" placeholder="Castellano"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-12 col-md-12">
+            <label>Cuenta contable</label>
+            <input value="1170" type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-12 col-md-12">
+            <p-checkbox binary="true" label="No exportar datos (LOPD)" name="groupname " class="ml-0"></p-checkbox>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="esFichaActiva('generales')" class="card-footer">
+    <div class="text-right main-button ">
+      <button (click)="cerrarFicha('generales')" pButton type="button " icon="far fa-save " iconPos="left" label="Guardar"></button>
+      <button (click)="cerrarFicha('generales')" pButton type="button " icon="fa fa-redo " iconPos="left" label="Restablecer"></button>
+    </div>
+  </div>
+</div>
+<!--END DATOS GENERALES-->

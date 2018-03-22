@@ -192,7 +192,7 @@
   <div *ngIf="buscar == true" class="card mt-3">
     <div class="card-body p-0">
       <div>
-        <p class="px-3 pt-2 text-right" (click)="isSelectMultiple()"><i class="pr-2 fa fa-plus"></i>Selección múltiple</p>
+        <p class="px-3 pt-2 text-right" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()"><i class="pr-2 fa fa-plus"></i>Selección múltiple</p>
       </div>
 
 

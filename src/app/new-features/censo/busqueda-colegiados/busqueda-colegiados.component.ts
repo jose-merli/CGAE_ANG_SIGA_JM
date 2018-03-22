@@ -17,7 +17,6 @@ import { Router } from '@angular/router';
 })
 export class BusquedaColegiadosComponent implements OnInit {
 
-
   formBusqueda: FormGroup;
   cols: any = [];
   datos: any[];
@@ -51,10 +50,6 @@ export class BusquedaColegiadosComponent implements OnInit {
 
   ngOnInit() {
 
-
-
-
-
     this.cols = [
       { field: 'nif', header: 'NIF/CIF' },
       { field: 'numColegiado', header: 'Nº colegiado' },
@@ -76,21 +71,21 @@ export class BusquedaColegiadosComponent implements OnInit {
 
 
     this.datos = [
-      { nif: '239123', numColegiado: '6578', apellidos: 'Andrés MAaestre', nombre: 'Ana', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
+      { nif: '239123', numColegiado: '6578', apellidos: 'Andrés Maestre', nombre: 'Ana', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
       { nif: '12122', numColegiado: '6578', apellidos: 'Abellan sirvent', nombre: 'Javier', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
-      { nif: '213223', numColegiado: '5454', apellidos: 'Andrés MAaestre', nombre: 'Ana', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
+      { nif: '213223', numColegiado: '6578', apellidos: 'Andrés Maestre', nombre: 'Ana', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
       { nif: '53434', numColegiado: '6578', apellidos: 'Abellan sirvent', nombre: 'Javier', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
-      { nif: '54534', numColegiado: '6578', apellidos: 'Andrés MAaestre', nombre: 'Ana', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
+      { nif: '54534', numColegiado: '6578', apellidos: 'Andrés Maestre', nombre: 'Ana', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
       { nif: '554331', numColegiado: '6578', apellidos: 'Abellan sirvent', nombre: 'Javier', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
-      { nif: '222', numColegiado: '6578', apellidos: 'Andrés MAaestre', nombre: 'Ana', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
+      { nif: '222', numColegiado: '6578', apellidos: 'Andrés Maestre', nombre: 'Ana', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
       { nif: '333', numColegiado: '6578', apellidos: 'Abellan sirvent', nombre: 'Javier', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
-      { nif: '444', numColegiado: '6578', apellidos: 'Andrés MAaestre', nombre: 'Ana', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
+      { nif: '444', numColegiado: '6578', apellidos: 'Andrés Maestre', nombre: 'Ana', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
       { nif: '4445', numColegiado: '6578', apellidos: 'Abellan sirvent', nombre: 'Javier', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
-      { nif: '12345', numColegiado: '6578', apellidos: 'Andrés MAaestre', nombre: 'Ana', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
+      { nif: '12345', numColegiado: '6578', apellidos: 'Andrés Maestre', nombre: 'Ana', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
       { nif: '5656', numColegiado: '6578', apellidos: 'Abellan sirvent', nombre: 'Javier', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
-      { nif: '6566', numColegiado: '6578', apellidos: 'Andrés MAaestre', nombre: 'Ana', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
+      { nif: '6566', numColegiado: '6578', apellidos: 'Andrés Maestre', nombre: 'Ana', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
       { nif: '12655', numColegiado: '6578', apellidos: 'Abellan sirvent', nombre: 'Javier', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
-      { nif: '7878', numColegiado: '6578', apellidos: 'Andrés MAaestre', nombre: 'Ana', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
+      { nif: '7878', numColegiado: '6578', apellidos: 'Andrés Maestre', nombre: 'Ana', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
       { nif: '8777', numColegiado: '6578', apellidos: 'Abellan sirvent', nombre: 'Javier', fechaIngreso: '22/02/2000', estadoColegial: 'No ejerciente', residente: 'si', telefono: '99999999' },
 
 
@@ -123,7 +118,6 @@ export class BusquedaColegiadosComponent implements OnInit {
 
 
   onChangeRowsPerPages(event) {
-    console.log(event);
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset()
@@ -165,7 +159,6 @@ export class BusquedaColegiadosComponent implements OnInit {
 
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
-    console.log(this.selectMultiple)
   }
 
 
