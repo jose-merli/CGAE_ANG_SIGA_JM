@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
     ngOnInit() {
 
         this.sigaServices.get("instituciones").subscribe(n => {
-            this.instituciones = n.get("combooItems");
+            this.instituciones = n.combooItems;
         });
         this.form = this.fb.group({
             tmpLoginInstitucion: new FormControl("2000"),
@@ -73,7 +73,7 @@ export class LoginComponent implements OnInit {
 
     onChange(newValue) {
         this.sigaServices.getPerfil("perfiles", newValue.id).subscribe(n => {
-            this.perfiles = n.get("combooItems");
+            this.perfiles = n.combooItems;
         });
         //console.log(newValue);
         //let combo = new LoginCombo();

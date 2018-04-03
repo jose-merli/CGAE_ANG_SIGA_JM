@@ -1,3 +1,4 @@
+import { TranslateService } from '../translate/translation.service';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
@@ -15,7 +16,7 @@ export class MenuComponent implements OnInit {
   items: MenuItem[];
   closeMenu: boolean = false;
 
-  constructor(private router: Router, private sigaServices: SigaServices) {
+  constructor(private router: Router, private sigaServices: SigaServices, private translateService: TranslateService) {
 
 
   }
@@ -24,7 +25,7 @@ export class MenuComponent implements OnInit {
   //o revisar si se pude instanciar el router de forma dinámica al arrancar el angular
   ngOnInit() {
     this.sigaServices.get("menu").subscribe(response => {
-      this.items = response.get("menuItems");
+      this.items = this.translateService.translateMenu(response.menuItems);
       return this.items;
     });
 

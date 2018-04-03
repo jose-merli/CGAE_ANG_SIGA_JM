@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse, HttpParams, HttpResponseBase } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 import 'rxjs/add/operator/map'
 import { environment } from '../../environments/environment'
+import { MenuItem } from 'primeng/api';
+
 
 @Injectable()
 export class SigaServices {
-
+    items: MenuItem[];
     endpoints = {
         testDb: "db",
         login: "login",
@@ -50,5 +52,8 @@ export class SigaServices {
         })
 
     }
+
+
+
 
 }

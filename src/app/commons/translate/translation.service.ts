@@ -1,15 +1,17 @@
+import { MenuItem } from 'primeng/primeng';
+import { SigaServices } from '../../_services/siga.service';
 // app/translate/translate.service.ts
 
 import { Injectable, Inject } from '@angular/core';
 // import { TranslationClass } from './translation'; // import our opaque token
-import { SigaServices } from '../../_services/siga.service'
+
 
 
 @Injectable()
 export class TranslateService {
     private _currentLang: string;
     private _translations: any;
-
+    menuItem: MenuItem;
     private enCalendar = {
         firstDayOfWeek: 0,
         dayNames: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
@@ -38,7 +40,7 @@ export class TranslateService {
     constructor(private service: SigaServices) {
         this._currentLang = "es";
         service.get("diccionarios").subscribe(response => {
-            this._translations = response
+            this._translations = response.DiccionarioItems;
         });
     }
 
@@ -54,8 +56,12 @@ export class TranslateService {
     private translate(key: string): string {
         // private perform translation
         let translation = key;
-        if (this._translations[this.currentLang] && this._translations[this.currentLang][key]) {
-            return this._translations[this.currentLang][key];
+        if (this._translations) {
+            for (var cont = 0; cont < this._translations.length; cont++) {
+                if (this._translations[cont] && this._translations[cont].diccionario[this.currentLang]) {
+                    return this._translations[cont].diccionario[this.currentLang][key];
+                }
+            }
         }
 
         return translation;
@@ -68,5 +74,32 @@ export class TranslateService {
 
     public getCalendarLocale() {
         return this.currentLang === "es" ? this.esCalendar : this.enCalendar;
+    }
+    public translateMenu(menu: any): MenuItem[] {
+
+        if (menu) {
+            for (var cont = 0; cont < menu.length; cont++) {
+
+                menu[cont].label = this.instant(menu[cont].label);
+
+                menu[cont].items = this.cargarSubmenus(menu[cont].items);
+            }
+        }
+
+
+        return menu;
+    }
+    public cargarSubmenus(menu: any): MenuItem {
+        for (var cont = 0; cont < menu.length; cont++) {
+            this.menuItem = menu[cont];
+            this.menuItem.label = this.instant(this.menuItem.label);
+            if (this.menuItem.items && this.menuItem.items.length > 0) {
+
+                for (var i = 0; i < this.menuItem.items.length; i++) {
+                    this.cargarSubmenus(this.menuItem.items);
+                }
+            }
+        }
+        return menu;
     }
 }
