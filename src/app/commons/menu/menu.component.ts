@@ -15,6 +15,13 @@ export class MenuComponent implements OnInit {
 
   items: MenuItem[];
   closeMenu: boolean = false;
+  showChild: boolean = false;
+  selectedItem: any;
+  selectedLabel: any;
+  showChildOfChild: boolean = false;
+  selectedItemOfChild: any;
+  selectedLabelOfChild: any;
+  encontrado: boolean;
 
   constructor(private router: Router, private sigaServices: SigaServices, private translateService: TranslateService) {
 
@@ -44,13 +51,44 @@ export class MenuComponent implements OnInit {
 
   isRoute(ruta) {
     var currentRoute = this.router.url;
-    return (currentRoute === ruta);
+
+    this.encontrado = false;
+    if (currentRoute.indexOf(ruta) != -1) {
+      this.encontrado = true;
+    }
+    return (currentRoute === ruta || this.encontrado);
   }
 
   navigateTo(ruta) {
     this.router.navigate([ruta]);
+    console.log(ruta)
+
   }
 
+  viewChild(e, i) {
+    if (e) {
+      this.showChild = true;
+      this.selectedItem = e;
+      this.selectedLabel = i;
+    }
 
+  }
+
+  viewChildOfChild(e, i) {
+    if (e) {
+      this.showChildOfChild = true;
+      this.selectedItemOfChild = e;
+      this.selectedLabelOfChild = i;
+    }
+
+  }
+
+  backMenu() {
+    this.showChild = false;
+  }
+
+  backMenuChild() {
+    this.showChildOfChild = false;
+  }
 
 }

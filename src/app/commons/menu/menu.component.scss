@@ -16,21 +16,31 @@
                     padding:0;
                     width: 20em;
                     flex-grow: 1;
+                    .ui-state-default{
+                        border: none;
+                        
+                    }
                     li{
-                        // padding: 1.5em 1.5em;
+                        padding: 1rem ;
+                        margin: 0 ;
                         font-family: $general-font;
-                        margin: 0; 
-                        font-size: .9rem;
+                        font-size: .95rem;
+                        border-bottom: 1px solid $lightGrey;
                         &:hover{
                             color: white;
-                            transition: all .5s;
+                            transition: all .2s;
                             cursor: pointer; 
-                            background: $gradientBlue;
+                            background: $primary-color;
                         }
                     }
                     .menu-item-active{
                         color: white;
-                        background:  $gradientBlue;
+                        background:  $primary-color;
+                    }
+
+                    .breadCrumbMenu{                            
+                            font-size: .8rem;
+                            color: $secondary-color;
                     }
                 }
                 .menu-arrow{
@@ -49,6 +59,19 @@
         
     }
 
+    // body .ui-panelmenu {
+    //     .ui-panelmenu-header{
+    //         // border: none;
+    //         border-bottom: 1px solid $grey4;
+    //     }
+    //       .ui-panelmenu-panel{
+    //             border: none;  
+    //         &:last-child{
+    //              border: none;  
+    //         } 
+    //     }
+        
+    // }
     .closedMenu{
         margin-left: -20em;
         transition: all 1s;
@@ -81,13 +104,13 @@
 
         .icono-menu{
             :before{
-                content: "\f060"
+                content: "\f0C9"
             }
         }
 
         .icono-menu-flecha{
             :before{
-                content: "\f00a"
+                content: "\f00D"
             }
         }
 
@@ -96,7 +119,7 @@
 
     @media screen and (max-width: 768px){
          .menu-censo{
-            padding-top: 9rem;
+            padding-top: 7rem;
          }
     }
 

@@ -1,16 +1,36 @@
 <header class="header-censo">
-  <div class="logo">
-    <div class="logo-img">
-      <img src="../../../assets/images/imagotipo-redabogacia.png">
+  <div class="d-flex justify-content-between header-principal">
+    <div class="logo">
+      <div class="logo-img">
+        <img src="../../../assets/images/imagotipo-redabogacia.png">
+      </div>
+      <h1>SIGA</h1>
     </div>
-    <h1>SIGA</h1>
+    <div class="logo-central">
+      <img src="../../../assets/images/logoCentral.PNG">
+    </div>
+    <div>
+      <div class="datos-img">
+        <img src="../../../assets/images/RedAbogacia.jpg">
+      </div>
+    </div>
   </div>
-  <div class="datos">
-    <p>Nombre Apellido
-      <span>conexión</span>
-    </p>
-    <div class="datos-img">
-      <img src="../../../assets/images/Abogacia-Española.jpg">
-    </div>
+  <div class="d-flex justify-content-end header-user">
+    <i (click)="isMenuVisible()" class="far fa-user" [ngClass]="{'user-active': !menuHide}"></i>
+    <i class="fa fa-question-circle"></i>
   </div>
 </header>
+
+<!--menu user-->
+<div class="menu-user" [ngClass]="{'menuVisible': !menuHide, 'menuHide': menuHide}">
+  <label class="mb-4">Usuario</label>
+  <ul *ngFor="let item of menuUser">
+    <li>Nombre: <span>{{item.nombre}}</span></li>
+    <li>DNI: <span>{{item.dni}}</span></li>
+    <li>Grupo: <span>{{item.grupo}}</span></li>
+    <li>Institución: <span>{{item.institucion}}</span></li>
+    <li>Idioma: <span>{{item.idioma}}</span></li>
+    <li>Última conexión: <span>{{item.ultimaConex}}</span></li>
+    <li (click)="logout()" class="cerrar-sesion">Cerrar sesión</li>
+  </ul>
+</div>
