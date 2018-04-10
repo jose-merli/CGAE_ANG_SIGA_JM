@@ -14,8 +14,8 @@ export class JwtInterceptor implements HttpInterceptor {
         console.log("intercepted request ... ");
 
         // Clone the request to add the new header.
-        const authReq = req.clone({ headers: req.headers.set("Authorization", sessionStorage.getItem('Authorization')) });
-
+        //const authReq = req.clone({ headers: req.headers.set("Authorization", sessionStorage.getItem('Authorization')) });
+        const authReq = req.clone();
         console.log("Sending request with new header now ...");
 
         //send the newly created request

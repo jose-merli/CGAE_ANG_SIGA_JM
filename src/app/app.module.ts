@@ -1,58 +1,63 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { HttpModule } from '@angular/http';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { APP_BASE_HREF } from '@angular/common';
+import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+import { HttpModule } from "@angular/http";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { APP_BASE_HREF } from "@angular/common";
 
-import { MenubarModule } from 'primeng/menubar';
-import { PanelMenuModule } from 'primeng/panelmenu';
-import { MenuItem } from 'primeng/api';
+import { MenubarModule } from "primeng/menubar";
+import { PanelMenuModule } from "primeng/panelmenu";
+import { MenuItem } from "primeng/api";
 
-import { AuthGuard } from './_guards/auth.guards';
-import { OldSigaServices } from './_services/oldSiga.service';
-import { SigaServices } from './_services/siga.service';
-import { AuthenticationService } from './_services/authentication.service';
-import { JwtInterceptor } from './_interceptor/jwt.interceptor'
+import { AuthGuard } from "./_guards/auth.guards";
+import { OldSigaServices } from "./_services/oldSiga.service";
+import { SigaServices } from "./_services/siga.service";
+import { AuthenticationService } from "./_services/authentication.service";
+import { JwtInterceptor } from "./_interceptor/jwt.interceptor";
 
 // Componentes comunes
-import { routing } from './app.routing';
-import { environment } from '../environments/environment';
-import { AppComponent } from './app.component';
-import { HeaderComponent } from './commons/header/header.component';
-import { MyIframeComponent } from './commons/my-iframe/my-iframe.component';
-import { MenuComponent } from './commons/menu/menu.component';
-import { HomeComponent } from './features/home/home.component';
-import { LoginComponent } from './commons/login/login.component';
-import { TranslatePipe, TranslateService } from './commons/translate'
+import { routing } from "./app.routing";
+import { environment } from "../environments/environment";
+import { AppComponent } from "./app.component";
+import { HeaderComponent } from "./commons/header/header.component";
+import { MyIframeComponent } from "./commons/my-iframe/my-iframe.component";
+import { MenuComponent } from "./commons/menu/menu.component";
+import { HomeComponent } from "./features/home/home.component";
+import { LoginComponent } from "./commons/login/login.component";
+import { TranslatePipe, TranslateService } from "./commons/translate";
+
+//PRIMENG
+import { DropdownModule } from "primeng/dropdown";
+import { ButtonModule } from "primeng/button";
+import { DataTableModule } from "primeng/datatable";
+import { InputTextModule } from "primeng/inputtext";
+import { InputTextareaModule } from "primeng/inputtextarea";
 
 // Modulo de censo
-import { SearchColegiadosComponent } from './features/censo/search-colegiados/search-colegiados.component';
-import { SearchNoColegiadosComponent } from './features/censo/search-no-colegiados/search-no-colegiados.component';
-import { CertificadosAcaComponent } from './features/censo/certificados-aca/certificados-aca.component';
-import { ComisionesCargosComponent } from './features/censo/comisiones-cargos/comisiones-cargos.component';
-import { SolicitudesGenericasComponent } from './features/censo/solicitudes-genericas/solicitudes-genericas.component';
-import { SolicitudesEspecificasComponent } from './features/censo/solicitudes-especificas/solicitudes-especificas.component';
-import { SolicitudesIncorporacionComponent } from './features/censo/solicitudes-incorporacion/solicitudes-incorporacion.component';
-import { NuevaIncorporacionComponent } from './features/censo/nueva-incorporacion/nueva-incorporacion.component';
-import { DocumentacionSolicitudesComponent } from './features/censo/documentacion-solicitudes/documentacion-solicitudes.component';
-import { MantenimientoGruposFijosComponent } from './features/censo/mantenimiento-grupos-fijos/mantenimiento-grupos-fijos.component';
-import { MantenimientoMandatosComponent } from './features/censo/mantenimiento-mandatos/mantenimiento-mandatos.component';
-import { BusquedaSancionesComponent } from './features/censo/busqueda-sanciones/busqueda-sanciones.component';
-
+import { SearchColegiadosComponent } from "./features/censo/search-colegiados/search-colegiados.component";
+import { SearchNoColegiadosComponent } from "./features/censo/search-no-colegiados/search-no-colegiados.component";
+import { CertificadosAcaComponent } from "./features/censo/certificados-aca/certificados-aca.component";
+import { ComisionesCargosComponent } from "./features/censo/comisiones-cargos/comisiones-cargos.component";
+import { SolicitudesGenericasComponent } from "./features/censo/solicitudes-genericas/solicitudes-genericas.component";
+import { SolicitudesEspecificasComponent } from "./features/censo/solicitudes-especificas/solicitudes-especificas.component";
+import { SolicitudesIncorporacionComponent } from "./features/censo/solicitudes-incorporacion/solicitudes-incorporacion.component";
+import { NuevaIncorporacionComponent } from "./features/censo/nueva-incorporacion/nueva-incorporacion.component";
+import { DocumentacionSolicitudesComponent } from "./features/censo/documentacion-solicitudes/documentacion-solicitudes.component";
+import { MantenimientoGruposFijosComponent } from "./features/censo/mantenimiento-grupos-fijos/mantenimiento-grupos-fijos.component";
+import { MantenimientoMandatosComponent } from "./features/censo/mantenimiento-mandatos/mantenimiento-mandatos.component";
+import { BusquedaSancionesComponent } from "./features/censo/busqueda-sanciones/busqueda-sanciones.component";
 
 // Modulo de administracion
-import { CatalogosMaestros } from './features/administracion/catalogos-maestros/catalogos-maestros.component';
-import { GruposUsuarios } from './features/administracion/grupos-usuarios/grupos-usuarios.component';
-import { Etiquetas } from './features/administracion/etiquetas/etiquetas.component';
-import { SeleccionarIdioma } from './features/administracion/seleccionar-idioma/seleccionar-idioma.component';
-import { Usuarios } from './features/administracion/usuarios/usuarios.component';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-
+import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
+import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
+import { Etiquetas } from "./features/administracion/etiquetas/etiquetas.component";
+import { SeleccionarIdioma } from "./features/administracion/seleccionar-idioma/seleccionar-idioma.component";
+import { Usuarios } from "./features/administracion/usuarios/usuarios.component";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 
 /***NEW modules censo***/
-import { BusquedaColegiadosModule } from './new-features/censo/busqueda-colegiados/busqueda-colegiados.module';
-import { FichaColegialModule } from './new-features/censo/ficha-colegial/ficha-colegial.module';
+import { BusquedaColegiadosModule } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.module";
+import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-colegial.module";
 
 @NgModule({
   declarations: [
@@ -95,7 +100,12 @@ import { FichaColegialModule } from './new-features/censo/ficha-colegial/ficha-c
     MenubarModule,
     PanelMenuModule,
     BusquedaColegiadosModule,
-    FichaColegialModule
+    FichaColegialModule,
+    DropdownModule,
+    ButtonModule,
+    DataTableModule,
+    InputTextModule,
+    InputTextareaModule
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
@@ -107,7 +117,8 @@ import { FichaColegialModule } from './new-features/censo/ficha-colegial/ficha-c
     {
       provide: APP_BASE_HREF,
       useValue: environment.baseHref
-    }, {
+    },
+    {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,
       multi: true
@@ -115,4 +126,4 @@ import { FichaColegialModule } from './new-features/censo/ficha-colegial/ficha-c
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
