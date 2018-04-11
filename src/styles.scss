@@ -274,6 +274,7 @@ label{
 }
 
 .form-group-date, .form-group {
+        margin-bottom: 1.5rem;
         .icon-incidencia {
             color: $lightOrange;
             padding-right: .33em;
@@ -414,7 +415,11 @@ label{
 }
 
 .customCursor td{
-    cursor: cell;
+    cursor: copy;
+}
+.input-error{
+color:$error;
+font-size: .7rem;
 }
 
 
@@ -464,6 +469,11 @@ label{
 .ui-calendar{
     width: 100%;  
 }
+
+ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext{
+     box-shadow: 0 0 2px $error;
+     border-bottom-color: $grey4;
+ }
 .ui-calendar.ui-calendar-w-btn input{
     width: calc(100% - 2em);
 }

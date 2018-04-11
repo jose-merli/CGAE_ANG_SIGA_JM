@@ -37,8 +37,8 @@ const appRoutes: Routes = [
     { path: 'login', component: LoginComponent },
 
     // Censo
-    { path: 'busquedaColegiados', component: BusquedaColegiadosComponent },
-    { path: 'fichaColegial/:id', component: FichaColegialComponent },
+    { path: 'busquedaColegiados', component: BusquedaColegiadosComponent, canActivate: [AuthGuard] },
+    { path: 'fichaColegial/:id', component: FichaColegialComponent, canActivate: [AuthGuard] },
     { path: 'searchNoColegiados', component: SearchNoColegiadosComponent },
     { path: 'certificadosAca', component: CertificadosAcaComponent },
     { path: 'comisionesCargos', component: ComisionesCargosComponent },
