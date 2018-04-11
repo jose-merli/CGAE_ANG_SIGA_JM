@@ -11,7 +11,7 @@
       </ul>
       <ul *ngIf="showChildOfChild" class="nav navbar-nav ">
         <li (click)="backMenuChild()" class="breadCrumbMenu">{{selectedLabel}} <i class="fa fa-angle-right"></i> {{selectedLabelOfChild}}</li>
-        <li [ngClass]="{'menu-item-active': isRoute(opcion.routerLink)}" ngFor="let opcion of selectedItemOfChild">{{opcion.label}} <i *ngIf="opcion.items" class="fa fa-angle-right float-right"></i></li>
+        <li [ngClass]="{'menu-item-active': isRoute(opcion.routerLink)}" *ngFor="let opcion of selectedItemOfChild">{{opcion.label}} <i *ngIf="opcion.items" class="fa fa-angle-right float-right"></i></li>
       </ul>
     </div>
 

@@ -33,16 +33,38 @@ export class BusquedaColegiadosComponent implements OnInit {
   selectMultiple: boolean = false;
 
   buscar: boolean = false;
+  selectAll: boolean = false;
 
   selectedItem: number = 4;
   @ViewChild('table')
   table
+  selectedDatos
+
+  masFiltros: boolean = false;
+  labelFiltros: string;
+  fichasPosibles = [
+    {
+      key: "generales",
+      activa: false
+    },
+    {
+      key: "colegiales",
+      activa: false
+    },
+    {
+      key: "facturacion",
+      activa: false
+    }
+  ]
 
 
   constructor(private formBuilder: FormBuilder, private router: Router, private changeDetectorRef: ChangeDetectorRef) {
 
     this.formBusqueda = this.formBuilder.group({
       'cif': null,
+      'fechaNacimiento': new FormControl(null, Validators.required),
+      'fechaIncorporacion': new FormControl(null),
+      'fechaFacturacion': new FormControl(null),
     });
 
 
@@ -120,25 +142,8 @@ export class BusquedaColegiadosComponent implements OnInit {
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
-    this.table.reset()
-
-
+    this.table.reset();
   }
-
-  // confirmarBorrar(index) {
-  //   this.confirmationService.confirm({
-  //     message: '¿Está seguro de eliminar los datos?',
-  //     icon: 'far fa-trash-alt',
-  //     accept: () => {
-  //       this.msgs = [{ severity: 'info', summary: 'Confirmed', detail: 'Record deleted' }];
-  //       this.socios.splice(index, 1);
-  //       this.socios = [...this.socios];
-  //     },
-  //     reject: () => {
-  //       this.msgs = [{ severity: 'info', summary: 'Rejected', detail: 'You have rejected' }];
-  //     }
-  //   });
-  // }
 
 
   isBuscar() {
@@ -147,7 +152,7 @@ export class BusquedaColegiadosComponent implements OnInit {
 
 
   irFichaColegial(id) {
-    if (!this.selectMultiple) {
+    if (!this.selectMultiple && !this.selectAll) {
       var ir = null;
       if (id && id.length > 0) {
         ir = id[0].numColegiado
@@ -159,6 +164,45 @@ export class BusquedaColegiadosComponent implements OnInit {
 
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
+  }
+
+  verMasFiltros() {
+    this.masFiltros = !this.masFiltros;
+  }
+
+  abrirFicha(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    fichaPosible.activa = true;
+  }
+
+  cerrarFicha(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    fichaPosible.activa = false;
+  }
+
+  esFichaActiva(key) {
+
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    return fichaPosible.activa;
+  }
+
+  getFichaPosibleByKey(key): any {
+    let fichaPosible = this.fichasPosibles.filter((elto) => {
+      return elto.key === key;
+    })
+    if (fichaPosible && fichaPosible.length) {
+      return fichaPosible[0];
+    }
+    return {}
+  }
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.selectedDatos = this.datos;
+      this.selectMultiple = true;
+    } else {
+      this.selectedDatos = [];
+      this.selectMultiple = false;
+    }
   }
 
 

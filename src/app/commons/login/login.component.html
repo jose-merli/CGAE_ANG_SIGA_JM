@@ -10,7 +10,7 @@
             <td>
                 <select formControlName="tmpLoginInstitucion" style="width:300px" (ngModelChange)="onChange($event)">
                     <option value="" selected></option>
-                    <option *ngFor="let i of instituciones" [ngValue]="i">{{ i.value }}</option>
+                    <option *ngFor="let i of instituciones" [ngValue]="i">{{ i.label }}</option>
                 </select>
             </td>
             <td valign="middle" align="center">
@@ -31,7 +31,7 @@
             <td class="labelText">Perfil</td>
             <td colspan="2">
                 <select formControlName="tmpLoginPerfil" style="width:300px;width:300px;" size="20">
-                    <option *ngFor="let i of perfiles" [ngValue]="i.value">{{ i.value }}</option>
+                    <option *ngFor="let i of perfiles" [ngValue]="i.value">{{ i.label }}</option>
                 </select>
             </td>
         </tr>
