@@ -95,10 +95,13 @@ export class TranslateService {
             this.menuItem.label = this.instant(this.menuItem.label);
             if (this.menuItem.items && this.menuItem.items.length > 0) {
 
-                for (var i = 0; i < this.menuItem.items.length; i++) {
-                    this.cargarSubmenus(this.menuItem.items);
-                }
+                //    for (var i = 0; i < this.menuItem.length; i++) {
+                this.cargarSubmenus(this.menuItem.items);
+                //  }
             }
+            // } else {
+            //     this.menuItem.items = null;
+            // }
         }
         return menu;
     }
