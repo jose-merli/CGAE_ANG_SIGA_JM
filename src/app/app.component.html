@@ -1,8 +1,8 @@
 <div class="siga-app-container">
-    <app-header *ngIf="canShowMenu()"></app-header>
+    <app-header *ngIf="isLogged()"></app-header>
     <div class="wrapper-menu-sidebar">
         <div class="menu-sidebar ">
-            <app-menu *ngIf="canShowMenu()"></app-menu>
+            <app-menu *ngIf="isLogged()"></app-menu>
         </div>
         <div class="content">
             <router-outlet></router-outlet>

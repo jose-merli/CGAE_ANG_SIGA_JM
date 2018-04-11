@@ -1,779 +1,784 @@
-import { VAL_MESSAGES } from './message-properties';
-import { Validators } from '@angular/forms';
+import { VAL_MESSAGES } from "./message-properties";
+import { Validators } from "@angular/forms";
 
 export const LOGIN_VALIDATIONFIELDSCONTROL: Map<string, boolean> = new Map([
-  ['uid', false],
-  ['pass', false]
+  ["uid", false],
+  ["pass", false]
 ]);
 export const LOGINBEAN: Map<string, Array<string>> = new Map([
-  ['uid', ['notNullOrEmpty']],
-  ['pass', ['notNullOrEmpty']]
+  ["uid", ["notNullOrEmpty"]],
+  ["pass", ["notNullOrEmpty"]]
 ]);
 
 export const USUARIOBEAN: Map<string, Array<string>> = new Map([
-  ['cdgoTipUsu', ['notNullOrEmpty']],
-  ['cdgoRolUsu', ['notNullOrEmpty']],
-  ['uid', ['notNullOrEmpty']],
-  ['txtoEmail', ['emailFormat']]
+  ["cdgoTipUsu", ["notNullOrEmpty"]],
+  ["cdgoRolUsu", ["notNullOrEmpty"]],
+  ["uid", ["notNullOrEmpty"]],
+  ["txtoEmail", ["emailFormat"]]
 ]);
 export const USUARIO_VALIDATIONFIELDSCONTROL: Map<string, boolean> = new Map([
-  ['cdgoTipUsu', false],
-  ['cdgoRolUsu', false],
-  ['uid', false],
-  ['txtoEmail', false]
+  ["cdgoTipUsu", false],
+  ["cdgoRolUsu", false],
+  ["uid", false],
+  ["txtoEmail", false]
 ]);
 
 export const TIPOUSUARIOBEAN: Map<string, Array<string>> = new Map([
-  ['cdgoTipUsu', ['notNullOrEmpty']],
-  ['txtoTipUsu', ['notNullOrEmpty']]
+  ["cdgoTipUsu", ["notNullOrEmpty"]],
+  ["txtoTipUsu", ["notNullOrEmpty"]]
 ]);
 
 export const TIPOUSUARIO_VALIDATIONFIELDSCONTROL: Map<
   string,
   boolean
-  > = new Map([['cdgoTipUsu', false], ['txtoTipUsu', false]]);
+> = new Map([["cdgoTipUsu", false], ["txtoTipUsu", false]]);
 
 export const TIPOFUNCBEAN: Map<string, Array<string>> = new Map([
-  ['tipoFunc', ['notNullOrEmpty']],
-  ['txtoFunc', ['notNullOrEmpty']]
+  ["tipoFunc", ["notNullOrEmpty"]],
+  ["txtoFunc", ["notNullOrEmpty"]]
 ]);
 
 export const TIPOFUNC_VALIDATIONFIELDSCONTROL: Map<string, boolean> = new Map([
-  ['tipoFunc', false],
-  ['txtoFunc', false]
+  ["tipoFunc", false],
+  ["txtoFunc", false]
 ]);
 
 export const FUNCBEAN: Map<string, Array<string>> = new Map([
-  ['cdgoFuncAcc', ['notNullOrEmpty']],
-  ['txtoFuncAcc', ['notNullOrEmpty']],
-  ['tipoFunc', ['notNullOrEmpty']],
-  ['mrcaAudit', ['notNullOrEmpty']]
+  ["cdgoFuncAcc", ["notNullOrEmpty"]],
+  ["txtoFuncAcc", ["notNullOrEmpty"]],
+  ["tipoFunc", ["notNullOrEmpty"]],
+  ["mrcaAudit", ["notNullOrEmpty"]]
 ]);
 
 export const FUNC_VALIDATIONFIELDSCONTROL: Map<string, boolean> = new Map([
-  ['cdgoFuncAcc', false],
-  ['txtoFuncAcc', false],
-  ['tipoFunc', false],
-  ['mrcaAudit', false]
+  ["cdgoFuncAcc", false],
+  ["txtoFuncAcc", false],
+  ["tipoFunc", false],
+  ["mrcaAudit", false]
 ]);
 
 export const ROLBEAN: Map<string, Array<string>> = new Map([
-  ['cdgoRolUsu', ['notNullOrEmpty']],
-  ['txtoRolUsu', ['notNullOrEmpty']]
+  ["cdgoRolUsu", ["notNullOrEmpty"]],
+  ["txtoRolUsu", ["notNullOrEmpty"]]
 ]);
 export const ALARMBEAN: Map<string, Array<string>> = new Map([
-  ['txtoAlarma', ['notNullOrEmpty']],
-  ['limit', ['notNullOrEmpty']]
+  ["txtoAlarma", ["notNullOrEmpty"]],
+  ["limit", ["notNullOrEmpty"]]
 ]);
 export const ALARM_VALIDATIONFIELDSCONTROL: Map<string, boolean> = new Map([
-  ['txtoAlarma', false],
-  ['limit', false]
+  ["txtoAlarma", false],
+  ["limit", false]
 ]);
 export const ROL_VALIDATIONFIELDSCONTROL: Map<string, boolean> = new Map([
-  ['cdgoRolUsu', false],
-  ['txtoRolUsu', false]
+  ["cdgoRolUsu", false],
+  ["txtoRolUsu", false]
 ]);
 
 export const RELROLBEAN: Map<string, Array<string>> = new Map([
-  ['cdgoRolUsu', ['notNullOrEmpty']]
+  ["cdgoRolUsu", ["notNullOrEmpty"]]
 ]);
 
 export const RELROL_VALIDATIONFIELDSCONTROL: Map<string, boolean> = new Map([
-  ['cdgoRolUsu', false]
+  ["cdgoRolUsu", false]
 ]);
 
 export const MAILBEAN: Map<string, Array<string>> = new Map([
-  ['txtoMailList', ['notNullOrEmpty']]
+  ["txtoMailList", ["notNullOrEmpty"]]
 ]);
 
 export const MAIL_VALIDATIONFIELDSCONTROL: Map<string, boolean> = new Map([
-  ['txtoMailList', false]
+  ["txtoMailList", false]
 ]);
 
 export const FBCNSKBEAN: Map<string, Array<string>> = new Map([
-  ['cdgoBookClass', ['notNullOrEmpty']],
-  ['cdgoClass', ['notNullOrEmpty']],
-  ['cdgoFbc', ['notNullOrEmpty']],
-  ['txtoTarifWSO', ['notNullOrEmpty']]
+  ["cdgoBookClass", ["notNullOrEmpty"]],
+  ["cdgoClass", ["notNullOrEmpty"]],
+  ["cdgoFbc", ["notNullOrEmpty"]],
+  ["txtoTarifWSO", ["notNullOrEmpty"]]
 ]);
 
 export const FBC_NSK_VALIDATIONFIELDSCONTROL: Map<string, boolean> = new Map([
-  ['cdgoBookClass', false],
-  ['cdgoClass', false],
-  ['cdgoFbc', false],
-  ['txtoTarifWSO', false]
+  ["cdgoBookClass", false],
+  ["cdgoClass", false],
+  ["cdgoFbc", false],
+  ["txtoTarifWSO", false]
 ]);
 
 export const STATIONSBEAN: Map<string, Array<string>> = new Map([
-  ['cdgoEstaNSK', ['notNullOrEmpty']],
-  ['txtoDesc', ['notNullOrEmpty']]
+  ["cdgoEstaNSK", ["notNullOrEmpty"]],
+  ["txtoDesc", ["notNullOrEmpty"]]
 ]);
 
 export const STATIONS_VALIDATIONFIELDSCONTROL: Map<string, boolean> = new Map([
-  ['cdgoEstaNSK', false],
-  ['txtoDesc', false],
-  ['cdgoEstaRenf', false]
+  ["cdgoEstaNSK", false],
+  ["txtoDesc", false],
+  ["cdgoEstaRenf", false]
 ]);
 
 export const TRAINSTATUSBEAN: Map<string, Array<string>> = new Map([
-  ['cdgoEstadODS', ['notNullOrEmpty']],
-  ['cdgoTipoAcce', ['notNullOrEmpty']],
-  ['txtoDesc', ['notNullOrEmpty']],
-  ['txtoNombre', ['notNullOrEmpty']]
+  ["cdgoEstadODS", ["notNullOrEmpty"]],
+  ["cdgoTipoAcce", ["notNullOrEmpty"]],
+  ["txtoDesc", ["notNullOrEmpty"]],
+  ["txtoNombre", ["notNullOrEmpty"]]
 ]);
 
 export const TRAINS_STATUS_VALIDATIONFIELDSCONTROL: Map<
   string,
   boolean
-  > = new Map([
-    ['cdgoEstadODS', false],
-    ['cdgoTipoAcce', false],
-    ['txtoDesc', false],
-    ['txtoNombre', false]
-  ]);
+> = new Map([
+  ["cdgoEstadODS", false],
+  ["cdgoTipoAcce", false],
+  ["txtoDesc", false],
+  ["txtoNombre", false]
+]);
 
 export const EQUIPMENTRELATIONSHIPBEAN: Map<string, Array<string>> = new Map([
-  ['cdgoTipoTren', ['notNullOrEmpty']],
-  ['nmroCoche', ['notNullOrEmpty']],
-  ['nmroClase', ['notNullOrEmpty']],
-  ['cdgoComCoche', ['notNullOrEmpty']],
-  ['cdgoPlazNSK', ['notNullOrEmpty']],
-  ['cdgoPlazRenf', ['notNullOrEmpty']],
-  ['cdgoFbc', ['notNullOrEmpty']]
+  ["cdgoTipoTren", ["notNullOrEmpty"]],
+  ["nmroCoche", ["notNullOrEmpty"]],
+  ["nmroClase", ["notNullOrEmpty"]],
+  ["cdgoComCoche", ["notNullOrEmpty"]],
+  ["cdgoPlazNSK", ["notNullOrEmpty"]],
+  ["cdgoPlazRenf", ["notNullOrEmpty"]],
+  ["cdgoFbc", ["notNullOrEmpty"]]
 ]);
 
 export const EQ_REL_VALIDATIONFIELDSCONTROL: Map<string, boolean> = new Map([
-  ['cdgoTipoTren', false],
-  ['nmroCoche', false],
-  ['nmroClase', false],
-  ['cdgoComCoche', false],
-  ['cdgoComCoche', false],
-  ['cdgoPlazRenf', false],
-  ['cdgoFbc', false]
+  ["cdgoTipoTren", false],
+  ["nmroCoche", false],
+  ["nmroClase", false],
+  ["cdgoComCoche", false],
+  ["cdgoComCoche", false],
+  ["cdgoPlazRenf", false],
+  ["cdgoFbc", false]
 ]);
 
 export const SEATPREFERENCEBEAN: Map<string, Array<string>> = new Map([
-  ['cdgoPreferenc', ['notNullOrEmpty']],
-  ['txtoDesc', ['notNullOrEmpty']]
+  ["cdgoPreferenc", ["notNullOrEmpty"]],
+  ["txtoDesc", ["notNullOrEmpty"]]
 ]);
 
-export const SEAT_PREFS_VALIDATIONFIELDSCONTROL: Map<string, boolean> = new Map(
-  [['cdgoPreferenc', false], ['txtoDesc', false]]
-);
+export const SEAT_PREFS_VALIDATIONFIELDSCONTROL: Map<
+  string,
+  boolean
+> = new Map([["cdgoPreferenc", false], ["txtoDesc", false]]);
 
 export const TRAINRELATIONSHIPBEAN: Map<string, Array<string>> = new Map([
-  ['cdgoTrenNSK', ['notNullOrEmpty']],
-  ['cdgoTrenRenf', ['notNullOrEmpty']],
-  ['cdgoTipTRen', ['notNullOrEmpty']]
+  ["cdgoTrenNSK", ["notNullOrEmpty"]],
+  ["cdgoTrenRenf", ["notNullOrEmpty"]],
+  ["cdgoTipTRen", ["notNullOrEmpty"]]
 ]);
 
-export const TRAINS_REL_VALIDATIONFIELDSCONTROL: Map<string, boolean> = new Map(
-  [['cdgoTrenNSK', false], ['cdgoTrenRenf', false], ['cdgoTipTRen', false]]
-);
+export const TRAINS_REL_VALIDATIONFIELDSCONTROL: Map<
+  string,
+  boolean
+> = new Map([
+  ["cdgoTrenNSK", false],
+  ["cdgoTrenRenf", false],
+  ["cdgoTipTRen", false]
+]);
 
 export const TRAINROUTENSKBEAN: Map<string, Array<string>> = new Map([
-  ['cdgoEstaDest', ['notNullOrEmpty']],
-  ['cdgoEstaOrig', ['notNullOrEmpty']],
-  ['cdgoTipoTren', ['notNullOrEmpty']],
-  ['cdgoTrenNSK', ['notNullOrEmpty']],
-  ['txtoCriterio', ['notNullOrEmpty']],
-  ['txtoRuta', ['notNullOrEmpty']],
-  ['txtoSentido', ['notNullOrEmpty']],
-  ['txtoTime3Env', ['notNullOrEmpty']]
+  ["cdgoEstaDest", ["notNullOrEmpty"]],
+  ["cdgoEstaOrig", ["notNullOrEmpty"]],
+  ["cdgoTipoTren", ["notNullOrEmpty"]],
+  ["cdgoTrenNSK", ["notNullOrEmpty"]],
+  ["txtoCriterio", ["notNullOrEmpty"]],
+  ["txtoRuta", ["notNullOrEmpty"]],
+  ["txtoSentido", ["notNullOrEmpty"]],
+  ["txtoTime3Env", ["notNullOrEmpty"]]
 ]);
 
 export const TRAINS_ROUTE_VALIDATIONFIELDSCONTROL: Map<
   string,
   boolean
-  > = new Map([
-    ['cdgoEstaDest', false],
-    ['cdgoEstaOrig', false],
-    ['cdgoTipoTren', false],
-    ['cdgoTrenNSK', false],
-    ['txtoCriterio', false],
-    ['txtoRuta', false],
-    ['txtoSentido', false],
-    ['txtoTime3Env', false]
-  ]);
+> = new Map([
+  ["cdgoEstaDest", false],
+  ["cdgoEstaOrig", false],
+  ["cdgoTipoTren", false],
+  ["cdgoTrenNSK", false],
+  ["txtoCriterio", false],
+  ["txtoRuta", false],
+  ["txtoSentido", false],
+  ["txtoTime3Env", false]
+]);
 
 export const FULL_OCCU_BEAN: Map<string, Array<string>> = new Map([
-  ['date', ['notNullOrEmpty']],
-  ['train', ['notNullOrEmpty']],
-  ['begin', ['notNullOrEmpty']],
-  ['end', ['notNullOrEmpty']]
+  ["date", ["notNullOrEmpty"]],
+  ["train", ["notNullOrEmpty"]],
+  ["begin", ["notNullOrEmpty"]],
+  ["end", ["notNullOrEmpty"]]
 ]);
 
 export const OCCU_VALIDATIONFIELDSCONTROL: Map<string, boolean> = new Map([
-  ['date', false],
-  ['train', false],
-  ['begin', false],
-  ['end', false]
+  ["date", false],
+  ["train", false],
+  ["begin", false],
+  ["end", false]
 ]);
 
 export const SBQ_BEAN: Map<string, Array<string>> = new Map([
-  ['date', ['notNullOrEmpty']]
+  ["date", ["notNullOrEmpty"]]
 ]);
 
 export const SBQ_VALIDATIONFIELDSCONTROL: Map<string, boolean> = new Map([
-  ['date', false]
+  ["date", false]
 ]);
 
 export const MATRIX: Map<String, Map<string, Array<string>>> = new Map([
   // Bean structures
-  ['LoginBean', LOGINBEAN],
-  ['UsuarioBean', USUARIOBEAN],
-  ['TipoUsuarioBean', TIPOUSUARIOBEAN],
-  ['TipoFuncBean', TIPOFUNCBEAN],
-  ['FuncBean', FUNCBEAN],
-  ['RolBean', ROLBEAN],
-  ['RelRolBean', RELROLBEAN],
-  ['MailBean', MAILBEAN],
-  ['FbcNSKBean', FBCNSKBEAN],
-  ['StationRelationshipBean', STATIONSBEAN],
-  ['TrainStatusODSBean', TRAINSTATUSBEAN],
-  ['EquipmentRelationshipBean', EQUIPMENTRELATIONSHIPBEAN],
-  ['SeatPreferenceBean', SEATPREFERENCEBEAN],
-  ['TrainRelationshipBean', TRAINRELATIONSHIPBEAN],
-  ['TrainRouteNSKBean', TRAINROUTENSKBEAN],
-  ['FilterOccupancyBean', FULL_OCCU_BEAN],
-  ['FilterGoingOnOffRemBean', SBQ_BEAN]
+  ["LoginBean", LOGINBEAN],
+  ["UsuarioBean", USUARIOBEAN],
+  ["TipoUsuarioBean", TIPOUSUARIOBEAN],
+  ["TipoFuncBean", TIPOFUNCBEAN],
+  ["FuncBean", FUNCBEAN],
+  ["RolBean", ROLBEAN],
+  ["RelRolBean", RELROLBEAN],
+  ["MailBean", MAILBEAN],
+  ["FbcNSKBean", FBCNSKBEAN],
+  ["StationRelationshipBean", STATIONSBEAN],
+  ["TrainStatusODSBean", TRAINSTATUSBEAN],
+  ["EquipmentRelationshipBean", EQUIPMENTRELATIONSHIPBEAN],
+  ["SeatPreferenceBean", SEATPREFERENCEBEAN],
+  ["TrainRelationshipBean", TRAINRELATIONSHIPBEAN],
+  ["TrainRouteNSKBean", TRAINROUTENSKBEAN],
+  ["FilterOccupancyBean", FULL_OCCU_BEAN],
+  ["FilterGoingOnOffRemBean", SBQ_BEAN]
 ]);
 
 export const USUARIO_VALIDATIONS: Map<string, any[]> = new Map([
-  ['uid', [Validators.required, Validators.maxLength(20)]],
-  ['cdgoTipUsu', [Validators.required, Validators.maxLength(20)]],
-  ['cdgoRolUsu', [Validators.required, Validators.maxLength(20)]],
-  ['txtoUsuario', [Validators.required, Validators.maxLength(20)]],
-  ['txtoEmail', [Validators.required, Validators.email]]
+  ["uid", [Validators.required, Validators.maxLength(20)]],
+  ["cdgoTipUsu", [Validators.required, Validators.maxLength(20)]],
+  ["cdgoRolUsu", [Validators.required, Validators.maxLength(20)]],
+  ["txtoUsuario", [Validators.required, Validators.maxLength(20)]],
+  ["txtoEmail", [Validators.required, Validators.email]]
 ]);
 
 export const USUARIO_VAL_MSG: Map<string, Map<string, string>> = new Map([
   [
-    'uid',
+    "uid",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'cdgoTipUsu',
+    "cdgoTipUsu",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'cdgoRolUsu',
+    "cdgoRolUsu",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'txtoUsuario',
+    "txtoUsuario",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'txtoEmail',
+    "txtoEmail",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['email', VAL_MESSAGES.VAL_EMAIL]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["email", VAL_MESSAGES.VAL_EMAIL]
     ])
   ]
 ]);
 
 export const TIPO_USUARIO_VALIDATIONS: Map<string, any[]> = new Map([
-  ['cdgoTipUsu', [Validators.required, Validators.maxLength(2)]],
-  ['txtoTipUsu', [Validators.required, Validators.maxLength(35)]],
-  ['cdgoUsuSist', [Validators.required, Validators.maxLength(35)]],
-  ['passUsuSist', [Validators.required]]
+  ["cdgoTipUsu", [Validators.required, Validators.maxLength(2)]],
+  ["txtoTipUsu", [Validators.required, Validators.maxLength(35)]],
+  ["cdgoUsuSist", [Validators.required, Validators.maxLength(35)]],
+  ["passUsuSist", [Validators.required]]
 ]);
 
 export const TIPO_USUARIO_VAL_MSG: Map<string, Map<string, string>> = new Map([
   [
-    'cdgoTipUsu',
+    "cdgoTipUsu",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'txtoTipUsu',
+    "txtoTipUsu",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'cdgoUsuSist',
+    "cdgoUsuSist",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
-  ['passUsuSist', new Map([['required', VAL_MESSAGES.VAL_NULLEMPTY]])]
+  ["passUsuSist", new Map([["required", VAL_MESSAGES.VAL_NULLEMPTY]])]
 ]);
 
 export const OCCU_VALIDATIONS: Map<string, any[]> = new Map([
-  ['date', [Validators.required]],
-  ['train', [Validators.required]],
-  ['begin', [Validators.required]],
-  ['end', [Validators.required]]
+  ["date", [Validators.required]],
+  ["train", [Validators.required]],
+  ["begin", [Validators.required]],
+  ["end", [Validators.required]]
 ]);
 
 export const OCCU_VAL_MSG: Map<string, Map<string, string>> = new Map([
-  ['date', new Map([['required', VAL_MESSAGES.VAL_NULLEMPTY]])],
-  ['train', new Map([['required', VAL_MESSAGES.VAL_NULLEMPTY]])],
-  ['begin', new Map([['required', VAL_MESSAGES.VAL_NULLEMPTY]])],
-  ['end', new Map([['required', VAL_MESSAGES.VAL_NULLEMPTY]])]
+  ["date", new Map([["required", VAL_MESSAGES.VAL_NULLEMPTY]])],
+  ["train", new Map([["required", VAL_MESSAGES.VAL_NULLEMPTY]])],
+  ["begin", new Map([["required", VAL_MESSAGES.VAL_NULLEMPTY]])],
+  ["end", new Map([["required", VAL_MESSAGES.VAL_NULLEMPTY]])]
 ]);
 
 export const SBQ_VALIDATIONS: Map<string, any[]> = new Map([
-  ['date', [Validators.required]]
+  ["date", [Validators.required]]
 ]);
 
 export const SBQ_VAL_MSG: Map<string, Map<string, string>> = new Map([
-  ['date', new Map([['required', VAL_MESSAGES.VAL_NULLEMPTY]])]
+  ["date", new Map([["required", VAL_MESSAGES.VAL_NULLEMPTY]])]
 ]);
 
 export const FUNC_VALIDATIONS: Map<string, any[]> = new Map([
-  ['cdgoFuncAcc', [Validators.required, Validators.maxLength(3)]],
-  ['txtoFuncAcc', [Validators.required, Validators.maxLength(40)]],
-  ['tipoFunc', [Validators.required]],
-  ['txtoServRest', [Validators.required, Validators.maxLength(40)]]
+  ["cdgoFuncAcc", [Validators.required, Validators.maxLength(3)]],
+  ["txtoFuncAcc", [Validators.required, Validators.maxLength(40)]],
+  ["tipoFunc", [Validators.required]],
+  ["txtoServRest", [Validators.required, Validators.maxLength(40)]]
 ]);
 
 export const FUNC_VAL_MSG: Map<string, Map<string, string>> = new Map([
   [
-    'cdgoFuncAcc',
+    "cdgoFuncAcc",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'txtoFuncAcc',
+    "txtoFuncAcc",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
-  ['tipoFunc', new Map([['required', VAL_MESSAGES.VAL_NULLEMPTY]])],
+  ["tipoFunc", new Map([["required", VAL_MESSAGES.VAL_NULLEMPTY]])],
   [
-    'txtoServRest',
+    "txtoServRest",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ]
 ]);
 
 export const TIPOFUNC_VALIDATIONS: Map<string, any[]> = new Map([
-  ['tipoFunc', [Validators.required, Validators.maxLength(2)]],
-  ['txtoFunc', [Validators.required]]
+  ["tipoFunc", [Validators.required, Validators.maxLength(2)]],
+  ["txtoFunc", [Validators.required]]
 ]);
 
 export const TIPOFUNC_VAL_MSG: Map<string, Map<string, string>> = new Map([
   [
-    'tipoFunc',
+    "tipoFunc",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
-  ['txtoFunc', new Map([['required', VAL_MESSAGES.VAL_NULLEMPTY]])]
+  ["txtoFunc", new Map([["required", VAL_MESSAGES.VAL_NULLEMPTY]])]
 ]);
 
 export const ROL_VALIDATIONS: Map<string, any[]> = new Map([
-  ['cdgoRolUsu', [Validators.required, Validators.maxLength(2)]],
-  ['txtoRolUsu', [Validators.required]]
+  ["cdgoRolUsu", [Validators.required, Validators.maxLength(2)]],
+  ["txtoRolUsu", [Validators.required]]
 ]);
 
 export const ROL_VAL_MSG: Map<string, Map<string, string>> = new Map([
   [
-    'cdgoRolUsu',
+    "cdgoRolUsu",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
-  ['txtoRolUsu', new Map([['required', VAL_MESSAGES.VAL_NULLEMPTY]])]
+  ["txtoRolUsu", new Map([["required", VAL_MESSAGES.VAL_NULLEMPTY]])]
 ]);
 
 export const RELROL_VALIDATIONS: Map<string, any[]> = new Map([
-  ['cdgoRolUsu', [Validators.required]]
+  ["cdgoRolUsu", [Validators.required]]
 ]);
 
 export const RELROL_VAL_MSG: Map<string, Map<string, string>> = new Map([
-  ['cdgoRolUsu', new Map([['required', VAL_MESSAGES.VAL_NULLEMPTY]])]
+  ["cdgoRolUsu", new Map([["required", VAL_MESSAGES.VAL_NULLEMPTY]])]
 ]);
 
 export const TRAIN_ROUTE_VALIDATIONS: Map<string, any[]> = new Map([
-  ['cdgoTrenNSK', [Validators.required, Validators.maxLength(4)]],
-  ['txtoRuta', [Validators.required, Validators.maxLength(30)]],
-  ['txtoSentido', [Validators.required, Validators.maxLength(3)]],
-  ['txtoTime3Env', [Validators.required]],
-  ['cdgoEstaOrig', [Validators.required, Validators.maxLength(3)]],
-  ['cdgoEstaDest', [Validators.required, Validators.maxLength(3)]],
-  ['cdgoTipoTren', [Validators.required, Validators.maxLength(10)]],
-  ['txtoCriterio', [Validators.required, Validators.maxLength(30)]]
+  ["cdgoTrenNSK", [Validators.required, Validators.maxLength(4)]],
+  ["txtoRuta", [Validators.required, Validators.maxLength(30)]],
+  ["txtoSentido", [Validators.required, Validators.maxLength(3)]],
+  ["txtoTime3Env", [Validators.required]],
+  ["cdgoEstaOrig", [Validators.required, Validators.maxLength(3)]],
+  ["cdgoEstaDest", [Validators.required, Validators.maxLength(3)]],
+  ["cdgoTipoTren", [Validators.required, Validators.maxLength(10)]],
+  ["txtoCriterio", [Validators.required, Validators.maxLength(30)]]
 ]);
 
 export const TRAIN_ROUTE_VAL_MSG: Map<string, Map<string, string>> = new Map([
   [
-    'cdgoTrenNSK',
+    "cdgoTrenNSK",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'txtoRuta',
+    "txtoRuta",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'txtoSentido',
+    "txtoSentido",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
-  ['txtoTime3Env', new Map([['required', VAL_MESSAGES.VAL_NULLEMPTY]])],
+  ["txtoTime3Env", new Map([["required", VAL_MESSAGES.VAL_NULLEMPTY]])],
   [
-    'cdgoEstaOrig',
+    "cdgoEstaOrig",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
-    ])
-  ],
-  [
-    'cdgoEstaDest',
-    new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'cdgoTipoTren',
+    "cdgoEstaDest",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'txtoCriterio',
+    "cdgoTipoTren",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
+    ])
+  ],
+  [
+    "txtoCriterio",
+    new Map([
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ]
 ]);
 
 export const TRAINS_REL_VALIDATIONS: Map<string, any[]> = new Map([
-  ['cdgoTrenNSK', [Validators.required, Validators.maxLength(4)]],
-  ['cdgoTrenRenf', [Validators.required, Validators.maxLength(5)]],
-  ['cdgoTipTRen', [Validators.required, Validators.maxLength(10)]]
+  ["cdgoTrenNSK", [Validators.required, Validators.maxLength(4)]],
+  ["cdgoTrenRenf", [Validators.required, Validators.maxLength(5)]],
+  ["cdgoTipTRen", [Validators.required, Validators.maxLength(10)]]
 ]);
 
 export const TRAINS_REL_VAL_MSG: Map<string, Map<string, string>> = new Map([
   [
-    'cdgoTrenNSK',
+    "cdgoTrenNSK",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'cdgoTrenRenf',
+    "cdgoTrenRenf",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'cdgoTipTRen',
+    "cdgoTipTRen",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ]
 ]);
 
 export const STATIONS_VALIDATIONS: Map<string, any[]> = new Map([
-  ['cdgoEstaNSK', [Validators.required, Validators.maxLength(3)]],
-  ['cdgoEstaRenf', [Validators.maxLength(5)]],
-  ['txtoPais', [Validators.required, Validators.maxLength(2)]],
-  ['esFrontera', [Validators.maxLength(6)]],
-  ['txtoDesc', [Validators.required, Validators.maxLength(30)]]
+  ["cdgoEstaNSK", [Validators.required, Validators.maxLength(3)]],
+  ["cdgoEstaRenf", [Validators.maxLength(5)]],
+  ["txtoPais", [Validators.required, Validators.maxLength(2)]],
+  ["esFrontera", [Validators.maxLength(6)]],
+  ["txtoDesc", [Validators.required, Validators.maxLength(30)]]
 ]);
 
 export const STATIONS_VAL_MSG: Map<string, Map<string, string>> = new Map([
   [
-    'cdgoEstaNSK',
+    "cdgoEstaNSK",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
-  ['cdgoEstaRenf', new Map([['maxlength', VAL_MESSAGES.VAL_LENGTH]])],
+  ["cdgoEstaRenf", new Map([["maxlength", VAL_MESSAGES.VAL_LENGTH]])],
   [
-    'txtoPais',
+    "txtoPais",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
-  ['esFrontera', new Map([['maxlength', VAL_MESSAGES.VAL_LENGTH]])],
+  ["esFrontera", new Map([["maxlength", VAL_MESSAGES.VAL_LENGTH]])],
   [
-    'txtoDesc',
+    "txtoDesc",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ]
 ]);
 
 export const EQ_REL_VALIDATIONS: Map<string, any[]> = new Map([
-  ['cdgoTipoTren', [Validators.required, Validators.maxLength(6)]],
-  ['nmroClase', [Validators.required, Validators.maxLength(5)]],
-  ['nmroCoche', [Validators.required, Validators.maxLength(5)]],
-  ['cdgoComCoche', [Validators.required, Validators.maxLength(5)]],
-  ['cdgoPlazNSK', [Validators.required, Validators.maxLength(5)]],
-  ['cdgoPlazRenf', [Validators.required, Validators.maxLength(5)]],
-  ['cdgoFbc', [Validators.required, Validators.maxLength(10)]]
+  ["cdgoTipoTren", [Validators.required, Validators.maxLength(6)]],
+  ["nmroClase", [Validators.required, Validators.maxLength(5)]],
+  ["nmroCoche", [Validators.required, Validators.maxLength(5)]],
+  ["cdgoComCoche", [Validators.required, Validators.maxLength(5)]],
+  ["cdgoPlazNSK", [Validators.required, Validators.maxLength(5)]],
+  ["cdgoPlazRenf", [Validators.required, Validators.maxLength(5)]],
+  ["cdgoFbc", [Validators.required, Validators.maxLength(10)]]
 ]);
 
 export const EQ_REL_VAL_MSG: Map<string, Map<string, string>> = new Map([
   [
-    'cdgoTipoTren',
+    "cdgoTipoTren",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'nmroClase',
+    "nmroClase",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'nmroCoche',
+    "nmroCoche",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'cdgoComCoche',
+    "cdgoComCoche",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'cdgoPlazNSK',
+    "cdgoPlazNSK",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'cdgoPlazRenf',
+    "cdgoPlazRenf",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'cdgoFbc',
+    "cdgoFbc",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ]
 ]);
 
 export const SEAT_PREFS_VALIDATIONS: Map<string, any[]> = new Map([
-  ['cdgoPreferenc', [Validators.required, Validators.maxLength(15)]],
-  ['txtoDesc', [Validators.required]]
+  ["cdgoPreferenc", [Validators.required, Validators.maxLength(15)]],
+  ["txtoDesc", [Validators.required]]
 ]);
 
 export const SEAT_PREFS_VAL_MSG: Map<string, Map<string, string>> = new Map([
   [
-    'cdgoPreferenc',
+    "cdgoPreferenc",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
-  ['txtoDesc', new Map([['required', VAL_MESSAGES.VAL_NULLEMPTY]])]
+  ["txtoDesc", new Map([["required", VAL_MESSAGES.VAL_NULLEMPTY]])]
 ]);
 
 export const FBC_NSK_VALIDATIONS: Map<string, any[]> = new Map([
-  ['cdgoFbc', [Validators.required, Validators.maxLength(7)]],
-  ['cdgoClass', [Validators.required, Validators.maxLength(2)]],
-  ['cdgoBookClass', [Validators.required, Validators.maxLength(2)]],
-  ['txtoTarifWSO', [Validators.required, Validators.maxLength(10)]]
+  ["cdgoFbc", [Validators.required, Validators.maxLength(7)]],
+  ["cdgoClass", [Validators.required, Validators.maxLength(2)]],
+  ["cdgoBookClass", [Validators.required, Validators.maxLength(2)]],
+  ["txtoTarifWSO", [Validators.required, Validators.maxLength(10)]]
 ]);
 
 export const FBC_NSK_VAL_MSG: Map<string, Map<string, string>> = new Map([
   [
-    'cdgoFbc',
+    "cdgoFbc",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'cdgoClass',
+    "cdgoClass",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'cdgoBookClass',
+    "cdgoBookClass",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'txtoTarifWSO',
+    "txtoTarifWSO",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ]
 ]);
 
 export const TRAINS_STATUS_VALIDATIONS: Map<string, any[]> = new Map([
-  ['cdgoEstadODS', [Validators.required, Validators.maxLength(1)]],
-  ['txtoNombre', [Validators.required, Validators.maxLength(20)]],
-  ['txtoDesc', [Validators.required, Validators.maxLength(60)]],
-  ['cdgoTipoAcce', [Validators.required, Validators.maxLength(1)]]
+  ["cdgoEstadODS", [Validators.required, Validators.maxLength(1)]],
+  ["txtoNombre", [Validators.required, Validators.maxLength(20)]],
+  ["txtoDesc", [Validators.required, Validators.maxLength(60)]],
+  ["cdgoTipoAcce", [Validators.required, Validators.maxLength(1)]]
 ]);
 
 export const TRAINS_STATUS_VAL_MSG: Map<string, Map<string, string>> = new Map([
   [
-    'cdgoEstadODS',
+    "cdgoEstadODS",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'txtoNombre',
+    "txtoNombre",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'txtoDesc',
+    "txtoDesc",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'cdgoTipoAcce',
+    "cdgoTipoAcce",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ]
 ]);
 
 export const ALARM_VALIDATIONS: Map<string, any[]> = new Map([
-  ['txtoAlarma', [Validators.required, Validators.maxLength(60)]],
-  ['txtoServicio', [Validators.required, Validators.maxLength(60)]],
-  ['limit', [Validators.required]],
-  ['idMailList', [Validators.required]]
+  ["txtoAlarma", [Validators.required, Validators.maxLength(60)]],
+  ["txtoServicio", [Validators.required, Validators.maxLength(60)]],
+  ["limit", [Validators.required]],
+  ["idMailList", [Validators.required]]
 ]);
 
 export const ALARM_VAL_MSG: Map<string, Map<string, string>> = new Map([
   [
-    'txtoAlarma',
+    "txtoAlarma",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
   [
-    'txtoServicio',
+    "txtoServicio",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ],
-  ['limit', new Map([['required', VAL_MESSAGES.VAL_NULLEMPTY]])],
-  ['idMailList', new Map([['required', VAL_MESSAGES.VAL_NULLEMPTY]])]
+  ["limit", new Map([["required", VAL_MESSAGES.VAL_NULLEMPTY]])],
+  ["idMailList", new Map([["required", VAL_MESSAGES.VAL_NULLEMPTY]])]
 ]);
 
 export const MAIL_VALIDATIONS: Map<string, any[]> = new Map([
-  ['txtoMailList', [Validators.required]]
+  ["txtoMailList", [Validators.required]]
 ]);
 
 export const MAIL_VAL_MSG: Map<string, Map<string, string>> = new Map([
-  ['txtoMailList', new Map([['required', VAL_MESSAGES.VAL_NULLEMPTY]])]
+  ["txtoMailList", new Map([["required", VAL_MESSAGES.VAL_NULLEMPTY]])]
 ]);
 
 export const LOGIN_VALIDATIONS: Map<string, any[]> = new Map([
-  ['uid', [Validators.required]],
-  ['pass', [Validators.required]]
+  ["uid", [Validators.required]],
+  ["pass", [Validators.required]]
 ]);
 
 export const LOGIN_VAL_MSG: Map<string, Map<string, string>> = new Map([
-  ['uid', new Map([['required', VAL_MESSAGES.VAL_NULLEMPTY]])],
-  ['pass', new Map([['required', VAL_MESSAGES.VAL_NULLEMPTY]])]
+  ["uid", new Map([["required", VAL_MESSAGES.VAL_NULLEMPTY]])],
+  ["pass", new Map([["required", VAL_MESSAGES.VAL_NULLEMPTY]])]
 ]);
 
 export const USER_VALIDATIONS: Map<string, any[]> = new Map([
-  ['nombreApellidos', [Validators.required, Validators.maxLength(20)]]
+  ["nombreApellidos", [Validators.required, Validators.maxLength(50)]]
 ]);
 
 export const USER_VAL_MSG: Map<string, Map<string, string>> = new Map([
   [
-    'nombreApellidos',
+    "nombreApellidos",
     new Map([
-      ['required', VAL_MESSAGES.VAL_NULLEMPTY],
-      ['maxlength', VAL_MESSAGES.VAL_LENGTH]
+      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
+      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
     ])
   ]
 ]);
 
-
 export const MATRIX_REL: Map<
   Map<string, any[]>,
   Map<string, Map<string, string>>
-  > = new Map([
-    // Bean structures
-    [USER_VALIDATIONS, USER_VAL_MSG],
-    [USUARIO_VALIDATIONS, USUARIO_VAL_MSG],
-    [TIPO_USUARIO_VALIDATIONS, TIPO_USUARIO_VAL_MSG],
-    [OCCU_VALIDATIONS, OCCU_VAL_MSG],
-    [SBQ_VALIDATIONS, SBQ_VAL_MSG],
-    [FUNC_VALIDATIONS, FUNC_VAL_MSG],
-    [TIPOFUNC_VALIDATIONS, TIPOFUNC_VAL_MSG],
-    [ROL_VALIDATIONS, ROL_VAL_MSG],
-    [RELROL_VALIDATIONS, RELROL_VAL_MSG],
-    [TRAIN_ROUTE_VALIDATIONS, TRAIN_ROUTE_VAL_MSG],
-    [TRAINS_REL_VALIDATIONS, TRAINS_REL_VAL_MSG],
-    [STATIONS_VALIDATIONS, STATIONS_VAL_MSG],
-    [EQ_REL_VALIDATIONS, EQ_REL_VAL_MSG],
-    [SEAT_PREFS_VALIDATIONS, SEAT_PREFS_VAL_MSG],
-    [FBC_NSK_VALIDATIONS, FBC_NSK_VAL_MSG],
-    [TRAINS_STATUS_VALIDATIONS, TRAINS_STATUS_VAL_MSG],
-    [ALARM_VALIDATIONS, ALARM_VAL_MSG],
-    [MAIL_VALIDATIONS, MAIL_VAL_MSG],
-    [LOGIN_VALIDATIONS, LOGIN_VAL_MSG]
-  ]);
+> = new Map([
+  // Bean structures
+  [USER_VALIDATIONS, USER_VAL_MSG],
+  [USUARIO_VALIDATIONS, USUARIO_VAL_MSG],
+  [TIPO_USUARIO_VALIDATIONS, TIPO_USUARIO_VAL_MSG],
+  [OCCU_VALIDATIONS, OCCU_VAL_MSG],
+  [SBQ_VALIDATIONS, SBQ_VAL_MSG],
+  [FUNC_VALIDATIONS, FUNC_VAL_MSG],
+  [TIPOFUNC_VALIDATIONS, TIPOFUNC_VAL_MSG],
+  [ROL_VALIDATIONS, ROL_VAL_MSG],
+  [RELROL_VALIDATIONS, RELROL_VAL_MSG],
+  [TRAIN_ROUTE_VALIDATIONS, TRAIN_ROUTE_VAL_MSG],
+  [TRAINS_REL_VALIDATIONS, TRAINS_REL_VAL_MSG],
+  [STATIONS_VALIDATIONS, STATIONS_VAL_MSG],
+  [EQ_REL_VALIDATIONS, EQ_REL_VAL_MSG],
+  [SEAT_PREFS_VALIDATIONS, SEAT_PREFS_VAL_MSG],
+  [FBC_NSK_VALIDATIONS, FBC_NSK_VAL_MSG],
+  [TRAINS_STATUS_VALIDATIONS, TRAINS_STATUS_VAL_MSG],
+  [ALARM_VALIDATIONS, ALARM_VAL_MSG],
+  [MAIL_VALIDATIONS, MAIL_VAL_MSG],
+  [LOGIN_VALIDATIONS, LOGIN_VAL_MSG]
+]);

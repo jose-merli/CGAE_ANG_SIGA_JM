@@ -14,6 +14,9 @@ import { MenuItem } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
 import { InputTextareaModule } from "primeng/inputtextarea";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { ConfirmationService } from "primeng/api";
+
 @Injectable()
 export class SigaServices {
   items: MenuItem[];
@@ -26,7 +29,8 @@ export class SigaServices {
     diccionarios: "diccionarios",
     usuarios_rol: "usuarios/rol",
     usuarios_perfil: "usuarios/perfil",
-    usuarios_search: "/usuarios/search"
+    usuarios_search: "usuarios/search",
+    usuarios_delete: "usuarios/delete"
   };
 
   constructor(private http: HttpClient) {}
@@ -62,6 +66,20 @@ export class SigaServices {
     });
     return this.http
       .post(environment.newSigaUrl + this.endpoints[service], body, {
+        headers: headers,
+        observe: "response",
+        responseType: "text"
+      })
+      .map(response => {
+        return response;
+      });
+  }
+  postPaginado(service: string, param: string, body: any): Observable<any> {
+    let headers = new HttpHeaders({
+      "Content-Type": "application/json"
+    });
+    return this.http
+      .post(environment.newSigaUrl + this.endpoints[service] + param, body, {
         headers: headers,
         observe: "response",
         responseType: "text"

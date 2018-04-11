@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
   }
 
-  canShowMenu() {
+  isLogged() {
     return this.autenticateService.isAutenticated();
   }
 

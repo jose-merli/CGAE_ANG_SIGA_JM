@@ -25,13 +25,17 @@ import { MenuComponent } from "./commons/menu/menu.component";
 import { HomeComponent } from "./features/home/home.component";
 import { LoginComponent } from "./commons/login/login.component";
 import { TranslatePipe, TranslateService } from "./commons/translate";
-
+import { ConfirmDialogComponent } from "./commons/dialog/dialog.component";
 //PRIMENG
 import { DropdownModule } from "primeng/dropdown";
 import { ButtonModule } from "primeng/button";
 import { DataTableModule } from "primeng/datatable";
 import { InputTextModule } from "primeng/inputtext";
 import { InputTextareaModule } from "primeng/inputtextarea";
+import { CheckboxModule } from "primeng/checkbox";
+import { RadioButtonModule } from "primeng/radiobutton";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { ConfirmationService } from "primeng/api";
 
 // Modulo de censo
 import { SearchColegiadosComponent } from "./features/censo/search-colegiados/search-colegiados.component";
@@ -68,7 +72,7 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     LoginComponent,
     HeaderComponent,
     HomeComponent,
-
+    ConfirmDialogComponent,
     // Censo
     SearchColegiadosComponent,
     SearchNoColegiadosComponent,
@@ -105,7 +109,10 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     ButtonModule,
     DataTableModule,
     InputTextModule,
-    InputTextareaModule
+    InputTextareaModule,
+    CheckboxModule,
+    RadioButtonModule,
+    ConfirmDialogModule
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
@@ -113,6 +120,7 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     OldSigaServices,
     SigaServices,
     AuthenticationService,
+    ConfirmationService,
     AuthGuard,
     {
       provide: APP_BASE_HREF,

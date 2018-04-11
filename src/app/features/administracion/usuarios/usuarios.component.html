@@ -26,6 +26,10 @@
             <label>NIF</label>
             <input type="text" name="NIF" class="form-control" [(ngModel)]='body.nif' pInputText>
           </div>
+          <div *ngIf="editar == false" class="form-group col-lg-3 col-md-3">
+          </div>
+          <div *ngIf="editar == false" class="form-group col-lg-3 col-md-3">
+          </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>Rol</label>
             <p-dropdown class="select-form" [(ngModel)]='body.rol' [options]="usuarios_rol"></p-dropdown>
@@ -35,11 +39,16 @@
               </select>-->
             <img id="idRolBusqueda_loading" src="html/imagenes/loading-spinner.gif" alt="Cargando..." style="visibility:hidden">
           </div>
-          <div class="form-group col-lg-3 col-md-3">
+
+          <div *ngIf="editar == false" class="form-group col-lg-3 col-md-3">
             <label>Grupo</label>
             <p-dropdown class="select-form" [(ngModel)]='body.Grupo' [options]="usuarios_perfil"></p-dropdown>
-
-
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label class="d-block pb-2">Activo</label>
+            <!--<p-dropdown class="select-form" [options]="select"></p-dropdown>-->
+            <p-radioButton label="Sí" name="activo" value="S" class="pr-3" [(ngModel)]="body.activo" [(disabled)]="disabledRadio"></p-radioButton>
+            <p-radioButton label="No" name="activo" value="N" class="pr-3" [(ngModel)]="body.activo" [(disabled)]="disabledRadio"> </p-radioButton>
           </div>
         </div>
       </div>
@@ -62,9 +71,7 @@
   <!--FIN CARD-->
   <div *ngIf="buscar == true" class="card mt-3">
     <div class="card-body p-0">
-      <div>
-        <p class="px-3 pt-2 text-right" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()"><i class="pr-2 fa fa-plus"></i>Selección múltiple</p>
-      </div>
+
       <p-dataTable [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowSelect)="editarUsuario(selectedDatos)"
         dataKey="nif" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1"
         [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
@@ -84,12 +91,17 @@
 
 
         <p-footer *ngIf="selectedDatos">
-          <div class="text-right main-button">
-            <button pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="Eliminar"></button>
+
+          <div *ngIf="activo==true" class="text-right main-button">
+            <button pButton type="button" icon="fa fa-check" iconPos="left" label="Rehabilitar"></button>
+          </div>
+          <div *ngIf="activo==false" class="text-right main-button">
+            <button (click)="borrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="Eliminar"></button>
           </div>
         </p-footer>
         </p-dataTable>
     </div>
   </div>
   <!--FIN DE PRINCIPAL-->
+  <app-dialog></app-dialog>
 </div>
