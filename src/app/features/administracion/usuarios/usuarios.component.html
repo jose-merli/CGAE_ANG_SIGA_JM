@@ -18,13 +18,14 @@
         <div class="form-row">
           <div class="form-group col-lg-3 col-md-3">
             <label>Nombre y Apellidos</label>
-            <input type="text" name="nombreApellidos" class="form-control" [(ngModel)]='body.nombreApellidos' [formControl]="this.formGroup.controls['nombreApellidos']"
+            <input type="text" name="nombreApellidos" [(disabled)]="editar" class="form-control" [(ngModel)]='body.nombreApellidos' (ngModelChange)="onChangeForm()"
               pInputText>
-              <label *ngIf="hasErrors('nombreApellidos')" class="labelError">{{getErrorMessage('nombreApellidos')}}</label>
+
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>NIF</label>
-            <input type="text" name="NIF" class="form-control" [(ngModel)]='body.nif' pInputText>
+            <input type="text" name="NIF" class="form-control" [(disabled)]="editar" [(ngModel)]='body.nif' (ngModelChange)="onChangeForm()"
+              pInputText>
           </div>
           <div *ngIf="editar == false" class="form-group col-lg-3 col-md-3">
           </div>
@@ -32,17 +33,24 @@
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>Rol</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.rol' [options]="usuarios_rol"></p-dropdown>
+            <p-dropdown class="select-form" [(ngModel)]='body.rol' [(disabled)]="editar" [options]="usuarios_rol" (ngModelChange)="onChangeForm()"></p-dropdown>
             <!--<select id="idRolBusqueda" [(ngModel)]='body.rol' name="idRolBusqueda" class="select-form">
               <option value="" selected></option>
               <option *ngFor="let i of usuarios_rol" [ngValue]="i">{{ i.value }}</option>
               </select>-->
             <img id="idRolBusqueda_loading" src="html/imagenes/loading-spinner.gif" alt="Cargando..." style="visibility:hidden">
           </div>
-
-          <div *ngIf="editar == false" class="form-group col-lg-3 col-md-3">
+          <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
+          </div>
+          <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
             <label>Grupo</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.Grupo' [options]="usuarios_perfil"></p-dropdown>
+            <p-dropdown class="select-form" [(ngModel)]='body.grupo' [options]="usuarios_perfil" (ngModelChange)="onChangeForm()" [(disabled)]="!editar"></p-dropdown>
+          </div>
+
+          <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
+            <label>Codigo Externo</label>
+            <input type="text" name="codExterno" class="form-control" [(disabled)]="!editar" [(ngModel)]='body.codigoExterno' (ngModelChange)="onChangeForm()"
+              pInputText>
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label class="d-block pb-2">Activo</label>
@@ -57,11 +65,11 @@
       <div class="text-right main-button ">
         <div class="row">
           <div *ngIf="editar == true" class=" col-2 offset-10">
-            <button pButton type="button" icon="	fa fa-edit " iconPos="left" label="Editar"></button>
+            <button (click)="sendEdit();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="Editar"></button>
             <button (click)="cancelar(); selectedDatos = false;" pButton type="button" icon="	fa fa-close " iconPos="left" label="Cancelar"></button>
           </div>
           <div *ngIf="editar == false" class="col-2 offset-10">
-            <button pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="Crear"></button>
+            <button (click)="crear()" pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="Crear" [disabled]="blockCrear"></button>
             <button (click)="isBuscar()" pButton type="button " icon="fa fa-search " iconPos="left" label="Buscar"></button>
           </div>
         </div>
