@@ -137,13 +137,11 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
   //cada vez que cambia el formulario comprueba esto
   onChangeForm() {
-    if (this.body.codigoExt == "" || this.body.codigoExt == undefined) {
+    if (this.formCodigo == "" || this.formCodigo == undefined) {
       this.blockCrear = true;
-    } else if (this.body.descripcion == "" || this.body.descripcion == undefined) {
+    } else if (this.formDescripcion == "" || this.formDescripcion == undefined) {
       this.blockCrear = true;
     } else {
-      this.formDescripcion = this.body.descripcion;
-      this.formCodigo = this.body.codigoExt;
       this.blockCrear = false;
     }
   }
@@ -155,21 +153,29 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       this.body = selectedDatos[0];
       this.editar = true;
       this.blockSeleccionar = true;
+      this.bodyToForm();
     } else {
       this.editar = false;
       this.blockSeleccionar = false;
+
       this.body = new CatalogoRequestDto();
+      this.bodyToForm();
       this.table.reset();
     }
   }
 
   isBuscar() {
     this.buscar = true;
+    if (this.body.codigoExt != undefined) {
+      this.formToBody();
+    }
     if (this.body.codigoExt == undefined) {
       this.body.codigoExt = "";
+      this.formToBody();
     }
     if (this.body.descripcion == undefined) {
       this.body.descripcion = "";
+      this.formToBody();
     }
     if (this.body.idInstitucion == undefined) {
       this.body.idInstitucion = "";
@@ -191,24 +197,72 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
 
   isLimpiar() {
     this.body = new CatalogoRequestDto();
+    this.bodyToForm();
     this.editar = false;
     this.blockSeleccionar = false;
     this.eliminacion = false;
+    this.blockCrear = true;
+    this.blockBuscar = true;
   }
 
   isCrear() {
-    // 
+    this.cre = new CatalogoCreateRequestDto();
+    this.cre.tabla = this.body.catalogo;
+    this.cre.idRegistro = this.body.idRegistro;
+    this.cre.codigoExt = this.formCodigo;
+    this.cre.descripcion = this.formDescripcion;
+    this.cre.idInstitucion = this.body.idInstitucion;
+    this.sigaServices.post("maestros_create", this.cre).subscribe(
+      data => {
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.reset();
+      }
+    );
+  }
+
+  reset() {
+    this.editar = false;
+    this.body = new CatalogoRequestDto();
+    this.body.catalogo = this.catalogoSeleccionado;
+    this.blockSeleccionar = false;
+    this.bodyToForm();
+    this.isBuscar();
+    this.blockCrear = true;
+    this.table.reset();
+  }
+  formToBody() {
+    this.body.descripcion = this.formDescripcion;
+    this.body.codigoExt = this.formCodigo;
+  }
+
+  bodyToForm() {
+    this.formDescripcion = this.body.descripcion;
+    this.formCodigo = this.body.codigoExt;
   }
 
   isEditar(selectedItem) {
-    this.catalogoSeleccionado = this.body.catalogo;
-    this.body = new CatalogoRequestDto();
-    this.body = selectedItem[0];
-    this.body.catalogo = this.catalogoSeleccionado;
+    this.upd = new CatalogoUpdateRequestDto();
+    this.upd.tabla = this.body.catalogo;
+    this.upd.descripcion = this.formDescripcion;
+    this.upd.codigoExt = this.formCodigo;
+    this.upd.idRegistro = this.body.idRegistro;
     this.blockSeleccionar = true;
-    //aqui guardo los elementos de las cajas dentro del objeto body, no se si lo que debería hacer es ponerlos en el objeto editar.
-    this.body.descripcion = this.formDescripcion;
-    this.body.codigoExt = this.formCodigo;
+    this.sigaServices.post("maestros_update", this.upd).subscribe(
+      data => {
+        console.log(data);
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.reset();
+      }
+    );
+
   }
 
   isEliminar(selectedDatos) {
@@ -224,12 +278,15 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         console.log(err);
       },
       () => {
+        this.catalogoSeleccionado = this.body.catalogo;
         this.body = new CatalogoRequestDto();
+        this.body.catalogo = this.catalogoSeleccionado;
         this.isBuscar();
 
       }
     )
   }
+
 }
 
 export class CatalogoMaestroItem {
@@ -251,6 +308,7 @@ export class CatalogoRequestDto {
   catalogo: String;
   codigoExt: String;
   descripcion: String;
+  idRegistro: String;
   idInstitucion: String;
   constructor() { }
 }
