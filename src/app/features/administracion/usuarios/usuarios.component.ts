@@ -47,7 +47,9 @@ export class Usuarios extends SigaWrapper implements OnInit {
   editar: boolean = false;
   buscar: boolean = false;
   disabledRadio: boolean = false;
+  disabled: boolean = false;
   selectMultiple: boolean = false;
+  blockCrear: boolean = true;
   selectedItem: number = 4;
   activo: boolean = false;
   constructor(
@@ -106,30 +108,26 @@ export class Usuarios extends SigaWrapper implements OnInit {
       }
     ];
   }
+  crear() {}
+  onChangeForm() {
+    if (
+      this.body.nombreApellidos == "" ||
+      this.body.nif == "" ||
+      this.body.rol == "" ||
+      this.body.grupo == ""
+    ) {
+      this.blockCrear = true;
+    } else {
+      this.blockCrear = false;
+    }
+  }
 
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
   }
-  search() {
-    console.log("{ UsuarioRequestDto: " + JSON.stringify(this.body) + "}");
-    this.sigaServices
-      .post(
-        "usuarios_search",
-        "{ UsuarioRequestDto: " + JSON.stringify(this.body) + "}"
-      )
-      .subscribe(
-        data => {
-          console.log(
-            "{ UsuarioRequestDto: " + JSON.stringify(this.body) + "}"
-          );
-        },
-        err => {
-          console.log("JA JA JA");
-        }
-      );
-  }
+
   pInputText;
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
@@ -137,12 +135,27 @@ export class Usuarios extends SigaWrapper implements OnInit {
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
+  sendEdit() {
+    console.log(this.body);
+
+    this.sigaServices.post("usuarios_update", this.body).subscribe(
+      data => {
+        console.log(data);
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.isBuscar();
+      }
+    );
+  }
   isBuscar() {
     this.buscar = true;
     if (this.body.nombreApellidos == undefined) {
       this.body.nombreApellidos = "";
     }
-    if (this.body.activo == undefined) {
+    if (UsuarioRequestDto == undefined) {
       this.body.activo = "S";
       this.activo = true;
     }
@@ -228,7 +241,8 @@ export class UsuarioItem {
   codigoExterno: String;
   roles: String;
   activo: String;
-  perfil: String;
+  idGrupo: String;
+  grupo: String;
   idUsuario: String;
   idInstitucion: String;
   constructor() {}

@@ -744,17 +744,11 @@ export const LOGIN_VAL_MSG: Map<string, Map<string, string>> = new Map([
 ]);
 
 export const USER_VALIDATIONS: Map<string, any[]> = new Map([
-  ["nombreApellidos", [Validators.required, Validators.maxLength(50)]]
+  ["nombreApellidos", [Validators.maxLength(50)]]
 ]);
 
 export const USER_VAL_MSG: Map<string, Map<string, string>> = new Map([
-  [
-    "nombreApellidos",
-    new Map([
-      ["required", VAL_MESSAGES.VAL_NULLEMPTY],
-      ["maxlength", VAL_MESSAGES.VAL_LENGTH]
-    ])
-  ]
+  ["nombreApellidos", new Map([["maxlength", VAL_MESSAGES.VAL_LENGTH]])]
 ]);
 
 export const MATRIX_REL: Map<
@@ -762,23 +756,5 @@ export const MATRIX_REL: Map<
   Map<string, Map<string, string>>
 > = new Map([
   // Bean structures
-  [USER_VALIDATIONS, USER_VAL_MSG],
-  [USUARIO_VALIDATIONS, USUARIO_VAL_MSG],
-  [TIPO_USUARIO_VALIDATIONS, TIPO_USUARIO_VAL_MSG],
-  [OCCU_VALIDATIONS, OCCU_VAL_MSG],
-  [SBQ_VALIDATIONS, SBQ_VAL_MSG],
-  [FUNC_VALIDATIONS, FUNC_VAL_MSG],
-  [TIPOFUNC_VALIDATIONS, TIPOFUNC_VAL_MSG],
-  [ROL_VALIDATIONS, ROL_VAL_MSG],
-  [RELROL_VALIDATIONS, RELROL_VAL_MSG],
-  [TRAIN_ROUTE_VALIDATIONS, TRAIN_ROUTE_VAL_MSG],
-  [TRAINS_REL_VALIDATIONS, TRAINS_REL_VAL_MSG],
-  [STATIONS_VALIDATIONS, STATIONS_VAL_MSG],
-  [EQ_REL_VALIDATIONS, EQ_REL_VAL_MSG],
-  [SEAT_PREFS_VALIDATIONS, SEAT_PREFS_VAL_MSG],
-  [FBC_NSK_VALIDATIONS, FBC_NSK_VAL_MSG],
-  [TRAINS_STATUS_VALIDATIONS, TRAINS_STATUS_VAL_MSG],
-  [ALARM_VALIDATIONS, ALARM_VAL_MSG],
-  [MAIL_VALIDATIONS, MAIL_VAL_MSG],
-  [LOGIN_VALIDATIONS, LOGIN_VAL_MSG]
+  [USER_VALIDATIONS, USER_VAL_MSG]
 ]);
