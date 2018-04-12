@@ -55,7 +55,7 @@ const appRoutes: Routes = [
     { path: 'catalogosMaestros', component: CatalogosMaestros },
     { path: 'gruposUsuarios', component: GruposUsuarios },
     { path: 'etiquetas', component: Etiquetas },
-    { path: 'usuarios', component: Usuarios },
+    { path: 'usuarios', component: Usuarios, canActivate: [AuthGuard] },
     { path: 'seleccionarIdioma', component: SeleccionarIdioma },
 
     { path: '**', redirectTo: 'home' }
