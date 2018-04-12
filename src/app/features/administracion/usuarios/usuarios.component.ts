@@ -170,6 +170,9 @@ export class Usuarios extends SigaWrapper implements OnInit {
     if (this.body.codigoExterno == undefined) {
       this.body.codigoExterno = "";
     }
+    if (this.body.grupo == undefined) {
+      this.body.grupo = "";
+    }
     this.sigaServices.post("usuarios_update", this.body).subscribe(
       data => {
         this.showSuccess();
@@ -243,7 +246,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
 
   cancelar() {
     this.editar = false;
-    this.dniCorrecto = true;
+    this.dniCorrecto = null;
     this.body = new UsuarioRequestDto();
     this.body.activo = "S";
     this.isBuscar();
