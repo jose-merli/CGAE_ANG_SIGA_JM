@@ -32,6 +32,7 @@ export class SigaServices {
     usuarios_search: "usuarios/search",
     usuarios_delete: "usuarios/delete",
     usuarios_update: "usuarios/update",
+    usuarios_insert: "usuarios/create",
     maestros_search: "catmaestros/search",
     maestros_rol: "catmaestros/tabla",
     maestros_update: "catmaestros/update",

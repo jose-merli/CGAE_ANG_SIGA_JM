@@ -24,8 +24,10 @@ import { InputTextareaModule } from "primeng/inputtextarea";
 import { CheckboxModule } from "primeng/checkbox";
 import { RadioButtonModule } from "primeng/radiobutton";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { GrowlModule } from "primeng/growl";
 import { ConfirmationService } from "primeng/api";
-
+import { Message } from "primeng/components/common/api";
+import { MessageService } from "primeng/components/common/messageservice";
 @Component({
   selector: "app-usuarios",
   templateUrl: "./usuarios.component.html",
@@ -38,6 +40,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
   cols: any = [];
   datos: any[];
   select: any[];
+  msgs: Message[] = [];
   searchUser: UsuarioResponseDto = new UsuarioResponseDto();
   rowsPerPage: any = [];
   body: UsuarioRequestDto = new UsuarioRequestDto();
@@ -52,11 +55,16 @@ export class Usuarios extends SigaWrapper implements OnInit {
   blockCrear: boolean = true;
   selectedItem: number = 4;
   activo: boolean = false;
+  dniCorrecto: boolean;
+
+  private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
+
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
     private router: Router,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private messageService: MessageService
   ) {
     super(USER_VALIDATIONS);
   }
@@ -81,6 +89,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
         console.log(err);
       }
     );
+
     this.cols = [
       { field: "nombreApellidos", header: "Nombre y Apellidos" },
       { field: "nif", header: "NIF" },
@@ -108,17 +117,38 @@ export class Usuarios extends SigaWrapper implements OnInit {
       }
     ];
   }
-  crear() {}
+  isValidDNI(dni: String): boolean {
+    return (
+      dni &&
+      typeof dni === "string" &&
+      /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
+      dni.substr(8, 9).toUpperCase() ===
+        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+    );
+  }
+  prueba(event) {
+    console.log("");
+  }
   onChangeForm() {
     if (
-      this.body.nombreApellidos == "" ||
-      this.body.nif == "" ||
-      this.body.rol == "" ||
-      this.body.grupo == ""
+      this.body.nombreApellidos != "" &&
+      this.body.nombreApellidos != undefined &&
+      (this.body.nif != "" && this.body.nif != undefined) &&
+      (this.body.rol != "" && this.body.rol != undefined) &&
+      (this.body.grupo != "" && this.body.grupo != undefined)
     ) {
-      this.blockCrear = true;
-    } else {
       this.blockCrear = false;
+    } else {
+      this.blockCrear = true;
+    }
+
+    if (this.isValidDNI(this.body.nif)) {
+      this.dniCorrecto = true;
+    } else {
+      this.dniCorrecto = false;
+    }
+    if (this.body.nif == "") {
+      this.dniCorrecto = null;
     }
   }
 
@@ -137,16 +167,20 @@ export class Usuarios extends SigaWrapper implements OnInit {
   }
   sendEdit() {
     console.log(this.body);
-
+    if (this.body.codigoExterno == undefined) {
+      this.body.codigoExterno = "";
+    }
     this.sigaServices.post("usuarios_update", this.body).subscribe(
       data => {
+        this.showSuccess();
         console.log(data);
       },
       err => {
+        this.showFail();
         console.log(err);
       },
       () => {
-        this.isBuscar();
+        this.cancelar();
       }
     );
   }
@@ -209,8 +243,10 @@ export class Usuarios extends SigaWrapper implements OnInit {
 
   cancelar() {
     this.editar = false;
+    this.dniCorrecto = true;
     this.body = new UsuarioRequestDto();
     this.body.activo = "S";
+    this.isBuscar();
     this.table.reset();
   }
 
@@ -223,14 +259,50 @@ export class Usuarios extends SigaWrapper implements OnInit {
       this.usuariosDelete.idInstitucion = "2000";
     });
     this.sigaServices.post("usuarios_delete", this.usuariosDelete).subscribe(
-      data => {},
+      data => {
+        this.showSuccess();
+      },
       err => {
+        this.showFail();
         console.log(err);
       },
       () => {
-        this.isBuscar();
+        this.cancelar();
       }
     );
+  }
+
+  crear() {
+    this.sigaServices.post("usuarios_insert", this.body).subscribe(
+      data => {
+        this.showSuccess();
+      },
+      err => {
+        console.log(err);
+        this.showFail();
+      },
+      () => {
+        this.cancelar();
+      }
+    );
+  }
+
+  showSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: "Correcto",
+      detail: "Accion realizada correctamente"
+    });
+  }
+
+  showFail() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: "Error, fallo al realizar la accion"
+    });
   }
 }
 
@@ -266,6 +338,7 @@ export class UsuarioRequestDto {
   activo: String;
   grupo: String;
   idInstitucion: "2000";
+  codigoExterno: String;
   constructor() {}
 }
 export class UsuarioDeleteRequestDto {

@@ -4,7 +4,7 @@ import { HttpModule } from "@angular/http";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { APP_BASE_HREF } from "@angular/common";
-
+import { ValidationModule } from "./commons/validation/validation.module";
 import { MenubarModule } from "primeng/menubar";
 import { PanelMenuModule } from "primeng/panelmenu";
 import { MenuItem } from "primeng/api";
@@ -26,6 +26,9 @@ import { HomeComponent } from "./features/home/home.component";
 import { LoginComponent } from "./commons/login/login.component";
 import { TranslatePipe, TranslateService } from "./commons/translate";
 import { ConfirmDialogComponent } from "./commons/dialog/dialog.component";
+
+import { Message } from "primeng/components/common/api";
+import { MessageService } from "primeng/components/common/messageservice";
 //PRIMENG
 import { DropdownModule } from "primeng/dropdown";
 import { ButtonModule } from "primeng/button";
@@ -36,6 +39,7 @@ import { CheckboxModule } from "primeng/checkbox";
 import { RadioButtonModule } from "primeng/radiobutton";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ConfirmationService } from "primeng/api";
+import { GrowlModule } from "primeng/growl";
 
 // Modulo de censo
 import { SearchColegiadosComponent } from "./features/censo/search-colegiados/search-colegiados.component";
@@ -112,13 +116,16 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     InputTextareaModule,
     CheckboxModule,
     RadioButtonModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    ValidationModule,
+    GrowlModule
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     TranslateService,
     OldSigaServices,
     SigaServices,
+    MessageService,
     AuthenticationService,
     ConfirmationService,
     AuthGuard,
