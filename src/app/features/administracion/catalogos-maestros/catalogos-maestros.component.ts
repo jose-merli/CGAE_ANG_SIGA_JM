@@ -19,7 +19,6 @@ import { Router } from '@angular/router';
   encapsulation: ViewEncapsulation.None
 })
 export class CatalogosMaestros extends SigaWrapper implements OnInit {
-  maestros_rol: String;
   maestros_update: String;
   maestros_create: String;
   maestros_delete: String;
@@ -27,14 +26,16 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   body: CatalogoRequestDto = new CatalogoRequestDto();
 
   //Creo los objetos para interactuar con sus respectivos DTO
-  upd: CatalogoUpdateResponseDto = new CatalogoUpdateResponseDto();
-  cre: CatalogoCreateResponseDto = new CatalogoCreateResponseDto();
-  del: CatalogoDeleteResponseDto = new CatalogoDeleteResponseDto();
+  searchCatalogo: CatalogoResponseDto = new CatalogoResponseDto();
+  upd: CatalogoUpdateRequestDto = new CatalogoUpdateRequestDto();
+  cre: CatalogoCreateRequestDto = new CatalogoCreateRequestDto();
+  del: CatalogoDeleteRequestDto = new CatalogoDeleteRequestDto();
 
 
   pButton
   buscar: boolean = false;
   editar: boolean = false;
+  eliminacion: boolean = true;
 
   selectMultiple: boolean = false;
   selectedItem: number = 4;
@@ -45,9 +46,14 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   select: any[];
 
   //Array de opciones del dropdown
-  catalogo: any[];
+  catalogoArray: any[];
+
   //elemento seleccionado en el dropdown
   catalogoSeleccionado: String;
+
+  //elementos del form
+  formDescripcion: String;
+  formCodigo: String;
 
   showDatosGenerales: boolean = true
   blockSeleccionar: boolean = false;
@@ -65,101 +71,50 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     });
 
   }
-
-  search() {
-    console.log("{ CatalogoRequestDto: " + JSON.stringify(this.body) + "}");
-    this.sigaServices.post("maestros_search", "{ CatalogoRequestDto: " + JSON.stringify(this.body) + "}")
-      .subscribe(data => {
-        console.log("{ CatalogoRequestDto: " + JSON.stringify(this.body) + "}");
-      },
-      err => {
-        console.log("JA JA JA");
-      });
-  }
-
-  update() {
-    console.log("{ CatalogoUpdateRequestDto: " + JSON.stringify(this.upd) + "}");
-    this.sigaServices.post("maestros_update", "{ CatalogoUpdateRequestDto: " + JSON.stringify(this.upd) + "}")
-      .subscribe(data => {
-        console.log("{ CatalogoUpdateRequestDto: " + JSON.stringify(this.upd) + "}");
-      },
-      err => {
-        console.log("JA JA JA");
-      });
-  }
-
-  delete() {
-    console.log("{ CatalogoDeleteRequestDto: " + JSON.stringify(this.del) + "}");
-    this.sigaServices.post("maestros_delete", "{ CatalogoDeleteRequestDto: " + JSON.stringify(this.del) + "}")
-      .subscribe(data => {
-        console.log("{ CatalogoDeleteRequestDto: " + JSON.stringify(this.del) + "}");
-      },
-      err => {
-        console.log("JA JA JA");
-      });
-  }
-
-  create() {
-    console.log("{ CatalogoCreateRequestDto: " + JSON.stringify(this.cre) + "}");
-    this.sigaServices.post("maestros_create", "{ CatalogoCreateRequestDto: " + JSON.stringify(this.cre) + "}")
-      .subscribe(data => {
-        console.log("{ CatalogoCreateRequestDto: " + JSON.stringify(this.cre) + "}");
-      },
-      err => {
-        console.log("JA JA JA");
-      });
-  }
-
+  //Cargo el combo nada mas comenzar
   ngOnInit() {
     this.sigaServices.get("maestros_rol").subscribe(n => {
-      this.maestros_rol = n.combooItems;
-    });
-
-    //Cambiando los elementos body de undefined a "" para poder controlar los textarea
-    this.body.descripcion = "";
-    this.body.codigoExt = "";
+      this.catalogoArray = n.combooItems;
+    },
+      err => {
+        console.log(err);
+      }
+    );
 
     //Valores dummie de catalogo
-    this.catalogo = [
-      { label: 'Selecciona un catálogo', value: '' },
-      { label: 'dummie1', value: 'dummie1' },
-      { label: 'dummie2', value: 'dummie2' },
-      { label: 'dummie3', value: 'dummie3' },
-      { label: 'dummie4', value: 'dummie4' },
-      { label: 'dummie5', value: 'dummie5' }
-    ];
+    // this.catalogo = [
+    //   { label: 'Selecciona un catálogo', value: '' },
+    //   { label: 'dummie5', value: 'dummie5' }
+    // ];
     this.cols = [
       { field: 'codigoExt', header: 'Código externo' },
       { field: 'descripcion', header: 'Descripción' },
     ];
 
     //Valores dummie de tabla
-    this.datos = [
-      { codigoExt: '239123', descripcion: 'Administrador' },
-      { codigoExt: '324542', descripcion: 'Otorgante' },
-      { codigoExt: '214124', descripcion: 'Representante' },
-      { codigoExt: '758689', descripcion: 'Secretario' },
-      { codigoExt: '849123', descripcion: 'Paco' },
-      { codigoExt: '944542', descripcion: 'Luis' },
-      { codigoExt: '244124', descripcion: 'Pepe' },
-      { codigoExt: '748689', descripcion: 'Juan' },
-      { codigoExt: '249123', descripcion: 'Socio' },
-      { codigoExt: '344542', descripcion: 'Analista' },
-      { codigoExt: '244334', descripcion: 'Julian' },
-      { codigoExt: '744689', descripcion: 'Dummies' },
-    ];
+    // this.datos = [
+    //   { codigoExt: '239123', descripcion: 'Administrador' },
+    //   { codigoExt: '744689', descripcion: 'Dummies' },
+    // ];
 
     this.rowsPerPage = [
       {
-        label: 4, value: 4
+        label: 4,
+        value: 4
       },
       {
-        label: 6, value: 6
+        label: 6,
+        value: 6
       },
       {
-        label: 'Todo', value: this.datos.length
+        label: 8,
+        value: 8
       },
-    ]
+      {
+        label: 10,
+        value: 10
+      }
+    ];
   }
 
   onHideDatosGenerales() {
@@ -171,33 +126,38 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.changeDetectorRef.detectChanges();
     this.table.reset();
   }
-
+  // Control de buscar desactivado por ahora (hasta tener primer elemento del combo preparado)
   onChangeCatalogo() {
-    if (this.catalogoSeleccionado == '') {
+    if (this.body.catalogo == "") {
       this.blockBuscar = true;
       this.blockCrear = true;
     } else {
       this.blockBuscar = false;
     }
   }
-
+  //cada vez que cambia el formulario comprueba esto
   onChangeForm() {
-    if (this.body.descripcion == "" || this.body.codigoExt == "") {
+    if (this.body.codigoExt == "" || this.body.codigoExt == undefined) {
       this.blockCrear = true;
-    } else if (this.blockBuscar == false) {
+    } else if (this.body.descripcion == "" || this.body.descripcion == undefined) {
+      this.blockCrear = true;
+    } else {
+      this.formDescripcion = this.body.descripcion;
+      this.formCodigo = this.body.codigoExt;
       this.blockCrear = false;
     }
   }
 
   editarCatalogos(selectedDatos) {
+    this.eliminacion = true;
     if (selectedDatos.length == 1) {
-
       this.body = new CatalogoRequestDto();
       this.body = selectedDatos[0];
       this.editar = true;
       this.blockSeleccionar = true;
-      this.body.catalogo = this.catalogoSeleccionado;
     } else {
+      this.editar = false;
+      this.blockSeleccionar = false;
       this.body = new CatalogoRequestDto();
       this.table.reset();
     }
@@ -205,22 +165,86 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
 
   isBuscar() {
     this.buscar = true;
+    if (this.body.codigoExt == undefined) {
+      this.body.codigoExt = "";
+    }
+    if (this.body.descripcion == undefined) {
+      this.body.descripcion = "";
+    }
+    if (this.body.idInstitucion == undefined) {
+      this.body.idInstitucion = "";
+    }
+    this.sigaServices
+      .postPaginado("maestros_search", "?numPagina=1", this.body)
+      .subscribe(
+      data => {
+        console.log(data);
+
+        this.searchCatalogo = JSON.parse(data["body"]);
+        this.datos = this.searchCatalogo.catalogoMaestroItem;
+      },
+      err => {
+        console.log(err);
+      }
+      );
   }
 
   isLimpiar() {
     this.body = new CatalogoRequestDto();
     this.editar = false;
     this.blockSeleccionar = false;
+    this.eliminacion = false;
   }
 
   isCrear() {
     // 
   }
 
-  isEditar() {
-    // 
+  isEditar(selectedItem) {
+    this.catalogoSeleccionado = this.body.catalogo;
+    this.body = new CatalogoRequestDto();
+    this.body = selectedItem[0];
+    this.body.catalogo = this.catalogoSeleccionado;
+    this.blockSeleccionar = true;
+    //aqui guardo los elementos de las cajas dentro del objeto body, no se si lo que debería hacer es ponerlos en el objeto editar.
+    this.body.descripcion = this.formDescripcion;
+    this.body.codigoExt = this.formCodigo;
   }
 
+  isEliminar(selectedDatos) {
+    this.del = new CatalogoDeleteRequestDto();
+    selectedDatos.forEach((value: CatalogoMaestroItem, key: number) => {
+      console.log(value);
+      this.del.idRegistro.push(value.idRegistro);
+      this.del.tabla = value.catalogo;
+    });
+    this.sigaServices.post("maestros_delete", this.del).subscribe(
+      data => { },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.body = new CatalogoRequestDto();
+        this.isBuscar();
+
+      }
+    )
+  }
+}
+
+export class CatalogoMaestroItem {
+  idRegistro: "String";
+  catalogo: "String";
+  codigoExt: "String";
+  descripcion: "String";
+  idInstitucion: "String";
+  constructor() { }
+}
+
+export class CatalogoResponseDto {
+  error: String;
+  catalogoMaestroItem: CatalogoMaestroItem[] = [];
+  constructor() { }
 }
 
 export class CatalogoRequestDto {
@@ -231,34 +255,29 @@ export class CatalogoRequestDto {
   constructor() { }
 }
 
-export class CatalogoDeleteResponseDto {
-  catalogoItem: String;
+export class CatalogoDeleteRequestDto {
   idRegistro: any = [];
   tabla: String;
   idInstitucion: String;
-  error: String;
   constructor() { }
 }
 
-export class CatalogoUpdateResponseDto {
-  catalogoItem: String;
+export class CatalogoUpdateRequestDto {
   idRegistro: String;
   tabla: String;
-  idTabla: String;
   codigoExt: String;
   descripcion: String;
   idInstitucion: String;
-  error: String;
+  idLenguaje: String;
   constructor() { }
 }
 
-export class CatalogoCreateResponseDto {
-  catalogoItem: String;
+export class CatalogoCreateRequestDto {
+  idRegistro: String;
   tabla: String;
-  idTabla: String;
   codigoExt: String;
   descripcion: String;
   idInstitucion: String;
-  error: String;
+  idLenguaje: String;
   constructor() { }
 }

@@ -19,16 +19,16 @@
           <div class="form-group col-lg-4 col-md-4">
             <label>Seleccionar Catálogo (*)</label>
 
-            <p-dropdown class="select-form" [(ngModel)]="catalogoSeleccionado" [options]="catalogo" [(disabled)]="blockSeleccionar" (onChange)="onChangeCatalogo()"></p-dropdown>
+            <p-dropdown class="select-form" [(ngModel)]="body.catalogo" [options]="catalogoArray" [(disabled)]="blockSeleccionar" (onChange)="onChangeCatalogo()"></p-dropdown>
           </div>
           <div class="form-group col-lg-4 col-md-4">
             <label>Código externo</label>
-            <input type="text" name="codigoBusqueda" value="" class="box" class="form-control" [(ngModel)]='body.codigoExt' (ngModelChange)="onChangeForm()"
+            <input type="text" name="codigoBusqueda" value="" class="box" class="form-control" [(ngModel)]='formCodigo' (ngModelChange)="onChangeForm()"
               pInputText>
           </div>
           <div class="form-group col-lg-4 col-md-4">
             <label>Descripción</label>
-            <input type="text" name="descripcionBusqueda" value="" class="box" class="form-control" [(ngModel)]='body.descripcion' (ngModelChange)="onChangeForm()"
+            <input type="text" name="descripcionBusqueda" value="" class="box" class="form-control" [(ngModel)]='formDescripcion' (ngModelChange)="onChangeForm()"
               pInputText>
           </div>
         </div>
@@ -47,7 +47,7 @@
       <!--botones que se activan al editar-->
       <div *ngIf="editar == true">
         <div class="text-right main-button ">
-          <button (click)="isLimpiar(); selectedDatos=[]" pButton type="button " icon="	fa fa-eraser " iconPos="left" label="Limpiar"></button>
+          <button (click)="isLimpiar(); selectedDatos=[];" pButton type="button " icon="fa fa-eraser" iconPos="left" label="Cancelar"></button>
           <!--deshabilitar botón a menos que el campo obligatorio esté relleno-->
           <button (click)="isEditar()" pButton type="button " icon="fa fa-save " iconPos="left" label="Editar"></button>
         </div>
@@ -61,7 +61,7 @@
 <div *ngIf="buscar == true" class="card mt-3">
   <div class="card-body p-0">
     <p-dataTable [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowSelect)="editarCatalogos(selectedDatos)"
-      dataKey="codigoExt" selectionMode="multiple" [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1"
+      dataKey="descripcion" selectionMode="multiple" [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1"
       [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
       <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header"> </p-column>
 
@@ -70,9 +70,9 @@
         <label>Mostrar <p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> registros</label>
       </ng-template>
 
-      <p-footer *ngIf="selectedDatos">
+      <p-footer *ngIf="eliminacion">
         <div class="text-right main-button">
-          <button pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="Eliminar"></button>
+          <button (click)="isEliminar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="Eliminar"></button>
         </div>
       </p-footer>
       </p-dataTable>
