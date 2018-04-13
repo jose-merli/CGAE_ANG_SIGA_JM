@@ -55,6 +55,13 @@ import { MantenimientoGruposFijosComponent } from "./features/censo/mantenimient
 import { MantenimientoMandatosComponent } from "./features/censo/mantenimiento-mandatos/mantenimiento-mandatos.component";
 import { BusquedaSancionesComponent } from "./features/censo/busqueda-sanciones/busqueda-sanciones.component";
 
+import { CommonModule } from "@angular/common";
+import { CalendarModule } from "primeng/calendar";
+import { AutoCompleteModule } from "primeng/autocomplete";
+import { TooltipModule } from "primeng/tooltip";
+import { ChipsModule } from "primeng/chips";
+import { EditorModule } from "primeng/editor";
+
 // Modulo de administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
@@ -118,7 +125,13 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     RadioButtonModule,
     ConfirmDialogModule,
     ValidationModule,
-    GrowlModule
+    GrowlModule,
+    CommonModule,
+    CalendarModule,
+    AutoCompleteModule,
+    TooltipModule,
+    ChipsModule,
+    EditorModule
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

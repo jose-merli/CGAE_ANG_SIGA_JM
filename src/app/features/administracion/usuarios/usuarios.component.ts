@@ -16,6 +16,7 @@ import {
   Validators,
   FormControl
 } from "@angular/forms";
+import { TranslateService } from "../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { ButtonModule } from "primeng/button";
 import { Router } from "@angular/router";
@@ -64,7 +65,9 @@ export class Usuarios extends SigaWrapper implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService
   ) {
     super(USER_VALIDATIONS);
   }
@@ -184,6 +187,8 @@ export class Usuarios extends SigaWrapper implements OnInit {
       },
       () => {
         this.cancelar();
+        this.isBuscar();
+        this.table.reset();
       }
     );
   }
@@ -234,8 +239,10 @@ export class Usuarios extends SigaWrapper implements OnInit {
       this.editar = true;
       this.disabledRadio = false;
     } else {
-      this.cancelar();
-      this.disabledRadio = true;
+      this.editar = false;
+      this.dniCorrecto = null;
+      this.body = new UsuarioRequestDto();
+      this.body.activo = selectedItem[0].activo;
     }
     if (this.body.activo == "N") {
       this.activo = true;
@@ -249,8 +256,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
     this.dniCorrecto = null;
     this.body = new UsuarioRequestDto();
     this.body.activo = "S";
-    this.isBuscar();
-    this.table.reset();
+    this.disabledRadio = false;
   }
 
   borrar(selectedItem) {
@@ -270,7 +276,13 @@ export class Usuarios extends SigaWrapper implements OnInit {
         console.log(err);
       },
       () => {
-        this.cancelar();
+        this.editar = false;
+        this.dniCorrecto = null;
+        this.body = new UsuarioRequestDto();
+        this.body.activo = selectedItem[0].activo;
+        this.disabledRadio = false;
+        this.isBuscar();
+        this.table.reset();
       }
     );
   }
@@ -286,6 +298,8 @@ export class Usuarios extends SigaWrapper implements OnInit {
       },
       () => {
         this.cancelar();
+        this.isBuscar();
+        this.table.reset();
       }
     );
   }
@@ -306,6 +320,74 @@ export class Usuarios extends SigaWrapper implements OnInit {
       summary: "Incorrecto",
       detail: "Error, fallo al realizar la accion"
     });
+  }
+  confirmarBorrar(selectedItem) {
+    let mess = "¿Está seguro que desea eliminar el registro?";
+    let icon = "fa fa-trash-alt";
+
+    if (selectedItem.length > 1) {
+      mess =
+        "¿Está seguro que desea eliminar " +
+        selectedItem.length +
+        " registros?";
+    }
+    if (this.activo == true) {
+      icon = "fa fa-check";
+      if (selectedItem.length > 1) {
+        mess =
+          "¿Está seguro que desea rehabilitar " +
+          selectedItem.length +
+          " registros?";
+      } else {
+        mess = "¿Está seguro que desea rehabilitar el registro?";
+      }
+    }
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.borrar(selectedItem);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: "Acción cancelada por el usuario"
+          }
+        ];
+      }
+    });
+  }
+  confirmarBuscar() {
+    if (
+      (this.body.nombreApellidos == "" ||
+        this.body.nombreApellidos == undefined) &&
+      (this.body.nif == "" || this.body.nif == undefined) &&
+      (this.body.rol == "" || this.body.rol == undefined) &&
+      (this.body.grupo == "" || this.body.grupo == undefined)
+    ) {
+      this.confirmationService.confirm({
+        message: this.translateService.instant(
+          "administracion.grupos.asignarUsuariosGrupo.literal.busquedaCostosa"
+        ),
+        icon: "fa fa-search ",
+        accept: () => {
+          this.isBuscar();
+        },
+        reject: () => {
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "Rejected",
+              detail: "You have rejected"
+            }
+          ];
+        }
+      });
+    } else {
+      this.isBuscar();
+    }
   }
 }
 

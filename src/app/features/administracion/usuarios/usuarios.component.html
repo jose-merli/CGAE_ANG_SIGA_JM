@@ -76,7 +76,7 @@
           </div>
           <div *ngIf="editar == false" class="col-2 offset-10">
             <button (click)="crear()" pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="Crear" [disabled]="blockCrear"></button>
-            <button (click)="isBuscar(); selectedDatos = false" pButton type="button " icon="fa fa-search " iconPos="left" label="Buscar"></button>
+            <button (click)="confirmarBuscar(); selectedDatos = false" pButton type="button " icon="fa fa-search " iconPos="left" label="Buscar"></button>
           </div>
         </div>
       </div>
@@ -107,10 +107,12 @@
         <p-footer *ngIf="selectedDatos">
 
           <div *ngIf="activo==true" class="text-right main-button">
-            <button (click)="borrar(selectedDatos)" pButton type="button" icon="fa fa-check" iconPos="left" label="Rehabilitar"></button>
+            <button (click)="confirmarBorrar(selectedDatos); selectedDatos=false" pButton type="button" icon="fa fa-check" iconPos="left"
+              label="Rehabilitar"></button>
           </div>
           <div *ngIf="activo==false" class="text-right main-button">
-            <button (click)="borrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="Eliminar"></button>
+            <button (click)="confirmarBorrar(selectedDatos); selectedDatos=false" pButton type="button" icon="fa fa-trash-alt " iconPos="left"
+              label="Eliminar"></button>
           </div>
         </p-footer>
         </p-dataTable>
