@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" life="3000"></p-growl>
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -56,25 +57,64 @@
     <!--FIN CARD-->
   </div>
   <!--FIN DE PRINCIPAL-->
-</div>
 
-<div *ngIf="buscar == true" class="card mt-3">
-  <div class="card-body p-0">
-    <p-dataTable [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowSelect)="editarCatalogos(selectedDatos)"
-      dataKey="descripcion" selectionMode="multiple" [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1"
-      [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
-      <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header"> </p-column>
 
-      <ng-template pTemplate="paginatorLeft">
-        <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-        <label>Mostrar <p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> registros</label>
-      </ng-template>
+  <div *ngIf="buscar == true" class="card mt-3">
+    <div class="card-body p-0">
+      <p-dataTable [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowSelect)="editarCatalogos(selectedDatos)"
+        dataKey="descripcion" selectionMode="multiple" [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1"
+        [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+        <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header"> </p-column>
 
-      <p-footer *ngIf="eliminacion">
-        <div class="text-right main-button">
-          <button (click)="isEliminar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="Eliminar"></button>
-        </div>
-      </p-footer>
-      </p-dataTable>
+        <ng-template pTemplate="paginatorLeft">
+          <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+          <label>Mostrar <p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> registros</label>
+        </ng-template>
+
+        <p-footer>
+          <div class="text-right main-button">
+            <button (click)="historico()" pButton type="button" icon="fa fa-history " iconPos="left" label="Historico"></button>
+            <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="Eliminar"></button>
+          </div>
+        </p-footer>
+        </p-dataTable>
+    </div>
   </div>
+
+  <div *ngIf="tablaHistorico == true" class="card mt-3">
+    <div class="card-body p-0">
+      <p-dataTable [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowSelect)="editarCatalogos(selectedDatos)"
+        dataKey="descripcion" selectionMode="multiple" [responsive]="true" #table class="tabla-listado" [value]="datosHist"
+        [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+
+        <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header"> </p-column>
+
+        <!--<p-column [sortable]="true " field="codigoExt " header="Código Externo" filterPlaceholder="&#xf002; ">
+
+          <ng-container *ngIf="datos.fechaBaja === null">
+            <ng-template let-col let-row="rowData" pTemplate="editor">
+              <i></i>
+            </ng-template>
+          </ng-container>
+
+        </p-column>
+        <p-column [sortable]="true " field="descripcion " header="Descripción" filterPlaceholder="&#xf002; ">
+
+        </p-column>-->
+
+        <ng-template pTemplate="paginatorLeft">
+          <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+          <label>Mostrar <p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> registros</label>
+        </ng-template>
+
+        <p-footer>
+          <div class="text-right main-button">
+            <button (click)="historico()" pButton type="button" icon="fa fa-history " iconPos="left" label="Historico"></button>
+            <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="Eliminar"></button>
+          </div>
+        </p-footer>
+        </p-dataTable>
+    </div>
+  </div>
+  <app-dialog></app-dialog>
 </div>
