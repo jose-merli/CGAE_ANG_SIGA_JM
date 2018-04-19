@@ -27,19 +27,6 @@
                         <p-checkbox [(ngModel)]='valorCheckParametros' binary="true"></p-checkbox>
                     </div>
                 </div>
-
-                <!--<div class="form-row align-items-center">
-                    <div class="col-auto">
-                        <label>Módulo</label>
-                        <p-dropdown class="select-form" [(ngModel)]='selectedModulo' [options]="modulos" (ngModelChange)="onChangeForm()"></p-dropdown>
-                    </div>
-                    <div class="col-auto">
-                        <div class="form-check mb-2">
-                            <label class="form-check-label">Mostrar parámetros Generales comunes a todas las instituciones</label>
-                            <p-checkbox [(ngModel)]='valorCheckParametros' binary="true"></p-checkbox>
-                        </div>
-                    </div>
-                </div> -->
             </div>
         </div>
         <div class="card-footer" *ngIf="showDatosGenerales">
@@ -80,6 +67,14 @@
             <p-dataTable [value]="datosHistorico" [responsive]="true" #table class="tabla-listado" [sortOrder]="1" [paginator]="true"
                 paginatorPosition="both" [rows]="selectedItem">
                 <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header" [filter]="true">
+                    <ng-template let-datoH="rowData" pTemplate="body">
+                        <div *ngIf="setItalic(datoH)">
+                            <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold'}">{{datoH[col.field]}}</span>
+                        </div>
+                        <div *ngIf="!setItalic(datoH)">
+                            <span>{{datoH[col.field]}}</span>
+                        </div>
+                    </ng-template>
                 </p-column>
                 <ng-template pTemplate="paginatorLeft">
                     <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>

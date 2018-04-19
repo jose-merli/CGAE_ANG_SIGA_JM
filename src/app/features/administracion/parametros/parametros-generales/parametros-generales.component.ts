@@ -244,6 +244,11 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   almacenaValorActual(valorActual) {
     this.almacenaValorActual = valorActual;
   }
+
+  setItalic(datoH) {
+    if (datoH.fechaBaja == null) return false;
+    else return true;
+  }
 }
 
 export class ComboItem {
