@@ -1,0 +1,98 @@
+<div class="busqueda-container">
+    <div class="header-title">
+        <i class="fa fa-square"></i>
+        <p>Parámetros Generales</p>
+    </div>
+    <div class="breadCrumb">
+        <p>Administración <i class="fa fa-angle-right"></i> Gestión de Parámetros <i class="fa fa-angle-right"></i> Parámetros
+            Generales
+        </p>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <label>Búsqueda de Parámetros Generales</label>
+        </div>
+        <div class="card-body">
+            <p class="title-module">Datos generales<i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i><i
+                    (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i></p>
+
+            <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+                <div class="form-row">
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Módulo</label>
+                        <p-dropdown class="select-form" [(ngModel)]='selectedModulo' [options]="modulos" (ngModelChange)="onChangeForm()"></p-dropdown>
+                    </div>
+                    <div class="form-check col-lg-3 col-md-3">
+                        <label class="form-check-label">Mostrar parámetros Generales comunes a todas las instituciones</label>
+                        <p-checkbox [(ngModel)]='valorCheckParametros' binary="true"></p-checkbox>
+                    </div>
+                </div>
+
+                <!--<div class="form-row align-items-center">
+                    <div class="col-auto">
+                        <label>Módulo</label>
+                        <p-dropdown class="select-form" [(ngModel)]='selectedModulo' [options]="modulos" (ngModelChange)="onChangeForm()"></p-dropdown>
+                    </div>
+                    <div class="col-auto">
+                        <div class="form-check mb-2">
+                            <label class="form-check-label">Mostrar parámetros Generales comunes a todas las instituciones</label>
+                            <p-checkbox [(ngModel)]='valorCheckParametros' binary="true"></p-checkbox>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+        <div class="card-footer" *ngIf="showDatosGenerales">
+            <div class="text-right main-button">
+                <button (click)="confirmarBuscar(); selectedDatos = false" pButton type="button " icon="fa fa-search" iconPos="left" label="Buscar"></button>
+            </div>
+        </div>
+    </div>
+    <!--FIN CARD-->
+    <div *ngIf="buscar == true" class="card mt-3">
+        <div class="card-body p-0">
+            <p-dataTable selectionMode="single" [value]="datosBuscar" [editable]="true" [(selection)]="filaSelecionadaTabla" [responsive]="true"
+                #table class="tabla-listado" [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem"
+                [editable]="true" (onRowSelect)="onRowSelect($event)">
+                <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header" [filter]="true">
+                    <ng-template *ngIf="col.field == 'valor'" let-dato="rowData" pTemplate="body">
+                        <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" (change)="isGuardar($event,dato)">
+                    </ng-template>
+                </p-column>
+
+                <ng-template pTemplate="paginatorLeft">
+                    <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                    <label>Mostrar <p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> registros</label>
+                </ng-template>
+
+                <p-footer>
+                    <div class="text-right main-button">
+                        <button (click)="isEliminar()" pButton type="button" [disabled]="isHabilitadoEliminar()" icon="fa fa-trash-alt " iconPos="left"
+                            label="Eliminar"></button>
+                            <button (click)="isHistorico()" pButton type="button" icon="fa fa-search" iconPos="left" label="Historico"></button>
+                    </div>
+                </p-footer>
+                </p-dataTable>
+        </div>
+    </div>
+    <div *ngIf="historico == true" class="card mt-3">
+        <div class="card-body p-0">
+            <p-dataTable [value]="datosHistorico" [responsive]="true" #table class="tabla-listado" [sortOrder]="1" [paginator]="true"
+                paginatorPosition="both" [rows]="selectedItem">
+                <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header" [filter]="true">
+                </p-column>
+                <ng-template pTemplate="paginatorLeft">
+                    <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                    <label>Mostrar <p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> registros</label>
+                </ng-template>
+                <p-footer>
+                    <div class="text-right main-button">
+                        <button (click)="isEliminar()" pButton type="button" [disabled]="isHabilitadoEliminar()" icon="fa fa-trash-alt " iconPos="left"
+                            label="Eliminar"></button>
+                            <button (click)="isHistorico()" pButton type="button" icon="fa fa-search" iconPos="left" label="Historico"></button>
+                    </div>
+                </p-footer>
+                </p-dataTable>
+        </div>
+    </div>
+</div>

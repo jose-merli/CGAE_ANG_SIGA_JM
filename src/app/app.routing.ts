@@ -26,7 +26,7 @@ import { Etiquetas } from './features/administracion/etiquetas/etiquetas.compone
 import { SeleccionarIdioma } from './features/administracion/seleccionar-idioma/seleccionar-idioma.component';
 import { Usuarios } from './features/administracion/usuarios/usuarios.component';
 import { UsingObservable } from 'rxjs/observable/UsingObservable';
-
+import { ParametrosGenerales } from './features/administracion/parametros/parametros-generales/parametros-generales.component';
 
 //new censo
 import { BusquedaColegiadosComponent } from './new-features/censo/busqueda-colegiados/busqueda-colegiados.component';
@@ -55,8 +55,9 @@ const appRoutes: Routes = [
     { path: 'catalogosMaestros', component: CatalogosMaestros },
     { path: 'gruposUsuarios', component: GruposUsuarios },
     { path: 'etiquetas', component: Etiquetas },
-    { path: 'usuarios', component: Usuarios, canActivate: [AuthGuard] },
+    { path: 'usuarios', component: Usuarios },
     { path: 'seleccionarIdioma', component: SeleccionarIdioma },
+    { path: 'parametrosGenerales', component: ParametrosGenerales },
 
     { path: '**', redirectTo: 'home' }
 

@@ -37,7 +37,13 @@ export class SigaServices {
     maestros_rol: "catmaestros/tabla",
     maestros_update: "catmaestros/update",
     maestros_create: "catmaestros/create",
-    maestros_delete: "catmaestros/delete"
+    maestros_delete: "catmaestros/delete",
+    maestros_historico: "catmaestros/historico",
+    parametros_modulo: "parametros/modulo",
+    parametros_search: "parametros/search",
+    parametros_delete: "parametros/delete",
+    parametros_update: "parametros/update",
+    parametros_historico: "parametros/historico"
   };
 
   constructor(private http: HttpClient) {}
