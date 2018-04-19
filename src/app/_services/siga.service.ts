@@ -37,10 +37,11 @@ export class SigaServices {
     maestros_rol: "catmaestros/tabla",
     maestros_update: "catmaestros/update",
     maestros_create: "catmaestros/create",
-    maestros_delete: "catmaestros/delete"
+    maestros_delete: "catmaestros/delete",
+    maestros_historico: "catmaestros/historico"
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   get(service: string): Observable<any> {
     return this.http
@@ -57,10 +58,10 @@ export class SigaServices {
   getPerfil(service: string, institucion: string): Observable<any> {
     return this.http
       .get(
-        environment.newSigaUrl +
-          this.endpoints[service] +
-          "?institucion=" +
-          institucion
+      environment.newSigaUrl +
+      this.endpoints[service] +
+      "?institucion=" +
+      institucion
       )
       .map(response => {
         return response;
