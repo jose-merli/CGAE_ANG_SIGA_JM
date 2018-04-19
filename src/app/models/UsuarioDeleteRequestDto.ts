@@ -1,6 +1,7 @@
 export class UsuarioDeleteRequestDto {
   error: String;
-  listUser: Number[] = [];
+  idUsuario: String[] = [];
   activo: String;
+  idInstitucion: String;
   constructor() {}
 }

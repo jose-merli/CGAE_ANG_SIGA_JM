@@ -1,13 +1,12 @@
-export class UsuarioItem {
+export class UsuarioUpdate {
   nombreApellidos: String;
   nif: String;
   fechaAlta: Date;
   codigoExterno: String;
-  roles: String;
+  rol: String;
   activo: String;
-  idGrupo: String;
-  perfiles: String[];
   grupo: String;
+  idGrupo: String[];
   idUsuario: String;
   idInstitucion: String;
   constructor() {}

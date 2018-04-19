@@ -19,7 +19,7 @@ import {
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { ButtonModule } from "primeng/button";
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { InputTextModule } from "primeng/inputtext";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { CheckboxModule } from "primeng/checkbox";
@@ -29,6 +29,12 @@ import { GrowlModule } from "primeng/growl";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
+import { UsuarioRequestDto } from "./../../../../app/models/UsuarioRequestDto";
+import { UsuarioResponseDto } from "./../../../../app/models/UsuarioResponseDto";
+import { UsuarioDeleteRequestDto } from "./../../../../app/models/UsuarioDeleteRequestDto";
+import { UsuarioItem } from "./../../../../app/models/UsuarioItem";
+import { ComboItem } from "./../../../../app/models/ComboItem";
+import { MultiSelectModule } from "primeng/multiSelect";
 @Component({
   selector: "app-usuarios",
   templateUrl: "./usuarios.component.html",
@@ -67,6 +73,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
+    private activatedRoute: ActivatedRoute,
     private translateService: TranslateService
   ) {
     super(USER_VALIDATIONS);
@@ -74,8 +81,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
   @ViewChild("table") table;
   ngOnInit() {
     this.activo = true;
-    this.body = new UsuarioRequestDto();
-    this.body.activo = "S";
+
     this.sigaServices.get("usuarios_rol").subscribe(
       n => {
         this.usuarios_rol = n.combooItems;
@@ -119,6 +125,15 @@ export class Usuarios extends SigaWrapper implements OnInit {
         value: 10
       }
     ];
+    if (sessionStorage.getItem("searchUser") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("searchUser"));
+      this.isBuscar();
+      sessionStorage.removeItem("searchUser");
+      sessionStorage.removeItem("usuarioBody");
+    } else {
+      this.body = new UsuarioRequestDto();
+      this.body.activo = "S";
+    }
   }
   isValidDNI(dni: String): boolean {
     return (
@@ -128,9 +143,6 @@ export class Usuarios extends SigaWrapper implements OnInit {
       dni.substr(8, 9).toUpperCase() ===
         this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
-  }
-  prueba(event) {
-    console.log("");
   }
   onChangeForm() {
     if (
@@ -269,7 +281,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
     });
     this.sigaServices.post("usuarios_delete", this.usuariosDelete).subscribe(
       data => {
-        this.showSuccess();
+        this.showSuccessDelete(selectedItem.length);
       },
       err => {
         this.showFail();
@@ -309,7 +321,42 @@ export class Usuarios extends SigaWrapper implements OnInit {
     this.msgs.push({
       severity: "success",
       summary: "Correcto",
-      detail: "Accion realizada correctamente"
+      detail: this.translateService.instant("general.message.accion.realizada")
+    });
+  }
+
+  showSuccessDelete(number) {
+    let msg = "";
+    if (this.activo) {
+      if (number >= 2) {
+        msg =
+          number +
+          this.translateService.instant("messages.deleted.selected.success");
+      } else {
+        msg = this.translateService.instant("messages.deleted.success");
+      }
+    } else {
+      if (number >= 2) {
+        msg =
+          this.translateService.instant(
+            "general.message.registro.restaurados"
+          ) +
+          number +
+          this.translateService.instant(
+            "cargaMasivaDatosCurriculares.numRegistros.literal"
+          );
+      } else {
+        msg = this.translateService.instant(
+          "general.message.registro.restaurado"
+        );
+      }
+    }
+
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: "Correcto",
+      detail: msg
     });
   }
 
@@ -317,29 +364,37 @@ export class Usuarios extends SigaWrapper implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
-      detail: "Error, fallo al realizar la accion"
+      summary: "Error",
+      detail: this.translateService.instant(
+        "general.message.error.realiza.accion"
+      )
     });
   }
   confirmarBorrar(selectedItem) {
-    let mess = "¿Está seguro que desea eliminar el registro?";
+    let mess = this.translateService.instant("messages.deleteConfirmation");
     let icon = "fa fa-trash-alt";
 
     if (selectedItem.length > 1) {
       mess =
-        "¿Está seguro que desea eliminar " +
+        this.translateService.instant("messages.deleteConfirmation.much") +
         selectedItem.length +
-        " registros?";
+        this.translateService.instant("messages.deleteConfirmation.register") +
+        "?";
     }
     if (this.activo == true) {
       icon = "fa fa-check";
       if (selectedItem.length > 1) {
-        mess =
-          "¿Está seguro que desea rehabilitar " +
-          selectedItem.length +
-          " registros?";
+        (mess = this.translateService.instant(
+          "general.message.confirmar.rehabilitaciones"
+        )),
+          +selectedItem.length +
+            this.translateService.instant(
+              "cargaMasivaDatosCurriculares.numRegistros.literal"
+            );
       } else {
-        mess = "¿Está seguro que desea rehabilitar el registro?";
+        mess = this.translateService.instant(
+          "general.message.confirmar.rehabilitacion"
+        );
       }
     }
     this.confirmationService.confirm({
@@ -353,7 +408,9 @@ export class Usuarios extends SigaWrapper implements OnInit {
           {
             severity: "info",
             summary: "Cancel",
-            detail: "Acción cancelada por el usuario"
+            detail: this.translateService.instant(
+              "general.message.error.realiza.accion"
+            )
           }
         ];
       }
@@ -379,8 +436,10 @@ export class Usuarios extends SigaWrapper implements OnInit {
           this.msgs = [
             {
               severity: "info",
-              summary: "Rejected",
-              detail: "You have rejected"
+              summary: "Info",
+              detail: this.translateService.instant(
+                "general.message.accion.cancelada"
+              )
             }
           ];
         }
@@ -389,47 +448,27 @@ export class Usuarios extends SigaWrapper implements OnInit {
       this.isBuscar();
     }
   }
-}
 
-export class UsuarioItem {
-  nombreApellidos: String;
-  nif: String;
-  fechaAlta: Date;
-  codigoExterno: String;
-  roles: String;
-  activo: String;
-  idGrupo: String;
-  grupo: String;
-  idUsuario: String;
-  idInstitucion: String;
-  constructor() {}
-}
-export class UsuarioResponseDto {
-  error: String;
-  usuarioItem: UsuarioItem[] = [];
-  constructor() {}
-}
-export class ComboItem {
-  label: String;
-  value: String;
-  constructor() {}
-}
+  irEditarUsuario(id) {
+    if (!this.selectMultiple) {
+      var ir = null;
+      if (id && id.length > 0) {
+        ir = id[0];
+      }
+      sessionStorage.setItem("usuarioBody", JSON.stringify(id));
+      sessionStorage.setItem("searchUser", JSON.stringify(this.body));
+      this.router.navigate(["/editarUsuario", ir]);
+    } else {
+      this.editar = false;
+      this.dniCorrecto = null;
+      this.body = new UsuarioRequestDto();
+      this.body.activo = id[0].activo;
+    }
 
-export class UsuarioRequestDto {
-  nombreApellidos: String;
-  nif: String;
-  fechaAlta: Date;
-  rol: String;
-  activo: String;
-  grupo: String;
-  idInstitucion: "2000";
-  codigoExterno: String;
-  constructor() {}
-}
-export class UsuarioDeleteRequestDto {
-  error: String;
-  idUsuario: String[] = [];
-  activo: String;
-  idInstitucion: String;
-  constructor() {}
+    if (this.body.activo == "N") {
+      this.activo = true;
+    } else {
+      this.activo = false;
+    }
+  }
 }
