@@ -8,6 +8,7 @@ import { esCalendar } from '../../../utils/calendar';
 import { Router } from '@angular/router';
 import { DatosGeneralesComponent } from './datos-generales/datos-generales.component';
 import { Message } from 'primeng/components/common/api';
+import { Location } from '@angular/common';
 
 
 
@@ -73,7 +74,7 @@ export class FichaColegialComponent implements OnInit {
   ]
 
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private changeDetectorRef: ChangeDetectorRef) {
+  constructor(private formBuilder: FormBuilder, private router: Router, private changeDetectorRef: ChangeDetectorRef, private location: Location, ) {
 
     this.formBusqueda = this.formBuilder.group({
       'cif': null,
@@ -242,7 +243,9 @@ export class FichaColegialComponent implements OnInit {
   //   this.msgs = [];
   //   this.msgs.push({ severity: 'info', summary: 'File Uploaded', detail: '' });
   // }
-
+  backTo() {
+    this.location.back();
+  }
 
 
 
