@@ -1,40 +1,35 @@
-.siga-app-container{         
+.siga-app-container {
+  position: relative;
+  height: 100vh;
+  .wrapper-menu-sidebar {
+    display: flex;
+    height: 100%;
     position: relative;
-    height: 100vh;
-    .wrapper-menu-sidebar {
-        display: flex;          
-        height: 100%;
-        position: relative;
-       
-     
-        .content{
-            flex-grow: 1;
-            padding: 7rem 1rem 1rem 1rem;
-            overflow-y: scroll;
-            font-size: .85rem;
-        }
-    }   
+
+    .content {
+      flex-grow: 1;
+      padding: 7rem 1rem 1rem 1rem;
+      overflow-y: scroll;
+      font-size: 0.85rem;
+    }
+  }
 }
 
+@media screen and (max-width: 1200px) {
+  .content {
+    margin-left: 2.2rem;
+    padding: 9rem 1rem 1rem 1rem;
+  }
+}
 
- @media screen and (max-width: 1200px){
-        .content{
-            margin-left: 2.2rem;
-            padding: 9rem 1rem 1rem 1rem;
-        }
+@media screen and (max-width: 768px) {
+  .content {
+    padding-top: 3rem;
+  }
+}
 
- }
-
- @media screen and (max-width: 768px){
-        .content{            
-           padding-top: 3rem;
-        }
- }
-
- @media screen and (max-width: 400px){
-     .content{            
-           padding-top: 2rem;
-    }
- }
-
-
+@media screen and (max-width: 400px) {
+  .content {
+    padding-top: 2rem;
+  }
+}

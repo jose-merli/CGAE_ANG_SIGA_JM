@@ -744,11 +744,11 @@ export const LOGIN_VAL_MSG: Map<string, Map<string, string>> = new Map([
 ]);
 
 export const USER_VALIDATIONS: Map<string, any[]> = new Map([
-  ["nombreApellidos", [Validators.maxLength(50)]]
+  ["codigoExterno", [Validators.maxLength(10)]]
 ]);
 
 export const USER_VAL_MSG: Map<string, Map<string, string>> = new Map([
-  ["nombreApellidos", new Map([["maxlength", VAL_MESSAGES.VAL_LENGTH]])]
+  ["codigoExterno", new Map([["maxlength", VAL_MESSAGES.VAL_LENGTH]])]
 ]);
 
 export const MATRIX_REL: Map<

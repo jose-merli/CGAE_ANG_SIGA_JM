@@ -26,7 +26,6 @@ import { HomeComponent } from "./features/home/home.component";
 import { LoginComponent } from "./commons/login/login.component";
 import { TranslatePipe, TranslateService } from "./commons/translate";
 import { ConfirmDialogComponent } from "./commons/dialog/dialog.component";
-
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
 //PRIMENG
@@ -40,7 +39,7 @@ import { RadioButtonModule } from "primeng/radiobutton";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ConfirmationService } from "primeng/api";
 import { GrowlModule } from "primeng/growl";
-
+import { MultiSelectModule } from "primeng/multiSelect";
 // Modulo de censo
 import { SearchColegiadosComponent } from "./features/censo/search-colegiados/search-colegiados.component";
 import { SearchNoColegiadosComponent } from "./features/censo/search-no-colegiados/search-no-colegiados.component";
@@ -61,7 +60,7 @@ import { AutoCompleteModule } from "primeng/autocomplete";
 import { TooltipModule } from "primeng/tooltip";
 import { ChipsModule } from "primeng/chips";
 import { EditorModule } from "primeng/editor";
-
+import { EditarUsuarioComponent } from "./features/administracion/usuarios/editarUsuario/editarUsuario.component";
 // Modulo de administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
@@ -97,7 +96,7 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     MantenimientoGruposFijosComponent,
     MantenimientoMandatosComponent,
     BusquedaSancionesComponent,
-
+    EditarUsuarioComponent,
     // Administracion
     CatalogosMaestros,
     GruposUsuarios,
@@ -131,7 +130,8 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     AutoCompleteModule,
     TooltipModule,
     ChipsModule,
-    EditorModule
+    EditorModule,
+    MultiSelectModule
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
