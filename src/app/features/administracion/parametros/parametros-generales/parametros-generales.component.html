@@ -70,7 +70,7 @@
         <div class="card-body p-0">
             <p-dataTable [value]="datosHistorico" [responsive]="true" #table class="tabla-listado" [sortOrder]="1" [paginator]="true"
                 paginatorPosition="both" [rows]="selectedItem">
-                <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header" [filter]="true">
+                <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true">
                     <ng-template let-datoH="rowData" pTemplate="body">
                         <div *ngIf="setItalic(datoH)">
                             <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold'}">{{datoH[col.field]}}</span>
