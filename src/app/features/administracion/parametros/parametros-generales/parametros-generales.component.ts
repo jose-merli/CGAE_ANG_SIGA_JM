@@ -23,6 +23,7 @@ import {
 } from "@angular/forms";
 
 import { CheckboxModule } from "primeng/checkbox";
+import { Message } from "primeng/components/common/api";
 
 import { ParametroRequestDto } from "../../../../models/ParametroRequestDto";
 import { ParametroDto } from "../../../../models/ParametroDto";
@@ -48,6 +49,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   datosHistorico: any[];
   filaSelecionadaTabla: any;
   buscar: boolean = false;
+  botonBuscar: boolean = true;
   selectedItem: number = 4;
   columnasTabla: any = [];
   rowsPerPage: any = [];
@@ -57,6 +59,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   bodyDelete: ParametroDeleteDto = new ParametroDeleteDto();
   bodyUpdate: ParametroUpdateDto = new ParametroUpdateDto();
   historico: boolean = false;
+  msgs: Message[] = [];
 
   constructor(
     private sigaServices: SigaServices,
@@ -81,9 +84,18 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     );
 
     this.columnasTabla = [
-      { field: "modulo", header: "Módulo" },
-      { field: "parametro", header: "Parámetro" },
-      { field: "valor", header: "Valor" }
+      {
+        field: "modulo",
+        header: "administracion.parametrosGenerales.literal.modulo"
+      },
+      {
+        field: "parametro",
+        header: "menu.administracion.parametrosGenerales"
+      },
+      {
+        field: "valor",
+        header: "administracion.parametrosGenerales.literal.valor"
+      }
     ];
 
     this.rowsPerPage = [
@@ -157,9 +169,11 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.sigaServices.post("parametros_delete", this.bodyDelete).subscribe(
       data => {
         console.log(data);
+        this.showSuccessDelete();
       },
       err => {
         console.log(err);
+        this.showFail();
       },
       () => {
         this.isBuscar();
@@ -178,9 +192,11 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.sigaServices.post("parametros_update", this.bodyUpdate).subscribe(
       data => {
         console.log(data);
+        this.showSuccessEdit();
       },
       err => {
         console.log(err);
+        this.showFail();
       },
       () => {
         this.isBuscar();
@@ -217,6 +233,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
           this.buscar = false;
           this.historico = true;
           this.eliminar = true;
+          this.filaSelecionadaTabla = null;
         }
       );
   }
@@ -248,6 +265,70 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;
     else return true;
+  }
+
+  isHabilitadoBuscar() {
+    if (this.selectedModulo == "" || this.selectedModulo == null) {
+      this.botonBuscar = true;
+      return this.botonBuscar;
+    } else {
+      this.botonBuscar = false;
+      return this.botonBuscar;
+    }
+  }
+
+  confirmarEliminar(selectedDatos) {
+    let mess = this.translateService.instant("messages.deleteConfirmation");
+    let icon = "fa fa-trash-alt";
+    //this.isEliminar();
+
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.isEliminar();
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  showSuccessDelete() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: "Correcto",
+      detail: this.translateService.instant("messages.deleted.success")
+    });
+  }
+
+  showSuccessEdit() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: "Correcto",
+      detail: this.translateService.instant(
+        "general.message.registro.actualizado"
+      )
+    });
+  }
+
+  showFail() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Error",
+      detail: this.translateService.instant("general.message.accion.cancelada")
+    });
   }
 }
 
