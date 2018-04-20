@@ -41,7 +41,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   buscar: boolean = false;
   tablaHistorico: boolean = false;
   editar: boolean = false;
-
+  eliminar: boolean = false;
   selectMultiple: boolean = false;
   selectedItem: number = 4;
 
@@ -191,6 +191,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.his.idInstitucion = "";
     this.his.idRegistro = "";
     this.tablaHistorico = true;
+    this.eliminar = true;
     this.sigaServices.post("maestros_historico", this.his).subscribe(
       data => {
         console.log(data);
@@ -209,6 +210,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   isBuscar() {
     this.buscar = true;
     this.tablaHistorico = false;
+    this.eliminar = false;
     if (this.body.codigoExt != undefined) {
       this.formToBody();
     }
@@ -279,7 +281,10 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.body.catalogo = this.catalogoSeleccionado;
     this.blockSeleccionar = false;
     this.bodyToForm();
-    this.isBuscar();
+    if (this.tablaHistorico == false) {
+      this.isBuscar();
+    }
+
     this.blockCrear = true;
   }
 
@@ -370,7 +375,9 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       }
     )
   }
-
+  isHabilitadoEliminar() {
+    return this.eliminar;
+  }
   confirmarBorrar(selectedDatos) {
     let mess = "¿Está seguro que desea eliminar el registro?";
     let icon = "fa fa-trash-alt";
@@ -399,7 +406,10 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     });
   }
 
-
+  setItalic(datoH) {
+    if (datoH.fechaBaja == null) return false;
+    else return true;
+  }
 }
 
 export class CatalogoMaestroItem {
