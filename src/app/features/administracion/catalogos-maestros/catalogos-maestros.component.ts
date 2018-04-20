@@ -119,8 +119,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     //   { label: 'dummie5', value: 'dummie5' }
     // ];
     this.cols = [
-      { field: "codigoExt", header: "Código externo" },
-      { field: "descripcion", header: "Descripción" }
+      { field: "codigoExt", header: "general.codeext" },
+      { field: "descripcion", header: "general.description" }
     ];
 
     //Valores dummie de tabla
@@ -195,7 +195,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.msgs.push({
       severity: "success",
       summary: "Correcto",
-      detail: "Accion realizada correctamente"
+      detail: this.translateService.instant("general.message.accion.realizada")
     });
   }
 
@@ -203,8 +203,10 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
-      detail: "Error, fallo al realizar la accion"
+      summary: "Error",
+      detail: this.translateService.instant(
+        "general.message.error.realiza.accion"
+      )
     });
   }
 
@@ -261,15 +263,15 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("maestros_search", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          console.log(data);
+      data => {
+        console.log(data);
 
-          this.searchCatalogo = JSON.parse(data["body"]);
-          this.datosHist = this.searchCatalogo.catalogoMaestroItem;
-        },
-        err => {
-          console.log(err);
-        }
+        this.searchCatalogo = JSON.parse(data["body"]);
+        this.datosHist = this.searchCatalogo.catalogoMaestroItem;
+      },
+      err => {
+        console.log(err);
+      }
       );
   }
 
@@ -375,14 +377,14 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
           this.msgs.push({
             severity: "success",
             summary: "Correcto",
-            detail: "Registro eliminado correctamente"
+            detail: this.translateService.instant("messages.deleted.success")
           });
         } else {
           this.msgs = [];
           this.msgs.push({
             severity: "success",
             summary: "Correcto",
-            detail: selectedDatos.length + "registros eliminados correctamente"
+            detail: selectedDatos.length + this.translateService.instant("messages.deleted.selected.success")
           });
         }
       },
@@ -403,14 +405,15 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     return this.eliminar;
   }
   confirmarBorrar(selectedDatos) {
-    let mess = "¿Está seguro que desea eliminar el registro?";
+    let mess = this.translateService.instant("messages.deleteConfirmation");
     let icon = "fa fa-trash-alt";
 
     if (selectedDatos.length > 1) {
       mess =
-        "¿Está seguro que desea eliminar " +
+        this.translateService.instant("messages.deleteConfirmation.much") +
         selectedDatos.length +
-        " registros?";
+        this.translateService.instant("messages.deleteConfirmation.register") +
+        "?";
     }
     this.confirmationService.confirm({
       message: mess,
@@ -423,7 +426,9 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
           {
             severity: "info",
             summary: "Cancel",
-            detail: "Acción cancelada por el usuario"
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
           }
         ];
       }
