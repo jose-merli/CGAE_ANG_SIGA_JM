@@ -63,6 +63,7 @@ import { EditorModule } from "primeng/editor";
 import { EditarUsuarioComponent } from "./features/administracion/usuarios/editarUsuario/editarUsuario.component";
 // Modulo de administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
+import { EditarCatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros/editarCatalogosMaestros/editarCatalogosMaestros.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
 import { Etiquetas } from "./features/administracion/etiquetas/etiquetas.component";
 import { SeleccionarIdioma } from "./features/administracion/seleccionar-idioma/seleccionar-idioma.component";
@@ -98,6 +99,7 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     MantenimientoMandatosComponent,
     BusquedaSancionesComponent,
     EditarUsuarioComponent,
+    EditarCatalogosMaestrosComponent,
     // Administracion
     CatalogosMaestros,
     GruposUsuarios,
@@ -156,4 +158,4 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

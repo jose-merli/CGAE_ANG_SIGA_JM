@@ -61,9 +61,12 @@
 
   <div *ngIf="buscar == true" class="card mt-3">
     <div class="card-body p-0">
-      <p-dataTable [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowSelect)="editarCatalogos(selectedDatos)"
-        dataKey="descripcion" selectionMode="multiple" [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1"
-        [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+      <div class="m-3 d-flex text-right">
+        <label class="ml-3" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()"><i class="pr-2 fa fa-plus"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+      </div>
+      <p-dataTable [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowSelect)="irEditarCatalogo(selectedDatos)"
+        dataKey="descripcion" selectionMode="multiple" [responsive]="true" #table class="tabla-listado" [value]="datosHist"
+        [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" [filter]="true"> </p-column>
 
         <ng-template pTemplate="paginatorLeft">
@@ -83,8 +86,10 @@
 
   <div *ngIf="tablaHistorico == true" class="card mt-3">
     <div class="card-body p-0">
-      <p-dataTable [ngClass]="{'customCursor': selectMultiple}" dataKey="descripcion" [responsive]="true" #table class="tabla-listado"
-        [value]="datosHist" [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+
+      <p-dataTable [ngClass]="{'customCursor': selectMultiple}" (onRowSelect)="irEditarCatalogo(selectedDatos)" filterPlaceholder="Search"
+        dataKey="nif" [responsive]="true" #table class="tabla-listado" [value]="datosHist" [sortOrder]="1" [paginator]="true"
+        paginatorPosition="both" [rows]="selectedItem">
         <p-column *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header" [filter]="true">
           <ng-template let-datoH="rowData" pTemplate="body">
             <div *ngIf="setItalic(datoH)">
