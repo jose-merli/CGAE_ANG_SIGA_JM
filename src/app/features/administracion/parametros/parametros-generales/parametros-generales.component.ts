@@ -122,7 +122,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
 
-  onChangeForm() {}
+  onChangeForm() { }
 
   confirmarBuscar() {
     if (this.selectedModulo != "") {
@@ -144,15 +144,15 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("parametros_search", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          console.log(data);
+      data => {
+        console.log(data);
 
-          this.searchParametros = JSON.parse(data["body"]);
-          this.datosBuscar = this.searchParametros.parametrosItems;
-        },
-        err => {
-          console.log(err);
-        }
+        this.searchParametros = JSON.parse(data["body"]);
+        this.datosBuscar = this.searchParametros.parametrosItems;
+      },
+      err => {
+        console.log(err);
+      }
       );
 
     this.buscar = true;
@@ -220,21 +220,21 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("parametros_historico", "?numPagina=1", this.bodyHistorico)
       .subscribe(
-        data => {
-          console.log(data);
+      data => {
+        console.log(data);
 
-          this.historicoParametros = JSON.parse(data["body"]);
-          this.datosHistorico = this.historicoParametros.parametrosItems;
-        },
-        err => {
-          console.log(err);
-        },
-        () => {
-          this.buscar = false;
-          this.historico = true;
-          this.eliminar = true;
-          this.filaSelecionadaTabla = null;
-        }
+        this.historicoParametros = JSON.parse(data["body"]);
+        this.datosHistorico = this.historicoParametros.parametrosItems;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.buscar = false;
+        this.historico = true;
+        this.eliminar = true;
+        this.filaSelecionadaTabla = null;
+      }
       );
   }
 
@@ -306,7 +306,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "success",
-      summary: "Correcto",
+      summary: this.translateService.instant("general.message.correct"),
       detail: this.translateService.instant("messages.deleted.success")
     });
   }
@@ -315,7 +315,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "success",
-      summary: "Correcto",
+      summary: this.translateService.instant("general.message.correct"),
       detail: this.translateService.instant(
         "general.message.registro.actualizado"
       )
@@ -335,5 +335,5 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
 export class ComboItem {
   label: String;
   value: String;
-  constructor() {}
+  constructor() { }
 }

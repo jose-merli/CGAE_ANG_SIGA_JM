@@ -194,7 +194,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "success",
-      summary: "Correcto",
+      summary: this.translateService.instant("general.message.correct"),
       detail: this.translateService.instant("general.message.accion.realizada")
     });
   }
@@ -376,14 +376,14 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
           this.msgs = [];
           this.msgs.push({
             severity: "success",
-            summary: "Correcto",
-            detail: this.translateService.instant("messages.deleted.success")
+            summary: this.translateService.instant("general.message.correct"),
+            detail: this.translateService.instant("general.message.correct")
           });
         } else {
           this.msgs = [];
           this.msgs.push({
             severity: "success",
-            summary: "Correcto",
+            summary: this.translateService.instant("general.message.correct"),
             detail: selectedDatos.length + this.translateService.instant("messages.deleted.selected.success")
           });
         }

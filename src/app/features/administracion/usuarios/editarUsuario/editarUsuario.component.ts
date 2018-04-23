@@ -172,7 +172,7 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "success",
-      summary: "Correcto",
+      summary: this.translateService.instant("general.message.correct"),
       detail: this.translateService.instant("general.message.accion.realizada")
     });
   }
