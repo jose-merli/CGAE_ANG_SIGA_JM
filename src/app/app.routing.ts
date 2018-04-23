@@ -29,7 +29,8 @@ import { UsingObservable } from "rxjs/observable/UsingObservable";
 import { EditarUsuarioComponent } from "./features/administracion/usuarios/editarUsuario/editarUsuario.component";
 import { ParametrosGenerales } from "./features/administracion/parametros/parametros-generales/parametros-generales.component";
 import { EditarCatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros/editarCatalogosMaestros/editarCatalogosMaestros.component";
-//new censo
+import { EditarContadoresComponent } from "./features/administracion/contadores/editarContadores/editarContadores.component";
+import { ContadoresComponent } from "./features/administracion/contadores/contadores.component"; //new censo
 import { BusquedaColegiadosComponent } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
 import { FichaColegialComponent } from "./new-features/censo/ficha-colegial/ficha-colegial.component";
 
@@ -81,6 +82,11 @@ const appRoutes: Routes = [
   {
     path: "EditarCatalogosMaestros",
     component: EditarCatalogosMaestrosComponent
+  },
+  { path: "contadores", component: ContadoresComponent },
+  {
+    path: "editarContadores",
+    component: EditarContadoresComponent
   },
 
   { path: "gruposUsuarios", component: GruposUsuarios },
