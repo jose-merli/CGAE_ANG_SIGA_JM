@@ -112,23 +112,10 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         console.log(err);
       }
     );
-
-    //Valores dummie de catalogo
-    // this.catalogo = [
-    //   { label: 'Selecciona un catálogo', value: '' },
-    //   { label: 'dummie5', value: 'dummie5' }
-    // ];
     this.cols = [
       { field: "codigoExt", header: "general.codeext" },
       { field: "descripcion", header: "general.description" }
     ];
-
-    //Valores dummie de tabla
-    // this.datos = [
-    //   { codigoExt: '239123', descripcion: 'Administrador' },
-    //   { codigoExt: '744689', descripcion: 'Dummies' },
-    // ];
-
     this.rowsPerPage = [
       {
         label: 4,
@@ -263,15 +250,15 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("maestros_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.searchCatalogo = JSON.parse(data["body"]);
-        this.datosHist = this.searchCatalogo.catalogoMaestroItem;
-      },
-      err => {
-        console.log(err);
-      }
+          this.searchCatalogo = JSON.parse(data["body"]);
+          this.datosHist = this.searchCatalogo.catalogoMaestroItem;
+        },
+        err => {
+          console.log(err);
+        }
       );
   }
 
@@ -342,7 +329,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       this.router.navigate(["/EditarCatalogosMaestros"]);
     } else {
       this.editar = false;
-      this.body = new CatalogoRequestDto();
     }
   }
 
@@ -384,7 +370,9 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
           this.msgs.push({
             severity: "success",
             summary: "Correcto",
-            detail: selectedDatos.length + this.translateService.instant("messages.deleted.selected.success")
+            detail:
+              selectedDatos.length +
+              this.translateService.instant("messages.deleted.selected.success")
           });
         }
       },
@@ -392,10 +380,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         console.log(err);
       },
       () => {
-        this.catalogoSeleccionado = this.body.catalogo;
-        this.body = new CatalogoRequestDto();
-        this.bodyToForm();
-        this.body.catalogo = this.catalogoSeleccionado;
         this.isBuscar();
         this.editar = false;
       }
