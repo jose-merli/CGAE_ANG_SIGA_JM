@@ -372,7 +372,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     });
     this.sigaServices.post("maestros_delete", this.del).subscribe(
       data => {
-        if (selectedDatos == 1) {
+        if (selectedDatos.length == 1) {
           this.msgs = [];
           this.msgs.push({
             severity: "success",
