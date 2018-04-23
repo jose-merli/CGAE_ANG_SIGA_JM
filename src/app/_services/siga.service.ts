@@ -24,6 +24,7 @@ export class SigaServices {
     testDb: "db",
     login: "login",
     menu: "menu",
+    usuario: "usuario",
     instituciones: "instituciones",
     perfiles: "perfiles",
     diccionarios: "diccionarios",
@@ -46,7 +47,7 @@ export class SigaServices {
     parametros_historico: "parametros/historico"
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   get(service: string): Observable<any> {
     return this.http
@@ -63,10 +64,10 @@ export class SigaServices {
   getPerfil(service: string, institucion: string): Observable<any> {
     return this.http
       .get(
-        environment.newSigaUrl +
-          this.endpoints[service] +
-          "?institucion=" +
-          institucion
+      environment.newSigaUrl +
+      this.endpoints[service] +
+      "?institucion=" +
+      institucion
       )
       .map(response => {
         return response;

@@ -38,10 +38,14 @@ export class TranslateService {
 
     // inject our translations
     constructor(private service: SigaServices) {
-        this._currentLang = "es";
+        service.get("usuario").subscribe(response => {
+            this._currentLang = response.usuarioItem[0].idLenguaje;
+        });
         service.get("diccionarios").subscribe(response => {
             this._translations = response.DiccionarioItems;
         });
+
+
     }
 
     public get currentLang() {
@@ -73,7 +77,7 @@ export class TranslateService {
     }
 
     public getCalendarLocale() {
-        return this.currentLang === "es" ? this.esCalendar : this.enCalendar;
+        return this.currentLang === "1" ? this.esCalendar : this.enCalendar;
     }
     public translateMenu(menu: any): MenuItem[] {
 
