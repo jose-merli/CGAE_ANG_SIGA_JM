@@ -64,7 +64,7 @@ import { EditarUsuarioComponent } from "./features/administracion/usuarios/edita
 // Modulo de administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
 import { EditarCatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros/editarCatalogosMaestros/editarCatalogosMaestros.component";
-import { EditarContadoresComponent } from "./features/administracion/contadores/editarContadores/editarContadores.component";
+import { GestionContadoresComponent } from "./features/administracion/contadores/gestion-contadores/gestion-contadores.component";
 import { ContadoresComponent } from "./features/administracion/contadores/contadores.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
 import { Etiquetas } from "./features/administracion/etiquetas/etiquetas.component";
@@ -103,7 +103,7 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     EditarUsuarioComponent,
     EditarCatalogosMaestrosComponent,
     ContadoresComponent,
-    EditarContadoresComponent,
+    GestionContadoresComponent,
     // Administracion
     CatalogosMaestros,
     GruposUsuarios,

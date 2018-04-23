@@ -35,12 +35,12 @@ import { UsuarioUpdate } from "../../../../../app/models/UsuarioUpdate";
 import { ComboItem } from "../../../../../app/models/ComboItem";
 import { ActivatedRoute } from "@angular/router";
 @Component({
-  selector: "app-editarContadores",
-  templateUrl: "./editarContadores.component.html",
-  styleUrls: ["./editarContadores.component.scss"],
+  selector: "app-gestion-contadores",
+  templateUrl: "./gestion-contadores.component.html",
+  styleUrls: ["./gestion-contadores.component.scss"],
   encapsulation: ViewEncapsulation.None
 })
-export class EditarContadoresComponent extends SigaWrapper implements OnInit {
+export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   usuarios_rol: any[];
   usuarios_perfil: any[];
   select: any[];
