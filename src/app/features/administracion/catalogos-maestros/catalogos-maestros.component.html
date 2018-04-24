@@ -6,7 +6,7 @@
   </div>
   <div class="breadCrumb">
     <p>{{ 'menu.administracion' | translate}} <i class="fa fa-angle-right"></i> {{ 'administracion.catalogos.titulo' | translate}}
-      </p>
+    </p>
   </div>
   <div class="card">
     <div class="card-header">
@@ -21,7 +21,15 @@
           <div class="form-group col-lg-4 col-md-4">
             <label>{{ 'administracion.catalogos.seleccionar' | translate}} (*)</label>
 
-            <p-dropdown class="select-form" [(ngModel)]="body.catalogo" [options]="catalogoArray" [(disabled)]="blockSeleccionar" (onChange)="onChangeCatalogo()"></p-dropdown>
+            <p-dropdown class="select-form" [(ngModel)]="body.catalogo" [options]="catalogoArray" [(disabled)]="blockSeleccionar" (onChange)="onChangeCatalogo()">
+              <ng-template let-item pTemplate="item">
+                <div *ngIf="setBold(item)==true" [ngStyle]="{'font-weight':'bold'}">{{item.label}}</div>
+                <div *ngIf="setBold(item)==false" [ngStyle]="{'font-weight': 'normal'}">{{item.label}}</div>
+              </ng-template>
+
+
+
+            </p-dropdown>
           </div>
           <div class="form-group col-lg-4 col-md-4">
             <label>{{ 'general.codeext' | translate}}</label>
