@@ -2,15 +2,15 @@
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{ 'administracion.usuarios.busqueda.usuarios' | translate}}</p>
+    <p>{{ 'administracion.contadores.busqueda.contadores' | translate}}</p>
   </div>
   <div class="breadCrumb">
-    <p>{{ "menu.administracion" | translate}} <i class="fa fa-angle-right"></i> {{ 'menu.administracion.usuarios' | translate}}
+    <p>{{ "menu.administracion" | translate}} <i class="fa fa-angle-right"></i> {{ 'menu.administracion.contador' | translate}}
     </p>
   </div>
   <div class="card">
     <div class="card-header">
-      <label>{{ 'administracion.usuarios.busqueda.usuarios' | translate}}</label>
+      <label>{{ 'administracion.contadores.busqueda.contadores' | translate}}</label>
     </div>
     <div class="card-body">
       <p class="title-module">{{ "general.message.datos.generales" | translate}}
@@ -68,16 +68,6 @@
             <label>{{ "general.message.mostrar" | translate}} <p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
           </ng-template>
 
-
-          <p-footer *ngIf="selectedDatos">
-            <div class="text-right main-button">
-              <button (click)="selectedDatos=false" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
-              <button (click)="confirmarBorrar(selectedDatos); selectedDatos=false" pButton type="button" icon="fa fa-check" iconPos="left"
-                label="{{'menu.consultas' | translate}}"></button>
-                <button (click)="confirmarBorrar(selectedDatos); selectedDatos=false" pButton type="button" icon="fa fa-check" iconPos="left"
-                  label="{{'general.boton.edit' | translate}}"></button>
-            </div>
-          </p-footer>
           </p-dataTable>
     </div>
   </div>
