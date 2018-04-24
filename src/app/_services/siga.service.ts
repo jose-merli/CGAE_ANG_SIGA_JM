@@ -43,7 +43,11 @@ export class SigaServices {
     parametros_search: "parametros/search",
     parametros_delete: "parametros/delete",
     parametros_update: "parametros/update",
-    parametros_historico: "parametros/historico"
+    parametros_historico: "parametros/historico",
+    contadores_search: "contadores/search",
+    contadores_update: "contadores/update",
+    contadores_modo: "contadores/modo",
+    contadores_module: "contadores/module"
   };
 
   constructor(private http: HttpClient) {}
