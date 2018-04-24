@@ -94,6 +94,7 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
   //Cargo el combo nada mas comenzar
   ngOnInit() {
     this.idModulo = this.activatedRoute.snapshot.params["id"];
+    this.body = new ContadorItem();
     this.sigaServices.get("contadores_module").subscribe(
       n => {
         this.contadores_modo = n.combooItems;
@@ -132,11 +133,13 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
         value: 10
       }
     ];
-    if (sessionStorage.getItem("searchUser") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("searchUser"));
+
+    if (sessionStorage.getItem("searchContador") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("searchContador"));
       this.isBuscar();
-      sessionStorage.removeItem("searchUser");
-      sessionStorage.removeItem("usuarioBody");
+      sessionStorage.removeItem("searchContador");
+      sessionStorage.removeItem("contadorBody");
+      sessionStorage.removeItem("url");
     } else {
       this.body = new ContadorItem();
     }
@@ -238,18 +241,16 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
   bodyToForm() {
     this.formDescripcion = this.body.descripcion;
   }
-  irEditarCatalogo(id) {
-    if (!this.selectMultiple) {
-      var ir = null;
-      if (id && id.length > 0) {
-        ir = id[0];
-      }
-      // sessionStorage.setItem("catalogoBody", JSON.stringify(id));
-      // sessionStorage.setItem("searchCatalogo", JSON.stringify(this.body));
-      // this.router.navigate(["/EditarCatalogosMaestros"]);
-    } else {
-      this.editar = false;
+  irEditarContador(id) {
+    var ir = null;
+    var url = "/contadores/" + this.idModulo;
+    if (id && id.length > 0) {
+      ir = id[0];
     }
+    sessionStorage.setItem("contadorBody", JSON.stringify(id));
+    sessionStorage.setItem("url", JSON.stringify(url));
+    sessionStorage.setItem("searchContador", JSON.stringify(this.body));
+    this.router.navigate(["/gestionContadores"]);
   }
 
   editarCatalogos(selectedDatos) {

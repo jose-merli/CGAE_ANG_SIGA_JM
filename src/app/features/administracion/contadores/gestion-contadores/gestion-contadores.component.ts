@@ -72,9 +72,6 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   ngOnInit() {
     console.log(sessionStorage);
 
-    this.body = new ContadorItem();
-    this.body = JSON.parse(sessionStorage.getItem("contadorBody"))[0];
-    this.restablecer = this.body;
     this.sigaServices.get("contadores_modo").subscribe(
       n => {
         this.contadores_modo = n.combooItems;
@@ -83,23 +80,30 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
         console.log(err);
       }
     );
-  }
 
+    this.body = new ContadorItem();
+    this.body = JSON.parse(sessionStorage.getItem("contadorBody"));
+    this.restablecer = this.body;
+    this.checkMode();
+  }
+  checkMode() {
+    if (JSON.parse(sessionStorage.getItem("modo")) != null) {
+      if (JSON.parse(sessionStorage.getItem("modo")) == "editar") {
+        this.disabled = true;
+      } else {
+        this.disabled = false;
+      }
+    } else {
+      this.disabled = false;
+    }
+  }
   isRestablecer() {
     this.body = this.restablecer;
   }
 
   pInputText;
   isEditar() {
-    //     this.updateContador.contador = this.body.contador;
-    //     this.updateContador.descripcion = this.body.descripcion;
-    //     this.updateContador.fechacreacion = this.body.fechacreacion;
-    //     this.updateContador.fechamodificacion = this.body.fechamodificacion;
-    //     this.updateContador.fechareconfiguracion = this.body.fechareconfiguracion;
-    // this.updateContador.idcampocontador=this.body.idcampocontador;
-    // this.updateContador.idcampoprefijo
-
-    this.sigaServices.post("contador_update", this.body).subscribe(
+    this.sigaServices.post("contadores_update", this.body).subscribe(
       data => {
         this.showSuccess();
         this.correcto = true;
@@ -171,6 +175,6 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   }
 
   volver() {
-    this.router.navigate(["/contadores"]);
+    this.router.navigate([JSON.parse(sessionStorage.getItem("url"))]);
   }
 }
