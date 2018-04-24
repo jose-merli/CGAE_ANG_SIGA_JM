@@ -1,7 +1,7 @@
-import { ParametroItem } from './ParametroItem';
+import { ParametroItem } from "./ParametroItem";
 
 export class ParametroDto {
-    errpr: String;
-    parametrosItems: ParametroItem[] = [];
-    constructor() { }
+  error: String;
+  parametrosItems: ParametroItem[] = [];
+  constructor() {}
 }

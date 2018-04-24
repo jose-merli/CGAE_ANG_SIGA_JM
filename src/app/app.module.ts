@@ -69,7 +69,7 @@ import { EditarCatalogosMaestrosComponent } from "./features/administracion/cata
 import { GestionContadoresComponent } from "./features/administracion/contadores/gestion-contadores/gestion-contadores.component";
 import { ContadoresComponent } from "./features/administracion/contadores/contadores.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
-import { Etiquetas } from "./features/administracion/etiquetas/etiquetas.component";
+import { Etiquetas } from "./features/administracion/gestion-multiidioma/etiquetas/etiquetas.component";
 import { SeleccionarIdioma } from "./features/administracion/seleccionar-idioma/seleccionar-idioma.component";
 import { Usuarios } from "./features/administracion/usuarios/usuarios.component";
 import { ParametrosGenerales } from "./features/administracion/parametros/parametros-generales/parametros-generales.component";

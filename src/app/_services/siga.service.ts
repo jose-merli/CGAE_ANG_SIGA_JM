@@ -45,6 +45,10 @@ export class SigaServices {
     parametros_delete: "parametros/delete",
     parametros_update: "parametros/update",
     parametros_historico: "parametros/historico",
+
+    etiquetas_lenguaje: "etiquetas/lenguaje",
+    etiquetas_search: "etiquetas/search",
+    etiquetas_update: "etiquetas/update",
     contadores_search: "contadores/search",
     contadores_update: "contadores/update",
     contadores_modo: "contadores/mode",
