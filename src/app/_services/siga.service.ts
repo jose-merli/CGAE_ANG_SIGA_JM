@@ -43,7 +43,10 @@ export class SigaServices {
     parametros_search: "parametros/search",
     parametros_delete: "parametros/delete",
     parametros_update: "parametros/update",
-    parametros_historico: "parametros/historico"
+    parametros_historico: "parametros/historico",
+    etiquetas_lenguaje: "etiquetas/lenguaje",
+    etiquetas_search: "etiquetas/search",
+    etiquetas_update: "etiquetas/update"
   };
 
   constructor(private http: HttpClient) {}

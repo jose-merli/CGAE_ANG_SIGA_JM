@@ -1,0 +1,66 @@
+<p-growl [(value)]="msgs" life="30000"></p-growl>
+<div class="busqueda-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>Etiquetas</p>
+  </div>
+  <div class="breadCrumb">
+    <p>Administracion <i class="fa fa-angle-right"></i> Gestión Multiidioma <i class="fa fa-angle-right"></i> Etiquetas
+    </p>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <label>Etiquetas</label>
+    </div>
+    <div class="card-body">
+      <p class="title-module">{{'administracion.catalogos.titulo.datos.generales' | translate}}
+        <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+        <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+      </p>
+      <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Descripción</label>
+            <input type="text" class="form-control" [(ngModel)]="descripcion" pInputText> &nbsp;&nbsp;
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Idioma búsqueda</label>
+            <p-dropdown class="select-form" [(ngModel)]='selectedIdiomaBusqueda' [options]="idiomaBusqueda"></p-dropdown> &nbsp;&nbsp;
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Idioma a traducir</label>
+            <p-dropdown class="select-form" [(ngModel)]='selectedIdiomaTraduccion' [options]="idiomaTraduccion"></p-dropdown> &nbsp;&nbsp;
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="card-footer" *ngIf="showDatosGenerales">
+      <div class="text-right main-button">
+        <button (click)="isBuscar()" [disabled]="isHabilitadoBuscar()" pButton type="button " icon="fa fa-search" iconPos="left"
+          label="{{'general.boton.search' | translate}}"></button>
+          <button (click)="generarRecursos()" pButton type="button " icon="fa fa-history" iconPos="left" label="Generar Recursos"></button>
+      </div>
+    </div>
+  </div>
+  <!--FIN CARD-->
+  <div *ngIf="buscarSeleccionado == true" class="card mt-3">
+    <div class="card-body p-0">
+      <p-dataTable [value]="datosTraduccion" [editable]="true" [responsive]="true" #table class="tabla-listado" [sortOrder]="1"
+        [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+        <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header" [filter]="true">
+          <ng-template *ngIf="col.field == 'descripcionTraduccion'" let-dato="rowData" pTemplate="body">
+            <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" (change)="isGuardar($event,dato)">
+          </ng-template>
+        </p-column>
+
+        <ng-template pTemplate="paginatorLeft">
+          <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+          <label>{{ 'general.message.mostrar' | translate}}<p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
+        </ng-template>
+
+        </p-dataTable>
+    </div>
+  </div>
+  <app-dialog></app-dialog>
+</div>
