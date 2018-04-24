@@ -32,6 +32,8 @@ import { MessageService } from "primeng/components/common/messageservice";
 import { DropdownModule } from "primeng/dropdown";
 import { ButtonModule } from "primeng/button";
 import { DataTableModule } from "primeng/datatable";
+
+import { TableModule } from "primeng/table";
 import { InputTextModule } from "primeng/inputtext";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { CheckboxModule } from "primeng/checkbox";
@@ -139,7 +141,8 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     TooltipModule,
     ChipsModule,
     EditorModule,
-    MultiSelectModule
+    MultiSelectModule,
+    TableModule
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

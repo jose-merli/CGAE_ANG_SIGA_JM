@@ -83,7 +83,7 @@ const appRoutes: Routes = [
     path: "EditarCatalogosMaestros",
     component: EditarCatalogosMaestrosComponent
   },
-  { path: "contadores", component: ContadoresComponent },
+  { path: "contadores/:id", component: ContadoresComponent },
   {
     path: "gestionContadores",
     component: GestionContadoresComponent
