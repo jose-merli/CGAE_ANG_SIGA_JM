@@ -45,12 +45,17 @@ export class SigaServices {
     parametros_delete: "parametros/delete",
     parametros_update: "parametros/update",
     parametros_historico: "parametros/historico",
+
     etiquetas_lenguaje: "etiquetas/lenguaje",
     etiquetas_search: "etiquetas/search",
-    etiquetas_update: "etiquetas/update"
+    etiquetas_update: "etiquetas/update",
+    contadores_search: "contadores/search",
+    contadores_update: "contadores/update",
+    contadores_modo: "contadores/modo",
+    contadores_module: "contadores/module"
   };
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   get(service: string): Observable<any> {
     return this.http
@@ -67,10 +72,10 @@ export class SigaServices {
   getPerfil(service: string, institucion: string): Observable<any> {
     return this.http
       .get(
-      environment.newSigaUrl +
-      this.endpoints[service] +
-      "?institucion=" +
-      institucion
+        environment.newSigaUrl +
+          this.endpoints[service] +
+          "?institucion=" +
+          institucion
       )
       .map(response => {
         return response;

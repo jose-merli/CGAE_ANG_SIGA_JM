@@ -2,7 +2,7 @@
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{"administracion.usuarios.edicion.usuarios" | translate}} </p>
+    <p>{{"administracion.parametrosGenerales.gestion" | translate}} Gestión de Contadores</p>
   </div>
   <div class="breadCrumb">
     <p>{{"general.boton.edit" | translate}} <i class="fa fa-angle-right"></i> {{ 'menu.administracion.usuarios' | translate}}
@@ -11,63 +11,125 @@
 
   <div class="card">
     <div class="card-header">
-      <label>{{"administracion.usuarios.edicion.usuarios" | translate}} </label>
+      <label>{{"administracion.parametrosGenerales.gestion" | translate}}Gestión de Contadores</label>
     </div>
     <div class="card-body">
-      <p class="title-module">{{ "general.message.datos.generales"| translate}}
+      <p class="title-module">{{"administracion.parametrosGenerales.gestion" | translate}}Gestión de Contadores
         <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
         <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
       </p>
 
       <div *ngIf="showDatosGenerales" class="module vista-avanzada">
         <div class="form-row">
-          <div class="form-group col-lg-3 col-md-3">
-            <label>{{"administracion.usuarios.literal.nombre" | translate}}</label>
-            <input type="text" name="nombreApellidos" [(disabled)]="editar" class="form-control" [(ngModel)]='body.nombreApellidos' (ngModelChange)="onChangeForm()"
-              pInputText>
 
-          </div>
-          <div class="form-group col-lg-3 col-md-3">
-            <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
-            <input type="text" name="NIF" class="form-control" [(disabled)]="editar" [(ngModel)]='body.nif' pInputText>
+          <div class="form-group col-lg-12 col-md-12">
+            <div class="form-group col-lg-4 col-md-4">
+              <label>{{"administracion.parametrosGenerales.literal.codigo" | translate}}</label>
+              <input type="text" name="codigo" class="form-control" [(ngModel)]='body.idcontador' readonly="readonly" InputText>
+              <label>{{body.idcontador}}</label>
+            </div>
 
+            <div class="form-group col-lg-8 col-md-8">
+              <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
+              <input type="text" name="nombre" class="form-control" [(ngModel)]='body.nombre' (ngModelChange)="onChangeForm()" pInputText>
+            </div>
 
-          </div>
-          <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
-          </div>
-          <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
-          </div>
-          <div class="form-group col-lg-3 col-md-3">
-            <label>{{"administracion.usuarios.literal.grupo" | translate}}</label>
-            <p-multiSelect styleClass="widthAll" [(ngModel)]='body.perfiles' [options]="usuarios_perfil" [selectedItemsLabel]="textSelected"
-              [defaultLabel]="textFilter" [panelStyle]="{width:'100%'}"></p-multiSelect>
+            <div class="form-group col-lg-8 col-md-8">
+              <label>{{"administracion.parametrosGenerales.literal.descripcion" | translate}}</label>
+              <input type="text" name="descripcion" class="form-control" [(ngModel)]='body.descripcion' pInputText>
+            </div>
 
-          </div>
+            <div class="form-group col-lg-4 col-md-4">
+              <div class="form-row">
+                <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.modificable" | translate}}</label>
+                <!--<p-dropdown class="select-form" [options]="select"></p-dropdown>-->
+                <p-checkbox name="modificable" [(ngModel)]="body.modificablecontador"></p-checkbox>
+              </div>
+            </div>
 
-          <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
-            <label>{{"general.codeext" | translate}}</label>
-            <input type="text" name="codExterno" class="form-control" [(disabled)]="!editar" [(ngModel)]='body.codigoExterno' [formControl]="this.formGroup.controls['codigoExterno']"
-              pInputText>
-              <label *ngIf="hasErrors('codigoExterno')" class="labelError">{{getErrorMessage('codigoExterno')}}</label>
-          </div>
-          <div class="form-group col-lg-3 col-md-3">
-            <label class="d-block pb-2">{{"administracion.usuarios.literal.activo" | translate}}</label>
-            <!--<p-dropdown class="select-form" [options]="select"></p-dropdown>-->
-            <p-radioButton label="{{'messages.si' | translate}}" name="activo" value="S" class="pr-3" [(ngModel)]="body.activo" [(disabled)]="disabledRadio"></p-radioButton>
-            <p-radioButton label="{{'general.boton.no' | translate}}" name="activo" value="N" class="pr-3" [(ngModel)]="body.activo"
-              [(disabled)]="disabledRadio">
-              </p-radioButton>
+            <div class="form-group col-lg-5 col-md-5">
+              <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.modo" | translate}}</label>
+              <p-dropdown class="select-form" [(ngModel)]="body.modo" [options]="contadores_modo"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-12 col-md-12">
+              <div class="form-row">
+                <div class="col-lg-4 col-md-4">
+                  <label>{{"administracion.parametrosGenerales.literal.prefijo" | translate}}</label>
+                  <input type="text" name="prefijo" class="form-control" [(ngModel)]='body.prefijo' pInputText>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                  <label>{{"administracion.parametrosGenerales.literal.contadorActual" | translate}}</label>
+                  <input type="text" name="prefijo" class="form-control" [(ngModel)]='body.contador' pInputText>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                  <label>{{"administracion.parametrosGenerales.literal.sufijo" | translate}}</label>
+                  <input type="text" name="prefijo" class="form-control" [(ngModel)]='body.sufijo' pInputText>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-lg-3 col-md-3">
+              <label>{{"administracion.parametrosGenerales.literal.longitud" | translate}}</label>
+              <input type="text" name="descripcion" class="form-control" [(ngModel)]='body.longitudcontador' pInputText>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="card-footer">
-      <div class="text-right main-button ">
-        <button (click)="confirmEdit();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"
-          [disabled]="formGroup.invalid"></button>
-          <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+
+
+    <div class="card">
+      <div class="card-body">
+        <p class="title-module">{{"administracion.parametrosGenerales.reconfigurar" | translate}}Reconfiguración de contador
+          <i (click)="onHideReconfiguracion()" *ngIf="showReconfiguracion" class="fa fa-angle-up float-right"></i>
+          <i (click)="onHideReconfiguracion()" *ngIf="!showReconfiguracion" class="fa fa-angle-down float-right"></i>
+        </p>
+
+        <div *ngIf="showReconfiguracion" class="module vista-avanzada">
+          <div class="form-row">
+
+            <div class="form-group col-lg-12 col-md-12">
+              <div class="form-group col-lg-4 col-md-4">
+                <label>{{"administracion.parametrosGenerales.literal.fechaReconfiguracion" | translate}}</label>
+                <p-calendar [(ngModel)]="body.fechareconfiguracion" [showIcon]="true"></p-calendar>
+              </div>
+              <!--ocultar estos tres mientras la fecha sea nula-->
+              <div *ngIf="body.fechareconfiguracion!=null" class="module vista-avanzada">
+                <div class="form-group col-lg-12 col-md-12">
+                  <div class="form-row">
+                    <div class="col-lg-4 col-md-4">
+                      <label>{{"administracion.parametrosGenerales.literal.prefijoSiguiente" | translate}}</label>
+                      <input type="text" name="prefijo" class="form-control" [(ngModel)]='body.reconfiguracionprefijo' pInputText>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                      <label>{{"administracion.parametrosGenerales.literal.contadorSiguiente" | translate}}</label>
+                      <input type="text" name="prefijo" class="form-control" [(ngModel)]='body.reconfiguracioncontador' pInputText>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                      <label>{{"administracion.parametrosGenerales.literal.sufijoSiguiente" | translate}}</label>
+                      <input type="text" name="prefijo" class="form-control" [(ngModel)]='body.reconfiguracionsufijo' pInputText>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
+              </div>
+              <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="card-footer">
+          <div class="text-right main-button ">
+            <button (click)="confirmEdit();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"
+              [disabled]="formGroup.invalid"></button>
+              <button (click)="isRestablecer();" pButton type="button" icon="	fa fa-eraser " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+              <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+          </div>
+        </div>
       </div>
+      <app-dialog></app-dialog>
     </div>
-  </div>
-  <app-dialog></app-dialog>
-</div>
