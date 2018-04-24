@@ -28,8 +28,9 @@ import { Usuarios } from "./features/administracion/usuarios/usuarios.component"
 import { UsingObservable } from "rxjs/observable/UsingObservable";
 import { EditarUsuarioComponent } from "./features/administracion/usuarios/editarUsuario/editarUsuario.component";
 import { ParametrosGenerales } from "./features/administracion/parametros/parametros-generales/parametros-generales.component";
-
-//new censo
+import { EditarCatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros/editarCatalogosMaestros/editarCatalogosMaestros.component";
+import { GestionContadoresComponent } from "./features/administracion/contadores/gestion-contadores/gestion-contadores.component";
+import { ContadoresComponent } from "./features/administracion/contadores/contadores.component"; //new censo
 import { BusquedaColegiadosComponent } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
 import { FichaColegialComponent } from "./new-features/censo/ficha-colegial/ficha-colegial.component";
 
@@ -78,9 +79,19 @@ const appRoutes: Routes = [
 
   // Administracion
   { path: "catalogosMaestros", component: CatalogosMaestros },
+  {
+    path: "EditarCatalogosMaestros",
+    component: EditarCatalogosMaestrosComponent
+  },
+  { path: "contadores", component: ContadoresComponent },
+  {
+    path: "gestionContadores",
+    component: GestionContadoresComponent
+  },
+
   { path: "gruposUsuarios", component: GruposUsuarios },
   { path: "etiquetas", component: Etiquetas },
-  { path: "usuarios", component: Usuarios, canActivate: [AuthGuard] },
+  { path: "usuarios", component: Usuarios },
   { path: "seleccionarIdioma", component: SeleccionarIdioma },
   { path: "parametrosGenerales", component: ParametrosGenerales },
   { path: "**", redirectTo: "home" }

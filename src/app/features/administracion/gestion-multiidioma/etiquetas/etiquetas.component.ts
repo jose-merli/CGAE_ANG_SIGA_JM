@@ -159,11 +159,6 @@ export class Etiquetas extends SigaWrapper implements OnInit {
 
   generarRecursos() {}
 
-  idiomaUsuario() {
-    //this.translateService.currentLang()
-    let lenguaje = this.translateService.currentLang;
-  }
-
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();

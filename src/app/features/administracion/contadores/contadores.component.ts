@@ -36,12 +36,12 @@ import { UsuarioItem } from "./../../../../app/models/UsuarioItem";
 import { ComboItem } from "./../../../../app/models/ComboItem";
 import { MultiSelectModule } from "primeng/multiSelect";
 @Component({
-  selector: "app-usuarios",
-  templateUrl: "./usuarios.component.html",
-  styleUrls: ["./usuarios.component.scss"],
+  selector: "app-contadores",
+  templateUrl: "./contadores.component.html",
+  styleUrls: ["./contadores.component.scss"],
   encapsulation: ViewEncapsulation.None
 })
-export class Usuarios extends SigaWrapper implements OnInit {
+export class ContadoresComponent extends SigaWrapper implements OnInit {
   usuarios_rol: any[];
   usuarios_perfil: any[];
   cols: any = [];
@@ -141,7 +141,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
   onChangeForm() {
@@ -226,15 +226,15 @@ export class Usuarios extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("usuarios_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.searchUser = JSON.parse(data["body"]);
-        this.datos = this.searchUser.usuarioItem;
-      },
-      err => {
-        console.log(err);
-      }
+          this.searchUser = JSON.parse(data["body"]);
+          this.datos = this.searchUser.usuarioItem;
+        },
+        err => {
+          console.log(err);
+        }
       );
   }
 
@@ -388,9 +388,9 @@ export class Usuarios extends SigaWrapper implements OnInit {
           "general.message.confirmar.rehabilitaciones"
         )),
           +selectedItem.length +
-          this.translateService.instant(
-            "cargaMasivaDatosCurriculares.numRegistros.literal"
-          );
+            this.translateService.instant(
+              "cargaMasivaDatosCurriculares.numRegistros.literal"
+            );
       } else {
         mess = this.translateService.instant(
           "general.message.confirmar.rehabilitacion"
@@ -449,7 +449,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
     }
   }
 
-  irEditarUsuario(id) {
+  irEditarUsuario(id, event) {
     if (!this.selectMultiple) {
       var ir = null;
       if (id && id.length > 0) {

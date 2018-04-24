@@ -1,25 +1,43 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild, ChangeDetectorRef, Input } from '@angular/core';
-import { SigaServices } from './../../../_services/siga.service';
-import { SigaWrapper } from '../../../wrapper/wrapper.class';
-import { SelectItem } from 'primeng/api';
-import { MenuItem } from 'primeng/api';
-import { Http, Response } from '@angular/http';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { DropdownModule } from 'primeng/dropdown';
-import { USER_VALIDATIONS } from '../../../properties/val-properties';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
-import { Router } from '@angular/router';
+import {
+  Component,
+  OnInit,
+  ViewEncapsulation,
+  ViewChild,
+  ChangeDetectorRef,
+  Input
+} from "@angular/core";
+import { SigaServices } from "./../../../_services/siga.service";
+import { SigaWrapper } from "../../../wrapper/wrapper.class";
+import { SelectItem } from "primeng/api";
+import { MenuItem } from "primeng/api";
+import { Http, Response } from "@angular/http";
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl
+} from "@angular/forms";
+import { DropdownModule } from "primeng/dropdown";
+import { USER_VALIDATIONS } from "../../../properties/val-properties";
+import { ButtonModule } from "primeng/button";
+import { InputTextModule } from "primeng/inputtext";
+import { InputTextareaModule } from "primeng/inputtextarea";
+import { Router } from "@angular/router";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { MessageService } from "primeng/components/common/messageservice";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
-
+import { CatalogoRequestDto } from "./../../../../app/models/CatalogoRequestDto";
+import { CatalogoHistoricoRequestDto } from "./../../../../app/models/CatalogoHistoricoRequestDto";
+import { CatalogoResponseDto } from "./../../../../app/models/CatalogoResponseDto";
+import { CatalogoUpdateRequestDto } from "./../../../../app/models/CatalogoUpdateRequestDto";
+import { CatalogoCreateRequestDto } from "./../../../../app/models/CatalogoCreateRequestDto";
+import { CatalogoDeleteRequestDto } from "./../../../../app/models/CatalogoDeleteRequestDto";
+import { CatalogoMaestroItem } from "./../../../../app/models/CatalogoMaestroItem";
 @Component({
-  selector: 'app-catalogos-maestros',
-  templateUrl: './catalogos-maestros.component.html',
-  styleUrls: ['./catalogos-maestros.component.scss'],
+  selector: "app-catalogos-maestros",
+  templateUrl: "./catalogos-maestros.component.html",
+  styleUrls: ["./catalogos-maestros.component.scss"],
   encapsulation: ViewEncapsulation.None
 })
 export class CatalogosMaestros extends SigaWrapper implements OnInit {
@@ -36,8 +54,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   cre: CatalogoCreateRequestDto = new CatalogoCreateRequestDto();
   del: CatalogoDeleteRequestDto = new CatalogoDeleteRequestDto();
 
-
-  pButton
+  pButton;
   buscar: boolean = false;
   tablaHistorico: boolean = false;
   editar: boolean = false;
@@ -64,53 +81,41 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   //mensajes
   msgs: Message[] = [];
 
-  showDatosGenerales: boolean = true
+  showDatosGenerales: boolean = true;
   blockSeleccionar: boolean = false;
   blockBuscar: boolean = true;
   blockCrear: boolean = true;
 
   rowsPerPage: any = [];
 
-  @ViewChild('table')
-  table
-  constructor(private formBuilder: FormBuilder,
+  @ViewChild("table") table;
+  constructor(
+    private formBuilder: FormBuilder,
     private sigaServices: SigaServices,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService) {
+    private translateService: TranslateService
+  ) {
     super(USER_VALIDATIONS);
-    this.formBusqueda = this.formBuilder.group({
-    });
+    this.formBusqueda = this.formBuilder.group({});
   }
 
   //Cargo el combo nada mas comenzar
   ngOnInit() {
-    this.sigaServices.get("maestros_rol").subscribe(n => {
-      this.catalogoArray = n.combooItems;
-    },
+    this.sigaServices.get("maestros_rol").subscribe(
+      n => {
+        this.catalogoArray = n.combooItems;
+      },
       err => {
         console.log(err);
       }
     );
-
-    //Valores dummie de catalogo
-    // this.catalogo = [
-    //   { label: 'Selecciona un catálogo', value: '' },
-    //   { label: 'dummie5', value: 'dummie5' }
-    // ];
     this.cols = [
-      { field: 'codigoExt', header: 'Código externo' },
-      { field: 'descripcion', header: 'Descripción' },
+      { field: "codigoExt", header: "general.codeext" },
+      { field: "descripcion", header: "general.description" }
     ];
-
-    //Valores dummie de tabla
-    // this.datos = [
-    //   { codigoExt: '239123', descripcion: 'Administrador' },
-    //   { codigoExt: '744689', descripcion: 'Dummies' },
-    // ];
-
     this.rowsPerPage = [
       {
         label: 4,
@@ -129,10 +134,19 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         value: 10
       }
     ];
+
+    if (sessionStorage.getItem("searchCatalogo") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("searchCatalogo"));
+      this.isBuscar();
+      sessionStorage.removeItem("searchCatalogo");
+      sessionStorage.removeItem("catalogoBody");
+    } else {
+      this.body = new CatalogoRequestDto();
+    }
   }
 
   onHideDatosGenerales() {
-    this.showDatosGenerales = !this.showDatosGenerales
+    this.showDatosGenerales = !this.showDatosGenerales;
   }
 
   onChangeRowsPerPages(event) {
@@ -153,7 +167,10 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   onChangeForm() {
     if (this.formCodigo == "" || this.formCodigo == undefined) {
       this.blockCrear = true;
-    } else if (this.formDescripcion == "" || this.formDescripcion == undefined) {
+    } else if (
+      this.formDescripcion == "" ||
+      this.formDescripcion == undefined
+    ) {
       this.blockCrear = true;
     } else {
       this.blockCrear = false;
@@ -165,7 +182,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.msgs.push({
       severity: "success",
       summary: "Correcto",
-      detail: "Accion realizada correctamente"
+      detail: this.translateService.instant("general.message.accion.realizada")
     });
   }
 
@@ -173,18 +190,20 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
-      detail: "Error, fallo al realizar la accion"
+      summary: "Error",
+      detail: this.translateService.instant(
+        "general.message.error.realiza.accion"
+      )
     });
   }
 
   historico() {
     this.buscar = false;
     this.catalogoSeleccionado = this.body.catalogo;
-    this.body = new CatalogoRequestDto;
+    this.body = new CatalogoRequestDto();
     this.body.catalogo = this.catalogoSeleccionado;
     this.bodyToForm();
-    this.his = new CatalogoHistoricoRequestDto;
+    this.his = new CatalogoHistoricoRequestDto();
     this.his.catalogo = this.body.catalogo;
     this.his.codigoExt = "";
     this.his.descripcion = "";
@@ -206,9 +225,12 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       }
     );
   }
-
+  isSelectMultiple() {
+    this.selectMultiple = !this.selectMultiple;
+  }
   isBuscar() {
     this.buscar = true;
+    this.blockBuscar = false;
     this.tablaHistorico = false;
     this.eliminar = false;
     if (this.body.codigoExt != undefined) {
@@ -228,15 +250,15 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("maestros_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.searchCatalogo = JSON.parse(data["body"]);
-        this.datos = this.searchCatalogo.catalogoMaestroItem;
-      },
-      err => {
-        console.log(err);
-      }
+          this.searchCatalogo = JSON.parse(data["body"]);
+          this.datosHist = this.searchCatalogo.catalogoMaestroItem;
+        },
+        err => {
+          console.log(err);
+        }
       );
   }
 
@@ -273,7 +295,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   reset() {
     if (this.buscar == true) {
       this.table.reset();
-
     }
     this.editar = false;
     this.catalogoSeleccionado = this.body.catalogo;
@@ -297,27 +318,18 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.formDescripcion = this.body.descripcion;
     this.formCodigo = this.body.codigoExt;
   }
-
-  isEditar(selectedItem) {
-    this.upd = new CatalogoUpdateRequestDto();
-    this.upd.tabla = this.body.catalogo;
-    this.upd.descripcion = this.formDescripcion;
-    this.upd.codigoExt = this.formCodigo;
-    this.upd.idRegistro = this.body.idRegistro;
-    this.blockSeleccionar = true;
-    this.sigaServices.post("maestros_update", this.upd).subscribe(
-      data => {
-        this.showSuccess();
-        console.log(data);
-      },
-      err => {
-        this.showFail();
-        console.log(err);
-      },
-      () => {
-        this.reset();
+  irEditarCatalogo(id) {
+    if (!this.selectMultiple) {
+      var ir = null;
+      if (id && id.length > 0) {
+        ir = id[0];
       }
-    );
+      sessionStorage.setItem("catalogoBody", JSON.stringify(id));
+      sessionStorage.setItem("searchCatalogo", JSON.stringify(this.body));
+      this.router.navigate(["/EditarCatalogosMaestros"]);
+    } else {
+      this.editar = false;
+    }
   }
 
   editarCatalogos(selectedDatos) {
@@ -351,14 +363,16 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
           this.msgs.push({
             severity: "success",
             summary: "Correcto",
-            detail: "Registro eliminado correctamente"
+            detail: this.translateService.instant("messages.deleted.success")
           });
         } else {
           this.msgs = [];
           this.msgs.push({
             severity: "success",
             summary: "Correcto",
-            detail: selectedDatos.length + "registros eliminados correctamente"
+            detail:
+              selectedDatos.length +
+              this.translateService.instant("messages.deleted.selected.success")
           });
         }
       },
@@ -366,27 +380,24 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         console.log(err);
       },
       () => {
-        this.catalogoSeleccionado = this.body.catalogo;
-        this.body = new CatalogoRequestDto();
-        this.bodyToForm();
-        this.body.catalogo = this.catalogoSeleccionado;
         this.isBuscar();
         this.editar = false;
       }
-    )
+    );
   }
   isHabilitadoEliminar() {
     return this.eliminar;
   }
   confirmarBorrar(selectedDatos) {
-    let mess = "¿Está seguro que desea eliminar el registro?";
+    let mess = this.translateService.instant("messages.deleteConfirmation");
     let icon = "fa fa-trash-alt";
 
     if (selectedDatos.length > 1) {
       mess =
-        "¿Está seguro que desea eliminar " +
+        this.translateService.instant("messages.deleteConfirmation.much") +
         selectedDatos.length +
-        " registros?";
+        this.translateService.instant("messages.deleteConfirmation.register") +
+        "?";
     }
     this.confirmationService.confirm({
       message: mess,
@@ -399,7 +410,9 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
           {
             severity: "info",
             summary: "Cancel",
-            detail: "Acción cancelada por el usuario"
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
           }
         ];
       }
@@ -410,65 +423,4 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     if (datoH.fechaBaja == null) return false;
     else return true;
   }
-}
-
-export class CatalogoMaestroItem {
-  idRegistro: "String";
-  catalogo: "String";
-  codigoExt: "String";
-  descripcion: "String";
-  idInstitucion: "String";
-  fechaBaja: Date;
-  constructor() { }
-}
-
-export class CatalogoResponseDto {
-  error: String;
-  catalogoMaestroItem: CatalogoMaestroItem[] = [];
-  constructor() { }
-}
-
-export class CatalogoRequestDto {
-  catalogo: String;
-  codigoExt: String;
-  descripcion: String;
-  idRegistro: String;
-  idInstitucion: String;
-  constructor() { }
-}
-
-export class CatalogoHistoricoRequestDto {
-  catalogo: String;
-  codigoExt: String;
-  descripcion: String;
-  idRegistro: String;
-  idInstitucion: String;
-  constructor() { }
-}
-
-export class CatalogoDeleteRequestDto {
-  idRegistro: any = [];
-  tabla: String;
-  idInstitucion: String;
-  constructor() { }
-}
-
-export class CatalogoUpdateRequestDto {
-  idRegistro: String;
-  tabla: String;
-  codigoExt: String;
-  descripcion: String;
-  idInstitucion: String;
-  idLenguaje: String;
-  constructor() { }
-}
-
-export class CatalogoCreateRequestDto {
-  idRegistro: String;
-  tabla: String;
-  codigoExt: String;
-  descripcion: String;
-  idInstitucion: String;
-  idLenguaje: String;
-  constructor() { }
 }

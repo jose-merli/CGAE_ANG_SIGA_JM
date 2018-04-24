@@ -102,7 +102,9 @@ export class TranslateService {
 
   // inject our translations
   constructor(private service: SigaServices) {
-    this._currentLang = "1";
+    service.get("usuario").subscribe(response => {
+      this._currentLang = response.usuarioItem[0].idLenguaje;
+    });
     service.get("diccionarios").subscribe(response => {
       this._translations = response.DiccionarioItems;
     });

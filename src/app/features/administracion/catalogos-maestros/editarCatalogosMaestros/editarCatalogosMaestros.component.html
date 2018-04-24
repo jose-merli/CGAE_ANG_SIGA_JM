@@ -1,0 +1,49 @@
+<p-growl [(value)]="msgs" life="1500"></p-growl>
+<div class="busqueda-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{"administracion.usuarios.edicion.usuarios" | translate}} </p>
+  </div>
+  <div class="breadCrumb">
+    <p>{{"general.boton.edit" | translate}} <i class="fa fa-angle-right"></i> {{ 'menu.administracion.usuarios' | translate}}
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <label>{{"administracion.usuarios.edicion.usuarios" | translate}} </label>
+    </div>
+    <div class="card-body">
+      <p class="title-module">{{ "general.message.datos.generales"| translate}}
+        <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+        <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+      </p>
+
+      <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group col-lg-4 col-md-4">
+            <label>{{ 'administracion.catalogos.seleccionar' | translate}} (*)</label>
+
+            <p-dropdown [(disabled)]="!blockSeleccionar" class="select-form" [(ngModel)]="body.catalogo" [options]="catalogoArray" [(disabled)]="blockSeleccionar"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-4 col-md-4">
+            <label>{{ 'general.codeext' | translate}}</label>
+            <input type="text" name="codigoBusqueda" value="" class="box" class="form-control" [(ngModel)]='body.codigoExt' pInputText>
+          </div>
+          <div class="form-group col-lg-4 col-md-4">
+            <label>{{ 'general.description' | translate}}</label>
+            <input type="text" name="descripcionBusqueda" value="" class="box" class="form-control" [(ngModel)]='body.descripcion' pInputText>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="text-right main-button ">
+        <button (click)="confirmEdit();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"
+          [disabled]="formGroup.invalid"></button>
+          <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+  <app-dialog></app-dialog>
+</div>

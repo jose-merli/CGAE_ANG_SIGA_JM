@@ -30,23 +30,24 @@ import { GrowlModule } from "primeng/growl";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
-import { UsuarioItem } from "../../../../../app/models/UsuarioItem";
-import { UsuarioUpdate } from "../../../../../app/models/UsuarioUpdate";
+import { CatalogoRequestDto } from "../../../../../app/models/CatalogoRequestDto";
+import { CatalogoUpdateRequestDto } from "../../../../../app/models/CatalogoUpdateRequestDto";
 import { ComboItem } from "../../../../../app/models/ComboItem";
 import { ActivatedRoute } from "@angular/router";
 @Component({
-  selector: "app-editarUsuario",
-  templateUrl: "./editarUsuario.component.html",
-  styleUrls: ["./editarUsuario.component.scss"],
+  selector: "app-editarCatalogosMaestros",
+  templateUrl: "./editarCatalogosMaestros.component.html",
+  styleUrls: ["./editarCatalogosMaestros.component.scss"],
   encapsulation: ViewEncapsulation.None
 })
-export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
+export class EditarCatalogosMaestrosComponent extends SigaWrapper
+  implements OnInit {
   usuarios_rol: any[];
   usuarios_perfil: any[];
   select: any[];
   msgs: Message[] = [];
-  body: UsuarioItem = new UsuarioItem();
-  updateUser: UsuarioUpdate = new UsuarioUpdate();
+  body: CatalogoRequestDto = new CatalogoRequestDto();
+  upd: CatalogoUpdateRequestDto = new CatalogoUpdateRequestDto();
   pButton;
   textSelected: String = "{0} grupos seleccionados";
   textFilter: String;
@@ -55,8 +56,13 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
   activo: boolean = false;
   correcto: boolean = false;
   dniCorrecto: boolean;
+  blockSeleccionar: boolean = false;
   showDatosGenerales: boolean = true;
-
+  //elementos del form
+  formDescripcion: String;
+  formCodigo: String;
+  //Array de opciones del dropdown
+  catalogoArray: any[];
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -71,83 +77,33 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
   }
   @ViewChild("table") table;
   ngOnInit() {
+    this.sigaServices.get("maestros_rol").subscribe(
+      n => {
+        this.catalogoArray = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
     console.log(sessionStorage);
 
     this.textFilter = "Elegir";
     this.correcto = false;
 
-    this.body = new UsuarioItem();
-    this.body = JSON.parse(sessionStorage.getItem("usuarioBody"))[0];
-
-    this.sigaServices.get("usuarios_rol").subscribe(
-      n => {
-        this.usuarios_rol = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-    );
-    this.sigaServices.get("usuarios_perfil").subscribe(
-      n => {
-        this.usuarios_perfil = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    this.body = new CatalogoRequestDto();
+    this.body = JSON.parse(sessionStorage.getItem("catalogoBody"))[0];
   }
 
   pInputText;
-  confirmEdit() {
-    let mess = this.translateService.instant(
-      "general.message.aceptar.y.volver"
-    );
-    let icon = "fa fa-edit";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.sendEdit();
-        this.showSuccess();
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Cancel",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
-      }
-    });
-  }
-  sendEdit() {
-    console.log(this.body);
 
-    if (this.body.codigoExterno == undefined) {
-      this.body.codigoExterno = "";
-    }
-    if (this.body.grupo == undefined) {
-      this.body.perfiles == null;
-    }
-    this.updateUser.activo = this.body.activo;
-    this.updateUser.codigoExterno = this.body.codigoExterno;
-    this.updateUser.fechaAlta = this.body.fechaAlta;
-    this.updateUser.grupo = this.body.grupo;
-    this.updateUser.idGrupo = this.body.perfiles;
-    this.updateUser.idInstitucion = this.body.idInstitucion;
-    this.updateUser.idUsuario = this.body.idUsuario;
-    this.updateUser.nif = this.body.nif;
-    this.updateUser.nombreApellidos = this.body.nombreApellidos;
-    this.updateUser.rol = this.body.roles;
-    this.usuarios_rol.forEach((value: ComboItem, key: number) => {
-      if (value.label == this.body.roles) {
-        this.updateUser.rol = value.value;
-      }
-    });
-    this.sigaServices.post("usuarios_update", this.updateUser).subscribe(
+  isEditar() {
+    this.upd = new CatalogoUpdateRequestDto();
+    this.upd.tabla = this.body.catalogo;
+    this.upd.descripcion = this.body.descripcion;
+    this.upd.codigoExt = this.body.codigoExt;
+    this.upd.idRegistro = this.body.idRegistro;
+    this.blockSeleccionar = true;
+    this.sigaServices.post("maestros_update", this.upd).subscribe(
       data => {
         this.showSuccess();
         this.correcto = true;
@@ -165,6 +121,32 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
       }
     );
   }
+
+  confirmEdit() {
+    let mess = this.translateService.instant(
+      "general.message.aceptar.y.volver"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.isEditar();
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
@@ -187,8 +169,7 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
       )
     });
   }
-
   volver() {
-    this.router.navigate(["/usuarios"]);
+    this.router.navigate(["/catalogosMaestros"]);
   }
 }

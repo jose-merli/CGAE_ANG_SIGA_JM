@@ -10,5 +10,7 @@ export class UsuarioItem {
   grupo: String;
   idUsuario: String;
   idInstitucion: String;
-  constructor() {}
+  idLenguaje: String;
+  descLenguaje: String;
+  constructor() { }
 }
