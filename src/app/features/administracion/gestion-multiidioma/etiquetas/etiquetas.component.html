@@ -2,15 +2,17 @@
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>Etiquetas</p>
+    <p>{{'menu.administracion.gestionMultiidioma.etiquetas' | translate}}</p>
   </div>
   <div class="breadCrumb">
-    <p>Administracion <i class="fa fa-angle-right"></i> Gestión Multiidioma <i class="fa fa-angle-right"></i> Etiquetas
+    <p>{{'menu.administracion' | translate}} <i class="fa fa-angle-right"></i> {{'menu.administracion.gestionMultiidioma' |
+      translate}}
+      <i class="fa fa-angle-right"></i> {{'menu.administracion.gestionMultiidioma.etiquetas' | translate}}
     </p>
   </div>
   <div class="card">
     <div class="card-header">
-      <label>Etiquetas</label>
+      <label>{{'menu.administracion.gestionMultiidioma.etiquetas' | translate}}</label>
     </div>
     <div class="card-body">
       <p class="title-module">{{'administracion.catalogos.titulo.datos.generales' | translate}}
@@ -20,15 +22,15 @@
       <div *ngIf="showDatosGenerales" class="module vista-avanzada">
         <div class="form-row">
           <div class="form-group col-lg-3 col-md-3">
-            <label>Descripción</label>
+            <label>{{'general.description' | translate}}</label>
             <input type="text" class="form-control" [(ngModel)]="descripcion" pInputText> &nbsp;&nbsp;
           </div>
           <div class="form-group col-lg-3 col-md-3">
-            <label>Idioma búsqueda</label>
+            <label>{{'administracion.multidioma.etiquetas.literal.idioma' | translate}}</label>
             <p-dropdown class="select-form" [(ngModel)]='selectedIdiomaBusqueda' [options]="idiomaBusqueda"></p-dropdown> &nbsp;&nbsp;
           </div>
           <div class="form-group col-lg-3 col-md-3">
-            <label>Idioma a traducir</label>
+            <label>{{'administracion.multidioma.etiquetas.literal.idiomaATraducir' | translate}}</label>
             <p-dropdown class="select-form" [(ngModel)]='selectedIdiomaTraduccion' [options]="idiomaTraduccion"></p-dropdown> &nbsp;&nbsp;
           </div>
         </div>
@@ -39,7 +41,7 @@
       <div class="text-right main-button">
         <button (click)="isBuscar()" [disabled]="isHabilitadoBuscar()" pButton type="button " icon="fa fa-search" iconPos="left"
           label="{{'general.boton.search' | translate}}"></button>
-          <button (click)="generarRecursos()" pButton type="button " icon="fa fa-history" iconPos="left" label="Generar Recursos"></button>
+          <button (click)="generarRecursos()" pButton type="button " icon="fa fa-history" iconPos="left" label="{{'general.boton.generarRecursos' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -48,9 +50,14 @@
     <div class="card-body p-0">
       <p-dataTable [value]="datosTraduccion" [editable]="true" [responsive]="true" #table class="tabla-listado" [sortOrder]="1"
         [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
-        <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header" [filter]="true">
+        <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true">
           <ng-template *ngIf="col.field == 'descripcionTraduccion'" let-dato="rowData" pTemplate="body">
-            <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" (change)="isGuardar($event,dato)">
+            <div class="input-group">
+              <span class="input-group">
+                <button pButton type="button" [pTooltip]="obtenerRecurso(dato)"  tooltipPosition="top" icon="fa fa-question"></button> &nbsp;&nbsp;
+              <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" (change)="isGuardar($event,dato)">
+              </span>
+            </div>
           </ng-template>
         </p-column>
 
