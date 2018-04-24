@@ -25,7 +25,8 @@
           <div class="form-group col-lg-12 col-md-12">
             <div class="form-group col-lg-4 col-md-4">
               <label>{{"administracion.parametrosGenerales.literal.codigo" | translate}}</label>
-              <input type="text" name="codigo" class="form-control" [(ngModel)]='body.idcontador' pInputText>
+              <input type="text" name="codigo" class="form-control" [(ngModel)]='body.idcontador' readonly="readonly" InputText>
+              <label>{{body.idcontador}}</label>
             </div>
 
             <div class="form-group col-lg-8 col-md-8">
@@ -92,42 +93,43 @@
                 <label>{{"administracion.parametrosGenerales.literal.fechaReconfiguracion" | translate}}</label>
                 <p-calendar [(ngModel)]="body.fechareconfiguracion" [showIcon]="true"></p-calendar>
               </div>
-
-              <div class="form-group col-lg-12 col-md-12">
-                <div class="form-row">
-                  <div class="col-lg-4 col-md-4">
-                    <label>{{"administracion.parametrosGenerales.literal.prefijoSiguiente" | translate}}</label>
-                    <input type="text" name="prefijo" class="form-control" [(ngModel)]='body.reconfiguracionprefijo' pInputText>
-                  </div>
-                  <div class="col-lg-4 col-md-4">
-                    <label>{{"administracion.parametrosGenerales.literal.contadorSiguiente" | translate}}</label>
-                    <input type="text" name="prefijo" class="form-control" [(ngModel)]='body.reconfiguracioncontador' pInputText>
-                  </div>
-                  <div class="col-lg-4 col-md-4">
-                    <label>{{"administracion.parametrosGenerales.literal.sufijoSiguiente" | translate}}</label>
-                    <input type="text" name="prefijo" class="form-control" [(ngModel)]='body.reconfiguracionsufijo' pInputText>
+              <!--ocultar estos tres mientras la fecha sea nula-->
+              <div *ngIf="body.fechareconfiguracion!=null" class="module vista-avanzada">
+                <div class="form-group col-lg-12 col-md-12">
+                  <div class="form-row">
+                    <div class="col-lg-4 col-md-4">
+                      <label>{{"administracion.parametrosGenerales.literal.prefijoSiguiente" | translate}}</label>
+                      <input type="text" name="prefijo" class="form-control" [(ngModel)]='body.reconfiguracionprefijo' pInputText>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                      <label>{{"administracion.parametrosGenerales.literal.contadorSiguiente" | translate}}</label>
+                      <input type="text" name="prefijo" class="form-control" [(ngModel)]='body.reconfiguracioncontador' pInputText>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                      <label>{{"administracion.parametrosGenerales.literal.sufijoSiguiente" | translate}}</label>
+                      <input type="text" name="prefijo" class="form-control" [(ngModel)]='body.reconfiguracionsufijo' pInputText>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
-            </div>
-            <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
+              <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
+              </div>
+              <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
 
 
-      <div class="card-footer">
-        <div class="text-right main-button ">
-          <button (click)="confirmEdit();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"
-            [disabled]="formGroup.invalid"></button>
-            <button (click)="restablecer();" pButton type="button" icon="	fa fa-eraser " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-            <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+        <div class="card-footer">
+          <div class="text-right main-button ">
+            <button (click)="confirmEdit();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"
+              [disabled]="formGroup.invalid"></button>
+              <button (click)="isRestablecer();" pButton type="button" icon="	fa fa-eraser " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+              <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+          </div>
         </div>
       </div>
+      <app-dialog></app-dialog>
     </div>
-    <app-dialog></app-dialog>
-  </div>

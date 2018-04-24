@@ -44,6 +44,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   contadores_modo: any[];
   msgs: Message[] = [];
   body: ContadorItem = new ContadorItem();
+  restablecer: ContadorItem = new ContadorItem();
   pButton;
   textSelected: String = "{0} grupos seleccionados";
   textFilter: String;
@@ -73,7 +74,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
 
     this.body = new ContadorItem();
     this.body = JSON.parse(sessionStorage.getItem("contadorBody"))[0];
-
+    this.restablecer = this.body;
     this.sigaServices.get("contadores_modo").subscribe(
       n => {
         this.contadores_modo = n.combooItems;
@@ -82,6 +83,10 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  isRestablecer() {
+    this.body = this.restablecer;
   }
 
   pInputText;
@@ -166,6 +171,6 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   }
 
   volver() {
-    this.router.navigate(["/usuarios"]);
+    this.router.navigate(["/contadores"]);
   }
 }
