@@ -28,6 +28,7 @@ import { TranslatePipe, TranslateService } from "./commons/translate";
 import { ConfirmDialogComponent } from "./commons/dialog/dialog.component";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
+import { TreeModule } from 'primeng/tree';
 //PRIMENG
 import { DropdownModule } from "primeng/dropdown";
 import { ButtonModule } from "primeng/button";
@@ -72,6 +73,7 @@ import { SeleccionarIdioma } from "./features/administracion/seleccionar-idioma/
 import { Usuarios } from "./features/administracion/usuarios/usuarios.component";
 import { ParametrosGenerales } from "./features/administracion/parametros/parametros-generales/parametros-generales.component";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
+import { PermisosComponent } from "./features/administracion/permisos/permisos.component";
 
 /***NEW modules censo***/
 import { BusquedaColegiadosModule } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.module";
@@ -110,7 +112,8 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     Etiquetas,
     SeleccionarIdioma,
     Usuarios,
-    ParametrosGenerales
+    ParametrosGenerales,
+    PermisosComponent
   ],
   imports: [
     BrowserModule,
@@ -139,7 +142,8 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     TooltipModule,
     ChipsModule,
     EditorModule,
-    MultiSelectModule
+    MultiSelectModule,
+    TreeModule
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
@@ -162,4 +166,4 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

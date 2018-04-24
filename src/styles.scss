@@ -425,6 +425,53 @@ font-size: .7rem;
 
 
 
+.menu-accesos{
+        position:fixed;
+        background: white;
+        bottom: 0;
+        width: 100%;
+        flex-grow: 1;
+        right: 0;
+        padding: 1rem;
+        border:1px solid $lightGrey;
+        box-shadow: 0 0 44px 0 $grey4;  
+        .title{
+            font-weight: bold;
+        }
+        .btn-acceso{      
+            border-radius: 3px;
+            text-align: center;
+            color: white;
+            height:52px;
+            padding: 0 1.5rem;
+            margin-left: .75rem;
+            box-shadow: 0 0 2px $grey4;
+            cursor:pointer;
+            p{
+                text-align: center;
+                line-height:.9rem;
+                 span{
+                display: block;
+                }
+            }
+           
+        }
+
+        .acceso-total{
+            background: #219653;
+        }
+        .acceso-denegado{
+            background: #EB5757;
+        }
+        .solo-lectura{
+            background: #F2994A;
+        }
+        .sin-asignar{
+            background: $grey4;
+        }
+}
+
+
 
 /*MODIFICACIONES DE PRIMENG*/
 
@@ -592,6 +639,80 @@ font-size: .7rem;
 
 .ql-snow .ql-stroke{
     stroke: $grey1;
+}
+
+//tree permisos
+
+.permisos-tree {
+    .ui-tree{
+        width: 100%;
+      
+        .ui-treenode{
+            position: relative;
+            background: white;
+            border-radius: 3px;
+            border-bottom:2px solid $grey4;
+            box-shadow: 0 0 2px $grey4;  
+            margin-bottom: 1rem;  
+           
+            .ui-treenode-content{
+                 padding: 1rem 1rem 1rem 2.5rem;
+                 border-bottom: 1px solid $lightGrey;
+                 .ui-tree-toggler{
+                    float: right;   
+                    line-height: 1.5rem;                              
+                 }
+
+                 .fa-caret-right:before{
+                       content: '\f107' !important;
+                 }
+                  .fa-caret-down:before{
+                       content: '\f106' !important;
+                 }
+
+            }
+
+            .ui-treenode-children{
+                  padding: 0 0 1rem 2.4rem;
+                .ui-treenode{                  
+                    border: none;
+                    padding-bottom: 0;
+                    box-shadow: none;  
+                    background: none;
+                    margin-bottom: 0;
+                    .ui-treenode-content{
+                        padding: 1rem 1rem 0rem 2.5rem;
+                        border-bottom:0;
+                        padding-top: 1rem;
+                    }
+                }
+            }
+        }
+ 
+    }
+    .ui-widget-content{
+        border: none;
+        background: none;
+    }
+
+    .icon-acceso{
+        position: absolute;
+        left: 0;
+        padding-left: 1rem;
+        line-height: 1.3rem;
+        text-shadow: 0px 0px 3px $lightGrey;
+    }
+
+    .color-total{
+        color: #219653;
+    }
+    .color-denegado{
+        color: #EB5757;
+    }
+       .color-lectura{
+        color: #F2994A;
+    }
+
 }
 
 

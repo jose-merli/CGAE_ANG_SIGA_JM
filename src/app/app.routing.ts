@@ -33,6 +33,7 @@ import { GestionContadoresComponent } from "./features/administracion/contadores
 import { ContadoresComponent } from "./features/administracion/contadores/contadores.component"; //new censo
 import { BusquedaColegiadosComponent } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
 import { FichaColegialComponent } from "./new-features/censo/ficha-colegial/ficha-colegial.component";
+import { PermisosComponent } from "./features/administracion/permisos/permisos.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -42,12 +43,12 @@ const appRoutes: Routes = [
   {
     path: "busquedaColegiados",
     component: BusquedaColegiadosComponent,
-    canActivate: [AuthGuard]
+    // canActivate: [AuthGuard]
   },
   {
     path: "fichaColegial/:id",
     component: FichaColegialComponent,
-    canActivate: [AuthGuard]
+    // canActivate: [AuthGuard]
   },
   {
     path: "editarUsuario",
@@ -94,6 +95,11 @@ const appRoutes: Routes = [
   { path: "usuarios", component: Usuarios },
   { path: "seleccionarIdioma", component: SeleccionarIdioma },
   { path: "parametrosGenerales", component: ParametrosGenerales },
+  {
+    path: "permisos",
+    component: PermisosComponent,
+    // canActivate: [AuthGuard]
+  },
   { path: "**", redirectTo: "home" }
 ];
 export const routing = RouterModule.forRoot(appRoutes);
