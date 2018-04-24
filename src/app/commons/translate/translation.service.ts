@@ -165,4 +165,10 @@ export class TranslateService {
     }
     return menu;
   }
+
+  public updateTranslations(service: SigaServices): void {
+    service.get("diccionarios").subscribe(response => {
+      this._translations = response.DiccionarioItems;
+    });
+  }
 }

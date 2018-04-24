@@ -23,6 +23,7 @@ import {
 
 import { InputTextModule } from "primeng/inputtext";
 import { Message } from "primeng/components/common/api";
+import { TooltipModule } from "primeng/tooltip";
 
 import { EtiquetaUpdateDto } from "../../../../models/EtiquetaUpdateDto";
 import { EtiquetaSearchDto } from "../../../../models/EtiquetaSearchDto";
@@ -88,11 +89,13 @@ export class Etiquetas extends SigaWrapper implements OnInit {
     this.columnasTabla = [
       {
         field: "descripcionBusqueda",
-        header: "Descripción idioma búsqueda"
+        header:
+          "administracion.multidioma.etiquetas.literal.descripcionInstitucion"
       },
       {
         field: "descripcionTraduccion",
-        header: "Descripción idioma a traducir"
+        header:
+          "administracion.multidioma.etiquetas.literal.descripcionIdiomaSeleccionado"
       }
     ];
 
@@ -157,7 +160,9 @@ export class Etiquetas extends SigaWrapper implements OnInit {
     }
   }
 
-  generarRecursos() {}
+  generarRecursos() {
+    this.translateService.updateTranslations(this.sigaServices);
+  }
 
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
@@ -183,6 +188,10 @@ export class Etiquetas extends SigaWrapper implements OnInit {
         this.table.reset();
       }
     );
+  }
+
+  obtenerRecurso(dato) {
+    return dato.idRecurso;
   }
 
   showSuccessEdit() {
