@@ -18,7 +18,7 @@
       <div *ngIf="!esFichaActiva('generales')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
-            <img src="../../assets/images/img-colegiado.PNG">
+            <img src="./assets/images/img-colegiado.PNG">
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -37,7 +37,7 @@
       </div>
       <div *ngIf="esFichaActiva('generales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
-          <img src="../../assets/images/img-colegiado.PNG">
+          <img src="./assets/images/img-colegiado.PNG">
         </div>
         <label class="title-ficha">Datos generales</label>
         <i (click)="cerrarFicha('generales')" class="fa fa-angle-up ml-auto"></i>
@@ -50,7 +50,7 @@
         <div class="bloque col-lg-3 col-md-3">
           <label class="d-block">Foto</label>
           <div class="img-colegiado my-2">
-            <img src="../../assets/images/img-colegiado.PNG">
+            <img src="./assets/images/img-colegiado.PNG">
             <p-fileUpload chooseLabel="" class="edit" mode="basic" name="" accept="image/*" maxFileSize="1000000" auto="true">
               <!--<ng-template pTemplate="content">
                 <ul *ngIf="uploadedFiles.length">

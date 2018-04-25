@@ -59,7 +59,7 @@
       <p-dataTable [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowSelect)="irEditarContador(selectedDatos)"
         filterPlaceholder="Search" dataKey="idcontador" [responsive]="true" selectionMode="single" #table class="tabla-listado"
         [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
-        <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="Search"
+        <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="Search"
           [filter]="true">
           </p-column>
 
