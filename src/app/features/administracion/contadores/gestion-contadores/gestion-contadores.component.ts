@@ -10,6 +10,7 @@ import { SigaServices } from "./../../../../_services/siga.service";
 import { SigaWrapper } from "../../../../wrapper/wrapper.class";
 import { SelectItem } from "primeng/api";
 import { DropdownModule } from "primeng/dropdown";
+import { esCalendar } from "./../../../../utils/calendar";
 import {
   FormBuilder,
   FormGroup,
@@ -44,7 +45,6 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   contadores_modo: any[];
   msgs: Message[] = [];
   body: ContadorItem = new ContadorItem();
-  restablecer: ContadorItem = new ContadorItem();
   pButton;
   textSelected: String = "{0} grupos seleccionados";
   textFilter: String;
@@ -53,8 +53,11 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   activo: boolean = false;
   correcto: boolean = false;
   dniCorrecto: boolean;
+  checkmodificable: boolean = false;
+  fechareconfiguracion: Date;
   showDatosGenerales: boolean = true;
   showReconfiguracion: boolean = true;
+  es: any = esCalendar;
 
   constructor(
     private sigaServices: SigaServices,
@@ -83,7 +86,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
 
     this.body = new ContadorItem();
     this.body = JSON.parse(sessionStorage.getItem("contadorBody"));
-    this.restablecer = this.body;
+    this.bodyToModificable();
     this.checkMode();
   }
   checkMode() {
@@ -98,11 +101,30 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
     }
   }
   isRestablecer() {
-    this.body = this.restablecer;
+    // this.body = this.restablecer;
+    this.body = JSON.parse(sessionStorage.getItem("contadorBody"));
+    this.bodyToModificable();
   }
-
+  // Fecha configuracion no se carga con formato de fecha correcto,
+  bodyToModificable() {
+    this.fechareconfiguracion = this.body.fechareconfiguracion;
+    if (this.body.modificablecontador == "1") {
+      this.checkmodificable = true;
+    } else {
+      this.checkmodificable = false;
+    }
+  }
+  modificableToBody() {
+    this.body.fechareconfiguracion = this.fechareconfiguracion;
+    if (this.checkmodificable == true) {
+      this.body.modificablecontador = "1";
+    } else {
+      this.body.modificablecontador = "0";
+    }
+  }
   pInputText;
   isEditar() {
+    this.modificableToBody();
     this.sigaServices.post("contadores_update", this.body).subscribe(
       data => {
         this.showSuccess();

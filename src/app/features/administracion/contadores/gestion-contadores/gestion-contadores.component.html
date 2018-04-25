@@ -2,7 +2,7 @@
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{"administracion.parametrosGenerales.gestion" | translate}} Gestión de Contadores</p>
+    <p>{{"administracion.contador.titulo" | translate}}</p>
   </div>
   <div class="breadCrumb">
     <p>{{"general.boton.edit" | translate}} <i class="fa fa-angle-right"></i> {{ 'menu.administracion.usuarios' | translate}}
@@ -10,11 +10,8 @@
   </div>
 
   <div class="card">
-    <div class="card-header">
-      <label>{{"administracion.parametrosGenerales.gestion" | translate}}Gestión de Contadores</label>
-    </div>
     <div class="card-body">
-      <p class="title-module">{{"administracion.parametrosGenerales.gestion" | translate}}Gestión de Contadores
+      <p class="title-module">{{"administracion.contador.titulo" | translate}}
         <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
         <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
       </p>
@@ -40,7 +37,7 @@
 
           <div class="form-group col-lg-3 col-md-3">
             <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.modificable" | translate}}</label>
-            <p-checkbox name="modificable" [(ngModel)]="body.modificablecontador" [(disabled)]="!editar"></p-checkbox>
+            <p-checkbox name="modificable" [(ngModel)]="checkmodificable" [(disabled)]="!editar" binary="true"></p-checkbox>
           </div>
 
           <div class="form-group col-lg-3 col-md-3">
@@ -71,7 +68,7 @@
 
 
     <div class="card-body">
-      <p class="title-module">{{"administracion.parametrosGenerales.reconfigurar" | translate}}Reconfiguración de contador
+      <p class="title-module">{{"administracion.contador.reconfigurar" | translate}}
         <i (click)="onHideReconfiguracion()" *ngIf="showReconfiguracion" class="fa fa-angle-up float-right"></i>
         <i (click)="onHideReconfiguracion()" *ngIf="!showReconfiguracion" class="fa fa-angle-down float-right"></i>
       </p>
@@ -80,7 +77,12 @@
         <div class="form-row">
           <div class="form-group col-lg-3 col-md-3">
             <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.fechaReconfiguracion" | translate}}</label>
-            <p-calendar [(disabled)]="!editar" [(ngModel)]="body.fechareconfiguracion" [showIcon]="true"></p-calendar>
+            <!--Fecha reconfiguracion no se carga bien, debe cogerlo y ponerlo en formato fecha-->
+            <p-calendar [(disabled)]="!editar" [(ngModel)]="fechareconfiguracion" dateFormat="dd-mm-yy" [locale]="es" [showIcon]="true"></p-calendar>
+
+            <!--<p-calendar [locale]="es" [formControl]="formCargas.controls['fechaDesde']" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
+showIcon="true"></p-calendar> -->
+
           </div>
         </div>
         <div *ngIf="body.fechareconfiguracion!=null" class="form-row">

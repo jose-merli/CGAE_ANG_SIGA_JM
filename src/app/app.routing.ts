@@ -35,6 +35,9 @@ import { BusquedaColegiadosComponent } from "./new-features/censo/busqueda-coleg
 import { FichaColegialComponent } from "./new-features/censo/ficha-colegial/ficha-colegial.component";
 import { PerfilesComponent } from "./features/administracion/perfiles/perfiles.component";
 import { EditarPerfilesComponent } from "./features/administracion/perfiles/editarPerfiles/editarPerfiles.component";
+import { PermisosComponent } from "./features/administracion/permisos/permisos.component";
+import { Catalogos } from "./features/administracion/gestion-multiidioma/catalogos/catalogos.component";
+
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
   { path: "login", component: LoginComponent },
@@ -42,13 +45,13 @@ const appRoutes: Routes = [
   // Censo
   {
     path: "busquedaColegiados",
-    component: BusquedaColegiadosComponent,
-    canActivate: [AuthGuard]
+    component: BusquedaColegiadosComponent
+    // canActivate: [AuthGuard]
   },
   {
     path: "fichaColegial/:id",
-    component: FichaColegialComponent,
-    canActivate: [AuthGuard]
+    component: FichaColegialComponent
+    // canActivate: [AuthGuard]
   },
   {
     path: "editarUsuario",
@@ -100,6 +103,12 @@ const appRoutes: Routes = [
   { path: "usuarios", component: Usuarios },
   { path: "seleccionarIdioma", component: SeleccionarIdioma },
   { path: "parametrosGenerales", component: ParametrosGenerales },
+  {
+    path: "permisos",
+    component: PermisosComponent
+    // canActivate: [AuthGuard]
+  },
+  { path: "catalogos", component: Catalogos },
   { path: "**", redirectTo: "home" }
 ];
 export const routing = RouterModule.forRoot(appRoutes);

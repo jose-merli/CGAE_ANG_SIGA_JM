@@ -28,6 +28,7 @@ import { TranslatePipe, TranslateService } from "./commons/translate";
 import { ConfirmDialogComponent } from "./commons/dialog/dialog.component";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
+import { TreeModule } from "primeng/tree";
 //PRIMENG
 import { DropdownModule } from "primeng/dropdown";
 import { ButtonModule } from "primeng/button";
@@ -76,7 +77,9 @@ import { Etiquetas } from "./features/administracion/gestion-multiidioma/etiquet
 import { SeleccionarIdioma } from "./features/administracion/seleccionar-idioma/seleccionar-idioma.component";
 import { Usuarios } from "./features/administracion/usuarios/usuarios.component";
 import { ParametrosGenerales } from "./features/administracion/parametros/parametros-generales/parametros-generales.component";
+import { Catalogos } from "./features/administracion/gestion-multiidioma/catalogos/catalogos.component";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
+import { PermisosComponent } from "./features/administracion/permisos/permisos.component";
 
 /***NEW modules censo***/
 import { BusquedaColegiadosModule } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.module";
@@ -110,6 +113,7 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     CatalogosMaestros,
     GruposUsuarios,
     Etiquetas,
+    Catalogos,
     SeleccionarIdioma,
     Usuarios,
     ParametrosGenerales,
@@ -118,7 +122,8 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     ContadoresComponent,
     GestionContadoresComponent,
     PerfilesComponent,
-    EditarPerfilesComponent
+    EditarPerfilesComponent,
+    PermisosComponent
   ],
   imports: [
     BrowserModule,
@@ -148,7 +153,8 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     ChipsModule,
     EditorModule,
     MultiSelectModule,
-    TableModule
+    TableModule,
+    TreeModule
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
