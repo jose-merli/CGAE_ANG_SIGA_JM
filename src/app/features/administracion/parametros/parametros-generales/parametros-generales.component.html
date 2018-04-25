@@ -24,9 +24,9 @@
                         <label>{{'administracion.parametrosGenerales.literal.modulo' | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='selectedModulo' [options]="modulos" (ngModelChange)="onChangeForm()"></p-dropdown>
                     </div>
-                    <div class="form-check col-lg-3 col-md-3">
-                        <br/>
-                        <label class="form-check-label">{{'administracion.parametrosGenerales.literal.checkParametrosGenerales' | translate}}</label>&nbsp;&nbsp;
+                    <div class="form-check col-lg-6 col-md-6">
+                        <br/> &nbsp;&nbsp;
+                        <label class="form-group-label">{{'administracion.parametrosGenerales.literal.checkParametrosGenerales' | translate}}</label>&nbsp;&nbsp;
                         <p-checkbox [(ngModel)]='valorCheckParametros' binary="true"></p-checkbox>
                     </div>
                 </div>

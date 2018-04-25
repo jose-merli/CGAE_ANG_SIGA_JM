@@ -70,6 +70,7 @@ import { GestionContadoresComponent } from "./features/administracion/contadores
 import { ContadoresComponent } from "./features/administracion/contadores/contadores.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
 import { Etiquetas } from "./features/administracion/gestion-multiidioma/etiquetas/etiquetas.component";
+import { AuditoriaUsuarios } from "./features/administracion/auditoria/usuarios/auditoria-usuarios.component";
 import { SeleccionarIdioma } from "./features/administracion/seleccionar-idioma/seleccionar-idioma.component";
 import { Usuarios } from "./features/administracion/usuarios/usuarios.component";
 import { ParametrosGenerales } from "./features/administracion/parametros/parametros-generales/parametros-generales.component";
@@ -111,6 +112,7 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     CatalogosMaestros,
     GruposUsuarios,
     Etiquetas,
+    AuditoriaUsuarios,
     Catalogos,
     SeleccionarIdioma,
     Usuarios,

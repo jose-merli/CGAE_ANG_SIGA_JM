@@ -34,6 +34,7 @@ import { ContadoresComponent } from "./features/administracion/contadores/contad
 import { BusquedaColegiadosComponent } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
 import { FichaColegialComponent } from "./new-features/censo/ficha-colegial/ficha-colegial.component";
 import { Catalogos } from "./features/administracion/gestion-multiidioma/catalogos/catalogos.component";
+import { AuditoriaUsuarios } from "./features/administracion/auditoria/usuarios/auditoria-usuarios.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -96,6 +97,7 @@ const appRoutes: Routes = [
   { path: "seleccionarIdioma", component: SeleccionarIdioma },
   { path: "parametrosGenerales", component: ParametrosGenerales },
   { path: "catalogos", component: Catalogos },
+  { path: "auditoriaUsuarios", component: AuditoriaUsuarios },
   { path: "**", redirectTo: "home" }
 ];
 export const routing = RouterModule.forRoot(appRoutes);
