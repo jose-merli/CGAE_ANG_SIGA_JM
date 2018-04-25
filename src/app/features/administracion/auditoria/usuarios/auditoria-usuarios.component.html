@@ -1,0 +1,66 @@
+<div class="busqueda-container">
+    <div class="header-title">
+        <i class="fa fa-square"></i>
+        <p>Auditoría de Usuarios</p>
+    </div>
+    <div class="breadCrumb">
+        <p>{{'menu.administracion' | translate}} <i class="fa fa-angle-right"></i> {{'menu.administracion.auditoria' | translate}}
+            <i class="fa fa-angle-right"></i> {{'menu.administracion.auditoria.usuarios' | translate}}
+        </p>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <label>{{'menu.administracion.auditoria.usuarios' | translate}}</label>
+        </div>
+        <div class="card-body">
+            <p class="title-module">{{'administracion.catalogos.titulo.datos.generales' | translate}}
+                <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+                <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+            </p>
+            <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+                <div class="form-row">
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Usuario</label>
+                        <input type="text" class="form-control" [(ngModel)]="usuario" pInputText>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                    </div>
+                    <div class="form-check col-lg-3 col-md-3">
+                        <br/>
+                        <label class="form-group-label">Usuario Automático</label> &nbsp;&nbsp;
+                        <p-checkbox [(ngModel)]='valorCheckUsuarioAutomatico' binary="true"></p-checkbox>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Tipo Acción</label>
+                        <p-dropdown class="select-form" [(ngModel)]='selectedTipoAccion' [options]="tipoAcciones"></p-dropdown> &nbsp;&nbsp;
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Fecha desde</label>
+                        <p-calendar [locale]="es" [(ngModel)]="fechaDesdeCalendar" dateFormat="dd-mm-yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Fecha hasta</label>
+                        <p-calendar [locale]="es" [(ngModel)]="fechaHastaCalendar" dateFormat="dd-mm-yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer" *ngIf="showDatosGenerales">
+            <div class="text-right main-button">
+                <button (click)="isBuscar()" [disabled]="isHabilitadoBuscar()" pButton type="button " icon="fa fa-search" iconPos="left"
+                    label="{{'general.boton.search' | translate}}"></button>
+            </div>
+        </div>
+    </div>
+    <!--FIN CARD-->
+    <div *ngIf="buscarSeleccionado == true" class="card mt-3">
+        <div class="card-body p-0">
+        </div>
+    </div>
+</div>

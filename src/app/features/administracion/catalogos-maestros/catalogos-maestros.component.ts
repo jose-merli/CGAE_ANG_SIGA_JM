@@ -199,6 +199,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
 
   historico() {
     this.buscar = false;
+    this.selectMultiple = false;
     this.catalogoSeleccionado = this.body.catalogo;
     this.body = new CatalogoRequestDto();
     this.body.catalogo = this.catalogoSeleccionado;

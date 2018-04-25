@@ -28,7 +28,7 @@ import { TranslatePipe, TranslateService } from "./commons/translate";
 import { ConfirmDialogComponent } from "./commons/dialog/dialog.component";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
-import { TreeModule } from 'primeng/tree';
+import { TreeModule } from "primeng/tree";
 //PRIMENG
 import { DropdownModule } from "primeng/dropdown";
 import { ButtonModule } from "primeng/button";
@@ -63,14 +63,18 @@ import { AutoCompleteModule } from "primeng/autocomplete";
 import { TooltipModule } from "primeng/tooltip";
 import { ChipsModule } from "primeng/chips";
 import { EditorModule } from "primeng/editor";
-import { EditarUsuarioComponent } from "./features/administracion/usuarios/editarUsuario/editarUsuario.component";
+
 // Modulo de administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
 import { EditarCatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros/editarCatalogosMaestros/editarCatalogosMaestros.component";
 import { GestionContadoresComponent } from "./features/administracion/contadores/gestion-contadores/gestion-contadores.component";
 import { ContadoresComponent } from "./features/administracion/contadores/contadores.component";
+import { PerfilesComponent } from "./features/administracion/perfiles/perfiles.component";
+import { EditarPerfilesComponent } from "./features/administracion/perfiles/editarPerfiles/editarPerfiles.component";
+import { EditarUsuarioComponent } from "./features/administracion/usuarios/editarUsuario/editarUsuario.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
 import { Etiquetas } from "./features/administracion/gestion-multiidioma/etiquetas/etiquetas.component";
+import { AuditoriaUsuarios } from "./features/administracion/auditoria/usuarios/auditoria-usuarios.component";
 import { SeleccionarIdioma } from "./features/administracion/seleccionar-idioma/seleccionar-idioma.component";
 import { Usuarios } from "./features/administracion/usuarios/usuarios.component";
 import { ParametrosGenerales } from "./features/administracion/parametros/parametros-generales/parametros-generales.component";
@@ -105,18 +109,22 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     MantenimientoGruposFijosComponent,
     MantenimientoMandatosComponent,
     BusquedaSancionesComponent,
-    EditarUsuarioComponent,
-    EditarCatalogosMaestrosComponent,
-    ContadoresComponent,
-    GestionContadoresComponent,
+
     // Administracion
     CatalogosMaestros,
     GruposUsuarios,
     Etiquetas,
+    AuditoriaUsuarios,
     Catalogos,
     SeleccionarIdioma,
     Usuarios,
     ParametrosGenerales,
+    EditarUsuarioComponent,
+    EditarCatalogosMaestrosComponent,
+    ContadoresComponent,
+    GestionContadoresComponent,
+    PerfilesComponent,
+    EditarPerfilesComponent,
     PermisosComponent
   ],
   imports: [
@@ -171,4 +179,4 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

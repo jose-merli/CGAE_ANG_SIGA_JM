@@ -33,8 +33,11 @@ import { GestionContadoresComponent } from "./features/administracion/contadores
 import { ContadoresComponent } from "./features/administracion/contadores/contadores.component"; //new censo
 import { BusquedaColegiadosComponent } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
 import { FichaColegialComponent } from "./new-features/censo/ficha-colegial/ficha-colegial.component";
+import { PerfilesComponent } from "./features/administracion/perfiles/perfiles.component";
+import { EditarPerfilesComponent } from "./features/administracion/perfiles/editarPerfiles/editarPerfiles.component";
 import { PermisosComponent } from "./features/administracion/permisos/permisos.component";
 import { Catalogos } from "./features/administracion/gestion-multiidioma/catalogos/catalogos.component";
+import { AuditoriaUsuarios } from "./features/administracion/auditoria/usuarios/auditoria-usuarios.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -43,12 +46,12 @@ const appRoutes: Routes = [
   // Censo
   {
     path: "busquedaColegiados",
-    component: BusquedaColegiadosComponent,
+    component: BusquedaColegiadosComponent
     // canActivate: [AuthGuard]
   },
   {
     path: "fichaColegial/:id",
-    component: FichaColegialComponent,
+    component: FichaColegialComponent
     // canActivate: [AuthGuard]
   },
   {
@@ -90,6 +93,11 @@ const appRoutes: Routes = [
     path: "gestionContadores",
     component: GestionContadoresComponent
   },
+  { path: "perfiles", component: PerfilesComponent },
+  {
+    path: "EditarPerfiles",
+    component: EditarPerfilesComponent
+  },
 
   { path: "gruposUsuarios", component: GruposUsuarios },
   { path: "etiquetas", component: Etiquetas },
@@ -98,10 +106,11 @@ const appRoutes: Routes = [
   { path: "parametrosGenerales", component: ParametrosGenerales },
   {
     path: "permisos",
-    component: PermisosComponent,
+    component: PermisosComponent
     // canActivate: [AuthGuard]
   },
   { path: "catalogos", component: Catalogos },
+  { path: "auditoriaUsuarios", component: AuditoriaUsuarios },
   { path: "**", redirectTo: "home" }
 ];
 export const routing = RouterModule.forRoot(appRoutes);

@@ -10,7 +10,6 @@ import { SigaServices } from "./../../../../_services/siga.service";
 import { SigaWrapper } from "../../../../wrapper/wrapper.class";
 import { SelectItem } from "primeng/api";
 import { DropdownModule } from "primeng/dropdown";
-import { esCalendar } from "./../../../../utils/calendar";
 import {
   FormBuilder,
   FormGroup,
@@ -31,20 +30,23 @@ import { GrowlModule } from "primeng/growl";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
-import { ContadorItem } from "../../../../../app/models/ContadorItem";
+import { UsuarioItem } from "../../../../../app/models/UsuarioItem";
 import { UsuarioUpdate } from "../../../../../app/models/UsuarioUpdate";
 import { ComboItem } from "../../../../../app/models/ComboItem";
 import { ActivatedRoute } from "@angular/router";
 @Component({
-  selector: "app-gestion-contadores",
-  templateUrl: "./gestion-contadores.component.html",
-  styleUrls: ["./gestion-contadores.component.scss"],
+  selector: "app-editarPerfiles",
+  templateUrl: "./editarPerfiles.component.html",
+  styleUrls: ["./editarPerfiles.component.scss"],
   encapsulation: ViewEncapsulation.None
 })
-export class GestionContadoresComponent extends SigaWrapper implements OnInit {
-  contadores_modo: any[];
+export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
+  usuarios_rol: any[];
+  usuarios_perfil: any[];
+  select: any[];
   msgs: Message[] = [];
-  body: ContadorItem = new ContadorItem();
+  body: UsuarioItem = new UsuarioItem();
+  updateUser: UsuarioUpdate = new UsuarioUpdate();
   pButton;
   textSelected: String = "{0} grupos seleccionados";
   textFilter: String;
@@ -53,16 +55,8 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   activo: boolean = false;
   correcto: boolean = false;
   dniCorrecto: boolean;
-  checkmodificable: boolean = false;
-  fechareconfiguracion: Date;
   showDatosGenerales: boolean = true;
-  showReconfiguracion: boolean = true;
-  es: any = esCalendar;
-  jsonDate: string;
-  rawDate: string;
-  splitDate: any[];
-  arrayDate: string;
-  addedDay: number;
+
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -79,92 +73,31 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   ngOnInit() {
     console.log(sessionStorage);
 
-    this.sigaServices.get("contadores_modo").subscribe(
+    this.textFilter = "Elegir";
+    this.correcto = false;
+
+    this.body = new UsuarioItem();
+    this.body = JSON.parse(sessionStorage.getItem("usuarioBody"))[0];
+
+    this.sigaServices.get("usuarios_rol").subscribe(
       n => {
-        this.contadores_modo = n.combooItems;
+        this.usuarios_rol = n.combooItems;
       },
       err => {
         console.log(err);
       }
     );
-
-    this.body = new ContadorItem();
-    this.body = JSON.parse(sessionStorage.getItem("contadorBody"));
-    this.bodyToModificable();
-    this.checkMode();
-  }
-  checkMode() {
-    if (JSON.parse(sessionStorage.getItem("modo")) != null) {
-      if (JSON.parse(sessionStorage.getItem("modo")) == "editar") {
-        this.disabled = true;
-      } else {
-        this.disabled = false;
+    this.sigaServices.get("usuarios_perfil").subscribe(
+      n => {
+        this.usuarios_perfil = n.combooItems;
+      },
+      err => {
+        console.log(err);
       }
-    } else {
-      this.disabled = false;
-    }
-  }
-  isRestablecer() {
-    this.body = JSON.parse(sessionStorage.getItem("contadorBody"));
-    this.bodyToModificable();
+    );
   }
 
-  bodyToModificable() {
-    this.fechareconfiguracion = this.body.fechareconfiguracion;
-    if (this.body.modificablecontador == "1") {
-      this.checkmodificable = true;
-    } else {
-      this.checkmodificable = false;
-    }
-  }
-
-  //Arreglo el fomato de la fecha añadiendole horas, minutos y segundos para que se guarde en el back correctamente, además lo separo para reordenar dia mes y año según debe estar escrito en el update.
-  arreglarDate() {
-    this.jsonDate = JSON.stringify(this.fechareconfiguracion);
-    this.rawDate = this.jsonDate.slice(1, -1);
-    if (this.rawDate.length < 14) {
-      this.splitDate = this.rawDate.split("-");
-      this.arrayDate =
-        this.splitDate[2] + "-" + this.splitDate[1] + "-" + this.splitDate[0];
-      this.body.fechareconfiguracion = new Date(
-        (this.arrayDate += "T00:00:00.001Z")
-      );
-      this.body.fechareconfiguracion = new Date(this.arrayDate);
-    } else {
-      this.body.fechareconfiguracion = new Date(this.rawDate);
-    }
-  }
-
-  modificableToBody() {
-    this.arreglarDate();
-    if (this.checkmodificable == true) {
-      this.body.modificablecontador = "1";
-    } else {
-      this.body.modificablecontador = "0";
-    }
-  }
   pInputText;
-  isEditar() {
-    this.modificableToBody();
-    this.sigaServices.post("contadores_update", this.body).subscribe(
-      data => {
-        this.showSuccess();
-        console.log(data);
-        this.correcto = true;
-      },
-      err => {
-        this.showFail();
-        this.correcto = false;
-        console.log(err);
-      },
-      () => {
-        if (this.correcto) {
-          this.volver();
-        }
-      }
-    );
-  }
-
   confirmEdit() {
     let mess = this.translateService.instant(
       "general.message.aceptar.y.volver"
@@ -174,7 +107,8 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
       message: mess,
       icon: icon,
       accept: () => {
-        this.isEditar();
+        this.sendEdit();
+        this.showSuccess();
       },
       reject: () => {
         this.msgs = [
@@ -189,14 +123,51 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
       }
     });
   }
+  sendEdit() {
+    console.log(this.body);
 
+    if (this.body.codigoExterno == undefined) {
+      this.body.codigoExterno = "";
+    }
+    if (this.body.grupo == undefined) {
+      this.body.perfiles == null;
+    }
+    this.updateUser.activo = this.body.activo;
+    this.updateUser.codigoExterno = this.body.codigoExterno;
+    this.updateUser.fechaAlta = this.body.fechaAlta;
+    this.updateUser.grupo = this.body.grupo;
+    this.updateUser.idGrupo = this.body.perfiles;
+    this.updateUser.idInstitucion = this.body.idInstitucion;
+    this.updateUser.idUsuario = this.body.idUsuario;
+    this.updateUser.nif = this.body.nif;
+    this.updateUser.nombreApellidos = this.body.nombreApellidos;
+    this.updateUser.rol = this.body.roles;
+    this.usuarios_rol.forEach((value: ComboItem, key: number) => {
+      if (value.label == this.body.roles) {
+        this.updateUser.rol = value.value;
+      }
+    });
+    this.sigaServices.post("usuarios_update", this.updateUser).subscribe(
+      data => {
+        this.showSuccess();
+        this.correcto = true;
+        console.log(data);
+      },
+      err => {
+        this.showFail();
+        this.correcto = false;
+        console.log(err);
+      },
+      () => {
+        if (this.correcto) {
+          this.volver();
+        }
+      }
+    );
+  }
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
-  onHideReconfiguracion() {
-    this.showReconfiguracion = !this.showReconfiguracion;
-  }
-
   showSuccess() {
     this.msgs = [];
     this.msgs.push({
@@ -218,6 +189,6 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   }
 
   volver() {
-    this.router.navigate([JSON.parse(sessionStorage.getItem("url"))]);
+    this.router.navigate(["/perfiles"]);
   }
 }

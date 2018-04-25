@@ -52,17 +52,17 @@ export class SigaServices {
     contadores_update: "contadores/update",
     contadores_modo: "contadores/mode",
     contadores_module: "contadores/module",
-
+    perfiles_search: "usuariosgrupos/search",
+    perfiles_historico: "/usuariosgrupos/historico",
+    perfiles_delete: "/usuariosgrupos/delete",
     permisos_grupos: "permisos/grupo",
     permisos_tree: "permisos",
-
     catalogos_lenguage: "catalogos/lenguaje",
     catalogos_entidad: "catalogos/entidad",
     catalogos_search: "catalogos/search",
     catalogos_update: "catalogos/update",
 
     permisos_update: "permisos/update"
-
   };
 
   constructor(private http: HttpClient) { }
@@ -106,7 +106,6 @@ export class SigaServices {
         return response;
       });
   }
-
 
   postPaginado(service: string, param: string, body: any): Observable<any> {
     let headers = new HttpHeaders({
