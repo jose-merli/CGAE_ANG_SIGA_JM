@@ -1,0 +1,21 @@
+.labelError {
+  color: red;
+  font-weight: bold;
+}
+
+.labelOK {
+  color: green;
+  font-weight: bold;
+}
+.ui-growl-item {
+  color: white !important;
+}
+
+.ui-tooltip {
+  max-width: 100%;
+  .ui-tooltip-text {
+    background: gray;
+    color: black;
+    font-size: 0.8rem;
+  }
+}

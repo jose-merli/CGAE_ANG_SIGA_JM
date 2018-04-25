@@ -45,14 +45,17 @@ export class SigaServices {
     parametros_delete: "parametros/delete",
     parametros_update: "parametros/update",
     parametros_historico: "parametros/historico",
-
     etiquetas_lenguaje: "etiquetas/lenguaje",
     etiquetas_search: "etiquetas/search",
     etiquetas_update: "etiquetas/update",
     contadores_search: "contadores/search",
     contadores_update: "contadores/update",
     contadores_modo: "contadores/mode",
-    contadores_module: "contadores/module"
+    contadores_module: "contadores/module",
+    catalogos_lenguage: "catalogos/lenguaje",
+    catalogos_entidad: "catalogos/entidad",
+    catalogos_search: "catalogos/search",
+    catalogos_update: "catalogos/update"
   };
 
   constructor(private http: HttpClient) {}
