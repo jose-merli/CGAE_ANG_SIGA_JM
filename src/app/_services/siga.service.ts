@@ -52,7 +52,10 @@ export class SigaServices {
     contadores_search: "contadores/search",
     contadores_update: "contadores/update",
     contadores_modo: "contadores/mode",
-    contadores_module: "contadores/module"
+    contadores_module: "contadores/module",
+    perfiles_search: "usuariosgrupos/search",
+    perfiles_historico: "/usuariosgrupos/historico",
+    perfiles_delete: "/usuariosgrupos/delete"
   };
 
   constructor(private http: HttpClient) {}

@@ -33,7 +33,8 @@ import { GestionContadoresComponent } from "./features/administracion/contadores
 import { ContadoresComponent } from "./features/administracion/contadores/contadores.component"; //new censo
 import { BusquedaColegiadosComponent } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
 import { FichaColegialComponent } from "./new-features/censo/ficha-colegial/ficha-colegial.component";
-
+import { PerfilesComponent } from "./features/administracion/perfiles/perfiles.component";
+import { EditarPerfilesComponent } from "./features/administracion/perfiles/editarPerfiles/editarPerfiles.component";
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
   { path: "login", component: LoginComponent },
@@ -87,6 +88,11 @@ const appRoutes: Routes = [
   {
     path: "gestionContadores",
     component: GestionContadoresComponent
+  },
+  { path: "perfiles", component: PerfilesComponent },
+  {
+    path: "EditarPerfiles",
+    component: EditarPerfilesComponent
   },
 
   { path: "gruposUsuarios", component: GruposUsuarios },
