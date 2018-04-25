@@ -26,7 +26,7 @@
     <p-tree (onNodeSelect)="onNodeSelect(selectedPermiso)" [(selection)]="selectedPermiso" #expandingTree [value]="permisosTree"
       selectionMode="checkbox">
       <ng-template let-node pTemplate="default">
-        <i class="fa fa-circle icon-acceso" [ngClass]="{ 'color-total':node.derechoacceso == 0 , 'color-denegado':node.derechoacceso == 1 ,'color-lectura':node.derechoacceso == 2,  'color-sinAsignar':node.derechoacceso == 3}"></i>
+        <i class="fa fa-circle icon-acceso" [ngClass]="{ 'color-sinAsignar':node.derechoacceso == 0 , 'color-denegado':node.derechoacceso == 1 ,'color-lectura':node.derechoacceso == 2,  'color-total':node.derechoacceso == 3}"></i>
         <label>{{node.label}}</label>
       </ng-template>
 
@@ -36,28 +36,29 @@
 
 
 </div>
-<div [style.width.px]="myWidth" class="menu-accesos d-flex justify-content-start align-items-center">
+<div *ngIf="selectedPermiso && selectedPermiso.length > 0" [style.width.px]="myWidth" class="menu-accesos d-flex justify-content-start align-items-center">
   <div>
     <label class="title">Administrar permisos de acceso</label>
     <div>
       <label class="mr-2">Seleccionados 2/400</label>
       <label class="mr-2">Cambios 0/400</label>
       <div class="main-button d-inline-block">
-        <button class="mr-2" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
-        <button pButton type="button" icon="fa fa-redo" iconPos="left" label="Restablecer"></button>
+        <button [disabled]="isButtonDisabled()" (click)="savePermisos()" class="mr-2" pButton type="button" icon="far fa-save" iconPos="left"
+          label="Guardar"></button>
+          <button (click)="restablecerPermisos()" pButton type="button" icon="fa fa-redo" iconPos="left" label="Restablecer"></button>
       </div>
     </div>
   </div>
   <div class="ml-auto">
     <div class="text-right d-flex">
-      <div class="btn-acceso acceso-total d-flex align-items-center">Acceso total</div>
-      <div class="btn-acceso acceso-denegado d-flex align-items-center">
+      <div (click)="changeAcceso('total')" class="btn-acceso acceso-total d-flex align-items-center">Acceso total</div>
+      <div (click)="changeAcceso('denegado')" class="btn-acceso acceso-denegado d-flex align-items-center">
         <p>Acceso denegado</p>
       </div>
-      <div class="btn-acceso solo-lectura d-flex align-items-center">
+      <div (click)="changeAcceso('lectura')" class="btn-acceso solo-lectura d-flex align-items-center">
         <p>Solo lectura</p>
       </div>
-      <div class="btn-acceso sin-asignar d-flex align-items-center">
+      <div (click)="changeAcceso('sinAsignar')" class="btn-acceso sin-asignar d-flex align-items-center">
         <p>Sin asignar</p>
       </div>
     </div>

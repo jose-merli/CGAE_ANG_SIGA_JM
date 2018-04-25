@@ -59,7 +59,9 @@ export class SigaServices {
     catalogos_lenguage: "catalogos/lenguaje",
     catalogos_entidad: "catalogos/entidad",
     catalogos_search: "catalogos/search",
-    catalogos_update: "catalogos/update"
+    catalogos_update: "catalogos/update",
+
+    permisos_update: "permisos/update"
 
   };
 
