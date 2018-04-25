@@ -18,7 +18,10 @@ export class PermisosComponent implements OnInit, DoCheck {
   grupos: any = []
   todoDesplegado: boolean = false;
   selectedGrupo: any;
+  selectedPermiso: any = [];
+  selectAll: boolean = false;
 
+  // treeNode: TreeNode[]
 
   @ViewChild('widthContent')
   widthContent: any;
@@ -42,7 +45,6 @@ export class PermisosComponent implements OnInit, DoCheck {
       this.myWidth = this.widthContent.nativeElement.parentElement.parentElement.offsetWidth;
       //this.changeDetectorRef.detectChanges();
     }, 5)
-
   }
 
   ngOnInit() {
@@ -52,94 +54,121 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.myWidth = this.widthContent.nativeElement.parentElement.parentElement.offsetWidth;
     console.log(this.widthContent)
 
-    // this.grupos = [
-    //   {
-    //     label: '-'
+    this.grupos = [
+      {
+        label: '-'
+      },
+      {
+        label: 'Abogado', value: 'abogado', idGrupo: 1
+      }
+
+    ]
+
+    // this.sigaServices.get("usuarios_perfil").subscribe(
+    //   n => {
+    //     this.grupos = n.combooItems;
     //   },
-    //   {
-    //     label: 'Abogado', value: 'abogado'
+    //   err => {
+    //     console.log(err);
     //   }
+    // );
 
-    // ]
 
-    this.sigaServices.get("usuarios_perfil").subscribe(
-      n => {
-        this.grupos = n.combooItems;
+    this.sigaServices.post("permisos_tree", {
+      idGrupo: 'ABG'
+    }).subscribe(
+      data => {
+
+        let permisosTree = JSON.parse(data.body)
+        this.permisosTree = permisosTree.permisoItems
+        console.log(data);
+
       },
       err => {
         console.log(err);
       }
-    );
 
-    this.permisosTree =
-      [
-        {
-          "label": "Catálogo Botones-Atajos",
-          "derechoacceso": 2,
-          "children":
-          [{
-            "label": "Botón colegiación",
-          },
-          {
-            "label": "Botón Generar Certificado"
-          }]
-        },
-        {
-          "label": "Catálogo Cursos"
-        },
-        {
-          "label": "Catálogo Botones-Atajos",
-          "children":
-          [{
-            "label": "Botón colegiación",
-          },
-          {
-            "label": "Botón Generar Certificado"
-          }]
-        },
-        {
-          "label": "Catálogo Cursos"
-        },
-        {
-          "label": "Catálogo Botones-Atajos",
-          "children":
-          [{
-            "label": "Botón colegiación",
-          },
-          {
-            "label": "Botón Generar Certificado"
-          }]
-        },
-        {
-          "label": "Catálogo Cursos"
-        },
-        {
-          "label": "Catálogo Botones-Atajos",
-          "children":
-          [{
-            "label": "Botón colegiación",
-          },
-          {
-            "label": "Botón Generar Certificado"
-          }]
-        },
-        {
-          "label": "Catálogo Cursos"
-        },
-        {
-          "label": "Catálogo Botones-Atajos",
-          "children":
-          [{
-            "label": "Botón colegiación",
-          },
-          {
-            "label": "Botón Generar Certificado"
-          }]
-        },
-        {
-          "label": "Catálogo Cursos"
-        }
-      ]
+      );
+
+
+
+    // this.permisosTree =
+    //   [
+    //     {
+    //       "label": "Catálogo Botones-Atajos",
+    //       "derechoacceso": 2,
+    //       "children":
+    //       [{
+    //         "label": "Botón colegiación",
+    //         "derechoacceso": 2,
+    //         "children":
+    //         [{
+    //           "label": "Botón colegiación",
+    //         },
+    //         {
+    //           "label": "Botón Generar Certificado"
+    //         }]
+    //       },
+    //       {
+    //         "label": "Botón Generar Certificado"
+    //       }]
+    //     },
+    //     {
+    //       "label": "Catálogo Cursos"
+    //     },
+    //     {
+    //       "label": "Catálogo Botones-Atajos",
+    //       "children":
+    //       [{
+    //         "label": "Botón colegiación",
+    //       },
+    //       {
+    //         "label": "Botón Generar Certificado"
+    //       }]
+    //     },
+    //     {
+    //       "label": "Catálogo Cursos"
+    //     },
+    //     {
+    //       "label": "Catálogo Botones-Atajos",
+    //       "children":
+    //       [{
+    //         "label": "Botón colegiación",
+    //       },
+    //       {
+    //         "label": "Botón Generar Certificado"
+    //       }]
+    //     },
+    //     {
+    //       "label": "Catálogo Cursos"
+    //     },
+    //     {
+    //       "label": "Catálogo Botones-Atajos",
+    //       "children":
+    //       [{
+    //         "label": "Botón colegiación",
+    //       },
+    //       {
+    //         "label": "Botón Generar Certificado"
+    //       }]
+    //     },
+    //     {
+    //       "label": "Catálogo Cursos"
+    //     },
+    //     {
+    //       "label": "Catálogo Botones-Atajos",
+    //       "children":
+    //       [{
+    //         "label": "Botón colegiación",
+    //       },
+    //       {
+    //         "label": "Botón Generar Certificado"
+    //       }]
+    //     },
+    //     {
+    //       "label": "Catálogo Cursos"
+    //     }
+    //   ]
   }
 
 
@@ -165,7 +194,53 @@ export class PermisosComponent implements OnInit, DoCheck {
     }
   }
 
+  onNodeSelect(selectedPermiso) {
+    console.log(this.selectedPermiso)
+  }
 
+
+  // onChangeSelectAll() {
+
+  //   if (this.selectAll === true) {
+  //     this.selectedPermiso = this.permisosTree;
+  //     for (let permisos of this.permisosTree) {
+  //       if (permisos.children) {
+  //         for (let child of permisos.children) {
+  //           this.selectedPermiso.push(child)
+  //         }
+  //       }
+  //     }
+  //   } else {
+  //     this.selectedPermiso = [];
+  //   }
+
+  //   console.log(this.selectedPermiso)
+
+  // }
+
+
+
+
+  selectAllRecursive(node: TreeNode) {
+    this.selectedPermiso.push(node);
+
+    if (node.children) {
+      node.children.forEach(childNode => {
+        this.selectAllRecursive(childNode);
+      });
+    }
+  }
+
+  onChangeSelectAll(node) {
+    if (this.selectAll === true) {
+      this.permisosTree.forEach(node => {
+        this.selectAllRecursive(node);
+      });
+
+    } else {
+      this.selectedPermiso = []
+    }
+  }
 
 
 

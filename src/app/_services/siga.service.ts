@@ -24,6 +24,7 @@ export class SigaServices {
     testDb: "db",
     login: "login",
     menu: "menu",
+    usuario: "usuario",
     instituciones: "instituciones",
     perfiles: "perfiles",
     diccionarios: "diccionarios",
@@ -43,10 +44,21 @@ export class SigaServices {
     parametros_search: "parametros/search",
     parametros_delete: "parametros/delete",
     parametros_update: "parametros/update",
-    parametros_historico: "parametros/historico"
+    parametros_historico: "parametros/historico",
+
+    etiquetas_lenguaje: "etiquetas/lenguaje",
+    etiquetas_search: "etiquetas/search",
+    etiquetas_update: "etiquetas/update",
+    contadores_search: "contadores/search",
+    contadores_update: "contadores/update",
+    contadores_modo: "contadores/mode",
+    contadores_module: "contadores/module",
+
+    permisos_grupos: "permisos/grupo",
+    permisos_tree: "permisos"
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   get(service: string): Observable<any> {
     return this.http
@@ -63,10 +75,10 @@ export class SigaServices {
   getPerfil(service: string, institucion: string): Observable<any> {
     return this.http
       .get(
-        environment.newSigaUrl +
-          this.endpoints[service] +
-          "?institucion=" +
-          institucion
+      environment.newSigaUrl +
+      this.endpoints[service] +
+      "?institucion=" +
+      institucion
       )
       .map(response => {
         return response;
@@ -87,6 +99,8 @@ export class SigaServices {
         return response;
       });
   }
+
+
   postPaginado(service: string, param: string, body: any): Observable<any> {
     let headers = new HttpHeaders({
       "Content-Type": "application/json"

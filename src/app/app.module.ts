@@ -33,6 +33,8 @@ import { TreeModule } from 'primeng/tree';
 import { DropdownModule } from "primeng/dropdown";
 import { ButtonModule } from "primeng/button";
 import { DataTableModule } from "primeng/datatable";
+
+import { TableModule } from "primeng/table";
 import { InputTextModule } from "primeng/inputtext";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { CheckboxModule } from "primeng/checkbox";
@@ -68,7 +70,7 @@ import { EditarCatalogosMaestrosComponent } from "./features/administracion/cata
 import { GestionContadoresComponent } from "./features/administracion/contadores/gestion-contadores/gestion-contadores.component";
 import { ContadoresComponent } from "./features/administracion/contadores/contadores.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
-import { Etiquetas } from "./features/administracion/etiquetas/etiquetas.component";
+import { Etiquetas } from "./features/administracion/gestion-multiidioma/etiquetas/etiquetas.component";
 import { SeleccionarIdioma } from "./features/administracion/seleccionar-idioma/seleccionar-idioma.component";
 import { Usuarios } from "./features/administracion/usuarios/usuarios.component";
 import { ParametrosGenerales } from "./features/administracion/parametros/parametros-generales/parametros-generales.component";
@@ -143,6 +145,7 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     ChipsModule,
     EditorModule,
     MultiSelectModule,
+    TableModule,
     TreeModule
   ],
   providers: [

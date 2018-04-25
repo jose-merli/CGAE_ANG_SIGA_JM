@@ -4,11 +4,11 @@ export class ContadorItem {
   nombre: String;
   descripcion: String;
   modificablecontador: String;
-  modo: Number;
-  contador: Number;
+  modo: String;
+  contador: String;
   prefijo: String;
   sufijo: String;
-  longitudcontador: Number;
+  longitudcontador: String;
   fechareconfiguracion: Date;
   reconfiguracioncontador: String;
   reconfiguracionprefijo: String;
@@ -17,11 +17,12 @@ export class ContadorItem {
   idcampocontador: String;
   idcampoprefijo: String;
   idcamposufijo: String;
+  idmodulo: String;
   general: String;
   fechamodificacion: Date;
-  usumodificacion: Number;
+  usumodificacion: String;
   fechacreacion: Date;
-  usucreacion: Number;
+  usucreacion: String;
 
   constructor() {}
 }

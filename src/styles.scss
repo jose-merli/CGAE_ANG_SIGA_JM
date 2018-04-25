@@ -644,6 +644,10 @@ font-size: .7rem;
 //tree permisos
 
 .permisos-tree {
+    padding-bottom: 5rem;
+    .ui-tree .ui-treenode-content.ui-treenode-selectable .ui-treenode-label:not(.ui-state-highlight):hover{
+        background: none;
+    }
     .ui-tree{
         width: 100%;
       
@@ -658,9 +662,12 @@ font-size: .7rem;
             .ui-treenode-content{
                  padding: 1rem 1rem 1rem 2.5rem;
                  border-bottom: 1px solid $lightGrey;
+                 .ui-treenode-label{
+                        color: $grey1 !important;
+                 }      
                  .ui-tree-toggler{
                     float: right;   
-                    line-height: 1.5rem;                              
+                    line-height: 1.5rem;                                          
                  }
 
                  .fa-caret-right:before{
@@ -709,8 +716,12 @@ font-size: .7rem;
     .color-denegado{
         color: #EB5757;
     }
-       .color-lectura{
+    .color-lectura{
         color: #F2994A;
+    }
+    .color-sinAsignar{
+        color:transparent;
+        text-shadow: none;
     }
 
 }

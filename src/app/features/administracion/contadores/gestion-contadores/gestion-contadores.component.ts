@@ -30,7 +30,7 @@ import { GrowlModule } from "primeng/growl";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
-import { UsuarioItem } from "../../../../../app/models/UsuarioItem";
+import { ContadorItem } from "../../../../../app/models/ContadorItem";
 import { UsuarioUpdate } from "../../../../../app/models/UsuarioUpdate";
 import { ComboItem } from "../../../../../app/models/ComboItem";
 import { ActivatedRoute } from "@angular/router";
@@ -41,12 +41,10 @@ import { ActivatedRoute } from "@angular/router";
   encapsulation: ViewEncapsulation.None
 })
 export class GestionContadoresComponent extends SigaWrapper implements OnInit {
-  usuarios_rol: any[];
-  usuarios_perfil: any[];
-  select: any[];
+  contadores_modo: any[];
   msgs: Message[] = [];
-  body: UsuarioItem = new UsuarioItem();
-  updateUser: UsuarioUpdate = new UsuarioUpdate();
+  body: ContadorItem = new ContadorItem();
+  restablecer: ContadorItem = new ContadorItem();
   pButton;
   textSelected: String = "{0} grupos seleccionados";
   textFilter: String;
@@ -56,6 +54,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   correcto: boolean = false;
   dniCorrecto: boolean;
   showDatosGenerales: boolean = true;
+  showReconfiguracion: boolean = true;
 
   constructor(
     private sigaServices: SigaServices,
@@ -73,81 +72,38 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   ngOnInit() {
     console.log(sessionStorage);
 
-    this.textFilter = "Elegir";
-    this.correcto = false;
-
-    this.body = new UsuarioItem();
-    this.body = JSON.parse(sessionStorage.getItem("usuarioBody"))[0];
-
-    this.sigaServices.get("usuarios_rol").subscribe(
+    this.sigaServices.get("contadores_modo").subscribe(
       n => {
-        this.usuarios_rol = n.combooItems;
+        this.contadores_modo = n.combooItems;
       },
       err => {
         console.log(err);
       }
     );
-    this.sigaServices.get("usuarios_perfil").subscribe(
-      n => {
-        this.usuarios_perfil = n.combooItems;
-      },
-      err => {
-        console.log(err);
+
+    this.body = new ContadorItem();
+    this.body = JSON.parse(sessionStorage.getItem("contadorBody"));
+    this.restablecer = this.body;
+    this.checkMode();
+  }
+  checkMode() {
+    if (JSON.parse(sessionStorage.getItem("modo")) != null) {
+      if (JSON.parse(sessionStorage.getItem("modo")) == "editar") {
+        this.disabled = true;
+      } else {
+        this.disabled = false;
       }
-    );
+    } else {
+      this.disabled = false;
+    }
+  }
+  isRestablecer() {
+    this.body = this.restablecer;
   }
 
   pInputText;
-  confirmEdit() {
-    let mess = this.translateService.instant(
-      "general.message.aceptar.y.volver"
-    );
-    let icon = "fa fa-edit";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.sendEdit();
-        this.showSuccess();
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Cancel",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
-      }
-    });
-  }
-  sendEdit() {
-    console.log(this.body);
-
-    if (this.body.codigoExterno == undefined) {
-      this.body.codigoExterno = "";
-    }
-    if (this.body.grupo == undefined) {
-      this.body.perfiles == null;
-    }
-    this.updateUser.activo = this.body.activo;
-    this.updateUser.codigoExterno = this.body.codigoExterno;
-    this.updateUser.fechaAlta = this.body.fechaAlta;
-    this.updateUser.grupo = this.body.grupo;
-    this.updateUser.idGrupo = this.body.perfiles;
-    this.updateUser.idInstitucion = this.body.idInstitucion;
-    this.updateUser.idUsuario = this.body.idUsuario;
-    this.updateUser.nif = this.body.nif;
-    this.updateUser.nombreApellidos = this.body.nombreApellidos;
-    this.updateUser.rol = this.body.roles;
-    this.usuarios_rol.forEach((value: ComboItem, key: number) => {
-      if (value.label == this.body.roles) {
-        this.updateUser.rol = value.value;
-      }
-    });
-    this.sigaServices.post("usuarios_update", this.updateUser).subscribe(
+  isEditar() {
+    this.sigaServices.post("contadores_update", this.body).subscribe(
       data => {
         this.showSuccess();
         this.correcto = true;
@@ -165,9 +121,39 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
       }
     );
   }
+
+  confirmEdit() {
+    let mess = this.translateService.instant(
+      "general.message.aceptar.y.volver"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.isEditar();
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
+  onHideReconfiguracion() {
+    this.showReconfiguracion = !this.showReconfiguracion;
+  }
+
   showSuccess() {
     this.msgs = [];
     this.msgs.push({
@@ -189,6 +175,6 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   }
 
   volver() {
-    this.router.navigate(["/usuarios"]);
+    this.router.navigate([JSON.parse(sessionStorage.getItem("url"))]);
   }
 }

@@ -11,7 +11,7 @@
     <div *ngIf="formPermisos.controls['grupo'].value" class="text-right  form-group col-lg-6 col-md-6">
       <label class="proceso-generico">Proceso Genérico Sistema SIGA (0/árbol)</label>
       <div class="mt-2">
-        <p-checkbox class="d-inline-block mr-2" binary="true" label="Seleccionar todo"></p-checkbox>
+        <p-checkbox (onChange)="onChangeSelectAll(node)" [(ngModel)]="selectAll" class="d-inline-block mr-2" binary="true" label="Seleccionar todo"></p-checkbox>
         <label *ngIf="!todoDesplegado" (click)="expandAll()" class="desplegar-todo">Desplegar todo <i class="fa fa-angle-down"></i></label>
         <label *ngIf="todoDesplegado" (click)="collapseAll()" class="desplegar-todo">Plegar todo <i class="fa fa-angle-up"></i></label>
       </div>
@@ -23,13 +23,14 @@
     </div>
   </div>
   <div expandedIcon="fa fa-angle-down" *ngIf="formPermisos.controls['grupo'].value" class="permisos-tree">
-    <p-tree #expandingTree [value]="permisosTree" selectionMode="checkbox">
+    <p-tree (onNodeSelect)="onNodeSelect(selectedPermiso)" [(selection)]="selectedPermiso" #expandingTree [value]="permisosTree"
+      selectionMode="checkbox">
       <ng-template let-node pTemplate="default">
         <i class="fa fa-circle icon-acceso" [ngClass]="{ 'color-total':node.derechoacceso == 0 , 'color-denegado':node.derechoacceso == 1 ,'color-lectura':node.derechoacceso == 2,  'color-sinAsignar':node.derechoacceso == 3}"></i>
         <label>{{node.label}}</label>
       </ng-template>
 
-    </p-tree>
+      </p-tree>
   </div>
 
 
