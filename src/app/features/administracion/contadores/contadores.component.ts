@@ -107,12 +107,24 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
       }
     );
     this.cols = [
-      { field: "idcontador", header: "Código" },
-      { field: "nombre", header: "Nombre" },
-      { field: "descripcion", header: "Descripcion" },
-      { field: "prefijo", header: "Prefijo" },
-      { field: "contador", header: "Contador Actual" },
-      { field: "sufijo", header: "Sufijo" }
+      { field: "idcontador", header: "general.boton.code" },
+      {
+        field: "nombre",
+        header: "administracion.parametrosGenerales.literal.nombre"
+      },
+      { field: "descripcion", header: "general.description" },
+      {
+        field: "prefijo",
+        header: "administracion.parametrosGenerales.literal.prefijo"
+      },
+      {
+        field: "contador",
+        header: "administracion.parametrosGenerales.literal.contadorActual"
+      },
+      {
+        field: "sufijo",
+        header: "administracion.parametrosGenerales.literal.sufijo"
+      }
     ];
 
     this.rowsPerPage = [

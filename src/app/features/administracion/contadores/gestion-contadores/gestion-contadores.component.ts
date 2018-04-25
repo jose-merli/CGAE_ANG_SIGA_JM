@@ -58,7 +58,11 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   showDatosGenerales: boolean = true;
   showReconfiguracion: boolean = true;
   es: any = esCalendar;
-
+  jsonDate: string;
+  rawDate: string;
+  splitDate: any[];
+  arrayDate: string;
+  addedDay: number;
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -101,11 +105,10 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
     }
   }
   isRestablecer() {
-    // this.body = this.restablecer;
     this.body = JSON.parse(sessionStorage.getItem("contadorBody"));
     this.bodyToModificable();
   }
-  // Fecha configuracion no se carga con formato de fecha correcto,
+
   bodyToModificable() {
     this.fechareconfiguracion = this.body.fechareconfiguracion;
     if (this.body.modificablecontador == "1") {
@@ -114,8 +117,26 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
       this.checkmodificable = false;
     }
   }
+
+  //Arreglo el fomato de la fecha añadiendole horas, minutos y segundos para que se guarde en el back correctamente, además lo separo para reordenar dia mes y año según debe estar escrito en el update.
+  arreglarDate() {
+    this.jsonDate = JSON.stringify(this.fechareconfiguracion);
+    this.rawDate = this.jsonDate.slice(1, -1);
+    if (this.rawDate.length < 14) {
+      this.splitDate = this.rawDate.split("-");
+      this.arrayDate =
+        this.splitDate[2] + "-" + this.splitDate[1] + "-" + this.splitDate[0];
+      this.body.fechareconfiguracion = new Date(
+        (this.arrayDate += "T00:00:00.001Z")
+      );
+      this.body.fechareconfiguracion = new Date(this.arrayDate);
+    } else {
+      this.body.fechareconfiguracion = new Date(this.rawDate);
+    }
+  }
+
   modificableToBody() {
-    this.body.fechareconfiguracion = this.fechareconfiguracion;
+    this.arreglarDate();
     if (this.checkmodificable == true) {
       this.body.modificablecontador = "1";
     } else {
@@ -128,8 +149,8 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
     this.sigaServices.post("contadores_update", this.body).subscribe(
       data => {
         this.showSuccess();
-        this.correcto = true;
         console.log(data);
+        this.correcto = true;
       },
       err => {
         this.showFail();
