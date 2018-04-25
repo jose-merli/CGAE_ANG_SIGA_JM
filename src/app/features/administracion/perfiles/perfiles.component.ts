@@ -52,7 +52,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   showDatosGenerales: boolean = true;
   pButton;
   editar: boolean = false;
-  buscar: boolean = false;
+  buscar: boolean = true;
   historicoActive: boolean = false;
   disabled: boolean = false;
   selectMultiple: boolean = false;
@@ -117,6 +117,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
           console.log(data);
           this.searchPerfiles = JSON.parse(data["body"]);
           this.datos = this.searchPerfiles.usuarioGrupoItems;
+          this.buscar = true;
         },
         err => {
           console.log(err);
@@ -236,7 +237,6 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     );
   }
   historico() {
-    this.buscar = false;
     this.historicoActive = true;
     this.sigaServices
       .postPaginado("perfiles_historico", "?numPagina=1", null)
@@ -245,6 +245,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
           console.log(data);
           this.searchPerfiles = JSON.parse(data["body"]);
           this.datos = this.searchPerfiles.usuarioGrupoItems;
+          this.buscar = false;
         },
         err => {
           console.log(err);
