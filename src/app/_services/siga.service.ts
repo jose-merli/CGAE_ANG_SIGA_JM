@@ -45,7 +45,6 @@ export class SigaServices {
     parametros_delete: "parametros/delete",
     parametros_update: "parametros/update",
     parametros_historico: "parametros/historico",
-
     etiquetas_lenguaje: "etiquetas/lenguaje",
     etiquetas_search: "etiquetas/search",
     etiquetas_update: "etiquetas/update",
@@ -55,7 +54,13 @@ export class SigaServices {
     contadores_module: "contadores/module",
 
     permisos_grupos: "permisos/grupo",
-    permisos_tree: "permisos"
+    permisos_tree: "permisos",
+
+    catalogos_lenguage: "catalogos/lenguaje",
+    catalogos_entidad: "catalogos/entidad",
+    catalogos_search: "catalogos/search",
+    catalogos_update: "catalogos/update"
+
   };
 
   constructor(private http: HttpClient) { }

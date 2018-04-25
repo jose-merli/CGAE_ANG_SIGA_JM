@@ -106,7 +106,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   ngOnInit() {
     this.sigaServices.get("maestros_rol").subscribe(
       n => {
-        this.catalogoArray = n.combooItems;
+        this.catalogoArray = n.comboCatalogoItems;
       },
       err => {
         console.log(err);
@@ -422,5 +422,16 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;
     else return true;
+  }
+  setBold(data) {
+    if (data.local == null) {
+      return false;
+    } else if (data.local == "") {
+      return false;
+    } else if (data.local == "N") {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

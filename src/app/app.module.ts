@@ -74,6 +74,7 @@ import { Etiquetas } from "./features/administracion/gestion-multiidioma/etiquet
 import { SeleccionarIdioma } from "./features/administracion/seleccionar-idioma/seleccionar-idioma.component";
 import { Usuarios } from "./features/administracion/usuarios/usuarios.component";
 import { ParametrosGenerales } from "./features/administracion/parametros/parametros-generales/parametros-generales.component";
+import { Catalogos } from "./features/administracion/gestion-multiidioma/catalogos/catalogos.component";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { PermisosComponent } from "./features/administracion/permisos/permisos.component";
 
@@ -112,6 +113,7 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     CatalogosMaestros,
     GruposUsuarios,
     Etiquetas,
+    Catalogos,
     SeleccionarIdioma,
     Usuarios,
     ParametrosGenerales,
