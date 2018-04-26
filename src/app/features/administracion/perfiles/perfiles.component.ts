@@ -76,9 +76,12 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     this.isBuscar();
 
     this.cols = [
-      { field: "idGrupo", header: "ID" },
-      { field: "descripcionGrupo", header: "Descripción" },
-      { field: "descripcionRol", header: "Roles por Defecto" }
+      { field: "idGrupo", header: "administracion.grupos.literal.id" },
+      { field: "descripcionGrupo", header: "general.description" },
+      {
+        field: "descripcionRol",
+        header: "administracion.usuarios.literal.roles"
+      }
     ];
 
     this.rowsPerPage = [

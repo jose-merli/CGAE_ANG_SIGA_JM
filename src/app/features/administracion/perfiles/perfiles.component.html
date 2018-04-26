@@ -2,10 +2,10 @@
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{ 'administracion.usuarios.busqueda.usuarios' | translate}} PERFILES</p>
+    <p>{{ 'administracion.perfiles.busqueda.perfiles' | translate}} PERFILES</p>
   </div>
   <div class="breadCrumb">
-    <p>{{ "menu.administracion" | translate}} <i class="fa fa-angle-right"></i> {{ 'menu.administracion.usuarios' | translate}}
+    <p>{{ "menu.administracion" | translate}} <i class="fa fa-angle-right"></i> {{ 'menu.administracion.perfiles' | translate}}
     </p>
   </div>
   <div class="card">
@@ -70,7 +70,7 @@
             <p-dataTable [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowSelect)="irEditarUsuario(selectedDatos)"
               filterPlaceholder="Search" dataKey="idGrupo" [responsive]="true" #table class="tabla-listado" selectionMode="multiple"
               [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
-              <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="Search"
+              <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="Search"
                 [filter]="true">
                 </p-column>
                 <ng-template pTemplate="paginatorLeft">
