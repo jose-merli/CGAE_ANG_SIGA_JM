@@ -60,11 +60,11 @@ export class SigaServices {
     catalogos_entidad: "catalogos/entidad",
     catalogos_search: "catalogos/search",
     catalogos_update: "catalogos/update",
-
+    auditoriaUsuarios_tipoAccion: "auditoriaUsuarios/tipoAccion",
     permisos_update: "permisos/update"
   };
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   get(service: string): Observable<any> {
     return this.http
@@ -81,10 +81,10 @@ export class SigaServices {
   getPerfil(service: string, institucion: string): Observable<any> {
     return this.http
       .get(
-      environment.newSigaUrl +
-      this.endpoints[service] +
-      "?institucion=" +
-      institucion
+        environment.newSigaUrl +
+          this.endpoints[service] +
+          "?institucion=" +
+          institucion
       )
       .map(response => {
         return response;
