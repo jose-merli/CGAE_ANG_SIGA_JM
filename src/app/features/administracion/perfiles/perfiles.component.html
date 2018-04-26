@@ -37,20 +37,21 @@
           </div>
 
 
-          <p-dataTable [ngClass]="{'customCursor': selectMultiple}" (onRowSelect)="irEditarUsuario(selectedDatos)" filterPlaceholder="Search"
-            dataKey="idGrupo" [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true"
-            paginatorPosition="both" [rows]="selectedItem">
-            <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="Search"
-              [filter]="true">
-              </p-column>
-              <ng-template pTemplate="paginatorLeft">
-                <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                <label>{{ "general.message.mostrar" | translate}} <p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-              </ng-template>
+          <div class="card-body p-0">
+            <p-dataTable [ngClass]="{'customCursor': selectMultiple}" (onRowSelect)="irEditarUsuario(selectedDatos)" filterPlaceholder="Search"
+              dataKey="idGrupo" [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true"
+              paginatorPosition="both" [rows]="selectedItem">
+              <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="Search"
+                [filter]="true">
+                </p-column>
+                <ng-template pTemplate="paginatorLeft">
+                  <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                  <label>{{ "general.message.mostrar" | translate}} <p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                </ng-template>
 
-              </p-dataTable>
+                </p-dataTable>
+          </div>
         </div>
-
         <div *ngIf="buscar == true" class="card mt-3">
           <div class="form-row">
             <div class="form-group col-lg-3 col-md-3">
@@ -68,31 +69,32 @@
               </div>
             </div>
           </div>
-          <p-dataTable [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowSelect)="irEditarUsuario(selectedDatos)"
-            filterPlaceholder="Search" dataKey="idGrupo" [responsive]="true" #table class="tabla-listado" selectionMode="multiple"
-            [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
-            <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="Search"
-              [filter]="true">
-              </p-column>
-              <ng-template pTemplate="paginatorLeft">
-                <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                <label>{{ "general.message.mostrar" | translate}} <p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-              </ng-template>
-              <p-footer *ngIf="selectedDatos">
-                <div class="text-right main-button">
-                  <button (click)="selectedDatos=false" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
-                  <button (click)="confirmarBorrar(selectedDatos); selectedDatos=false" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
-                    label="{{'general.boton.eliminar'  | translate}}"></button>
-                </div>
-              </p-footer>
-              </p-dataTable>
+          <div class="card-body p-0">
+            <p-dataTable [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowSelect)="irEditarUsuario(selectedDatos)"
+              filterPlaceholder="Search" dataKey="idGrupo" [responsive]="true" #table class="tabla-listado" selectionMode="multiple"
+              [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+              <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="Search"
+                [filter]="true">
+                </p-column>
+                <ng-template pTemplate="paginatorLeft">
+                  <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                  <label>{{ "general.message.mostrar" | translate}} <p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                </ng-template>
+                <p-footer *ngIf="selectedDatos">
+                  <div class="text-right main-button">
+                    <button (click)="selectedDatos=false" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
+                    <button (click)="confirmarBorrar(selectedDatos); selectedDatos=false" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
+                      label="{{'general.boton.eliminar'  | translate}}"></button>
+                  </div>
+                </p-footer>
+                </p-dataTable>
+          </div>
+
+
+
         </div>
-
-
-
       </div>
     </div>
+    <!--FIN CARD-->
+    <app-dialog></app-dialog>
   </div>
-  <!--FIN CARD-->
-  <app-dialog></app-dialog>
-</div>

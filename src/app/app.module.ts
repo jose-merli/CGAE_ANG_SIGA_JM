@@ -63,7 +63,7 @@ import { AutoCompleteModule } from "primeng/autocomplete";
 import { TooltipModule } from "primeng/tooltip";
 import { ChipsModule } from "primeng/chips";
 import { EditorModule } from "primeng/editor";
-
+import { PickListModule } from "primeng/picklist";
 // Modulo de administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
 import { EditarCatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros/editarCatalogosMaestros/editarCatalogosMaestros.component";
@@ -156,7 +156,8 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     EditorModule,
     MultiSelectModule,
     TableModule,
-    TreeModule
+    TreeModule,
+    PickListModule
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

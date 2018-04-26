@@ -30,10 +30,11 @@ import { GrowlModule } from "primeng/growl";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
-import { UsuarioItem } from "../../../../../app/models/UsuarioItem";
+import { PerfilItem } from "../../../../../app/models/PerfilItem";
 import { UsuarioUpdate } from "../../../../../app/models/UsuarioUpdate";
 import { ComboItem } from "../../../../../app/models/ComboItem";
 import { ActivatedRoute } from "@angular/router";
+import { PickListModule } from "primeng/picklist";
 @Component({
   selector: "app-editarPerfiles",
   templateUrl: "./editarPerfiles.component.html",
@@ -41,12 +42,11 @@ import { ActivatedRoute } from "@angular/router";
   encapsulation: ViewEncapsulation.None
 })
 export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
-  usuarios_rol: any[];
-  usuarios_perfil: any[];
   select: any[];
   msgs: Message[] = [];
-  body: UsuarioItem = new UsuarioItem();
-  updateUser: UsuarioUpdate = new UsuarioUpdate();
+  body: PerfilItem = new PerfilItem();
+  rolesAsignados: any[];
+  rolesNoAsignados: any[];
   pButton;
   textSelected: String = "{0} grupos seleccionados";
   textFilter: String;
@@ -72,31 +72,31 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
   @ViewChild("table") table;
   ngOnInit() {
     console.log(sessionStorage);
-
+    this.rolesAsignados = [];
+    this.rolesNoAsignados = [];
     this.textFilter = "Elegir";
     this.correcto = false;
-
-    this.body = new UsuarioItem();
-    this.body = JSON.parse(sessionStorage.getItem("usuarioBody"))[0];
-
-    this.sigaServices.get("usuarios_rol").subscribe(
-      n => {
-        this.usuarios_rol = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-    );
-    this.sigaServices.get("usuarios_perfil").subscribe(
-      n => {
-        this.usuarios_perfil = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    this.body = new PerfilItem();
+    if (sessionStorage.getItem("perfil") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("perfil"))[0];
+      this.fillRol();
+    } else {
+      this.body = new PerfilItem();
+    }
   }
 
+  fillRol() {
+    if (this.body.rolesAsignados != null) {
+      this.body.rolesAsignados.forEach((value: ComboItem, key: number) => {
+        this.rolesAsignados.push(value);
+      });
+    }
+    if (this.body.rolesNoAsignados != null) {
+      this.body.rolesNoAsignados.forEach((value: ComboItem, key: number) => {
+        this.rolesNoAsignados.push(value);
+      });
+    }
+  }
   pInputText;
   confirmEdit() {
     let mess = this.translateService.instant(
@@ -107,7 +107,6 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
       message: mess,
       icon: icon,
       accept: () => {
-        this.sendEdit();
         this.showSuccess();
       },
       reject: () => {
@@ -123,45 +122,17 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
       }
     });
   }
-  sendEdit() {
-    console.log(this.body);
-
-    if (this.body.codigoExterno == undefined) {
-      this.body.codigoExterno = "";
-    }
-    if (this.body.grupo == undefined) {
-      this.body.perfiles == null;
-    }
-    this.updateUser.activo = this.body.activo;
-    this.updateUser.codigoExterno = this.body.codigoExterno;
-    this.updateUser.fechaAlta = this.body.fechaAlta;
-    this.updateUser.grupo = this.body.grupo;
-    this.updateUser.idGrupo = this.body.perfiles;
-    this.updateUser.idInstitucion = this.body.idInstitucion;
-    this.updateUser.idUsuario = this.body.idUsuario;
-    this.updateUser.nif = this.body.nif;
-    this.updateUser.nombreApellidos = this.body.nombreApellidos;
-    this.updateUser.rol = this.body.roles;
-    this.usuarios_rol.forEach((value: ComboItem, key: number) => {
-      if (value.label == this.body.roles) {
-        this.updateUser.rol = value.value;
-      }
-    });
-    this.sigaServices.post("usuarios_update", this.updateUser).subscribe(
-      data => {
-        this.showSuccess();
-        this.correcto = true;
-        console.log(data);
-      },
+  isEditar() {
+    this.body.rolesAsignados = this.rolesAsignados;
+    this.body.rolesNoAsignados = this.rolesNoAsignados;
+    this.sigaServices.post("usuarios_delete", this.body).subscribe(
+      data => {},
       err => {
         this.showFail();
-        this.correcto = false;
         console.log(err);
       },
       () => {
-        if (this.correcto) {
-          this.volver();
-        }
+        // this.volver();
       }
     );
   }
