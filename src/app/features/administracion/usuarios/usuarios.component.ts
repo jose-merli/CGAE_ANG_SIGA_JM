@@ -162,14 +162,10 @@ export class Usuarios extends SigaWrapper implements OnInit {
     } else {
       this.blockCrear = true;
     }
-
-    if (this.isValidDNI(this.body.nif)) {
-      this.dniCorrecto = true;
-    } else {
-      this.dniCorrecto = false;
-    }
     if (this.body.nif == "") {
       this.dniCorrecto = null;
+    } else {
+      this.dniCorrecto = this.isValidDNI(this.body.nif);
     }
   }
 
@@ -210,7 +206,21 @@ export class Usuarios extends SigaWrapper implements OnInit {
       }
     );
   }
+
   isBuscar() {
+    if (this.isValidDNI(this.body.nif)) {
+      this.dniCorrecto = true;
+    } else {
+      this.dniCorrecto = false;
+    }
+
+    this.Search();
+  }
+
+  Search() {
+    if (this.body.nif == "" || this.body.nif == null) {
+      this.dniCorrecto = null;
+    }
     this.buscar = true;
     if (this.body.nombreApellidos == undefined) {
       this.body.nombreApellidos = "";
