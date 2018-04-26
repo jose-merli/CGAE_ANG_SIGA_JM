@@ -53,7 +53,6 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
   formBusqueda: FormGroup;
   cols: any = [];
   datos: any[];
-  datosHist: any[];
   select: any[];
 
   //Array de opciones del dropdown
@@ -194,12 +193,17 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
   }
+
+  activarPaginacion() {
+    if (this.datos.length == 0) return false;
+    else return true;
+  }
+
   isBuscar() {
     this.buscar = true;
     this.blockBuscar = false;
     this.tablaHistorico = false;
     this.eliminar = false;
-
     if (this.body.descripcion == undefined) {
       this.body.descripcion = "";
       this.formToBody();
