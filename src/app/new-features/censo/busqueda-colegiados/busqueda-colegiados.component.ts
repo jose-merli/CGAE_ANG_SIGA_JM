@@ -164,6 +164,12 @@ export class BusquedaColegiadosComponent implements OnInit {
 
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
+    if (!this.selectMultiple) {
+      this.selectedDatos = []
+    } else {
+      this.selectAll = false
+      this.selectedDatos = []
+    }
   }
 
   verMasFiltros() {
@@ -195,13 +201,13 @@ export class BusquedaColegiadosComponent implements OnInit {
     }
     return {}
   }
+
   onChangeSelectAll() {
     if (this.selectAll === true) {
+      this.selectMultiple = false;
       this.selectedDatos = this.datos;
-      this.selectMultiple = true;
     } else {
       this.selectedDatos = [];
-      this.selectMultiple = false;
     }
   }
 

@@ -213,4 +213,9 @@ export class Etiquetas extends SigaWrapper implements OnInit {
       detail: this.translateService.instant("general.message.accion.cancelada")
     });
   }
+
+  activarPaginacion() {
+    if (this.datosTraduccion.length == 0) return false;
+    else return true;
+  }
 }
