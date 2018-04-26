@@ -79,7 +79,7 @@ export class EditarCatalogosMaestrosComponent extends SigaWrapper
   ngOnInit() {
     this.sigaServices.get("maestros_rol").subscribe(
       n => {
-        this.catalogoArray = n.combooItems;
+        this.catalogoArray = n.comboCatalogoItems;
       },
       err => {
         console.log(err);

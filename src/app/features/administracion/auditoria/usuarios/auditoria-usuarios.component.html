@@ -9,9 +9,6 @@
         </p>
     </div>
     <div class="card">
-        <div class="card-header">
-            <label>{{'menu.administracion.auditoria.usuarios' | translate}}</label>
-        </div>
         <div class="card-body">
             <p class="title-module">{{'administracion.catalogos.titulo.datos.generales' | translate}}
                 <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
@@ -34,7 +31,7 @@
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
                         <label>Tipo Acción</label>
-                        <p-dropdown class="select-form" [(ngModel)]='selectedTipoAccion' [options]="tipoAcciones"></p-dropdown> &nbsp;&nbsp;
+                        <p-dropdown class="select-form" [(ngModel)]='selectedTipoAccion' [options]="tipoAcciones" [filter]="true" filterBy="label"></p-dropdown> &nbsp;&nbsp;
                     </div>
                 </div>
                 <div class="form-row">
@@ -61,6 +58,17 @@
     <!--FIN CARD-->
     <div *ngIf="buscarSeleccionado == true" class="card mt-3">
         <div class="card-body p-0">
+            <p-dataTable [value]="datosUsuarios" [editable]="true" [responsive]="true" #table class="tabla-listado" [sortOrder]="1" [paginator]="activarPaginacion()"
+                paginatorPosition="both" [rows]="selectedItem">
+                <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true">
+                </p-column>
+
+                <ng-template *ngIf="activarPaginacion() == true" pTemplate="paginatorLeft">
+                    <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                    <label>{{ 'general.message.mostrar' | translate}}<p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
+                </ng-template>
+
+                </p-dataTable>
         </div>
     </div>
 </div>

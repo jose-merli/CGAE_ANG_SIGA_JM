@@ -41,6 +41,10 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   fechaDesdeCalendar: Date;
   fechaHastaCalendar: Date;
   es: any = esCalendar;
+  selectedItem: number = 4;
+  columnasTabla: any = [];
+  rowsPerPage: any = [];
+  datosUsuarios: any[];
 
   constructor(
     private sigaServices: SigaServices,
@@ -54,11 +58,63 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     super(USER_VALIDATIONS);
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.sigaServices.get("auditoriaUsuarios_tipoAccion").subscribe(
+      n => {
+        this.tipoAcciones = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
+    this.columnasTabla = [
+      {
+        field: "descripcionBusqueda",
+        header: "Usuario"
+      },
+      {
+        field: "descripcionTraduccion",
+        header: "Tipo Acción"
+      },
+      {
+        field: "descripcionTraduccion",
+        header: "Fecha Efectiva"
+      },
+      {
+        field: "descripcionTraduccion",
+        header: "Motivo"
+      }
+    ];
+
+    this.rowsPerPage = [
+      {
+        label: 4,
+        value: 4
+      },
+      {
+        label: 6,
+        value: 6
+      },
+      {
+        label: 8,
+        value: 8
+      },
+      {
+        label: 10,
+        value: 10
+      }
+    ];
+  }
 
   isBuscar() {}
   isHabilitadoBuscar() {}
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
+  }
+
+  activarPaginacion() {
+    if (this.datosUsuarios.length == 0) return false;
+    else return true;
   }
 }
