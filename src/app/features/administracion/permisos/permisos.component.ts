@@ -22,6 +22,8 @@ export class PermisosComponent implements OnInit, DoCheck {
   selectedGrupo: any;
   selectedPermiso: any = [];
   selectAll: boolean = false;
+  idGrupo: any;
+  savedPermisos: boolean = false;
 
   // treeNode: TreeNode[]
 
@@ -81,11 +83,10 @@ export class PermisosComponent implements OnInit, DoCheck {
       idGrupo: 'ABG'
     }).subscribe(
       data => {
-
         let permisosTree = JSON.parse(data.body)
         this.permisosTree = permisosTree.permisoItems;
         this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
-        console.log(data);
+
 
 
       },
@@ -94,6 +95,7 @@ export class PermisosComponent implements OnInit, DoCheck {
       }
 
       );
+
 
 
 
@@ -177,6 +179,16 @@ export class PermisosComponent implements OnInit, DoCheck {
 
   }
 
+  onChangeGrupo(id) {
+
+    this.idGrupo = id.value;
+    console.log(this.permisosTree);
+
+    this.selectedPermiso = [];
+    this.permisosChange = [];
+
+  }
+
 
   expandAll() {
     this.todoDesplegado = true;
@@ -204,23 +216,23 @@ export class PermisosComponent implements OnInit, DoCheck {
   //   console.log(this.selectedPermiso)
   // }
 
-  changeAcceso(ref) {
+  onChangeAcceso(ref) {
 
     if (ref) {
       this.permisosChange = this.selectedPermiso
       for (let changed of this.permisosChange) {
         if (ref == 'sinAsignar') {
-          changed.derechoacceso = 0;
+          changed.derechoAcceso = 0;
         } else if (ref == 'denegado') {
-          changed.derechoacceso = 1;
+          changed.derechoAcceso = 1;
         } else if (ref == 'lectura') {
-          changed.derechoacceso = 2;
+          changed.derechoAcceso = 2;
         } else if (ref == 'total') {
-          changed.derechoacceso = 3;
+          changed.derechoAcceso = 3;
         }
         // console.log(this.permisosChange)
       }
-
+      this.selectedPermiso = [];
     }
   }
 
@@ -275,19 +287,31 @@ export class PermisosComponent implements OnInit, DoCheck {
 
 
   savePermisos() {
-    // for (let permiso of this.permisosChange) {
-    //   let id = permiso.data;
-    //   let derechoAcceso = permiso.derechoAcceso;
-    //   console.log(id, derechoAcceso)
-    //   this.sigaServices.post("permisos_update", { id, derechoAcceso }).subscribe(
-    //     data => {
-    //       console.log(data);
-    //     },
-    //     err => {
-    //       console.log(err);
-    //     }
-    //   );
-    // }
+    for (let permiso of this.permisosChange) {
+
+      let objUpdate = {
+        idGrupo: this.idGrupo,
+        id: permiso.data,
+        derechoAcceso: permiso.derechoAcceso
+      }
+
+      console.log(objUpdate)
+
+      this.sigaServices.post("permisos_update", { objUpdate }).subscribe(
+        data => {
+          console.log(data);
+
+        },
+        err => {
+          console.log(err);
+        }
+      );
+
+    }
+
+    this.savedPermisos = true;
+
+
   }
 
 
@@ -295,6 +319,7 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.permisosTree = JSON.parse(JSON.stringify(this.treeInicial));
     this.selectAll = false;
     this.selectedPermiso = [];
+    this.permisosChange = [];
 
     console.log('redo', this.treeInicial);
   }

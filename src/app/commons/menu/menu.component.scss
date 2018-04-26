@@ -93,7 +93,7 @@
         transition: all 1s;
     }
 
-    @media screen and (max-width: 1200px){
+    @media screen and (max-width: 1250px){
         .menu-censo{
             height: 100%;
             position: fixed;
@@ -114,13 +114,13 @@
 
         .icono-menu{
             :before{
-                content: "\f0C9"
+                content: "\f00D"
             }
         }
 
         .icono-menu-flecha{
             :before{
-                content: "\f00D"
+                content: "\f0C9"
             }
         }
 
