@@ -107,6 +107,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
       message: mess,
       icon: icon,
       accept: () => {
+        this.isEditar();
         this.showSuccess();
       },
       reject: () => {
@@ -132,7 +133,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
         console.log(err);
       },
       () => {
-        // this.volver();
+        this.volver();
       }
     );
   }
