@@ -273,6 +273,11 @@ label{
     }
 }
 
+
+.form-row > .col, .form-row > [class*="col-"]{
+    padding-left: .5rem;
+    padding-right: .5rem;
+}
 .form-group-date, .form-group {
         margin-bottom: 1.5rem;
         .icon-incidencia {
@@ -708,6 +713,7 @@ font-size: .7rem;
         padding-left: 1rem;
         line-height: 1.3rem;
         text-shadow: 0px 0px 3px $lightGrey;
+        color: none;
     }
 
     .color-total{

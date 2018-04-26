@@ -40,8 +40,11 @@ export class MenuComponent implements OnInit {
   }
 
 
+
+
   onCloseMenu() {
     this.closeMenu = !this.closeMenu;
+    console.log(this.items)
   }
 
   onOpenMenu() {

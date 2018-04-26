@@ -55,13 +55,13 @@ export class SigaServices {
     perfiles_search: "usuariosgrupos/search",
     perfiles_historico: "/usuariosgrupos/historico",
     perfiles_delete: "/usuariosgrupos/delete",
-    permisos_grupos: "permisos/grupo",
     permisos_tree: "permisos",
     catalogos_lenguage: "catalogos/lenguaje",
     catalogos_entidad: "catalogos/entidad",
     catalogos_search: "catalogos/search",
     catalogos_update: "catalogos/update",
-    auditoriaUsuarios_tipoAccion: "auditoriaUsuarios/tipoAccion"
+    auditoriaUsuarios_tipoAccion: "auditoriaUsuarios/tipoAccion",
+    permisos_update: "permisos/update"
   };
 
   constructor(private http: HttpClient) {}

@@ -114,7 +114,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   }
 
   activarPaginacion() {
-    if (this.datosTraduccion.length == 0) return false;
+    if (this.datosUsuarios.length == 0) return false;
     else return true;
   }
 }

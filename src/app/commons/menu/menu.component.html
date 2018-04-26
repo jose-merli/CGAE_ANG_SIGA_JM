@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="col-items">
       <ul *ngIf="!showChild" class="nav navbar-nav ">
-        <li *ngFor="let opcion of items" (click)="viewChild(opcion.items, opcion.label)">{{opcion.label}} <i *ngIf="opcion.items" class="fa fa-angle-right float-right"></i></li>
+        <li [ngClass]="{'menu-bottom':opcion.label==='menu.administracion'}" *ngFor="let opcion of items" (click)="viewChild(opcion.items, opcion.label)">{{opcion.label}} <i *ngIf="opcion.items" class="fa fa-angle-right float-right"></i></li>
       </ul>
       <ul *ngIf="showChild && !showChildOfChild" class="nav navbar-nav ">
         <li (click)="backMenu()" class="breadCrumbMenu">{{selectedLabel}} <i class="fa fa-angle-right"></i></li>
