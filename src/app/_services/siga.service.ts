@@ -55,7 +55,6 @@ export class SigaServices {
     perfiles_search: "usuariosgrupos/search",
     perfiles_historico: "/usuariosgrupos/historico",
     perfiles_delete: "/usuariosgrupos/delete",
-    permisos_grupos: "permisos/grupo",
     permisos_tree: "permisos",
     catalogos_lenguage: "catalogos/lenguaje",
     catalogos_entidad: "catalogos/entidad",

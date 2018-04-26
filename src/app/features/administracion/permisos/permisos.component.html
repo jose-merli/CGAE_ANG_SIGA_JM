@@ -6,7 +6,7 @@
   <div class="mt-4 permisos-filters d-flex  justify-content-start">
     <div class="mr-auto pl-0 form-group col-lg-3 col-md-3">
       <label>Grupo</label>
-      <p-dropdown [(ngModel)]="selectedGrupo" [options]="grupos" class="select-form" [formControl]="formPermisos.controls['grupo']"></p-dropdown>
+      <p-dropdown [filter]="true" [(ngModel)]="selectedGrupo" [options]="grupos" class="select-form" [formControl]="formPermisos.controls['grupo']"></p-dropdown>
     </div>
     <div *ngIf="formPermisos.controls['grupo'].value" class="text-right  form-group col-lg-6 col-md-6">
       <label class="proceso-generico">Proceso Genérico Sistema SIGA (0/árbol)</label>

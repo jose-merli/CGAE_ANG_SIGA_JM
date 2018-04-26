@@ -273,6 +273,11 @@ label{
     }
 }
 
+
+.form-row > .col, .form-row > [class*="col-"]{
+    padding-left: .5rem;
+    padding-right: .5rem;
+}
 .form-group-date, .form-group {
         margin-bottom: 1.5rem;
         .icon-incidencia {

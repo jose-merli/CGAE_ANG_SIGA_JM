@@ -57,119 +57,120 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.myWidth = this.widthContent.nativeElement.parentElement.parentElement.offsetWidth;
 
 
-    this.grupos = [
-      {
-        label: '-'
+    // this.grupos = [
+    //   {
+    //     label: '-'
+    //   },
+    //   {
+    //     label: 'Abogado', value: 'abogado', idGrupo: 1
+    //   }
+
+    // ]
+
+    this.sigaServices.get("usuarios_perfil").subscribe(
+      n => {
+        this.grupos = n.combooItems;
       },
-      {
-        label: 'Abogado', value: 'abogado', idGrupo: 1
+      err => {
+        console.log(err);
+      }
+    );
+
+
+    this.sigaServices.post("permisos_tree", {
+      idGrupo: 'ABG'
+    }).subscribe(
+      data => {
+
+        let permisosTree = JSON.parse(data.body)
+        this.permisosTree = permisosTree.permisoItems;
+        this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
+        console.log(data);
+
+
+      },
+      err => {
+        console.log(err);
       }
 
-    ]
-
-    // this.sigaServices.get("usuarios_perfil").subscribe(
-    //   n => {
-    //     this.grupos = n.combooItems;
-    //   },
-    //   err => {
-    //     console.log(err);
-    //   }
-    // );
-
-
-    // this.sigaServices.post("permisos_tree", {
-    //   idGrupo: 'ABG'
-    // }).subscribe(
-    //   data => {
-
-    //     let permisosTree = JSON.parse(data.body)
-    //     this.permisosTree = permisosTree.permisoItems
-    //     console.log(data);
-
-
-    //   },
-    //   err => {
-    //     console.log(err);
-    //   }
-
-    //   );
+      );
 
 
 
-    this.permisosTree =
-      [
-        {
-          "label": "Catálogo Botones-Atajos",
-          "derechoacceso": 2,
-          "selected": false,
-          "children":
-          [{
-            "label": "Botón colegiación",
-            "derechoacceso": 2,
-          },
-          {
-            "label": "Botón Generar Certificado"
-          }]
-        },
-        {
-          "label": "Catálogo Cursos"
-        },
-        {
-          "label": "Catálogo Botones-Atajos",
-          "children":
-          [{
-            "label": "Botón colegiación",
-          },
-          {
-            "label": "Botón Generar Certificado"
-          }]
-        },
-        {
-          "label": "Catálogo Cursos"
-        },
-        {
-          "label": "Catálogo Botones-Atajos",
-          "children":
-          [{
-            "label": "Botón colegiación",
-          },
-          {
-            "label": "Botón Generar Certificado"
-          }]
-        },
-        {
-          "label": "Catálogo Cursos"
-        },
-        {
-          "label": "Catálogo Botones-Atajos",
-          "children":
-          [{
-            "label": "Botón colegiación",
-          },
-          {
-            "label": "Botón Generar Certificado"
-          }]
-        },
-        {
-          "label": "Catálogo Cursos"
-        },
-        {
-          "label": "Catálogo Botones-Atajos",
-          "children":
-          [{
-            "label": "Botón colegiación",
-          },
-          {
-            "label": "Botón Generar Certificado"
-          }]
-        },
-        {
-          "label": "Catálogo Cursos"
-        }
-      ]
+    // this.permisosTree =
+    //   [
+    //     {
+    //       "label": "Catálogo Botones-Atajos",
+    //       "derechoacceso": 2,
+    //       "selected": false,
+    //       "children":
+    //       [{
+    //         "label": "Botón colegiación",
+    //         "derechoacceso": 2,
+    //       },
+    //       {
+    //         "label": "Botón Generar Certificado"
+    //       }]
+    //     },
+    //     {
+    //       "label": "Catálogo Cursos"
+    //     },
+    //     {
+    //       "label": "Catálogo Botones-Atajos",
+    //       "children":
+    //       [{
+    //         "label": "Botón colegiación",
+    //       },
+    //       {
+    //         "label": "Botón Generar Certificado"
+    //       }]
+    //     },
+    //     {
+    //       "label": "Catálogo Cursos"
+    //     },
+    //     {
+    //       "label": "Catálogo Botones-Atajos",
+    //       "children":
+    //       [{
+    //         "label": "Botón colegiación",
+    //       },
+    //       {
+    //         "label": "Botón Generar Certificado"
+    //       }]
+    //     },
+    //     {
+    //       "label": "Catálogo Cursos"
+    //     },
+    //     {
+    //       "label": "Catálogo Botones-Atajos",
+    //       "children":
+    //       [{
+    //         "label": "Botón colegiación",
+    //       },
+    //       {
+    //         "label": "Botón Generar Certificado"
+    //       }]
+    //     },
+    //     {
+    //       "label": "Catálogo Cursos"
+    //     },
+    //     {
+    //       "label": "Catálogo Botones-Atajos",
+    //       "children":
+    //       [{
+    //         "label": "Botón colegiación",
+    //       },
+    //       {
+    //         "label": "Botón Generar Certificado"
+    //       }]
+    //     },
+    //     {
+    //       "label": "Catálogo Cursos"
+    //     }
+    //   ]
 
 
-    this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree))
+
 
 
     console.log('oninitInicial', this.treeInicial)
@@ -296,7 +297,6 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.selectedPermiso = [];
 
     console.log('redo', this.treeInicial);
-
   }
 
 

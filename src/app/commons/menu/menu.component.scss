@@ -15,7 +15,11 @@
                 .col-items{
                     padding:0;
                     width: 20em;
+                    position: relative;
                     flex-grow: 1;
+                    overflow-y:auto;
+                    overflow-x: hidden;
+                   
                     .ui-state-default{
                         border: none;
                         
@@ -32,6 +36,12 @@
                             cursor: pointer; 
                             background: $primary-color;
                         }
+                    }
+
+                    .menu-bottom{
+                        position:absolute;
+                        bottom: 0;
+                        width: 100%;
                     }
                     .menu-item-active{
                         color: white;
