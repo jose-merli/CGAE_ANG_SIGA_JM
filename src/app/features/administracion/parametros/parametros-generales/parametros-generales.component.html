@@ -45,8 +45,8 @@
     <div *ngIf="buscar == true" class="card mt-3">
         <div class="card-body p-0">
             <p-dataTable selectionMode="single" [value]="datosBuscar" [editable]="true" [(selection)]="filaSelecionadaTabla" [responsive]="true"
-                #table class="tabla-listado" [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem"
-                [editable]="true" (onRowSelect)="onRowSelect($event)">
+                #table class="tabla-listado" [sortOrder]="1" [paginator]="activarPaginacionBuscar()" paginatorPosition="both"
+                [rows]="selectedItem" [editable]="true" (onRowSelect)="onRowSelect($event)">
                 <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true">
                     <ng-template *ngIf="col.field == 'valor'" let-dato="rowData" pTemplate="body">
                         <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" (change)="isGuardar($event,dato)">
@@ -59,7 +59,7 @@
                 </ng-template>
 
                 <p-footer>
-                    <div class="text-right main-button">
+                    <div *ngIf="activarPaginacionBuscar() == true" class="text-right main-button">
                         <button (click)="confirmarEliminar(filaSelecionadaTabla)" pButton type="button" [disabled]="isHabilitadoEliminar()" icon="fa fa-trash-alt "
                             iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
                             <button (click)="isHistorico()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.historico' | translate}}"></button>
@@ -70,7 +70,7 @@
     </div>
     <div *ngIf="historico == true" class="card mt-3">
         <div class="card-body p-0">
-            <p-dataTable [value]="datosHistorico" [responsive]="true" #table class="tabla-listado" [sortOrder]="1" [paginator]="true"
+            <p-dataTable [value]="datosHistorico" [responsive]="true" #table class="tabla-listado" [sortOrder]="1" [paginator]="activarPaginacionHistorico()"
                 paginatorPosition="both" [rows]="selectedItem">
                 <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true">
                     <ng-template let-datoH="rowData" pTemplate="body">
@@ -87,7 +87,7 @@
                     <label>{{ 'general.message.mostrar' | translate}}<p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
                 </ng-template>
                 <p-footer>
-                    <div class="text-right main-button">
+                    <div *ngIf="activarPaginacionHistorico() == true" class="text-right main-button">
                         <button (click)="confirmarEliminar(filaSelecionadaTabla)" pButton type="button" [disabled]="isHabilitadoEliminar()" icon="fa fa-trash-alt "
                             iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
                             <button (click)="isHistorico()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.historico' | translate}}"></button>
