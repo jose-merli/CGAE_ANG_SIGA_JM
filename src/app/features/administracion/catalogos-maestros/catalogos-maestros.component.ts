@@ -229,6 +229,12 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
   }
+
+  activarPaginacion() {
+    if (this.datosHist.length == 0) return false;
+    else return true;
+  }
+
   isBuscar() {
     this.buscar = true;
     this.blockBuscar = false;

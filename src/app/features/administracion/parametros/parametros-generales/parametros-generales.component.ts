@@ -183,6 +183,16 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     );
   }
 
+  activarPaginacionBuscar() {
+    if (this.datosBuscar.length == 0) return false;
+    else return true;
+  }
+
+  activarPaginacionHistorico() {
+    if (this.datosHistorico.length == 0) return false;
+    else return true;
+  }
+
   isGuardar(event, dato) {
     this.bodyUpdate.idInstitucion = dato.idInstitucion;
     this.bodyUpdate.modulo = dato.modulo;
