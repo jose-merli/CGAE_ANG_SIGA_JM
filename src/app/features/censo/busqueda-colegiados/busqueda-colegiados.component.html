@@ -1,0 +1,190 @@
+<div class="busqueda-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>Búsqueda de Colegiados</p>
+  </div>
+  <div class="breadCrumb">
+    <p>Censo <i class="fa fa-angle-right"></i> Búsqueda de Colegiados</p>
+  </div>
+  <div class="card">
+    <!--<div class="card-header">
+      <label>Búsqueda de Colegiados</label>
+      <p-radioButton label="Simple" name="groupname" value="simple" class="float-right" [(ngModel)]="selectedValue"></p-radioButton>
+      <p-radioButton label="Avanzada" name="groupname" value="avanzada" class="pr-3 float-right" [(ngModel)]="selectedValue"></p-radioButton>
+    </div>-->
+    <div class="card-body">
+      <p class="title-module">Datos generales<i (click)="abrirFicha('generales')" *ngIf="!esFichaActiva('generales')" class="fa fa-angle-up float-right"></i><i
+          (click)="cerrarFicha('generales')" *ngIf="esFichaActiva('generales')" class="fa fa-angle-down float-right"></i></p>
+      <div *ngIf="!masFiltros && !esFichaActiva('generales')" class="module vista-simple">
+        <div class="form-row">
+          <div class="form-group col-lg-3 col-md-3">
+            <label>NIF/CIF</label>
+            <input type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Nombre</label>
+            <input type="text" class="form-control" pInputText>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Nº Colegiado</label>
+            <input type="text" class="form-control" pInputText>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="masFiltros">
+        <div *ngIf="!esFichaActiva('generales')" class="module vista-avanzada">
+          <div class="form-row">
+            <div class="form-group col-lg-3 col-md-3">
+              <label>NIF/CIF</label>
+              <input type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>Nombre</label>
+              <input type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>Primer apellido</label>
+              <input type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>Segundo apellido</label>
+              <input type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3 form-group-date">
+              <label>Fecha nacimiento</label>
+              <p-calendar [formControl]="formBusqueda.controls['fechaNacimiento']" [keepInvalid]="true" selectionMode="range" [locale]="es"
+                icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                <small class="input-error" *ngIf="!formBusqueda.controls['fechaNacimiento'].pristine && formBusqueda.controls['fechaNacimiento'].value==null">
+                  El formato correcto es d/m/y - d/m/y</small>
+            </div>
+            <div class="form-group col-lg-2 col-md-2">
+              <label>Sexo</label>
+              <p-dropdown class="select-form" [options]="select"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-1 col-md-1">
+              <label>C.P</label>
+              <input type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Domicilio</label>
+              <input type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>Teléfono</label>
+              <input type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>Fax</label>
+              <input type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>Correo electrónico</label>
+              <input type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>Grupos fijos</label>
+              <p-dropdown class="select-form" [options]="select"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>Tipo apunte CV</label>
+              <p-dropdown class="select-form" [options]="select"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label></label>
+              <p-dropdown class="select-form" [options]="select"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label></label>
+              <p-dropdown class="select-form" [options]="select"></p-dropdown>
+            </div>
+          </div>
+        </div>
+        <p class="title-module">Datos colegiales<i (click)="abrirFicha('colegiales')" *ngIf="!esFichaActiva('colegiales')" class="fa fa-angle-down float-right"></i><i
+            (click)="cerrarFicha('colegiales')" *ngIf="esFichaActiva('colegiales')" class="fa fa-angle-up float-right"></i>
+        </p>
+        <div *ngIf="esFichaActiva('colegiales')" class="module vista-avanzada">
+          <div class="form-row">
+            <div class="form-group col-lg-3 col-md-3">
+              <label>Nº Colegiado</label>
+              <input type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Tipo colegiación</label>
+              <p-dropdown class="select-form" [options]="select"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label class="d-block pb-2">Ejerciente</label>
+              <!--<p-dropdown class="select-form" [options]="select"></p-dropdown>-->
+              <p-radioButton label="Sí" name="groupname" value="true" class="pr-3"></p-radioButton>
+              <p-radioButton label="No" name="groupname" value="false"></p-radioButton>
+            </div>
+            <div class="form-group col-lg-3 col-md-3 form-group-date">
+              <label>Fecha incorporación</label>
+              <p-calendar [formControl]="formBusqueda.controls['fechaIncorporacion'] " [keepInvalid]="true" selectionMode="range" [locale]="es"
+                icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                <small class="input-error" *ngIf="!formBusqueda.controls['fechaIncorporacion'].pristine && formBusqueda.controls['fechaIncorporacion'].value==null ">
+                  El formato correcto es dd/mm/aa - dd/mm/aa</small>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <!--<label>Residente</label>
+            <p-dropdown class="select-form" [options]="select"></p-dropdown>-->
+              <label class="d-block pb-2">Residente</label>
+              <p-radioButton label="Sí" name="groupname" value="true" class="pr-3"></p-radioButton>
+              <p-radioButton label="No" name="groupname" value="false"></p-radioButton>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>Abogado inscrito</label>
+              <p-dropdown class="select-form" [options]="select"></p-dropdown>
+            </div>
+          </div>
+        </div>
+        <p class="title-module">Datos de facturación<i (click)="abrirFicha('facturacion')" *ngIf="!esFichaActiva('facturacion')" class="fa fa-angle-down float-right"></i><i
+            (click)="cerrarFicha('facturacion')" *ngIf="esFichaActiva('facturacion')" class="fa fa-angle-up float-right"></i></p>
+        <div *ngIf="esFichaActiva('facturacion')" class="module vista-avanzada">
+          <div class="form-row">
+            <div class="form-group col-lg-3 col-md-3 form-group-date">
+              <label>Fecha factura</label>
+              <p-calendar [formControl]="formBusqueda.controls['fechaFacturacion'] " [keepInvalid]="true" selectionMode="range" [locale]="es"
+                icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                <small class="input-error" *ngIf="!formBusqueda.controls['fechaFacturacion'].pristine && formBusqueda.controls['fechaFacturacion'].value==null ">
+                  El formato correcto es d/m/y - d/m/y</small>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="text-right main-button ">
+        <button *ngIf="!masFiltros" (click)="verMasFiltros()" pButton type="button " icon="fa fa-eraser " iconPos="left" label="Más filtros"></button>
+        <button *ngIf="masFiltros" (click)="verMasFiltros()" pButton type="button " icon="fa fa-eraser " iconPos="left" label="Menos filtros"></button>
+        <button pButton type="button " icon="fa fa-eraser " iconPos="left" label="Limpiar"></button>
+        <button (click)="isBuscar()" pButton type="button " icon="fa fa-search " iconPos="left" label="Buscar"></button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="buscar == true" class="card mt-3">
+    <div class="card-body p-0">
+      <div class="m-3 d-flex justify-content-end">
+        <div>
+          <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
+        </div>
+        <label class="ml-3" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()"><i class="pr-2 fa fa-plus"></i>Selección múltiple</label>
+      </div>
+      <p-dataTable [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowSelect)="irFichaColegial(selectedDatos)"
+        dataKey="nif" selectionMode="multiple" [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1"
+        [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+        <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header"></p-column>
+        <ng-template pTemplate="paginatorLeft">
+          <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+          <label>Mostrar <p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> registros</label>
+        </ng-template>
+        <p-footer *ngIf="selectedDatos && selectedDatos != ''">
+          <div class="text-right main-button">
+            <button pButton type="button" icon="fa fa-download" iconPos="left" label="Descargar"></button>
+          </div>
+        </p-footer>
+        </p-dataTable>
+    </div>
+  </div>
+</div>

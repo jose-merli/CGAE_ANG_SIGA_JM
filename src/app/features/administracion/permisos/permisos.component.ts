@@ -25,6 +25,16 @@ export class PermisosComponent implements OnInit, DoCheck {
   idGrupo: any;
   savedPermisos: boolean = false;
 
+  numSeleccionados: number;
+  numCambios: number;
+  totalPermisos: number;
+
+  //accesos totales
+  accesoTotal: any;
+  accesoDenegado: any;
+  accesoLectura: any;
+  sinAsignar: any;
+
   // treeNode: TreeNode[]
 
   @ViewChild('widthContent')
@@ -42,6 +52,14 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.formPermisos = this.formBuilder.group({
       'grupo': null,
     });
+
+    this.numSeleccionados = 0;
+    this.numCambios = 0;
+    this.totalPermisos = 0;
+
+
+
+
   }
 
   ngDoCheck() {
@@ -86,7 +104,12 @@ export class PermisosComponent implements OnInit, DoCheck {
         let permisosTree = JSON.parse(data.body)
         this.permisosTree = permisosTree.permisoItems;
         this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
+        this.permisosTree.forEach(node => {
+          this.totalRecursive(node);
 
+        });
+
+        console.log(this.totalPermisos)
 
 
       },
@@ -95,8 +118,6 @@ export class PermisosComponent implements OnInit, DoCheck {
       }
 
       );
-
-
 
 
     // this.permisosTree =
@@ -171,11 +192,14 @@ export class PermisosComponent implements OnInit, DoCheck {
     //     }
     //   ]
 
+    // this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
+    // this.permisosTree.forEach(node => {
+    //   this.totalRecursive(node);
 
+    // });
 
+    // console.log(this.totalPermisos)
 
-
-    console.log('oninitInicial', this.treeInicial)
 
   }
 
@@ -202,6 +226,8 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.permisosTree.forEach(node => {
       this.expandRecursive(node, false);
     });
+
+
   }
   private expandRecursive(node: TreeNode, isExpand: boolean) {
     node.expanded = isExpand;
@@ -210,6 +236,7 @@ export class PermisosComponent implements OnInit, DoCheck {
         this.expandRecursive(childNode, isExpand);
       });
     }
+
   }
 
   // onNodeSelect(selectedPermiso) {
@@ -217,7 +244,6 @@ export class PermisosComponent implements OnInit, DoCheck {
   // }
 
   onChangeAcceso(ref) {
-
     if (ref) {
       this.permisosChange = this.selectedPermiso
       for (let changed of this.permisosChange) {
@@ -230,10 +256,18 @@ export class PermisosComponent implements OnInit, DoCheck {
         } else if (ref == 'total') {
           changed.derechoAcceso = 3;
         }
+        // this.getNumAccesos();
         // console.log(this.permisosChange)
+        // this.permisosChange.forEach(node => {
+        //   this.totalAccesosRecursive(node);
+        //   console.log(this.accesoTotal)
+        // });
       }
       this.selectedPermiso = [];
+
     }
+
+
   }
 
   isButtonDisabled() {
@@ -266,19 +300,35 @@ export class PermisosComponent implements OnInit, DoCheck {
 
   selectAllRecursive(node: TreeNode) {
     this.selectedPermiso.push(node);
-
     if (node.children) {
+      console.log(node.children)
       node.children.forEach(childNode => {
         this.selectAllRecursive(childNode);
       });
     }
   }
 
+  totalRecursive(node: TreeNode) {
+    this.totalPermisos += 1;
+    if (node.children) {
+      node.children.forEach(childNode => {
+        this.totalRecursive(childNode);
+      });
+    }
+  }
+
+  // totalAccesosRecursive(node: TreeNode) {
+  //   if (node.derechoacceso === 3) {
+  //     this.accesoTotal++;
+  //   }
+  // }
+
   onChangeSelectAll(node) {
     if (this.selectAll === true) {
       this.permisosTree.forEach(node => {
         this.selectAllRecursive(node);
       });
+      this.getNumSelected()
 
     } else {
       this.selectedPermiso = []
@@ -311,9 +361,8 @@ export class PermisosComponent implements OnInit, DoCheck {
 
     this.savedPermisos = true;
 
-
+    this.getNumChanges();
   }
-
 
   restablecerPermisos() {
     this.permisosTree = JSON.parse(JSON.stringify(this.treeInicial));
@@ -323,6 +372,29 @@ export class PermisosComponent implements OnInit, DoCheck {
 
     console.log('redo', this.treeInicial);
   }
+
+
+  getNumSelected() {
+    this.numSeleccionados = this.selectedPermiso.length;
+  }
+  getNumChanges() {
+    this.numCambios = this.permisosChange.length;
+  }
+
+  getNumTotales() {
+    // this.numTotales = this.permisosTree.length + node.children.length;
+  }
+
+  onNodeSelect() {
+    this.getNumSelected();
+
+    this.getNumTotales()
+  }
+
+  onNodeUnselect() {
+    this.getNumSelected();
+  }
+
 
 
 }

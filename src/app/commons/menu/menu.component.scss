@@ -38,7 +38,28 @@
                         }
                     }
 
-                    .menu-bottom{
+                    .adm{
+                        position:absolute;
+                        bottom:7rem;
+                        width: 100%;
+
+                      
+                    }
+
+                    .conf{
+                        position:absolute;
+                        bottom:11rem;
+                        width: 100%;
+                        padding-left: 1rem;
+                    }
+
+                    .catalogos{
+                        position:absolute;
+                        bottom: 3.6rem;
+                        width: 100%;
+                    }
+
+                     .plantillas{
                         position:absolute;
                         bottom: 0;
                         width: 100%;
