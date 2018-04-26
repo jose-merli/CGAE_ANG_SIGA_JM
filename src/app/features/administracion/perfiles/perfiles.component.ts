@@ -102,15 +102,6 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         value: 10
       }
     ];
-    // if (sessionStorage.getItem("searchUser") != null) {
-    //   this.body = JSON.parse(sessionStorage.getItem("searchUser"));
-    //   this.isBuscar();
-    //   sessionStorage.removeItem("searchUser");
-    //   sessionStorage.removeItem("usuarioBody");
-    // } else {
-    //   this.body = new UsuarioRequestDto();
-    //   this.body.activo = "S";
-    // }
   }
   isBuscar() {
     this.sigaServices

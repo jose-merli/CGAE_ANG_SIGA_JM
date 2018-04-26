@@ -161,6 +161,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
   }
 
   volver() {
+    sessionStorage.removeItem("perfil");
     this.router.navigate(["/perfiles"]);
   }
 }
