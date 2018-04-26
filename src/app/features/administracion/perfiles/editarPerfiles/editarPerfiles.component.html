@@ -5,15 +5,12 @@
     <p>{{"administracion.usuarios.edicion.usuarios" | translate}} PERFILES </p>
   </div>
   <div class="breadCrumb">
-    <p>{{"general.boton.edit" | translate}} <i class="fa fa-angle-right"></i> {{ 'menu.administracion.usuarios' | translate}}
+    <p>{{"general.boton.edit" | translate}} <i class="fa fa-angle-right"></i> {{ 'menu.administracion.perfiles' | translate}}
       PERFILES
     </p>
   </div>
 
   <div class="card">
-    <div class="card-header">
-      <label>{{"administracion.usuarios.edicion.usuarios" | translate}} PERFILES </label>
-    </div>
     <div class="card-body">
       <p class="title-module">{{ "general.message.datos.generales"| translate}}
         <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
