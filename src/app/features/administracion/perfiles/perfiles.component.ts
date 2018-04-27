@@ -79,23 +79,19 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     this.cols = [
       {
         field: "idGrupo",
-        header: "administracion.grupos.literal.id",
-        hasDropdownFilter: false
+        header: "administracion.grupos.literal.id"
       },
       {
         field: "descripcionGrupo",
-        header: "general.description",
-        hasDropdownFilter: false
+        header: "general.description"
       },
       {
         field: "descripcionRol",
-        header: "administracion.usuarios.literal.roles",
-        hasDropdownFilter: false
+        header: "administracion.usuarios.literal.roles"
       },
       {
         field: "asignarRolDefecto",
-        header: "Roles por defecto",
-        hasDropdownFilter: true
+        header: "Roles por defecto"
       }
     ];
 
@@ -145,7 +141,51 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         }
       );
   }
-  onChangeForm() {}
+  onChangeDrop(event, dato) {
+    console.log(event);
+    console.log(dato);
+  }
+  rolDefecto(event, dato) {
+    let item = new PerfilItem();
+    item.idGrupo = dato.idGrupo;
+    dato.asignarRolDefecto.forEach((value: ComboItem, key: number) => {
+      if (event.value == value.value) {
+        item.asignarRolDefecto = [];
+        item.asignarRolDefecto.push(value);
+      }
+    });
+    this.sigaServices.post("perfiles_default", item).subscribe(
+      data => {
+        this.showSuccess();
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+  confirmarRolDefecto(event, dato) {
+    let mess = "¿Desea asignar este rol?";
+    let icon = "fa fa-plus";
+
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.rolDefecto(event, dato);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
 
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
@@ -159,23 +199,6 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   }
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
-  }
-  sendEdit() {
-    // this.sigaServices.post("usuarios_update", this.body).subscribe(
-    //   data => {
-    //     this.showSuccess();
-    //     console.log(data);
-    //   },
-    //   err => {
-    //     this.showFail();
-    //     console.log(err);
-    //   },
-    //   () => {
-    //     this.cancelar();
-    //     this.isBuscar();
-    //     this.table.reset();
-    //   }
-    // );
   }
 
   editarUsuario(selectedItem) {
@@ -209,7 +232,9 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       )
     });
   }
-
+  crear() {
+    this.router.navigate(["/EditarPerfiles"]);
+  }
   irEditarUsuario(id) {
     if (!this.selectMultiple) {
       var ir = null;
@@ -223,9 +248,13 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     }
   }
   isEliminar(selectedDatos) {
-    this.requestPerfiles = new PerfilesRequestDto();
-
-    this.sigaServices.post("perfiles_delete", this.requestPerfiles).subscribe(
+    let eliminar = new PerfilItem();
+    eliminar.grupo = [];
+    selectedDatos.forEach((value: PerfilItem, key: number) => {
+      eliminar.grupo.push(value.idGrupo);
+    });
+    console.log(eliminar);
+    this.sigaServices.post("perfiles_delete", eliminar).subscribe(
       data => {
         if (selectedDatos == 1) {
           this.msgs = [];
