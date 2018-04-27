@@ -30,10 +30,10 @@ export class PermisosComponent implements OnInit, DoCheck {
   totalPermisos: number;
 
   //accesos totales
-  accesoTotal: any;
-  accesoDenegado: any;
-  accesoLectura: any;
-  sinAsignar: any;
+  accesoTotal: number;
+  accesoLectura: number;
+  accesoDenegado: number;
+  sinAsignar: number;
 
   // treeNode: TreeNode[]
 
@@ -56,8 +56,8 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.numSeleccionados = 0;
     this.numCambios = 0;
     this.totalPermisos = 0;
-
-
+    this.accesoTotal = 0;
+    this.accesoLectura = 0;
 
 
   }
@@ -110,8 +110,6 @@ export class PermisosComponent implements OnInit, DoCheck {
         });
 
         console.log(this.totalPermisos)
-
-
       },
       err => {
         console.log(err);
@@ -208,8 +206,12 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.idGrupo = id.value;
     console.log(this.permisosTree);
 
+    this.selectAll = false;
+    this.numSeleccionados = 0;
+    this.numCambios = 0;
     this.selectedPermiso = [];
     this.permisosChange = [];
+
 
   }
 
@@ -248,26 +250,45 @@ export class PermisosComponent implements OnInit, DoCheck {
       this.permisosChange = this.selectedPermiso
       for (let changed of this.permisosChange) {
         if (ref == 'sinAsignar') {
-          changed.derechoAcceso = 0;
+          changed.derechoacceso = '0';
         } else if (ref == 'denegado') {
-          changed.derechoAcceso = 1;
+          changed.derechoacceso = '1';
         } else if (ref == 'lectura') {
-          changed.derechoAcceso = 2;
+          changed.derechoacceso = '2';
         } else if (ref == 'total') {
-          changed.derechoAcceso = 3;
+          changed.derechoacceso = '3';
         }
-        // this.getNumAccesos();
-        // console.log(this.permisosChange)
-        // this.permisosChange.forEach(node => {
-        //   this.totalAccesosRecursive(node);
-        //   console.log(this.accesoTotal)
-        // });
       }
+      this.selectAll = false;
+      this.numSeleccionados = 0;
+      this.accesoTotal = 0;
+      this.accesoLectura = 0;
+      this.accesoDenegado = 0;
+      this.sinAsignar = 0;
       this.selectedPermiso = [];
+      this.permisosTree.forEach(node => {
+        this.totalAccesosRecursive(node);
+      });
+    }
+  }
 
+
+  totalAccesosRecursive(node: TreeNode) {
+    if (node.derechoacceso === ' 3') {
+      this.accesoTotal++;
+    } else if (node.derechoacceso === '2') {
+      this.accesoLectura++;
+    } else if (node.derechoacceso === '1') {
+      this.accesoDenegado++;
+    } else if (node.derechoacceso === '0') {
+      this.sinAsignar++;
     }
 
-
+    if (node.children) {
+      node.children.forEach(childNode => {
+        this.totalAccesosRecursive(childNode);
+      });
+    }
   }
 
   isButtonDisabled() {
@@ -317,11 +338,6 @@ export class PermisosComponent implements OnInit, DoCheck {
     }
   }
 
-  // totalAccesosRecursive(node: TreeNode) {
-  //   if (node.derechoacceso === 3) {
-  //     this.accesoTotal++;
-  //   }
-  // }
 
   onChangeSelectAll(node) {
     if (this.selectAll === true) {
@@ -342,7 +358,7 @@ export class PermisosComponent implements OnInit, DoCheck {
       let objUpdate = {
         idGrupo: this.idGrupo,
         id: permiso.data,
-        derechoAcceso: permiso.derechoAcceso
+        derechoAcceso: permiso.derechoacceso
       }
 
       console.log(objUpdate)
