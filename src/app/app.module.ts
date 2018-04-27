@@ -75,6 +75,7 @@ import { EditarUsuarioComponent } from "./features/administracion/usuarios/edita
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
 import { Etiquetas } from "./features/administracion/gestion-multiidioma/etiquetas/etiquetas.component";
 import { AuditoriaUsuarios } from "./features/administracion/auditoria/usuarios/auditoria-usuarios.component";
+import { GestionAuditoriaComponent } from "./features/administracion/auditoria/usuarios/editarAuditoriaUsuarios/gestion-auditoria.component";
 import { SeleccionarIdioma } from "./features/administracion/seleccionar-idioma/seleccionar-idioma.component";
 import { Usuarios } from "./features/administracion/usuarios/usuarios.component";
 import { ParametrosGenerales } from "./features/administracion/parametros/parametros-generales/parametros-generales.component";
@@ -115,6 +116,7 @@ import { FichaColegialModule } from "./features/censo/ficha-colegial/ficha-coleg
     GruposUsuarios,
     Etiquetas,
     AuditoriaUsuarios,
+    GestionContadoresComponent,
     Catalogos,
     SeleccionarIdioma,
     Usuarios,
@@ -123,6 +125,7 @@ import { FichaColegialModule } from "./features/censo/ficha-colegial/ficha-coleg
     EditarCatalogosMaestrosComponent,
     ContadoresComponent,
     GestionContadoresComponent,
+    GestionAuditoriaComponent,
     PerfilesComponent,
     EditarPerfilesComponent,
     PermisosComponent

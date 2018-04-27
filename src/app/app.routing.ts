@@ -38,6 +38,7 @@ import { EditarPerfilesComponent } from "./features/administracion/perfiles/edit
 import { PermisosComponent } from "./features/administracion/permisos/permisos.component";
 import { Catalogos } from "./features/administracion/gestion-multiidioma/catalogos/catalogos.component";
 import { AuditoriaUsuarios } from "./features/administracion/auditoria/usuarios/auditoria-usuarios.component";
+import { GestionAuditoriaComponent } from "./features/administracion/auditoria/usuarios/editarAuditoriaUsuarios/gestion-auditoria.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -111,6 +112,7 @@ const appRoutes: Routes = [
   },
   { path: "catalogos", component: Catalogos },
   { path: "auditoriaUsuarios", component: AuditoriaUsuarios },
+  { path: "gestionAuditoria", component: GestionAuditoriaComponent },
   { path: "**", redirectTo: "home" }
 ];
 export const routing = RouterModule.forRoot(appRoutes);
