@@ -103,8 +103,7 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.selectedPermiso = [];
     this.permisosChange = [];
 
-
-
+    this.todoDesplegado = false;
 
     this.sigaServices.post("permisos_tree", {
       idGrupo: this.idGrupo

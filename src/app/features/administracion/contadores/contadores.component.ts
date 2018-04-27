@@ -54,6 +54,7 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
   cols: any = [];
   datos: any[];
   select: any[];
+  selectedDatos: any;
 
   //Array de opciones del dropdown
   contadores_modo: any[];
@@ -166,9 +167,9 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
     this.table.reset();
   }
   // Control de buscar desactivado por ahora (hasta tener primer elemento del combo preparado)
-  onChangeCatalogo() {}
+  onChangeCatalogo() { }
   //cada vez que cambia el formulario comprueba esto
-  onChangeForm() {}
+  onChangeForm() { }
 
   showSuccess() {
     this.msgs = [];
@@ -212,17 +213,17 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("contadores_search", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          console.log(data);
+      data => {
+        console.log(data);
 
-          this.search = JSON.parse(data["body"]);
-          this.datos = this.search.contadorItems;
-          console.log(this.datos);
-          this.table.reset();
-        },
-        err => {
-          console.log(err);
-        }
+        this.search = JSON.parse(data["body"]);
+        this.datos = this.search.contadorItems;
+        console.log(this.datos);
+        this.table.reset();
+      },
+      err => {
+        console.log(err);
+      }
       );
   }
 
