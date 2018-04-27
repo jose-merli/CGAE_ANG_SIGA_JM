@@ -34,12 +34,11 @@ export class MenuComponent implements OnInit {
     this.sigaServices.get("menu").subscribe(response => {
       this.items = this.translateService.translateMenu(response.menuItems);
       return this.items;
+
     });
 
 
   }
-
-
 
 
   onCloseMenu() {

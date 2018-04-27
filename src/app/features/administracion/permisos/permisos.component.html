@@ -6,7 +6,8 @@
   <div class="mt-4 permisos-filters d-flex  justify-content-start">
     <div class="mr-auto pl-0 form-group col-lg-3 col-md-3">
       <label>Grupo</label>
-      <p-dropdown [filter]="true" [(ngModel)]="selectedGrupo" [options]="grupos" class="select-form" [formControl]="formPermisos.controls['grupo']"></p-dropdown>
+      <p-dropdown (onChange)="onChangeGrupo($event)" [filter]="true" [(ngModel)]="selectedGrupo" [options]="grupos" class="select-form"
+        [formControl]="formPermisos.controls['grupo']"></p-dropdown>
     </div>
     <div *ngIf="formPermisos.controls['grupo'].value" class="text-right  form-group col-lg-6 col-md-6">
       <label class="proceso-generico">Proceso Genérico Sistema SIGA (0/árbol)</label>
@@ -23,10 +24,10 @@
     </div>
   </div>
   <div expandedIcon="fa fa-angle-down" *ngIf="formPermisos.controls['grupo'].value" class="permisos-tree">
-    <p-tree (onNodeSelect)="onNodeSelect(selectedPermiso)" [(selection)]="selectedPermiso" #expandingTree [value]="permisosTree"
-      selectionMode="checkbox">
+    <p-tree (onNodeSelect)="onNodeSelect()" (onNodeUnselect)="onNodeUnselect()" [(selection)]="selectedPermiso" #expandingTree
+      [value]="permisosTree" selectionMode="checkbox">
       <ng-template let-node pTemplate="default">
-        <i class="fa fa-circle icon-acceso" [ngClass]="{ 'color-sinAsignar':node.derechoacceso == 0 , 'color-denegado':node.derechoacceso == 1 ,'color-lectura':node.derechoacceso == 2,  'color-total':node.derechoacceso == 3}"></i>
+        <i class="fa fa-circle icon-acceso" [ngClass]="{ 'color-sinAsignar':node.derechoAcceso == 0 , 'color-denegado':node.derechoAcceso == 1 ,'color-lectura':node.derechoAcceso == 2,  'color-total':node.derechoAcceso == 3}"></i>
         <label>{{node.label}}</label>
       </ng-template>
 
@@ -36,30 +37,34 @@
 
 
 </div>
-<div *ngIf="selectedPermiso && selectedPermiso.length > 0" [style.width.px]="myWidth" class="menu-accesos d-flex justify-content-start align-items-center">
+<div *ngIf="(selectedPermiso && selectedPermiso.length > 0) || (this.permisosChange && this.permisosChange.length > 0)" [style.width.px]="myWidth"
+  class="menu-accesos d-flex justify-content-start align-items-center">
   <div>
     <label class="title">Administrar permisos de acceso</label>
     <div>
-      <label class="mr-2">Seleccionados 2/400</label>
-      <label class="mr-2">Cambios 0/400</label>
+      <label class="mr-2">Seleccionados {{numSeleccionados}}/{{totalPermisos}}</label>
+      <label class="mr-2">Cambios {{numSeleccionados}}/{{totalPermisos}}</label>
       <div class="main-button d-inline-block">
         <button [disabled]="isButtonDisabled()" (click)="savePermisos()" class="mr-2" pButton type="button" icon="far fa-save" iconPos="left"
           label="Guardar"></button>
-          <button (click)="restablecerPermisos()" pButton type="button" icon="fa fa-redo" iconPos="left" label="Restablecer"></button>
+          <button [disabled]="savedPermisos" (click)="restablecerPermisos()" pButton type="button" icon="fa fa-redo" iconPos="left"
+            label="Restablecer"></button>
       </div>
     </div>
   </div>
   <div class="ml-auto">
     <div class="text-right d-flex">
-      <div (click)="changeAcceso('total')" class="btn-acceso acceso-total d-flex align-items-center">Acceso total</div>
-      <div (click)="changeAcceso('denegado')" class="btn-acceso acceso-denegado d-flex align-items-center">
-        <p>Acceso denegado</p>
+      <div (click)="onChangeAcceso('total')" class="btn-acceso acceso-total d-flex align-items-center">
+        <p>Acceso total ({{accesoTotal}})</p>
       </div>
-      <div (click)="changeAcceso('lectura')" class="btn-acceso solo-lectura d-flex align-items-center">
-        <p>Solo lectura</p>
+      <div (click)="onChangeAcceso('denegado')" class="btn-acceso acceso-denegado d-flex align-items-center">
+        <p>Acceso denegado ({{accesoDenegado}})</p>
       </div>
-      <div (click)="changeAcceso('sinAsignar')" class="btn-acceso sin-asignar d-flex align-items-center">
-        <p>Sin asignar</p>
+      <div (click)="onChangeAcceso('lectura')" class="btn-acceso solo-lectura d-flex align-items-center">
+        <p>Solo lectura ({{accesoLectura}})</p>
+      </div>
+      <div (click)="onChangeAcceso('sinAsignar')" class="btn-acceso sin-asignar d-flex align-items-center">
+        <p>Sin asignar ({{sinAsignar}})</p>
       </div>
     </div>
   </div>

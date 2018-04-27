@@ -83,8 +83,8 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { PermisosComponent } from "./features/administracion/permisos/permisos.component";
 
 /***NEW modules censo***/
-import { BusquedaColegiadosModule } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.module";
-import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-colegial.module";
+import { BusquedaColegiadosModule } from "./features/censo/busqueda-colegiados/busqueda-colegiados.module";
+import { FichaColegialModule } from "./features/censo/ficha-colegial/ficha-colegial.module";
 
 @NgModule({
   declarations: [
