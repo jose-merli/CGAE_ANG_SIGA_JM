@@ -31,8 +31,8 @@ import { ParametrosGenerales } from "./features/administracion/parametros/parame
 import { EditarCatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros/editarCatalogosMaestros/editarCatalogosMaestros.component";
 import { GestionContadoresComponent } from "./features/administracion/contadores/gestion-contadores/gestion-contadores.component";
 import { ContadoresComponent } from "./features/administracion/contadores/contadores.component"; //new censo
-import { BusquedaColegiadosComponent } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
-import { FichaColegialComponent } from "./new-features/censo/ficha-colegial/ficha-colegial.component";
+import { BusquedaColegiadosComponent } from "./features/censo/busqueda-colegiados/busqueda-colegiados.component";
+import { FichaColegialComponent } from "./features/censo/ficha-colegial/ficha-colegial.component";
 import { PerfilesComponent } from "./features/administracion/perfiles/perfiles.component";
 import { EditarPerfilesComponent } from "./features/administracion/perfiles/editarPerfiles/editarPerfiles.component";
 import { PermisosComponent } from "./features/administracion/permisos/permisos.component";

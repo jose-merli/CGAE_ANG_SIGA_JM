@@ -148,8 +148,10 @@ export class TranslateService {
     if (menu) {
       for (var cont = 0; cont < menu.length; cont++) {
         menu[cont].label = this.instant(menu[cont].label);
+        if (menu[cont].items && menu[cont].items.length > 0) {
+          menu[cont].items = this.cargarSubmenus(menu[cont].items);
+        }
 
-        menu[cont].items = this.cargarSubmenus(menu[cont].items);
       }
     }
 

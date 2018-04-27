@@ -76,9 +76,12 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     this.isBuscar();
 
     this.cols = [
-      { field: "idGrupo", header: "ID" },
-      { field: "descripcionGrupo", header: "Descripción" },
-      { field: "descripcionRol", header: "Roles por Defecto" }
+      { field: "idGrupo", header: "administracion.grupos.literal.id" },
+      { field: "descripcionGrupo", header: "general.description" },
+      {
+        field: "descripcionRol",
+        header: "administracion.usuarios.literal.roles"
+      }
     ];
 
     this.rowsPerPage = [
@@ -99,15 +102,6 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         value: 10
       }
     ];
-    // if (sessionStorage.getItem("searchUser") != null) {
-    //   this.body = JSON.parse(sessionStorage.getItem("searchUser"));
-    //   this.isBuscar();
-    //   sessionStorage.removeItem("searchUser");
-    //   sessionStorage.removeItem("usuarioBody");
-    // } else {
-    //   this.body = new UsuarioRequestDto();
-    //   this.body.activo = "S";
-    // }
   }
   isBuscar() {
     this.sigaServices

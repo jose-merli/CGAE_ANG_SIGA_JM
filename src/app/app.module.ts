@@ -63,7 +63,7 @@ import { AutoCompleteModule } from "primeng/autocomplete";
 import { TooltipModule } from "primeng/tooltip";
 import { ChipsModule } from "primeng/chips";
 import { EditorModule } from "primeng/editor";
-
+import { PickListModule } from "primeng/picklist";
 // Modulo de administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
 import { EditarCatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros/editarCatalogosMaestros/editarCatalogosMaestros.component";
@@ -83,8 +83,8 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { PermisosComponent } from "./features/administracion/permisos/permisos.component";
 
 /***NEW modules censo***/
-import { BusquedaColegiadosModule } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.module";
-import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-colegial.module";
+import { BusquedaColegiadosModule } from "./features/censo/busqueda-colegiados/busqueda-colegiados.module";
+import { FichaColegialModule } from "./features/censo/ficha-colegial/ficha-colegial.module";
 
 @NgModule({
   declarations: [
@@ -156,7 +156,8 @@ import { FichaColegialModule } from "./new-features/censo/ficha-colegial/ficha-c
     EditorModule,
     MultiSelectModule,
     TableModule,
-    TreeModule
+    TreeModule,
+    PickListModule
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

@@ -11,9 +11,6 @@
         </p>
     </div>
     <div class="card">
-        <div class="card-header">
-            <label>{{'menu.administracion.gestionMultiidioma.catalogos' | translate}}</label>
-        </div>
         <div class="card-body">
             <p class="title-module">{{'administracion.catalogos.titulo.datos.generales' | translate}}
                 <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
@@ -23,15 +20,15 @@
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{'administracion.multidioma.etiquetas.literal.entidad' | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='selectedEntidad' [options]="entidad"></p-dropdown> &nbsp;&nbsp;
+                        <p-dropdown class="select-form" [(ngModel)]='selectedEntidad' [options]="entidad" [filter]="true" filterBy="label"></p-dropdown> &nbsp;&nbsp;
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{'administracion.multidioma.etiquetas.literal.idioma' | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='selectedIdiomaBusqueda' [options]="idiomaBusqueda"></p-dropdown> &nbsp;&nbsp;
+                        <p-dropdown class="select-form" [(ngModel)]='selectedIdiomaBusqueda' [options]="idiomaBusqueda" [filter]="true" filterBy="label"></p-dropdown> &nbsp;&nbsp;
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{'administracion.multidioma.etiquetas.literal.idiomaATraducir' | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='selectedIdiomaTraduccion' [options]="idiomaTraduccion"></p-dropdown> &nbsp;&nbsp;
+                        <p-dropdown class="select-form" [(ngModel)]='selectedIdiomaTraduccion' [options]="idiomaTraduccion" [filter]="true" filterBy="label"></p-dropdown> &nbsp;&nbsp;
                     </div>
                 </div>
             </div>
