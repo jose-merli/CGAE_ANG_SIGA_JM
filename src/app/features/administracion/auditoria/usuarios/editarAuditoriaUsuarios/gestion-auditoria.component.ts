@@ -116,7 +116,11 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
 
   pInputText;
   isEditar() {
-    this.sigaServices.post("contadores_update", this.update).subscribe(
+    this.update.idHistorico = this.itemBody.idHistorico;
+    this.update.idPersona = this.itemBody.idPersona;
+    this.update.motivo = this.itemBody.motivo;
+
+    this.sigaServices.post("auditoriaUsuarios_update", this.update).subscribe(
       data => {
         this.showSuccess();
         console.log(data);

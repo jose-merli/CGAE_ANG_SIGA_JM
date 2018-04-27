@@ -22,7 +22,7 @@
 
           <div class="form-group col-lg-3 col-md-3">
             <label class="d-block pb-2">{{"censo.consultaHistorico.literal.nombreUsu" | translate}}</label>
-            <label class="d-block pb-2">{{itemBody.nombre}}</label>
+            <label class="d-block pb-2">{{itemBody.persona}}</label>
           </div>
 
           <div class="form-group col-lg-3 col-md-3">
@@ -32,17 +32,17 @@
 
           <div class="form-group col-lg-3 col-md-3">
             <label class="d-block pb-2">{{"gratuita.listarDesignasTurno.literal.fechaEntrada" | translate}} (*)</label>
-            <p-calendar disabled="true" [(ngModel)]="itemBody.fechaEntrada" dateFormat="dd/mm/yy" [utc]="true" [locale]="es" [showIcon]="true"></p-calendar>
+            <p-calendar disabled="true" [(ngModel)]="itemBody.fechaEntrada" dateFormat="dd-mm-yy" [utc]="true" [locale]="es" [showIcon]="true"></p-calendar>
           </div>
 
           <div class="form-group col-lg-3 col-md-3">
             <label class="d-block pb-2">{{"administracion.auditoriaUsuarios.literal.fechaEfectiva" | translate}} (*)</label>
-            <p-calendar disabled="true" [(ngModel)]="itemBody.fechaEfectiva" dateFormat="dd/mm/yy" [utc]="true" [locale]="es" [showIcon]="true"></p-calendar>
+            <p-calendar disabled="true" [(ngModel)]="itemBody.fechaEfectiva" dateFormat="dd-mm-yy" [utc]="true" [locale]="es" [showIcon]="true"></p-calendar>
           </div>
 
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group col-lg-6 col-md-6">
             <label class="d-block pb-2">{{"administracion.auditoriaUsuarios.literal.motivo" | translate}} (*)</label>
-            <input type="text" name="prefijo" [(disabled)]="!editar" class="form-control" [(ngModel)]='itemBody.motivo' pInputText>
+            <input type="text" name="prefijo" class="form-control" [(ngModel)]='itemBody.motivo' pInputText>
           </div>
 
           <div class="form-group col-lg-12 col-md-12">
