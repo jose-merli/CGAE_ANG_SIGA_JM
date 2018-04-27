@@ -46,6 +46,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   cols: any = [];
   datos: any[];
   msgs: Message[] = [];
+  dummy = [];
   searchPerfiles: PerfilesResponseDto = new PerfilesResponseDto();
   requestPerfiles: PerfilesRequestDto = new PerfilesRequestDto();
   rowsPerPage: any = [];
@@ -76,11 +77,25 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     this.isBuscar();
 
     this.cols = [
-      { field: "idGrupo", header: "administracion.grupos.literal.id" },
-      { field: "descripcionGrupo", header: "general.description" },
+      {
+        field: "idGrupo",
+        header: "administracion.grupos.literal.id",
+        hasDropdownFilter: false
+      },
+      {
+        field: "descripcionGrupo",
+        header: "general.description",
+        hasDropdownFilter: false
+      },
       {
         field: "descripcionRol",
-        header: "administracion.usuarios.literal.roles"
+        header: "administracion.usuarios.literal.roles",
+        hasDropdownFilter: false
+      },
+      {
+        field: "asignarRolDefecto",
+        header: "Roles por defecto",
+        hasDropdownFilter: true
       }
     ];
 
@@ -112,6 +127,15 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
           this.searchPerfiles = JSON.parse(data["body"]);
           this.datos = this.searchPerfiles.usuarioGrupoItems;
           this.buscar = true;
+          this.sigaServices.get("usuarios_rol").subscribe(
+            n => {
+              this.dummy = n.combooItems;
+              this.table.reset();
+            },
+            err => {
+              console.log(err);
+            }
+          );
         },
         err => {
           console.log(err);

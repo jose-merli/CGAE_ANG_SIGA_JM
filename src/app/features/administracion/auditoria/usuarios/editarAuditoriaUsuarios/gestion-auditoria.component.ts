@@ -33,6 +33,7 @@ import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
 import { HistoricoUsuarioItem } from "./../../../../../../app/models/HistoricoUsuarioItem";
 import { HistoricoUsuarioUpdateDto } from "./../../../../../../app/models/HistoricoUsuarioUpdateDto";
+import { HistoricoUsuarioRequestDto } from "./../../../../../../app/models/HistoricoUsuarioRequestDto";
 import { ComboItem } from "./../../../../../../app/models/ComboItem";
 import { ActivatedRoute } from "@angular/router";
 @Component({
@@ -44,8 +45,9 @@ import { ActivatedRoute } from "@angular/router";
 export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   auditoriaUsuarios_update: any[];
   msgs: Message[] = [];
-  body: HistoricoUsuarioItem = new HistoricoUsuarioItem();
+  body: HistoricoUsuarioRequestDto = new HistoricoUsuarioRequestDto();
   update: HistoricoUsuarioUpdateDto = new HistoricoUsuarioUpdateDto();
+  itemBody: HistoricoUsuarioItem = new HistoricoUsuarioItem();
   pButton;
   textSelected: String = "{0} grupos seleccionados";
   textFilter: String;
@@ -75,6 +77,8 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   }
   @ViewChild("table") table;
   ngOnInit() {
+    this.itemBody = new HistoricoUsuarioItem();
+    this.itemBody = JSON.parse(sessionStorage.getItem("searchParametros"));
     console.log(sessionStorage);
 
     this.sigaServices.get("auditoriaUsuarios_update").subscribe(
@@ -86,8 +90,6 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
       }
     );
 
-    this.body = new HistoricoUsuarioItem();
-    this.body = JSON.parse(sessionStorage.getItem("searchParametros"));
     // this.bodyToForm();
     this.checkMode();
   }
