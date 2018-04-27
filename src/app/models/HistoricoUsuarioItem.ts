@@ -11,5 +11,6 @@ export class HistoricoUsuarioItem {
   apellidos1: String;
   apellidos2: String;
   descripcionUsuario: String;
+  persona: String;
   constructor() {}
 }
