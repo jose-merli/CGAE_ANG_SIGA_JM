@@ -29,9 +29,11 @@ export class LoginComponent implements OnInit {
         this.sigaServices.get("instituciones").subscribe(n => {
             this.instituciones = n.combooItems;
         });
+
+
         this.form = this.fb.group({
             tmpLoginInstitucion: new FormControl("2000"),
-            tmpLoginPerfil: new FormControl("ADG"),
+
             sLetrado: new FormControl("N"),
 
             user: new FormControl(),
@@ -42,16 +44,16 @@ export class LoginComponent implements OnInit {
             posMenu: new FormControl(0),
 
         });
-
+        this.onChange(this.form.controls['tmpLoginInstitucion'].value);
         this.form.controls['tmpLoginInstitucion'].valueChanges.subscribe(newValue => {
             this.form.controls['location'].setValue(newValue);
         });
 
-        this.form.controls.tmpLoginPerfil.valueChanges.subscribe(n => {
+        this.form.controls['tmpLoginPerfil'].valueChanges.subscribe(n => {
             this.form.controls['profile'].setValue(n);
         });
 
-        this.form.controls.sLetrado.valueChanges.subscribe(n => {
+        this.form.controls['sLetrado'].valueChanges.subscribe(n => {
             this.form.controls['letrado'].setValue(n);
         })
 
