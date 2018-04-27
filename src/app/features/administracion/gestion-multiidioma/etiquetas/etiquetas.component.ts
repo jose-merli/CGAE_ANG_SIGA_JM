@@ -54,6 +54,7 @@ export class Etiquetas extends SigaWrapper implements OnInit {
   searchParametros: EtiquetaDto = new EtiquetaDto();
   bodyUpdate: EtiquetaUpdateDto = new EtiquetaUpdateDto();
   msgs: Message[] = [];
+  paginacion: boolean = false;
 
   constructor(
     private sigaServices: SigaServices,
@@ -79,7 +80,8 @@ export class Etiquetas extends SigaWrapper implements OnInit {
           item => item.value === lenguaje
         );
 
-        this.selectedIdiomaBusqueda = this.valorDefecto.value;
+        if (this.valorDefecto.value != undefined)
+          this.selectedIdiomaBusqueda = this.valorDefecto.value;
       },
       err => {
         console.log(err);
@@ -136,6 +138,9 @@ export class Etiquetas extends SigaWrapper implements OnInit {
           this.searchParametros = JSON.parse(data["body"]);
           this.datosTraduccion = this.searchParametros.etiquetaItem;
           this.buscarSeleccionado = true;
+
+          if (this.datosTraduccion.length == 0) this.paginacion = false;
+          else this.paginacion = true;
         },
         err => {
           console.log(err);
@@ -215,7 +220,6 @@ export class Etiquetas extends SigaWrapper implements OnInit {
   }
 
   activarPaginacion() {
-    if (this.datosTraduccion.length == 0) return false;
-    else return true;
+    return this.paginacion;
   }
 }
