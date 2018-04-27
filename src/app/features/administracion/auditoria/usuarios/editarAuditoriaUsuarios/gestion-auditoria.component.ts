@@ -78,7 +78,7 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   @ViewChild("table") table;
   ngOnInit() {
     this.itemBody = new HistoricoUsuarioItem();
-    this.itemBody = JSON.parse(sessionStorage.getItem("searchParametros"));
+    this.itemBody = JSON.parse(sessionStorage.getItem("auditoriaBody"));
     console.log(sessionStorage);
 
     this.sigaServices.get("auditoriaUsuarios_update").subscribe(

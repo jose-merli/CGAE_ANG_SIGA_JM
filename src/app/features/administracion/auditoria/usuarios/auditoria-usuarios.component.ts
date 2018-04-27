@@ -52,6 +52,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   bodySearch: HistoricoUsuarioRequestDto = new HistoricoUsuarioRequestDto();
   searchParametros: HistoricoUsuarioDto = new HistoricoUsuarioDto();
   jsonDate: string;
+  selectedDatos: any;
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -76,11 +77,11 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
 
     this.columnasTabla = [
       {
-        field: "idPersona",
+        field: "persona",
         header: "Persona"
       },
       {
-        field: "nombre",
+        field: "descripcionUsuario",
         header: "Usuario"
       },
       {
@@ -118,16 +119,20 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   }
 
   isBuscar() {
-    this.bodySearch.usuario = this.usuario;
-    this.bodySearch.idPersona = this.persona;
-    this.bodySearch.idTipoAccion = this.selectedTipoAccion;
+    if (this.usuario != undefined) this.bodySearch.usuario = this.usuario;
+    if (this.persona != undefined) this.bodySearch.idPersona = this.persona;
+    if (this.selectedTipoAccion)
+      this.bodySearch.idTipoAccion = this.selectedTipoAccion;
     if (this.valorCheckUsuarioAutomatico == true)
       this.bodySearch.usuarioAutomatico = "S";
     else this.bodySearch.usuarioAutomatico = "N";
 
-    this.bodySearch.fechaDesde = this.fechaDesdeCalendar;
-
-    this.bodySearch.fechaHasta = this.fechaHastaCalendar;
+    if (this.fechaDesdeCalendar != undefined)
+      this.bodySearch.fechaDesde = this.fechaDesdeCalendar;
+    else this.bodySearch.fechaDesde = null;
+    if (this.fechaHastaCalendar != undefined)
+      this.bodySearch.fechaHasta = this.fechaHastaCalendar;
+    else this.bodySearch.fechaHasta = null;
 
     this.sigaServices
       .postPaginado("auditoriaUsuarios_search", "?numPagina=1", this.bodySearch)
@@ -137,6 +142,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
 
           this.searchParametros = JSON.parse(data["body"]);
           this.datosUsuarios = this.searchParametros.historicoUsuarioItem;
+          this.buscarSeleccionado = true;
         },
         err => {
           console.log(err);
@@ -151,5 +157,11 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   activarPaginacion() {
     if (this.datosUsuarios.length == 0) return false;
     else return true;
+  }
+
+  irEditarUsuario(id) {
+    sessionStorage.setItem("auditoriaBody", JSON.stringify(id));
+    sessionStorage.setItem("searchCatalogo", JSON.stringify(this.bodySearch));
+    this.router.navigate(["/gestionAuditoria"]);
   }
 }
