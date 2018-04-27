@@ -48,13 +48,9 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   pButton;
   textSelected: String = "{0} grupos seleccionados";
   textFilter: String;
-  editar: boolean = true;
-  disabled: boolean = false;
-  activo: boolean = false;
-  correcto: boolean = false;
-  dniCorrecto: boolean;
-  checkmodificable: boolean = false;
-  fechareconfiguracion: Date;
+  fechaentrada: Date;
+  fechaefectiva: Date;
+  disabled: boolean;
   showDatosGenerales: boolean = true;
   showReconfiguracion: boolean = true;
   es: any = esCalendar;
@@ -118,6 +114,15 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
     }
   }
 
+  modificableToBody() {
+    this.arreglarDate();
+    if (this.checkmodificable == true) {
+      this.body.modificablecontador = "1";
+    } else {
+      this.body.modificablecontador = "0";
+    }
+  }
+
   //Arreglo el fomato de la fecha añadiendole horas, minutos y segundos para que se guarde en el back correctamente, además lo separo para reordenar dia mes y año según debe estar escrito en el update.
   arreglarDate() {
     this.jsonDate = JSON.stringify(this.fechareconfiguracion);
@@ -135,14 +140,6 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
     }
   }
 
-  modificableToBody() {
-    this.arreglarDate();
-    if (this.checkmodificable == true) {
-      this.body.modificablecontador = "1";
-    } else {
-      this.body.modificablecontador = "0";
-    }
-  }
   pInputText;
   isEditar() {
     this.modificableToBody();
