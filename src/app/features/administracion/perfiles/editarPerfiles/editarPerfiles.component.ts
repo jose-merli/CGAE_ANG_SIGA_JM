@@ -42,6 +42,7 @@ import { PickListModule } from "primeng/picklist";
   encapsulation: ViewEncapsulation.None
 })
 export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
+  usuarios_rol: any[];
   select: any[];
   msgs: Message[] = [];
   body: PerfilItem = new PerfilItem();
@@ -77,11 +78,22 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
     this.textFilter = "Elegir";
     this.correcto = false;
     this.body = new PerfilItem();
+
     if (sessionStorage.getItem("perfil") != null) {
       this.body = JSON.parse(sessionStorage.getItem("perfil"))[0];
+      this.editar = true;
       this.fillRol();
     } else {
+      this.editar = false;
       this.body = new PerfilItem();
+      this.sigaServices.get("usuarios_rol").subscribe(
+        n => {
+          this.rolesNoAsignados = n.combooItems;
+        },
+        err => {
+          console.log(err);
+        }
+      );
     }
   }
 
@@ -98,6 +110,21 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
     }
   }
   pInputText;
+
+  isNew() {
+    this.body.rolesAsignados = this.rolesAsignados;
+    this.body.rolesNoAsignados = this.rolesNoAsignados;
+    this.sigaServices.post("perfiles_insert", this.body).subscribe(
+      data => {},
+      err => {
+        this.showFail();
+        console.log(err);
+      },
+      () => {
+        this.volver();
+      }
+    );
+  }
   confirmEdit() {
     let mess = this.translateService.instant(
       "general.message.aceptar.y.volver"
@@ -107,7 +134,12 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
       message: mess,
       icon: icon,
       accept: () => {
-        this.isEditar();
+        if (this.editar == false) {
+          this.isNew();
+        } else {
+          this.isEditar();
+        }
+
         this.showSuccess();
       },
       reject: () => {
@@ -126,7 +158,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
   isEditar() {
     this.body.rolesAsignados = this.rolesAsignados;
     this.body.rolesNoAsignados = this.rolesNoAsignados;
-    this.sigaServices.post("usuarios_delete", this.body).subscribe(
+    this.sigaServices.post("perfiles_update", this.body).subscribe(
       data => {},
       err => {
         this.showFail();
