@@ -47,72 +47,73 @@ const appRoutes: Routes = [
   // Censo
   {
     path: "busquedaColegiados",
-    component: BusquedaColegiadosComponent
+    component: BusquedaColegiadosComponent, canActivate: [AuthGuard]
     // canActivate: [AuthGuard]
   },
   {
     path: "fichaColegial/:id",
-    component: FichaColegialComponent
+    component: FichaColegialComponent, canActivate: [AuthGuard]
     // canActivate: [AuthGuard]
   },
   {
     path: "editarUsuario",
-    component: EditarUsuarioComponent
+    component: EditarUsuarioComponent, canActivate: [AuthGuard]
   },
-  { path: "searchNoColegiados", component: SearchNoColegiadosComponent },
-  { path: "certificadosAca", component: CertificadosAcaComponent },
-  { path: "comisionesCargos", component: ComisionesCargosComponent },
-  { path: "solicitudesGenericas", component: SolicitudesGenericasComponent },
+  { path: "searchNoColegiados", component: SearchNoColegiadosComponent, canActivate: [AuthGuard] },
+  { path: "certificadosAca", component: CertificadosAcaComponent, canActivate: [AuthGuard] },
+  { path: "comisionesCargos", component: ComisionesCargosComponent, canActivate: [AuthGuard] },
+  { path: "solicitudesGenericas", component: SolicitudesGenericasComponent, canActivate: [AuthGuard] },
   {
     path: "solicitudesEspecificas",
-    component: SolicitudesEspecificasComponent
+    component: SolicitudesEspecificasComponent, canActivate: [AuthGuard]
   },
   {
     path: "solicitudesIncorporacion",
-    component: SolicitudesIncorporacionComponent
+    component: SolicitudesIncorporacionComponent, canActivate: [AuthGuard]
   },
-  { path: "nuevaIncorporacion", component: NuevaIncorporacionComponent },
+  { path: "nuevaIncorporacion", component: NuevaIncorporacionComponent, canActivate: [AuthGuard] },
   {
     path: "documentacionSolicitudes",
-    component: DocumentacionSolicitudesComponent
+    component: DocumentacionSolicitudesComponent, canActivate: [AuthGuard]
   },
   {
     path: "mantenimientoGruposFijos",
-    component: MantenimientoGruposFijosComponent
+    component: MantenimientoGruposFijosComponent, canActivate: [AuthGuard]
   },
-  { path: "mantenimientoMandatos", component: MantenimientoMandatosComponent },
-  { path: "busquedaSanciones", component: BusquedaSancionesComponent },
+  { path: "mantenimientoMandatos", component: MantenimientoMandatosComponent, canActivate: [AuthGuard] },
+  { path: "busquedaSanciones", component: BusquedaSancionesComponent, canActivate: [AuthGuard] },
 
   // Administracion
-  { path: "catalogosMaestros", component: CatalogosMaestros },
+  { path: "catalogosMaestros", component: CatalogosMaestros, canActivate: [AuthGuard] },
   {
     path: "EditarCatalogosMaestros",
-    component: EditarCatalogosMaestrosComponent
+    component: EditarCatalogosMaestrosComponent, canActivate: [AuthGuard]
   },
-  { path: "contadores/:id", component: ContadoresComponent },
+  { path: "contadores/:id", component: ContadoresComponent, canActivate: [AuthGuard] },
   {
     path: "gestionContadores",
-    component: GestionContadoresComponent
+    component: GestionContadoresComponent, canActivate: [AuthGuard]
   },
-  { path: "perfiles", component: PerfilesComponent },
+  { path: "perfiles", component: PerfilesComponent, canActivate: [AuthGuard] },
   {
     path: "EditarPerfiles",
-    component: EditarPerfilesComponent
+    component: EditarPerfilesComponent, canActivate: [AuthGuard]
   },
 
-  { path: "gruposUsuarios", component: GruposUsuarios },
-  { path: "etiquetas", component: Etiquetas },
-  { path: "usuarios", component: Usuarios },
-  { path: "seleccionarIdioma", component: SeleccionarIdioma },
-  { path: "parametrosGenerales", component: ParametrosGenerales },
+  { path: "gruposUsuarios", component: GruposUsuarios, canActivate: [AuthGuard] },
+  { path: "etiquetas", component: Etiquetas, canActivate: [AuthGuard] },
+  { path: "usuarios", component: Usuarios, canActivate: [AuthGuard] },
+  { path: "seleccionarIdioma", component: SeleccionarIdioma, canActivate: [AuthGuard] },
+  { path: "parametrosGenerales", component: ParametrosGenerales, canActivate: [AuthGuard] },
   {
     path: "permisos",
-    component: PermisosComponent
-    // canActivate: [AuthGuard]
+    component: PermisosComponent,
+    canActivate: [AuthGuard]
   },
-  { path: "catalogos", component: Catalogos },
-  { path: "auditoriaUsuarios", component: AuditoriaUsuarios },
-  { path: "gestionAuditoria", component: GestionAuditoriaComponent },
+
+  { path: "catalogos", component: Catalogos, canActivate: [AuthGuard] },
+  { path: "auditoriaUsuarios", component: AuditoriaUsuarios, canActivate: [AuthGuard] },
+  { path: "gestionAuditoria", component: GestionAuditoriaComponent, canActivate: [AuthGuard] },
   { path: "**", redirectTo: "home" }
 ];
 export const routing = RouterModule.forRoot(appRoutes);

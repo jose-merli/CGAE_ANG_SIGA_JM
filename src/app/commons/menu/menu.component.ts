@@ -32,7 +32,7 @@ export class MenuComponent implements OnInit {
   //o revisar si se pude instanciar el router de forma dinámica al arrancar el angular
   ngOnInit() {
     this.sigaServices.get("menu").subscribe(response => {
-      this.items = this.translateService.translateMenu(response.menuItems);
+      this.items = response.menuItems;
       return this.items;
 
     });

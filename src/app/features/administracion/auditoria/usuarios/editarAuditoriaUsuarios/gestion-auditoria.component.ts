@@ -31,8 +31,9 @@ import { GrowlModule } from "primeng/growl";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
-import { ContadorItem } from "./../../../../../../app/models/ContadorItem";
-import { UsuarioUpdate } from "./../../../../../../app/models/UsuarioUpdate";
+import { HistoricoUsuarioItem } from "./../../../../../../app/models/HistoricoUsuarioItem";
+import { HistoricoUsuarioUpdateDto } from "./../../../../../../app/models/HistoricoUsuarioUpdateDto";
+import { HistoricoUsuarioRequestDto } from "./../../../../../../app/models/HistoricoUsuarioRequestDto";
 import { ComboItem } from "./../../../../../../app/models/ComboItem";
 import { ActivatedRoute } from "@angular/router";
 @Component({
@@ -44,17 +45,15 @@ import { ActivatedRoute } from "@angular/router";
 export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   auditoriaUsuarios_update: any[];
   msgs: Message[] = [];
-  body: ContadorItem = new ContadorItem();
+  body: HistoricoUsuarioRequestDto = new HistoricoUsuarioRequestDto();
+  update: HistoricoUsuarioUpdateDto = new HistoricoUsuarioUpdateDto();
+  itemBody: HistoricoUsuarioItem = new HistoricoUsuarioItem();
   pButton;
   textSelected: String = "{0} grupos seleccionados";
   textFilter: String;
-  editar: boolean = true;
-  disabled: boolean = false;
-  activo: boolean = false;
-  correcto: boolean = false;
-  dniCorrecto: boolean;
-  checkmodificable: boolean = false;
-  fechareconfiguracion: Date;
+  fechaEntrada: Date;
+  fechaEfectiva: Date;
+  disabled: boolean;
   showDatosGenerales: boolean = true;
   showReconfiguracion: boolean = true;
   es: any = esCalendar;
@@ -63,6 +62,7 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   splitDate: any[];
   arrayDate: string;
   addedDay: number;
+  correcto: boolean;
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -77,6 +77,8 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   }
   @ViewChild("table") table;
   ngOnInit() {
+    this.itemBody = new HistoricoUsuarioItem();
+    this.itemBody = JSON.parse(sessionStorage.getItem("searchParametros"));
     console.log(sessionStorage);
 
     this.sigaServices.get("auditoriaUsuarios_update").subscribe(
@@ -88,9 +90,7 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
       }
     );
 
-    this.body = new ContadorItem();
-    this.body = JSON.parse(sessionStorage.getItem("AuditoriaBody"));
-    this.bodyToModificable();
+    // this.bodyToForm();
     this.checkMode();
   }
   checkMode() {
@@ -106,47 +106,17 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   }
   isRestablecer() {
     this.body = JSON.parse(sessionStorage.getItem("auditoriaBody"));
-    this.bodyToModificable();
+    // this.bodyToForm();
   }
 
-  bodyToModificable() {
-    this.fechareconfiguracion = this.body.fechareconfiguracion;
-    if (this.body.modificablecontador == "1") {
-      this.checkmodificable = true;
-    } else {
-      this.checkmodificable = false;
-    }
-  }
+  // bodyToForm() {
+  //   this.fechaEntrada = this.body.fechaEntrada;
+  //   this.fechaEfectiva = this.body.fechaEfectiva;
+  // }
 
-  //Arreglo el fomato de la fecha añadiendole horas, minutos y segundos para que se guarde en el back correctamente, además lo separo para reordenar dia mes y año según debe estar escrito en el update.
-  arreglarDate() {
-    this.jsonDate = JSON.stringify(this.fechareconfiguracion);
-    this.rawDate = this.jsonDate.slice(1, -1);
-    if (this.rawDate.length < 14) {
-      this.splitDate = this.rawDate.split("-");
-      this.arrayDate =
-        this.splitDate[2] + "-" + this.splitDate[1] + "-" + this.splitDate[0];
-      this.body.fechareconfiguracion = new Date(
-        (this.arrayDate += "T00:00:00.001Z")
-      );
-      this.body.fechareconfiguracion = new Date(this.arrayDate);
-    } else {
-      this.body.fechareconfiguracion = new Date(this.rawDate);
-    }
-  }
-
-  modificableToBody() {
-    this.arreglarDate();
-    if (this.checkmodificable == true) {
-      this.body.modificablecontador = "1";
-    } else {
-      this.body.modificablecontador = "0";
-    }
-  }
   pInputText;
   isEditar() {
-    this.modificableToBody();
-    this.sigaServices.post("contadores_update", this.body).subscribe(
+    this.sigaServices.post("contadores_update", this.update).subscribe(
       data => {
         this.showSuccess();
         console.log(data);

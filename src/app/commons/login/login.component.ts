@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit {
 
 
     onChange(newValue) {
-        this.sigaServices.getPerfil("perfiles", newValue.value).subscribe(n => {
+        this.sigaServices.getPerfil("perfiles", newValue).subscribe(n => {
             this.perfiles = n.combooItems;
         });
         //console.log(newValue);

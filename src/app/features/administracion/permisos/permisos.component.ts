@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, DoCheck, ViewEncapsulation } from '@angular/core';
 import { Message, MenuItem, TreeNode } from 'primeng/components/common/api';
 import { Tree } from 'primeng/components/tree/tree';
+import { TranslateService } from "../../../commons/translate/translation.service";
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { SigaServices } from "./../../../_services/siga.service";
 
@@ -24,16 +25,18 @@ export class PermisosComponent implements OnInit, DoCheck {
   selectAll: boolean = false;
   idGrupo: any;
   savedPermisos: boolean = false;
+  //mensajes
+  msgs: Message[] = [];
 
   numSeleccionados: number;
   numCambios: number;
   totalPermisos: number;
 
   //accesos totales
-  accesoTotal: any;
-  accesoDenegado: any;
-  accesoLectura: any;
-  sinAsignar: any;
+  accesoTotal: number;
+  accesoLectura: number;
+  accesoDenegado: number;
+  sinAsignar: number;
 
   // treeNode: TreeNode[]
 
@@ -47,7 +50,8 @@ export class PermisosComponent implements OnInit, DoCheck {
   @ViewChild('expandingTree')
   expandingTree: Tree;
 
-  constructor(private formBuilder: FormBuilder, private elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices) {
+  constructor(private formBuilder: FormBuilder, private elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices,
+    private translateService: TranslateService) {
 
     this.formPermisos = this.formBuilder.group({
       'grupo': null,
@@ -59,13 +63,12 @@ export class PermisosComponent implements OnInit, DoCheck {
 
 
 
-
   }
 
   ngDoCheck() {
     setTimeout(() => {
       this.myWidth = this.widthContent.nativeElement.parentElement.parentElement.offsetWidth;
-      //this.changeDetectorRef.detectChanges();
+
     }, 5)
   }
 
@@ -77,16 +80,6 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.myWidth = this.widthContent.nativeElement.parentElement.parentElement.offsetWidth;
 
 
-    // this.grupos = [
-    //   {
-    //     label: '-'
-    //   },
-    //   {
-    //     label: 'Abogado', value: 'abogado', idGrupo: 1
-    //   }
-
-    // ]
-
     this.sigaServices.get("usuarios_perfil").subscribe(
       n => {
         this.grupos = n.combooItems;
@@ -97,8 +90,24 @@ export class PermisosComponent implements OnInit, DoCheck {
     );
 
 
+
+  }
+
+  onChangeGrupo(id) {
+
+    this.idGrupo = id.value;
+
+    this.selectAll = false;
+    this.numSeleccionados = 0;
+    this.numCambios = 0;
+    this.selectedPermiso = [];
+    this.permisosChange = [];
+
+
+
+
     this.sigaServices.post("permisos_tree", {
-      idGrupo: 'ABG'
+      idGrupo: this.idGrupo
     }).subscribe(
       data => {
         let permisosTree = JSON.parse(data.body)
@@ -106,11 +115,14 @@ export class PermisosComponent implements OnInit, DoCheck {
         this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
         this.permisosTree.forEach(node => {
           this.totalRecursive(node);
-
         });
-
-        console.log(this.totalPermisos)
-
+        this.accesoTotal = 0;
+        this.accesoLectura = 0;
+        this.accesoDenegado = 0;
+        this.sinAsignar = 0;
+        this.permisosTree.forEach(node => {
+          this.totalAccesosRecursive(node);
+        });
 
       },
       err => {
@@ -203,16 +215,6 @@ export class PermisosComponent implements OnInit, DoCheck {
 
   }
 
-  onChangeGrupo(id) {
-
-    this.idGrupo = id.value;
-    console.log(this.permisosTree);
-
-    this.selectedPermiso = [];
-    this.permisosChange = [];
-
-  }
-
 
   expandAll() {
     this.todoDesplegado = true;
@@ -239,35 +241,53 @@ export class PermisosComponent implements OnInit, DoCheck {
 
   }
 
-  // onNodeSelect(selectedPermiso) {
-  //   console.log(this.selectedPermiso)
-  // }
+
 
   onChangeAcceso(ref) {
     if (ref) {
       this.permisosChange = this.selectedPermiso
       for (let changed of this.permisosChange) {
         if (ref == 'sinAsignar') {
-          changed.derechoAcceso = 0;
+          changed.derechoacceso = '0';
         } else if (ref == 'denegado') {
-          changed.derechoAcceso = 1;
+          changed.derechoacceso = '1';
         } else if (ref == 'lectura') {
-          changed.derechoAcceso = 2;
+          changed.derechoacceso = '2';
         } else if (ref == 'total') {
-          changed.derechoAcceso = 3;
+          changed.derechoacceso = '3';
         }
-        // this.getNumAccesos();
-        // console.log(this.permisosChange)
-        // this.permisosChange.forEach(node => {
-        //   this.totalAccesosRecursive(node);
-        //   console.log(this.accesoTotal)
-        // });
-      }
-      this.selectedPermiso = [];
 
+      }
+      this.selectAll = false;
+      this.numSeleccionados = 0;
+      this.accesoTotal = 0;
+      this.accesoLectura = 0;
+      this.accesoDenegado = 0;
+      this.sinAsignar = 0;
+      this.selectedPermiso = [];
+      this.permisosTree.forEach(node => {
+        this.totalAccesosRecursive(node);
+      });
+    }
+  }
+
+
+  totalAccesosRecursive(node: TreeNode) {
+    if (node.derechoacceso === '3') {
+      this.accesoTotal++;
+    } else if (node.derechoacceso === '2') {
+      this.accesoLectura++;
+    } else if (node.derechoacceso === '1') {
+      this.accesoDenegado++;
+    } else if (node.derechoacceso === '0') {
+      this.sinAsignar++;
     }
 
-
+    if (node.children) {
+      node.children.forEach(childNode => {
+        this.totalAccesosRecursive(childNode);
+      });
+    }
   }
 
   isButtonDisabled() {
@@ -278,30 +298,12 @@ export class PermisosComponent implements OnInit, DoCheck {
     return true;
   }
 
-  // onChangeSelectAll() {
 
-  //   if (this.selectAll === true) {
-  //     this.selectedPermiso = this.permisosTree;
-  //     for (let permisos of this.permisosTree) {
-  //       if (permisos.children) {
-  //         for (let child of permisos.children) {
-  //           this.selectedPermiso.push(child)
-  //         }
-  //       }
-  //     }
-  //   } else {
-  //     this.selectedPermiso = [];
-  //   }
-
-  //   console.log(this.selectedPermiso)
-
-  // }
 
 
   selectAllRecursive(node: TreeNode) {
     this.selectedPermiso.push(node);
     if (node.children) {
-      console.log(node.children)
       node.children.forEach(childNode => {
         this.selectAllRecursive(childNode);
       });
@@ -317,11 +319,6 @@ export class PermisosComponent implements OnInit, DoCheck {
     }
   }
 
-  // totalAccesosRecursive(node: TreeNode) {
-  //   if (node.derechoacceso === 3) {
-  //     this.accesoTotal++;
-  //   }
-  // }
 
   onChangeSelectAll(node) {
     if (this.selectAll === true) {
@@ -332,6 +329,7 @@ export class PermisosComponent implements OnInit, DoCheck {
 
     } else {
       this.selectedPermiso = []
+      this.numSeleccionados = 0;
     }
   }
 
@@ -342,12 +340,10 @@ export class PermisosComponent implements OnInit, DoCheck {
       let objUpdate = {
         idGrupo: this.idGrupo,
         id: permiso.data,
-        derechoAcceso: permiso.derechoAcceso
+        derechoacceso: permiso.derechoacceso
       }
 
-      console.log(objUpdate)
-
-      this.sigaServices.post("permisos_update", { objUpdate }).subscribe(
+      this.sigaServices.post("permisos_update", objUpdate).subscribe(
         data => {
           console.log(data);
 
@@ -362,6 +358,7 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.savedPermisos = true;
 
     this.getNumChanges();
+    this.showSuccess();
   }
 
   restablecerPermisos() {
@@ -369,8 +366,6 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.selectAll = false;
     this.selectedPermiso = [];
     this.permisosChange = [];
-
-    console.log('redo', this.treeInicial);
   }
 
 
@@ -395,6 +390,13 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.getNumSelected();
   }
 
-
+  showSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: "Correcto",
+      detail: "Árbol de permisos actualizado correctamente"
+    });
+  }
 
 }

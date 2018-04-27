@@ -5,8 +5,7 @@
     <p>{{ 'administracion.perfiles.busqueda.perfiles' | translate}} PERFILES</p>
   </div>
   <div class="breadCrumb">
-    <p>{{ "menu.administracion" | translate}} <i class="fa fa-angle-right"></i> {{ 'menu.administracion.perfiles' | translate}}
-    </p>
+    <p>{{ "menu.administracion" | translate}} <i class="fa fa-angle-right"></i> {{ 'menu.administracion.perfiles' | translate}}</p>
   </div>
   <div class="card">
     <div class="card-body">
@@ -20,9 +19,14 @@
           <div class="card-body p-0">
             <p-dataTable [ngClass]="{'customCursor': selectMultiple}" (onRowSelect)="irEditarUsuario(selectedDatos)" filterPlaceholder="Search"
               dataKey="idGrupo" [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true"
-              paginatorPosition="both" [rows]="selectedItem">
-              <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="Search"
+              [editable]="true" paginatorPosition="both" [rows]="selectedItem">
+
+              <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="Search"
                 [filter]="true">
+                <ng-template *ngIf="col.field =='asignarRolDefecto'" pTemplate="body" let-dato="rowData"  >
+                  <p-dropdown [options]="dato['asignarRolDefecto']" [autoWidth]="true" styleClass="ui-column-filter" [style]="{'width':'100%'}"
+                    appendTo="body"></p-dropdown>
+                </ng-template>
                 </p-column>
                 <ng-template pTemplate="paginatorLeft">
                   <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
@@ -31,6 +35,9 @@
 
                 </p-dataTable>
           </div>
+
+
+
           <div class="card-footer">
             <div class="form-row">
               <div class="form-group col-lg-9 col-md-9">
@@ -67,6 +74,11 @@
               [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
               <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="Search"
                 [filter]="true">
+                <ng-template *ngIf="col.field=='asignarRolDefecto'" pTemplate="body" let-dato="rowData"  >
+                  <p-dropdown [options]="dato['asignarRolDefecto']" styleClass="ui-column-filter" [style]="{'width':'100%'}" appendTo="body"></p-dropdown>
+                </ng-template>
+
+
                 </p-column>
                 <ng-template pTemplate="paginatorLeft">
                   <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
@@ -81,6 +93,7 @@
                   </div>
                 </p-footer>
                 </p-dataTable>
+
           </div>
 
 

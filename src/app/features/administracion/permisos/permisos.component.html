@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" life="3000"></p-growl>
 <div #widthContent class="permisos-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -10,7 +11,7 @@
         [formControl]="formPermisos.controls['grupo']"></p-dropdown>
     </div>
     <div *ngIf="formPermisos.controls['grupo'].value" class="text-right  form-group col-lg-6 col-md-6">
-      <label class="proceso-generico">Proceso Genérico Sistema SIGA (0/árbol)</label>
+      <label class="proceso-generico">Proceso Genérico Sistema SIGA ({{numSeleccionados}}/árbol)</label>
       <div class="mt-2">
         <p-checkbox (onChange)="onChangeSelectAll(node)" [(ngModel)]="selectAll" class="d-inline-block mr-2" binary="true" label="Seleccionar todo"></p-checkbox>
         <label *ngIf="!todoDesplegado" (click)="expandAll()" class="desplegar-todo">Desplegar todo <i class="fa fa-angle-down"></i></label>
@@ -27,13 +28,12 @@
     <p-tree (onNodeSelect)="onNodeSelect()" (onNodeUnselect)="onNodeUnselect()" [(selection)]="selectedPermiso" #expandingTree
       [value]="permisosTree" selectionMode="checkbox">
       <ng-template let-node pTemplate="default">
-        <i class="fa fa-circle icon-acceso" [ngClass]="{ 'color-sinAsignar':node.derechoAcceso == 0 , 'color-denegado':node.derechoAcceso == 1 ,'color-lectura':node.derechoAcceso == 2,  'color-total':node.derechoAcceso == 3}"></i>
+        <i class="fa fa-circle icon-acceso" [ngClass]="{ 'color-sinAsignar':node.derechoacceso == 0 , 'color-denegado':node.derechoacceso == 1 ,'color-lectura':node.derechoacceso == 2,  'color-total':node.derechoacceso == 3}"></i>
         <label>{{node.label}}</label>
       </ng-template>
 
       </p-tree>
   </div>
-
 
 
 </div>
@@ -43,7 +43,7 @@
     <label class="title">Administrar permisos de acceso</label>
     <div>
       <label class="mr-2">Seleccionados {{numSeleccionados}}/{{totalPermisos}}</label>
-      <label class="mr-2">Cambios {{numSeleccionados}}/{{totalPermisos}}</label>
+      <label class="mr-2">Cambios {{numCambios}}/{{totalPermisos}}</label>
       <div class="main-button d-inline-block">
         <button [disabled]="isButtonDisabled()" (click)="savePermisos()" class="mr-2" pButton type="button" icon="far fa-save" iconPos="left"
           label="Guardar"></button>
