@@ -65,7 +65,7 @@ export class PermisosComponent implements OnInit, DoCheck {
   ngDoCheck() {
     setTimeout(() => {
       this.myWidth = this.widthContent.nativeElement.parentElement.parentElement.offsetWidth;
-      //this.changeDetectorRef.detectChanges();
+
     }, 5)
   }
 
@@ -77,16 +77,6 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.myWidth = this.widthContent.nativeElement.parentElement.parentElement.offsetWidth;
 
 
-    // this.grupos = [
-    //   {
-    //     label: '-'
-    //   },
-    //   {
-    //     label: 'Abogado', value: 'abogado', idGrupo: 1
-    //   }
-
-    // ]
-
     this.sigaServices.get("usuarios_perfil").subscribe(
       n => {
         this.grupos = n.combooItems;
@@ -97,8 +87,16 @@ export class PermisosComponent implements OnInit, DoCheck {
     );
 
 
+
+  }
+
+  onChangeGrupo(id) {
+
+    this.idGrupo = id.value;
+    console.log(this.permisosTree);
+
     this.sigaServices.post("permisos_tree", {
-      idGrupo: 'ABG'
+      idGrupo: this.idGrupo
     }).subscribe(
       data => {
         let permisosTree = JSON.parse(data.body)
@@ -118,96 +116,6 @@ export class PermisosComponent implements OnInit, DoCheck {
       }
 
       );
-
-
-    // this.permisosTree =
-    //   [
-    //     {
-    //       "label": "Catálogo Botones-Atajos",
-    //       "derechoacceso": 2,
-    //       "selected": false,
-    //       "children":
-    //       [{
-    //         "label": "Botón colegiación",
-    //         "derechoacceso": 2,
-    //       },
-    //       {
-    //         "label": "Botón Generar Certificado"
-    //       }]
-    //     },
-    //     {
-    //       "label": "Catálogo Cursos"
-    //     },
-    //     {
-    //       "label": "Catálogo Botones-Atajos",
-    //       "children":
-    //       [{
-    //         "label": "Botón colegiación",
-    //       },
-    //       {
-    //         "label": "Botón Generar Certificado"
-    //       }]
-    //     },
-    //     {
-    //       "label": "Catálogo Cursos"
-    //     },
-    //     {
-    //       "label": "Catálogo Botones-Atajos",
-    //       "children":
-    //       [{
-    //         "label": "Botón colegiación",
-    //       },
-    //       {
-    //         "label": "Botón Generar Certificado"
-    //       }]
-    //     },
-    //     {
-    //       "label": "Catálogo Cursos"
-    //     },
-    //     {
-    //       "label": "Catálogo Botones-Atajos",
-    //       "children":
-    //       [{
-    //         "label": "Botón colegiación",
-    //       },
-    //       {
-    //         "label": "Botón Generar Certificado"
-    //       }]
-    //     },
-    //     {
-    //       "label": "Catálogo Cursos"
-    //     },
-    //     {
-    //       "label": "Catálogo Botones-Atajos",
-    //       "children":
-    //       [{
-    //         "label": "Botón colegiación",
-    //       },
-    //       {
-    //         "label": "Botón Generar Certificado"
-    //       }]
-    //     },
-    //     {
-    //       "label": "Catálogo Cursos"
-    //     }
-    //   ]
-
-    // this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
-    // this.permisosTree.forEach(node => {
-    //   this.totalRecursive(node);
-
-    // });
-
-    // console.log(this.totalPermisos)
-
-
-  }
-
-  onChangeGrupo(id) {
-
-    this.idGrupo = id.value;
-    console.log(this.permisosTree);
-
     this.selectedPermiso = [];
     this.permisosChange = [];
 
@@ -239,29 +147,22 @@ export class PermisosComponent implements OnInit, DoCheck {
 
   }
 
-  // onNodeSelect(selectedPermiso) {
-  //   console.log(this.selectedPermiso)
-  // }
+
 
   onChangeAcceso(ref) {
     if (ref) {
       this.permisosChange = this.selectedPermiso
       for (let changed of this.permisosChange) {
         if (ref == 'sinAsignar') {
-          changed.derechoAcceso = 0;
+          changed.derechoacceso = 0;
         } else if (ref == 'denegado') {
-          changed.derechoAcceso = 1;
+          changed.derechoacceso = 1;
         } else if (ref == 'lectura') {
-          changed.derechoAcceso = 2;
+          changed.derechoacceso = 2;
         } else if (ref == 'total') {
-          changed.derechoAcceso = 3;
+          changed.derechoacceso = 3;
         }
-        // this.getNumAccesos();
-        // console.log(this.permisosChange)
-        // this.permisosChange.forEach(node => {
-        //   this.totalAccesosRecursive(node);
-        //   console.log(this.accesoTotal)
-        // });
+
       }
       this.selectedPermiso = [];
 
@@ -278,24 +179,7 @@ export class PermisosComponent implements OnInit, DoCheck {
     return true;
   }
 
-  // onChangeSelectAll() {
 
-  //   if (this.selectAll === true) {
-  //     this.selectedPermiso = this.permisosTree;
-  //     for (let permisos of this.permisosTree) {
-  //       if (permisos.children) {
-  //         for (let child of permisos.children) {
-  //           this.selectedPermiso.push(child)
-  //         }
-  //       }
-  //     }
-  //   } else {
-  //     this.selectedPermiso = [];
-  //   }
-
-  //   console.log(this.selectedPermiso)
-
-  // }
 
 
   selectAllRecursive(node: TreeNode) {
@@ -317,11 +201,6 @@ export class PermisosComponent implements OnInit, DoCheck {
     }
   }
 
-  // totalAccesosRecursive(node: TreeNode) {
-  //   if (node.derechoacceso === 3) {
-  //     this.accesoTotal++;
-  //   }
-  // }
 
   onChangeSelectAll(node) {
     if (this.selectAll === true) {
@@ -342,12 +221,12 @@ export class PermisosComponent implements OnInit, DoCheck {
       let objUpdate = {
         idGrupo: this.idGrupo,
         id: permiso.data,
-        derechoAcceso: permiso.derechoAcceso
+        derechoacceso: permiso.derechoacceso
       }
 
       console.log(objUpdate)
 
-      this.sigaServices.post("permisos_update", { objUpdate }).subscribe(
+      this.sigaServices.post("permisos_update", objUpdate).subscribe(
         data => {
           console.log(data);
 

@@ -144,29 +144,6 @@ export class TranslateService {
   public getCalendarLocale() {
     return this.currentLang === "1" ? this.esCalendar : this.enCalendar;
   }
-  public translateMenu(menu: any): MenuItem[] {
-    if (menu) {
-      for (var cont = 0; cont < menu.length; cont++) {
-        menu[cont].label = this.instant(menu[cont].label);
-        if (menu[cont].items && menu[cont].items.length > 0) {
-          menu[cont].items = this.cargarSubmenus(menu[cont].items);
-        }
-
-      }
-    }
-
-    return menu;
-  }
-  public cargarSubmenus(menu: any): MenuItem {
-    for (var cont = 0; cont < menu.length; cont++) {
-      this.menuItem = menu[cont];
-      this.menuItem.label = this.instant(this.menuItem.label);
-      if (this.menuItem.items && this.menuItem.items.length > 0) {
-        this.cargarSubmenus(this.menuItem.items);
-      }
-    }
-    return menu;
-  }
 
   public updateTranslations(service: SigaServices): void {
     service.get("diccionarios").subscribe(response => {

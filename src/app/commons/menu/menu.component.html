@@ -4,16 +4,16 @@
       <ul *ngIf="!showChild" class="nav navbar-nav ">
         <i class="conf fa fa-cog"></i>
         <li [ngClass]="{'catalogos':opcion.idClass==='catalogos', 'adm':opcion.idClass==='adm', 'plantillas':opcion.idClass==='plantillas','menu-item-active': isRoute(opcion.routerLink) }"
-          *ngFor="let opcion of items" (click)="viewChild(opcion.items, opcion.label) || navigateTo(opcion.routerLink)">{{opcion.label}} <i *ngIf="opcion.items" class="fa fa-angle-right float-right"></i></li>
+          *ngFor="let opcion of items" (click)="viewChild(opcion.items, opcion.label) || navigateTo(opcion.routerLink)">{{opcion.label | translate}} <i *ngIf="opcion.items" class="fa fa-angle-right float-right"></i></li>
       </ul>
       <ul *ngIf="showChild && !showChildOfChild" class="nav navbar-nav ">
         <li (click)="backMenu()" class="breadCrumbMenu">{{selectedLabel}} <i class="fa fa-angle-right"></i></li>
         <li *ngFor="let opcion of selectedItem" (click)="viewChildOfChild(opcion.items, opcion.label) || navigateTo(opcion.routerLink)"
-          [ngClass]="{'menu-item-active': isRoute(opcion.routerLink)}">{{opcion.label}} <i *ngIf="opcion.items" class="fa fa-angle-right float-right"></i></li>
+          [ngClass]="{'menu-item-active': isRoute(opcion.routerLink)}">{{opcion.label | translate}} <i *ngIf="opcion.items" class="fa fa-angle-right float-right"></i></li>
       </ul>
       <ul *ngIf="showChildOfChild" class="nav navbar-nav ">
         <li (click)="backMenuChild()" class="breadCrumbMenu">{{selectedLabel}} <i class="fa fa-angle-right"></i> {{selectedLabelOfChild}}</li>
-        <li (click)="navigateTo(opcion.routerLink)" [ngClass]="{'menu-item-active': isRoute(opcion.routerLink)}" *ngFor="let opcion of selectedItemOfChild">{{opcion.label}} <i *ngIf="opcion.items" class="fa fa-angle-right float-right"></i></li>
+        <li (click)="navigateTo(opcion.routerLink)" [ngClass]="{'menu-item-active': isRoute(opcion.routerLink)}" *ngFor="let opcion of selectedItemOfChild">{{opcion.label | translate}} <i *ngIf="opcion.items" class="fa fa-angle-right float-right"></i></li>
       </ul>
     </div>
 
