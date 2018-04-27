@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" life="3000"></p-growl>
 <div #widthContent class="permisos-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -27,13 +28,12 @@
     <p-tree (onNodeSelect)="onNodeSelect()" (onNodeUnselect)="onNodeUnselect()" [(selection)]="selectedPermiso" #expandingTree
       [value]="permisosTree" selectionMode="checkbox">
       <ng-template let-node pTemplate="default">
-        <i class="fa fa-circle icon-acceso" [ngClass]="{ 'color-sinAsignar':node.derechoacceso == '0' , 'color-denegado':node.derechoacceso == '1' ,'color-lectura':node.derechoacceso == '2',  'color-total':node.derechoacceso == '3'}"></i>
+        <i class="fa fa-circle icon-acceso" [ngClass]="{ 'color-sinAsignar':node.derechoacceso == 0 , 'color-denegado':node.derechoacceso == 1 ,'color-lectura':node.derechoacceso == 2,  'color-total':node.derechoacceso == 3}"></i>
         <label>{{node.label}}</label>
       </ng-template>
 
       </p-tree>
   </div>
-
 
 
 </div>

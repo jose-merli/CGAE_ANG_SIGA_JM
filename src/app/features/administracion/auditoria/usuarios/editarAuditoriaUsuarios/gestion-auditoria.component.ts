@@ -6,18 +6,19 @@ import {
   ChangeDetectorRef,
   Input
 } from "@angular/core";
-import { SigaServices } from "./../../../../_services/siga.service";
-import { SigaWrapper } from "../../../../wrapper/wrapper.class";
+import { SigaServices } from "./../../../../../_services/siga.service";
+import { SigaWrapper } from "./../../../../../wrapper/wrapper.class";
 import { SelectItem } from "primeng/api";
 import { DropdownModule } from "primeng/dropdown";
+import { esCalendar } from "./../../../../../utils/calendar";
 import {
   FormBuilder,
   FormGroup,
   Validators,
   FormControl
 } from "@angular/forms";
-import { TranslateService } from "../../../../commons/translate/translation.service";
-import { USER_VALIDATIONS } from "../../../../properties/val-properties";
+import { TranslateService } from "./../../../../../commons/translate/translation.service";
+import { USER_VALIDATIONS } from "./../../../../../properties/val-properties";
 import { ButtonModule } from "primeng/button";
 import { Router } from "@angular/router";
 import { InputTextModule } from "primeng/inputtext";
@@ -30,34 +31,36 @@ import { GrowlModule } from "primeng/growl";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
-import { PerfilItem } from "../../../../../app/models/PerfilItem";
-import { UsuarioUpdate } from "../../../../../app/models/UsuarioUpdate";
-import { ComboItem } from "../../../../../app/models/ComboItem";
+import { HistoricoUsuarioItem } from "./../../../../../../app/models/HistoricoUsuarioItem";
+import { HistoricoUsuarioUpdateDto } from "./../../../../../../app/models/HistoricoUsuarioUpdateDto";
+import { ComboItem } from "./../../../../../../app/models/ComboItem";
 import { ActivatedRoute } from "@angular/router";
-import { PickListModule } from "primeng/picklist";
 @Component({
-  selector: "app-editarPerfiles",
-  templateUrl: "./editarPerfiles.component.html",
-  styleUrls: ["./editarPerfiles.component.scss"],
+  selector: "app-gestion-auditoria",
+  templateUrl: "./gestion-auditoria.component.html",
+  styleUrls: ["./gestion-auditoria.component.scss"],
   encapsulation: ViewEncapsulation.None
 })
-export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
-  usuarios_rol: any[];
-  select: any[];
+export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
+  auditoriaUsuarios_update: any[];
   msgs: Message[] = [];
-  body: PerfilItem = new PerfilItem();
-  rolesAsignados: any[];
-  rolesNoAsignados: any[];
+  body: HistoricoUsuarioItem = new HistoricoUsuarioItem();
+  update: HistoricoUsuarioUpdateDto = new HistoricoUsuarioUpdateDto();
   pButton;
   textSelected: String = "{0} grupos seleccionados";
   textFilter: String;
-  editar: boolean = true;
-  disabled: boolean = false;
-  activo: boolean = false;
-  correcto: boolean = false;
-  dniCorrecto: boolean;
+  fechaEntrada: Date;
+  fechaEfectiva: Date;
+  disabled: boolean;
   showDatosGenerales: boolean = true;
-
+  showReconfiguracion: boolean = true;
+  es: any = esCalendar;
+  jsonDate: string;
+  rawDate: string;
+  splitDate: any[];
+  arrayDate: string;
+  addedDay: number;
+  correcto: boolean;
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -73,58 +76,63 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
   @ViewChild("table") table;
   ngOnInit() {
     console.log(sessionStorage);
-    this.rolesAsignados = [];
-    this.rolesNoAsignados = [];
-    this.textFilter = "Elegir";
-    this.correcto = false;
-    this.body = new PerfilItem();
 
-    if (sessionStorage.getItem("perfil") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("perfil"))[0];
-      this.editar = true;
-      this.fillRol();
+    this.sigaServices.get("auditoriaUsuarios_update").subscribe(
+      n => {
+        this.auditoriaUsuarios_update = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
+    this.body = new HistoricoUsuarioItem();
+    this.body = JSON.parse(sessionStorage.getItem("searchParametros"));
+    // this.bodyToForm();
+    this.checkMode();
+  }
+  checkMode() {
+    if (JSON.parse(sessionStorage.getItem("modo")) != null) {
+      if (JSON.parse(sessionStorage.getItem("modo")) == "editar") {
+        this.disabled = true;
+      } else {
+        this.disabled = false;
+      }
     } else {
-      this.editar = false;
-      this.body = new PerfilItem();
-      this.sigaServices.get("usuarios_rol").subscribe(
-        n => {
-          this.rolesNoAsignados = n.combooItems;
-        },
-        err => {
-          console.log(err);
-        }
-      );
+      this.disabled = false;
     }
+  }
+  isRestablecer() {
+    this.body = JSON.parse(sessionStorage.getItem("auditoriaBody"));
+    // this.bodyToForm();
   }
 
-  fillRol() {
-    if (this.body.rolesAsignados != null) {
-      this.body.rolesAsignados.forEach((value: ComboItem, key: number) => {
-        this.rolesAsignados.push(value);
-      });
-    }
-    if (this.body.rolesNoAsignados != null) {
-      this.body.rolesNoAsignados.forEach((value: ComboItem, key: number) => {
-        this.rolesNoAsignados.push(value);
-      });
-    }
-  }
+  // bodyToForm() {
+  //   this.fechaEntrada = this.body.fechaEntrada;
+  //   this.fechaEfectiva = this.body.fechaEfectiva;
+  // }
+
   pInputText;
-
-  isNew() {
-    this.body.rolesAsignados = this.rolesAsignados;
-    this.body.rolesNoAsignados = this.rolesNoAsignados;
-    this.sigaServices.post("perfiles_insert", this.body).subscribe(
-      data => {},
+  isEditar() {
+    this.sigaServices.post("contadores_update", this.update).subscribe(
+      data => {
+        this.showSuccess();
+        console.log(data);
+        this.correcto = true;
+      },
       err => {
         this.showFail();
+        this.correcto = false;
         console.log(err);
       },
       () => {
-        this.volver();
+        if (this.correcto) {
+          this.volver();
+        }
       }
     );
   }
+
   confirmEdit() {
     let mess = this.translateService.instant(
       "general.message.aceptar.y.volver"
@@ -134,13 +142,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
       message: mess,
       icon: icon,
       accept: () => {
-        if (this.editar == false) {
-          this.isNew();
-        } else {
-          this.isEditar();
-        }
-
-        this.showSuccess();
+        this.isEditar();
       },
       reject: () => {
         this.msgs = [
@@ -155,23 +157,14 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
       }
     });
   }
-  isEditar() {
-    this.body.rolesAsignados = this.rolesAsignados;
-    this.body.rolesNoAsignados = this.rolesNoAsignados;
-    this.sigaServices.post("perfiles_update", this.body).subscribe(
-      data => {},
-      err => {
-        this.showFail();
-        console.log(err);
-      },
-      () => {
-        this.volver();
-      }
-    );
-  }
+
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
+  onHideReconfiguracion() {
+    this.showReconfiguracion = !this.showReconfiguracion;
+  }
+
   showSuccess() {
     this.msgs = [];
     this.msgs.push({
@@ -193,7 +186,6 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
   }
 
   volver() {
-    sessionStorage.removeItem("perfil");
-    this.router.navigate(["/perfiles"]);
+    this.router.navigate([JSON.parse(sessionStorage.getItem("url"))]);
   }
 }

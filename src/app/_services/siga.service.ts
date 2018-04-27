@@ -61,6 +61,8 @@ export class SigaServices {
     catalogos_search: "catalogos/search",
     catalogos_update: "catalogos/update",
     auditoriaUsuarios_tipoAccion: "auditoriaUsuarios/tipoAccion",
+    auditoriaUsuarios_search: "auditoriaUsuarios/search",
+    auditoriaUsuarios_update: "auditoriaUsuarios/update",
     permisos_update: "permisos/update"
   };
 
