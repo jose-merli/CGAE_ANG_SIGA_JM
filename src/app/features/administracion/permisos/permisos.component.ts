@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, DoCheck, ViewEncapsulation } from '@angular/core';
 import { Message, MenuItem, TreeNode } from 'primeng/components/common/api';
 import { Tree } from 'primeng/components/tree/tree';
+import { TranslateService } from "../../../commons/translate/translation.service";
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { SigaServices } from "./../../../_services/siga.service";
 
@@ -24,6 +25,8 @@ export class PermisosComponent implements OnInit, DoCheck {
   selectAll: boolean = false;
   idGrupo: any;
   savedPermisos: boolean = false;
+  //mensajes
+  msgs: Message[] = [];
 
   numSeleccionados: number;
   numCambios: number;
@@ -47,7 +50,8 @@ export class PermisosComponent implements OnInit, DoCheck {
   @ViewChild('expandingTree')
   expandingTree: Tree;
 
-  constructor(private formBuilder: FormBuilder, private elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices) {
+  constructor(private formBuilder: FormBuilder, private elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices,
+    private translateService: TranslateService) {
 
     this.formPermisos = this.formBuilder.group({
       'grupo': null,
@@ -241,6 +245,7 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.savedPermisos = true;
 
     this.getNumChanges();
+    this.showSuccess();
   }
 
   restablecerPermisos() {
@@ -274,6 +279,13 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.getNumSelected();
   }
 
-
+  showSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: "Correcto",
+      detail: "Árbol de permisos actualizado correctamente"
+    });
+  }
 
 }
