@@ -1,6 +1,7 @@
 import { ComboItem } from "./ComboItem";
 export class PerfilItem {
   idGrupo: String;
+  grupo: String[];
   descripcionGrupo: String;
   descripcionRol: String;
   asignarRolDefecto: ComboItem[];

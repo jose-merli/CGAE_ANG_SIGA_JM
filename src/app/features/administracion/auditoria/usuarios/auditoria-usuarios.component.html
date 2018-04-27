@@ -65,7 +65,8 @@
     <div *ngIf="buscarSeleccionado == true" class="card mt-3">
         <div class="card-body p-0">
             <p-dataTable [value]="datosUsuarios" [editable]="true" [responsive]="true" #table class="tabla-listado" [sortOrder]="1" [paginator]="activarPaginacion()"
-                paginatorPosition="both" [rows]="selectedItem">
+                paginatorPosition="both" [rows]="selectedItem" [(selection)]="selectedDatos" (onRowSelect)="irEditarUsuario(selectedDatos)"
+                selectionMode="single">
                 <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header" [filter]="true">
                 </p-column>
 

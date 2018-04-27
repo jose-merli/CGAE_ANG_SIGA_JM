@@ -45,6 +45,7 @@
               <div class="form-group col-lg-3 col-md-3">
                 <div class="text-right">
                   <div class="text-right main-button">
+                    <button (click)="crear()" pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
                     <button (click)="isBuscar()" pButton type="button" icon="fa fa-search " iconPos="left" label="{{'general.boton.search' | translate}}"></button>
                   </div>
 
@@ -75,7 +76,8 @@
               <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="Search"
                 [filter]="true">
                 <ng-template *ngIf="col.field=='asignarRolDefecto'" pTemplate="body" let-dato="rowData"  >
-                  <p-dropdown [options]="dato['asignarRolDefecto']" styleClass="ui-column-filter" [style]="{'width':'100%'}" appendTo="body"></p-dropdown>
+                  <p-dropdown [options]="dato['asignarRolDefecto']" styleClass="ui-column-filter" [style]="{'width':'100%'}" appendTo="body"
+                    (onChange)="confirmarRolDefecto($event, dato )"></p-dropdown>
                 </ng-template>
 
 
@@ -87,9 +89,16 @@
                 <p-footer *ngIf="selectedDatos">
                   <div class="text-right main-button">
                     <button (click)="selectedDatos=false" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
+                    <button (click)="crear()" pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
                     <button (click)="historico(); selectedDatos=false" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.historico' | translate}}"></button>
                     <button (click)="confirmarBorrar(selectedDatos); selectedDatos=false" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
                       label="{{'general.boton.eliminar'  | translate}}"></button>
+                  </div>
+                </p-footer>
+                <p-footer *ngIf="!selectedDatos">
+                  <div class="text-right main-button">
+                    <button (click)="crear()" pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+                    <button (click)="historico(); selectedDatos=false" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.historico' | translate}}"></button>
                   </div>
                 </p-footer>
                 </p-dataTable>
