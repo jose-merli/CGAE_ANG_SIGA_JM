@@ -52,6 +52,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   bodySearch: HistoricoUsuarioRequestDto = new HistoricoUsuarioRequestDto();
   searchParametros: HistoricoUsuarioDto = new HistoricoUsuarioDto();
   jsonDate: string;
+  selectedDatos: any;
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -156,5 +157,11 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   activarPaginacion() {
     if (this.datosUsuarios.length == 0) return false;
     else return true;
+  }
+
+  irEditarUsuario(id) {
+    sessionStorage.setItem("auditoriaBody", JSON.stringify(id));
+    sessionStorage.setItem("searchCatalogo", JSON.stringify(this.bodySearch));
+    this.router.navigate(["/gestionAuditoria"]);
   }
 }
