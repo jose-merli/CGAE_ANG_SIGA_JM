@@ -25,6 +25,9 @@ import { InputTextModule } from "primeng/inputtext";
 import { Message } from "primeng/components/common/api";
 import { esCalendar } from "./../../../../utils/calendar";
 
+import { HistoricoUsuarioDto } from "../../../../models/HistoricoUsuarioDto";
+import { HistoricoUsuarioRequestDto } from "../../../../models/HistoricoUsuarioRequestDto";
+
 @Component({
   selector: "app-etiquetas",
   templateUrl: "./auditoria-usuarios.component.html",
@@ -33,9 +36,10 @@ import { esCalendar } from "./../../../../utils/calendar";
 })
 export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   usuario: any;
+  persona: any;
   showDatosGenerales: boolean = true;
   buscarSeleccionado: boolean = false;
-  valorCheckParametros: boolean = false;
+  valorCheckUsuarioAutomatico: boolean = false;
   selectedTipoAccion: any;
   tipoAcciones: any[];
   fechaDesdeCalendar: Date;
@@ -45,7 +49,9 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   columnasTabla: any = [];
   rowsPerPage: any = [];
   datosUsuarios: any[];
-
+  bodySearch: HistoricoUsuarioRequestDto = new HistoricoUsuarioRequestDto();
+  searchParametros: HistoricoUsuarioDto = new HistoricoUsuarioDto();
+  jsonDate: string;
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -70,19 +76,23 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
 
     this.columnasTabla = [
       {
-        field: "descripcionBusqueda",
+        field: "idPersona",
+        header: "Persona"
+      },
+      {
+        field: "nombre",
         header: "Usuario"
       },
       {
-        field: "descripcionTraduccion",
+        field: "descTipoCambio",
         header: "Tipo Acción"
       },
       {
-        field: "descripcionTraduccion",
+        field: "fechaEfectiva",
         header: "Fecha Efectiva"
       },
       {
-        field: "descripcionTraduccion",
+        field: "motivo",
         header: "Motivo"
       }
     ];
@@ -107,7 +117,32 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     ];
   }
 
-  isBuscar() {}
+  isBuscar() {
+    this.bodySearch.usuario = this.usuario;
+    this.bodySearch.idPersona = this.persona;
+    this.bodySearch.idTipoAccion = this.selectedTipoAccion;
+    if (this.valorCheckUsuarioAutomatico == true)
+      this.bodySearch.usuarioAutomatico = "S";
+    else this.bodySearch.usuarioAutomatico = "N";
+
+    this.bodySearch.fechaDesde = this.fechaDesdeCalendar;
+
+    this.bodySearch.fechaHasta = this.fechaHastaCalendar;
+
+    this.sigaServices
+      .postPaginado("auditoriaUsuarios_search", "?numPagina=1", this.bodySearch)
+      .subscribe(
+        data => {
+          console.log(data);
+
+          this.searchParametros = JSON.parse(data["body"]);
+          this.datosUsuarios = this.searchParametros.historicoUsuarioItem;
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
   isHabilitadoBuscar() {}
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
