@@ -108,7 +108,7 @@ const appRoutes: Routes = [
   {
     path: "permisos",
     component: PermisosComponent,
-    // canActivate: [AuthGuard]
+    canActivate: [AuthGuard]
   },
 
   { path: "catalogos", component: Catalogos, canActivate: [AuthGuard] },
