@@ -161,7 +161,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
 
   irEditarUsuario(id) {
     sessionStorage.setItem("auditoriaBody", JSON.stringify(id));
-    sessionStorage.setItem("searchCatalogo", JSON.stringify(this.bodySearch));
+    //sessionStorage.setItem("searchCatalogo", JSON.stringify(this.bodySearch));
     this.router.navigate(["/gestionAuditoria"]);
   }
 }
