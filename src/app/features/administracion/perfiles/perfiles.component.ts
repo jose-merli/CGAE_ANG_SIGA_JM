@@ -91,7 +91,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       },
       {
         field: "asignarRolDefecto",
-        header: "Roles por defecto"
+        header: "menu.administracion.perfilrol"
       }
     ];
 
@@ -157,6 +157,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     this.sigaServices.post("perfiles_default", item).subscribe(
       data => {
         this.showSuccess();
+        this.isBuscar();
       },
       err => {
         console.log(err);

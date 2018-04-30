@@ -45,14 +45,14 @@ export class LoginComponent implements OnInit {
 
         });
         this.onChange(this.form.controls['tmpLoginInstitucion'].value);
-        this.form.controls['tmpLoginInstitucion'].valueChanges.subscribe(newValue => {
-            this.form.controls['location'].setValue(newValue);
-        });
-
-        this.form.controls['tmpLoginPerfil'].valueChanges.subscribe(n => {
-            this.form.controls['profile'].setValue(n);
-        });
-
+        /*  this.form.controls['tmpLoginInstitucion'].valueChanges.subscribe(newValue => {
+              this.form.controls['location'].setValue(newValue);
+          });
+  
+          this.form.controls['tmpLoginPerfil'].valueChanges.subscribe(n => {
+              this.form.controls['profile'].setValue(n);
+          });
+  */
         this.form.controls['sLetrado'].valueChanges.subscribe(n => {
             this.form.controls['letrado'].setValue(n);
         })

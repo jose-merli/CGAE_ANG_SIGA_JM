@@ -8,5 +8,6 @@ export class PerfilItem {
   nombre: String;
   rolesAsignados: ComboItem[];
   rolesNoAsignados: ComboItem[];
-  constructor() {}
+  fechaBaja: Date;
+  constructor() { }
 }

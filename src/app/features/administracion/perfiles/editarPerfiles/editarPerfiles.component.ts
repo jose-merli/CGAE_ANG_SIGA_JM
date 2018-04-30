@@ -35,6 +35,7 @@ import { UsuarioUpdate } from "../../../../../app/models/UsuarioUpdate";
 import { ComboItem } from "../../../../../app/models/ComboItem";
 import { ActivatedRoute } from "@angular/router";
 import { PickListModule } from "primeng/picklist";
+import { PerfilesResponseDto } from "./../../../../../app/models/PerfilesResponseDto";
 @Component({
   selector: "app-editarPerfiles",
   templateUrl: "./editarPerfiles.component.html",
@@ -57,11 +58,13 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
   correcto: boolean = false;
   dniCorrecto: boolean;
   showDatosGenerales: boolean = true;
+  responsePerfiles: PerfilesResponseDto = new PerfilesResponseDto();
 
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
     private router: Router,
+
     private changeDetectorRef: ChangeDetectorRef,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
@@ -115,20 +118,41 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
     this.body.rolesAsignados = this.rolesAsignados;
     this.body.rolesNoAsignados = this.rolesNoAsignados;
     this.sigaServices.post("perfiles_insert", this.body).subscribe(
-      data => {},
+      data => {
+
+        this.responsePerfiles = JSON.parse(data["body"]);
+        if (this.responsePerfiles.error) {
+          this.showduplicateFail(this.responsePerfiles.error.message.toString());
+        } else {
+          this.volver();
+        }
+      },
       err => {
         this.showFail();
         console.log(err);
       },
       () => {
-        this.volver();
+        this.showSuccess;
+
       }
     );
   }
+
+  //cada vez que cambia el formulario comprueba esto
+  onChangeForm() { }
+
+
   confirmEdit() {
-    let mess = this.translateService.instant(
-      "general.message.aceptar.y.volver"
-    );
+    let mess = "";
+    if (this.editar == false) {
+      mess = this.translateService.instant(
+        "general.message.create.aceptar.y.volver"
+      );
+    } else {
+      mess = this.translateService.instant(
+        "general.message.aceptar.y.volver"
+      );
+    }
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
       message: mess,
@@ -140,7 +164,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
           this.isEditar();
         }
 
-        this.showSuccess();
+
       },
       reject: () => {
         this.msgs = [
@@ -159,12 +183,16 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
     this.body.rolesAsignados = this.rolesAsignados;
     this.body.rolesNoAsignados = this.rolesNoAsignados;
     this.sigaServices.post("perfiles_update", this.body).subscribe(
-      data => {},
+      data => {
+        this.responsePerfiles = JSON.parse(data["body"]);
+
+      },
       err => {
         this.showFail();
         console.log(err);
       },
       () => {
+        this.showSuccess;
         this.volver();
       }
     );
@@ -188,6 +216,17 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
       summary: "Incorrecto",
       detail: this.translateService.instant(
         "general.message.error.realiza.accion"
+      )
+    });
+  }
+
+
+  showduplicateFail(message: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Error",
+      detail: this.translateService.instant(message
       )
     });
   }

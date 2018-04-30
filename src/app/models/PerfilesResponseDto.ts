@@ -1,6 +1,7 @@
 import { PerfilItem } from "./PerfilItem";
+import { ErrorItem } from "./ErrorItem";
 export class PerfilesResponseDto {
-  error: String;
+  error: ErrorItem;
   usuarioGrupoItems: PerfilItem[] = [];
-  constructor() {}
+  constructor() { }
 }
