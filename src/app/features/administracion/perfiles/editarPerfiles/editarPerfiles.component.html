@@ -21,24 +21,29 @@
         <div class="form-row">
           <div class="form-group col-lg-3 col-md-3">
             <label>{{"administracion.grupos.literal.id" | translate}} </label>
-            <input type="text" name="id" [(disabled)]="editar" class="form-control" [(ngModel)]='body.idGrupo' (ngModelChange)="onChangeForm()"
+            <input *ngIf="!disabled" disabled type="text" name="id" class="form-control" [(ngModel)]='body.idGrupo' (ngModelChange)="onChangeForm()"
               [formControl]="this.formGroup.controls['idGrupo']" pInputText>
-              <div *ngIf="hasErrors('idGrupo')"><label class="labelError">{{getErrorMessage('idGrupo')}}</label></div>
+              <input *ngIf="disabled" type="text" name="id" class="form-control" [(ngModel)]='body.idGrupo' (ngModelChange)="onChangeForm()"
+                [formControl]="this.formGroup.controls['idGrupo']" pInputText>
+                <div *ngIf="hasErrors('idGrupo')"><label class="labelError">{{getErrorMessage('idGrupo')}}</label></div>
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>{{'general.description' | translate}} (*)</label>
-            <input type="text" name="descripcion" class="form-control" [(ngModel)]='body.descripcionGrupo' [formControl]="this.formGroup.controls['descripcionGrupo']"
-              pInputText>
+            <input *ngIf="!disabled" disabled type="text" name="descripcion" class="form-control" [(ngModel)]='body.descripcionGrupo'
+              [formControl]="this.formGroup.controls['descripcionGrupo']" pInputText>
+              <input *ngIf="disabled" type="text" name="descripcion" class="form-control" [(ngModel)]='body.descripcionGrupo' [formControl]="this.formGroup.controls['descripcionGrupo']"
+                pInputText>
           </div>
           <div class="form-group col-lg-3 col-md-3">
           </div>
           <div class="form-group col-lg-3 col-md-3">
           </div>
           <div class="form-group col-lg-6 col-md-6">
-            <p-pickList [source]="rolesAsignados" [target]="rolesNoAsignados" sourceHeader="{{'administracion.grupos.literal.rolesAsignados' | translate}}"
-              targetHeader="{{'administracion.grupos.literal.rolesSinAsignar' | translate}}" [responsive]="true" filterBy="label"
-              dragdrop="true" dragdropScope="rolesAsignados" sourceFilterPlaceholder="  Buscar rol" targetFilterPlaceholder="  Buscar rol"
-              [sourceStyle]="{'height':'300px'}" [targetStyle]="{'height':'300px'}">
+            <p-pickList [disabled]="!disabled" [source]="rolesAsignados" [target]="rolesNoAsignados" sourceHeader="{{'administracion.grupos.literal.rolesAsignados' | translate}}"
+              targetHeader="{{'administracion.grupos.literal.rolesSinAsignar'
+ | translate}}" [responsive]="true" filterBy="label" dragdropScope="rolesAsignados" sourceFilterPlaceholder="  Buscar rol"
+              targetFilterPlaceholder="  Buscar rol" [sourceStyle]="{'height':'300px'}" [targetStyle]="{'height':'300px'}"
+              disabled>
               <ng-template let-item pTemplate="item">
                 <div>{{item.label}}</div>
               </ng-template>
@@ -52,9 +57,8 @@
     </div>
     <div class="card-footer">
       <div class="text-right main-button ">
-        <button (click)="confirmEdit();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"
-          [disabled]="formGroup.invalid"></button>
-          <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+        <button [disabled]="!disabled" (click)="confirmEdit();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+        <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
       </div>
     </div>
   </div>

@@ -33,8 +33,8 @@ import { MessageService } from "primeng/components/common/messageservice";
 import { PerfilItem } from "./../../../../app/models/PerfilItem";
 import { PerfilesResponseDto } from "./../../../../app/models/PerfilesResponseDto";
 import { PerfilesRequestDto } from "./../../../../app/models/PerfilesRequestDto";
+import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { ComboItem } from "./../../../../app/models/ComboItem";
-
 @Component({
   selector: "app-perfiles",
   templateUrl: "./perfiles.component.html",
@@ -49,6 +49,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   dummy = [];
   searchPerfiles: PerfilesResponseDto = new PerfilesResponseDto();
   requestPerfiles: PerfilesRequestDto = new PerfilesRequestDto();
+  controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   rowsPerPage: any = [];
   showDatosGenerales: boolean = true;
   pButton;
@@ -58,6 +59,10 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   disabled: boolean = false;
   selectMultiple: boolean = false;
   blockCrear: boolean = true;
+  permisosTree: any;
+  permisosArray: any[];
+  derechoAcceso: any;
+  activacionEditar: boolean;
   selectedItem: number = 10;
 
   constructor(
@@ -75,7 +80,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   @ViewChild("table") table;
   ngOnInit() {
     this.isBuscar();
-
+    this.checkAcceso();
     this.cols = [
       {
         field: "idGrupo",
@@ -114,6 +119,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       }
     ];
   }
+
   isBuscar() {
     this.historicoActive = false;
     this.sigaServices
@@ -142,6 +148,29 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         }
       );
   }
+
+  checkAcceso() {
+    this.controlAcceso = new ControlAccesoDto();
+    this.controlAcceso.idProceso = 82;
+    this.sigaServices.post("acces_control", this.controlAcceso).subscribe(
+      data => {
+        this.permisosTree = JSON.parse(data.body);
+        this.permisosArray = this.permisosTree.permisoItems;
+        this.derechoAcceso = this.permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (this.derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else {
+          this.activacionEditar = false;
+        }
+      }
+    );
+  }
+
   onChangeDrop(event, dato) {
     console.log(event);
     console.log(dato);
@@ -244,6 +273,10 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         ir = id[0];
       }
       sessionStorage.setItem("perfil", JSON.stringify(id));
+      sessionStorage.setItem(
+        "privilegios",
+        JSON.stringify(this.activacionEditar)
+      );
       this.router.navigate(["/EditarPerfiles"]);
     } else {
       this.editar = false;
