@@ -4,7 +4,7 @@ import { Http, Response } from '@angular/http';
 import { MenuItem } from 'primeng/api';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
-import { esCalendar } from '../../../utils/calendar';
+import { esCalendar } from '../../utils/calendar';
 import { Router } from '@angular/router';
 import { DatosGeneralesComponent } from './datos-generales/datos-generales.component';
 import { Message } from 'primeng/components/common/api';

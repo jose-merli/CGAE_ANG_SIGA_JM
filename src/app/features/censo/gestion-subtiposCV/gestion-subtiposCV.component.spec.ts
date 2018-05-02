@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BusquedaColegiadosComponent } from './busqueda-colegiados.component';
+import { GestionSubtiposCVComponent } from './gestion-subtiposCV.component';
 
-describe('BusquedaColegiadosComponent', () => {
-  let component: BusquedaColegiadosComponent;
-  let fixture: ComponentFixture<BusquedaColegiadosComponent>;
+describe('GestionSubtiposCVComponent', () => {
+  let component: GestionSubtiposCVComponent;
+  let fixture: ComponentFixture<GestionSubtiposCVComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [BusquedaColegiadosComponent]
+      declarations: [GestionSubtiposCVComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BusquedaColegiadosComponent);
+    fixture = TestBed.createComponent(GestionSubtiposCVComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

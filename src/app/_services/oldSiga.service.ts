@@ -7,6 +7,7 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpParams, HttpResponseBase } f
 export class OldSigaServices {
 
     oldServices = {
+        //Censo
         busquedaSanciones: "Dispatcher.do?proceso=566",
         certificadosAca: "Dispatcher.do?proceso=130",
         comisionesCargos: "Dispatcher.do?proceso=48",
@@ -19,6 +20,23 @@ export class OldSigaServices {
         solicitudesEspecificas: "Dispatcher.do?proceso=5",
         solicitudesGenericas: "Dispatcher.do?proceso=4",
         solicitudesIncorporacion: "Dispatcher.do?proceso=3",
+        fichaColegial: "Dispatcher.do?proceso=12",
+        busquedaLetrados: "Dispatcher.do?proceso=11",
+        mantenimientoDuplicados: "Dispatcher.do?proceso=18",
+        modificacionDatos: "Dispatcher.do?proceso=13",
+        cargasPeriodicas: "Dispatcher.do?proceso=161",
+        configurarPerfil: "Dispatcher.do?proceso=172",
+        censoDocumentacion: "Dispatcher.do?proceso=10",
+        gestionSubtiposCV: "Dispatcher.do?proceso=15E",
+
+        //Certificados
+        comunicacionInterprofesional: "Dispatcher.do?proceso=64",
+        solicitarCompra: "Dispatcher.do?proceso=63",
+        solicitudCertificados: "Dispatcher.do?proceso=60",
+        gestionSolicitudes: "Dispatcher.do?proceso=61",
+        mantenimientoCertificados: "Dispatcher.do?proceso=62",
+
+
         login: "developmentLogin.do"
 
     }
