@@ -171,7 +171,7 @@
         </div>
         <label class="ml-3" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()"><i class="pr-2 fa fa-plus"></i>Selección múltiple</label>
       </div>
-      <p-dataTable [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowSelect)="irFichaColegial(selectedDatos)"
+      <p-dataTable ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowSelect)="irFichaColegial(selectedDatos)"
         dataKey="nif" selectionMode="multiple" [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1"
         [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header"></p-column>

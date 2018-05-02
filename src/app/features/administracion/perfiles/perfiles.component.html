@@ -20,9 +20,10 @@
             <div class="m-3 d-flex text-right justify-content-end">
               <label class="ml-3" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false"><i class="pr-2 fa fa-plus"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
             </div>
-            <p-dataTable #myTable [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowSelect)="irEditarUsuario(selectedDatos)"
-              filterPlaceholder="Search" dataKey="idGrupo" [responsive]="true" #table class="tabla-listado" selectionMode="multiple"
-              [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" (onPage)="paginate($event)">
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+              [(selection)]="selectedDatos" (onRowSelect)="irEditarUsuario(selectedDatos)" filterPlaceholder="Search" dataKey="idGrupo"
+              [responsive]="true" #table class="tabla-listado" selectionMode="multiple" [value]="datos" [sortOrder]="1" [paginator]="true"
+              paginatorPosition="both" [rows]="selectedItem">
               <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="Search"
                 [filter]="true">
 
@@ -59,9 +60,10 @@
 
         <div *ngIf="buscar == false" class="card mt-3">
           <div class="card-body p-0">
-            <p-dataTable [ngClass]="{'customCursor': selectMultiple}" (onRowSelect)="irEditarUsuario(selectedDatos)" filterPlaceholder="Search"
-              dataKey="idGrupo" [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true"
-              [editable]="true" paginatorPosition="both" [rows]="selectedItem">
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+              (onRowSelect)="irEditarUsuario(selectedDatos)" filterPlaceholder="Search" dataKey="idGrupo" [responsive]="true"
+              #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true" [editable]="true" paginatorPosition="both"
+              [rows]="selectedItem">
               <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="Search"
                 [filter]="true">
 

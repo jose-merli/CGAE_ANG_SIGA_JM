@@ -45,7 +45,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   fechaDesdeCalendar: Date;
   fechaHastaCalendar: Date;
   es: any = esCalendar;
-  selectedItem: number = 4;
+  selectedItem: number = 10;
   columnasTabla: any = [];
   rowsPerPage: any = [];
   datosUsuarios: any[];
@@ -100,20 +100,20 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
 
     this.rowsPerPage = [
       {
-        label: 4,
-        value: 4
-      },
-      {
-        label: 6,
-        value: 6
-      },
-      {
-        label: 8,
-        value: 8
-      },
-      {
         label: 10,
         value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
       }
     ];
   }
@@ -137,19 +137,19 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("auditoriaUsuarios_search", "?numPagina=1", this.bodySearch)
       .subscribe(
-        data => {
-          console.log(data);
+      data => {
+        console.log(data);
 
-          this.searchParametros = JSON.parse(data["body"]);
-          this.datosUsuarios = this.searchParametros.historicoUsuarioItem;
-          this.buscarSeleccionado = true;
-        },
-        err => {
-          console.log(err);
-        }
+        this.searchParametros = JSON.parse(data["body"]);
+        this.datosUsuarios = this.searchParametros.historicoUsuarioItem;
+        this.buscarSeleccionado = true;
+      },
+      err => {
+        console.log(err);
+      }
       );
   }
-  isHabilitadoBuscar() {}
+  isHabilitadoBuscar() { }
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }

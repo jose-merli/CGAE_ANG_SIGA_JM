@@ -44,9 +44,9 @@
     <!--FIN CARD-->
     <div *ngIf="buscar == true" class="card mt-3">
         <div class="card-body p-0">
-            <p-dataTable selectionMode="single" [value]="datosBuscar" [editable]="true" [(selection)]="filaSelecionadaTabla" [responsive]="true"
-                #table class="tabla-listado" [sortOrder]="1" [paginator]="activarPaginacionBuscar()" paginatorPosition="both"
-                [rows]="selectedItem" [editable]="true" (onRowSelect)="onRowSelect($event)">
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" selectionMode="single" [value]="datosBuscar"
+                [editable]="true" [(selection)]="filaSelecionadaTabla" [responsive]="true" #table class="tabla-listado" [sortOrder]="1"
+                [paginator]="activarPaginacionBuscar()" paginatorPosition="both" [rows]="selectedItem" [editable]="true" (onRowSelect)="onRowSelect($event)">
                 <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true">
                     <ng-template *ngIf="col.field == 'valor'" let-dato="rowData" pTemplate="body">
                         <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" (change)="isGuardar($event,dato)">
@@ -70,8 +70,9 @@
     </div>
     <div *ngIf="historico == true" class="card mt-3">
         <div class="card-body p-0">
-            <p-dataTable [value]="datosHistorico" [responsive]="true" #table class="tabla-listado" [sortOrder]="1" [paginator]="activarPaginacionHistorico()"
-                paginatorPosition="both" [rows]="selectedItem">
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [value]="datosHistorico" [responsive]="true"
+                #table class="tabla-listado" [sortOrder]="1" [paginator]="activarPaginacionHistorico()" paginatorPosition="both"
+                [rows]="selectedItem">
                 <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true">
                     <ng-template let-datoH="rowData" pTemplate="body">
                         <div *ngIf="setItalic(datoH)">

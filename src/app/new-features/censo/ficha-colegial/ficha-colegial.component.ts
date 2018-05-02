@@ -39,7 +39,7 @@ export class FichaColegialComponent implements OnInit {
   rowsPerPage: any = [];
   showAll: boolean = false;
 
-  selectedItem: number = 4;
+  selectedItem: number = 10;
   selectedDoc: string = 'NIF'
   newDireccion: boolean = false;
 
@@ -132,10 +132,10 @@ export class FichaColegialComponent implements OnInit {
 
     this.rowsPerPage = [
       {
-        label: 4, value: 4
+        label: 10, value: 10
       },
       {
-        label: 6, value: 6
+        label: 20, value: 20
       },
       {
         label: 'Todo', value: this.datosDirecciones.length

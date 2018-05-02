@@ -25,6 +25,7 @@ export class SigaServices {
     login: "login",
     menu: "menu",
     usuario: "usuario",
+    usuario_logeado: "usuario/logeado",
     instituciones: "instituciones",
     perfiles: "perfiles",
     diccionarios: "diccionarios",
@@ -70,7 +71,7 @@ export class SigaServices {
     acces_control: "/accesControl"
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   get(service: string): Observable<any> {
     return this.http
@@ -87,10 +88,10 @@ export class SigaServices {
   getPerfil(service: string, institucion: string): Observable<any> {
     return this.http
       .get(
-        environment.newSigaUrl +
-          this.endpoints[service] +
-          "?institucion=" +
-          institucion
+      environment.newSigaUrl +
+      this.endpoints[service] +
+      "?institucion=" +
+      institucion
       )
       .map(response => {
         return response;

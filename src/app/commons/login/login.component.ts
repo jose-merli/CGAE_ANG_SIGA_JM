@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
 
 
         this.form = this.fb.group({
-            tmpLoginInstitucion: new FormControl("2000"),
+            tmpLoginInstitucion: new FormControl(""),
 
             sLetrado: new FormControl("N"),
 
