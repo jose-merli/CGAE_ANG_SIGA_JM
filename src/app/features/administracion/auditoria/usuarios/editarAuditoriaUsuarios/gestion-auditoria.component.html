@@ -1,4 +1,4 @@
-<p-growl [(value)]="msgs" life="1500"></p-growl>
+<p-growl [(value)]="msgs" life="3000"></p-growl>
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -42,7 +42,8 @@
 
           <div class="form-group col-lg-6 col-md-6">
             <label class="d-block pb-2">{{"administracion.auditoriaUsuarios.literal.motivo" | translate}} (*)</label>
-            <input type="text" name="prefijo" class="form-control" [(ngModel)]='itemBody.motivo' pInputText>
+            <input type="text" name="prefijo" class="form-control" [(ngModel)]='itemBody.motivo' (ngModelChange)="actualizarBotonGuardarCerrar()"
+              pInputText>
           </div>
 
           <div class="form-group col-lg-12 col-md-12">
@@ -50,15 +51,14 @@
             <input type="text" name="descripcion" disabled="true" class="form-control" [(ngModel)]='itemBody.descripcionUsuario' pInputText>
           </div>
 
-
         </div>
       </div>
     </div>
 
     <div class="card-footer">
       <div class="text-right main-button ">
-        <button (click)="confirmEdit();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"
-          [disabled]="formGroup.invalid"></button>
+        <button (click)="confirmEdit()" pButton type="button" [disabled]="isHabilitadoGuardarCerrar()" icon="	fa fa-edit " iconPos="left"
+          label="{{ 'general.boton.guardarCerrar' | translate}}" [disabled]="formGroup.invalid"></button>
           <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
       </div>
     </div>

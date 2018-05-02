@@ -1,7 +1,8 @@
+<p-growl [(value)]="msgs" life="3000"></p-growl>
 <div class="busqueda-container">
     <div class="header-title">
         <i class="fa fa-square"></i>
-        <p>Auditoría de Usuarios</p>
+        <p>{{'administracion.auditoriaUsuarios.titulo' | translate}}</p>
     </div>
     <div class="breadCrumb">
         <p>{{'menu.administracion' | translate}} <i class="fa fa-angle-right"></i> {{'menu.administracion.auditoria' | translate}}
@@ -17,46 +18,48 @@
             <div *ngIf="showDatosGenerales" class="module vista-avanzada">
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
-                        <label>Usuario</label>
-                        <input type="text" class="form-control" [(ngModel)]="usuario" pInputText>
+                        <label>{{'general.boton.usuario' | translate}}</label>
+                        <input type="text" [disabled]="isHabilitadoInputUsuario()" class="form-control" [(ngModel)]="usuario" pInputText>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
-                        <label>Persona</label>
+                        <label>{{'administracion.auditoriaUsuarios.persona' | translate}}</label>
                         <input type="text" class="form-control" [(ngModel)]="persona" pInputText>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
-                        <label>Tipo Acción</label>
+                        <label>{{'administracion.auditoriaUsuarios.literal.tipoAccion' | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='selectedTipoAccion' [options]="tipoAcciones" [filter]="true" filterBy="label"></p-dropdown> &nbsp;&nbsp;
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                     </div>
                     <div class="form-check col-lg-3 col-md-3">
                         <br/>
-                        <label class="form-group-label">Usuario Automático</label> &nbsp;&nbsp;
+                        <label class="form-group-label">{{'administracion.auditoriaUsuarios.literal.usuarioAutomatico' | translate}}</label>                        &nbsp;&nbsp;
                         <p-checkbox [(ngModel)]='valorCheckUsuarioAutomatico' binary="true"></p-checkbox>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
-                        <label>Fecha desde</label>
-                        <p-calendar [locale]="es" [(ngModel)]="fechaDesdeCalendar" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                        <label>{{'administracion.auditoriaUsuarios.fechaDesde' | translate}} (*)</label>
+                        <p-calendar [locale]="es" [(ngModel)]="fechaDesdeCalendar" [maxDate]="getFechaHastaCalendar()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
+                            showIcon="true"></p-calendar>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
-                        <label>Fecha hasta</label>
-                        <p-calendar [locale]="es" [(ngModel)]="fechaHastaCalendar" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                        <label>{{'administracion.auditoriaUsuarios.fechaHasta' | translate}} (*)</label>
+                        <p-calendar [locale]="es" [(ngModel)]="fechaHastaCalendar" [minDate]="getFechaDesdeCalendar()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
+                            showIcon="true"></p-calendar>
                     </div>
                 </div>
             </div>
         </div>
         <div class="card-footer" *ngIf="showDatosGenerales">
             <div class="text-right main-button">
-                <button (click)="isBuscar()" [disabled]="isHabilitadoBuscar()" pButton type="button " icon="fa fa-search" iconPos="left"
+                <button (click)="confirmarBuscar()" [disabled]="isHabilitadoBuscar()" pButton type="button " icon="fa fa-search" iconPos="left"
                     label="{{'general.boton.search' | translate}}"></button>
             </div>
         </div>
@@ -64,18 +67,23 @@
     <!--FIN CARD-->
     <div *ngIf="buscarSeleccionado == true" class="card mt-3">
         <div class="card-body p-0">
-            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [value]="datosUsuarios" [editable]="true" [responsive]="true"
-                #table class="tabla-listado" [sortOrder]="1" [paginator]="activarPaginacion()" paginatorPosition="both" [rows]="selectedItem"
-                [(selection)]="selectedDatos" (onRowSelect)="irEditarUsuario(selectedDatos)" selectionMode="single">
-                <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header" [filter]="true">
-                </p-column>
+            <p-dataTable [value]="datosUsuarios" [editable]="true" [responsive]="true" #table class="tabla-listado" [sortOrder]="1" [paginator]="activarPaginacion()"
+                paginatorPosition="both" [rows]="selectedItem" [(selection)]="selectedDatos" (onRowSelect)="irEditarUsuario(selectedDatos)"
+                selectionMode="single">
+                <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true">
+                    <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [value]="datosUsuarios" [editable]="true" [responsive]="true"
+                        #table class="tabla-listado" [sortOrder]="1" [paginator]="activarPaginacion()" paginatorPosition="both"
+                        [rows]="selectedItem" [(selection)]="selectedDatos" (onRowSelect)="irEditarUsuario(selectedDatos)" selectionMode="single">
+                        <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header" [filter]="true">
+                        </p-column>
 
-                <ng-template *ngIf="activarPaginacion() == true" pTemplate="paginatorLeft">
-                    <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                    <label>{{ 'general.message.mostrar' | translate}}<p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
-                </ng-template>
+                        <ng-template *ngIf="activarPaginacion() == true" pTemplate="paginatorLeft">
+                            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                            <label>{{ 'general.message.mostrar' | translate}}<p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
+                        </ng-template>
 
-                </p-dataTable>
+                        </p-dataTable>
         </div>
     </div>
+    <app-dialog></app-dialog>
 </div>
