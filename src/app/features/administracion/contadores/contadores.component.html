@@ -54,9 +54,10 @@
   <div *ngIf="buscar == true" class="card mt-3">
     <div class="card-body p-0">
 
-      <p-dataTable [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowSelect)="irEditarContador(selectedDatos)"
-        filterPlaceholder="Search" dataKey="idcontador" [responsive]="true" selectionMode="single" #table class="tabla-listado"
-        [value]="datos" [sortOrder]="1" paginatorPosition="both" [rows]="selectedItem" [paginator]="activarPaginacion()">
+      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+        [(selection)]="selectedDatos" (onRowSelect)="irEditarContador(selectedDatos)" filterPlaceholder="Search" dataKey="idcontador"
+        [responsive]="true" selectionMode="single" #table class="tabla-listado" [value]="datos" [sortOrder]="1" paginatorPosition="both"
+        [rows]="selectedItem" [paginator]="activarPaginacion()">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="Search"
           [filter]="true">
           </p-column>

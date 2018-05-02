@@ -58,7 +58,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   disabled: boolean = false;
   selectMultiple: boolean = false;
   blockCrear: boolean = true;
-  selectedItem: number = 4;
+  selectedItem: number = 10;
 
   constructor(
     private sigaServices: SigaServices,
@@ -97,20 +97,20 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
 
     this.rowsPerPage = [
       {
-        label: 4,
-        value: 4
-      },
-      {
-        label: 6,
-        value: 6
-      },
-      {
-        label: 8,
-        value: 8
-      },
-      {
         label: 10,
         value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
       }
     ];
   }

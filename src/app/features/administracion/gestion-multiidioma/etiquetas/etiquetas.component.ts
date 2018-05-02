@@ -46,7 +46,7 @@ export class Etiquetas extends SigaWrapper implements OnInit {
   buscar: boolean = true;
   descripcion: any;
   datosTraduccion: any[];
-  selectedItem: number = 4;
+  selectedItem: number = 10;
   buscarSeleccionado: boolean = false;
   columnasTabla: any = [];
   rowsPerPage: any = [];
@@ -92,31 +92,31 @@ export class Etiquetas extends SigaWrapper implements OnInit {
       {
         field: "descripcionBusqueda",
         header:
-          "administracion.multidioma.etiquetas.literal.descripcionInstitucion"
+        "administracion.multidioma.etiquetas.literal.descripcionInstitucion"
       },
       {
         field: "descripcionTraduccion",
         header:
-          "administracion.multidioma.etiquetas.literal.descripcionIdiomaSeleccionado"
+        "administracion.multidioma.etiquetas.literal.descripcionIdiomaSeleccionado"
       }
     ];
 
     this.rowsPerPage = [
       {
-        label: 4,
-        value: 4
-      },
-      {
-        label: 6,
-        value: 6
-      },
-      {
-        label: 8,
-        value: 8
-      },
-      {
         label: 10,
         value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
       }
     ];
   }
@@ -133,18 +133,18 @@ export class Etiquetas extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("etiquetas_search", "?numPagina=1", this.bodySearch)
       .subscribe(
-        data => {
-          console.log(data);
-          this.searchParametros = JSON.parse(data["body"]);
-          this.datosTraduccion = this.searchParametros.etiquetaItem;
-          this.buscarSeleccionado = true;
+      data => {
+        console.log(data);
+        this.searchParametros = JSON.parse(data["body"]);
+        this.datosTraduccion = this.searchParametros.etiquetaItem;
+        this.buscarSeleccionado = true;
 
-          if (this.datosTraduccion.length == 0) this.paginacion = false;
-          else this.paginacion = true;
-        },
-        err => {
-          console.log(err);
-        }
+        if (this.datosTraduccion.length == 0) this.paginacion = false;
+        else this.paginacion = true;
+      },
+      err => {
+        console.log(err);
+      }
       );
   }
 

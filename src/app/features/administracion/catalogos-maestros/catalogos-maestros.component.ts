@@ -60,7 +60,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   editar: boolean = false;
   eliminar: boolean = false;
   selectMultiple: boolean = false;
-  selectedItem: number = 4;
+  selectedItem: number = 10;
 
   formBusqueda: FormGroup;
   cols: any = [];
@@ -118,20 +118,20 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     ];
     this.rowsPerPage = [
       {
-        label: 4,
-        value: 4
-      },
-      {
-        label: 6,
-        value: 6
-      },
-      {
-        label: 8,
-        value: 8
-      },
-      {
         label: 10,
         value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
       }
     ];
 
@@ -257,15 +257,15 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("maestros_search", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          console.log(data);
+      data => {
+        console.log(data);
 
-          this.searchCatalogo = JSON.parse(data["body"]);
-          this.datosHist = this.searchCatalogo.catalogoMaestroItem;
-        },
-        err => {
-          console.log(err);
-        }
+        this.searchCatalogo = JSON.parse(data["body"]);
+        this.datosHist = this.searchCatalogo.catalogoMaestroItem;
+      },
+      err => {
+        console.log(err);
+      }
       );
   }
 
@@ -378,8 +378,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
             severity: "success",
             summary: "Correcto",
             detail:
-              selectedDatos.length +
-              this.translateService.instant("messages.deleted.selected.success")
+            selectedDatos.length +
+            this.translateService.instant("messages.deleted.selected.success")
           });
         }
       },

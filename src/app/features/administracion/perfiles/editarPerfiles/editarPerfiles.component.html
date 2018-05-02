@@ -36,9 +36,9 @@
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <p-pickList [source]="rolesAsignados" [target]="rolesNoAsignados" sourceHeader="{{'administracion.grupos.literal.rolesAsignados' | translate}}"
-              targetHeader="{{'administracion.grupos.literal.rolesSinAsignar'
- | translate}}" [responsive]="true" filterBy="label" dragdropScope="rolesAsignados" sourceFilterPlaceholder="  Buscar rol"
-              targetFilterPlaceholder="  Buscar rol" [sourceStyle]="{'height':'300px'}" [targetStyle]="{'height':'300px'}">
+              targetHeader="{{'administracion.grupos.literal.rolesSinAsignar' | translate}}" [responsive]="true" filterBy="label"
+              dragdrop="true" dragdropScope="rolesAsignados" sourceFilterPlaceholder="  Buscar rol" targetFilterPlaceholder="  Buscar rol"
+              [sourceStyle]="{'height':'300px'}" [targetStyle]="{'height':'300px'}">
               <ng-template let-item pTemplate="item">
                 <div>{{item.label}}</div>
               </ng-template>
