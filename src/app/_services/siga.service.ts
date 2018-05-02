@@ -66,7 +66,8 @@ export class SigaServices {
     auditoriaUsuarios_tipoAccion: "auditoriaUsuarios/tipoAccion",
     auditoriaUsuarios_search: "auditoriaUsuarios/search",
     auditoriaUsuarios_update: "auditoriaUsuarios/update",
-    permisos_update: "permisos/update"
+    permisos_update: "permisos/update",
+    acces_control: "/accesControl"
   };
 
   constructor(private http: HttpClient) {}

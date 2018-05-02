@@ -53,7 +53,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
   textSelected: String = "{0} grupos seleccionados";
   textFilter: String;
   editar: boolean = true;
-  disabled: boolean = false;
+  disabled: boolean;
   activo: boolean = false;
   correcto: boolean = false;
   dniCorrecto: boolean;
@@ -64,7 +64,6 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
     private router: Router,
-
     private changeDetectorRef: ChangeDetectorRef,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
@@ -83,6 +82,8 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
     this.body = new PerfilItem();
 
     if (sessionStorage.getItem("perfil") != null) {
+      this.disabled = JSON.parse(sessionStorage.getItem("privilegios"));
+      // this.disabled = !this.disabled;
       this.body = JSON.parse(sessionStorage.getItem("perfil"))[0];
       this.editar = true;
       this.fillRol();
@@ -119,10 +120,11 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
     this.body.rolesNoAsignados = this.rolesNoAsignados;
     this.sigaServices.post("perfiles_insert", this.body).subscribe(
       data => {
-
         this.responsePerfiles = JSON.parse(data["body"]);
         if (this.responsePerfiles.error) {
-          this.showduplicateFail(this.responsePerfiles.error.message.toString());
+          this.showduplicateFail(
+            this.responsePerfiles.error.message.toString()
+          );
         } else {
           this.volver();
         }
@@ -133,14 +135,12 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
       },
       () => {
         this.showSuccess;
-
       }
     );
   }
 
   //cada vez que cambia el formulario comprueba esto
-  onChangeForm() { }
-
+  onChangeForm() {}
 
   confirmEdit() {
     let mess = "";
@@ -149,9 +149,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
         "general.message.create.aceptar.y.volver"
       );
     } else {
-      mess = this.translateService.instant(
-        "general.message.aceptar.y.volver"
-      );
+      mess = this.translateService.instant("general.message.aceptar.y.volver");
     }
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
@@ -163,8 +161,6 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
         } else {
           this.isEditar();
         }
-
-
       },
       reject: () => {
         this.msgs = [
@@ -185,7 +181,6 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
     this.sigaServices.post("perfiles_update", this.body).subscribe(
       data => {
         this.responsePerfiles = JSON.parse(data["body"]);
-
       },
       err => {
         this.showFail();
@@ -196,6 +191,10 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
         this.volver();
       }
     );
+  }
+
+  disable() {
+    return false;
   }
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
@@ -220,14 +219,12 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
     });
   }
 
-
   showduplicateFail(message: string) {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
       summary: "Error",
-      detail: this.translateService.instant(message
-      )
+      detail: this.translateService.instant(message)
     });
   }
 
