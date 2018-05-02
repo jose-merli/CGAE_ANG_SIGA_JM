@@ -56,6 +56,7 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
   correcto: boolean = false;
   dniCorrecto: boolean;
   showDatosGenerales: boolean = true;
+  activacionEditar: boolean = true;
 
   constructor(
     private sigaServices: SigaServices,
@@ -78,7 +79,7 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
 
     this.body = new UsuarioItem();
     this.body = JSON.parse(sessionStorage.getItem("usuarioBody"))[0];
-
+    this.activacionEditar = JSON.parse(sessionStorage.getItem("privilegios"));
     this.sigaServices.get("usuarios_rol").subscribe(
       n => {
         this.usuarios_rol = n.combooItems;

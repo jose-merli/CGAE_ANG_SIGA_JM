@@ -35,6 +35,8 @@ import { UsuarioDeleteRequestDto } from "./../../../../app/models/UsuarioDeleteR
 import { UsuarioItem } from "./../../../../app/models/UsuarioItem";
 import { ComboItem } from "./../../../../app/models/ComboItem";
 import { MultiSelectModule } from "primeng/multiSelect";
+import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
+
 @Component({
   selector: "app-usuarios",
   templateUrl: "./usuarios.component.html",
@@ -63,6 +65,11 @@ export class Usuarios extends SigaWrapper implements OnInit {
   selectedItem: number = 10;
   activo: boolean = false;
   dniCorrecto: boolean;
+  controlAcceso: ControlAccesoDto = new ControlAccesoDto();
+  permisosTree: any;
+  permisosArray: any[];
+  derechoAcceso: any;
+  activacionEditar: boolean;
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
@@ -81,7 +88,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
   @ViewChild("table") table;
   ngOnInit() {
     this.activo = true;
-
+    this.checkAcceso();
     this.sigaServices.get("usuarios_rol").subscribe(
       n => {
         this.usuarios_rol = n.combooItems;
@@ -141,7 +148,29 @@ export class Usuarios extends SigaWrapper implements OnInit {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+    );
+  }
+
+  checkAcceso() {
+    this.controlAcceso = new ControlAccesoDto();
+    this.controlAcceso.idProceso = 83;
+    this.sigaServices.post("acces_control", this.controlAcceso).subscribe(
+      data => {
+        this.permisosTree = JSON.parse(data.body);
+        this.permisosArray = this.permisosTree.permisoItems;
+        this.derechoAcceso = this.permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (this.derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else {
+          this.activacionEditar = false;
+        }
+      }
     );
   }
 
@@ -242,15 +271,15 @@ export class Usuarios extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("usuarios_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.searchUser = JSON.parse(data["body"]);
-        this.datos = this.searchUser.usuarioItem;
-      },
-      err => {
-        console.log(err);
-      }
+          this.searchUser = JSON.parse(data["body"]);
+          this.datos = this.searchUser.usuarioItem;
+        },
+        err => {
+          console.log(err);
+        }
       );
   }
 
@@ -404,9 +433,9 @@ export class Usuarios extends SigaWrapper implements OnInit {
           "general.message.confirmar.rehabilitaciones"
         )),
           +selectedItem.length +
-          this.translateService.instant(
-            "cargaMasivaDatosCurriculares.numRegistros.literal"
-          );
+            this.translateService.instant(
+              "cargaMasivaDatosCurriculares.numRegistros.literal"
+            );
       } else {
         mess = this.translateService.instant(
           "general.message.confirmar.rehabilitacion"
@@ -472,6 +501,10 @@ export class Usuarios extends SigaWrapper implements OnInit {
         ir = id[0];
       }
       sessionStorage.setItem("usuarioBody", JSON.stringify(id));
+      sessionStorage.setItem(
+        "privilegios",
+        JSON.stringify(this.activacionEditar)
+      );
       sessionStorage.setItem("searchUser", JSON.stringify(this.body));
       this.router.navigate(["/editarUsuario", ir]);
     } else {
