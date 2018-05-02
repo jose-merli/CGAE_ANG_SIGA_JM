@@ -18,6 +18,24 @@ import { DocumentacionSolicitudesComponent } from "./features/censo/documentacio
 import { MantenimientoGruposFijosComponent } from "./features/censo/mantenimiento-grupos-fijos/mantenimiento-grupos-fijos.component";
 import { MantenimientoMandatosComponent } from "./features/censo/mantenimiento-mandatos/mantenimiento-mandatos.component";
 import { BusquedaSancionesComponent } from "./features/censo/busqueda-sanciones/busqueda-sanciones.component";
+import { BusquedaLetradosComponent } from "./features/censo/busqueda-letrados/busqueda-letrados.component";
+import { MantenimientoDuplicadosComponent } from "./features/censo/mantenimiento-duplicados/mantenimiento-duplicados.component";
+import { ModificacionDatosComponent } from "./features/censo/modificacion-datos/modificacion-datos.component";
+import { MediadoresComponent } from "./features/censo/mediadores/mediadores.component";
+import { CargasPeriodicasComponent } from "./features/censo/cargas-periodicas/cargas-periodicas.component";
+import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/configurar-perfil.component";
+import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
+import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/gestion-subtiposCV.component";
+
+//Certificados
+import { ComunicacionInterprofesionalComponent } from "./features/certificados/comunicacion-interprofesional/comunicacion-interprofesional.component";
+import { SolicitarCompraComponent } from "./features/certificados/solicitar-compra/solicitar-compra.component";
+import { SolicitudCertificadosComponent } from "./features/certificados/solicitud-certificados/solicitud-certificados.component";
+import { GestionSolicitudesComponent } from "./features/certificados/gestion-solicitudes/gestion-solicitudes.component";
+import { MantenimientoCertificadosComponent } from "./features/certificados/mantenimiento-certificados/mantenimiento-certificados.component";
+
+
+
 
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
@@ -45,44 +63,37 @@ const appRoutes: Routes = [
   { path: "login", component: LoginComponent },
 
   // Censo
-  {
-    path: "busquedaColegiados",
-    component: BusquedaColegiadosComponent, canActivate: [AuthGuard]
-    // canActivate: [AuthGuard]
-  },
-  {
-    path: "fichaColegial/:id",
-    component: FichaColegialComponent, canActivate: [AuthGuard]
-    // canActivate: [AuthGuard]
-  },
-  {
-    path: "editarUsuario",
-    component: EditarUsuarioComponent, canActivate: [AuthGuard]
-  },
+  { path: "busquedaColegiados", component: BusquedaColegiadosComponent, canActivate: [AuthGuard] },
+  { path: "fichaColegial", component: FichaColegialComponent, canActivate: [AuthGuard] },
+  { path: "editarUsuario", component: EditarUsuarioComponent, canActivate: [AuthGuard] },
   { path: "searchNoColegiados", component: SearchNoColegiadosComponent, canActivate: [AuthGuard] },
   { path: "certificadosAca", component: CertificadosAcaComponent, canActivate: [AuthGuard] },
   { path: "comisionesCargos", component: ComisionesCargosComponent, canActivate: [AuthGuard] },
   { path: "solicitudesGenericas", component: SolicitudesGenericasComponent, canActivate: [AuthGuard] },
-  {
-    path: "solicitudesEspecificas",
-    component: SolicitudesEspecificasComponent, canActivate: [AuthGuard]
-  },
-  {
-    path: "solicitudesIncorporacion",
-    component: SolicitudesIncorporacionComponent, canActivate: [AuthGuard]
-  },
+  { path: "solicitudesEspecificas", component: SolicitudesEspecificasComponent, canActivate: [AuthGuard] },
+  { path: "solicitudesIncorporacion", component: SolicitudesIncorporacionComponent, canActivate: [AuthGuard] },
   { path: "nuevaIncorporacion", component: NuevaIncorporacionComponent, canActivate: [AuthGuard] },
-  {
-    path: "documentacionSolicitudes",
-    component: DocumentacionSolicitudesComponent, canActivate: [AuthGuard]
-  },
-  {
-    path: "mantenimientoGruposFijos",
-    component: MantenimientoGruposFijosComponent, canActivate: [AuthGuard]
-  },
+  { path: "documentacionSolicitudes", component: DocumentacionSolicitudesComponent, canActivate: [AuthGuard] },
+  { path: "mantenimientoGruposFijos", component: MantenimientoGruposFijosComponent, canActivate: [AuthGuard] },
   { path: "mantenimientoMandatos", component: MantenimientoMandatosComponent, canActivate: [AuthGuard] },
   { path: "busquedaSanciones", component: BusquedaSancionesComponent, canActivate: [AuthGuard] },
+  { path: "busquedaLetrados", component: BusquedaLetradosComponent, canActivate: [AuthGuard] },
+  { path: "mantenimientoDuplicados", component: MantenimientoDuplicadosComponent, canActivate: [AuthGuard] },
+  { path: "modificacionDatos", component: ModificacionDatosComponent, canActivate: [AuthGuard] },
+  { path: "mediadores", component: MediadoresComponent, canActivate: [AuthGuard] },
+  { path: "cargasPeriodicas", component: CargasPeriodicasComponent, canActivate: [AuthGuard] },
+  { path: "configurarPerfil", component: ConfigurarPerfilComponent, canActivate: [AuthGuard] },
+  { path: "censoDocumentacion", component: CensoDocumentacionComponent, canActivate: [AuthGuard] },
+  { path: "gestionSubtiposCV", component: GestionSubtiposCVComponent, canActivate: [AuthGuard] },
 
+
+
+  //Certificados
+  { path: "comunicacionInterprofesional", component: ComunicacionInterprofesionalComponent, canActivate: [AuthGuard] },
+  { path: "solicitarCompra", component: SolicitarCompraComponent, canActivate: [AuthGuard] },
+  { path: "solicitudCertificados", component: SolicitudCertificadosComponent, canActivate: [AuthGuard] },
+  { path: "gestionSolicitudes", component: GestionSolicitudesComponent, canActivate: [AuthGuard] },
+  { path: "mantenimientoCertificados", component: MantenimientoCertificadosComponent, canActivate: [AuthGuard] },
   // Administracion
   { path: "catalogosMaestros", component: CatalogosMaestros, canActivate: [AuthGuard] },
   {

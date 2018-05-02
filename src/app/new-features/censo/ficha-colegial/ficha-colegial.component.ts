@@ -4,7 +4,7 @@ import { Http, Response } from '@angular/http';
 import { MenuItem } from 'primeng/api';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
-import { esCalendar } from '../../../utils/calendar';
+import { esCalendar } from '../../utils/calendar';
 import { Router } from '@angular/router';
 import { DatosGeneralesComponent } from './datos-generales/datos-generales.component';
 import { Message } from 'primeng/components/common/api';
@@ -39,7 +39,7 @@ export class FichaColegialComponent implements OnInit {
   rowsPerPage: any = [];
   showAll: boolean = false;
 
-  selectedItem: number = 4;
+  selectedItem: number = 10;
   selectedDoc: string = 'NIF'
   newDireccion: boolean = false;
 
@@ -132,10 +132,10 @@ export class FichaColegialComponent implements OnInit {
 
     this.rowsPerPage = [
       {
-        label: 4, value: 4
+        label: 10, value: 10
       },
       {
-        label: 6, value: 6
+        label: 20, value: 20
       },
       {
         label: 'Todo', value: this.datosDirecciones.length

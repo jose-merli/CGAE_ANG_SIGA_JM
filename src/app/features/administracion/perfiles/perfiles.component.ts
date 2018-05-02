@@ -33,8 +33,8 @@ import { MessageService } from "primeng/components/common/messageservice";
 import { PerfilItem } from "./../../../../app/models/PerfilItem";
 import { PerfilesResponseDto } from "./../../../../app/models/PerfilesResponseDto";
 import { PerfilesRequestDto } from "./../../../../app/models/PerfilesRequestDto";
+import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { ComboItem } from "./../../../../app/models/ComboItem";
-
 @Component({
   selector: "app-perfiles",
   templateUrl: "./perfiles.component.html",
@@ -49,6 +49,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   dummy = [];
   searchPerfiles: PerfilesResponseDto = new PerfilesResponseDto();
   requestPerfiles: PerfilesRequestDto = new PerfilesRequestDto();
+  controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   rowsPerPage: any = [];
   showDatosGenerales: boolean = true;
   pButton;
@@ -58,7 +59,11 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   disabled: boolean = false;
   selectMultiple: boolean = false;
   blockCrear: boolean = true;
-  selectedItem: number = 4;
+  permisosTree: any;
+  permisosArray: any[];
+  derechoAcceso: any;
+  activacionEditar: boolean;
+  selectedItem: number = 10;
 
   constructor(
     private sigaServices: SigaServices,
@@ -75,7 +80,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   @ViewChild("table") table;
   ngOnInit() {
     this.isBuscar();
-
+    this.checkAcceso();
     this.cols = [
       {
         field: "idGrupo",
@@ -97,50 +102,75 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
 
     this.rowsPerPage = [
       {
-        label: 4,
-        value: 4
-      },
-      {
-        label: 6,
-        value: 6
-      },
-      {
-        label: 8,
-        value: 8
-      },
-      {
         label: 10,
         value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
       }
     ];
   }
+
   isBuscar() {
+    this.historicoActive = false;
     this.sigaServices
       .postPaginado("perfiles_search", "?numPagina=1", null)
       .subscribe(
+        data => {
+          console.log(data);
+          this.searchPerfiles = JSON.parse(data["body"]);
+          this.datos = this.searchPerfiles.usuarioGrupoItems;
+          this.buscar = true;
+          this.sigaServices.get("usuarios_rol").subscribe(
+            n => {
+              this.dummy = n.combooItems;
+              this.table.reset();
+            },
+            err => {
+              console.log(err);
+            }
+          );
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.table.reset();
+        }
+      );
+  }
+
+  checkAcceso() {
+    this.controlAcceso = new ControlAccesoDto();
+    this.controlAcceso.idProceso = 82;
+    this.sigaServices.post("acces_control", this.controlAcceso).subscribe(
       data => {
-        console.log(data);
-        this.searchPerfiles = JSON.parse(data["body"]);
-        this.datos = this.searchPerfiles.usuarioGrupoItems;
-        this.buscar = true;
-        this.sigaServices.get("usuarios_rol").subscribe(
-          n => {
-            this.dummy = n.combooItems;
-            this.table.reset();
-          },
-          err => {
-            console.log(err);
-          }
-        );
+        this.permisosTree = JSON.parse(data.body);
+        this.permisosArray = this.permisosTree.permisoItems;
+        this.derechoAcceso = this.permisosArray[0].derechoacceso;
       },
       err => {
         console.log(err);
       },
       () => {
-        this.table.reset();
+        if (this.derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else {
+          this.activacionEditar = false;
+        }
       }
-      );
+    );
   }
+
   onChangeDrop(event, dato) {
     console.log(event);
     console.log(dato);
@@ -243,6 +273,10 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         ir = id[0];
       }
       sessionStorage.setItem("perfil", JSON.stringify(id));
+      sessionStorage.setItem(
+        "privilegios",
+        JSON.stringify(this.activacionEditar)
+      );
       this.router.navigate(["/EditarPerfiles"]);
     } else {
       this.editar = false;
@@ -265,8 +299,8 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
             severity: "success",
             summary: "Correcto",
             detail:
-            selectedDatos.length +
-            this.translateService.instant("messages.deleted.selected.success")
+              selectedDatos.length +
+              this.translateService.instant("messages.deleted.selected.success")
           });
         }
       },
@@ -281,21 +315,22 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   }
   historico() {
     this.historicoActive = true;
+    this.selectMultiple = false;
     this.sigaServices
       .postPaginado("perfiles_historico", "?numPagina=1", null)
       .subscribe(
-      data => {
-        console.log(data);
-        this.searchPerfiles = JSON.parse(data["body"]);
-        this.datos = this.searchPerfiles.usuarioGrupoItems;
-        this.buscar = false;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.table.reset();
-      }
+        data => {
+          console.log(data);
+          this.searchPerfiles = JSON.parse(data["body"]);
+          this.datos = this.searchPerfiles.usuarioGrupoItems;
+          this.buscar = false;
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.table.reset();
+        }
       );
   }
   confirmarBorrar(selectedDatos) {
@@ -328,8 +363,8 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       }
     });
   }
-  setItalic(datoH) {
-    if (datoH.fechaBaja == null) return false;
+  setItalic(dato) {
+    if (dato.fechaBaja == null) return false;
     else return true;
   }
 }

@@ -50,7 +50,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   filaSelecionadaTabla: any;
   buscar: boolean = false;
   botonBuscar: boolean = true;
-  selectedItem: number = 4;
+  selectedItem: number = 10;
   columnasTabla: any = [];
   rowsPerPage: any = [];
   eliminar: boolean = true;
@@ -100,20 +100,20 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
 
     this.rowsPerPage = [
       {
-        label: 4,
-        value: 4
-      },
-      {
-        label: 6,
-        value: 6
-      },
-      {
-        label: 8,
-        value: 8
-      },
-      {
         label: 10,
         value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
       }
     ];
   }
@@ -122,7 +122,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
 
-  onChangeForm() {}
+  onChangeForm() { }
 
   confirmarBuscar() {
     if (this.selectedModulo != "") {
@@ -144,15 +144,15 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("parametros_search", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          console.log(data);
+      data => {
+        console.log(data);
 
-          this.searchParametros = JSON.parse(data["body"]);
-          this.datosBuscar = this.searchParametros.parametrosItems;
-        },
-        err => {
-          console.log(err);
-        }
+        this.searchParametros = JSON.parse(data["body"]);
+        this.datosBuscar = this.searchParametros.parametrosItems;
+      },
+      err => {
+        console.log(err);
+      }
       );
 
     this.buscar = true;
@@ -230,21 +230,21 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("parametros_historico", "?numPagina=1", this.bodyHistorico)
       .subscribe(
-        data => {
-          console.log(data);
+      data => {
+        console.log(data);
 
-          this.historicoParametros = JSON.parse(data["body"]);
-          this.datosHistorico = this.historicoParametros.parametrosItems;
-        },
-        err => {
-          console.log(err);
-        },
-        () => {
-          this.buscar = false;
-          this.historico = true;
-          this.eliminar = true;
-          this.filaSelecionadaTabla = null;
-        }
+        this.historicoParametros = JSON.parse(data["body"]);
+        this.datosHistorico = this.historicoParametros.parametrosItems;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.buscar = false;
+        this.historico = true;
+        this.eliminar = true;
+        this.filaSelecionadaTabla = null;
+      }
       );
   }
 
@@ -345,5 +345,5 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
 export class ComboItem {
   label: String;
   value: String;
-  constructor() {}
+  constructor() { }
 }

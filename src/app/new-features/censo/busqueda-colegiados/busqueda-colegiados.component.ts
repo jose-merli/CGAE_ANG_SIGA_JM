@@ -35,7 +35,7 @@ export class BusquedaColegiadosComponent implements OnInit {
   buscar: boolean = false;
   selectAll: boolean = false;
 
-  selectedItem: number = 4;
+  selectedItem: number = 10;
   @ViewChild('table')
   table
   selectedDatos
@@ -116,10 +116,10 @@ export class BusquedaColegiadosComponent implements OnInit {
 
     this.rowsPerPage = [
       {
-        label: 4, value: 4
+        label: 10, value: 10
       },
       {
-        label: 6, value: 6
+        label: 20, value: 20
       },
       {
         label: 'Todo', value: this.datos.length

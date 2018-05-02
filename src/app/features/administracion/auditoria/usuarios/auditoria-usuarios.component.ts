@@ -198,6 +198,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
       return false;
     else return true;
   }
+
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }

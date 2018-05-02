@@ -36,23 +36,25 @@
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>{{"administracion.usuarios.literal.grupo" | translate}}</label>
-            <p-multiSelect styleClass="widthAll" [(ngModel)]='body.perfiles' [options]="usuarios_perfil" [selectedItemsLabel]="textSelected"
-              [defaultLabel]="textFilter" [panelStyle]="{width:'100%'}"></p-multiSelect>
+            <p-multiSelect [disabled]="!activacionEditar" styleClass="widthAll" [(ngModel)]='body.perfiles' [options]="usuarios_perfil"
+              [selectedItemsLabel]="textSelected" [defaultLabel]="textFilter" [panelStyle]="{width:'100%'}"></p-multiSelect>
 
           </div>
 
           <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
             <label>{{"general.codeext" | translate}}</label>
-            <input type="text" name="codExterno" class="form-control" [(disabled)]="!editar" [(ngModel)]='body.codigoExterno' [formControl]="this.formGroup.controls['codigoExterno']"
-              pInputText>
-              <label *ngIf="hasErrors('codigoExterno')" class="labelError">{{getErrorMessage('codigoExterno')}}</label>
+            <input *ngIf="!activacionEditar" disabled type="text" name="codExterno" class="form-control" [(ngModel)]='body.codigoExterno'
+              [formControl]="this.formGroup.controls['codigoExterno']" pInputText>
+              <input *ngIf="activacionEditar" type="text" name="codExterno" class="form-control" [(ngModel)]='body.codigoExterno' [formControl]="this.formGroup.controls['codigoExterno']"
+                pInputText>
+                <label *ngIf="hasErrors('codigoExterno')" class="labelError">{{getErrorMessage('codigoExterno')}}</label>
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label class="d-block pb-2">{{"administracion.usuarios.literal.activo" | translate}}</label>
             <!--<p-dropdown class="select-form" [options]="select"></p-dropdown>-->
-            <p-radioButton label="{{'messages.si' | translate}}" name="activo" value="S" class="pr-3" [(ngModel)]="body.activo" [(disabled)]="disabledRadio"></p-radioButton>
+            <p-radioButton label="{{'messages.si' | translate}}" name="activo" value="S" class="pr-3" [(ngModel)]="body.activo" [disabled]="!activacionEditar"></p-radioButton>
             <p-radioButton label="{{'general.boton.no' | translate}}" name="activo" value="N" class="pr-3" [(ngModel)]="body.activo"
-              [(disabled)]="disabledRadio">
+              [disabled]="!activacionEditar">
               </p-radioButton>
           </div>
         </div>
@@ -61,7 +63,7 @@
     <div class="card-footer">
       <div class="text-right main-button ">
         <button (click)="confirmEdit();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"
-          [disabled]="formGroup.invalid"></button>
+          [disabled]="!activacionEditar"></button>
           <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
       </div>
     </div>

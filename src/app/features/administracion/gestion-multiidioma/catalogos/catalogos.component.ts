@@ -48,7 +48,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
   datosTraduccion: any[];
   columnasTabla: any = [];
   rowsPerPage: any = [];
-  selectedItem: number = 4;
+  selectedItem: number = 10;
   valorDefecto: any;
   buscar: boolean = true;
   bodySearch: MultiidiomaCatalogoSearchDto = new MultiidiomaCatalogoSearchDto();
@@ -100,31 +100,31 @@ export class Catalogos extends SigaWrapper implements OnInit {
       {
         field: "descripcionBusqueda",
         header:
-          "administracion.multidioma.etiquetas.literal.descripcionInstitucion"
+        "administracion.multidioma.etiquetas.literal.descripcionInstitucion"
       },
       {
         field: "descripcionTraduccion",
         header:
-          "administracion.multidioma.etiquetas.literal.descripcionIdiomaSeleccionado"
+        "administracion.multidioma.etiquetas.literal.descripcionIdiomaSeleccionado"
       }
     ];
 
     this.rowsPerPage = [
       {
-        label: 4,
-        value: 4
-      },
-      {
-        label: 6,
-        value: 6
-      },
-      {
-        label: 8,
-        value: 8
-      },
-      {
         label: 10,
         value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
       }
     ];
   }
@@ -140,15 +140,15 @@ export class Catalogos extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("catalogos_search", "?numPagina=1", this.bodySearch)
       .subscribe(
-        data => {
-          console.log(data);
-          this.searchParametros = JSON.parse(data["body"]);
-          this.datosTraduccion = this.searchParametros.multiidiomaCatalogoItem;
-          this.buscarSeleccionado = true;
-        },
-        err => {
-          console.log(err);
-        }
+      data => {
+        console.log(data);
+        this.searchParametros = JSON.parse(data["body"]);
+        this.datosTraduccion = this.searchParametros.multiidiomaCatalogoItem;
+        this.buscarSeleccionado = true;
+      },
+      err => {
+        console.log(err);
+      }
       );
   }
   isHabilitadoBuscar() {

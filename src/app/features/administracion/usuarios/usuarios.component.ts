@@ -35,6 +35,8 @@ import { UsuarioDeleteRequestDto } from "./../../../../app/models/UsuarioDeleteR
 import { UsuarioItem } from "./../../../../app/models/UsuarioItem";
 import { ComboItem } from "./../../../../app/models/ComboItem";
 import { MultiSelectModule } from "primeng/multiSelect";
+import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
+
 @Component({
   selector: "app-usuarios",
   templateUrl: "./usuarios.component.html",
@@ -60,9 +62,14 @@ export class Usuarios extends SigaWrapper implements OnInit {
   disabled: boolean = false;
   selectMultiple: boolean = false;
   blockCrear: boolean = true;
-  selectedItem: number = 4;
+  selectedItem: number = 10;
   activo: boolean = false;
   dniCorrecto: boolean;
+  controlAcceso: ControlAccesoDto = new ControlAccesoDto();
+  permisosTree: any;
+  permisosArray: any[];
+  derechoAcceso: any;
+  activacionEditar: boolean;
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
@@ -81,7 +88,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
   @ViewChild("table") table;
   ngOnInit() {
     this.activo = true;
-
+    this.checkAcceso();
     this.sigaServices.get("usuarios_rol").subscribe(
       n => {
         this.usuarios_rol = n.combooItems;
@@ -109,20 +116,20 @@ export class Usuarios extends SigaWrapper implements OnInit {
 
     this.rowsPerPage = [
       {
-        label: 4,
-        value: 4
-      },
-      {
-        label: 6,
-        value: 6
-      },
-      {
-        label: 8,
-        value: 8
-      },
-      {
         label: 10,
         value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
       }
     ];
     if (sessionStorage.getItem("searchUser") != null) {
@@ -145,8 +152,30 @@ export class Usuarios extends SigaWrapper implements OnInit {
     );
   }
 
+  checkAcceso() {
+    this.controlAcceso = new ControlAccesoDto();
+    this.controlAcceso.idProceso = 83;
+    this.sigaServices.post("acces_control", this.controlAcceso).subscribe(
+      data => {
+        this.permisosTree = JSON.parse(data.body);
+        this.permisosArray = this.permisosTree.permisoItems;
+        this.derechoAcceso = this.permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (this.derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else {
+          this.activacionEditar = false;
+        }
+      }
+    );
+  }
+
   activarPaginacion() {
-    if (this.datos.length == 0) return false;
+    if (!this.datos || this.datos.length == 0) return false;
     else return true;
   }
 
@@ -472,6 +501,10 @@ export class Usuarios extends SigaWrapper implements OnInit {
         ir = id[0];
       }
       sessionStorage.setItem("usuarioBody", JSON.stringify(id));
+      sessionStorage.setItem(
+        "privilegios",
+        JSON.stringify(this.activacionEditar)
+      );
       sessionStorage.setItem("searchUser", JSON.stringify(this.body));
       this.router.navigate(["/editarUsuario", ir]);
     } else {
