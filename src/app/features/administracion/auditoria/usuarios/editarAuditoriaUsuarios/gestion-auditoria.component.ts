@@ -63,6 +63,8 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   arrayDate: string;
   addedDay: number;
   correcto: boolean;
+  habilitarBotonGuardarCerrar: boolean = true;
+  motivoSinModificar: String;
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -78,17 +80,12 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   @ViewChild("table") table;
   ngOnInit() {
     this.itemBody = new HistoricoUsuarioItem();
-    this.itemBody = JSON.parse(sessionStorage.getItem("auditoriaBody"));
+    this.itemBody = JSON.parse(sessionStorage.getItem("auditoriaUsuarioBody"));
+    sessionStorage.removeItem("auditoriaUsuarioBody");
+
     console.log(sessionStorage);
 
-    this.sigaServices.get("auditoriaUsuarios_update").subscribe(
-      n => {
-        this.auditoriaUsuarios_update = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    this.motivoSinModificar = this.itemBody.motivo;
 
     // this.bodyToForm();
     this.checkMode();
@@ -104,37 +101,34 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
       this.disabled = false;
     }
   }
-  isRestablecer() {
-    this.body = JSON.parse(sessionStorage.getItem("auditoriaBody"));
-    // this.bodyToForm();
-  }
-
-  // bodyToForm() {
-  //   this.fechaEntrada = this.body.fechaEntrada;
-  //   this.fechaEfectiva = this.body.fechaEfectiva;
-  // }
 
   pInputText;
   isEditar() {
     this.update.idHistorico = this.itemBody.idHistorico;
     this.update.idPersona = this.itemBody.idPersona;
     this.update.motivo = this.itemBody.motivo;
-
+    var registroActualizado = false;
     this.sigaServices.post("auditoriaUsuarios_update", this.update).subscribe(
       data => {
         this.showSuccess();
         console.log(data);
         this.correcto = true;
+        registroActualizado = true;
+        sessionStorage.setItem(
+          "registroAuditoriaUsuariosActualizado",
+          JSON.stringify(registroActualizado)
+        );
+        this.volver();
       },
       err => {
         this.showFail();
         this.correcto = false;
         console.log(err);
-      },
-      () => {
-        if (this.correcto) {
-          this.volver();
-        }
+        registroActualizado = false;
+        sessionStorage.setItem(
+          "registroAuditoriaUsuariosActualizado",
+          JSON.stringify(registroActualizado)
+        );
       }
     );
   }
@@ -192,6 +186,18 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   }
 
   volver() {
-    this.router.navigate([JSON.parse(sessionStorage.getItem("url"))]);
+    this.router.navigate([
+      JSON.parse(sessionStorage.getItem("urlAuditoriaUsuarios"))
+    ]);
+  }
+
+  isHabilitadoGuardarCerrar() {
+    return this.habilitarBotonGuardarCerrar;
+  }
+
+  actualizarBotonGuardarCerrar() {
+    if (this.motivoSinModificar != this.itemBody.motivo)
+      this.habilitarBotonGuardarCerrar = false;
+    else this.habilitarBotonGuardarCerrar = true;
   }
 }

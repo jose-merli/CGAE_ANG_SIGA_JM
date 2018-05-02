@@ -45,7 +45,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   fechaDesdeCalendar: Date;
   fechaHastaCalendar: Date;
   es: any = esCalendar;
-  selectedItem: number = 4;
+  selectedItem: number = 10;
   columnasTabla: any = [];
   rowsPerPage: any = [];
   datosUsuarios: any[];
@@ -53,6 +53,9 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   searchParametros: HistoricoUsuarioDto = new HistoricoUsuarioDto();
   jsonDate: string;
   selectedDatos: any;
+  msgs: Message[] = [];
+  habilitarInputUsuario: boolean = false;
+
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -65,6 +68,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     super(USER_VALIDATIONS);
   }
 
+  @ViewChild("table") table;
   ngOnInit() {
     this.sigaServices.get("auditoriaUsuarios_tipoAccion").subscribe(
       n => {
@@ -75,64 +79,77 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
       }
     );
 
+    var registroActualizado = JSON.parse(
+      sessionStorage.getItem("registroAuditoriaUsuariosActualizado")
+    );
+    if (registroActualizado) {
+      this.showSuccess();
+      sessionStorage.setItem(
+        "registroAuditoriaUsuariosActualizado",
+        JSON.stringify(false)
+      );
+    }
+
+    sessionStorage.removeItem("urlAuditoriaUsuarios");
+
+    if (sessionStorage.getItem("searchBodyAuditoriaUsuarios") != null) {
+      this.bodySearch = JSON.parse(
+        sessionStorage.getItem("searchBodyAuditoriaUsuarios")
+      );
+      this.isBuscar();
+    }
+
     this.columnasTabla = [
       {
         field: "persona",
-        header: "Persona"
+        header: "administracion.auditoriaUsuarios.persona"
       },
       {
         field: "descripcionUsuario",
-        header: "Usuario"
+        header: "general.boton.usuario"
       },
       {
         field: "descTipoCambio",
-        header: "Tipo Acción"
+        header: "administracion.auditoriaUsuarios.literal.tipoAccion"
       },
       {
         field: "fechaEfectiva",
-        header: "Fecha Efectiva"
+        header: "administracion.auditoriaUsuarios.literal.fechaEfectiva"
       },
       {
         field: "motivo",
-        header: "Motivo"
+        header: "administracion.auditoriaUsuarios.literal.motivo"
       }
     ];
 
     this.rowsPerPage = [
       {
-        label: 4,
-        value: 4
-      },
-      {
-        label: 6,
-        value: 6
-      },
-      {
-        label: 8,
-        value: 8
-      },
-      {
         label: 10,
         value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
       }
     ];
   }
 
   isBuscar() {
-    if (this.usuario != undefined) this.bodySearch.usuario = this.usuario;
-    if (this.persona != undefined) this.bodySearch.idPersona = this.persona;
-    if (this.selectedTipoAccion)
-      this.bodySearch.idTipoAccion = this.selectedTipoAccion;
-    if (this.valorCheckUsuarioAutomatico == true)
-      this.bodySearch.usuarioAutomatico = "S";
-    else this.bodySearch.usuarioAutomatico = "N";
-
-    if (this.fechaDesdeCalendar != undefined)
-      this.bodySearch.fechaDesde = this.fechaDesdeCalendar;
-    else this.bodySearch.fechaDesde = null;
-    if (this.fechaHastaCalendar != undefined)
-      this.bodySearch.fechaHasta = this.fechaHastaCalendar;
-    else this.bodySearch.fechaHasta = null;
+    // si no viene de la pantalla de editarAuditoriaUsuario contruye el objecto para el body de la consulta /search
+    if (sessionStorage.getItem("searchBodyAuditoriaUsuarios") == null) {
+      this.construirObjetoBodySearch();
+    } else {
+      // si viene de la pantalla de edicion, borra la variable session
+      sessionStorage.removeItem("searchBodyAuditoriaUsuarios");
+    }
 
     this.sigaServices
       .postPaginado("auditoriaUsuarios_search", "?numPagina=1", this.bodySearch)
@@ -149,7 +166,38 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
         }
       );
   }
-  isHabilitadoBuscar() {}
+
+  construirObjetoBodySearch() {
+    if (this.usuario != undefined) this.bodySearch.usuario = this.usuario;
+    else this.usuario = undefined;
+
+    if (this.persona != undefined) this.bodySearch.idPersona = this.persona;
+    else this.persona = undefined;
+
+    if (this.selectedTipoAccion != "")
+      this.bodySearch.idTipoAccion = this.selectedTipoAccion;
+    else this.selectedTipoAccion = undefined;
+
+    if (this.valorCheckUsuarioAutomatico == true)
+      this.bodySearch.usuarioAutomatico = "S";
+    else this.bodySearch.usuarioAutomatico = "N";
+
+    if (this.fechaDesdeCalendar != undefined)
+      this.bodySearch.fechaDesde = this.fechaDesdeCalendar;
+    else this.bodySearch.fechaDesde = undefined;
+    if (this.fechaHastaCalendar != undefined)
+      this.bodySearch.fechaHasta = this.fechaHastaCalendar;
+    else this.bodySearch.fechaHasta = undefined;
+  }
+
+  isHabilitadoBuscar() {
+    if (
+      this.fechaDesdeCalendar != undefined &&
+      this.fechaHastaCalendar != undefined
+    )
+      return false;
+    else return true;
+  }
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
@@ -160,8 +208,140 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   }
 
   irEditarUsuario(id) {
-    sessionStorage.setItem("auditoriaBody", JSON.stringify(id));
-    //sessionStorage.setItem("searchCatalogo", JSON.stringify(this.bodySearch));
+    var url = "/auditoriaUsuarios/";
+    sessionStorage.setItem("auditoriaUsuarioBody", JSON.stringify(id));
+    sessionStorage.setItem("urlAuditoriaUsuarios", JSON.stringify(url));
+    sessionStorage.setItem(
+      "searchBodyAuditoriaUsuarios",
+      JSON.stringify(this.bodySearch)
+    );
+
     this.router.navigate(["/gestionAuditoria"]);
+  }
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
+
+  confirmarBuscar() {
+    let diferenciaFechas = this.calcularRangoFechas();
+    let diferenciaFechas1 = this.calcularRangoFechas();
+
+    // con mas de 30 dias entre las fechas introducidas y los demas filtros vacios sale el mensaje de busqueda costosa
+    if (
+      (this.usuario == "" || this.usuario == undefined) &&
+      (this.persona == "" || this.persona == undefined) &&
+      (this.selectedTipoAccion == "" || this.selectedTipoAccion == undefined) &&
+      diferenciaFechas > 30
+    ) {
+      this.confirmationService.confirm({
+        message: this.translateService.instant(
+          "administracion.auditoriaUsuarios.literal.busquedaCostosa"
+        ),
+        icon: "fa fa-search ",
+        accept: () => {
+          this.isBuscar();
+        },
+        reject: () => {
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "Info",
+              detail: this.translateService.instant(
+                "general.message.accion.cancelada"
+              )
+            }
+          ];
+        }
+      });
+    } else {
+      this.isBuscar();
+    }
+  }
+
+  calcularRangoFechas() {
+    // obtener 1 dia en milisegundos
+    let one_day = 1000 * 60 * 60 * 24;
+
+    // convertir fechas en milisegundos
+    let fechaDesde = this.fechaDesdeCalendar.getTime();
+    let fechaHasta = this.fechaHastaCalendar.getTime();
+
+    // calcular las diferencias en milisegundos
+    let msRangoFechas = fechaHasta - fechaDesde;
+
+    // transformar los milisegundos en dias
+    let rangoFechas = Math.round(msRangoFechas / one_day);
+
+    return rangoFechas;
+  }
+
+  isHabilitadoInputUsuario() {
+    if (this.valorCheckUsuarioAutomatico == true) {
+      this.habilitarInputUsuario = true;
+      this.usuario = undefined;
+      return this.habilitarInputUsuario;
+    } else {
+      this.habilitarInputUsuario = false;
+      return this.habilitarInputUsuario;
+    }
+  }
+
+  // se controla la fecha cuando se introduce sin el grafico del calendario
+  getFechaHastaCalendar() {
+    if (
+      this.fechaDesdeCalendar != undefined &&
+      this.fechaHastaCalendar != undefined
+    ) {
+      let one_day = 1000 * 60 * 60 * 24;
+
+      // convertir fechas en milisegundos
+      let fechaDesde = this.fechaDesdeCalendar.getTime();
+      let fechaHasta = this.fechaHastaCalendar.getTime();
+      let msRangoFechas = fechaHasta - fechaDesde;
+
+      if (msRangoFechas < 0) this.fechaDesdeCalendar = undefined;
+    }
+    return this.fechaHastaCalendar;
+  }
+
+  // se controla la fecha cuando se introduce sin el grafico del calendario
+  getFechaDesdeCalendar() {
+    if (
+      this.fechaDesdeCalendar != undefined &&
+      this.fechaHastaCalendar != undefined
+    ) {
+      let one_day = 1000 * 60 * 60 * 24;
+
+      // convertir fechas en milisegundos
+      let fechaDesde = this.fechaDesdeCalendar.getTime();
+      let fechaHasta = this.fechaHastaCalendar.getTime();
+      let msRangoFechas = fechaHasta - fechaDesde;
+
+      if (msRangoFechas < 0) this.fechaHastaCalendar = undefined;
+    }
+    return this.fechaDesdeCalendar;
+  }
+
+  showSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant("general.message.accion.realizada")
+    });
+  }
+
+  showFail() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "general.message.error.realiza.accion"
+      )
+    });
   }
 }
