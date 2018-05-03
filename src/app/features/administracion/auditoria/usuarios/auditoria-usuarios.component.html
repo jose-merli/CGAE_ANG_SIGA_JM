@@ -70,7 +70,7 @@
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [value]="datosUsuarios" [editable]="true" [responsive]="true"
                 #table class="tabla-listado" [sortOrder]="1" [paginator]="activarPaginacion()" paginatorPosition="both" [rows]="selectedItem"
                 [(selection)]="selectedDatos" (onRowSelect)="irEditarUsuario(selectedDatos)" selectionMode="single">
-                <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header" [filter]="true">
+                <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true">
                 </p-column>
 
                 <ng-template *ngIf="activarPaginacion() == true" pTemplate="paginatorLeft">
