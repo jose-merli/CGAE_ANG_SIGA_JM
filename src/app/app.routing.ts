@@ -132,7 +132,8 @@ const appRoutes: Routes = [
   {
     path: "permisos",
     component: PermisosComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { scrollReset: true }
   },
 
   { path: "catalogos", component: Catalogos, canActivate: [AuthGuard] },

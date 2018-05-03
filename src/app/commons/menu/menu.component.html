@@ -1,10 +1,11 @@
 <div class="menu-censo" [ngClass]="{'closedMenu':closeMenu === true, 'openedMenu':closeMenu === false}">
   <div class="container-fluid">
     <div class="col-items">
-      <ul *ngIf="!showChild" class="nav navbar-nav ">
-        <i class="conf fa fa-cog"></i>
-        <li [ngClass]="{'catalogos':opcion.idClass==='catalogos', 'adm':opcion.idClass==='adm', 'plantillas':opcion.idClass==='plantillas','menu-item-active': isRoute(opcion.routerLink) }"
+      <ul *ngIf="!showChild" class="nav navbar-nav d-flex">
+
+        <li [ngClass]="{'config':opcion.idClass==='config', 'catalogos':opcion.idClass==='catalogos', 'adm':opcion.idClass==='adm', 'plantillas':opcion.idClass==='plantillas','menu-item-active': isRoute(opcion.routerLink) }"
           *ngFor="let opcion of items" (click)="viewChild(opcion.items, opcion.label) || navigateTo(opcion.routerLink)">{{opcion.label | translate}} <i *ngIf="opcion.items" class="fa fa-angle-right float-right"></i></li>
+
       </ul>
       <ul *ngIf="showChild && !showChildOfChild" class="nav navbar-nav ">
         <li (click)="backMenu()" class="breadCrumbMenu">{{selectedLabel | translate}} <i class="fa fa-angle-right"></i></li>
