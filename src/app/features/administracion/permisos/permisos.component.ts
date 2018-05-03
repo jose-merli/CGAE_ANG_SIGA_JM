@@ -102,7 +102,7 @@ export class PermisosComponent implements OnInit, DoCheck {
 
   checkAcceso() {
     this.controlAcceso = new ControlAccesoDto();
-    this.controlAcceso.idProceso = 84;
+    this.controlAcceso.idProceso = "84";
     this.sigaServices.post("acces_control", this.controlAcceso).subscribe(
       data => {
         this.permisos = JSON.parse(data.body);

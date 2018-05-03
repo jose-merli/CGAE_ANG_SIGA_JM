@@ -103,7 +103,7 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
 
   checkAcceso() {
     this.controlAcceso = new ControlAccesoDto();
-    this.controlAcceso.idProceso = 110;
+    this.controlAcceso.idProceso = "110";
     this.sigaServices.post("acces_control", this.controlAcceso).subscribe(
       data => {
         this.permisos = JSON.parse(data.body);

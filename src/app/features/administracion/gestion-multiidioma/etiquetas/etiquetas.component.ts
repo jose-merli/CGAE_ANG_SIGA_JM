@@ -29,6 +29,7 @@ import { EtiquetaUpdateDto } from "../../../../models/EtiquetaUpdateDto";
 import { EtiquetaSearchDto } from "../../../../models/EtiquetaSearchDto";
 import { EtiquetaDto } from "../../../../models/EtiquetaDto";
 import { EtiquetaItem } from "../../../../models/EtiquetaItem";
+import { ControlAccesoDto } from "../../../../../app/models/ControlAccesoDto";
 
 @Component({
   selector: "app-etiquetas",
@@ -56,6 +57,13 @@ export class Etiquetas extends SigaWrapper implements OnInit {
   msgs: Message[] = [];
   paginacion: boolean = false;
 
+  controlAcceso: ControlAccesoDto = new ControlAccesoDto();
+  permisos: any;
+  permisosArray: any[];
+  derechoAcceso: any;
+  comparacion: boolean;
+  editar: boolean = false;
+
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -70,6 +78,7 @@ export class Etiquetas extends SigaWrapper implements OnInit {
 
   @ViewChild("table") table;
   ngOnInit() {
+    this.checkAcceso();
     this.sigaServices.get("etiquetas_lenguaje").subscribe(
       n => {
         this.idiomaBusqueda = n.combooItems;
@@ -92,12 +101,12 @@ export class Etiquetas extends SigaWrapper implements OnInit {
       {
         field: "descripcionBusqueda",
         header:
-        "administracion.multidioma.etiquetas.literal.descripcionInstitucion"
+          "administracion.multidioma.etiquetas.literal.descripcionInstitucion"
       },
       {
         field: "descripcionTraduccion",
         header:
-        "administracion.multidioma.etiquetas.literal.descripcionIdiomaSeleccionado"
+          "administracion.multidioma.etiquetas.literal.descripcionIdiomaSeleccionado"
       }
     ];
 
@@ -125,6 +134,28 @@ export class Etiquetas extends SigaWrapper implements OnInit {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
 
+  checkAcceso() {
+    this.controlAcceso = new ControlAccesoDto();
+    this.controlAcceso.idProceso = "99A";
+    this.sigaServices.post("acces_control", this.controlAcceso).subscribe(
+      data => {
+        this.permisos = JSON.parse(data.body);
+        this.permisosArray = this.permisos.permisoItems;
+        this.derechoAcceso = this.permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (this.derechoAcceso == 3) {
+          this.editar = true;
+        } else {
+          this.editar = false;
+        }
+      }
+    );
+  }
+
   isBuscar() {
     this.bodySearch.descripcion = this.descripcion;
     this.bodySearch.idiomaBusqueda = this.selectedIdiomaBusqueda;
@@ -133,18 +164,18 @@ export class Etiquetas extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("etiquetas_search", "?numPagina=1", this.bodySearch)
       .subscribe(
-      data => {
-        console.log(data);
-        this.searchParametros = JSON.parse(data["body"]);
-        this.datosTraduccion = this.searchParametros.etiquetaItem;
-        this.buscarSeleccionado = true;
+        data => {
+          console.log(data);
+          this.searchParametros = JSON.parse(data["body"]);
+          this.datosTraduccion = this.searchParametros.etiquetaItem;
+          this.buscarSeleccionado = true;
 
-        if (this.datosTraduccion.length == 0) this.paginacion = false;
-        else this.paginacion = true;
-      },
-      err => {
-        console.log(err);
-      }
+          if (this.datosTraduccion.length == 0) this.paginacion = false;
+          else this.paginacion = true;
+        },
+        err => {
+          console.log(err);
+        }
       );
   }
 
