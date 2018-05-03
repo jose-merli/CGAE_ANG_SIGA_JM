@@ -85,10 +85,11 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
       this.disabled = JSON.parse(sessionStorage.getItem("privilegios"));
       // this.disabled = !this.disabled;
       this.body = JSON.parse(sessionStorage.getItem("perfil"))[0];
-      this.editar = true;
+      this.editar = false;
       this.fillRol();
     } else {
-      this.editar = false;
+      this.editar = true;
+      this.disabled = JSON.parse(sessionStorage.getItem("privilegios"));
       this.body = new PerfilItem();
       this.sigaServices.get("usuarios_rol").subscribe(
         n => {
@@ -140,7 +141,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
   }
 
   //cada vez que cambia el formulario comprueba esto
-  onChangeForm() {}
+  onChangeForm() { }
 
   confirmEdit() {
     let mess = "";

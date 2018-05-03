@@ -101,6 +101,10 @@ import { SolicitudCertificadosComponent } from "./features/certificados/solicitu
 import { GestionSolicitudesComponent } from "./features/certificados/gestion-solicitudes/gestion-solicitudes.component";
 import { MantenimientoCertificadosComponent } from "./features/certificados/mantenimiento-certificados/mantenimiento-certificados.component";
 
+//Modulo de Facturacion
+import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimiento-sufijos/mantenimiento-sufijos.component";
+
+
 
 /***NEW modules censo***/
 
@@ -146,6 +150,9 @@ import { MantenimientoCertificadosComponent } from "./features/certificados/mant
     SolicitudCertificadosComponent,
     GestionSolicitudesComponent,
     MantenimientoCertificadosComponent,
+
+    //Facturacion
+    MantenimientoSufijosComponent,
 
     // Administracion
     CatalogosMaestros,

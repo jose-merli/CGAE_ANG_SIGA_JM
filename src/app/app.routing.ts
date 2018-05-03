@@ -35,6 +35,10 @@ import { GestionSolicitudesComponent } from "./features/certificados/gestion-sol
 import { MantenimientoCertificadosComponent } from "./features/certificados/mantenimiento-certificados/mantenimiento-certificados.component";
 
 
+//Facturacion
+import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimiento-sufijos/mantenimiento-sufijos.component";
+
+
 
 
 // Administracion
@@ -94,6 +98,11 @@ const appRoutes: Routes = [
   { path: "solicitudCertificados", component: SolicitudCertificadosComponent, canActivate: [AuthGuard] },
   { path: "gestionSolicitudes", component: GestionSolicitudesComponent, canActivate: [AuthGuard] },
   { path: "mantenimientoCertificados", component: MantenimientoCertificadosComponent, canActivate: [AuthGuard] },
+
+
+  //Facturacion
+  { path: "mantenimientoSufijos", component: MantenimientoSufijosComponent, canActivate: [AuthGuard] },
+
   // Administracion
   { path: "catalogosMaestros", component: CatalogosMaestros, canActivate: [AuthGuard] },
   {

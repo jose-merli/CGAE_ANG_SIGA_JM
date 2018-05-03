@@ -36,6 +36,8 @@ export class OldSigaServices {
         gestionSolicitudes: "Dispatcher.do?proceso=61",
         mantenimientoCertificados: "Dispatcher.do?proceso=62",
 
+        //Facturacion
+        mantenimientoSufijos: "Dispatcher.do?proceso=214",
 
         login: "developmentLogin.do"
 
