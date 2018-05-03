@@ -44,7 +44,8 @@
             <label class="d-block pb-2">{{"administracion.auditoriaUsuarios.literal.motivo" | translate}} (*)</label>
             <!--<input type="text" name="prefijo" class="form-control" [(ngModel)]='itemBody.motivo' (ngModelChange)="actualizarBotonGuardarCerrar()"
               pInputText>-->
-            <textarea name="prefijo" class="form-control" pInputTextarea [(ngModel)]="itemBody.motivo" autoResize="autoResize" (ngModelChange)="actualizarBotonGuardarCerrar()"></textarea>
+            <textarea [(disabled)]="!activacionEditar" name="prefijo" class="form-control" pInputTextarea [(ngModel)]="itemBody.motivo"
+              autoResize="autoResize" (ngModelChange)="actualizarBotonGuardarCerrar()"></textarea>
           </div>
 
           <div class="form-group col-lg-12 col-md-12">
@@ -61,6 +62,7 @@
       <div class="text-right main-button ">
         <button (click)="confirmEdit()" pButton type="button" [disabled]="isHabilitadoGuardarCerrar()" icon="	fa fa-edit " iconPos="left"
           label="{{ 'general.boton.guardarCerrar' | translate}}" [disabled]="formGroup.invalid"></button>
+
           <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
       </div>
     </div>

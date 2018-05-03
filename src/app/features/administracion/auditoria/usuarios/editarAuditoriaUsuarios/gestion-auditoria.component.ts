@@ -36,6 +36,8 @@ import { HistoricoUsuarioUpdateDto } from "./../../../../../../app/models/Histor
 import { HistoricoUsuarioRequestDto } from "./../../../../../../app/models/HistoricoUsuarioRequestDto";
 import { ComboItem } from "./../../../../../../app/models/ComboItem";
 import { ActivatedRoute } from "@angular/router";
+import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
+
 @Component({
   selector: "app-gestion-auditoria",
   templateUrl: "./gestion-auditoria.component.html",
@@ -65,6 +67,13 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   correcto: boolean;
   habilitarBotonGuardarCerrar: boolean = true;
   motivoSinModificar: String;
+
+  controlAcceso: ControlAccesoDto = new ControlAccesoDto();
+  permisos: any;
+  permisosArray: any[];
+  derechoAcceso: any;
+  activacionEditar: boolean;
+
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -79,6 +88,7 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   }
   @ViewChild("table") table;
   ngOnInit() {
+    this.checkAcceso();
     this.itemBody = new HistoricoUsuarioItem();
     this.itemBody = JSON.parse(sessionStorage.getItem("auditoriaUsuarioBody"));
     sessionStorage.removeItem("auditoriaUsuarioBody");
@@ -90,6 +100,29 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
     // this.bodyToForm();
     this.checkMode();
   }
+
+  checkAcceso() {
+    this.controlAcceso = new ControlAccesoDto();
+    this.controlAcceso.idProceso = 110;
+    this.sigaServices.post("acces_control", this.controlAcceso).subscribe(
+      data => {
+        this.permisos = JSON.parse(data.body);
+        this.permisosArray = this.permisos.permisoItems;
+        this.derechoAcceso = this.permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (this.derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else {
+          this.activacionEditar = false;
+        }
+      }
+    );
+  }
+
   checkMode() {
     if (JSON.parse(sessionStorage.getItem("modo")) != null) {
       if (JSON.parse(sessionStorage.getItem("modo")) == "editar") {
