@@ -35,6 +35,8 @@ import { ContadorItem } from "../../../../../app/models/ContadorItem";
 import { UsuarioUpdate } from "../../../../../app/models/UsuarioUpdate";
 import { ComboItem } from "../../../../../app/models/ComboItem";
 import { ActivatedRoute } from "@angular/router";
+import { ControlAccesoDto } from "../../../../../app/models/ControlAccesoDto";
+
 @Component({
   selector: "app-gestion-contadores",
   templateUrl: "./gestion-contadores.component.html",
@@ -45,10 +47,11 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   contadores_modo: any[];
   msgs: Message[] = [];
   body: ContadorItem = new ContadorItem();
+  bodyPermanente: ContadorItem = new ContadorItem();
   pButton;
   textSelected: String = "{0} grupos seleccionados";
   textFilter: String;
-  editar: boolean = true;
+  editar: boolean = false;
   disabled: boolean = false;
   activo: boolean = false;
   correcto: boolean = false;
@@ -63,6 +66,13 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   splitDate: any[];
   arrayDate: string;
   addedDay: number;
+
+  controlAcceso: ControlAccesoDto = new ControlAccesoDto();
+  permisos: any;
+  permisosArray: any[];
+  derechoAcceso: any;
+  comparacion: boolean;
+
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -78,7 +88,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   @ViewChild("table") table;
   ngOnInit() {
     console.log(sessionStorage);
-
+    this.checkAcceso();
     this.sigaServices.get("contadores_modo").subscribe(
       n => {
         this.contadores_modo = n.combooItems;
@@ -89,21 +99,43 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
     );
 
     this.body = new ContadorItem();
+    this.bodyPermanente = new ContadorItem();
     this.body = JSON.parse(sessionStorage.getItem("contadorBody"));
+    this.bodyPermanente = JSON.parse(sessionStorage.getItem("contadorBody"));
     this.bodyToModificable();
-    this.checkMode();
   }
-  checkMode() {
-    if (JSON.parse(sessionStorage.getItem("modo")) != null) {
-      if (JSON.parse(sessionStorage.getItem("modo")) == "editar") {
-        this.disabled = true;
-      } else {
-        this.disabled = false;
+  checkAcceso() {
+    this.controlAcceso = new ControlAccesoDto();
+    this.controlAcceso.idProceso = 112;
+    this.sigaServices.post("acces_control", this.controlAcceso).subscribe(
+      data => {
+        this.permisos = JSON.parse(data.body);
+        this.permisosArray = this.permisos.permisoItems;
+        this.derechoAcceso = this.permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (this.derechoAcceso == 3) {
+          this.editar = true;
+        } else {
+          this.editar = false;
+        }
       }
+    );
+  }
+
+  checkEditar() {
+    this.comparacion =
+      JSON.stringify(this.bodyPermanente) == JSON.stringify(this.body);
+    if (this.editar == true && !this.comparacion) {
+      return false;
     } else {
-      this.disabled = false;
+      return true;
     }
   }
+
   isRestablecer() {
     this.body = JSON.parse(sessionStorage.getItem("contadorBody"));
     this.bodyToModificable();

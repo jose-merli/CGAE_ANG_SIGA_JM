@@ -1,18 +1,31 @@
-import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, DoCheck, ViewEncapsulation } from '@angular/core';
-import { Message, MenuItem, TreeNode } from 'primeng/components/common/api';
-import { Tree } from 'primeng/components/tree/tree';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  ChangeDetectorRef,
+  DoCheck,
+  ViewEncapsulation
+} from "@angular/core";
+import { Message, MenuItem, TreeNode } from "primeng/components/common/api";
+import { Tree } from "primeng/components/tree/tree";
 import { TranslateService } from "../../../commons/translate/translation.service";
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl
+} from "@angular/forms";
 import { SigaServices } from "./../../../_services/siga.service";
+import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 
 @Component({
-  selector: 'app-permisos',
-  templateUrl: './permisos.component.html',
-  styleUrls: ['./permisos.component.scss'],
+  selector: "app-permisos",
+  templateUrl: "./permisos.component.html",
+  styleUrls: ["./permisos.component.scss"],
   encapsulation: ViewEncapsulation.None
 })
 export class PermisosComponent implements OnInit, DoCheck {
-
   formPermisos: FormGroup;
 
   permisosTree: any = [];
@@ -38,47 +51,44 @@ export class PermisosComponent implements OnInit, DoCheck {
   accesoDenegado: number;
   sinAsignar: number;
 
+  controlAcceso: ControlAccesoDto = new ControlAccesoDto();
+  permisos: any;
+  permisosArray: any[];
+  derechoAcceso: any;
+  activacionEditar: boolean;
   // treeNode: TreeNode[]
 
-  @ViewChild('widthContent')
-  widthContent: any;
+  @ViewChild("widthContent") widthContent: any;
 
   myWidth: any;
 
+  @ViewChild("expandingTree") expandingTree: Tree;
 
-
-  @ViewChild('expandingTree')
-  expandingTree: Tree;
-
-  constructor(private formBuilder: FormBuilder, private elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices,
-    private translateService: TranslateService) {
-
+  constructor(
+    private formBuilder: FormBuilder,
+    private elementRef: ElementRef,
+    private changeDetectorRef: ChangeDetectorRef,
+    private sigaServices: SigaServices,
+    private translateService: TranslateService
+  ) {
     this.formPermisos = this.formBuilder.group({
-      'grupo': null,
+      grupo: null
     });
 
     this.numSeleccionados = 0;
     this.numCambios = 0;
     this.totalPermisos = 0;
-
-
-
   }
 
   ngDoCheck() {
     setTimeout(() => {
       this.myWidth = this.widthContent.nativeElement.parentElement.parentElement.offsetWidth;
-
-    }, 5)
+    }, 5);
   }
 
   ngOnInit() {
-
-
-
-
+    this.checkAcceso();
     this.myWidth = this.widthContent.nativeElement.parentElement.parentElement.offsetWidth;
-
 
     this.sigaServices.get("usuarios_perfil").subscribe(
       n => {
@@ -88,13 +98,31 @@ export class PermisosComponent implements OnInit, DoCheck {
         console.log(err);
       }
     );
+  }
 
-
-
+  checkAcceso() {
+    this.controlAcceso = new ControlAccesoDto();
+    this.controlAcceso.idProceso = 84;
+    this.sigaServices.post("acces_control", this.controlAcceso).subscribe(
+      data => {
+        this.permisos = JSON.parse(data.body);
+        this.permisosArray = this.permisos.permisoItems;
+        this.derechoAcceso = this.permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (this.derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else {
+          this.activacionEditar = false;
+        }
+      }
+    );
   }
 
   onChangeGrupo(id) {
-
     this.idGrupo = id.value;
 
     this.selectAll = false;
@@ -105,31 +133,30 @@ export class PermisosComponent implements OnInit, DoCheck {
 
     this.todoDesplegado = false;
 
-    this.sigaServices.post("permisos_tree", {
-      idGrupo: this.idGrupo
-    }).subscribe(
-      data => {
-        let permisosTree = JSON.parse(data.body)
-        this.permisosTree = permisosTree.permisoItems;
-        this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
-        this.permisosTree.forEach(node => {
-          this.totalRecursive(node);
-        });
-        this.accesoTotal = 0;
-        this.accesoLectura = 0;
-        this.accesoDenegado = 0;
-        this.sinAsignar = 0;
-        this.permisosTree.forEach(node => {
-          this.totalAccesosRecursive(node);
-        });
-
-      },
-      err => {
-        console.log(err);
-      }
-
+    this.sigaServices
+      .post("permisos_tree", {
+        idGrupo: this.idGrupo
+      })
+      .subscribe(
+        data => {
+          let permisosTree = JSON.parse(data.body);
+          this.permisosTree = permisosTree.permisoItems;
+          this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
+          this.permisosTree.forEach(node => {
+            this.totalRecursive(node);
+          });
+          this.accesoTotal = 0;
+          this.accesoLectura = 0;
+          this.accesoDenegado = 0;
+          this.sinAsignar = 0;
+          this.permisosTree.forEach(node => {
+            this.totalAccesosRecursive(node);
+          });
+        },
+        err => {
+          console.log(err);
+        }
       );
-
 
     // this.permisosTree =
     //   [
@@ -210,10 +237,7 @@ export class PermisosComponent implements OnInit, DoCheck {
     // });
 
     // console.log(this.totalPermisos)
-
-
   }
-
 
   expandAll() {
     this.todoDesplegado = true;
@@ -227,8 +251,6 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.permisosTree.forEach(node => {
       this.expandRecursive(node, false);
     });
-
-
   }
   private expandRecursive(node: TreeNode, isExpand: boolean) {
     node.expanded = isExpand;
@@ -237,25 +259,21 @@ export class PermisosComponent implements OnInit, DoCheck {
         this.expandRecursive(childNode, isExpand);
       });
     }
-
   }
-
-
 
   onChangeAcceso(ref) {
     if (ref) {
-      this.permisosChange = this.selectedPermiso
+      this.permisosChange = this.selectedPermiso;
       for (let changed of this.permisosChange) {
-        if (ref == 'sinAsignar') {
-          changed.derechoacceso = '0';
-        } else if (ref == 'denegado') {
-          changed.derechoacceso = '1';
-        } else if (ref == 'lectura') {
-          changed.derechoacceso = '2';
-        } else if (ref == 'total') {
-          changed.derechoacceso = '3';
+        if (ref == "sinAsignar") {
+          changed.derechoacceso = "0";
+        } else if (ref == "denegado") {
+          changed.derechoacceso = "1";
+        } else if (ref == "lectura") {
+          changed.derechoacceso = "2";
+        } else if (ref == "total") {
+          changed.derechoacceso = "3";
         }
-
       }
       this.selectAll = false;
       this.numSeleccionados = 0;
@@ -270,15 +288,14 @@ export class PermisosComponent implements OnInit, DoCheck {
     }
   }
 
-
   totalAccesosRecursive(node: TreeNode) {
-    if (node.derechoacceso === '3') {
+    if (node.derechoacceso === "3") {
       this.accesoTotal++;
-    } else if (node.derechoacceso === '2') {
+    } else if (node.derechoacceso === "2") {
       this.accesoLectura++;
-    } else if (node.derechoacceso === '1') {
+    } else if (node.derechoacceso === "1") {
       this.accesoDenegado++;
-    } else if (node.derechoacceso === '0') {
+    } else if (node.derechoacceso === "0") {
       this.sinAsignar++;
     }
 
@@ -290,15 +307,11 @@ export class PermisosComponent implements OnInit, DoCheck {
   }
 
   isButtonDisabled() {
-
     if (this.permisosChange && this.permisosChange.length > 0) {
       return false;
     }
     return true;
   }
-
-
-
 
   selectAllRecursive(node: TreeNode) {
     this.selectedPermiso.push(node);
@@ -318,40 +331,34 @@ export class PermisosComponent implements OnInit, DoCheck {
     }
   }
 
-
   onChangeSelectAll(node) {
     if (this.selectAll === true) {
       this.permisosTree.forEach(node => {
         this.selectAllRecursive(node);
       });
-      this.getNumSelected()
-
+      this.getNumSelected();
     } else {
-      this.selectedPermiso = []
+      this.selectedPermiso = [];
       this.numSeleccionados = 0;
     }
   }
 
-
   savePermisos() {
     for (let permiso of this.permisosChange) {
-
       let objUpdate = {
         idGrupo: this.idGrupo,
         id: permiso.data,
         derechoacceso: permiso.derechoacceso
-      }
+      };
 
       this.sigaServices.post("permisos_update", objUpdate).subscribe(
         data => {
           console.log(data);
-
         },
         err => {
           console.log(err);
         }
       );
-
     }
 
     this.savedPermisos = true;
@@ -367,7 +374,6 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.permisosChange = [];
   }
 
-
   getNumSelected() {
     this.numSeleccionados = this.selectedPermiso.length;
   }
@@ -382,7 +388,7 @@ export class PermisosComponent implements OnInit, DoCheck {
   onNodeSelect() {
     this.getNumSelected();
 
-    this.getNumTotales()
+    this.getNumTotales();
   }
 
   onNodeUnselect() {
@@ -397,5 +403,4 @@ export class PermisosComponent implements OnInit, DoCheck {
       detail: "Árbol de permisos actualizado correctamente"
     });
   }
-
 }
