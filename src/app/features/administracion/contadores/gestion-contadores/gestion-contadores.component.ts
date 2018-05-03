@@ -106,7 +106,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   }
   checkAcceso() {
     this.controlAcceso = new ControlAccesoDto();
-    this.controlAcceso.idProceso = 84;
+    this.controlAcceso.idProceso = 112;
     this.sigaServices.post("acces_control", this.controlAcceso).subscribe(
       data => {
         this.permisos = JSON.parse(data.body);
@@ -118,7 +118,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
       },
       () => {
         if (this.derechoAcceso == 3) {
-          this.editar = false;
+          this.editar = true;
         } else {
           this.editar = false;
         }
