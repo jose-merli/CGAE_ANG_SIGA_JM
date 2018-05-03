@@ -303,7 +303,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
       let fechaHasta = this.fechaHastaCalendar.getTime();
       let msRangoFechas = fechaHasta - fechaDesde;
 
-      if (msRangoFechas < 0) this.fechaDesdeCalendar = undefined;
+      if (msRangoFechas < 0) this.fechaHastaCalendar = undefined;
     }
     return this.fechaHastaCalendar;
   }
@@ -321,8 +321,9 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
       let fechaHasta = this.fechaHastaCalendar.getTime();
       let msRangoFechas = fechaHasta - fechaDesde;
 
-      if (msRangoFechas < 0) this.fechaHastaCalendar = undefined;
+      if (msRangoFechas < 0) this.fechaDesdeCalendar = undefined;
     }
+
     return this.fechaDesdeCalendar;
   }
 

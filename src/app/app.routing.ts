@@ -70,17 +70,21 @@ const appRoutes: Routes = [
   { path: "busquedaColegiados", component: BusquedaColegiadosComponent, canActivate: [AuthGuard] },
   { path: "fichaColegial", component: FichaColegialComponent, canActivate: [AuthGuard] },
   { path: "editarUsuario", component: EditarUsuarioComponent, canActivate: [AuthGuard] },
+
   { path: "searchNoColegiados", component: SearchNoColegiadosComponent, canActivate: [AuthGuard] },
   { path: "certificadosAca", component: CertificadosAcaComponent, canActivate: [AuthGuard] },
   { path: "comisionesCargos", component: ComisionesCargosComponent, canActivate: [AuthGuard] },
   { path: "solicitudesGenericas", component: SolicitudesGenericasComponent, canActivate: [AuthGuard] },
   { path: "solicitudesEspecificas", component: SolicitudesEspecificasComponent, canActivate: [AuthGuard] },
   { path: "solicitudesIncorporacion", component: SolicitudesIncorporacionComponent, canActivate: [AuthGuard] },
+
   { path: "nuevaIncorporacion", component: NuevaIncorporacionComponent, canActivate: [AuthGuard] },
   { path: "documentacionSolicitudes", component: DocumentacionSolicitudesComponent, canActivate: [AuthGuard] },
   { path: "mantenimientoGruposFijos", component: MantenimientoGruposFijosComponent, canActivate: [AuthGuard] },
+
   { path: "mantenimientoMandatos", component: MantenimientoMandatosComponent, canActivate: [AuthGuard] },
   { path: "busquedaSanciones", component: BusquedaSancionesComponent, canActivate: [AuthGuard] },
+
   { path: "busquedaLetrados", component: BusquedaLetradosComponent, canActivate: [AuthGuard] },
   { path: "mantenimientoDuplicados", component: MantenimientoDuplicadosComponent, canActivate: [AuthGuard] },
   { path: "modificacionDatos", component: ModificacionDatosComponent, canActivate: [AuthGuard] },
