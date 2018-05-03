@@ -138,24 +138,24 @@ export class PermisosComponent implements OnInit, DoCheck {
         idGrupo: this.idGrupo
       })
       .subscribe(
-        data => {
-          let permisosTree = JSON.parse(data.body);
-          this.permisosTree = permisosTree.permisoItems;
-          this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
-          this.permisosTree.forEach(node => {
-            this.totalRecursive(node);
-          });
-          this.accesoTotal = 0;
-          this.accesoLectura = 0;
-          this.accesoDenegado = 0;
-          this.sinAsignar = 0;
-          this.permisosTree.forEach(node => {
-            this.totalAccesosRecursive(node);
-          });
-        },
-        err => {
-          console.log(err);
-        }
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        this.permisosTree = permisosTree.permisoItems;
+        this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
+        this.permisosTree.forEach(node => {
+          this.totalRecursive(node);
+        });
+        this.accesoTotal = 0;
+        this.accesoLectura = 0;
+        this.accesoDenegado = 0;
+        this.sinAsignar = 0;
+        this.permisosTree.forEach(node => {
+          this.totalAccesosRecursive(node);
+        });
+      },
+      err => {
+        console.log(err);
+      }
       );
 
     // this.permisosTree =
@@ -262,7 +262,7 @@ export class PermisosComponent implements OnInit, DoCheck {
   }
 
   onChangeAcceso(ref) {
-    if (ref) {
+    if (ref && this.selectedPermiso.length > 0) {
       this.permisosChange = this.selectedPermiso;
       for (let changed of this.permisosChange) {
         if (ref == "sinAsignar") {
