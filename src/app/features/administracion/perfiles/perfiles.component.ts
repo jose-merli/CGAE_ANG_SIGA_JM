@@ -151,7 +151,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
 
   checkAcceso() {
     this.controlAcceso = new ControlAccesoDto();
-    this.controlAcceso.idProceso = 82;
+    this.controlAcceso.idProceso = "82";
     this.sigaServices.post("acces_control", this.controlAcceso).subscribe(
       data => {
         this.permisosTree = JSON.parse(data.body);

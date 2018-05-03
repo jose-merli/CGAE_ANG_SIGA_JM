@@ -1,4 +1,4 @@
 export class ControlAccesoDto {
-  idProceso: number;
+  idProceso: String;
   constructor() {}
 }

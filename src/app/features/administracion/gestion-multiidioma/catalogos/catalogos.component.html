@@ -51,7 +51,7 @@
                         <div class="input-group">
                             <span class="input-group">
                 <button pButton type="button" [pTooltip]="obtenerRecurso(dato)"  tooltipPosition="top" icon="fa fa-question"></button> &nbsp;&nbsp;
-              <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" (change)="isGuardar($event,dato)">
+              <input type="text" class="form-control" [(disabled)]="!editar"  pInputText [(ngModel)]="dato[col.field]" (change)="isGuardar($event,dato)">
               </span>
                         </div>
                     </ng-template>

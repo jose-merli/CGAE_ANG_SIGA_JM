@@ -29,6 +29,7 @@ import { MultiidiomaCatalogoDto } from "../../../../models/MultiidiomaCatalogoDt
 import { MultiidiomaCatalogoSearchDto } from "../../../../models/MultiidiomaCatalogoSearchDto";
 import { MultiidiomaCatalogoUpdateDto } from "../../../../models/MultiidiomaCatalogoUpdateDto";
 import { MultiidiomaCatalogoItem } from "../../../../models/MultiidiomaCatalogoItem";
+import { ControlAccesoDto } from "../../../../../app/models/ControlAccesoDto";
 
 @Component({
   selector: "app-etiquetas",
@@ -56,6 +57,13 @@ export class Catalogos extends SigaWrapper implements OnInit {
   bodyUpdate: MultiidiomaCatalogoUpdateDto = new MultiidiomaCatalogoUpdateDto();
   msgs: Message[] = [];
 
+  controlAcceso: ControlAccesoDto = new ControlAccesoDto();
+  permisos: any;
+  permisosArray: any[];
+  derechoAcceso: any;
+  comparacion: boolean;
+  editar: boolean = false;
+
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -70,6 +78,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
 
   @ViewChild("table") table;
   ngOnInit() {
+    this.checkAcceso();
     this.sigaServices.get("catalogos_lenguage").subscribe(
       n => {
         this.idiomaBusqueda = n.combooItems;
@@ -100,12 +109,12 @@ export class Catalogos extends SigaWrapper implements OnInit {
       {
         field: "descripcionBusqueda",
         header:
-        "administracion.multidioma.etiquetas.literal.descripcionInstitucion"
+          "administracion.multidioma.etiquetas.literal.descripcionInstitucion"
       },
       {
         field: "descripcionTraduccion",
         header:
-        "administracion.multidioma.etiquetas.literal.descripcionIdiomaSeleccionado"
+          "administracion.multidioma.etiquetas.literal.descripcionIdiomaSeleccionado"
       }
     ];
 
@@ -140,17 +149,40 @@ export class Catalogos extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("catalogos_search", "?numPagina=1", this.bodySearch)
       .subscribe(
+        data => {
+          console.log(data);
+          this.searchParametros = JSON.parse(data["body"]);
+          this.datosTraduccion = this.searchParametros.multiidiomaCatalogoItem;
+          this.buscarSeleccionado = true;
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
+  checkAcceso() {
+    this.controlAcceso = new ControlAccesoDto();
+    this.controlAcceso.idProceso = "99B";
+    this.sigaServices.post("acces_control", this.controlAcceso).subscribe(
       data => {
-        console.log(data);
-        this.searchParametros = JSON.parse(data["body"]);
-        this.datosTraduccion = this.searchParametros.multiidiomaCatalogoItem;
-        this.buscarSeleccionado = true;
+        this.permisos = JSON.parse(data.body);
+        this.permisosArray = this.permisos.permisoItems;
+        this.derechoAcceso = this.permisosArray[0].derechoacceso;
       },
       err => {
         console.log(err);
+      },
+      () => {
+        if (this.derechoAcceso == 3) {
+          this.editar = true;
+        } else {
+          this.editar = false;
+        }
       }
-      );
+    );
   }
+
   isHabilitadoBuscar() {
     if (
       this.selectedIdiomaBusqueda != "" &&
