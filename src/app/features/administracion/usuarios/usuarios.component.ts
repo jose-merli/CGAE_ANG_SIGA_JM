@@ -180,21 +180,22 @@ export class Usuarios extends SigaWrapper implements OnInit {
   }
 
   onChangeForm() {
+    if (this.body.nif == "") {
+      this.dniCorrecto = null;
+    } else {
+      this.dniCorrecto = this.isValidDNI(this.body.nif);
+    }
     if (
       this.body.nombreApellidos != "" &&
       this.body.nombreApellidos != undefined &&
       (this.body.nif != "" && this.body.nif != undefined) &&
       (this.body.rol != "" && this.body.rol != undefined) &&
-      (this.body.grupo != "" && this.body.grupo != undefined)
+      (this.body.grupo != "" && this.body.grupo != undefined) &&
+      this.dniCorrecto
     ) {
       this.blockCrear = false;
     } else {
       this.blockCrear = true;
-    }
-    if (this.body.nif == "") {
-      this.dniCorrecto = null;
-    } else {
-      this.dniCorrecto = this.isValidDNI(this.body.nif);
     }
   }
 

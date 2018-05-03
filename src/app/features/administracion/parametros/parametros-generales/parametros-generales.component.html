@@ -47,25 +47,26 @@
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" selectionMode="single" [value]="datosBuscar"
                 [editable]="true" [(selection)]="filaSelecionadaTabla" [responsive]="true" #table class="tabla-listado" [sortOrder]="1"
                 [paginator]="activarPaginacionBuscar()" paginatorPosition="both" [rows]="selectedItem" [editable]="true" (onRowSelect)="onRowSelect($event)">
-                <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true">
+                <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true"
+                    filterPlaceholder="{{'general.boton.search' | translate}}">
                     <ng-template *ngIf="col.field == 'valor'" let-dato="rowData" pTemplate="body">
-                        <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" (change)="isGuardar($event,dato)">
+                        <input type="text" [(disabled)]="!activacionEditar" class="form-control" pInputText [(ngModel)]="dato[col.field]" (change)="isGuardar($event,dato)">
                     </ng-template>
-                </p-column>
+                    </p-column>
 
-                <ng-template pTemplate="paginatorLeft">
-                    <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                    <label>{{ 'general.message.mostrar' | translate}}<p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
-                </ng-template>
+                    <ng-template pTemplate="paginatorLeft">
+                        <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                        <label>{{ 'general.message.mostrar' | translate}}<p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
+                    </ng-template>
 
-                <p-footer>
-                    <div *ngIf="activarPaginacionBuscar() == true" class="text-right main-button">
-                        <button (click)="confirmarEliminar(filaSelecionadaTabla)" pButton type="button" [disabled]="isHabilitadoEliminar()" icon="fa fa-trash-alt "
-                            iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-                            <button (click)="isHistorico()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.historico' | translate}}"></button>
-                    </div>
-                </p-footer>
-                </p-dataTable>
+                    <p-footer>
+                        <div *ngIf="activarPaginacionBuscar() == true" class="text-right main-button">
+                            <button (click)="confirmarEliminar(filaSelecionadaTabla)" pButton type="button" [disabled]="isHabilitadoEliminar()" icon="fa fa-trash-alt "
+                                iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+                                <button (click)="isHistorico()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.historico' | translate}}"></button>
+                        </div>
+                    </p-footer>
+                    </p-dataTable>
         </div>
     </div>
     <div *ngIf="historico == true" class="card mt-3">
