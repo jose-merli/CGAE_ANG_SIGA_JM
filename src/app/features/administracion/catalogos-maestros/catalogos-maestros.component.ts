@@ -34,6 +34,8 @@ import { CatalogoUpdateRequestDto } from "./../../../../app/models/CatalogoUpdat
 import { CatalogoCreateRequestDto } from "./../../../../app/models/CatalogoCreateRequestDto";
 import { CatalogoDeleteRequestDto } from "./../../../../app/models/CatalogoDeleteRequestDto";
 import { CatalogoMaestroItem } from "./../../../../app/models/CatalogoMaestroItem";
+import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
+
 @Component({
   selector: "app-catalogos-maestros",
   templateUrl: "./catalogos-maestros.component.html",
@@ -86,6 +88,13 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   blockBuscar: boolean = true;
   blockCrear: boolean = true;
 
+  //validacion permisos
+  permisosTree: any;
+  permisosArray: any[];
+  derechoAcceso: any;
+  activacionEditar: boolean;
+  controlAcceso: ControlAccesoDto = new ControlAccesoDto();
+
   rowsPerPage: any = [];
 
   @ViewChild("table") table;
@@ -104,6 +113,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
 
   //Cargo el combo nada mas comenzar
   ngOnInit() {
+    this.checkAcceso();
     this.sigaServices.get("maestros_rol").subscribe(
       n => {
         this.catalogoArray = n.comboCatalogoItems;
@@ -143,6 +153,28 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     } else {
       this.body = new CatalogoRequestDto();
     }
+  }
+
+  checkAcceso() {
+    this.controlAcceso = new ControlAccesoDto();
+    this.controlAcceso.idProceso = 78;
+    this.sigaServices.post("acces_control", this.controlAcceso).subscribe(
+      data => {
+        this.permisosTree = JSON.parse(data.body);
+        this.permisosArray = this.permisosTree.permisoItems;
+        this.derechoAcceso = this.permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (this.derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else {
+          this.activacionEditar = false;
+        }
+      }
+    );
   }
 
   onHideDatosGenerales() {
@@ -257,15 +289,15 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("maestros_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.searchCatalogo = JSON.parse(data["body"]);
-        this.datosHist = this.searchCatalogo.catalogoMaestroItem;
-      },
-      err => {
-        console.log(err);
-      }
+          this.searchCatalogo = JSON.parse(data["body"]);
+          this.datosHist = this.searchCatalogo.catalogoMaestroItem;
+        },
+        err => {
+          console.log(err);
+        }
       );
   }
 
@@ -331,8 +363,15 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       if (id && id.length > 0) {
         ir = id[0];
       }
+      sessionStorage.removeItem("catalogoBody");
+      sessionStorage.removeItem("privilegios");
+      sessionStorage.removeItem("searchCatalogo");
       sessionStorage.setItem("catalogoBody", JSON.stringify(id));
       sessionStorage.setItem("searchCatalogo", JSON.stringify(this.body));
+      sessionStorage.setItem(
+        "privilegios",
+        JSON.stringify(this.activacionEditar)
+      );
       this.router.navigate(["/EditarCatalogosMaestros"]);
     } else {
       this.editar = false;
@@ -378,8 +417,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
             severity: "success",
             summary: "Correcto",
             detail:
-            selectedDatos.length +
-            this.translateService.instant("messages.deleted.selected.success")
+              selectedDatos.length +
+              this.translateService.instant("messages.deleted.selected.success")
           });
         }
       },

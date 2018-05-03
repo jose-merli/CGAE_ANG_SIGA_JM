@@ -21,9 +21,9 @@
         <div class="form-row">
           <div class="form-group col-lg-3 col-md-3">
             <label>{{"administracion.grupos.literal.id" | translate}} </label>
-            <input *ngIf="!editar" disabled type="text" name="id" class="form-control" [(ngModel)]='body.idGrupo' (ngModelChange)="onChangeForm()"
+            <input *ngIf="!disabled" disabled type="text" name="id" class="form-control" [(ngModel)]='body.idGrupo' (ngModelChange)="onChangeForm()"
               [formControl]="this.formGroup.controls['idGrupo']" pInputText>
-              <input *ngIf="editar" type="text" name="id" class="form-control" [(ngModel)]='body.idGrupo' (ngModelChange)="onChangeForm()"
+              <input *ngIf="disabled" type="text" name="id" class="form-control" [(ngModel)]='body.idGrupo' (ngModelChange)="onChangeForm()"
                 [formControl]="this.formGroup.controls['idGrupo']" pInputText>
                 <div *ngIf="hasErrors('idGrupo')"><label class="labelError">{{getErrorMessage('idGrupo')}}</label></div>
           </div>

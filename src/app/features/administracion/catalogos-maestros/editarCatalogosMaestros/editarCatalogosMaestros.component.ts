@@ -63,6 +63,8 @@ export class EditarCatalogosMaestrosComponent extends SigaWrapper
   formCodigo: String;
   //Array de opciones del dropdown
   catalogoArray: any[];
+
+  activacionEditar: boolean;
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -92,6 +94,9 @@ export class EditarCatalogosMaestrosComponent extends SigaWrapper
 
     this.body = new CatalogoRequestDto();
     this.body = JSON.parse(sessionStorage.getItem("catalogoBody"))[0];
+    this.activacionEditar = JSON.parse(sessionStorage.getItem("privilegios"));
+    sessionStorage.removeItem("catalogoBody");
+    sessionStorage.removeItem("privilegios");
   }
 
   pInputText;

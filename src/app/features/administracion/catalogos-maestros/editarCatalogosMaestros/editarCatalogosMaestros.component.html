@@ -26,11 +26,13 @@
           </div>
           <div class="form-group col-lg-4 col-md-4">
             <label>{{ 'general.codeext' | translate}}</label>
-            <input type="text" name="codigoBusqueda" value="" class="box" class="form-control" [(ngModel)]='body.codigoExt' pInputText>
+            <input type="text" name="codigoBusqueda" value="" class="box" class="form-control" [(ngModel)]='body.codigoExt' [(disabled)]="!activacionEditar"
+              pInputText>
           </div>
           <div class="form-group col-lg-4 col-md-4">
             <label>{{ 'general.description' | translate}}</label>
-            <input type="text" name="descripcionBusqueda" value="" class="box" class="form-control" [(ngModel)]='body.descripcion' pInputText>
+            <input type="text" name="descripcionBusqueda" value="" class="box" class="form-control" [(ngModel)]='body.descripcion' [(disabled)]="!activacionEditar"
+              pInputText>
           </div>
         </div>
       </div>

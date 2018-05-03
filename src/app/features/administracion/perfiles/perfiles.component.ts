@@ -272,6 +272,8 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       if (id && id.length > 0) {
         ir = id[0];
       }
+      sessionStorage.removeItem("perfil");
+      sessionStorage.removeItem("privilegios");
       sessionStorage.setItem("perfil", JSON.stringify(id));
       sessionStorage.setItem(
         "privilegios",

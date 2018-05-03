@@ -500,6 +500,8 @@ export class Usuarios extends SigaWrapper implements OnInit {
       if (id && id.length > 0) {
         ir = id[0];
       }
+      sessionStorage.removeItem("usuarioBody");
+      sessionStorage.removeItem("privilegios");
       sessionStorage.setItem("usuarioBody", JSON.stringify(id));
       sessionStorage.setItem(
         "privilegios",
