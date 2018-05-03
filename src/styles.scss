@@ -538,6 +538,11 @@ font-size: .7rem;
     box-shadow: 0 0 2px $primary-color;
 }
 
+
+.ui-dropdown-panel .ui-dropdown-items-wrapper{ 
+    max-height: 350px; 
+}
+
 .ui-chkbox-box.ui-state-active, .ui-radiobutton-box.ui-state-active, .ui-chkbox-box.ui-state-focus, .ui-chkbox-box.ui-state-focus.ui-state-active{    
     color: $primary-color;
     box-shadow: none;

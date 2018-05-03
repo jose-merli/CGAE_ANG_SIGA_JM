@@ -40,7 +40,7 @@
 
                     .adm{
                         position:absolute;
-                        bottom:7rem;
+                        bottom:5.2rem;
                         width: 100%;
 
                       
@@ -48,14 +48,14 @@
 
                     .conf{
                         position:absolute;
-                        bottom:11rem;
+                        bottom:8.8rem;
                         width: 100%;
                         padding-left: 1rem;
                     }
 
                     .catalogos{
                         position:absolute;
-                        bottom: 3.6rem;
+                        bottom: 2.6rem;
                         width: 100%;
                     }
 
@@ -112,6 +112,14 @@
     .openedMenu{
         margin-left: 0;
         transition: all 1s;
+    }
+
+
+    @media screen and (max-width: 1300px){
+        .menu-censo .container-fluid .col-items li{
+            padding: .6rem;                   
+        }
+
     }
 
     @media screen and (max-width: 1250px){
