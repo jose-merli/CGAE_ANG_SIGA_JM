@@ -747,6 +747,13 @@ font-size: .7rem;
     }
 
 }
+.fa-sort-asc:before, .fa-sort-up:before {
+    content: "\f0de";
+}
+
+.fa-sort-desc:before, .fa-sort-down:before {
+    content: "\f0dd";
+}
 
 
 
