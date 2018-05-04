@@ -33,6 +33,7 @@ import { TreeModule } from "primeng/tree";
 import { DropdownModule } from "primeng/dropdown";
 import { ButtonModule } from "primeng/button";
 import { DataTableModule } from "primeng/datatable";
+import { ListboxModule } from "primeng/listbox";
 
 import { TableModule } from "primeng/table";
 import { InputTextModule } from "primeng/inputtext";
@@ -66,7 +67,6 @@ import { CargasPeriodicasComponent } from "./features/censo/cargas-periodicas/ca
 import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/configurar-perfil.component";
 import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
 import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/gestion-subtiposCV.component";
-
 
 import { CommonModule } from "@angular/common";
 import { CalendarModule } from "primeng/calendar";
@@ -104,10 +104,7 @@ import { MantenimientoCertificadosComponent } from "./features/certificados/mant
 //Modulo de Facturacion
 import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimiento-sufijos/mantenimiento-sufijos.component";
 
-
-
 /***NEW modules censo***/
-
 
 @NgModule({
   declarations: [
@@ -142,7 +139,6 @@ import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimie
     ConfigurarPerfilComponent,
     CensoDocumentacionComponent,
     GestionSubtiposCVComponent,
-
 
     //Certificados
     ComunicacionInterprofesionalComponent,
@@ -201,7 +197,8 @@ import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimie
     MultiSelectModule,
     TableModule,
     TreeModule,
-    PickListModule
+    PickListModule,
+    ListboxModule
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
@@ -224,4 +221,4 @@ import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimie
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
