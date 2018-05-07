@@ -53,7 +53,6 @@ export class AppComponent implements OnInit {
       .filter(route => route.outlet === 'primary')
       .mergeMap(route => route.data)
       .subscribe((e: any) => {
-        console.log(e)
         this.isScrollReseteable = e.scrollReset;
       });
   }  // outputs my `data`
