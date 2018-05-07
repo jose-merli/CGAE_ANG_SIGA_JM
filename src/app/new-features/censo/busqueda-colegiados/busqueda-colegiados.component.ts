@@ -37,8 +37,8 @@ export class BusquedaColegiadosComponent implements OnInit {
 
   selectedItem: number = 10;
   @ViewChild('table')
-  table
-  selectedDatos
+  table;
+  selectedDatos;
 
   masFiltros: boolean = false;
   labelFiltros: string;

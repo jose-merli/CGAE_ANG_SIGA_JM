@@ -169,7 +169,7 @@
         <div>
           <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
         </div>
-        <label class="ml-3" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()"><i class="pr-2 fa fa-plus"></i>Selección múltiple</label>
+        <label class="ml-3" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()"><i class="pr-2 fa fa-mouse-pointer"></i>Selección múltiple</label>
       </div>
       <p-dataTable [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowSelect)="irFichaColegial(selectedDatos)"
         dataKey="nif" selectionMode="multiple" [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1"
