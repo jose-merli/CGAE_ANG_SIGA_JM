@@ -63,6 +63,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   eliminar: boolean = false;
   selectMultiple: boolean = false;
   selectedItem: number = 10;
+  selectAll: boolean = false;
 
   formBusqueda: FormGroup;
   cols: any = [];
@@ -97,7 +98,9 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
 
   rowsPerPage: any = [];
 
-  @ViewChild("table") table;
+  @ViewChild("table")
+  table;
+  selectedDatos;
   constructor(
     private formBuilder: FormBuilder,
     private sigaServices: SigaServices,
@@ -257,7 +260,14 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
+    if (!this.selectMultiple) {
+      this.selectedDatos = []
+    } else {
+      this.selectAll = false
+      this.selectedDatos = []
+    }
   }
+
 
   activarPaginacion() {
     if (this.datosHist.length == 0) return false;
@@ -286,15 +296,15 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("maestros_search", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          console.log(data);
+      data => {
+        console.log(data);
 
-          this.searchCatalogo = JSON.parse(data["body"]);
-          this.datosHist = this.searchCatalogo.catalogoMaestroItem;
-        },
-        err => {
-          console.log(err);
-        }
+        this.searchCatalogo = JSON.parse(data["body"]);
+        this.datosHist = this.searchCatalogo.catalogoMaestroItem;
+      },
+      err => {
+        console.log(err);
+      }
       );
   }
 
@@ -414,8 +424,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
             severity: "success",
             summary: "Correcto",
             detail:
-              selectedDatos.length +
-              this.translateService.instant("messages.deleted.selected.success")
+            selectedDatos.length +
+            this.translateService.instant("messages.deleted.selected.success")
           });
         }
       },
@@ -475,6 +485,15 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       return false;
     } else {
       return true;
+    }
+  }
+
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.selectMultiple = false;
+      this.selectedDatos = this.datosHist;
+    } else {
+      this.selectedDatos = [];
     }
   }
 }

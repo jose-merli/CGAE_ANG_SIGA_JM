@@ -598,7 +598,10 @@ font-size: .7rem;
 }
 
 .ui-datatable tbody.ui-datatable-hoverable-rows > tr.ui-widget-content:not(.ui-state-highlight):hover{
-    background: #fafafb;
+    background: $secondary-color;
+    td{
+        color: white;
+    }
 }
 
 .ui-confirmdialog .ui-button{
