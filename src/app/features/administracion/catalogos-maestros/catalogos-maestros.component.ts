@@ -122,10 +122,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         console.log(err);
       }
     );
-    this.cols = [
-      { field: "codigoExt", header: "general.codeext" },
-      { field: "descripcion", header: "general.description" }
-    ];
+    this.cols = [{ field: "descripcion", header: "general.description" }];
     this.rowsPerPage = [
       {
         label: 10,
