@@ -24,9 +24,6 @@
                 <div *ngIf="setBold(item)==true" [ngStyle]="{'font-weight':'bold'}">{{item.label}}</div>
                 <div *ngIf="setBold(item)==false" [ngStyle]="{'font-weight': 'normal'}">{{item.label}}</div>
               </ng-template>
-
-
-
               </p-dropdown>
           </div>
           <div class="form-group col-lg-4 col-md-4">
@@ -69,8 +66,6 @@
   </div>
   <!--FIN DE PRINCIPAL-->
 
-
-
   <div *ngIf="buscar == true" class="card mt-3">
     <div class="card-body p-0">
       <div class="m-3 d-flex text-right justify-content-end">
@@ -83,8 +78,17 @@
         [(selection)]="selectedDatos" [paginator]="activarPaginacion()" (onRowSelect)="irEditarCatalogo(selectedDatos)" dataKey="descripcion"
         selectionMode="multiple" [responsive]="true" #table class="tabla-listado" [value]="datosHist" [sortOrder]="1" [paginator]="true"
         paginatorPosition="both" [rows]="selectedItem">
-        <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" [filter]="true"
+
+        <!--<p-column *ngFor="let col of cols" [style]="{'width':'20%'}" [sortable]="true " [field]="col.field" [header]="col.header | translate"
+          [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}">
+
+          </p-column>-->
+
+        <p-column [sortable]="true" [style]="{'width': '20%'}" field="codigoExt" [header]="'general.codeext' | translate" [filter]="true"
           filterPlaceholder="{{'general.boton.search' | translate}}">
+          </p-column>
+
+          <p-column [sortable]="true" field="descripcion" [header]="'general.description' | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}">
           </p-column>
 
           <ng-template pTemplate="paginatorLeft">
@@ -110,31 +114,37 @@
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
         (onRowSelect)="irEditarCatalogo(selectedDatos)" dataKey="nif" [responsive]="true" #table class="tabla-listado" [value]="datosHist"
         [sortOrder]="1" [paginator]="activarPaginacion()" paginatorPosition="both" [rows]="selectedItem">
-        <p-column *ngFor="let col of cols" filterPlaceholder="{{'general.boton.search' | translate}}" [sortable]="true" [field]="col.field"
-          [header]="col.header | translate" [filter]="true">
-          <ng-template let-datoH="rowData" pTemplate="body">
-            <div *ngIf="setItalic(datoH)">
-              <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold'}">{{datoH[col.field]}}</span>
-            </div>
-            <div *ngIf="!setItalic(datoH)">
-              <span>{{datoH[col.field]}}</span>
-            </div>
-          </ng-template>
+
+        <p-column [sortable]="true" [style]="{'width': '20%'}" field="codigoExt" [header]="'general.codeext' | translate" [filter]="true"
+          filterPlaceholder="{{'general.boton.search' | translate}}">
+
           </p-column>
 
-          <ng-template pTemplate="paginatorLeft">
-            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-            <label>{{ 'general.message.mostrar' | translate}} <p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
-          </ng-template>
+          <p-column *ngFor="let col of cols" filterPlaceholder="{{'general.boton.search' | translate}}" [sortable]="true" [field]="col.field"
+            [header]="col.header | translate" [filter]="true">
+            <ng-template let-datoH="rowData" pTemplate="body">
+              <div *ngIf="setItalic(datoH)">
+                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold'}">{{datoH[col.field]}}</span>
+              </div>
+              <div *ngIf="!setItalic(datoH)">
+                <span>{{datoH[col.field]}}</span>
+              </div>
+            </ng-template>
+            </p-column>
 
-          <p-footer>
-            <div class="text-right main-button" *ngIf="activarPaginacion() == true">
-              <button (click)="historico()" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.historico' | translate}}"></button>
-              <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt " [disabled]="isHabilitadoEliminar()"
-                iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-            </div>
-          </p-footer>
-          </p-dataTable>
+            <ng-template pTemplate="paginatorLeft">
+              <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+              <label>{{ 'general.message.mostrar' | translate}} <p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
+            </ng-template>
+
+            <p-footer>
+              <div class="text-right main-button" *ngIf="activarPaginacion() == true">
+                <button (click)="historico()" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.historico' | translate}}"></button>
+                <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt " [disabled]="isHabilitadoEliminar()"
+                  iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+              </div>
+            </p-footer>
+            </p-dataTable>
     </div>
   </div>
   <app-dialog></app-dialog>
