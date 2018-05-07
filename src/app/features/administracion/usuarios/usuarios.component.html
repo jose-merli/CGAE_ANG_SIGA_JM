@@ -1,11 +1,12 @@
-<p-growl [(value)]="msgs" life="30000"></p-growl>
+<p-growl [(value)]="msgs" life="3000"></p-growl>
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{ 'administracion.usuarios.busqueda.usuarios' | translate}}</p>
+    <p>{{ 'gestion.usuarios.literal.usuarios' | translate}}</p>
   </div>
   <div class="breadCrumb">
-    <p>{{ "menu.administracion" | translate}} <i class="fa fa-angle-right"></i> {{ 'menu.administracion.usuarios' | translate}}
+    <p>{{ "menu.administracion" | translate}} <i class="fa fa-angle-right"></i> {{'administracion.usuarios.literal.usuariosyperfiles'
+      | translate}} <i class="fa fa-angle-right"></i> {{ 'menu.administracion.usuarios' | translate}}
     </p>
   </div>
   <div class="card">
@@ -23,17 +24,13 @@
               pInputText>
 
           </div>
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group col-lg-2 col-md-2">
             <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
             <input type="text" name="NIF" class="form-control" [(disabled)]="editar" [(ngModel)]='body.nif' (ngModelChange)="onChangeForm()"
               pInputText>
               <div *ngIf="dniCorrecto == false"><label class="labelError">{{"messages.nifcif.comprobacion.incorrecto" | translate}}</label></div>
               <div *ngIf="dniCorrecto == true"><label class="labelOK">{{"messages.nifcif.comprobacion.correcto" | translate}}</label></div>
 
-          </div>
-          <div *ngIf="editar == false" class="form-group col-lg-3 col-md-3">
-          </div>
-          <div *ngIf="editar == false" class="form-group col-lg-3 col-md-3">
           </div>
           <div *ngIf="editar == false" class="form-group col-lg-3 col-md-3">
             <label>{{ "administracion.usuarios.literal.rol" | translate }}</label>
@@ -45,14 +42,18 @@
               </select>-->
               <img id="idRolBusqueda_loading" src="html/imagenes/loading-spinner.gif" alt="Cargando..." style="visibility:hidden">
           </div>
-          <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
-          </div>
-          <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
-          </div>
           <div class="form-group col-lg-3 col-md-3">
-            <label>{{"administracion.usuarios.literal.grupo" | translate}}</label>
+            <label>{{"administracion.usuarios.literal.grupos" | translate}}</label>
             <p-dropdown class="select-form" [(ngModel)]='body.grupo' [options]="usuarios_perfil" (ngModelChange)="onChangeForm()" [filter]="true"
               filterBy="label"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-1 col-md-1">
+            <label class="d-block pb-2">{{"administracion.usuarios.literal.activo" | translate}}</label>
+            <!--<p-dropdown class="select-form" [options]="select"></p-dropdown>-->
+            <p-radioButton label="{{'messages.si' | translate}}" name="activo" value="S" class="pr-3" [(ngModel)]="body.activo" [(disabled)]="disabledRadio"></p-radioButton><br/>
+            <p-radioButton label="{{'general.boton.no' | translate}}" name="activo" value="N" class="pr-3" [(ngModel)]="body.activo"
+              [(disabled)]="disabledRadio">
+              </p-radioButton>
           </div>
 
           <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
@@ -60,14 +61,7 @@
             <input type="text" name="codExterno" class="form-control" [(disabled)]="!editar" [(ngModel)]='body.codigoExterno' (ngModelChange)="onChangeForm()"
               pInputText>
           </div>
-          <div class="form-group col-lg-3 col-md-3">
-            <label class="d-block pb-2">{{"administracion.usuarios.literal.activo" | translate}}</label>
-            <!--<p-dropdown class="select-form" [options]="select"></p-dropdown>-->
-            <p-radioButton label="{{'messages.si' | translate}}" name="activo" value="S" class="pr-3" [(ngModel)]="body.activo" [(disabled)]="disabledRadio"></p-radioButton>
-            <p-radioButton label="{{'general.boton.no' | translate}}" name="activo" value="N" class="pr-3" [(ngModel)]="body.activo"
-              [(disabled)]="disabledRadio">
-              </p-radioButton>
-          </div>
+
         </div>
       </div>
     </div>
@@ -107,7 +101,6 @@
 
 
           <p-footer *ngIf="selectedDatos">
-
             <div *ngIf="activo==true" class="text-right main-button">
               <button (click)="isSelectMultiple(); selectedDatos=false" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
               <button (click)="confirmarBorrar(selectedDatos); selectedDatos=false" pButton type="button" icon="fa fa-check" iconPos="left"
@@ -118,6 +111,15 @@
                 icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
             </div>
           </p-footer>
+          <!--Solución a incidencia 19, pendiente de aceptacion-->
+          <!--<p-footer *ngIf="!selectedDatos">
+            <div *ngIf="editar == false" class="text-right main-button">
+              <button *ngIf="activacionEditar" (click)="crear()" pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"
+                [disabled]="blockCrear"></button>
+                <button *ngIf="!activacionEditar" (click)="crear()" pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"
+                  [disabled]="true"></button>
+            </div>
+          </p-footer>-->
           </p-dataTable>
     </div>
   </div>
