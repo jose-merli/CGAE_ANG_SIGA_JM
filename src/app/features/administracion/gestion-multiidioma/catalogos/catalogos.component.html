@@ -52,7 +52,7 @@
                         <div class="input-group">
                             <span class="input-group">
                 <button pButton type="button" [pTooltip]="obtenerRecurso(dato)"  tooltipPosition="top" icon="fa fa-question"></button> &nbsp;&nbsp;
-              <input type="text" class="form-control" [(disabled)]="!editar"  pInputText [(ngModel)]="dato[col.field]" (change)="isGuardar($event,dato)">
+              <input type="text" class="form-control" [(disabled)]="!editar"  pInputText [(ngModel)]="dato[col.field]" (change)="Guardar($event,dato)">
               </span>
                         </div>
                     </ng-template>
@@ -62,6 +62,13 @@
                         <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
                         <label>{{ 'general.message.mostrar' | translate}}<p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
                     </ng-template>
+                    <p-footer>
+                        <div class="text-right main-button">
+                            <button (click)="isBuscar()" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
+                            <button (click)="isGuardar()" pButton type="button " icon="fa fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                        </div>
+                    </p-footer>
+
                     </p-dataTable>
         </div>
     </div>

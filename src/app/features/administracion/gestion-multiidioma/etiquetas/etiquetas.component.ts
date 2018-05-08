@@ -63,7 +63,8 @@ export class Etiquetas extends SigaWrapper implements OnInit {
   derechoAcceso: any;
   comparacion: boolean;
   editar: boolean = false;
-
+  bodySave: EtiquetaSearchDto = new EtiquetaSearchDto();
+  elementosAGuardar: EtiquetaUpdateDto[] = [];
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -160,7 +161,7 @@ export class Etiquetas extends SigaWrapper implements OnInit {
     this.bodySearch.descripcion = this.descripcion;
     this.bodySearch.idiomaBusqueda = this.selectedIdiomaBusqueda;
     this.bodySearch.idiomaTraduccion = this.selectedIdiomaTraduccion;
-
+    this.bodySave = this.bodySearch;
     this.sigaServices
       .postPaginado("etiquetas_search", "?numPagina=1", this.bodySearch)
       .subscribe(
@@ -177,6 +178,11 @@ export class Etiquetas extends SigaWrapper implements OnInit {
           console.log(err);
         }
       );
+  }
+
+  isRestablecer() {
+    this.bodySearch = this.bodySave;
+    this.isBuscar();
   }
 
   isHabilitadoBuscar() {
@@ -206,24 +212,34 @@ export class Etiquetas extends SigaWrapper implements OnInit {
     this.table.reset();
   }
 
-  isGuardar(event, dato) {
+  Guardar(event, dato) {
+    this.bodyUpdate = new EtiquetaUpdateDto();
     this.bodyUpdate.descripcion = event.target.value;
     this.bodyUpdate.idLenguaje = dato.idLenguajeTraducir;
     this.bodyUpdate.idRecurso = dato.idRecurso;
-    this.sigaServices.post("etiquetas_update", this.bodyUpdate).subscribe(
-      data => {
-        console.log(data);
-        this.showSuccessEdit();
-      },
-      err => {
-        console.log(err);
-        this.showFail();
-      },
-      () => {
-        this.isBuscar();
-        this.table.reset();
-      }
-    );
+    this.elementosAGuardar.push(this.bodyUpdate);
+  }
+
+  isGuardar() {
+    for (let i in this.elementosAGuardar) {
+      this.sigaServices
+        .post("etiquetas_update", this.elementosAGuardar[i])
+        .subscribe(
+          data => {
+            console.log(data);
+            this.showSuccessEdit();
+          },
+          err => {
+            console.log(err);
+            this.showFail();
+          },
+          () => {
+            this.elementosAGuardar = [];
+            this.isBuscar();
+            this.table.reset();
+          }
+        );
+    }
   }
 
   obtenerRecurso(dato) {

@@ -57,6 +57,9 @@ export class Catalogos extends SigaWrapper implements OnInit {
   bodyUpdate: MultiidiomaCatalogoUpdateDto = new MultiidiomaCatalogoUpdateDto();
   msgs: Message[] = [];
 
+  bodySave: MultiidiomaCatalogoSearchDto = new MultiidiomaCatalogoSearchDto();
+  elementosAGuardar: MultiidiomaCatalogoUpdateDto[] = [];
+
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   permisos: any;
   permisosArray: any[];
@@ -145,7 +148,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
     this.bodySearch.nombreTabla = this.selectedEntidad;
     this.bodySearch.idiomaBusqueda = this.selectedIdiomaBusqueda;
     this.bodySearch.idiomaTraduccion = this.selectedIdiomaTraduccion;
-
+    this.bodySave = this.bodySearch;
     this.sigaServices
       .postPaginado("catalogos_search", "?numPagina=1", this.bodySearch)
       .subscribe(
@@ -159,6 +162,11 @@ export class Catalogos extends SigaWrapper implements OnInit {
           console.log(err);
         }
       );
+  }
+
+  isRestablecer() {
+    this.bodySearch = this.bodySave;
+    this.isBuscar();
   }
 
   checkAcceso() {
@@ -203,24 +211,32 @@ export class Catalogos extends SigaWrapper implements OnInit {
     return dato.idRecurso;
   }
 
-  isGuardar(event, dato) {
+  Guardar(event, dato) {
+    this.bodyUpdate = new MultiidiomaCatalogoUpdateDto();
     this.bodyUpdate.descripcion = event.target.value;
     this.bodyUpdate.idLenguaje = dato.idLenguajeTraducir;
     this.bodyUpdate.idRecurso = dato.idRecurso;
-    this.sigaServices.post("catalogos_update", this.bodyUpdate).subscribe(
-      data => {
-        console.log(data);
-        this.showSuccessEdit();
-      },
-      err => {
-        console.log(err);
-        this.showFail();
-      },
-      () => {
-        this.isBuscar();
-        this.table.reset();
-      }
-    );
+    this.elementosAGuardar.push(this.bodyUpdate);
+  }
+
+  isGuardar() {
+    for (let i in this.elementosAGuardar) {
+      this.sigaServices.post("catalogos_update", this.bodyUpdate).subscribe(
+        data => {
+          console.log(data);
+          this.showSuccessEdit();
+        },
+        err => {
+          console.log(err);
+          this.showFail();
+        },
+        () => {
+          this.elementosAGuardar = [];
+          this.isBuscar();
+          this.table.reset();
+        }
+      );
+    }
   }
 
   onChangeRowsPerPages(event) {
