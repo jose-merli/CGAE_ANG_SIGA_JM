@@ -140,13 +140,17 @@ export class EditarCatalogosMaestrosComponent extends SigaWrapper
   }
 
   checkIgual() {
-    if (this.activacionEditar == true) {
-      if (
-        this.body.codigoExt == this.checkBody.codigoExt &&
-        this.body.descripcion == this.checkBody.descripcion
-      ) {
-        return true;
-      }
+    if (
+      this.activacionEditar == true &&
+      this.body.codigoExt == this.checkBody.codigoExt &&
+      this.body.descripcion == this.checkBody.descripcion
+    ) {
+      return true;
+    } else if (
+      this.body.codigoExt == this.checkBody.codigoExt &&
+      this.body.descripcion == this.checkBody.descripcion
+    ) {
+      return true;
     } else {
       return false;
     }
