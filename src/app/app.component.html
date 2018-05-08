@@ -4,8 +4,9 @@
         <div class="menu-sidebar ">
             <app-menu *ngIf="isLogged()"></app-menu>
         </div>
-        <div class="content">
+        <div (scroll)="onWindowScroll($event,content)" #content class="content">
             <router-outlet></router-outlet>
+            <div class="scroll-arrow" *ngIf="scroll" (click)="subirTop($event, content)"><i class="fa fa-arrow-up"></i></div>
         </div>
     </div>
 </div>
@@ -16,8 +17,9 @@
         <div class="menu-sidebar ">
             <app-menu></app-menu>
         </div>
-        <div class="content">
+        <div (scroll)="onWindowScroll($event,content)" #content class="content">
             <router-outlet></router-outlet>
+            <div class="scroll-arrow" *ngIf="scroll" (click)="subirTop($event, content)"><i class="fa fa-arrow-up"></i></div>
         </div>
     </div>
 </div>-->

@@ -33,7 +33,7 @@ import { TreeModule } from "primeng/tree";
 import { DropdownModule } from "primeng/dropdown";
 import { ButtonModule } from "primeng/button";
 import { DataTableModule } from "primeng/datatable";
-
+import { ListboxModule } from "primeng/listbox";
 import { TableModule } from "primeng/table";
 import { InputTextModule } from "primeng/inputtext";
 import { InputTextareaModule } from "primeng/inputtextarea";
@@ -43,6 +43,13 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ConfirmationService } from "primeng/api";
 import { GrowlModule } from "primeng/growl";
 import { MultiSelectModule } from "primeng/multiSelect";
+import { CalendarModule } from "primeng/calendar";
+import { AutoCompleteModule } from "primeng/autocomplete";
+import { TooltipModule } from "primeng/tooltip";
+import { ChipsModule } from "primeng/chips";
+import { EditorModule } from "primeng/editor";
+import { PickListModule } from "primeng/picklist";
+import { FileUploadModule } from "primeng/fileupload";
 // Modulo de censo
 import { SearchColegiadosComponent } from "./features/censo/search-colegiados/search-colegiados.component";
 import { SearchNoColegiadosComponent } from "./features/censo/search-no-colegiados/search-no-colegiados.component";
@@ -68,14 +75,6 @@ import { CensoDocumentacionComponent } from "./features/censo/censo-documentacio
 import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/gestion-subtiposCV.component";
 
 import { CommonModule } from "@angular/common";
-import { CalendarModule } from "primeng/calendar";
-import { AutoCompleteModule } from "primeng/autocomplete";
-import { TooltipModule } from "primeng/tooltip";
-import { ListboxModule } from "primeng/listbox";
-import { ChipsModule } from "primeng/chips";
-import { EditorModule } from "primeng/editor";
-import { PickListModule } from "primeng/picklist";
-import { FileUploadModule } from "primeng/fileupload";
 
 // Modulo de administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
@@ -108,6 +107,7 @@ import { MantenimientoCertificadosComponent } from "./features/certificados/mant
 import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimiento-sufijos/mantenimiento-sufijos.component";
 
 /***NEW modules censo***/
+import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
 
 @NgModule({
   declarations: [
@@ -142,6 +142,7 @@ import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimie
     ConfigurarPerfilComponent,
     CensoDocumentacionComponent,
     GestionSubtiposCVComponent,
+    BusquedaColegiadosComponentNew,
 
     //Certificados
     ComunicacionInterprofesionalComponent,

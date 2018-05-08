@@ -80,6 +80,8 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
     this.body = new UsuarioItem();
     this.body = JSON.parse(sessionStorage.getItem("usuarioBody"))[0];
     this.activacionEditar = JSON.parse(sessionStorage.getItem("privilegios"));
+    sessionStorage.removeItem("usuarioBody");
+    sessionStorage.removeItem("privilegios");
     this.sigaServices.get("usuarios_rol").subscribe(
       n => {
         this.usuarios_rol = n.combooItems;

@@ -13,9 +13,10 @@
     <div *ngIf="formPermisos.controls['grupo'].value" class="text-right  form-group col-lg-6 col-md-6">
       <label class="proceso-generico">Proceso Genérico Sistema SIGA ({{numSeleccionados}}/árbol)</label>
       <div class="mt-2">
-        <p-checkbox (onChange)="onChangeSelectAll(node)" [(ngModel)]="selectAll" class="d-inline-block mr-2" binary="true" label="Seleccionar todo"></p-checkbox>
-        <label *ngIf="!todoDesplegado" (click)="expandAll()" class="desplegar-todo">Desplegar todo <i class="fa fa-angle-down"></i></label>
-        <label *ngIf="todoDesplegado" (click)="collapseAll()" class="desplegar-todo">Plegar todo <i class="fa fa-angle-up"></i></label>
+        <p-checkbox *ngIf="activacionEditar" (onChange)="onChangeSelectAll(node)" [(ngModel)]="selectAll" class="d-inline-block mr-2"
+          binary="true" label="Seleccionar todo"></p-checkbox>
+          <label *ngIf="!todoDesplegado" (click)="expandAll()" class="desplegar-todo">Desplegar todo <i class="fa fa-angle-down"></i></label>
+          <label *ngIf="todoDesplegado" (click)="collapseAll()" class="desplegar-todo">Plegar todo <i class="fa fa-angle-up"></i></label>
       </div>
     </div>
   </div>
@@ -25,14 +26,21 @@
     </div>
   </div>
   <div expandedIcon="fa fa-angle-down" *ngIf="formPermisos.controls['grupo'].value" class="permisos-tree">
-    <p-tree (onNodeSelect)="onNodeSelect()" (onNodeUnselect)="onNodeUnselect()" [(selection)]="selectedPermiso" #expandingTree
-      [value]="permisosTree" selectionMode="checkbox">
+    <p-tree *ngIf="activacionEditar" (onNodeSelect)="onNodeSelect()" (onNodeUnselect)="onNodeUnselect()" [(selection)]="selectedPermiso"
+      #expandingTree [value]="permisosTree" selectionMode="checkbox">
       <ng-template let-node pTemplate="default">
         <i class="fa fa-circle icon-acceso" [ngClass]="{ 'color-sinAsignar':node.derechoacceso == 0 , 'color-denegado':node.derechoacceso == 1 ,'color-lectura':node.derechoacceso == 2,  'color-total':node.derechoacceso == 3}"></i>
         <label>{{node.label}}</label>
       </ng-template>
 
       </p-tree>
+      <p-tree *ngIf="!activacionEditar" (onNodeSelect)="onNodeSelect()" (onNodeUnselect)="onNodeUnselect()" [(selection)]="selectedPermiso"
+        #expandingTree [value]="permisosTree">
+        <ng-template let-node pTemplate="default">
+          <i class="fa fa-circle icon-acceso" [ngClass]="{ 'color-sinAsignar':node.derechoacceso == 0 , 'color-denegado':node.derechoacceso == 1 ,'color-lectura':node.derechoacceso == 2,  'color-total':node.derechoacceso == 3}"></i>
+          <label>{{node.label}}</label>
+        </ng-template>
+        </p-tree>
   </div>
 
 

@@ -100,6 +100,8 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
         }
       );
     }
+    sessionStorage.removeItem("perfil");
+    sessionStorage.removeItem("privilegios");
   }
 
   fillRol() {
@@ -141,7 +143,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
   }
 
   //cada vez que cambia el formulario comprueba esto
-  onChangeForm() { }
+  onChangeForm() {}
 
   confirmEdit() {
     let mess = "";

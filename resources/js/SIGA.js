@@ -2277,7 +2277,7 @@ function jQueryUILoaded() {
 		link.rel = "stylesheet";
 		link.href = jqueryUICSSfileUri;
 
-		document.getElementsByTagName("head")[0].appendChild(link);
+		// document.getElementsByTagName("head")[0].appendChild(link);
 	}
 	// CONFIGURACI�N POR DEFECTO DE DATEPICKER
 	if (jQueryTop != null && jQueryTop.fn.datepicker) {

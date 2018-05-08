@@ -106,9 +106,10 @@
     <div class="card-footer">
       <div class="text-right main-button ">
         <button (click)="confirmEdit();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"
-          [disabled]="formGroup.invalid"></button>
-          <button (click)="isRestablecer();" pButton type="button" icon="	fa fa-eraser " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-          <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+          [disabled]="checkEditar()"></button>
+          <button [disabled]="checkEditar()" (click)="isRestablecer();" pButton type="button" icon="	fa fa-eraser " iconPos="left"
+            label="{{ 'general.boton.restablecer' | translate}}"></button>
+            <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
       </div>
     </div>
     <app-dialog></app-dialog>

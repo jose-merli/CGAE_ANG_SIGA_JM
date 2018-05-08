@@ -47,23 +47,24 @@
     <div class="card-body p-0">
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [value]="datosTraduccion" [editable]="true" [responsive]="true"
         #table class="tabla-listado" [sortOrder]="1" [paginator]="activarPaginacion()" paginatorPosition="both" [rows]="selectedItem">
-        <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true">
+        <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true"
+          filterPlaceholder="{{'general.boton.search' | translate}}">
           <ng-template *ngIf="col.field == 'descripcionTraduccion'" let-dato="rowData" pTemplate="body">
             <div class="input-group">
               <span class="input-group">
                 <button pButton type="button" [pTooltip]="obtenerRecurso(dato)"  tooltipPosition="top" icon="fa fa-question"></button> &nbsp;&nbsp;
-              <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" (change)="isGuardar($event,dato)">
+              <input type="text" [(disabled)]="!editar" class="form-control" pInputText [(ngModel)]="dato[col.field]" (change)="isGuardar($event,dato)">
               </span>
             </div>
           </ng-template>
-        </p-column>
+          </p-column>
 
-        <ng-template pTemplate="paginatorLeft">
-          <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-          <label>{{ 'general.message.mostrar' | translate}}<p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
-        </ng-template>
+          <ng-template pTemplate="paginatorLeft">
+            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+            <label>{{ 'general.message.mostrar' | translate}}<p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
+          </ng-template>
 
-        </p-dataTable>
+          </p-dataTable>
     </div>
   </div>
   <app-dialog></app-dialog>

@@ -70,6 +70,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
   permisosArray: any[];
   derechoAcceso: any;
   activacionEditar: boolean;
+  selectAll: boolean = false;
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
@@ -85,7 +86,10 @@ export class Usuarios extends SigaWrapper implements OnInit {
   ) {
     super(USER_VALIDATIONS);
   }
-  @ViewChild("table") table;
+  @ViewChild("table")
+  table;
+  selectedDatos;
+
   ngOnInit() {
     this.activo = true;
     this.checkAcceso();
@@ -148,13 +152,13 @@ export class Usuarios extends SigaWrapper implements OnInit {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
 
   checkAcceso() {
     this.controlAcceso = new ControlAccesoDto();
-    this.controlAcceso.idProceso = 83;
+    this.controlAcceso.idProceso = "83";
     this.sigaServices.post("acces_control", this.controlAcceso).subscribe(
       data => {
         this.permisosTree = JSON.parse(data.body);
@@ -180,21 +184,22 @@ export class Usuarios extends SigaWrapper implements OnInit {
   }
 
   onChangeForm() {
+    if (this.body.nif == "") {
+      this.dniCorrecto = null;
+    } else {
+      this.dniCorrecto = this.isValidDNI(this.body.nif);
+    }
     if (
       this.body.nombreApellidos != "" &&
       this.body.nombreApellidos != undefined &&
       (this.body.nif != "" && this.body.nif != undefined) &&
       (this.body.rol != "" && this.body.rol != undefined) &&
-      (this.body.grupo != "" && this.body.grupo != undefined)
+      (this.body.grupo != "" && this.body.grupo != undefined) &&
+      this.dniCorrecto
     ) {
       this.blockCrear = false;
     } else {
       this.blockCrear = true;
-    }
-    if (this.body.nif == "") {
-      this.dniCorrecto = null;
-    } else {
-      this.dniCorrecto = this.isValidDNI(this.body.nif);
     }
   }
 
@@ -205,9 +210,17 @@ export class Usuarios extends SigaWrapper implements OnInit {
   }
 
   pInputText;
+
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
+    if (!this.selectMultiple) {
+      this.selectedDatos = []
+    } else {
+      this.selectAll = false
+      this.selectedDatos = []
+    }
   }
+
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
@@ -271,15 +284,15 @@ export class Usuarios extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("usuarios_search", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          console.log(data);
+      data => {
+        console.log(data);
 
-          this.searchUser = JSON.parse(data["body"]);
-          this.datos = this.searchUser.usuarioItem;
-        },
-        err => {
-          console.log(err);
-        }
+        this.searchUser = JSON.parse(data["body"]);
+        this.datos = this.searchUser.usuarioItem;
+      },
+      err => {
+        console.log(err);
+      }
       );
   }
 
@@ -433,9 +446,9 @@ export class Usuarios extends SigaWrapper implements OnInit {
           "general.message.confirmar.rehabilitaciones"
         )),
           +selectedItem.length +
-            this.translateService.instant(
-              "cargaMasivaDatosCurriculares.numRegistros.literal"
-            );
+          this.translateService.instant(
+            "cargaMasivaDatosCurriculares.numRegistros.literal"
+          );
       } else {
         mess = this.translateService.instant(
           "general.message.confirmar.rehabilitacion"
@@ -500,6 +513,8 @@ export class Usuarios extends SigaWrapper implements OnInit {
       if (id && id.length > 0) {
         ir = id[0];
       }
+      sessionStorage.removeItem("usuarioBody");
+      sessionStorage.removeItem("privilegios");
       sessionStorage.setItem("usuarioBody", JSON.stringify(id));
       sessionStorage.setItem(
         "privilegios",
@@ -518,6 +533,15 @@ export class Usuarios extends SigaWrapper implements OnInit {
       this.activo = true;
     } else {
       this.activo = false;
+    }
+  }
+
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.selectMultiple = false;
+      this.selectedDatos = this.datos;
+    } else {
+      this.selectedDatos = [];
     }
   }
 }

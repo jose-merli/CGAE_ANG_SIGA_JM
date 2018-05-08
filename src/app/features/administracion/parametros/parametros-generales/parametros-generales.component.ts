@@ -29,6 +29,7 @@ import { ParametroRequestDto } from "../../../../models/ParametroRequestDto";
 import { ParametroDto } from "../../../../models/ParametroDto";
 import { ParametroDeleteDto } from "../../../../models/ParametroDeleteDto";
 import { ParametroUpdateDto } from "../../../../models/ParametroUpdateDto";
+import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
 
 @Component({
   selector: "app-parametros-generales",
@@ -61,6 +62,12 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   historico: boolean = false;
   msgs: Message[] = [];
 
+  controlAcceso: ControlAccesoDto = new ControlAccesoDto();
+  permisos: any;
+  permisosArray: any[];
+  derechoAcceso: any;
+  activacionEditar: boolean;
+
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -74,6 +81,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   }
   @ViewChild("table") table;
   ngOnInit() {
+    this.checkAcceso();
     this.sigaServices.get("parametros_modulo").subscribe(
       n => {
         this.modulos = n.combooItems;
@@ -90,7 +98,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
       },
       {
         field: "parametro",
-        header: "menu.administracion.literal.parametro"
+        header: "administracion.parametrosGenerales.literal.parametro"
       },
       {
         field: "valor",
@@ -122,12 +130,34 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
 
-  onChangeForm() { }
+  onChangeForm() {}
 
   confirmarBuscar() {
     if (this.selectedModulo != "") {
       this.isBuscar();
     }
+  }
+
+  checkAcceso() {
+    this.controlAcceso = new ControlAccesoDto();
+    this.controlAcceso.idProceso = "111";
+    this.sigaServices.post("acces_control", this.controlAcceso).subscribe(
+      data => {
+        this.permisos = JSON.parse(data.body);
+        this.permisosArray = this.permisos.permisoItems;
+        this.derechoAcceso = this.permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (this.derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else {
+          this.activacionEditar = false;
+        }
+      }
+    );
   }
 
   isBuscar() {
@@ -144,15 +174,15 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("parametros_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.searchParametros = JSON.parse(data["body"]);
-        this.datosBuscar = this.searchParametros.parametrosItems;
-      },
-      err => {
-        console.log(err);
-      }
+          this.searchParametros = JSON.parse(data["body"]);
+          this.datosBuscar = this.searchParametros.parametrosItems;
+        },
+        err => {
+          console.log(err);
+        }
       );
 
     this.buscar = true;
@@ -230,21 +260,21 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("parametros_historico", "?numPagina=1", this.bodyHistorico)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.historicoParametros = JSON.parse(data["body"]);
-        this.datosHistorico = this.historicoParametros.parametrosItems;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.buscar = false;
-        this.historico = true;
-        this.eliminar = true;
-        this.filaSelecionadaTabla = null;
-      }
+          this.historicoParametros = JSON.parse(data["body"]);
+          this.datosHistorico = this.historicoParametros.parametrosItems;
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.buscar = false;
+          this.historico = true;
+          this.eliminar = true;
+          this.filaSelecionadaTabla = null;
+        }
       );
   }
 
@@ -261,7 +291,11 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   }
 
   isHabilitadoEliminar() {
-    return this.eliminar;
+    if (this.activacionEditar == true) {
+      return this.eliminar;
+    } else {
+      return true;
+    }
   }
 
   almacenaValorEditandose(event) {
@@ -345,5 +379,5 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
 export class ComboItem {
   label: String;
   value: String;
-  constructor() { }
+  constructor() {}
 }

@@ -438,6 +438,7 @@ font-size: .7rem;
         flex-grow: 1;
         right: 0;
         padding: 1rem;
+        padding-right: 3.5rem;
         border:1px solid $lightGrey;
         box-shadow:0 -5px 5px -5px $grey4;  
         .title{
@@ -474,6 +475,16 @@ font-size: .7rem;
         .sin-asignar{
             background: $grey4;
         }
+}
+
+.scroll-arrow{
+   padding: .5rem;
+    font-size: .8rem;
+    background: $grey1;
+    color: white;
+    bottom: 1rem;
+    right: 1rem;
+    position: fixed;
 }
 
 
@@ -587,7 +598,10 @@ font-size: .7rem;
 }
 
 .ui-datatable tbody.ui-datatable-hoverable-rows > tr.ui-widget-content:not(.ui-state-highlight):hover{
-    background: #fafafb;
+    background: $secondary-color;
+    td{
+        color: white;
+    }
 }
 
 .ui-confirmdialog .ui-button{
@@ -654,7 +668,7 @@ font-size: .7rem;
 //tree permisos
 
 .permisos-tree {
-    padding-bottom: 5rem;
+    padding-bottom: 4rem;
     .ui-tree .ui-treenode-content.ui-treenode-selectable .ui-treenode-label:not(.ui-state-highlight):hover{
         background: none;
     }
@@ -735,6 +749,13 @@ font-size: .7rem;
         text-shadow: none;
     }
 
+}
+.fa-sort-asc:before, .fa-sort-up:before {
+    content: "\f0de";
+}
+
+.fa-sort-desc:before, .fa-sort-down:before {
+    content: "\f0dd";
 }
 
 

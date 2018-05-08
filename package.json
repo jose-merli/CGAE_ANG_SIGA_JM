@@ -7,6 +7,7 @@
     "start": "webpack-dev-server --port=4200",
     "build": "webpack",
     "deploy": "ng build --env=prod --base-href=/siga-ang/",
+    "cgaeBuild": "ng build --env=cgae --base-href=/htdocs/",
     "test": "karma start ./karma.conf.js",
     "lint": "ng lint",
     "e2e": "protractor ./protractor.conf.js",
