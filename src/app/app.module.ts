@@ -105,6 +105,7 @@ import { MantenimientoCertificadosComponent } from "./features/certificados/mant
 import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimiento-sufijos/mantenimiento-sufijos.component";
 
 /***NEW modules censo***/
+import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
 
 @NgModule({
   declarations: [
@@ -139,6 +140,7 @@ import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimie
     ConfigurarPerfilComponent,
     CensoDocumentacionComponent,
     GestionSubtiposCVComponent,
+    BusquedaColegiadosComponentNew,
 
     //Certificados
     ComunicacionInterprofesionalComponent,
@@ -221,4 +223,4 @@ import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimie
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
