@@ -55,6 +55,10 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   selectedDatos: any;
   msgs: Message[] = [];
   habilitarInputUsuario: boolean = false;
+  returnDesde: string;
+  returnHasta: string;
+  arrayDesde: any[];
+  arrayHasta: any[];
 
   constructor(
     private sigaServices: SigaServices,
@@ -148,6 +152,11 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
       this.construirObjetoBodySearch();
     } else {
       // si viene de la pantalla de edicion, borra la variable session
+      this.bodySearch = JSON.parse(
+        sessionStorage.getItem("searchBodyAuditoriaUsuarios")
+      );
+      this.arreglarFechas();
+
       sessionStorage.removeItem("searchBodyAuditoriaUsuarios");
     }
 
@@ -166,6 +175,22 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
         }
       );
   }
+  arreglarFechas() {
+    this.returnDesde = JSON.stringify(this.bodySearch.fechaDesde);
+    this.returnHasta = JSON.stringify(this.bodySearch.fechaHasta);
+    this.returnDesde = this.returnDesde.substring(1, 11);
+    this.returnHasta = this.returnHasta.substring(1, 11);
+    this.arrayDesde = this.returnDesde.split("-");
+    this.arrayHasta = this.returnHasta.split("-");
+    this.arrayDesde[2] = parseInt(this.arrayDesde[2]) + 1;
+    this.arrayHasta[2] = parseInt(this.arrayHasta[2]) + 1;
+    this.returnDesde =
+      this.arrayDesde[1] + "/" + this.arrayDesde[2] + "/" + this.arrayDesde[0];
+    this.returnHasta =
+      this.arrayHasta[1] + "/" + this.arrayHasta[2] + "/" + this.arrayHasta[0];
+    this.fechaDesdeCalendar = new Date(this.returnDesde);
+    this.fechaHastaCalendar = new Date(this.returnHasta);
+  }
 
   construirObjetoBodySearch() {
     if (this.usuario != undefined) this.bodySearch.usuario = this.usuario;
@@ -182,12 +207,12 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
       this.bodySearch.usuarioAutomatico = "S";
     else this.bodySearch.usuarioAutomatico = "N";
 
-    if (this.fechaDesdeCalendar != undefined)
+    if (this.fechaDesdeCalendar != undefined) {
       this.bodySearch.fechaDesde = this.fechaDesdeCalendar;
-    else this.bodySearch.fechaDesde = undefined;
-    if (this.fechaHastaCalendar != undefined)
+    } else this.bodySearch.fechaDesde = undefined;
+    if (this.fechaHastaCalendar != undefined) {
       this.bodySearch.fechaHasta = this.fechaHastaCalendar;
-    else this.bodySearch.fechaHasta = undefined;
+    } else this.bodySearch.fechaHasta = undefined;
   }
 
   isHabilitadoBuscar() {
