@@ -157,7 +157,13 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
 
     if (sessionStorage.getItem("searchCatalogo") != null) {
       this.body = JSON.parse(sessionStorage.getItem("searchCatalogo"));
-      this.isBuscar();
+
+      let aaa = JSON.parse(sessionStorage.getItem("searchOrHistory"));
+      if (aaa == "history") {
+        this.historico();
+      } else {
+        this.isBuscar();
+      }
       sessionStorage.removeItem("searchCatalogo");
       sessionStorage.removeItem("catalogoBody");
     } else {
@@ -240,6 +246,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
 
   historico() {
+    sessionStorage.removeItem("searchOrHistory");
+    sessionStorage.setItem("searchOrHistory", JSON.stringify("history"));
     this.buscar = false;
     this.selectMultiple = false;
     this.catalogoSeleccionado = this.body.catalogo;
@@ -288,6 +296,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
 
   isBuscar() {
+    sessionStorage.removeItem("searchOrHistory");
+    sessionStorage.setItem("searchOrHistory", JSON.stringify("search"));
     this.buscar = true;
     this.blockBuscar = false;
     this.tablaHistorico = false;
@@ -388,10 +398,15 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       sessionStorage.removeItem("searchCatalogo");
       sessionStorage.setItem("catalogoBody", JSON.stringify(id));
       sessionStorage.setItem("searchCatalogo", JSON.stringify(this.body));
-      sessionStorage.setItem(
-        "privilegios",
-        JSON.stringify(this.activacionEditar)
-      );
+      if (id[0].fechaBaja != null) {
+        sessionStorage.setItem("privilegios", JSON.stringify(false));
+      } else {
+        sessionStorage.setItem(
+          "privilegios",
+          JSON.stringify(this.activacionEditar)
+        );
+      }
+
       this.router.navigate(["/EditarCatalogosMaestros"]);
     } else {
       this.editar = false;
