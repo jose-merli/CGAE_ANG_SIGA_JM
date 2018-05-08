@@ -24,15 +24,15 @@
             <input *ngIf="!disabled" disabled type="text" name="id" class="form-control" [(ngModel)]='body.idGrupo' (ngModelChange)="onChangeForm()"
               [formControl]="this.formGroup.controls['idGrupo']" pInputText>
               <input *ngIf="disabled" type="text" name="id" class="form-control" [(ngModel)]='body.idGrupo' (ngModelChange)="onChangeForm()"
-                [formControl]="this.formGroup.controls['idGrupo']" pInputText>
+                [formControl]="this.formGroup.controls['idGrupo']" (onChange)="checkIgual()" pInputText>
                 <div *ngIf="hasErrors('idGrupo')"><label class="labelError">{{getErrorMessage('idGrupo')}}</label></div>
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>{{'general.description' | translate}} (*)</label>
             <input *ngIf="!disabled" disabled type="text" name="descripcion" class="form-control" [(ngModel)]='body.descripcionGrupo'
               [formControl]="this.formGroup.controls['descripcionGrupo']" pInputText>
-              <input *ngIf="disabled" type="text" name="descripcion" class="form-control" [(ngModel)]='body.descripcionGrupo' [formControl]="this.formGroup.controls['descripcionGrupo']"
-                pInputText>
+              <input *ngIf="disabled" (onChange)="checkIgual()" type="text" name="descripcion" class="form-control" [(ngModel)]='body.descripcionGrupo'
+                [formControl]="this.formGroup.controls['descripcionGrupo']" pInputText>
           </div>
           <div class="form-group col-lg-3 col-md-3">
           </div>
@@ -49,15 +49,12 @@
               </ng-template>
               </p-pickList>
           </div>
-
-
-
         </div>
       </div>
     </div>
     <div class="card-footer">
       <div class="text-right main-button ">
-        <button [disabled]="!disabled" (click)="confirmEdit();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+        <button [disabled]="checkIgual()" (click)="confirmEdit();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
         <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
       </div>
     </div>

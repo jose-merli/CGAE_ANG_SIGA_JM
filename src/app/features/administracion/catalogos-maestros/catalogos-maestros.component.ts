@@ -158,8 +158,10 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     if (sessionStorage.getItem("searchCatalogo") != null) {
       this.body = JSON.parse(sessionStorage.getItem("searchCatalogo"));
 
-      let aaa = JSON.parse(sessionStorage.getItem("searchOrHistory"));
-      if (aaa == "history") {
+      let tablaAnterior = JSON.parse(sessionStorage.getItem("searchOrHistory"));
+      sessionStorage.removeItem("searchOrHistory");
+
+      if (tablaAnterior == "history") {
         this.historico();
       } else {
         this.isBuscar();
@@ -246,7 +248,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
 
   historico() {
-    sessionStorage.removeItem("searchOrHistory");
     sessionStorage.setItem("searchOrHistory", JSON.stringify("history"));
     this.buscar = false;
     this.selectMultiple = false;
@@ -296,7 +297,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
 
   isBuscar() {
-    sessionStorage.removeItem("searchOrHistory");
     sessionStorage.setItem("searchOrHistory", JSON.stringify("search"));
     this.buscar = true;
     this.blockBuscar = false;

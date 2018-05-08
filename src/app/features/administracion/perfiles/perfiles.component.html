@@ -41,14 +41,15 @@
                   <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
                   <label>{{ "general.message.mostrar" | translate}} <p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
                 </ng-template>
-                <p-footer *ngIf="selectedDatos && selectedDatos != ''">
+                <p-footer>
                   <div class="text-right main-button">
-                    <button (click)="selectedDatos=false" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
-                    <button [disabled]="!activacionEditar" (click)="crear()" pButton type="button" icon="	fa fa-plus-square " iconPos="left"
-                      label="{{ 'general.boton.new' | translate}}"></button>
-                      <button (click)="historico(); selectedDatos=false" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.historico' | translate}}"></button>
-                      <button [disabled]="!activacionEditar" (click)="confirmarBorrar(selectedDatos); selectedDatos=false" pButton type="button"
-                        icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
+                    <button *ngIf="selectedDatos && selectedDatos != ''" (click)="selectedDatos=false" pButton type="button" icon="fa fa-check"
+                      iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
+                      <button *ngIf="selectedDatos && selectedDatos != ''" [disabled]="!activacionEditar" (click)="crear()" pButton type="button"
+                        icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+                        <button (click)="historico(); selectedDatos=false" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.historico' | translate}}"></button>
+                        <button *ngIf="selectedDatos && selectedDatos != ''" [disabled]="!activacionEditar" (click)="confirmarBorrar(selectedDatos); selectedDatos=false"
+                          pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
                   </div>
                 </p-footer>
                 <p-footer *ngIf="selectedDatos && selectedDatos == ''">
@@ -66,7 +67,8 @@
           <div class="card-body p-0">
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
               (onRowSelect)="irEditarUsuario(selectedDatos)" dataKey="idGrupo" [responsive]="true" #table class="tabla-listado"
-              [value]="datos" [sortOrder]="1" [paginator]="true" [editable]="true" paginatorPosition="both" [rows]="selectedItem">
+              [value]="datos" [(selection)]="selectedDatos" selectionMode="multiple" [sortOrder]="1" [paginator]="true" [editable]="true"
+              paginatorPosition="both" [rows]="selectedItem">
               <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
                 [filter]="true">
 
@@ -79,10 +81,17 @@
                   </div>
                 </ng-template>
 
-                <ng-template *ngIf="col.field =='asignarRolDefecto'" pTemplate="body" let-dato="rowData"  >
-                  <p-dropdown [disabled]="!activacionEditar" [options]="dato['asignarRolDefecto']" [autoWidth]="true" styleClass="ui-column-filter"
-                    [style]="{'width':'100%'}" appendTo="body"></p-dropdown>
+                <ng-template *ngIf="col.field =='asignarRolDefecto'" pTemplate="body" let-dato="rowData">
+                  <div *ngIf="setItalic(dato)">
+                    <p-dropdown disabled="true" [options]="dato['asignarRolDefecto']" [autoWidth]="true" styleClass="ui-column-filter" [style]="{'width':'100%'}"
+                      appendTo="body"></p-dropdown>
+                  </div>
+                  <div *ngIf="!setItalic(dato)">
+                    <p-dropdown [disabled]="!activacionEditar" [options]="dato['asignarRolDefecto']" [autoWidth]="true" styleClass="ui-column-filter"
+                      [style]="{'width':'100%'}" appendTo="body"></p-dropdown>
+                  </div>
                 </ng-template>
+
                 </p-column>
                 <ng-template pTemplate="paginatorLeft">
                   <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
@@ -95,7 +104,7 @@
             <div class="text-right main-button">
               <button [disabled]="!activacionEditar" (click)="crear()" pButton type="button" icon="	fa fa-plus-square " iconPos="left"
                 label="{{ 'general.boton.new' | translate}}"></button>
-                <button (click)="isBuscar()" pButton type="button" icon="fa fa-search " iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+                <button (click)="isBuscar()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
             </div>
           </div>
         </div>
