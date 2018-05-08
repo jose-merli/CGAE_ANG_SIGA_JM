@@ -98,8 +98,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
 
   rowsPerPage: any = [];
 
-  @ViewChild("table")
-  table;
+  @ViewChild("table") table;
   selectedDatos;
   constructor(
     private formBuilder: FormBuilder,
@@ -144,6 +143,17 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         value: 40
       }
     ];
+
+    var registroActualizado = JSON.parse(
+      sessionStorage.getItem("registroAuditoriaUsuariosActualizado")
+    );
+    if (registroActualizado) {
+      this.showSuccess();
+      sessionStorage.setItem(
+        "registroAuditoriaUsuariosActualizado",
+        JSON.stringify(false)
+      );
+    }
 
     if (sessionStorage.getItem("searchCatalogo") != null) {
       this.body = JSON.parse(sessionStorage.getItem("searchCatalogo"));
@@ -261,17 +271,20 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
     if (!this.selectMultiple) {
-      this.selectedDatos = []
+      this.selectedDatos = [];
     } else {
-      this.selectAll = false
-      this.selectedDatos = []
+      this.selectAll = false;
+      this.selectedDatos = [];
     }
   }
 
-
   activarPaginacion() {
-    if (this.datosHist.length == 0) return false;
-    else return true;
+    if (this.datosHist == undefined) {
+      return false;
+    } else {
+      if (this.datosHist.length == 0) return false;
+      else return true;
+    }
   }
 
   isBuscar() {
@@ -296,15 +309,15 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("maestros_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.searchCatalogo = JSON.parse(data["body"]);
-        this.datosHist = this.searchCatalogo.catalogoMaestroItem;
-      },
-      err => {
-        console.log(err);
-      }
+          this.searchCatalogo = JSON.parse(data["body"]);
+          this.datosHist = this.searchCatalogo.catalogoMaestroItem;
+        },
+        err => {
+          console.log(err);
+        }
       );
   }
 
@@ -424,8 +437,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
             severity: "success",
             summary: "Correcto",
             detail:
-            selectedDatos.length +
-            this.translateService.instant("messages.deleted.selected.success")
+              selectedDatos.length +
+              this.translateService.instant("messages.deleted.selected.success")
           });
         }
       },

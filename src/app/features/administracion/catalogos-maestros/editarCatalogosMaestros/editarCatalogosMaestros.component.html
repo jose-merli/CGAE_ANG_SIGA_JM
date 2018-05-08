@@ -26,13 +26,13 @@
           </div>
           <div class="form-group col-lg-4 col-md-4">
             <label>{{ 'general.codeext' | translate}}</label>
-            <input type="text" name="codigoBusqueda" value="" class="box" class="form-control" [(ngModel)]='body.codigoExt' [(disabled)]="!activacionEditar"
-              pInputText>
+            <input type="text" (onChange)="checkIgual()" name="codigoBusqueda" value="" class="box" class="form-control" [(ngModel)]='body.codigoExt'
+              [(disabled)]="!activacionEditar" pInputText>
           </div>
           <div class="form-group col-lg-4 col-md-4">
             <label>{{ 'general.description' | translate}}</label>
-            <input type="text" name="descripcionBusqueda" value="" class="box" class="form-control" [(ngModel)]='body.descripcion' [(disabled)]="!activacionEditar"
-              pInputText>
+            <input type="text" (onChange)="checkIgual()" name="descripcionBusqueda" value="" class="box" class="form-control" [(ngModel)]='body.descripcion'
+              [(disabled)]="!activacionEditar" pInputText>
           </div>
         </div>
       </div>
@@ -40,7 +40,7 @@
     <div class="card-footer">
       <div class="text-right main-button ">
         <button (click)="confirmEdit();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"
-          [disabled]="formGroup.invalid"></button>
+          [disabled]="checkIgual()"></button>
           <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
       </div>
     </div>
