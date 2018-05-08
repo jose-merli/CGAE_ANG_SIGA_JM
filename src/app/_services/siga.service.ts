@@ -138,23 +138,6 @@ export class SigaServices {
       });
   }
 
-  postNuevo(service: string, file: any): Observable<any> {
-    let formData: FormData = new FormData();
-    formData.append("uploadFile", file, file.name);
-    let headers = new HttpHeaders();
-    /** In Angular 5, including the header Content-Type can invalidate your request */
-    headers.append("Content-Type", "multipart/form-data");
-    headers.append("Accept", "application/json");
-
-    return this.http
-      .post(environment.newSigaUrl + this.endpoints[service], formData, {
-        headers: headers
-      })
-      .map(response => {
-        return response;
-      });
-  }
-
   postPaginado(service: string, param: string, body: any): Observable<any> {
     let headers = new HttpHeaders({
       "Content-Type": "application/json"

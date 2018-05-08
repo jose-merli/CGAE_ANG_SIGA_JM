@@ -41,7 +41,9 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
   valorDefectoIdioma: any;
   msgs: Message[] = [];
   guardarHabilitado: boolean = true;
+  archivoDisponible: boolean = false;
   file: File = undefined;
+  nombreImagen: any;
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -64,7 +66,7 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
             this.idiomaBusqueda = n.combooItems;
 
             this.valorDefectoIdioma = this.idiomaBusqueda.find(
-              item => item.value === this.lenguajeInstitucion
+              item => item.value == this.lenguajeInstitucion
             );
 
             if (this.valorDefectoIdioma != undefined) {
@@ -91,14 +93,54 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
     this.msgs.push({
       severity: "success",
       summary: this.translateService.instant("general.message.correct"),
-      detail: this.translateService.instant("imagen guardada correctamente")
+      detail: "imagen guardada correctamente"
+    });
+  }
+
+  showSuccessUploadedLenguage() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: "idioma actualizado correctamente"
+    });
+  }
+
+  showFailUploadedImage() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Error",
+      detail: "Formato incorrecto de imagen seleccionada"
     });
   }
 
   uploadImage(event: any) {
-    // guardamos la imagen en front para despues guardarla
+    // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
     let fileList: FileList = event.target.files;
-    this.file = fileList[0];
+
+    let nombreCompletoArchivo = fileList[0].name;
+    let extensionArchivo = nombreCompletoArchivo.substring(
+      nombreCompletoArchivo.lastIndexOf("."),
+      nombreCompletoArchivo.length
+    );
+
+    if (
+      extensionArchivo == null ||
+      extensionArchivo.trim() == "" ||
+      !/\.(gif|jpg|jpeg|tiff|png)$/i.test(extensionArchivo.trim().toUpperCase())
+    ) {
+      // Mensaje de error de formato de imagen y deshabilitar boton guardar
+      this.file = undefined;
+      this.archivoDisponible = false;
+      this.nombreImagen = "";
+      this.showFailUploadedImage();
+    } else {
+      // se almacena el archivo para habilitar boton guardar
+      this.file = fileList[0];
+      this.archivoDisponible = true;
+      this.nombreImagen = nombreCompletoArchivo;
+    }
   }
 
   isGuardar() {
@@ -112,6 +154,9 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
           data => {
             console.log(data);
             this.file = undefined;
+            this.archivoDisponible = false;
+            this.nombreImagen = "";
+            this.showSuccessUploadedImage();
           },
           err => {
             console.log(err);
@@ -132,6 +177,8 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
         .subscribe(
           data => {
             console.log(data);
+            this.lenguajeInstitucion = this.selectedIdiomaBusqueda;
+            this.showSuccessUploadedLenguage();
           },
           err => {
             console.log(err);
