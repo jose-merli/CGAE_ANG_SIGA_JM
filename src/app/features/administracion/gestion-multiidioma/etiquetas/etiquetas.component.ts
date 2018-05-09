@@ -181,6 +181,7 @@ export class Etiquetas extends SigaWrapper implements OnInit {
   }
 
   isRestablecer() {
+    this.elementosAGuardar = [];
     this.bodySearch = this.bodySave;
     this.isBuscar();
   }
