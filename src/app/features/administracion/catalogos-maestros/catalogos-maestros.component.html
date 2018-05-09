@@ -43,14 +43,10 @@
       <div *ngIf="editar == false">
 
         <div class="text-right main-button ">
-          <button *ngIf="activacionEditar" (click)="isCrear()" pButton type="button " icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"
-            [disabled]="blockCrear"></button>
-            <button *ngIf="!activacionEditar" (click)="isCrear()" pButton type="button " icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"
-              disabled></button>
-              <!--deshabilitar botón a menos que el campo obligatorio esté relleno-->
-              <button (click)="isBuscar(); selectedDatos=[]" pButton type="button " icon="fa fa-search " iconPos="left" label="{{ 'general.boton.search' | translate}}"
-                [disabled]="blockBuscar"></button>
-
+          <button (click)="isBuscar(); selectedDatos=[]" pButton type="button " icon="fa fa-search " iconPos="left" label="{{ 'general.boton.search' | translate}}"
+            [disabled]="blockBuscar"></button>
+            <button (click)="newData();" pButton type="button" icon="fa fa-plus-square  " iconPos="left" label="{{ 'general.boton.new' | translate}}"
+              [disabled]="crear"></button>
         </div>
       </div>
       <!--botones que se activan al editar-->
@@ -108,7 +104,54 @@
           </p-dataTable>
     </div>
   </div>
+  <div *ngIf="pressNew == true" class="card mt-3">
+    <div class="card-body p-0">
+      <div class="m-3 d-flex text-right justify-content-end">
+        <div>
+          <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
+        </div>
+        <label class="ml-3" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=[]"><i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+      </div>
+      <p-dataTable #table class="tabla-listado" [value]="datosHist" [editable]="true" emptyMessage="{{ 'general.message.no.registros' | translate}}"
+        [ngClass]="{'customCursor': selectMultiple}">
 
+        <p-column [style]="{'width': '20%'}" field="codigoExt" [header]="'general.codeext' | translate" [filter]="true">
+          <ng-template let-col let-car="rowData" pTemplate="body">
+
+            <span>{{car[col.field]}}</span>
+            <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='newCatalogo.codigoExt' type="text" class="form-control"
+              (ngModelChange)="onChangeForm()" pInputText>
+          </ng-template>
+        </p-column>
+        <p-column [sortable]="true" field="descripcion" [header]="'general.description' | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}">
+          <ng-template let-col let-car="rowData" pTemplate="body">
+
+            <span>{{car[col.field]}}</span>
+            <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='newCatalogo.descripcion' type="text" class="form-control"
+              (ngModelChange)="onChangeForm()" pInputText>
+          </ng-template>
+        </p-column>
+
+
+        <ng-template pTemplate="paginatorLeft">
+          <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+          <label>{{ 'general.message.mostrar' | translate}} <p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
+        </ng-template>
+        <p-footer>
+          <div class="text-right main-button">
+            <button *ngIf="activacionEditar" (click)="confirmarCrear()" pButton type="button " icon="	fa fa-plus-square " iconPos="left"
+              label="{{ 'general.boton.new' | translate}}" [disabled]="blockCrear"></button>
+              <button *ngIf="!activacionEditar" (click)="confirmarCrear()" pButton type="button " icon="	fa fa-plus-square " iconPos="left"
+                label="{{ 'general.boton.new' | translate}}" disabled></button>
+                <!--deshabilitar botón a menos que el campo obligatorio esté relleno-->
+
+                <button (click)="reset()" pButton type="button" icon="fa fa-eraser " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+          </div>
+        </p-footer>
+        </p-dataTable>
+
+    </div>
+  </div>
   <div *ngIf="tablaHistorico == true" class="card mt-3">
     <div class="card-body p-0">
 
