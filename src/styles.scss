@@ -2,6 +2,7 @@
 
 /*** TIPOGRAFÍAS ***/
 
+
 @font-face {
     font-family: OpenSansCondensedBold;
     src: url('./assets/fonts/OpenSansCondensedBold.eot');
@@ -26,7 +27,14 @@
     url('./assets/fonts/OpenSansCondensedLight.ttf') format('truetype');
 }
 
-
+@keyframes ui-progress-spinner-color {
+    0% {
+        stroke: $secondary-color;
+    }
+    50%{
+        stroke: $primary-color;
+    }
+}
 
 *{
     margin:0;
@@ -489,6 +497,9 @@ font-size: .7rem;
 
 
 
+
+
+
 /*MODIFICACIONES DE PRIMENG*/
 
 
@@ -759,7 +770,17 @@ font-size: .7rem;
 }
 
 
-
+.ui-progress-spinner{
+    width: 100px;
+    height: 100px;
+    fill: transparent;
+    position: fixed;
+    margin-left: -50px;
+    margin-top: -50px;
+    top: 50%;
+    left: 50%;
+    stroke-width: 4px;
+}
 
 
 

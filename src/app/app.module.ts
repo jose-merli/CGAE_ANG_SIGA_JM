@@ -44,6 +44,8 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ConfirmationService } from "primeng/api";
 import { GrowlModule } from "primeng/growl";
 import { MultiSelectModule } from "primeng/multiSelect";
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+
 // Modulo de censo
 import { SearchColegiadosComponent } from "./features/censo/search-colegiados/search-colegiados.component";
 import { SearchNoColegiadosComponent } from "./features/censo/search-no-colegiados/search-no-colegiados.component";
@@ -200,7 +202,8 @@ import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-co
     TableModule,
     TreeModule,
     PickListModule,
-    ListboxModule
+    ListboxModule,
+    ProgressSpinnerModule
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
