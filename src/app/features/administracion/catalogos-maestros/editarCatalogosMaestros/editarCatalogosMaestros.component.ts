@@ -47,6 +47,7 @@ export class EditarCatalogosMaestrosComponent extends SigaWrapper
   select: any[];
   msgs: Message[] = [];
   body: CatalogoRequestDto = new CatalogoRequestDto();
+  checkBody: CatalogoRequestDto = new CatalogoRequestDto();
   upd: CatalogoUpdateRequestDto = new CatalogoUpdateRequestDto();
   pButton;
   textSelected: String = "{0} grupos seleccionados";
@@ -93,7 +94,9 @@ export class EditarCatalogosMaestrosComponent extends SigaWrapper
     this.correcto = false;
 
     this.body = new CatalogoRequestDto();
+    this.checkBody = new CatalogoRequestDto();
     this.body = JSON.parse(sessionStorage.getItem("catalogoBody"))[0];
+    this.checkBody = JSON.parse(sessionStorage.getItem("catalogoBody"))[0];
     this.activacionEditar = JSON.parse(sessionStorage.getItem("privilegios"));
     sessionStorage.removeItem("catalogoBody");
     sessionStorage.removeItem("privilegios");
@@ -113,11 +116,20 @@ export class EditarCatalogosMaestrosComponent extends SigaWrapper
         this.showSuccess();
         this.correcto = true;
         console.log(data);
+        this.correcto = true;
+        sessionStorage.setItem(
+          "registroAuditoriaUsuariosActualizado",
+          JSON.stringify(this.correcto)
+        );
       },
       err => {
         this.showFail();
         this.correcto = false;
         console.log(err);
+        sessionStorage.setItem(
+          "registroAuditoriaUsuariosActualizado",
+          JSON.stringify(this.correcto)
+        );
       },
       () => {
         if (this.correcto) {
@@ -125,6 +137,23 @@ export class EditarCatalogosMaestrosComponent extends SigaWrapper
         }
       }
     );
+  }
+
+  checkIgual() {
+    if (
+      this.activacionEditar == true &&
+      this.body.codigoExt == this.checkBody.codigoExt &&
+      this.body.descripcion == this.checkBody.descripcion
+    ) {
+      return true;
+    } else if (
+      this.body.codigoExt == this.checkBody.codigoExt &&
+      this.body.descripcion == this.checkBody.descripcion
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   confirmEdit() {

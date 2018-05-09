@@ -78,12 +78,17 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   ) {
     super(USER_VALIDATIONS);
   }
-  @ViewChild("table")
-  table;
+  @ViewChild("table") table;
   selectedDatos;
 
   ngOnInit() {
-    this.isBuscar();
+    let tablaAnterior = JSON.parse(sessionStorage.getItem("searchOrHistory"));
+    sessionStorage.removeItem("searchOrHistory");
+    if (tablaAnterior == "history") {
+      this.historico();
+    } else {
+      this.isBuscar();
+    }
     this.checkAcceso();
     this.cols = [
       {
@@ -125,31 +130,32 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   }
 
   isBuscar() {
+    sessionStorage.setItem("searchOrHistory", JSON.stringify("search"));
     this.historicoActive = false;
     this.sigaServices
       .postPaginado("perfiles_search", "?numPagina=1", null)
       .subscribe(
-      data => {
-        console.log(data);
-        this.searchPerfiles = JSON.parse(data["body"]);
-        this.datos = this.searchPerfiles.usuarioGrupoItems;
-        this.buscar = true;
-        this.sigaServices.get("usuarios_rol").subscribe(
-          n => {
-            this.dummy = n.combooItems;
-            this.table.reset();
-          },
-          err => {
-            console.log(err);
-          }
-        );
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.table.reset();
-      }
+        data => {
+          console.log(data);
+          this.searchPerfiles = JSON.parse(data["body"]);
+          this.datos = this.searchPerfiles.usuarioGrupoItems;
+          this.buscar = true;
+          this.sigaServices.get("usuarios_rol").subscribe(
+            n => {
+              this.dummy = n.combooItems;
+              this.table.reset();
+            },
+            err => {
+              console.log(err);
+            }
+          );
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.table.reset();
+        }
       );
   }
 
@@ -233,10 +239,10 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
     if (!this.selectMultiple) {
-      this.selectedDatos = []
+      this.selectedDatos = [];
     } else {
-      this.selectAll = false
-      this.selectedDatos = []
+      this.selectAll = false;
+      this.selectedDatos = [];
     }
   }
 
@@ -287,10 +293,14 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       sessionStorage.removeItem("perfil");
       sessionStorage.removeItem("privilegios");
       sessionStorage.setItem("perfil", JSON.stringify(id));
-      sessionStorage.setItem(
-        "privilegios",
-        JSON.stringify(this.activacionEditar)
-      );
+      if (id[0].fechaBaja != null) {
+        sessionStorage.setItem("privilegios", JSON.stringify(false));
+      } else {
+        sessionStorage.setItem(
+          "privilegios",
+          JSON.stringify(this.activacionEditar)
+        );
+      }
       this.router.navigate(["/EditarPerfiles"]);
     } else {
       this.editar = false;
@@ -313,8 +323,8 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
             severity: "success",
             summary: "Correcto",
             detail:
-            selectedDatos.length +
-            this.translateService.instant("messages.deleted.selected.success")
+              selectedDatos.length +
+              this.translateService.instant("messages.deleted.selected.success")
           });
         }
       },
@@ -328,23 +338,24 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     );
   }
   historico() {
+    sessionStorage.setItem("searchOrHistory", JSON.stringify("history"));
     this.historicoActive = true;
     this.selectMultiple = false;
     this.sigaServices
       .postPaginado("perfiles_historico", "?numPagina=1", null)
       .subscribe(
-      data => {
-        console.log(data);
-        this.searchPerfiles = JSON.parse(data["body"]);
-        this.datos = this.searchPerfiles.usuarioGrupoItems;
-        this.buscar = false;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.table.reset();
-      }
+        data => {
+          console.log(data);
+          this.searchPerfiles = JSON.parse(data["body"]);
+          this.datos = this.searchPerfiles.usuarioGrupoItems;
+          this.buscar = false;
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.table.reset();
+        }
       );
   }
   confirmarBorrar(selectedDatos) {

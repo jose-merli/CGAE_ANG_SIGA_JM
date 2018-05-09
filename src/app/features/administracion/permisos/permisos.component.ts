@@ -7,8 +7,9 @@ import {
   DoCheck,
   ViewEncapsulation
 } from "@angular/core";
-import { Message, MenuItem, TreeNode } from "primeng/components/common/api";
+import { Message, MenuItem } from "primeng/components/common/api";
 import { Tree } from "primeng/components/tree/tree";
+import { TreeNode } from "../../../utils/treenode";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import {
   FormBuilder,

@@ -98,8 +98,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
 
   rowsPerPage: any = [];
 
-  @ViewChild("table")
-  table;
+  @ViewChild("table") table;
   selectedDatos;
   constructor(
     private formBuilder: FormBuilder,
@@ -145,9 +144,28 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       }
     ];
 
+    var registroActualizado = JSON.parse(
+      sessionStorage.getItem("registroAuditoriaUsuariosActualizado")
+    );
+    if (registroActualizado) {
+      this.showSuccess();
+      sessionStorage.setItem(
+        "registroAuditoriaUsuariosActualizado",
+        JSON.stringify(false)
+      );
+    }
+
     if (sessionStorage.getItem("searchCatalogo") != null) {
       this.body = JSON.parse(sessionStorage.getItem("searchCatalogo"));
-      this.isBuscar();
+
+      let tablaAnterior = JSON.parse(sessionStorage.getItem("searchOrHistory"));
+      sessionStorage.removeItem("searchOrHistory");
+
+      if (tablaAnterior == "history") {
+        this.historico();
+      } else {
+        this.isBuscar();
+      }
       sessionStorage.removeItem("searchCatalogo");
       sessionStorage.removeItem("catalogoBody");
     } else {
@@ -230,6 +248,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
 
   historico() {
+    sessionStorage.setItem("searchOrHistory", JSON.stringify("history"));
     this.buscar = false;
     this.selectMultiple = false;
     this.catalogoSeleccionado = this.body.catalogo;
@@ -261,20 +280,24 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
     if (!this.selectMultiple) {
-      this.selectedDatos = []
+      this.selectedDatos = [];
     } else {
-      this.selectAll = false
-      this.selectedDatos = []
+      this.selectAll = false;
+      this.selectedDatos = [];
     }
   }
 
-
   activarPaginacion() {
-    if (this.datosHist.length == 0) return false;
-    else return true;
+    if (this.datosHist == undefined) {
+      return false;
+    } else {
+      if (this.datosHist.length == 0) return false;
+      else return true;
+    }
   }
 
   isBuscar() {
+    sessionStorage.setItem("searchOrHistory", JSON.stringify("search"));
     this.buscar = true;
     this.blockBuscar = false;
     this.tablaHistorico = false;
@@ -296,15 +319,15 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("maestros_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.searchCatalogo = JSON.parse(data["body"]);
-        this.datosHist = this.searchCatalogo.catalogoMaestroItem;
-      },
-      err => {
-        console.log(err);
-      }
+          this.searchCatalogo = JSON.parse(data["body"]);
+          this.datosHist = this.searchCatalogo.catalogoMaestroItem;
+        },
+        err => {
+          console.log(err);
+        }
       );
   }
 
@@ -375,10 +398,15 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       sessionStorage.removeItem("searchCatalogo");
       sessionStorage.setItem("catalogoBody", JSON.stringify(id));
       sessionStorage.setItem("searchCatalogo", JSON.stringify(this.body));
-      sessionStorage.setItem(
-        "privilegios",
-        JSON.stringify(this.activacionEditar)
-      );
+      if (id[0].fechaBaja != null) {
+        sessionStorage.setItem("privilegios", JSON.stringify(false));
+      } else {
+        sessionStorage.setItem(
+          "privilegios",
+          JSON.stringify(this.activacionEditar)
+        );
+      }
+
       this.router.navigate(["/EditarCatalogosMaestros"]);
     } else {
       this.editar = false;
@@ -424,8 +452,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
             severity: "success",
             summary: "Correcto",
             detail:
-            selectedDatos.length +
-            this.translateService.instant("messages.deleted.selected.success")
+              selectedDatos.length +
+              this.translateService.instant("messages.deleted.selected.success")
           });
         }
       },
