@@ -19,12 +19,18 @@
                         <label>{{'administracion.multidioma.etiquetas.literal.idioma' | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='selectedIdiomaBusqueda' [options]="idiomaBusqueda" [filter]="true" filterBy="label">
                         </p-dropdown>
-                    </div> &nbsp;&nbsp; &nbsp;&nbsp;
+                    </div> &nbsp;&nbsp;
                     <div class="form-group col-lg-3 col-md-3">
+                        <!--<br/>-->
+                        <label>Logotipo</label>
                         <br/>
-                        <!--<p-fileUpload mode="basic" name="file" accept="image/*" maxFileSize="1000000" (uploadHandler)="uploadImage($event)" auto="true"
-                            chooseLabel="Buscar archivo"></p-fileUpload>-->
-                        <p-fileUpload #fubauto mode="basic" name="file" accept="image/*" (change)="uploadImage($event)" auto="true" chooseLabel="Buscar archivo"></p-fileUpload>
+                        <div class="ui-inputgroup">
+                            <p-fileUpload #fubauto mode="basic" name="file" accept="image/*" (change)="uploadImage($event)" auto="true" chooseLabel="Buscar archivo">
+                            </p-fileUpload>
+                            <div *ngIf="archivoDisponible">
+                                <input type="text" pInputText disabled="true" [(ngModel)]="nombreImagen" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
