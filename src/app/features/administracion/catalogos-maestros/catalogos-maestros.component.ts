@@ -176,6 +176,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     }
   }
   newData() {
+    this.blockSeleccionar = true;
     console.log(this.datosHist);
     let dummy = {
       catalogo: "",
@@ -218,6 +219,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       }
     );
   }
+
   checkAcceso() {
     this.controlAcceso = new ControlAccesoDto();
     this.controlAcceso.idProceso = "78";
