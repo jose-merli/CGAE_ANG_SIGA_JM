@@ -93,7 +93,9 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
     this.msgs.push({
       severity: "success",
       summary: this.translateService.instant("general.message.correct"),
-      detail: "imagen guardada correctamente"
+      detail: this.translateService.instant(
+        "general.message.logotipo.actualizado"
+      )
     });
   }
 
@@ -102,7 +104,20 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
     this.msgs.push({
       severity: "success",
       summary: this.translateService.instant("general.message.correct"),
-      detail: "idioma actualizado correctamente"
+      detail: this.translateService.instant(
+        "general.message.lenguaje.actualizado"
+      )
+    });
+  }
+
+  showSuccessUploadedLenguageImage() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant(
+        "general.message.logotipoLenguage.actualizado"
+      )
     });
   }
 
@@ -144,7 +159,15 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
   }
 
   isGuardar() {
-    // comprobar que se pasa bien el idlenguaje a back
+    // si se guardan la imagen y el lenguaje muestra un mensaje de ambos
+    let lenguajeeImagen: boolean = false;
+    if (
+      this.file != undefined &&
+      (this.selectedIdiomaBusqueda != "" ||
+        this.selectedIdiomaBusqueda != undefined)
+    ) {
+      lenguajeeImagen = true;
+    }
 
     // guardar imagen
     if (this.file != undefined) {
@@ -156,7 +179,9 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
             this.file = undefined;
             this.archivoDisponible = false;
             this.nombreImagen = "";
-            this.showSuccessUploadedImage();
+            if (!lenguajeeImagen) {
+              this.showSuccessUploadedImage();
+            }
           },
           err => {
             console.log(err);
@@ -178,10 +203,19 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
           data => {
             console.log(data);
             this.lenguajeInstitucion = this.selectedIdiomaBusqueda;
-            this.showSuccessUploadedLenguage();
+            if (!lenguajeeImagen) {
+              this.showSuccessUploadedLenguage();
+            }
           },
           err => {
             console.log(err);
+          },
+          () => {
+            // mensaje conjunto
+            if (lenguajeeImagen) {
+              this.showSuccessUploadedLenguageImage();
+              lenguajeeImagen = false;
+            }
           }
         );
     }
