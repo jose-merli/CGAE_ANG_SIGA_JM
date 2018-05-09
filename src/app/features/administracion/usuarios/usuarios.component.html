@@ -93,7 +93,7 @@
         [(selection)]="selectedDatos" (onRowSelect)="irEditarUsuario(selectedDatos)" pageLinks="2" dataKey="nif" [responsive]="true"
         selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="activarPaginacion()"
         paginatorPosition="both" [rows]="selectedItem">
-        <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="{{'general.boton.search' | translate}}"
+        <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true">
           </p-column>
 
