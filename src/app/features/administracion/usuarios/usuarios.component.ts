@@ -497,38 +497,6 @@ export class Usuarios extends SigaWrapper implements OnInit {
       }
     });
   }
-  confirmarBuscar() {
-    if (
-      (this.body.nombreApellidos == "" ||
-        this.body.nombreApellidos == undefined) &&
-      (this.body.nif == "" || this.body.nif == undefined) &&
-      (this.body.rol == "" || this.body.rol == undefined) &&
-      (this.body.grupo == "" || this.body.grupo == undefined)
-    ) {
-      this.confirmationService.confirm({
-        message: this.translateService.instant(
-          "administracion.grupos.asignarUsuariosGrupo.literal.busquedaCostosa"
-        ),
-        icon: "fa fa-search ",
-        accept: () => {
-          this.isBuscar();
-        },
-        reject: () => {
-          this.msgs = [
-            {
-              severity: "info",
-              summary: "Info",
-              detail: this.translateService.instant(
-                "general.message.accion.cancelada"
-              )
-            }
-          ];
-        }
-      });
-    } else {
-      this.isBuscar();
-    }
-  }
 
   irEditarUsuario(id) {
     if (!this.selectMultiple) {
