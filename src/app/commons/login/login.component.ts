@@ -5,6 +5,7 @@ import { SigaServices } from "../../_services/siga.service";
 import { Router } from "@angular/router";
 import { LoginCombo } from "./login.combo";
 import { ListboxModule } from "primeng/listbox";
+import { ButtonModule } from "primeng/button";
 
 @Component({
   selector: "app-login",
@@ -16,15 +17,23 @@ export class LoginComponent implements OnInit {
 
   instituciones: any[];
   perfiles: any[];
+  isLetrado: String;
 
+  // value=N selected="">NO, no soy Letrado</option>
+  //                   <option value=S>SÍ, soy Letrado</option>
+
+  letrado: any[] = [
+    { label: "No, no soy Letrado", value: "N" },
+    { label: "Sí, soy Letrado", value: "S" }
+  ];
   constructor(
     private fb: FormBuilder,
     private service: AuthenticationService,
     private sigaServices: SigaServices,
     private router: Router
-  ) { }
+  ) {}
 
-  onSubmit() { }
+  onSubmit() {}
 
   ngOnInit() {
     this.sigaServices.getBackend("instituciones").subscribe(n => {
