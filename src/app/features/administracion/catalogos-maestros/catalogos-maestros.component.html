@@ -45,8 +45,6 @@
         <div class="text-right main-button ">
           <button (click)="isBuscar(); selectedDatos=[]" pButton type="button " icon="fa fa-search " iconPos="left" label="{{ 'general.boton.search' | translate}}"
             [disabled]="blockBuscar"></button>
-            <button (click)="newData();" pButton type="button" icon="fa fa-plus-square  " iconPos="left" label="{{ 'general.boton.new' | translate}}"
-              [disabled]="crear"></button>
         </div>
       </div>
       <!--botones que se activan al editar-->
@@ -93,7 +91,7 @@
           </ng-template>
 
           <p-footer>
-            <div class="text-right main-button" *ngIf="activarPaginacion() == true">
+            <div class="text-right main-button">
               <button (click)="historico()" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.historico' | translate}}"></button>
               <button (click)="newData();" pButton type="button" icon="fa fa-plus-square  " iconPos="left" label="{{ 'general.boton.new' | translate}}"
                 [disabled]="crear"></button>

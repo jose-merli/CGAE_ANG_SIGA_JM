@@ -60,6 +60,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
   showDatosGenerales: boolean = true;
   responsePerfiles: PerfilesResponseDto = new PerfilesResponseDto();
   checkBody: PerfilItem = new PerfilItem();
+  crear: boolean;
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -74,6 +75,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
   }
   @ViewChild("table") table;
   ngOnInit() {
+    this.crear = JSON.parse(sessionStorage.getItem("crear"));
     console.log(sessionStorage);
     this.rolesAsignados = [];
     this.rolesNoAsignados = [];
@@ -138,7 +140,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
         console.log(err);
       },
       () => {
-        this.showSuccess;
+        this.showSuccess();
       }
     );
   }
@@ -160,7 +162,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
       message: mess,
       icon: icon,
       accept: () => {
-        if (this.editar == false) {
+        if (this.crear == true) {
           this.isNew();
         } else {
           this.isEditar();
@@ -209,7 +211,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
         console.log(err);
       },
       () => {
-        this.showSuccess;
+        this.showSuccess();
         this.volver();
       }
     );
@@ -219,12 +221,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
   showSuccess() {
-    this.msgs = [];
-    this.msgs.push({
-      severity: "success",
-      summary: this.translateService.instant("general.message.correct"),
-      detail: this.translateService.instant("general.message.accion.realizada")
-    });
+    sessionStorage.setItem("registroActualizado", JSON.stringify(true));
   }
 
   showFail() {

@@ -115,11 +115,17 @@ export class Usuarios extends SigaWrapper implements OnInit {
       { label: "No", value: "N" }
     ];
     this.cols = [
-      { field: "nombreApellidos", header: "Nombre y Apellidos" },
-      { field: "nif", header: "NIF" },
-      { field: "fechaAlta", header: "Fecha de Alta" },
-      { field: "activo", header: "Activo" },
-      { field: "roles", header: "Roles" }
+      {
+        field: "nombreApellidos",
+        header: "administracion.usuarios.literal.nombre"
+      },
+      { field: "nif", header: "administracion.usuarios.literal.NIF" },
+      {
+        field: "fechaAlta",
+        header: "administracion.usuarios.literal.fechaAlta"
+      },
+      { field: "activo", header: "administracion.usuarios.literal.activo" },
+      { field: "roles", header: "administracion.usuarios.literal.roles" }
     ];
 
     this.rowsPerPage = [
