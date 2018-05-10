@@ -46,6 +46,7 @@ import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 export class Usuarios extends SigaWrapper implements OnInit {
   usuarios_rol: any[];
   usuarios_perfil: any[];
+  usuarios_activo: any[];
   cols: any = [];
   datos: any[];
   select: any[];
@@ -108,7 +109,11 @@ export class Usuarios extends SigaWrapper implements OnInit {
         console.log(err);
       }
     );
-
+    this.usuarios_activo = [
+      { label: "", value: "" },
+      { label: "Si", value: "S" },
+      { label: "No", value: "N" }
+    ];
     this.cols = [
       {
         field: "nombreApellidos",
