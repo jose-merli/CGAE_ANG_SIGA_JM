@@ -48,12 +48,8 @@
               filterBy="label"></p-dropdown>
           </div>
           <div class="form-group col-lg-1 col-md-1">
-            <label class="d-block pb-2">{{"administracion.usuarios.literal.activo" | translate}}</label>
-            <!--<p-dropdown class="select-form" [options]="select"></p-dropdown>-->
-            <p-radioButton label="{{'messages.si' | translate}}" name="activo" value="S" class="pr-3" [(ngModel)]="body.activo" [(disabled)]="disabledRadio"></p-radioButton><br/>
-            <p-radioButton label="{{'general.boton.no' | translate}}" name="activo" value="N" class="pr-3" [(ngModel)]="body.activo"
-              [(disabled)]="disabledRadio">
-              </p-radioButton>
+            <label>{{"administracion.usuarios.literal.activo" | translate}}</label>
+            <p-dropdown class="select-form" [options]="usuarios_activo" [(ngModel)]="body.activo" [(disabled)]="disabledRadio"></p-dropdown>
           </div>
 
           <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
