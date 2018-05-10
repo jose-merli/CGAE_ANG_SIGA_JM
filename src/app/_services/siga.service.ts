@@ -3,7 +3,9 @@ import {
   HttpClient,
   HttpResponse,
   HttpParams,
-  HttpResponseBase
+  HttpResponseBase,
+  HttpHeaders,
+  HttpBackend
 } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 import { Router } from "@angular/router";
@@ -16,7 +18,6 @@ import { InputTextareaModule } from "primeng/inputtextarea";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ConfirmationService } from "primeng/api";
 import { RequestOptions, Headers } from "@angular/http";
-import { HttpHeaders } from "@angular/common/http";
 
 @Injectable()
 export class SigaServices {
@@ -76,7 +77,11 @@ export class SigaServices {
     entidad_uploadLenguage: "entidad/uploadLenguage"
   };
 
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient, handler: HttpBackend, private httpbackend: HttpClient) {
+
+    this.httpbackend = new HttpClient(handler);
+  }
 
   get(service: string): Observable<any> {
     return this.http
@@ -86,17 +91,28 @@ export class SigaServices {
       });
   }
 
+
+
+  getBackend(service: string): Observable<any> {
+    return this.httpbackend
+      .get(environment.newSigaUrl + this.endpoints[service])
+      .map(response => {
+        return response;
+      });
+  }
+
+
   getNewSigaUrl() {
     return environment.newSigaUrl;
   }
 
   getPerfil(service: string, institucion: string): Observable<any> {
-    return this.http
+    return this.httpbackend
       .get(
-        environment.newSigaUrl +
-          this.endpoints[service] +
-          "?institucion=" +
-          institucion
+      environment.newSigaUrl +
+      this.endpoints[service] +
+      "?institucion=" +
+      institucion
       )
       .map(response => {
         return response;
