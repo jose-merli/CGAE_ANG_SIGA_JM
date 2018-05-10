@@ -366,14 +366,27 @@ export class Usuarios extends SigaWrapper implements OnInit {
       }
     );
   }
+  showduplicateFail(message: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Error",
+      detail: this.translateService.instant(message)
+    });
+  }
 
   crear() {
     this.sigaServices.post("usuarios_insert", this.body).subscribe(
       data => {
-        this.showSuccess();
+        this.searchUser = JSON.parse(data["body"]);
+        if (this.searchUser.error) {
+          this.showduplicateFail(this.searchUser.error.message.toString());
+        } else {
+          this.showSuccess();
+        }
       },
-      err => {
-        console.log(err);
+      error => {
+        console.log(error);
         this.showFail();
       },
       () => {
