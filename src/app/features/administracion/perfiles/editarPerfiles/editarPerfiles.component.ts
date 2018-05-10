@@ -59,7 +59,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
   dniCorrecto: boolean;
   showDatosGenerales: boolean = true;
   responsePerfiles: PerfilesResponseDto = new PerfilesResponseDto();
-
+  checkBody: PerfilItem = new PerfilItem();
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -84,6 +84,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
     if (sessionStorage.getItem("perfil") != null) {
       this.disabled = JSON.parse(sessionStorage.getItem("privilegios"));
       // this.disabled = !this.disabled;
+      this.checkBody = JSON.parse(sessionStorage.getItem("perfil"))[0];
       this.body = JSON.parse(sessionStorage.getItem("perfil"))[0];
       this.editar = false;
       this.fillRol();
@@ -178,6 +179,24 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
       }
     });
   }
+
+  checkIgual() {
+    if (
+      this.disabled != true &&
+      this.body.idGrupo == this.checkBody.idGrupo &&
+      this.body.descripcionGrupo == this.checkBody.descripcionGrupo
+    ) {
+      return true;
+    } else if (
+      this.body.idGrupo == this.checkBody.idGrupo &&
+      this.body.descripcionGrupo == this.checkBody.descripcionGrupo
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   isEditar() {
     this.body.rolesAsignados = this.rolesAsignados;
     this.body.rolesNoAsignados = this.rolesNoAsignados;
@@ -196,9 +215,6 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
     );
   }
 
-  disable() {
-    return false;
-  }
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }

@@ -59,6 +59,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   returnHasta: string;
   arrayDesde: any[];
   arrayHasta: any[];
+  progressSpinner: boolean = false;
 
   constructor(
     private sigaServices: SigaServices,
@@ -147,6 +148,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   }
 
   isBuscar() {
+    this.progressSpinner = true;
     // si no viene de la pantalla de editarAuditoriaUsuario contruye el objecto para el body de la consulta /search
     if (sessionStorage.getItem("searchBodyAuditoriaUsuarios") == null) {
       this.construirObjetoBodySearch();
@@ -163,16 +165,17 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("auditoriaUsuarios_search", "?numPagina=1", this.bodySearch)
       .subscribe(
-        data => {
-          console.log(data);
-
-          this.searchParametros = JSON.parse(data["body"]);
-          this.datosUsuarios = this.searchParametros.historicoUsuarioItem;
-          this.buscarSeleccionado = true;
-        },
-        err => {
-          console.log(err);
-        }
+      data => {
+        console.log(data);
+        this.searchParametros = JSON.parse(data["body"]);
+        this.datosUsuarios = this.searchParametros.historicoUsuarioItem;
+        this.buscarSeleccionado = true;
+        this.progressSpinner = false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      }
       );
   }
   arreglarFechas() {

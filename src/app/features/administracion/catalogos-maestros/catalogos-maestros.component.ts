@@ -61,6 +61,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   tablaHistorico: boolean = false;
   editar: boolean = false;
   eliminar: boolean = false;
+  crear: boolean = true;
   selectMultiple: boolean = false;
   selectedItem: number = 10;
   selectAll: boolean = false;
@@ -88,12 +89,14 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   blockSeleccionar: boolean = false;
   blockBuscar: boolean = true;
   blockCrear: boolean = true;
+  pressNew: boolean = false;
 
   //validacion permisos
   permisosTree: any;
   permisosArray: any[];
   derechoAcceso: any;
   activacionEditar: boolean;
+  newCatalogo: CatalogoMaestroItem = new CatalogoMaestroItem();
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
 
   rowsPerPage: any = [];
@@ -157,14 +160,64 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
 
     if (sessionStorage.getItem("searchCatalogo") != null) {
       this.body = JSON.parse(sessionStorage.getItem("searchCatalogo"));
-      this.isBuscar();
+
+      let tablaAnterior = JSON.parse(sessionStorage.getItem("searchOrHistory"));
+      sessionStorage.removeItem("searchOrHistory");
+
+      if (tablaAnterior == "history") {
+        this.historico();
+      } else {
+        this.isBuscar();
+      }
       sessionStorage.removeItem("searchCatalogo");
       sessionStorage.removeItem("catalogoBody");
     } else {
       this.body = new CatalogoRequestDto();
     }
   }
+  newData() {
+    console.log(this.datosHist);
+    let dummy = {
+      catalogo: "",
+      codigoExt: "",
+      descripcion: "",
+      fechaBaja: "",
+      idInstitucion: "",
+      idRegistro: ""
+    };
 
+    this.pressNew = true;
+    this.buscar = false;
+    this.datosHist = [dummy, ...this.datosHist];
+    this.newCatalogo = new CatalogoMaestroItem();
+    this.newCatalogo.catalogo = this.body.catalogo;
+
+    console.log(this.datosHist);
+    this.table.reset();
+  }
+
+  confirmarCrear() {
+    console.log(this.datosHist[0]);
+    console.log(this.newCatalogo);
+    this.cre = new CatalogoCreateRequestDto();
+    this.cre.tabla = this.newCatalogo.catalogo;
+    this.cre.idRegistro = "";
+    this.cre.codigoExt = this.newCatalogo.codigoExt;
+    this.cre.descripcion = this.newCatalogo.descripcion;
+    this.cre.idInstitucion = "";
+    this.sigaServices.post("maestros_create", this.cre).subscribe(
+      data => {
+        this.showSuccess();
+      },
+      err => {
+        this.showFail();
+        console.log(err);
+      },
+      () => {
+        this.reset();
+      }
+    );
+  }
   checkAcceso() {
     this.controlAcceso = new ControlAccesoDto();
     this.controlAcceso.idProceso = "78";
@@ -207,11 +260,14 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
   //cada vez que cambia el formulario comprueba esto
   onChangeForm() {
-    if (this.formCodigo == "" || this.formCodigo == undefined) {
+    if (
+      this.newCatalogo.codigoExt == "" ||
+      this.newCatalogo.codigoExt == undefined
+    ) {
       this.blockCrear = true;
     } else if (
-      this.formDescripcion == "" ||
-      this.formDescripcion == undefined
+      this.newCatalogo.descripcion == "" ||
+      this.newCatalogo.descripcion == undefined
     ) {
       this.blockCrear = true;
     } else {
@@ -240,6 +296,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
 
   historico() {
+    sessionStorage.setItem("searchOrHistory", JSON.stringify("history"));
     this.buscar = false;
     this.selectMultiple = false;
     this.catalogoSeleccionado = this.body.catalogo;
@@ -288,8 +345,10 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
 
   isBuscar() {
+    sessionStorage.setItem("searchOrHistory", JSON.stringify("search"));
     this.buscar = true;
     this.blockBuscar = false;
+    this.crear = false;
     this.tablaHistorico = false;
     this.eliminar = false;
     if (this.body.codigoExt != undefined) {
@@ -360,6 +419,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.body = new CatalogoRequestDto();
     this.body.catalogo = this.catalogoSeleccionado;
     this.blockSeleccionar = false;
+    this.pressNew = false;
     this.bodyToForm();
     if (this.tablaHistorico == false) {
       this.isBuscar();
@@ -388,10 +448,15 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       sessionStorage.removeItem("searchCatalogo");
       sessionStorage.setItem("catalogoBody", JSON.stringify(id));
       sessionStorage.setItem("searchCatalogo", JSON.stringify(this.body));
-      sessionStorage.setItem(
-        "privilegios",
-        JSON.stringify(this.activacionEditar)
-      );
+      if (id[0].fechaBaja != null) {
+        sessionStorage.setItem("privilegios", JSON.stringify(false));
+      } else {
+        sessionStorage.setItem(
+          "privilegios",
+          JSON.stringify(this.activacionEditar)
+        );
+      }
+
       this.router.navigate(["/EditarCatalogosMaestros"]);
     } else {
       this.editar = false;

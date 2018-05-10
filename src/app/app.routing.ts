@@ -34,12 +34,8 @@ import { SolicitudCertificadosComponent } from "./features/certificados/solicitu
 import { GestionSolicitudesComponent } from "./features/certificados/gestion-solicitudes/gestion-solicitudes.component";
 import { MantenimientoCertificadosComponent } from "./features/certificados/mantenimiento-certificados/mantenimiento-certificados.component";
 
-
 //Facturacion
 import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimiento-sufijos/mantenimiento-sufijos.component";
-
-
-
 
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
@@ -61,74 +57,221 @@ import { PermisosComponent } from "./features/administracion/permisos/permisos.c
 import { Catalogos } from "./features/administracion/gestion-multiidioma/catalogos/catalogos.component";
 import { AuditoriaUsuarios } from "./features/administracion/auditoria/usuarios/auditoria-usuarios.component";
 import { GestionAuditoriaComponent } from "./features/administracion/auditoria/usuarios/editarAuditoriaUsuarios/gestion-auditoria.component";
+import { GestionEntidad } from "./features/administracion/gestion-entidad/gestion-entidad.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
   { path: "login", component: LoginComponent },
 
   // Censo
-  { path: "busquedaColegiados", component: BusquedaColegiadosComponent, canActivate: [AuthGuard] },
-  { path: "fichaColegial", component: FichaColegialComponent, canActivate: [AuthGuard] },
-  { path: "editarUsuario", component: EditarUsuarioComponent, canActivate: [AuthGuard] },
+  {
+    path: "busquedaColegiados",
+    component: BusquedaColegiadosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fichaColegial",
+    component: FichaColegialComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "editarUsuario",
+    component: EditarUsuarioComponent,
+    canActivate: [AuthGuard]
+  },
 
-  { path: "searchNoColegiados", component: SearchNoColegiadosComponent, canActivate: [AuthGuard] },
-  { path: "certificadosAca", component: CertificadosAcaComponent, canActivate: [AuthGuard] },
-  { path: "comisionesCargos", component: ComisionesCargosComponent, canActivate: [AuthGuard] },
-  { path: "solicitudesGenericas", component: SolicitudesGenericasComponent, canActivate: [AuthGuard] },
-  { path: "solicitudesEspecificas", component: SolicitudesEspecificasComponent, canActivate: [AuthGuard] },
-  { path: "solicitudesIncorporacion", component: SolicitudesIncorporacionComponent, canActivate: [AuthGuard] },
+  {
+    path: "searchNoColegiados",
+    component: SearchNoColegiadosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "certificadosAca",
+    component: CertificadosAcaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "comisionesCargos",
+    component: ComisionesCargosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "solicitudesGenericas",
+    component: SolicitudesGenericasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "solicitudesEspecificas",
+    component: SolicitudesEspecificasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "solicitudesIncorporacion",
+    component: SolicitudesIncorporacionComponent,
+    canActivate: [AuthGuard]
+  },
 
-  { path: "nuevaIncorporacion", component: NuevaIncorporacionComponent, canActivate: [AuthGuard] },
-  { path: "documentacionSolicitudes", component: DocumentacionSolicitudesComponent, canActivate: [AuthGuard] },
-  { path: "mantenimientoGruposFijos", component: MantenimientoGruposFijosComponent, canActivate: [AuthGuard] },
+  {
+    path: "nuevaIncorporacion",
+    component: NuevaIncorporacionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "documentacionSolicitudes",
+    component: DocumentacionSolicitudesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "mantenimientoGruposFijos",
+    component: MantenimientoGruposFijosComponent,
+    canActivate: [AuthGuard]
+  },
 
-  { path: "mantenimientoMandatos", component: MantenimientoMandatosComponent, canActivate: [AuthGuard] },
-  { path: "busquedaSanciones", component: BusquedaSancionesComponent, canActivate: [AuthGuard] },
+  {
+    path: "mantenimientoMandatos",
+    component: MantenimientoMandatosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "busquedaSanciones",
+    component: BusquedaSancionesComponent,
+    canActivate: [AuthGuard]
+  },
 
-  { path: "busquedaLetrados", component: BusquedaLetradosComponent, canActivate: [AuthGuard] },
-  { path: "mantenimientoDuplicados", component: MantenimientoDuplicadosComponent, canActivate: [AuthGuard] },
-  { path: "modificacionDatos", component: ModificacionDatosComponent, canActivate: [AuthGuard] },
-  { path: "mediadores", component: MediadoresComponent, canActivate: [AuthGuard] },
-  { path: "cargasPeriodicas", component: CargasPeriodicasComponent, canActivate: [AuthGuard] },
-  { path: "configurarPerfil", component: ConfigurarPerfilComponent, canActivate: [AuthGuard] },
-  { path: "censoDocumentacion", component: CensoDocumentacionComponent, canActivate: [AuthGuard] },
-  { path: "gestionSubtiposCV", component: GestionSubtiposCVComponent, canActivate: [AuthGuard] },
-
-
+  {
+    path: "busquedaLetrados",
+    component: BusquedaLetradosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "mantenimientoDuplicados",
+    component: MantenimientoDuplicadosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "modificacionDatos",
+    component: ModificacionDatosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "mediadores",
+    component: MediadoresComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "cargasPeriodicas",
+    component: CargasPeriodicasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "configurarPerfil",
+    component: ConfigurarPerfilComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "censoDocumentacion",
+    component: CensoDocumentacionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "gestionSubtiposCV",
+    component: GestionSubtiposCVComponent,
+    canActivate: [AuthGuard]
+  },
 
   //Certificados
-  { path: "comunicacionInterprofesional", component: ComunicacionInterprofesionalComponent, canActivate: [AuthGuard] },
-  { path: "solicitarCompra", component: SolicitarCompraComponent, canActivate: [AuthGuard] },
-  { path: "solicitudCertificados", component: SolicitudCertificadosComponent, canActivate: [AuthGuard] },
-  { path: "gestionSolicitudes", component: GestionSolicitudesComponent, canActivate: [AuthGuard] },
-  { path: "mantenimientoCertificados", component: MantenimientoCertificadosComponent, canActivate: [AuthGuard] },
-
+  {
+    path: "comunicacionInterprofesional",
+    component: ComunicacionInterprofesionalComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "solicitarCompra",
+    component: SolicitarCompraComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "solicitudCertificados",
+    component: SolicitudCertificadosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "gestionSolicitudes",
+    component: GestionSolicitudesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "mantenimientoCertificados",
+    component: MantenimientoCertificadosComponent,
+    canActivate: [AuthGuard]
+  },
 
   //Facturacion
-  { path: "mantenimientoSufijos", component: MantenimientoSufijosComponent, canActivate: [AuthGuard] },
+  {
+    path: "mantenimientoSufijos",
+    component: MantenimientoSufijosComponent,
+    canActivate: [AuthGuard]
+  },
 
   // Administracion
-  { path: "catalogosMaestros", component: CatalogosMaestros, canActivate: [AuthGuard] },
+  {
+    path: "catalogosMaestros",
+    component: CatalogosMaestros,
+    canActivate: [AuthGuard]
+  },
   {
     path: "EditarCatalogosMaestros",
-    component: EditarCatalogosMaestrosComponent, canActivate: [AuthGuard]
+    component: EditarCatalogosMaestrosComponent,
+    canActivate: [AuthGuard]
   },
-  { path: "contadores/:id", component: ContadoresComponent, canActivate: [AuthGuard] },
+  {
+    path: "contadores/:id",
+    component: ContadoresComponent,
+    canActivate: [AuthGuard]
+  },
   {
     path: "gestionContadores",
-    component: GestionContadoresComponent, canActivate: [AuthGuard]
+    component: GestionContadoresComponent,
+    canActivate: [AuthGuard]
   },
   { path: "perfiles", component: PerfilesComponent, canActivate: [AuthGuard] },
   {
     path: "EditarPerfiles",
-    component: EditarPerfilesComponent, canActivate: [AuthGuard]
+    component: EditarPerfilesComponent,
+    canActivate: [AuthGuard]
   },
 
-  { path: "gruposUsuarios", component: GruposUsuarios, canActivate: [AuthGuard] },
-  { path: "etiquetas", component: Etiquetas, canActivate: [AuthGuard] },
-  { path: "usuarios", component: Usuarios, canActivate: [AuthGuard] },
-  { path: "seleccionarIdioma", component: SeleccionarIdioma, canActivate: [AuthGuard] },
-  { path: "parametrosGenerales", component: ParametrosGenerales, canActivate: [AuthGuard] },
+  {
+    path: "gruposUsuarios",
+    component: GruposUsuarios,
+    canActivate: [AuthGuard]
+  },
+  {
+    //path: "etiquetas", component: Etiquetas, canActivate: [AuthGuard] },
+    path: "etiquetas",
+    component: Etiquetas
+  },
+  {
+    path: "usuarios",
+    component: Usuarios,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "seleccionarIdioma",
+    component: SeleccionarIdioma,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "parametrosGenerales",
+    component: ParametrosGenerales,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "gestionEntidad",
+    // component: GestionEntidad,
+    // canActivate: [AuthGuard]
+    component: GestionEntidad
+  },
   {
     path: "permisos",
     component: PermisosComponent,
@@ -137,8 +280,16 @@ const appRoutes: Routes = [
   },
 
   { path: "catalogos", component: Catalogos, canActivate: [AuthGuard] },
-  { path: "auditoriaUsuarios", component: AuditoriaUsuarios, canActivate: [AuthGuard] },
-  { path: "gestionAuditoria", component: GestionAuditoriaComponent, canActivate: [AuthGuard] },
+  {
+    path: "auditoriaUsuarios",
+    component: AuditoriaUsuarios,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "gestionAuditoria",
+    component: GestionAuditoriaComponent,
+    canActivate: [AuthGuard]
+  },
   { path: "**", redirectTo: "home" }
 ];
 export const routing = RouterModule.forRoot(appRoutes);

@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import {
   HttpClient,
-  HttpHeaders,
   HttpResponse,
   HttpParams,
   HttpResponseBase
@@ -16,6 +15,8 @@ import { InputTextModule } from "primeng/inputtext";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ConfirmationService } from "primeng/api";
+import { RequestOptions, Headers } from "@angular/http";
+import { HttpHeaders } from "@angular/common/http";
 
 @Injectable()
 export class SigaServices {
@@ -68,10 +69,14 @@ export class SigaServices {
     auditoriaUsuarios_search: "auditoriaUsuarios/search",
     auditoriaUsuarios_update: "auditoriaUsuarios/update",
     permisos_update: "permisos/update",
-    acces_control: "/accesControl"
+    acces_control: "/accesControl",
+    entidad_lenguajeInstitucion: "entidad/lenguajeInstitucion",
+    entidad_lenguaje: "entidad/lenguaje",
+    entidad_uploadFile: "entidad/uploadFile",
+    entidad_uploadLenguage: "entidad/uploadLenguage"
   };
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   get(service: string): Observable<any> {
     return this.http
@@ -88,10 +93,10 @@ export class SigaServices {
   getPerfil(service: string, institucion: string): Observable<any> {
     return this.http
       .get(
-      environment.newSigaUrl +
-      this.endpoints[service] +
-      "?institucion=" +
-      institucion
+        environment.newSigaUrl +
+          this.endpoints[service] +
+          "?institucion=" +
+          institucion
       )
       .map(response => {
         return response;
@@ -107,6 +112,26 @@ export class SigaServices {
         headers: headers,
         observe: "response",
         responseType: "text"
+      })
+      .map(response => {
+        return response;
+      });
+  }
+
+  postSendContent(service: string, file: any): Observable<any> {
+    let formData: FormData = new FormData();
+    if (file != undefined) {
+      formData.append("uploadFile", file, file.name);
+    }
+
+    let headers = new HttpHeaders();
+
+    headers.append("Content-Type", "multipart/form-data");
+    headers.append("Accept", "application/json");
+
+    return this.http
+      .post(environment.newSigaUrl + this.endpoints[service], formData, {
+        headers: headers
       })
       .map(response => {
         return response;

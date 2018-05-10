@@ -34,7 +34,6 @@ import { DropdownModule } from "primeng/dropdown";
 import { ButtonModule } from "primeng/button";
 import { DataTableModule } from "primeng/datatable";
 import { ListboxModule } from "primeng/listbox";
-
 import { TableModule } from "primeng/table";
 import { InputTextModule } from "primeng/inputtext";
 import { InputTextareaModule } from "primeng/inputtextarea";
@@ -45,7 +44,13 @@ import { ConfirmationService } from "primeng/api";
 import { GrowlModule } from "primeng/growl";
 import { MultiSelectModule } from "primeng/multiSelect";
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-
+import { CalendarModule } from "primeng/calendar";
+import { AutoCompleteModule } from "primeng/autocomplete";
+import { TooltipModule } from "primeng/tooltip";
+import { ChipsModule } from "primeng/chips";
+import { EditorModule } from "primeng/editor";
+import { PickListModule } from "primeng/picklist";
+import { FileUploadModule } from "primeng/fileupload";
 // Modulo de censo
 import { SearchColegiadosComponent } from "./features/censo/search-colegiados/search-colegiados.component";
 import { SearchNoColegiadosComponent } from "./features/censo/search-no-colegiados/search-no-colegiados.component";
@@ -71,12 +76,7 @@ import { CensoDocumentacionComponent } from "./features/censo/censo-documentacio
 import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/gestion-subtiposCV.component";
 
 import { CommonModule } from "@angular/common";
-import { CalendarModule } from "primeng/calendar";
-import { AutoCompleteModule } from "primeng/autocomplete";
-import { TooltipModule } from "primeng/tooltip";
-import { ChipsModule } from "primeng/chips";
-import { EditorModule } from "primeng/editor";
-import { PickListModule } from "primeng/picklist";
+
 // Modulo de administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
 import { EditarCatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros/editarCatalogosMaestros/editarCatalogosMaestros.component";
@@ -87,6 +87,7 @@ import { EditarPerfilesComponent } from "./features/administracion/perfiles/edit
 import { EditarUsuarioComponent } from "./features/administracion/usuarios/editarUsuario/editarUsuario.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
 import { Etiquetas } from "./features/administracion/gestion-multiidioma/etiquetas/etiquetas.component";
+import { GestionEntidad } from "./features/administracion/gestion-entidad/gestion-entidad.component";
 import { AuditoriaUsuarios } from "./features/administracion/auditoria/usuarios/auditoria-usuarios.component";
 import { GestionAuditoriaComponent } from "./features/administracion/auditoria/usuarios/editarAuditoriaUsuarios/gestion-auditoria.component";
 import { SeleccionarIdioma } from "./features/administracion/seleccionar-idioma/seleccionar-idioma.component";
@@ -163,6 +164,7 @@ import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-co
     Catalogos,
     SeleccionarIdioma,
     Usuarios,
+    GestionEntidad,
     ParametrosGenerales,
     EditarUsuarioComponent,
     EditarCatalogosMaestrosComponent,
@@ -196,6 +198,7 @@ import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-co
     CalendarModule,
     AutoCompleteModule,
     TooltipModule,
+    ListboxModule,
     ChipsModule,
     EditorModule,
     MultiSelectModule,
@@ -203,7 +206,8 @@ import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-co
     TreeModule,
     PickListModule,
     ListboxModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    FileUploadModule
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
