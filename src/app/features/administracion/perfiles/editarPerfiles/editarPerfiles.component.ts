@@ -49,11 +49,14 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
   body: PerfilItem = new PerfilItem();
   rolesAsignados: any[];
   rolesNoAsignados: any[];
+  saveRolesAsignados: any[];
+  saveRolesNoAsignados: any[];
   pButton;
   textSelected: String = "{0} grupos seleccionados";
   textFilter: String;
   editar: boolean = true;
-  disabled: boolean;
+  enabled: boolean;
+  enabledid: boolean = false;
   activo: boolean = false;
   correcto: boolean = false;
   dniCorrecto: boolean;
@@ -79,29 +82,34 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
     console.log(sessionStorage);
     this.rolesAsignados = [];
     this.rolesNoAsignados = [];
+    this.saveRolesAsignados = [];
+    this.saveRolesNoAsignados = [];
     this.textFilter = "Elegir";
     this.correcto = false;
     this.body = new PerfilItem();
 
     if (sessionStorage.getItem("perfil") != null) {
-      this.disabled = JSON.parse(sessionStorage.getItem("privilegios"));
-      // this.disabled = !this.disabled;
+      this.enabled = JSON.parse(sessionStorage.getItem("privilegios"));
       this.checkBody = JSON.parse(sessionStorage.getItem("perfil"))[0];
       this.body = JSON.parse(sessionStorage.getItem("perfil"))[0];
       this.editar = false;
       this.fillRol();
     } else {
       this.editar = true;
-      this.disabled = JSON.parse(sessionStorage.getItem("privilegios"));
+      this.enabled = JSON.parse(sessionStorage.getItem("privilegios"));
       this.body = new PerfilItem();
       this.sigaServices.get("usuarios_rol").subscribe(
         n => {
           this.rolesNoAsignados = n.combooItems;
+          this.saveRolesNoAsignados = n.combooItems;
         },
         err => {
           console.log(err);
         }
       );
+    }
+    if (this.enabled == true) {
+      this.enabledid = this.crear;
     }
     sessionStorage.removeItem("perfil");
     sessionStorage.removeItem("privilegios");
@@ -111,11 +119,13 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
     if (this.body.rolesAsignados != null) {
       this.body.rolesAsignados.forEach((value: ComboItem, key: number) => {
         this.rolesAsignados.push(value);
+        this.saveRolesAsignados.push(value);
       });
     }
     if (this.body.rolesNoAsignados != null) {
       this.body.rolesNoAsignados.forEach((value: ComboItem, key: number) => {
         this.rolesNoAsignados.push(value);
+        this.saveRolesNoAsignados.push(value);
       });
     }
   }
@@ -127,17 +137,12 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
     this.sigaServices.post("perfiles_insert", this.body).subscribe(
       data => {
         this.responsePerfiles = JSON.parse(data["body"]);
-        if (this.responsePerfiles.error) {
-          this.showduplicateFail(
-            this.responsePerfiles.error.message.toString()
-          );
-        } else {
-          this.volver();
-        }
+        this.volver();
       },
-      err => {
-        this.showFail();
-        console.log(err);
+      error => {
+        this.responsePerfiles = JSON.parse(error["error"]);
+        this.showduplicateFail(this.responsePerfiles.error.message.toString());
+        console.log(error);
       },
       () => {
         this.showSuccess();
@@ -145,12 +150,9 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
     );
   }
 
-  //cada vez que cambia el formulario comprueba esto
-  onChangeForm() {}
-
   confirmEdit() {
     let mess = "";
-    if (this.editar == false) {
+    if (this.crear == true) {
       mess = this.translateService.instant(
         "general.message.create.aceptar.y.volver"
       );
@@ -184,19 +186,35 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
 
   checkIgual() {
     if (
-      this.disabled != true &&
-      this.body.idGrupo == this.checkBody.idGrupo &&
-      this.body.descripcionGrupo == this.checkBody.descripcionGrupo
-    ) {
-      return true;
-    } else if (
-      this.body.idGrupo == this.checkBody.idGrupo &&
-      this.body.descripcionGrupo == this.checkBody.descripcionGrupo
+      this.body.idGrupo == undefined ||
+      this.body.descripcionGrupo == undefined
     ) {
       return true;
     } else {
-      return false;
+      if (
+        this.enabled != true &&
+        this.body.idGrupo == this.checkBody.idGrupo &&
+        this.body.descripcionGrupo == this.checkBody.descripcionGrupo &&
+        JSON.stringify(this.rolesAsignados) ===
+          JSON.stringify(this.saveRolesAsignados) &&
+        JSON.stringify(this.rolesNoAsignados) ===
+          JSON.stringify(this.saveRolesNoAsignados)
+      ) {
+        return true;
+      } else if (
+        this.body.idGrupo == this.checkBody.idGrupo &&
+        this.body.descripcionGrupo == this.checkBody.descripcionGrupo &&
+        JSON.stringify(this.rolesAsignados) ===
+          JSON.stringify(this.saveRolesAsignados) &&
+        JSON.stringify(this.rolesNoAsignados) ===
+          JSON.stringify(this.saveRolesNoAsignados)
+      ) {
+        return true;
+      } else {
+        return false;
+      }
     }
+    // }
   }
 
   isEditar() {
