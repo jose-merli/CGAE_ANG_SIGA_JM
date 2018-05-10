@@ -22,12 +22,12 @@ export class LoginComponent implements OnInit {
     private service: AuthenticationService,
     private sigaServices: SigaServices,
     private router: Router
-  ) {}
+  ) { }
 
-  onSubmit() {}
+  onSubmit() { }
 
   ngOnInit() {
-    this.sigaServices.get("instituciones").subscribe(n => {
+    this.sigaServices.getBackend("instituciones").subscribe(n => {
       this.instituciones = n.combooItems;
     });
 

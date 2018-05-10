@@ -46,6 +46,7 @@ import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 export class Usuarios extends SigaWrapper implements OnInit {
   usuarios_rol: any[];
   usuarios_perfil: any[];
+  usuarios_activo: any[];
   cols: any = [];
   datos: any[];
   select: any[];
@@ -86,8 +87,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
   ) {
     super(USER_VALIDATIONS);
   }
-  @ViewChild("table")
-  table;
+  @ViewChild("table") table;
   selectedDatos;
 
   ngOnInit() {
@@ -109,13 +109,23 @@ export class Usuarios extends SigaWrapper implements OnInit {
         console.log(err);
       }
     );
-
+    this.usuarios_activo = [
+      { label: "", value: "" },
+      { label: "Si", value: "S" },
+      { label: "No", value: "N" }
+    ];
     this.cols = [
-      { field: "nombreApellidos", header: "Nombre y Apellidos" },
-      { field: "nif", header: "NIF" },
-      { field: "fechaAlta", header: "Fecha de Alta" },
-      { field: "activo", header: "Activo" },
-      { field: "roles", header: "Roles" }
+      {
+        field: "nombreApellidos",
+        header: "administracion.usuarios.literal.nombre"
+      },
+      { field: "nif", header: "administracion.usuarios.literal.NIF" },
+      {
+        field: "fechaAlta",
+        header: "administracion.usuarios.literal.fechaAlta"
+      },
+      { field: "activo", header: "administracion.usuarios.literal.activo" },
+      { field: "roles", header: "administracion.usuarios.literal.roles" }
     ];
 
     this.rowsPerPage = [
@@ -152,7 +162,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
 
@@ -214,10 +224,10 @@ export class Usuarios extends SigaWrapper implements OnInit {
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
     if (!this.selectMultiple) {
-      this.selectedDatos = []
+      this.selectedDatos = [];
     } else {
-      this.selectAll = false
-      this.selectedDatos = []
+      this.selectAll = false;
+      this.selectedDatos = [];
     }
   }
 
@@ -284,15 +294,15 @@ export class Usuarios extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("usuarios_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.searchUser = JSON.parse(data["body"]);
-        this.datos = this.searchUser.usuarioItem;
-      },
-      err => {
-        console.log(err);
-      }
+          this.searchUser = JSON.parse(data["body"]);
+          this.datos = this.searchUser.usuarioItem;
+        },
+        err => {
+          console.log(err);
+        }
       );
   }
 
@@ -356,14 +366,27 @@ export class Usuarios extends SigaWrapper implements OnInit {
       }
     );
   }
+  showduplicateFail(message: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Error",
+      detail: this.translateService.instant(message)
+    });
+  }
 
   crear() {
     this.sigaServices.post("usuarios_insert", this.body).subscribe(
       data => {
-        this.showSuccess();
+        this.searchUser = JSON.parse(data["body"]);
+        if (this.searchUser.error) {
+          this.showduplicateFail(this.searchUser.error.message.toString());
+        } else {
+          this.showSuccess();
+        }
       },
-      err => {
-        console.log(err);
+      error => {
+        console.log(error);
         this.showFail();
       },
       () => {
@@ -446,9 +469,9 @@ export class Usuarios extends SigaWrapper implements OnInit {
           "general.message.confirmar.rehabilitaciones"
         )),
           +selectedItem.length +
-          this.translateService.instant(
-            "cargaMasivaDatosCurriculares.numRegistros.literal"
-          );
+            this.translateService.instant(
+              "cargaMasivaDatosCurriculares.numRegistros.literal"
+            );
       } else {
         mess = this.translateService.instant(
           "general.message.confirmar.rehabilitacion"
@@ -473,38 +496,6 @@ export class Usuarios extends SigaWrapper implements OnInit {
         ];
       }
     });
-  }
-  confirmarBuscar() {
-    if (
-      (this.body.nombreApellidos == "" ||
-        this.body.nombreApellidos == undefined) &&
-      (this.body.nif == "" || this.body.nif == undefined) &&
-      (this.body.rol == "" || this.body.rol == undefined) &&
-      (this.body.grupo == "" || this.body.grupo == undefined)
-    ) {
-      this.confirmationService.confirm({
-        message: this.translateService.instant(
-          "administracion.grupos.asignarUsuariosGrupo.literal.busquedaCostosa"
-        ),
-        icon: "fa fa-search ",
-        accept: () => {
-          this.isBuscar();
-        },
-        reject: () => {
-          this.msgs = [
-            {
-              severity: "info",
-              summary: "Info",
-              detail: this.translateService.instant(
-                "general.message.accion.cancelada"
-              )
-            }
-          ];
-        }
-      });
-    } else {
-      this.isBuscar();
-    }
   }
 
   irEditarUsuario(id) {

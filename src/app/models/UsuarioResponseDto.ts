@@ -1,6 +1,6 @@
 import { UsuarioItem } from "./UsuarioItem";
 export class UsuarioResponseDto {
-  error: String;
+  error: Error;
   usuarioItem: UsuarioItem[] = [];
   constructor() {}
 }

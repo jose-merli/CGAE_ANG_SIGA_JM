@@ -127,6 +127,13 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         value: 40
       }
     ];
+    var registroActualizado = JSON.parse(
+      sessionStorage.getItem("registroActualizado")
+    );
+    if (registroActualizado) {
+      this.showSuccess();
+      sessionStorage.setItem("registroActualizado", JSON.stringify(false));
+    }
   }
 
   isBuscar() {
@@ -282,6 +289,11 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     });
   }
   crear() {
+    sessionStorage.setItem(
+      "privilegios",
+      JSON.stringify(this.activacionEditar)
+    );
+    sessionStorage.setItem("crear", JSON.stringify(true));
     this.router.navigate(["/EditarPerfiles"]);
   }
   irEditarUsuario(id) {
@@ -290,6 +302,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       if (id && id.length > 0) {
         ir = id[0];
       }
+      sessionStorage.setItem("crear", JSON.stringify(false));
       sessionStorage.removeItem("perfil");
       sessionStorage.removeItem("privilegios");
       sessionStorage.setItem("perfil", JSON.stringify(id));

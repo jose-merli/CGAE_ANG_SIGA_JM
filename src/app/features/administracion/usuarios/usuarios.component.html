@@ -48,12 +48,8 @@
               filterBy="label"></p-dropdown>
           </div>
           <div class="form-group col-lg-1 col-md-1">
-            <label class="d-block pb-2">{{"administracion.usuarios.literal.activo" | translate}}</label>
-            <!--<p-dropdown class="select-form" [options]="select"></p-dropdown>-->
-            <p-radioButton label="{{'messages.si' | translate}}" name="activo" value="S" class="pr-3" [(ngModel)]="body.activo" [(disabled)]="disabledRadio"></p-radioButton><br/>
-            <p-radioButton label="{{'general.boton.no' | translate}}" name="activo" value="N" class="pr-3" [(ngModel)]="body.activo"
-              [(disabled)]="disabledRadio">
-              </p-radioButton>
+            <label>{{"administracion.usuarios.literal.activo" | translate}}</label>
+            <p-dropdown class="select-form" [options]="usuarios_activo" [(ngModel)]="body.activo" [(disabled)]="disabledRadio"></p-dropdown>
           </div>
 
           <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
@@ -76,7 +72,7 @@
           <button *ngIf="!activacionEditar" (click)="crear()" pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"
             [disabled]="true"></button>
 
-            <button (click)="confirmarBuscar(); selectedDatos = false" pButton type="button " icon="fa fa-search " iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+            <button (click)="isBuscar(); selectedDatos = false" pButton type="button " icon="fa fa-search " iconPos="left" label="{{'general.boton.search' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -93,7 +89,7 @@
         [(selection)]="selectedDatos" (onRowSelect)="irEditarUsuario(selectedDatos)" pageLinks="2" dataKey="nif" [responsive]="true"
         selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="activarPaginacion()"
         paginatorPosition="both" [rows]="selectedItem">
-        <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="{{'general.boton.search' | translate}}"
+        <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true">
           </p-column>
 
