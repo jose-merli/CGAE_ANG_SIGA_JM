@@ -92,7 +92,7 @@
 
           <p-footer>
             <div class="text-right main-button">
-              <button (click)="historico()" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.historico' | translate}}"></button>
+              <button (click)="historico(); selectedDatos=[]" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.historico' | translate}}"></button>
               <button (click)="newData();" pButton type="button" icon="fa fa-plus-square  " iconPos="left" label="{{ 'general.boton.new' | translate}}"
                 [disabled]="crear"></button>
                 <button *ngIf="selectedDatos && selectedDatos != '' && activacionEditar" (click)="confirmarBorrar(selectedDatos)" pButton
@@ -184,7 +184,7 @@
 
             <p-footer>
               <div class="text-right main-button" *ngIf="activarPaginacion() == true">
-                <button (click)="isBuscar()" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
+                <button (click)="isBuscar(); selectedDatos=[]" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
                 <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt " [disabled]="isHabilitadoEliminar()"
                   iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
               </div>

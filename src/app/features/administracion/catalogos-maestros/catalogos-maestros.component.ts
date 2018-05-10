@@ -262,12 +262,10 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
   //cada vez que cambia el formulario comprueba esto
   onChangeForm() {
+    if (this.newCatalogo.codigoExt == undefined) {
+      this.newCatalogo.codigoExt = "";
+    }
     if (
-      this.newCatalogo.codigoExt == "" ||
-      this.newCatalogo.codigoExt == undefined
-    ) {
-      this.blockCrear = true;
-    } else if (
       this.newCatalogo.descripcion == "" ||
       this.newCatalogo.descripcion == undefined
     ) {
