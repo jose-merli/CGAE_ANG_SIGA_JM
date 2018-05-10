@@ -152,7 +152,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
 
   confirmEdit() {
     let mess = "";
-    if (this.editar == false) {
+    if (this.crear == true) {
       mess = this.translateService.instant(
         "general.message.create.aceptar.y.volver"
       );
