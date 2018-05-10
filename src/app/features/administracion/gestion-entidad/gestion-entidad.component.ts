@@ -6,6 +6,12 @@ import {
   ChangeDetectorRef
 } from "@angular/core";
 
+import {
+  DomSanitizer,
+  SafeResourceUrl,
+  SafeUrl
+} from "@angular/platform-browser";
+
 import { SigaServices } from "./../../../_services/siga.service";
 import { Router } from "@angular/router";
 import { MessageService } from "primeng/components/common/messageservice";
@@ -13,6 +19,8 @@ import { ConfirmationService } from "primeng/api";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
+
+import { HeaderLogoDto } from "../../../models/HeaderLogoDto";
 
 import {
   FormBuilder,
@@ -44,6 +52,9 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
   archivoDisponible: boolean = false;
   file: File = undefined;
   nombreImagen: any;
+  logoImagen: HeaderLogoDto = new HeaderLogoDto();
+  base64String: any;
+  source: any;
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -51,7 +62,8 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private sanitizer: DomSanitizer
   ) {
     super(USER_VALIDATIONS);
   }
@@ -77,6 +89,85 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
             console.log(err);
           }
         );
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
+    // PRUEBAS
+    this.sigaServices.get("header_logo").subscribe(
+      n => {
+        this.logoImagen.imagen = n.imagen;
+
+        // intento de solucionar : "sanitizing unsafe URL value"
+        // this.sanitizer.bypassSecurityTrustResourceUrl(
+        //   btoa(this.logoImagen.imagen.toString())
+        // );
+
+        // LO UNICO QUE SIRVE
+        // con this.logoImagen.imagen.toString() estan los bytes de la imagen
+        this.source = this.logoImagen.imagen.toString();
+
+        // this.sanitizer.bypassSecurityTrustResourceUrl(this.source);
+        // this.sanitizer.bypassSecurityTrustUrl(this.source);
+        // this.sanitizer.bypassSecurityTrustScript(this.source);
+        // this.sanitizer.bypassSecurityTrustStyle(this.source);
+        // this.sanitizer.bypassSecurityTrustHtml(this.source);
+
+        //const base64String = btoa(String.fromCharCode(new Uint8Array(this.logoImagen.imagen)));
+
+        // var byteArray = new Uint8Array(this.logoImagen.imagen);
+
+        // var blob = new Blob([this.logoImagen.imagen.toString()], {
+        //   type: "image/jpeg"
+        // });
+        // var reader = new FileReader();
+        // reader.readAsDataURL(blob);
+        // var base64data;
+        // reader.onloadend = function() {
+        //   base64data = reader.result;
+        // };
+
+        // this.sanitizer.bypassSecurityTrustResourceUrl(base64data);
+        // this.sanitizer.bypassSecurityTrustUrl(base64data);
+        // this.sanitizer.bypassSecurityTrustScript(base64data);
+        // this.sanitizer.bypassSecurityTrustStyle(base64data);
+        // this.sanitizer.bypassSecurityTrustHtml(base64data);
+        //this.source = base64data;
+
+        //this.source = URL.createObjectURL(blob);
+        // window.open(this.source);
+
+        // var blob = new Blob([this.logoImagen.imagen.toString()], {
+        //   type: "image/jpeg"
+        // });
+        // this.source = URL.createObjectURL(blob).substring(
+        //   5,
+        //   URL.createObjectURL(blob).length
+        // );
+        // this.source = URL.createObjectURL(blob).substring(
+        //   5,
+        //   URL.createObjectURL(blob).length
+        // );
+
+        // this.sanitizer.bypassSecurityTrustResourceUrl(this.source);
+        // this.sanitizer.bypassSecurityTrustUrl(this.source);
+        // this.sanitizer.bypassSecurityTrustScript(this.source);
+        // this.sanitizer.bypassSecurityTrustStyle(this.source);
+        // this.sanitizer.bypassSecurityTrustHtml(this.source);
+
+        // var result = "";
+        // for (var i = 0; i < this.logoImagen.imagen.length; i++) {
+        //   result += String.fromCharCode(parseInt(this.logoImagen.imagen[i], 2));
+        // }
+
+        // this.base64String = btoa(result);
+        // this.source = `data:image/jpeg;base64,${this.base64String}`;
+
+        // var byteArray = new Uint8Array(this.logoImagen.imagen);
+        // var b64encoded = btoa(String.fromCharCode.apply(byteArray));
+        // this.source = b64encoded;
       },
       err => {
         console.log(err);
@@ -231,5 +322,29 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
     } else this.guardarHabilitado = true;
 
     return this.guardarHabilitado;
+  }
+
+  probarLogo() {
+    this.sigaServices.get("header_logo").subscribe(
+      n => {
+        this.logoImagen.imagen = n.imagen;
+        //const base64String = btoa(String.fromCharCode(new Uint8Array(this.logoImagen.imagen)));
+
+        // var byteArray = new Uint8Array(this.logoImagen.imagen);
+        // var blob = new Blob([byteArray], { type: "image/jpeg" });
+        // window.navigator.msSaveOrOpenBlob(blob);
+
+        var result = "";
+        for (var i = 0; i < this.logoImagen.imagen.length; i++) {
+          result += String.fromCharCode(parseInt(this.logoImagen.imagen[i], 2));
+        }
+
+        this.base64String = btoa(result);
+        this.source = `data:image/jpeg;base64,${this.base64String}`;
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 }

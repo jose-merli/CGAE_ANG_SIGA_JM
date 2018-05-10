@@ -73,7 +73,8 @@ export class SigaServices {
     entidad_lenguajeInstitucion: "entidad/lenguajeInstitucion",
     entidad_lenguaje: "entidad/lenguaje",
     entidad_uploadFile: "entidad/uploadFile",
-    entidad_uploadLenguage: "entidad/uploadLenguage"
+    entidad_uploadLenguage: "entidad/uploadLenguage",
+    header_logo: "/header/logo"
   };
 
   constructor(private http: HttpClient) {}
