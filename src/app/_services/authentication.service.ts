@@ -39,8 +39,13 @@ export class AuthenticationService {
         return sessionStorage.getItem('osAutenticated') === 'true';
     }
 
-    newSigaLogin(): Observable<any> {
-        return this.http.get(this.sigaServices.getNewSigaUrl() + this.sigaServices.endpoints["login"], { observe: 'response' });
+    newSigaLogin(formValues): Observable<any> {
+        let params = '?';
+        for (let key in formValues) {
+            params = params + key + '=' + formValues[key] + '&';
+        }
+
+        return this.http.get(this.sigaServices.getNewSigaUrl() + this.sigaServices.endpoints["login"] + params, { observe: 'response' });
     }
 
     oldSigaLogin(formValues): Observable<any> {
@@ -64,7 +69,7 @@ export class AuthenticationService {
     }
 
     autenticate(formValues): Observable<any> {
-        let newSigaRquest = this.newSigaLogin();
+        let newSigaRquest = this.newSigaLogin(formValues);
         let oldSigaRquest = this.oldSigaLogin(formValues);
 
 

@@ -8,6 +8,15 @@ export const environment = {
   protocol: "",
   env: "",
   baseHref: "/ang/",
+
+
+  //oldSigaUrl: "http://vmcgaeap002.cloud.es.deloitte.com:7001/SIGA/",
+  //oldSigaUrl: "https://localhost/SIGA/",
+  //newSigaUrl: "http://localhost:8180/siga-web/"
+  //newSigaUrl: "http://localhost:7001/siga-web/"
+
+
   oldSigaUrl: '/SIGA/',
   newSigaUrl: '/siga-web/'
+
 };
