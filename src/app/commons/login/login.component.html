@@ -19,7 +19,8 @@
                     </p-dropdown>
 
             </td>
-            <p-button (click)='submit()' title="Entrar con los datos de los combos" label="Entrar"></p-button>
+            <button [disabled]="isHabilitadoEntrar()" pButton type="button " (click)='submit()' title="Entrar con los datos de los combos"
+                label="Entrar"></button>
 
         </tr>
         <tr>
