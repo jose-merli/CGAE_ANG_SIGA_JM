@@ -801,6 +801,20 @@ font-size: .7rem;
 }
 
 
+//notice antiguo SIGA
+.notice-wrap{
+    color: white;
+    width: 200px;
+    position: fixed;
+    top: 7rem;
+    right:2rem;
+
+    .notice-item-wrapper{
+        background: $secondary-color;
+        padding: 1rem;
+    }
+}
+
 /**RESPONSIVE**/
 
 @media ( max-width: 55em ) { /* Default 35em */
