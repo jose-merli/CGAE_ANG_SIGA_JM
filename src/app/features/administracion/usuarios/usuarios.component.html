@@ -40,7 +40,7 @@
               <option value="" selected></option>
               <option *ngFor="let i of usuarios_rol" [ngValue]="i">{{ i.value }}</option>
               </select>-->
-              <img id="idRolBusqueda_loading" src="html/imagenes/loading-spinner.gif" alt="Cargando..." style="visibility:hidden">
+              <!--<img id="idRolBusqueda_loading" src="html/imagenes/loading-spinner.gif" alt="Cargando..." style="visibility:hidden">-->
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>{{"administracion.usuarios.literal.grupos" | translate}}</label>
@@ -94,8 +94,11 @@
           </p-column>
 
           <ng-template pTemplate="paginatorLeft">
-            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-            <label>{{ "general.message.mostrar" | translate}} <p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+            <div class="mostrar">
+              <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+              <label>{{ "general.message.mostrar" | translate}}</label>
+              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> <label>{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+            </div>
           </ng-template>
 
 
@@ -124,4 +127,8 @@
   </div>
   <!--FIN DE PRINCIPAL-->
   <app-dialog></app-dialog>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <p-progressSpinner animationDuration="1s"></p-progressSpinner>
 </div>

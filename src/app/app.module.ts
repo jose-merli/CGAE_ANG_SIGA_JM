@@ -43,6 +43,7 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ConfirmationService } from "primeng/api";
 import { GrowlModule } from "primeng/growl";
 import { MultiSelectModule } from "primeng/multiSelect";
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CalendarModule } from "primeng/calendar";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { TooltipModule } from "primeng/tooltip";
@@ -204,6 +205,8 @@ import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-co
     TableModule,
     TreeModule,
     PickListModule,
+    ListboxModule,
+    ProgressSpinnerModule,
     FileUploadModule
   ],
   providers: [
@@ -227,4 +230,4 @@ import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-co
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
