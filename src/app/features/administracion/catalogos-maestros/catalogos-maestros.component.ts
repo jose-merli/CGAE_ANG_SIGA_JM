@@ -70,6 +70,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   cols: any = [];
   datos: any[];
   datosHist: any[];
+  datosEdit: any[];
   select: any[];
 
   //Array de opciones del dropdown
@@ -175,6 +176,61 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       this.body = new CatalogoRequestDto();
     }
   }
+
+  isEditar() {
+    this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
+      if (value.editar) {
+        this.upd = new CatalogoUpdateRequestDto();
+        this.upd.tabla = value.catalogo;
+        this.upd.descripcion = value.descripcion;
+        this.upd.codigoExt = value.codigoExt;
+        this.upd.idRegistro = value.idRegistro;
+        this.sigaServices.post("maestros_update", this.upd).subscribe(
+          data => {
+            this.showSuccess();
+            console.log(data);
+            sessionStorage.setItem(
+              "registroAuditoriaUsuariosActualizado",
+              JSON.stringify(true)
+            );
+          },
+          err => {
+            this.showFail();
+            console.log(err);
+            sessionStorage.setItem(
+              "registroAuditoriaUsuariosActualizado",
+              JSON.stringify(false)
+            );
+          }
+        );
+      }
+    });
+    this.volver();
+  }
+  confirmEdit() {
+    let mess = this.translateService.instant(
+      "general.message.aceptar.y.volver"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.isEditar();
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
   newData() {
     this.blockSeleccionar = true;
     console.log(this.datosHist);
@@ -196,7 +252,22 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     console.log(this.datosHist);
     this.table.reset();
   }
-
+  editarCompleto(event) {
+    console.log(event);
+    let data = event.data;
+    //compruebo si la edicion es correcta con la basedatos
+    this.editar = true;
+    this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
+      if (value.idRegistro == data.idRegistro) {
+        value.editar = true;
+      }
+    });
+    console.log(this.datosHist);
+  }
+  volver() {
+    this.editar = false;
+    this.isBuscar();
+  }
   confirmarCrear() {
     console.log(this.datosHist[0]);
     console.log(this.newCatalogo);
@@ -315,6 +386,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       data => {
         console.log(data);
         this.searchCatalogo = JSON.parse(data["body"]);
+        this.datosEdit = this.searchCatalogo.catalogoMaestroItem;
         this.datosHist = this.searchCatalogo.catalogoMaestroItem;
       },
       err => {
@@ -333,6 +405,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       this.selectAll = false;
       this.selectedDatos = [];
     }
+    this.volver();
   }
 
   activarPaginacion() {
@@ -372,6 +445,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
           console.log(data);
 
           this.searchCatalogo = JSON.parse(data["body"]);
+          this.datosEdit = this.searchCatalogo.catalogoMaestroItem;
           this.datosHist = this.searchCatalogo.catalogoMaestroItem;
         },
         err => {
@@ -443,21 +517,21 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       if (id && id.length > 0) {
         ir = id[0];
       }
-      sessionStorage.removeItem("catalogoBody");
-      sessionStorage.removeItem("privilegios");
-      sessionStorage.removeItem("searchCatalogo");
-      sessionStorage.setItem("catalogoBody", JSON.stringify(id));
-      sessionStorage.setItem("searchCatalogo", JSON.stringify(this.body));
-      if (id[0].fechaBaja != null) {
-        sessionStorage.setItem("privilegios", JSON.stringify(false));
-      } else {
-        sessionStorage.setItem(
-          "privilegios",
-          JSON.stringify(this.activacionEditar)
-        );
-      }
+      // sessionStorage.removeItem("catalogoBody");
+      // sessionStorage.removeItem("privilegios");
+      // sessionStorage.removeItem("searchCatalogo");
+      // sessionStorage.setItem("catalogoBody", JSON.stringify(id));
+      // sessionStorage.setItem("searchCatalogo", JSON.stringify(this.body));
+      // if (id[0].fechaBaja != null) {
+      //   sessionStorage.setItem("privilegios", JSON.stringify(false));
+      // } else {
+      //   sessionStorage.setItem(
+      //     "privilegios",
+      //     JSON.stringify(this.activacionEditar)
+      //   );
+      // }
 
-      this.router.navigate(["/EditarCatalogosMaestros"]);
+      // this.router.navigate(["/EditarCatalogosMaestros"]);
     } else {
       this.editar = false;
     }

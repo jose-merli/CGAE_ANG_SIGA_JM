@@ -379,13 +379,12 @@ export class Usuarios extends SigaWrapper implements OnInit {
     this.sigaServices.post("usuarios_insert", this.body).subscribe(
       data => {
         this.searchUser = JSON.parse(data["body"]);
-        if (this.searchUser.error) {
-          this.showduplicateFail(this.searchUser.error.message.toString());
-        } else {
-          this.showSuccess();
-        }
+
+        this.showSuccess();
       },
       error => {
+        this.searchUser = JSON.parse(error["error"]);
+        this.showduplicateFail(this.searchUser.error.message.toString());
         console.log(error);
         this.showFail();
       },
