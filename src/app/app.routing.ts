@@ -251,7 +251,11 @@ const appRoutes: Routes = [
     path: "etiquetas",
     component: Etiquetas
   },
-  { path: "usuarios", component: Usuarios, canActivate: [AuthGuard] },
+  {
+    path: "usuarios",
+    component: Usuarios,
+    canActivate: [AuthGuard]
+  },
   {
     path: "seleccionarIdioma",
     component: SeleccionarIdioma,

@@ -1,38 +1,49 @@
 <form [formGroup]='form'>
     <br>
 
-    <p class="titulos" style="text-align:center">BIENVENIDO AL SISTEMA DE GESTIÓN DE LA ABOGACÍA (S.I.G.A)</p>
+    <p class="titulos" id="title">BIENVENIDO AL SISTEMA DE GESTIÓN DE LA ABOGACÍA (S.I.G.A)</p>
 
 
     <table align="center" class="table-login">
         <tr>
-            <td class="labelText">Institución</td>
+            <td class="labelText"><label>Institución</label></td>
             <td>
-                <select formControlName="tmpLoginInstitucion" style="width:300px" (ngModelChange)="onChange($event)">
+                <!--<select formControlName="tmpLoginInstitucion" style="width:300px" (ngModelChange)="onChange($event)">
                     <option value="" selected></option>
                     <option *ngFor="let i of instituciones" [ngValue]="i.value">{{ i.label }}</option>
-                </select>
+                </select>-->
+
+                <p-dropdown [filter]="true" filterBy="label" [style]="{'width':'400px'}" formControlName="tmpLoginInstitucion" [options]="instituciones"
+                    (ngModelChange)="onChange($event)" id="dropdown">
+
+                    </p-dropdown>
+
             </td>
-            <td valign="middle" align="center">
-                <button (click)='submit()' title="Entrar con los datos de los combos">Entrar</button>
-                <!-- <input type="button" class="button" value="Entrar" onClick="entrar()" > -->
-            </td>
+            <button [disabled]="isHabilitadoEntrar()" pButton type="button " (click)='submit()' title="Entrar con los datos de los combos"
+                label="Entrar"></button>
+
         </tr>
         <tr>
-            <td class="labelText">¿Letrado?</td>
+            <td class="labelText"><label>¿Letrado?</label></td>
             <td colspan="2">
-                <select formControlName="sLetrado" class="boxCombo" style="width:300px;">
+                <!--<select formControlName="sLetrado" class="boxCombo" style="width:300px;">
                     <option value=N selected="">NO, no soy Letrado</option>
                     <option value=S>SÍ, soy Letrado</option>
-                </select>
+                </select>-->
+
+                <p-dropdown [style]="{'width':'400px'}" formControlName="sLetrado" [options]="letrado" [(ngModel)]="isLetrado" id="dropdown">
+
+                </p-dropdown>
+
             </td>
+
         </tr>
         <tr>
             <td class="labelText">Perfil</td>
             <td colspan="2">
 
-                <p-listbox formControlName="tmpLoginPerfil" [options]="perfiles" [(ngModel)]="tmpLoginPerfil" multiple="multiple" [style]="{'width':'300px'}"
-                    [listStyle]="{'height':'300px'}"></p-listbox>
+                <p-listbox formControlName="tmpLoginPerfil" [options]="perfiles" [(ngModel)]="tmpLoginPerfil" multiple="multiple" [style]="{'width':'400px'}"
+                    [listStyle]="{'height':'400px'}"></p-listbox>
 
                     <!--<select formControlName="tmpLoginPerfil" style="width:300px;width:300px;" size="20">
                     <option *ngFor="let i of perfiles" [ngValue]="i.value">{{ i.label }}</option>
