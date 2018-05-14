@@ -131,7 +131,7 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.numCambios = 0;
     this.selectedPermiso = [];
     this.permisosChange = [];
-
+    this.totalPermisos = 0;
     this.todoDesplegado = false;
 
     this.sigaServices
@@ -139,24 +139,25 @@ export class PermisosComponent implements OnInit, DoCheck {
         idGrupo: this.idGrupo
       })
       .subscribe(
-      data => {
-        let permisosTree = JSON.parse(data.body);
-        this.permisosTree = permisosTree.permisoItems;
-        this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
-        this.permisosTree.forEach(node => {
-          this.totalRecursive(node);
-        });
-        this.accesoTotal = 0;
-        this.accesoLectura = 0;
-        this.accesoDenegado = 0;
-        this.sinAsignar = 0;
-        this.permisosTree.forEach(node => {
-          this.totalAccesosRecursive(node);
-        });
-      },
-      err => {
-        console.log(err);
-      }
+        data => {
+          let permisosTree = JSON.parse(data.body);
+          this.permisosTree = permisosTree.permisoItems;
+          this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
+          this.permisosTree.forEach(node => {
+            this.totalRecursive(node);
+          });
+          this.accesoTotal = 0;
+          this.accesoLectura = 0;
+          this.accesoDenegado = 0;
+          this.sinAsignar = 0;
+
+          this.permisosTree.forEach(node => {
+            this.totalAccesosRecursive(node);
+          });
+        },
+        err => {
+          console.log(err);
+        }
       );
 
     // this.permisosTree =
@@ -283,9 +284,11 @@ export class PermisosComponent implements OnInit, DoCheck {
       this.accesoDenegado = 0;
       this.sinAsignar = 0;
       this.selectedPermiso = [];
+
       this.permisosTree.forEach(node => {
         this.totalAccesosRecursive(node);
       });
+      this.getNumChanges();
     }
   }
 
@@ -364,22 +367,27 @@ export class PermisosComponent implements OnInit, DoCheck {
 
     this.savedPermisos = true;
 
-    this.getNumChanges();
     this.showSuccess();
   }
 
   restablecerPermisos() {
     this.permisosTree = JSON.parse(JSON.stringify(this.treeInicial));
+
     this.selectAll = false;
     this.selectedPermiso = [];
     this.permisosChange = [];
+    this.numCambios = 0;
   }
 
   getNumSelected() {
     this.numSeleccionados = this.selectedPermiso.length;
   }
   getNumChanges() {
-    this.numCambios = this.permisosChange.length;
+    if (this.permisosChange.length > 0) {
+      this.numCambios += this.permisosChange.length;
+    } else {
+      this.numCambios = 0;
+    }
   }
 
   getNumTotales() {
@@ -388,7 +396,7 @@ export class PermisosComponent implements OnInit, DoCheck {
 
   onNodeSelect() {
     this.getNumSelected();
-
+    this.savedPermisos = false;
     this.getNumTotales();
   }
 
