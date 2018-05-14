@@ -1,2 +1,2 @@
-export * from './translation.service';
-export * from './translation.pipe';
+export * from "./translation.service";
+export * from "./translation.pipe";

@@ -1,21 +1,34 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { SigaServices } from '../../_services/siga.service';
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { SigaServices } from "../../_services/siga.service";
+
+// prueba
+import { HeaderGestionEntidadService } from "../../_services/headerGestionEntidad.service";
+import { ImagePipe } from "../image-pipe/image.pipe";
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  selector: "app-header",
+  templateUrl: "./header.component.html",
+  styleUrls: ["./header.component.scss"]
 })
 export class HeaderComponent implements OnInit {
-
   menuUser: any = [];
   menuHide: boolean;
 
-  constructor(private router: Router, private sigaServices: SigaServices) { }
+  imagenURL: any;
+
+  constructor(
+    private router: Router,
+    private sigaServices: SigaServices,
+    private headerGestionEntidadService: HeaderGestionEntidadService,
+    private imagePipe: ImagePipe
+  ) {
+    this.headerGestionEntidadService.url$.subscribe(data => {
+      this.imagenURL = data;
+    });
+  }
 
   ngOnInit() {
-
     this.menuHide = true;
 
     this.sigaServices.get("usuario_logeado").subscribe(n => {
@@ -39,8 +52,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    sessionStorage.removeItem('authenticated')
-    this.router.navigate(['/login']);
+    sessionStorage.removeItem("authenticated");
+    this.router.navigate(["/login"]);
   }
-
 }

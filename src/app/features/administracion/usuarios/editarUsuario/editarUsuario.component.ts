@@ -57,7 +57,7 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
   dniCorrecto: boolean;
   showDatosGenerales: boolean = true;
   activacionEditar: boolean = true;
-
+  edicion: boolean = true;
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -79,7 +79,8 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
 
     this.body = new UsuarioItem();
     this.body = JSON.parse(sessionStorage.getItem("usuarioBody"))[0];
-    this.activacionEditar = JSON.parse(sessionStorage.getItem("privilegios"));
+    this.edicion = JSON.parse(sessionStorage.getItem("privilegios"));
+    this.activacionEditar = this.edicion;
     sessionStorage.removeItem("usuarioBody");
     sessionStorage.removeItem("privilegios");
     this.sigaServices.get("usuarios_rol").subscribe(
@@ -133,7 +134,7 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
       this.body.codigoExterno = "";
     }
     if (this.body.grupo == undefined) {
-      this.body.perfiles == null;
+      this.body.grupo == null;
     }
     this.updateUser.activo = this.body.activo;
     this.updateUser.codigoExterno = this.body.codigoExterno;
@@ -171,6 +172,15 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
+
+  onChangeForm() {
+    if (this.body.perfiles.length == 0) {
+      this.edicion = false;
+    } else if (this.activacionEditar) {
+      this.edicion = true;
+    }
+  }
+
   showSuccess() {
     this.msgs = [];
     this.msgs.push({

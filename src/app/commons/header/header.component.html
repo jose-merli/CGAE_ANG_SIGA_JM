@@ -7,7 +7,9 @@
       <h1>SIGA</h1>
     </div>
     <div class="logo-central">
-      <img src="./assets/images/logoCentral.PNG">
+      <!--<img src="./assets/images/logoCentral.PNG">-->
+      <!--<img [src]="{{imagenURL | imagenLogotipo}}">-->
+      <img src="{{(imagenURL | image) | async}}">
     </div>
     <div>
       <div class="datos-img">

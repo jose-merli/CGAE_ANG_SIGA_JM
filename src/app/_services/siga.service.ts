@@ -75,12 +75,15 @@ export class SigaServices {
     entidad_lenguajeInstitucion: "entidad/lenguajeInstitucion",
     entidad_lenguaje: "entidad/lenguaje",
     entidad_uploadFile: "entidad/uploadFile",
-    entidad_uploadLenguage: "entidad/uploadLenguage"
+    entidad_uploadLenguage: "entidad/uploadLenguage",
+    header_logo: "/header/logo"
   };
 
-
-  constructor(private http: HttpClient, handler: HttpBackend, private httpbackend: HttpClient) {
-
+  constructor(
+    private http: HttpClient,
+    handler: HttpBackend,
+    private httpbackend: HttpClient
+  ) {
     this.httpbackend = new HttpClient(handler);
   }
 
@@ -92,8 +95,6 @@ export class SigaServices {
       });
   }
 
-
-
   getBackend(service: string): Observable<any> {
     return this.httpbackend
       .get(environment.newSigaUrl + this.endpoints[service])
@@ -102,18 +103,21 @@ export class SigaServices {
       });
   }
 
-
   getNewSigaUrl() {
     return environment.newSigaUrl;
+  }
+
+  getServucePath(service: string) {
+    return this.endpoints[service];
   }
 
   getPerfil(service: string, institucion: string): Observable<any> {
     return this.httpbackend
       .get(
-      environment.newSigaUrl +
-      this.endpoints[service] +
-      "?institucion=" +
-      institucion
+        environment.newSigaUrl +
+          this.endpoints[service] +
+          "?institucion=" +
+          institucion
       )
       .map(response => {
         return response;

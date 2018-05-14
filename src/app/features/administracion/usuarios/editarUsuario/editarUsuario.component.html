@@ -36,8 +36,9 @@
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>{{"administracion.usuarios.literal.grupo" | translate}}</label>
-            <p-multiSelect [disabled]="!activacionEditar" styleClass="widthAll" [(ngModel)]='body.perfiles' [options]="usuarios_perfil"
-              [selectedItemsLabel]="textSelected" [defaultLabel]="textFilter" [panelStyle]="{width:'100%'}"></p-multiSelect>
+            <p-multiSelect [disabled]="!activacionEditar" [defaultLabel]="textFilter" styleClass="widthAll" (onChange)="onChangeForm()"
+              [(ngModel)]='body.perfiles' [options]="usuarios_perfil" [selectedItemsLabel]="textSelected" maxSelectedLabels="1"
+              [panelStyle]="{width:'100%'}"></p-multiSelect>
 
           </div>
 
@@ -63,7 +64,7 @@
     <div class="card-footer">
       <div class="text-right main-button ">
         <button (click)="confirmEdit();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"
-          [disabled]="!activacionEditar"></button>
+          [disabled]="!edicion"></button>
           <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
       </div>
     </div>
