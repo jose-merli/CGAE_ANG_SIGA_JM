@@ -149,6 +149,10 @@ export class Usuarios extends SigaWrapper implements OnInit {
         value: 40
       }
     ];
+    if (sessionStorage.getItem("editedUser") != null) {
+      this.selectedDatos = JSON.parse(sessionStorage.getItem("editedUser"));
+    }
+    sessionStorage.removeItem("editedUser");
     if (sessionStorage.getItem("searchUser") != null) {
       this.body = JSON.parse(sessionStorage.getItem("searchUser"));
       this.isBuscar();
@@ -517,6 +521,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
         JSON.stringify(this.activacionEditar)
       );
       sessionStorage.setItem("searchUser", JSON.stringify(this.body));
+      sessionStorage.setItem("editedUser", JSON.stringify(this.selectedDatos));
       this.router.navigate(["/editarUsuario", ir]);
     } else {
       this.editar = false;
@@ -524,7 +529,6 @@ export class Usuarios extends SigaWrapper implements OnInit {
       this.body = new UsuarioRequestDto();
       this.body.activo = id[0].activo;
     }
-
     if (this.body.activo == "N") {
       this.activo = true;
     } else {
