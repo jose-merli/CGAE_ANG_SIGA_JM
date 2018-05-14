@@ -6,7 +6,7 @@
   </div>
   <div class="mt-4 permisos-filters d-flex  justify-content-start">
     <div class="mr-auto pl-0 form-group col-lg-3 col-md-3">
-      <label>Grupo</label>
+      <label>{{'administracion.grupos.literal.perfiles' | translate}}</label>
       <p-dropdown (onChange)="onChangeGrupo($event)" [filter]="true" [(ngModel)]="selectedGrupo" [options]="grupos" class="select-form"
         [formControl]="formPermisos.controls['grupo']"></p-dropdown>
     </div>

@@ -139,25 +139,25 @@ export class PermisosComponent implements OnInit, DoCheck {
         idGrupo: this.idGrupo
       })
       .subscribe(
-        data => {
-          let permisosTree = JSON.parse(data.body);
-          this.permisosTree = permisosTree.permisoItems;
-          this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
-          this.permisosTree.forEach(node => {
-            this.totalRecursive(node);
-          });
-          this.accesoTotal = 0;
-          this.accesoLectura = 0;
-          this.accesoDenegado = 0;
-          this.sinAsignar = 0;
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        this.permisosTree = permisosTree.permisoItems;
+        this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
+        this.permisosTree.forEach(node => {
+          this.totalRecursive(node);
+        });
+        this.accesoTotal = 0;
+        this.accesoLectura = 0;
+        this.accesoDenegado = 0;
+        this.sinAsignar = 0;
 
-          this.permisosTree.forEach(node => {
-            this.totalAccesosRecursive(node);
-          });
-        },
-        err => {
-          console.log(err);
-        }
+        this.permisosTree.forEach(node => {
+          this.totalAccesosRecursive(node);
+        });
+      },
+      err => {
+        console.log(err);
+      }
       );
 
     // this.permisosTree =
@@ -337,6 +337,8 @@ export class PermisosComponent implements OnInit, DoCheck {
 
   onChangeSelectAll(node) {
     if (this.selectAll === true) {
+      this.selectedPermiso = [];
+      this.numSeleccionados = 0;
       this.permisosTree.forEach(node => {
         this.selectAllRecursive(node);
       });
@@ -390,14 +392,11 @@ export class PermisosComponent implements OnInit, DoCheck {
     }
   }
 
-  getNumTotales() {
-    // this.numTotales = this.permisosTree.length + node.children.length;
-  }
+
 
   onNodeSelect() {
     this.getNumSelected();
     this.savedPermisos = false;
-    this.getNumTotales();
   }
 
   onNodeUnselect() {
