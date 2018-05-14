@@ -26,6 +26,7 @@ export class SigaServices {
     testDb: "db",
     login: "login",
     menu: "menu",
+    entorno: "getEntorno",
     usuario: "usuario",
     usuario_logeado: "usuario/logeado",
     instituciones: "instituciones",

@@ -20,6 +20,8 @@ export class LoginComponent implements OnInit {
   isLetrado: String;
   isEntrar: boolean = true;
   tmpLoginPerfil: String;
+  entorno: String;
+  ocultar: boolean = false;
   // value=N selected="">NO, no soy Letrado</option>
   //                   <option value=S>SÍ, soy Letrado</option>
 
@@ -37,33 +39,63 @@ export class LoginComponent implements OnInit {
   onSubmit() { }
 
   ngOnInit() {
-    this.sigaServices.getBackend("instituciones").subscribe(n => {
-      this.instituciones = n.combooItems;
-      this.isLetrado = "N";
+    this.sigaServices.getBackend("entorno").subscribe(n => {
+      this.entorno = n.entorno;
+
+      if (this.entorno == "false") {
+        this.sigaServices.getBackend("instituciones").subscribe(n => {
+          this.instituciones = n.combooItems;
+          this.isLetrado = "N";
+        });
+        this.ocultar = true;
+        this.form = this.fb.group({
+          tmpLoginInstitucion: new FormControl(""),
+          tmpLoginPerfil: new FormControl("ADG"),
+          sLetrado: new FormControl("N"),
+          user: new FormControl(),
+          letrado: new FormControl("N"),
+          location: new FormControl("2000"),
+          profile: new FormControl("ADG"),
+
+          posMenu: new FormControl(0)
+        });
+        //this.onChange(this.form.controls['tmpLoginInstitucion'].value);
+        this.form.controls['tmpLoginInstitucion'].valueChanges.subscribe(newValue => {
+          this.form.controls['location'].setValue(newValue);
+        });
+
+        this.form.controls['tmpLoginPerfil'].valueChanges.subscribe(n => {
+          this.form.controls['profile'].setValue(n);
+        });
+        this.form.controls["sLetrado"].valueChanges.subscribe(n => {
+          this.form.controls["letrado"].setValue(n);
+        });
+      } else {
+        this.ocultar = false;
+        this.form = this.fb.group({
+          tmpLoginInstitucion: new FormControl("2000"),
+          tmpLoginPerfil: new FormControl("ADG"),
+          sLetrado: new FormControl("N"),
+          user: new FormControl(),
+          letrado: new FormControl("N"),
+          location: new FormControl("2000"),
+          profile: new FormControl("ADG"),
+
+          posMenu: new FormControl(0)
+        });
+
+        this.service.autenticate(this.form.value).subscribe(response => {
+          if (response) {
+            this.router.navigate(["/home"]);
+          } else {
+            this.router.navigate(["/landpage"]);
+          }
+        });
+
+      }
     });
 
-    this.form = this.fb.group({
-      tmpLoginInstitucion: new FormControl(""),
-      tmpLoginPerfil: new FormControl("ADG"),
-      sLetrado: new FormControl("N"),
-      user: new FormControl(),
-      letrado: new FormControl("N"),
-      location: new FormControl("2000"),
-      profile: new FormControl("ADG"),
 
-      posMenu: new FormControl(0)
-    });
-    //this.onChange(this.form.controls['tmpLoginInstitucion'].value);
-    this.form.controls['tmpLoginInstitucion'].valueChanges.subscribe(newValue => {
-      this.form.controls['location'].setValue(newValue);
-    });
-
-    this.form.controls['tmpLoginPerfil'].valueChanges.subscribe(n => {
-      this.form.controls['profile'].setValue(n);
-    });
-    this.form.controls["sLetrado"].valueChanges.subscribe(n => {
-      this.form.controls["letrado"].setValue(n);
-    });
 
     // this.form.setValue({'location': this.form.value.tmpLoginInstitucion});
   }
@@ -81,7 +113,10 @@ export class LoginComponent implements OnInit {
   }
 
   onChange(newValue) {
-    this.sigaServices.getPerfil("perfiles", newValue).subscribe(n => {
+    var ir = null;
+    this.form.controls['location'].setValue(newValue.value);
+    this.form.controls['tmpLoginInstitucion'].setValue(newValue.value);
+    this.sigaServices.getPerfil("perfiles", newValue.value).subscribe(n => {
       this.perfiles = n.combooItems;
     });
     // this.tmpLoginPerfil = "Administrador General";
