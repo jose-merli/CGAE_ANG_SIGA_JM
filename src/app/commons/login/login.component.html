@@ -1,4 +1,4 @@
-<form [formGroup]='form'>
+<form [formGroup]='form' *ngIf="ocultar">
     <br>
 
     <p class="titulos" id="title">BIENVENIDO AL SISTEMA DE GESTIÓN DE LA ABOGACÍA (S.I.G.A)</p>
@@ -13,9 +13,8 @@
                     <option *ngFor="let i of instituciones" [ngValue]="i.value">{{ i.label }}</option>
                 </select>-->
 
-                <p-dropdown [filter]="true" filterBy="label" [style]="{'width':'400px'}" formControlName="tmpLoginInstitucion" [options]="instituciones"
-                    (ngModelChange)="onChange($event)" id="dropdown">
-
+                <p-dropdown [filter]="true" filterBy="label" [style]="{'width':'400px'}" formControlName="tmpLoginInstitucion" [(ngModel)]="tmpLoginInstitucion"
+                    [options]="instituciones" (onChange)="onChange($event)" id="dropdown">
                     </p-dropdown>
 
             </td>
