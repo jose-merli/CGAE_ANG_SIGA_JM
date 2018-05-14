@@ -174,7 +174,7 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
   }
 
   onChangeForm() {
-    if (this.body.perfiles == []) {
+    if (this.body.perfiles.length == 0) {
       this.edicion = false;
     } else if (this.activacionEditar) {
       this.edicion = true;

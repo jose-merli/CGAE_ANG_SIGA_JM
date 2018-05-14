@@ -12,6 +12,8 @@ import { MenuItem } from "primeng/api";
 import { AuthGuard } from "./_guards/auth.guards";
 import { OldSigaServices } from "./_services/oldSiga.service";
 import { SigaServices } from "./_services/siga.service";
+// prueba
+import { HeaderGestionEntidadService } from "./_services/headerGestionEntidad.service";
 import { AuthenticationService } from "./_services/authentication.service";
 import { JwtInterceptor } from "./_interceptor/jwt.interceptor";
 
@@ -25,6 +27,7 @@ import { MenuComponent } from "./commons/menu/menu.component";
 import { HomeComponent } from "./features/home/home.component";
 import { LoginComponent } from "./commons/login/login.component";
 import { TranslatePipe, TranslateService } from "./commons/translate";
+import { ImagePipe } from "./commons/image-pipe/image.pipe";
 import { ConfirmDialogComponent } from "./commons/dialog/dialog.component";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
@@ -43,7 +46,7 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ConfirmationService } from "primeng/api";
 import { GrowlModule } from "primeng/growl";
 import { MultiSelectModule } from "primeng/multiSelect";
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ProgressSpinnerModule } from "primeng/progressspinner";
 import { CalendarModule } from "primeng/calendar";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { TooltipModule } from "primeng/tooltip";
@@ -114,6 +117,7 @@ import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-co
   declarations: [
     AppComponent,
     TranslatePipe,
+    ImagePipe,
     MyIframeComponent,
     MenuComponent,
     LoginComponent,
@@ -212,8 +216,10 @@ import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-co
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     TranslateService,
+    ImagePipe,
     OldSigaServices,
     SigaServices,
+    HeaderGestionEntidadService,
     MessageService,
     AuthenticationService,
     ConfirmationService,
@@ -230,4 +236,4 @@ import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-co
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

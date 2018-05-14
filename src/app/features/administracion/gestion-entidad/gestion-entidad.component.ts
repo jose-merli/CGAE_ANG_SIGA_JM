@@ -6,6 +6,15 @@ import {
   ChangeDetectorRef
 } from "@angular/core";
 
+import {
+  DomSanitizer,
+  SafeResourceUrl,
+  SafeUrl
+} from "@angular/platform-browser";
+
+// prueba
+import { HeaderGestionEntidadService } from "./../../../_services/headerGestionEntidad.service";
+
 import { SigaServices } from "./../../../_services/siga.service";
 import { Router } from "@angular/router";
 import { MessageService } from "primeng/components/common/messageservice";
@@ -14,6 +23,7 @@ import { TranslateService } from "../../../commons/translate/translation.service
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
 
+import { HeaderComponent } from "../../../commons/header/header.component";
 import {
   FormBuilder,
   FormGroup,
@@ -26,9 +36,10 @@ import { Message } from "primeng/components/common/api";
 import { TooltipModule } from "primeng/tooltip";
 import { ListboxModule } from "primeng/listbox";
 import { FileUploadModule } from "primeng/fileupload";
+import * as blobUtil from "blob-util";
 
 @Component({
-  selector: "app-etiquetas",
+  selector: "app-gestion-entidad",
   templateUrl: "./gestion-entidad.component.html",
   styleUrls: ["./gestion-entidad.component.scss"],
   encapsulation: ViewEncapsulation.None
@@ -44,6 +55,10 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
   archivoDisponible: boolean = false;
   file: File = undefined;
   nombreImagen: any;
+  base64String: any;
+  source: any;
+  imageBase64: any;
+  imagenURL: any;
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -51,7 +66,9 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private sanitizer: DomSanitizer,
+    private headerGestionEntidadService: HeaderGestionEntidadService
   ) {
     super(USER_VALIDATIONS);
   }
@@ -169,7 +186,7 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
       lenguajeeImagen = true;
     }
 
-    // guardar imagen
+    // guardar imagen en bd y refresca header.component
     if (this.file != undefined) {
       this.sigaServices
         .postSendContent("entidad_uploadFile", this.file)
@@ -179,6 +196,16 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
             this.file = undefined;
             this.archivoDisponible = false;
             this.nombreImagen = "";
+
+            this.imagenURL =
+              this.sigaServices.getNewSigaUrl() +
+              this.sigaServices.getServucePath("header_logo") +
+              "?random=" +
+              new Date().getTime();
+
+            // Aqui se refresca el header.component, gracias al servicio headerGestionEntidadService
+            this.headerGestionEntidadService.changeUrl(this.imagenURL);
+
             if (!lenguajeeImagen) {
               this.showSuccessUploadedImage();
             }
