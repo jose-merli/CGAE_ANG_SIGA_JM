@@ -2,7 +2,9 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { SigaServices } from "../../_services/siga.service";
 
-import { HeaderLogoDto } from "../../models/HeaderLogoDto";
+// prueba
+import { HeaderGestionEntidadService } from "../../_services/headerGestionEntidad.service";
+import { ImagePipe } from "../image-pipe/image.pipe";
 
 @Component({
   selector: "app-header",
@@ -12,9 +14,19 @@ import { HeaderLogoDto } from "../../models/HeaderLogoDto";
 export class HeaderComponent implements OnInit {
   menuUser: any = [];
   menuHide: boolean;
-  logoImagen: HeaderLogoDto = new HeaderLogoDto();
 
-  constructor(private router: Router, private sigaServices: SigaServices) {}
+  imagenURL: any;
+
+  constructor(
+    private router: Router,
+    private sigaServices: SigaServices,
+    private headerGestionEntidadService: HeaderGestionEntidadService,
+    private imagePipe: ImagePipe
+  ) {
+    this.headerGestionEntidadService.url$.subscribe(data => {
+      this.imagenURL = data;
+    });
+  }
 
   ngOnInit() {
     this.menuHide = true;
@@ -42,17 +54,5 @@ export class HeaderComponent implements OnInit {
   logout() {
     sessionStorage.removeItem("authenticated");
     this.router.navigate(["/login"]);
-  }
-
-  probarLogo() {
-    this.sigaServices.get("header_logo").subscribe(
-      n => {
-        this.logoImagen.imagen = n.imagen;
-        //const base64String = btoa(String.fromCharCode(new Uint8Array(this.logoImagen.imagen)));
-      },
-      err => {
-        console.log(err);
-      }
-    );
   }
 }

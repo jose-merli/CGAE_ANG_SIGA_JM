@@ -29,7 +29,7 @@ import { HistoricoUsuarioDto } from "../../../../models/HistoricoUsuarioDto";
 import { HistoricoUsuarioRequestDto } from "../../../../models/HistoricoUsuarioRequestDto";
 
 @Component({
-  selector: "app-etiquetas",
+  selector: "app-auditoria-usuarios",
   templateUrl: "./auditoria-usuarios.component.html",
   styleUrls: ["./auditoria-usuarios.component.scss"],
   encapsulation: ViewEncapsulation.None
