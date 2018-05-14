@@ -105,8 +105,6 @@ export class Usuarios extends SigaWrapper implements OnInit {
     this.sigaServices.get("usuarios_perfil").subscribe(
       n => {
         this.usuarios_perfil = n.combooItems;
-        let first = { label: "", value: "" };
-        this.usuarios_perfil.unshift(first);
       },
       err => {
         console.log(err);
@@ -165,7 +163,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
 
@@ -263,6 +261,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
   }
 
   isBuscar() {
+
     if (this.isValidDNI(this.body.nif)) {
       this.dniCorrecto = true;
     } else {
@@ -298,16 +297,16 @@ export class Usuarios extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("usuarios_search", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-          this.searchUser = JSON.parse(data["body"]);
-          this.datos = this.searchUser.usuarioItem;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        }
+      data => {
+        console.log(data);
+        this.progressSpinner = false;
+        this.searchUser = JSON.parse(data["body"]);
+        this.datos = this.searchUser.usuarioItem;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      }
       );
   }
 
@@ -381,7 +380,6 @@ export class Usuarios extends SigaWrapper implements OnInit {
   }
 
   crear() {
-    let a = this.body;
     this.sigaServices.post("usuarios_insert", this.body).subscribe(
       data => {
         this.searchUser = JSON.parse(data["body"]);
@@ -474,9 +472,9 @@ export class Usuarios extends SigaWrapper implements OnInit {
           "general.message.confirmar.rehabilitaciones"
         )),
           +selectedItem.length +
-            this.translateService.instant(
-              "cargaMasivaDatosCurriculares.numRegistros.literal"
-            );
+          this.translateService.instant(
+            "cargaMasivaDatosCurriculares.numRegistros.literal"
+          );
       } else {
         mess = this.translateService.instant(
           "general.message.confirmar.rehabilitacion"

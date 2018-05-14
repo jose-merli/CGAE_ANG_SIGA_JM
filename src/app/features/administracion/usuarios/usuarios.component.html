@@ -45,7 +45,7 @@
           <div class="form-group col-lg-3 col-md-3">
             <label>{{"administracion.usuarios.literal.grupos" | translate}}</label>
             <p-dropdown class="select-form" [(ngModel)]='body.grupo' [options]="usuarios_perfil" (ngModelChange)="onChangeForm()" [filter]="true"
-              filterBy="label" placeholder="{{ 'administracion.usuarios.literal.grupos' | translate}}"></p-dropdown>
+              filterBy="label"></p-dropdown>
           </div>
           <div class="form-group col-lg-1 col-md-1">
             <label>{{"administracion.usuarios.literal.activo" | translate}}</label>
