@@ -1,168 +1,168 @@
 @import "../../../sass/variables.scss";
 
-@keyframes showMenu{
-    from{top: -100%}
-    to{top: 0}
-}
-
-@keyframes hideMenu{
-    from{top: 0}
-    to{top: -100%}
-}
-
-header{
-    width: 100%;       
-    overflow: hidden;
-    position: fixed;
-    z-index: 100;
-    height: 6rem;
-
-    .header-principal{    
-        padding: 1rem 1.5em;
-        background: white;          
-        
-        .logo{            
-            .logo-img {
-                display: inline-block;
-                img{                
-                    width: 2em;         
-                    margin-right: .33em;          
-                    vertical-align: initial;
-                }
-            }
-            h1{
-                display: inline-block;
-                font-family: Arial;
-                font-weight: lighter;
-                color: $primary-color;
-                font-size: 2rem;
-                margin-bottom: 0;
-            }
-                
-        }
-        .logo-central{
-            img{
-                    width: 10.5rem;     
-            }
-        }
-
-        .datos-img{
-            img{                     
-                width: 7rem;     
-            }
-        }
-
-    }
-
-    .header-user{
-        background: $primary-color;
-        width: 100%;
-        padding: 0 1.5rem;
-        color: white;
-        font-size: .8rem;
-        i{
-            cursor: pointer;
-            padding: .33rem ;
-            &:hover{
-                background:white;
-                color: $primary-color;
-            }
-        }
-        .user-active{
-            background: white;
-            color: $primary-color;
-            transition: color .2s;
-        }
-    }      
-
-}
-
-.menu-user{
-    background: white;
-    position: fixed;
-    z-index: 99;
-    right: 0;
-    top:-100%;
-    height: 100%;
-    width: 16rem;
-    padding: 1.5rem;
-    box-shadow: 0 0 2px $grey4;
-    padding-top: 7rem;
-    label{
-        font-weight: bolder;
-        font-size: 1.1rem;
-    }
-    li{
-        font-size: .85rem;
-        font-weight: bold;
-        padding-bottom: .5rem;
-        span{
-            color: $secondary-color;
-            font-weight: normal;
-        }
-    }
-    .cerrar-sesion{
-        font-size: .75rem;
-        border-top: 1px solid $grey5;
-        margin-top: 2rem;
-        padding-top: .33rem;
-        cursor: pointer;
-    }
-}
-
-.menuHide{
+@keyframes showMenu {
+  from {
     top: -100%;
-    animation-name: hideMenu;
-    animation-duration: 0s;
-    animation-iteration-count: 1;
-    animation-fill-mode: forwards;
-
-}
-.menuVisible{
+  }
+  to {
     top: 0;
-    animation-name: showMenu;
-    animation-duration: 1.2s;
-    animation-iteration-count: 1;
-    animation-fill-mode: forwards;
-
+  }
 }
 
-@media screen and (max-width: 768px){
-
-    header{   
-        height: 9rem;
-        .logo{   
-            display: block;
-            width: 100%;
-            .logo-img {
-                img{                   
-                    width: 1.5rem;        
-                }
-            }
-            h1{
-                font-size: 1.8rem;
-            }
-        }
-
-         .logo-central{
-            img{
-                    width: 10.5rem;     
-            }
-        }
-
-        .datos-img{
-            display: table-cell;
-            vertical-align: middle;
-               
-            img{                     
-                width: 6rem;     
-                margin-left: 3em;
-                float: right;
-            }
-        }
-        }
-    
-
+@keyframes hideMenu {
+  from {
+    top: 0;
+  }
+  to {
+    top: -100%;
+  }
 }
 
- 
+header {
+  width: 100%;
+  overflow: hidden;
+  position: fixed;
+  z-index: 100;
+  height: 6rem;
+
+  .header-principal {
+    padding: 1rem 1.5em;
+    background: white;
+
+    .logo {
+      .logo-img {
+        display: inline-block;
+        img {
+          width: 2em;
+          margin-right: 0.33em;
+          vertical-align: initial;
+        }
+      }
+      h1 {
+        display: inline-block;
+        font-family: Arial;
+        font-weight: lighter;
+        color: $primary-color;
+        font-size: 2rem;
+        margin-bottom: 0;
+      }
+    }
+    .logo-central {
+      img {
+        width: 10.5rem;
+        height: 39px;
+        width: 168px;
+      }
+    }
+
+    .datos-img {
+      img {
+        width: 7rem;
+      }
+    }
+  }
+
+  .header-user {
+    background: $primary-color;
+    width: 100%;
+    padding: 0 1.5rem;
+    color: white;
+    font-size: 0.8rem;
+    i {
+      cursor: pointer;
+      padding: 0.33rem;
+      &:hover {
+        background: white;
+        color: $primary-color;
+      }
+    }
+    .user-active {
+      background: white;
+      color: $primary-color;
+      transition: color 0.2s;
+    }
+  }
+}
+
+.menu-user {
+  background: white;
+  position: fixed;
+  z-index: 99;
+  right: 0;
+  top: -100%;
+  height: 100%;
+  width: 16rem;
+  padding: 1.5rem;
+  box-shadow: 0 0 2px $grey4;
+  padding-top: 7rem;
+  label {
+    font-weight: bolder;
+    font-size: 1.1rem;
+  }
+  li {
+    font-size: 0.85rem;
+    font-weight: bold;
+    padding-bottom: 0.5rem;
+    span {
+      color: $secondary-color;
+      font-weight: normal;
+    }
+  }
+  .cerrar-sesion {
+    font-size: 0.75rem;
+    border-top: 1px solid $grey5;
+    margin-top: 2rem;
+    padding-top: 0.33rem;
+    cursor: pointer;
+  }
+}
+
+.menuHide {
+  top: -100%;
+  animation-name: hideMenu;
+  animation-duration: 0s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+.menuVisible {
+  top: 0;
+  animation-name: showMenu;
+  animation-duration: 1.2s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@media screen and (max-width: 768px) {
+  header {
+    height: 9rem;
+    .logo {
+      display: block;
+      width: 100%;
+      .logo-img {
+        img {
+          width: 1.5rem;
+        }
+      }
+      h1 {
+        font-size: 1.8rem;
+      }
+    }
+
+    .logo-central {
+      img {
+        width: 10.5rem;
+      }
+    }
+
+    .datos-img {
+      display: table-cell;
+      vertical-align: middle;
+
+      img {
+        width: 6rem;
+        margin-left: 3em;
+        float: right;
+      }
+    }
+  }
+}
