@@ -282,11 +282,9 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       data => {
         this.showSuccess();
       },
-      error => {
-        this.searchCatalogo = JSON.parse(error["error"]);
-        this.showFail(this.searchCatalogo.error.message.toString());
-        console.log(error);
-        this.reset();
+      err => {
+        this.showFail();
+        console.log(err);
       },
       () => {
         this.reset();
@@ -358,12 +356,14 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     });
   }
 
-  showFail(message: string) {
+  showFail() {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
       summary: "Error",
-      detail: message
+      detail: this.translateService.instant(
+        "general.message.error.realiza.accion"
+      )
     });
   }
 
@@ -475,10 +475,9 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       data => {
         this.showSuccess();
       },
-      error => {
-        this.searchCatalogo = JSON.parse(error["error"]);
-        this.showFail(this.searchCatalogo.error.message.toString());
-        console.log(error);
+      err => {
+        this.showFail();
+        console.log(err);
       },
       () => {
         this.reset();
