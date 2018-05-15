@@ -282,9 +282,10 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       data => {
         this.showSuccess();
       },
-      err => {
-        this.showFail();
-        console.log(err);
+      error => {
+        this.searchCatalogo = JSON.parse(error["error"]);
+        this.showFail(this.searchCatalogo.error.message.toString());
+        console.log(error);
       },
       () => {
         this.reset();
@@ -356,14 +357,12 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     });
   }
 
-  showFail() {
+  showFail(message: string) {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
       summary: "Error",
-      detail: this.translateService.instant(
-        "general.message.error.realiza.accion"
-      )
+      detail: message
     });
   }
 
@@ -442,16 +441,16 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("maestros_search", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          console.log(data);
+      data => {
+        console.log(data);
 
-          this.searchCatalogo = JSON.parse(data["body"]);
-          this.datosEdit = this.searchCatalogo.catalogoMaestroItem;
-          this.datosHist = this.searchCatalogo.catalogoMaestroItem;
-        },
-        err => {
-          console.log(err);
-        }
+        this.searchCatalogo = JSON.parse(data["body"]);
+        this.datosEdit = this.searchCatalogo.catalogoMaestroItem;
+        this.datosHist = this.searchCatalogo.catalogoMaestroItem;
+      },
+      err => {
+        console.log(err);
+      }
       );
   }
 
@@ -475,9 +474,10 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       data => {
         this.showSuccess();
       },
-      err => {
-        this.showFail();
-        console.log(err);
+      error => {
+        this.searchCatalogo = JSON.parse(error["error"]);
+        this.showFail(this.searchCatalogo.error.message.toString());
+        console.log(error);
       },
       () => {
         this.reset();
@@ -577,8 +577,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
             severity: "success",
             summary: "Correcto",
             detail:
-              selectedDatos.length +
-              this.translateService.instant("messages.deleted.selected.success")
+            selectedDatos.length +
+            this.translateService.instant("messages.deleted.selected.success")
           });
         }
       },
