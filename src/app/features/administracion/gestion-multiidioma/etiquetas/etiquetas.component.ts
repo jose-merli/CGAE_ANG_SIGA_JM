@@ -203,8 +203,18 @@ export class Etiquetas extends SigaWrapper implements OnInit {
     }
   }
 
+  showSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant("general.message.accion.realizada")
+    });
+  }
+
   generarRecursos() {
     this.translateService.updateTranslations(this.sigaServices);
+    this.showSuccess();
   }
 
   onChangeRowsPerPages(event) {

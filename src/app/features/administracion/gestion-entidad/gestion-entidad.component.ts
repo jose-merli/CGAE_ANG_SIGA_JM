@@ -12,7 +12,9 @@ import {
   SafeUrl
 } from "@angular/platform-browser";
 
+// prueba
 import { HeaderGestionEntidadService } from "./../../../_services/headerGestionEntidad.service";
+
 import { SigaServices } from "./../../../_services/siga.service";
 import { Router } from "@angular/router";
 import { MessageService } from "primeng/components/common/messageservice";
@@ -34,6 +36,7 @@ import { Message } from "primeng/components/common/api";
 import { TooltipModule } from "primeng/tooltip";
 import { ListboxModule } from "primeng/listbox";
 import { FileUploadModule } from "primeng/fileupload";
+
 
 @Component({
   selector: "app-gestion-entidad",
@@ -188,28 +191,28 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
       this.sigaServices
         .postSendContent("entidad_uploadFile", this.file)
         .subscribe(
-          data => {
-            console.log(data);
-            this.file = undefined;
-            this.archivoDisponible = false;
-            this.nombreImagen = "";
+        data => {
+          console.log(data);
+          this.file = undefined;
+          this.archivoDisponible = false;
+          this.nombreImagen = "";
 
-            this.imagenURL =
-              this.sigaServices.getNewSigaUrl() +
-              this.sigaServices.getServucePath("header_logo") +
-              "?random=" +
-              new Date().getTime();
+          this.imagenURL =
+            this.sigaServices.getNewSigaUrl() +
+            this.sigaServices.getServucePath("header_logo") +
+            "?random=" +
+            new Date().getTime();
 
-            // Aqui se refresca el header.component, gracias al servicio headerGestionEntidadService
-            this.headerGestionEntidadService.changeUrl(this.imagenURL);
+          // Aqui se refresca el header.component, gracias al servicio headerGestionEntidadService
+          this.headerGestionEntidadService.changeUrl(this.imagenURL);
 
-            if (!lenguajeeImagen) {
-              this.showSuccessUploadedImage();
-            }
-          },
-          err => {
-            console.log(err);
+          if (!lenguajeeImagen) {
+            this.showSuccessUploadedImage();
           }
+        },
+        err => {
+          console.log(err);
+        }
         );
     }
 
@@ -220,27 +223,27 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
     ) {
       this.sigaServices
         .post(
-          "entidad_uploadLenguage",
-          JSON.stringify(this.selectedIdiomaBusqueda)
+        "entidad_uploadLenguage",
+        JSON.stringify(this.selectedIdiomaBusqueda)
         )
         .subscribe(
-          data => {
-            console.log(data);
-            this.lenguajeInstitucion = this.selectedIdiomaBusqueda;
-            if (!lenguajeeImagen) {
-              this.showSuccessUploadedLenguage();
-            }
-          },
-          err => {
-            console.log(err);
-          },
-          () => {
-            // mensaje conjunto
-            if (lenguajeeImagen) {
-              this.showSuccessUploadedLenguageImage();
-              lenguajeeImagen = false;
-            }
+        data => {
+          console.log(data);
+          this.lenguajeInstitucion = this.selectedIdiomaBusqueda;
+          if (!lenguajeeImagen) {
+            this.showSuccessUploadedLenguage();
           }
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          // mensaje conjunto
+          if (lenguajeeImagen) {
+            this.showSuccessUploadedLenguageImage();
+            lenguajeeImagen = false;
+          }
+        }
         );
     }
   }
