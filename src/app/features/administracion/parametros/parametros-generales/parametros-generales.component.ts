@@ -43,6 +43,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   selectedModulo: String;
   valorCheckParametros: boolean = false;
   body: ParametroRequestDto = new ParametroRequestDto();
+  bodySave: ParametroRequestDto = new ParametroRequestDto();
   bodyHistorico: ParametroRequestDto = new ParametroRequestDto();
   searchParametros: ParametroDto = new ParametroDto();
   historicoParametros: ParametroDto = new ParametroDto();
@@ -61,6 +62,8 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   bodyUpdate: ParametroUpdateDto = new ParametroUpdateDto();
   historico: boolean = false;
   msgs: Message[] = [];
+
+  elementosAGuardar: ParametroUpdateDto[] = [];
 
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   permisos: any;
@@ -171,6 +174,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
       this.body.parametrosGenerales = "N";
     }
 
+    this.bodySave = this.body;
     this.sigaServices
       .postPaginado("parametros_search", "?numPagina=1", this.body)
       .subscribe(
@@ -206,6 +210,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
         this.showFail();
       },
       () => {
+        this.elementosAGuardar = [];
         this.isBuscar();
         this.table.reset();
         this.eliminar = true;
@@ -214,36 +219,53 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   }
 
   activarPaginacionBuscar() {
-    if (this.datosBuscar.length == 0) return false;
-    else return true;
+    if (this.datosBuscar == undefined) return false;
+    else {
+      if (this.datosBuscar.length == 0) return false;
+      else return true;
+    }
   }
 
   activarPaginacionHistorico() {
-    if (this.datosHistorico.length == 0) return false;
-    else return true;
+    if (this.datosHistorico == undefined) return false;
+    else {
+      if (this.datosHistorico.length == 0) return false;
+      else return true;
+    }
   }
 
-  isGuardar(event, dato) {
+  isGuardar() {
+    for (let i in this.elementosAGuardar) {
+      this.sigaServices
+        .post("parametros_update", this.elementosAGuardar[i])
+        .subscribe(
+          data => {
+            console.log(data);
+          },
+          err => {
+            console.log(err);
+            this.showFail();
+          },
+          () => {
+            this.elementosAGuardar = [];
+            this.isBuscar();
+            this.table.reset();
+            this.eliminar = true;
+          }
+        );
+    }
+
+    this.showSuccessEdit();
+  }
+
+  guardar(event, dato) {
+    this.bodyUpdate = new ParametroUpdateDto();
     this.bodyUpdate.idInstitucion = dato.idInstitucion;
     this.bodyUpdate.modulo = dato.modulo;
     this.bodyUpdate.parametro = dato.parametro;
     this.bodyUpdate.valor = event.target.value;
     this.bodyUpdate.idRecurso = dato.idRecurso;
-    this.sigaServices.post("parametros_update", this.bodyUpdate).subscribe(
-      data => {
-        console.log(data);
-        this.showSuccessEdit();
-      },
-      err => {
-        console.log(err);
-        this.showFail();
-      },
-      () => {
-        this.isBuscar();
-        this.table.reset();
-        this.eliminar = true;
-      }
-    );
+    this.elementosAGuardar.push(this.bodyUpdate);
   }
 
   isHistorico() {
@@ -274,6 +296,8 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
           this.historico = true;
           this.eliminar = true;
           this.filaSelecionadaTabla = null;
+          // se eliminan los objetos que se iban a guardar
+          this.elementosAGuardar = [];
         }
       );
   }
@@ -295,6 +319,14 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
       return this.eliminar;
     } else {
       return true;
+    }
+  }
+
+  isHabilitadoGuardar() {
+    if (this.elementosAGuardar == undefined) return true;
+    else {
+      if (this.elementosAGuardar.length == 0) return true;
+      else return false;
     }
   }
 
@@ -324,7 +356,6 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   confirmarEliminar(selectedDatos) {
     let mess = this.translateService.instant("messages.deleteConfirmation");
     let icon = "fa fa-trash-alt";
-    //this.isEliminar();
 
     this.confirmationService.confirm({
       message: mess,
@@ -360,9 +391,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.msgs.push({
       severity: "success",
       summary: this.translateService.instant("general.message.correct"),
-      detail: this.translateService.instant(
-        "general.message.registro.actualizado"
-      )
+      detail: this.translateService.instant("general.message.accion.realizada")
     });
   }
 
@@ -373,6 +402,12 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
       summary: "Error",
       detail: this.translateService.instant("general.message.accion.cancelada")
     });
+  }
+
+  isRestablecer() {
+    this.elementosAGuardar = [];
+    this.body = this.bodySave;
+    this.isBuscar();
   }
 }
 
