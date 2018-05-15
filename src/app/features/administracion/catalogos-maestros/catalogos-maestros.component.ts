@@ -642,10 +642,9 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
 
   onChangeSelectAll() {
     if (this.selectAll === true) {
-      this.selectMultiple = true;
+      this.selectMultiple = false;
       this.selectedDatos = this.datosHist;
     } else {
-      this.selectMultiple = false;
       this.selectedDatos = [];
     }
   }
