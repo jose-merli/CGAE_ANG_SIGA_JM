@@ -36,7 +36,6 @@ import { Message } from "primeng/components/common/api";
 import { TooltipModule } from "primeng/tooltip";
 import { ListboxModule } from "primeng/listbox";
 import { FileUploadModule } from "primeng/fileupload";
-import * as blobUtil from "blob-util";
 
 @Component({
   selector: "app-gestion-entidad",
