@@ -56,7 +56,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   cre: CatalogoCreateRequestDto = new CatalogoCreateRequestDto();
   del: CatalogoDeleteRequestDto = new CatalogoDeleteRequestDto();
 
-
   pButton;
   buscar: boolean = false;
   tablaHistorico: boolean = false;
@@ -179,32 +178,35 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
 
   isEditar() {
-    this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
-      if (value.editar) {
-        this.upd = new CatalogoUpdateRequestDto();
-        this.upd.tabla = value.catalogo;
-        this.upd.descripcion = value.descripcion;
-        this.upd.codigoExt = value.codigoExt;
-        this.upd.idRegistro = value.idRegistro;
-        this.sigaServices.post("maestros_update", this.upd).subscribe(
-          data => {
-            this.showSuccess();
-            console.log(data);
-            sessionStorage.setItem(
-              "registroAuditoriaUsuariosActualizado",
-              JSON.stringify(true)
-            );
-
-          },
-          error => {
-            this.searchCatalogo = JSON.parse(error["error"]);
-            this.showFail(this.searchCatalogo.error.message.toString());
-            console.log(error);
-          }
-        );
+    this.datosHist.forEach(
+      (value: CatalogoMaestroItem, key: number) => {
+        if (value.editar) {
+          this.upd = new CatalogoUpdateRequestDto();
+          this.upd.tabla = value.catalogo;
+          this.upd.descripcion = value.descripcion;
+          this.upd.codigoExt = value.codigoExt;
+          this.upd.idRegistro = value.idRegistro;
+          this.sigaServices.post("maestros_update", this.upd).subscribe(
+            data => {
+              this.showSuccess();
+              console.log(data);
+              sessionStorage.setItem(
+                "registroAuditoriaUsuariosActualizado",
+                JSON.stringify(true)
+              );
+            },
+            error => {
+              this.searchCatalogo = JSON.parse(error["error"]);
+              this.showFail(this.searchCatalogo.error.message.toString());
+              console.log(error);
+            }
+          );
+        }
+      },
+      () => {
+        this.volver();
       }
-    }, () => { this.volver(); });
-
+    );
   }
   confirmEdit() {
     let mess = this.translateService.instant(
@@ -440,16 +442,16 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("maestros_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.searchCatalogo = JSON.parse(data["body"]);
-        this.datosEdit = this.searchCatalogo.catalogoMaestroItem;
-        this.datosHist = this.searchCatalogo.catalogoMaestroItem;
-      },
-      err => {
-        console.log(err);
-      }
+          this.searchCatalogo = JSON.parse(data["body"]);
+          this.datosEdit = this.searchCatalogo.catalogoMaestroItem;
+          this.datosHist = this.searchCatalogo.catalogoMaestroItem;
+        },
+        err => {
+          console.log(err);
+        }
       );
   }
 
@@ -576,8 +578,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
             severity: "success",
             summary: "Correcto",
             detail:
-            selectedDatos.length +
-            this.translateService.instant("messages.deleted.selected.success")
+              selectedDatos.length +
+              this.translateService.instant("messages.deleted.selected.success")
           });
         }
       },
