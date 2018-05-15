@@ -238,7 +238,6 @@ export class Etiquetas extends SigaWrapper implements OnInit {
         .subscribe(
           data => {
             console.log(data);
-            this.showSuccessEdit();
           },
           err => {
             console.log(err);
@@ -251,6 +250,7 @@ export class Etiquetas extends SigaWrapper implements OnInit {
           }
         );
     }
+    this.showSuccessEdit();
   }
 
   obtenerRecurso(dato) {
@@ -262,9 +262,7 @@ export class Etiquetas extends SigaWrapper implements OnInit {
     this.msgs.push({
       severity: "success",
       summary: "Correcto",
-      detail: this.translateService.instant(
-        "general.message.registro.actualizado"
-      )
+      detail: this.translateService.instant("general.message.accion.realizada")
     });
   }
 
@@ -279,5 +277,13 @@ export class Etiquetas extends SigaWrapper implements OnInit {
 
   activarPaginacion() {
     return this.paginacion;
+  }
+
+  isHabilitadoGuardar() {
+    if (this.elementosAGuardar == undefined) return true;
+    else {
+      if (this.elementosAGuardar.length == 0) return true;
+      else return false;
+    }
   }
 }
