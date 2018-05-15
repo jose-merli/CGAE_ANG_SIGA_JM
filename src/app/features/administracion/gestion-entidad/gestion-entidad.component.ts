@@ -12,9 +12,7 @@ import {
   SafeUrl
 } from "@angular/platform-browser";
 
-// prueba
 import { HeaderGestionEntidadService } from "./../../../_services/headerGestionEntidad.service";
-
 import { SigaServices } from "./../../../_services/siga.service";
 import { Router } from "@angular/router";
 import { MessageService } from "primeng/components/common/messageservice";
