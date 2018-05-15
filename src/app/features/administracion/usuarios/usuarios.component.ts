@@ -421,6 +421,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
       if (number >= 2) {
         msg =
           number +
+          " " +
           this.translateService.instant("messages.deleted.selected.success");
       } else {
         msg = this.translateService.instant("messages.deleted.success");
@@ -432,6 +433,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
             "general.message.registro.restaurados"
           ) +
           number +
+          " " +
           this.translateService.instant(
             "cargaMasivaDatosCurriculares.numRegistros.literal"
           );
