@@ -16,6 +16,7 @@ import {
   Validators,
   FormControl
 } from "@angular/forms";
+import { DataTable } from "primeng/datatable";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { ButtonModule } from "primeng/button";
@@ -36,7 +37,8 @@ import { UsuarioItem } from "./../../../../app/models/UsuarioItem";
 import { ComboItem } from "./../../../../app/models/ComboItem";
 import { MultiSelectModule } from "primeng/multiSelect";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
-
+import { Location } from "@angular/common";
+import { Observable } from "rxjs/Rx";
 @Component({
   selector: "app-usuarios",
   templateUrl: "./usuarios.component.html",
@@ -64,6 +66,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
   selectMultiple: boolean = false;
   blockCrear: boolean = true;
   selectedItem: number = 10;
+  first: number = 0;
   activo: boolean = false;
   dniCorrecto: boolean;
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
@@ -84,11 +87,12 @@ export class Usuarios extends SigaWrapper implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private activatedRoute: ActivatedRoute,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private location: Location
   ) {
     super(USER_VALIDATIONS);
   }
-  @ViewChild("table") table;
+  @ViewChild("table") table: DataTable;
   selectedDatos;
 
   ngOnInit() {
@@ -307,14 +311,24 @@ export class Usuarios extends SigaWrapper implements OnInit {
           this.progressSpinner = false;
           this.searchUser = JSON.parse(data["body"]);
           this.datos = this.searchUser.usuarioItem;
+          this.table.paginator = true;
         },
         err => {
           console.log(err);
           this.progressSpinner = false;
+        },
+        () => {
+          if (sessionStorage.getItem("first") != null) {
+            let first = JSON.parse(sessionStorage.getItem("first")) as number;
+            this.table.first = first;
+            sessionStorage.removeItem("first");
+          }
         }
       );
   }
-
+  paginate(event) {
+    console.log(event);
+  }
   editarUsuario(selectedItem) {
     // if (!this.selectMultiple) {
     if (selectedItem.length == 1) {
@@ -515,6 +529,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
       }
       sessionStorage.removeItem("usuarioBody");
       sessionStorage.removeItem("privilegios");
+      sessionStorage.removeItem("first");
       sessionStorage.setItem("usuarioBody", JSON.stringify(id));
       sessionStorage.setItem(
         "privilegios",
@@ -522,7 +537,8 @@ export class Usuarios extends SigaWrapper implements OnInit {
       );
       sessionStorage.setItem("searchUser", JSON.stringify(this.body));
       sessionStorage.setItem("editedUser", JSON.stringify(this.selectedDatos));
-      this.router.navigate(["/editarUsuario", ir]);
+      sessionStorage.setItem("first", JSON.stringify(this.table.first));
+      this.router.navigate(["/editarUsuario"]);
     } else {
       this.editar = false;
       this.dniCorrecto = null;
