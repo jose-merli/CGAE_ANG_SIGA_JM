@@ -35,6 +35,10 @@ import { PerfilesResponseDto } from "./../../../../app/models/PerfilesResponseDt
 import { PerfilesRequestDto } from "./../../../../app/models/PerfilesRequestDto";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { ComboItem } from "./../../../../app/models/ComboItem";
+import { DataTable } from "primeng/datatable";
+import { Location } from "@angular/common";
+import { Observable } from "rxjs/Rx";
+
 @Component({
   selector: "app-perfiles",
   templateUrl: "./perfiles.component.html",
@@ -74,11 +78,12 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private activatedRoute: ActivatedRoute,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private location: Location
   ) {
     super(USER_VALIDATIONS);
   }
-  @ViewChild("table") table;
+  @ViewChild("table") table: DataTable;
   selectedDatos;
 
   ngOnInit() {
@@ -130,6 +135,10 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     var registroActualizado = JSON.parse(
       sessionStorage.getItem("registroActualizado")
     );
+    if (sessionStorage.getItem("editedUser") != null) {
+      this.selectedDatos = JSON.parse(sessionStorage.getItem("editedUser"));
+    }
+    sessionStorage.removeItem("editedUser");
     if (registroActualizado) {
       this.showSuccess();
       sessionStorage.setItem("registroActualizado", JSON.stringify(false));
@@ -147,6 +156,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
           this.searchPerfiles = JSON.parse(data["body"]);
           this.datos = this.searchPerfiles.usuarioGrupoItems;
           this.buscar = true;
+          this.table.paginator = true;
           this.sigaServices.get("usuarios_rol").subscribe(
             n => {
               this.dummy = n.combooItems;
@@ -161,9 +171,17 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
           console.log(err);
         },
         () => {
-          this.table.reset();
+          if (sessionStorage.getItem("first") != null) {
+            let first = JSON.parse(sessionStorage.getItem("first")) as number;
+            this.table.first = first;
+            sessionStorage.removeItem("first");
+          }
         }
       );
+  }
+
+  paginate(event) {
+    console.log(event);
   }
 
   checkAcceso() {
@@ -305,7 +323,10 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       sessionStorage.setItem("crear", JSON.stringify(false));
       sessionStorage.removeItem("perfil");
       sessionStorage.removeItem("privilegios");
+      sessionStorage.removeItem("first");
       sessionStorage.setItem("perfil", JSON.stringify(id));
+      sessionStorage.setItem("editedUser", JSON.stringify(this.selectedDatos));
+      sessionStorage.setItem("first", JSON.stringify(this.table.first));
       if (id[0].fechaBaja != null) {
         sessionStorage.setItem("privilegios", JSON.stringify(false));
       } else {
