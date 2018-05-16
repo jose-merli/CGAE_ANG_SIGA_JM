@@ -94,6 +94,8 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.sigaServices.get("usuarios_perfil").subscribe(
       n => {
         this.grupos = n.combooItems;
+        let first = { label: "", value: "" };
+        this.grupos.unshift(first);
       },
       err => {
         console.log(err);
@@ -139,25 +141,25 @@ export class PermisosComponent implements OnInit, DoCheck {
         idGrupo: this.idGrupo
       })
       .subscribe(
-        data => {
-          let permisosTree = JSON.parse(data.body);
-          this.permisosTree = permisosTree.permisoItems;
-          this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
-          this.permisosTree.forEach(node => {
-            this.totalRecursive(node);
-          });
-          this.accesoTotal = 0;
-          this.accesoLectura = 0;
-          this.accesoDenegado = 0;
-          this.sinAsignar = 0;
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        this.permisosTree = permisosTree.permisoItems;
+        this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
+        this.permisosTree.forEach(node => {
+          this.totalRecursive(node);
+        });
+        this.accesoTotal = 0;
+        this.accesoLectura = 0;
+        this.accesoDenegado = 0;
+        this.sinAsignar = 0;
 
-          this.permisosTree.forEach(node => {
-            this.totalAccesosRecursive(node);
-          });
-        },
-        err => {
-          console.log(err);
-        }
+        this.permisosTree.forEach(node => {
+          this.totalAccesosRecursive(node);
+        });
+      },
+      err => {
+        console.log(err);
+      }
       );
 
     // this.permisosTree =

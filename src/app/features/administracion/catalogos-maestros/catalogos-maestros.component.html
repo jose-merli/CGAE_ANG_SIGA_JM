@@ -43,8 +43,8 @@
       <div>
 
         <div class="text-right main-button ">
-          <button (click)="isBuscar(); selectedDatos=[]" pButton type="button " icon="fa fa-search " iconPos="left" label="{{ 'general.boton.search' | translate}}"
-            [disabled]="blockBuscar"></button>
+          <button (click)="isBuscar(); selectedDatos=[]; pressNew = false" pButton type="button " icon="fa fa-search " iconPos="left"
+            label="{{ 'general.boton.search' | translate}}" [disabled]="blockBuscar"></button>
         </div>
       </div>
       <!--botones que se activan al editar-->

@@ -22,15 +22,15 @@
                         <p-dropdown class="select-form" [(ngModel)]='selectedModulo' [options]="modulos" (ngModelChange)="onChangeForm()" [filter]="true"
                             filterBy="label"></p-dropdown>
                     </div>
-                    <div class="form-group col-lg-4 col-md-4">
-                        <br/>
-                        <label class="form-group-label">{{'administracion.parametrosGenerales.literal.checkParametrosGenerales' | translate}}</label>
+
+                    <div class="form-group col-lg-4 col-md-6">
+                        <label id="formu" class="form-group-label">{{'administracion.parametrosGenerales.literal.checkParametros' | translate}} <p-checkbox [(ngModel)]='valorCheckParametros' binary="true" id="check"></p-checkbox></label>
+
                     </div>
                     <div class="form-group col-lg-1 col-md-1">
                         <br/>
-                        <p-checkbox [(ngModel)]='valorCheckParametros' binary="true"></p-checkbox>
                     </div>
-                    <div class="form-group col-lg-4 col-md-4">
+                    <div class="form-group col-lg-3 col-md-2">
                         <br/>
                     </div>
 
