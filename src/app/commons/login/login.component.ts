@@ -6,6 +6,7 @@ import { Router } from "@angular/router";
 import { LoginCombo } from "./login.combo";
 import { ListboxModule } from "primeng/listbox";
 import { ButtonModule } from "primeng/button";
+import { ComboItem } from "../../../app/models/ComboItem";
 
 @Component({
   selector: "app-login",
@@ -34,9 +35,9 @@ export class LoginComponent implements OnInit {
     private service: AuthenticationService,
     private sigaServices: SigaServices,
     private router: Router
-  ) { }
+  ) {}
 
-  onSubmit() { }
+  onSubmit() {}
 
   ngOnInit() {
     this.sigaServices.getBackend("entorno").subscribe(n => {
@@ -60,12 +61,14 @@ export class LoginComponent implements OnInit {
           posMenu: new FormControl(0)
         });
         //this.onChange(this.form.controls['tmpLoginInstitucion'].value);
-        this.form.controls['tmpLoginInstitucion'].valueChanges.subscribe(newValue => {
-          this.form.controls['location'].setValue(newValue);
+        this.form.controls[
+          "tmpLoginInstitucion"
+        ].valueChanges.subscribe(newValue => {
+          this.form.controls["location"].setValue(newValue);
         });
 
-        this.form.controls['tmpLoginPerfil'].valueChanges.subscribe(n => {
-          this.form.controls['profile'].setValue(n);
+        this.form.controls["tmpLoginPerfil"].valueChanges.subscribe(n => {
+          this.form.controls["profile"].setValue(n);
         });
         this.form.controls["sLetrado"].valueChanges.subscribe(n => {
           this.form.controls["letrado"].setValue(n);
@@ -91,17 +94,13 @@ export class LoginComponent implements OnInit {
             this.router.navigate(["/landpage"]);
           }
         });
-
       }
     });
-
-
 
     // this.form.setValue({'location': this.form.value.tmpLoginInstitucion});
   }
 
   submit() {
-
     var ir = null;
     this.service.autenticate(this.form.value).subscribe(response => {
       if (response) {
@@ -114,25 +113,27 @@ export class LoginComponent implements OnInit {
 
   onChange(newValue) {
     var ir = null;
-    this.form.controls['location'].setValue(newValue.value);
-    this.form.controls['tmpLoginInstitucion'].setValue(newValue.value);
+    this.form.controls["location"].setValue(newValue.value);
+    this.form.controls["tmpLoginInstitucion"].setValue(newValue.value);
     this.sigaServices.getPerfil("perfiles", newValue.value).subscribe(n => {
       this.perfiles = n.combooItems;
+      this.perfiles.forEach((value: ComboItem, key: number) => {
+        if (value.label == "Administrador General") {
+          this.form.value.tmpLoginPerfil = [];
+          this.form.controls["tmpLoginPerfil"].setValue(value.value);
+          this.form.value.tmpLoginPerfil.push(value.value);
+        }
+      });
     });
-    // this.tmpLoginPerfil = "Administrador General";
-    //console.log(newValue);
-    //let combo = new LoginCombo();
-    //combo.setValue(newValue.id);
-    //this.sigaServices.post("perfilespost", combo).subscribe(n => {
-    //if (n) {
-    //this.perfiles = JSON.parse(n['body']);;
-    //}
-    //});
   }
 
   isHabilitadoEntrar() {
-    if ((this.form.controls['tmpLoginPerfil'].value == "" || this.form.controls['tmpLoginPerfil'].value == undefined) ||
-      (this.form.controls['tmpLoginInstitucion'].value == "" || this.form.controls['tmpLoginInstitucion'].value == undefined)) {
+    if (
+      this.form.controls["tmpLoginPerfil"].value == "" ||
+      this.form.controls["tmpLoginPerfil"].value == undefined ||
+      (this.form.controls["tmpLoginInstitucion"].value == "" ||
+        this.form.controls["tmpLoginInstitucion"].value == undefined)
+    ) {
       this.isEntrar = true;
       return this.isEntrar;
     } else {
