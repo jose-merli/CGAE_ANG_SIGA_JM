@@ -27,6 +27,9 @@ import { esCalendar } from "./../../../../utils/calendar";
 
 import { HistoricoUsuarioDto } from "../../../../models/HistoricoUsuarioDto";
 import { HistoricoUsuarioRequestDto } from "../../../../models/HistoricoUsuarioRequestDto";
+import { Location } from "@angular/common";
+import { Observable } from "rxjs/Rx";
+import { DataTable } from "primeng/datatable";
 
 @Component({
   selector: "app-auditoria-usuarios",
@@ -52,7 +55,6 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   bodySearch: HistoricoUsuarioRequestDto = new HistoricoUsuarioRequestDto();
   searchParametros: HistoricoUsuarioDto = new HistoricoUsuarioDto();
   jsonDate: string;
-  selectedDatos: any;
   msgs: Message[] = [];
   habilitarInputUsuario: boolean = false;
   returnDesde: string;
@@ -68,12 +70,14 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private location: Location
   ) {
     super(USER_VALIDATIONS);
   }
 
-  @ViewChild("table") table;
+  @ViewChild("table") table: DataTable;
+  selectedDatos;
   ngOnInit() {
     this.sigaServices.get("auditoriaUsuarios_tipoAccion").subscribe(
       n => {
@@ -156,6 +160,10 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
         value: 40
       }
     ];
+    if (sessionStorage.getItem("editedUser") != null) {
+      this.selectedDatos = JSON.parse(sessionStorage.getItem("editedUser"));
+    }
+    sessionStorage.removeItem("editedUser");
   }
 
   isBuscar() {
@@ -182,13 +190,25 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
           this.datosUsuarios = this.searchParametros.historicoUsuarioItem;
           this.buscarSeleccionado = true;
           this.progressSpinner = false;
+          this.table.paginator = true;
         },
         err => {
           console.log(err);
           this.progressSpinner = false;
+        },
+        () => {
+          if (sessionStorage.getItem("first") != null) {
+            let first = JSON.parse(sessionStorage.getItem("first")) as number;
+            this.table.first = first;
+            sessionStorage.removeItem("first");
+          }
         }
       );
   }
+  paginate(event) {
+    console.log(event);
+  }
+
   arreglarFechas() {
     this.returnDesde = JSON.stringify(this.bodySearch.fechaDesde);
     this.returnHasta = JSON.stringify(this.bodySearch.fechaHasta);
@@ -249,6 +269,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   }
 
   irEditarUsuario(id) {
+    sessionStorage.removeItem("first");
     var url = "/auditoriaUsuarios/";
     sessionStorage.setItem("auditoriaUsuarioBody", JSON.stringify(id));
     sessionStorage.setItem("urlAuditoriaUsuarios", JSON.stringify(url));
@@ -256,7 +277,8 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
       "searchBodyAuditoriaUsuarios",
       JSON.stringify(this.bodySearch)
     );
-
+    sessionStorage.setItem("first", JSON.stringify(this.table.first));
+    sessionStorage.setItem("editedUser", JSON.stringify(this.selectedDatos));
     this.router.navigate(["/gestionAuditoria"]);
   }
 

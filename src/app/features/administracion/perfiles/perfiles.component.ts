@@ -50,7 +50,6 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   cols: any = [];
   datos: any[];
   msgs: Message[] = [];
-  dummy = [];
   searchPerfiles: PerfilesResponseDto = new PerfilesResponseDto();
   requestPerfiles: PerfilesRequestDto = new PerfilesRequestDto();
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
@@ -158,10 +157,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
           this.buscar = true;
           this.table.paginator = true;
           this.sigaServices.get("usuarios_rol").subscribe(
-            n => {
-              this.dummy = n.combooItems;
-              this.table.reset();
-            },
+            n => {},
             err => {
               console.log(err);
             }
