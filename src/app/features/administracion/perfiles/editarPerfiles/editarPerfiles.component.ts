@@ -36,6 +36,9 @@ import { ComboItem } from "../../../../../app/models/ComboItem";
 import { ActivatedRoute } from "@angular/router";
 import { PickListModule } from "primeng/picklist";
 import { PerfilesResponseDto } from "./../../../../../app/models/PerfilesResponseDto";
+import { Location } from "@angular/common";
+import { Observable } from "rxjs/Rx";
+
 @Component({
   selector: "app-editarPerfiles",
   templateUrl: "./editarPerfiles.component.html",
@@ -72,7 +75,8 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private activatedRoute: ActivatedRoute,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private location: Location
   ) {
     super(USER_VALIDATIONS);
   }
@@ -264,6 +268,6 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
 
   volver() {
     sessionStorage.removeItem("perfil");
-    this.router.navigate(["/perfiles"]);
+    this.location.back();
   }
 }
