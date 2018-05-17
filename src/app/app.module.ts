@@ -26,6 +26,7 @@ import { MyIframeComponent } from "./commons/my-iframe/my-iframe.component";
 import { MenuComponent } from "./commons/menu/menu.component";
 import { HomeComponent } from "./features/home/home.component";
 import { LoginComponent } from "./commons/login/login.component";
+import { LoginDevelopComponent } from "./commons/login-develop/login-develop.component";
 import { TranslatePipe, TranslateService } from "./commons/translate";
 import { ImagePipe } from "./commons/image-pipe/image.pipe";
 import { ConfirmDialogComponent } from "./commons/dialog/dialog.component";
@@ -121,6 +122,7 @@ import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-co
     MyIframeComponent,
     MenuComponent,
     LoginComponent,
+    LoginDevelopComponent,
     HeaderComponent,
     HomeComponent,
     ConfirmDialogComponent,
@@ -236,4 +238,4 @@ import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-co
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

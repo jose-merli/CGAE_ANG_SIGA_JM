@@ -39,7 +39,10 @@ export class AuthenticationService {
         return sessionStorage.getItem('osAutenticated') === 'true';
     }
 
-    newSigaLogin(formValues): Observable<any> {
+    newSigaLogin(): Observable<any> {
+        return this.http.get(this.sigaServices.getNewSigaUrl() + this.sigaServices.endpoints["login"], { observe: 'response' });
+    }
+    newSigaDevelopLogin(formValues): Observable<any> {
         let params = '?';
         for (let key in formValues) {
             params = params + key + '=' + formValues[key] + '&';
@@ -48,7 +51,7 @@ export class AuthenticationService {
         return this.http.get(this.sigaServices.getNewSigaUrl() + this.sigaServices.endpoints["login"] + params, { observe: 'response' });
     }
 
-    oldSigaLogin(formValues): Observable<any> {
+    oldSigaDevelopLogin(formValues): Observable<any> {
         var formData: FormData = new FormData();
         for (let key in formValues) {
             formData.append(key, formValues[key]);
@@ -63,14 +66,26 @@ export class AuthenticationService {
             'Content-Type': 'application/x-www-form-urlencoded',
         })
         let options = { headers: headers, observe: 'response', responseType: 'text' }
-        return this.http.post(this.oldSigaServices.getOldSigaUrl("login"), params.toString(), { headers: headers, observe: 'response', responseType: 'text' })
-        // .map((response) => response.status)
+        return this.http.post(this.oldSigaServices.getOldSigaUrl("loginDevelop"), params.toString(), { headers: headers, observe: 'response', responseType: 'text' })
+
 
     }
 
-    autenticate(formValues): Observable<any> {
-        let newSigaRquest = this.newSigaLogin(formValues);
-        let oldSigaRquest = this.oldSigaLogin(formValues);
+    oldSigaLogin(): Observable<any> {
+
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/x-www-form-urlencoded',
+        })
+        let options = { headers: headers, observe: 'response', responseType: 'text' }
+        return this.http.get(this.oldSigaServices.getOldSigaUrl("login"), { headers: headers, observe: 'response', responseType: 'text' })
+
+
+    }
+
+
+    autenticate(): Observable<any> {
+        let newSigaRquest = this.newSigaLogin();
+        let oldSigaRquest = this.oldSigaLogin();
 
 
         return forkJoin([oldSigaRquest, newSigaRquest]).map(
@@ -85,11 +100,29 @@ export class AuthenticationService {
 
                     return true;
                 }
-                // if (newSigaResponse) {
-                //     sessionStorage.setItem('authenticated', 'true');
-                //     sessionStorage.setItem('Authorization', newSigaResponse);
-                //     return true;
-                // }
+
+            }
+        )
+    }
+
+    autenticateDevelop(formValues): Observable<any> {
+        let newSigaRquest = this.newSigaDevelopLogin(formValues);
+        let oldSigaRquest = this.oldSigaDevelopLogin(formValues);
+
+
+        return forkJoin([oldSigaRquest, newSigaRquest]).map(
+            (response) => {
+                let newSigaResponse = response[1].headers.get("Authorization");
+                let oldSigaResponse = response[0].status;
+                if (oldSigaResponse == 200) {
+                    sessionStorage.setItem('osAutenticated', 'true');
+
+                    sessionStorage.setItem('authenticated', 'true');
+                    sessionStorage.setItem('Authorization', newSigaResponse);
+
+                    return true;
+                }
+
             }
         )
 
