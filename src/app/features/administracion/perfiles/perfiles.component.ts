@@ -249,6 +249,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
             )
           }
         ];
+        this.isBuscar();
       }
     });
   }
