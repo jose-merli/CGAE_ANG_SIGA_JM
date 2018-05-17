@@ -83,6 +83,17 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
         console.log(err);
       }
     );
+    if (sessionStorage.getItem("AuditoriaSearch") != null) {
+      this.bodySearch = new HistoricoUsuarioRequestDto();
+      this.bodySearch = JSON.parse(sessionStorage.getItem("AuditoriaSearch"));
+      this.usuario = this.bodySearch.usuario;
+      this.persona = this.bodySearch.idPersona;
+      if ((this.bodySearch.usuarioAutomatico = "N"))
+        this.valorCheckUsuarioAutomatico = false;
+      else this.valorCheckUsuarioAutomatico = true;
+      this.selectedTipoAccion = this.bodySearch.idTipoAccion;
+      sessionStorage.removeItem("AuditoriaSearch");
+    }
 
     var registroActualizado = JSON.parse(
       sessionStorage.getItem("registroAuditoriaUsuariosActualizado")
@@ -165,17 +176,17 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("auditoriaUsuarios_search", "?numPagina=1", this.bodySearch)
       .subscribe(
-      data => {
-        console.log(data);
-        this.searchParametros = JSON.parse(data["body"]);
-        this.datosUsuarios = this.searchParametros.historicoUsuarioItem;
-        this.buscarSeleccionado = true;
-        this.progressSpinner = false;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      }
+        data => {
+          console.log(data);
+          this.searchParametros = JSON.parse(data["body"]);
+          this.datosUsuarios = this.searchParametros.historicoUsuarioItem;
+          this.buscarSeleccionado = true;
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        }
       );
   }
   arreglarFechas() {
@@ -216,6 +227,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     if (this.fechaHastaCalendar != undefined) {
       this.bodySearch.fechaHasta = this.fechaHastaCalendar;
     } else this.bodySearch.fechaHasta = undefined;
+    sessionStorage.setItem("AuditoriaSearch", JSON.stringify(this.bodySearch));
   }
 
   isHabilitadoBuscar() {
