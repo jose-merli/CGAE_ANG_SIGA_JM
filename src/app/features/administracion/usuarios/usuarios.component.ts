@@ -153,6 +153,11 @@ export class Usuarios extends SigaWrapper implements OnInit {
         value: 40
       }
     ];
+    if ((this.body.activo == "S")) {
+      this.activo = true;
+    } else {
+      this.activo = false;
+    }
     if (sessionStorage.getItem("editedUser") != null) {
       this.selectedDatos = JSON.parse(sessionStorage.getItem("editedUser"));
     }
@@ -431,7 +436,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
 
   showSuccessDelete(number) {
     let msg = "";
-    if (this.activo) {
+    if (!this.activo) {
       if (number >= 2) {
         msg =
           number +
