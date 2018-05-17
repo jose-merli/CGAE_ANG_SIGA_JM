@@ -8,6 +8,7 @@ import 'rxjs/add/operator/map'
 import { SigaServices } from './siga.service';
 import { OldSigaServices } from './oldSiga.service';
 import { environment } from '../../environments/environment'
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 
 
 @Injectable()
@@ -48,7 +49,7 @@ export class AuthenticationService {
             params = params + key + '=' + formValues[key] + '&';
         }
 
-        return this.http.get(this.sigaServices.getNewSigaUrl() + this.sigaServices.endpoints["login"] + params, { observe: 'response' });
+        return this.http.get(this.sigaServices.getNewSigaUrl() + this.sigaServices.endpoints["loginDevelop"] + params, { observe: 'response' });
     }
 
     oldSigaDevelopLogin(formValues): Observable<any> {
@@ -84,8 +85,22 @@ export class AuthenticationService {
 
 
     autenticate(): Observable<any> {
+        // TODO: Descomentar estas lineas cuando funcione el login bueno /sigainit.do
+        let form: FormGroup;
+        form = new FormBuilder().group({
+            tmpLoginInstitucion: new FormControl(""),
+            tmpLoginPerfil: new FormControl("ADG"),
+            sLetrado: new FormControl("N"),
+            user: new FormControl(),
+            letrado: new FormControl("N"),
+            location: new FormControl("2000"),
+            profile: new FormControl("ADG"),
+            posMenu: new FormControl(0)
+        });
+
         let newSigaRquest = this.newSigaLogin();
-        let oldSigaRquest = this.oldSigaLogin();
+        let oldSigaRquest = this.oldSigaDevelopLogin(form.value);
+        //let oldSigaRquest = this.oldSigaLogin();
 
 
         return forkJoin([oldSigaRquest, newSigaRquest]).map(
