@@ -48,7 +48,6 @@
                   <div class="text-right main-button">
                     <button *ngIf="selectedDatos && selectedDatos != ''" (click)="selectedDatos=false" pButton type="button" icon="fa fa-check"
                       iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
-                      <button (click)="crear()" pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
                       <button (click)="historico(); selectedDatos=false" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.historico' | translate}}"></button>
                       <button (click)="crear()" pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
                       <button *ngIf="selectedDatos && selectedDatos != ''" [disabled]="!activacionEditar" (click)="confirmarBorrar(selectedDatos); selectedDatos=false"
