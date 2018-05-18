@@ -1,6 +1,6 @@
 {
-  "name": "angular-test",
-  "version": "0.0.0",
+  "name": "cgae-siga",
+  "version": "1.0.1",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
