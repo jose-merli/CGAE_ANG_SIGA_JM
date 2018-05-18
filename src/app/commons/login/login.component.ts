@@ -35,9 +35,9 @@ export class LoginComponent implements OnInit {
     private service: AuthenticationService,
     private sigaServices: SigaServices,
     private router: Router
-  ) {}
+  ) { }
 
-  onSubmit() {}
+  onSubmit() { }
 
   ngOnInit() {
     this.sigaServices.getBackend("entorno").subscribe(n => {
@@ -121,7 +121,7 @@ export class LoginComponent implements OnInit {
         if (value.label == "Administrador General") {
           this.form.value.tmpLoginPerfil = [];
           this.form.controls["tmpLoginPerfil"].setValue(value.value);
-          this.form.value.tmpLoginPerfil.push(value.value);
+          // this.form.value.tmpLoginPerfil.push(value.value);
         }
       });
     });
