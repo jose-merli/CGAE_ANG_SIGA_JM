@@ -169,7 +169,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
 
@@ -302,16 +302,16 @@ export class Usuarios extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("usuarios_search", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-          this.searchUser = JSON.parse(data["body"]);
-          this.datos = this.searchUser.usuarioItem;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        }
+      data => {
+        console.log(data);
+        this.progressSpinner = false;
+        this.searchUser = JSON.parse(data["body"]);
+        this.datos = this.searchUser.usuarioItem;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      }
       );
   }
 
@@ -334,9 +334,9 @@ export class Usuarios extends SigaWrapper implements OnInit {
       this.body.activo = selectedItem[0].activo;
     }
     if (this.body.activo == "N") {
-      this.activo = true;
-    } else {
       this.activo = false;
+    } else {
+      this.activo = true;
     }
   }
 
@@ -396,7 +396,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
         this.searchUser = JSON.parse(error["error"]);
         this.showduplicateFail(this.searchUser.error.message.toString());
         console.log(error);
-        this.showFail();
+
       },
       () => {
         this.cancelar();
@@ -474,17 +474,17 @@ export class Usuarios extends SigaWrapper implements OnInit {
         this.translateService.instant("messages.deleteConfirmation.register") +
         "?";
     }
-    if (this.activo == true) {
+    if (this.activo == false) {
       icon = "fa fa-check";
       if (selectedItem.length > 1) {
         (mess = this.translateService.instant(
           "general.message.confirmar.rehabilitaciones"
         )),
           +selectedItem.length +
-            " " +
-            this.translateService.instant(
-              "cargaMasivaDatosCurriculares.numRegistros.literal"
-            );
+          " " +
+          this.translateService.instant(
+            "cargaMasivaDatosCurriculares.numRegistros.literal"
+          );
       } else {
         mess = this.translateService.instant(
           "general.message.confirmar.rehabilitacion"
@@ -534,9 +534,9 @@ export class Usuarios extends SigaWrapper implements OnInit {
       this.body.activo = id[0].activo;
     }
     if (this.body.activo == "N") {
-      this.activo = true;
-    } else {
       this.activo = false;
+    } else {
+      this.activo = true;
     }
   }
 

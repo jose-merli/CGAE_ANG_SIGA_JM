@@ -103,12 +103,12 @@
 
 
           <p-footer *ngIf="selectedDatos && selectedDatos != ''">
-            <div *ngIf="activo==true" class="text-right main-button">
+            <div *ngIf="activo==false" class="text-right main-button">
               <button (click)="isSelectMultiple(); selectedDatos=false" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
               <button (click)="confirmarBorrar(selectedDatos); selectedDatos=false" pButton type="button" icon="fa fa-check" iconPos="left"
                 label="{{'general.message.rehabilitar' | translate}}"></button>
             </div>
-            <div *ngIf="activo==false" class="text-right main-button"> <button (click)="selectedDatos=false" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
+            <div *ngIf="activo==true" class="text-right main-button"> <button (click)="selectedDatos=false" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
               <button [disabled]="!activacionEditar" (click)="confirmarBorrar(selectedDatos); selectedDatos=false" pButton type="button"
                 icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
             </div>
