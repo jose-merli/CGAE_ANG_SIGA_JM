@@ -7,7 +7,7 @@ import {
 } from "@angular/core";
 
 import { SigaServices } from "./../../../../_services/siga.service";
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/components/common/messageservice";
 import { ConfirmationService } from "primeng/api";
 import { TranslateService } from "../../../../commons/translate/translation.service";
@@ -41,7 +41,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   usuario: any;
   persona: any;
   showDatosGenerales: boolean = true;
-  buscarSeleccionado: boolean = false;
+  buscar: boolean = false;
   valorCheckUsuarioAutomatico: boolean = false;
   selectedTipoAccion: any;
   tipoAcciones: any[];
@@ -70,6 +70,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
+    private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
     private location: Location
   ) {
@@ -87,38 +88,6 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
         console.log(err);
       }
     );
-    if (sessionStorage.getItem("AuditoriaSearch") != null) {
-      this.bodySearch = new HistoricoUsuarioRequestDto();
-      this.bodySearch = JSON.parse(sessionStorage.getItem("AuditoriaSearch"));
-      this.usuario = this.bodySearch.usuario;
-      this.persona = this.bodySearch.idPersona;
-      if ((this.bodySearch.usuarioAutomatico = "N"))
-        this.valorCheckUsuarioAutomatico = false;
-      else this.valorCheckUsuarioAutomatico = true;
-      this.selectedTipoAccion = this.bodySearch.idTipoAccion;
-      sessionStorage.removeItem("AuditoriaSearch");
-    }
-
-    var registroActualizado = JSON.parse(
-      sessionStorage.getItem("registroAuditoriaUsuariosActualizado")
-    );
-    if (registroActualizado) {
-      this.showSuccess();
-      sessionStorage.setItem(
-        "registroAuditoriaUsuariosActualizado",
-        JSON.stringify(false)
-      );
-    }
-
-    sessionStorage.removeItem("urlAuditoriaUsuarios");
-
-    if (sessionStorage.getItem("searchBodyAuditoriaUsuarios") != null) {
-      this.bodySearch = JSON.parse(
-        sessionStorage.getItem("searchBodyAuditoriaUsuarios")
-      );
-      this.isBuscar();
-    }
-
     this.columnasTabla = [
       {
         field: "persona",
@@ -160,6 +129,40 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
         value: 40
       }
     ];
+    this.buscar = true;
+    if (sessionStorage.getItem("AuditoriaSearch") != null) {
+      this.bodySearch = new HistoricoUsuarioRequestDto();
+      this.bodySearch = JSON.parse(sessionStorage.getItem("AuditoriaSearch"));
+      this.usuario = this.bodySearch.usuario;
+      this.persona = this.bodySearch.idPersona;
+      if ((this.bodySearch.usuarioAutomatico = "N"))
+        this.valorCheckUsuarioAutomatico = false;
+      else this.valorCheckUsuarioAutomatico = true;
+      this.selectedTipoAccion = this.bodySearch.idTipoAccion;
+      sessionStorage.removeItem("AuditoriaSearch");
+    }
+
+    var registroActualizado = JSON.parse(
+      sessionStorage.getItem("registroAuditoriaUsuariosActualizado")
+    );
+    if (registroActualizado) {
+      this.showSuccess();
+      sessionStorage.setItem(
+        "registroAuditoriaUsuariosActualizado",
+        JSON.stringify(false)
+      );
+    }
+
+    sessionStorage.removeItem("urlAuditoriaUsuarios");
+
+    if (sessionStorage.getItem("searchBodyAuditoriaUsuarios") != null) {
+      this.bodySearch = JSON.parse(
+        sessionStorage.getItem("searchBodyAuditoriaUsuarios")
+      );
+
+      this.isBuscar();
+    }
+
     if (sessionStorage.getItem("editedUser") != null) {
       this.selectedDatos = JSON.parse(sessionStorage.getItem("editedUser"));
     }
@@ -180,7 +183,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
 
       sessionStorage.removeItem("searchBodyAuditoriaUsuarios");
     }
-
+    this.buscar = true;
     this.sigaServices
       .postPaginado("auditoriaUsuarios_search", "?numPagina=1", this.bodySearch)
       .subscribe(
@@ -188,9 +191,8 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
           console.log(data);
           this.searchParametros = JSON.parse(data["body"]);
           this.datosUsuarios = this.searchParametros.historicoUsuarioItem;
-          this.buscarSeleccionado = true;
+          this.buscar = true;
           this.progressSpinner = false;
-          this.table.paginator = true;
         },
         err => {
           console.log(err);
@@ -204,9 +206,6 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
           }
         }
       );
-  }
-  paginate(event) {
-    console.log(event);
   }
 
   arreglarFechas() {
