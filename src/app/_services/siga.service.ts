@@ -25,6 +25,7 @@ export class SigaServices {
   endpoints = {
     testDb: "db",
     login: "login",
+    loginDevelop: "loginDevelop",
     menu: "menu",
     entorno: "getEntorno",
     usuario: "usuario",
@@ -115,9 +116,9 @@ export class SigaServices {
     return this.httpbackend
       .get(
         environment.newSigaUrl +
-          this.endpoints[service] +
-          "?institucion=" +
-          institucion
+        this.endpoints[service] +
+        "?institucion=" +
+        institucion
       )
       .map(response => {
         return response;

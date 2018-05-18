@@ -3,6 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { AppComponent } from "./app.component";
 import { AuthGuard } from "./_guards/auth.guards";
 import { LoginComponent } from "./commons/login/login.component";
+import { LoginDevelopComponent } from "./commons/login-develop/login-develop.component";
 import { HomeComponent } from "./features/home/home.component";
 
 // Censo
@@ -62,6 +63,8 @@ import { GestionEntidad } from "./features/administracion/gestion-entidad/gestio
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
   { path: "login", component: LoginComponent },
+
+  { path: "loginDevelop", component: LoginDevelopComponent },
 
   // Censo
   {
