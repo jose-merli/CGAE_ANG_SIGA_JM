@@ -91,7 +91,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   blockBuscar: boolean = true;
   blockCrear: boolean = true;
   pressNew: boolean = false;
-
   //validacion permisos
   permisosTree: any;
   permisosArray: any[];
@@ -202,6 +201,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
             }
           );
         }
+        value.editar = false;
       },
       () => {
         this.volver();
@@ -209,17 +209,37 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     );
   }
   confirmEdit() {
-    let mess = this.translateService.instant(
-      "general.message.aceptar.y.volver"
-    );
+    let editados = 0;
+    var mess = "";
+    for (let i in this.datosHist) {
+      if (this.datosHist[i].editar) {
+        editados++;
+      }
+    }
+    if (editados <= 1) {
+      mess = this.translateService.instant("general.message.aceptar") + "?";
+    } else {
+      mess =
+        this.translateService.instant("general.message.aceptar") +
+        " " +
+        editados +
+        " " +
+        this.translateService.instant(
+          "consultas.consultaslistas.literal.registros"
+        ) +
+        "?";
+    }
+
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
       message: mess,
       icon: icon,
       accept: () => {
+        editados = 0;
         this.isEditar();
       },
       reject: () => {
+        editados = 0;
         this.msgs = [
           {
             severity: "info",

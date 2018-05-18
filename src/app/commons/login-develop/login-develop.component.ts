@@ -3,16 +3,16 @@ import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { SigaServices } from "../../_services/siga.service";
 import { Router } from "@angular/router";
-import { LoginCombo } from "./login.combo";
+import { LoginCombo } from "./login-develop.combo";
 import { ListboxModule } from "primeng/listbox";
 import { ButtonModule } from "primeng/button";
 
 @Component({
-  selector: "app-login",
-  templateUrl: "./login.component.html",
-  styleUrls: ["./login.component.scss"]
+  selector: "app-login-develop",
+  templateUrl: "./login-develop.component.html",
+  styleUrls: ["./login-develop.component.scss"]
 })
-export class LoginComponent implements OnInit {
+export class LoginDevelopComponent implements OnInit {
   form: FormGroup;
 
   instituciones: any[];
@@ -39,22 +39,42 @@ export class LoginComponent implements OnInit {
   onSubmit() { }
 
   ngOnInit() {
+    this.sigaServices.getBackend("instituciones").subscribe(n => {
+      this.instituciones = n.combooItems;
+      this.isLetrado = "N";
+    });
+    this.ocultar = true;
+    this.form = this.fb.group({
+      tmpLoginInstitucion: new FormControl(""),
+      tmpLoginPerfil: new FormControl("ADG"),
+      sLetrado: new FormControl("N"),
+      user: new FormControl(),
+      letrado: new FormControl("N"),
+      location: new FormControl("2000"),
+      profile: new FormControl("ADG"),
 
-
-    this.service.autenticate().subscribe(response => {
-      if (response) {
-        this.router.navigate(["/home"]);
-      } else {
-        this.router.navigate(["/landpage"]);
-      }
+      posMenu: new FormControl(0)
+    });
+    //this.onChange(this.form.controls['tmpLoginInstitucion'].value);
+    this.form.controls['tmpLoginInstitucion'].valueChanges.subscribe(newValue => {
+      this.form.controls['location'].setValue(newValue);
     });
 
+    this.form.controls['tmpLoginPerfil'].valueChanges.subscribe(n => {
+      this.form.controls['profile'].setValue(n);
+    });
+    this.form.controls["sLetrado"].valueChanges.subscribe(n => {
+      this.form.controls["letrado"].setValue(n);
+    });
+
+
+    // this.form.setValue({'location': this.form.value.tmpLoginInstitucion});
   }
 
   submit() {
 
     var ir = null;
-    this.service.autenticate().subscribe(response => {
+    this.service.autenticateDevelop(this.form.value).subscribe(response => {
       if (response) {
         this.router.navigate(["/home"]);
       } else {

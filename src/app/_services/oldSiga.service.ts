@@ -8,6 +8,7 @@ export class OldSigaServices {
 
     oldServices = {
         //Censo
+
         busquedaSanciones: "Dispatcher.do?proceso=566",
         certificadosAca: "Dispatcher.do?proceso=130",
         comisionesCargos: "Dispatcher.do?proceso=48",
@@ -39,7 +40,8 @@ export class OldSigaServices {
         //Facturacion
         mantenimientoSufijos: "Dispatcher.do?proceso=214",
 
-        login: "developmentLogin.do"
+        loginDevelop: "developmentLogin.do",
+        login: "sigainit.do"
 
     }
 
