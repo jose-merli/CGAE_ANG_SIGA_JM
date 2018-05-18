@@ -337,6 +337,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
             summary: "Correcto",
             detail:
               selectedDatos.length +
+              " " +
               this.translateService.instant("messages.deleted.selected.success")
           });
         }
@@ -379,6 +380,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       mess =
         this.translateService.instant("messages.deleteConfirmation.much") +
         selectedDatos.length +
+        " " +
         this.translateService.instant("messages.deleteConfirmation.register") +
         "?";
     }

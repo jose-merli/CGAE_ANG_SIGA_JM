@@ -178,34 +178,35 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
 
   isEditar() {
-    this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
-      if (value.editar) {
-        this.upd = new CatalogoUpdateRequestDto();
-        this.upd.tabla = value.catalogo;
-        this.upd.descripcion = value.descripcion;
-        this.upd.codigoExt = value.codigoExt;
-        this.upd.idRegistro = value.idRegistro;
-        this.sigaServices.post("maestros_update", this.upd).subscribe(
-          data => {
-            this.showSuccess();
-            console.log(data);
-            sessionStorage.setItem(
-              "registroAuditoriaUsuariosActualizado",
-              JSON.stringify(true)
-            );
-          },
-          err => {
-            this.showFail();
-            console.log(err);
-            sessionStorage.setItem(
-              "registroAuditoriaUsuariosActualizado",
-              JSON.stringify(false)
-            );
-          }
-        );
+    this.datosHist.forEach(
+      (value: CatalogoMaestroItem, key: number) => {
+        if (value.editar) {
+          this.upd = new CatalogoUpdateRequestDto();
+          this.upd.tabla = value.catalogo;
+          this.upd.descripcion = value.descripcion;
+          this.upd.codigoExt = value.codigoExt;
+          this.upd.idRegistro = value.idRegistro;
+          this.sigaServices.post("maestros_update", this.upd).subscribe(
+            data => {
+              this.showSuccess();
+              console.log(data);
+              sessionStorage.setItem(
+                "registroAuditoriaUsuariosActualizado",
+                JSON.stringify(true)
+              );
+            },
+            error => {
+              this.searchCatalogo = JSON.parse(error["error"]);
+              this.showFail(this.searchCatalogo.error.message.toString());
+              console.log(error);
+            }
+          );
+        }
+      },
+      () => {
+        this.volver();
       }
-    });
-    this.volver();
+    );
   }
   confirmEdit() {
     let mess = this.translateService.instant(
@@ -281,9 +282,10 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       data => {
         this.showSuccess();
       },
-      err => {
-        this.showFail();
-        console.log(err);
+      error => {
+        this.searchCatalogo = JSON.parse(error["error"]);
+        this.showFail(this.searchCatalogo.error.message.toString());
+        console.log(error);
       },
       () => {
         this.reset();
@@ -330,6 +332,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     } else {
       this.blockBuscar = false;
     }
+    this.isBuscar();
   }
   //cada vez que cambia el formulario comprueba esto
   onChangeForm() {
@@ -355,14 +358,12 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     });
   }
 
-  showFail() {
+  showFail(message: string) {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
       summary: "Error",
-      detail: this.translateService.instant(
-        "general.message.error.realiza.accion"
-      )
+      detail: message
     });
   }
 
@@ -474,9 +475,10 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       data => {
         this.showSuccess();
       },
-      err => {
-        this.showFail();
-        console.log(err);
+      error => {
+        this.searchCatalogo = JSON.parse(error["error"]);
+        this.showFail(this.searchCatalogo.error.message.toString());
+        console.log(error);
       },
       () => {
         this.reset();
@@ -577,6 +579,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
             summary: "Correcto",
             detail:
               selectedDatos.length +
+              " " +
               this.translateService.instant("messages.deleted.selected.success")
           });
         }
@@ -601,6 +604,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       mess =
         this.translateService.instant("messages.deleteConfirmation.much") +
         selectedDatos.length +
+        " " +
         this.translateService.instant("messages.deleteConfirmation.register") +
         "?";
     }
@@ -642,9 +646,10 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
 
   onChangeSelectAll() {
     if (this.selectAll === true) {
-      this.selectMultiple = false;
+      this.selectMultiple = true;
       this.selectedDatos = this.datosHist;
     } else {
+      this.selectMultiple = false;
       this.selectedDatos = [];
     }
   }
