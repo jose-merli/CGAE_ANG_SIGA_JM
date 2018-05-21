@@ -68,8 +68,8 @@
     <div *ngIf="buscar == true" class="card mt-3">
         <div class="card-body p-0">
             <p-dataTable #table emptyMessage="{{ 'general.message.no.registros' | translate}}" [value]="datosUsuarios" [responsive]="true"
-                class="tabla-listado" [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="irEditarUsuario(selectedDatos)"
-                selectionMode="single">
+                class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]="true" paginatorPosition="both"
+                [rows]="selectedItem" (onRowSelect)="irEditarUsuario(selectedDatos)" selectionMode="single">
                 <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true"
                     filterPlaceholder="{{'general.boton.search' | translate}}">
                     </p-column>
