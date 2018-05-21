@@ -305,11 +305,11 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
           this.progressSpinner = false;
         },
         () => {
-          if (sessionStorage.getItem("first") != null) {
-            let first = JSON.parse(sessionStorage.getItem("first")) as number;
-            this.table.first = first;
-            sessionStorage.removeItem("first");
-          }
+          // if (sessionStorage.getItem("first") != null) {
+          //   let first = JSON.parse(sessionStorage.getItem("first")) as number;
+          //   this.table.first = first;
+          //   sessionStorage.removeItem("first");
+          // }
         }
       );
   }
