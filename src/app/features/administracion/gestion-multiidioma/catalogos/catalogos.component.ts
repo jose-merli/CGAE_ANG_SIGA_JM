@@ -56,6 +56,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
   searchParametros: MultiidiomaCatalogoDto = new MultiidiomaCatalogoDto();
   bodyUpdate: MultiidiomaCatalogoUpdateDto = new MultiidiomaCatalogoUpdateDto();
   msgs: Message[] = [];
+  progressSpinner: boolean = false;
 
   bodySave: MultiidiomaCatalogoSearchDto = new MultiidiomaCatalogoSearchDto();
   elementosAGuardar: MultiidiomaCatalogoUpdateDto[] = [];
@@ -146,6 +147,8 @@ export class Catalogos extends SigaWrapper implements OnInit {
   }
 
   isBuscar() {
+    this.progressSpinner = true;
+
     this.bodySearch.nombreTabla = this.selectedEntidad;
     this.bodySearch.idiomaBusqueda = this.selectedIdiomaBusqueda;
     this.bodySearch.idiomaTraduccion = this.selectedIdiomaTraduccion;
@@ -157,10 +160,12 @@ export class Catalogos extends SigaWrapper implements OnInit {
           console.log(data);
           this.searchParametros = JSON.parse(data["body"]);
           this.datosTraduccion = this.searchParametros.multiidiomaCatalogoItem;
+          this.progressSpinner = false;
           this.buscarSeleccionado = true;
         },
         err => {
           console.log(err);
+          this.progressSpinner = false;
         }
       );
   }
