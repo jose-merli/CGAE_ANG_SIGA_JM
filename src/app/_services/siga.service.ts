@@ -77,7 +77,12 @@ export class SigaServices {
     entidad_lenguaje: "entidad/lenguaje",
     entidad_uploadFile: "entidad/uploadFile",
     entidad_uploadLenguage: "entidad/uploadLenguage",
-    header_logo: "/header/logo"
+    header_logo: "/header/logo",
+    busquedaPerJuridica_tipo: "busquedaPerJuridica/tipoSociedad",
+    busquedaPerJuridica_etiquetas: "busquedaPerJuridica/etiquetas",
+    busquedaPerJuridica_search: "busquedaPerJuridica/search",
+    busquedaPerJuridica_create: "busquedaPerJuridica/create",
+    busquedaPerJuridica_delete: "busquedaPerJuridica/delete"
   };
 
   constructor(
@@ -116,9 +121,9 @@ export class SigaServices {
     return this.httpbackend
       .get(
         environment.newSigaUrl +
-        this.endpoints[service] +
-        "?institucion=" +
-        institucion
+          this.endpoints[service] +
+          "?institucion=" +
+          institucion
       )
       .map(response => {
         return response;

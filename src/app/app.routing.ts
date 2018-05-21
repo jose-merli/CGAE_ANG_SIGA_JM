@@ -59,6 +59,7 @@ import { Catalogos } from "./features/administracion/gestion-multiidioma/catalog
 import { AuditoriaUsuarios } from "./features/administracion/auditoria/usuarios/auditoria-usuarios.component";
 import { GestionAuditoriaComponent } from "./features/administracion/auditoria/usuarios/editarAuditoriaUsuarios/gestion-auditoria.component";
 import { GestionEntidad } from "./features/administracion/gestion-entidad/gestion-entidad.component";
+import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -85,7 +86,7 @@ const appRoutes: Routes = [
 
   {
     path: "searchNoColegiados",
-    component: SearchNoColegiadosComponent,
+    component: BusquedaPersonasJuridicas,
     canActivate: [AuthGuard]
   },
   {

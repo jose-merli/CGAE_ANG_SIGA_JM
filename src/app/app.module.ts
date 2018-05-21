@@ -113,6 +113,7 @@ import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimie
 
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
+import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component";
 
 @NgModule({
   declarations: [
@@ -150,6 +151,7 @@ import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-co
     CensoDocumentacionComponent,
     GestionSubtiposCVComponent,
     BusquedaColegiadosComponentNew,
+    BusquedaPersonasJuridicas,
 
     //Certificados
     ComunicacionInterprofesionalComponent,
@@ -238,4 +240,4 @@ import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-co
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
