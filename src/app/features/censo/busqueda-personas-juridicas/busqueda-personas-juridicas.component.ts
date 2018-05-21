@@ -10,6 +10,7 @@ import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
 import { SelectItem } from "primeng/api";
 import { DropdownModule } from "primeng/dropdown";
+import { esCalendar } from "./../../../utils/calendar";
 import {
   FormBuilder,
   FormGroup,
@@ -63,6 +64,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   first: number = 0;
   activo: boolean = false;
   dniCorrecto: boolean;
+  es: any = esCalendar;
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   personaDelete: PersonaJuridicaObject = new PersonaJuridicaObject();
   personaSearch: PersonaJuridicaObject = new PersonaJuridicaObject();
@@ -73,8 +75,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   selectAll: boolean = false;
   progressSpinner: boolean = false;
   tipos: any[];
-
-  private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
+  fechaConstitucion: Date;
 
   constructor(
     private sigaServices: SigaServices,
@@ -98,6 +99,8 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.sigaServices.get("busquedaPerJuridica_tipo").subscribe(
       n => {
         this.tipos = n.combooItems;
+        let first = { label: "", value: "" };
+        this.tipos.unshift(first);
       },
       err => {
         console.log(err);
@@ -107,7 +110,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       n => {
         this.etiquetas = n.combooItems;
         // let first = { label: "", value: "" };
-        // this.usuarios_perfil.unshift(first);
+        // this.etiquetas.unshift(first);
       },
       err => {
         console.log(err);
@@ -168,15 +171,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     //   this.body = new PersonaJuridicaRequestDto();
     // }
   }
-  isValidDNI(dni: String): boolean {
-    return (
-      dni &&
-      typeof dni === "string" &&
-      /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
-      dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
-    );
-  }
 
   checkAcceso() {
     this.controlAcceso = new ControlAccesoDto();
@@ -206,11 +200,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   onChangeForm() {
-    if (this.body.nif == "") {
-      this.dniCorrecto = null;
-    } else {
-      this.dniCorrecto = this.isValidDNI(this.body.nif);
-    }
     if (
       this.body.tipo != "" &&
       this.body.tipo != undefined &&
@@ -273,12 +262,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   // }
 
   isBuscar() {
-    if (this.isValidDNI(this.body.nif)) {
-      this.dniCorrecto = true;
-    } else {
-      this.dniCorrecto = false;
-    }
-
     this.Search();
   }
 

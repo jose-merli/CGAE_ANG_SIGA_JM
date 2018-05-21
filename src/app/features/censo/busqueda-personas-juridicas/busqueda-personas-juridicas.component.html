@@ -32,8 +32,6 @@
             <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
             <input type="text" name="NIF" class="form-control" [(disabled)]="!editar" [(ngModel)]='body.nif' (ngModelChange)="onChangeForm()"
               pInputText>
-              <div *ngIf="dniCorrecto == false"><label class="labelError">{{"messages.nifcif.comprobacion.incorrecto" | translate}}</label></div>
-              <div *ngIf="dniCorrecto == true"><label class="labelOK">{{"messages.nifcif.comprobacion.correcto" | translate}}</label></div>
 
           </div>
           <div class="form-group col-lg-3 col-md-3">
@@ -59,8 +57,8 @@
 
           <div class="form-group col-lg-3 col-md-3">
             <label>{{"menu.administracion.gestionMultiidioma.etiquetas" | translate}}</label>
-            <p-multiSelect [disabled]="!editar" [defaultLabel]="textFilter" styleClass="widthAll" (onChange)="onChangeForm()" [(ngModel)]='body.perfiles'
-              [options]="etiquetas" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" [panelStyle]="{width:'100%'}"></p-multiSelect>
+            <p-multiSelect [disabled]="!editar" [defaultLabel]="textFilter" autoWidth="false" (onChange)="onChangeForm()" [(ngModel)]='body.perfiles'
+              [options]="etiquetas" [selectedItemsLabel]="textSelected" maxSelectedLabels="3" [style]="{'width':'100%'}"></p-multiSelect>
           </div>
 
         </div>
