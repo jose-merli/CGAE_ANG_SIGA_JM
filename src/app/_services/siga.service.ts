@@ -82,7 +82,12 @@ export class SigaServices {
     busquedaPerJuridica_etiquetas: "busquedaPerJuridica/etiquetas",
     busquedaPerJuridica_search: "busquedaPerJuridica/search",
     busquedaPerJuridica_create: "busquedaPerJuridica/create",
-    busquedaPerJuridica_delete: "busquedaPerJuridica/delete"
+    busquedaPerJuridica_delete: "busquedaPerJuridica/delete",
+    datosGenerales_update: "DatosGenerales/update",
+    datosGenerales_insert: "DatosGenerales/insert",
+    datosGenerales_tipo: "DatosGenerales/tipo",
+    datosGenerales_etiquetas: "DatosGenerales/etiquetas",
+    datosGenerales_identificacion: "DatosGenerales/identificacion"
   };
 
   constructor(

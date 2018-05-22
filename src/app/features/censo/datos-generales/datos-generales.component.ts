@@ -31,27 +31,27 @@ import { GrowlModule } from "primeng/growl";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
-import { PersonaJuridicaObject } from "./../../../../app/models/PersonaJuridicaObject";
-import { PersonaJuridicaItem } from "./../../../../app/models/PersonaJuridicaItem";
+import { DatosGeneralesObject } from "./../../../../app/models/DatosGeneralesObject";
+import { DatosGeneralesItem } from "./../../../../app/models/DatosGeneralesItem";
 import { ComboItem } from "./../../../../app/models/ComboItem";
 import { MultiSelectModule } from "primeng/multiSelect";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { Location } from "@angular/common";
 import { Observable } from "rxjs/Rx";
 @Component({
-  selector: "app-busqueda-personas-juridicas",
-  templateUrl: "./busqueda-personas-juridicas.component.html",
-  styleUrls: ["./busqueda-personas-juridicas.component.scss"],
+  selector: "app-datos-generales",
+  templateUrl: "./datos-generales.component.html",
+  styleUrls: ["./datos-generales.component.scss"],
   encapsulation: ViewEncapsulation.None
 })
-export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
+export class DatosGenerales extends SigaWrapper implements OnInit {
   etiquetas: any[];
   cols: any = [];
   datos: any[];
   select: any[];
   msgs: Message[] = [];
   rowsPerPage: any = [];
-  body: PersonaJuridicaItem = new PersonaJuridicaItem();
+  body: DatosGeneralesItem = new DatosGeneralesItem();
   showDatosGenerales: boolean = true;
   pButton;
   editar: boolean = true;
@@ -66,8 +66,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   dniCorrecto: boolean;
   es: any = esCalendar;
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
-  personaDelete: PersonaJuridicaObject = new PersonaJuridicaObject();
-  personaSearch: PersonaJuridicaObject = new PersonaJuridicaObject();
+  datosSearch: DatosGeneralesObject = new DatosGeneralesObject();
   permisosTree: any;
   permisosArray: any[];
   derechoAcceso: any;
@@ -78,7 +77,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   fechaConstitucion: Date;
   textSelected: String = "{0} grupos seleccionados";
   textFilter = "Elegir";
-  fechaConstitucionArreglada: Date;
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -196,15 +194,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     );
   }
 
-  arreglarFecha() {
-    let fechaString = JSON.stringify(this.fechaConstitucion);
-    fechaString = fechaString.substring(1, 11);
-    let arrayDesde: any[] = fechaString.split("-");
-    arrayDesde[2] = parseInt(arrayDesde[2]) + 1;
-    let returnDesde = arrayDesde[1] + "/" + arrayDesde[2] + "/" + arrayDesde[0];
-    this.fechaConstitucionArreglada = new Date(returnDesde);
-  }
-
   activarPaginacion() {
     if (!this.datos || this.datos.length == 0) return false;
     else return true;
@@ -214,11 +203,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     if (
       this.body.tipo != "" &&
       this.body.tipo != undefined &&
-      (this.body.nif != "" && this.body.nif != undefined) &&
+      (this.body.identificacion != "" &&
+        this.body.identificacion != undefined) &&
       (this.body.denominacion != "" && this.body.denominacion != undefined) &&
-      (this.body.abreviatura != "" && this.body.abreviatura != undefined) &&
-      this.body.fechaConstitucion != undefined &&
-      this.dniCorrecto
+      (this.body.abreviatura != "" && this.body.abreviatura != undefined)
     ) {
       this.blockCrear = false;
     } else {
@@ -273,36 +261,25 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   // }
 
   isBuscar() {
-    this.arreglarFecha();
     this.Search();
   }
 
   Search() {
-    this.arreglarFecha();
-    this.body.fechaConstitucion = this.fechaConstitucionArreglada;
     this.progressSpinner = true;
     this.buscar = true;
-    if (this.body.tipo == undefined) {
-      this.body.tipo = "";
+    if (this.body.cuentaContable == undefined) {
+      this.body.cuentaContable = "";
     }
-    if (this.body.sociedadesProfesionales == undefined) {
-      this.body.sociedadesProfesionales = false;
+    if (this.body.idioma == undefined) {
+      this.body.idioma = "";
     }
-    if (this.body.nif == undefined) {
-      this.body.nif = "";
-    }
-    if (this.body.denominacion == undefined) {
-      this.body.denominacion = "";
-    }
-    if (this.body.abreviatura == undefined) {
-      this.body.abreviatura = "";
+    if (this.body.anotaciones == undefined) {
+      this.body.anotaciones = "";
     }
     if (this.body.etiquetas == undefined) {
       this.body.denominacion = "";
     }
-    if (this.body.socioIntegrante == undefined) {
-      this.body.socioIntegrante = "";
-    }
+
     // this.body.idInstitucion = "2000";
     this.sigaServices
       .postPaginado("busquedaPerJuridica_search", "?numPagina=1", this.body)
@@ -310,72 +287,27 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         data => {
           console.log(data);
           this.progressSpinner = false;
-          this.personaSearch = JSON.parse(data["body"]);
-          this.datos = this.personaSearch.PersonaJuridicaItem;
+          this.datosSearch = JSON.parse(data["body"]);
+          this.datos = this.datosSearch.DatosGeneralesItem;
           this.table.paginator = true;
         },
         err => {
           console.log(err);
           this.progressSpinner = false;
-        },
-        () => {
-          // if (sessionStorage.getItem("first") != null) {
-          //   let first = JSON.parse(sessionStorage.getItem("first")) as number;
-          //   this.table.first = first;
-          //   sessionStorage.removeItem("first");
-          // }
         }
       );
   }
   paginate(event) {
     console.log(event);
   }
-  // editarUsuario(selectedItem) {
-  //   // if (!this.selectMultiple) {
-  //   if (selectedItem.length == 1) {
-  //     this.body = new UsuarioRequestDto();
-  //     this.body = selectedItem[0];
-  //     this.editar = false;
-  //     this.disabledRadio = false;
-  //   } else {
-  //     this.editar = false;
-  //     this.dniCorrecto = null;
-  //     this.body = new UsuarioRequestDto();
-  //     this.body.activo = selectedItem[0].activo;
-  //   }
-  //   if (this.body.activo == "N") {
-  //     this.activo = true;
-  //   } else {
-  //     this.activo = false;
-  //   }
-  // }
 
   cancelar() {
     this.editar = true;
     this.dniCorrecto = null;
-    this.body = new PersonaJuridicaItem();
+    this.body = new DatosGeneralesItem();
     this.disabledRadio = false;
   }
 
-  borrar(selectedDatos) {
-    this.sigaServices.post("usuarios_delete", selectedDatos).subscribe(
-      data => {
-        this.showSuccessDelete(selectedDatos.length);
-      },
-      err => {
-        this.showFail();
-        console.log(err);
-      },
-      () => {
-        this.editar = true;
-        this.dniCorrecto = null;
-        this.body = new PersonaJuridicaItem();
-        this.disabledRadio = false;
-        this.isBuscar();
-        this.table.reset();
-      }
-    );
-  }
   showduplicateFail(message: string) {
     this.msgs = [];
     this.msgs.push({
@@ -389,12 +321,12 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     let a = this.body;
     this.sigaServices.post("busquedaPerJuridica_create", this.body).subscribe(
       data => {
-        this.personaSearch = JSON.parse(data["body"]);
+        this.datosSearch = JSON.parse(data["body"]);
         this.showSuccess();
       },
       error => {
-        this.personaSearch = JSON.parse(error["error"]);
-        this.showduplicateFail(this.personaSearch.error.message.toString());
+        this.datosSearch = JSON.parse(error["error"]);
+        this.showduplicateFail(this.datosSearch.error.message.toString());
         console.log(error);
         this.showFail();
       },
@@ -442,79 +374,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         "general.message.error.realiza.accion"
       )
     });
-  }
-  confirmarBorrar(selectedItem) {
-    let mess = this.translateService.instant("messages.deleteConfirmation");
-    let icon = "fa fa-trash-alt";
-
-    if (selectedItem.length > 1) {
-      mess =
-        this.translateService.instant("messages.deleteConfirmation.much") +
-        selectedItem.length +
-        " " +
-        this.translateService.instant("messages.deleteConfirmation.register") +
-        "?";
-    }
-    if (this.activo == true) {
-      icon = "fa fa-check";
-      if (selectedItem.length > 1) {
-        (mess = this.translateService.instant(
-          "general.message.confirmar.rehabilitaciones"
-        )),
-          +selectedItem.length +
-            " " +
-            this.translateService.instant(
-              "cargaMasivaDatosCurriculares.numRegistros.literal"
-            );
-      } else {
-        mess = this.translateService.instant(
-          "general.message.confirmar.rehabilitacion"
-        );
-      }
-    }
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.borrar(selectedItem);
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Cancel",
-            detail: this.translateService.instant(
-              "general.message.error.realiza.accion"
-            )
-          }
-        ];
-      }
-    });
-  }
-
-  irEditarUsuario(id) {
-    if (!this.selectMultiple) {
-      var ir = null;
-      if (id && id.length > 0) {
-        ir = id[0];
-      }
-      sessionStorage.removeItem("usuarioBody");
-      sessionStorage.removeItem("privilegios");
-      sessionStorage.removeItem("first");
-      sessionStorage.setItem("usuarioBody", JSON.stringify(id));
-      sessionStorage.setItem(
-        "privilegios",
-        JSON.stringify(this.activacionEditar)
-      );
-      sessionStorage.setItem("searchUser", JSON.stringify(this.body));
-      sessionStorage.setItem("editedUser", JSON.stringify(this.selectedDatos));
-      sessionStorage.setItem("first", JSON.stringify(this.table.first));
-      this.router.navigate(["/editarUsuario"]);
-    } else {
-      this.editar = true;
-      this.dniCorrecto = null;
-      this.body = new PersonaJuridicaItem();
-    }
   }
 
   onChangeSelectAll() {

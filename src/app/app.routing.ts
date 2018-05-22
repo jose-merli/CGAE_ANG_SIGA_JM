@@ -60,6 +60,7 @@ import { AuditoriaUsuarios } from "./features/administracion/auditoria/usuarios/
 import { GestionAuditoriaComponent } from "./features/administracion/auditoria/usuarios/editarAuditoriaUsuarios/gestion-auditoria.component";
 import { GestionEntidad } from "./features/administracion/gestion-entidad/gestion-entidad.component";
 import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component";
+import { DatosGenerales } from "./features/censo/datos-generales/datos-generales.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
