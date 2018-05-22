@@ -197,12 +197,15 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   arreglarFecha() {
-    let fechaString = JSON.stringify(this.fechaConstitucion);
-    fechaString = fechaString.substring(1, 11);
-    let arrayDesde: any[] = fechaString.split("-");
-    arrayDesde[2] = parseInt(arrayDesde[2]) + 1;
-    let returnDesde = arrayDesde[1] + "/" + arrayDesde[2] + "/" + arrayDesde[0];
-    this.fechaConstitucionArreglada = new Date(returnDesde);
+    if (this.fechaConstitucion != undefined) {
+      let fechaString = JSON.stringify(this.fechaConstitucion);
+      fechaString = fechaString.substring(1, 11);
+      let arrayDesde: any[] = fechaString.split("-");
+      arrayDesde[2] = parseInt(arrayDesde[2]) + 1;
+      let returnDesde =
+        arrayDesde[1] + "/" + arrayDesde[2] + "/" + arrayDesde[0];
+      this.fechaConstitucionArreglada = new Date(returnDesde);
+    }
   }
 
   activarPaginacion() {
