@@ -10,5 +10,8 @@ export class PersonaJuridicaItem {
   numeroIntegrantes: number;
   nombresIntegrantes: String;
   sociedadProfesional: String;
+  idPersona: String;
+  idPersonaDelete: String[] = [];
+  fechaBaja: Date;
   constructor() {}
 }

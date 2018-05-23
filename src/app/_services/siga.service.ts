@@ -83,6 +83,7 @@ export class SigaServices {
     busquedaPerJuridica_search: "busquedaPerJuridica/search",
     busquedaPerJuridica_create: "busquedaPerJuridica/create",
     busquedaPerJuridica_delete: "busquedaPerJuridica/delete",
+    busquedaPerJuridica_history: "busquedaPerJuridica/searchHistoric",
     datosGenerales_update: "DatosGenerales/update",
     datosGenerales_insert: "DatosGenerales/insert",
     datosGenerales_tipo: "DatosGenerales/tipo",

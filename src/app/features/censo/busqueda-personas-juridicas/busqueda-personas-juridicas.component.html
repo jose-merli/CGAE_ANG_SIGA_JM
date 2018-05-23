@@ -131,12 +131,22 @@
         paginatorPosition="both" [rows]="selectedItem">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true">
-          <ng-template *ngIf="col.field == 'numeroIntegrantes'" let-dato="rowData" pTemplate="body">
-            <div class="input-group">
-              <span class="input-group">
-                <button pButton type="button" [pTooltip]="obtenerNombreIntegrantes(dato)" [label]="obtenerIntegrantes(dato)" tooltipPosition="top"></button> &nbsp;&nbsp;
-              </span>
+          <ng-template let-datoH="rowData" pTemplate="body">
+            <div *ngIf="setItalic(datoH)">
+              <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold'}">{{datoH[col.field]}}</span>
             </div>
+            <div *ngIf="!setItalic(datoH)">
+              <span>{{datoH[col.field]}}</span>
+            </div>
+
+            <ng-template *ngIf="col.field == 'numeroIntegrantes'" let-dato="rowData" pTemplate="body">
+              <div class="input-group">
+                <span class="input-group">
+                  <button pButton type="button" [pTooltip]="obtenerNombreIntegrantes(dato)" [label]="obtenerIntegrantes(dato)" tooltipPosition="top"></button> &nbsp;&nbsp;
+                </span>
+              </div>
+            </ng-template>
+
           </ng-template>
           </p-column>
 
@@ -151,7 +161,7 @@
 
           <p-footer>
             <div class="text-right main-button">
-              <button (click)="toHistorico()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
+              <button (click)="isBuscar()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
               <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash" iconPos="left" label="{{'general.boton.eliminar' | translate}}"
                 disabled></button>
             </div>

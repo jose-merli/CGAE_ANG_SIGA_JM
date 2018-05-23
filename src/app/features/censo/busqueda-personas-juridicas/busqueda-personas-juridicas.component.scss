@@ -17,3 +17,11 @@
   vertical-align: middle !important;
   padding-left: 0.8em;
 }
+
+.ui-tooltip {
+  .ui-tooltip-text {
+    background: gray;
+    color: black;
+    font-size: 0.8rem;
+  }
+}
