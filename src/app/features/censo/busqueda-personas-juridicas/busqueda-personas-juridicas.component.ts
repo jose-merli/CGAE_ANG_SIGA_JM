@@ -79,6 +79,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   textSelected: String = "{0} grupos seleccionados";
   textFilter = "Elegir";
   fechaConstitucionArreglada: Date;
+  historico: boolean = false;
 
   constructor(
     private sigaServices: SigaServices,
@@ -175,6 +176,15 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     // }
   }
 
+  toHistorico() {
+    if (this.historico == false) {
+      this.historico = true;
+      this.buscar = false;
+    } else {
+      this.historico = false;
+      this.buscar = true;
+    }
+  }
   checkAcceso() {
     this.controlAcceso = new ControlAccesoDto();
     this.controlAcceso.idProceso = "2";
@@ -522,9 +532,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       if (id && id.length > 0) {
         ir = id[0];
       }
-      sessionStorage.removeItem("usuarioBody");
-      sessionStorage.removeItem("privilegios");
-      sessionStorage.removeItem("first");
       sessionStorage.setItem("usuarioBody", JSON.stringify(id));
       sessionStorage.setItem(
         "privilegios",
@@ -533,7 +540,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       sessionStorage.setItem("searchUser", JSON.stringify(this.body));
       sessionStorage.setItem("editedUser", JSON.stringify(this.selectedDatos));
       sessionStorage.setItem("first", JSON.stringify(this.table.first));
-      this.router.navigate(["/editarUsuario"]);
+      // this.router.navigate(["/editarUsuario"]);
     } else {
       this.editar = true;
       this.dniCorrecto = null;
