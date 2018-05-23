@@ -8,5 +8,7 @@ export class PersonaJuridicaItem {
   sociedadesProfesionales: boolean;
   abreviatura: String;
   numeroIntegrantes: number;
+  nombresIntegrantes: String;
+  sociedadProfesional: String;
   constructor() {}
 }

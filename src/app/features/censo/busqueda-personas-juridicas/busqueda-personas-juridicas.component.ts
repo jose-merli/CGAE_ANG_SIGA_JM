@@ -79,6 +79,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   textSelected: String = "{0} grupos seleccionados";
   textFilter = "Elegir";
   fechaConstitucionArreglada: Date;
+
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -129,7 +130,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         header: "censo.consultaDatosGenerales.literal.denominacion"
       },
       {
-        field: "FechaConstitucion",
+        field: "fechaConstitucion",
         header: "censo.general.literal.FechaConstitucion"
       },
       {
@@ -277,9 +278,17 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
 
   isBuscar() {
     this.arreglarFecha();
+    this.arreglarSociedades();
     this.Search();
   }
 
+  arreglarSociedades() {
+    if (this.body.sociedadesProfesionales == true) {
+      this.body.sociedadProfesional = "1";
+    } else {
+      this.body.sociedadProfesional = "0";
+    }
+  }
   Search() {
     //this.arreglarFecha(); sobra porque se entra siempre en this.isBuscar();
 
@@ -317,7 +326,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
           console.log(data);
           this.progressSpinner = false;
           this.personaSearch = JSON.parse(data["body"]);
-          this.datos = this.personaSearch.PersonaJuridicaItem;
+          this.datos = this.personaSearch.busquedaJuridicaItems;
           this.table.paginator = true;
         },
         err => {
@@ -333,6 +342,15 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         }
       );
   }
+
+  obtenerIntegrantes(dato) {
+    return dato.numeroIntegrantes;
+  }
+
+  obtenerNombreIntegrantes(dato) {
+    return dato.nombresIntegrantes;
+  }
+
   paginate(event) {
     console.log(event);
   }

@@ -88,6 +88,13 @@
         paginatorPosition="both" [rows]="selectedItem">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true">
+          <ng-template *ngIf="col.field == 'numeroIntegrantes'" let-dato="rowData" pTemplate="body">
+            <div class="input-group">
+              <span class="input-group">
+                <button pButton type="button" [pTooltip]="obtenerNombreIntegrantes(dato)" [label]="obtenerIntegrantes(dato)" tooltipPosition="top"></button> &nbsp;&nbsp;
+              </span>
+            </div>
+          </ng-template>
           </p-column>
 
           <ng-template pTemplate="paginatorLeft">
