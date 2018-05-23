@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit {
   tmpLoginPerfil: String;
   entorno: String;
   ocultar: boolean = false;
+  progressSpinner: boolean = false;
   // value=N selected="">NO, no soy Letrado</option>
   //                   <option value=S>SÍ, soy Letrado</option>
 
@@ -40,14 +41,21 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
 
-
+    this.progressSpinner = true;
     this.service.autenticate().subscribe(response => {
       if (response) {
+        this.progressSpinner = false;
         this.router.navigate(["/home"]);
       } else {
+        this.progressSpinner = false;
         this.router.navigate(["/landpage"]);
       }
-    });
+    }
+      ,
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      });
 
   }
 
