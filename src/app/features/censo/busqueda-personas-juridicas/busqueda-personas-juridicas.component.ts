@@ -178,7 +178,9 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.historico = true;
     this.buscar = false;
     this.selectMultiple = false;
+    this.selectedDatos = "";
     this.progressSpinner = true;
+    this.selectAll = false;
     this.sigaServices
       .postPaginado("busquedaPerJuridica_history", "?numPagina=1", this.body)
       .subscribe(
@@ -317,6 +319,9 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.progressSpinner = true;
     this.buscar = true;
     this.historico = false;
+    this.selectAll = false;
+    this.selectMultiple = false;
+    this.selectedDatos = "";
     // comprobaciones para body de search
     this.body.fechaConstitucion = this.fechaConstitucionArreglada;
     if (this.body.tipo == undefined) {
