@@ -1,12 +1,12 @@
 export class PersonaJuridicaItem {
   tipo: String;
   nif: String;
-  fechaConstitucion: Date;
-  sociedadesProfesionales: boolean;
   denominacion: String;
+  fechaConstitucion: Date;
+  integrante: String;
+  grupos: any[] = []; // etiquetas en pantalla
+  sociedadesProfesionales: boolean;
   abreviatura: String;
-  socioIntegrante: String;
-  etiquetas: any[];
   numeroIntegrantes: number;
   constructor() {}
 }

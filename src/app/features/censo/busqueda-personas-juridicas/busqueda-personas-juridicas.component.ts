@@ -197,12 +197,15 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   arreglarFecha() {
-    let fechaString = JSON.stringify(this.fechaConstitucion);
-    fechaString = fechaString.substring(1, 11);
-    let arrayDesde: any[] = fechaString.split("-");
-    arrayDesde[2] = parseInt(arrayDesde[2]) + 1;
-    let returnDesde = arrayDesde[1] + "/" + arrayDesde[2] + "/" + arrayDesde[0];
-    this.fechaConstitucionArreglada = new Date(returnDesde);
+    if (this.fechaConstitucion != undefined) {
+      let fechaString = JSON.stringify(this.fechaConstitucion);
+      fechaString = fechaString.substring(1, 11);
+      let arrayDesde: any[] = fechaString.split("-");
+      arrayDesde[2] = parseInt(arrayDesde[2]) + 1;
+      let returnDesde =
+        arrayDesde[1] + "/" + arrayDesde[2] + "/" + arrayDesde[0];
+      this.fechaConstitucionArreglada = new Date(returnDesde);
+    }
   }
 
   activarPaginacion() {
@@ -278,10 +281,13 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   Search() {
-    this.arreglarFecha();
-    this.body.fechaConstitucion = this.fechaConstitucionArreglada;
+    //this.arreglarFecha(); sobra porque se entra siempre en this.isBuscar();
+
     this.progressSpinner = true;
     this.buscar = true;
+
+    // comprobaciones para body de search
+    this.body.fechaConstitucion = this.fechaConstitucionArreglada;
     if (this.body.tipo == undefined) {
       this.body.tipo = "";
     }
@@ -297,11 +303,11 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     if (this.body.abreviatura == undefined) {
       this.body.abreviatura = "";
     }
-    if (this.body.etiquetas == undefined) {
-      this.body.denominacion = "";
+    if (this.body.grupos == undefined) {
+      this.body.grupos = [];
     }
-    if (this.body.socioIntegrante == undefined) {
-      this.body.socioIntegrante = "";
+    if (this.body.integrante == undefined) {
+      this.body.integrante = "";
     }
     // this.body.idInstitucion = "2000";
     this.sigaServices
