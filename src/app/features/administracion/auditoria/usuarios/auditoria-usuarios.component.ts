@@ -129,7 +129,6 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
         value: 40
       }
     ];
-    this.buscar = true;
     if (sessionStorage.getItem("AuditoriaSearch") != null) {
       this.bodySearch = new HistoricoUsuarioRequestDto();
       this.bodySearch = JSON.parse(sessionStorage.getItem("AuditoriaSearch"));
