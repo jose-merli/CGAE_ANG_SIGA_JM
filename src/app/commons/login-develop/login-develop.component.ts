@@ -19,7 +19,7 @@ export class LoginDevelopComponent implements OnInit {
   perfiles: any[];
   isLetrado: String;
   isEntrar: boolean = true;
-  tmpLoginPerfil: String;
+  tmpLoginPerfil: String[];
   entorno: String;
   ocultar: boolean = false;
   // value=N selected="">NO, no soy Letrado</option>
@@ -34,9 +34,9 @@ export class LoginDevelopComponent implements OnInit {
     private service: AuthenticationService,
     private sigaServices: SigaServices,
     private router: Router
-  ) { }
+  ) {}
 
-  onSubmit() { }
+  onSubmit() {}
 
   ngOnInit() {
     this.sigaServices.getBackend("instituciones").subscribe(n => {
@@ -56,23 +56,23 @@ export class LoginDevelopComponent implements OnInit {
       posMenu: new FormControl(0)
     });
     //this.onChange(this.form.controls['tmpLoginInstitucion'].value);
-    this.form.controls['tmpLoginInstitucion'].valueChanges.subscribe(newValue => {
-      this.form.controls['location'].setValue(newValue);
+    this.form.controls[
+      "tmpLoginInstitucion"
+    ].valueChanges.subscribe(newValue => {
+      this.form.controls["location"].setValue(newValue);
     });
 
-    this.form.controls['tmpLoginPerfil'].valueChanges.subscribe(n => {
-      this.form.controls['profile'].setValue(n);
+    this.form.controls["tmpLoginPerfil"].valueChanges.subscribe(n => {
+      this.form.controls["profile"].setValue(n);
     });
     this.form.controls["sLetrado"].valueChanges.subscribe(n => {
       this.form.controls["letrado"].setValue(n);
     });
 
-
     // this.form.setValue({'location': this.form.value.tmpLoginInstitucion});
   }
 
   submit() {
-
     var ir = null;
     this.service.autenticateDevelop(this.form.value).subscribe(response => {
       if (response) {
@@ -84,9 +84,10 @@ export class LoginDevelopComponent implements OnInit {
   }
 
   onChange(newValue) {
+    this.tmpLoginPerfil = ["ADG"];
     var ir = null;
-    this.form.controls['location'].setValue(newValue.value);
-    this.form.controls['tmpLoginInstitucion'].setValue(newValue.value);
+    this.form.controls["location"].setValue(newValue.value);
+    this.form.controls["tmpLoginInstitucion"].setValue(newValue.value);
     this.sigaServices.getPerfil("perfiles", newValue.value).subscribe(n => {
       this.perfiles = n.combooItems;
     });
@@ -102,8 +103,12 @@ export class LoginDevelopComponent implements OnInit {
   }
 
   isHabilitadoEntrar() {
-    if ((this.form.controls['tmpLoginPerfil'].value == "" || this.form.controls['tmpLoginPerfil'].value == undefined) ||
-      (this.form.controls['tmpLoginInstitucion'].value == "" || this.form.controls['tmpLoginInstitucion'].value == undefined)) {
+    if (
+      this.form.controls["tmpLoginPerfil"].value == "" ||
+      this.form.controls["tmpLoginPerfil"].value == undefined ||
+      (this.form.controls["tmpLoginInstitucion"].value == "" ||
+        this.form.controls["tmpLoginInstitucion"].value == undefined)
+    ) {
       this.isEntrar = true;
       return this.isEntrar;
     } else {
