@@ -96,6 +96,9 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
   //Cargo el combo nada mas comenzar
   ngOnInit() {
     this.idModulo = this.activatedRoute.snapshot.params["id"];
+    if (this.idModulo == undefined) {
+      this.editar = false;
+    }
     this.body = new ContadorItem();
     this.sigaServices.get("contadores_module").subscribe(
       n => {
