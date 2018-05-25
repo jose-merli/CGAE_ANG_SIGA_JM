@@ -55,4 +55,9 @@ export class HeaderComponent implements OnInit {
     sessionStorage.removeItem("authenticated");
     this.router.navigate(["/login"]);
   }
+
+  navigateTo() {
+    this.router.navigate(['/login]']);
+  }
+
 }

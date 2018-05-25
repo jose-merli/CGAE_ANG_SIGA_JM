@@ -313,7 +313,7 @@ export class PermisosComponent implements OnInit, DoCheck {
   }
 
   isButtonDisabled() {
-    if (this.permisosChange && this.permisosChange.length > 0) {
+    if (this.permisosChange && this.permisosChange.length > 0 && this.savedPermisos == false) {
       return false;
     }
     return true;
@@ -359,7 +359,8 @@ export class PermisosComponent implements OnInit, DoCheck {
 
       this.sigaServices.post("permisos_update", objUpdate).subscribe(
         data => {
-          console.log(data);
+
+          this.permisosChange = [];
         },
         err => {
           console.log(err);
@@ -368,6 +369,7 @@ export class PermisosComponent implements OnInit, DoCheck {
     }
 
     this.savedPermisos = true;
+    this.numCambios = 0;
 
     this.showSuccess();
   }

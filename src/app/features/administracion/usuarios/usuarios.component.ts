@@ -73,6 +73,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
   activacionEditar: boolean;
   selectAll: boolean = false;
   progressSpinner: boolean = false;
+  numSelected: number = 0;
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
@@ -232,9 +233,11 @@ export class Usuarios extends SigaWrapper implements OnInit {
     this.selectMultiple = !this.selectMultiple;
     if (!this.selectMultiple) {
       this.selectedDatos = [];
+      this.numSelected = 0;
     } else {
       this.selectAll = false;
       this.selectedDatos = [];
+      this.numSelected = 0;
     }
   }
 
@@ -529,6 +532,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
       this.router.navigate(["/editarUsuario", ir]);
     } else {
       this.editar = false;
+      this.numSelected = this.selectedDatos.length
       this.dniCorrecto = null;
       this.body = new UsuarioRequestDto();
       this.body.activo = id[0].activo;
@@ -544,8 +548,10 @@ export class Usuarios extends SigaWrapper implements OnInit {
     if (this.selectAll === true) {
       this.selectMultiple = false;
       this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
     } else {
       this.selectedDatos = [];
+      this.numSelected = 0;
     }
   }
 }

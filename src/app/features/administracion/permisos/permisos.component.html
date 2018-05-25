@@ -46,33 +46,43 @@
 
 </div>
 <div *ngIf="(selectedPermiso && selectedPermiso.length > 0) || (this.permisosChange && this.permisosChange.length > 0)" [style.width.px]="myWidth"
-  class="menu-accesos d-flex justify-content-start align-items-center">
+  class="menu-accesos">
   <div>
     <label class="title">Administrar permisos de acceso</label>
     <div>
       <label class="mr-2">Seleccionados {{numSeleccionados}}/{{totalPermisos}}</label>
       <label class="mr-2">Cambios {{numCambios}}/{{totalPermisos}}</label>
-      <div class="main-button d-inline-block">
+      <!--<div class="main-button d-inline-block">
+        <button [disabled]="isButtonDisabled()" (click)="savePermisos()" class="mr-2" pButton type="button" icon="far fa-save" iconPos="left"
+          label="Guardar"></button>
+          <button [disabled]="savedPermisos" (click)="restablecerPermisos()" pButton type="button" icon="fa fa-redo" iconPos="left"
+            label="Restablecer"></button>
+      </div>-->
+    </div>
+  </div>
+  <div class="ml-auto">
+    <div class="text-right d-flex align-items-center">
+      <div (click)="onChangeAcceso('total')" class="btn-acceso acceso-total d-flex align-items-center">
+        <p>Acceso total ({{accesoTotal}})</p>
+      </div>
+      <div (click)="onChangeAcceso('lectura')" class="btn-acceso solo-lectura d-flex align-items-center">
+        <p>Solo lectura ({{accesoLectura}})</p>
+      </div>
+      <div (click)="onChangeAcceso('denegado')" class="ml-3 btn-acceso acceso-denegado d-flex align-items-center">
+        <p>Acceso denegado ({{accesoDenegado}})</p>
+      </div>
+      <div (click)="onChangeAcceso('sinAsignar')" class="btn-acceso sin-asignar d-flex align-items-center">
+        <p>Sin asignar ({{sinAsignar}})</p>
+      </div>
+      <div class="ml-4 main-button d-inline-block">
         <button [disabled]="isButtonDisabled()" (click)="savePermisos()" class="mr-2" pButton type="button" icon="far fa-save" iconPos="left"
           label="Guardar"></button>
           <button [disabled]="savedPermisos" (click)="restablecerPermisos()" pButton type="button" icon="fa fa-redo" iconPos="left"
             label="Restablecer"></button>
       </div>
     </div>
+
+
   </div>
-  <div class="ml-auto">
-    <div class="text-right d-flex">
-      <div (click)="onChangeAcceso('total')" class="btn-acceso acceso-total d-flex align-items-center">
-        <p>Acceso total ({{accesoTotal}})</p>
-      </div>
-      <div (click)="onChangeAcceso('denegado')" class="btn-acceso acceso-denegado d-flex align-items-center">
-        <p>Acceso denegado ({{accesoDenegado}})</p>
-      </div>
-      <div (click)="onChangeAcceso('lectura')" class="btn-acceso solo-lectura d-flex align-items-center">
-        <p>Solo lectura ({{accesoLectura}})</p>
-      </div>
-      <div (click)="onChangeAcceso('sinAsignar')" class="btn-acceso sin-asignar d-flex align-items-center">
-        <p>Sin asignar ({{sinAsignar}})</p>
-      </div>
-    </div>
+
   </div>
