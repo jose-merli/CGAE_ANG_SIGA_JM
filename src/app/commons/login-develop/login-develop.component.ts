@@ -87,7 +87,7 @@ export class LoginDevelopComponent implements OnInit {
     this.tmpLoginPerfil = ["ADG"];
     var ir = null;
     this.form.controls["location"].setValue(newValue.value);
-    this.form.controls["tmpLoginInstitucion"].setValue(newValue.value);
+    // this.form.controls["tmpLoginInstitucion"].setValue(newValue.value);
     this.sigaServices.getPerfil("perfiles", newValue.value).subscribe(n => {
       this.perfiles = n.combooItems;
     });
