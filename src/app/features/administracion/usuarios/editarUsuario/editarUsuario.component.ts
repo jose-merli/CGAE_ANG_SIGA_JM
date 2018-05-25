@@ -34,6 +34,7 @@ import { UsuarioItem } from "../../../../../app/models/UsuarioItem";
 import { UsuarioUpdate } from "../../../../../app/models/UsuarioUpdate";
 import { ComboItem } from "../../../../../app/models/ComboItem";
 import { ActivatedRoute } from "@angular/router";
+import { Location } from "@angular/common";
 @Component({
   selector: "app-editarUsuario",
   templateUrl: "./editarUsuario.component.html",
@@ -66,7 +67,8 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private activatedRoute: ActivatedRoute,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private location: Location
   ) {
     super(USER_VALIDATIONS);
   }
@@ -202,6 +204,6 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
   }
 
   volver() {
-    this.router.navigate(["/usuarios"]);
+    this.location.back();
   }
 }

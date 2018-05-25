@@ -52,7 +52,7 @@
                         <div class="input-group">
                             <span class="input-group">
                 <button pButton type="button" [pTooltip]="obtenerRecurso(dato)"  tooltipPosition="top" icon="fa fa-question"></button> &nbsp;&nbsp;
-              <input type="text" class="form-control" [(disabled)]="!editar"  pInputText [(ngModel)]="dato[col.field]" (change)="Guardar($event,dato)">
+              <input type="text" class="form-control" [(disabled)]="!editar"  pInputText [(ngModel)]="dato[col.field]" (input)="Guardar($event,dato)">
               </span>
                         </div>
                     </ng-template>
@@ -68,8 +68,9 @@
                     </ng-template>
                     <p-footer>
                         <div class="text-right main-button">
-                            <button (click)="isRestablecer()" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
-                            <button (click)="isGuardar()" pButton type="button " icon="fa fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                            <button (click)="isRestablecer()" pButton type="button" [disabled]="!habilitarBotones" icon="fa fa-history " iconPos="left"
+                                label="{{'general.boton.restablecer' | translate}}"></button>
+                                <button (click)="isGuardar()" pButton type="button " [disabled]="!habilitarBotones" icon="fa fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
                         </div>
                     </p-footer>
 
@@ -77,4 +78,8 @@
         </div>
     </div>
     <app-dialog></app-dialog>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <p-progressSpinner animationDuration="1s"></p-progressSpinner>
 </div>

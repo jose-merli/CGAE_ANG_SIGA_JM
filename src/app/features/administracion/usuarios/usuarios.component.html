@@ -45,7 +45,7 @@
           <div class="form-group col-lg-3 col-md-3">
             <label>{{"administracion.usuarios.literal.grupos" | translate}}</label>
             <p-dropdown class="select-form" [(ngModel)]='body.grupo' [options]="usuarios_perfil" (ngModelChange)="onChangeForm()" [filter]="true"
-              filterBy="label" placeholder="{{ 'administracion.usuarios.literal.grupos' | translate}}"></p-dropdown>
+              filterBy="label"></p-dropdown>
           </div>
           <div class="form-group col-lg-1 col-md-1">
             <label>{{"administracion.usuarios.literal.activo" | translate}}</label>
@@ -102,12 +102,13 @@
 
 
           <p-footer *ngIf="selectedDatos && selectedDatos != ''">
-            <div *ngIf="activo==false" class="text-right main-button">
+            <div *ngIf="activo==true" class="text-right main-button">
               <button (click)="isSelectMultiple(); selectedDatos=false" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
               <button (click)="confirmarBorrar(selectedDatos); selectedDatos=false" pButton type="button" icon="fa fa-check" iconPos="left"
                 label="{{'general.message.rehabilitar' | translate}}"></button>
             </div>
-            <div *ngIf="activo==true" class="text-right main-button"> <button (click)="selectedDatos=false" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
+            <div *ngIf="activo==false" class="text-right main-button">
+              <button (click)="selectedDatos=false" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
               <button [disabled]="!activacionEditar" (click)="confirmarBorrar(selectedDatos); selectedDatos=false" pButton type="button"
                 icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
             </div>

@@ -65,6 +65,8 @@ export class Etiquetas extends SigaWrapper implements OnInit {
   editar: boolean = false;
   bodySave: EtiquetaSearchDto = new EtiquetaSearchDto();
   elementosAGuardar: EtiquetaUpdateDto[] = [];
+  habilitarBotones: boolean = false;
+
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -182,6 +184,7 @@ export class Etiquetas extends SigaWrapper implements OnInit {
 
   isRestablecer() {
     this.elementosAGuardar = [];
+    this.habilitarBotones = false;
     this.bodySearch = this.bodySave;
     this.isBuscar();
   }
@@ -229,6 +232,7 @@ export class Etiquetas extends SigaWrapper implements OnInit {
     this.bodyUpdate.idLenguaje = dato.idLenguajeTraducir;
     this.bodyUpdate.idRecurso = dato.idRecurso;
     this.elementosAGuardar.push(this.bodyUpdate);
+    this.isHabilitadoGuardar();
   }
 
   isGuardar() {
@@ -278,12 +282,12 @@ export class Etiquetas extends SigaWrapper implements OnInit {
   activarPaginacion() {
     return this.paginacion;
   }
-
   isHabilitadoGuardar() {
-    if (this.elementosAGuardar == undefined) return true;
-    else {
-      if (this.elementosAGuardar.length == 0) return true;
-      else return false;
-    }
+    if (
+      this.elementosAGuardar == undefined ||
+      this.elementosAGuardar.length == 0
+    )
+      this.habilitarBotones = false;
+    else this.habilitarBotones = true;
   }
 }

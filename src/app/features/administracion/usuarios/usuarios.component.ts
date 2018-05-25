@@ -16,6 +16,7 @@ import {
   Validators,
   FormControl
 } from "@angular/forms";
+import { DataTable } from "primeng/datatable";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { ButtonModule } from "primeng/button";
@@ -36,7 +37,8 @@ import { UsuarioItem } from "./../../../../app/models/UsuarioItem";
 import { ComboItem } from "./../../../../app/models/ComboItem";
 import { MultiSelectModule } from "primeng/multiSelect";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
-
+import { Location } from "@angular/common";
+import { Observable } from "rxjs/Rx";
 @Component({
   selector: "app-usuarios",
   templateUrl: "./usuarios.component.html",
@@ -64,6 +66,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
   selectMultiple: boolean = false;
   blockCrear: boolean = true;
   selectedItem: number = 10;
+  first: number = 0;
   activo: boolean = false;
   dniCorrecto: boolean;
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
@@ -85,11 +88,12 @@ export class Usuarios extends SigaWrapper implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private activatedRoute: ActivatedRoute,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private location: Location
   ) {
     super(USER_VALIDATIONS);
   }
-  @ViewChild("table") table;
+  @ViewChild("table") table: DataTable;
   selectedDatos;
 
   ngOnInit() {
@@ -150,6 +154,11 @@ export class Usuarios extends SigaWrapper implements OnInit {
         value: 40
       }
     ];
+    if ((this.body.activo == "S")) {
+      this.activo = true;
+    } else {
+      this.activo = false;
+    }
     if (sessionStorage.getItem("editedUser") != null) {
       this.selectedDatos = JSON.parse(sessionStorage.getItem("editedUser"));
     }
@@ -170,7 +179,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
 
@@ -305,19 +314,29 @@ export class Usuarios extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("usuarios_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
-        this.progressSpinner = false;
-        this.searchUser = JSON.parse(data["body"]);
-        this.datos = this.searchUser.usuarioItem;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      }
+        data => {
+          console.log(data);
+          this.progressSpinner = false;
+          this.searchUser = JSON.parse(data["body"]);
+          this.datos = this.searchUser.usuarioItem;
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          if (sessionStorage.getItem("first") != null) {
+            let first = JSON.parse(sessionStorage.getItem("first")) as number;
+            this.table.first = first;
+            sessionStorage.removeItem("first");
+          }
+        }
       );
   }
-
+  paginate(event) {
+    console.log(event);
+  }
   editarUsuario(selectedItem) {
     // if (!this.selectMultiple) {
     if (selectedItem.length == 1) {
@@ -337,9 +356,9 @@ export class Usuarios extends SigaWrapper implements OnInit {
       this.body.activo = selectedItem[0].activo;
     }
     if (this.body.activo == "N") {
-      this.activo = false;
-    } else {
       this.activo = true;
+    } else {
+      this.activo = false;
     }
   }
 
@@ -399,7 +418,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
         this.searchUser = JSON.parse(error["error"]);
         this.showduplicateFail(this.searchUser.error.message.toString());
         console.log(error);
-
+        this.showFail();
       },
       () => {
         this.cancelar();
@@ -420,7 +439,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
 
   showSuccessDelete(number) {
     let msg = "";
-    if (this.activo) {
+    if (!this.activo) {
       if (number >= 2) {
         msg =
           number +
@@ -477,17 +496,17 @@ export class Usuarios extends SigaWrapper implements OnInit {
         this.translateService.instant("messages.deleteConfirmation.register") +
         "?";
     }
-    if (this.activo == false) {
+    if (this.activo == true) {
       icon = "fa fa-check";
       if (selectedItem.length > 1) {
         (mess = this.translateService.instant(
           "general.message.confirmar.rehabilitaciones"
         )),
           +selectedItem.length +
-          " " +
-          this.translateService.instant(
-            "cargaMasivaDatosCurriculares.numRegistros.literal"
-          );
+            " " +
+            this.translateService.instant(
+              "cargaMasivaDatosCurriculares.numRegistros.literal"
+            );
       } else {
         mess = this.translateService.instant(
           "general.message.confirmar.rehabilitacion"
@@ -522,6 +541,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
       }
       sessionStorage.removeItem("usuarioBody");
       sessionStorage.removeItem("privilegios");
+      sessionStorage.removeItem("first");
       sessionStorage.setItem("usuarioBody", JSON.stringify(id));
       sessionStorage.setItem(
         "privilegios",
@@ -529,7 +549,8 @@ export class Usuarios extends SigaWrapper implements OnInit {
       );
       sessionStorage.setItem("searchUser", JSON.stringify(this.body));
       sessionStorage.setItem("editedUser", JSON.stringify(this.selectedDatos));
-      this.router.navigate(["/editarUsuario", ir]);
+      sessionStorage.setItem("first", JSON.stringify(this.table.first));
+      this.router.navigate(["/editarUsuario"]);
     } else {
       this.editar = false;
       this.numSelected = this.selectedDatos.length
@@ -538,9 +559,9 @@ export class Usuarios extends SigaWrapper implements OnInit {
       this.body.activo = id[0].activo;
     }
     if (this.body.activo == "N") {
-      this.activo = false;
-    } else {
       this.activo = true;
+    } else {
+      this.activo = false;
     }
   }
 

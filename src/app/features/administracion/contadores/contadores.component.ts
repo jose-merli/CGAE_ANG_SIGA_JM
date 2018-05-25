@@ -29,6 +29,7 @@ import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { ContadorItem } from "./../../../../app/models/ContadorItem";
 import { ContadorResponseDto } from "./../../../../app/models/ContadorResponseDto";
+import { DataTable } from "primeng/datatable";
 
 @Component({
   selector: "app-contadorescomponent",
@@ -74,9 +75,10 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
   blockBuscar: boolean = true;
   blockCrear: boolean = true;
   idModulo: String;
+  first: number = 0;
   rowsPerPage: any = [];
 
-  @ViewChild("table") table;
+  @ViewChild("table") table: DataTable;
   constructor(
     private formBuilder: FormBuilder,
     private sigaServices: SigaServices,
@@ -94,6 +96,9 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
   //Cargo el combo nada mas comenzar
   ngOnInit() {
     this.idModulo = this.activatedRoute.snapshot.params["id"];
+    if (this.idModulo == "0") {
+      this.editar = false;
+    }
     this.body = new ContadorItem();
     this.sigaServices.get("contadores_module").subscribe(
       n => {
@@ -155,6 +160,10 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
     } else {
       this.body = new ContadorItem();
     }
+    if (sessionStorage.getItem("editedUser") != null) {
+      this.selectedDatos = JSON.parse(sessionStorage.getItem("editedUser"));
+    }
+    sessionStorage.removeItem("editedUser");
   }
 
   onHideDatosGenerales() {
@@ -167,9 +176,9 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
     this.table.reset();
   }
   // Control de buscar desactivado por ahora (hasta tener primer elemento del combo preparado)
-  onChangeCatalogo() { }
+  onChangeCatalogo() {}
   //cada vez que cambia el formulario comprueba esto
-  onChangeForm() { }
+  onChangeForm() {}
 
   showSuccess() {
     this.msgs = [];
@@ -213,18 +222,28 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("contadores_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.search = JSON.parse(data["body"]);
-        this.datos = this.search.contadorItems;
-        console.log(this.datos);
-        this.table.reset();
-      },
-      err => {
-        console.log(err);
-      }
+          this.search = JSON.parse(data["body"]);
+          this.datos = this.search.contadorItems;
+          console.log(this.datos);
+          this.table.reset();
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          if (sessionStorage.getItem("first") != null) {
+            let first = JSON.parse(sessionStorage.getItem("first")) as number;
+            this.table.first = first;
+            sessionStorage.removeItem("first");
+          }
+        }
       );
+  }
+  paginate(event) {
+    console.log(event);
   }
 
   isLimpiar() {
@@ -267,6 +286,9 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
     sessionStorage.setItem("contadorBody", JSON.stringify(id));
     sessionStorage.setItem("url", JSON.stringify(url));
     sessionStorage.setItem("searchContador", JSON.stringify(this.body));
+    sessionStorage.removeItem("first");
+    sessionStorage.setItem("first", JSON.stringify(this.table.first));
+    sessionStorage.setItem("editedUser", JSON.stringify(this.selectedDatos));
     this.router.navigate(["/gestionContadores"]);
   }
 

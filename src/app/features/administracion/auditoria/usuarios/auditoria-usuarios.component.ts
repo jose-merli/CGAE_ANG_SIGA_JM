@@ -7,7 +7,7 @@ import {
 } from "@angular/core";
 
 import { SigaServices } from "./../../../../_services/siga.service";
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { MessageService } from "primeng/components/common/messageservice";
 import { ConfirmationService } from "primeng/api";
 import { TranslateService } from "../../../../commons/translate/translation.service";
@@ -27,6 +27,9 @@ import { esCalendar } from "./../../../../utils/calendar";
 
 import { HistoricoUsuarioDto } from "../../../../models/HistoricoUsuarioDto";
 import { HistoricoUsuarioRequestDto } from "../../../../models/HistoricoUsuarioRequestDto";
+import { Location } from "@angular/common";
+import { Observable } from "rxjs/Rx";
+import { DataTable } from "primeng/datatable";
 
 @Component({
   selector: "app-auditoria-usuarios",
@@ -38,7 +41,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   usuario: any;
   persona: any;
   showDatosGenerales: boolean = true;
-  buscarSeleccionado: boolean = false;
+  buscar: boolean = false;
   valorCheckUsuarioAutomatico: boolean = false;
   selectedTipoAccion: any;
   tipoAcciones: any[];
@@ -52,7 +55,6 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   bodySearch: HistoricoUsuarioRequestDto = new HistoricoUsuarioRequestDto();
   searchParametros: HistoricoUsuarioDto = new HistoricoUsuarioDto();
   jsonDate: string;
-  selectedDatos: any;
   msgs: Message[] = [];
   habilitarInputUsuario: boolean = false;
   returnDesde: string;
@@ -68,12 +70,15 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private activatedRoute: ActivatedRoute,
+    private translateService: TranslateService,
+    private location: Location
   ) {
     super(USER_VALIDATIONS);
   }
 
-  @ViewChild("table") table;
+  @ViewChild("table") table: DataTable;
+  selectedDatos;
   ngOnInit() {
     this.sigaServices.get("auditoriaUsuarios_tipoAccion").subscribe(
       n => {
@@ -83,27 +88,6 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
         console.log(err);
       }
     );
-
-    var registroActualizado = JSON.parse(
-      sessionStorage.getItem("registroAuditoriaUsuariosActualizado")
-    );
-    if (registroActualizado) {
-      this.showSuccess();
-      sessionStorage.setItem(
-        "registroAuditoriaUsuariosActualizado",
-        JSON.stringify(false)
-      );
-    }
-
-    sessionStorage.removeItem("urlAuditoriaUsuarios");
-
-    if (sessionStorage.getItem("searchBodyAuditoriaUsuarios") != null) {
-      this.bodySearch = JSON.parse(
-        sessionStorage.getItem("searchBodyAuditoriaUsuarios")
-      );
-      this.isBuscar();
-    }
-
     this.columnasTabla = [
       {
         field: "persona",
@@ -145,6 +129,43 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
         value: 40
       }
     ];
+    if (sessionStorage.getItem("AuditoriaSearch") != null) {
+      this.bodySearch = new HistoricoUsuarioRequestDto();
+      this.bodySearch = JSON.parse(sessionStorage.getItem("AuditoriaSearch"));
+      this.usuario = this.bodySearch.usuario;
+      this.persona = this.bodySearch.idPersona;
+      if ((this.bodySearch.usuarioAutomatico = "N"))
+        this.valorCheckUsuarioAutomatico = false;
+      else this.valorCheckUsuarioAutomatico = true;
+      this.selectedTipoAccion = this.bodySearch.idTipoAccion;
+      sessionStorage.removeItem("AuditoriaSearch");
+    }
+
+    var registroActualizado = JSON.parse(
+      sessionStorage.getItem("registroAuditoriaUsuariosActualizado")
+    );
+    if (registroActualizado) {
+      this.showSuccess();
+      sessionStorage.setItem(
+        "registroAuditoriaUsuariosActualizado",
+        JSON.stringify(false)
+      );
+    }
+
+    sessionStorage.removeItem("urlAuditoriaUsuarios");
+
+    if (sessionStorage.getItem("searchBodyAuditoriaUsuarios") != null) {
+      this.bodySearch = JSON.parse(
+        sessionStorage.getItem("searchBodyAuditoriaUsuarios")
+      );
+
+      this.isBuscar();
+    }
+
+    if (sessionStorage.getItem("editedUser") != null) {
+      this.selectedDatos = JSON.parse(sessionStorage.getItem("editedUser"));
+    }
+    sessionStorage.removeItem("editedUser");
   }
 
   isBuscar() {
@@ -161,23 +182,31 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
 
       sessionStorage.removeItem("searchBodyAuditoriaUsuarios");
     }
-
+    this.buscar = true;
     this.sigaServices
       .postPaginado("auditoriaUsuarios_search", "?numPagina=1", this.bodySearch)
       .subscribe(
-      data => {
-        console.log(data);
-        this.searchParametros = JSON.parse(data["body"]);
-        this.datosUsuarios = this.searchParametros.historicoUsuarioItem;
-        this.buscarSeleccionado = true;
-        this.progressSpinner = false;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      }
+        data => {
+          console.log(data);
+          this.searchParametros = JSON.parse(data["body"]);
+          this.datosUsuarios = this.searchParametros.historicoUsuarioItem;
+          this.buscar = true;
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          if (sessionStorage.getItem("first") != null) {
+            let first = JSON.parse(sessionStorage.getItem("first")) as number;
+            this.table.first = first;
+            sessionStorage.removeItem("first");
+          }
+        }
       );
   }
+
   arreglarFechas() {
     this.returnDesde = JSON.stringify(this.bodySearch.fechaDesde);
     this.returnHasta = JSON.stringify(this.bodySearch.fechaHasta);
@@ -216,6 +245,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     if (this.fechaHastaCalendar != undefined) {
       this.bodySearch.fechaHasta = this.fechaHastaCalendar;
     } else this.bodySearch.fechaHasta = undefined;
+    sessionStorage.setItem("AuditoriaSearch", JSON.stringify(this.bodySearch));
   }
 
   isHabilitadoBuscar() {
@@ -237,6 +267,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   }
 
   irEditarUsuario(id) {
+    sessionStorage.removeItem("first");
     var url = "/auditoriaUsuarios/";
     sessionStorage.setItem("auditoriaUsuarioBody", JSON.stringify(id));
     sessionStorage.setItem("urlAuditoriaUsuarios", JSON.stringify(url));
@@ -244,7 +275,8 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
       "searchBodyAuditoriaUsuarios",
       JSON.stringify(this.bodySearch)
     );
-
+    sessionStorage.setItem("first", JSON.stringify(this.table.first));
+    sessionStorage.setItem("editedUser", JSON.stringify(this.selectedDatos));
     this.router.navigate(["/gestionAuditoria"]);
   }
 

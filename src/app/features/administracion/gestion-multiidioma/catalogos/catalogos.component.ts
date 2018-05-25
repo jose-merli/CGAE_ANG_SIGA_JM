@@ -56,6 +56,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
   searchParametros: MultiidiomaCatalogoDto = new MultiidiomaCatalogoDto();
   bodyUpdate: MultiidiomaCatalogoUpdateDto = new MultiidiomaCatalogoUpdateDto();
   msgs: Message[] = [];
+  progressSpinner: boolean = false;
 
   bodySave: MultiidiomaCatalogoSearchDto = new MultiidiomaCatalogoSearchDto();
   elementosAGuardar: MultiidiomaCatalogoUpdateDto[] = [];
@@ -66,6 +67,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
   derechoAcceso: any;
   comparacion: boolean;
   editar: boolean = false;
+  habilitarBotones: boolean = false;
 
   constructor(
     private sigaServices: SigaServices,
@@ -145,6 +147,8 @@ export class Catalogos extends SigaWrapper implements OnInit {
   }
 
   isBuscar() {
+    this.progressSpinner = true;
+
     this.bodySearch.nombreTabla = this.selectedEntidad;
     this.bodySearch.idiomaBusqueda = this.selectedIdiomaBusqueda;
     this.bodySearch.idiomaTraduccion = this.selectedIdiomaTraduccion;
@@ -156,16 +160,19 @@ export class Catalogos extends SigaWrapper implements OnInit {
           console.log(data);
           this.searchParametros = JSON.parse(data["body"]);
           this.datosTraduccion = this.searchParametros.multiidiomaCatalogoItem;
+          this.progressSpinner = false;
           this.buscarSeleccionado = true;
         },
         err => {
           console.log(err);
+          this.progressSpinner = false;
         }
       );
   }
 
   isRestablecer() {
     this.elementosAGuardar = [];
+    this.habilitarBotones = false;
     this.bodySearch = this.bodySave;
     this.isBuscar();
   }
@@ -208,6 +215,16 @@ export class Catalogos extends SigaWrapper implements OnInit {
       return this.buscar;
     }
   }
+
+  isHabilitadoGuardar() {
+    if (
+      this.elementosAGuardar == undefined ||
+      this.elementosAGuardar.length == 0
+    )
+      this.habilitarBotones = false;
+    else this.habilitarBotones = true;
+  }
+
   obtenerRecurso(dato) {
     return dato.idRecurso;
   }
@@ -218,6 +235,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
     this.bodyUpdate.idLenguaje = dato.idLenguajeTraducir;
     this.bodyUpdate.idRecurso = dato.idRecurso;
     this.elementosAGuardar.push(this.bodyUpdate);
+    this.isHabilitadoGuardar();
   }
 
   isGuardar() {

@@ -20,7 +20,7 @@ import {
 import { TranslateService } from "./../../../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "./../../../../../properties/val-properties";
 import { ButtonModule } from "primeng/button";
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { InputTextModule } from "primeng/inputtext";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { CheckboxModule } from "primeng/checkbox";
@@ -35,9 +35,8 @@ import { HistoricoUsuarioItem } from "./../../../../../../app/models/HistoricoUs
 import { HistoricoUsuarioUpdateDto } from "./../../../../../../app/models/HistoricoUsuarioUpdateDto";
 import { HistoricoUsuarioRequestDto } from "./../../../../../../app/models/HistoricoUsuarioRequestDto";
 import { ComboItem } from "./../../../../../../app/models/ComboItem";
-import { ActivatedRoute } from "@angular/router";
 import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
-
+import { Location } from "@angular/common";
 @Component({
   selector: "app-gestion-auditoria",
   templateUrl: "./gestion-auditoria.component.html",
@@ -82,7 +81,8 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private activatedRoute: ActivatedRoute,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private location: Location
   ) {
     super(USER_VALIDATIONS);
   }
@@ -219,9 +219,7 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   }
 
   volver() {
-    this.router.navigate([
-      JSON.parse(sessionStorage.getItem("urlAuditoriaUsuarios"))
-    ]);
+    this.location.back();
   }
 
   isHabilitadoGuardarCerrar() {
