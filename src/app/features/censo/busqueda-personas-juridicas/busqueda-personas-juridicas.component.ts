@@ -62,7 +62,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   blockCrear: boolean = true;
   selectedItem: number = 10;
   first: number = 0;
-  activo: boolean = false;
   dniCorrecto: boolean;
   es: any = esCalendar;
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
@@ -79,6 +78,8 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   textSelected: String = "{0} grupos seleccionados";
   textFilter = "Elegir";
   fechaConstitucionArreglada: Date;
+  historico: boolean = false;
+
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -96,7 +97,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   selectedDatos;
 
   ngOnInit() {
-    this.activo = true;
     this.checkAcceso(); //coger tipos
     this.sigaServices.get("busquedaPerJuridica_tipo").subscribe(
       n => {
@@ -129,7 +129,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         header: "censo.consultaDatosGenerales.literal.denominacion"
       },
       {
-        field: "FechaConstitucion",
+        field: "fechaConstitucion",
         header: "censo.general.literal.FechaConstitucion"
       },
       {
@@ -174,6 +174,31 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     // }
   }
 
+  toHistorico() {
+    this.historico = true;
+    this.buscar = false;
+    this.selectMultiple = false;
+    this.selectedDatos = "";
+    this.progressSpinner = true;
+    this.selectAll = false;
+    this.sigaServices
+      .postPaginado("busquedaPerJuridica_history", "?numPagina=1", this.body)
+      .subscribe(
+        data => {
+          console.log(data);
+          this.progressSpinner = false;
+          this.personaSearch = JSON.parse(data["body"]);
+          this.datos = this.personaSearch.busquedaJuridicaItems;
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {}
+      );
+  }
+
   checkAcceso() {
     this.controlAcceso = new ControlAccesoDto();
     this.controlAcceso.idProceso = "2";
@@ -197,12 +222,15 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   arreglarFecha() {
-    let fechaString = JSON.stringify(this.fechaConstitucion);
-    fechaString = fechaString.substring(1, 11);
-    let arrayDesde: any[] = fechaString.split("-");
-    arrayDesde[2] = parseInt(arrayDesde[2]) + 1;
-    let returnDesde = arrayDesde[1] + "/" + arrayDesde[2] + "/" + arrayDesde[0];
-    this.fechaConstitucionArreglada = new Date(returnDesde);
+    if (this.fechaConstitucion != undefined) {
+      let fechaString = JSON.stringify(this.fechaConstitucion);
+      fechaString = fechaString.substring(1, 11);
+      let arrayDesde: any[] = fechaString.split("-");
+      arrayDesde[2] = parseInt(arrayDesde[2]) + 1;
+      let returnDesde =
+        arrayDesde[1] + "/" + arrayDesde[2] + "/" + arrayDesde[0];
+      this.fechaConstitucionArreglada = new Date(returnDesde);
+    }
   }
 
   activarPaginacion() {
@@ -274,14 +302,28 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
 
   isBuscar() {
     this.arreglarFecha();
+    this.arreglarSociedades();
     this.Search();
   }
 
+  arreglarSociedades() {
+    if (this.body.sociedadesProfesionales == true) {
+      this.body.sociedadProfesional = "1";
+    } else {
+      this.body.sociedadProfesional = "0";
+    }
+  }
   Search() {
-    this.arreglarFecha();
-    this.body.fechaConstitucion = this.fechaConstitucionArreglada;
+    //this.arreglarFecha(); sobra porque se entra siempre en this.isBuscar();
+
     this.progressSpinner = true;
     this.buscar = true;
+    this.historico = false;
+    this.selectAll = false;
+    this.selectMultiple = false;
+    this.selectedDatos = "";
+    // comprobaciones para body de search
+    this.body.fechaConstitucion = this.fechaConstitucionArreglada;
     if (this.body.tipo == undefined) {
       this.body.tipo = "";
     }
@@ -297,11 +339,11 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     if (this.body.abreviatura == undefined) {
       this.body.abreviatura = "";
     }
-    if (this.body.etiquetas == undefined) {
-      this.body.denominacion = "";
+    if (this.body.grupos == undefined) {
+      this.body.grupos = [];
     }
-    if (this.body.socioIntegrante == undefined) {
-      this.body.socioIntegrante = "";
+    if (this.body.integrante == undefined) {
+      this.body.integrante = "";
     }
     // this.body.idInstitucion = "2000";
     this.sigaServices
@@ -311,7 +353,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
           console.log(data);
           this.progressSpinner = false;
           this.personaSearch = JSON.parse(data["body"]);
-          this.datos = this.personaSearch.PersonaJuridicaItem;
+          this.datos = this.personaSearch.busquedaJuridicaItems;
           this.table.paginator = true;
         },
         err => {
@@ -327,6 +369,15 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         }
       );
   }
+
+  obtenerIntegrantes(dato) {
+    return dato.numeroIntegrantes;
+  }
+
+  obtenerNombreIntegrantes(dato) {
+    return dato.nombresIntegrantes;
+  }
+
   paginate(event) {
     console.log(event);
   }
@@ -356,11 +407,51 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.body = new PersonaJuridicaItem();
     this.disabledRadio = false;
   }
+  confirmarBorrar(selectedItem) {
+    let mess = this.translateService.instant("messages.deleteConfirmation");
+    let icon = "fa fa-trash-alt";
 
-  borrar(selectedDatos) {
-    this.sigaServices.post("usuarios_delete", selectedDatos).subscribe(
+    if (selectedItem.length > 1) {
+      mess =
+        this.translateService.instant("messages.deleteConfirmation.much") +
+        selectedItem.length +
+        " " +
+        this.translateService.instant("messages.deleteConfirmation.register") +
+        "?";
+    }
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.borrar(selectedItem);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.error.realiza.accion"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  borrar(selectedItem) {
+    //recorrer selected datos y enviar idusuario
+    var deletePersonas: String[];
+    var personaItem = new PersonaJuridicaItem();
+    selectedItem.forEach((value: PersonaJuridicaItem, key: number) => {
+      personaItem.idPersonaDelete.push(value.idPersona);
+      // this.personaDelete.busquedaJuridicaItems.push(personaItem);
+      console.log(value);
+      // deletePersonas.push(value.idPersona);
+    });
+    this.sigaServices.post("busquedaPerJuridica_delete", personaItem).subscribe(
       data => {
-        this.showSuccessDelete(selectedDatos.length);
+        this.showSuccessDelete(selectedItem.length);
       },
       err => {
         this.showFail();
@@ -443,54 +534,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       )
     });
   }
-  confirmarBorrar(selectedItem) {
-    let mess = this.translateService.instant("messages.deleteConfirmation");
-    let icon = "fa fa-trash-alt";
-
-    if (selectedItem.length > 1) {
-      mess =
-        this.translateService.instant("messages.deleteConfirmation.much") +
-        selectedItem.length +
-        " " +
-        this.translateService.instant("messages.deleteConfirmation.register") +
-        "?";
-    }
-    if (this.activo == true) {
-      icon = "fa fa-check";
-      if (selectedItem.length > 1) {
-        (mess = this.translateService.instant(
-          "general.message.confirmar.rehabilitaciones"
-        )),
-          +selectedItem.length +
-            " " +
-            this.translateService.instant(
-              "cargaMasivaDatosCurriculares.numRegistros.literal"
-            );
-      } else {
-        mess = this.translateService.instant(
-          "general.message.confirmar.rehabilitacion"
-        );
-      }
-    }
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.borrar(selectedItem);
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Cancel",
-            detail: this.translateService.instant(
-              "general.message.error.realiza.accion"
-            )
-          }
-        ];
-      }
-    });
-  }
 
   irEditarUsuario(id) {
     if (!this.selectMultiple) {
@@ -498,9 +541,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       if (id && id.length > 0) {
         ir = id[0];
       }
-      sessionStorage.removeItem("usuarioBody");
-      sessionStorage.removeItem("privilegios");
-      sessionStorage.removeItem("first");
       sessionStorage.setItem("usuarioBody", JSON.stringify(id));
       sessionStorage.setItem(
         "privilegios",
@@ -509,7 +549,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       sessionStorage.setItem("searchUser", JSON.stringify(this.body));
       sessionStorage.setItem("editedUser", JSON.stringify(this.selectedDatos));
       sessionStorage.setItem("first", JSON.stringify(this.table.first));
-      this.router.navigate(["/editarUsuario"]);
+      // this.router.navigate(["/editarUsuario"]);
     } else {
       this.editar = true;
       this.dniCorrecto = null;
@@ -524,5 +564,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     } else {
       this.selectedDatos = [];
     }
+  }
+
+  setItalic(datoH) {
+    if (datoH.fechaBaja == null) return false;
+    else return true;
   }
 }
