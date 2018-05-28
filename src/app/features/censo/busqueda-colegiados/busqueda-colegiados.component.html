@@ -15,14 +15,14 @@
                 </div>
                 <div class="col-lg-11 col-md-10">
                     <div class="d-flex justify-content-end mb-1">
-                        <label class="mr-auto title-ficha">Datos generales</label>
-                        <label class="registros-ficha">(0 registros)</label>
+                        <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate}}</label>
+                        <!--<label class="registros-ficha">(0 registros)</label>-->
                     </div>
                     <div class="d-flex justify-content-between">
-                        <label>NIF: <span>21489943J</span></label>
-                        <label>Nombre: <span>María José Abella Mestanza</span></label>
-                        <label>Fecha nacimiento: <span>18/03/1970</span></label>
-                        <label>Fecha alta: <span>04/02/1997</span></label>
+                        <label>NIF: <span>{{body.nif}}</span></label>
+                        <label>Nombre: <span>{{body.nombre}}</span></label>
+                        <label>Fecha nacimiento: <span>{{body.fechaNacimiento}}</span></label>
+                        <label>Fecha alta: <span>{{body.fechaAlta}}</span></label>
                         <i *ngIf="!esFichaActiva('generales')" (click)="abrirFicha('generales')" class="fa fa-angle-down float-right"></i>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                 <div class="img-colegiado">
                     <img src="./assets/images/img-colegiado.PNG">
                 </div>
-                <label class="title-ficha">Datos generales</label>
+                <label class="title-ficha">{{ "general.message.datos.generales" | translate}}</label>
                 <i (click)="cerrarFicha('generales')" class="fa fa-angle-up ml-auto"></i>
             </div>
         </div>
@@ -46,32 +46,26 @@
                         <img src="{{imagenURL}}">
                         <p-fileUpload #fubauto chooseLabel="" class="edit" mode="basic" name="file" auto="true" accept="image/*" (change)="uploadImage($event)"
                             auto="true">
-                            <!--<ng-template pTemplate="content">
-                <ul *ngIf="uploadedFiles.length">
-                  <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
-                </ul>
-              </ng-template>-->
                             </p-fileUpload>
+                            <!--<p-fileUpload *ngIf="archivoDisponible" #fubauto mode="basic" name="file" accept="image/*" (change)="uploadImage($event)" auto="true" chooseLabel="{{'administracion.gestionEntidad.buscarLogotipo' | translate}}">
+                            </p-fileUpload>-->
 
                     </div>
-                    <!--<div class="main-button mb-3">
-            <button pButton type="button" icon="fae fa-image" iconPos="left" label="Subir foto"></button>
-          </div>-->
                     <p-checkbox binary="true" label="Permitir utilizar mi foto de Guía Colegial" name="groupname "></p-checkbox>
                 </div>
                 <div class="bloque col-lg-5 col-md-5">
                     <div class="form-row">
                         <div class="form-group col-lg-6 col-md-6">
                             <label>Identificación</label>
-                            <input value="38475777C" type="text" class="form-control" pInputText>
+                            <input [(ngModel)]="body.nif" type="text" class="form-control" pInputText>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label></label>
-                            <p-dropdown placeholder="NIF" class="select-form" [(ngModel)]="selectedDoc" [options]="select"></p-dropdown>
+                            <p-dropdown placeholder="NIF" class="select-form" [(ngModel)]="body.tipo" [options]="select"></p-dropdown>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>Apellidos</label>
-                            <input value="Abella" type="text" class="form-control" pInputText>
+                            <input [(ngModel)]="body.apellidos" type="text" class="form-control" pInputText>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label></label>

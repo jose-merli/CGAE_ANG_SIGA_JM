@@ -53,7 +53,8 @@ import { HeaderGestionEntidadService } from "./../../../_services/headerGestionE
 import { FichaColegialComponent } from "./../../../new-features/censo/ficha-colegial/ficha-colegial.component";
 import { DatosGeneralesComponent } from "./../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
 import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-colegial/datos-colegiales/datos-colegiales.component";
-import { PersonaJuridicaFotoDto } from "./../../../../app/models/PersonaJuridicaFotoDto";
+import { DatoGeneralItem } from "./../../../../app/models/DatoGeneralItem";
+import { DatoGeneralObject } from "./../../../../app/models/DatoGeneralObject";
 
 @NgModule({
   imports: [
@@ -95,7 +96,8 @@ export class BusquedaColegiadosComponent implements OnInit {
   select: any[];
   es: any = esCalendar;
   msgs: Message[];
-  cargaFoto: PersonaJuridicaFotoDto = new PersonaJuridicaFotoDto();
+  cargaFoto: DatoGeneralItem = new DatoGeneralItem();
+  body: DatoGeneralItem = new DatoGeneralItem();
   fichasActivas: Array<any> = [];
   todo: boolean = false;
 
@@ -162,6 +164,12 @@ export class BusquedaColegiadosComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.body = new DatoGeneralItem();
+    this.body.nif = "AAAA";
+    this.body.tipo = "NIF";
+    this.body.apellidos = "Gutierrez";
+    this.body.nombre = "Maria José";
+
     if (sessionStorage.getItem("idPersona") != null) {
       this.sigaServices
         .postPaginado(
