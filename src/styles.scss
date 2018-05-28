@@ -91,7 +91,7 @@ label{
 .header-title{
     display: flex;
     align-items: center;
-    margin-bottom: .5rem;
+    margin-bottom: 1rem;
     border-bottom: 1px dashed $secondary-color;        
    
     i{
@@ -129,7 +129,7 @@ label{
 .card{
     box-shadow: 0 0 2px $grey4;    
     border:none;
-    margin-bottom: 1.5rem;
+    margin-bottom: .5rem;
     border-bottom:2px solid $grey4;
     .card-header{
         background-color: white;
@@ -205,6 +205,7 @@ label{
     }    
 
     .card-body{
+        padding: .6rem 1.25rem;
         .title-module{
             margin: 1rem 0;
             border-bottom: 1px solid $grey1;
@@ -306,7 +307,7 @@ label{
         }
         p-checkbox{
             margin-left: 1rem;
-            display: block
+            display: block;
         }
 
         textarea{
@@ -382,9 +383,15 @@ label{
          background: none;
     }
     .ui-paginator-top{
-    .registros-totales{
-        display: none;
+        .registros-totales,.numSeleccionados{
+            display: none;
+        }
     }
+
+    .ui-paginator-bottom{
+         .selectAll, .seleccionMultiple{
+            display: none;
+        }
     }
    
 
@@ -443,6 +450,9 @@ font-size: .7rem;
 
 
 .menu-accesos{
+        display: flex;
+        justify-content: start;
+        align-items: center;
         position:fixed;
         background: white;
         bottom: 0;
@@ -461,12 +471,14 @@ font-size: .7rem;
             text-align: center;
             color: white;
             height:52px;
+            width: 152px;
             padding: 0 1.5rem;
-            margin-left: .75rem;
+            margin-right: .4rem;
             box-shadow: 0 0 2px $grey4;
             cursor:pointer;
             p{
                 text-align: center;
+                margin: 0 auto;
                 line-height:.9rem;
                  span{
                 display: block;
@@ -487,6 +499,8 @@ font-size: .7rem;
         .sin-asignar{
             background: $grey4;
         }
+
+     
 }
 
 .scroll-arrow{
@@ -547,6 +561,7 @@ font-size: .7rem;
 .ui-calendar{
     width: 100%;  
 }
+
 
  p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext{
      box-shadow: 0 0 2px $error;
@@ -706,7 +721,9 @@ font-size: .7rem;
                  }      
                  .ui-tree-toggler{
                     float: right;   
-                    line-height: 1.5rem;                                          
+                    line-height: 1.5rem;   
+                    width: 100%;
+                    text-align: right;                                       
                  }
 
                  .fa-caret-right:before{
@@ -867,5 +884,17 @@ font-size: .7rem;
     }
 }
 
+
+@media ( max-width: 1600px) { 
+  .menu-accesos{
+        display: block;
+        .texto{
+            margin-bottom: .5rem;
+        }
+        .btn-acceso{
+             width:142px;
+         }
+  }
+}
 
 

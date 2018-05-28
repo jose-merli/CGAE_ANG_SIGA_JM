@@ -26,10 +26,11 @@ header {
   height: 6rem;
 
   .header-principal {
-    padding: 1rem 1.5em;
+    padding: 10px 1.5rem;
     background: white;
 
     .logo {
+      cursor: pointer;
       .logo-img {
         display: inline-block;
         img {
@@ -48,16 +49,14 @@ header {
       }
     }
     .logo-central {
-      img {
-        width: 10.5rem;
-        height: 39px;
-        width: 168px;
+      img {      
+        height:55px;
       }
     }
 
     .datos-img {
       img {
-        width: 7rem;
+        width: 8rem;
       }
     }
   }

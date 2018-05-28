@@ -4,10 +4,10 @@
     <i class="fa fa-square"></i>
     <p>{{ 'administracion.grupos.titulo' | translate}} </p>
   </div>
-  <div class="breadCrumb">
+  <!--<div class="breadCrumb">
     <p>{{ "menu.administracion" | translate}} <i class="fa fa-angle-right"></i> {{'administracion.usuarios.literal.usuariosyperfiles'
       | translate}} <i class="fa fa-angle-right"></i> {{ 'administracion.grupos.titulo' | translate}}</p>
-  </div>
+  </div>-->
   <div class="card">
     <div class="card-body">
       <p class="title-module">{{ "general.message.datos.generales" | translate}}
@@ -18,12 +18,6 @@
       <div *ngIf="showDatosGenerales" class="module vista-avanzada">
         <div *ngIf="buscar == true" class="card mt-3">
           <div class="card-body p-0">
-            <div class="m-3 d-flex text-right justify-content-end">
-              <div>
-                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
-              </div>
-              <label class="ml-3" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false"><i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
-            </div>
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
               [(selection)]="selectedDatos" (onRowSelect)="irEditarUsuario(selectedDatos)" dataKey="idGrupo" [responsive]="true"
               #table class="tabla-listado" selectionMode="multiple" [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both"
@@ -38,10 +32,15 @@
 
                 </p-column>
                 <ng-template pTemplate="paginatorLeft">
-                  <div class="mostrar">
+                  <div class="mostrar d-flex text-right justify-content-end">
                     <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                    <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
                     <label>{{ "general.message.mostrar" | translate}}</label>
-                    <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown><label> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                    <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown><label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                    <div class="ml-3 selectAll">
+                      <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
+                    </div>
+                    <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false"><i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
                   </div>
                 </ng-template>
                 <p-footer>

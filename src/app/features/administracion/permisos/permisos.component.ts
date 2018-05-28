@@ -57,6 +57,7 @@ export class PermisosComponent implements OnInit, DoCheck {
   permisosArray: any[];
   derechoAcceso: any;
   activacionEditar: boolean;
+  propagateDown: boolean = true;
   // treeNode: TreeNode[]
 
   @ViewChild("widthContent") widthContent: any;
@@ -278,7 +279,11 @@ export class PermisosComponent implements OnInit, DoCheck {
         } else if (ref == "total") {
           changed.derechoacceso = "3";
         }
+
+
       }
+
+
       this.selectAll = false;
       this.numSeleccionados = 0;
       this.accesoTotal = 0;
@@ -289,6 +294,8 @@ export class PermisosComponent implements OnInit, DoCheck {
 
       this.permisosTree.forEach(node => {
         this.totalAccesosRecursive(node);
+
+
       });
       this.getNumChanges();
     }
@@ -313,7 +320,7 @@ export class PermisosComponent implements OnInit, DoCheck {
   }
 
   isButtonDisabled() {
-    if (this.permisosChange && this.permisosChange.length > 0) {
+    if (this.permisosChange && this.permisosChange.length > 0 && this.savedPermisos == false) {
       return false;
     }
     return true;
@@ -359,7 +366,8 @@ export class PermisosComponent implements OnInit, DoCheck {
 
       this.sigaServices.post("permisos_update", objUpdate).subscribe(
         data => {
-          console.log(data);
+
+          this.permisosChange = [];
         },
         err => {
           console.log(err);
@@ -368,6 +376,7 @@ export class PermisosComponent implements OnInit, DoCheck {
     }
 
     this.savedPermisos = true;
+    this.numCambios = 0;
 
     this.showSuccess();
   }
@@ -397,12 +406,14 @@ export class PermisosComponent implements OnInit, DoCheck {
   }
 
   onNodeSelect() {
+    this.propagateDown = true;
     this.getNumSelected();
     this.savedPermisos = false;
     this.getNumTotales();
   }
 
   onNodeUnselect() {
+    this.propagateDown = true;
     this.getNumSelected();
   }
 
@@ -413,5 +424,9 @@ export class PermisosComponent implements OnInit, DoCheck {
       summary: "Correcto",
       detail: "Árbol de permisos actualizado correctamente"
     });
+  }
+
+  onChangePropagate(node) {
+    this.propagateDown = false;
   }
 }
