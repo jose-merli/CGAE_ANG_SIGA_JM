@@ -46,11 +46,14 @@ import { Location } from "@angular/common";
 
 import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
+import { TranslateService } from "../../../commons/translate/translation.service";
+import { HeaderGestionEntidadService } from "./../../../_services/headerGestionEntidad.service";
 
 /*** COMPONENTES ***/
 import { FichaColegialComponent } from "./../../../new-features/censo/ficha-colegial/ficha-colegial.component";
 import { DatosGeneralesComponent } from "./../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
 import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-colegial/datos-colegiales/datos-colegiales.component";
+import { PersonaJuridicaFotoDto } from "./../../../../app/models/PersonaJuridicaFotoDto";
 
 @NgModule({
   imports: [
@@ -92,7 +95,7 @@ export class BusquedaColegiadosComponent implements OnInit {
   select: any[];
   es: any = esCalendar;
   msgs: Message[];
-
+  cargaFoto: PersonaJuridicaFotoDto = new PersonaJuridicaFotoDto();
   fichasActivas: Array<any> = [];
   todo: boolean = false;
 
@@ -109,6 +112,12 @@ export class BusquedaColegiadosComponent implements OnInit {
   newDireccion: boolean = false;
 
   editar: boolean = false;
+  archivoDisponible: boolean = false;
+  file: File = undefined;
+  base64String: any;
+  source: any;
+  imageBase64: any;
+  imagenURL: any;
 
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
@@ -142,8 +151,10 @@ export class BusquedaColegiadosComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
+    private translateService: TranslateService,
     private location: Location,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private headerGestionEntidadService: HeaderGestionEntidadService
   ) {
     this.formBusqueda = this.formBuilder.group({
       cif: null
@@ -222,6 +233,96 @@ export class BusquedaColegiadosComponent implements OnInit {
         value: this.datosDirecciones.length
       }
     ];
+  }
+
+  showSuccessUploadedImage() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant(
+        "general.message.logotipo.actualizado"
+      )
+    });
+  }
+
+  guardar() {
+    this.cargaFoto.idPersona = "2005005356";
+    // guardar imagen en bd y refresca header.component
+    let lenguajeeImagen: boolean = false;
+    if (this.file != undefined) {
+      this.sigaServices
+        .postSendFileAndParameters(
+          "personaJuridica_uploadFotografia",
+          this.file,
+          "2005005356"
+        )
+        .subscribe(
+          data => {
+            console.log(data);
+            this.file = undefined;
+            this.archivoDisponible = false;
+
+            // this.imagenURL =
+            //   this.sigaServices.getNewSigaUrl() +
+            //   this.sigaServices.getServucePath(
+            //     "personaJuridica_cargarFotografia"
+            //   ) +
+            //   "?random=" +
+            //   new Date().getTime();
+
+            this.imagenURL = this.sigaServices.post(
+              "personaJuridica_cargarFotografia",
+              this.cargaFoto
+            );
+
+            this.imagenURL = this.imagenURL + "?random=" + new Date().getTime();
+
+            var ajsdka = this.imagenURL;
+            if (!lenguajeeImagen) {
+              this.showSuccessUploadedImage();
+            }
+          },
+          err => {
+            console.log(err);
+          }
+        );
+    }
+  }
+
+  showFailUploadedImage() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Error",
+      detail: "Formato incorrecto de imagen seleccionada"
+    });
+  }
+
+  uploadImage(event: any) {
+    // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
+    let fileList: FileList = event.target.files;
+
+    let nombreCompletoArchivo = fileList[0].name;
+    let extensionArchivo = nombreCompletoArchivo.substring(
+      nombreCompletoArchivo.lastIndexOf("."),
+      nombreCompletoArchivo.length
+    );
+
+    if (
+      extensionArchivo == null ||
+      extensionArchivo.trim() == "" ||
+      !/\.(gif|jpg|jpeg|tiff|png)$/i.test(extensionArchivo.trim().toUpperCase())
+    ) {
+      // Mensaje de error de formato de imagen y deshabilitar boton guardar
+      this.file = undefined;
+      this.archivoDisponible = false;
+      this.showFailUploadedImage();
+    } else {
+      // se almacena el archivo para habilitar boton guardar
+      this.file = fileList[0];
+      this.archivoDisponible = true;
+    }
   }
 
   onHideDatosGenerales() {

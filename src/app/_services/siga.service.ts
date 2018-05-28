@@ -88,7 +88,9 @@ export class SigaServices {
     datosGenerales_insert: "DatosGenerales/insert",
     datosGenerales_tipo: "DatosGenerales/tipo",
     datosGenerales_etiquetas: "DatosGenerales/etiquetas",
-    datosGenerales_identificacion: "DatosGenerales/identificacion"
+    datosGenerales_identificacion: "DatosGenerales/identificacion",
+    personaJuridica_uploadFotografia: "personaJuridica/uploadFotografia",
+    personaJuridica_cargarFotografia: "personaJuridica/cargarFotografia"
   };
 
   constructor(
