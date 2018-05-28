@@ -96,7 +96,6 @@ export class BusquedaColegiadosComponent implements OnInit {
   select: any[];
   es: any = esCalendar;
   msgs: Message[];
-  cargaFoto: DatoGeneralItem = new DatoGeneralItem();
   body: DatoGeneralItem = new DatoGeneralItem();
   fichasActivas: Array<any> = [];
   todo: boolean = false;
@@ -120,6 +119,16 @@ export class BusquedaColegiadosComponent implements OnInit {
   source: any;
   imageBase64: any;
   imagenURL: any;
+  generos: any[];
+  tratamientos: any[];
+  idiomas: any[] = [
+    { label: "", value: "" },
+    { label: "Castellano", value: "castellano" },
+    { label: "Catalá", value: "catalan" },
+    { label: "Euskara", value: "euskera" },
+    { label: "Galego", value: "gallego" }
+  ];
+  edadCalculada: String;
 
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
@@ -164,11 +173,11 @@ export class BusquedaColegiadosComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.body = new DatoGeneralItem();
-    this.body.nif = "AAAA";
-    this.body.tipo = "NIF";
-    this.body.apellidos = "Gutierrez";
-    this.body.nombre = "Maria José";
+    // this.body = new DatoGeneralItem();
+    // this.body.nif = "AAAA";
+    // this.body.tipo = "NIF";
+    // this.body.apellidos = "Gutierrez";
+    // this.body.nombre = "Maria José";
 
     if (sessionStorage.getItem("idPersona") != null) {
       this.sigaServices
@@ -241,6 +250,28 @@ export class BusquedaColegiadosComponent implements OnInit {
         value: this.datosDirecciones.length
       }
     ];
+
+    this.generos = [
+      { label: "", value: "" },
+      { label: "Mujer", value: "M" },
+      { label: "Hombre", value: "H" }
+    ];
+
+    this.calculaEdad();
+  }
+
+  isSearch() {
+    this.sigaServices
+      .postPaginado("ficha_search", "?numPagina=1", this.body)
+      .subscribe(
+        data => {
+          console.log(data);
+          this.body = JSON.parse(data["body"]);
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 
   showSuccessUploadedImage() {
@@ -254,8 +285,34 @@ export class BusquedaColegiadosComponent implements OnInit {
     });
   }
 
+  calculaEdad() {
+    var dateString = JSON.stringify(this.body.fechaNacimiento);
+    var fechaNac = new Date(dateString.substring(1, 25));
+    // var timeDiff = Math.abs(Date.now() - fechaNac.getDate());
+    // this.edadCalculada = "" + Math.ceil(timeDiff / (1000 * 3600 * 24) / 365);
+
+    var today = new Date();
+    var nowyear = today.getFullYear();
+    var nowmonth = today.getMonth();
+    var nowday = today.getDate();
+
+    var birth = new Date(fechaNac);
+    var birthyear = birth.getFullYear();
+    var birthmonth = birth.getMonth();
+    var birthday = birth.getDate();
+
+    var age = nowyear - birthyear;
+    var age_month = nowmonth - birthmonth;
+    var age_day = nowday - birthday;
+
+    if (age_month < 0 || (age_month == 0 && age_day < 0)) {
+      age = age - 1;
+    }
+    this.edadCalculada = "" + age;
+  }
+
   guardar() {
-    this.cargaFoto.idPersona = "2005005356";
+    this.body.idPersona = "2005005356";
     // guardar imagen en bd y refresca header.component
     let lenguajeeImagen: boolean = false;
     if (this.file != undefined) {
@@ -281,7 +338,7 @@ export class BusquedaColegiadosComponent implements OnInit {
 
             this.imagenURL = this.sigaServices.post(
               "personaJuridica_cargarFotografia",
-              this.cargaFoto
+              this.body
             );
 
             this.imagenURL = this.imagenURL + "?random=" + new Date().getTime();
