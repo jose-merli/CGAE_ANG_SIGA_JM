@@ -27,18 +27,18 @@
   </div>
   <div expandedIcon="fa fa-angle-down" *ngIf="formPermisos.controls['grupo'].value" class="permisos-tree">
     <p-tree *ngIf="activacionEditar" (onNodeSelect)="onNodeSelect()" (onNodeUnselect)="onNodeUnselect()" [(selection)]="selectedPermiso"
-      #expandingTree [value]="permisosTree" selectionMode="checkbox">
+      #expandingTree [value]="permisosTree" selectionMode="checkbox" [propagateSelectionDown]="propagateDown">
       <ng-template let-node pTemplate="default">
         <i class="fa fa-circle icon-acceso" [ngClass]="{ 'color-sinAsignar':node.derechoacceso == 0 , 'color-denegado':node.derechoacceso == 1 ,'color-lectura':node.derechoacceso == 2,  'color-total':node.derechoacceso == 3}"></i>
-        <label>{{node.label}}</label>
+        <label (click)="onChangePropagate(node)">{{node.label}}</label>
       </ng-template>
 
       </p-tree>
       <p-tree *ngIf="!activacionEditar" (onNodeSelect)="onNodeSelect()" (onNodeUnselect)="onNodeUnselect()" [(selection)]="selectedPermiso"
-        #expandingTree [value]="permisosTree">
+        #expandingTree [value]="permisosTree" [propagateSelectionDown]="propagateDown">
         <ng-template let-node pTemplate="default">
           <i class="fa fa-circle icon-acceso" [ngClass]="{ 'color-sinAsignar':node.derechoacceso == 0 , 'color-denegado':node.derechoacceso == 1 ,'color-lectura':node.derechoacceso == 2,  'color-total':node.derechoacceso == 3}"></i>
-          <label>{{node.label}}</label>
+          <label (click)="onChangePropagate(node)">{{node.label}}</label>
         </ng-template>
         </p-tree>
   </div>
@@ -47,7 +47,7 @@
 </div>
 <div *ngIf="(selectedPermiso && selectedPermiso.length > 0) || (this.permisosChange && this.permisosChange.length > 0)" [style.width.px]="myWidth"
   class="menu-accesos">
-  <div>
+  <div class="texto">
     <label class="title">Administrar permisos de acceso</label>
     <div>
       <label class="mr-2">Seleccionados {{numSeleccionados}}/{{totalPermisos}}</label>
@@ -61,20 +61,20 @@
     </div>
   </div>
   <div class="ml-auto">
-    <div class="text-right d-flex align-items-center">
+    <div class="text-right d-flex align-items-center justify-content-start">
       <div (click)="onChangeAcceso('total')" class="btn-acceso acceso-total d-flex align-items-center">
         <p>Acceso total ({{accesoTotal}})</p>
       </div>
-      <div (click)="onChangeAcceso('lectura')" class="btn-acceso solo-lectura d-flex align-items-center">
+      <div (click)="onChangeAcceso('lectura')" class="mr-3 btn-acceso solo-lectura d-flex align-items-center">
         <p>Solo lectura ({{accesoLectura}})</p>
       </div>
-      <div (click)="onChangeAcceso('denegado')" class="ml-3 btn-acceso acceso-denegado d-flex align-items-center">
+      <div (click)="onChangeAcceso('denegado')" class=" btn-acceso acceso-denegado d-flex align-items-center">
         <p>Acceso denegado ({{accesoDenegado}})</p>
       </div>
-      <div (click)="onChangeAcceso('sinAsignar')" class="btn-acceso sin-asignar d-flex align-items-center">
+      <div (click)="onChangeAcceso('sinAsignar')" class="mr-3 btn-acceso sin-asignar d-flex align-items-center">
         <p>Sin asignar ({{sinAsignar}})</p>
       </div>
-      <div class="ml-4 main-button d-inline-block">
+      <div class="ml-auto main-button d-inline-block">
         <button [disabled]="isButtonDisabled()" (click)="savePermisos()" class="mr-2" pButton type="button" icon="far fa-save" iconPos="left"
           label="Guardar"></button>
           <button [disabled]="savedPermisos" (click)="restablecerPermisos()" pButton type="button" icon="fa fa-redo" iconPos="left"

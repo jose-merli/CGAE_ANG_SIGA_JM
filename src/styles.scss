@@ -473,7 +473,7 @@ font-size: .7rem;
             height:52px;
             width: 152px;
             padding: 0 1.5rem;
-            margin-left: .4rem;
+            margin-right: .4rem;
             box-shadow: 0 0 2px $grey4;
             cursor:pointer;
             p{
@@ -721,7 +721,9 @@ font-size: .7rem;
                  }      
                  .ui-tree-toggler{
                     float: right;   
-                    line-height: 1.5rem;                                          
+                    line-height: 1.5rem;   
+                    width: 100%;
+                    text-align: right;                                       
                  }
 
                  .fa-caret-right:before{
@@ -886,16 +888,12 @@ font-size: .7rem;
 @media ( max-width: 1600px) { 
   .menu-accesos{
         display: block;
-         .btn-acceso{
-             &:first-child{
-                margin-left: 0;
-             }
-         }
-
-        .main-button{
-          margin-left: 0;
+        .texto{
+            margin-bottom: .5rem;
         }
-
+        .btn-acceso{
+             width:142px;
+         }
   }
 }
 

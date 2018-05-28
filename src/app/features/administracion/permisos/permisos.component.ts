@@ -57,6 +57,7 @@ export class PermisosComponent implements OnInit, DoCheck {
   permisosArray: any[];
   derechoAcceso: any;
   activacionEditar: boolean;
+  propagateDown: boolean = true;
   // treeNode: TreeNode[]
 
   @ViewChild("widthContent") widthContent: any;
@@ -278,7 +279,11 @@ export class PermisosComponent implements OnInit, DoCheck {
         } else if (ref == "total") {
           changed.derechoacceso = "3";
         }
+
+
       }
+
+
       this.selectAll = false;
       this.numSeleccionados = 0;
       this.accesoTotal = 0;
@@ -289,6 +294,8 @@ export class PermisosComponent implements OnInit, DoCheck {
 
       this.permisosTree.forEach(node => {
         this.totalAccesosRecursive(node);
+
+
       });
       this.getNumChanges();
     }
@@ -399,12 +406,14 @@ export class PermisosComponent implements OnInit, DoCheck {
   }
 
   onNodeSelect() {
+    this.propagateDown = true;
     this.getNumSelected();
     this.savedPermisos = false;
     this.getNumTotales();
   }
 
   onNodeUnselect() {
+    this.propagateDown = true;
     this.getNumSelected();
   }
 
@@ -415,5 +424,9 @@ export class PermisosComponent implements OnInit, DoCheck {
       summary: "Correcto",
       detail: "Árbol de permisos actualizado correctamente"
     });
+  }
+
+  onChangePropagate(node) {
+    this.propagateDown = false;
   }
 }
