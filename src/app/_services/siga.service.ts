@@ -88,7 +88,11 @@ export class SigaServices {
     datosGenerales_insert: "DatosGenerales/insert",
     datosGenerales_tipo: "DatosGenerales/tipo",
     datosGenerales_etiquetas: "DatosGenerales/etiquetas",
-    datosGenerales_identificacion: "DatosGenerales/identificacion"
+    datosGenerales_identificacion: "DatosGenerales/identificacion",
+    busquedaPer_colegio: "busquedaPer/colegio",
+    busquedaPer_searchJuridica: "busquedaPer/searchJuridica",
+    busquedaPer_searchFisica: "busquedaPer/searchFisica",
+
   };
 
   constructor(
