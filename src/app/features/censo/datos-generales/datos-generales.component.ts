@@ -6,137 +6,233 @@ import {
   ChangeDetectorRef,
   Input
 } from "@angular/core";
-import { SigaServices } from "./../../../_services/siga.service";
-import { SigaWrapper } from "../../../wrapper/wrapper.class";
-import { SelectItem } from "primeng/api";
+import { OldSigaServices } from "../../../_services/oldSiga.service";
+
+import {
+  /*** MODULOS ***/
+  NgModule
+} from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { CalendarModule } from "primeng/calendar";
+import { InputTextModule } from "primeng/inputtext";
+import { InputTextareaModule } from "primeng/inputtextarea";
 import { DropdownModule } from "primeng/dropdown";
-import { esCalendar } from "./../../../utils/calendar";
+import { CheckboxModule } from "primeng/checkbox";
+import { ButtonModule } from "primeng/button";
+import { DataTableModule } from "primeng/datatable";
+// import { MenubarModule } from 'primeng/menubar';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+// import { DialogModule } from 'primeng/dialog';
+import { AutoCompleteModule } from "primeng/autocomplete";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { TooltipModule } from "primeng/tooltip";
+import { ChipsModule } from "primeng/chips";
+import { RadioButtonModule } from "primeng/radiobutton";
+import { FileUploadModule } from "primeng/fileupload";
+
+import { Http, Response } from "@angular/http";
+import { MenuItem } from "primeng/api";
 import {
   FormBuilder,
   FormGroup,
   Validators,
   FormControl
 } from "@angular/forms";
-import { DataTable } from "primeng/datatable";
-import { TranslateService } from "../../../commons/translate/translation.service";
-import { USER_VALIDATIONS } from "../../../properties/val-properties";
-import { ButtonModule } from "primeng/button";
-import { Router, ActivatedRoute } from "@angular/router";
-import { InputTextModule } from "primeng/inputtext";
-import { InputTextareaModule } from "primeng/inputtextarea";
-import { CheckboxModule } from "primeng/checkbox";
-import { RadioButtonModule } from "primeng/radiobutton";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { GrowlModule } from "primeng/growl";
-import { ConfirmationService } from "primeng/api";
+import { SelectItem } from "primeng/api";
+import { esCalendar } from "../../../utils/calendar";
+import { Router } from "@angular/router";
 import { Message } from "primeng/components/common/api";
-import { MessageService } from "primeng/components/common/messageservice";
-import { DatosGeneralesObject } from "./../../../../app/models/DatosGeneralesObject";
-import { DatosGeneralesItem } from "./../../../../app/models/DatosGeneralesItem";
-import { ComboItem } from "./../../../../app/models/ComboItem";
-import { MultiSelectModule } from "primeng/multiSelect";
-import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { Location } from "@angular/common";
-import { Observable } from "rxjs/Rx";
+
+import { SigaServices } from "./../../../_services/siga.service";
+import { SigaWrapper } from "../../../wrapper/wrapper.class";
+import { TranslateService } from "../../../commons/translate/translation.service";
+import { HeaderGestionEntidadService } from "./../../../_services/headerGestionEntidad.service";
+
+/*** COMPONENTES ***/
+import { FichaColegialComponent } from "./../../../new-features/censo/ficha-colegial/ficha-colegial.component";
+import { DatosGeneralesComponent } from "./../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
+import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-colegial/datos-colegiales/datos-colegiales.component";
+import { DatoGeneralItem } from "./../../../../app/models/DatoGeneralItem";
+import { DatoGeneralObject } from "./../../../../app/models/DatoGeneralObject";
+
+@NgModule({
+  imports: [
+    CommonModule,
+    CalendarModule,
+    InputTextModule,
+    InputTextareaModule,
+    DropdownModule,
+    CheckboxModule,
+    ButtonModule,
+    DataTableModule,
+    FormsModule,
+    ReactiveFormsModule,
+    AutoCompleteModule,
+    ConfirmDialogModule,
+    TooltipModule,
+    ChipsModule,
+    RadioButtonModule,
+    FileUploadModule
+  ],
+  declarations: [
+    FichaColegialComponent,
+    DatosGeneralesComponent,
+    DatosColegialesComponent
+  ],
+  exports: [FichaColegialComponent],
+  providers: []
+})
 @Component({
   selector: "app-datos-generales",
   templateUrl: "./datos-generales.component.html",
-  styleUrls: ["./datos-generales.component.scss"],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ["./datos-generales.component.scss"]
 })
-export class DatosGenerales extends SigaWrapper implements OnInit {
-  etiquetas: any[];
+export class DatosGenerales implements OnInit {
+  uploadedFiles: any[] = [];
+  formBusqueda: FormGroup;
   cols: any = [];
-  datos: any[];
+  datosDirecciones: any[];
   select: any[];
-  msgs: Message[] = [];
-  rowsPerPage: any = [];
-  body: DatosGeneralesItem = new DatosGeneralesItem();
-  showDatosGenerales: boolean = true;
-  pButton;
-  editar: boolean = true;
-  buscar: boolean = false;
-  disabledRadio: boolean = false;
-  disabled: boolean = false;
-  selectMultiple: boolean = false;
-  blockCrear: boolean = true;
-  selectedItem: number = 10;
-  first: number = 0;
-  activo: boolean = false;
-  dniCorrecto: boolean;
   es: any = esCalendar;
-  controlAcceso: ControlAccesoDto = new ControlAccesoDto();
-  datosSearch: DatosGeneralesObject = new DatosGeneralesObject();
-  permisosTree: any;
-  permisosArray: any[];
-  derechoAcceso: any;
-  activacionEditar: boolean;
-  selectAll: boolean = false;
-  progressSpinner: boolean = false;
-  tipos: any[];
-  fechaConstitucion: Date;
-  textSelected: String = "{0} grupos seleccionados";
-  textFilter = "Elegir";
+  msgs: Message[];
+  body: DatoGeneralItem = new DatoGeneralItem();
+  fichasActivas: Array<any> = [];
+  todo: boolean = false;
+
+  selectedDatos: any = [];
+
+  showDatosGenerales: boolean = true;
+  showDatosColegiales: boolean = false;
+  showDatosFacturacion: boolean = false;
+  rowsPerPage: any = [];
+  showAll: boolean = false;
+
+  selectedItem: number = 10;
+  selectedDoc: string = "NIF";
+  newDireccion: boolean = false;
+
+  editar: boolean = false;
+  archivoDisponible: boolean = false;
+  file: File = undefined;
+  base64String: any;
+  source: any;
+  imageBase64: any;
+  imagenURL: any;
+  generos: any[];
+  tratamientos: any[];
+  idiomas: any[] = [
+    { label: "", value: "" },
+    { label: "Castellano", value: "castellano" },
+    { label: "Catalá", value: "catalan" },
+    { label: "Euskara", value: "euskera" },
+    { label: "Galego", value: "gallego" }
+  ];
+  edadCalculada: String;
+
+  @ViewChild(DatosGeneralesComponent)
+  datosGeneralesComponent: DatosGeneralesComponent;
+
+  @ViewChild("table") table;
+
+  fichasPosibles = [
+    {
+      key: "generales",
+      activa: false
+    },
+    {
+      key: "direcciones",
+      activa: false
+    },
+    {
+      key: "colegiales",
+      activa: false
+    },
+    {
+      key: "bancarios",
+      activa: false
+    },
+    {
+      key: "cv",
+      activa: false
+    }
+  ];
+
   constructor(
-    private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
-    private messageService: MessageService,
-    private confirmationService: ConfirmationService,
-    private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
-    private location: Location
+    private location: Location,
+    private sigaServices: SigaServices,
+    private headerGestionEntidadService: HeaderGestionEntidadService
   ) {
-    super(USER_VALIDATIONS);
+    this.formBusqueda = this.formBuilder.group({
+      cif: null
+    });
   }
-  @ViewChild("table") table: DataTable;
-  selectedDatos;
 
   ngOnInit() {
-    this.activo = true;
-    this.checkAcceso(); //coger tipos
-    this.sigaServices.get("busquedaPerJuridica_tipo").subscribe(
-      n => {
-        this.tipos = n.combooItems;
-        let first = { label: "", value: "" };
-        this.tipos.unshift(first);
-      },
-      err => {
-        console.log(err);
-      }
-    );
-    this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
-      n => {
-        this.etiquetas = n.combooItems;
-        // let first = { label: "", value: "" };
-        // this.etiquetas.unshift(first);
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    // this.body = new DatoGeneralItem();
+    // this.body.nif = "AAAA";
+    // this.body.tipo = "NIF";
+    // this.body.apellidos = "Gutierrez";
+    // this.body.nombre = "Maria José";
+
+    if (sessionStorage.getItem("idPersona") != null) {
+      this.sigaServices
+        .postPaginado(
+          "datos_generales_search",
+          "?numPagina=1",
+          sessionStorage.getItem("idPersona")
+        )
+        .subscribe(
+          data => {
+            console.log(data);
+            // this.search = JSON.parse(data["body"]);
+            // this.datos = this.search.contadorItems;
+            // console.log(this.datos);
+            this.table.reset();
+          },
+          err => {
+            console.log(err);
+          }
+        );
+      sessionStorage.removeItem("idPersona");
+    }
+
     this.cols = [
+      { field: "tipoDireccion", header: "Tipo dirección" },
+      { field: "direccion", header: "Dirección" },
+      { field: "cp", header: "Código postal" },
+      { field: "poblacion", header: "Población" },
+      { field: "telefono", header: "Teléfono" },
+      { field: "fax", header: "Fax" },
+      { field: "movil", header: "Movil" },
+      { field: "email", header: "Email" },
+      { field: "preferente", header: "Preferente" }
+    ];
+
+    this.select = [
+      { label: "", value: null },
+      { label: "NIF", value: "nif" },
+      { label: "Pasaporte", value: "pasaporte" },
+      { label: "NIE", value: "nie" }
+    ];
+
+    this.datosDirecciones = [
       {
-        field: "tipo",
-        header: "censo.busquedaClientesAvanzada.literal.tipoCliente"
-      },
-      { field: "nif", header: "administracion.usuarios.literal.NIF" },
-      {
-        field: "denominacion",
-        header: "censo.consultaDatosGenerales.literal.denominacion"
-      },
-      {
-        field: "FechaConstitucion",
-        header: "censo.general.literal.FechaConstitucion"
-      },
-      {
-        field: "abreviatura",
-        header: "gratuita.definirTurnosIndex.literal.abreviatura"
-      },
-      {
-        field: "numeroIntegrantes",
-        header: "censo.general.literal.numeroIntegrantes"
+        id: 0,
+        tipoDireccion:
+          "CensoWeb, Despacho, Facturación, Guardia, Guía Judicial, Pública, Revista, Traspaso a organos judiciales",
+        direccion: "C/ CARDENAL CISNEROS 42-1º",
+        cp: "03660",
+        poblacion: "Novelda",
+        telefono: "99999",
+        fax: "2434344",
+        movil: "88888",
+        email: "email@redabogacia.org",
+        preferente: "correo,Mail,Fax,SMS"
       }
     ];
 
@@ -150,238 +246,246 @@ export class DatosGenerales extends SigaWrapper implements OnInit {
         value: 20
       },
       {
-        label: 30,
-        value: 30
-      },
-      {
-        label: 40,
-        value: 40
+        label: "Todo",
+        value: this.datosDirecciones.length
       }
     ];
-    // if (sessionStorage.getItem("editedUser") != null) {
-    //   this.selectedDatos = JSON.parse(sessionStorage.getItem("editedUser"));
-    // }
-    // sessionStorage.removeItem("editedUser");
-    // if (sessionStorage.getItem("searchUser") != null) {
-    //   this.body = JSON.parse(sessionStorage.getItem("searchUser"));
-    //   this.isBuscar();
-    //   sessionStorage.removeItem("searchUser");
-    //   sessionStorage.removeItem("usuarioBody");
-    // } else {
-    //   this.body = new PersonaJuridicaRequestDto();
-    // }
+
+    this.generos = [
+      { label: "", value: "" },
+      { label: "Mujer", value: "M" },
+      { label: "Hombre", value: "H" }
+    ];
+
+    this.calculaEdad();
   }
 
-  checkAcceso() {
-    this.controlAcceso = new ControlAccesoDto();
-    this.controlAcceso.idProceso = "2";
-    this.sigaServices.post("acces_control", this.controlAcceso).subscribe(
-      data => {
-        this.permisosTree = JSON.parse(data.body);
-        this.permisosArray = this.permisosTree.permisoItems;
-        this.derechoAcceso = this.permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        if (this.derechoAcceso == 3) {
-          this.activacionEditar = true;
-        } else {
-          this.activacionEditar = false;
+  isSearch() {
+    this.sigaServices
+      .postPaginado("ficha_search", "?numPagina=1", this.body)
+      .subscribe(
+        data => {
+          console.log(data);
+          this.body = JSON.parse(data["body"]);
+        },
+        err => {
+          console.log(err);
         }
-      }
-    );
+      );
   }
 
-  activarPaginacion() {
-    if (!this.datos || this.datos.length == 0) return false;
-    else return true;
+  showSuccessUploadedImage() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant(
+        "general.message.logotipo.actualizado"
+      )
+    });
   }
 
-  onChangeForm() {
-    if (
-      this.body.tipo != "" &&
-      this.body.tipo != undefined &&
-      (this.body.identificacion != "" &&
-        this.body.identificacion != undefined) &&
-      (this.body.denominacion != "" && this.body.denominacion != undefined) &&
-      (this.body.abreviatura != "" && this.body.abreviatura != undefined)
-    ) {
-      this.blockCrear = false;
-    } else {
-      this.blockCrear = true;
+  calculaEdad() {
+    var dateString = JSON.stringify(this.body.fechaNacimiento);
+    var fechaNac = new Date(dateString.substring(1, 25));
+    // var timeDiff = Math.abs(Date.now() - fechaNac.getDate());
+    // this.edadCalculada = "" + Math.ceil(timeDiff / (1000 * 3600 * 24) / 365);
+
+    var today = new Date();
+    var nowyear = today.getFullYear();
+    var nowmonth = today.getMonth();
+    var nowday = today.getDate();
+
+    var birth = new Date(fechaNac);
+    var birthyear = birth.getFullYear();
+    var birthmonth = birth.getMonth();
+    var birthday = birth.getDate();
+
+    var age = nowyear - birthyear;
+    var age_month = nowmonth - birthmonth;
+    var age_day = nowday - birthday;
+
+    if (age_month < 0 || (age_month == 0 && age_day < 0)) {
+      age = age - 1;
+    }
+    this.edadCalculada = "" + age;
+  }
+
+  guardar() {
+    this.body.idPersona = "2005005356";
+    // guardar imagen en bd y refresca header.component
+    let lenguajeeImagen: boolean = false;
+    if (this.file != undefined) {
+      this.sigaServices
+        .postSendFileAndParameters(
+          "personaJuridica_uploadFotografia",
+          this.file,
+          "2005005356"
+        )
+        .subscribe(
+          data => {
+            console.log(data);
+            this.file = undefined;
+            this.archivoDisponible = false;
+
+            // this.imagenURL =
+            //   this.sigaServices.getNewSigaUrl() +
+            //   this.sigaServices.getServucePath(
+            //     "personaJuridica_cargarFotografia"
+            //   ) +
+            //   "?random=" +
+            //   new Date().getTime();
+
+            this.imagenURL = this.sigaServices.post(
+              "personaJuridica_cargarFotografia",
+              this.body
+            );
+
+            this.imagenURL = this.imagenURL + "?random=" + new Date().getTime();
+
+            var ajsdka = this.imagenURL;
+            if (!lenguajeeImagen) {
+              this.showSuccessUploadedImage();
+            }
+          },
+          err => {
+            console.log(err);
+          }
+        );
     }
   }
 
-  onChangeRowsPerPages(event) {
-    this.selectedItem = event.value;
-    this.changeDetectorRef.detectChanges();
-    this.table.reset();
+  showFailUploadedImage() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Error",
+      detail: "Formato incorrecto de imagen seleccionada"
+    });
   }
 
-  pInputText;
+  uploadImage(event: any) {
+    // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
+    let fileList: FileList = event.target.files;
 
-  isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
+    let nombreCompletoArchivo = fileList[0].name;
+    let extensionArchivo = nombreCompletoArchivo.substring(
+      nombreCompletoArchivo.lastIndexOf("."),
+      nombreCompletoArchivo.length
+    );
+
+    if (
+      extensionArchivo == null ||
+      extensionArchivo.trim() == "" ||
+      !/\.(gif|jpg|jpeg|tiff|png)$/i.test(extensionArchivo.trim().toUpperCase())
+    ) {
+      // Mensaje de error de formato de imagen y deshabilitar boton guardar
+      this.file = undefined;
+      this.archivoDisponible = false;
+      this.showFailUploadedImage();
     } else {
-      this.selectAll = false;
-      this.selectedDatos = [];
+      // se almacena el archivo para habilitar boton guardar
+      this.file = fileList[0];
+      this.archivoDisponible = true;
     }
   }
 
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
-  // sendEdit() {
-  //   console.log(this.body);
-  //   if (this.body.codigoExterno == undefined) {
-  //     this.body.codigoExterno = "";
-  //   }
-  //   if (this.body.grupo == undefined) {
-  //     this.body.grupo = "";
-  //   }
-  //   this.sigaServices.post("usuarios_update", this.body).subscribe(
-  //     data => {
-  //       this.showSuccess();
-  //       console.log(data);
+  onHideDatosColegiales() {
+    this.showDatosColegiales = !this.showDatosColegiales;
+  }
+  onHideDatosFacturacion() {
+    this.showDatosFacturacion = !this.showDatosFacturacion;
+  }
+
+  onChangeRowsPerPages(event) {
+    console.log(event);
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
+
+  // confirmarBorrar(index) {
+  //   this.confirmationService.confirm({
+  //     message: '¿Está seguro de eliminar los datos?',
+  //     icon: 'far fa-trash-alt',
+  //     accept: () => {
+  //       this.msgs = [{ severity: 'info', summary: 'Confirmed', detail: 'Record deleted' }];
+  //       this.socios.splice(index, 1);
+  //       this.socios = [...this.socios];
   //     },
-  //     err => {
-  //       this.showFail();
-  //       console.log(err);
-  //     },
-  //     () => {
-  //       this.cancelar();
-  //       this.isBuscar();
-  //       this.table.reset();
+  //     reject: () => {
+  //       this.msgs = [{ severity: 'info', summary: 'Rejected', detail: 'You have rejected' }];
   //     }
-  //   );
+  //   });
   // }
 
-  isBuscar() {
-    this.Search();
+  abrirFicha(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    fichaPosible.activa = true;
   }
 
-  Search() {
-    this.progressSpinner = true;
-    this.buscar = true;
-    if (this.body.cuentaContable == undefined) {
-      this.body.cuentaContable = "";
-    }
-    if (this.body.idioma == undefined) {
-      this.body.idioma = "";
-    }
-    if (this.body.anotaciones == undefined) {
-      this.body.anotaciones = "";
-    }
-    if (this.body.etiquetas == undefined) {
-      this.body.denominacion = "";
-    }
-
-    // this.body.idInstitucion = "2000";
-    this.sigaServices
-      .postPaginado("busquedaPerJuridica_search", "?numPagina=1", this.body)
-      .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-          this.datosSearch = JSON.parse(data["body"]);
-          this.datos = this.datosSearch.DatosGeneralesItem;
-          this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        }
-      );
-  }
-  paginate(event) {
-    console.log(event);
+  cerrarFicha(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    fichaPosible.activa = false;
   }
 
-  cancelar() {
-    this.editar = true;
-    this.dniCorrecto = null;
-    this.body = new DatosGeneralesItem();
-    this.disabledRadio = false;
+  esFichaActiva(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    return fichaPosible.activa;
   }
 
-  showduplicateFail(message: string) {
-    this.msgs = [];
-    this.msgs.push({
-      severity: "error",
-      summary: "Error",
-      detail: this.translateService.instant(message)
+  onAbrirTodoClick() {
+    this.showAll = !this.showAll;
+    this.fichasPosibles.forEach((ficha: any) => {
+      ficha.activa = this.showAll;
     });
   }
 
-  crear() {
-    let a = this.body;
-    this.sigaServices.post("busquedaPerJuridica_create", this.body).subscribe(
-      data => {
-        this.datosSearch = JSON.parse(data["body"]);
-        this.showSuccess();
-      },
-      error => {
-        this.datosSearch = JSON.parse(error["error"]);
-        this.showduplicateFail(this.datosSearch.error.message.toString());
-        console.log(error);
-        this.showFail();
-      },
-      () => {
-        this.cancelar();
-        this.isBuscar();
-        this.table.reset();
+  getFichaPosibleByKey(key): any {
+    let fichaPosible = this.fichasPosibles.filter(elto => {
+      return elto.key === key;
+    });
+    if (fichaPosible && fichaPosible.length) {
+      return fichaPosible[0];
+    }
+    return {};
+  }
+
+  addDireccion() {
+    this.datosDirecciones = [
+      ...this.datosDirecciones,
+      {
+        tipoDireccion: "",
+        direccion: "",
+        new: true,
+        cp: "",
+        poblacion: "",
+        telefono: "",
+        fax: "",
+        movil: "",
+        email: "",
+        preferente: ""
       }
-    );
+    ];
+    this.newDireccion = true;
   }
 
-  showSuccess() {
-    this.msgs = [];
-    this.msgs.push({
-      severity: "success",
-      summary: this.translateService.instant("general.message.correct"),
-      detail: this.translateService.instant("general.message.accion.realizada")
-    });
+  isEditar() {
+    this.editar = true;
   }
 
-  showSuccessDelete(number) {
-    let msg = "";
-    if (number >= 2) {
-      msg =
-        number +
-        " " +
-        this.translateService.instant("messages.deleted.selected.success");
-    } else {
-      msg = this.translateService.instant("messages.deleted.success");
-    }
-    this.msgs = [];
-    this.msgs.push({
-      severity: "success",
-      summary: this.translateService.instant("general.message.correct"),
-      detail: msg
-    });
-  }
+  // onUpload(event) {
+  //   for (let file of event.files) {
+  //     this.uploadedFiles.push(file);
+  //   }
 
-  showFail() {
-    this.msgs = [];
-    this.msgs.push({
-      severity: "error",
-      summary: "Error",
-      detail: this.translateService.instant(
-        "general.message.error.realiza.accion"
-      )
-    });
-  }
-
-  onChangeSelectAll() {
-    if (this.selectAll === true) {
-      this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-    } else {
-      this.selectedDatos = [];
-    }
+  //   this.msgs = [];
+  //   this.msgs.push({ severity: 'info', summary: 'File Uploaded', detail: '' });
+  // }
+  backTo() {
+    this.location.back();
   }
 }
