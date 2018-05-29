@@ -53,8 +53,8 @@ import { HeaderGestionEntidadService } from "./../../../_services/headerGestionE
 import { FichaColegialComponent } from "./../../../new-features/censo/ficha-colegial/ficha-colegial.component";
 import { DatosGeneralesComponent } from "./../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
 import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-colegial/datos-colegiales/datos-colegiales.component";
-import { DatoGeneralItem } from "./../../../../app/models/DatoGeneralItem";
-import { DatoGeneralObject } from "./../../../../app/models/DatoGeneralObject";
+import { DatosGeneralesItem } from "./../../../../app/models/DatosGeneralesItem";
+import { DatosGeneralesObject } from "./../../../../app/models/DatosGeneralesObject";
 import { DatosPersonaJuridicaComponent } from "./../../../features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
 
 @NgModule({
@@ -97,7 +97,7 @@ export class BusquedaColegiadosComponent implements OnInit {
   select: any[];
   es: any = esCalendar;
   msgs: Message[];
-  body: DatoGeneralItem = new DatoGeneralItem();
+  body: DatosGeneralesItem = new DatosGeneralesItem();
   fichasActivas: Array<any> = [];
   todo: boolean = false;
 
@@ -174,7 +174,7 @@ export class BusquedaColegiadosComponent implements OnInit {
   }
 
   ngOnInit() {
-    //   // this.body = new DatoGeneralItem();
+    //   // this.body = new DatosGeneralesItem();
     //   // this.body.nif = "AAAA";
     //   // this.body.tipo = "NIF";
     //   // this.body.apellidos = "Gutierrez";

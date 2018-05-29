@@ -53,8 +53,9 @@ import { HeaderGestionEntidadService } from "./../../../_services/headerGestionE
 import { FichaColegialComponent } from "./../../../new-features/censo/ficha-colegial/ficha-colegial.component";
 import { DatosGeneralesComponent } from "./../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
 import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-colegial/datos-colegiales/datos-colegiales.component";
-import { DatoGeneralItem } from "./../../../../app/models/DatoGeneralItem";
-import { DatoGeneralObject } from "./../../../../app/models/DatoGeneralObject";
+import { DatosGeneralesItem } from "./../../../../app/models/DatosGeneralesItem";
+import { DatosGeneralesObject } from "./../../../../app/models/DatosGeneralesObject";
+import { MultiSelectModule } from "primeng/multiSelect";
 
 @NgModule({
   imports: [
@@ -71,6 +72,7 @@ import { DatoGeneralObject } from "./../../../../app/models/DatoGeneralObject";
     AutoCompleteModule,
     ConfirmDialogModule,
     TooltipModule,
+    MultiSelectModule,
     ChipsModule,
     RadioButtonModule,
     FileUploadModule
@@ -96,7 +98,7 @@ export class DatosGenerales implements OnInit {
   select: any[];
   es: any = esCalendar;
   msgs: Message[];
-  body: DatoGeneralItem = new DatoGeneralItem();
+  body: DatosGeneralesItem = new DatosGeneralesItem();
   fichasActivas: Array<any> = [];
   todo: boolean = false;
 
@@ -121,6 +123,9 @@ export class DatosGenerales implements OnInit {
   imagenURL: any;
   generos: any[];
   tratamientos: any[];
+  comboEtiquetas: any[];
+  comboIdentificacion: any[];
+  comboTipo: any[];
   idiomas: any[] = [
     { label: "", value: "" },
     { label: "Castellano", value: "castellano" },
@@ -173,11 +178,41 @@ export class DatosGenerales implements OnInit {
   }
 
   ngOnInit() {
-    // this.body = new DatoGeneralItem();
-    // this.body.nif = "AAAA";
-    // this.body.tipo = "NIF";
-    // this.body.apellidos = "Gutierrez";
-    // this.body.nombre = "Maria José";
+    this.sigaServices.get("datosGenerales_etiquetas").subscribe(
+      n => {
+        this.comboEtiquetas = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
+    this.sigaServices.get("datosGenerales_identificacion").subscribe(
+      n => {
+        this.comboIdentificacion = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
+    this.sigaServices.get("datosGenerales_tipo").subscribe(
+      n => {
+        this.comboTipo = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
+    this.sigaServices.get("personaJuridica_cargarFotografia").subscribe(
+      n => {
+        this.comboTipo = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
 
     if (sessionStorage.getItem("idPersona") != null) {
       this.sigaServices

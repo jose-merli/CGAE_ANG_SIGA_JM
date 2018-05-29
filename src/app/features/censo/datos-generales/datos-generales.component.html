@@ -57,26 +57,31 @@
         <div class="bloque col-lg-5 col-md-5">
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.fichaCliente.literal.identificacion"  | translate}}</label>
-              <input [(ngModel)]="body.nif" type="text" class="form-control" pInputText>
+              <label>{{"censo.fichaCliente.literal.identificacion"  | translate}} (*)</label>
+              <p-dropdown class="select-form" [(ngModel)]="body.identificacion" [options]="comboIdentificacion"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label></label>
+              <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
               <p-dropdown placeholder="{{'administracion.usuarios.literal.NIF' | translate}}" class="select-form" [(ngModel)]="body.tipo"
-                [options]="select"></p-dropdown>
+                [options]="comboTipo"></p-dropdown>
             </div>
-            <div class="form-group col-lg-12 col-md-12">
+            <div class="form-group col-lg-6 col-md-6">
               <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
               <input [(ngModel)]="body.nombre" type="text" class="form-control" pInputText>
             </div>
+
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}</label>
               <input [(ngModel)]="body.apellidos" type="text" class="form-control" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-
+              <label>{{"censo.consultaDatosGenerales.literal.tratamiento" | translate}}</label>
+              <p-dropdown placeholder="" class="select-form" [(ngModel)]='body.tratamiento' [options]="generos" [filter]="true" filterBy="label"></p-dropdown>
             </div>
-
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{"gratuita.definirTurnosIndex.literal.abreviatura" | translate}} (*)</label>
+              <input [(ngModel)]="body.abreviatura" type="text" class="form-control" pInputText>
+            </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}}</label>
               <p-calendar [locale]="es" [(ngModel)]="body.fechaNacimiento" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
@@ -85,14 +90,23 @@
             <div class="d-flex mb-0 align-items-center form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.edad" | translate}}: {{edadCalculada}}</label>
             </div>
-            <div class="form-group col-lg-12 col-md-12">
+            <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.nacido" | translate}}</label>
               <input [(ngModel)]="body.lugarNacimiento" type="text" class="form-control" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.consultaDatosGenerales.literal.tratamiento" | translate}}</label>
-              <p-dropdown placeholder="" class="select-form" [(ngModel)]='body.tratamiento' [options]="generos" [filter]="true" filterBy="label"></p-dropdown>
+              <label>{{"censo.consultaDatosGenerales.literal.denominacion" | translate}} (*)</label>
+              <input [(ngModel)]="body.denominacion" type="text" class="form-control" pInputText>
             </div>
+            <div class="form-group col-lg-6 col-md-6 form-group-date">
+              <label>{{"administracion.usuarios.literal.fechaAlta" | translate}}</label>
+              <p-calendar [locale]="es" [(ngModel)]="body.fechaAlta" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" (onSelect)="calculaEdad()"></p-calendar>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 form-group-date">
+              <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}</label>
+              <p-calendar [locale]="es" [(ngModel)]="body.fechaBaja" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" (onSelect)="calculaEdad()"></p-calendar>
+            </div>
+
           </div>
         </div>
 
@@ -106,7 +120,14 @@
             </div>
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"censo.fichaCliente.situacion.idiomaPref" | translate}}</label>
-              <p-dropdown class="select-form" [options]="idiomas" [(ngModel)]="body.idiomaPreferencia"></p-dropdown>
+              <p-dropdown class="select-form" [options]="idiomas" [(ngModel)]="body.idiomaPreferencia" [filter]="true" filterBy="label"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-8 col-md-8">
+              <label>{{"menu.administracion.gestionMultiidioma.etiquetas" | translate}}</label>
+              <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='body.etiquetas' [options]="comboEtiquetas"
+                [selectedItemsLabel]="textSelected" maxSelectedLabels="1" [panelStyle]="{width:'100%'}"></p-multiSelect>
+
+
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>

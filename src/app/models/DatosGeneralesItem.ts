@@ -1,7 +1,7 @@
 export class DatosGeneralesItem {
+  nif: String;
   identificacion: String;
   tipo: String;
-  fechaAltaSistema: Date;
   fechaBaja: Date;
   denominacion: String;
   abreviatura: String;
@@ -9,5 +9,17 @@ export class DatosGeneralesItem {
   cuentaContable: String;
   anotaciones: String;
   etiquetas: String[];
+  apellidos: String;
+  nombre: String;
+  fechaNacimiento: Date;
+  fechaAlta: Date;
+  lugarNacimiento: String;
+  tratamiento: String;
+  sexo: String;
+  idiomaPreferencia: String;
+  situacionGeneral: String;
+  utilizarFoto: boolean;
+  exportarDatos: boolean;
+  idPersona: String;
   constructor() {}
 }

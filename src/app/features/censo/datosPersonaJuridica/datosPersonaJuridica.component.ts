@@ -53,8 +53,8 @@ import { HeaderGestionEntidadService } from "./../../../_services/headerGestionE
 import { FichaColegialComponent } from "./../../../new-features/censo/ficha-colegial/ficha-colegial.component";
 import { DatosGeneralesComponent } from "./../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
 import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-colegial/datos-colegiales/datos-colegiales.component";
-import { DatoGeneralItem } from "./../../../../app/models/DatoGeneralItem";
-import { DatoGeneralObject } from "./../../../../app/models/DatoGeneralObject";
+import { DatosGeneralesItem } from "./../../../../app/models/DatosGeneralesItem";
+import { DatosGeneralesObject } from "./../../../../app/models/DatosGeneralesObject";
 
 // import
 @Component({
