@@ -88,7 +88,9 @@ export class SigaServices {
     datosGenerales_insert: "DatosGenerales/insert",
     datosGenerales_tipo: "DatosGenerales/tipo",
     datosGenerales_etiquetas: "DatosGenerales/etiquetas",
-    datosGenerales_identificacion: "DatosGenerales/identificacion"
+    datosGenerales_identificacion: "DatosGenerales/identificacion",
+    personaJuridica_uploadFotografia: "personaJuridica/uploadFotografia",
+    personaJuridica_cargarFotografia: "personaJuridica/cargarFotografia"
   };
 
   constructor(
@@ -156,6 +158,33 @@ export class SigaServices {
     if (file != undefined) {
       formData.append("uploadFile", file, file.name);
     }
+
+    let headers = new HttpHeaders();
+
+    headers.append("Content-Type", "multipart/form-data");
+    headers.append("Accept", "application/json");
+
+    return this.http
+      .post(environment.newSigaUrl + this.endpoints[service], formData, {
+        headers: headers
+      })
+      .map(response => {
+        return response;
+      });
+  }
+
+  postSendFileAndParameters(
+    service: string,
+    file: any,
+    idPersona: any
+  ): Observable<any> {
+    let formData: FormData = new FormData();
+    if (file != undefined) {
+      formData.append("uploadFile", file, file.name);
+    }
+
+    // pasar parametros por la request
+    formData.append("idPersona", idPersona);
 
     let headers = new HttpHeaders();
 
