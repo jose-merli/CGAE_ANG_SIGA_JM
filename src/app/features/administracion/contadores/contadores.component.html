@@ -4,10 +4,10 @@
     <i class="fa fa-square"></i>
     <p>{{ 'administracion.contadores.busqueda.contadores' | translate}}</p>
   </div>
-  <div class="breadCrumb">
+  <!--<div class="breadCrumb">
     <p>{{ "menu.administracion" | translate}} <i class="fa fa-angle-right"></i> {{ 'menu.administracion.contador' | translate}}
     </p>
-  </div>
+  </div>-->
   <div class="card">
     <div class="card-body">
       <p class="title-module">{{ "general.message.datos.generales" | translate}}
@@ -66,8 +66,7 @@
             <div class="mostrar">
               <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
               <label>{{ "general.message.mostrar" | translate}}</label>
-              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage"
-                (onChange)="onChangeRowsPerPages($event)"></p-dropdown> <label>{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> <label>{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             </div>
           </ng-template>
 

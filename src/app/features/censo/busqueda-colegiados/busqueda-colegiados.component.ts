@@ -46,11 +46,15 @@ import { Location } from "@angular/common";
 
 import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
+import { TranslateService } from "../../../commons/translate/translation.service";
+import { HeaderGestionEntidadService } from "./../../../_services/headerGestionEntidad.service";
 
 /*** COMPONENTES ***/
 import { FichaColegialComponent } from "./../../../new-features/censo/ficha-colegial/ficha-colegial.component";
 import { DatosGeneralesComponent } from "./../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
 import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-colegial/datos-colegiales/datos-colegiales.component";
+import { DatoGeneralItem } from "./../../../../app/models/DatoGeneralItem";
+import { DatoGeneralObject } from "./../../../../app/models/DatoGeneralObject";
 
 @NgModule({
   imports: [
@@ -92,7 +96,7 @@ export class BusquedaColegiadosComponent implements OnInit {
   select: any[];
   es: any = esCalendar;
   msgs: Message[];
-
+  body: DatoGeneralItem = new DatoGeneralItem();
   fichasActivas: Array<any> = [];
   todo: boolean = false;
 
@@ -109,6 +113,22 @@ export class BusquedaColegiadosComponent implements OnInit {
   newDireccion: boolean = false;
 
   editar: boolean = false;
+  archivoDisponible: boolean = false;
+  file: File = undefined;
+  base64String: any;
+  source: any;
+  imageBase64: any;
+  imagenURL: any;
+  generos: any[];
+  tratamientos: any[];
+  idiomas: any[] = [
+    { label: "", value: "" },
+    { label: "Castellano", value: "castellano" },
+    { label: "Catalá", value: "catalan" },
+    { label: "Euskara", value: "euskera" },
+    { label: "Galego", value: "gallego" }
+  ];
+  edadCalculada: String;
 
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
@@ -142,8 +162,10 @@ export class BusquedaColegiadosComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
+    private translateService: TranslateService,
     private location: Location,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private headerGestionEntidadService: HeaderGestionEntidadService
   ) {
     this.formBusqueda = this.formBuilder.group({
       cif: null
@@ -151,6 +173,12 @@ export class BusquedaColegiadosComponent implements OnInit {
   }
 
   ngOnInit() {
+    // this.body = new DatoGeneralItem();
+    // this.body.nif = "AAAA";
+    // this.body.tipo = "NIF";
+    // this.body.apellidos = "Gutierrez";
+    // this.body.nombre = "Maria José";
+
     if (sessionStorage.getItem("idPersona") != null) {
       this.sigaServices
         .postPaginado(
@@ -186,7 +214,7 @@ export class BusquedaColegiadosComponent implements OnInit {
     ];
 
     this.select = [
-      { label: "-seleccionar-", value: null },
+      { label: "", value: null },
       { label: "NIF", value: "nif" },
       { label: "Pasaporte", value: "pasaporte" },
       { label: "NIE", value: "nie" }
@@ -222,6 +250,144 @@ export class BusquedaColegiadosComponent implements OnInit {
         value: this.datosDirecciones.length
       }
     ];
+
+    this.generos = [
+      { label: "", value: "" },
+      { label: "Mujer", value: "M" },
+      { label: "Hombre", value: "H" }
+    ];
+
+    this.calculaEdad();
+  }
+
+  isSearch() {
+    this.sigaServices
+      .postPaginado("ficha_search", "?numPagina=1", this.body)
+      .subscribe(
+        data => {
+          console.log(data);
+          this.body = JSON.parse(data["body"]);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
+  showSuccessUploadedImage() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant(
+        "general.message.logotipo.actualizado"
+      )
+    });
+  }
+
+  calculaEdad() {
+    var dateString = JSON.stringify(this.body.fechaNacimiento);
+    var fechaNac = new Date(dateString.substring(1, 25));
+    // var timeDiff = Math.abs(Date.now() - fechaNac.getDate());
+    // this.edadCalculada = "" + Math.ceil(timeDiff / (1000 * 3600 * 24) / 365);
+
+    var today = new Date();
+    var nowyear = today.getFullYear();
+    var nowmonth = today.getMonth();
+    var nowday = today.getDate();
+
+    var birth = new Date(fechaNac);
+    var birthyear = birth.getFullYear();
+    var birthmonth = birth.getMonth();
+    var birthday = birth.getDate();
+
+    var age = nowyear - birthyear;
+    var age_month = nowmonth - birthmonth;
+    var age_day = nowday - birthday;
+
+    if (age_month < 0 || (age_month == 0 && age_day < 0)) {
+      age = age - 1;
+    }
+    this.edadCalculada = "" + age;
+  }
+
+  guardar() {
+    this.body.idPersona = "2005005356";
+    // guardar imagen en bd y refresca header.component
+    let lenguajeeImagen: boolean = false;
+    if (this.file != undefined) {
+      this.sigaServices
+        .postSendFileAndParameters(
+          "personaJuridica_uploadFotografia",
+          this.file,
+          "2005005356"
+        )
+        .subscribe(
+          data => {
+            console.log(data);
+            this.file = undefined;
+            this.archivoDisponible = false;
+
+            // this.imagenURL =
+            //   this.sigaServices.getNewSigaUrl() +
+            //   this.sigaServices.getServucePath(
+            //     "personaJuridica_cargarFotografia"
+            //   ) +
+            //   "?random=" +
+            //   new Date().getTime();
+
+            this.imagenURL = this.sigaServices.post(
+              "personaJuridica_cargarFotografia",
+              this.body
+            );
+
+            this.imagenURL = this.imagenURL + "?random=" + new Date().getTime();
+
+            var ajsdka = this.imagenURL;
+            if (!lenguajeeImagen) {
+              this.showSuccessUploadedImage();
+            }
+          },
+          err => {
+            console.log(err);
+          }
+        );
+    }
+  }
+
+  showFailUploadedImage() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Error",
+      detail: "Formato incorrecto de imagen seleccionada"
+    });
+  }
+
+  uploadImage(event: any) {
+    // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
+    let fileList: FileList = event.target.files;
+
+    let nombreCompletoArchivo = fileList[0].name;
+    let extensionArchivo = nombreCompletoArchivo.substring(
+      nombreCompletoArchivo.lastIndexOf("."),
+      nombreCompletoArchivo.length
+    );
+
+    if (
+      extensionArchivo == null ||
+      extensionArchivo.trim() == "" ||
+      !/\.(gif|jpg|jpeg|tiff|png)$/i.test(extensionArchivo.trim().toUpperCase())
+    ) {
+      // Mensaje de error de formato de imagen y deshabilitar boton guardar
+      this.file = undefined;
+      this.archivoDisponible = false;
+      this.showFailUploadedImage();
+    } else {
+      // se almacena el archivo para habilitar boton guardar
+      this.file = fileList[0];
+      this.archivoDisponible = true;
+    }
   }
 
   onHideDatosGenerales() {

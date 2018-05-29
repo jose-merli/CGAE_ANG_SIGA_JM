@@ -68,6 +68,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   activacionEditar: boolean;
   selectedItem: number = 10;
   selectAll: boolean = false;
+  numSelected: number = 0;
 
   constructor(
     private sigaServices: SigaServices,
@@ -150,29 +151,29 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("perfiles_search", "?numPagina=1", null)
       .subscribe(
-        data => {
-          console.log(data);
-          this.searchPerfiles = JSON.parse(data["body"]);
-          this.datos = this.searchPerfiles.usuarioGrupoItems;
-          this.buscar = true;
-          this.table.paginator = true;
-          this.sigaServices.get("usuarios_rol").subscribe(
-            n => {},
-            err => {
-              console.log(err);
-            }
-          );
-        },
-        err => {
-          console.log(err);
-        },
-        () => {
-          if (sessionStorage.getItem("first") != null) {
-            let first = JSON.parse(sessionStorage.getItem("first")) as number;
-            this.table.first = first;
-            sessionStorage.removeItem("first");
+      data => {
+        console.log(data);
+        this.searchPerfiles = JSON.parse(data["body"]);
+        this.datos = this.searchPerfiles.usuarioGrupoItems;
+        this.buscar = true;
+        this.table.paginator = true;
+        this.sigaServices.get("usuarios_rol").subscribe(
+          n => { },
+          err => {
+            console.log(err);
           }
+        );
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (sessionStorage.getItem("first") != null) {
+          let first = JSON.parse(sessionStorage.getItem("first")) as number;
+          this.table.first = first;
+          sessionStorage.removeItem("first");
         }
+      }
       );
   }
 
@@ -261,10 +262,12 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
     if (!this.selectMultiple) {
+      this.numSelected = 0;
       this.selectedDatos = [];
     } else {
       this.selectAll = false;
       this.selectedDatos = [];
+      this.numSelected = 0;
     }
   }
 
@@ -335,6 +338,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       this.router.navigate(["/EditarPerfiles"]);
     } else {
       this.editar = false;
+      this.numSelected = this.selectedDatos.length
     }
   }
   isEliminar(selectedDatos) {
@@ -354,9 +358,9 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
             severity: "success",
             summary: "Correcto",
             detail:
-              selectedDatos.length +
-              " " +
-              this.translateService.instant("messages.deleted.selected.success")
+            selectedDatos.length +
+            " " +
+            this.translateService.instant("messages.deleted.selected.success")
           });
         }
       },
@@ -376,18 +380,18 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("perfiles_historico", "?numPagina=1", null)
       .subscribe(
-        data => {
-          console.log(data);
-          this.searchPerfiles = JSON.parse(data["body"]);
-          this.datos = this.searchPerfiles.usuarioGrupoItems;
-          this.buscar = false;
-        },
-        err => {
-          console.log(err);
-        },
-        () => {
-          this.table.reset();
-        }
+      data => {
+        console.log(data);
+        this.searchPerfiles = JSON.parse(data["body"]);
+        this.datos = this.searchPerfiles.usuarioGrupoItems;
+        this.buscar = false;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.table.reset();
+      }
       );
   }
   confirmarBorrar(selectedDatos) {
@@ -428,10 +432,12 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
 
   onChangeSelectAll() {
     if (this.selectAll === true) {
+      this.numSelected = this.datos.length;
       this.selectMultiple = false;
       this.selectedDatos = this.datos;
     } else {
       this.selectedDatos = [];
+      this.numSelected = 0;
     }
   }
 }
