@@ -101,7 +101,7 @@ export class DatosGenerales implements OnInit {
   body: DatosGeneralesItem = new DatosGeneralesItem();
   fichasActivas: Array<any> = [];
   todo: boolean = false;
-
+  textFilter: String;
   selectedDatos: any = [];
 
   showDatosGenerales: boolean = true;
@@ -134,6 +134,8 @@ export class DatosGenerales implements OnInit {
     { label: "Galego", value: "gallego" }
   ];
   edadCalculada: String;
+  textSelected: String = "{0} grupos seleccionados";
+  idPersona: String;
 
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
@@ -178,6 +180,9 @@ export class DatosGenerales implements OnInit {
   }
 
   ngOnInit() {
+    this.idPersona = sessionStorage.getItem("idPersona");
+    this.isSearch();
+    this.textFilter = "Elegir";
     this.sigaServices.get("datosGenerales_etiquetas").subscribe(
       n => {
         this.comboEtiquetas = n.combooItems;
@@ -297,7 +302,11 @@ export class DatosGenerales implements OnInit {
 
   isSearch() {
     this.sigaServices
-      .postPaginado("ficha_search", "?numPagina=1", this.body)
+      .postPaginado(
+        "busquedaPerJuridica_datosGeneralesSearch",
+        "?numPagina=1",
+        this.idPersona
+      )
       .subscribe(
         data => {
           console.log(data);

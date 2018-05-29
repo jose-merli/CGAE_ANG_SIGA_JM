@@ -42,8 +42,8 @@
         <div class="bloque col-lg-3 col-md-3">
           <label class="d-block">Foto</label>
           <div class="img-colegiado my-2">
-            <!--<img src="./assets/images/img-colegiado.PNG">-->
-            <img src="{{imagenURL}}">
+            <img src="./assets/images/img-colegiado.PNG">
+            <!--<img src="{{imagenURL}}">-->
             <p-fileUpload #fubauto chooseLabel="" class="edit" mode="basic" name="file" auto="true" accept="image/*" (change)="uploadImage($event)"
               auto="true">
               </p-fileUpload>
@@ -123,28 +123,27 @@
               <p-dropdown class="select-form" [options]="idiomas" [(ngModel)]="body.idiomaPreferencia" [filter]="true" filterBy="label"></p-dropdown>
             </div>
             <div class="form-group col-lg-8 col-md-8">
-              <label>{{"menu.administracion.gestionMultiidioma.etiquetas" | translate}}</label>
+              <label>{{"menu.administracion.gestionMultiidioma.etiquetas" | translate}}</label> <br/>
               <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='body.etiquetas' [options]="comboEtiquetas"
-                [selectedItemsLabel]="textSelected" maxSelectedLabels="1" [panelStyle]="{width:'100%'}"></p-multiSelect>
-
-
+                [selectedItemsLabel]="textSelected" maxSelectedLabels="1" autoWidth="false" defaultLabel="" maxSelectedLabels="1"
+                styleClass="widthAll"></p-multiSelect>
             </div>
-            <div class="form-group col-lg-12 col-md-12">
+            <div class="form-group col-lg-12 col-md-12 ">
               <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
-              <input value="1170" type="text" class="form-control" [(ngModel)]="body.cuentaContable" pInputText>
+              <input value="1170 " type="text " class="form-control " [(ngModel)]="body.cuentaContable " pInputText>
             </div>
-            <div class="form-group col-lg-12 col-md-12">
-              <p-checkbox binary="true" label="{{'censo.consultaDatosGenerales.literal.noExportarDatos' | translate}} (LOPD)" name="groupname"
-                [(ngModel)]="body.exportarDatos" class="ml-0"></p-checkbox>
+            <div class="form-group col-lg-12 col-md-12 ">
+              <p-checkbox binary="true " label="{{ 'censo.consultaDatosGenerales.literal.noExportarDatos' | translate}}
+                (LOPD) " name="groupname " [(ngModel)]="body.exportarDatos " class="ml-0 "></p-checkbox>
             </div>
           </div>
         </div>
       </div>
-      <div *ngIf="esFichaActiva('generales')" class="card-footer">
+      <div *ngIf="esFichaActiva( 'generales') " class="card-footer ">
         <div class="text-right main-button ">
-          <button (click)="search()" pButton type="button " icon="fa fa-search " iconPos="left" label="Buscar"></button>
-          <button (click)="desasociar()" pButton type="button " icon="fa fa-undo " iconPos="left" label="Desasociar"></button>
-          <button (click)="guardar()" pButton type="button " icon="far fa-save " iconPos="left" label="Guardar"></button>
+          <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="Buscar"></button>
+          <button (click)="desasociar()" pButton type="button" icon="fa fa-undo" iconPos="left" label="Desasociar"></button>
+          <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
         </div>
       </div>
     </div>

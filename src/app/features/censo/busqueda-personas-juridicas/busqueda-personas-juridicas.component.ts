@@ -546,7 +546,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         "privilegios",
         JSON.stringify(this.activacionEditar)
       );
-      sessionStorage.setItem("searchUser", JSON.stringify(this.body));
+      sessionStorage.setItem("idPersona", JSON.stringify(this.body.idPersona));
       sessionStorage.setItem("editedUser", JSON.stringify(this.selectedDatos));
       sessionStorage.setItem("first", JSON.stringify(this.table.first));
       this.router.navigate(["fichaPersonaJuridica"]);
