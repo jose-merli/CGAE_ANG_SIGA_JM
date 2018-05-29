@@ -214,7 +214,7 @@ export class BusquedaColegiadosComponent implements OnInit {
     ];
 
     this.select = [
-      { label: "-seleccionar-", value: null },
+      { label: "", value: null },
       { label: "NIF", value: "nif" },
       { label: "Pasaporte", value: "pasaporte" },
       { label: "NIE", value: "nie" }

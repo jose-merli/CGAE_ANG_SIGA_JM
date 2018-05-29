@@ -70,7 +70,7 @@
                             <input [(ngModel)]="body.nombre" type="text" class="form-control" pInputText>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <label>Apellidos</label>
+                            <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}</label>
                             <input [(ngModel)]="body.apellidos" type="text" class="form-control" pInputText>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
@@ -78,19 +78,19 @@
                         </div>
 
                         <div class="form-group col-lg-6 col-md-6 form-group-date">
-                            <label>Fecha nacimiento</label>
+                            <label>{{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}}</label>
                             <p-calendar [locale]="es" [(ngModel)]="body.fechaNacimiento" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
                                 (onSelect)="calculaEdad()"></p-calendar>
                         </div>
                         <div class="d-flex mb-0 align-items-center form-group col-lg-6 col-md-6">
-                            <label>Edad: {{edadCalculada}}</label>
+                            <label>{{"censo.consultaDatosGenerales.literal.edad" | translate}}: {{edadCalculada}}</label>
                         </div>
                         <div class="form-group col-lg-12 col-md-12">
-                            <label>Lugar de nacimiento</label>
+                            <label>{{"censo.consultaDatosGenerales.literal.nacido" | translate}}</label>
                             <input [(ngModel)]="body.lugarNacimiento" type="text" class="form-control" pInputText>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <label>Tratamiento</label>
+                            <label>{{"censo.consultaDatosGenerales.literal.tratamiento" | translate}}</label>
                             <p-dropdown placeholder="" class="select-form" [(ngModel)]='body.tratamiento' [options]="generos" [filter]="true" filterBy="label"></p-dropdown>
                         </div>
                     </div>
@@ -99,34 +99,34 @@
                 <div class="bloque col-lg-4 col-md-4">
                     <div class="form-row">
                         <div class="form-group col-lg-8 col-md-8">
-                            <label>Situación general: {{body.situacionGeneral}}</label>
+                            <label>{{"censo.fichaCliente.situacion.cabecera" | translate}}: {{body.situacionGeneral}}</label>
                         </div>
                         <div class="form-group col-lg-8 col-md-8">
-                            <label>Alta en el sistema: {{body.fechaAlta}}</label>
+                            <label>{{"administracion.usuarios.literal.fechaAlta" | translate}}: {{body.fechaAlta}}</label>
                         </div>
                         <div class="form-group col-lg-8 col-md-8">
-                            <label>Idioma de preferencia</label>
+                            <label>{{"censo.fichaCliente.situacion.idiomaPref" | translate}}</label>
                             <p-dropdown class="select-form" [options]="idiomas" [(ngModel)]="body.idiomaPreferencia"></p-dropdown>
                         </div>
                         <div class="form-group col-lg-12 col-md-12">
-                            <label>Cuenta contable</label>
+                            <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
                             <input value="1170" type="text" class="form-control" [(ngModel)]="body.cuentaContable" pInputText>
                         </div>
                         <div class="form-group col-lg-12 col-md-12">
-                            <p-checkbox binary="true" label="No exportar datos (LOPD)" name="groupname" [(ngModel)]="body.exportarDatos" class="ml-0"></p-checkbox>
+                            <p-checkbox binary="true" label="{{'censo.consultaDatosGenerales.literal.noExportarDatos' | translate}} (LOPD)" name="groupname"
+                                [(ngModel)]="body.exportarDatos" class="ml-0"></p-checkbox>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div *ngIf="esFichaActiva('generales')" class="card-footer">
-            <div class="text-right main-button ">
-                <button (click)="search()" pButton type="button " icon="fa fa-search " iconPos="left" label="Buscar"></button>
-                <button (click)="desasociar()" pButton type="button " icon="fa fa-undo " iconPos="left" label="Desasociar"></button>
-                <button (click)="guardar()" pButton type="button " icon="far fa-save " iconPos="left" label="Guardar"></button>
+            <div *ngIf="esFichaActiva('generales')" class="card-footer">
+                <div class="text-right main-button ">
+                    <button (click)="search()" pButton type="button " icon="fa fa-search " iconPos="left" label="Buscar"></button>
+                    <button (click)="desasociar()" pButton type="button " icon="fa fa-undo " iconPos="left" label="Desasociar"></button>
+                    <button (click)="guardar()" pButton type="button " icon="far fa-save " iconPos="left" label="Guardar"></button>
+                </div>
             </div>
         </div>
-    </div>
-    <!--END DATOS GENERALES-->
+        <!--END DATOS GENERALES-->
 
-</div>
+    </div>
