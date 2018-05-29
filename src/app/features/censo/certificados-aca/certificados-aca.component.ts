@@ -40,7 +40,10 @@ import { MultiSelectModule } from "primeng/multiSelect";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { Location } from "@angular/common";
 import { Observable } from "rxjs/Rx";
-import { PersonaItem } from "./../../../../app/models/PersonaItem";
+import { BusquedaFisicaItem } from "./../../../../app/models/BusquedaFisicaItem";
+import { BusquedaJuridicaItem } from "./../../../../app/models/BusquedaJuridicaItem";
+import { BusquedaJuridicaObject } from "./../../../../app/models/BusquedaJuridicaObject";
+import { BusquedaFisicaObject } from "./../../../../app/models/BusquedaFisicaObject";
 @Component({
   selector: "app-certificados-aca",
   templateUrl: "./certificados-aca.component.html",
@@ -58,7 +61,10 @@ export class CertificadosAcaComponent {
   selectedValue: string = "simple";
   persona: String;
   // selectedDatos: any = []
-  body: PersonaItem = new PersonaItem();
+  bodyFisica: BusquedaFisicaItem = new BusquedaFisicaItem();
+  bodyJuridica: BusquedaJuridicaItem = new BusquedaJuridicaItem();
+  searchFisica: BusquedaFisicaObject = new BusquedaFisicaObject();
+  searchJuridica: BusquedaJuridicaObject = new BusquedaJuridicaObject();
   showDatosGenerales: boolean = true;
   showDatosColegiales: boolean = false;
   showDatosFacturacion: boolean = false;
@@ -184,7 +190,7 @@ export class CertificadosAcaComponent {
         value: 40
       }
     ];
-    this.sigaServices.get("colegios_rol").subscribe(
+    this.sigaServices.get("busquedaPer_colegio").subscribe(
       n => {
         this.colegios_rol = n.combooItems;
         let first = { label: "", value: "" };
@@ -214,29 +220,60 @@ export class CertificadosAcaComponent {
 
   search() {
     this.progressSpinner = true;
-
-    this.sigaServices
-      .postPaginado("usuarios_search", "?numPagina=1", this.body)
-      .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-          // this.searchUser = JSON.parse(data["body"]);
-          // this.datos = this.searchUser.usuarioItem;
-          // this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          // if (sessionStorage.getItem("first") != null) {
-          //   let first = JSON.parse(sessionStorage.getItem("first")) as number;
-          //   this.table.first = first;
-          //   sessionStorage.removeItem("first");
-          // }
-        }
-      );
+    if (this.persona == "f") {
+      this.sigaServices
+        .postPaginado(
+          "busquedaPer_searchFisica",
+          "?numPagina=1",
+          this.bodyFisica
+        )
+        .subscribe(
+          data => {
+            console.log(data);
+            this.progressSpinner = false;
+            this.searchFisica = JSON.parse(data["body"]);
+            this.datos = this.searchFisica.busquedaFisicaItems;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            // if (sessionStorage.getItem("first") != null) {
+            //   let first = JSON.parse(sessionStorage.getItem("first")) as number;
+            //   this.table.first = first;
+            //   sessionStorage.removeItem("first");
+            // }
+          }
+        );
+    } else {
+      this.sigaServices
+        .postPaginado(
+          "busquedaPer_searchJuridica",
+          "?numPagina=1",
+          this.bodyJuridica
+        )
+        .subscribe(
+          data => {
+            console.log(data);
+            this.progressSpinner = false;
+            this.searchJuridica = JSON.parse(data["body"]);
+            this.datos = this.searchJuridica.busquedaJuridicaItems;
+            // this.table.paginator = true;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            // if (sessionStorage.getItem("first") != null) {
+            //   let first = JSON.parse(sessionStorage.getItem("first")) as number;
+            //   this.table.first = first;
+            //   sessionStorage.removeItem("first");
+            // }
+          }
+        );
+    }
   }
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;

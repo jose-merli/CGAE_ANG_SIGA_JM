@@ -89,6 +89,11 @@ export class SigaServices {
     datosGenerales_tipo: "DatosGenerales/tipo",
     datosGenerales_etiquetas: "DatosGenerales/etiquetas",
     datosGenerales_identificacion: "DatosGenerales/identificacion",
+
+    busquedaPer_colegio: "busquedaPer/colegio",
+    busquedaPer_searchJuridica: "busquedaPer/searchJuridica",
+    busquedaPer_searchFisica: "busquedaPer/searchFisica",
+
     personaJuridica_uploadFotografia: "personaJuridica/uploadFotografia",
     personaJuridica_cargarFotografia: "personaJuridica/cargarFotografia"
   };
