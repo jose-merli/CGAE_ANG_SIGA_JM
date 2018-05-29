@@ -63,7 +63,37 @@ import { DatoGeneralObject } from "./../../../../app/models/DatoGeneralObject";
   styleUrls: ["./datosPersonaJuridica.component.scss"]
 })
 export class DatosPersonaJuridicaComponent implements OnInit {
-  constructor(public sigaServices: OldSigaServices) {}
+  fichasPosibles: any[];
+  constructor(
+    public sigaServices: OldSigaServices,
+    private location: Location
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.fichasPosibles = [
+      {
+        key: "generales",
+        activa: false
+      },
+      {
+        key: "direcciones",
+        activa: false
+      },
+      {
+        key: "colegiales",
+        activa: false
+      },
+      {
+        key: "bancarios",
+        activa: false
+      },
+      {
+        key: "cv",
+        activa: false
+      }
+    ];
+  }
+  backTo() {
+    this.location.back();
+  }
 }

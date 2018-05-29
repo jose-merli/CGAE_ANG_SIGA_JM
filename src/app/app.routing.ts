@@ -61,6 +61,7 @@ import { GestionAuditoriaComponent } from "./features/administracion/auditoria/u
 import { GestionEntidad } from "./features/administracion/gestion-entidad/gestion-entidad.component";
 import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component";
 import { DatosGenerales } from "./features/censo/datos-generales/datos-generales.component";
+import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -69,6 +70,11 @@ const appRoutes: Routes = [
   { path: "loginDevelop", component: LoginDevelopComponent },
 
   // Censo
+  {
+    path: "fichaPersonaJuridica",
+    component: DatosPersonaJuridicaComponent,
+    canActivate: [AuthGuard]
+  },
   {
     path: "busquedaColegiados",
     component: BusquedaColegiadosComponent,
