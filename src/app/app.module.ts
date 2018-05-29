@@ -78,6 +78,7 @@ import { CargasPeriodicasComponent } from "./features/censo/cargas-periodicas/ca
 import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/configurar-perfil.component";
 import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
 import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/gestion-subtiposCV.component";
+import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
 
 import { CommonModule } from "@angular/common";
 
@@ -154,6 +155,7 @@ import { DatosGenerales } from "./features/censo/datos-generales/datos-generales
     BusquedaColegiadosComponentNew,
     BusquedaPersonasJuridicas,
     DatosGenerales,
+    DatosPersonaJuridicaComponent,
 
     //Certificados
     ComunicacionInterprofesionalComponent,
