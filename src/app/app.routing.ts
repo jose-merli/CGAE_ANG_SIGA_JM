@@ -93,11 +93,12 @@ const appRoutes: Routes = [
 
   {
     path: "searchNoColegiados",
-    component: BusquedaPersonasJuridicas,
+    component: SearchNoColegiadosComponent,
     canActivate: [AuthGuard]
   },
   {
     path: "certificadosAca",
+    // component: CertificadosAcaComponent,
     component: CertificadosAcaComponent,
     canActivate: [AuthGuard]
   },
