@@ -38,3 +38,10 @@
   vertical-align: middle !important;
   padding-left: 0.8em;
 }
+
+.ui-tooltip {
+  max-width: 100%;
+  .ui-tooltip-text {
+    font-size: 0.8rem;
+  }
+}
