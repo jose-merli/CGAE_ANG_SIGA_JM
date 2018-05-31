@@ -24,6 +24,7 @@
         "../node_modules/primeng/resources/primeng.min.css",
         "../node_modules/primeng/resources/themes/omega/theme.css",
         "../resources/web-fonts-with-css/css/fontawesome-all.min.css",
+        "../resources/css/jquery-ui-1.10.3.custom.min.css",
         "styles.scss"
       ],
       "scripts": [
