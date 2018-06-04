@@ -154,7 +154,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
         value: 40
       }
     ];
-    if ((this.body.activo == "S")) {
+    if (this.body.activo == "S") {
       this.activo = true;
     } else {
       this.activo = false;
@@ -211,7 +211,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
   }
 
   onChangeForm() {
-    if (this.body.nif == "") {
+    if (this.body.nif == "" || this.body.nif.length < 9) {
       this.dniCorrecto = null;
     } else {
       this.dniCorrecto = this.isValidDNI(this.body.nif);
@@ -553,7 +553,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
       this.router.navigate(["/editarUsuario"]);
     } else {
       this.editar = false;
-      this.numSelected = this.selectedDatos.length
+      this.numSelected = this.selectedDatos.length;
       this.dniCorrecto = null;
       this.body = new UsuarioRequestDto();
       this.body.activo = id[0].activo;
