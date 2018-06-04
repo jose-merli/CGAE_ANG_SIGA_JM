@@ -535,7 +535,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     });
   }
 
-  irEditarUsuario(id) {
+  irEditarPersona(id) {
     if (!this.selectMultiple) {
       var ir = null;
       if (id && id.length > 0) {
@@ -546,10 +546,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         "privilegios",
         JSON.stringify(this.activacionEditar)
       );
-      sessionStorage.setItem("searchUser", JSON.stringify(this.body));
+      sessionStorage.setItem("idPersona", JSON.stringify(this.body.idPersona));
       sessionStorage.setItem("editedUser", JSON.stringify(this.selectedDatos));
       sessionStorage.setItem("first", JSON.stringify(this.table.first));
-      // this.router.navigate(["/editarUsuario"]);
+      this.router.navigate(["fichaPersonaJuridica"]);
     } else {
       this.editar = true;
       this.dniCorrecto = null;

@@ -81,7 +81,6 @@ export class SigaServices {
     busquedaPerJuridica_tipo: "busquedaPerJuridica/tipoSociedad",
     busquedaPerJuridica_etiquetas: "busquedaPerJuridica/etiquetas",
     busquedaPerJuridica_search: "busquedaPerJuridica/search",
-    busquedaPerJuridica_create: "busquedaPerJuridica/create",
     busquedaPerJuridica_delete: "busquedaPerJuridica/delete",
     busquedaPerJuridica_history: "busquedaPerJuridica/searchHistoric",
     datosGenerales_update: "DatosGenerales/update",
@@ -89,8 +88,16 @@ export class SigaServices {
     datosGenerales_tipo: "DatosGenerales/tipo",
     datosGenerales_etiquetas: "DatosGenerales/etiquetas",
     datosGenerales_identificacion: "DatosGenerales/identificacion",
+
+    busquedaPer_colegio: "busquedaPer/colegio",
+    busquedaPer_searchJuridica: "busquedaPer/searchJuridica",
+    busquedaPer_searchFisica: "busquedaPer/searchFisica",
+
     personaJuridica_uploadFotografia: "personaJuridica/uploadFotografia",
-    personaJuridica_cargarFotografia: "personaJuridica/cargarFotografia"
+    personaJuridica_cargarFotografia: "personaJuridica/cargarFotografia",
+    busquedaPerJuridica_datosGeneralesSearch:
+      "busquedaPerJuridica/datosGeneralesSearch",
+    busquedaPerJuridica_create: "busquedaPerJuridica/create"
   };
 
   constructor(
