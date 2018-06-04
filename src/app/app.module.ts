@@ -12,6 +12,7 @@ import { MenuItem } from "primeng/api";
 import { AuthGuard } from "./_guards/auth.guards";
 import { OldSigaServices } from "./_services/oldSiga.service";
 import { SigaServices } from "./_services/siga.service";
+import { CookieService } from 'ngx-cookie-service';
 // prueba
 import { HeaderGestionEntidadService } from "./_services/headerGestionEntidad.service";
 import { AuthenticationService } from "./_services/authentication.service";
@@ -117,6 +118,9 @@ import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-co
 import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component";
 import { DatosGenerales } from "./features/censo/datos-generales/datos-generales.component";
 
+//COOKIES
+import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -157,6 +161,7 @@ import { DatosGenerales } from "./features/censo/datos-generales/datos-generales
     DatosGenerales,
     DatosPersonaJuridicaComponent,
 
+
     //Certificados
     ComunicacionInterprofesionalComponent,
     SolicitarCompraComponent,
@@ -185,7 +190,8 @@ import { DatosGenerales } from "./features/censo/datos-generales/datos-generales
     GestionAuditoriaComponent,
     PerfilesComponent,
     EditarPerfilesComponent,
-    PermisosComponent
+    PermisosComponent,
+    PoliticaCookiesComponent
   ],
   imports: [
     BrowserModule,
@@ -240,8 +246,9 @@ import { DatosGenerales } from "./features/censo/datos-generales/datos-generales
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,
       multi: true
-    }
+    },
+    CookieService
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

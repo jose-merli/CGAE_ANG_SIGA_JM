@@ -11,6 +11,12 @@
     </div>
 </div>
 
+<div class="cookies" [style.bottom.%]="bottomCookies">
+    <h3>Política de Cookies</h3>
+    <p>{{cookieValue}}<span (click)="navigateTo()"> aquí</span></p>
+    <button (click)='onHideCookies()' pButton type="button " label="{{'general.boton.submit' | translate}}"></button>
+</div>
+
 <!--<div class="siga-app-container">
     <app-header></app-header>
     <div class="wrapper-menu-sidebar">

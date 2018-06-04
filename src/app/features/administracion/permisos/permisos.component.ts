@@ -103,6 +103,14 @@ export class PermisosComponent implements OnInit, DoCheck {
       n => {
         this.grupos = n.combooItems;
         let first = { label: "", value: "" };
+
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+para poder filtrar el dato con o sin estos caracteres*/
+        this.grupos.map(e => {
+          e.labelSinTilde = e.label.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+          return e.labelSinTilde;
+        });
+
         this.grupos.unshift(first);
       },
       err => {
