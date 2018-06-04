@@ -38,6 +38,9 @@ import { MantenimientoCertificadosComponent } from "./features/certificados/mant
 //Facturacion
 import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimiento-sufijos/mantenimiento-sufijos.component";
 
+//Productos y Servicios
+import { CategoriasComponent } from "./features/productosYServicios/categorias/categorias.component";
+
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
