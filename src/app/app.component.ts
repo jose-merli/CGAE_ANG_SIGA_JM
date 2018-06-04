@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 // import { MenuItem } from 'primeng/api';
 import { AuthenticationService } from './_services/authentication.service';
 import { Router, ActivatedRoute, RouterStateSnapshot, NavigationEnd } from '@angular/router';
-
+import { CookieService } from 'ngx-cookie-service';
 
 
 @Component({
@@ -17,6 +17,11 @@ export class AppComponent implements OnInit {
   @ViewChild('content')
   content: any;
 
+  cookieValue = 'UNKNOWN';
+
+  hideCookies: boolean = true;
+  bottomCookies: string = "-100"
+
 
 
 
@@ -24,7 +29,7 @@ export class AppComponent implements OnInit {
   isScrollReseteable: boolean = false;
 
   constructor(
-    private autenticateService: AuthenticationService, private activatedRoute: ActivatedRoute, private router: Router) {
+    private autenticateService: AuthenticationService, private activatedRoute: ActivatedRoute, private router: Router, private cookieService: CookieService) {
 
   }
 
@@ -35,7 +40,15 @@ export class AppComponent implements OnInit {
     //   console.log(result)
     // })
 
-    this.subscribeNavigationEnd()
+    this.subscribeNavigationEnd();
+
+    if (sessionStorage.getItem('cookies') === 'true') {
+      this.bottomCookies = "-100";
+    } else {
+      this.bottomCookies = "0";
+      this.cookieService.set('Test', 'Éste sitio web usa cookies. Puede leer más sobre el uso de cookies');
+      this.cookieValue = this.cookieService.get('Test');
+    }
   }
 
   subscribeNavigationEnd() {
@@ -86,5 +99,15 @@ export class AppComponent implements OnInit {
       }, 2)
     }
 
+  }
+
+
+  navigateTo() {
+    this.router.navigate(['/politicaCookies']);
+  }
+
+  onHideCookies() {
+    sessionStorage.setItem('cookies', 'true');
+    this.bottomCookies = '-100';
   }
 }

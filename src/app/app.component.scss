@@ -1,3 +1,14 @@
+@import "../sass/variables.scss";
+
+@keyframes showCookies{
+    from{bottom: -100%}
+    to{bottom: 0}
+}
+@keyframes hideCookies{
+    from{bottom: 0}
+    to{bottom: -100%}
+}
+
 .siga-app-container {
   position: relative;
   height: 100vh;
@@ -15,6 +26,68 @@
     }
   }
 }
+
+.cookies{
+    position: fixed;
+    width: 100%;
+    z-index: 1006;
+    padding: 1.5em;
+    bottom: -100%;
+    left: 0;
+    color: white;
+    background: $secondary-color;   
+    font-size: .8rem;
+    transition: all 1.2s ease-in .2s; 
+    h3{
+        font-family: $general-font;
+        font-size: 1rem;
+    }
+    p{        
+        display: inline-block;
+        span{
+            color: $blue3;
+            cursor: pointer;
+            &:hover{
+                color: white;
+                transition: color .2s;
+            }
+        }        
+    }
+
+    .ui-button:enabled:hover, .ui-button:enabled:hover, .ui-widget.ui-button:enabled:hover, .ui-button:enabled:hover{
+      background: white;
+      border: none;
+      box-shadow: none;
+      color: $secondary-color;
+    }
+
+    button{
+        color: $secondary-color;
+        background: white;
+        padding: .2rem .5rem;
+        border: none;
+        border-radius: 3px;
+        margin-left: .5rem;
+        cursor: pointer;
+        color: $secondary-color;
+        
+    }
+}
+
+.showCookies{
+    animation-name: showCookies;
+    animation-duration: 1.2s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;    
+}
+
+.hideCookies{
+    animation-name: hideCookies;
+    animation-duration: 1.5s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;    
+}
+
 
 @media screen and (max-width: 1250px) {
 

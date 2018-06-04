@@ -62,12 +62,16 @@ import { GestionEntidad } from "./features/administracion/gestion-entidad/gestio
 import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component";
 import { DatosGenerales } from "./features/censo/datos-generales/datos-generales.component";
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
+//COOKIES
+import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
   { path: "login", component: LoginComponent },
 
   { path: "loginDevelop", component: LoginDevelopComponent },
+
+  { path: "politicaCookies", component: PoliticaCookiesComponent, canActivate: [AuthGuard] },
 
   // Censo
   {
