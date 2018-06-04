@@ -135,6 +135,19 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
   }
   pInputText;
 
+  onlySpaces(str) {
+    let i = 0;
+    var ret;
+    ret = true;
+    while (i < str.length) {
+      if (str[i] != " ") {
+        ret = false;
+      }
+      i++;
+    }
+    return ret;
+  }
+
   isNew() {
     this.body.rolesAsignados = this.rolesAsignados;
     this.body.rolesNoAsignados = this.rolesNoAsignados;
@@ -191,7 +204,9 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
   checkIgual() {
     if (
       this.body.idGrupo == undefined ||
-      this.body.descripcionGrupo == undefined
+      this.body.descripcionGrupo == undefined ||
+      this.onlySpaces(this.body.idGrupo) ||
+      this.onlySpaces(this.body.descripcionGrupo)
     ) {
       return true;
     } else {

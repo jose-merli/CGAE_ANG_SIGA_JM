@@ -61,7 +61,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   tablaHistorico: boolean = false;
   editar: boolean = false;
   eliminar: boolean = false;
-  crear: boolean = true;
+  s;
   selectMultiple: boolean = false;
   selectedItem: number = 10;
   selectAll: boolean = false;
@@ -98,7 +98,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   activacionEditar: boolean;
   newCatalogo: CatalogoMaestroItem = new CatalogoMaestroItem();
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
-
+  controlEditar: boolean = false;
   rowsPerPage: any = [];
   numSelected: number = 0;
 
@@ -210,48 +210,49 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     );
   }
   confirmEdit() {
-    let editados = 0;
-    var mess = "";
-    for (let i in this.datosHist) {
-      if (this.datosHist[i].editar) {
-        editados++;
-      }
-    }
-    if (editados <= 1) {
-      mess = this.translateService.instant("general.message.aceptar") + "?";
-    } else {
-      mess =
-        this.translateService.instant("general.message.aceptar") +
-        " " +
-        editados +
-        " " +
-        this.translateService.instant(
-          "consultas.consultaslistas.literal.registros"
-        ) +
-        "?";
-    }
+    this.isEditar();
+    // let editados = 0;
+    // var mess = "";
+    // for (let i in this.datosHist) {
+    //   if (this.datosHist[i].editar) {
+    //     editados++;
+    //   }
+    // }
+    // if (editados <= 1) {
+    //   mess = this.translateService.instant("general.message.aceptar") + "?";
+    // } else {
+    //   mess =
+    //     this.translateService.instant("general.message.aceptar") +
+    //     " " +
+    //     editados +
+    //     " " +
+    //     this.translateService.instant(
+    //       "consultas.consultaslistas.literal.registros"
+    //     ) +
+    //     "?";
+    // }
 
-    let icon = "fa fa-edit";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        editados = 0;
-        this.isEditar();
-      },
-      reject: () => {
-        editados = 0;
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Cancel",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
-      }
-    });
+    // let icon = "fa fa-edit";
+    // this.confirmationService.confirm({
+    //   message: mess,
+    //   icon: icon,
+    //   accept: () => {
+    //     editados = 0;
+    //     this.isEditar();
+    //   },
+    //   reject: () => {
+    //     editados = 0;
+    //     this.msgs = [
+    //       {
+    //         severity: "info",
+    //         summary: "Cancel",
+    //         detail: this.translateService.instant(
+    //           "general.message.accion.cancelada"
+    //         )
+    //       }
+    //     ];
+    //   }
+    // });
   }
   newData() {
     this.blockSeleccionar = true;
@@ -278,13 +279,18 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     console.log(event);
     let data = event.data;
     //compruebo si la edicion es correcta con la basedatos
-    this.editar = true;
-    this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
-      if (value.idRegistro == data.idRegistro) {
-        value.editar = true;
-      }
-    });
-    console.log(this.datosHist);
+    if (this.onlySpaces(data.descripcion)) {
+      this.blockCrear = true;
+    } else {
+      this.editar = true;
+      this.blockCrear = false;
+      this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
+        if (value.idRegistro == data.idRegistro) {
+          value.editar = true;
+        }
+      });
+      console.log(this.datosHist);
+    }
   }
   volver() {
     this.editar = false;
@@ -355,14 +361,28 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     }
     this.isBuscar();
   }
-  //cada vez que cambia el formulario comprueba esto
+
+  onlySpaces(str) {
+    let i = 0;
+    var ret;
+    ret = true;
+    while (i < str.length) {
+      if (str[i] != " ") {
+        ret = false;
+      }
+      i++;
+    }
+    return ret;
+  }
+  // cada vez que cambia el formulario comprueba esto
   onChangeForm() {
     if (this.newCatalogo.codigoExt == undefined) {
       this.newCatalogo.codigoExt = "";
     }
     if (
       this.newCatalogo.descripcion == "" ||
-      this.newCatalogo.descripcion == undefined
+      this.newCatalogo.descripcion == undefined ||
+      this.onlySpaces(this.newCatalogo.descripcion)
     ) {
       this.blockCrear = true;
     } else {
@@ -428,7 +448,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       this.selectAll = false;
       this.selectedDatos = [];
       this.numSelected = 0;
-      console.log(this.selectAll)
+      console.log(this.selectAll);
     }
     this.volver();
   }
@@ -446,7 +466,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     sessionStorage.setItem("searchOrHistory", JSON.stringify("search"));
     this.buscar = true;
     this.blockBuscar = false;
-    this.crear = false;
+    this.blockCrear = true;
     this.tablaHistorico = false;
     this.eliminar = false;
     if (this.body.codigoExt != undefined) {
@@ -466,16 +486,16 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("maestros_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.searchCatalogo = JSON.parse(data["body"]);
-        this.datosEdit = this.searchCatalogo.catalogoMaestroItem;
-        this.datosHist = this.searchCatalogo.catalogoMaestroItem;
-      },
-      err => {
-        console.log(err);
-      }
+          this.searchCatalogo = JSON.parse(data["body"]);
+          this.datosEdit = this.searchCatalogo.catalogoMaestroItem;
+          this.datosHist = this.searchCatalogo.catalogoMaestroItem;
+        },
+        err => {
+          console.log(err);
+        }
       );
   }
 
@@ -603,9 +623,9 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
             severity: "success",
             summary: "Correcto",
             detail:
-            selectedDatos.length +
-            " " +
-            this.translateService.instant("messages.deleted.selected.success")
+              selectedDatos.length +
+              " " +
+              this.translateService.instant("messages.deleted.selected.success")
           });
         }
       },
