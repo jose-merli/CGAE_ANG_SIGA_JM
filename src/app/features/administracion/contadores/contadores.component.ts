@@ -103,6 +103,13 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
     this.sigaServices.get("contadores_module").subscribe(
       n => {
         this.contadores_modo = n.combooItems;
+
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+para poder filtrar el dato con o sin estos caracteres*/
+        this.contadores_modo.map(e => {
+          e.labelSinTilde = e.label.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+          return e.labelSinTilde;
+        });
       },
       err => {
         console.log(err);
@@ -176,9 +183,9 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
     this.table.reset();
   }
   // Control de buscar desactivado por ahora (hasta tener primer elemento del combo preparado)
-  onChangeCatalogo() {}
+  onChangeCatalogo() { }
   //cada vez que cambia el formulario comprueba esto
-  onChangeForm() {}
+  onChangeForm() { }
 
   showSuccess() {
     this.msgs = [];
@@ -222,24 +229,24 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("contadores_search", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          console.log(data);
+      data => {
+        console.log(data);
 
-          this.search = JSON.parse(data["body"]);
-          this.datos = this.search.contadorItems;
-          console.log(this.datos);
-          this.table.reset();
-        },
-        err => {
-          console.log(err);
-        },
-        () => {
-          if (sessionStorage.getItem("first") != null) {
-            let first = JSON.parse(sessionStorage.getItem("first")) as number;
-            this.table.first = first;
-            sessionStorage.removeItem("first");
-          }
+        this.search = JSON.parse(data["body"]);
+        this.datos = this.search.contadorItems;
+        console.log(this.datos);
+        this.table.reset();
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (sessionStorage.getItem("first") != null) {
+          let first = JSON.parse(sessionStorage.getItem("first")) as number;
+          this.table.first = first;
+          sessionStorage.removeItem("first");
         }
+      }
       );
   }
   paginate(event) {

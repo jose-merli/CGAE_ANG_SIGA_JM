@@ -102,6 +102,14 @@ export class Usuarios extends SigaWrapper implements OnInit {
     this.sigaServices.get("usuarios_rol").subscribe(
       n => {
         this.usuarios_rol = n.combooItems;
+
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+para poder filtrar el dato con o sin estos caracteres*/
+        this.usuarios_rol.map(e => {
+          e.labelSinTilde = e.label.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+          return e.labelSinTilde;
+        });
+
       },
       err => {
         console.log(err);
@@ -111,6 +119,15 @@ export class Usuarios extends SigaWrapper implements OnInit {
       n => {
         this.usuarios_perfil = n.combooItems;
         let first = { label: "", value: "" };
+
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+para poder filtrar el dato con o sin estos caracteres*/
+        this.usuarios_perfil.map(e => {
+          e.labelSinTilde = e.label.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+          return e.labelSinTilde;
+        });
+
+
         this.usuarios_perfil.unshift(first);
       },
       err => {
@@ -179,7 +196,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
 
@@ -314,24 +331,24 @@ export class Usuarios extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("usuarios_search", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-          this.searchUser = JSON.parse(data["body"]);
-          this.datos = this.searchUser.usuarioItem;
-          this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          if (sessionStorage.getItem("first") != null) {
-            let first = JSON.parse(sessionStorage.getItem("first")) as number;
-            this.table.first = first;
-            sessionStorage.removeItem("first");
-          }
+      data => {
+        console.log(data);
+        this.progressSpinner = false;
+        this.searchUser = JSON.parse(data["body"]);
+        this.datos = this.searchUser.usuarioItem;
+        this.table.paginator = true;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {
+        if (sessionStorage.getItem("first") != null) {
+          let first = JSON.parse(sessionStorage.getItem("first")) as number;
+          this.table.first = first;
+          sessionStorage.removeItem("first");
         }
+      }
       );
   }
   paginate(event) {
@@ -503,10 +520,10 @@ export class Usuarios extends SigaWrapper implements OnInit {
           "general.message.confirmar.rehabilitaciones"
         )),
           +selectedItem.length +
-            " " +
-            this.translateService.instant(
-              "cargaMasivaDatosCurriculares.numRegistros.literal"
-            );
+          " " +
+          this.translateService.instant(
+            "cargaMasivaDatosCurriculares.numRegistros.literal"
+          );
       } else {
         mess = this.translateService.instant(
           "general.message.confirmar.rehabilitacion"

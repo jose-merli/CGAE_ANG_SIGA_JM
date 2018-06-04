@@ -17,10 +17,16 @@
 }
 
 @media screen and (max-width: 1250px) {
-  .content {
-    margin-left: 2.2rem;
-    padding: 9rem 1rem 1rem 1rem;
+
+  .siga-app-container{
+    .wrapper-menu-sidebar{
+       .content {
+          margin-left: 2rem;
+          padding: 0rem 1rem 1rem 1rem;
+        }
+    }
   }
+ 
 }
 
 @media screen and (max-width: 768px) {

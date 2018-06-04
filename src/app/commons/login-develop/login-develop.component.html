@@ -13,8 +13,8 @@
                     <option *ngFor="let i of instituciones" [ngValue]="i.value">{{ i.label }}</option>
                 </select>-->
 
-                <p-dropdown [filter]="true" filterBy="label" [style]="{'width':'400px'}" formControlName="tmpLoginInstitucion" [(ngModel)]="tmpLoginInstitucion"
-                    [options]="instituciones" (onChange)="onChange($event)" id="dropdown">
+                <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [style]="{'width':'400px'}" formControlName="tmpLoginInstitucion"
+                    [(ngModel)]="tmpLoginInstitucion" [options]="instituciones" (onChange)="onChange($event)" id="dropdown">
                     </p-dropdown>
 
             </td>

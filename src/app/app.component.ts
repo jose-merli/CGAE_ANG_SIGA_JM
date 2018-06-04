@@ -47,23 +47,20 @@ export class AppComponent implements OnInit {
         if (route.firstChild) {
           route = route.firstChild;
         }
-
         return route;
       })
       .filter(route => route.outlet === 'primary')
       .mergeMap(route => route.data)
       .subscribe((e: any) => {
         this.isScrollReseteable = e.scrollReset;
+        console.log(this.isScrollReseteable)
       });
   }  // outputs my `data`
-
-
 
 
   isLogged() {
     return this.autenticateService.isAutenticated();
   }
-
 
   subirTop(e, content) {
 
