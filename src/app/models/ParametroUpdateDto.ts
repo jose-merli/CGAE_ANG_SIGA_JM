@@ -4,5 +4,6 @@ export class ParametroUpdateDto {
   valor: String;
   idInstitucion: String;
   idRecurso: String;
+  descripcion: String;
   constructor() {}
 }
