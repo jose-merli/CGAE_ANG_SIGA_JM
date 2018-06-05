@@ -46,7 +46,7 @@ export class AppComponent implements OnInit {
       this.bottomCookies = "-100";
     } else {
       this.bottomCookies = "0";
-      this.cookieService.set('Test', 'Éste sitio web usa cookies. Puede leer más sobre el uso de cookies');
+      this.cookieService.set('Test', 'Utilizamos cookies propias y de analítica para mejorar tu experiencia de usuario. Si continúas navegando, consideramos que aceptas su uso.');
       this.cookieValue = this.cookieService.get('Test');
     }
   }
