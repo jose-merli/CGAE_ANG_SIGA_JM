@@ -146,9 +146,11 @@
   <div *ngIf="pressNew == true" class="card mt-3">
     <div class="card-body p-0">
 
-      <p-dataTable #table class="tabla-listado" [value]="datosHist" [editable]="true" emptyMessage="{{ 'general.message.no.registros' | translate}}"
-        [ngClass]="{'customCursor': selectMultiple}">
-
+      <!--<p-dataTable #table class="tabla-listado" [value]="datosNew" [editable]="true" emptyMessage="{{ 'general.message.no.registros' | translate}}"
+        [ngClass]="{'customCursor': selectMultiple}">-->
+      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+        [paginator]="activarPaginacion()" #table class="tabla-listado" [value]="datosNew" [paginator]="true" paginatorPosition="both"
+        datakey="descripcion" [rows]="selectedItem" [editable]="!selectMultiple" (onEdit)="editarCompleto($event)" (onEditInit)="editar=true">
         <p-column [style]="{'width': '20%'}" field="codigoExt" [header]="'general.codeext' | translate" [filter]="true">
           <ng-template let-col let-car="rowData" pTemplate="body">
 
