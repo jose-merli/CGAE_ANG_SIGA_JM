@@ -49,6 +49,7 @@ export class OldSigaServices {
         gestionarSolicitudes: "Dispatcher.do?proceso=36",
         solicitudCompraSubscripcion: "Dispatcher.do?proceso=37",
         solicitudAnulacion: "Dispatcher.do?proceso=40",
+        cargaCompras: "Dispatcher.do?proceso=44",
 
         loginDevelop: "developmentLogin.do",
         login: "sigainit.do"

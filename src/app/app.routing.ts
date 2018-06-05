@@ -47,6 +47,7 @@ import { MantenimientoServiciosComponent } from "./features/productosYServicios/
 import { GestionarSolicitudesComponent } from "./features/productosYServicios/gestionarSolicitudes/gestionarSolicitudes.component";
 import { SolicitudCompraSubscripcionComponent } from "./features/productosYServicios/solicitudCompraSubscripcion/solicitudCompraSubscripcion.component";
 import { SolicitudAnulacionComponent } from "./features/productosYServicios/solicitudAnulacion/solicitudAnulacion.component";
+import { CargaComprasComponent } from "./features/productosYServicios/cargaCompras/cargaCompras.component";
 
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
@@ -278,6 +279,11 @@ const appRoutes: Routes = [
   {
     path: "solicitudAnulacion",
     component: SolicitudAnulacionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "cargaCompras",
+    component: CargaComprasComponent,
     canActivate: [AuthGuard]
   },
 

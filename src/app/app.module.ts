@@ -122,6 +122,7 @@ import { MantenimientoServiciosComponent } from "./features/productosYServicios/
 import { GestionarSolicitudesComponent } from "./features/productosYServicios/gestionarSolicitudes/gestionarSolicitudes.component";
 import { SolicitudCompraSubscripcionComponent } from "./features/productosYServicios/solicitudCompraSubscripcion/solicitudCompraSubscripcion.component";
 import { SolicitudAnulacionComponent } from "./features/productosYServicios/solicitudAnulacion/solicitudAnulacion.component";
+import { CargaComprasComponent } from "./features/productosYServicios/cargaCompras/cargaCompras.component";
 
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
@@ -191,6 +192,7 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     GestionarSolicitudesComponent,
     SolicitudCompraSubscripcionComponent,
     SolicitudAnulacionComponent,
+    CargaComprasComponent,
 
     // Administracion
     CatalogosMaestros,
