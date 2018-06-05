@@ -27,17 +27,29 @@
     url('./assets/fonts/OpenSansCondensedLight.ttf') format('truetype');
 }
 
-@keyframes ui-progress-spinner-color {
-    0% {
-        stroke: $secondary-color;
-    }
-    100%{
-        stroke: $primary-color;
-    }
+@keyframes load8 {
+    // 0% {
+    //     stroke: $secondary-color;
+    // }
+    // 100%{
+    //     stroke: $primary-color;
+    // }
+
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  50%{
+    border-top: .4em solid $primary-color;
+    border-right: .4em solid $primary-color;
+    border-bottom: .4em solid $primary-color;
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+    
+  }
 }
-
-
-
 
 
 *{
@@ -800,20 +812,46 @@ font-size: .7rem;
     background: rgba(0,0,0,.1);
     z-index: 2000;    
 
-    .ui-progress-spinner{
-        width: 100px;
-        height: 100px;
-        fill: transparent;
-        position: fixed;
-        margin-left: -50px;
+    .loader {
+        border-radius: 50%;
+        width:100px;
+        height:100px;
         margin-top: -50px;
         top: 50%;
-        left: 50%;
-        background: none;
-        .ui-progress-circle{
-            stroke-width: 4;
+        margin-left: -50px;
+        left:50%;
+        position: absolute;
+        border-top: .4em solid $secondary-color;
+        border-right: .4em solid $secondary-color;
+        border-bottom: .4em solid $secondary-color;
+        border-left: .4em solid transparent;
+        -webkit-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-animation: load8 1.4s infinite linear;
+        animation: load8 1.4s infinite linear;
+
+        &:after{
+            border-radius: 50%;
+            width:100px;
+            height:100px;
         }
     }
+
+    // .ui-progress-spinner{
+    //     width: 100px;
+    //     height: 100px;
+    //     fill: transparent;
+    //     position: fixed;
+    //     margin-left: -50px;
+    //     margin-top: -50px;
+    //     top: 50%;
+    //     left: 50%;
+    //     background: none;
+    //     .ui-progress-circle{
+    //         stroke-width: 4;
+    //     }
+    // }
 
 }
 

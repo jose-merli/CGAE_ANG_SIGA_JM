@@ -3,7 +3,8 @@
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p>{{'menu.administracion' | translate}} <i class="pl-1 fa fa-angle-right"></i>{{ 'gestion.usuarios.literal.usuarios' |
-      translate}}</p>
+      translate}}
+    </p>
   </div>
   <!--<div class="breadCrumb">
     <p>{{ "menu.administracion" | translate}} <i class="fa fa-angle-right"></i> {{'administracion.usuarios.literal.usuariosyperfiles'
@@ -131,5 +132,6 @@
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
-  <p-progressSpinner animationDuration="1s"></p-progressSpinner>
+  <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+  <div class="loader"></div>
 </div>
