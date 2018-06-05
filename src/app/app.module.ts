@@ -115,6 +115,8 @@ import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimie
 
 //Modulo de Productos y Servicios
 import { CategoriasComponent } from "./features/productosYServicios/categorias/categorias.component";
+import { CategoriasProductoComponent } from "./features/productosYServicios/categoriasProducto/categoriasProducto.component";
+import { CategoriasServiciosComponent } from "./features/productosYServicios/categoriasServicios/categoriasServicios.component";
 
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
@@ -177,6 +179,8 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
 
     //Productos y Servicios
     CategoriasComponent,
+    CategoriasProductoComponent,
+    CategoriasServiciosComponent,
 
     // Administracion
     CatalogosMaestros,
