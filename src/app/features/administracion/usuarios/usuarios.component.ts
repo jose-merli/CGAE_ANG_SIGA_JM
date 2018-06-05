@@ -171,7 +171,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         value: 40
       }
     ];
-    if ((this.body.activo == "S")) {
+    if (this.body.activo == "S") {
       this.activo = true;
     } else {
       this.activo = false;
@@ -228,7 +228,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onChangeForm() {
-    if (this.body.nif == "") {
+    if (this.body.nif == "" || this.body.nif.length < 9) {
       this.dniCorrecto = null;
     } else {
       this.dniCorrecto = this.isValidDNI(this.body.nif);
@@ -570,7 +570,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.router.navigate(["/editarUsuario"]);
     } else {
       this.editar = false;
-      this.numSelected = this.selectedDatos.length
+      this.numSelected = this.selectedDatos.length;
       this.dniCorrecto = null;
       this.body = new UsuarioRequestDto();
       this.body.activo = id[0].activo;

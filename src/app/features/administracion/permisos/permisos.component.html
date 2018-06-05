@@ -46,7 +46,7 @@
 
 
 </div>
-<div *ngIf="(selectedPermiso && selectedPermiso.length > 0) || (this.permisosChange && this.permisosChange.length > 0)" [style.width.px]="myWidth"
+<div *ngIf="(selectedPermiso && selectedPermiso.length > 0) || (this.permisosChange && this.permisosChange.size > 0)" [style.width.px]="myWidth"
   class="menu-accesos">
   <div class="texto">
     <label class="title">Administrar permisos de acceso</label>
@@ -77,9 +77,9 @@
       </div>
       <div class="ml-auto main-button d-inline-block">
         <button [disabled]="isButtonDisabled()" (click)="savePermisos()" class="mr-2" pButton type="button" icon="far fa-save" iconPos="left"
-          label="Guardar"></button>
+          label="{{ 'general.boton.guardar' | translate}}"></button>
           <button [disabled]="savedPermisos" (click)="restablecerPermisos()" pButton type="button" icon="fa fa-redo" iconPos="left"
-            label="Restablecer"></button>
+            label="{{'general.boton.restablecer' | translate}}"></button>
       </div>
     </div>
 
