@@ -38,6 +38,9 @@ import { MantenimientoCertificadosComponent } from "./features/certificados/mant
 //Facturacion
 import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimiento-sufijos/mantenimiento-sufijos.component";
 
+//Productos y Servicios
+import { CategoriasComponent } from "./features/productosYServicios/categorias/categorias.component";
+
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
@@ -226,6 +229,13 @@ const appRoutes: Routes = [
   {
     path: "mantenimientoSufijos",
     component: MantenimientoSufijosComponent,
+    canActivate: [AuthGuard]
+  },
+
+  //Productos y Servicios
+  {
+    path: "categorias",
+    component: CategoriasComponent,
     canActivate: [AuthGuard]
   },
 
