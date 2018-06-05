@@ -510,11 +510,14 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.sigaServices.post("maestros_create", this.cre).subscribe(
       data => {
         this.showSuccess();
+        this.isBuscar();
       },
       error => {
         this.searchCatalogo = JSON.parse(error["error"]);
-        this.showFail(this.searchCatalogo.error.message.toString());
+        this.showFail(JSON.stringify(this.searchCatalogo.error.message));
         console.log(error);
+        this.table.reset();
+        this.isBuscar();
       },
       () => {
         this.reset();
