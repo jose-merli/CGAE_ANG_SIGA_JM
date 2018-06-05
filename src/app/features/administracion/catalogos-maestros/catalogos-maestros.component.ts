@@ -97,7 +97,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   permisosTree: any;
   permisosArray: any[];
   derechoAcceso: any;
-  activacionEditar: boolean;
+  activacionEditar: boolean = true;
   newCatalogo: CatalogoMaestroItem = new CatalogoMaestroItem();
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   controlEditar: boolean = false;
