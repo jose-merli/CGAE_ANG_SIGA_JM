@@ -15,48 +15,20 @@ import { SelectItem } from 'primeng/api';
 export class PoliticaCookiesComponent implements OnInit {
 
 
-  formNotificaciones: FormGroup;
-  datos: any[];
-  colegios: any[];
-  displayTable: boolean = false;
-
 
   constructor(private formBuilder: FormBuilder) {
 
-    this.formNotificaciones = this.formBuilder.group({
-      'colegio': null,
-      'asunto': null,
-      'destinatarios': null,
-      'email': null,
-    });
+
+
 
   }
 
   ngOnInit() {
 
-    this.datos = [
-      { nombre: 'Madrid', obligatorio: 'true' },
-      { nombre: 'Sevilla', obligatorio: 'true' },
-      { nombre: 'Madrid', obligatorio: 'false' },
-      { nombre: 'Madrid', obligatorio: 'true' },
-    ];
-
-    this.colegios = [
-      { label: '-', value: null },
-      { label: 'Madrid', value: { name: 'Madrid' } },
-      { label: 'Toledo', value: { name: 'Toledo' } },
-    ];
 
   }
 
-  onChangeColegio(e) {
-    if (this.formNotificaciones.controls['colegio'].value === null) {
-      this.displayTable = false;
-    } else {
-      this.displayTable = true;
-    }
 
-  }
 
 
 
