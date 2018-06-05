@@ -72,7 +72,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   datosHist: any[];
   datosEdit: any[];
   select: any[];
-
+  codigoExtAux: String;
+  descripcionAux: String;
   //Array de opciones del dropdown
   catalogoArray: any[];
 
@@ -186,6 +187,12 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
           this.upd.descripcion = value.descripcion;
           this.upd.codigoExt = value.codigoExt;
           this.upd.idRegistro = value.idRegistro;
+          // if (
+          //   this.codigoExtAux == this.upd.codigoExt &&
+          //   this.descripcionAux != this.upd.descripcion
+          // ) {
+          //   this.codigoExtAux = this.codigoExtAux + " ";
+          // }
           this.sigaServices.post("maestros_update", this.upd).subscribe(
             data => {
               this.showSuccess();
@@ -194,11 +201,14 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
                 "registroAuditoriaUsuariosActualizado",
                 JSON.stringify(true)
               );
+              this.isBuscar();
             },
             error => {
               this.searchCatalogo = JSON.parse(error["error"]);
               this.showFail(JSON.stringify(this.searchCatalogo.error.message));
               console.log(error);
+              this.table.reset();
+              this.isBuscar();
             }
           );
         }
@@ -209,50 +219,9 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       }
     );
   }
+
   confirmEdit() {
     this.isEditar();
-    // let editados = 0;
-    // var mess = "";
-    // for (let i in this.datosHist) {
-    //   if (this.datosHist[i].editar) {
-    //     editados++;
-    //   }
-    // }
-    // if (editados <= 1) {
-    //   mess = this.translateService.instant("general.message.aceptar") + "?";
-    // } else {
-    //   mess =
-    //     this.translateService.instant("general.message.aceptar") +
-    //     " " +
-    //     editados +
-    //     " " +
-    //     this.translateService.instant(
-    //       "consultas.consultaslistas.literal.registros"
-    //     ) +
-    //     "?";
-    // }
-
-    // let icon = "fa fa-edit";
-    // this.confirmationService.confirm({
-    //   message: mess,
-    //   icon: icon,
-    //   accept: () => {
-    //     editados = 0;
-    //     this.isEditar();
-    //   },
-    //   reject: () => {
-    //     editados = 0;
-    //     this.msgs = [
-    //       {
-    //         severity: "info",
-    //         summary: "Cancel",
-    //         detail: this.translateService.instant(
-    //           "general.message.accion.cancelada"
-    //         )
-    //       }
-    //     ];
-    //   }
-    // });
   }
   newData() {
     this.blockSeleccionar = true;
@@ -291,6 +260,12 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       });
       console.log(this.datosHist);
     }
+  }
+
+  guardarCodigo(event) {
+    let data = event.data;
+    this.codigoExtAux = data.codigoExt;
+    this.descripcionAux = data.descripcion;
   }
   volver() {
     this.editar = false;
@@ -466,7 +441,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     sessionStorage.setItem("searchOrHistory", JSON.stringify("search"));
     this.buscar = true;
     this.blockBuscar = false;
-    this.blockCrear = true;
+    this.blockCrear = false;
     this.tablaHistorico = false;
     this.eliminar = false;
     if (this.body.codigoExt != undefined) {
