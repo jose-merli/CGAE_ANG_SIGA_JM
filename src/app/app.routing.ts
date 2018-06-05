@@ -232,6 +232,13 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
 
+  //Productos y Servicios
+  {
+    path: "categorias",
+    component: CategoriasComponent,
+    canActivate: [AuthGuard]
+  },
+
   // Administracion
   {
     path: "catalogosMaestros",
