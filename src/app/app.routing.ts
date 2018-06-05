@@ -45,6 +45,8 @@ import { CategoriasServiciosComponent } from "./features/productosYServicios/cat
 import { MantenimientoProductosComponent } from "./features/productosYServicios/mantenimientoProductos/mantenimientoProductos.component";
 import { MantenimientoServiciosComponent } from "./features/productosYServicios/mantenimientoServicios/mantenimientoServicios.component";
 import { GestionarSolicitudesComponent } from "./features/productosYServicios/gestionarSolicitudes/gestionarSolicitudes.component";
+import { SolicitudCompraSubscripcionComponent } from "./features/productosYServicios/mantenimientoServicios/mantenimientoServicios.component";
+import { SolicitudAnulacionComponent } from "./features/productosYServicios/gestionarSolicitudes/gestionarSolicitudes.component";
 
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
@@ -266,6 +268,16 @@ const appRoutes: Routes = [
   {
     path: "gestionarSolicitudes",
     component: GestionarSolicitudesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "solicitudCompraSubscripcion",
+    component: SolicitudCompraSubscripcionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "solicitudAnulacion",
+    component: SolicitudAnulacionComponent,
     canActivate: [AuthGuard]
   },
 
