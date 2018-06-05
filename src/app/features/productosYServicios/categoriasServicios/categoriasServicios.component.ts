@@ -3,7 +3,7 @@ import { OldSigaServices } from '../../../_services/oldSiga.service'
 
 
 @Component({
-  selector: 'app-categorias',
+  selector: 'app-categoriasServicios',
   templateUrl: './categoriasServicios.component.html',
   styleUrls: ['./categoriasServicios.component.scss'],
 

@@ -44,6 +44,9 @@ export class OldSigaServices {
         categorias: "Dispatcher.do?proceso=052",
         categoriasProducto: "Dispatcher.do?proceso=400",
         categoriasServicios: "Dispatcher.do?proceso=401",
+        mantenimientoProductos: "Dispatcher.do?proceso=40",
+        mantenimientoServicios: "Dispatcher.do?proceso=41",
+        gestionarSolicitudes: "Dispatcher.do?proceso=36",
 
         loginDevelop: "developmentLogin.do",
         login: "sigainit.do"

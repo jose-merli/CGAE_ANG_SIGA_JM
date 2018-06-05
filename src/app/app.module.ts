@@ -117,6 +117,9 @@ import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimie
 import { CategoriasComponent } from "./features/productosYServicios/categorias/categorias.component";
 import { CategoriasProductoComponent } from "./features/productosYServicios/categoriasProducto/categoriasProducto.component";
 import { CategoriasServiciosComponent } from "./features/productosYServicios/categoriasServicios/categoriasServicios.component";
+import { MantenimientoProductosComponent } from "./features/productosYServicios/mantenimientoProductos/mantenimientoProductos.component";
+import { MantenimientoServiciosComponent } from "./features/productosYServicios/mantenimientoServicios/mantenimientoServicios.component";
+import { GestionarSolicitudesComponent } from "./features/productosYServicios/gestionarSolicitudes/gestionarSolicitudes.component";
 
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
@@ -181,6 +184,9 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     CategoriasComponent,
     CategoriasProductoComponent,
     CategoriasServiciosComponent,
+    MantenimientoProductosComponent,
+    MantenimientoServiciosComponent,
+    GestionarSolicitudesComponent,
 
     // Administracion
     CatalogosMaestros,

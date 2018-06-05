@@ -42,6 +42,9 @@ import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimie
 import { CategoriasComponent } from "./features/productosYServicios/categorias/categorias.component";
 import { CategoriasProductoComponent } from "./features/productosYServicios/categoriasProducto/categoriasProducto.component";
 import { CategoriasServiciosComponent } from "./features/productosYServicios/categoriasServicios/categoriasServicios.component";
+import { MantenimientoProductosComponent } from "./features/productosYServicios/mantenimientoProductos/mantenimientoProductos.component";
+import { MantenimientoServiciosComponent } from "./features/productosYServicios/mantenimientoServicios/mantenimientoServicios.component";
+import { GestionarSolicitudesComponent } from "./features/productosYServicios/gestionarSolicitudes/gestionarSolicitudes.component";
 
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
@@ -248,6 +251,21 @@ const appRoutes: Routes = [
   {
     path: "categoriasServicios",
     component: CategoriasServiciosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "mantenimientoProductos",
+    component: MantenimientoProductosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "mantenimientoServicios",
+    component: MantenimientoServiciosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "gestionarSolicitudes",
+    component: GestionarSolicitudesComponent,
     canActivate: [AuthGuard]
   },
 
