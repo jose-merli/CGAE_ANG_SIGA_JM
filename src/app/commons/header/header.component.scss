@@ -33,19 +33,19 @@ header {
       cursor: pointer;
       .logo-img {
         display: inline-block;
-        img {
-          width: 2.2em;
-          margin-right: 0.33em;
-          vertical-align: initial;
-        }
+        width: 2.2em;
+        margin-right: 0.33em;
+        vertical-align: middle;
+        
       }
       h1 {
         display: inline-block;
         font-family: Arial;
         font-weight: lighter;
         color: $primary-color;
-        font-size: 2rem;
+        font-size: 2.4rem;
         margin-bottom: 0;
+        vertical-align: middle;
       }
     }
     .logo-central {
@@ -56,7 +56,7 @@ header {
 
     .datos-img {
       img {
-        width: 9rem;
+        height:55px;
       }
     }
   }

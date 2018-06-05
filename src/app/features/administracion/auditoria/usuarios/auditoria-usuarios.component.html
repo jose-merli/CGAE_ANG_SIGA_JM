@@ -2,7 +2,7 @@
 <div class="busqueda-container">
     <div class="header-title">
         <i class="fa fa-square"></i>
-        <p>{{'menu.administracion.auditoria' | translate}}</p>
+        <p>{{'menu.administracion' | translate}} <i class="pl-1 fa fa-angle-right"></i>{{'menu.administracion.auditoria' | translate}}</p>
     </div>
     <!--<div class="breadCrumb">
         <p>{{'menu.administracion' | translate}} <i class="fa fa-angle-right"></i> {{'menu.administracion.auditoria' | translate}}
@@ -38,7 +38,7 @@
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{'administracion.auditoriaUsuarios.literal.tipoAccion' | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='selectedTipoAccion' [options]="tipoAcciones" [filter]="true" filterBy="label"></p-dropdown> &nbsp;&nbsp;
+                        <p-dropdown class="select-form" [(ngModel)]='selectedTipoAccion' [options]="tipoAcciones" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown> &nbsp;&nbsp;
                     </div>
                     <div class="form-group col-lg-1 col-md-1">
                     </div>
@@ -87,6 +87,9 @@
     <app-dialog></app-dialog>
 </div>
 
+
+
 <div *ngIf="progressSpinner" class="overlay-spinner">
-    <p-progressSpinner animationDuration="1s"></p-progressSpinner>
+    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+    <div class="loader"></div>
 </div>

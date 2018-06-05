@@ -82,6 +82,13 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
           n => {
             this.idiomaBusqueda = n.combooItems;
 
+            /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+para poder filtrar el dato con o sin estos caracteres*/
+            this.idiomaBusqueda.map(e => {
+              e.labelSinTilde = e.label.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+              return e.labelSinTilde;
+            });
+
             this.valorDefectoIdioma = this.idiomaBusqueda.find(
               item => item.value == this.lenguajeInstitucion
             );

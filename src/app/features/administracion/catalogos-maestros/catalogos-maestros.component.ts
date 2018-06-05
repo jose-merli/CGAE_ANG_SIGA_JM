@@ -70,6 +70,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   cols: any = [];
   datos: any[];
   datosHist: any[];
+  datosNew: any[];
   datosEdit: any[];
   select: any[];
   codigoExtAux: String;
@@ -234,15 +235,31 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       idInstitucion: "",
       idRegistro: ""
     };
-
+    let value = this.table.first;
     this.pressNew = true;
     this.buscar = false;
-    this.datosHist = [dummy, ...this.datosHist];
+    // this.createArrayEdit(dummy, value);
+    this.datosNew = [dummy, ...this.datosHist];
+
     this.newCatalogo = new CatalogoMaestroItem();
     this.newCatalogo.catalogo = this.body.catalogo;
 
     console.log(this.datosHist);
     this.table.reset();
+  }
+
+  createArrayEdit(dummy, index) {
+    if (index != 0) {
+      for (let i = 0; i < this.datosHist.length; i++) {
+        if (this.table.first != index) {
+          this.datosNew = [...this.datosNew, ...this.datosHist[i]];
+        } else {
+          this.datosNew = [...this.datosNew, dummy, ...this.datosHist[i]];
+        }
+      }
+    } else {
+      this.datosNew = [dummy, ...this.datosHist];
+    }
   }
   editarCompleto(event) {
     console.log(event);

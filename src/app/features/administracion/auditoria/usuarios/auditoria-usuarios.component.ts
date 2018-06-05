@@ -83,6 +83,14 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     this.sigaServices.get("auditoriaUsuarios_tipoAccion").subscribe(
       n => {
         this.tipoAcciones = n.combooItems;
+
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+      para poder filtrar el dato con o sin estos caracteres*/
+        this.tipoAcciones.map(e => {
+          e.labelSinTilde = e.label.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+          return e.labelSinTilde;
+        });
+
       },
       err => {
         console.log(err);
@@ -186,24 +194,24 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("auditoriaUsuarios_search", "?numPagina=1", this.bodySearch)
       .subscribe(
-        data => {
-          console.log(data);
-          this.searchParametros = JSON.parse(data["body"]);
-          this.datosUsuarios = this.searchParametros.historicoUsuarioItem;
-          this.buscar = true;
-          this.progressSpinner = false;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          if (sessionStorage.getItem("first") != null) {
-            let first = JSON.parse(sessionStorage.getItem("first")) as number;
-            this.table.first = first;
-            sessionStorage.removeItem("first");
-          }
+      data => {
+        console.log(data);
+        this.searchParametros = JSON.parse(data["body"]);
+        this.datosUsuarios = this.searchParametros.historicoUsuarioItem;
+        this.buscar = true;
+        this.progressSpinner = false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {
+        if (sessionStorage.getItem("first") != null) {
+          let first = JSON.parse(sessionStorage.getItem("first")) as number;
+          this.table.first = first;
+          sessionStorage.removeItem("first");
         }
+      }
       );
   }
 

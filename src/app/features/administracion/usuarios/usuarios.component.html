@@ -2,7 +2,9 @@
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{ 'gestion.usuarios.literal.usuarios' | translate}}</p>
+    <p>{{'menu.administracion' | translate}} <i class="pl-1 fa fa-angle-right"></i>{{ 'gestion.usuarios.literal.usuarios' |
+      translate}}
+    </p>
   </div>
   <!--<div class="breadCrumb">
     <p>{{ "menu.administracion" | translate}} <i class="fa fa-angle-right"></i> {{'administracion.usuarios.literal.usuariosyperfiles'
@@ -35,7 +37,7 @@
           <div *ngIf="editar == false" class="form-group col-lg-3 col-md-3">
             <label>{{ "administracion.usuarios.literal.rol" | translate }}</label>
             <p-dropdown class="select-form" [(ngModel)]='body.rol' [(disabled)]="editar" [options]="usuarios_rol" (ngModelChange)="onChangeForm()"
-              [filter]="true" filterBy="label"></p-dropdown>
+              [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
               <!--<select id="idRolBusqueda" [(ngModel)]='body.rol' name="idRolBusqueda" class="select-form">
               <option value="" selected></option>
               <option *ngFor="let i of usuarios_rol" [ngValue]="i">{{ i.value }}</option>
@@ -45,7 +47,7 @@
           <div class="form-group col-lg-3 col-md-3">
             <label>{{"administracion.usuarios.literal.grupos" | translate}}</label>
             <p-dropdown class="select-form" [(ngModel)]='body.grupo' [options]="usuarios_perfil" (ngModelChange)="onChangeForm()" [filter]="true"
-              filterBy="label"></p-dropdown>
+              filterBy="label,labelSinTilde"></p-dropdown>
           </div>
           <div class="form-group col-lg-1 col-md-1">
             <label>{{"administracion.usuarios.literal.activo" | translate}}</label>
@@ -130,5 +132,6 @@
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
-  <p-progressSpinner animationDuration="1s"></p-progressSpinner>
+  <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+  <div class="loader"></div>
 </div>
