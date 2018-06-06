@@ -59,6 +59,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
   usuariosDelete: UsuarioDeleteRequestDto = new UsuarioDeleteRequestDto();
   showDatosGenerales: boolean = true;
   pButton;
+  historico: boolean = false;
   editar: boolean = false;
   buscar: boolean = false;
   disabledRadio: boolean = false;
@@ -106,10 +107,11 @@ export class Usuarios extends SigaWrapper implements OnInit {
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.usuarios_rol.map(e => {
-          e.labelSinTilde = e.label.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+          e.labelSinTilde = e.label
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
           return e.labelSinTilde;
         });
-
       },
       err => {
         console.log(err);
@@ -123,10 +125,11 @@ para poder filtrar el dato con o sin estos caracteres*/
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.usuarios_perfil.map(e => {
-          e.labelSinTilde = e.label.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+          e.labelSinTilde = e.label
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
           return e.labelSinTilde;
         });
-
 
         this.usuarios_perfil.unshift(first);
       },
@@ -134,11 +137,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         console.log(err);
       }
     );
-    this.usuarios_activo = [
-      { label: "", value: "" },
-      { label: "Si", value: "S" },
-      { label: "No", value: "N" }
-    ];
+
     this.cols = [
       {
         field: "nombreApellidos",
@@ -149,7 +148,6 @@ para poder filtrar el dato con o sin estos caracteres*/
         field: "fechaAlta",
         header: "administracion.usuarios.literal.fechaAlta"
       },
-      { field: "activo", header: "administracion.usuarios.literal.activo" },
       { field: "roles", header: "administracion.usuarios.literal.roles" }
     ];
 
@@ -171,11 +169,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         value: 40
       }
     ];
-    if (this.body.activo == "S") {
-      this.activo = true;
-    } else {
-      this.activo = false;
-    }
+
     if (sessionStorage.getItem("editedUser") != null) {
       this.selectedDatos = JSON.parse(sessionStorage.getItem("editedUser"));
     }
@@ -196,10 +190,21 @@ para poder filtrar el dato con o sin estos caracteres*/
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
 
+  toHistorico() {
+    this.body.activo = "N";
+    this.historico = true;
+    this.Search();
+  }
+
+  toNotHistory() {
+    this.historico = false;
+    this.body.activo = "S";
+    this.Search();
+  }
   checkAcceso() {
     this.controlAcceso = new ControlAccesoDto();
     this.controlAcceso.idProceso = "83";
@@ -310,14 +315,13 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (this.body.nif == "" || this.body.nif == null) {
       this.dniCorrecto = null;
     }
-    this.buscar = true;
     if (this.body.nombreApellidos == undefined) {
       this.body.nombreApellidos = "";
     }
-    if (UsuarioRequestDto == undefined) {
-      this.body.activo = "S";
-      this.activo = true;
-    }
+    // if (UsuarioRequestDto == undefined) {
+    //   this.body.activo = "S";
+    //   this.activo = true;
+    // }
     if (this.body.grupo == undefined) {
       this.body.grupo = "";
     }
@@ -331,24 +335,24 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices
       .postPaginado("usuarios_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
-        this.progressSpinner = false;
-        this.searchUser = JSON.parse(data["body"]);
-        this.datos = this.searchUser.usuarioItem;
-        this.table.paginator = true;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      },
-      () => {
-        if (sessionStorage.getItem("first") != null) {
-          let first = JSON.parse(sessionStorage.getItem("first")) as number;
-          this.table.first = first;
-          sessionStorage.removeItem("first");
+        data => {
+          console.log(data);
+          this.progressSpinner = false;
+          this.searchUser = JSON.parse(data["body"]);
+          this.datos = this.searchUser.usuarioItem;
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          if (sessionStorage.getItem("first") != null) {
+            let first = JSON.parse(sessionStorage.getItem("first")) as number;
+            this.table.first = first;
+            sessionStorage.removeItem("first");
+          }
         }
-      }
       );
   }
   paginate(event) {
@@ -520,10 +524,10 @@ para poder filtrar el dato con o sin estos caracteres*/
           "general.message.confirmar.rehabilitaciones"
         )),
           +selectedItem.length +
-          " " +
-          this.translateService.instant(
-            "cargaMasivaDatosCurriculares.numRegistros.literal"
-          );
+            " " +
+            this.translateService.instant(
+              "cargaMasivaDatosCurriculares.numRegistros.literal"
+            );
       } else {
         mess = this.translateService.instant(
           "general.message.confirmar.rehabilitacion"
