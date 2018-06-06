@@ -40,6 +40,14 @@ import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimie
 
 //Productos y Servicios
 import { CategoriasComponent } from "./features/productosYServicios/categorias/categorias.component";
+import { CategoriasProductoComponent } from "./features/productosYServicios/categoriasProducto/categoriasProducto.component";
+import { CategoriasServiciosComponent } from "./features/productosYServicios/categoriasServicios/categoriasServicios.component";
+import { MantenimientoProductosComponent } from "./features/productosYServicios/mantenimientoProductos/mantenimientoProductos.component";
+import { MantenimientoServiciosComponent } from "./features/productosYServicios/mantenimientoServicios/mantenimientoServicios.component";
+import { GestionarSolicitudesComponent } from "./features/productosYServicios/gestionarSolicitudes/gestionarSolicitudes.component";
+import { SolicitudCompraSubscripcionComponent } from "./features/productosYServicios/solicitudCompraSubscripcion/solicitudCompraSubscripcion.component";
+import { SolicitudAnulacionComponent } from "./features/productosYServicios/solicitudAnulacion/solicitudAnulacion.component";
+import { CargaComprasComponent } from "./features/productosYServicios/cargaCompras/cargaCompras.component";
 
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
@@ -245,6 +253,46 @@ const appRoutes: Routes = [
   {
     path: "categorias",
     component: CategoriasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "categoriasProducto",
+    component: CategoriasProductoComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "categoriasServicios",
+    component: CategoriasServiciosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "mantenimientoProductos",
+    component: MantenimientoProductosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "mantenimientoServicios",
+    component: MantenimientoServiciosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "gestionarSolicitudes",
+    component: GestionarSolicitudesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "solicitudCompraSubscripcion",
+    component: SolicitudCompraSubscripcionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "solicitudAnulacion",
+    component: SolicitudAnulacionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "cargaCompras",
+    component: CargaComprasComponent,
     canActivate: [AuthGuard]
   },
 
