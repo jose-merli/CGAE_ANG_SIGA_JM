@@ -301,21 +301,7 @@ export class DatosGenerales implements OnInit {
   }
 
   isSearch() {
-    this.sigaServices
-      .postPaginado(
-        "busquedaPerJuridica_datosGeneralesSearch",
-        "?numPagina=1",
-        this.idPersona
-      )
-      .subscribe(
-        data => {
-          console.log(data);
-          this.body = JSON.parse(data["body"]);
-        },
-        err => {
-          console.log(err);
-        }
-      );
+    this.router.navigate(["/busquedaGeneral"]);
   }
 
   showSuccessUploadedImage() {

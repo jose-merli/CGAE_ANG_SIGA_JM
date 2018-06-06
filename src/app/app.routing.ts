@@ -27,7 +27,7 @@ import { CargasPeriodicasComponent } from "./features/censo/cargas-periodicas/ca
 import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/configurar-perfil.component";
 import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
 import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/gestion-subtiposCV.component";
-
+import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
 //Certificados
 import { ComunicacionInterprofesionalComponent } from "./features/certificados/comunicacion-interprofesional/comunicacion-interprofesional.component";
 import { SolicitarCompraComponent } from "./features/certificados/solicitar-compra/solicitar-compra.component";
@@ -74,9 +74,18 @@ const appRoutes: Routes = [
 
   { path: "loginDevelop", component: LoginDevelopComponent },
 
-  { path: "politicaCookies", component: PoliticaCookiesComponent, canActivate: [AuthGuard] },
+  {
+    path: "politicaCookies",
+    component: PoliticaCookiesComponent,
+    canActivate: [AuthGuard]
+  },
 
   // Censo
+  {
+    path: "busquedaGeneral",
+    component: BusquedaGeneralComponent,
+    canActivate: [AuthGuard]
+  },
   {
     path: "fichaPersonaJuridica",
     component: DatosPersonaJuridicaComponent,
@@ -100,7 +109,7 @@ const appRoutes: Routes = [
 
   {
     path: "searchNoColegiados",
-    component: SearchNoColegiadosComponent,
+    component: BusquedaPersonasJuridicas,
     canActivate: [AuthGuard]
   },
   {

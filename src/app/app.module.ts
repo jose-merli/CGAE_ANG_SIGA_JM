@@ -12,7 +12,7 @@ import { MenuItem } from "primeng/api";
 import { AuthGuard } from "./_guards/auth.guards";
 import { OldSigaServices } from "./_services/oldSiga.service";
 import { SigaServices } from "./_services/siga.service";
-import { CookieService } from 'ngx-cookie-service';
+import { CookieService } from "ngx-cookie-service";
 // prueba
 import { HeaderGestionEntidadService } from "./_services/headerGestionEntidad.service";
 import { AuthenticationService } from "./_services/authentication.service";
@@ -80,7 +80,7 @@ import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/co
 import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
 import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/gestion-subtiposCV.component";
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
-
+import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
 import { CommonModule } from "@angular/common";
 
 // Modulo de administracion
@@ -138,6 +138,7 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     ConfirmDialogComponent,
     // Censo
     SearchColegiadosComponent,
+    BusquedaGeneralComponent,
     SearchNoColegiadosComponent,
     CertificadosAcaComponent,
     ComisionesCargosComponent,
@@ -163,7 +164,6 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     BusquedaPersonasJuridicas,
     DatosGenerales,
     DatosPersonaJuridicaComponent,
-
 
     //Certificados
     ComunicacionInterprofesionalComponent,
@@ -257,4 +257,4 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

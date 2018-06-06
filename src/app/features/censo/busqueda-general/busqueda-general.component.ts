@@ -45,11 +45,11 @@ import { BusquedaJuridicaItem } from "./../../../../app/models/BusquedaJuridicaI
 import { BusquedaJuridicaObject } from "./../../../../app/models/BusquedaJuridicaObject";
 import { BusquedaFisicaObject } from "./../../../../app/models/BusquedaFisicaObject";
 @Component({
-  selector: "app-certificados-aca",
-  templateUrl: "./certificados-aca.component.html",
-  styleUrls: ["./certificados-aca.component.scss"]
+  selector: "app-busqueda-general",
+  templateUrl: "./busqueda-general.component.html",
+  styleUrls: ["./busqueda-general.component.scss"]
 })
-export class CertificadosAcaComponent {
+export class BusquedaGeneralComponent {
   formBusqueda: FormGroup;
   cols: any = [];
   colsFisicas: any = [];
