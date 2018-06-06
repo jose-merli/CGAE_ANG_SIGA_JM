@@ -113,6 +113,9 @@ import { MantenimientoCertificadosComponent } from "./features/certificados/mant
 //Modulo de Facturacion
 import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimiento-sufijos/mantenimiento-sufijos.component";
 
+//Modulo de Productos y Servicios
+import { CategoriasComponent } from "./features/productosYServicios/categorias/categorias.component";
+
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
 import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component";
@@ -171,6 +174,9 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
 
     //Facturacion
     MantenimientoSufijosComponent,
+
+    //Productos y Servicios
+    CategoriasComponent,
 
     // Administracion
     CatalogosMaestros,

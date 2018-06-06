@@ -12,8 +12,8 @@
 </div>
 
 <div *ngIf="isLogged()" class="cookies" [style.bottom.%]="bottomCookies">
-    <h3>Política de Cookies</h3>
-    <p>{{cookieValue}}<span (click)="navigateTo()"> aquí</span></p>
+    <h3>Uso de cookies en Abogacía Española</h3>
+    <p>{{cookieValue}}<a href="http://www.abogacia.es/informacion-sobre-cookies/" target="_blank"> Más información.</a></p>
     <button pButton type="button " label="{{'general.boton.submit' | translate}}" (click)='onHideCookies()'></button>
 </div>
 

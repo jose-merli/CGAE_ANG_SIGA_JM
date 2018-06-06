@@ -40,6 +40,9 @@ export class OldSigaServices {
         //Facturacion
         mantenimientoSufijos: "Dispatcher.do?proceso=214",
 
+        //Facturacion
+        categorias: "Dispatcher.do?proceso=052",
+
         loginDevelop: "developmentLogin.do",
         login: "sigainit.do"
 
