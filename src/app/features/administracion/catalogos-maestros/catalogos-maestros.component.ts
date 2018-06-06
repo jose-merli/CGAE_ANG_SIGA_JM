@@ -303,7 +303,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       },
       error => {
         this.searchCatalogo = JSON.parse(error["error"]);
-        this.showFail(this.searchCatalogo.error.message.toString());
+        this.showFail(JSON.stringify(this.searchCatalogo.error.message));
         console.log(error);
       },
       () => {

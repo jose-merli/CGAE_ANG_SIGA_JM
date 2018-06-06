@@ -90,17 +90,20 @@ export class Etiquetas extends SigaWrapper implements OnInit {
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.idiomaBusqueda.map(e => {
-          e.labelSinTilde = e.label.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+          e.labelSinTilde = e.label
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
           return e.labelSinTilde;
         });
 
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.idiomaTraduccion.map(e => {
-          e.labelSinTilde = e.label.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+          e.labelSinTilde = e.label
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
           return e.labelSinTilde;
         });
-
 
         let lenguaje = this.translateService.currentLang;
         this.valorDefecto = this.idiomaBusqueda.find(
@@ -119,12 +122,12 @@ para poder filtrar el dato con o sin estos caracteres*/
       {
         field: "descripcionBusqueda",
         header:
-        "administracion.multidioma.etiquetas.literal.descripcionInstitucion"
+          "administracion.multidioma.etiquetas.literal.descripcionInstitucion"
       },
       {
         field: "descripcionTraduccion",
         header:
-        "administracion.multidioma.etiquetas.literal.descripcionIdiomaSeleccionado"
+          "administracion.multidioma.etiquetas.literal.descripcionIdiomaSeleccionado"
       }
     ];
 
@@ -182,18 +185,18 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices
       .postPaginado("etiquetas_search", "?numPagina=1", this.bodySearch)
       .subscribe(
-      data => {
-        console.log(data);
-        this.searchParametros = JSON.parse(data["body"]);
-        this.datosTraduccion = this.searchParametros.etiquetaItem;
-        this.buscarSeleccionado = true;
+        data => {
+          console.log(data);
+          this.searchParametros = JSON.parse(data["body"]);
+          this.datosTraduccion = this.searchParametros.etiquetaItem;
+          this.buscarSeleccionado = true;
 
-        if (this.datosTraduccion.length == 0) this.paginacion = false;
-        else this.paginacion = true;
-      },
-      err => {
-        console.log(err);
-      }
+          if (this.datosTraduccion.length == 0) this.paginacion = false;
+          else this.paginacion = true;
+        },
+        err => {
+          console.log(err);
+        }
       );
   }
 
@@ -255,21 +258,22 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.sigaServices
         .post("etiquetas_update", this.elementosAGuardar[i])
         .subscribe(
-        data => {
-          console.log(data);
-        },
-        err => {
-          console.log(err);
-          this.showFail();
-        },
-        () => {
-          this.elementosAGuardar = [];
-          this.isBuscar();
-          this.table.reset();
-        }
+          data => {
+            console.log(data);
+          },
+          err => {
+            console.log(err);
+            this.showFail();
+          },
+          () => {
+            this.elementosAGuardar = [];
+            this.isBuscar();
+            this.table.reset();
+          }
         );
     }
     this.showSuccessEdit();
+    this.habilitarBotones = false;
   }
 
   obtenerRecurso(dato) {
