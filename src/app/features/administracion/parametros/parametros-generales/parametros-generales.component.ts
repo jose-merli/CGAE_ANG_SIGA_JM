@@ -41,7 +41,6 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   showDatosGenerales: boolean = true;
   modulos: any[];
   selectedModulo: String;
-  valorCheckParametros: boolean = false;
   body: ParametroRequestDto = new ParametroRequestDto();
   bodySave: ParametroRequestDto = new ParametroRequestDto();
   bodyHistorico: ParametroRequestDto = new ParametroRequestDto();
@@ -164,11 +163,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
       this.body.modulo = this.selectedModulo;
     } else this.body.modulo = "";
 
-    if (this.valorCheckParametros == true) {
-      this.body.parametrosGenerales = "S";
-    } else {
-      this.body.parametrosGenerales = "N";
-    }
+    this.body.parametrosGenerales = "S";
 
     this.bodySave = this.body;
     this.sigaServices
@@ -269,11 +264,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
       this.bodyHistorico.modulo = this.selectedModulo;
     } else this.bodyHistorico.modulo = "";
 
-    if (this.valorCheckParametros == true) {
-      this.bodyHistorico.parametrosGenerales = "S";
-    } else {
-      this.bodyHistorico.parametrosGenerales = "N";
-    }
+    this.body.parametrosGenerales = "S";
 
     this.sigaServices
       .postPaginado("parametros_historico", "?numPagina=1", this.bodyHistorico)
