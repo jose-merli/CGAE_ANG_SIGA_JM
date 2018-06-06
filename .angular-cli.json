@@ -32,7 +32,8 @@
         "../resources/js/ui.dropdownchecklist-1.4-min.js",
         "../resources/js/SIGA.js",
         "../resources/js/mainjsp.js",
-        "../resources/js/calendar.js"
+        "../resources/js/calendar.js",
+        "../node_modules/jquery-ui/themes/base/all.css"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
