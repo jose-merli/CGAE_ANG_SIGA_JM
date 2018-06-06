@@ -214,7 +214,7 @@
             [header]="col.header | translate" [filter]="true">
             <ng-template let-datoH="rowData" pTemplate="body">
               <div *ngIf="setItalic(datoH)">
-                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold'}">{{datoH[col.field]}}</span>
+                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
               </div>
               <div *ngIf="!setItalic(datoH)">
                 <span>{{datoH[col.field]}}</span>
