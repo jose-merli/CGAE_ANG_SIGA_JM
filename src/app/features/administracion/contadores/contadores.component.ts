@@ -4,7 +4,8 @@ import {
   ViewEncapsulation,
   ViewChild,
   ChangeDetectorRef,
-  Input
+  Input,
+  HostListener
 } from "@angular/core";
 import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
@@ -30,6 +31,12 @@ import { Message } from "primeng/components/common/api";
 import { ContadorItem } from "./../../../../app/models/ContadorItem";
 import { ContadorResponseDto } from "./../../../../app/models/ContadorResponseDto";
 import { DataTable } from "primeng/datatable";
+
+
+export enum KEY_CODE {
+  ENTER = 13,
+}
+
 
 @Component({
   selector: "app-contadorescomponent",
@@ -313,6 +320,12 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.body = new ContadorItem();
       this.bodyToForm();
       this.table.reset();
+    }
+  }
+
+  @HostListener('document:keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.isBuscar();
     }
   }
 }

@@ -3,7 +3,8 @@ import {
   OnInit,
   ViewEncapsulation,
   ViewChild,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  HostListener
 } from "@angular/core";
 
 import { SigaServices } from "./../../../../_services/siga.service";
@@ -30,6 +31,12 @@ import { MultiidiomaCatalogoSearchDto } from "../../../../models/MultiidiomaCata
 import { MultiidiomaCatalogoUpdateDto } from "../../../../models/MultiidiomaCatalogoUpdateDto";
 import { MultiidiomaCatalogoItem } from "../../../../models/MultiidiomaCatalogoItem";
 import { ControlAccesoDto } from "../../../../../app/models/ControlAccesoDto";
+
+
+export enum KEY_CODE {
+  ENTER = 13,
+}
+
 
 @Component({
   selector: "app-etiquetas",
@@ -297,5 +304,12 @@ export class Catalogos extends SigaWrapper implements OnInit {
       summary: "Error",
       detail: this.translateService.instant("general.message.accion.cancelada")
     });
+  }
+
+  //búsqueda con enter
+  @HostListener('document:keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER && !this.buscar) {
+      this.isBuscar();
+    }
   }
 }

@@ -4,7 +4,8 @@ import {
   ViewEncapsulation,
   ViewChild,
   ChangeDetectorRef,
-  Input
+  Input,
+  HostListener
 } from "@angular/core";
 import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
@@ -38,6 +39,13 @@ import { MultiSelectModule } from "primeng/multiSelect";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { Location } from "@angular/common";
 import { Observable } from "rxjs/Rx";
+
+
+export enum KEY_CODE {
+  ENTER = 13,
+}
+
+
 @Component({
   selector: "app-busqueda-personas-juridicas",
   templateUrl: "./busqueda-personas-juridicas.component.html",
@@ -184,18 +192,18 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("busquedaPerJuridica_history", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-          this.personaSearch = JSON.parse(data["body"]);
-          this.datos = this.personaSearch.busquedaJuridicaItems;
-          this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {}
+      data => {
+        console.log(data);
+        this.progressSpinner = false;
+        this.personaSearch = JSON.parse(data["body"]);
+        this.datos = this.personaSearch.busquedaJuridicaItems;
+        this.table.paginator = true;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => { }
       );
   }
 
@@ -349,24 +357,24 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("busquedaPerJuridica_search", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-          this.personaSearch = JSON.parse(data["body"]);
-          this.datos = this.personaSearch.busquedaJuridicaItems;
-          this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          // if (sessionStorage.getItem("first") != null) {
-          //   let first = JSON.parse(sessionStorage.getItem("first")) as number;
-          //   this.table.first = first;
-          //   sessionStorage.removeItem("first");
-          // }
-        }
+      data => {
+        console.log(data);
+        this.progressSpinner = false;
+        this.personaSearch = JSON.parse(data["body"]);
+        this.datos = this.personaSearch.busquedaJuridicaItems;
+        this.table.paginator = true;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {
+        // if (sessionStorage.getItem("first") != null) {
+        //   let first = JSON.parse(sessionStorage.getItem("first")) as number;
+        //   this.table.first = first;
+        //   sessionStorage.removeItem("first");
+        // }
+      }
       );
   }
 
@@ -569,5 +577,12 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;
     else return true;
+  }
+
+  //búsqueda con enter
+  @HostListener('document:keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.isBuscar();
+    }
   }
 }

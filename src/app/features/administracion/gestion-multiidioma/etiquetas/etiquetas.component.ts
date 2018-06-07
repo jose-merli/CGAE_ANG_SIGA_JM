@@ -3,7 +3,8 @@ import {
   OnInit,
   ViewEncapsulation,
   ViewChild,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  HostListener
 } from "@angular/core";
 
 import { SigaServices } from "./../../../../_services/siga.service";
@@ -30,6 +31,11 @@ import { EtiquetaSearchDto } from "../../../../models/EtiquetaSearchDto";
 import { EtiquetaDto } from "../../../../models/EtiquetaDto";
 import { EtiquetaItem } from "../../../../models/EtiquetaItem";
 import { ControlAccesoDto } from "../../../../../app/models/ControlAccesoDto";
+
+
+export enum KEY_CODE {
+  ENTER = 13,
+}
 
 @Component({
   selector: "app-etiquetas",
@@ -304,5 +310,12 @@ para poder filtrar el dato con o sin estos caracteres*/
     )
       this.habilitarBotones = false;
     else this.habilitarBotones = true;
+  }
+
+  //búsqueda con enter
+  @HostListener('document:keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER && !this.buscar) {
+      this.isBuscar();
+    }
   }
 }

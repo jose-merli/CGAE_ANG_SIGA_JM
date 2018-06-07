@@ -4,7 +4,8 @@ import {
   ViewEncapsulation,
   ViewChild,
   ChangeDetectorRef,
-  Input
+  Input,
+  HostListener
 } from "@angular/core";
 import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
@@ -39,12 +40,23 @@ import { MultiSelectModule } from "primeng/multiSelect";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { Location } from "@angular/common";
 import { Observable } from "rxjs/Rx";
+
+
+export enum KEY_CODE {
+  ENTER = 13,
+}
+
 @Component({
   selector: "app-usuarios",
   templateUrl: "./usuarios.component.html",
   styleUrls: ["./usuarios.component.scss"],
+  host: {
+    '(document:keypress)': 'onKeyPress($event)'
+  },
   encapsulation: ViewEncapsulation.None
 })
+
+
 export class Usuarios extends SigaWrapper implements OnInit {
   usuarios_rol: any[];
   usuarios_perfil: any[];
@@ -77,6 +89,8 @@ export class Usuarios extends SigaWrapper implements OnInit {
   selectAll: boolean = false;
   progressSpinner: boolean = false;
   numSelected: number = 0;
+
+
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
@@ -590,6 +604,13 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
+    }
+  }
+
+  //búsqueda con enter
+  @HostListener('document:keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.isBuscar();
     }
   }
 }
