@@ -49,7 +49,7 @@
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [value]="datosTraduccion" [editable]="true" [responsive]="true"
                 #table class="tabla-listado" [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
                 <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true"
-                    filterPlaceholder="{{'general.boton.search' | translate}}">
+                    filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
                     <ng-template *ngIf="col.field == 'descripcionTraduccion'" let-dato="rowData" pTemplate="body">
                         <div class="input-group">
                             <span class="input-group">

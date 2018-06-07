@@ -554,6 +554,11 @@ font-size: .7rem;
     color: $secondary-color;
 }
 
+.loginSiga .ui-listbox-list .ui-state-highlight{
+    background: $secondary-color;
+    color: white;
+}
+
 .ui-button, .ui-widget.ui-button, .ui-button{
     background-color: $blue3;
     border: 1px solid $grey4;

@@ -4,7 +4,8 @@ import {
   ViewEncapsulation,
   ViewChild,
   ChangeDetectorRef,
-  Input
+  Input,
+  HostListener
 } from "@angular/core";
 import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
@@ -39,18 +40,30 @@ import { MultiSelectModule } from "primeng/multiSelect";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { Location } from "@angular/common";
 import { Observable } from "rxjs/Rx";
+
+
+export enum KEY_CODE {
+  ENTER = 13,
+}
+
 @Component({
   selector: "app-usuarios",
   templateUrl: "./usuarios.component.html",
   styleUrls: ["./usuarios.component.scss"],
+  host: {
+    '(document:keypress)': 'onKeyPress($event)'
+  },
   encapsulation: ViewEncapsulation.None
 })
+
+
 export class Usuarios extends SigaWrapper implements OnInit {
   usuarios_rol: any[];
   usuarios_perfil: any[];
   usuarios_activo: any[];
   cols: any = [];
   datos: any[];
+  datosActivos: any[];
   select: any[];
   msgs: Message[] = [];
   searchUser: UsuarioResponseDto = new UsuarioResponseDto();
@@ -78,6 +91,8 @@ export class Usuarios extends SigaWrapper implements OnInit {
   selectAll: boolean = false;
   progressSpinner: boolean = false;
   numSelected: number = 0;
+
+
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
@@ -195,9 +210,45 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   toHistorico() {
+    this.progressSpinner = true;
     this.body.activo = "N";
+    this.sigaServices
+      .postPaginado("usuarios_search", "?numPagina=1", this.body)
+      .subscribe(
+        data => {
+          console.log(data);
+          this.searchUser = JSON.parse(data["body"]);
+          this.datosActivos = this.searchUser.usuarioItem;
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.body.activo = "S";
+          this.sigaServices
+            .postPaginado("usuarios_search", "?numPagina=1", this.body)
+            .subscribe(
+              data => {
+                console.log(data);
+                this.progressSpinner = false;
+                this.searchUser = JSON.parse(data["body"]);
+                for (let i in this.searchUser.usuarioItem) {
+                  this.datosActivos.push(this.searchUser.usuarioItem[i]);
+                }
+                this.datos = this.datosActivos;
+                this.table.paginator = true;
+                this.table.reset();
+              },
+              err => {
+                console.log(err);
+                this.progressSpinner = false;
+              }
+            );
+        }
+      );
+
     this.historico = true;
-    this.Search();
   }
 
   toNotHistory() {
@@ -235,8 +286,6 @@ para poder filtrar el dato con o sin estos caracteres*/
   onChangeForm() {
     if (this.body.nif == "" || this.body.nif.length < 9) {
       this.dniCorrecto = null;
-    } else {
-      this.dniCorrecto = this.isValidDNI(this.body.nif);
     }
     if (
       this.body.nombreApellidos != "" &&
@@ -301,13 +350,16 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   isBuscar() {
-    if (this.isValidDNI(this.body.nif)) {
+    if (
+      this.isValidDNI(this.body.nif) ||
+      this.body.nif == "" ||
+      this.body.nif == undefined
+    ) {
       this.dniCorrecto = true;
+      this.Search();
     } else {
       this.dniCorrecto = false;
     }
-
-    this.Search();
   }
 
   Search() {
@@ -358,6 +410,12 @@ para poder filtrar el dato con o sin estos caracteres*/
   paginate(event) {
     console.log(event);
   }
+
+  setItalic(datoH) {
+    if (datoH.activo == "S") return false;
+    else return true;
+  }
+
   editarUsuario(selectedItem) {
     // if (!this.selectMultiple) {
     if (selectedItem.length == 1) {
@@ -594,6 +652,13 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
+    }
+  }
+
+  //búsqueda con enter
+  @HostListener('document:keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.isBuscar();
     }
   }
 }

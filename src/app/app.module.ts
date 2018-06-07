@@ -114,7 +114,6 @@ import { MantenimientoCertificadosComponent } from "./features/certificados/mant
 import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimiento-sufijos/mantenimiento-sufijos.component";
 
 //Modulo de Productos y Servicios
-import { CategoriasComponent } from "./features/productosYServicios/categorias/categorias.component";
 import { CategoriasProductoComponent } from "./features/productosYServicios/categoriasProducto/categoriasProducto.component";
 import { CategoriasServiciosComponent } from "./features/productosYServicios/categoriasServicios/categoriasServicios.component";
 import { MantenimientoProductosComponent } from "./features/productosYServicios/mantenimientoProductos/mantenimientoProductos.component";
@@ -123,6 +122,12 @@ import { GestionarSolicitudesComponent } from "./features/productosYServicios/ge
 import { SolicitudCompraSubscripcionComponent } from "./features/productosYServicios/solicitudCompraSubscripcion/solicitudCompraSubscripcion.component";
 import { SolicitudAnulacionComponent } from "./features/productosYServicios/solicitudAnulacion/solicitudAnulacion.component";
 import { CargaComprasComponent } from "./features/productosYServicios/cargaCompras/cargaCompras.component";
+
+//Modulo de Expedientes
+import { TiposExpedientesComponent } from "./features/expedientes/tipos-expedientes/tipos-expedientes.component";
+import { GestionarExpedientesComponent } from "./features/expedientes/gestionar-expedientes/gestionar-expedientes.component";
+import { AlertasComponent } from "./features/expedientes/alertas/alertas.component";
+import { NuevoExpedienteComponent } from "./features/expedientes/nuevo-expediente/nuevo-expediente.component";
 
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
@@ -184,7 +189,6 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     MantenimientoSufijosComponent,
 
     //Productos y Servicios
-    CategoriasComponent,
     CategoriasProductoComponent,
     CategoriasServiciosComponent,
     MantenimientoProductosComponent,
@@ -193,6 +197,12 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     SolicitudCompraSubscripcionComponent,
     SolicitudAnulacionComponent,
     CargaComprasComponent,
+
+    //Expedientes
+    TiposExpedientesComponent,
+    GestionarExpedientesComponent,
+    AlertasComponent,
+    NuevoExpedienteComponent,
 
     // Administracion
     CatalogosMaestros,

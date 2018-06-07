@@ -3,7 +3,8 @@ import {
   OnInit,
   ViewEncapsulation,
   ViewChild,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  HostListener
 } from "@angular/core";
 
 import { SigaServices } from "./../../../../_services/siga.service";
@@ -31,10 +32,17 @@ import { Location } from "@angular/common";
 import { Observable } from "rxjs/Rx";
 import { DataTable } from "primeng/datatable";
 
+export enum KEY_CODE {
+  ENTER = 13,
+}
+
 @Component({
   selector: "app-auditoria-usuarios",
   templateUrl: "./auditoria-usuarios.component.html",
   styleUrls: ["./auditoria-usuarios.component.scss"],
+  host: {
+    '(document:keypress)': 'onKeyPress($event)'
+  },
   encapsulation: ViewEncapsulation.None
 })
 export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
@@ -62,6 +70,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   arrayDesde: any[];
   arrayHasta: any[];
   progressSpinner: boolean = false;
+
 
   constructor(
     private sigaServices: SigaServices,
@@ -176,6 +185,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     sessionStorage.removeItem("editedUser");
   }
 
+
   isBuscar() {
     this.progressSpinner = true;
     // si no viene de la pantalla de editarAuditoriaUsuario contruye el objecto para el body de la consulta /search
@@ -263,6 +273,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     )
       return false;
     else return true;
+
   }
 
   onHideDatosGenerales() {
@@ -414,4 +425,14 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
       )
     });
   }
+
+  //búsqueda con enter
+  @HostListener('document:keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER && this.fechaDesdeCalendar != undefined &&
+      this.fechaHastaCalendar != undefined) {
+      this.isBuscar();
+    }
+
+  }
+
 }
