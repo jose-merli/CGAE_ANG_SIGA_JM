@@ -235,8 +235,6 @@ para poder filtrar el dato con o sin estos caracteres*/
   onChangeForm() {
     if (this.body.nif == "" || this.body.nif.length < 9) {
       this.dniCorrecto = null;
-    } else {
-      this.dniCorrecto = this.isValidDNI(this.body.nif);
     }
     if (
       this.body.nombreApellidos != "" &&
@@ -303,11 +301,10 @@ para poder filtrar el dato con o sin estos caracteres*/
   isBuscar() {
     if (this.isValidDNI(this.body.nif)) {
       this.dniCorrecto = true;
+      this.Search();
     } else {
       this.dniCorrecto = false;
     }
-
-    this.Search();
   }
 
   Search() {
