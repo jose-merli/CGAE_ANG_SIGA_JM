@@ -299,7 +299,11 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   isBuscar() {
-    if (this.isValidDNI(this.body.nif)) {
+    if (
+      this.isValidDNI(this.body.nif) ||
+      this.body.nif == "" ||
+      this.body.nif == undefined
+    ) {
       this.dniCorrecto = true;
       this.Search();
     } else {
