@@ -5,7 +5,8 @@ import {
   ViewEncapsulation,
   ViewChild,
   ChangeDetectorRef,
-  Input
+  Input,
+  HostListener
 } from "@angular/core";
 import { CalendarModule } from "primeng/calendar";
 import { Http, Response } from "@angular/http";
@@ -44,6 +45,12 @@ import { BusquedaFisicaItem } from "./../../../../app/models/BusquedaFisicaItem"
 import { BusquedaJuridicaItem } from "./../../../../app/models/BusquedaJuridicaItem";
 import { BusquedaJuridicaObject } from "./../../../../app/models/BusquedaJuridicaObject";
 import { BusquedaFisicaObject } from "./../../../../app/models/BusquedaFisicaObject";
+
+
+export enum KEY_CODE {
+  ENTER = 13,
+}
+
 @Component({
   selector: "app-busqueda-general",
   templateUrl: "./busqueda-general.component.html",
@@ -71,6 +78,8 @@ export class BusquedaGeneralComponent {
   rowsPerPage: any = [];
   selectMultiple: boolean = false;
   progressSpinner: boolean = false;
+
+
 
   buscar: boolean = false;
   selectAll: boolean = false;
@@ -226,55 +235,55 @@ export class BusquedaGeneralComponent {
       }
       this.sigaServices
         .postPaginado(
-          "busquedaPer_searchFisica",
-          "?numPagina=1",
-          this.bodyFisica
+        "busquedaPer_searchFisica",
+        "?numPagina=1",
+        this.bodyFisica
         )
         .subscribe(
-          data => {
-            console.log(data);
-            this.progressSpinner = false;
-            this.searchFisica = JSON.parse(data["body"]);
-            this.datos = this.searchFisica.busquedaFisicaItems;
-          },
-          err => {
-            console.log(err);
-            this.progressSpinner = false;
-          },
-          () => {
-            // if (sessionStorage.getItem("first") != null) {
-            //   let first = JSON.parse(sessionStorage.getItem("first")) as number;
-            //   this.table.first = first;
-            //   sessionStorage.removeItem("first");
-            // }
-          }
+        data => {
+          console.log(data);
+          this.progressSpinner = false;
+          this.searchFisica = JSON.parse(data["body"]);
+          this.datos = this.searchFisica.busquedaFisicaItems;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          // if (sessionStorage.getItem("first") != null) {
+          //   let first = JSON.parse(sessionStorage.getItem("first")) as number;
+          //   this.table.first = first;
+          //   sessionStorage.removeItem("first");
+          // }
+        }
         );
     } else {
       this.sigaServices
         .postPaginado(
-          "busquedaPer_searchJuridica",
-          "?numPagina=1",
-          this.bodyJuridica
+        "busquedaPer_searchJuridica",
+        "?numPagina=1",
+        this.bodyJuridica
         )
         .subscribe(
-          data => {
-            console.log(data);
-            this.progressSpinner = false;
-            this.searchJuridica = JSON.parse(data["body"]);
-            this.datos = this.searchJuridica.busquedaJuridicaItems;
-            // this.table.paginator = true;
-          },
-          err => {
-            console.log(err);
-            this.progressSpinner = false;
-          },
-          () => {
-            // if (sessionStorage.getItem("first") != null) {
-            //   let first = JSON.parse(sessionStorage.getItem("first")) as number;
-            //   this.table.first = first;
-            //   sessionStorage.removeItem("first");
-            // }
-          }
+        data => {
+          console.log(data);
+          this.progressSpinner = false;
+          this.searchJuridica = JSON.parse(data["body"]);
+          this.datos = this.searchJuridica.busquedaJuridicaItems;
+          // this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          // if (sessionStorage.getItem("first") != null) {
+          //   let first = JSON.parse(sessionStorage.getItem("first")) as number;
+          //   this.table.first = first;
+          //   sessionStorage.removeItem("first");
+          // }
+        }
         );
     }
   }
@@ -353,6 +362,13 @@ export class BusquedaGeneralComponent {
       this.selectedDatos = this.datos;
     } else {
       this.selectedDatos = [];
+    }
+  }
+
+  //búsqueda con enter
+  @HostListener('document:keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.isBuscar();
     }
   }
 }
