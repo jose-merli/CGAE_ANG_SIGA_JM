@@ -16,6 +16,9 @@
     display: flex;
     height: 100%;
     position: relative;
+    .menu-sidebar{
+      z-index: 200;
+    }
 
     .content {
       flex-grow: 1;

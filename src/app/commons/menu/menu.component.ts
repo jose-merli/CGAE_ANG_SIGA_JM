@@ -35,11 +35,7 @@ export class MenuComponent implements OnInit {
       this.items = response.menuItems;
       return this.items;
 
-
     });
-
-
-
 
   }
 
@@ -47,10 +43,12 @@ export class MenuComponent implements OnInit {
   onCloseMenu() {
     this.closeMenu = !this.closeMenu;
     console.log(this.items)
+    this.sigaServices.notifyMenuToggled();
   }
 
   onOpenMenu() {
     this.closeMenu = false;
+    this.sigaServices.notifyMenuToggled();
   }
 
 

@@ -16,7 +16,7 @@ export const environment = {
   //newSigaUrl: "http://localhost:7001/siga-web/"
 
 
-  //oldSigaUrl: '/SIGA/',
+  // oldSigaUrl: '/SIGA/',
   newSigaUrl: 'https://localhost/siga-web/'
 
   // newSigaUrl: '/siga-web/'

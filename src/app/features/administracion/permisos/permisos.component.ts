@@ -28,7 +28,7 @@ import { PermisosAplicacionesDto } from "./../../../../app/models/PermisosAplica
   styleUrls: ["./permisos.component.scss"],
   encapsulation: ViewEncapsulation.None
 })
-export class PermisosComponent implements OnInit, DoCheck {
+export class PermisosComponent implements OnInit {
   formPermisos: FormGroup;
 
   permisosTree: any = [];
@@ -59,13 +59,14 @@ export class PermisosComponent implements OnInit, DoCheck {
   derechoAcceso: any;
   activacionEditar: boolean;
   propagateDown: boolean = true;
+  isWidthChange: boolean = false;
   // treeNode: TreeNode[]
 
   // map con los permisos {data, ObjectoPermisosBack}
   permisosChange: Map<String, PermisosAplicacionesDto> = new Map<
     String,
     PermisosAplicacionesDto
-  >();
+    >();
 
   @ViewChild("widthContent") widthContent: any;
 
@@ -87,13 +88,19 @@ export class PermisosComponent implements OnInit, DoCheck {
     this.numSeleccionados = 0;
     this.numCambios = 0;
     this.totalPermisos = 0;
+
+
+    this.sigaServices.menuToggled$.subscribe(() => {
+      this.isWidthChange = !this.isWidthChange;
+    });
   }
 
-  ngDoCheck() {
-    setTimeout(() => {
-      this.myWidth = this.widthContent.nativeElement.parentElement.parentElement.offsetWidth;
-    }, 5);
-  }
+
+  // ngDoCheck() {
+  //   setTimeout(() => {
+  //     this.myWidth = this.widthContent.nativeElement.parentElement.parentElement.offsetWidth;
+  //   }, 5);
+  // }
 
   ngOnInit() {
     this.checkAcceso();
@@ -157,25 +164,25 @@ para poder filtrar el dato con o sin estos caracteres*/
         idGrupo: this.idGrupo
       })
       .subscribe(
-        data => {
-          let permisosTree = JSON.parse(data.body);
-          this.permisosTree = permisosTree.permisoItems;
-          this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
-          this.permisosTree.forEach(node => {
-            this.totalRecursive(node);
-          });
-          this.accesoTotal = 0;
-          this.accesoLectura = 0;
-          this.accesoDenegado = 0;
-          this.sinAsignar = 0;
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        this.permisosTree = permisosTree.permisoItems;
+        this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
+        this.permisosTree.forEach(node => {
+          this.totalRecursive(node);
+        });
+        this.accesoTotal = 0;
+        this.accesoLectura = 0;
+        this.accesoDenegado = 0;
+        this.sinAsignar = 0;
 
-          this.permisosTree.forEach(node => {
-            this.totalAccesosRecursive(node);
-          });
-        },
-        err => {
-          console.log(err);
-        }
+        this.permisosTree.forEach(node => {
+          this.totalAccesosRecursive(node);
+        });
+      },
+      err => {
+        console.log(err);
+      }
       );
 
     // this.permisosTree =
