@@ -59,6 +59,7 @@
                             [pTooltip]="dato.descripcion" tooltipPosition="bottom">
                     </ng-template>
                     <ng-template *ngIf="col.field == 'parametro'" let-dato="rowData" pTemplate="body">
+                        <button pButton type="button" icon="fa fa-info"></button>
                         <label [pTooltip]="dato.descripcion" tooltipPosition="bottom">{{dato.parametro}}</label>
                     </ng-template>
                     </p-column>
