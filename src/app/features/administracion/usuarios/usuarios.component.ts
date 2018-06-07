@@ -51,6 +51,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
   usuarios_activo: any[];
   cols: any = [];
   datos: any[];
+  datosActivos: any[];
   select: any[];
   msgs: Message[] = [];
   searchUser: UsuarioResponseDto = new UsuarioResponseDto();
@@ -195,9 +196,45 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   toHistorico() {
+    this.progressSpinner = true;
     this.body.activo = "N";
+    this.sigaServices
+      .postPaginado("usuarios_search", "?numPagina=1", this.body)
+      .subscribe(
+        data => {
+          console.log(data);
+          this.searchUser = JSON.parse(data["body"]);
+          this.datosActivos = this.searchUser.usuarioItem;
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.body.activo = "S";
+          this.sigaServices
+            .postPaginado("usuarios_search", "?numPagina=1", this.body)
+            .subscribe(
+              data => {
+                console.log(data);
+                this.progressSpinner = false;
+                this.searchUser = JSON.parse(data["body"]);
+                for (let i in this.searchUser.usuarioItem) {
+                  this.datosActivos.push(this.searchUser.usuarioItem[i]);
+                }
+                this.datos = this.datosActivos;
+                this.table.paginator = true;
+                this.table.reset();
+              },
+              err => {
+                console.log(err);
+                this.progressSpinner = false;
+              }
+            );
+        }
+      );
+
     this.historico = true;
-    this.Search();
   }
 
   toNotHistory() {
@@ -359,6 +396,12 @@ para poder filtrar el dato con o sin estos caracteres*/
   paginate(event) {
     console.log(event);
   }
+
+  setItalic(datoH) {
+    if (datoH.activo == "S") return false;
+    else return true;
+  }
+
   editarUsuario(selectedItem) {
     // if (!this.selectMultiple) {
     if (selectedItem.length == 1) {
