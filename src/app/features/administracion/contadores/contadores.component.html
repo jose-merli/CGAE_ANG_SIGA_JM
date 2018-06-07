@@ -60,7 +60,7 @@
         selectionMode="single" #table class="tabla-listado" [value]="datos" [sortOrder]="1" paginatorPosition="both" [rows]="selectedItem"
         [paginator]="activarPaginacion()">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-          [filter]="true">
+          [filter]="true" filterMatchMode="contains">
           </p-column>
 
           <ng-template pTemplate="paginatorLeft">
