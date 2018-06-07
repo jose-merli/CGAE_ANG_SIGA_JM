@@ -53,7 +53,7 @@
                 [editable]="true" [(selection)]="filaSelecionadaTabla" [responsive]="true" #table class="tabla-listado" [sortOrder]="1"
                 [paginator]="activarPaginacionBuscar()" paginatorPosition="both" [rows]="selectedItem" [editable]="true" (onRowSelect)="onRowSelect($event)">
                 <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true"
-                    filterPlaceholder="{{'general.boton.search' | translate}}">
+                    filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
                     <ng-template *ngIf="col.field == 'valor'" let-dato="rowData" pTemplate="body">
                         <input type="text" [(disabled)]="!activacionEditar" class="form-control" pInputText [(ngModel)]="dato[col.field]" (change)="guardar($event,dato)"
                             [pTooltip]="dato.descripcion" tooltipPosition="bottom">
@@ -90,7 +90,8 @@
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [value]="datosHistorico" [responsive]="true"
                 #table class="tabla-listado" [sortOrder]="1" [paginator]="activarPaginacionHistorico()" paginatorPosition="both"
                 [rows]="selectedItem">
-                <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true">
+                <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true"
+                    filterMatchMode="contains">
                     <ng-template let-datoH="rowData" pTemplate="body">
                         <div *ngIf="setItalic(datoH)">
                             <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
@@ -99,19 +100,19 @@
                             <span>{{datoH[col.field]}}</span>
                         </div>
                     </ng-template>
-                </p-column>
-                <ng-template pTemplate="paginatorLeft">
-                    <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                    <label>{{ 'general.message.mostrar' | translate}}<p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
-                </ng-template>
-                <p-footer>
-                    <div *ngIf="activarPaginacionHistorico() == true" class="text-right main-button">
-                        <button (click)="confirmarEliminar(filaSelecionadaTabla)" pButton type="button" [disabled]="isHabilitadoEliminar()" icon="fa fa-trash-alt "
-                            iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-                            <button (click)="isBuscar()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
-                    </div>
-                </p-footer>
-                </p-dataTable>
+                    </p-column>
+                    <ng-template pTemplate="paginatorLeft">
+                        <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                        <label>{{ 'general.message.mostrar' | translate}}<p-dropdown [(ngModel)]="selectedItem"  [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
+                    </ng-template>
+                    <p-footer>
+                        <div *ngIf="activarPaginacionHistorico() == true" class="text-right main-button">
+                            <button (click)="confirmarEliminar(filaSelecionadaTabla)" pButton type="button" [disabled]="isHabilitadoEliminar()" icon="fa fa-trash-alt "
+                                iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+                                <button (click)="isBuscar()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
+                        </div>
+                    </p-footer>
+                    </p-dataTable>
         </div>
     </div>
     <app-dialog></app-dialog>

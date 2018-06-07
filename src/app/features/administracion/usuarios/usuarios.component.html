@@ -87,7 +87,7 @@
         selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="activarPaginacion()"
         paginatorPosition="both" [rows]="selectedItem">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-          [filter]="true">
+          [filter]="true" filterMatchMode="contains">
           <ng-template let-datoH="rowData" pTemplate="body">
             <span *ngIf="historico == true" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
             <span *ngIf="historico == false">{{datoH[col.field]}}</span>

@@ -230,6 +230,9 @@ export class BusquedaGeneralComponent {
   search() {
     this.progressSpinner = true;
     if (this.persona == "f") {
+      if (this.bodyFisica.colegio == undefined) {
+        this.bodyFisica.colegio = "";
+      }
       this.sigaServices
         .postPaginado(
         "busquedaPer_searchFisica",

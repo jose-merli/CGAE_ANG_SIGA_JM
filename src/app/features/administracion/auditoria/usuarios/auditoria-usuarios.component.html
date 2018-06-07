@@ -38,7 +38,8 @@
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{'administracion.auditoriaUsuarios.literal.tipoAccion' | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='selectedTipoAccion' [options]="tipoAcciones" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown> &nbsp;&nbsp;
+                        <p-dropdown class="select-form" [(ngModel)]='selectedTipoAccion' [options]="tipoAcciones" [filter]="true" filterMatchMode="contains"
+                            filterBy="label,labelSinTilde"></p-dropdown> &nbsp;&nbsp;
                     </div>
                     <div class="form-group col-lg-1 col-md-1">
                     </div>
@@ -71,7 +72,7 @@
                 class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]="true" paginatorPosition="both"
                 [rows]="selectedItem" (onRowSelect)="irEditarUsuario(selectedDatos)" selectionMode="single">
                 <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true"
-                    filterPlaceholder="{{'general.boton.search' | translate}}">
+                    filterMatchMode="contains" filterPlaceholder="{{'general.boton.search' | translate}}">
                     </p-column>
 
                     <ng-template pTemplate="paginatorLeft">

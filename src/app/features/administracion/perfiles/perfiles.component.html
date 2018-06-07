@@ -24,7 +24,7 @@
               #table class="tabla-listado" selectionMode="multiple" [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both"
               [rows]="selectedItem">
               <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-                [filter]="true">
+                [filter]="true" filterMatchMode="contains">
 
                 <ng-template *ngIf="col.field=='asignarRolDefecto'" pTemplate="body" let-dato="rowData"  >
                   <p-dropdown [disabled]="!activacionEditar" [options]="dato['asignarRolDefecto']" styleClass="ui-column-filter" [style]="{'width':'100%'}"
@@ -71,7 +71,7 @@
               [value]="datos" [(selection)]="selectedDatos" selectionMode="multiple" [sortOrder]="1" [paginator]="true" [editable]="true"
               paginatorPosition="both" [rows]="selectedItem">
               <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-                [filter]="true">
+                [filter]="true" filterMatchMode="contains">
 
                 <ng-template *ngIf="historicoActive==true" pTemplate="body" let-dato="rowData">
                   <div *ngIf="setItalic(dato)">
