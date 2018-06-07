@@ -41,7 +41,6 @@ export class OldSigaServices {
         mantenimientoSufijos: "Dispatcher.do?proceso=214",
 
         //Productos y Servicios
-        categorias: "Dispatcher.do?proceso=052",
         categoriasProducto: "Dispatcher.do?proceso=400",
         categoriasServicios: "Dispatcher.do?proceso=401",
         mantenimientoProductos: "Dispatcher.do?proceso=40",
@@ -50,6 +49,12 @@ export class OldSigaServices {
         solicitudCompraSubscripcion: "Dispatcher.do?proceso=37",
         solicitudAnulacion: "Dispatcher.do?proceso=40",
         cargaCompras: "Dispatcher.do?proceso=44",
+
+        //Expedientes
+        tiposExpedientes: "Dispatcher.do?proceso=41",
+        gestionarExpedientes: "Dispatcher.do?proceso=42",
+        alertas: "Dispatcher.do?proceso=44",
+        nuevoExpediente: "Dispatcher.do?proceso=46",
 
         loginDevelop: "developmentLogin.do",
         login: "sigainit.do"

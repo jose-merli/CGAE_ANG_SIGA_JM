@@ -4,7 +4,8 @@ import {
   ViewEncapsulation,
   ViewChild,
   ChangeDetectorRef,
-  Input
+  Input,
+  HostListener
 } from "@angular/core";
 
 import { SigaServices } from "./../../../../_services/siga.service";
@@ -30,6 +31,11 @@ import { ParametroDto } from "../../../../models/ParametroDto";
 import { ParametroDeleteDto } from "../../../../models/ParametroDeleteDto";
 import { ParametroUpdateDto } from "../../../../models/ParametroUpdateDto";
 import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
+
+
+export enum KEY_CODE {
+  ENTER = 13,
+}
 
 @Component({
   selector: "app-parametros-generales",
@@ -395,6 +401,13 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.elementosAGuardar = [];
     this.body = this.bodySave;
     this.isBuscar();
+  }
+
+  //búsqueda con enter
+  @HostListener('document:keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER && !this.botonBuscar) {
+      this.isBuscar();
+    }
   }
 }
 
