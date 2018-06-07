@@ -41,8 +41,8 @@
             <td class="labelText">Perfil</td>
             <td colspan="2">
 
-                <p-listbox formControlName="tmpLoginPerfil" [options]="perfiles" [(ngModel)]="tmpLoginPerfil" multiple="multiple" [style]="{'width':'400px'}"
-                    [listStyle]="{'height':'400px'}"></p-listbox>
+                <p-listbox styleClass="loginSiga" formControlName="tmpLoginPerfil" [options]="perfiles" [(ngModel)]="tmpLoginPerfil" multiple="multiple"
+                    [style]="{'width':'400px'}" [listStyle]="{'height':'400px'}"></p-listbox>
 
                     <!--<select formControlName="tmpLoginPerfil" style="width:300px;width:300px;" size="20">
                     <option *ngFor="let i of perfiles" [ngValue]="i.value">{{ i.label }}</option>
