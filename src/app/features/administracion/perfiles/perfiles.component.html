@@ -3,7 +3,7 @@
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p>{{'menu.administracion' | translate}} <i class="pl-1 fa fa-angle-right"></i>{{ 'administracion.grupos.titulo' | translate}}
-      </p>
+    </p>
   </div>
   <!--<div class="breadCrumb">
     <p>{{ "menu.administracion" | translate}} <i class="fa fa-angle-right"></i> {{'administracion.usuarios.literal.usuariosyperfiles'
@@ -75,7 +75,7 @@
 
                 <ng-template *ngIf="historicoActive==true" pTemplate="body" let-dato="rowData">
                   <div *ngIf="setItalic(dato)">
-                    <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold'}">{{dato[col.field]}}</span>
+                    <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
                   </div>
                   <div *ngIf="!setItalic(dato)">
                     <span>{{dato[col.field]}}</span>

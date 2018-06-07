@@ -22,6 +22,7 @@ export class LoginDevelopComponent implements OnInit {
   tmpLoginPerfil: String[];
   entorno: String;
   ocultar: boolean = false;
+  progressSpinner: boolean = false;
   // value=N selected="">NO, no soy Letrado</option>
   //                   <option value=S>SÍ, soy Letrado</option>
 
@@ -34,9 +35,9 @@ export class LoginDevelopComponent implements OnInit {
     private service: AuthenticationService,
     private sigaServices: SigaServices,
     private router: Router
-  ) { }
+  ) {}
 
-  onSubmit() { }
+  onSubmit() {}
 
   ngOnInit() {
     this.sigaServices.getBackend("instituciones").subscribe(n => {
@@ -45,7 +46,9 @@ export class LoginDevelopComponent implements OnInit {
       /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
       this.instituciones.map(e => {
-        e.labelSinTilde = e.label.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+        e.labelSinTilde = e.label
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
         return e.labelSinTilde;
       });
 
@@ -82,6 +85,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   submit() {
     var ir = null;
+    this.progressSpinner = true;
     this.service.autenticateDevelop(this.form.value).subscribe(response => {
       if (response) {
         this.router.navigate(["/home"]);

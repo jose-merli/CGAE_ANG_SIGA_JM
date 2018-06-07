@@ -12,7 +12,7 @@ import { MenuItem } from "primeng/api";
 import { AuthGuard } from "./_guards/auth.guards";
 import { OldSigaServices } from "./_services/oldSiga.service";
 import { SigaServices } from "./_services/siga.service";
-import { CookieService } from 'ngx-cookie-service';
+import { CookieService } from "ngx-cookie-service";
 // prueba
 import { HeaderGestionEntidadService } from "./_services/headerGestionEntidad.service";
 import { AuthenticationService } from "./_services/authentication.service";
@@ -80,7 +80,7 @@ import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/co
 import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
 import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/gestion-subtiposCV.component";
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
-
+import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
 import { CommonModule } from "@angular/common";
 
 // Modulo de administracion
@@ -114,7 +114,20 @@ import { MantenimientoCertificadosComponent } from "./features/certificados/mant
 import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimiento-sufijos/mantenimiento-sufijos.component";
 
 //Modulo de Productos y Servicios
-import { CategoriasComponent } from "./features/productosYServicios/categorias/categorias.component";
+import { CategoriasProductoComponent } from "./features/productosYServicios/categoriasProducto/categoriasProducto.component";
+import { CategoriasServiciosComponent } from "./features/productosYServicios/categoriasServicios/categoriasServicios.component";
+import { MantenimientoProductosComponent } from "./features/productosYServicios/mantenimientoProductos/mantenimientoProductos.component";
+import { MantenimientoServiciosComponent } from "./features/productosYServicios/mantenimientoServicios/mantenimientoServicios.component";
+import { GestionarSolicitudesComponent } from "./features/productosYServicios/gestionarSolicitudes/gestionarSolicitudes.component";
+import { SolicitudCompraSubscripcionComponent } from "./features/productosYServicios/solicitudCompraSubscripcion/solicitudCompraSubscripcion.component";
+import { SolicitudAnulacionComponent } from "./features/productosYServicios/solicitudAnulacion/solicitudAnulacion.component";
+import { CargaComprasComponent } from "./features/productosYServicios/cargaCompras/cargaCompras.component";
+
+//Modulo de Expedientes
+import { TiposExpedientesComponent } from "./features/expedientes/tipos-expedientes/tipos-expedientes.component";
+import { GestionarExpedientesComponent } from "./features/expedientes/gestionar-expedientes/gestionar-expedientes.component";
+import { AlertasComponent } from "./features/expedientes/alertas/alertas.component";
+import { NuevoExpedienteComponent } from "./features/expedientes/nuevo-expediente/nuevo-expediente.component";
 
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
@@ -138,6 +151,7 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     ConfirmDialogComponent,
     // Censo
     SearchColegiadosComponent,
+    BusquedaGeneralComponent,
     SearchNoColegiadosComponent,
     CertificadosAcaComponent,
     ComisionesCargosComponent,
@@ -164,7 +178,6 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     DatosGenerales,
     DatosPersonaJuridicaComponent,
 
-
     //Certificados
     ComunicacionInterprofesionalComponent,
     SolicitarCompraComponent,
@@ -176,7 +189,20 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     MantenimientoSufijosComponent,
 
     //Productos y Servicios
-    CategoriasComponent,
+    CategoriasProductoComponent,
+    CategoriasServiciosComponent,
+    MantenimientoProductosComponent,
+    MantenimientoServiciosComponent,
+    GestionarSolicitudesComponent,
+    SolicitudCompraSubscripcionComponent,
+    SolicitudAnulacionComponent,
+    CargaComprasComponent,
+
+    //Expedientes
+    TiposExpedientesComponent,
+    GestionarExpedientesComponent,
+    AlertasComponent,
+    NuevoExpedienteComponent,
 
     // Administracion
     CatalogosMaestros,
@@ -257,4 +283,4 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

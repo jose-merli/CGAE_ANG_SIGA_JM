@@ -52,11 +52,11 @@ export enum KEY_CODE {
 }
 
 @Component({
-  selector: "app-certificados-aca",
-  templateUrl: "./certificados-aca.component.html",
-  styleUrls: ["./certificados-aca.component.scss"]
+  selector: "app-busqueda-general",
+  templateUrl: "./busqueda-general.component.html",
+  styleUrls: ["./busqueda-general.component.scss"]
 })
-export class CertificadosAcaComponent {
+export class BusquedaGeneralComponent {
   formBusqueda: FormGroup;
   cols: any = [];
   colsFisicas: any = [];

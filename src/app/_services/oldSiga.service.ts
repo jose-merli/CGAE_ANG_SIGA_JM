@@ -40,8 +40,21 @@ export class OldSigaServices {
         //Facturacion
         mantenimientoSufijos: "Dispatcher.do?proceso=214",
 
-        //Facturacion
-        categorias: "Dispatcher.do?proceso=052",
+        //Productos y Servicios
+        categoriasProducto: "Dispatcher.do?proceso=400",
+        categoriasServicios: "Dispatcher.do?proceso=401",
+        mantenimientoProductos: "Dispatcher.do?proceso=40",
+        mantenimientoServicios: "Dispatcher.do?proceso=41",
+        gestionarSolicitudes: "Dispatcher.do?proceso=36",
+        solicitudCompraSubscripcion: "Dispatcher.do?proceso=37",
+        solicitudAnulacion: "Dispatcher.do?proceso=40",
+        cargaCompras: "Dispatcher.do?proceso=44",
+
+        //Expedientes
+        tiposExpedientes: "Dispatcher.do?proceso=41",
+        gestionarExpedientes: "Dispatcher.do?proceso=42",
+        alertas: "Dispatcher.do?proceso=44",
+        nuevoExpediente: "Dispatcher.do?proceso=46",
 
         loginDevelop: "developmentLogin.do",
         login: "sigainit.do"

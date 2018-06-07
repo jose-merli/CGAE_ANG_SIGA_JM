@@ -90,8 +90,8 @@ export class SigaServices {
     datosGenerales_identificacion: "DatosGenerales/identificacion",
 
     busquedaPer_colegio: "busquedaPer/colegio",
-    busquedaPer_searchJuridica: "busquedaPer/searchJuridica",
-    busquedaPer_searchFisica: "busquedaPer/searchFisica",
+    busquedaPer_searchJuridica: "busquedaPerJuridica/searchJuridica",
+    busquedaPer_searchFisica: "busquedaPerJuridica/searchFisica",
 
     personaJuridica_uploadFotografia: "personaJuridica/uploadFotografia",
     personaJuridica_cargarFotografia: "personaJuridica/cargarFotografia",

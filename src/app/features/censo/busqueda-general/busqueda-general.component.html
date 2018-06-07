@@ -54,23 +54,23 @@
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
                         <label>Tipo persona Juridica</label>
-                        <input type="text" class="form-control" pInputText>
+                        <input type="text" class="form-control" pInputText [(ngModel)]='bodyJuridica.tipo'>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>NIF</label>
-                        <input type="text" class="form-control" pInputText>
+                        <input type="text" class="form-control" pInputText [(ngModel)]='bodyJuridica.nif'>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>Denominacion</label>
-                        <input type="text" class="form-control" pInputText>
+                        <input type="text" class="form-control" pInputText [(ngModel)]='bodyJuridica.denominacion'>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>Abreviatura</label>
-                        <input type="text" class="form-control" pInputText>
+                        <input type="text" class="form-control" pInputText [(ngModel)]='bodyJuridica.Abreviatura'>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>Colegio</label>
-                        <p-dropdown class="select-form" [filter]="true" filterBy="label"></p-dropdown>
+                        <p-dropdown class="select-form" [filter]="true" filterBy="label" [(ngModel)]='bodyJuridica.nif'> </p-dropdown>
                     </div>
                 </div>
             </div>
@@ -79,7 +79,7 @@
         <div class="card-footer">
             <div class="text-right main-button ">
                 <button pButton type="button " icon="fa fa-eraser " iconPos="left" label="Limpiar"></button>
-                <button (click)="isBuscar()" pButton type="button " icon="fa fa-search " iconPos="left" label="Buscar"></button>
+                <button (click)="search()" pButton type="button " icon="fa fa-search " iconPos="left" label="Buscar"></button>
             </div>
         </div>
     </div>

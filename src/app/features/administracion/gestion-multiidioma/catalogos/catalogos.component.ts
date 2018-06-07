@@ -101,14 +101,18 @@ export class Catalogos extends SigaWrapper implements OnInit {
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
    para poder filtrar el dato con o sin estos caracteres*/
         this.idiomaBusqueda.map(e => {
-          e.labelSinTilde = e.label.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+          e.labelSinTilde = e.label
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
           return e.labelSinTilde;
         });
 
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
     para poder filtrar el dato con o sin estos caracteres*/
         this.idiomaTraduccion.map(e => {
-          e.labelSinTilde = e.label.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+          e.labelSinTilde = e.label
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
           return e.labelSinTilde;
         });
 
@@ -136,12 +140,12 @@ export class Catalogos extends SigaWrapper implements OnInit {
       {
         field: "descripcionBusqueda",
         header:
-        "administracion.multidioma.etiquetas.literal.descripcionInstitucion"
+          "administracion.multidioma.etiquetas.literal.descripcionInstitucion"
       },
       {
         field: "descripcionTraduccion",
         header:
-        "administracion.multidioma.etiquetas.literal.descripcionIdiomaSeleccionado"
+          "administracion.multidioma.etiquetas.literal.descripcionIdiomaSeleccionado"
       }
     ];
 
@@ -178,17 +182,17 @@ export class Catalogos extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("catalogos_search", "?numPagina=1", this.bodySearch)
       .subscribe(
-      data => {
-        console.log(data);
-        this.searchParametros = JSON.parse(data["body"]);
-        this.datosTraduccion = this.searchParametros.multiidiomaCatalogoItem;
-        this.progressSpinner = false;
-        this.buscarSeleccionado = true;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      }
+        data => {
+          console.log(data);
+          this.searchParametros = JSON.parse(data["body"]);
+          this.datosTraduccion = this.searchParametros.multiidiomaCatalogoItem;
+          this.progressSpinner = false;
+          this.buscarSeleccionado = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        }
       );
   }
 
@@ -262,22 +266,25 @@ export class Catalogos extends SigaWrapper implements OnInit {
 
   isGuardar() {
     for (let i in this.elementosAGuardar) {
-      this.sigaServices.post("catalogos_update", this.bodyUpdate).subscribe(
-        data => {
-          console.log(data);
-          this.showSuccessEdit();
-        },
-        err => {
-          console.log(err);
-          this.showFail();
-        },
-        () => {
-          this.elementosAGuardar = [];
-          this.isBuscar();
-          this.table.reset();
-        }
-      );
+      this.sigaServices
+        .post("catalogos_update", this.elementosAGuardar[i])
+        .subscribe(
+          data => {
+            console.log(data);
+            this.showSuccessEdit();
+          },
+          err => {
+            console.log(err);
+            this.showFail();
+          },
+          () => {
+            this.elementosAGuardar = [];
+            this.isBuscar();
+            this.table.reset();
+          }
+        );
     }
+    this.habilitarBotones = false;
   }
 
   onChangeRowsPerPages(event) {

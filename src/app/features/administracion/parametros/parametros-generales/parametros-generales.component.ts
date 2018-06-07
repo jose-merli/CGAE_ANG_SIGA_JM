@@ -47,7 +47,6 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   showDatosGenerales: boolean = true;
   modulos: any[];
   selectedModulo: String;
-  valorCheckParametros: boolean = false;
   body: ParametroRequestDto = new ParametroRequestDto();
   bodySave: ParametroRequestDto = new ParametroRequestDto();
   bodyHistorico: ParametroRequestDto = new ParametroRequestDto();
@@ -102,10 +101,6 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
 
     this.columnasTabla = [
       {
-        field: "modulo",
-        header: "administracion.parametrosGenerales.literal.modulo"
-      },
-      {
         field: "parametro",
         header: "administracion.parametrosGenerales.literal.parametro"
       },
@@ -139,7 +134,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
 
-  onChangeForm() { }
+  onChangeForm() {}
 
   confirmarBuscar() {
     if (this.selectedModulo != "") {
@@ -174,25 +169,21 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
       this.body.modulo = this.selectedModulo;
     } else this.body.modulo = "";
 
-    if (this.valorCheckParametros == true) {
-      this.body.parametrosGenerales = "S";
-    } else {
-      this.body.parametrosGenerales = "N";
-    }
+    this.body.parametrosGenerales = "S";
 
     this.bodySave = this.body;
     this.sigaServices
       .postPaginado("parametros_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.searchParametros = JSON.parse(data["body"]);
-        this.datosBuscar = this.searchParametros.parametrosItems;
-      },
-      err => {
-        console.log(err);
-      }
+          this.searchParametros = JSON.parse(data["body"]);
+          this.datosBuscar = this.searchParametros.parametrosItems;
+        },
+        err => {
+          console.log(err);
+        }
       );
 
     this.buscar = true;
@@ -245,19 +236,19 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
       this.sigaServices
         .post("parametros_update", this.elementosAGuardar[i])
         .subscribe(
-        data => {
-          console.log(data);
-        },
-        err => {
-          console.log(err);
-          this.showFail();
-        },
-        () => {
-          this.elementosAGuardar = [];
-          this.isBuscar();
-          this.table.reset();
-          this.eliminar = true;
-        }
+          data => {
+            console.log(data);
+          },
+          err => {
+            console.log(err);
+            this.showFail();
+          },
+          () => {
+            this.elementosAGuardar = [];
+            this.isBuscar();
+            this.table.reset();
+            this.eliminar = true;
+          }
         );
     }
 
@@ -279,32 +270,28 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
       this.bodyHistorico.modulo = this.selectedModulo;
     } else this.bodyHistorico.modulo = "";
 
-    if (this.valorCheckParametros == true) {
-      this.bodyHistorico.parametrosGenerales = "S";
-    } else {
-      this.bodyHistorico.parametrosGenerales = "N";
-    }
+    this.body.parametrosGenerales = "S";
 
     this.sigaServices
       .postPaginado("parametros_historico", "?numPagina=1", this.bodyHistorico)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.historicoParametros = JSON.parse(data["body"]);
-        this.datosHistorico = this.historicoParametros.parametrosItems;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.buscar = false;
-        this.historico = true;
-        this.eliminar = true;
-        this.filaSelecionadaTabla = null;
-        // se eliminan los objetos que se iban a guardar
-        this.elementosAGuardar = [];
-      }
+          this.historicoParametros = JSON.parse(data["body"]);
+          this.datosHistorico = this.historicoParametros.parametrosItems;
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.buscar = false;
+          this.historico = true;
+          this.eliminar = true;
+          this.filaSelecionadaTabla = null;
+          // se eliminan los objetos que se iban a guardar
+          this.elementosAGuardar = [];
+        }
       );
   }
 
@@ -427,5 +414,5 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
 export class ComboItem {
   label: String;
   value: String;
-  constructor() { }
+  constructor() {}
 }

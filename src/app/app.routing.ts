@@ -27,7 +27,7 @@ import { CargasPeriodicasComponent } from "./features/censo/cargas-periodicas/ca
 import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/configurar-perfil.component";
 import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
 import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/gestion-subtiposCV.component";
-
+import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
 //Certificados
 import { ComunicacionInterprofesionalComponent } from "./features/certificados/comunicacion-interprofesional/comunicacion-interprofesional.component";
 import { SolicitarCompraComponent } from "./features/certificados/solicitar-compra/solicitar-compra.component";
@@ -39,7 +39,20 @@ import { MantenimientoCertificadosComponent } from "./features/certificados/mant
 import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimiento-sufijos/mantenimiento-sufijos.component";
 
 //Productos y Servicios
-import { CategoriasComponent } from "./features/productosYServicios/categorias/categorias.component";
+import { CategoriasProductoComponent } from "./features/productosYServicios/categoriasProducto/categoriasProducto.component";
+import { CategoriasServiciosComponent } from "./features/productosYServicios/categoriasServicios/categoriasServicios.component";
+import { MantenimientoProductosComponent } from "./features/productosYServicios/mantenimientoProductos/mantenimientoProductos.component";
+import { MantenimientoServiciosComponent } from "./features/productosYServicios/mantenimientoServicios/mantenimientoServicios.component";
+import { GestionarSolicitudesComponent } from "./features/productosYServicios/gestionarSolicitudes/gestionarSolicitudes.component";
+import { SolicitudCompraSubscripcionComponent } from "./features/productosYServicios/solicitudCompraSubscripcion/solicitudCompraSubscripcion.component";
+import { SolicitudAnulacionComponent } from "./features/productosYServicios/solicitudAnulacion/solicitudAnulacion.component";
+import { CargaComprasComponent } from "./features/productosYServicios/cargaCompras/cargaCompras.component";
+
+//Modulo de Expedientes
+import { TiposExpedientesComponent } from "./features/expedientes/tipos-expedientes/tipos-expedientes.component";
+import { GestionarExpedientesComponent } from "./features/expedientes/gestionar-expedientes/gestionar-expedientes.component";
+import { AlertasComponent } from "./features/expedientes/alertas/alertas.component";
+import { NuevoExpedienteComponent } from "./features/expedientes/nuevo-expediente/nuevo-expediente.component";
 
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
@@ -74,9 +87,18 @@ const appRoutes: Routes = [
 
   { path: "loginDevelop", component: LoginDevelopComponent },
 
-  { path: "politicaCookies", component: PoliticaCookiesComponent, canActivate: [AuthGuard] },
+  {
+    path: "politicaCookies",
+    component: PoliticaCookiesComponent,
+    canActivate: [AuthGuard]
+  },
 
   // Censo
+  {
+    path: "busquedaGeneral",
+    component: BusquedaGeneralComponent,
+    canActivate: [AuthGuard]
+  },
   {
     path: "fichaPersonaJuridica",
     component: DatosPersonaJuridicaComponent,
@@ -100,7 +122,7 @@ const appRoutes: Routes = [
 
   {
     path: "searchNoColegiados",
-    component: SearchNoColegiadosComponent,
+    component: BusquedaPersonasJuridicas,
     canActivate: [AuthGuard]
   },
   {
@@ -234,10 +256,69 @@ const appRoutes: Routes = [
 
   //Productos y Servicios
   {
-    path: "categorias",
-    component: CategoriasComponent,
+    path: "categoriasProducto",
+    component: CategoriasProductoComponent,
     canActivate: [AuthGuard]
   },
+  {
+    path: "categoriasServicios",
+    component: CategoriasServiciosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "mantenimientoProductos",
+    component: MantenimientoProductosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "mantenimientoServicios",
+    component: MantenimientoServiciosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "gestionarSolicitudes",
+    component: GestionarSolicitudesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "solicitudCompraSubscripcion",
+    component: SolicitudCompraSubscripcionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "solicitudAnulacion",
+    component: SolicitudAnulacionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "cargaCompras",
+    component: CargaComprasComponent,
+    canActivate: [AuthGuard]
+  },
+
+  //Expedientes
+  {
+    path: "tiposExpedientes",
+    component: TiposExpedientesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "gestionarExpedientes",
+    component: GestionarExpedientesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "alertas",
+    component: AlertasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "nuevoExpediente",
+    component: NuevoExpedienteComponent,
+    canActivate: [AuthGuard]
+  },
+
+
 
   // Administracion
   {

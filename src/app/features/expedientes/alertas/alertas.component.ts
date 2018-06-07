@@ -3,17 +3,17 @@ import { OldSigaServices } from '../../../_services/oldSiga.service'
 
 
 @Component({
-  selector: 'app-categorias',
-  templateUrl: './categorias.component.html',
-  styleUrls: ['./categorias.component.scss'],
+  selector: 'app-alertas',
+  templateUrl: './alertas.component.html',
+  styleUrls: ['./alertas.component.scss'],
 
 })
-export class CategoriasComponent implements OnInit {
+export class AlertasComponent implements OnInit {
 
   url;
 
   constructor(public sigaServices: OldSigaServices) {
-    this.url = sigaServices.getOldSigaUrl("categorias");
+    this.url = sigaServices.getOldSigaUrl("alertas");
   }
 
   ngOnInit() {
