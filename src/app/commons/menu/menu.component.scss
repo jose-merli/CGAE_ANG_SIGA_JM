@@ -143,26 +143,26 @@
             }
 
         }
-        .openedMenu{
-            margin-left: -20em;
-            transition: all 1s;
-        }
-         .closedMenu{
-            margin-left: 0;
-            transition: all 1s;
-        }
+    //     .openedMenu{
+    //         margin-left: -20em;
+    //         transition: all 1s;
+    //     }
+    //      .closedMenu{
+    //         margin-left: 0;
+    //         transition: all 1s;
+    //     }
 
-        .icono-menu{
-            :before{
-                content: "\f00D"
-            }
-        }
+    //     .icono-menu{
+    //         :before{
+    //             content: "\f00D"
+    //         }
+    //     }
 
-        .icono-menu-flecha{
-            :before{
-                content: "\f0C9"
-            }
-        }
+    //     .icono-menu-flecha{
+    //         :before{
+    //             content: "\f0C9"
+    //         }
+    //     }
 
     }
 

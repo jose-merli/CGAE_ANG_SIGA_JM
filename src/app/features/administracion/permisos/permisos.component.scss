@@ -25,3 +25,15 @@
   color: white !important;
   background-color: #dc3545   !important;
    }
+
+
+   .widthChange{
+     padding-left: 4rem;
+     transition: padding-left 1s;
+   }
+
+   
+   .widthNotChange{
+     padding-left: 24rem;
+     transition: padding-left 1s;
+   }

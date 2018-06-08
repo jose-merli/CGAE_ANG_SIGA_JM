@@ -465,7 +465,7 @@ font-size: .7rem;
         display: flex;
         justify-content: start;
         align-items: center;
-        position:fixed;
+        position:absolute;
         background: white;
         bottom: 0;
         width: 100%;
@@ -475,6 +475,7 @@ font-size: .7rem;
         padding-right: 3.5rem;
         border:1px solid $lightGrey;
         box-shadow:0 -5px 5px -5px $grey4;  
+        padding-left: 24rem;
         .title{
             font-weight: bold;
         }

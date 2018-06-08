@@ -18,6 +18,7 @@ import { InputTextareaModule } from "primeng/inputtextarea";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ConfirmationService } from "primeng/api";
 import { RequestOptions, Headers } from "@angular/http";
+import { Subject } from "rxjs/Subject";
 
 @Injectable()
 export class SigaServices {
@@ -96,9 +97,12 @@ export class SigaServices {
     personaJuridica_uploadFotografia: "personaJuridica/uploadFotografia",
     personaJuridica_cargarFotografia: "personaJuridica/cargarFotografia",
     busquedaPerJuridica_datosGeneralesSearch:
-      "busquedaPerJuridica/datosGeneralesSearch",
+    "busquedaPerJuridica/datosGeneralesSearch",
     busquedaPerJuridica_create: "busquedaPerJuridica/create"
   };
+
+  private menuToggled = new Subject<any>();
+  menuToggled$ = this.menuToggled.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -135,10 +139,10 @@ export class SigaServices {
   getPerfil(service: string, institucion: string): Observable<any> {
     return this.httpbackend
       .get(
-        environment.newSigaUrl +
-          this.endpoints[service] +
-          "?institucion=" +
-          institucion
+      environment.newSigaUrl +
+      this.endpoints[service] +
+      "?institucion=" +
+      institucion
       )
       .map(response => {
         return response;
@@ -221,4 +225,11 @@ export class SigaServices {
         return response;
       });
   }
+
+
+  notifyMenuToggled() {
+    this.menuToggled.next();
+  }
+
+
 }

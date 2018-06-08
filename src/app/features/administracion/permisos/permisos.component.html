@@ -46,7 +46,7 @@
 
 
 </div>
-<div *ngIf="(selectedPermiso && selectedPermiso.length > 0) || (this.permisosChange && this.permisosChange.size > 0)" [style.width.px]="myWidth"
+<div *ngIf="(selectedPermiso && selectedPermiso.length > 0) || (this.permisosChange && this.permisosChange.size > 0)" [ngClass]="{'widthChange':isWidthChange,'widthNotChange':!isWidthChange}"
   class="menu-accesos">
   <div class="texto">
     <label class="title">Administrar permisos de acceso</label>
