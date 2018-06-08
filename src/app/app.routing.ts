@@ -122,7 +122,7 @@ const appRoutes: Routes = [
 
   {
     path: "searchNoColegiados",
-    component: BusquedaPersonasJuridicas,
+    component: SearchNoColegiadosComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -317,8 +317,6 @@ const appRoutes: Routes = [
     component: NuevoExpedienteComponent,
     canActivate: [AuthGuard]
   },
-
-
 
   // Administracion
   {
