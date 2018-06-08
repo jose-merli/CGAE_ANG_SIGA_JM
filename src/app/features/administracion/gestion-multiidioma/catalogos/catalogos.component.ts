@@ -32,11 +32,9 @@ import { MultiidiomaCatalogoUpdateDto } from "../../../../models/MultiidiomaCata
 import { MultiidiomaCatalogoItem } from "../../../../models/MultiidiomaCatalogoItem";
 import { ControlAccesoDto } from "../../../../../app/models/ControlAccesoDto";
 
-
 export enum KEY_CODE {
-  ENTER = 13,
+  ENTER = 13
 }
-
 
 @Component({
   selector: "app-etiquetas",
@@ -175,7 +173,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
   isBuscar() {
     this.progressSpinner = true;
 
-    this.bodySearch.nombreTabla = this.selectedEntidad;
+    //this.bodySearch.nombreTabla = this.selectedEntidad;
     this.bodySearch.idiomaBusqueda = this.selectedIdiomaBusqueda;
     this.bodySearch.idiomaTraduccion = this.selectedIdiomaTraduccion;
     this.bodySave = this.bodySearch;
@@ -195,7 +193,11 @@ export class Catalogos extends SigaWrapper implements OnInit {
         }
       );
   }
-
+  datos(event) {
+    console.log(event);
+    this.bodySearch.local = event.value;
+    this.bodySearch.nombreTabla = event.originalEvent.srcElement.innerText;
+  }
   isRestablecer() {
     this.elementosAGuardar = [];
     this.habilitarBotones = false;
@@ -314,7 +316,8 @@ export class Catalogos extends SigaWrapper implements OnInit {
   }
 
   //búsqueda con enter
-  @HostListener('document:keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER && !this.buscar) {
       this.isBuscar();
     }
