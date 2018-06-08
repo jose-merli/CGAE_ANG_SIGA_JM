@@ -32,9 +32,8 @@ import { ParametroDeleteDto } from "../../../../models/ParametroDeleteDto";
 import { ParametroUpdateDto } from "../../../../models/ParametroUpdateDto";
 import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
 
-
 export enum KEY_CODE {
-  ENTER = 13,
+  ENTER = 13
 }
 
 @Component({
@@ -270,7 +269,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
       this.bodyHistorico.modulo = this.selectedModulo;
     } else this.bodyHistorico.modulo = "";
 
-    this.body.parametrosGenerales = "S";
+    this.bodyHistorico.parametrosGenerales = "S";
 
     this.sigaServices
       .postPaginado("parametros_historico", "?numPagina=1", this.bodyHistorico)
@@ -404,7 +403,8 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   }
 
   //búsqueda con enter
-  @HostListener('document:keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER && !this.botonBuscar) {
       this.isBuscar();
     }
