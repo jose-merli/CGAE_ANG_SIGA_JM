@@ -45,11 +45,12 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
   usuarios_rol: any[];
   usuarios_perfil: any[];
   select: any[];
+  selectPerfil: any[];
   msgs: Message[] = [];
   body: UsuarioItem = new UsuarioItem();
   updateUser: UsuarioUpdate = new UsuarioUpdate();
   pButton;
-  textSelected: String = "{0} grupos seleccionados";
+  textSelected: String = "{0} perfiles seleccionados";
   textFilter: String;
   editar: boolean = true;
   disabled: boolean = false;
@@ -80,11 +81,6 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
     this.correcto = false;
 
     this.body = new UsuarioItem();
-    this.body = JSON.parse(sessionStorage.getItem("usuarioBody"))[0];
-    this.edicion = JSON.parse(sessionStorage.getItem("privilegios"));
-    this.activacionEditar = this.edicion;
-    sessionStorage.removeItem("usuarioBody");
-    sessionStorage.removeItem("privilegios");
     this.sigaServices.get("usuarios_rol").subscribe(
       n => {
         this.usuarios_rol = n.combooItems;
@@ -99,6 +95,21 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
       },
       err => {
         console.log(err);
+      },
+      () => {
+        this.body = JSON.parse(sessionStorage.getItem("usuarioBody"))[0];
+        this.edicion = JSON.parse(sessionStorage.getItem("privilegios"));
+        this.activacionEditar = this.edicion;
+        sessionStorage.removeItem("usuarioBody");
+        sessionStorage.removeItem("privilegios");
+        this.selectPerfil = [];
+        this.body.perfiles.forEach((valuePerfil: String, key: number) => {
+          this.usuarios_perfil.forEach((value: ComboItem, key: number) => {
+            if (valuePerfil == value.value) {
+              this.selectPerfil.push(value);
+            }
+          });
+        });
       }
     );
   }
@@ -114,7 +125,6 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
       icon: icon,
       accept: () => {
         this.sendEdit();
-        this.showSuccess();
       },
       reject: () => {
         this.msgs = [
@@ -142,12 +152,19 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
     this.updateUser.codigoExterno = this.body.codigoExterno;
     this.updateUser.fechaAlta = this.body.fechaAlta;
     this.updateUser.grupo = this.body.grupo;
-    this.updateUser.idGrupo = this.body.perfiles;
     this.updateUser.idInstitucion = this.body.idInstitucion;
     this.updateUser.idUsuario = this.body.idUsuario;
     this.updateUser.nif = this.body.nif;
     this.updateUser.nombreApellidos = this.body.nombreApellidos;
     this.updateUser.rol = this.body.roles;
+    if (this.selectPerfil.length > 0) {
+      this.updateUser.idGrupo = [];
+      this.selectPerfil.forEach((value: ComboItem, key: number) => {
+        this.updateUser.idGrupo.push(value.value);
+      });
+    } else {
+      this.updateUser.idGrupo = [];
+    }
     this.usuarios_rol.forEach((value: ComboItem, key: number) => {
       if (value.label == this.body.roles) {
         this.updateUser.rol = value.value;
@@ -182,7 +199,9 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
       this.edicion = true;
     }
   }
-
+  cambios(event) {
+    console.log(event);
+  }
   showSuccess() {
     this.msgs = [];
     this.msgs.push({

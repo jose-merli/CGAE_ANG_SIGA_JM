@@ -41,9 +41,8 @@ import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { Location } from "@angular/common";
 import { Observable } from "rxjs/Rx";
 
-
 export enum KEY_CODE {
-  ENTER = 13,
+  ENTER = 13
 }
 
 @Component({
@@ -51,12 +50,10 @@ export enum KEY_CODE {
   templateUrl: "./usuarios.component.html",
   styleUrls: ["./usuarios.component.scss"],
   host: {
-    '(document:keypress)': 'onKeyPress($event)'
+    "(document:keypress)": "onKeyPress($event)"
   },
   encapsulation: ViewEncapsulation.None
 })
-
-
 export class Usuarios extends SigaWrapper implements OnInit {
   usuarios_rol: any[];
   usuarios_perfil: any[];
@@ -90,8 +87,6 @@ export class Usuarios extends SigaWrapper implements OnInit {
   selectAll: boolean = false;
   progressSpinner: boolean = false;
   numSelected: number = 0;
-
-
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
@@ -191,6 +186,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (sessionStorage.getItem("searchUser") != null) {
       this.body = JSON.parse(sessionStorage.getItem("searchUser"));
       this.isBuscar();
+      this.buscar = true;
       sessionStorage.removeItem("searchUser");
       sessionStorage.removeItem("usuarioBody");
     } else {
@@ -613,7 +609,8 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   //búsqueda con enter
-  @HostListener('document:keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
       this.isBuscar();
     }

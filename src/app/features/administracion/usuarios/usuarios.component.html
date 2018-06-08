@@ -92,6 +92,12 @@
             <span *ngIf="historico == true" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
             <span *ngIf="historico == false">{{datoH[col.field]}}</span>
           </ng-template>
+          <ng-template>
+            <ng-template *ngIf="col.field =='perfiles'" pTemplate="body" let-dato="rowData"  >
+              <p-multiSelect [options]="usuarios_perfil" styleClass="ui-column-filter" [style]="{'width':'100%'}" appendTo="body" (onChange)="confirmarRolDefecto($event, dato )"></p-multiSelect>
+            </ng-template>
+
+          </ng-template>
           </p-column>
 
           <ng-template pTemplate="paginatorLeft">

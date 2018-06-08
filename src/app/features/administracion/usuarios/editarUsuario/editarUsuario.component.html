@@ -38,7 +38,7 @@
           <div class="form-group col-lg-3 col-md-3">
             <label>{{"administracion.usuarios.literal.grupo" | translate}}</label>
             <p-multiSelect [disabled]="!activacionEditar" [defaultLabel]="textFilter" styleClass="widthAll" (onChange)="onChangeForm()"
-              [(ngModel)]='body.perfiles' [options]="usuarios_perfil" optionLabel="label" [selectedItemsLabel]="textSelected"
+              [(ngModel)]='selectPerfil' [options]="usuarios_perfil" optionLabel="label" [selectedItemsLabel]="textSelected"
               maxSelectedLabels="1" [panelStyle]="{width:'100%'}"></p-multiSelect>
 
           </div>
