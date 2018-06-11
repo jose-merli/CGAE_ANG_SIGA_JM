@@ -1,4 +1,4 @@
-<p-growl [(value)]="msgs" life="30000"></p-growl>
+<p-growl [(value)]="msgs" life="3000"></p-growl>
 <div class="busqueda-container">
     <div class="header-title">
         <i class="fa fa-square"></i>
@@ -55,11 +55,14 @@
                 <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true"
                     filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
                     <ng-template *ngIf="col.field == 'valor'" let-dato="rowData" pTemplate="body">
+                        <span class="input-group">
+                        <button pButton type="button" icon="fa fa-question" [pTooltip]="dato.descripcion" tooltipPosition="top"></button>                        &nbsp;&nbsp;
                         <input type="text" [(disabled)]="!activacionEditar" class="form-control" pInputText [(ngModel)]="dato[col.field]" (change)="guardar($event,dato)"
-                            [pTooltip]="dato.descripcion" tooltipPosition="bottom">
+                            tooltipPosition="bottom"></span>
                     </ng-template>
                     <ng-template *ngIf="col.field == 'parametro'" let-dato="rowData" pTemplate="body">
-                        <label [pTooltip]="dato.descripcion" tooltipPosition="bottom">{{dato.parametro}}</label>
+
+                        <label>{{dato.parametro}}</label>
                     </ng-template>
                     </p-column>
                     <ng-template pTemplate="paginatorLeft">

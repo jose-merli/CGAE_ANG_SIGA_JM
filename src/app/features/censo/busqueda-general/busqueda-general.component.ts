@@ -46,9 +46,8 @@ import { BusquedaJuridicaItem } from "./../../../../app/models/BusquedaJuridicaI
 import { BusquedaJuridicaObject } from "./../../../../app/models/BusquedaJuridicaObject";
 import { BusquedaFisicaObject } from "./../../../../app/models/BusquedaFisicaObject";
 
-
 export enum KEY_CODE {
-  ENTER = 13,
+  ENTER = 13
 }
 
 @Component({
@@ -62,6 +61,7 @@ export class BusquedaGeneralComponent {
   colsFisicas: any = [];
   colsJuridicas: any = [];
   colegios_rol: any[];
+  colegios_seleccionados: any[];
   datos: any[];
   select: any[];
   es: any = esCalendar;
@@ -78,8 +78,6 @@ export class BusquedaGeneralComponent {
   rowsPerPage: any = [];
   selectMultiple: boolean = false;
   progressSpinner: boolean = false;
-
-
 
   buscar: boolean = false;
   selectAll: boolean = false;
@@ -145,41 +143,6 @@ export class BusquedaGeneralComponent {
       { field: "residente", header: "Residente" },
       { field: "telefono", header: "Teléfono" }
     ];
-    this.select = [
-      { label: "-", value: null },
-      { label: "value1", value: { name: "Value1" } },
-      { label: "value2", value: { name: "Value2" } }
-    ];
-
-    this.datos = [
-      {
-        nif: "NIF/CIF",
-        nombre: "Nombre",
-        apellidos: "Apellidos",
-        colegio: "Colegio",
-        numColegiado: "Numero de Colegiado",
-        estadoColegial: "Estado colegial",
-        residencia: "Residencia"
-      },
-      {
-        nif: "NIF/CIF",
-        nombre: "Nombre",
-        apellidos: "Apellidos",
-        colegio: "Colegio",
-        numColegiado: "Numero de Colegiado",
-        estadoColegial: "Estado colegial",
-        residencia: "Residencia"
-      },
-      {
-        nif: "NIF/CIF",
-        nombre: "Nombre",
-        apellidos: "Apellidos",
-        colegio: "Colegio",
-        numColegiado: "Numero de Colegiado",
-        estadoColegial: "Estado colegial",
-        residencia: "Residencia"
-      }
-    ];
 
     this.rowsPerPage = [
       {
@@ -230,60 +193,92 @@ export class BusquedaGeneralComponent {
   search() {
     this.progressSpinner = true;
     if (this.persona == "f") {
-      if (this.bodyFisica.colegio == undefined) {
-        this.bodyFisica.colegio = "";
+      if (this.bodyFisica.nif == undefined) {
+        this.bodyFisica.nif = "";
+      }
+      if (this.colegios_seleccionados != undefined) {
+        this.bodyFisica.idInstitucion = [];
+        this.colegios_seleccionados.forEach((value: ComboItem, key: number) => {
+          this.bodyFisica.idInstitucion.push(value.value);
+        });
+      }
+      if (this.bodyFisica.nombre == undefined) {
+        this.bodyFisica.nombre = "";
+      }
+      if (this.bodyFisica.primerApellido == undefined) {
+        this.bodyFisica.primerApellido = "";
+      }
+      if (this.bodyFisica.segundoApellido == undefined) {
+        this.bodyFisica.segundoApellido = "";
+      }
+      if (this.bodyFisica.numColegiado == undefined) {
+        this.bodyFisica.numColegiado = "";
       }
       this.sigaServices
         .postPaginado(
-        "busquedaPer_searchFisica",
-        "?numPagina=1",
-        this.bodyFisica
+          "busquedaPer_searchFisica",
+          "?numPagina=1",
+          this.bodyFisica
         )
         .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-          this.searchFisica = JSON.parse(data["body"]);
-          this.datos = this.searchFisica.busquedaFisicaItems;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          // if (sessionStorage.getItem("first") != null) {
-          //   let first = JSON.parse(sessionStorage.getItem("first")) as number;
-          //   this.table.first = first;
-          //   sessionStorage.removeItem("first");
-          // }
-        }
+          data => {
+            console.log(data);
+            this.progressSpinner = false;
+            this.searchFisica = JSON.parse(data["body"]);
+            this.datos = this.searchFisica.busquedaFisicaItems;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            // if (sessionStorage.getItem("first") != null) {
+            //   let first = JSON.parse(sessionStorage.getItem("first")) as number;
+            //   this.table.first = first;
+            //   sessionStorage.removeItem("first");
+            // }
+          }
         );
     } else {
+      if (this.bodyJuridica.tipo == undefined) {
+        this.bodyJuridica.tipo = "";
+      }
+      if (this.bodyJuridica.nif == undefined) {
+        this.bodyJuridica.nif = "";
+      }
+      if (this.bodyJuridica.denominacion == undefined) {
+        this.bodyJuridica.denominacion = "";
+      }
+      if (this.bodyJuridica.numColegiado == undefined) {
+        this.bodyJuridica.numColegiado = "";
+      }
+      if (this.bodyJuridica.idInstitucion != undefined) {
+      }
       this.sigaServices
         .postPaginado(
-        "busquedaPer_searchJuridica",
-        "?numPagina=1",
-        this.bodyJuridica
+          "busquedaPer_searchJuridica",
+          "?numPagina=1",
+          this.bodyJuridica
         )
         .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-          this.searchJuridica = JSON.parse(data["body"]);
-          this.datos = this.searchJuridica.busquedaJuridicaItems;
-          // this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          // if (sessionStorage.getItem("first") != null) {
-          //   let first = JSON.parse(sessionStorage.getItem("first")) as number;
-          //   this.table.first = first;
-          //   sessionStorage.removeItem("first");
-          // }
-        }
+          data => {
+            console.log(data);
+            this.progressSpinner = false;
+            this.searchJuridica = JSON.parse(data["body"]);
+            this.datos = this.searchJuridica.busquedaJuridicaItems;
+            // this.table.paginator = true;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            // if (sessionStorage.getItem("first") != null) {
+            //   let first = JSON.parse(sessionStorage.getItem("first")) as number;
+            //   this.table.first = first;
+            //   sessionStorage.removeItem("first");
+            // }
+          }
         );
     }
   }
@@ -366,7 +361,8 @@ export class BusquedaGeneralComponent {
   }
 
   //búsqueda con enter
-  @HostListener('document:keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
       this.isBuscar();
     }

@@ -18,7 +18,7 @@
           <div class="form-group col-lg-4 col-md-4">
             <label>{{ 'administracion.catalogos.seleccionar' | translate}} (*)</label>
 
-            <p-dropdown class="select-form" [(ngModel)]="body.catalogo" [options]="catalogoArray" [(disabled)]="blockSeleccionar" (onChange)="onChangeCatalogo()"
+            <p-dropdown class="select-form" [(ngModel)]="body.catalogo" [options]="catalogoArray" [(disabled)]="blockSeleccionar" (onChange)="onChangeCatalogo($event)"
               [filter]="true" filterBy="label">
               <ng-template let-item pTemplate="item">
                 <div *ngIf="setBold(item)==true" [ngStyle]="{'font-weight':'bold'}">{{item.label}}</div>

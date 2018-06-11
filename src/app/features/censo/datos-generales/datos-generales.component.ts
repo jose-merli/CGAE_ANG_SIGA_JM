@@ -181,7 +181,6 @@ export class DatosGenerales implements OnInit {
 
   ngOnInit() {
     this.idPersona = sessionStorage.getItem("idPersona");
-    this.isSearch();
     this.textFilter = "Elegir";
     this.sigaServices.get("datosGenerales_etiquetas").subscribe(
       n => {

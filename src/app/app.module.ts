@@ -129,6 +129,12 @@ import { GestionarExpedientesComponent } from "./features/expedientes/gestionar-
 import { AlertasComponent } from "./features/expedientes/alertas/alertas.component";
 import { NuevoExpedienteComponent } from "./features/expedientes/nuevo-expediente/nuevo-expediente.component";
 
+//Modulo de SJCS
+import { ZonasYSubzonasComponent } from "./features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component";
+import { AreasYMateriasComponent } from "./features/sjcs/maestros/areas-materias/areas-materias.component";
+import { PartidasComponent } from "./features/sjcs/maestros/partidas/partidas.component";
+import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-judiciales/partidos-judiciales.component";
+
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
 import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component";
@@ -203,6 +209,12 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     GestionarExpedientesComponent,
     AlertasComponent,
     NuevoExpedienteComponent,
+
+    //SJCS
+    ZonasYSubzonasComponent,
+    AreasYMateriasComponent,
+    PartidasComponent,
+    PartidosJudicialesComponent,
 
     // Administracion
     CatalogosMaestros,
@@ -283,4 +295,4 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

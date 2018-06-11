@@ -1,11 +1,12 @@
 export class BusquedaFisicaItem {
   colegio: String;
   idPersona: String;
+  idInstitucion: String[];
   nif: String;
   nombre: String;
   primerApellido: String;
   segundoApellido: String;
-  numeroColegiado: String;
+  numColegiado: String;
   residente: String;
   situacion: String;
   fechaAlta: Date;
