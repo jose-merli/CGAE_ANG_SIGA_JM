@@ -61,6 +61,7 @@ export class PermisosComponent implements OnInit {
   propagateDown: boolean = true;
   isWidthChange: boolean = false;
   // treeNode: TreeNode[]
+  first: any = [];
 
   // map con los permisos {data, ObjectoPermisosBack}
   permisosChange: Map<String, PermisosAplicacionesDto> = new Map<
@@ -109,7 +110,9 @@ export class PermisosComponent implements OnInit {
     this.sigaServices.get("usuarios_perfil").subscribe(
       n => {
         this.grupos = n.combooItems;
-        let first = { label: "", value: "" };
+        this.first = { label: "", value: "" };
+        console.log(this.first)
+        this.grupos.unshift(this.first);
 
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
@@ -118,7 +121,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           return e.labelSinTilde;
         });
 
-        this.grupos.unshift(first);
+
       },
       err => {
         console.log(err);
