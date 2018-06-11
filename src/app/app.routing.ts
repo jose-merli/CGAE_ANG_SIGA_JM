@@ -54,6 +54,12 @@ import { GestionarExpedientesComponent } from "./features/expedientes/gestionar-
 import { AlertasComponent } from "./features/expedientes/alertas/alertas.component";
 import { NuevoExpedienteComponent } from "./features/expedientes/nuevo-expediente/nuevo-expediente.component";
 
+//SJCS
+import { ZonasYSubzonasComponent } from "./features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component";
+import { AreasYMateriasComponent } from "./features/sjcs/maestros/areas-materias/areas-materias.component";
+import { PartidasComponent } from "./features/sjcs/maestros/partidas/partidas.component";
+import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-judiciales/partidos-judiciales.component";
+
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
@@ -315,6 +321,28 @@ const appRoutes: Routes = [
   {
     path: "nuevoExpediente",
     component: NuevoExpedienteComponent,
+    canActivate: [AuthGuard]
+  },
+
+  //SJCS
+  {
+    path: "zonasYsubzonas",
+    component: ZonasYSubzonasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "areasYMaterias",
+    component: AreasYMateriasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "partidas",
+    component: PartidasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "partidosJudiciales",
+    component: PartidosJudicialesComponent,
     canActivate: [AuthGuard]
   },
 

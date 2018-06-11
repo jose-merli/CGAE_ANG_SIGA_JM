@@ -56,6 +56,12 @@ export class OldSigaServices {
         alertas: "Dispatcher.do?proceso=44",
         nuevoExpediente: "Dispatcher.do?proceso=46",
 
+        //SJCS
+        zonasYSubzonas: "Dispatcher.do?proceso=911",
+        areasYMaterias: "Dispatcher.do?proceso=912",
+        partidas: "Dispatcher.do?proceso=113",
+        partidosJudiciales: "Dispatcher.do?proceso=91C",
+
         loginDevelop: "developmentLogin.do",
         login: "sigainit.do"
 
