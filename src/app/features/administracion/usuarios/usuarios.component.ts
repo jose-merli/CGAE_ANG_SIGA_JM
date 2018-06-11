@@ -575,14 +575,15 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (this.activo == true) {
       icon = "fa fa-check";
       if (selectedItem.length > 1) {
-        (mess = this.translateService.instant(
-          "general.message.confirmar.rehabilitaciones"
-        )),
-          +selectedItem.length +
-            " " +
-            this.translateService.instant(
-              "cargaMasivaDatosCurriculares.numRegistros.literal"
-            );
+        mess =
+          this.translateService.instant(
+            "general.message.confirmar.rehabilitaciones"
+          ) +
+          selectedItem.length +
+          " " +
+          this.translateService.instant(
+            "cargaMasivaDatosCurriculares.numRegistros.literal"
+          );
       } else {
         mess = this.translateService.instant(
           "general.message.confirmar.rehabilitacion"
