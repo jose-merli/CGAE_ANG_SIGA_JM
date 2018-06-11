@@ -197,7 +197,12 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
           this.upd = new CatalogoUpdateRequestDto();
           this.upd.tabla = value.catalogo;
           this.upd.descripcion = value.descripcion.trim();
-          this.upd.codigoExt = value.codigoExt.trim();
+          if (value.codigoExt == null) {
+            this.upd.codigoExt = value.codigoExt;
+          } else {
+            this.upd.codigoExt = value.codigoExt.trim();
+          }
+
           this.upd.idRegistro = value.idRegistro;
 
           this.upd.local = this.local;
