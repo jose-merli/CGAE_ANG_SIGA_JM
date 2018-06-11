@@ -309,6 +309,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.cre.codigoExt = this.newCatalogo.codigoExt;
     this.cre.descripcion = this.newCatalogo.descripcion;
     this.cre.idInstitucion = "";
+    this.cre.local = this.local;
+
     this.sigaServices.post("maestros_create", this.cre).subscribe(
       data => {
         this.showSuccess();
