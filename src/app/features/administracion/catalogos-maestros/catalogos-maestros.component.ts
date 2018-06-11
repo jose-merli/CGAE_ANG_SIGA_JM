@@ -76,6 +76,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
 
   formBusqueda: FormGroup;
   cols: any = [];
+  cols2: any = [];
   datos: any[];
   datosHist: any[];
   datosNew: any[];
@@ -139,6 +140,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         console.log(err);
       }
     );
+    this.cols2 = [{ field: "codigoExt", header: "general.codigoext" }];
     this.cols = [{ field: "descripcion", header: "general.description" }];
     this.rowsPerPage = [
       {
