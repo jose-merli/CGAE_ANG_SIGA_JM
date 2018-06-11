@@ -134,6 +134,9 @@ import { ZonasYSubzonasComponent } from "./features/sjcs/maestros/zonas-subzonas
 import { AreasYMateriasComponent } from "./features/sjcs/maestros/areas-materias/areas-materias.component";
 import { PartidasComponent } from "./features/sjcs/maestros/partidas/partidas.component";
 import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-judiciales/partidos-judiciales.component";
+import { RetencionesIRPFComponent } from "./features/sjcs/maestros/retenciones-IRPF/retenciones-IRPF.component";
+import { MaestrosModulosComponent } from "./features/sjcs/maestros/maestros-modulos/maestros-modulos.component";
+import { CalendarioLaboralComponent } from "./features/sjcs/maestros/calendarioLaboral/calendarioLaboral.component";
 
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
@@ -215,6 +218,9 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     AreasYMateriasComponent,
     PartidasComponent,
     PartidosJudicialesComponent,
+    RetencionesIRPFComponent,
+    MaestrosModulosComponent,
+    CalendarioLaboralComponent,
 
     // Administracion
     CatalogosMaestros,

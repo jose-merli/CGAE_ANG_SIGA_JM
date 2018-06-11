@@ -61,6 +61,9 @@ export class OldSigaServices {
         areasYMaterias: "Dispatcher.do?proceso=912",
         partidas: "Dispatcher.do?proceso=113",
         partidosJudiciales: "Dispatcher.do?proceso=91C",
+        retencionesIRPF: "Dispatcher.do?proceso=92S",
+        maestrosModulos: "Dispatcher.do?proceso=91D",
+        calendarioLaboral: "Dispatcher.do?proceso=938",
 
         loginDevelop: "developmentLogin.do",
         login: "sigainit.do"

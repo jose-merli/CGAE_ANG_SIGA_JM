@@ -59,7 +59,9 @@ import { ZonasYSubzonasComponent } from "./features/sjcs/maestros/zonas-subzonas
 import { AreasYMateriasComponent } from "./features/sjcs/maestros/areas-materias/areas-materias.component";
 import { PartidasComponent } from "./features/sjcs/maestros/partidas/partidas.component";
 import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-judiciales/partidos-judiciales.component";
-
+import { RetencionesIRPFComponent } from "./features/sjcs/maestros/retenciones-IRPF/retenciones-IRPF.component";
+import { MaestrosModulosComponent } from "./features/sjcs/maestros/maestros-modulos/maestros-modulos.component";
+import { CalendarioLaboralComponent } from "./features/sjcs/maestros/calendarioLaboral/calendarioLaboral.component";
 
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
@@ -325,7 +327,7 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
 
-  //SJCS
+  //Justicia Gratuita
   {
     path: "zonasYSubzonas",
     component: ZonasYSubzonasComponent,
@@ -344,6 +346,21 @@ const appRoutes: Routes = [
   {
     path: "partidosJudiciales",
     component: PartidosJudicialesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "retencionesIRPF",
+    component: RetencionesIRPFComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "maestrosModulos",
+    component: MaestrosModulosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "calendarioLaboral",
+    component: CalendarioLaboralComponent,
     canActivate: [AuthGuard]
   },
 
