@@ -66,6 +66,8 @@ export class OldSigaServices {
         calendarioLaboral: "Dispatcher.do?proceso=938",
         mantenimientoProcuradores: "Dispatcher.do?proceso=91F",
         mantenimientoPrisiones: "Dispatcher.do?proceso=91G",
+        mantenimientoComisarias: "Dispatcher.do?proceso=91H",
+        mantenimientoJuzgados: "Dispatcher.do?proceso=91I",
 
         loginDevelop: "developmentLogin.do",
         login: "sigainit.do"

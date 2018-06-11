@@ -139,6 +139,8 @@ import { MaestrosModulosComponent } from "./features/sjcs/maestros/maestros-modu
 import { CalendarioLaboralComponent } from "./features/sjcs/maestros/calendarioLaboral/calendarioLaboral.component";
 import { MantenimientoProcuradoresComponent } from "./features/sjcs/maestros/mantenimiento-procuradores/mantenimiento-procuradores.component";
 import { MantenimientoPrisionesComponent } from "./features/sjcs/maestros/mantenimiento-prisiones/mantenimiento-prisiones.component";
+import { MantenimientoComisariasComponent } from "./features/sjcs/maestros/mantenimiento-comisarias/mantenimiento-comisarias.component";
+import { MantenimientoJuzgadosComponent } from "./features/sjcs/maestros/mantenimiento-juzgados/mantenimiento-juzgados.component";
 
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
@@ -225,6 +227,8 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     CalendarioLaboralComponent,
     MantenimientoProcuradoresComponent,
     MantenimientoPrisionesComponent,
+    MantenimientoComisariasComponent,
+    MantenimientoJuzgadosComponent,
 
     // Administracion
     CatalogosMaestros,

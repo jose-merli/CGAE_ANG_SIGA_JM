@@ -64,6 +64,8 @@ import { MaestrosModulosComponent } from "./features/sjcs/maestros/maestros-modu
 import { CalendarioLaboralComponent } from "./features/sjcs/maestros/calendarioLaboral/calendarioLaboral.component";
 import { MantenimientoProcuradoresComponent } from "./features/sjcs/maestros/mantenimiento-procuradores/mantenimiento-procuradores.component";
 import { MantenimientoPrisionesComponent } from "./features/sjcs/maestros/mantenimiento-prisiones/mantenimiento-prisiones.component";
+import { MantenimientoComisariasComponent } from "./features/sjcs/maestros/mantenimiento-comisarias/mantenimiento-comisarias.component";
+import { MantenimientoJuzgadosComponent } from "./features/sjcs/maestros/mantenimiento-juzgados/mantenimiento-juzgados.component";
 
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
@@ -375,6 +377,16 @@ const appRoutes: Routes = [
   {
     path: "mantenimientoPrisiones",
     component: MantenimientoPrisionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "mantenimientoComisarias",
+    component: MantenimientoComisariasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "mantenimientoJuzgados",
+    component: MantenimientoJuzgadosComponent,
     canActivate: [AuthGuard]
   },
 
