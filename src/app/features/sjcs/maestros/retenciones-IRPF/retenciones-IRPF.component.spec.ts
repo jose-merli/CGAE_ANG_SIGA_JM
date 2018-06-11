@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ZonasYSubzonasComponent } from './zonas-subzonas.component';
+import { RetencionesIRPFComponent } from './retenciones-IRPF.component';
 
-describe('ZonasYSubzonasComponent', () => {
-  let component: ZonasYSubzonasComponent;
-  let fixture: ComponentFixture<ZonasYSubzonasComponent>;
+describe('RetencionesIRPFComponent', () => {
+  let component: RetencionesIRPFComponent;
+  let fixture: ComponentFixture<RetencionesIRPFComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ZonasYSubzonasComponent]
+      declarations: [RetencionesIRPFComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ZonasYSubzonasComponent);
+    fixture = TestBed.createComponent(RetencionesIRPFComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

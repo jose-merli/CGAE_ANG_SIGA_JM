@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ZonasYSubzonasComponent } from './zonas-subzonas.component';
+import { CalendarioLaboralComponent } from './calendarioLaboral.component';
 
-describe('ZonasYSubzonasComponent', () => {
-  let component: ZonasYSubzonasComponent;
-  let fixture: ComponentFixture<ZonasYSubzonasComponent>;
+describe('CalendarioLaboralComponent', () => {
+  let component: CalendarioLaboralComponent;
+  let fixture: ComponentFixture<CalendarioLaboralComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ZonasYSubzonasComponent]
+      declarations: [CalendarioLaboralComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ZonasYSubzonasComponent);
+    fixture = TestBed.createComponent(CalendarioLaboralComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

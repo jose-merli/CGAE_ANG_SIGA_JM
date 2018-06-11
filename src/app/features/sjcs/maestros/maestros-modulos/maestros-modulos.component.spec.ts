@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ZonasYSubzonasComponent } from './zonas-subzonas.component';
+import { MaestrosModulosComponent } from './maestros-modulos.component';
 
-describe('ZonasYSubzonasComponent', () => {
-  let component: ZonasYSubzonasComponent;
-  let fixture: ComponentFixture<ZonasYSubzonasComponent>;
+describe('MaestrosModulosComponent', () => {
+  let component: MaestrosModulosComponent;
+  let fixture: ComponentFixture<MaestrosModulosComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ZonasYSubzonasComponent]
+      declarations: [MaestrosModulosComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ZonasYSubzonasComponent);
+    fixture = TestBed.createComponent(MaestrosModulosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
