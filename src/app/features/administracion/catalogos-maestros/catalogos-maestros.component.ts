@@ -88,6 +88,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
 
   //elemento seleccionado en el dropdown
   catalogoSeleccionado: String;
+  local: String;
 
   //elementos del form
   formDescripcion: String;
@@ -420,8 +421,10 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.buscar = false;
     this.selectMultiple = false;
     this.catalogoSeleccionado = this.body.catalogo;
+    this.local = this.body.local;
     this.body = new CatalogoRequestDto();
     this.body.catalogo = this.catalogoSeleccionado;
+    this.body.local = this.local;
     this.bodyToForm();
     this.his = new CatalogoHistoricoRequestDto();
     this.his.catalogo = this.body.catalogo;
@@ -429,6 +432,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.his.descripcion = "";
     this.his.idInstitucion = "";
     this.his.idRegistro = "";
+    this.his.local = this.body.local;
     this.tablaHistorico = true;
     this.eliminar = true;
     this.sigaServices.post("maestros_historico", this.his).subscribe(
@@ -490,6 +494,9 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     if (this.body.idInstitucion == undefined) {
       this.body.idInstitucion = "";
     }
+    if (this.body.local == undefined) {
+      this.body.local = "";
+    }
     this.sigaServices
       .postPaginado("maestros_search", "?numPagina=1", this.body)
       .subscribe(
@@ -546,8 +553,10 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     }
     this.editar = false;
     this.catalogoSeleccionado = this.body.catalogo;
+    this.local = this.body.local;
     this.body = new CatalogoRequestDto();
     this.body.catalogo = this.catalogoSeleccionado;
+    this.body.local = this.local;
     this.blockSeleccionar = false;
     this.pressNew = false;
     this.bodyToForm();
