@@ -122,6 +122,7 @@ const appRoutes: Routes = [
 
   {
     path: "searchNoColegiados",
+    //component: BusquedaPersonasJuridicas,
     component: SearchNoColegiadosComponent,
     canActivate: [AuthGuard]
   },
