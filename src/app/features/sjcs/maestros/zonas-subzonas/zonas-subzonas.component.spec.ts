@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ZonasYSubzonasComponent } from './zonas-subzonas.component';
 
-describe('ZonasYSubzonasComponent', () => {
+describe('CargaComprasComponent', () => {
   let component: ZonasYSubzonasComponent;
   let fixture: ComponentFixture<ZonasYSubzonasComponent>;
 

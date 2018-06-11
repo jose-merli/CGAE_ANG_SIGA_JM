@@ -60,6 +60,7 @@ import { AreasYMateriasComponent } from "./features/sjcs/maestros/areas-materias
 import { PartidasComponent } from "./features/sjcs/maestros/partidas/partidas.component";
 import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-judiciales/partidos-judiciales.component";
 
+
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
@@ -128,7 +129,7 @@ const appRoutes: Routes = [
 
   {
     path: "searchNoColegiados",
-    component: SearchNoColegiadosComponent,
+    component: BusquedaPersonasJuridicas,
     canActivate: [AuthGuard]
   },
   {
@@ -326,7 +327,7 @@ const appRoutes: Routes = [
 
   //SJCS
   {
-    path: "zonasYsubzonas",
+    path: "zonasYSubzonas",
     component: ZonasYSubzonasComponent,
     canActivate: [AuthGuard]
   },

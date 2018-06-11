@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { OldSigaServices } from '../../../_services/oldSiga.service'
+import { OldSigaServices } from '../../../../_services/oldSiga.service'
 
 
 @Component({
@@ -13,7 +13,7 @@ export class ZonasYSubzonasComponent implements OnInit {
   url;
 
   constructor(public sigaServices: OldSigaServices) {
-    this.url = sigaServices.getOldSigaUrl("zonasYsubzonas");
+    this.url = sigaServices.getOldSigaUrl("zonasYSubzonas");
   }
 
   ngOnInit() {
