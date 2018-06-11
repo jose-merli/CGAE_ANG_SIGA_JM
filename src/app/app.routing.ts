@@ -54,6 +54,17 @@ import { GestionarExpedientesComponent } from "./features/expedientes/gestionar-
 import { AlertasComponent } from "./features/expedientes/alertas/alertas.component";
 import { NuevoExpedienteComponent } from "./features/expedientes/nuevo-expediente/nuevo-expediente.component";
 
+//SJCS
+import { ZonasYSubzonasComponent } from "./features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component";
+import { AreasYMateriasComponent } from "./features/sjcs/maestros/areas-materias/areas-materias.component";
+import { PartidasComponent } from "./features/sjcs/maestros/partidas/partidas.component";
+import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-judiciales/partidos-judiciales.component";
+import { RetencionesIRPFComponent } from "./features/sjcs/maestros/retenciones-IRPF/retenciones-IRPF.component";
+import { MaestrosModulosComponent } from "./features/sjcs/maestros/maestros-modulos/maestros-modulos.component";
+import { CalendarioLaboralComponent } from "./features/sjcs/maestros/calendarioLaboral/calendarioLaboral.component";
+import { MantenimientoProcuradoresComponent } from "./features/sjcs/maestros/mantenimiento-procuradores/mantenimiento-procuradores.component";
+import { MantenimientoPrisionesComponent } from "./features/sjcs/maestros/mantenimiento-prisiones/mantenimiento-prisiones.component";
+
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
@@ -124,6 +135,7 @@ const appRoutes: Routes = [
     path: "searchNoColegiados",
     //component: BusquedaPersonasJuridicas,
     component: SearchNoColegiadosComponent,
+    // component: BusquedaPersonasJuridicas,
     canActivate: [AuthGuard]
   },
   {
@@ -316,6 +328,53 @@ const appRoutes: Routes = [
   {
     path: "nuevoExpediente",
     component: NuevoExpedienteComponent,
+    canActivate: [AuthGuard]
+  },
+
+  //Justicia Gratuita
+  {
+    path: "zonasYSubzonas",
+    component: ZonasYSubzonasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "areasYMaterias",
+    component: AreasYMateriasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "partidas",
+    component: PartidasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "partidosJudiciales",
+    component: PartidosJudicialesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "retencionesIRPF",
+    component: RetencionesIRPFComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "maestrosModulos",
+    component: MaestrosModulosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "calendarioLaboral",
+    component: CalendarioLaboralComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "mantenimientoProcuradores",
+    component: MantenimientoProcuradoresComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "mantenimientoPrisiones",
+    component: MantenimientoPrisionesComponent,
     canActivate: [AuthGuard]
   },
 
