@@ -200,6 +200,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
           this.upd.codigoExt = value.codigoExt.trim();
           this.upd.idRegistro = value.idRegistro;
 
+          this.upd.local = this.local;
+
           // if (
           //   this.codigoExtAux == this.upd.codigoExt &&
           //   this.descripcionAux != this.upd.descripcion
@@ -367,6 +369,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.catalogoArray.forEach((value: ComboItem, key: number) => {
       if (value.value == event.value) {
         this.body.local = value.local;
+        this.local = value.local;
       }
     });
 
@@ -639,6 +642,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       console.log(value);
       this.del.idRegistro.push(value.idRegistro);
       this.del.tabla = value.catalogo;
+      this.del.local = this.local;
     });
     this.sigaServices.post("maestros_delete", this.del).subscribe(
       data => {
