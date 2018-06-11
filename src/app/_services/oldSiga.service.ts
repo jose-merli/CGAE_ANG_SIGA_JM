@@ -68,6 +68,10 @@ export class OldSigaServices {
         mantenimientoPrisiones: "Dispatcher.do?proceso=91G",
         mantenimientoComisarias: "Dispatcher.do?proceso=91H",
         mantenimientoJuzgados: "Dispatcher.do?proceso=91I",
+        documentacionEJG: "Dispatcher.do?proceso=91J",
+        maestroPJ: "Dispatcher.do?proceso=992",
+        destinatariosRetenciones: "Dispatcher.do?proceso=996",
+        tiposAsistencia: "Dispatcher.do?proceso=99J",
 
         loginDevelop: "developmentLogin.do",
         login: "sigainit.do"
