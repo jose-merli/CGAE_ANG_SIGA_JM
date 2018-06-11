@@ -442,6 +442,11 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         console.log(err);
       },
       () => {
+        if (this.datosHist != null && this.datosHist != undefined) {
+          this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
+            value.editar = false;
+          });
+        }
         this.reset();
       }
     );
@@ -502,6 +507,11 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         },
         err => {
           console.log(err);
+        },
+        () => {
+          this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
+            value.editar = false;
+          });
         }
       );
   }

@@ -21,8 +21,8 @@
             <p-dropdown class="select-form" [(ngModel)]="body.catalogo" [options]="catalogoArray" [(disabled)]="blockSeleccionar" (onChange)="onChangeCatalogo($event)"
               [filter]="true" filterBy="label">
               <ng-template let-item pTemplate="item">
-                <div *ngIf="setBold(item)==true" [ngStyle]="{'font-weight':'bold'}">{{item.label}}</div>
-                <div *ngIf="setBold(item)==false" [ngStyle]="{'font-weight': 'normal'}">{{item.label}}</div>
+                <div *ngIf="setBold(item)==false" [ngStyle]="{'font-weight':'bold'}">{{item.label}}</div>
+                <div *ngIf="setBold(item)==true" [ngStyle]="{'font-weight': 'normal'}">{{item.label}}</div>
               </ng-template>
               </p-dropdown>
           </div>
