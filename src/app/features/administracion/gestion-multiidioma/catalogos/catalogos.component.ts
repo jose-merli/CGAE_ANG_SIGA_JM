@@ -73,6 +73,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
   comparacion: boolean;
   editar: boolean = false;
   habilitarBotones: boolean = false;
+  local: String;
 
   constructor(
     private sigaServices: SigaServices,
@@ -196,6 +197,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
   datos(event) {
     console.log(event);
     this.bodySearch.local = event.value;
+    this.local = event.value;
     this.bodySearch.nombreTabla = event.originalEvent.srcElement.innerText;
   }
   isRestablecer() {
@@ -262,6 +264,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
     this.bodyUpdate.descripcion = event.target.value;
     this.bodyUpdate.idLenguaje = dato.idLenguajeTraducir;
     this.bodyUpdate.idRecurso = dato.idRecurso;
+    this.bodyUpdate.local = this.local;
     this.elementosAGuardar.push(this.bodyUpdate);
     this.isHabilitadoGuardar();
   }
