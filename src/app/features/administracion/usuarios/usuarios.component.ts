@@ -280,7 +280,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onChangeForm() {
-    if (this.body.nif == "" || this.body.nif.length < 9) {
+    if (this.body.nif != "" || this.body.nif.length < 9) {
       this.dniCorrecto = null;
     }
     if (
@@ -289,7 +289,8 @@ para poder filtrar el dato con o sin estos caracteres*/
       (this.body.nif != "" && this.body.nif != undefined) &&
       (this.body.rol != "" && this.body.rol != undefined) &&
       (this.body.grupo != "" && this.body.grupo != undefined) &&
-      this.dniCorrecto
+      this.body.nif != "" &&
+      this.body.nif.length >= 9
     ) {
       this.blockCrear = false;
     } else {

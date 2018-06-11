@@ -196,9 +196,10 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         if (value.editar) {
           this.upd = new CatalogoUpdateRequestDto();
           this.upd.tabla = value.catalogo;
-          this.upd.descripcion = value.descripcion;
-          this.upd.codigoExt = value.codigoExt;
+          this.upd.descripcion = value.descripcion.trim();
+          this.upd.codigoExt = value.codigoExt.trim();
           this.upd.idRegistro = value.idRegistro;
+
           // if (
           //   this.codigoExtAux == this.upd.codigoExt &&
           //   this.descripcionAux != this.upd.descripcion
@@ -538,8 +539,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.cre = new CatalogoCreateRequestDto();
     this.cre.tabla = this.body.catalogo;
     this.cre.idRegistro = "";
-    this.cre.codigoExt = this.formCodigo;
-    this.cre.descripcion = this.formDescripcion;
+    this.cre.codigoExt = this.formCodigo.trim();
+    this.cre.descripcion = this.formDescripcion.trim();
     this.cre.idInstitucion = "";
     this.sigaServices.post("maestros_create", this.cre).subscribe(
       data => {

@@ -149,7 +149,7 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
       this.body.grupo == null;
     }
     this.updateUser.activo = this.body.activo;
-    this.updateUser.codigoExterno = this.body.codigoExterno;
+    this.updateUser.codigoExterno = this.body.codigoExterno.trim();
     this.updateUser.fechaAlta = this.body.fechaAlta;
     this.updateUser.grupo = this.body.grupo;
     this.updateUser.idInstitucion = this.body.idInstitucion;
