@@ -62,6 +62,8 @@ import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-j
 import { RetencionesIRPFComponent } from "./features/sjcs/maestros/retenciones-IRPF/retenciones-IRPF.component";
 import { MaestrosModulosComponent } from "./features/sjcs/maestros/maestros-modulos/maestros-modulos.component";
 import { CalendarioLaboralComponent } from "./features/sjcs/maestros/calendarioLaboral/calendarioLaboral.component";
+import { MantenimientoProcuradoresComponent } from "./features/sjcs/maestros/mantenimiento-procuradores/mantenimiento-procuradores.component";
+import { MantenimientoPrisionesComponent } from "./features/sjcs/maestros/mantenimiento-prisiones/mantenimiento-prisiones.component";
 
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
@@ -361,6 +363,16 @@ const appRoutes: Routes = [
   {
     path: "calendarioLaboral",
     component: CalendarioLaboralComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "mantenimientoProcuradores",
+    component: MantenimientoProcuradoresComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "mantenimientoPrisiones",
+    component: MantenimientoPrisionesComponent,
     canActivate: [AuthGuard]
   },
 

@@ -64,6 +64,8 @@ export class OldSigaServices {
         retencionesIRPF: "Dispatcher.do?proceso=92S",
         maestrosModulos: "Dispatcher.do?proceso=91D",
         calendarioLaboral: "Dispatcher.do?proceso=938",
+        mantenimientoProcuradores: "Dispatcher.do?proceso=91F",
+        mantenimientoPrisiones: "Dispatcher.do?proceso=91G",
 
         loginDevelop: "developmentLogin.do",
         login: "sigainit.do"

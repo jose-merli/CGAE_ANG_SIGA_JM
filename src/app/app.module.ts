@@ -137,6 +137,8 @@ import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-j
 import { RetencionesIRPFComponent } from "./features/sjcs/maestros/retenciones-IRPF/retenciones-IRPF.component";
 import { MaestrosModulosComponent } from "./features/sjcs/maestros/maestros-modulos/maestros-modulos.component";
 import { CalendarioLaboralComponent } from "./features/sjcs/maestros/calendarioLaboral/calendarioLaboral.component";
+import { MantenimientoProcuradoresComponent } from "./features/sjcs/maestros/mantenimiento-procuradores/mantenimiento-procuradores.component";
+import { MantenimientoPrisionesComponent } from "./features/sjcs/maestros/mantenimiento-prisiones/mantenimiento-prisiones.component";
 
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
@@ -221,6 +223,8 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     RetencionesIRPFComponent,
     MaestrosModulosComponent,
     CalendarioLaboralComponent,
+    MantenimientoProcuradoresComponent,
+    MantenimientoPrisionesComponent,
 
     // Administracion
     CatalogosMaestros,
