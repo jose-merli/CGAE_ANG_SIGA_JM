@@ -239,6 +239,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
   isEditar() {
     this.body.rolesAsignados = this.rolesAsignados;
     this.body.rolesNoAsignados = this.rolesNoAsignados;
+    this.body.descripcionGrupo = this.body.descripcionGrupo.trim();
     this.sigaServices.post("perfiles_update", this.body).subscribe(
       data => {
         this.responsePerfiles = JSON.parse(data["body"]);

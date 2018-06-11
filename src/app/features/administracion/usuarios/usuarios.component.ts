@@ -280,7 +280,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onChangeForm() {
-    if (this.body.nif == "" || this.body.nif.length < 9) {
+    if (this.body.nif != "" || this.body.nif.length < 9) {
       this.dniCorrecto = null;
     }
     if (
@@ -289,7 +289,8 @@ para poder filtrar el dato con o sin estos caracteres*/
       (this.body.nif != "" && this.body.nif != undefined) &&
       (this.body.rol != "" && this.body.rol != undefined) &&
       (this.body.grupo != "" && this.body.grupo != undefined) &&
-      this.dniCorrecto
+      this.body.nif != "" &&
+      this.body.nif.length >= 9
     ) {
       this.blockCrear = false;
     } else {
@@ -574,14 +575,15 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (this.activo == true) {
       icon = "fa fa-check";
       if (selectedItem.length > 1) {
-        (mess = this.translateService.instant(
-          "general.message.confirmar.rehabilitaciones"
-        )),
-          +selectedItem.length +
-            " " +
-            this.translateService.instant(
-              "cargaMasivaDatosCurriculares.numRegistros.literal"
-            );
+        mess =
+          this.translateService.instant(
+            "general.message.confirmar.rehabilitaciones"
+          ) +
+          selectedItem.length +
+          " " +
+          this.translateService.instant(
+            "cargaMasivaDatosCurriculares.numRegistros.literal"
+          );
       } else {
         mess = this.translateService.instant(
           "general.message.confirmar.rehabilitacion"

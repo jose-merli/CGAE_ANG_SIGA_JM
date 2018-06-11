@@ -32,11 +32,9 @@ import { ContadorItem } from "./../../../../app/models/ContadorItem";
 import { ContadorResponseDto } from "./../../../../app/models/ContadorResponseDto";
 import { DataTable } from "primeng/datatable";
 
-
 export enum KEY_CODE {
-  ENTER = 13,
+  ENTER = 13
 }
-
 
 @Component({
   selector: "app-contadorescomponent",
@@ -57,6 +55,7 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
   eliminar: boolean = false;
   selectMultiple: boolean = false;
   selectedItem: number = 10;
+  progressSpinner: boolean = false;
 
   formBusqueda: FormGroup;
   cols: any = [];
@@ -114,7 +113,9 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.contadores_modo.map(e => {
-          e.labelSinTilde = e.label.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+          e.labelSinTilde = e.label
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
           return e.labelSinTilde;
         });
       },
@@ -190,9 +191,9 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.table.reset();
   }
   // Control de buscar desactivado por ahora (hasta tener primer elemento del combo preparado)
-  onChangeCatalogo() { }
+  onChangeCatalogo() {}
   //cada vez que cambia el formulario comprueba esto
-  onChangeForm() { }
+  onChangeForm() {}
 
   showSuccess() {
     this.msgs = [];
@@ -236,24 +237,24 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices
       .postPaginado("contadores_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.search = JSON.parse(data["body"]);
-        this.datos = this.search.contadorItems;
-        console.log(this.datos);
-        this.table.reset();
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        if (sessionStorage.getItem("first") != null) {
-          let first = JSON.parse(sessionStorage.getItem("first")) as number;
-          this.table.first = first;
-          sessionStorage.removeItem("first");
+          this.search = JSON.parse(data["body"]);
+          this.datos = this.search.contadorItems;
+          console.log(this.datos);
+          this.table.reset();
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          if (sessionStorage.getItem("first") != null) {
+            let first = JSON.parse(sessionStorage.getItem("first")) as number;
+            this.table.first = first;
+            sessionStorage.removeItem("first");
+          }
         }
-      }
       );
   }
   paginate(event) {
@@ -323,7 +324,8 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
 
-  @HostListener('document:keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
       this.isBuscar();
     }
