@@ -527,7 +527,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       if (number >= 2) {
         msg =
           this.translateService.instant(
-            "general.message.registro.restaurados"
+            "general.message.registros.restaurados"
           ) +
           number +
           " " +
