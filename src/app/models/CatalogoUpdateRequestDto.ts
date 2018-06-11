@@ -5,6 +5,7 @@ export class CatalogoUpdateRequestDto {
   descripcion: String;
   idInstitucion: String;
   idLenguaje: String;
+  local: String;
   error: String;
   constructor() {}
 }
