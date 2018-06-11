@@ -76,6 +76,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
 
   formBusqueda: FormGroup;
   cols: any = [];
+  cols2: any = [];
   datos: any[];
   datosHist: any[];
   datosNew: any[];
@@ -139,6 +140,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         console.log(err);
       }
     );
+    this.cols2 = [{ field: "codigoExt", header: "general.codigoext" }];
     this.cols = [{ field: "descripcion", header: "general.description" }];
     this.rowsPerPage = [
       {
@@ -197,6 +199,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
           this.upd.descripcion = value.descripcion;
           this.upd.codigoExt = value.codigoExt;
           this.upd.idRegistro = value.idRegistro;
+          this.upd.local = this.local;
           // if (
           //   this.codigoExtAux == this.upd.codigoExt &&
           //   this.descripcionAux != this.upd.descripcion
@@ -364,6 +367,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.catalogoArray.forEach((value: ComboItem, key: number) => {
       if (value.value == event.value) {
         this.body.local = value.local;
+        this.local = value.local;
       }
     });
 
@@ -636,6 +640,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       console.log(value);
       this.del.idRegistro.push(value.idRegistro);
       this.del.tabla = value.catalogo;
+      this.del.local = this.local;
     });
     this.sigaServices.post("maestros_delete", this.del).subscribe(
       data => {
