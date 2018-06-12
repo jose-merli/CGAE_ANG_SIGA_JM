@@ -339,7 +339,7 @@ const appRoutes: Routes = [
 
   //Justicia Gratuita
   {
-    path: "zonasYSubzonas",
+    path: "zonasYsubzonas",
     component: ZonasYSubzonasComponent,
     canActivate: [AuthGuard]
   },
