@@ -265,15 +265,36 @@ export class Catalogos extends SigaWrapper implements OnInit {
     this.bodyUpdate.idLenguaje = dato.idLenguajeTraducir;
     this.bodyUpdate.idRecurso = dato.idRecurso;
     this.bodyUpdate.local = this.local;
+    this.datosTraduccion.forEach(
+      (value: MultiidiomaCatalogoItem, key: number) => {
+        if (value.idRecurso == dato.idRecurso) {
+          value.editar = true;
+        }
+      }
+    );
     this.elementosAGuardar.push(this.bodyUpdate);
     this.isHabilitadoGuardar();
   }
 
   isGuardar() {
-    for (let i in this.elementosAGuardar) {
-      this.sigaServices
-        .post("catalogos_update", this.elementosAGuardar[i])
-        .subscribe(
+    this.elementosAGuardar = [];
+    this.datosTraduccion.forEach(
+      (value: MultiidiomaCatalogoItem, key: number) => {
+        if (value.editar == true) {
+          this.bodyUpdate = new MultiidiomaCatalogoUpdateDto();
+          this.bodyUpdate.descripcion = value.descripcionTraduccion;
+          this.bodyUpdate.idLenguaje = value.idLenguajeTraducir;
+          this.bodyUpdate.idRecurso = value.idRecurso;
+          this.bodyUpdate.local = this.local;
+          this.bodyUpdate.nombreTabla = value.nombreTabla;
+          this.elementosAGuardar.push(this.bodyUpdate);
+        }
+      }
+    );
+    this.elementosAGuardar.forEach(
+      (value: MultiidiomaCatalogoUpdateDto, key: number) => {
+        console.log(value);
+        this.sigaServices.post("catalogos_update", value).subscribe(
           data => {
             console.log(data);
             this.showSuccessEdit();
@@ -281,14 +302,13 @@ export class Catalogos extends SigaWrapper implements OnInit {
           err => {
             console.log(err);
             this.showFail();
-          },
-          () => {
-            this.elementosAGuardar = [];
-            this.isBuscar();
-            this.table.reset();
           }
         );
-    }
+      }
+    );
+    this.elementosAGuardar = [];
+    this.isBuscar();
+    this.table.reset();
     this.habilitarBotones = false;
   }
 
