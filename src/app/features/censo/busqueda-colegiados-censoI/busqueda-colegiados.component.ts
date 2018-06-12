@@ -89,7 +89,7 @@ import { DatosPersonaJuridicaComponent } from "./../../../features/censo/datosPe
   templateUrl: "./busqueda-colegiados.component.html",
   styleUrls: ["./busqueda-colegiados.component.scss"]
 })
-export class BusquedaColegiadosComponent implements OnInit {
+export class BusquedaColegiadosComponentI implements OnInit {
   uploadedFiles: any[] = [];
   formBusqueda: FormGroup;
   cols: any = [];

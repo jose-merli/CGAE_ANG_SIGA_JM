@@ -70,6 +70,7 @@ import { MantenimientoGruposFijosComponent } from "./features/censo/mantenimient
 import { MantenimientoMandatosComponent } from "./features/censo/mantenimiento-mandatos/mantenimiento-mandatos.component";
 import { BusquedaSancionesComponent } from "./features/censo/busqueda-sanciones/busqueda-sanciones.component";
 import { BusquedaColegiadosComponent } from "./features/censo/busqueda-colegiados/busqueda-colegiados.component";
+import { BusquedaColegiadosComponentI } from "./features/censo/busqueda-colegiados-censoI/busqueda-colegiados.component";
 import { FichaColegialComponent } from "./features/censo/ficha-colegial/ficha-colegial.component";
 import { BusquedaLetradosComponent } from "./features/censo/busqueda-letrados/busqueda-letrados.component";
 import { MantenimientoDuplicadosComponent } from "./features/censo/mantenimiento-duplicados/mantenimiento-duplicados.component";
@@ -82,7 +83,7 @@ import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
 import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
 import { CommonModule } from "@angular/common";
-
+import { AccesoFichaPersonaComponent } from "./features/censo/accesoFichaPersona/accesoFichaPersona.component";
 // Modulo de administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
 import { EditarCatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros/editarCatalogosMaestros/editarCatalogosMaestros.component";
@@ -161,6 +162,7 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     HomeComponent,
     ConfirmDialogComponent,
     // Censo
+    AccesoFichaPersonaComponent,
     SearchColegiadosComponent,
     BusquedaGeneralComponent,
     SearchNoColegiadosComponent,
@@ -175,6 +177,7 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     MantenimientoMandatosComponent,
     BusquedaSancionesComponent,
     BusquedaColegiadosComponent,
+    BusquedaColegiadosComponentI,
     FichaColegialComponent,
     BusquedaLetradosComponent,
     MantenimientoDuplicadosComponent,
@@ -305,4 +308,4 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

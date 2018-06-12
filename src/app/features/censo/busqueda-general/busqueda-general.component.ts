@@ -127,11 +127,11 @@ export class BusquedaGeneralComponent {
     this.colsFisicas = [
       { field: "nif", header: "NIF/CIF" },
       { field: "nombre", header: "Nombre" },
-      { field: "apellidos", header: "Apellidos" },
+      { field: "primerApellido", header: "Apellidos" },
       { field: "colegio", header: "Colegio" },
       { field: "numColegiado", header: "Numero de Colegiado" },
-      { field: "estadoColegial", header: "Estado colegial" },
-      { field: "residencia", header: "Residencia" }
+      { field: "situacion", header: "Estado colegial" },
+      { field: "residente", header: "Residencia" }
     ];
     this.colsJuridicas = [
       { field: "tipo", header: "Tipo" },

@@ -6,5 +6,6 @@ export class MultiidiomaCatalogoItem {
   descripcionTraduccion: String;
   nombreTabla: String;
   idRecursoAlias: String;
+  local:String;
   constructor() {}
 }
