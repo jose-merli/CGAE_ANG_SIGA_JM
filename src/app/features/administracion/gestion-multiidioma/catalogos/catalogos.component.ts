@@ -304,6 +304,9 @@ export class Catalogos extends SigaWrapper implements OnInit {
             this.showFail();
           }
         );
+      },
+      () => {
+        this.isBuscar();
       }
     );
     this.elementosAGuardar = [];
