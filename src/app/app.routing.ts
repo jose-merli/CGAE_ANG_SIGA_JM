@@ -54,7 +54,7 @@ import { GestionarExpedientesComponent } from "./features/expedientes/gestionar-
 import { AlertasComponent } from "./features/expedientes/alertas/alertas.component";
 import { NuevoExpedienteComponent } from "./features/expedientes/nuevo-expediente/nuevo-expediente.component";
 
-//SJCS
+//Justicia Gratuita
 import { ZonasYSubzonasComponent } from "./features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component";
 import { AreasYMateriasComponent } from "./features/sjcs/maestros/areas-materias/areas-materias.component";
 import { PartidasComponent } from "./features/sjcs/maestros/partidas/partidas.component";
@@ -64,6 +64,17 @@ import { MaestrosModulosComponent } from "./features/sjcs/maestros/maestros-modu
 import { CalendarioLaboralComponent } from "./features/sjcs/maestros/calendarioLaboral/calendarioLaboral.component";
 import { MantenimientoProcuradoresComponent } from "./features/sjcs/maestros/mantenimiento-procuradores/mantenimiento-procuradores.component";
 import { MantenimientoPrisionesComponent } from "./features/sjcs/maestros/mantenimiento-prisiones/mantenimiento-prisiones.component";
+import { MantenimientoComisariasComponent } from "./features/sjcs/maestros/mantenimiento-comisarias/mantenimiento-comisarias.component";
+import { MantenimientoJuzgadosComponent } from "./features/sjcs/maestros/mantenimiento-juzgados/mantenimiento-juzgados.component";
+import { DocumentacionEJGComponent } from "./features/sjcs/maestros/documentacion-ejg/documentacion-ejg.component";
+import { MaestroPJComponent } from "./features/sjcs/maestros/maestro-pj/maestro-pj.component";
+import { DestinatariosRetencionesComponent } from "./features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component";
+import { TiposAsistenciaComponent } from "./features/sjcs/maestros/tiposAsistencia/tiposAsistencia.component";
+import { TurnosComponent } from "./features/sjcs/oficio/turnos/turnos.component";
+import { SolicitudesTurnosGuardiasComponent } from "./features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component";
+import { BajasTemporalesComponent } from "./features/sjcs/oficio/bajas-temporales/bajas-temporales.component";
+import { SaltosYCompensacionesComponent } from "./features/sjcs/oficio/saltos-compensaciones/saltos-compensaciones.component";
+
 
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
@@ -333,7 +344,7 @@ const appRoutes: Routes = [
 
   //Justicia Gratuita
   {
-    path: "zonasYSubzonas",
+    path: "zonasYsubzonas",
     component: ZonasYSubzonasComponent,
     canActivate: [AuthGuard]
   },
@@ -375,6 +386,56 @@ const appRoutes: Routes = [
   {
     path: "mantenimientoPrisiones",
     component: MantenimientoPrisionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "mantenimientoComisarias",
+    component: MantenimientoComisariasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "mantenimientoJuzgados",
+    component: MantenimientoJuzgadosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "documentacionEJG",
+    component: DocumentacionEJGComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "maestroPJ",
+    component: MaestroPJComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "destinatariosRetenciones",
+    component: DestinatariosRetencionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "tiposAsistencia",
+    component: TiposAsistenciaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "turnos",
+    component: TurnosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "solicitudesTurnosGuardias",
+    component: SolicitudesTurnosGuardiasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "bajasTemporales",
+    component: BajasTemporalesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "saltosYCompensaciones",
+    component: SaltosYCompensacionesComponent,
     canActivate: [AuthGuard]
   },
 

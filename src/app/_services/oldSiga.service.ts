@@ -56,8 +56,8 @@ export class OldSigaServices {
         alertas: "Dispatcher.do?proceso=44",
         nuevoExpediente: "Dispatcher.do?proceso=46",
 
-        //SJCS
-        zonasYSubzonas: "Dispatcher.do?proceso=911",
+        //Justicia Gratuita
+        zonasYsubzonas: "Dispatcher.do?proceso=911",
         areasYMaterias: "Dispatcher.do?proceso=912",
         partidas: "Dispatcher.do?proceso=113",
         partidosJudiciales: "Dispatcher.do?proceso=91C",
@@ -66,6 +66,17 @@ export class OldSigaServices {
         calendarioLaboral: "Dispatcher.do?proceso=938",
         mantenimientoProcuradores: "Dispatcher.do?proceso=91F",
         mantenimientoPrisiones: "Dispatcher.do?proceso=91G",
+        mantenimientoComisarias: "Dispatcher.do?proceso=91H",
+        mantenimientoJuzgados: "Dispatcher.do?proceso=91I",
+        documentacionEJG: "Dispatcher.do?proceso=91J",
+        maestroPJ: "Dispatcher.do?proceso=992",
+        destinatariosRetenciones: "Dispatcher.do?proceso=996",
+        tiposAsistencia: "Dispatcher.do?proceso=99J",
+        turnos: "Dispatcher.do?proceso=913",
+        solicitudesTurnosGuardias: "Dispatcher.do?proceso=922",
+        bajasTemporales: "Dispatcher.do?proceso=9Z5",
+        saltosYCompensaciones: "Dispatcher.do?proceso=93N",
+        designaciones: "Dispatcher.do?proceso=959",
 
         loginDevelop: "developmentLogin.do",
         login: "sigainit.do"

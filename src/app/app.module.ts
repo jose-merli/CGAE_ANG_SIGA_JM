@@ -130,7 +130,7 @@ import { GestionarExpedientesComponent } from "./features/expedientes/gestionar-
 import { AlertasComponent } from "./features/expedientes/alertas/alertas.component";
 import { NuevoExpedienteComponent } from "./features/expedientes/nuevo-expediente/nuevo-expediente.component";
 
-//Modulo de SJCS
+//Modulo de Justicia Gratuita
 import { ZonasYSubzonasComponent } from "./features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component";
 import { AreasYMateriasComponent } from "./features/sjcs/maestros/areas-materias/areas-materias.component";
 import { PartidasComponent } from "./features/sjcs/maestros/partidas/partidas.component";
@@ -140,6 +140,16 @@ import { MaestrosModulosComponent } from "./features/sjcs/maestros/maestros-modu
 import { CalendarioLaboralComponent } from "./features/sjcs/maestros/calendarioLaboral/calendarioLaboral.component";
 import { MantenimientoProcuradoresComponent } from "./features/sjcs/maestros/mantenimiento-procuradores/mantenimiento-procuradores.component";
 import { MantenimientoPrisionesComponent } from "./features/sjcs/maestros/mantenimiento-prisiones/mantenimiento-prisiones.component";
+import { MantenimientoComisariasComponent } from "./features/sjcs/maestros/mantenimiento-comisarias/mantenimiento-comisarias.component";
+import { MantenimientoJuzgadosComponent } from "./features/sjcs/maestros/mantenimiento-juzgados/mantenimiento-juzgados.component";
+import { DocumentacionEJGComponent } from "./features/sjcs/maestros/documentacion-ejg/documentacion-ejg.component";
+import { MaestroPJComponent } from "./features/sjcs/maestros/maestro-pj/maestro-pj.component";
+import { DestinatariosRetencionesComponent } from "./features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component";
+import { TiposAsistenciaComponent } from "./features/sjcs/maestros/tiposAsistencia/tiposAsistencia.component";
+import { TurnosComponent } from "./features/sjcs/oficio/turnos/turnos.component";
+import { SolicitudesTurnosGuardiasComponent } from "./features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component";
+import { BajasTemporalesComponent } from "./features/sjcs/oficio/bajas-temporales/bajas-temporales.component";
+import { SaltosYCompensacionesComponent } from "./features/sjcs/oficio/saltos-compensaciones/saltos-compensaciones.component";
 
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
@@ -218,7 +228,7 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     AlertasComponent,
     NuevoExpedienteComponent,
 
-    //SJCS
+    //Justicia Gratuita
     ZonasYSubzonasComponent,
     AreasYMateriasComponent,
     PartidasComponent,
@@ -228,6 +238,15 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     CalendarioLaboralComponent,
     MantenimientoProcuradoresComponent,
     MantenimientoPrisionesComponent,
+    MantenimientoComisariasComponent,
+    MantenimientoJuzgadosComponent,
+    DocumentacionEJGComponent,
+    MaestroPJComponent,
+    DestinatariosRetencionesComponent,
+    TiposAsistenciaComponent,
+    TurnosComponent,
+    SolicitudesTurnosGuardiasComponent,
+    SaltosYCompensacionesComponent,
 
     // Administracion
     CatalogosMaestros,
