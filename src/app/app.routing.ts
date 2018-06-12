@@ -54,7 +54,7 @@ import { GestionarExpedientesComponent } from "./features/expedientes/gestionar-
 import { AlertasComponent } from "./features/expedientes/alertas/alertas.component";
 import { NuevoExpedienteComponent } from "./features/expedientes/nuevo-expediente/nuevo-expediente.component";
 
-//SJCS
+//Justicia Gratuita
 import { ZonasYSubzonasComponent } from "./features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component";
 import { AreasYMateriasComponent } from "./features/sjcs/maestros/areas-materias/areas-materias.component";
 import { PartidasComponent } from "./features/sjcs/maestros/partidas/partidas.component";
@@ -70,6 +70,11 @@ import { DocumentacionEJGComponent } from "./features/sjcs/maestros/documentacio
 import { MaestroPJComponent } from "./features/sjcs/maestros/maestro-pj/maestro-pj.component";
 import { DestinatariosRetencionesComponent } from "./features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component";
 import { TiposAsistenciaComponent } from "./features/sjcs/maestros/tiposAsistencia/tiposAsistencia.component";
+import { TurnosComponent } from "./features/sjcs/oficio/turnos/turnos.component";
+import { SolicitudesTurnosGuardiasComponent } from "./features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component";
+import { BajasTemporalesComponent } from "./features/sjcs/oficio/bajas-temporales/bajas-temporales.component";
+import { SaltosYCompensacionesComponent } from "./features/sjcs/oficio/saltos-compensaciones/saltos-compensaciones.component";
+
 
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
@@ -411,6 +416,26 @@ const appRoutes: Routes = [
   {
     path: "tiposAsistencia",
     component: TiposAsistenciaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "turnos",
+    component: TurnosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "solicitudesTurnosGuardias",
+    component: SolicitudesTurnosGuardiasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "bajasTemporales",
+    component: BajasTemporalesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "saltosYCompensaciones",
+    component: SaltosYCompensacionesComponent,
     canActivate: [AuthGuard]
   },
 
