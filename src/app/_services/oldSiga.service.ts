@@ -77,6 +77,15 @@ export class OldSigaServices {
         bajasTemporales: "Dispatcher.do?proceso=9Z5",
         saltosYCompensaciones: "Dispatcher.do?proceso=93N",
         designaciones: "Dispatcher.do?proceso=959",
+        guardiasSolicitudesTurnos: "Dispatcher.do?proceso=704",
+        guardiasIncompatibilidades: "Dispatcher.do?proceso=143",
+        programacionCalendarios: "Dispatcher.do?proceso=997",
+        guardiasBajasTemporales: "Dispatcher.do?proceso=705",
+        guardiasSaltosCompensaciones: "Dispatcher.do?proceso=706",
+        definirListasGuardias: "Dispatcher.do?proceso=104",
+        guardiasAsistencias: "Dispatcher.do?proceso=140",
+        guardiasAceptadasCentralita: "Dispatcher.do?proceso=956",
+        volanteExpres: "Dispatcher.do?proceso=111",
 
         loginDevelop: "developmentLogin.do",
         login: "sigainit.do"

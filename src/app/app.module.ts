@@ -152,6 +152,15 @@ import { TurnosComponent } from "./features/sjcs/oficio/turnos/turnos.component"
 import { SolicitudesTurnosGuardiasComponent } from "./features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component";
 import { BajasTemporalesComponent } from "./features/sjcs/oficio/bajas-temporales/bajas-temporales.component";
 import { SaltosYCompensacionesComponent } from "./features/sjcs/oficio/saltos-compensaciones/saltos-compensaciones.component";
+import { GuardiasSolicitudesTurnosComponent } from "./features/sjcs/guardia/solicitudes-turnos/solicitudes-turnos.component";
+import { GuardiasIncompatibilidadesComponent } from "./features/sjcs/guardia/guardias-incompatibilidades/guardias-incompatibilidades.component";
+import { ProgramacionCalendariosComponent } from "./features/sjcs/guardia/programacionCalendarios/programacionCalendarios.component";
+import { GuardiasBajasTemporalesComponent } from "./features/sjcs/guardia/guardias-bajas-temporales/guardias-bajas-temporales.component";
+import { GuardiasSaltosCompensacionesComponent } from "./features/sjcs/guardia/guardias-saltos-compensaciones/guardias-saltos-compensaciones.component";
+import { DefinirListasGuardiasComponent } from "./features/sjcs/guardia/definir-listas-guardias/definir-listas-guardias.component";
+import { GuardiasAsistenciasComponent } from "./features/sjcs/guardia/guardias-asistencias/guardias-asistencias.component";
+import { GuardiasCentralitaComponent } from "./features/sjcs/guardia/guardias-centralita/guardias-centralita.component";
+import { VolanteExpresComponent } from "./features/sjcs/guardia/volante-expres/volante-expres.component";
 
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
@@ -253,6 +262,15 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     TurnosComponent,
     SolicitudesTurnosGuardiasComponent,
     SaltosYCompensacionesComponent,
+    GuardiasSolicitudesTurnosComponent,
+    GuardiasIncompatibilidadesComponent,
+    ProgramacionCalendariosComponent,
+    GuardiasBajasTemporalesComponent,
+    GuardiasSaltosCompensacionesComponent,
+    DefinirListasGuardiasComponent,
+    GuardiasAsistenciasComponent,
+    GuardiasCentralitaComponent,
+    VolanteExpresComponent,
 
     // Administracion
     CatalogosMaestros,

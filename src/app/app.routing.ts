@@ -74,7 +74,15 @@ import { TurnosComponent } from "./features/sjcs/oficio/turnos/turnos.component"
 import { SolicitudesTurnosGuardiasComponent } from "./features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component";
 import { BajasTemporalesComponent } from "./features/sjcs/oficio/bajas-temporales/bajas-temporales.component";
 import { SaltosYCompensacionesComponent } from "./features/sjcs/oficio/saltos-compensaciones/saltos-compensaciones.component";
-
+import { GuardiasSolicitudesTurnosComponent } from "./features/sjcs/guardia/solicitudes-turnos/solicitudes-turnos.component";
+import { GuardiasIncompatibilidadesComponent } from "./features/sjcs/guardia/guardias-incompatibilidades/guardias-incompatibilidades.component";
+import { ProgramacionCalendariosComponent } from "./features/sjcs/guardia/programacionCalendarios/programacionCalendarios.component";
+import { GuardiasBajasTemporalesComponent } from "./features/sjcs/guardia/guardias-bajas-temporales/guardias-bajas-temporales.component";
+import { GuardiasSaltosCompensacionesComponent } from "./features/sjcs/guardia/guardias-saltos-compensaciones/guardias-saltos-compensaciones.component";
+import { DefinirListasGuardiasComponent } from "./features/sjcs/guardia/definir-listas-guardias/definir-listas-guardias.component";
+import { GuardiasAsistenciasComponent } from "./features/sjcs/guardia/guardias-asistencias/guardias-asistencias.component";
+import { GuardiasCentralitaComponent } from "./features/sjcs/guardia/guardias-centralita/guardias-centralita.component";
+import { VolanteExpresComponent } from "./features/sjcs/guardia/volante-expres/volante-expres.component";
 
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
@@ -436,6 +444,51 @@ const appRoutes: Routes = [
   {
     path: "saltosYCompensaciones",
     component: SaltosYCompensacionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "guardiasSolicitudesTurnos",
+    component: GuardiasSolicitudesTurnosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "guardiasIncompatibilidades",
+    component: GuardiasIncompatibilidadesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "programacionCalendarios",
+    component: ProgramacionCalendariosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "guardiasBajasTemporales",
+    component: GuardiasBajasTemporalesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "guardiasSaltosCompensaciones",
+    component: GuardiasSaltosCompensacionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "definirListasGuardias",
+    component: DefinirListasGuardiasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "guardiasAsistencias",
+    component: GuardiasAsistenciasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "guardiasAceptadasCentralita",
+    component: GuardiasCentralitaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "volanteExpres",
+    component: VolanteExpresComponent,
     canActivate: [AuthGuard]
   },
 
