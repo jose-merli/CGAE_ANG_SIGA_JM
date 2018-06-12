@@ -302,17 +302,18 @@ export class Catalogos extends SigaWrapper implements OnInit {
           err => {
             console.log(err);
             this.showFail();
+          },
+          () => {
+            if (key == this.elementosAGuardar.length - 1) {
+              this.elementosAGuardar = [];
+              this.isBuscar();
+              this.table.reset();
+              this.habilitarBotones = false;
+            }
           }
         );
-      },
-      () => {
-        this.isBuscar();
       }
     );
-    this.elementosAGuardar = [];
-    this.isBuscar();
-    this.table.reset();
-    this.habilitarBotones = false;
   }
 
   onChangeRowsPerPages(event) {
