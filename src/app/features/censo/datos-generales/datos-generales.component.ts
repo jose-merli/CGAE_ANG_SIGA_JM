@@ -99,6 +99,9 @@ export class DatosGenerales implements OnInit {
   es: any = esCalendar;
   msgs: Message[];
   body: DatosGeneralesItem = new DatosGeneralesItem();
+  bodyviejo: DatosGeneralesItem = new DatosGeneralesItem();
+
+  personaSearch: DatosGeneralesObject = new DatosGeneralesObject();
   fichasActivas: Array<any> = [];
   todo: boolean = false;
   textFilter: String;
@@ -126,6 +129,7 @@ export class DatosGenerales implements OnInit {
   comboEtiquetas: any[];
   comboIdentificacion: any[];
   comboTipo: any[];
+  fecha;
   idiomas: any[] = [
     { label: "", value: "" },
     { label: "Castellano", value: "castellano" },
@@ -137,6 +141,7 @@ export class DatosGenerales implements OnInit {
   textSelected: String = "{0} grupos seleccionados";
   idPersona: String;
 
+  datos: any[];
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
 
@@ -180,7 +185,22 @@ export class DatosGenerales implements OnInit {
   }
 
   ngOnInit() {
-    this.idPersona = sessionStorage.getItem("idPersona");
+    this.bodyviejo = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    this.body.idPersona = this.bodyviejo[0].idPersona;
+    this.sigaServices
+      .postPaginado("datosGenerales_search", "?numPagina=1", this.body)
+      .subscribe(
+        data => {
+          console.log(data);
+          this.personaSearch = JSON.parse(data["body"]);
+          this.body = this.personaSearch.personaJuridicaItems[0];
+          // this.datos = this.personaSearch.busquedaJuridicaItems;
+        },
+        err => {
+          console.log(err);
+        }
+      );
+
     this.textFilter = "Elegir";
     this.sigaServices.get("datosGenerales_etiquetas").subscribe(
       n => {
@@ -191,14 +211,14 @@ export class DatosGenerales implements OnInit {
       }
     );
 
-    this.sigaServices.get("datosGenerales_identificacion").subscribe(
-      n => {
-        this.comboIdentificacion = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    // this.sigaServices.get("datosGenerales_identificacion").subscribe(
+    //   n => {
+    //     this.comboIdentificacion = n.combooItems;
+    //   },
+    //   err => {
+    //     console.log(err);
+    //   }
+    // );
 
     this.sigaServices.get("datosGenerales_tipo").subscribe(
       n => {
@@ -209,36 +229,14 @@ export class DatosGenerales implements OnInit {
       }
     );
 
-    this.sigaServices.get("personaJuridica_cargarFotografia").subscribe(
-      n => {
-        this.comboTipo = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-    );
-
-    if (sessionStorage.getItem("idPersona") != null) {
-      this.sigaServices
-        .postPaginado(
-          "datos_generales_search",
-          "?numPagina=1",
-          sessionStorage.getItem("idPersona")
-        )
-        .subscribe(
-          data => {
-            console.log(data);
-            // this.search = JSON.parse(data["body"]);
-            // this.datos = this.search.contadorItems;
-            // console.log(this.datos);
-            this.table.reset();
-          },
-          err => {
-            console.log(err);
-          }
-        );
-      sessionStorage.removeItem("idPersona");
-    }
+    // this.sigaServices.get("personaJuridica_cargarFotografia").subscribe(
+    //   n => {
+    //     this.comboTipo = n.combooItems;
+    //   },
+    //   err => {
+    //     console.log(err);
+    //   }
+    // );
 
     this.cols = [
       { field: "tipoDireccion", header: "Tipo dirección" },
@@ -342,9 +340,41 @@ export class DatosGenerales implements OnInit {
     }
   }
 
+  showSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant("general.message.accion.realizada")
+    });
+  }
+
+  showFail() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "general.message.error.realiza.accion"
+      )
+    });
+  }
+
   guardar() {
-    this.body.idPersona = "2005005356";
     // guardar imagen en bd y refresca header.component
+    // datosGenerales_update
+
+    this.sigaServices.post("datosGenerales_update", this.body).subscribe(
+      data => {
+        this.showSuccess();
+        console.log(data);
+      },
+      err => {
+        this.showFail();
+        console.log(err);
+      }
+    );
+
     let lenguajeeImagen: boolean = false;
     if (this.file != undefined) {
       this.sigaServices
