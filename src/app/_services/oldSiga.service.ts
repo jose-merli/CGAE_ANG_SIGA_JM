@@ -86,6 +86,8 @@ export class OldSigaServices {
         guardiasAsistencias: "Dispatcher.do?proceso=140",
         guardiasAceptadasCentralita: "Dispatcher.do?proceso=956",
         volanteExpres: "Dispatcher.do?proceso=111",
+        soj: "Dispatcher.do?proceso=941",
+        ejg: "Dispatcher.do?proceso=946",
 
         loginDevelop: "developmentLogin.do",
         login: "sigainit.do"

@@ -161,6 +161,8 @@ import { DefinirListasGuardiasComponent } from "./features/sjcs/guardia/definir-
 import { GuardiasAsistenciasComponent } from "./features/sjcs/guardia/guardias-asistencias/guardias-asistencias.component";
 import { GuardiasCentralitaComponent } from "./features/sjcs/guardia/guardias-centralita/guardias-centralita.component";
 import { VolanteExpresComponent } from "./features/sjcs/guardia/volante-expres/volante-expres.component";
+import { SOJComponent } from "./features/sjcs/soj/soj.component";
+import { EJGComponent } from "./features/sjcs/ejg/ejg.component";
 
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
@@ -271,6 +273,8 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     GuardiasAsistenciasComponent,
     GuardiasCentralitaComponent,
     VolanteExpresComponent,
+    SOJComponent,
+    EJGComponent,
 
     // Administracion
     CatalogosMaestros,
@@ -351,4 +355,4 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

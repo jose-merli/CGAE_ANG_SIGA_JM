@@ -83,6 +83,8 @@ import { DefinirListasGuardiasComponent } from "./features/sjcs/guardia/definir-
 import { GuardiasAsistenciasComponent } from "./features/sjcs/guardia/guardias-asistencias/guardias-asistencias.component";
 import { GuardiasCentralitaComponent } from "./features/sjcs/guardia/guardias-centralita/guardias-centralita.component";
 import { VolanteExpresComponent } from "./features/sjcs/guardia/volante-expres/volante-expres.component";
+import { SOJComponent } from "./features/sjcs/soj/soj.component";
+import { EJGComponent } from "./features/sjcs/ejg/ejg.component";
 
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
@@ -327,6 +329,12 @@ const appRoutes: Routes = [
     component: CargaComprasComponent,
     canActivate: [AuthGuard]
   },
+  {
+    path: "ejg",
+    component: EJGComponent,
+    canActivate: [AuthGuard]
+  },
+
 
   //Expedientes
   {
@@ -489,6 +497,11 @@ const appRoutes: Routes = [
   {
     path: "volanteExpres",
     component: VolanteExpresComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "soj",
+    component: SOJComponent,
     canActivate: [AuthGuard]
   },
 
