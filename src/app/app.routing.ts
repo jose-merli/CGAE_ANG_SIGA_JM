@@ -395,7 +395,7 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: "mantenimientoProcuradores",
+    path: "mantenimientoprocuradores",
     component: MantenimientoProcuradoresComponent,
     canActivate: [AuthGuard]
   },
