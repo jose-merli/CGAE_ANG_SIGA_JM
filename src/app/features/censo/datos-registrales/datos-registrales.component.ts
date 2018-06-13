@@ -86,11 +86,11 @@ import { MultiSelectModule } from "primeng/multiSelect";
   providers: []
 })
 @Component({
-  selector: "app-datos-generales",
-  templateUrl: "./datos-generales.component.html",
-  styleUrls: ["./datos-generales.component.scss"]
+  selector: "app-datos-registrales",
+  templateUrl: "./datos-registrales.component.html",
+  styleUrls: ["./datos-registrales.component.scss"]
 })
-export class DatosGenerales implements OnInit {
+export class DatosRegistralesComponent implements OnInit {
   uploadedFiles: any[] = [];
   formBusqueda: FormGroup;
   cols: any = [];
@@ -142,8 +142,8 @@ export class DatosGenerales implements OnInit {
   idPersona: String;
 
   datos: any[];
-  @ViewChild(DatosGeneralesComponent)
-  datosGeneralesComponent: DatosGeneralesComponent;
+  @ViewChild(DatosRegistralesComponent)
+  datosRegistralesComponent: DatosRegistralesComponent;
 
   @ViewChild("table") table;
 
@@ -157,7 +157,7 @@ export class DatosGenerales implements OnInit {
       activa: false
     },
     {
-      key: "colegiales",
+      key: "registrales",
       activa: false
     },
     {
@@ -185,58 +185,28 @@ export class DatosGenerales implements OnInit {
   }
 
   ngOnInit() {
-    this.bodyviejo = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    this.body.idPersona = this.bodyviejo[0].idPersona;
-    this.sigaServices
-      .postPaginado("datosGenerales_search", "?numPagina=1", this.body)
-      .subscribe(
-        data => {
-          console.log(data);
-          this.personaSearch = JSON.parse(data["body"]);
-          this.body = this.personaSearch.personaJuridicaItems[0];
-          // this.datos = this.personaSearch.busquedaJuridicaItems;
-        },
-        err => {
-          console.log(err);
-        }
-      );
+    // this.bodyviejo = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    // this.body.idPersona = this.bodyviejo[0].idPersona;
+    // this.sigaServices
+    //   .postPaginado("datosGenerales_search", "?numPagina=1", this.body)
+    //   .subscribe(
+    //     data => {
+    //       console.log(data);
+    //       this.personaSearch = JSON.parse(data["body"]);
+    //       this.body = this.personaSearch.personaJuridicaItems[0];
+    //       // this.datos = this.personaSearch.busquedaJuridicaItems;
+    //     },
+    //     err => {
+    //       console.log(err);
+    //     }
+    //   );
 
-    this.textFilter = "Elegir";
-    this.sigaServices.get("datosGenerales_etiquetas").subscribe(
-      n => {
-        this.comboEtiquetas = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-    );
-
-    this.sigaServices.get("datosGenerales_identificacion").subscribe(
-      n => {
-        this.comboIdentificacion = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-    );
-
-    this.sigaServices.get("datosGenerales_tipo").subscribe(
-      n => {
-        this.comboTipo = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-    );
-
-    // this.sigaServices.get("personaJuridica_cargarFotografia").subscribe(
-    //   n => {
-    //     this.comboTipo = n.combooItems;
-    //   },
-    //   err => {
-    //     console.log(err);
-    //   }
-    // );
+    this.select = [
+      { label: "", value: null },
+      { label: "NIF", value: "nif" },
+      { label: "Pasaporte", value: "pasaporte" },
+      { label: "NIE", value: "nie" }
+    ];
 
     this.generos = [
       { label: "", value: "" },
@@ -245,21 +215,6 @@ export class DatosGenerales implements OnInit {
     ];
 
     this.calculaEdad();
-  }
-
-  isSearch() {
-    this.router.navigate(["/busquedaGeneral"]);
-  }
-
-  showSuccessUploadedImage() {
-    this.msgs = [];
-    this.msgs.push({
-      severity: "success",
-      summary: this.translateService.instant("general.message.correct"),
-      detail: this.translateService.instant(
-        "general.message.logotipo.actualizado"
-      )
-    });
   }
 
   calculaEdad() {
@@ -311,9 +266,6 @@ export class DatosGenerales implements OnInit {
   }
 
   guardar() {
-    // guardar imagen en bd y refresca header.component
-    // datosGenerales_update
-
     this.sigaServices.post("datosGenerales_update", this.body).subscribe(
       data => {
         this.showSuccess();
@@ -324,81 +276,6 @@ export class DatosGenerales implements OnInit {
         console.log(err);
       }
     );
-
-    let lenguajeeImagen: boolean = false;
-    if (this.file != undefined) {
-      this.sigaServices
-        .postSendFileAndParameters(
-          "personaJuridica_uploadFotografia",
-          this.file,
-          "2005005356"
-        )
-        .subscribe(
-          data => {
-            console.log(data);
-            this.file = undefined;
-            this.archivoDisponible = false;
-
-            // this.imagenURL =
-            //   this.sigaServices.getNewSigaUrl() +
-            //   this.sigaServices.getServucePath(
-            //     "personaJuridica_cargarFotografia"
-            //   ) +
-            //   "?random=" +
-            //   new Date().getTime();
-
-            this.imagenURL = this.sigaServices.post(
-              "personaJuridica_cargarFotografia",
-              this.body
-            );
-
-            this.imagenURL = this.imagenURL + "?random=" + new Date().getTime();
-
-            var ajsdka = this.imagenURL;
-            if (!lenguajeeImagen) {
-              this.showSuccessUploadedImage();
-            }
-          },
-          err => {
-            console.log(err);
-          }
-        );
-    }
-  }
-
-  showFailUploadedImage() {
-    this.msgs = [];
-    this.msgs.push({
-      severity: "error",
-      summary: "Error",
-      detail: "Formato incorrecto de imagen seleccionada"
-    });
-  }
-
-  uploadImage(event: any) {
-    // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
-    let fileList: FileList = event.target.files;
-
-    let nombreCompletoArchivo = fileList[0].name;
-    let extensionArchivo = nombreCompletoArchivo.substring(
-      nombreCompletoArchivo.lastIndexOf("."),
-      nombreCompletoArchivo.length
-    );
-
-    if (
-      extensionArchivo == null ||
-      extensionArchivo.trim() == "" ||
-      !/\.(gif|jpg|jpeg|tiff|png)$/i.test(extensionArchivo.trim().toUpperCase())
-    ) {
-      // Mensaje de error de formato de imagen y deshabilitar boton guardar
-      this.file = undefined;
-      this.archivoDisponible = false;
-      this.showFailUploadedImage();
-    } else {
-      // se almacena el archivo para habilitar boton guardar
-      this.file = fileList[0];
-      this.archivoDisponible = true;
-    }
   }
 
   onHideDatosGenerales() {
@@ -417,21 +294,6 @@ export class DatosGenerales implements OnInit {
     this.changeDetectorRef.detectChanges();
     this.table.reset();
   }
-
-  // confirmarBorrar(index) {
-  //   this.confirmationService.confirm({
-  //     message: '¿Está seguro de eliminar los datos?',
-  //     icon: 'far fa-trash-alt',
-  //     accept: () => {
-  //       this.msgs = [{ severity: 'info', summary: 'Confirmed', detail: 'Record deleted' }];
-  //       this.socios.splice(index, 1);
-  //       this.socios = [...this.socios];
-  //     },
-  //     reject: () => {
-  //       this.msgs = [{ severity: 'info', summary: 'Rejected', detail: 'You have rejected' }];
-  //     }
-  //   });
-  // }
 
   abrirFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
@@ -463,40 +325,5 @@ export class DatosGenerales implements OnInit {
       return fichaPosible[0];
     }
     return {};
-  }
-
-  addDireccion() {
-    this.datosDirecciones = [
-      ...this.datosDirecciones,
-      {
-        tipoDireccion: "",
-        direccion: "",
-        new: true,
-        cp: "",
-        poblacion: "",
-        telefono: "",
-        fax: "",
-        movil: "",
-        email: "",
-        preferente: ""
-      }
-    ];
-    this.newDireccion = true;
-  }
-
-  isEditar() {
-    this.editar = true;
-  }
-
-  // onUpload(event) {
-  //   for (let file of event.files) {
-  //     this.uploadedFiles.push(file);
-  //   }
-
-  //   this.msgs = [];
-  //   this.msgs.push({ severity: 'info', summary: 'File Uploaded', detail: '' });
-  // }
-  backTo() {
-    this.location.back();
   }
 }

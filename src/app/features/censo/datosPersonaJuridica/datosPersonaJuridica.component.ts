@@ -53,8 +53,6 @@ import { HeaderGestionEntidadService } from "./../../../_services/headerGestionE
 import { FichaColegialComponent } from "./../../../new-features/censo/ficha-colegial/ficha-colegial.component";
 import { DatosGeneralesComponent } from "./../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
 import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-colegial/datos-colegiales/datos-colegiales.component";
-import { DatosGeneralesItem } from "./../../../../app/models/DatosGeneralesItem";
-import { DatosGeneralesObject } from "./../../../../app/models/DatosGeneralesObject";
 
 // import
 @Component({
@@ -80,7 +78,7 @@ export class DatosPersonaJuridicaComponent implements OnInit {
         activa: false
       },
       {
-        key: "colegiales",
+        key: "registrales",
         activa: false
       },
       {

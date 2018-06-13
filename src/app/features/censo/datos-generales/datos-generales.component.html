@@ -59,6 +59,10 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.fichaCliente.literal.identificacion"  | translate}} (*)</label>
+              <input [(ngModel)]="body.nif" type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label></label>
               <p-dropdown class="select-form" [(ngModel)]="body.identificacion" [options]="comboIdentificacion"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
@@ -140,7 +144,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="esFichaActiva( 'generales') " class="card-footer ">
+      <div *ngIf="esFichaActiva('generales') " class="card-footer ">
         <div class="text-right main-button ">
           <button (click)="isSearch()" pButton type="button" icon="fa fa-search" iconPos="left" label="Buscar"></button>
           <button (click)="desasociar()" pButton type="button" icon="fa fa-undo" iconPos="left" label="Desasociar"></button>

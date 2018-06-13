@@ -157,6 +157,7 @@ import { SaltosYCompensacionesComponent } from "./features/sjcs/oficio/saltos-co
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
 import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component";
 import { DatosGenerales } from "./features/censo/datos-generales/datos-generales.component";
+import { DatosRegistralesComponent } from "./features/censo/datos-registrales/datos-registrales.component";
 
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
@@ -202,6 +203,7 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     BusquedaColegiadosComponentNew,
     BusquedaPersonasJuridicas,
     DatosGenerales,
+    DatosRegistralesComponent,
     DatosPersonaJuridicaComponent,
 
     //SJRS
