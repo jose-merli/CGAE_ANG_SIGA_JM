@@ -97,7 +97,14 @@ export class SigaServices {
     datosGenerales_update: "busquedaPerJuridica/update",
     datosGenerales_tipo: "busquedaPerJuridica/tipoSociedad",
     datosGenerales_etiquetas: "busquedaPerJuridica/etiquetas",
-    datosGenerales_identificacion: "DatosGenerales/identificacion"
+    datosGenerales_identificacion: "DatosGenerales/identificacion",
+
+    datosRegistrales_actividadesPersona:
+      "perJuridicaDatosRegistrales/actividadProfesionalPer",
+    datosRegistrales_actividadesDisponible:
+      "perJuridicaDatosRegistrales/actividadProfesional",
+    datosRegistrales_search: "perJuridicaDatosRegistrales/search",
+    datosRegistrales_update: "perJuridicaDatosRegistrales/update"
   };
 
   private menuToggled = new Subject<any>();

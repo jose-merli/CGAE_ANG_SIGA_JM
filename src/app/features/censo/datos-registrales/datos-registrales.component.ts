@@ -53,8 +53,8 @@ import { HeaderGestionEntidadService } from "./../../../_services/headerGestionE
 import { FichaColegialComponent } from "./../../../new-features/censo/ficha-colegial/ficha-colegial.component";
 import { DatosGeneralesComponent } from "./../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
 import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-colegial/datos-colegiales/datos-colegiales.component";
-import { DatosGeneralesItem } from "./../../../../app/models/DatosGeneralesItem";
-import { DatosGeneralesObject } from "./../../../../app/models/DatosGeneralesObject";
+import { DatosRegistralesItem } from "./../../../../app/models/DatosRegistralesItem";
+import { DatosRegistralesObject } from "./../../../../app/models/DatosRegistralesObject";
 import { MultiSelectModule } from "primeng/multiSelect";
 
 @NgModule({
@@ -98,10 +98,10 @@ export class DatosRegistralesComponent implements OnInit {
   select: any[];
   es: any = esCalendar;
   msgs: Message[];
-  body: DatosGeneralesItem = new DatosGeneralesItem();
-  bodyviejo: DatosGeneralesItem = new DatosGeneralesItem();
+  body: DatosRegistralesItem = new DatosRegistralesItem();
+  bodyviejo: DatosRegistralesItem = new DatosRegistralesItem();
+  personaSearch: DatosRegistralesObject = new DatosRegistralesObject();
 
-  personaSearch: DatosGeneralesObject = new DatosGeneralesObject();
   fichasActivas: Array<any> = [];
   todo: boolean = false;
   textFilter: String;
@@ -137,7 +137,6 @@ export class DatosRegistralesComponent implements OnInit {
     { label: "Euskara", value: "euskera" },
     { label: "Galego", value: "gallego" }
   ];
-  edadCalculada: String;
   textSelected: String = "{0} grupos seleccionados";
   idPersona: String;
 
@@ -185,21 +184,21 @@ export class DatosRegistralesComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.bodyviejo = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    // this.body.idPersona = this.bodyviejo[0].idPersona;
-    // this.sigaServices
-    //   .postPaginado("datosGenerales_search", "?numPagina=1", this.body)
-    //   .subscribe(
-    //     data => {
-    //       console.log(data);
-    //       this.personaSearch = JSON.parse(data["body"]);
-    //       this.body = this.personaSearch.personaJuridicaItems[0];
-    //       // this.datos = this.personaSearch.busquedaJuridicaItems;
-    //     },
-    //     err => {
-    //       console.log(err);
-    //     }
-    //   );
+    this.bodyviejo = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    // this.body.idPersona = this.bodyviejo[0].idPersona; si no es por idpersona, ¿que utilizo para buscar?
+    this.sigaServices
+      .postPaginado("datosRegistrales_search", "?numPagina=1", this.body)
+      .subscribe(
+        data => {
+          console.log(data);
+          this.personaSearch = JSON.parse(data["body"]);
+          this.body = this.personaSearch.DatosRegistralesItem[0];
+          // this.datos = this.personaSearch.busquedaJuridicaItems;
+        },
+        err => {
+          console.log(err);
+        }
+      );
 
     this.select = [
       { label: "", value: null },
@@ -213,36 +212,6 @@ export class DatosRegistralesComponent implements OnInit {
       { label: "Mujer", value: "M" },
       { label: "Hombre", value: "H" }
     ];
-
-    this.calculaEdad();
-  }
-
-  calculaEdad() {
-    if (this.body.fechaNacimiento != undefined) {
-      var dateString = JSON.stringify(this.body.fechaNacimiento);
-      var fechaNac = new Date(dateString.substring(1, 25));
-      // var timeDiff = Math.abs(Date.now() - fechaNac.getDate());
-      // this.edadCalculada = "" + Math.ceil(timeDiff / (1000 * 3600 * 24) / 365);
-
-      var today = new Date();
-      var nowyear = today.getFullYear();
-      var nowmonth = today.getMonth();
-      var nowday = today.getDate();
-
-      var birth = new Date(fechaNac);
-      var birthyear = birth.getFullYear();
-      var birthmonth = birth.getMonth();
-      var birthday = birth.getDate();
-
-      var age = nowyear - birthyear;
-      var age_month = nowmonth - birthmonth;
-      var age_day = nowday - birthday;
-
-      if (age_month < 0 || (age_month == 0 && age_day < 0)) {
-        age = age - 1;
-      }
-      this.edadCalculada = "" + age;
-    }
   }
 
   showSuccess() {

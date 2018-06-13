@@ -20,10 +20,13 @@
             <label class="registros-ficha">(0 registros)</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>{{"administracion.usuarios.literal.NIF" | translate}}: <span>21489943J</span></label>
-            <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}: <span>María José Abella Mestanza</span></label>
-            <label>{{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}}: <span>18/03/1970</span></label>
-            <label>{{"administracion.usuarios.literal.fechaAlta" | translate}}: <span>04/02/1997</span></label>
+            <label>{{"censo.general.literal.FechaConstitucion" | translate}} <span>{{body.fechaConstitucion}}</span></label>
+            <label>{{"censo.consultaDatosRegistrales.literal.Resenia" | translate}} <span>{{body.resena}}</span></label>
+            <label>{{"censo.consultaDatosRegistrales.literal.objSocial" | translate}} <span>{{body.objSocial}}</span></label>
+            <label>{{"censo.consultaDatosRegistrales.literal.fechaRegistro" | translate}} <span>{{body.fechaRegistro}}</span></label>
+            <label>{{"censo.consultaDatosRegistrales.literal.idRegProv" | translate}} <span>{{body.identificadorRegistroProvincial}}</span></label>
+            <label>{{"censo.consultaDatosRegistrales.literal.numRegistro" | translate}} <span>{{body.numeroRegistro}}</span></label>
+
             <i *ngIf="!esFichaActiva('registrales')" (click)="abrirFicha('registrales')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
@@ -42,44 +45,38 @@
       <div class="row">
         <div class="bloque col-lg-6 col-md-6">
           <div class="form-row">
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.fichaCliente.literal.identificacion"  | translate}}</label>
-              <input value="38475777C" type="text" class="form-control" pInputText>
+            <div class="form-group col-lg-12 col-md-12">
+              <label>{{"censo.consultaDatosRegistrales.literal.objSocial" | translate}} (*)</label>
+              <input [(ngModel)]="body.objetoSocial" type="text" class="form-control" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label></label>
-              <p-dropdown placeholder="NIF" class="select-form" [(ngModel)]="selectedDoc" [options]="select"></p-dropdown>
+              <label>{{"censo.consultaDatosRegistrales.literal.Resenia" | translate}} (*)</label>
+              <input [(ngModel)]="body.resena" type="text" class="form-control" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}</label>
-              <input value="Abella" type="text" class="form-control" pInputText>
+              <label>{{"censo.consultaDatosRegistrales.literal.numPoliza" | translate}} </label>
+              <input [(ngModel)]="body.polizaSeguro" type="text" class="form-control" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
+              <label>{{"censo.consultaDatosRegistrales.literal.Compania" | translate}}</label>
+              <input [(ngModel)]="body.aseguradora" type="text" class="form-control" pInputText>
+            </div>
+            <!--<div class="form-group col-lg-6 col-md-6">
               <label></label>
               <input value="Mestanza" type="text" class="form-control" pInputText>
-            </div>
-            <div class="form-group col-lg-12 col-md-12">
-              <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}} </label>
-              <input value="María José" type="text" class="form-control" pInputText>
+            </div>-->
+
+            <div class="form-group col-lg-6 col-md-6 form-group-date">
+              <label>{{"censo.general.literal.FechaConstitucion" | translate}} (*)</label>
+              <p-calendar [(ngModel)]="body.fechaConstitucion" [locale]="es" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
-              <label>{{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}}</label>
-              <p-calendar [locale]="es" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
-            </div>
-            <div class="d-flex mb-0 align-items-center form-group col-lg-6 col-md-6">
-              <label>Edad: 66</label>
+              <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}</label>
+              <p-calendar [(ngModel)]="body.fechaFin" [locale]="es" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-12 col-md-12">
-              <label>{{"censo.consultaDatosGenerales.literal.nacido" | translate}}</label>
-              <input value="España" type="text" class="form-control" pInputText>
-            </div>
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.consultaDatosGenerales.literal.tratamiento" | translate}}</label>
-              <p-dropdown placeholder="Mujer" class="select-form"></p-dropdown>
-            </div>
-            <div class="form-group col-lg-6 col-md-6">
-              <label></label>
-              <p-dropdown placeholder="Doña" class="select-form"></p-dropdown>
+              <label>Actividad Profesional: </label>
+
             </div>
           </div>
         </div>
@@ -87,22 +84,22 @@
         <div class="bloque col-lg-6 col-md-6">
           <div class="form-row">
             <div class="form-group col-lg-8 col-md-8">
-              <label>{{"censo.fichaCliente.situacion.cabecera" | translate}}: Activo</label>
+              <label>{{"censo.consultaDatosRegistrales.literal.idRegProv" | translate}} (*)</label>
+              <input [(ngModel)]="body.identificadorRegistroProvincial" type="text" class="form-control" pInputText>
             </div>
             <div class="form-group col-lg-8 col-md-8">
-              <label>{{"administracion.usuarios.literal.fechaAlta" | translate}}: 10/02/1984</label>
+              <label>{{"censo.consultaDatosRegistrales.literal.numRegistro" | translate}} (*)</label>
+              <input [(ngModel)]="body.numeroRegistro" type="text" class="form-control" pInputText>
             </div>
-            <div class="form-group col-lg-8 col-md-8">
-              <label>{{"censo.fichaCliente.situacion.idiomaPref" | translate}}</label>
-              <p-dropdown class="select-form" placeholder="Castellano"></p-dropdown>
+            <div class="form-group col-lg-8 col-md-8 form-group-date">
+              <label>{{"censo.consultaDatosRegistrales.literal.fechaRegistro" | translate}} (*)</label>
+              <p-calendar [(ngModel)]="body.fechaRegistro" [locale]="es" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
             </div>
-            <div class="form-group col-lg-12 col-md-12">
-              <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
-              <input value="1170" type="text" class="form-control" pInputText>
+            <div class="form-group col-lg-8 col-md-8 form-group-date">
+              <label>{{"censo.consultaDatosRegistrales.literal.fechaCancelacion" | translate}}</label>
+              <p-calendar [(ngModel)]="body.fechaCancelacion" [locale]="es" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
             </div>
-            <div class="form-group col-lg-12 col-md-12">
-              <p-checkbox binary="true" label="No exportar datos (LOPD)" name="groupname " class="ml-0"></p-checkbox>
-            </div>
+
           </div>
         </div>
       </div>
