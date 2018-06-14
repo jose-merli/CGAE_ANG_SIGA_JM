@@ -88,6 +88,7 @@ export class OldSigaServices {
         volanteExpres: "Dispatcher.do?proceso=11A",
         soj: "Dispatcher.do?proceso=941",
         ejg: "Dispatcher.do?proceso=946",
+        gestionActas: "Dispatcher.do?proceso=947",
 
         loginDevelop: "developmentLogin.do",
         login: "sigainit.do"

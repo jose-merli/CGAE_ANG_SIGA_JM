@@ -163,6 +163,7 @@ import { GuardiasCentralitaComponent } from "./features/sjcs/guardia/guardias-ce
 import { VolanteExpresComponent } from "./features/sjcs/guardia/volante-expres/volante-expres.component";
 import { SOJComponent } from "./features/sjcs/soj/soj.component";
 import { EJGComponent } from "./features/sjcs/ejg/ejg.component";
+import { GestionActasComponent } from "./features/sjcs/gestion-actas/gestion-actas.component";
 
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
@@ -275,6 +276,7 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     VolanteExpresComponent,
     SOJComponent,
     EJGComponent,
+    GestionActasComponent,
 
     // Administracion
     CatalogosMaestros,

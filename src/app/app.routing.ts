@@ -85,6 +85,7 @@ import { GuardiasCentralitaComponent } from "./features/sjcs/guardia/guardias-ce
 import { VolanteExpresComponent } from "./features/sjcs/guardia/volante-expres/volante-expres.component";
 import { SOJComponent } from "./features/sjcs/soj/soj.component";
 import { EJGComponent } from "./features/sjcs/ejg/ejg.component";
+import { GestionActasComponent } from "./features/sjcs/gestion-actas/gestion-actas.component";
 
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
@@ -501,6 +502,11 @@ const appRoutes: Routes = [
   {
     path: "ejg",
     component: EJGComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "gestionActas",
+    component: GestionActasComponent,
     canActivate: [AuthGuard]
   },
 
