@@ -1,4 +1,4 @@
-<p-growl [(value)]="msgs" life="1500"></p-growl>
+<p-growl [(value)]="msgs" life="3000"></p-growl>
 <div class="busqueda-container">
 
   <!--<div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
@@ -75,42 +75,49 @@
               <p-calendar [(ngModel)]="body.fechaFin" [locale]="es" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-12 col-md-12">
-              <label>Actividad Profesional: </label>
-
+              <label>Actividad Profesional: </label> <br>
+              <p-multiSelect [defaultLabel]="textFilter" (styleClass)="widthAll" [(ngModel)]='body.actividadProfesional' [options]="actividadesDisponibles"
+                optionLabel="label" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" [panelStyle]="{width:'100%'}"></p-multiSelect>
             </div>
           </div>
         </div>
 
         <div class="bloque col-lg-6 col-md-6">
           <div class="form-row">
-            <div class="form-group col-lg-8 col-md-8">
+            <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.idRegProv" | translate}} (*)</label>
               <input [(ngModel)]="body.identificadorRegistroProvincial" type="text" class="form-control" pInputText>
             </div>
-            <div class="form-group col-lg-8 col-md-8">
+            <div class="form-group col-lg-6 col-md-6">
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.numRegistro" | translate}} (*)</label>
               <input [(ngModel)]="body.numeroRegistro" type="text" class="form-control" pInputText>
             </div>
-            <div class="form-group col-lg-8 col-md-8 form-group-date">
+            <div class="form-group col-lg-6 col-md-6">
+            </div>
+            <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatosRegistrales.literal.fechaRegistro" | translate}} (*)</label>
               <p-calendar [(ngModel)]="body.fechaRegistro" [locale]="es" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
             </div>
-            <div class="form-group col-lg-8 col-md-8 form-group-date">
+            <div class="form-group col-lg-6 col-md-6">
+            </div>
+            <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatosRegistrales.literal.fechaCancelacion" | translate}}</label>
               <p-calendar [(ngModel)]="body.fechaCancelacion" [locale]="es" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
             </div>
-
           </div>
         </div>
       </div>
     </div>
     <div *ngIf="esFichaActiva('registrales')" class="card-footer">
       <div class="text-right main-button ">
-        <button (click)="cerrarFicha('registrales')" pButton type="button " icon="far fa-save " iconPos="left" label="Guardar"></button>
-        <button (click)="cerrarFicha('registrales')" pButton type="button " icon="fa fa-redo " iconPos="left" label="Restablecer"></button>
+        <button (click)="toSociedadProfesional()" class="sociedadprof" pButton type="button " icon="fas fa-book " iconPos="left"
+          label="Sociedad Profesional"></button>
+          <button (click)="restablecer()" pButton type="button " icon="fa fa-redo " iconPos="left" label="Restablecer"></button>
+          <button (click)="guardar()" pButton type="button " icon="far fa-save " iconPos="left" label="Guardar"></button>
       </div>
     </div>
   </div>
-
-
 </div>
+<app-dialog></app-dialog>

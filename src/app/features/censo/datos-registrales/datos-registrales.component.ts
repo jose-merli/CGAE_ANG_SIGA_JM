@@ -25,6 +25,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 // import { DialogModule } from 'primeng/dialog';
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { ConfirmationService } from "primeng/api";
 import { TooltipModule } from "primeng/tooltip";
 import { ChipsModule } from "primeng/chips";
 import { RadioButtonModule } from "primeng/radiobutton";
@@ -71,6 +72,7 @@ import { MultiSelectModule } from "primeng/multiSelect";
     ReactiveFormsModule,
     AutoCompleteModule,
     ConfirmDialogModule,
+    ConfirmationService,
     TooltipModule,
     MultiSelectModule,
     ChipsModule,
@@ -104,7 +106,7 @@ export class DatosRegistralesComponent implements OnInit {
 
   fichasActivas: Array<any> = [];
   todo: boolean = false;
-  textFilter: String;
+  textFilter: String = "Elegir";
   selectedDatos: any = [];
 
   showDatosGenerales: boolean = true;
@@ -126,9 +128,7 @@ export class DatosRegistralesComponent implements OnInit {
   imagenURL: any;
   generos: any[];
   tratamientos: any[];
-  comboEtiquetas: any[];
-  comboIdentificacion: any[];
-  comboTipo: any[];
+  actividadesDisponibles: any[];
   fecha;
   idiomas: any[] = [
     { label: "", value: "" },
@@ -175,6 +175,7 @@ export class DatosRegistralesComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private translateService: TranslateService,
     private location: Location,
+    private confirmationService: ConfirmationService,
     private sigaServices: SigaServices,
     private headerGestionEntidadService: HeaderGestionEntidadService
   ) {
@@ -185,7 +186,7 @@ export class DatosRegistralesComponent implements OnInit {
 
   ngOnInit() {
     this.bodyviejo = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    // this.body.idPersona = this.bodyviejo[0].idPersona; si no es por idpersona, ¿que utilizo para buscar?
+    this.body.idPersona = this.bodyviejo[0].idPersona;
     this.sigaServices
       .postPaginado("datosRegistrales_search", "?numPagina=1", this.body)
       .subscribe(
@@ -199,6 +200,26 @@ export class DatosRegistralesComponent implements OnInit {
           console.log(err);
         }
       );
+
+    this.sigaServices.get("datosRegistrales_actividadesDisponible").subscribe(
+      n => {
+        this.actividadesDisponibles = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
+    this.sigaServices.get("datosRegistrales_actividadesPersona").subscribe(
+      n => {
+        this.body.actividadProfesional = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
+    // datosRegistrales_search
 
     this.select = [
       { label: "", value: null },
@@ -235,7 +256,7 @@ export class DatosRegistralesComponent implements OnInit {
   }
 
   guardar() {
-    this.sigaServices.post("datosGenerales_update", this.body).subscribe(
+    this.sigaServices.post("datosRegistrales_update", this.body).subscribe(
       data => {
         this.showSuccess();
         console.log(data);
@@ -245,6 +266,39 @@ export class DatosRegistralesComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  restablecer() {
+    // Aún no hay un rest al que llamar
+  }
+
+  toSociedadProfesional() {
+    let mess = this.translateService.instant(
+      "¿Está seguro de que desea traspasar esta sociedad a Sociedad Profesional?"
+    );
+    let icon = "fas fa-book";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Confirmed",
+            detail: "Sociedad traspasada correctamente"
+          }
+        ];
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Rejected",
+            detail: "Acción cancelada por el usuario"
+          }
+        ];
+      }
+    });
   }
 
   onHideDatosGenerales() {
