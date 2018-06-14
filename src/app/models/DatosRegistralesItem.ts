@@ -1,5 +1,6 @@
 export class DatosRegistralesItem {
   anotaciones: String;
+  idPersona: String;
   actividadProfesional: String[];
   objetoSocial: String;
   fechaConstitucion: Date;
