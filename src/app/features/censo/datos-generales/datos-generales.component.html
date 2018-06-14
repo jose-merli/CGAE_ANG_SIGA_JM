@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" life="1500"></p-growl>
 <div class="busqueda-container">
 
   <!--<div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
@@ -58,6 +59,10 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.fichaCliente.literal.identificacion"  | translate}} (*)</label>
+              <input [(ngModel)]="body.nif" type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label></label>
               <p-dropdown class="select-form" [(ngModel)]="body.identificacion" [options]="comboIdentificacion"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
@@ -84,7 +89,7 @@
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}}</label>
-              <p-calendar [locale]="es" [(ngModel)]="body.fechaNacimiento" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
+              <p-calendar [locale]="es" [(ngModel)]="body.fechaNacimiento" dateFormat="dd-mm-yy" icon="far fa-calendar-alt" showIcon="true"
                 (onSelect)="calculaEdad()"></p-calendar>
             </div>
             <div class="d-flex mb-0 align-items-center form-group col-lg-6 col-md-6">
@@ -100,11 +105,11 @@
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"administracion.usuarios.literal.fechaAlta" | translate}}</label>
-              <p-calendar [locale]="es" [(ngModel)]="body.fechaAlta" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" (onSelect)="calculaEdad()"></p-calendar>
+              <p-calendar [locale]="es" [(ngModel)]="body.fechaAlta" dateFormat="dd-mm-yy" icon="far fa-calendar-alt" showIcon="true" (onSelect)="calculaEdad()"></p-calendar>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}</label>
-              <p-calendar [locale]="es" [(ngModel)]="body.fechaBaja" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" (onSelect)="calculaEdad()"></p-calendar>
+              <p-calendar [locale]="es" [(ngModel)]="body.fechaBaja" dateFormat="dd-mm-yy" icon="far fa-calendar-alt" showIcon="true" (onSelect)="calculaEdad()"></p-calendar>
             </div>
 
           </div>
@@ -139,7 +144,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="esFichaActiva( 'generales') " class="card-footer ">
+      <div *ngIf="esFichaActiva('generales') " class="card-footer ">
         <div class="text-right main-button ">
           <button (click)="isSearch()" pButton type="button" icon="fa fa-search" iconPos="left" label="Buscar"></button>
           <button (click)="desasociar()" pButton type="button" icon="fa fa-undo" iconPos="left" label="Desasociar"></button>

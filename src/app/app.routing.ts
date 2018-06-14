@@ -140,7 +140,6 @@ const appRoutes: Routes = [
     component: EditarUsuarioComponent,
     canActivate: [AuthGuard]
   },
-
   {
     path: "searchNoColegiados",
     component: BusquedaPersonasJuridicas,
@@ -149,7 +148,7 @@ const appRoutes: Routes = [
   },
   {
     path: "certificadosAca",
-    // component: CertificadosAcaComponent,
+    //component: CertificadosAcaComponent,
     component: CertificadosAcaComponent,
     canActivate: [AuthGuard]
   },

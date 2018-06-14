@@ -78,7 +78,7 @@ export class BusquedaGeneralComponent {
   rowsPerPage: any = [];
   selectMultiple: boolean = false;
   progressSpinner: boolean = false;
-
+  textFilter: String = "Elegir";
   buscar: boolean = false;
   selectAll: boolean = false;
 
@@ -163,8 +163,6 @@ export class BusquedaGeneralComponent {
     this.sigaServices.get("busquedaPer_colegio").subscribe(
       n => {
         this.colegios_rol = n.combooItems;
-        let first = { label: "", value: "" };
-        this.colegios_rol.unshift(first);
       },
       err => {
         console.log(err);
