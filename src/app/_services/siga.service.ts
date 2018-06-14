@@ -97,7 +97,7 @@ export class SigaServices {
     personaJuridica_uploadFotografia: "personaJuridica/uploadFotografia",
     personaJuridica_cargarFotografia: "personaJuridica/cargarFotografia",
     busquedaPerJuridica_datosGeneralesSearch:
-    "busquedaPerJuridica/datosGeneralesSearch",
+      "busquedaPerJuridica/datosGeneralesSearch",
     busquedaPerJuridica_create: "busquedaPerJuridica/create"
   };
 
@@ -139,10 +139,10 @@ export class SigaServices {
   getPerfil(service: string, institucion: string): Observable<any> {
     return this.httpbackend
       .get(
-      environment.newSigaUrl +
-      this.endpoints[service] +
-      "?institucion=" +
-      institucion
+        environment.newSigaUrl +
+          this.endpoints[service] +
+          "?institucion=" +
+          institucion
       )
       .map(response => {
         return response;
@@ -226,10 +226,7 @@ export class SigaServices {
       });
   }
 
-
   notifyMenuToggled() {
     this.menuToggled.next();
   }
-
-
 }

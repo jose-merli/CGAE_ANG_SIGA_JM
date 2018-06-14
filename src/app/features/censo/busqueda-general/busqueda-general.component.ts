@@ -139,9 +139,7 @@ export class BusquedaGeneralComponent {
       { field: "denominacion", header: "Denominacion" },
       { field: "fechaConstitucion", header: "Fecha Constitucion" },
       { field: "abreviatura", header: "Abreviatura" },
-      { field: "numIntegrantes", header: "Estado colegial" },
-      { field: "residente", header: "Residente" },
-      { field: "telefono", header: "Teléfono" }
+      { field: "numeroIntegrantes", header: "Número de integrantes" }
     ];
 
     this.rowsPerPage = [
@@ -252,8 +250,10 @@ export class BusquedaGeneralComponent {
       if (this.bodyJuridica.numColegiado == undefined) {
         this.bodyJuridica.numColegiado = "";
       }
-      if (this.bodyJuridica.idInstitucion != undefined) {
-      }
+      this.bodyJuridica.idInstitucion = [];
+      this.colegios_seleccionados.forEach((value: ComboItem, key: number) => {
+        this.bodyJuridica.idInstitucion.push(value.value);
+      });
       this.sigaServices
         .postPaginado(
           "busquedaPer_searchJuridica",
@@ -265,7 +265,7 @@ export class BusquedaGeneralComponent {
             console.log(data);
             this.progressSpinner = false;
             this.searchJuridica = JSON.parse(data["body"]);
-            this.datos = this.searchJuridica.busquedaJuridicaItems;
+            this.datos = this.searchJuridica.busquedaPerJuridicaItems;
             // this.table.paginator = true;
           },
           err => {

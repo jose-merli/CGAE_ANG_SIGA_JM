@@ -75,7 +75,6 @@ import { SolicitudesTurnosGuardiasComponent } from "./features/sjcs/oficio/solic
 import { BajasTemporalesComponent } from "./features/sjcs/oficio/bajas-temporales/bajas-temporales.component";
 import { SaltosYCompensacionesComponent } from "./features/sjcs/oficio/saltos-compensaciones/saltos-compensaciones.component";
 
-
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
@@ -144,9 +143,8 @@ const appRoutes: Routes = [
 
   {
     path: "searchNoColegiados",
-    //component: BusquedaPersonasJuridicas,
-    component: SearchNoColegiadosComponent,
-    // component: BusquedaPersonasJuridicas,
+    component: BusquedaPersonasJuridicas,
+    // component: SearchNoColegiadosComponent,
     canActivate: [AuthGuard]
   },
   {
