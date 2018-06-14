@@ -329,12 +329,6 @@ const appRoutes: Routes = [
     component: CargaComprasComponent,
     canActivate: [AuthGuard]
   },
-  {
-    path: "ejg",
-    component: EJGComponent,
-    canActivate: [AuthGuard]
-  },
-
 
   //Expedientes
   {
@@ -502,6 +496,11 @@ const appRoutes: Routes = [
   {
     path: "soj",
     component: SOJComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "ejg",
+    component: EJGComponent,
     canActivate: [AuthGuard]
   },
 
