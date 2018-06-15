@@ -166,6 +166,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         value: 40
       }
     ];
+
+    // Poner check "Sociedades Profesionales a activo por defecto"
+    this.body.sociedadesProfesionales = true;
+
     // if (sessionStorage.getItem("editedUser") != null) {
     //   this.selectedDatos = JSON.parse(sessionStorage.getItem("editedUser"));
     // }
@@ -308,17 +312,9 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
 
   isBuscar() {
     this.arreglarFecha();
-    this.arreglarSociedades();
     this.Search();
   }
 
-  arreglarSociedades() {
-    if (this.body.sociedadesProfesionales == true) {
-      this.body.sociedadProfesional = "1";
-    } else {
-      this.body.sociedadProfesional = "0";
-    }
-  }
   Search() {
     //this.arreglarFecha(); sobra porque se entra siempre en this.isBuscar();
 
@@ -333,8 +329,13 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     if (this.body.tipo == undefined) {
       this.body.tipo = "";
     }
-    if (this.body.sociedadesProfesionales == undefined) {
+    if (
+      this.body.sociedadesProfesionales == undefined ||
+      this.body.sociedadesProfesionales == false
+    ) {
       this.body.sociedadesProfesionales = false;
+    } else {
+      this.body.sociedadesProfesionales = true;
     }
     if (this.body.nif == undefined) {
       this.body.nif = "";
