@@ -20,7 +20,9 @@
     <!--END DATOS GENERALES-->
 
     <!--DATOS COLEGIALES-->
-
+    <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
+        <app-datos-registrales *ngSwitchCase="'registrales'"></app-datos-registrales>
+    </div>
     <!--END DATOS COLEGIALES-->
 
     <!--DIRECCIONES-->
