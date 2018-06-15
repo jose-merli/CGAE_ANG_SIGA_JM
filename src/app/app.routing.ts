@@ -75,7 +75,6 @@ import { SolicitudesTurnosGuardiasComponent } from "./features/sjcs/oficio/solic
 import { BajasTemporalesComponent } from "./features/sjcs/oficio/bajas-temporales/bajas-temporales.component";
 import { SaltosYCompensacionesComponent } from "./features/sjcs/oficio/saltos-compensaciones/saltos-compensaciones.component";
 
-
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
@@ -100,6 +99,7 @@ import { GestionEntidad } from "./features/administracion/gestion-entidad/gestio
 import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component";
 import { DatosGenerales } from "./features/censo/datos-generales/datos-generales.component";
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
+import { AccesoFichaPersonaComponent } from "./features/censo/accesoFichaPersona/accesoFichaPersona.component";
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
 
@@ -144,9 +144,8 @@ const appRoutes: Routes = [
 
   {
     path: "searchNoColegiados",
-    //component: BusquedaPersonasJuridicas,
-    component: SearchNoColegiadosComponent,
-    // component: BusquedaPersonasJuridicas,
+    component: BusquedaPersonasJuridicas,
+    // component: SearchNoColegiadosComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -241,6 +240,11 @@ const appRoutes: Routes = [
   {
     path: "gestionSubtiposCV",
     component: GestionSubtiposCVComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fichaNotario",
+    component: AccesoFichaPersonaComponent,
     canActivate: [AuthGuard]
   },
 

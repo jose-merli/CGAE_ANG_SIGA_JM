@@ -109,6 +109,7 @@ export class DatosGenerales implements OnInit {
   showDatosFacturacion: boolean = false;
   rowsPerPage: any = [];
   showAll: boolean = false;
+  showGuardar: boolean = false;
 
   selectedItem: number = 10;
   selectedDoc: string = "NIF";
@@ -133,6 +134,7 @@ export class DatosGenerales implements OnInit {
     { label: "Euskara", value: "euskera" },
     { label: "Galego", value: "gallego" }
   ];
+  usuarioBody: any[];
   edadCalculada: String;
   textSelected: String = "{0} grupos seleccionados";
   idPersona: String;
@@ -180,9 +182,13 @@ export class DatosGenerales implements OnInit {
   }
 
   ngOnInit() {
-    this.idPersona = sessionStorage.getItem("idPersona");
+    this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+
+    this.idPersona = this.usuarioBody[0].idPersona;
+
+    // Combo de etiquetas
     this.textFilter = "Elegir";
-    this.sigaServices.get("datosGenerales_etiquetas").subscribe(
+    this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
       n => {
         this.comboEtiquetas = n.combooItems;
       },
@@ -191,15 +197,15 @@ export class DatosGenerales implements OnInit {
       }
     );
 
-    this.sigaServices.get("datosGenerales_identificacion").subscribe(
+    // Combo de identificación
+    this.sigaServices.get("busquedaPerJuridica_tipo").subscribe(
       n => {
         this.comboIdentificacion = n.combooItems;
       },
-      err => {
-        console.log(err);
-      }
+      error => {}
     );
 
+    // Combo de tipo persona
     this.sigaServices.get("datosGenerales_tipo").subscribe(
       n => {
         this.comboTipo = n.combooItems;
@@ -209,14 +215,14 @@ export class DatosGenerales implements OnInit {
       }
     );
 
-    this.sigaServices.get("personaJuridica_cargarFotografia").subscribe(
-      n => {
-        this.comboTipo = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    // this.sigaServices.get("personaJuridica_cargarFotografia").subscribe(
+    //   n => {
+    //     this.comboTipo = n.combooItems;
+    //   },
+    //   err => {
+    //     console.log(err);
+    //   }
+    // );
 
     if (sessionStorage.getItem("idPersona") != null) {
       this.sigaServices
@@ -343,7 +349,7 @@ export class DatosGenerales implements OnInit {
   }
 
   guardar() {
-    this.body.idPersona = "2005005356";
+    this.body.idPersona = this.idPersona; //"2005005356";
     // guardar imagen en bd y refresca header.component
     let lenguajeeImagen: boolean = false;
     if (this.file != undefined) {
@@ -351,7 +357,7 @@ export class DatosGenerales implements OnInit {
         .postSendFileAndParameters(
           "personaJuridica_uploadFotografia",
           this.file,
-          "2005005356"
+          this.body.idPersona
         )
         .subscribe(
           data => {
@@ -518,5 +524,21 @@ export class DatosGenerales implements OnInit {
   // }
   backTo() {
     this.location.back();
+  }
+
+  onChangeForm() {
+    if (
+      this.body.identificacion != "" &&
+      this.body.identificacion != undefined &&
+      (this.body.nif != "" && this.body.nif != undefined) &&
+      (this.body.abreviatura != "" && this.body.abreviatura != undefined) &&
+      (this.body.denominacion != "" && this.body.denominacion != undefined) &&
+      this.body.fechaAlta != undefined &&
+      (this.body.nif != "" && this.body.nif.length >= 9)
+    ) {
+      this.showGuardar = false;
+    } else {
+      this.showGuardar = true;
+    }
   }
 }

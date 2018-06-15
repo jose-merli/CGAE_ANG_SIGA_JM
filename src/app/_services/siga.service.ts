@@ -86,8 +86,7 @@ export class SigaServices {
     busquedaPerJuridica_history: "busquedaPerJuridica/searchHistoric",
     datosGenerales_update: "DatosGenerales/update",
     datosGenerales_insert: "DatosGenerales/insert",
-    datosGenerales_tipo: "DatosGenerales/tipo",
-    datosGenerales_etiquetas: "DatosGenerales/etiquetas",
+
     datosGenerales_identificacion: "DatosGenerales/identificacion",
 
     busquedaPer_colegio: "busquedaPer/colegio",
@@ -97,8 +96,11 @@ export class SigaServices {
     personaJuridica_uploadFotografia: "personaJuridica/uploadFotografia",
     personaJuridica_cargarFotografia: "personaJuridica/cargarFotografia",
     busquedaPerJuridica_datosGeneralesSearch:
-    "busquedaPerJuridica/datosGeneralesSearch",
-    busquedaPerJuridica_create: "busquedaPerJuridica/create"
+      "busquedaPerJuridica/datosGeneralesSearch",
+    busquedaPerJuridica_create: "busquedaPerJuridica/create",
+    accesoFichaPersona_search: "fichaPersona/search",
+    accesoFichaPersona_desasociarPersona: "fichaPersona/desasociarPersona",
+    accesoFichaPersona_guardar: "fichaPersona/guardar"
   };
 
   private menuToggled = new Subject<any>();
@@ -139,10 +141,10 @@ export class SigaServices {
   getPerfil(service: string, institucion: string): Observable<any> {
     return this.httpbackend
       .get(
-      environment.newSigaUrl +
-      this.endpoints[service] +
-      "?institucion=" +
-      institucion
+        environment.newSigaUrl +
+          this.endpoints[service] +
+          "?institucion=" +
+          institucion
       )
       .map(response => {
         return response;
@@ -226,10 +228,7 @@ export class SigaServices {
       });
   }
 
-
   notifyMenuToggled() {
     this.menuToggled.next();
   }
-
-
 }

@@ -6,320 +6,203 @@ import {
   ChangeDetectorRef,
   Input
 } from "@angular/core";
-import { OldSigaServices } from "../../../_services/oldSiga.service";
 
-import {
-  /*** MODULOS ***/
-  NgModule
-} from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { CalendarModule } from "primeng/calendar";
-import { InputTextModule } from "primeng/inputtext";
-import { InputTextareaModule } from "primeng/inputtextarea";
-import { DropdownModule } from "primeng/dropdown";
-import { CheckboxModule } from "primeng/checkbox";
-import { ButtonModule } from "primeng/button";
-import { DataTableModule } from "primeng/datatable";
-// import { MenubarModule } from 'primeng/menubar';
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-// import { DialogModule } from 'primeng/dialog';
-import { AutoCompleteModule } from "primeng/autocomplete";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { TooltipModule } from "primeng/tooltip";
-import { ChipsModule } from "primeng/chips";
-import { RadioButtonModule } from "primeng/radiobutton";
-import { FileUploadModule } from "primeng/fileupload";
-
-import { Http, Response } from "@angular/http";
-import { MenuItem } from "primeng/api";
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl
-} from "@angular/forms";
-import { SelectItem } from "primeng/api";
-import { esCalendar } from "../../../utils/calendar";
 import { Router } from "@angular/router";
 import { Message } from "primeng/components/common/api";
 import { Location } from "@angular/common";
 
+import { SelectItem } from "primeng/api";
+
 import { SigaServices } from "./../../../_services/siga.service";
-import { SigaWrapper } from "../../../wrapper/wrapper.class";
 
-/*** COMPONENTES ***/
-import { FichaColegialComponent } from "./../../../new-features/censo/ficha-colegial/ficha-colegial.component";
-import { DatosGeneralesComponent } from "./../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
-import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-colegial/datos-colegiales/datos-colegiales.component";
+import { DatosNotarioItem } from "./../../../../app/models/DatosNotarioItem";
+import { DatosNotarioObject } from "./../../../../app/models/DatosNotarioObject";
 
-@NgModule({
-  imports: [
-    CommonModule,
-    CalendarModule,
-    InputTextModule,
-    InputTextareaModule,
-    DropdownModule,
-    CheckboxModule,
-    ButtonModule,
-    DataTableModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AutoCompleteModule,
-    ConfirmDialogModule,
-    TooltipModule,
-    ChipsModule,
-    RadioButtonModule,
-    FileUploadModule
-  ],
-  declarations: [
-    FichaColegialComponent,
-    DatosGeneralesComponent,
-    DatosColegialesComponent
-  ],
-  exports: [FichaColegialComponent],
-  providers: []
-})
 @Component({
   selector: "app-accesoFichaPersona",
   templateUrl: "./accesoFichaPersona.component.html",
   styleUrls: ["./accesoFichaPersona.component.scss"]
 })
 export class AccesoFichaPersonaComponent implements OnInit {
-  uploadedFiles: any[] = [];
-  formBusqueda: FormGroup;
-  cols: any = [];
-  datosDirecciones: any[];
-  select: any[];
-  es: any = esCalendar;
+  comboTipoIdentificacion: SelectItem[];
+  comboSituacion: SelectItem[];
+  selectedcomboTipoIdentificacion: string;
+
   msgs: Message[];
 
-  fichasActivas: Array<any> = [];
-  todo: boolean = false;
-
-  selectedDatos: any = [];
-
-  showDatosGenerales: boolean = true;
-  showDatosColegiales: boolean = false;
-  showDatosFacturacion: boolean = false;
-  rowsPerPage: any = [];
-  showAll: boolean = false;
-
-  selectedItem: number = 10;
-  selectedDoc: string = "NIF";
-  newDireccion: boolean = false;
-
+  openFicha: boolean = false;
   editar: boolean = false;
+  archivoDisponible: boolean = false;
+  progressSpinner: boolean = false;
 
-  @ViewChild(DatosGeneralesComponent)
-  datosGeneralesComponent: DatosGeneralesComponent;
+  body: DatosNotarioItem = new DatosNotarioItem();
+  bodySearch: DatosNotarioObject = new DatosNotarioObject();
 
-  @ViewChild("table") table;
+  idPersona: String;
+  tipoPersona: String;
 
-  fichasPosibles = [
-    {
-      key: "generales",
-      activa: false
-    },
-    {
-      key: "direcciones",
-      activa: false
-    },
-    {
-      key: "colegiales",
-      activa: false
-    },
-    {
-      key: "bancarios",
-      activa: false
-    },
-    {
-      key: "cv",
-      activa: false
-    }
-  ];
+  usuarioBody: any[];
+
+  file: File = undefined;
 
   constructor(
-    private formBuilder: FormBuilder,
     private router: Router,
-    private changeDetectorRef: ChangeDetectorRef,
     private location: Location,
     private sigaServices: SigaServices
-  ) {
-    this.formBusqueda = this.formBuilder.group({
-      cif: null
-    });
-  }
+  ) {}
 
   ngOnInit() {
-    if (sessionStorage.getItem("idPersona") != null) {
-      this.sigaServices
-        .postPaginado(
-          "datos_generales_search",
-          "?numPagina=1",
-          sessionStorage.getItem("idPersona")
-        )
-        .subscribe(
-          data => {
-            console.log(data);
-            // this.search = JSON.parse(data["body"]);
-            // this.datos = this.search.contadorItems;
-            // console.log(this.datos);
-            this.table.reset();
-          },
-          err => {
-            console.log(err);
-          }
-        );
-      sessionStorage.removeItem("idPersona");
-    }
+    this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
 
-    this.cols = [
-      { field: "tipoDireccion", header: "Tipo dirección" },
-      { field: "direccion", header: "Dirección" },
-      { field: "cp", header: "Código postal" },
-      { field: "poblacion", header: "Población" },
-      { field: "telefono", header: "Teléfono" },
-      { field: "fax", header: "Fax" },
-      { field: "movil", header: "Movil" },
-      { field: "email", header: "Email" },
-      { field: "preferente", header: "Preferente" }
+    this.idPersona = this.usuarioBody[0].idPersona;
+    this.tipoPersona = "Notario"; //this.usuarioBody[0].tipo;
+
+    this.search();
+
+    this.comboTipoIdentificacion = [
+      { label: "NIF", value: "NIF" },
+      { label: "NIE", value: "NIE" }
     ];
 
-    this.select = [
-      { label: "-seleccionar-", value: null },
-      { label: "NIF", value: "nif" },
-      { label: "Pasaporte", value: "pasaporte" },
-      { label: "NIE", value: "nie" }
+    this.comboSituacion = [
+      { label: "Ejerciente Residente", value: "Ejerciente Residente" },
+      { label: "No colegiado", value: "No colegiado" },
+      { label: "Sociedad", value: "Sociedad" }
     ];
+  }
 
-    this.datosDirecciones = [
-      {
-        id: 0,
-        tipoDireccion:
-          "CensoWeb, Despacho, Facturación, Guardia, Guía Judicial, Pública, Revista, Traspaso a organos judiciales",
-        direccion: "C/ CARDENAL CISNEROS 42-1º",
-        cp: "03660",
-        poblacion: "Novelda",
-        telefono: "99999",
-        fax: "2434344",
-        movil: "88888",
-        email: "email@redabogacia.org",
-        preferente: "correo,Mail,Fax,SMS"
-      }
-    ];
+  search() {
+    this.progressSpinner = true;
+    this.editar = false;
+    this.body.idPersona = this.idPersona;
+    this.body.tipoPersona = this.tipoPersona;
+    this.body.idInstitucion = "";
 
-    this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
+    this.sigaServices
+      .postPaginado("accesoFichaPersona_search", "?numPagina=1", this.body)
+      .subscribe(
+        data => {
+          console.log("hloo", data);
+          this.progressSpinner = false;
+          this.bodySearch = JSON.parse(data["body"]);
+          this.body = this.bodySearch.FichaPersonaItem[0];
+        },
+        error => {
+          this.bodySearch = JSON.parse(error["error"]);
+          this.showFail(JSON.stringify(this.bodySearch.error.description));
+          console.log(error);
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  desasociarPersona() {
+    this.progressSpinner = true;
+
+    this.body.idPersona = this.idPersona;
+    this.body.idPersonaDesasociar = this.idPersona;
+    this.body.tipoPersona = this.tipoPersona;
+    this.body.idInstitucion = "";
+
+    this.sigaServices
+      .post("accesoFichaPersona_desasociarPersona", this.body)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.body.status = data.status;
+        },
+        error => {
+          this.bodySearch = JSON.parse(error["error"]);
+          this.showFail(JSON.stringify(this.bodySearch.error.description));
+          console.log(error);
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  guardar() {
+    this.progressSpinner = true;
+    this.body.idPersona = this.idPersona;
+    this.body.tipoPersona = this.tipoPersona;
+    this.body.idInstitucion = "";
+
+    this.sigaServices.post("accesoFichaPersona_guardar", this.body).subscribe(
+      data => {
+        this.progressSpinner = false;
+        console.log(data);
+        this.body.status = data.status;
       },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: "Todo",
-        value: this.datosDirecciones.length
+      error => {
+        this.bodySearch = JSON.parse(error["error"]);
+        this.showFail(JSON.stringify(this.bodySearch.error.description));
+        console.log(error);
+        this.progressSpinner = false;
       }
-    ];
+    );
   }
 
-  onHideDatosGenerales() {
-    this.showDatosGenerales = !this.showDatosGenerales;
-  }
-  onHideDatosColegiales() {
-    this.showDatosColegiales = !this.showDatosColegiales;
-  }
-  onHideDatosFacturacion() {
-    this.showDatosFacturacion = !this.showDatosFacturacion;
+  abrirFicha() {
+    this.openFicha = !this.openFicha;
   }
 
-  onChangeRowsPerPages(event) {
-    console.log(event);
-    this.selectedItem = event.value;
-    this.changeDetectorRef.detectChanges();
-    this.table.reset();
+  backTo() {
+    this.location.back();
   }
 
-  // confirmarBorrar(index) {
-  //   this.confirmationService.confirm({
-  //     message: '¿Está seguro de eliminar los datos?',
-  //     icon: 'far fa-trash-alt',
-  //     accept: () => {
-  //       this.msgs = [{ severity: 'info', summary: 'Confirmed', detail: 'Record deleted' }];
-  //       this.socios.splice(index, 1);
-  //       this.socios = [...this.socios];
-  //     },
-  //     reject: () => {
-  //       this.msgs = [{ severity: 'info', summary: 'Rejected', detail: 'You have rejected' }];
-  //     }
-  //   });
-  // }
-
-  abrirFicha(key) {
-    let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = true;
-  }
-
-  cerrarFicha(key) {
-    let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = false;
-  }
-
-  esFichaActiva(key) {
-    let fichaPosible = this.getFichaPosibleByKey(key);
-    return fichaPosible.activa;
-  }
-
-  onAbrirTodoClick() {
-    this.showAll = !this.showAll;
-    this.fichasPosibles.forEach((ficha: any) => {
-      ficha.activa = this.showAll;
-    });
-  }
-
-  getFichaPosibleByKey(key): any {
-    let fichaPosible = this.fichasPosibles.filter(elto => {
-      return elto.key === key;
-    });
-    if (fichaPosible && fichaPosible.length) {
-      return fichaPosible[0];
-    }
-    return {};
-  }
-
-  addDireccion() {
-    this.datosDirecciones = [
-      ...this.datosDirecciones,
-      {
-        tipoDireccion: "",
-        direccion: "",
-        new: true,
-        cp: "",
-        poblacion: "",
-        telefono: "",
-        fax: "",
-        movil: "",
-        email: "",
-        preferente: ""
-      }
-    ];
-    this.newDireccion = true;
+  isSearch() {
+    this.router.navigate(["/busquedaGeneral"]);
   }
 
   isEditar() {
     this.editar = true;
   }
 
-  // onUpload(event) {
-  //   for (let file of event.files) {
-  //     this.uploadedFiles.push(file);
-  //   }
+  redireccionar() {}
 
-  //   this.msgs = [];
-  //   this.msgs.push({ severity: 'info', summary: 'File Uploaded', detail: '' });
-  // }
-  backTo() {
-    this.location.back();
+  uploadImage(event: any) {
+    // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
+    let fileList: FileList = event.target.files;
+
+    let nombreCompletoArchivo = fileList[0].name;
+    let extensionArchivo = nombreCompletoArchivo.substring(
+      nombreCompletoArchivo.lastIndexOf("."),
+      nombreCompletoArchivo.length
+    );
+
+    if (
+      extensionArchivo == null ||
+      extensionArchivo.trim() == "" ||
+      !/\.(gif|jpg|jpeg|tiff|png)$/i.test(extensionArchivo.trim().toUpperCase())
+    ) {
+      // Mensaje de error de formato de imagen y deshabilitar boton guardar
+      this.file = undefined;
+      this.archivoDisponible = false;
+      this.showFailUploadedImage();
+    } else {
+      // se almacena el archivo para habilitar boton guardar
+      this.file = fileList[0];
+      this.archivoDisponible = true;
+    }
+  }
+
+  showFailUploadedImage() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Error",
+      detail: "Formato incorrecto de imagen seleccionada"
+    });
+  }
+
+  seleccionarFecha(event) {}
+
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
   }
 }
