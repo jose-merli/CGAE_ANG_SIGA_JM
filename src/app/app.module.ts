@@ -185,6 +185,14 @@ import { CartaPagosColegiadosComponent } from "./features/sjcs/informes/carta-pa
 import { CartaFacturaColegiadoComponent } from "./features/sjcs/informes/carta-factura-colegiado/carta-factura-colegiado.component";
 import { CertificadosPagosComponent } from "./features/sjcs/informes/certificados-pagos/certificados-pagos.component";
 import { CertificadosIrpfComponent } from "./features/sjcs/informes/certificados-irpf/certificados-irpf.component";
+import { ComunicaPreparacionComponent } from "./features/sjcs/comunicaciones/comunica-preparacion/comunica-preparacion.component";
+import { ComunicaRemesaEnvioComponent } from "./features/sjcs/comunicaciones/comunica-remesa-envio/comunica-remesa-envio.component";
+import { ComunicaRemesaResultadoComponent } from "./features/sjcs/comunicaciones/comunica-remesa-resultado/comunica-remesa-resultado.component";
+import { ComunicaEnvioActualizacionComponent } from "./features/sjcs/comunicaciones/comunica-envio-actualizacion/comunica-envio-actualizacion.component";
+import { ComunicaInfoEconomicaComponent } from "./features/sjcs/comunicaciones/comunica-info-economica/comunica-info-economica.component";
+import { ComunicaCargaComponent } from "./features/sjcs/comunicaciones/comunica-carga/comunica-carga.component";
+import { ComunicaResolucionesComponent } from "./features/sjcs/comunicaciones/comunica-resoluciones/comunica-resoluciones.component";
+import { ComunicaDesignacionesComponent } from "./features/sjcs/comunicaciones/comunica-designaciones/comunica-designaciones.component";
 
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
@@ -318,6 +326,14 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     CartaFacturaColegiadoComponent,
     CertificadosPagosComponent,
     CertificadosIrpfComponent,
+    ComunicaPreparacionComponent,
+    ComunicaRemesaEnvioComponent,
+    ComunicaRemesaResultadoComponent,
+    ComunicaEnvioActualizacionComponent,
+    ComunicaInfoEconomicaComponent,
+    ComunicaCargaComponent,
+    ComunicaResolucionesComponent,
+    ComunicaDesignacionesComponent,
 
     // Administracion
     CatalogosMaestros,

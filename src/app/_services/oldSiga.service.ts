@@ -109,6 +109,14 @@ export class OldSigaServices {
         cartaFacturaColegiado: "Dispatcher.do?proceso=96I",
         certificadosPagos: "Dispatcher.do?proceso=96D",
         certificadosIrpf: "Dispatcher.do?proceso=96F",
+        comunicaPreparacion: "Dispatcher.do?proceso=12B",
+        comunicaRemesaEnvio: "Dispatcher.do?proceso=12C",
+        comunicaRemesaResultado: "Dispatcher.do?proceso=12Z",
+        comunicaEnvioActualizacion: "Dispatcher.do?proceso=12W",
+        comunicaInfoEconomica: "Dispatcher.do?proceso=12Y",
+        comunicaCarga: "Dispatcher.do?proceso=12X",
+        comunicaResoluciones: "Dispatcher.do?proceso=12F",
+        comunicaDesignaciones: "Dispatcher.do?proceso=12G",
 
         loginDevelop: "developmentLogin.do",
         login: "sigainit.do"

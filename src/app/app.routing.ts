@@ -106,6 +106,14 @@ import { CartaPagosColegiadosComponent } from "./features/sjcs/informes/carta-pa
 import { CartaFacturaColegiadoComponent } from "./features/sjcs/informes/carta-factura-colegiado/carta-factura-colegiado.component";
 import { CertificadosPagosComponent } from "./features/sjcs/informes/certificados-pagos/certificados-pagos.component";
 import { CertificadosIrpfComponent } from "./features/sjcs/informes/certificados-irpf/certificados-irpf.component";
+import { ComunicaPreparacionComponent } from "./features/sjcs/comunicaciones/comunica-preparacion/comunica-preparacion.component";
+import { ComunicaRemesaEnvioComponent } from "./features/sjcs/comunicaciones/comunica-remesa-envio/comunica-remesa-envio.component";
+import { ComunicaRemesaResultadoComponent } from "./features/sjcs/comunicaciones/comunica-remesa-resultado/comunica-remesa-resultado.component";
+import { ComunicaEnvioActualizacionComponent } from "./features/sjcs/comunicaciones/comunica-envio-actualizacion/comunica-envio-actualizacion.component";
+import { ComunicaInfoEconomicaComponent } from "./features/sjcs/comunicaciones/comunica-info-economica/comunica-info-economica.component";
+import { ComunicaCargaComponent } from "./features/sjcs/comunicaciones/comunica-carga/comunica-carga.component";
+import { ComunicaResolucionesComponent } from "./features/sjcs/comunicaciones/comunica-resoluciones/comunica-resoluciones.component";
+import { ComunicaDesignacionesComponent } from "./features/sjcs/comunicaciones/comunica-designaciones/comunica-designaciones.component";
 
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
@@ -627,6 +635,46 @@ const appRoutes: Routes = [
   {
     path: "certificadosIrpf",
     component: CertificadosIrpfComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "comunicaPreparacion",
+    component: ComunicaPreparacionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "comunicaRemesaEnvio",
+    component: ComunicaRemesaEnvioComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "comunicaRemesaResultado",
+    component: ComunicaRemesaResultadoComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "comunicaEnvioActualizacion",
+    component: ComunicaEnvioActualizacionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "comunicaInfoEconomica",
+    component: ComunicaInfoEconomicaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "comunicaCarga",
+    component: ComunicaCargaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "comunicaResoluciones",
+    component: ComunicaResolucionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "comunicaDesignaciones",
+    component: ComunicaDesignacionesComponent,
     canActivate: [AuthGuard]
   },
 
