@@ -96,6 +96,16 @@ import { BusquedaRetencionesAplicadasComponent } from "./features/sjcs/facturaci
 import { GenerarImpreso190Component } from "./features/sjcs/facturacionSJCS/generar-impreso190/generar-impreso190.component";
 import { ResumenPagosComponent } from "./features/sjcs/facturacionSJCS/resumen-pagos/resumen-pagos.component";
 import { EnvioReintegrosXuntaComponent } from "./features/sjcs/facturacionSJCS/envio-reintegros-xunta/envio-reintegros-xunta.component";
+import { JustificacionLetradoComponent } from "./features/sjcs/informes/justificacion-letrado/justificacion-letrado.component";
+import { InformeFacturacionComponent } from "./features/sjcs/informes/informe-facturacion/informe-facturacion.component";
+import { InformeFacturacionMultipleComponent } from "./features/sjcs/informes/informe-facturacion-multiple/informe-facturacion-multiple.component";
+import { InformeFacturacionPersonalizadoComponent } from "./features/sjcs/informes/informe-facturacion-personalizado/informe-facturacion-personalizado.component";
+import { FichaFacturacionComponent } from "./features/sjcs/informes/ficha-facturacion/ficha-facturacion.component";
+import { FichaPagoComponent } from "./features/sjcs/informes/ficha-pago/ficha-pago.component";
+import { CartaPagosColegiadosComponent } from "./features/sjcs/informes/carta-pagos-colegiados/carta-pagos-colegiados.component";
+import { CartaFacturaColegiadoComponent } from "./features/sjcs/informes/carta-factura-colegiado/carta-factura-colegiado.component";
+import { CertificadosPagosComponent } from "./features/sjcs/informes/certificados-pagos/certificados-pagos.component";
+import { CertificadosIrpfComponent } from "./features/sjcs/informes/certificados-irpf/certificados-irpf.component";
 
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
@@ -563,9 +573,60 @@ const appRoutes: Routes = [
     path: "resumenPagos",
     component: ResumenPagosComponent,
     canActivate: [AuthGuard]
-  }, {
+  },
+  {
     path: "envioReintegrosXunta",
     component: EnvioReintegrosXuntaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "justificacionLetrado",
+    component: JustificacionLetradoComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "informeFacturacion",
+    component: InformeFacturacionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "informeFacturacionMultiple",
+    component: InformeFacturacionMultipleComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "informeFacturacionPersonalizado",
+    component: InformeFacturacionPersonalizadoComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fichaFacturacion",
+    component: FichaFacturacionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fichaPago",
+    component: FichaPagoComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "cartaPagosColegiados",
+    component: CartaPagosColegiadosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "cartaFacturaColegiado",
+    component: CartaFacturaColegiadoComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "certificadosPagos",
+    component: CertificadosPagosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "certificadosIrpf",
+    component: CertificadosIrpfComponent,
     canActivate: [AuthGuard]
   },
 

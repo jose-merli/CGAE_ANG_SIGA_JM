@@ -99,6 +99,16 @@ export class OldSigaServices {
         generarImpreso190: "Dispatcher.do?proceso=613",
         resumenPagos: "Dispatcher.do?proceso=953",
         envioReintegrosXunta: "Dispatcher.do?proceso=12U",
+        justificacionLetrado: "Dispatcher.do?proceso=995",
+        informeFacturacion: "Dispatcher.do?proceso=96E",
+        informeFacturacionMultiple: "Dispatcher.do?proceso=96G",
+        informeFacturacionPersonalizado: "Dispatcher.do?proceso=96H",
+        fichaFacturacion: "Dispatcher.do?proceso=96A",
+        fichaPago: "Dispatcher.do?proceso=96B",
+        cartaPagosColegiados: "Dispatcher.do?proceso=96C",
+        cartaFacturaColegiado: "Dispatcher.do?proceso=96I",
+        certificadosPagos: "Dispatcher.do?proceso=96D",
+        certificadosIrpf: "Dispatcher.do?proceso=96F",
 
         loginDevelop: "developmentLogin.do",
         login: "sigainit.do"
