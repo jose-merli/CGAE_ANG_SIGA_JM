@@ -89,6 +89,16 @@ export class OldSigaServices {
         soj: "Dispatcher.do?proceso=941",
         ejg: "Dispatcher.do?proceso=946",
         gestionActas: "Dispatcher.do?proceso=947",
+        mantenimientoFacturacion: "Dispatcher.do?proceso=600",
+        previsiones: "Dispatcher.do?proceso=616",
+        mantenimientoPagos: "Dispatcher.do?proceso=621",
+        movimientosVarios: "Dispatcher.do?proceso=608",
+        tramosLEC: "Dispatcher.do?proceso=623",
+        retencionesJudiciales: "Dispatcher.do?proceso=611",
+        busquedaRetencionesAplicadas: "Dispatcher.do?proceso=617",
+        generarImpreso190: "Dispatcher.do?proceso=613",
+        resumenPagos: "Dispatcher.do?proceso=953",
+        envioReintegrosXunta: "Dispatcher.do?proceso=12U",
 
         loginDevelop: "developmentLogin.do",
         login: "sigainit.do"

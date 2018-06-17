@@ -132,6 +132,7 @@ import { TiposExpedientesComponent } from "./features/expedientes/tipos-expedien
 import { GestionarExpedientesComponent } from "./features/expedientes/gestionar-expedientes/gestionar-expedientes.component";
 import { AlertasComponent } from "./features/expedientes/alertas/alertas.component";
 import { NuevoExpedienteComponent } from "./features/expedientes/nuevo-expediente/nuevo-expediente.component";
+
 //Modulo de Justicia Gratuita
 import { ZonasYSubzonasComponent } from "./features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component";
 import { AreasYMateriasComponent } from "./features/sjcs/maestros/areas-materias/areas-materias.component";
@@ -164,6 +165,16 @@ import { VolanteExpresComponent } from "./features/sjcs/guardia/volante-expres/v
 import { SOJComponent } from "./features/sjcs/soj/soj.component";
 import { EJGComponent } from "./features/sjcs/ejg/ejg.component";
 import { GestionActasComponent } from "./features/sjcs/gestion-actas/gestion-actas.component";
+import { MantenimientoFacturacionComponent } from "./features/sjcs/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component";
+import { PrevisionesComponent } from "./features/sjcs/facturacionSJCS/previsiones/previsiones.component";
+import { MantenimientoPagosComponent } from "./features/sjcs/facturacionSJCS/mantenimiento-pagos/mantenimiento-pagos.component";
+import { MovimientosVariosComponent } from "./features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.component";
+import { TramosLECComponent } from "./features/sjcs/facturacionSJCS/tramos-lec/tramos-lec.component";
+import { RetencionesJudicialesComponent } from "./features/sjcs/facturacionSJCS/retenciones-judiciales/retenciones-judiciales.component";
+import { BusquedaRetencionesAplicadasComponent } from "./features/sjcs/facturacionSJCS/busqueda-retenciones-aplicadas/busqueda-retenciones-aplicadas.component";
+import { GenerarImpreso190Component } from "./features/sjcs/facturacionSJCS/generar-impreso190/generar-impreso190.component";
+import { ResumenPagosComponent } from "./features/sjcs/facturacionSJCS/resumen-pagos/resumen-pagos.component";
+import { EnvioReintegrosXuntaComponent } from "./features/sjcs/facturacionSJCS/envio-reintegros-xunta/envio-reintegros-xunta.component";
 
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
@@ -277,6 +288,16 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     SOJComponent,
     EJGComponent,
     GestionActasComponent,
+    MantenimientoFacturacionComponent,
+    PrevisionesComponent,
+    MantenimientoPagosComponent,
+    MovimientosVariosComponent,
+    TramosLECComponent,
+    RetencionesJudicialesComponent,
+    BusquedaRetencionesAplicadasComponent,
+    GenerarImpreso190Component,
+    ResumenPagosComponent,
+    EnvioReintegrosXuntaComponent,
 
     // Administracion
     CatalogosMaestros,
