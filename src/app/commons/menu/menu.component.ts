@@ -63,10 +63,15 @@ export class MenuComponent implements OnInit {
   }
 
   navigateTo(ruta) {
-    this.router.navigate([ruta]);
-    console.log(ruta)
 
+    this.router.navigate([ruta]);
+    if (ruta !== " ") {
+      this.closeMenu = true;
+      console.log(ruta)
+    }
   }
+
+
 
   viewChild(e, i) {
     if (e) {
@@ -77,11 +82,14 @@ export class MenuComponent implements OnInit {
 
   }
 
-  viewChildOfChild(e, i) {
-    if (e) {
-      this.showChildOfChild = true;
-      this.selectedItemOfChild = e;
-      this.selectedLabelOfChild = i;
+  viewChildOfChild(items, label) {
+    if (items) {
+      this.showChildOfChild = !this.showChildOfChild;
+      this.selectedItemOfChild = items;
+      console.log(this.selectedItemOfChild);
+      this.selectedLabelOfChild = label;
+
+
     }
 
   }

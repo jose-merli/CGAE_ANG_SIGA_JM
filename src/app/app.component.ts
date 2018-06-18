@@ -66,7 +66,6 @@ export class AppComponent implements OnInit {
       .mergeMap(route => route.data)
       .subscribe((e: any) => {
         this.isScrollReseteable = e.scrollReset;
-        console.log(this.isScrollReseteable)
       });
   }  // outputs my `data`
 
