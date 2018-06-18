@@ -21,8 +21,8 @@
             <p-dropdown class="select-form" [(ngModel)]="body.catalogo" [options]="catalogoArray" [(disabled)]="blockSeleccionar" (onChange)="onChangeCatalogo($event)"
               [filter]="true" filterBy="label">
               <ng-template let-item pTemplate="item">
-                <div *ngIf="setBold(item)==true" [ngStyle]="{'font-weight':'bold'}">{{item.label}}</div>
-                <div *ngIf="setBold(item)==false" [ngStyle]="{'font-weight': 'normal'}">{{item.label}}</div>
+                <div *ngIf="setBold(item)==false" [ngStyle]="{'font-weight':'bold'}">{{item.label}}</div>
+                <div *ngIf="setBold(item)==true" [ngStyle]="{'font-weight': 'normal'}">{{item.label}}</div>
               </ng-template>
               </p-dropdown>
           </div>
@@ -205,12 +205,17 @@
         (onRowSelect)="irEditarCatalogo(selectedDatos)" dataKey="descripcion" [(selection)]="selectedDatos" [responsive]="true"
         #table class="tabla-listado" [value]="datosHist" selectionMode="multiple" [sortOrder]="1" [paginator]="activarPaginacion()"
         paginatorPosition="both" [rows]="selectedItem">
-
-        <p-column [sortable]="true" [style]="{'width': '20%'}" field="codigoExt" [header]="'general.codeext' | translate" [filter]="true"
-          filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-
+        <p-column *ngFor="let col of cols2" [sortable]="true" [style]="{'width': '20%'}" [field]="col.field" [header]="'general.codeext' | translate"
+          [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+          <ng-template let-datoH="rowData" pTemplate="body">
+            <div *ngIf="setItalic(datoH)">
+              <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
+            </div>
+            <div *ngIf="!setItalic(datoH)">
+              <span>{{datoH[col.field]}}</span>
+            </div>
+          </ng-template>
           </p-column>
-
           <p-column *ngFor="let col of cols" filterPlaceholder="{{'general.boton.search' | translate}}" [sortable]="true" [field]="col.field"
             [header]="col.header | translate" [filter]="true" filterMatchMode="contains">
             <ng-template let-datoH="rowData" pTemplate="body">

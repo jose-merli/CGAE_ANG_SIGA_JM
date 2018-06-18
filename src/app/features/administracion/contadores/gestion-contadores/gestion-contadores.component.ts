@@ -178,6 +178,13 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   pInputText;
   isEditar() {
     this.modificableToBody();
+    this.body.nombre = this.body.nombre.trim();
+    this.body.descripcion = this.body.descripcion.trim();
+    this.body.prefijo = this.body.prefijo.trim();
+    this.body.idcontador = this.body.idcontador.trim();
+    this.body.reconfiguracionprefijo = this.body.reconfiguracionprefijo.trim();
+    this.body.reconfiguracionsufijo = this.body.reconfiguracionsufijo.trim();
+    this.body.reconfiguracioncontador = this.body.reconfiguracioncontador.trim();
     this.sigaServices.post("contadores_update", this.body).subscribe(
       data => {
         this.showSuccess();

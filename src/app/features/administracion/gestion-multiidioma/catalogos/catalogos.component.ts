@@ -73,6 +73,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
   comparacion: boolean;
   editar: boolean = false;
   habilitarBotones: boolean = false;
+  local: String;
 
   constructor(
     private sigaServices: SigaServices,
@@ -196,6 +197,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
   datos(event) {
     console.log(event);
     this.bodySearch.local = event.value;
+    this.local = event.value;
     this.bodySearch.nombreTabla = event.originalEvent.srcElement.innerText;
   }
   isRestablecer() {
@@ -262,15 +264,37 @@ export class Catalogos extends SigaWrapper implements OnInit {
     this.bodyUpdate.descripcion = event.target.value;
     this.bodyUpdate.idLenguaje = dato.idLenguajeTraducir;
     this.bodyUpdate.idRecurso = dato.idRecurso;
+    this.bodyUpdate.local = this.local;
+    this.datosTraduccion.forEach(
+      (value: MultiidiomaCatalogoItem, key: number) => {
+        if (value.idRecurso == dato.idRecurso) {
+          value.editar = true;
+        }
+      }
+    );
     this.elementosAGuardar.push(this.bodyUpdate);
     this.isHabilitadoGuardar();
   }
 
   isGuardar() {
-    for (let i in this.elementosAGuardar) {
-      this.sigaServices
-        .post("catalogos_update", this.elementosAGuardar[i])
-        .subscribe(
+    this.elementosAGuardar = [];
+    this.datosTraduccion.forEach(
+      (value: MultiidiomaCatalogoItem, key: number) => {
+        if (value.editar == true) {
+          this.bodyUpdate = new MultiidiomaCatalogoUpdateDto();
+          this.bodyUpdate.descripcion = value.descripcionTraduccion;
+          this.bodyUpdate.idLenguaje = value.idLenguajeTraducir;
+          this.bodyUpdate.idRecurso = value.idRecurso;
+          this.bodyUpdate.local = this.local;
+          this.bodyUpdate.nombreTabla = value.nombreTabla;
+          this.elementosAGuardar.push(this.bodyUpdate);
+        }
+      }
+    );
+    this.elementosAGuardar.forEach(
+      (value: MultiidiomaCatalogoUpdateDto, key: number) => {
+        console.log(value);
+        this.sigaServices.post("catalogos_update", value).subscribe(
           data => {
             console.log(data);
             this.showSuccessEdit();
@@ -280,13 +304,16 @@ export class Catalogos extends SigaWrapper implements OnInit {
             this.showFail();
           },
           () => {
-            this.elementosAGuardar = [];
-            this.isBuscar();
-            this.table.reset();
+            if (key == this.elementosAGuardar.length - 1) {
+              this.elementosAGuardar = [];
+              this.isBuscar();
+              this.table.reset();
+              this.habilitarBotones = false;
+            }
           }
         );
-    }
-    this.habilitarBotones = false;
+      }
+    );
   }
 
   onChangeRowsPerPages(event) {

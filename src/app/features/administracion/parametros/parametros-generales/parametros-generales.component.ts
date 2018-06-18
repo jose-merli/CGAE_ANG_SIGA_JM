@@ -67,6 +67,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   historico: boolean = false;
   msgs: Message[] = [];
 
+  isHabilitadoSave: boolean = false;
   elementosAGuardar: ParametroUpdateDto[] = [];
 
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
@@ -247,6 +248,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
             this.isBuscar();
             this.table.reset();
             this.eliminar = true;
+            this.isHabilitadoSave = false;
           }
         );
     }
@@ -259,9 +261,10 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.bodyUpdate.idInstitucion = dato.idInstitucion;
     this.bodyUpdate.modulo = dato.modulo;
     this.bodyUpdate.parametro = dato.parametro;
-    this.bodyUpdate.valor = event.target.value;
+    this.bodyUpdate.valor = event.target.value.trim();
     this.bodyUpdate.idRecurso = dato.idRecurso;
     this.elementosAGuardar.push(this.bodyUpdate);
+    this.isHabilitadoSave = true;
   }
 
   isHistorico() {
@@ -290,6 +293,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
           this.filaSelecionadaTabla = null;
           // se eliminan los objetos que se iban a guardar
           this.elementosAGuardar = [];
+          this.isHabilitadoSave = false;
         }
       );
   }
@@ -311,14 +315,6 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
       return this.eliminar;
     } else {
       return true;
-    }
-  }
-
-  isHabilitadoGuardar() {
-    if (this.elementosAGuardar == undefined) return true;
-    else {
-      if (this.elementosAGuardar.length == 0) return true;
-      else return false;
     }
   }
 
@@ -400,6 +396,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.elementosAGuardar = [];
     this.body = this.bodySave;
     this.isBuscar();
+    this.isHabilitadoSave = false;
   }
 
   //búsqueda con enter

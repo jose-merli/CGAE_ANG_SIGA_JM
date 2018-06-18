@@ -32,9 +32,8 @@ import { EtiquetaDto } from "../../../../models/EtiquetaDto";
 import { EtiquetaItem } from "../../../../models/EtiquetaItem";
 import { ControlAccesoDto } from "../../../../../app/models/ControlAccesoDto";
 
-
 export enum KEY_CODE {
-  ENTER = 13,
+  ENTER = 13
 }
 
 @Component({
@@ -252,7 +251,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   Guardar(event, dato) {
     this.bodyUpdate = new EtiquetaUpdateDto();
-    this.bodyUpdate.descripcion = event.target.value;
+    this.bodyUpdate.descripcion = event.target.value.trim();
     this.bodyUpdate.idLenguaje = dato.idLenguajeTraducir;
     this.bodyUpdate.idRecurso = dato.idRecurso;
     this.elementosAGuardar.push(this.bodyUpdate);
@@ -317,7 +316,8 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   //búsqueda con enter
-  @HostListener('document:keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER && !this.buscar) {
       this.isBuscar();
     }

@@ -76,6 +76,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
 
   formBusqueda: FormGroup;
   cols: any = [];
+  cols2: any = [];
   datos: any[];
   datosHist: any[];
   datosNew: any[];
@@ -88,6 +89,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
 
   //elemento seleccionado en el dropdown
   catalogoSeleccionado: String;
+  local: String;
 
   //elementos del form
   formDescripcion: String;
@@ -138,6 +140,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         console.log(err);
       }
     );
+    this.cols2 = [{ field: "codigoExt", header: "general.codigoext" }];
     this.cols = [{ field: "descripcion", header: "general.description" }];
     this.rowsPerPage = [
       {
@@ -193,9 +196,17 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         if (value.editar) {
           this.upd = new CatalogoUpdateRequestDto();
           this.upd.tabla = value.catalogo;
-          this.upd.descripcion = value.descripcion;
-          this.upd.codigoExt = value.codigoExt;
+          this.upd.descripcion = value.descripcion.trim();
+          if (value.codigoExt == null) {
+            this.upd.codigoExt = value.codigoExt;
+          } else {
+            this.upd.codigoExt = value.codigoExt.trim();
+          }
+
           this.upd.idRegistro = value.idRegistro;
+
+          this.upd.local = this.local;
+
           // if (
           //   this.codigoExtAux == this.upd.codigoExt &&
           //   this.descripcionAux != this.upd.descripcion
@@ -305,6 +316,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.cre.codigoExt = this.newCatalogo.codigoExt;
     this.cre.descripcion = this.newCatalogo.descripcion;
     this.cre.idInstitucion = "";
+    this.cre.local = this.local;
+
     this.sigaServices.post("maestros_create", this.cre).subscribe(
       data => {
         this.showSuccess();
@@ -363,6 +376,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.catalogoArray.forEach((value: ComboItem, key: number) => {
       if (value.value == event.value) {
         this.body.local = value.local;
+        this.local = value.local;
       }
     });
 
@@ -420,8 +434,10 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.buscar = false;
     this.selectMultiple = false;
     this.catalogoSeleccionado = this.body.catalogo;
+    this.local = this.body.local;
     this.body = new CatalogoRequestDto();
     this.body.catalogo = this.catalogoSeleccionado;
+    this.body.local = this.local;
     this.bodyToForm();
     this.his = new CatalogoHistoricoRequestDto();
     this.his.catalogo = this.body.catalogo;
@@ -429,6 +445,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.his.descripcion = "";
     this.his.idInstitucion = "";
     this.his.idRegistro = "";
+    this.his.local = this.body.local;
     this.tablaHistorico = true;
     this.eliminar = true;
     this.sigaServices.post("maestros_historico", this.his).subscribe(
@@ -442,6 +459,11 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         console.log(err);
       },
       () => {
+        if (this.datosHist != null && this.datosHist != undefined) {
+          this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
+            value.editar = false;
+          });
+        }
         this.reset();
       }
     );
@@ -490,6 +512,9 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     if (this.body.idInstitucion == undefined) {
       this.body.idInstitucion = "";
     }
+    if (this.body.local == undefined) {
+      this.body.local = "";
+    }
     this.sigaServices
       .postPaginado("maestros_search", "?numPagina=1", this.body)
       .subscribe(
@@ -502,6 +527,11 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         },
         err => {
           console.log(err);
+        },
+        () => {
+          this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
+            value.editar = false;
+          });
         }
       );
   }
@@ -519,8 +549,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.cre = new CatalogoCreateRequestDto();
     this.cre.tabla = this.body.catalogo;
     this.cre.idRegistro = "";
-    this.cre.codigoExt = this.formCodigo;
-    this.cre.descripcion = this.formDescripcion;
+    this.cre.codigoExt = this.formCodigo.trim();
+    this.cre.descripcion = this.formDescripcion.trim();
     this.cre.idInstitucion = "";
     this.sigaServices.post("maestros_create", this.cre).subscribe(
       data => {
@@ -546,8 +576,10 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     }
     this.editar = false;
     this.catalogoSeleccionado = this.body.catalogo;
+    this.local = this.body.local;
     this.body = new CatalogoRequestDto();
     this.body.catalogo = this.catalogoSeleccionado;
+    this.body.local = this.local;
     this.blockSeleccionar = false;
     this.pressNew = false;
     this.bodyToForm();
@@ -617,6 +649,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       console.log(value);
       this.del.idRegistro.push(value.idRegistro);
       this.del.tabla = value.catalogo;
+      this.del.local = this.local;
     });
     this.sigaServices.post("maestros_delete", this.del).subscribe(
       data => {

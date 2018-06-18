@@ -5,8 +5,9 @@ export class CatalogoMaestroItem {
   descripcion: String;
   idInstitucion: String;
   fechaBaja: Date;
-  editar: boolean;
+  editar: boolean = false;
   error: String;
+  local: String;
   longitudDescripcion: String;
   longitudCodigoExt: String;
   constructor() {}

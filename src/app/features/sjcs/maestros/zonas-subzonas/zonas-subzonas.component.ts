@@ -13,7 +13,7 @@ export class ZonasYSubzonasComponent implements OnInit {
   url;
 
   constructor(public sigaServices: OldSigaServices) {
-    this.url = sigaServices.getOldSigaUrl("zonasYSubzonas");
+    this.url = sigaServices.getOldSigaUrl("zonasYsubzonas");
   }
 
   ngOnInit() {
