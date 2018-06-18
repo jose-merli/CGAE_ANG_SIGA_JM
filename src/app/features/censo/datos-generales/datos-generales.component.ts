@@ -129,7 +129,7 @@ export class DatosGenerales implements OnInit {
   tratamientos: any[];
   comboEtiquetas: any[];
   comboIdentificacion: any[];
-  comboTipo: any[];
+  comboTipo: any[] = [];
   fecha;
   idiomas: any[] = [
     { label: "", value: "" },
@@ -142,7 +142,7 @@ export class DatosGenerales implements OnInit {
   edadCalculada: String;
   textSelected: String = "{0} grupos seleccionados";
   idPersona: String;
-
+  tipoPersonaJuridica: String;
   datos: any[];
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
@@ -190,7 +190,7 @@ export class DatosGenerales implements OnInit {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
 
     this.idPersona = this.usuarioBody[0].idPersona;
-
+    this.tipoPersonaJuridica = this.usuarioBody[0].tipo;
     // Combo de etiquetas
     // this.bodyviejo = JSON.parse(sessionStorage.getItem("usuarioBody"));
     // this.body.idPersona = this.bodyviejo[0].idPersona;
@@ -227,14 +227,16 @@ export class DatosGenerales implements OnInit {
     );
 
     // Combo de tipo persona
-    this.sigaServices.get("datosGenerales_tipo").subscribe(
-      n => {
-        this.comboTipo = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    // this.sigaServices.get("datosGenerales_tipo").subscribe(
+    //   n => {
+    //     this.comboTipo = n.combooItems;
+    //   },
+    //   err => {
+    //     console.log(err);
+    //   }
+    // );
+
+    this.comboTipo.push(this.tipoPersonaJuridica);
 
     // this.sigaServices.get("personaJuridica_cargarFotografia").subscribe(
     //   n => {
