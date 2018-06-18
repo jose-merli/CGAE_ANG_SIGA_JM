@@ -187,6 +187,8 @@ export class DatosGenerales implements OnInit {
   ngOnInit() {
     this.bodyviejo = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.body.idPersona = this.bodyviejo[0].idPersona;
+    this.bodyviejo.utilizarFoto = false;
+    this.body = new DatosGeneralesItem();
     this.sigaServices
       .postPaginado("datosGenerales_search", "?numPagina=1", this.body)
       .subscribe(
