@@ -1,7 +1,7 @@
 import { DatosGeneralesItem } from "./DatosGeneralesItem";
 import { ErrorItem } from "./ErrorItem";
 export class DatosGeneralesObject {
-  error: Error;
+  error: ErrorItem;
   personaJuridicaItems: DatosGeneralesItem[] = [];
   constructor() {}
 }
