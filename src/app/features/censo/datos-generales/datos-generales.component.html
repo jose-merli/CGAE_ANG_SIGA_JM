@@ -59,12 +59,11 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.fichaCliente.literal.identificacion"  | translate}} (*)</label>
-              <p-dropdown class="select-form" [(ngModel)]="body.identificacion" [options]="comboIdentificacion" optionLabel="value" (ngModelChange)="onChangeForm()"></p-dropdown>
+              <p-dropdown class="select-form" [(ngModel)]="body.identificacion" [options]="comboIdentificacion" optionLabel="label" (ngModelChange)="onChangeForm()"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Tipo de persona (*)</label>
-              <p-dropdown placeholder="{{'administracion.usuarios.literal.NIF' | translate}}" class="select-form" [(ngModel)]="body.tipo"
-                [options]="comboTipo" (ngModelChange)="onChangeForm()"></p-dropdown>
+              <p-dropdown class="select-form" [(ngModel)]="body.tipo" [options]="comboTipo" (ngModelChange)="onChangeForm()"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"administracion.usuarios.literal.fechaAlta" | translate}} (*)</label>
