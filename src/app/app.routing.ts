@@ -99,6 +99,7 @@ import { GestionEntidad } from "./features/administracion/gestion-entidad/gestio
 import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component";
 import { DatosGenerales } from "./features/censo/datos-generales/datos-generales.component";
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
+import { AccesoFichaPersonaComponent } from "./features/censo/accesoFichaPersona/accesoFichaPersona.component";
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
 
@@ -238,6 +239,11 @@ const appRoutes: Routes = [
   {
     path: "gestionSubtiposCV",
     component: GestionSubtiposCVComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fichaNotario",
+    component: AccesoFichaPersonaComponent,
     canActivate: [AuthGuard]
   },
 

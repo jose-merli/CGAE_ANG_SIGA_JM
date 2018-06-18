@@ -112,6 +112,7 @@ export class DatosGenerales implements OnInit {
   showDatosFacturacion: boolean = false;
   rowsPerPage: any = [];
   showAll: boolean = false;
+  showGuardar: boolean = false;
 
   selectedItem: number = 10;
   selectedDoc: string = "NIF";
@@ -128,7 +129,7 @@ export class DatosGenerales implements OnInit {
   tratamientos: any[];
   comboEtiquetas: any[];
   comboIdentificacion: any[];
-  comboTipo: any[];
+  comboTipo: any[] = [];
   fecha;
   idiomas: any[] = [
     { label: "", value: "" },
@@ -137,10 +138,11 @@ export class DatosGenerales implements OnInit {
     { label: "Euskara", value: "euskera" },
     { label: "Galego", value: "gallego" }
   ];
+  usuarioBody: any[];
   edadCalculada: String;
   textSelected: String = "{0} grupos seleccionados";
   idPersona: String;
-
+  tipoPersonaJuridica: String;
   datos: any[];
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
@@ -185,10 +187,13 @@ export class DatosGenerales implements OnInit {
   }
 
   ngOnInit() {
-    this.bodyviejo = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    this.body.idPersona = this.bodyviejo[0].idPersona;
-    this.bodyviejo.utilizarFoto = false;
-    this.body = new DatosGeneralesItem();
+    this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+
+    this.idPersona = this.usuarioBody[0].idPersona;
+    this.tipoPersonaJuridica = this.usuarioBody[0].tipo;
+    // Combo de etiquetas
+    // this.bodyviejo = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    // this.body.idPersona = this.bodyviejo[0].idPersona;
     this.sigaServices
       .postPaginado("datosGenerales_search", "?numPagina=1", this.body)
       .subscribe(
@@ -204,7 +209,7 @@ export class DatosGenerales implements OnInit {
       );
 
     this.textFilter = "Elegir";
-    this.sigaServices.get("datosGenerales_etiquetas").subscribe(
+    this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
       n => {
         this.comboEtiquetas = n.combooItems;
       },
@@ -213,23 +218,25 @@ export class DatosGenerales implements OnInit {
       }
     );
 
-    this.sigaServices.get("datosGenerales_identificacion").subscribe(
+    // Combo de identificación
+    this.sigaServices.get("busquedaPerJuridica_tipo").subscribe(
       n => {
         this.comboIdentificacion = n.combooItems;
       },
-      err => {
-        console.log(err);
-      }
+      error => {}
     );
 
-    this.sigaServices.get("datosGenerales_tipo").subscribe(
-      n => {
-        this.comboTipo = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    // Combo de tipo persona
+    // this.sigaServices.get("datosGenerales_tipo").subscribe(
+    //   n => {
+    //     this.comboTipo = n.combooItems;
+    //   },
+    //   err => {
+    //     console.log(err);
+    //   }
+    // );
+
+    this.comboTipo.push(this.tipoPersonaJuridica);
 
     // this.sigaServices.get("personaJuridica_cargarFotografia").subscribe(
     //   n => {
@@ -239,6 +246,78 @@ export class DatosGenerales implements OnInit {
     //     console.log(err);
     //   }
     // );
+
+    if (sessionStorage.getItem("idPersona") != null) {
+      this.sigaServices
+        .postPaginado(
+          "datos_generales_search",
+          "?numPagina=1",
+          sessionStorage.getItem("idPersona")
+        )
+        .subscribe(
+          data => {
+            console.log(data);
+            // this.search = JSON.parse(data["body"]);
+            // this.datos = this.search.contadorItems;
+            // console.log(this.datos);
+            this.table.reset();
+          },
+          err => {
+            console.log(err);
+          }
+        );
+      sessionStorage.removeItem("idPersona");
+    }
+
+    this.cols = [
+      { field: "tipoDireccion", header: "Tipo dirección" },
+      { field: "direccion", header: "Dirección" },
+      { field: "cp", header: "Código postal" },
+      { field: "poblacion", header: "Población" },
+      { field: "telefono", header: "Teléfono" },
+      { field: "fax", header: "Fax" },
+      { field: "movil", header: "Movil" },
+      { field: "email", header: "Email" },
+      { field: "preferente", header: "Preferente" }
+    ];
+
+    this.select = [
+      { label: "", value: null },
+      { label: "NIF", value: "nif" },
+      { label: "Pasaporte", value: "pasaporte" },
+      { label: "NIE", value: "nie" }
+    ];
+
+    this.datosDirecciones = [
+      {
+        id: 0,
+        tipoDireccion:
+          "CensoWeb, Despacho, Facturación, Guardia, Guía Judicial, Pública, Revista, Traspaso a organos judiciales",
+        direccion: "C/ CARDENAL CISNEROS 42-1º",
+        cp: "03660",
+        poblacion: "Novelda",
+        telefono: "99999",
+        fax: "2434344",
+        movil: "88888",
+        email: "email@redabogacia.org",
+        preferente: "correo,Mail,Fax,SMS"
+      }
+    ];
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: "Todo",
+        value: this.datosDirecciones.length
+      }
+    ];
 
     this.generos = [
       { label: "", value: "" },
@@ -313,6 +392,8 @@ export class DatosGenerales implements OnInit {
   }
 
   guardar() {
+    this.body.idPersona = this.idPersona; //"2005005356";
+
     // guardar imagen en bd y refresca header.component
     // datosGenerales_update
 
@@ -333,7 +414,7 @@ export class DatosGenerales implements OnInit {
         .postSendFileAndParameters(
           "personaJuridica_uploadFotografia",
           this.file,
-          "2005005356"
+          this.body.idPersona
         )
         .subscribe(
           data => {
@@ -500,5 +581,21 @@ export class DatosGenerales implements OnInit {
   // }
   backTo() {
     this.location.back();
+  }
+
+  onChangeForm() {
+    if (
+      this.body.identificacion != "" &&
+      this.body.identificacion != undefined &&
+      (this.body.nif != "" && this.body.nif != undefined) &&
+      (this.body.abreviatura != "" && this.body.abreviatura != undefined) &&
+      (this.body.denominacion != "" && this.body.denominacion != undefined) &&
+      this.body.fechaAlta != undefined &&
+      (this.body.nif != "" && this.body.nif.length >= 9)
+    ) {
+      this.showGuardar = false;
+    } else {
+      this.showGuardar = true;
+    }
   }
 }

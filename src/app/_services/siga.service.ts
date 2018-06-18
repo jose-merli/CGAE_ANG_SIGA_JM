@@ -84,22 +84,23 @@ export class SigaServices {
     busquedaPerJuridica_search: "busquedaPerJuridica/search",
     busquedaPerJuridica_delete: "busquedaPerJuridica/delete",
     busquedaPerJuridica_history: "busquedaPerJuridica/searchHistoric",
-
+    datosGenerales_update: "DatosGenerales/update",
+    datosGenerales_insert: "DatosGenerales/insert",
+    datosGenerales_identificacion: "DatosGenerales/identificacion",
     busquedaPer_colegio: "busquedaPer/colegio",
     busquedaPer_searchJuridica: "busquedaPerJuridica/searchJuridica",
     busquedaPer_searchFisica: "busquedaPerJuridica/searchFisica",
-
     personaJuridica_uploadFotografia: "personaJuridica/uploadFotografia",
     personaJuridica_cargarFotografia: "personaJuridica/cargarFotografia",
     busquedaPerJuridica_datosGeneralesSearch:
       "busquedaPerJuridica/datosGeneralesSearch",
     busquedaPerJuridica_create: "busquedaPerJuridica/create",
-
-    datosGenerales_search: "busquedaPerJuridica/datosGeneralesSearch",
-    datosGenerales_update: "busquedaPerJuridica/update",
+    accesoFichaPersona_search: "fichaPersona/search",
+    accesoFichaPersona_desasociarPersona: "fichaPersona/desasociarPersona",
+    accesoFichaPersona_guardar: "fichaPersona/guardar",
+    busquedaPerJuridica_update: "busquedaPerJuridica/update",
     datosGenerales_tipo: "busquedaPerJuridica/tipoSociedad",
     datosGenerales_etiquetas: "busquedaPerJuridica/etiquetas",
-    datosGenerales_identificacion: "DatosGenerales/identificacion",
 
     datosRegistrales_actividadesPersona:
       "perJuridicaDatosRegistrales/actividadProfesionalPer",

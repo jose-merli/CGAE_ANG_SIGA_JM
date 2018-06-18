@@ -78,7 +78,7 @@ export class DatosPersonaJuridicaComponent implements OnInit {
         activa: false
       },
       {
-        key: "registrales",
+        key: "notario",
         activa: false
       },
       {

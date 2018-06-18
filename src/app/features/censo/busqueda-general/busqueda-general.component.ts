@@ -66,6 +66,7 @@ export class BusquedaGeneralComponent {
   select: any[];
   es: any = esCalendar;
   selectedValue: string = "simple";
+  textSelected: String = "{0} perfiles seleccionados";
   persona: String;
   // selectedDatos: any = []
   bodyFisica: BusquedaFisicaItem = new BusquedaFisicaItem();
@@ -174,8 +175,12 @@ export class BusquedaGeneralComponent {
   changeColsAndData() {
     if (this.persona == "f") {
       this.cols = this.colsFisicas;
+      this.colegios_seleccionados = [];
+      this.datos = [];
     } else {
       this.cols = this.colsJuridicas;
+      this.colegios_seleccionados = [];
+      this.datos = [];
     }
   }
   checkStatusInit() {

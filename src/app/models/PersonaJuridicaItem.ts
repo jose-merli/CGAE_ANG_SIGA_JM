@@ -9,7 +9,6 @@ export class PersonaJuridicaItem {
   abreviatura: String;
   numeroIntegrantes: number;
   nombresIntegrantes: String;
-  sociedadProfesional: String;
   idPersona: String;
   idPersonaDelete: String[] = [];
   fechaBaja: Date;
