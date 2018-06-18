@@ -131,6 +131,7 @@ import { ComunicaInfoEconomicaComponent } from "./features/sjcs/comunicaciones/c
 import { ComunicaCargaComponent } from "./features/sjcs/comunicaciones/comunica-carga/comunica-carga.component";
 import { ComunicaResolucionesComponent } from "./features/sjcs/comunicaciones/comunica-resoluciones/comunica-resoluciones.component";
 import { ComunicaDesignacionesComponent } from "./features/sjcs/comunicaciones/comunica-designaciones/comunica-designaciones.component";
+import { DesignacionesComponent } from "./features/sjcs/oficio/designaciones/designaciones.component";
 
 //Consultas
 import { RecuperarConsultasComponent } from "./features/consultas/recuperar-consultas/recuperar-consultas.component";
@@ -790,6 +791,11 @@ const appRoutes: Routes = [
   {
     path: "comunicaDesignaciones",
     component: ComunicaDesignacionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "designaciones",
+    component: DesignacionesComponent,
     canActivate: [AuthGuard]
   },
 

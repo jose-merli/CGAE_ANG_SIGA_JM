@@ -85,8 +85,6 @@ import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busq
 import { CommonModule } from "@angular/common";
 import { AccesoFichaPersonaComponent } from "./features/censo/accesoFichaPersona/accesoFichaPersona.component";
 
-// Modulo de sjcs
-import { DesignacionesComponent } from "./features/sjcs/oficio/designaciones/designaciones.component";
 // Modulo de administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
 import { EditarCatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros/editarCatalogosMaestros/editarCatalogosMaestros.component";
@@ -151,6 +149,7 @@ import { AlertasComponent } from "./features/expedientes/alertas/alertas.compone
 import { NuevoExpedienteComponent } from "./features/expedientes/nuevo-expediente/nuevo-expediente.component";
 
 //Modulo de Justicia Gratuita
+import { DesignacionesComponent } from "./features/sjcs/oficio/designaciones/designaciones.component";
 import { ZonasYSubzonasComponent } from "./features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component";
 import { AreasYMateriasComponent } from "./features/sjcs/maestros/areas-materias/areas-materias.component";
 import { PartidasComponent } from "./features/sjcs/maestros/partidas/partidas.component";
