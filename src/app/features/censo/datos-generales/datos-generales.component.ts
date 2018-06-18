@@ -336,7 +336,7 @@ export class DatosGenerales implements OnInit {
   createLegalPerson() {
     this.sigaServices.post("datosGenerales_insert", this.body).subscribe(
       data => {
-        this.body.fechaAlta = new Date();
+        this.body.fechaConstitucion = new Date();
         this.showSuccess();
         console.log(data);
       },
@@ -405,6 +405,10 @@ export class DatosGenerales implements OnInit {
           }
         );
     }
+  }
+
+  restablecer() {
+    this.datosGeneralesSearch();
   }
 
   uploadImage(event: any) {
@@ -482,12 +486,11 @@ export class DatosGenerales implements OnInit {
 
   onChangeForm() {
     if (
-      this.body.identificacion != "" &&
-      this.body.identificacion != undefined &&
-      (this.body.nif != "" && this.body.nif != undefined) &&
+      this.body.nif != "" &&
+      this.body.nif != undefined &&
       (this.body.abreviatura != "" && this.body.abreviatura != undefined) &&
       (this.body.denominacion != "" && this.body.denominacion != undefined) &&
-      this.body.fechaAlta != undefined &&
+      this.body.fechaConstitucion != undefined &&
       (this.body.nif != "" && this.body.nif.length >= 9)
     ) {
       this.showGuardar = false;
