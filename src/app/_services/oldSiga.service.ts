@@ -118,6 +118,11 @@ export class OldSigaServices {
         comunicaResoluciones: "Dispatcher.do?proceso=12F",
         comunicaDesignaciones: "Dispatcher.do?proceso=12G",
 
+        recuperarConsultas: "Dispatcher.do?proceso=107",
+        consultasListasDinamicas: "Dispatcher.do?proceso=18a",
+        nuevaConsulta: "Dispatcher.do?proceso=108",
+        nuevaConsultaExperta: "Dispatcher.do?proceso=106",
+
         loginDevelop: "developmentLogin.do",
         login: "sigainit.do"
 

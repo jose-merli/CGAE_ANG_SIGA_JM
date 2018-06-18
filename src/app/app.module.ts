@@ -194,6 +194,12 @@ import { ComunicaCargaComponent } from "./features/sjcs/comunicaciones/comunica-
 import { ComunicaResolucionesComponent } from "./features/sjcs/comunicaciones/comunica-resoluciones/comunica-resoluciones.component";
 import { ComunicaDesignacionesComponent } from "./features/sjcs/comunicaciones/comunica-designaciones/comunica-designaciones.component";
 
+//Consultas
+import { RecuperarConsultasComponent } from "./features/consultas/recuperar-consultas/recuperar-consultas.component";
+import { ConsultasListasDinamicasComponent } from "./features/consultas/consultas-listas-dinamicas/consultas-listas-dinamicas.component";
+import { NuevaConsultaComponent } from "./features/consultas/nueva-consulta/nueva-consulta.component";
+import { NuevaConsultaExpertaComponent } from "./features/consultas/nueva-consulta-experta/nueva-consulta-experta.component";
+
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
 import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component";
@@ -334,6 +340,12 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     ComunicaCargaComponent,
     ComunicaResolucionesComponent,
     ComunicaDesignacionesComponent,
+
+    //Consultas
+    RecuperarConsultasComponent,
+    ConsultasListasDinamicasComponent,
+    NuevaConsultaComponent,
+    NuevaConsultaExpertaComponent,
 
     // Administracion
     CatalogosMaestros,

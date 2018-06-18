@@ -115,6 +115,12 @@ import { ComunicaCargaComponent } from "./features/sjcs/comunicaciones/comunica-
 import { ComunicaResolucionesComponent } from "./features/sjcs/comunicaciones/comunica-resoluciones/comunica-resoluciones.component";
 import { ComunicaDesignacionesComponent } from "./features/sjcs/comunicaciones/comunica-designaciones/comunica-designaciones.component";
 
+//Consultas
+import { RecuperarConsultasComponent } from "./features/consultas/recuperar-consultas/recuperar-consultas.component";
+import { ConsultasListasDinamicasComponent } from "./features/consultas/consultas-listas-dinamicas/consultas-listas-dinamicas.component";
+import { NuevaConsultaComponent } from "./features/consultas/nueva-consulta/nueva-consulta.component";
+import { NuevaConsultaExpertaComponent } from "./features/consultas/nueva-consulta-experta/nueva-consulta-experta.component";
+
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
@@ -675,6 +681,28 @@ const appRoutes: Routes = [
   {
     path: "comunicaDesignaciones",
     component: ComunicaDesignacionesComponent,
+    canActivate: [AuthGuard]
+  },
+
+  //Consultas
+  {
+    path: "recuperarConsultas",
+    component: RecuperarConsultasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "consultasListasDinamicas",
+    component: ConsultasListasDinamicasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "nuevaConsulta",
+    component: NuevaConsultaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "nuevaConsultaExperta",
+    component: NuevaConsultaExpertaComponent,
     canActivate: [AuthGuard]
   },
 
