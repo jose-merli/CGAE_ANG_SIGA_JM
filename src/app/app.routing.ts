@@ -121,6 +121,13 @@ import { ConsultasListasDinamicasComponent } from "./features/consultas/consulta
 import { NuevaConsultaComponent } from "./features/consultas/nueva-consulta/nueva-consulta.component";
 import { NuevaConsultaExpertaComponent } from "./features/consultas/nueva-consulta-experta/nueva-consulta-experta.component";
 
+//Comunicaciones
+import { InformesGenericosComponent } from "./features/comunicaciones/informes-genericos/informes-genericos.component";
+import { DefinirTipoPlantillaComponent } from "./features/comunicaciones/definir-tipo-plantilla/definir-tipo-plantilla.component";
+import { ListaCorreosComponent } from "./features/comunicaciones/lista-correos/lista-correos.component";
+import { BandejaSalidaComponent } from "./features/comunicaciones/bandeja-salida/bandeja-salida.component";
+import { BandejaEntradaComponent } from "./features/comunicaciones/bandeja-entrada/bandeja-entrada.component";
+
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
@@ -703,6 +710,33 @@ const appRoutes: Routes = [
   {
     path: "nuevaConsultaExperta",
     component: NuevaConsultaExpertaComponent,
+    canActivate: [AuthGuard]
+  },
+
+  //Comunicaciones
+  {
+    path: "informesGenericos",
+    component: InformesGenericosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "informesGenericos",
+    component: DefinirTipoPlantillaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "informesGenericos",
+    component: ListaCorreosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "informesGenericos",
+    component: BandejaSalidaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "informesGenericos",
+    component: BandejaEntradaComponent,
     canActivate: [AuthGuard]
   },
 
