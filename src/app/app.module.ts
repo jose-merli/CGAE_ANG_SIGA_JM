@@ -200,6 +200,13 @@ import { ConsultasListasDinamicasComponent } from "./features/consultas/consulta
 import { NuevaConsultaComponent } from "./features/consultas/nueva-consulta/nueva-consulta.component";
 import { NuevaConsultaExpertaComponent } from "./features/consultas/nueva-consulta-experta/nueva-consulta-experta.component";
 
+//Comunicaciones
+import { InformesGenericosComponent } from "./features/comunicaciones/informes-genericos/informes-genericos.component";
+import { DefinirTipoPlantillaComponent } from "./features/comunicaciones/definir-tipo-plantilla/definir-tipo-plantilla.component";
+import { ListaCorreosComponent } from "./features/comunicaciones/lista-correos/lista-correos.component";
+import { BandejaSalidaComponent } from "./features/comunicaciones/bandeja-salida/bandeja-salida.component";
+import { BandejaEntradaComponent } from "./features/comunicaciones/bandeja-entrada/bandeja-entrada.component";
+
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
 import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component";
@@ -346,6 +353,13 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     ConsultasListasDinamicasComponent,
     NuevaConsultaComponent,
     NuevaConsultaExpertaComponent,
+
+    //Comunicaciones
+    InformesGenericosComponent,
+    DefinirTipoPlantillaComponent,
+    ListaCorreosComponent,
+    BandejaSalidaComponent,
+    BandejaEntradaComponent,
 
     // Administracion
     CatalogosMaestros,

@@ -118,10 +118,18 @@ export class OldSigaServices {
         comunicaResoluciones: "Dispatcher.do?proceso=12F",
         comunicaDesignaciones: "Dispatcher.do?proceso=12G",
 
+        //Consultas
         recuperarConsultas: "Dispatcher.do?proceso=107",
         consultasListasDinamicas: "Dispatcher.do?proceso=18a",
         nuevaConsulta: "Dispatcher.do?proceso=108",
         nuevaConsultaExperta: "Dispatcher.do?proceso=106",
+
+        //Comunicaciones
+        informesGenericos: "Dispatcher.do?proceso=I00",
+        definirTipoPlantilla: "Dispatcher.do?proceso=74",
+        listaCorreos: "Dispatcher.do?proceso=72",
+        bandejaSalida: "Dispatcher.do?proceso=73",
+        bandejaEntrada: "Dispatcher.do?proceso=75",
 
         loginDevelop: "developmentLogin.do",
         login: "sigainit.do"
