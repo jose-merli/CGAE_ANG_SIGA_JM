@@ -1,13 +1,21 @@
 export class DatosGeneralesItem {
+  idPersona: String;
+  idInstitucion: String;
+  idLenguaje: String;
   nif: String;
-  identificacion: String;
-  tipo: String;
-  fechaBaja: Date;
   denominacion: String;
   abreviatura: String;
+  fechaConstitucion: Date;
+  tipo: String;
+  numeroIntegrantes: String;
+  nombresIntegrantes: String;
+  fechaBaja: Date;
+  anotaciones: String;
+  IDGrupos: string;
   idioma: String;
   cuentaContable: String;
-  anotaciones: String;
+  grupos: String[];
+  identificacion: String;
   etiquetas: String[];
   apellidos: String;
   nombre: String;
@@ -20,6 +28,6 @@ export class DatosGeneralesItem {
   situacionGeneral: String;
   utilizarFoto: boolean;
   exportarDatos: boolean;
-  idPersona: String;
+
   constructor() {}
 }

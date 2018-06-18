@@ -113,10 +113,12 @@ export class DatosGenerales implements OnInit {
   rowsPerPage: any = [];
   showAll: boolean = false;
   showGuardar: boolean = false;
+  progressSpinner: boolean = false;
 
   selectedItem: number = 10;
   selectedDoc: string = "NIF";
   newDireccion: boolean = false;
+  nuevo: boolean = false;
 
   editar: boolean = false;
   archivoDisponible: boolean = false;
@@ -132,7 +134,7 @@ export class DatosGenerales implements OnInit {
   comboTipo: any[] = [];
   fecha;
   idiomas: any[] = [
-    { label: "", value: "" },
+    { label: "Seleccione un idioma", value: "" },
     { label: "Castellano", value: "castellano" },
     { label: "Catalá", value: "catalan" },
     { label: "Euskara", value: "euskera" },
@@ -191,22 +193,8 @@ export class DatosGenerales implements OnInit {
 
     this.idPersona = this.usuarioBody[0].idPersona;
     this.tipoPersonaJuridica = this.usuarioBody[0].tipo;
-    // Combo de etiquetas
-    // this.bodyviejo = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    // this.body.idPersona = this.bodyviejo[0].idPersona;
-    this.sigaServices
-      .postPaginado("datosGenerales_search", "?numPagina=1", this.body)
-      .subscribe(
-        data => {
-          console.log(data);
-          this.personaSearch = JSON.parse(data["body"]);
-          this.body = this.personaSearch.personaJuridicaItems[0];
-          // this.datos = this.personaSearch.busquedaJuridicaItems;
-        },
-        err => {
-          console.log(err);
-        }
-      );
+
+    this.datosGeneralesSearch();
 
     this.textFilter = "Elegir";
     this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
@@ -238,157 +226,126 @@ export class DatosGenerales implements OnInit {
 
     this.comboTipo.push(this.tipoPersonaJuridica);
 
-    // this.sigaServices.get("personaJuridica_cargarFotografia").subscribe(
-    //   n => {
-    //     this.comboTipo = n.combooItems;
-    //   },
-    //   err => {
-    //     console.log(err);
+    // if (sessionStorage.getItem("idPersona") != null) {
+    //   this.sigaServices
+    //     .postPaginado(
+    //       "datos_generales_search",
+    //       "?numPagina=1",
+    //       sessionStorage.getItem("idPersona")
+    //     )
+    //     .subscribe(
+    //       data => {
+    //         console.log(data);
+    //         // this.search = JSON.parse(data["body"]);
+    //         // this.datos = this.search.contadorItems;
+    //         // console.log(this.datos);
+    //         this.table.reset();
+    //       },
+    //       err => {
+    //         console.log(err);
+    //       }
+    //     );
+    //   sessionStorage.removeItem("idPersona");
+    // }
+
+    // this.cols = [
+    //   { field: "tipoDireccion", header: "Tipo dirección" },
+    //   { field: "direccion", header: "Dirección" },
+    //   { field: "cp", header: "Código postal" },
+    //   { field: "poblacion", header: "Población" },
+    //   { field: "telefono", header: "Teléfono" },
+    //   { field: "fax", header: "Fax" },
+    //   { field: "movil", header: "Movil" },
+    //   { field: "email", header: "Email" },
+    //   { field: "preferente", header: "Preferente" }
+    // ];
+
+    // this.select = [
+    //   { label: "", value: null },
+    //   { label: "NIF", value: "nif" },
+    //   { label: "Pasaporte", value: "pasaporte" },
+    //   { label: "NIE", value: "nie" }
+    // ];
+
+    // this.datosDirecciones = [
+    //   {
+    //     id: 0,
+    //     tipoDireccion:
+    //       "CensoWeb, Despacho, Facturación, Guardia, Guía Judicial, Pública, Revista, Traspaso a organos judiciales",
+    //     direccion: "C/ CARDENAL CISNEROS 42-1º",
+    //     cp: "03660",
+    //     poblacion: "Novelda",
+    //     telefono: "99999",
+    //     fax: "2434344",
+    //     movil: "88888",
+    //     email: "email@redabogacia.org",
+    //     preferente: "correo,Mail,Fax,SMS"
     //   }
-    // );
+    // ];
 
-    if (sessionStorage.getItem("idPersona") != null) {
-      this.sigaServices
-        .postPaginado(
-          "datos_generales_search",
-          "?numPagina=1",
-          sessionStorage.getItem("idPersona")
-        )
-        .subscribe(
-          data => {
-            console.log(data);
-            // this.search = JSON.parse(data["body"]);
-            // this.datos = this.search.contadorItems;
-            // console.log(this.datos);
-            this.table.reset();
-          },
-          err => {
-            console.log(err);
-          }
-        );
-      sessionStorage.removeItem("idPersona");
-    }
+    // this.rowsPerPage = [
+    //   {
+    //     label: 10,
+    //     value: 10
+    //   },
+    //   {
+    //     label: 20,
+    //     value: 20
+    //   },
+    //   {
+    //     label: "Todo",
+    //     value: this.datosDirecciones.length
+    //   }
+    // ];
 
-    this.cols = [
-      { field: "tipoDireccion", header: "Tipo dirección" },
-      { field: "direccion", header: "Dirección" },
-      { field: "cp", header: "Código postal" },
-      { field: "poblacion", header: "Población" },
-      { field: "telefono", header: "Teléfono" },
-      { field: "fax", header: "Fax" },
-      { field: "movil", header: "Movil" },
-      { field: "email", header: "Email" },
-      { field: "preferente", header: "Preferente" }
-    ];
-
-    this.select = [
-      { label: "", value: null },
-      { label: "NIF", value: "nif" },
-      { label: "Pasaporte", value: "pasaporte" },
-      { label: "NIE", value: "nie" }
-    ];
-
-    this.datosDirecciones = [
-      {
-        id: 0,
-        tipoDireccion:
-          "CensoWeb, Despacho, Facturación, Guardia, Guía Judicial, Pública, Revista, Traspaso a organos judiciales",
-        direccion: "C/ CARDENAL CISNEROS 42-1º",
-        cp: "03660",
-        poblacion: "Novelda",
-        telefono: "99999",
-        fax: "2434344",
-        movil: "88888",
-        email: "email@redabogacia.org",
-        preferente: "correo,Mail,Fax,SMS"
-      }
-    ];
-
-    this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
-      },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: "Todo",
-        value: this.datosDirecciones.length
-      }
-    ];
-
-    this.generos = [
-      { label: "", value: "" },
-      { label: "Mujer", value: "M" },
-      { label: "Hombre", value: "H" }
-    ];
-
-    this.calculaEdad();
+    // this.generos = [
+    //   { label: "", value: "" },
+    //   { label: "Mujer", value: "M" },
+    //   { label: "Hombre", value: "H" }
+    // ];
   }
 
-  isSearch() {
-    this.router.navigate(["/busquedaGeneral"]);
-  }
+  datosGeneralesSearch() {
+    this.progressSpinner = true;
 
-  showSuccessUploadedImage() {
-    this.msgs = [];
-    this.msgs.push({
-      severity: "success",
-      summary: this.translateService.instant("general.message.correct"),
-      detail: this.translateService.instant(
-        "general.message.logotipo.actualizado"
+    this.body.idPersona = this.idPersona;
+    this.body.idLenguaje = "";
+    this.body.idInstitucion = "";
+
+    this.sigaServices
+      .postPaginado(
+        "busquedaPerJuridica_datosGeneralesSearch",
+        "?numPagina=1",
+        this.body
       )
-    });
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.personaSearch = JSON.parse(data["body"]);
+          this.body = this.personaSearch.personaJuridicaItems[0];
+        },
+        error => {
+          this.personaSearch = JSON.parse(error["error"]);
+          this.showFail(JSON.stringify(this.personaSearch.error.description));
+          console.log(error);
+          this.progressSpinner = false;
+        }
+      );
   }
 
-  calculaEdad() {
-    if (this.body.fechaNacimiento != undefined) {
-      var dateString = JSON.stringify(this.body.fechaNacimiento);
-      var fechaNac = new Date(dateString.substring(1, 25));
-      // var timeDiff = Math.abs(Date.now() - fechaNac.getDate());
-      // this.edadCalculada = "" + Math.ceil(timeDiff / (1000 * 3600 * 24) / 365);
-
-      var today = new Date();
-      var nowyear = today.getFullYear();
-      var nowmonth = today.getMonth();
-      var nowday = today.getDate();
-
-      var birth = new Date(fechaNac);
-      var birthyear = birth.getFullYear();
-      var birthmonth = birth.getMonth();
-      var birthday = birth.getDate();
-
-      var age = nowyear - birthyear;
-      var age_month = nowmonth - birthmonth;
-      var age_day = nowday - birthday;
-
-      if (age_month < 0 || (age_month == 0 && age_day < 0)) {
-        age = age - 1;
+  createLegalPerson() {
+    this.sigaServices.post("datosGenerales_insert", this.body).subscribe(
+      data => {
+        this.body.fechaAlta = new Date();
+        this.showSuccess();
+        console.log(data);
+      },
+      error => {
+        this.personaSearch = JSON.parse(error["error"]);
+        this.showFail(JSON.stringify(this.personaSearch.error.description));
+        console.log(error);
       }
-      this.edadCalculada = "" + age;
-    }
-  }
-
-  showSuccess() {
-    this.msgs = [];
-    this.msgs.push({
-      severity: "success",
-      summary: this.translateService.instant("general.message.correct"),
-      detail: this.translateService.instant("general.message.accion.realizada")
-    });
-  }
-
-  showFail() {
-    this.msgs = [];
-    this.msgs.push({
-      severity: "error",
-      summary: "Incorrecto",
-      detail: this.translateService.instant(
-        "general.message.error.realiza.accion"
-      )
-    });
+    );
   }
 
   guardar() {
@@ -402,9 +359,10 @@ export class DatosGenerales implements OnInit {
         this.showSuccess();
         console.log(data);
       },
-      err => {
-        this.showFail();
-        console.log(err);
+      error => {
+        this.personaSearch = JSON.parse(error["error"]);
+        this.showFail(JSON.stringify(this.personaSearch.error.description));
+        console.log(error);
       }
     );
 
@@ -449,15 +407,6 @@ export class DatosGenerales implements OnInit {
     }
   }
 
-  showFailUploadedImage() {
-    this.msgs = [];
-    this.msgs.push({
-      severity: "error",
-      summary: "Error",
-      detail: "Formato incorrecto de imagen seleccionada"
-    });
-  }
-
   uploadImage(event: any) {
     // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
     let fileList: FileList = event.target.files;
@@ -483,38 +432,6 @@ export class DatosGenerales implements OnInit {
       this.archivoDisponible = true;
     }
   }
-
-  onHideDatosGenerales() {
-    this.showDatosGenerales = !this.showDatosGenerales;
-  }
-  onHideDatosColegiales() {
-    this.showDatosColegiales = !this.showDatosColegiales;
-  }
-  onHideDatosFacturacion() {
-    this.showDatosFacturacion = !this.showDatosFacturacion;
-  }
-
-  onChangeRowsPerPages(event) {
-    console.log(event);
-    this.selectedItem = event.value;
-    this.changeDetectorRef.detectChanges();
-    this.table.reset();
-  }
-
-  // confirmarBorrar(index) {
-  //   this.confirmationService.confirm({
-  //     message: '¿Está seguro de eliminar los datos?',
-  //     icon: 'far fa-trash-alt',
-  //     accept: () => {
-  //       this.msgs = [{ severity: 'info', summary: 'Confirmed', detail: 'Record deleted' }];
-  //       this.socios.splice(index, 1);
-  //       this.socios = [...this.socios];
-  //     },
-  //     reject: () => {
-  //       this.msgs = [{ severity: 'info', summary: 'Rejected', detail: 'You have rejected' }];
-  //     }
-  //   });
-  // }
 
   abrirFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
@@ -548,37 +465,17 @@ export class DatosGenerales implements OnInit {
     return {};
   }
 
-  addDireccion() {
-    this.datosDirecciones = [
-      ...this.datosDirecciones,
-      {
-        tipoDireccion: "",
-        direccion: "",
-        new: true,
-        cp: "",
-        poblacion: "",
-        telefono: "",
-        fax: "",
-        movil: "",
-        email: "",
-        preferente: ""
-      }
-    ];
-    this.newDireccion = true;
+  onUpload(event) {
+    for (let file of event.files) {
+      this.uploadedFiles.push(file);
+    }
+
+    console.log("image", this.uploadedFiles);
+
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "File Uploaded", detail: "" });
   }
 
-  isEditar() {
-    this.editar = true;
-  }
-
-  // onUpload(event) {
-  //   for (let file of event.files) {
-  //     this.uploadedFiles.push(file);
-  //   }
-
-  //   this.msgs = [];
-  //   this.msgs.push({ severity: 'info', summary: 'File Uploaded', detail: '' });
-  // }
   backTo() {
     this.location.back();
   }
@@ -597,5 +494,43 @@ export class DatosGenerales implements OnInit {
     } else {
       this.showGuardar = true;
     }
+  }
+
+  showSuccessUploadedImage() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant(
+        "general.message.logotipo.actualizado"
+      )
+    });
+  }
+
+  showFailUploadedImage() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Error",
+      detail: "Formato incorrecto de imagen seleccionada"
+    });
+  }
+
+  showSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant("general.message.accion.realizada")
+    });
+  }
+
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: mensaje
+    });
   }
 }
