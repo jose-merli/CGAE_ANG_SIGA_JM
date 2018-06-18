@@ -39,6 +39,23 @@ export class OldSigaServices {
 
         //Facturacion
         mantenimientoSufijos: "Dispatcher.do?proceso=214",
+        facturaPlantillas: "Dispatcher.do?proceso=213",
+        gestionCuentasBancarias: "Dispatcher.do?proceso=281",
+        seriesFactura: "Dispatcher.do?proceso=200",
+        previsionesFactura: "Dispatcher.do?proceso=2A2",
+        programarFactura: "Dispatcher.do?proceso=280",
+        generarFactura: "Dispatcher.do?proceso=240",
+        mantenimientoFactura: "Dispatcher.do?proceso=241",
+        eliminarFactura: "Dispatcher.do?proceso=242",
+        facturas: "Dispatcher.do?proceso=220",
+        ficherosAdeudos: "Dispatcher.do?proceso=261",
+        ficherosDevoluciones: "Dispatcher.do?proceso=2C1",
+        devolucionManual: "Dispatcher.do?proceso=2C2",
+        abonos: "Dispatcher.do?proceso=2G0",
+        ficherosTransferencia: "Dispatcher.do?proceso=2G4",
+        contabilidad: "Dispatcher.do?proceso=250",
+        cobrosRecobros: "Dispatcher.do?proceso=2F0",
+        facturasEmitidas: "Dispatcher.do?proceso=2A1",
 
         //Productos y Servicios
         categoriasProducto: "Dispatcher.do?proceso=400",

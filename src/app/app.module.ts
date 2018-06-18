@@ -116,6 +116,23 @@ import { MantenimientoCertificadosComponent } from "./features/certificados/mant
 
 //Modulo de Facturacion
 import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimiento-sufijos/mantenimiento-sufijos.component";
+import { FacturaPlantillasComponent } from "./features/facturacion/factura-plantillas/factura-plantillas.component";
+import { GestionCuentasBancariasComponent } from "./features/facturacion/gestion-cuentas-bancarias/gestion-cuentas-bancarias.component";
+import { SeriesFacturaComponent } from "./features/facturacion/series-factura/series-factura.component";
+import { PrevisionesFacturaComponent } from "./features/facturacion/previsiones-factura/previsiones-factura.component";
+import { ProgramarFacturaComponent } from "./features/facturacion/programar-factura/programar-factura.component";
+import { GenerarFacturaComponent } from "./features/facturacion/generar-factura/generar-factura.component";
+import { MantenimientoFacturaComponent } from "./features/facturacion/mantenimiento-factura/mantenimiento-factura.component";
+import { EliminarFacturaComponent } from "./features/facturacion/eliminar-factura/eliminar-factura.component";
+import { FacturasComponent } from "./features/facturacion/facturas/facturas.component";
+import { FicherosAdeudosComponent } from "./features/facturacion/ficheros-adeudos/ficheros-adeudos.component";
+import { FicherosDevolucionesComponent } from "./features/facturacion/devoluciones/ficheros-devoluciones/ficheros-devoluciones.component";
+import { DevolucionManualComponent } from "./features/facturacion/devoluciones/devolucion-manual/devolucion-manual.component";
+import { AbonosComponent } from "./features/facturacion/abonos/abonos.component";
+import { FicherosTransferenciaComponent } from "./features/facturacion/ficheros-transferencia/ficheros-transferencia.component";
+import { ContabilidadComponent } from "./features/facturacion/contabilidad/contabilidad.component";
+import { CobrosRecobrosComponent } from "./features/facturacion/cobros-recobros/cobros-recobros.component";
+import { FacturasEmitidasComponent } from "./features/facturacion/informes/facturas-emitidas/facturas-emitidas.component";
 
 //Modulo de Productos y Servicios
 import { CategoriasProductoComponent } from "./features/productosYServicios/categoriasProducto/categoriasProducto.component";
@@ -271,6 +288,23 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
 
     //Facturacion
     MantenimientoSufijosComponent,
+    FacturaPlantillasComponent,
+    GestionCuentasBancariasComponent,
+    SeriesFacturaComponent,
+    PrevisionesFacturaComponent,
+    ProgramarFacturaComponent,
+    GenerarFacturaComponent,
+    MantenimientoFacturaComponent,
+    EliminarFacturaComponent,
+    FacturasComponent,
+    FicherosAdeudosComponent,
+    FicherosDevolucionesComponent,
+    DevolucionManualComponent,
+    AbonosComponent,
+    FicherosTransferenciaComponent,
+    ContabilidadComponent,
+    CobrosRecobrosComponent,
+    FacturasEmitidasComponent,
 
     //Productos y Servicios
     CategoriasProductoComponent,

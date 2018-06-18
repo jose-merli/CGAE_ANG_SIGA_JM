@@ -37,6 +37,23 @@ import { MantenimientoCertificadosComponent } from "./features/certificados/mant
 
 //Facturacion
 import { MantenimientoSufijosComponent } from "./features/facturacion/mantenimiento-sufijos/mantenimiento-sufijos.component";
+import { FacturaPlantillasComponent } from "./features/facturacion/factura-plantillas/factura-plantillas.component";
+import { GestionCuentasBancariasComponent } from "./features/facturacion/gestion-cuentas-bancarias/gestion-cuentas-bancarias.component";
+import { SeriesFacturaComponent } from "./features/facturacion/series-factura/series-factura.component";
+import { PrevisionesFacturaComponent } from "./features/facturacion/previsiones-factura/previsiones-factura.component";
+import { ProgramarFacturaComponent } from "./features/facturacion/programar-factura/programar-factura.component";
+import { GenerarFacturaComponent } from "./features/facturacion/generar-factura/generar-factura.component";
+import { MantenimientoFacturaComponent } from "./features/facturacion/mantenimiento-factura/mantenimiento-factura.component";
+import { EliminarFacturaComponent } from "./features/facturacion/eliminar-factura/eliminar-factura.component";
+import { FacturasComponent } from "./features/facturacion/facturas/facturas.component";
+import { FicherosAdeudosComponent } from "./features/facturacion/ficheros-adeudos/ficheros-adeudos.component";
+import { FicherosDevolucionesComponent } from "./features/facturacion/devoluciones/ficheros-devoluciones/ficheros-devoluciones.component";
+import { DevolucionManualComponent } from "./features/facturacion/devoluciones/devolucion-manual/devolucion-manual.component";
+import { AbonosComponent } from "./features/facturacion/abonos/abonos.component";
+import { FicherosTransferenciaComponent } from "./features/facturacion/ficheros-transferencia/ficheros-transferencia.component";
+import { ContabilidadComponent } from "./features/facturacion/contabilidad/contabilidad.component";
+import { CobrosRecobrosComponent } from "./features/facturacion/cobros-recobros/cobros-recobros.component";
+import { FacturasEmitidasComponent } from "./features/facturacion/informes/facturas-emitidas/facturas-emitidas.component";
 
 //Productos y Servicios
 import { CategoriasProductoComponent } from "./features/productosYServicios/categoriasProducto/categoriasProducto.component";
@@ -327,6 +344,91 @@ const appRoutes: Routes = [
   {
     path: "mantenimientoSufijos",
     component: MantenimientoSufijosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "facturaPlantillas",
+    component: FacturaPlantillasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "gestionCuentasBancarias",
+    component: GestionCuentasBancariasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "seriesFactura",
+    component: SeriesFacturaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "previsionesFactura",
+    component: PrevisionesFacturaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "programarFactura",
+    component: ProgramarFacturaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "generarFactura",
+    component: GenerarFacturaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "mantenimientoFactura",
+    component: MantenimientoFacturaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "eliminarFactura",
+    component: EliminarFacturaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "facturas",
+    component: FacturasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "ficherosAdeudos",
+    component: FicherosAdeudosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "ficherosDevoluciones",
+    component: FicherosDevolucionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "devolucionManual",
+    component: DevolucionManualComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "abonos",
+    component: AbonosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "ficherosTransferencia",
+    component: FicherosTransferenciaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "contabilidad",
+    component: ContabilidadComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "cobrosRecobros",
+    component: CobrosRecobrosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "facturasEmitidas",
+    component: FacturasEmitidasComponent,
     canActivate: [AuthGuard]
   },
 
