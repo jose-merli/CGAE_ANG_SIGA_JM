@@ -1,16 +1,18 @@
+import { ComboItem } from "./ComboItem";
 export class DatosRegistralesItem {
   anotaciones: String;
   idPersona: String;
-  actividadProfesional: String[];
+  actividades: String[];
   objetoSocial: String;
   fechaConstitucion: Date;
   fechaFin: Date;
   resena: String;
-  polizaSeguro: String;
-  aseguradora: String;
+  numeroPoliza: String;
+  companiaAseg: String;
   fechaRegistro: Date;
   fechaCancelacion: Date;
   identificadorRegistroProvincial: String;
   numeroRegistro: String;
+  combooItems: ComboItem[];
   constructor() {}
 }

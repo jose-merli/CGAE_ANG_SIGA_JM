@@ -104,7 +104,10 @@ export class SigaServices {
     datosRegistrales_actividadesDisponible:
       "perJuridicaDatosRegistrales/actividadProfesional",
     datosRegistrales_search: "perJuridicaDatosRegistrales/search",
-    datosRegistrales_update: "perJuridicaDatosRegistrales/update"
+    datosRegistrales_update: "perJuridicaDatosRegistrales/update",
+    retenciones_tipoRetencion: "retenciones/tipoRetencion",
+    retenciones_search: "retenciones/search",
+    retenciones_update: "retenciones/update"
   };
 
   private menuToggled = new Subject<any>();

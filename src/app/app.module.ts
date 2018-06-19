@@ -158,9 +158,11 @@ import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-co
 import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component";
 import { DatosGenerales } from "./features/censo/datos-generales/datos-generales.component";
 import { DatosRegistralesComponent } from "./features/censo/datos-registrales/datos-registrales.component";
+import { DatosRetencionesComponent } from "./features/censo/datos-retenciones/datos-retenciones.component";
 
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
+import { DatosIntegrantesComponent } from './features/censo/datos-integrantes/datos-integrantes.component';
 
 @NgModule({
   declarations: [
@@ -205,6 +207,7 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     DatosGenerales,
     DatosRegistralesComponent,
     DatosPersonaJuridicaComponent,
+    DatosRetencionesComponent,
 
     //SJRS
     DesignacionesComponent,
@@ -275,7 +278,8 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     PerfilesComponent,
     EditarPerfilesComponent,
     PermisosComponent,
-    PoliticaCookiesComponent
+    PoliticaCookiesComponent,
+    DatosIntegrantesComponent
   ],
   imports: [
     BrowserModule,

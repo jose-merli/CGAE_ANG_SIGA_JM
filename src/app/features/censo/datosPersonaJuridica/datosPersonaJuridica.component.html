@@ -12,30 +12,21 @@
     <app-datos-generales *ngSwitchCase="'generales'"></app-datos-generales>
   </div>-->
 
-    <!--DATOS GENERALES-->
     <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
         <app-datos-generales *ngSwitchCase="'generales'"></app-datos-generales>
         <app-accesoFichaPersona *ngSwitchCase="'notario'"></app-accesoFichaPersona>
+        <app-datos-integrantes *ngSwitchCase="'integrantes'"></app-datos-integrantes>
+        <app-datos-registrales *ngSwitchCase="'registrales'"></app-datos-registrales>
+        <app-datos-retenciones *ngSwitchCase="'retenciones'"></app-datos-retenciones>
+
     </div>
     <!--END DATOS GENERALES-->
 
     <!--DATOS COLEGIALES-->
-    <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
-        <app-datos-registrales *ngSwitchCase="'registrales'"></app-datos-registrales>
-    </div>
-    <!--END DATOS COLEGIALES-->
 
-    <!--DIRECCIONES-->
 
-    <!--END DIRECCIONES-->
-
-    <!--DATOS BANCARIOS-->
-
-    <!--END DATOS COLEGIALES-->
-
-    <!--DATOS CV-->
-
-    <!--END DATOS CV-->
+    <!--DATOS RETENCIONES-->
+    <!--END DATOS RETENCIONES-->
 
     <div class="mt-3 text-right main-button ">
         <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="Volver"></button>
