@@ -53,12 +53,12 @@ export class AccesoFichaPersonaComponent implements OnInit {
 
   ngOnInit() {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    if (this.usuarioBody != null) {
+      this.idPersona = this.usuarioBody[0].idPersona;
+      this.tipoPersona = "Notario"; //this.usuarioBody[0].tipo;
 
-    this.idPersona = this.usuarioBody[0].idPersona;
-    this.tipoPersona = "Notario"; //this.usuarioBody[0].tipo;
-
-    this.search();
-
+      this.search();
+    }
     this.comboTipoIdentificacion = [
       { label: "NIF", value: "NIF" },
       { label: "NIE", value: "NIE" }
@@ -85,7 +85,9 @@ export class AccesoFichaPersonaComponent implements OnInit {
           console.log("hloo", data);
           this.progressSpinner = false;
           this.bodySearch = JSON.parse(data["body"]);
-          this.body = this.bodySearch.FichaPersonaItem[0];
+          if (this.bodySearch.FichaPersonaItem != undefined) {
+            this.body = this.bodySearch.FichaPersonaItem[0];
+          }
         },
         error => {
           this.bodySearch = JSON.parse(error["error"]);

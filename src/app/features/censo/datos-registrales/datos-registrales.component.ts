@@ -49,6 +49,7 @@ import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { HeaderGestionEntidadService } from "./../../../_services/headerGestionEntidad.service";
+import { ComboItem } from "./../../../../app/models/ComboItem";
 
 /*** COMPONENTES ***/
 import { FichaColegialComponent } from "./../../../new-features/censo/ficha-colegial/ficha-colegial.component";
@@ -130,6 +131,13 @@ export class DatosRegistralesComponent implements OnInit {
   tratamientos: any[];
   actividadesDisponibles: any[];
   fecha;
+
+  fechaConst: Date;
+  fechaBaja: Date;
+  fechaReg: Date;
+  fechaCanc: Date;
+
+  selectActividad: any[];
   idiomas: any[] = [
     { label: "", value: "" },
     { label: "Castellano", value: "castellano" },
@@ -139,7 +147,7 @@ export class DatosRegistralesComponent implements OnInit {
   ];
   textSelected: String = "{0} grupos seleccionados";
   idPersona: String;
-
+  idPersonaEditar: String;
   datos: any[];
   @ViewChild(DatosRegistralesComponent)
   datosRegistralesComponent: DatosRegistralesComponent;
@@ -185,21 +193,14 @@ export class DatosRegistralesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.desactivadoGuardar();
     this.bodyviejo = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    this.body.idPersona = this.bodyviejo[0].idPersona;
-    this.sigaServices
-      .postPaginado("datosRegistrales_search", "?numPagina=1", this.body)
-      .subscribe(
-        data => {
-          console.log(data);
-          this.personaSearch = JSON.parse(data["body"]);
-          this.body = this.personaSearch.DatosRegistralesItem[0];
-          // this.datos = this.personaSearch.busquedaJuridicaItems;
-        },
-        err => {
-          console.log(err);
-        }
-      );
+    if (this.bodyviejo != null) {
+      this.body.idPersona = this.bodyviejo[0].idPersona;
+      this.idPersonaEditar = this.bodyviejo[0].idPersona;
+      sessionStorage.removeItem("usuarioBody");
+      this.search();
+    }
 
     this.sigaServices.get("datosRegistrales_actividadesDisponible").subscribe(
       n => {
@@ -212,7 +213,7 @@ export class DatosRegistralesComponent implements OnInit {
 
     this.sigaServices.get("datosRegistrales_actividadesPersona").subscribe(
       n => {
-        this.body.actividadProfesional = n.combooItems;
+        this.body.actividades = n.combooItems;
       },
       err => {
         console.log(err);
@@ -233,6 +234,24 @@ export class DatosRegistralesComponent implements OnInit {
       { label: "Mujer", value: "M" },
       { label: "Hombre", value: "H" }
     ];
+  }
+
+  search() {
+    this.sigaServices
+      .postPaginado("datosRegistrales_search", "?numPagina=1", this.body)
+      .subscribe(
+        data => {
+          console.log(data);
+          this.personaSearch = JSON.parse(data["body"]);
+          this.body = this.personaSearch.datosRegistralesItems[0];
+          this.body.idPersona = this.idPersonaEditar;
+          this.selectActividad = this.body.actividades;
+          // this.datos = this.personaSearch.busquedaJuridicaItems;
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 
   showSuccess() {
@@ -256,6 +275,20 @@ export class DatosRegistralesComponent implements OnInit {
   }
 
   guardar() {
+    this.arreglarFechas();
+    if (this.selectActividad != undefined) {
+      this.body.actividades = [];
+      this.selectActividad.forEach((value: ComboItem, key: number) => {
+        this.body.actividades.push(value.value);
+      });
+    }
+    if (this.body.companiaAseg == undefined) {
+      this.body.companiaAseg = "";
+    }
+    if (this.body.numeroPoliza == undefined) {
+      this.body.numeroPoliza = "";
+    }
+    console.log(this.body);
     this.sigaServices.post("datosRegistrales_update", this.body).subscribe(
       data => {
         this.showSuccess();
@@ -265,11 +298,91 @@ export class DatosRegistralesComponent implements OnInit {
         this.showFail();
         console.log(err);
       }
-    );
+    ),
+      () => {
+        this.search();
+      };
+  }
+
+  transformaFecha(FechaJSON) {
+    let fechaFinal;
+    if (FechaJSON.length > 12) {
+      FechaJSON = FechaJSON.substring(1, 11);
+      let fechaFormateada: any[] = FechaJSON.split("-");
+      // fechaFormateada[2] = parseInt(fechaFormateada[2]) + 1;
+      fechaFinal =
+        fechaFormateada[1] +
+        "-" +
+        fechaFormateada[2] +
+        "-" +
+        fechaFormateada[0];
+    } else {
+      let fechaFormateada: any[] = FechaJSON.split("-");
+      fechaFinal =
+        fechaFormateada[0] +
+        "-" +
+        fechaFormateada[1] +
+        "-" +
+        fechaFormateada[2];
+    }
+    return new Date(fechaFinal);
+  }
+
+  arreglarFechas() {
+    let fechaConst1 = JSON.stringify(this.body.fechaConstitucion);
+    let fechaBaja1 = JSON.stringify(this.body.fechaFin);
+    let fechaReg1 = JSON.stringify(this.body.fechaRegistro);
+    let fechaCanc1 = JSON.stringify(this.body.fechaCancelacion);
+
+    if (fechaConst1 != undefined) {
+      this.body.fechaConstitucion = this.transformaFecha(fechaConst1);
+    }
+    if (fechaBaja1 != undefined) {
+      this.body.fechaFin = this.transformaFecha(fechaBaja1);
+    }
+    if (fechaReg1 != undefined) {
+      this.body.fechaRegistro = this.transformaFecha(fechaReg1);
+    }
+    if (fechaCanc1 != undefined) {
+      this.body.fechaCancelacion = this.transformaFecha(fechaCanc1);
+    }
+  }
+
+  desactivadoGuardar() {
+    if (
+      this.body.objetoSocial != undefined &&
+      !this.onlySpaces(this.body.objetoSocial) &&
+      this.body.resena != undefined &&
+      !this.onlySpaces(this.body.resena) &&
+      this.body.fechaConstitucion != undefined &&
+      this.body.identificadorRegistroProvincial != undefined &&
+      !this.onlySpaces(this.body.identificadorRegistroProvincial) &&
+      this.body.numeroRegistro != undefined &&
+      !this.onlySpaces(this.body.numeroRegistro) &&
+      this.body.fechaRegistro != undefined
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  onlySpaces(str) {
+    let i = 0;
+    var ret;
+    ret = true;
+    while (i < str.length) {
+      if (str[i] != " ") {
+        ret = false;
+      }
+      i++;
+    }
+    return ret;
   }
 
   restablecer() {
-    // Aún no hay un rest al que llamar
+    this.arreglarFechas();
+    this.search();
   }
 
   toSociedadProfesional() {
