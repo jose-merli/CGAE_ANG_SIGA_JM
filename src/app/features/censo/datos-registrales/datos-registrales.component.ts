@@ -58,35 +58,6 @@ import { DatosRegistralesItem } from "./../../../../app/models/DatosRegistralesI
 import { DatosRegistralesObject } from "./../../../../app/models/DatosRegistralesObject";
 import { MultiSelectModule } from "primeng/multiSelect";
 
-@NgModule({
-  imports: [
-    CommonModule,
-    CalendarModule,
-    InputTextModule,
-    InputTextareaModule,
-    DropdownModule,
-    CheckboxModule,
-    ButtonModule,
-    DataTableModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AutoCompleteModule,
-    ConfirmDialogModule,
-    ConfirmationService,
-    TooltipModule,
-    MultiSelectModule,
-    ChipsModule,
-    RadioButtonModule,
-    FileUploadModule
-  ],
-  declarations: [
-    FichaColegialComponent,
-    DatosGeneralesComponent,
-    DatosColegialesComponent
-  ],
-  exports: [FichaColegialComponent],
-  providers: []
-})
 @Component({
   selector: "app-datos-registrales",
   templateUrl: "./datos-registrales.component.html",
