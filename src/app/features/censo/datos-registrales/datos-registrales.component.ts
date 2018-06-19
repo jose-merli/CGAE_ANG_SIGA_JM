@@ -184,16 +184,16 @@ export class DatosRegistralesComponent implements OnInit {
         console.log(err);
       }
     );
-    this.sigaServices
-      .post("datosRegistrales_actividadesPersona", this.body)
-      .subscribe(
-        n => {
-          this.body.combooItems = n.combooItems;
-        },
-        err => {
-          console.log(err);
-        }
-      );
+    // this.sigaServices
+    //   .post("datosRegistrales_actividadesPersona", this.body)
+    //   .subscribe(
+    //     n => {
+    //       this.body.combooItems = n.combooItems;
+    //     },
+    //     err => {
+    //       console.log(err);
+    //     }
+    //   );
 
     // datosRegistrales_search
 
