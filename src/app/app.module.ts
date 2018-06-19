@@ -162,6 +162,7 @@ import { DatosRetencionesComponent } from "./features/censo/datos-retenciones/da
 
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
+import { DatosIntegrantesComponent } from './features/censo/datos-integrantes/datos-integrantes.component';
 
 @NgModule({
   declarations: [
@@ -277,7 +278,8 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     PerfilesComponent,
     EditarPerfilesComponent,
     PermisosComponent,
-    PoliticaCookiesComponent
+    PoliticaCookiesComponent,
+    DatosIntegrantesComponent
   ],
   imports: [
     BrowserModule,
