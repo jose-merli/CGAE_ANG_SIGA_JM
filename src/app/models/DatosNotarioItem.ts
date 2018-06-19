@@ -10,8 +10,8 @@ export class DatosNotarioItem {
   apellido2: String;
   numeroColegiado: String;
   residente: String;
-  situacion: Date;
-  fechaAlta: String;
+  situacion: String;
+  fechaAlta: Date;
   status: String;
 
   constructor() {}

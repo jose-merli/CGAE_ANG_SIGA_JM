@@ -13,7 +13,6 @@ import {
   NgModule
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { CalendarModule } from "primeng/calendar";
 import { InputTextModule } from "primeng/inputtext";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { DropdownModule } from "primeng/dropdown";
@@ -25,13 +24,13 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 // import { DialogModule } from 'primeng/dialog';
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { TooltipModule } from "primeng/tooltip";
+import { ConfirmationService } from "primeng/api";
 import { ChipsModule } from "primeng/chips";
 import { RadioButtonModule } from "primeng/radiobutton";
-import { FileUploadModule } from "primeng/fileupload";
 
 import { Http, Response } from "@angular/http";
 import { MenuItem } from "primeng/api";
+
 import {
   FormBuilder,
   FormGroup,
@@ -50,60 +49,53 @@ import { TranslateService } from "../../../commons/translate/translation.service
 import { HeaderGestionEntidadService } from "./../../../_services/headerGestionEntidad.service";
 
 /*** COMPONENTES ***/
-import { FichaColegialComponent } from "./../../../new-features/censo/ficha-colegial/ficha-colegial.component";
-import { DatosGeneralesComponent } from "./../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
-import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-colegial/datos-colegiales/datos-colegiales.component";
+import { DatosRetencionesDto } from "./../../../../app/models/DatosRetencionesDto";
+import { RetencionesItem } from "./../../../../app/models/RetencionesItem";
+import { DatosPersonaJuridicaComponent } from "../datosPersonaJuridica/datosPersonaJuridica.component";
 
-// import
 @Component({
-  selector: "app-datos-persona-juridica",
-  templateUrl: "./datosPersonaJuridica.component.html",
-  styleUrls: ["./datosPersonaJuridica.component.scss"]
+  selector: "app-datos-retenciones",
+  templateUrl: "./datos-retenciones.component.html",
+  styleUrls: ["./datos-retenciones.component.scss"]
 })
-export class DatosPersonaJuridicaComponent implements OnInit {
-  fichasPosibles: any[];
+export class DatosRetencionesComponent implements OnInit {
+  openFicha: boolean = false;
+  usuarioBody: any[];
+  idPersona: String;
+  tiposRetenciones: DatosRetencionesDto = new DatosRetencionesDto();
   constructor(
-    public sigaServices: OldSigaServices,
-    private location: Location
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private changeDetectorRef: ChangeDetectorRef,
+    private translateService: TranslateService,
+    private location: Location,
+    private confirmationService: ConfirmationService,
+    private sigaServices: SigaServices,
+    private headerGestionEntidadService: HeaderGestionEntidadService,
+    private fichasPosibles: DatosPersonaJuridicaComponent
   ) {}
 
   ngOnInit() {
-    this.fichasPosibles = [
-      {
-        key: "generales",
-        activa: false
-      },
-      {
-        key: "direcciones",
-        activa: false
-      },
-      {
-        key: "notario",
-        activa: false
-      },
-      {
-        key: "bancarios",
-        activa: false
-      },
-      {
-        key: "cv",
-        activa: false
-      },
-      {
-        key: "retenciones",
-        activa: false
-      },
-      {
-        key: "registrales",
-        activa: false
-      }
-    ];
-  }
-  backTo() {
-    this.location.back();
+    this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    if (this.usuarioBody.length > 0)
+      this.idPersona = this.usuarioBody[0].idPersona;
+
+    this.getTiposRetenciones();
   }
 
-  getFichasPosibles() {
-    return this.fichasPosibles;
+  abrirFicha() {
+    this.openFicha = !this.openFicha;
+  }
+
+  getTiposRetenciones() {
+    this.sigaServices.get("retenciones_tipoRetencion").subscribe(
+      n => {
+        this.tiposRetenciones.retencionesItemList = n.maestroRetencionItem;
+      },
+      err => {
+        console.log(err);
+        this.tiposRetenciones.error = err.error;
+      }
+    );
   }
 }
