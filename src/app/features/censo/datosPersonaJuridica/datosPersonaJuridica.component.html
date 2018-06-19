@@ -14,7 +14,7 @@
 
     <!--DATOS GENERALES-->
     <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
-        <!--<app-datos-generales *ngSwitchCase="'generales'"></app-datos-generales>-->
+        <app-datos-generales *ngSwitchCase="'generales'"></app-datos-generales>
         <app-accesoFichaPersona *ngSwitchCase="'notario'"></app-accesoFichaPersona>
     </div>
     <!--END DATOS GENERALES-->
