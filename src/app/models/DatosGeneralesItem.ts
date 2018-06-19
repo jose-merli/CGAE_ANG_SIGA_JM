@@ -1,25 +1,21 @@
 export class DatosGeneralesItem {
+  idInstitucion: String;
+  idPersona: String;
+  idLenguaje: String;
   nif: String;
-  identificacion: String;
-  tipo: String;
-  fechaBaja: Date;
   denominacion: String;
   abreviatura: String;
+  fechaConstitucion: Date;
+  tipo: String;
+  numeroIntegrantes: String;
+  nombresIntegrantes: String;
+  fechaBaja: Date;
+  anotaciones: String;
+  IDGrupos: String;
+  sociedadProfesional: String;
   idioma: String;
   cuentaContable: String;
-  anotaciones: String;
-  etiquetas: String[];
-  apellidos: String;
-  nombre: String;
-  fechaNacimiento: Date;
-  fechaAlta: Date;
-  lugarNacimiento: String;
-  tratamiento: String;
-  sexo: String;
-  idiomaPreferencia: String;
-  situacionGeneral: String;
-  utilizarFoto: boolean;
-  exportarDatos: boolean;
-  idPersona: String;
+  grupos: String[];
+
   constructor() {}
 }

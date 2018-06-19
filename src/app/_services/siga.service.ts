@@ -84,8 +84,8 @@ export class SigaServices {
     busquedaPerJuridica_search: "busquedaPerJuridica/search",
     busquedaPerJuridica_delete: "busquedaPerJuridica/delete",
     busquedaPerJuridica_history: "busquedaPerJuridica/searchHistoric",
-    datosGenerales_update: "DatosGenerales/update",
-    datosGenerales_insert: "DatosGenerales/insert",
+    datosGenerales_update: "/personaJuridica/update",
+    datosGenerales_insert: "/personaJuridica/create",
     datosGenerales_identificacion: "DatosGenerales/identificacion",
     busquedaPer_colegio: "busquedaPer/colegio",
     busquedaPer_searchJuridica: "busquedaPerJuridica/searchJuridica",
@@ -99,15 +99,15 @@ export class SigaServices {
     accesoFichaPersona_desasociarPersona: "fichaPersona/desasociarPersona",
     accesoFichaPersona_guardar: "fichaPersona/guardar",
     busquedaPerJuridica_update: "busquedaPerJuridica/update",
-    datosGenerales_tipo: "busquedaPerJuridica/tipoSociedad",
-    datosGenerales_etiquetas: "busquedaPerJuridica/etiquetas",
-
     datosRegistrales_actividadesPersona:
       "perJuridicaDatosRegistrales/actividadProfesionalPer",
     datosRegistrales_actividadesDisponible:
       "perJuridicaDatosRegistrales/actividadProfesional",
     datosRegistrales_search: "perJuridicaDatosRegistrales/search",
-    datosRegistrales_update: "perJuridicaDatosRegistrales/update"
+    datosRegistrales_update: "perJuridicaDatosRegistrales/update",
+    retenciones_tipoRetencion: "retenciones/tipoRetencion",
+    retenciones_search: "retenciones/search",
+    retenciones_update: "retenciones/update"
   };
 
   private menuToggled = new Subject<any>();

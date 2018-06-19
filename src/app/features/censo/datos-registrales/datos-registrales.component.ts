@@ -30,6 +30,7 @@ import { TooltipModule } from "primeng/tooltip";
 import { ChipsModule } from "primeng/chips";
 import { RadioButtonModule } from "primeng/radiobutton";
 import { FileUploadModule } from "primeng/fileupload";
+import { MultiSelectModule } from "primeng/multiSelect";
 
 import { Http, Response } from "@angular/http";
 import { MenuItem } from "primeng/api";
@@ -57,37 +58,8 @@ import { DatosGeneralesComponent } from "./../../../new-features/censo/ficha-col
 import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-colegial/datos-colegiales/datos-colegiales.component";
 import { DatosRegistralesItem } from "./../../../../app/models/DatosRegistralesItem";
 import { DatosRegistralesObject } from "./../../../../app/models/DatosRegistralesObject";
-import { MultiSelectModule } from "primeng/multiSelect";
+import { DatosPersonaJuridicaComponent } from "../datosPersonaJuridica/datosPersonaJuridica.component";
 
-@NgModule({
-  imports: [
-    CommonModule,
-    CalendarModule,
-    InputTextModule,
-    InputTextareaModule,
-    DropdownModule,
-    CheckboxModule,
-    ButtonModule,
-    DataTableModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AutoCompleteModule,
-    ConfirmDialogModule,
-    ConfirmationService,
-    TooltipModule,
-    MultiSelectModule,
-    ChipsModule,
-    RadioButtonModule,
-    FileUploadModule
-  ],
-  declarations: [
-    FichaColegialComponent,
-    DatosGeneralesComponent,
-    DatosColegialesComponent
-  ],
-  exports: [FichaColegialComponent],
-  providers: []
-})
 @Component({
   selector: "app-datos-registrales",
   templateUrl: "./datos-registrales.component.html",
@@ -154,29 +126,6 @@ export class DatosRegistralesComponent implements OnInit {
 
   @ViewChild("table") table;
 
-  fichasPosibles = [
-    {
-      key: "generales",
-      activa: false
-    },
-    {
-      key: "direcciones",
-      activa: false
-    },
-    {
-      key: "registrales",
-      activa: false
-    },
-    {
-      key: "bancarios",
-      activa: false
-    },
-    {
-      key: "cv",
-      activa: false
-    }
-  ];
-
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -185,7 +134,8 @@ export class DatosRegistralesComponent implements OnInit {
     private location: Location,
     private confirmationService: ConfirmationService,
     private sigaServices: SigaServices,
-    private headerGestionEntidadService: HeaderGestionEntidadService
+    private headerGestionEntidadService: HeaderGestionEntidadService,
+    private fichasPosibles: DatosPersonaJuridicaComponent
   ) {
     this.formBusqueda = this.formBuilder.group({
       cif: null
@@ -201,6 +151,21 @@ export class DatosRegistralesComponent implements OnInit {
       sessionStorage.removeItem("usuarioBody");
       this.search();
     }
+    this.body.idPersona = this.bodyviejo[0].idPersona;
+    this.sigaServices
+      .postPaginado("datosRegistrales_search", "?numPagina=1", this.body)
+      .subscribe(
+        data => {
+          console.log(data);
+          this.personaSearch = JSON.parse(data["body"]);
+          if (this.personaSearch.datosRegistralesItems.length > 0)
+            this.body = this.personaSearch.datosRegistralesItems[0];
+          // this.datos = this.personaSearch.busquedaJuridicaItems;
+        },
+        err => {
+          console.log(err);
+        }
+      );
 
     this.sigaServices.get("datosRegistrales_actividadesDisponible").subscribe(
       n => {
@@ -219,6 +184,16 @@ export class DatosRegistralesComponent implements OnInit {
         console.log(err);
       }
     );
+    this.sigaServices
+      .post("datosRegistrales_actividadesPersona", this.body)
+      .subscribe(
+        n => {
+          this.body.combooItems = n.combooItems;
+        },
+        err => {
+          console.log(err);
+        }
+      );
 
     // datosRegistrales_search
 
@@ -448,13 +423,13 @@ export class DatosRegistralesComponent implements OnInit {
 
   onAbrirTodoClick() {
     this.showAll = !this.showAll;
-    this.fichasPosibles.forEach((ficha: any) => {
+    this.fichasPosibles.getFichasPosibles().forEach((ficha: any) => {
       ficha.activa = this.showAll;
     });
   }
 
   getFichaPosibleByKey(key): any {
-    let fichaPosible = this.fichasPosibles.filter(elto => {
+    let fichaPosible = this.fichasPosibles.getFichasPosibles().filter(elto => {
       return elto.key === key;
     });
     if (fichaPosible && fichaPosible.length) {

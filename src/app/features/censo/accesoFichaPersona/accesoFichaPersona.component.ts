@@ -56,15 +56,15 @@ export class AccesoFichaPersonaComponent implements OnInit {
     if (this.usuarioBody != null) {
       this.idPersona = this.usuarioBody[0].idPersona;
       this.tipoPersona = "Notario"; //this.usuarioBody[0].tipo;
-
-      this.search();
     }
+    this.search();
     this.comboTipoIdentificacion = [
       { label: "NIF", value: "NIF" },
       { label: "NIE", value: "NIE" }
     ];
 
     this.comboSituacion = [
+      { label: "", value: "" },
       { label: "Ejerciente Residente", value: "Ejerciente Residente" },
       { label: "No colegiado", value: "No colegiado" },
       { label: "Sociedad", value: "Sociedad" }
@@ -85,8 +85,13 @@ export class AccesoFichaPersonaComponent implements OnInit {
           console.log("hloo", data);
           this.progressSpinner = false;
           this.bodySearch = JSON.parse(data["body"]);
-          if (this.bodySearch.FichaPersonaItem != undefined) {
-            this.body = this.bodySearch.FichaPersonaItem[0];
+          if (this.bodySearch.fichaPersonaItem != undefined) {
+            this.body = this.bodySearch.fichaPersonaItem[0];
+          }
+          if (this.bodySearch.fichaPersonaItem != null) {
+            this.body = this.bodySearch.fichaPersonaItem[0];
+          } else {
+            this.limpiarCamposNotario();
           }
         },
         error => {
@@ -98,11 +103,20 @@ export class AccesoFichaPersonaComponent implements OnInit {
       );
   }
 
+  limpiarCamposNotario() {
+    this.body.nif = "";
+    this.body.nombre = "";
+    this.body.apellido1 = "";
+    this.body.apellido2 = "";
+    this.body.situacion = "";
+    this.body.numeroColegiado = "";
+    this.body.fechaAlta = undefined;
+  }
+
   desasociarPersona() {
     this.progressSpinner = true;
-
+    this.body.idPersonaDesasociar = this.body.idPersona;
     this.body.idPersona = this.idPersona;
-    this.body.idPersonaDesasociar = this.idPersona;
     this.body.tipoPersona = this.tipoPersona;
     this.body.idInstitucion = "";
 
@@ -118,6 +132,9 @@ export class AccesoFichaPersonaComponent implements OnInit {
           this.showFail(JSON.stringify(this.bodySearch.error.description));
           console.log(error);
           this.progressSpinner = false;
+        },
+        () => {
+          this.search();
         }
       );
   }
@@ -153,10 +170,6 @@ export class AccesoFichaPersonaComponent implements OnInit {
 
   isSearch() {
     this.router.navigate(["/busquedaGeneral"]);
-  }
-
-  isEditar() {
-    this.editar = true;
   }
 
   redireccionar() {}
