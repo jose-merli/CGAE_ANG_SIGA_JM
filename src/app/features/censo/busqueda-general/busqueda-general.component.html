@@ -4,7 +4,8 @@
         <p>Búsqueda de Colegiados</p>
     </div>
     <div class="breadCrumb">
-        <p>Censo <i class="fa fa-angle-right"></i> Búsqueda de Colegiados</p>
+        <p>Censo
+            <i class="fa fa-angle-right"></i> Búsqueda de Colegiados</p>
     </div>
     <div class="card">
 
@@ -15,8 +16,10 @@
                     <p-radioButton name="person" value="j" label="Personas Juridicas" [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
                 </div>
             </div>
-            <p class="title-module">Datos generales<i (click)="abrirFicha('generales')" *ngIf="!esFichaActiva('generales')" class="fa fa-angle-up float-right"></i><i
-                    (click)="cerrarFicha('generales')" *ngIf="esFichaActiva('generales')" class="fa fa-angle-down float-right"></i></p>
+            <p class="title-module">Datos generales
+                <i (click)="abrirFicha('generales')" *ngIf="!esFichaActiva('generales')" class="fa fa-angle-up float-right"></i>
+                <i (click)="cerrarFicha('generales')" *ngIf="esFichaActiva('generales')" class="fa fa-angle-down float-right"></i>
+            </p>
             <div *ngIf="persona=='f'" class="module vista-avanzada">
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
@@ -95,19 +98,24 @@
                 [rows]="selectedItem">
                 <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                     filterMatchMode="contains"></p-column>
-                    <ng-template pTemplate="paginatorLeft">
-                        <div class="mostrar">
-                            <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                            <label>Mostrar</label>
-                            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown><label> registros</label>
-                        </div>
-                    </ng-template>
-                    <p-footer *ngIf="selectedDatos && selectedDatos != ''">
-                        <div class="text-right main-button">
-                            <button pButton type="button" icon="fa fa-download" iconPos="left" label="Descargar"></button>
-                        </div>
-                    </p-footer>
-                    </p-dataTable>
+                <ng-template pTemplate="paginatorLeft">
+                    <div class="mostrar">
+                        <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                        <label>Mostrar</label>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                        <label> registros</label>
+                    </div>
+                </ng-template>
+                <p-footer *ngIf="selectedDatos && selectedDatos != ''">
+                    <div class="text-right main-button">
+                        <button pButton type="button" icon="fa fa-download" iconPos="left" label="Descargar"></button>
+                    </div>
+                </p-footer>
+            </p-dataTable>
         </div>
     </div>
+</div>
+<p-growl [(value)]="msgs "></p-growl>
+<div *ngIf="progressSpinner " class="overlay-spinner ">
+    <div class="loader "></div>
 </div>

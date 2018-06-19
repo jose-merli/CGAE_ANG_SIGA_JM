@@ -202,6 +202,8 @@ export class BusquedaGeneralComponent {
         this.colegios_seleccionados.forEach((value: ComboItem, key: number) => {
           this.bodyFisica.idInstitucion.push(value.value);
         });
+      }else{
+        this.bodyFisica.idInstitucion = [];
       }
       if (this.bodyFisica.nombre == undefined) {
         this.bodyFisica.nombre = "";
