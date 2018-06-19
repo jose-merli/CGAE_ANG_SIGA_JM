@@ -27,20 +27,15 @@ export class AccesoFichaPersonaComponent implements OnInit {
   comboTipoIdentificacion: SelectItem[];
   comboSituacion: SelectItem[];
   selectedcomboTipoIdentificacion: string;
-
   msgs: Message[];
-
   openFicha: boolean = false;
   editar: boolean = false;
   archivoDisponible: boolean = false;
   progressSpinner: boolean = false;
-
   body: DatosNotarioItem = new DatosNotarioItem();
   bodySearch: DatosNotarioObject = new DatosNotarioObject();
-
   idPersona: String;
   tipoPersona: String;
-
   usuarioBody: any[];
 
   file: File = undefined;
@@ -53,6 +48,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
 
   ngOnInit() {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+
     if (this.usuarioBody != null) {
       this.idPersona = this.usuarioBody[0].idPersona;
       this.tipoPersona = "Notario"; //this.usuarioBody[0].tipo;
@@ -77,12 +73,10 @@ export class AccesoFichaPersonaComponent implements OnInit {
     this.body.idPersona = this.idPersona;
     this.body.tipoPersona = this.tipoPersona;
     this.body.idInstitucion = "";
-
     this.sigaServices
       .postPaginado("accesoFichaPersona_search", "?numPagina=1", this.body)
       .subscribe(
         data => {
-          console.log("hloo", data);
           this.progressSpinner = false;
           this.bodySearch = JSON.parse(data["body"]);
           if (this.bodySearch.fichaPersonaItem != undefined) {

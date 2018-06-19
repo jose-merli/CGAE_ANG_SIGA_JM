@@ -56,35 +56,7 @@ import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-co
 import { DatosGeneralesItem } from "./../../../../app/models/DatosGeneralesItem";
 import { DatosGeneralesObject } from "./../../../../app/models/DatosGeneralesObject";
 import { MultiSelectModule } from "primeng/multiSelect";
-
-@NgModule({
-  imports: [
-    CommonModule,
-    CalendarModule,
-    InputTextModule,
-    InputTextareaModule,
-    DropdownModule,
-    CheckboxModule,
-    ButtonModule,
-    DataTableModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AutoCompleteModule,
-    ConfirmDialogModule,
-    TooltipModule,
-    MultiSelectModule,
-    ChipsModule,
-    RadioButtonModule,
-    FileUploadModule
-  ],
-  declarations: [
-    FichaColegialComponent,
-    DatosGeneralesComponent,
-    DatosColegialesComponent
-  ],
-  exports: [FichaColegialComponent],
-  providers: []
-})
+ 
 @Component({
   selector: "app-datos-generales",
   templateUrl: "./datos-generales.component.html",
