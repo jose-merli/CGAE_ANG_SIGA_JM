@@ -87,6 +87,7 @@ export class BusquedaGeneralComponent {
   selectedItem: number = 10;
   @ViewChild("table") table;
   selectedDatos;
+  tipoCIF: String;
 
   masFiltros: boolean = false;
   labelFiltros: string;
@@ -104,7 +105,7 @@ export class BusquedaGeneralComponent {
       activa: false
     }
   ];
-
+  private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -131,7 +132,7 @@ export class BusquedaGeneralComponent {
       { field: "nombre", header: "Nombre" },
       { field: "apellidos", header: "Apellidos" },
       { field: "colegio", header: "Colegio" },
-      { field: "numColegiado", header: "Numero de Colegiado" },
+      { field: "numeroColegiado", header: "Numero de Colegiado" },
       { field: "situacion", header: "Estado colegial" },
       { field: "residente", header: "Residencia" }
     ];
@@ -173,6 +174,49 @@ export class BusquedaGeneralComponent {
     this.checkStatusInit();
   }
 
+  isValidDNI(dni: String): boolean {
+    return (
+      dni &&
+      typeof dni === "string" &&
+      /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
+      dni.substr(8, 9).toUpperCase() ===
+        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+    );
+  }
+  checkTypeCIF(value: String): boolean {
+    if (this.isValidDNI(value)) {
+      this.tipoCIF = "10";
+      return true;
+    } else if (this.isValidNIE(value)) {
+      this.tipoCIF = "40";
+      return true;
+    } else if (this.isValidPassport(value)) {
+      this.tipoCIF = "30";
+      return true;
+    } else {
+      this.tipoCIF = "50";
+      return false;
+    }
+  }
+  isValidPassport(dni: String): boolean {
+    return (
+      dni && typeof dni === "string" && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni)
+    );
+  }
+  isValidNIE(nie: String): boolean {
+    return (
+      nie &&
+      typeof nie === "string" &&
+      /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie)
+    );
+  }
+  isValidCIF(cif: String): boolean {
+    return (
+      cif &&
+      typeof cif === "string" &&
+      /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif)
+    );
+  }
   changeColsAndData() {
     if (this.persona == "f") {
       this.cols = this.colsFisicas;
@@ -215,9 +259,10 @@ export class BusquedaGeneralComponent {
       if (this.bodyFisica.segundoApellido == undefined) {
         this.bodyFisica.segundoApellido = "";
       }
-      if (this.bodyFisica.numColegiado == undefined) {
-        this.bodyFisica.numColegiado = "";
+      if (this.bodyFisica.numeroColegiado == undefined) {
+        this.bodyFisica.numeroColegiado = "";
       }
+      this.checkTypeCIF(this.bodyFisica.nif);
       this.sigaServices
         .postPaginado(
           "busquedaPer_searchFisica",
@@ -245,9 +290,15 @@ export class BusquedaGeneralComponent {
               if (
                 this.bodyFisica.nif != null &&
                 this.bodyFisica.nif != undefined
-              ) {
-                this.noDataFoundWithDNI();
-              }
+              )
+                if (this.bodyFisica.nombre.trim() == "")
+                  if (
+                    this.bodyFisica.primerApellido.trim() == "" &&
+                    this.bodyFisica.segundoApellido.trim() == "" &&
+                    this.bodyFisica.numeroColegiado.trim() == ""
+                  ) {
+                    this.noDataFoundWithDNI();
+                  }
             }
           }
         );
@@ -268,6 +319,7 @@ export class BusquedaGeneralComponent {
       this.colegios_seleccionados.forEach((value: ComboItem, key: number) => {
         this.bodyJuridica.idInstitucion.push(value.value);
       });
+
       this.sigaServices
         .postPaginado(
           "busquedaPer_searchJuridica",
@@ -326,9 +378,12 @@ export class BusquedaGeneralComponent {
         sessionStorage.getItem("notario") != undefined
       ) {
         sessionStorage.removeItem("notario");
+
+        id.tipoIdentificacion = this.tipoCIF;
         sessionStorage.setItem("notario", JSON.stringify(id));
         this.location.back();
       } else {
+        id.tipoIdentificacion = this.tipoCIF;
         sessionStorage.setItem("notario", JSON.stringify(id));
         this.location.back();
       }
@@ -345,11 +400,13 @@ export class BusquedaGeneralComponent {
       accept: () => {
         let notarioNIF = new DatosNotarioItem();
         notarioNIF.nif = this.bodyFisica.nif;
-
+        notarioNIF.tipoIdentificacion = this.tipoCIF;
         notarioNIF.nombre = "";
         let notariosNEW = [];
         notariosNEW.push(notarioNIF);
+
         sessionStorage.removeItem("notario");
+
         sessionStorage.setItem("notario", JSON.stringify(notariosNEW));
         this.location.back();
       },

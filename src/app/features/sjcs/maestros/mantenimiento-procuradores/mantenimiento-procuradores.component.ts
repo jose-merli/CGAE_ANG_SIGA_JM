@@ -13,7 +13,7 @@ export class MantenimientoProcuradoresComponent implements OnInit {
   url;
 
   constructor(public sigaServices: OldSigaServices) {
-    this.url = sigaServices.getOldSigaUrl("mantenimientoProcuradores");
+    this.url = sigaServices.getOldSigaUrl("mantenimientoprocuradores");
   }
 
   ngOnInit() {

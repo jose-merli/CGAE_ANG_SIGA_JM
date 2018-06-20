@@ -77,6 +77,11 @@ export class DatosRegistralesComponent implements OnInit {
   bodyviejo: DatosRegistralesItem = new DatosRegistralesItem();
   personaSearch: DatosRegistralesObject = new DatosRegistralesObject();
 
+  fechaConstitucion: Date;
+  fechaFin: Date;
+  fechaCancelacion: Date;
+  fechaRegistro: Date;
+
   fichasActivas: Array<any> = [];
   todo: boolean = false;
   textFilter: String = "Elegir";
@@ -148,23 +153,24 @@ export class DatosRegistralesComponent implements OnInit {
     if (this.bodyviejo != null) {
       this.body.idPersona = this.bodyviejo[0].idPersona;
       this.idPersonaEditar = this.bodyviejo[0].idPersona;
-      this.search();
     }
 
-    this.sigaServices
-      .postPaginado("datosRegistrales_search", "?numPagina=1", this.body)
-      .subscribe(
-        data => {
-          console.log(data);
-          this.personaSearch = JSON.parse(data["body"]);
-          if (this.personaSearch.datosRegistralesItems.length > 0)
-            this.body = this.personaSearch.datosRegistralesItems[0];
-          // this.datos = this.personaSearch.busquedaJuridicaItems;
-        },
-        err => {
-          console.log(err);
-        }
-      );
+    this.search();
+    console.log(this.body);
+
+    // this.sigaServices
+    //   .postPaginado("datosRegistrales_search", "?numPagina=1", this.body)
+    //   .subscribe(
+    //     data => {
+    //       console.log(data);
+    //       this.personaSearch = JSON.parse(data["body"]);
+    //       if (this.personaSearch.datosRegistralesItems.length > 0)
+    //         this.body = this.personaSearch.datosRegistralesItems[0];
+    //     },
+    //     err => {
+    //       console.log(err);
+    //     }
+    //   );
 
     this.sigaServices.get("datosRegistrales_actividadesDisponible").subscribe(
       n => {
@@ -175,26 +181,7 @@ export class DatosRegistralesComponent implements OnInit {
       }
     );
 
-    this.sigaServices.get("datosRegistrales_actividadesPersona").subscribe(
-      n => {
-        this.body.actividades = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-    );
-    // this.sigaServices
-    //   .post("datosRegistrales_actividadesPersona", this.body)
-    //   .subscribe(
-    //     n => {
-    //       this.body.combooItems = n.combooItems;
-    //     },
-    //     err => {
-    //       console.log(err);
-    //     }
-    //   );
-
-    // datosRegistrales_search
+    this.getActividadesPersona();
 
     this.select = [
       { label: "", value: null },
@@ -210,7 +197,26 @@ export class DatosRegistralesComponent implements OnInit {
     ];
   }
 
+  getActividadesPersona() {
+    this.sigaServices
+      .post("datosRegistrales_actividadesPersona", this.body)
+      .subscribe(
+        data => {
+          this.body.actividades = [];
+          let seleccionadas = JSON.parse(data["body"]).combooItems;
+          seleccionadas.forEach((value: any, index: number) => {
+            this.body.actividades.push(value.value);
+          });
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
   search() {
+    this.body.idPersona = this.idPersonaEditar;
+    this.getActividadesPersona();
     this.sigaServices
       .postPaginado("datosRegistrales_search", "?numPagina=1", this.body)
       .subscribe(
@@ -219,8 +225,11 @@ export class DatosRegistralesComponent implements OnInit {
           this.personaSearch = JSON.parse(data["body"]);
           this.body = this.personaSearch.datosRegistralesItems[0];
           this.body.idPersona = this.idPersonaEditar;
+          this.fechaConstitucion = this.body.fechaConstitucion;
+          this.fechaFin = this.body.fechaFin;
+          this.fechaCancelacion = this.body.fechaCancelacion;
+          this.fechaRegistro = this.body.fechaRegistro;
           this.selectActividad = this.body.actividades;
-          // this.datos = this.personaSearch.busquedaJuridicaItems;
         },
         err => {
           console.log(err);
@@ -250,6 +259,7 @@ export class DatosRegistralesComponent implements OnInit {
 
   guardar() {
     this.arreglarFechas();
+    this.body.idPersona = this.idPersonaEditar;
     if (this.selectActividad != undefined) {
       this.body.actividades = [];
       this.selectActividad.forEach((value: ComboItem, key: number) => {
@@ -273,57 +283,49 @@ export class DatosRegistralesComponent implements OnInit {
       err => {
         this.showFail();
         console.log(err);
-      }
-    ),
+      },
       () => {
         this.search();
-      };
-  }
-
-  //Hay que averiguar que necesita el back que le envíe.
-
-  transformaFecha(FechaJSON) {
-    let fechaFinal;
-    if (FechaJSON.length > 12) {
-      FechaJSON = FechaJSON.substring(1, 11);
-      let fechaFormateada: any[] = FechaJSON.split("-");
-      fechaFormateada[2] = parseInt(fechaFormateada[2]) + 1;
-      fechaFinal =
-        fechaFormateada[1] +
-        "-" +
-        fechaFormateada[2] +
-        "-" +
-        fechaFormateada[0];
-    } else {
-      let fechaFormateada: any[] = FechaJSON.split("-");
-      fechaFinal =
-        fechaFormateada[0] +
-        "-" +
-        fechaFormateada[1] +
-        "-" +
-        fechaFormateada[2];
-    }
-    return new Date(fechaFinal);
+      }
+    );
   }
 
   arreglarFechas() {
-    let fechaConst1 = JSON.stringify(this.body.fechaConstitucion);
-    let fechaBaja1 = JSON.stringify(this.body.fechaFin);
-    let fechaReg1 = JSON.stringify(this.body.fechaRegistro);
-    let fechaCanc1 = JSON.stringify(this.body.fechaCancelacion);
+    console.log(this.fechaConstitucion);
+    console.log(JSON.stringify(this.fechaFin));
+
+    let fechaConst1 = JSON.stringify(this.fechaConstitucion);
+    let fechaBaja1 = JSON.stringify(this.fechaFin);
+    let fechaReg1 = JSON.stringify(this.fechaRegistro);
+    let fechaCanc1 = JSON.stringify(this.fechaCancelacion);
 
     if (fechaConst1 != undefined) {
-      this.body.fechaConstitucion = this.transformaFecha(fechaConst1);
+      this.body.fechaConstitucion = this.transformaFecha(
+        this.fechaConstitucion
+      );
     }
     if (fechaBaja1 != undefined) {
-      this.body.fechaFin = this.transformaFecha(fechaBaja1);
+      this.body.fechaFin = this.transformaFecha(this.fechaFin);
     }
     if (fechaReg1 != undefined) {
-      this.body.fechaRegistro = this.transformaFecha(fechaReg1);
+      this.body.fechaRegistro = this.transformaFecha(this.fechaRegistro);
     }
     if (fechaCanc1 != undefined) {
-      this.body.fechaCancelacion = this.transformaFecha(fechaCanc1);
+      this.body.fechaCancelacion = this.transformaFecha(this.fechaCancelacion);
     }
+  }
+
+  transformaFecha(fecha) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -1);
+    if (rawDate.length < 14) {
+      let splitDate = rawDate.split("-");
+      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+      fecha = new Date((arrayDate += "T23:59:59.001Z"));
+    } else {
+      fecha = new Date(fecha);
+    }
+    return fecha;
   }
 
   desactivadoGuardar() {
@@ -332,12 +334,12 @@ export class DatosRegistralesComponent implements OnInit {
       !this.onlySpaces(this.body.objetoSocial) &&
       this.body.resena != undefined &&
       !this.onlySpaces(this.body.resena) &&
-      this.body.fechaConstitucion != undefined &&
+      this.fechaConstitucion != undefined &&
       this.body.identificadorRegistroProvincial != undefined &&
       !this.onlySpaces(this.body.identificadorRegistroProvincial) &&
       this.body.numeroRegistro != undefined &&
       !this.onlySpaces(this.body.numeroRegistro) &&
-      this.body.fechaRegistro != undefined
+      this.fechaRegistro != undefined
     ) {
       return false;
     } else {
@@ -358,15 +360,9 @@ export class DatosRegistralesComponent implements OnInit {
     return ret;
   }
 
-  restablecer() {
-    this.search();
-    this.arreglarFechas();
-  }
-
   toSociedadProfesional() {
-    let mess = this.translateService.instant(
-      "¿Está seguro de que desea traspasar esta sociedad a Sociedad Profesional?"
-    );
+    let mess =
+      "¿Está seguro de que desea traspasar esta sociedad a Sociedad Profesional?";
     let icon = "fas fa-book";
     this.confirmationService.confirm({
       message: mess,
