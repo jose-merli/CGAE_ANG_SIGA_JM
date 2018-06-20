@@ -77,7 +77,7 @@ export class DatosRetencionesComponent implements OnInit {
 
   ngOnInit() {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    if (this.usuarioBody.length > 0)
+    if (this.usuarioBody != undefined)
       this.idPersona = this.usuarioBody[0].idPersona;
 
     this.getTiposRetenciones();
@@ -94,7 +94,6 @@ export class DatosRetencionesComponent implements OnInit {
       },
       err => {
         console.log(err);
-        this.tiposRetenciones.error = err.error;
       }
     );
   }

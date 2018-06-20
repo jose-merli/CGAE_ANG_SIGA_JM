@@ -56,7 +56,7 @@ import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-co
 import { DatosGeneralesItem } from "./../../../../app/models/DatosGeneralesItem";
 import { DatosGeneralesObject } from "./../../../../app/models/DatosGeneralesObject";
 import { MultiSelectModule } from "primeng/multiSelect";
- 
+
 @Component({
   selector: "app-datos-generales",
   templateUrl: "./datos-generales.component.html",
@@ -102,22 +102,19 @@ export class DatosGenerales implements OnInit {
   generos: any[];
   tratamientos: any[];
   comboEtiquetas: any[];
+  etiquetasPersonaJuridica: any[];
+  etiquetasPersonaJuridicaSelecionados: any[] = [];
   comboIdentificacion: any[];
   comboTipo: any[] = [];
-  fecha;
-  idiomas: any[] = [
-    { label: "Seleccione un idioma", value: "" },
-    { label: "Castellano", value: "castellano" },
-    { label: "Catalá", value: "catalan" },
-    { label: "Euskara", value: "euskera" },
-    { label: "Galego", value: "gallego" }
-  ];
+  idiomas: any[];
   usuarioBody: any[];
   edadCalculada: String;
   textSelected: String = "{0} grupos seleccionados";
   idPersona: String;
   tipoPersonaJuridica: String;
   datos: any[];
+  idiomaPreferenciaSociedad: String;
+
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
 
@@ -163,18 +160,43 @@ export class DatosGenerales implements OnInit {
   ngOnInit() {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
 
-    this.idPersona = this.usuarioBody[0].idPersona;
-    this.tipoPersonaJuridica = this.usuarioBody[0].tipo;
+    if (this.usuarioBody != undefined) {
+      this.idPersona = this.usuarioBody[0].idPersona;
+      this.tipoPersonaJuridica = this.usuarioBody[0].tipo;
+    }
 
     this.datosGeneralesSearch();
 
     this.textFilter = "Elegir";
+
     this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
       n => {
+        // coger todas las etiquetas
         this.comboEtiquetas = n.combooItems;
       },
       err => {
         console.log(err);
+      },
+      () => {
+        this.sigaServices
+          .post("busquedaPerJuridica_etiquetasPersona", this.body)
+          .subscribe(
+            n => {
+              // coger etiquetas de una persona juridica
+              this.etiquetasPersonaJuridica = JSON.parse(n["body"]).combooItems;
+            },
+            err => {
+              console.log(err);
+            },
+            () => {
+              // dejar etiquetas de persona juridica seleccionadas en <p-multiSelect></p-multiSelect>
+              this.etiquetasPersonaJuridica.forEach(
+                (value: any, index: number) => {
+                  this.etiquetasPersonaJuridicaSelecionados.push(value.value);
+                }
+              );
+            }
+          );
       }
     );
 
@@ -301,6 +323,20 @@ export class DatosGenerales implements OnInit {
           this.showFail(JSON.stringify(this.personaSearch.error.description));
           console.log(error);
           this.progressSpinner = false;
+        },
+        () => {
+          // obtengo los idiomas y establecer el del la persona jurídica
+          this.sigaServices.get("etiquetas_lenguaje").subscribe(
+            n => {
+              this.idiomas = n.combooItems;
+            },
+            err => {
+              console.log(err);
+            },
+            () => {
+              this.idiomaPreferenciaSociedad = this.body.idLenguajeSociedad;
+            }
+          );
         }
       );
   }
