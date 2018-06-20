@@ -256,6 +256,8 @@ export class DatosRegistralesComponent implements OnInit {
       this.selectActividad.forEach((value: ComboItem, key: number) => {
         this.body.actividades.push(value.value);
       });
+    } else {
+      this.body.actividades = [];
     }
     if (this.body.companiaAseg == undefined) {
       this.body.companiaAseg = "";
@@ -279,12 +281,14 @@ export class DatosRegistralesComponent implements OnInit {
       };
   }
 
+  //Hay que averiguar que necesita el back que le envíe.
+
   transformaFecha(FechaJSON) {
     let fechaFinal;
     if (FechaJSON.length > 12) {
       FechaJSON = FechaJSON.substring(1, 11);
       let fechaFormateada: any[] = FechaJSON.split("-");
-      // fechaFormateada[2] = parseInt(fechaFormateada[2]) + 1;
+      fechaFormateada[2] = parseInt(fechaFormateada[2]) + 1;
       fechaFinal =
         fechaFormateada[1] +
         "-" +
@@ -356,8 +360,8 @@ export class DatosRegistralesComponent implements OnInit {
   }
 
   restablecer() {
-    this.arreglarFechas();
     this.search();
+    this.arreglarFechas();
   }
 
   toSociedadProfesional() {
