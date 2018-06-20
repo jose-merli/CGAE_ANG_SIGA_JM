@@ -19,6 +19,7 @@
                         </label>
                         <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}
                             <span>{{ body.nombre }}</span>
+                            <span>{{ body.apellidos }}</span>
                         </label>
                         <label>Situación
                             <span>{{ body.situacion }}</span>
@@ -72,11 +73,11 @@
                         </div>
                         <div class="form-group col-lg-3 col-md-6">
                             <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}</label>
-                            <input [(ngModel)]="body.apellido1 " type="text " class="form-control" [(disabled)]="!editar" pInputText>
+                            <input [(ngModel)]="body.apellido1" type="text " class="form-control" [(disabled)]="!editar" pInputText>
                         </div>
                         <div class="form-group col-lg-3 col-md-6">
                             <label></label>
-                            <input [(ngModel)]="body.apellido2 " type="text " class="form-control" [(disabled)]="!editar" pInputText>
+                            <input [(ngModel)]="body.apellido2" type="text " class="form-control" [(disabled)]="!editar" pInputText>
                         </div>
                         <div class="form-group col-lg-3 col-md-6 ">
                             <label>{{"censo.fichaCliente.situacion.cabecera" | translate}}</label>

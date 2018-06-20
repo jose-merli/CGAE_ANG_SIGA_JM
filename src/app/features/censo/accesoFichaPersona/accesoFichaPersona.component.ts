@@ -10,13 +10,15 @@ import {
 import { Router } from "@angular/router";
 import { Message } from "primeng/components/common/api";
 import { Location } from "@angular/common";
-
+import { ConfirmationService } from "primeng/api";
+import { MessageService } from "primeng/components/common/messageservice";
 import { SelectItem } from "primeng/api";
 
 import { SigaServices } from "./../../../_services/siga.service";
 
 import { DatosNotarioItem } from "./../../../../app/models/DatosNotarioItem";
 import { DatosNotarioObject } from "./../../../../app/models/DatosNotarioObject";
+import { TranslateService } from "../../../commons/translate";
 
 @Component({
   selector: "app-accesoFichaPersona",
@@ -37,23 +39,20 @@ export class AccesoFichaPersonaComponent implements OnInit {
   idPersona: String;
   tipoPersona: String;
   usuarioBody: any[];
+  notario: any;
 
   file: File = undefined;
 
   constructor(
     private router: Router,
     private location: Location,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit() {
-    this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
-
-    if (this.usuarioBody != null) {
-      this.idPersona = this.usuarioBody[0].idPersona;
-      this.tipoPersona = "Notario"; //this.usuarioBody[0].tipo;
-    }
-    this.search();
     this.comboTipoIdentificacion = [
       { label: "NIF", value: "NIF" },
       { label: "NIE", value: "NIE" }
@@ -65,6 +64,44 @@ export class AccesoFichaPersonaComponent implements OnInit {
       { label: "No colegiado", value: "No colegiado" },
       { label: "Sociedad", value: "Sociedad" }
     ];
+    if (
+      sessionStorage.getItem("notario") != undefined &&
+      sessionStorage.getItem("notario") != null
+    ) {
+      this.notario = JSON.parse(sessionStorage.getItem("notario"));
+      if (this.notario[0].idPersona != undefined) {
+        this.body.idPersona = this.notario[0].idPersona;
+      } else {
+        this.editar = true;
+      }
+      if (this.notario[0].colegio != undefined) {
+        this.body.colegio = this.notario[0].colegio;
+      }
+      if (this.notario[0].nif != undefined) {
+        this.body.nif = this.notario[0].nif;
+      }
+      if (this.notario[0].nombre != undefined) {
+        this.body.nombre = this.notario[0].nombre;
+      }
+      if (this.notario[0].primerApellido != undefined) {
+        this.body.apellido1 = this.notario[0].primerApellido;
+      }
+      if (this.notario[0].segundoApellido != undefined) {
+        this.body.apellido2 = this.notario[0].segundoApellido;
+      }
+      if (this.notario[0].numeroColegiado != undefined) {
+        this.body.numeroColegiado = this.notario[0].numeroColegiado;
+      }
+      if (this.notario[0].residente != undefined) {
+        this.body.residente = this.notario[0].residente;
+      }
+    } else {
+      if (this.usuarioBody != null) {
+        this.idPersona = this.usuarioBody[0].idPersona;
+        this.tipoPersona = "Notario"; //this.usuarioBody[0].tipo;
+      }
+      this.search();
+    }
   }
 
   search() {
