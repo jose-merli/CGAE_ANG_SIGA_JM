@@ -67,12 +67,11 @@
 
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.general.literal.FechaConstitucion" | translate}} (*)</label>
-              <p-calendar [(ngModel)]="body.fechaConstitucion" [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd-mm-yy"
-                showIcon="true"></p-calendar>
+              <p-calendar [(ngModel)]="fechaConstitucion" [locale]="es" utc="true" icon="far fa-calendar-alt" dateFormat="dd-mm-yy" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}</label>
-              <p-calendar [(ngModel)]="body.fechaFin" [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd-mm-yy" showIcon="true"></p-calendar>
+              <p-calendar [(ngModel)]="fechaFin" [locale]="es" utc="true" icon="far fa-calendar-alt" dateFormat="dd-mm-yy" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>Actividad Profesional: </label> <br>
@@ -97,13 +96,11 @@
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatosRegistrales.literal.fechaRegistro" | translate}} (*)</label>
-              <p-calendar [(ngModel)]="body.fechaRegistro" [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd-mm-yy"
-                showIcon="true"></p-calendar>
+              <p-calendar [(ngModel)]="fechaRegistro" [locale]="es" utc="true" icon="far fa-calendar-alt" dateFormat="dd-mm-yy" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatosRegistrales.literal.fechaCancelacion" | translate}}</label>
-              <p-calendar [(ngModel)]="body.fechaCancelacion" [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd-mm-yy"
-                showIcon="true"></p-calendar>
+              <p-calendar [(ngModel)]="fechaCancelacion" [locale]="es" utc="true" icon="far fa-calendar-alt" dateFormat="dd-mm-yy" showIcon="true"></p-calendar>
             </div>
           </div>
         </div>
@@ -113,7 +110,7 @@
       <div class="text-right main-button ">
         <button (click)="toSociedadProfesional()" class="sociedadprof" pButton type="button " icon="fas fa-book " iconPos="left"
           label="Sociedad Profesional"></button>
-          <button (click)="restablecer()" pButton type="button " icon="fa fa-redo " iconPos="left" label="Restablecer"></button>
+          <button (click)="search()" pButton type="button " icon="fa fa-redo " iconPos="left" label="Restablecer"></button>
           <button (click)="guardar()" [disabled]="desactivadoGuardar()" pButton type="button " icon="far fa-save " iconPos="left" label="Guardar"></button>
       </div>
     </div>
