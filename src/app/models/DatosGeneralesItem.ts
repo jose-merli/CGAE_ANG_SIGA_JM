@@ -16,6 +16,7 @@ export class DatosGeneralesItem {
   idioma: String;
   cuentaContable: String;
   grupos: String[];
+  idLenguajeSociedad: String;
 
   constructor() {}
 }

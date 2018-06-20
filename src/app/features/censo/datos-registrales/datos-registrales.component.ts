@@ -148,10 +148,9 @@ export class DatosRegistralesComponent implements OnInit {
     if (this.bodyviejo != null) {
       this.body.idPersona = this.bodyviejo[0].idPersona;
       this.idPersonaEditar = this.bodyviejo[0].idPersona;
-      sessionStorage.removeItem("usuarioBody");
       this.search();
     }
-    this.body.idPersona = this.bodyviejo[0].idPersona;
+
     this.sigaServices
       .postPaginado("datosRegistrales_search", "?numPagina=1", this.body)
       .subscribe(
