@@ -18,17 +18,7 @@
                             <span>{{ body.nif }}</span>
                         </label>
                         <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}
-                            <span>{{ body.nombre }}</span>
-                            <span>{{ body.apellidos }}</span>
-                        </label>
-                        <label>Situación
-                            <span>{{ body.situacion }}</span>
-                        </label>
-                        <label>Nº colegiado
-                            <span>{{ body.numeroColegiado }}</span>
-                        </label>
-                        <label>{{"administracion.usuarios.literal.fechaAlta" | translate}}
-                            <span>{{ body.fechaAlta }}</span>
+                            <span>{{ body.nombre }} {{ body.apellido1 }} {{ body.apellido2 }}</span>
                         </label>
                         <i (click)="redireccionar()" class="fa fa-rotate-right"></i>
                         <i (click)="abrirFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
@@ -53,7 +43,7 @@
 
                         <p-fileUpload #fubauto chooseLabel="" class="edit" mode="basic" name="file" auto="true" accept="image/*" (change)="uploadImage($event)"
                             auto="true">
-                        </p-fileUpload>
+                            </p-fileUpload>
                     </div>
                 </div>
                 <div class="bloque col-lg-6 col-md-6">
@@ -79,19 +69,7 @@
                             <label></label>
                             <input [(ngModel)]="body.apellido2" type="text " class="form-control" [(disabled)]="!editar" pInputText>
                         </div>
-                        <div class="form-group col-lg-3 col-md-6 ">
-                            <label>{{"censo.fichaCliente.situacion.cabecera" | translate}}</label>
-                            <p-dropdown class="select-form" [(ngModel)]="body.situacion" [options]="comboSituacion" [(disabled)]="!editar"></p-dropdown>
-                        </div>
-                        <div class="form-group col-lg-3 col-md-6 ">
-                            <label>Nº Colegiado/Registro</label>
-                            <input type="text " class="form-control " [(ngModel)]="body.numeroColegiado" [(disabled)]="!editar" pInputText>
-                        </div>
-                        <div class="form-group col-lg-6 col-md-6 form-group-date">
-                            <label>Fecha incorporación/Registro</label>
-                            <p-calendar [defaultDate]="null" [(ngModel)]="body.fechaAlta" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
-                                [(disabled)]="!editar"></p-calendar>
-                        </div>
+
                     </div>
                 </div>
             </div>

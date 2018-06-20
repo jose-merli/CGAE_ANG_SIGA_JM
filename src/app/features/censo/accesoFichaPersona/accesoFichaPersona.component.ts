@@ -64,13 +64,15 @@ export class AccesoFichaPersonaComponent implements OnInit {
       { label: "No colegiado", value: "No colegiado" },
       { label: "Sociedad", value: "Sociedad" }
     ];
+    this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     if (
       sessionStorage.getItem("notario") != undefined &&
       sessionStorage.getItem("notario") != null
     ) {
       this.notario = JSON.parse(sessionStorage.getItem("notario"));
       if (this.notario[0].idPersona != undefined) {
-        this.body.idPersona = this.notario[0].idPersona;
+        this.body.idPersonaAsociar = this.notario[0].idPersona;
+        this.tipoPersona = "Notario";
       } else {
         this.editar = true;
       }
@@ -95,11 +97,19 @@ export class AccesoFichaPersonaComponent implements OnInit {
       if (this.notario[0].residente != undefined) {
         this.body.residente = this.notario[0].residente;
       }
+    }
+    if (this.usuarioBody != null) {
+      this.idPersona = this.usuarioBody[0].idPersona;
+      this.tipoPersona = "Notario";
+    }
+
+    // si viene de pantalla de persona fisica => no hace busqueda
+    if (
+      sessionStorage.getItem("notario") != undefined &&
+      sessionStorage.getItem("notario") != null
+    ) {
+      sessionStorage.removeItem("notario");
     } else {
-      if (this.usuarioBody != null) {
-        this.idPersona = this.usuarioBody[0].idPersona;
-        this.tipoPersona = "Notario"; //this.usuarioBody[0].tipo;
-      }
       this.search();
     }
   }
@@ -187,6 +197,9 @@ export class AccesoFichaPersonaComponent implements OnInit {
         this.showFail(JSON.stringify(this.bodySearch.error.description));
         console.log(error);
         this.progressSpinner = false;
+      },
+      () => {
+        this.search();
       }
     );
   }

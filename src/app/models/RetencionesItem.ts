@@ -11,5 +11,6 @@ export class RetencionesItem {
   fechaModificacion: Date;
   value: String;
   label: String;
+  idLenguaje: String;
   constructor() {}
 }

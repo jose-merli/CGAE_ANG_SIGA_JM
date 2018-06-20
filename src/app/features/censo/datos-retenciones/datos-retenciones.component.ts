@@ -62,6 +62,8 @@ export class DatosRetencionesComponent implements OnInit {
   openFicha: boolean = false;
   usuarioBody: any[];
   idPersona: String;
+  body: RetencionesItem = new RetencionesItem();
+
   tiposRetenciones: DatosRetencionesDto = new DatosRetencionesDto();
   constructor(
     private formBuilder: FormBuilder,
@@ -81,6 +83,8 @@ export class DatosRetencionesComponent implements OnInit {
       this.idPersona = this.usuarioBody[0].idPersona;
 
     this.getTiposRetenciones();
+
+    this.search();
   }
 
   abrirFicha() {
@@ -96,5 +100,23 @@ export class DatosRetencionesComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  search() {
+    this.body.idPersona = this.idPersona;
+    this.body.idInstitucion = "";
+    this.body.idLenguaje = "";
+
+    this.sigaServices
+      .postPaginado("retenciones_search", "?numPagina=1", this.body)
+      .subscribe(
+        data => {
+          console.log(data);
+          // this.searchCatalogo = JSON.parse(data["body"]);
+          // this.datosEdit = this.searchCatalogo.catalogoMaestroItem;
+          // this.datosHist = this.searchCatalogo.catalogoMaestroItem;
+        },
+        err => {}
+      );
   }
 }
