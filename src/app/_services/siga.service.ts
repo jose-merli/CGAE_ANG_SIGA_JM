@@ -84,14 +84,12 @@ export class SigaServices {
     busquedaPerJuridica_search: "busquedaPerJuridica/search",
     busquedaPerJuridica_delete: "busquedaPerJuridica/delete",
     busquedaPerJuridica_history: "busquedaPerJuridica/searchHistoric",
-    datosGenerales_update: "/personaJuridica/update",
-    datosGenerales_insert: "/personaJuridica/create",
+    datosGenerales_update: "DatosGenerales/update",
+    datosGenerales_insert: "DatosGenerales/insert",
     datosGenerales_identificacion: "DatosGenerales/identificacion",
     busquedaPer_colegio: "busquedaPer/colegio",
     busquedaPer_searchJuridica: "busquedaPerJuridica/searchJuridica",
     busquedaPer_searchFisica: "busquedaPerJuridica/searchFisica",
-    busquedaPerJuridica_etiquetasPersona:
-      "busquedaPerJuridica/etiquetasPersona",
     personaJuridica_uploadFotografia: "personaJuridica/uploadFotografia",
     personaJuridica_cargarFotografia: "personaJuridica/cargarFotografia",
     busquedaPerJuridica_datosGeneralesSearch:
@@ -102,15 +100,15 @@ export class SigaServices {
     accesoFichaPersona_guardar: "fichaPersona/guardar",
     fichaPersona_crearNotario: "fichaPersona/crearNotario",
     busquedaPerJuridica_update: "busquedaPerJuridica/update",
+    datosGenerales_tipo: "busquedaPerJuridica/tipoSociedad",
+    datosGenerales_etiquetas: "busquedaPerJuridica/etiquetas",
+
     datosRegistrales_actividadesPersona:
       "perJuridicaDatosRegistrales/actividadProfesionalPer",
     datosRegistrales_actividadesDisponible:
       "perJuridicaDatosRegistrales/actividadProfesional",
     datosRegistrales_search: "perJuridicaDatosRegistrales/search",
-    datosRegistrales_update: "perJuridicaDatosRegistrales/update",
-    retenciones_tipoRetencion: "retenciones/tipoRetencion",
-    retenciones_search: "retenciones/search",
-    retenciones_update: "retenciones/update"
+    datosRegistrales_update: "perJuridicaDatosRegistrales/update"
   };
 
   private menuToggled = new Subject<any>();

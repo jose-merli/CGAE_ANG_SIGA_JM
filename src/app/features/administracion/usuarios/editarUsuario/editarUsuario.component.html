@@ -40,7 +40,9 @@
             <p-multiSelect [disabled]="!activacionEditar" [defaultLabel]="textFilter" styleClass="widthAll" (onChange)="onChangeForm()"
               [(ngModel)]='selectPerfil' [options]="usuarios_perfil" optionLabel="label" [selectedItemsLabel]="textSelected"
               maxSelectedLabels="1" [panelStyle]="{width:'100%'}"></p-multiSelect>
+
           </div>
+
           <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
             <label>{{"general.codeext" | translate}}</label>
             <input *ngIf="!activacionEditar" disabled type="text" name="codExterno" class="form-control" [(ngModel)]='body.codigoExterno'

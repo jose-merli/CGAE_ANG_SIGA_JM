@@ -10,15 +10,13 @@ import {
 import { Router } from "@angular/router";
 import { Message } from "primeng/components/common/api";
 import { Location } from "@angular/common";
-import { ConfirmationService } from "primeng/api";
-import { MessageService } from "primeng/components/common/messageservice";
+
 import { SelectItem } from "primeng/api";
 
 import { SigaServices } from "./../../../_services/siga.service";
 
 import { DatosNotarioItem } from "./../../../../app/models/DatosNotarioItem";
 import { DatosNotarioObject } from "./../../../../app/models/DatosNotarioObject";
-import { TranslateService } from "../../../commons/translate";
 
 @Component({
   selector: "app-accesoFichaPersona",
@@ -29,14 +27,18 @@ export class AccesoFichaPersonaComponent implements OnInit {
   comboTipoIdentificacion: SelectItem[];
   comboSituacion: SelectItem[];
   msgs: Message[];
+
   openFicha: boolean = false;
   editar: boolean = false;
   archivoDisponible: boolean = false;
   progressSpinner: boolean = false;
+
   body: DatosNotarioItem = new DatosNotarioItem();
   bodySearch: DatosNotarioObject = new DatosNotarioObject();
+
   idPersona: String;
   tipoPersona: String;
+
   usuarioBody: any[];
   notario: any;
   guardarNotario: boolean = false;
@@ -47,24 +49,28 @@ export class AccesoFichaPersonaComponent implements OnInit {
   constructor(
     private router: Router,
     private location: Location,
-    private sigaServices: SigaServices,
-    private messageService: MessageService,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private sigaServices: SigaServices
   ) {}
 
   ngOnInit() {
+    this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+
+    this.idPersona = this.usuarioBody[0].idPersona;
+    this.tipoPersona = "Notario"; //this.usuarioBody[0].tipo;
+
+    this.search();
+
     this.comboTipoIdentificacion = [
       { label: "NIF", value: "NIF" },
       { label: "NIE", value: "NIE" }
     ];
 
     this.comboSituacion = [
-      { label: "", value: "" },
       { label: "Ejerciente Residente", value: "Ejerciente Residente" },
       { label: "No colegiado", value: "No colegiado" },
       { label: "Sociedad", value: "Sociedad" }
     ];
+
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.tipoPersona = "Notario";
     if (
@@ -121,10 +127,12 @@ export class AccesoFichaPersonaComponent implements OnInit {
     this.body.idPersona = this.idPersona;
     this.body.tipoPersona = this.tipoPersona;
     this.body.idInstitucion = "";
+
     this.sigaServices
       .postPaginado("accesoFichaPersona_search", "?numPagina=1", this.body)
       .subscribe(
         data => {
+          console.log("hloo", data);
           this.progressSpinner = false;
           this.bodySearch = JSON.parse(data["body"]);
           if (this.bodySearch.fichaPersonaItem != undefined) {
@@ -158,8 +166,9 @@ export class AccesoFichaPersonaComponent implements OnInit {
 
   desasociarPersona() {
     this.progressSpinner = true;
-    this.body.idPersonaDesasociar = this.body.idPersona;
+
     this.body.idPersona = this.idPersona;
+    this.body.idPersonaDesasociar = this.idPersona;
     this.body.tipoPersona = this.tipoPersona;
     this.body.idInstitucion = "";
 
@@ -175,9 +184,6 @@ export class AccesoFichaPersonaComponent implements OnInit {
           this.showFail(JSON.stringify(this.bodySearch.error.description));
           console.log(error);
           this.progressSpinner = false;
-        },
-        () => {
-          this.search();
         }
       );
   }
@@ -250,6 +256,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
               this.search();
             }
           );
+        this.progressSpinner = false;
       }
     );
   }
@@ -281,6 +288,10 @@ export class AccesoFichaPersonaComponent implements OnInit {
 
   isSearch() {
     this.router.navigate(["/busquedaGeneral"]);
+  }
+
+  isEditar() {
+    this.editar = true;
   }
 
   redireccionar() {}
