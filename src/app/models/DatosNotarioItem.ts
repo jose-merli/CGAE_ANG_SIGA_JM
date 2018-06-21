@@ -13,6 +13,7 @@ export class DatosNotarioItem {
   situacion: Date;
   fechaAlta: String;
   status: String;
-
+  idPersonaAsociar: String;
+  tipoIdentificacion: String;
   constructor() {}
 }
