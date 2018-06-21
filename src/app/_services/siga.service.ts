@@ -104,7 +104,9 @@ export class SigaServices {
     datosRegistrales_actividadesDisponible:
       "perJuridicaDatosRegistrales/actividadProfesional",
     datosRegistrales_search: "perJuridicaDatosRegistrales/search",
-    datosRegistrales_update: "perJuridicaDatosRegistrales/update"
+    datosRegistrales_update: "perJuridicaDatosRegistrales/update",
+    datosBancarios_search: "busquedaPerJuridica/datosBancariosSearch",
+    datosBancarios_delete: "busquedaPerJuridica/datosBancariosDelete"
   };
 
   private menuToggled = new Subject<any>();

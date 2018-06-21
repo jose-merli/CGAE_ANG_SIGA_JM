@@ -162,6 +162,9 @@ import { DatosRegistralesComponent } from "./features/censo/datos-registrales/da
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
 import { DatosIntegrantesComponent } from './features/censo/datos-integrantes/datos-integrantes.component';
+import { DatosBancariosComponent } from './features/censo/datos-bancarios/datos-bancarios.component';
+import { ConsultarDatosBancariosComponent } from './features/censo/consultar-datos-bancarios/consultar-datos-bancarios.component';
+import { DatosCuentaBancariaComponent } from './features/censo/datos-cuenta-bancaria/datos-cuenta-bancaria.component';
 
 @NgModule({
   declarations: [
@@ -277,7 +280,10 @@ import { DatosIntegrantesComponent } from './features/censo/datos-integrantes/da
     EditarPerfilesComponent,
     PermisosComponent,
     PoliticaCookiesComponent,
-    DatosIntegrantesComponent
+    DatosIntegrantesComponent,
+    DatosBancariosComponent,
+    ConsultarDatosBancariosComponent,
+    DatosCuentaBancariaComponent
   ],
   imports: [
     BrowserModule,

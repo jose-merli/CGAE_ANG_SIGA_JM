@@ -28,6 +28,8 @@ import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/co
 import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
 import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/gestion-subtiposCV.component";
 import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
+import { ConsultarDatosBancariosComponent } from "./features/censo/consultar-datos-bancarios/consultar-datos-bancarios.component";
+import { DatosBancariosComponent } from "./features/censo/datos-bancarios/datos-bancarios.component";
 //Certificados
 import { ComunicacionInterprofesionalComponent } from "./features/certificados/comunicacion-interprofesional/comunicacion-interprofesional.component";
 import { SolicitarCompraComponent } from "./features/certificados/solicitar-compra/solicitar-compra.component";
@@ -244,6 +246,16 @@ const appRoutes: Routes = [
   {
     path: "fichaNotario",
     component: AccesoFichaPersonaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "datosBancarios",
+    component: DatosBancariosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "consultarDatosBancarios",
+    component: ConsultarDatosBancariosComponent,
     canActivate: [AuthGuard]
   },
 

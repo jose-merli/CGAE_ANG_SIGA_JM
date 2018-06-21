@@ -25,13 +25,13 @@
               <label>Participación en la sociedad <span>{{ body.participacionSociedad }}</span></label>
             </div>
             <div *ngIf="datosIntegrantes.datosIntegrantesItems.length > 1">
-              <div class="row">
-                <div *ngFor="let integrante of datosIntegrantes.datosIntegrantesItems; let last = last">
+              <div class="row mb-1">
+                <div class="mb-1" *ngFor="let integrante of datosIntegrantes.datosIntegrantesItems; let last = last">
                   <div *ngIf="!last">
-                    <p>&nbsp;{{ integrante.nombre }},</p>
+                    <label>&nbsp;{{ integrante.nombre }},</label>
                   </div>
                   <div *ngIf="last">
-                    <p>&nbsp;{{ integrante.nombre }}</p>
+                    <label>&nbsp;{{ integrante.nombre }}</label>
                   </div>
                 </div>
                 <div>

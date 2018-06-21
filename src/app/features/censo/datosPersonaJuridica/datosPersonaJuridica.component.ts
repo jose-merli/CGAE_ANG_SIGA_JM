@@ -86,7 +86,7 @@ export class DatosPersonaJuridicaComponent implements OnInit {
         activa: false
       },
       {
-        key: "cv",
+        key: "bancarios",
         activa: false
       }
     ];
