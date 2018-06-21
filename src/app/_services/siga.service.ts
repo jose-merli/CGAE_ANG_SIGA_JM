@@ -90,6 +90,8 @@ export class SigaServices {
     busquedaPer_colegio: "busquedaPer/colegio",
     busquedaPer_searchJuridica: "busquedaPerJuridica/searchJuridica",
     busquedaPer_searchFisica: "busquedaPerJuridica/searchFisica",
+    busquedaPerJuridica_etiquetasPersona:
+      "busquedaPerJuridica/etiquetasPersona",
     personaJuridica_uploadFotografia: "personaJuridica/uploadFotografia",
     personaJuridica_cargarFotografia: "personaJuridica/cargarFotografia",
     busquedaPerJuridica_datosGeneralesSearch:
@@ -106,7 +108,10 @@ export class SigaServices {
     datosRegistrales_search: "perJuridicaDatosRegistrales/search",
     datosRegistrales_update: "perJuridicaDatosRegistrales/update",
     datosBancarios_search: "busquedaPerJuridica/datosBancariosSearch",
-    datosBancarios_delete: "busquedaPerJuridica/datosBancariosDelete"
+    datosBancarios_delete: "busquedaPerJuridica/datosBancariosDelete",
+    retenciones_tipoRetencion: "retenciones/tipoRetencion",
+    retenciones_search: "retenciones/search",
+    retenciones_update: "retenciones/update"
   };
 
   private menuToggled = new Subject<any>();

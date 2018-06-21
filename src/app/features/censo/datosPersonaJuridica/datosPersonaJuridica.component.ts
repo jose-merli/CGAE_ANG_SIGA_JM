@@ -82,16 +82,28 @@ export class DatosPersonaJuridicaComponent implements OnInit {
         activa: false
       },
       {
+        key: "registrales",
+        activa: false
+      },
+      {
         key: "integrantes",
         activa: false
       },
       {
         key: "bancarios",
         activa: false
+      },
+      {
+        key: "retenciones",
+        activa: false
       }
     ];
   }
   backTo() {
     this.location.back();
+  }
+
+  getFichasPosibles() {
+    return this.fichasPosibles;
   }
 }

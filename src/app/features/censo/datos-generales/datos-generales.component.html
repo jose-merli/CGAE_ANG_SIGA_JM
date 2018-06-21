@@ -11,7 +11,7 @@
       <div *ngIf="!esFichaActiva('generales')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
-            <img src="./assets/images/img-colegiado.PNG">
+            <i class="fa fa-user icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -20,19 +20,31 @@
             <!--<label class="registros-ficha">(0 registros)</label>-->
           </div>
           <div class="d-flex justify-content-between">
-            <label>{{"censo.fichaCliente.literal.identificacion" | translate}} <span>{{body.nif}}</span></label>
-            <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} <span>{{body.tipo}}</span></label>
-            <label>{{"administracion.usuarios.literal.fechaAlta" | translate}} <span>{{body.fechaConstitucion}}</span></label>
-            <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}} <span>{{body.fechaBaja}}</span></label>
-            <label>{{"censo.consultaDatosGenerales.literal.denominacion" | translate}} <span>{{body.denominacion}}</span></label>
-            <label>{{"gratuita.definirTurnosIndex.literal.abraviatura" | translate}} <span>{{body.abreviatura}}</span></label>
+            <label>{{"censo.fichaCliente.literal.identificacion" | translate}}
+              <span>{{body.nif}}</span>
+            </label>
+            <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}
+              <span>{{body.tipo}}</span>
+            </label>
+            <label>{{"administracion.usuarios.literal.fechaAlta" | translate}}
+              <span>{{body.fechaConstitucion}}</span>
+            </label>
+            <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}
+              <span>{{body.fechaBaja}}</span>
+            </label>
+            <label>{{"censo.consultaDatosGenerales.literal.denominacion" | translate}}
+              <span>{{body.denominacion}}</span>
+            </label>
+            <label>{{"gratuita.definirTurnosIndex.literal.abraviatura" | translate}}
+              <span>{{body.abreviatura}}</span>
+            </label>
             <i *ngIf="!esFichaActiva('generales')" (click)="abrirFicha('generales')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
       <div *ngIf="esFichaActiva('generales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
-          <img src="./assets/images/img-colegiado.PNG">
+          <i class="fa fa-user icon-ficha"></i>
         </div>
         <label class="title-ficha">{{ "general.message.datos.generales" | translate}}</label>
         <i (click)="cerrarFicha('generales')" class="fa fa-angle-up ml-auto"></i>
@@ -45,7 +57,7 @@
         <div class="bloque col-lg-3 col-md-3">
           <label class="d-block">Foto</label>
           <div class="img-colegiado my-2">
-            <img src="./assets/images/img-colegiado.PNG">
+            <i class="fa fa-user" style="font-size:130px;color:grey"></i>
             <!--<img src="{{imagenURL}}">-->
             <p-fileUpload #fubauto chooseLabel="" class="edit" mode="basic" name="file" auto="true" accept="image/*" (change)="uploadImage($event)"
               auto="true">
@@ -60,7 +72,7 @@
         <div class="bloque col-lg-5 col-md-5">
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.fichaCliente.literal.identificacion"  | translate}} (*)</label>
+              <label>{{"censo.fichaCliente.literal.identificacion" | translate}} (*)</label>
               <p-dropdown class="select-form" [(ngModel)]="body.identificacion" [options]="comboIdentificacion" optionLabel="label" (ngModelChange)="onChangeForm()"></p-dropdown>
             </div>
             <div *ngIf="comboTipo.length > 1" class="form-group col-lg-6 col-md-6">
@@ -96,7 +108,7 @@
           <div class="form-row">
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"censo.fichaCliente.situacion.idiomaPref" | translate}}</label>
-              <p-dropdown class="select-form" [options]="idiomas" [(ngModel)]="body.idiomaPreferencia" [filter]="true" filterBy="label"></p-dropdown>
+              <p-dropdown class="select-form" [options]="idiomas" [(ngModel)]="idiomaPreferenciaSociedad" [filter]="true" filterBy="label"></p-dropdown>
             </div>
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
@@ -107,8 +119,9 @@
               <textarea pInputTextarea [(ngModel)]="body.anotaciones"></textarea>
             </div>
             <div class="form-group col-lg-8 col-md-8">
-              <label>{{"menu.administracion.gestionMultiidioma.etiquetas" | translate}}</label> <br>
-              <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='body.etiquetas' [options]="comboEtiquetas"
+              <label>{{"menu.administracion.gestionMultiidioma.etiquetas" | translate}}</label>
+              <br>
+              <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='etiquetasPersonaJuridicaSelecionados' [options]="comboEtiquetas"
                 [selectedItemsLabel]="textSelected" maxSelectedLabels="1" autoWidth="false" defaultLabel="" maxSelectedLabels="1"></p-multiSelect>
             </div>
           </div>
