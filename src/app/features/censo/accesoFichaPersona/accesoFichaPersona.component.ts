@@ -28,7 +28,6 @@ import { TranslateService } from "../../../commons/translate";
 export class AccesoFichaPersonaComponent implements OnInit {
   comboTipoIdentificacion: SelectItem[];
   comboSituacion: SelectItem[];
-  selectedcomboTipoIdentificacion: string;
   msgs: Message[];
   openFicha: boolean = false;
   editar: boolean = false;
@@ -40,6 +39,8 @@ export class AccesoFichaPersonaComponent implements OnInit {
   tipoPersona: String;
   usuarioBody: any[];
   notario: any;
+  guardarNotario: boolean = false;
+  desasociar: boolean = false;
 
   file: File = undefined;
 
@@ -65,19 +66,23 @@ export class AccesoFichaPersonaComponent implements OnInit {
       { label: "Sociedad", value: "Sociedad" }
     ];
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    this.tipoPersona = "Notario";
     if (
       sessionStorage.getItem("notario") != undefined &&
       sessionStorage.getItem("notario") != null
     ) {
       this.notario = JSON.parse(sessionStorage.getItem("notario"));
+      // abre la ficha para que el usuario vea donde debe tocar
+      this.openFicha = true;
+
       if (this.notario[0].idPersona != undefined) {
+        // modo de asignacion de notario
         this.body.idPersonaAsociar = this.notario[0].idPersona;
-        this.tipoPersona = "Notario";
+        // si no se editan campos => boton guardar activo
+        this.guardarNotario = true;
       } else {
+        // modo de creacion + asignacion de notario
         this.editar = true;
-      }
-      if (this.notario[0].colegio != undefined) {
-        this.body.colegio = this.notario[0].colegio;
       }
       if (this.notario[0].nif != undefined) {
         this.body.nif = this.notario[0].nif;
@@ -91,16 +96,12 @@ export class AccesoFichaPersonaComponent implements OnInit {
       if (this.notario[0].segundoApellido != undefined) {
         this.body.apellido2 = this.notario[0].segundoApellido;
       }
-      if (this.notario[0].numeroColegiado != undefined) {
-        this.body.numeroColegiado = this.notario[0].numeroColegiado;
-      }
-      if (this.notario[0].residente != undefined) {
-        this.body.residente = this.notario[0].residente;
+      if (this.notario[0].tipoIdentificacion != undefined) {
+        this.body.tipoIdentificacion = this.notario[0].tipoIdentificacion;
       }
     }
     if (this.usuarioBody != null) {
       this.idPersona = this.usuarioBody[0].idPersona;
-      this.tipoPersona = "Notario";
     }
 
     // si viene de pantalla de persona fisica => no hace busqueda
@@ -128,10 +129,14 @@ export class AccesoFichaPersonaComponent implements OnInit {
           this.bodySearch = JSON.parse(data["body"]);
           if (this.bodySearch.fichaPersonaItem != undefined) {
             this.body = this.bodySearch.fichaPersonaItem[0];
+            this.desasociar = true;
           }
           if (this.bodySearch.fichaPersonaItem != null) {
             this.body = this.bodySearch.fichaPersonaItem[0];
+            this.desasociar = true;
           } else {
+            this.guardarNotario = false;
+            this.desasociar = false;
             this.limpiarCamposNotario();
           }
         },
@@ -149,9 +154,6 @@ export class AccesoFichaPersonaComponent implements OnInit {
     this.body.nombre = "";
     this.body.apellido1 = "";
     this.body.apellido2 = "";
-    this.body.situacion = "";
-    this.body.numeroColegiado = "";
-    this.body.fechaAlta = undefined;
   }
 
   desasociarPersona() {
@@ -181,27 +183,92 @@ export class AccesoFichaPersonaComponent implements OnInit {
   }
 
   guardar() {
-    this.progressSpinner = true;
-    this.body.idPersona = this.idPersona;
-    this.body.tipoPersona = this.tipoPersona;
-    this.body.idInstitucion = "";
+    // si se puede editar => crear notario
+    if (this.editar && this.body.nombre != undefined && this.body.apellido1) {
+      if (this.body.apellido2 == undefined) {
+        this.body.apellido2 = "";
+      }
+      this.crearNotarioYGuardar();
+    } else {
+      this.progressSpinner = true;
+      this.body.idPersona = this.idPersona;
+      this.body.tipoPersona = this.tipoPersona;
+      this.body.idInstitucion = "";
 
-    this.sigaServices.post("accesoFichaPersona_guardar", this.body).subscribe(
+      this.sigaServices.post("accesoFichaPersona_guardar", this.body).subscribe(
+        data => {
+          this.progressSpinner = false;
+          console.log(data);
+          this.body.status = data.status;
+        },
+        error => {
+          this.bodySearch = JSON.parse(error["error"]);
+          this.showFail(JSON.stringify(this.bodySearch.error.description));
+          console.log(error);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.guardarNotario = false;
+          this.search();
+        }
+      );
+    }
+  }
+
+  crearNotarioYGuardar() {
+    this.sigaServices.post("fichaPersona_crearNotario", this.body).subscribe(
       data => {
-        this.progressSpinner = false;
-        console.log(data);
-        this.body.status = data.status;
+        this.body.idPersonaAsociar = JSON.parse(
+          data["body"]
+        ).combooItems[0].value;
       },
       error => {
-        this.bodySearch = JSON.parse(error["error"]);
-        this.showFail(JSON.stringify(this.bodySearch.error.description));
         console.log(error);
-        this.progressSpinner = false;
       },
       () => {
-        this.search();
+        this.progressSpinner = true;
+        this.body.idPersona = this.idPersona;
+        this.body.tipoPersona = this.tipoPersona;
+        this.body.idInstitucion = "";
+
+        this.sigaServices
+          .post("accesoFichaPersona_guardar", this.body)
+          .subscribe(
+            data => {
+              this.progressSpinner = false;
+              console.log(data);
+              this.body.status = data.status;
+            },
+            error => {
+              this.bodySearch = JSON.parse(error["error"]);
+              this.showFail(JSON.stringify(this.bodySearch.error.description));
+              console.log(error);
+              this.progressSpinner = false;
+            },
+            () => {
+              this.guardarNotario = false;
+              this.search();
+            }
+          );
       }
     );
+  }
+
+  activarGuardarNotarioNoExistente(event) {
+    console.log(event);
+    if (
+      this.editar &&
+      this.body.nombre != undefined &&
+      this.body.nombre.trim() != "" &&
+      this.body.apellido1 != undefined &&
+      this.body.apellido1 != ""
+    ) {
+      this.guardarNotario = true;
+    } else {
+      if (this.editar) {
+        this.guardarNotario = false;
+      }
+    }
   }
 
   abrirFicha() {
