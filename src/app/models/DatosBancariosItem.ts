@@ -1,7 +1,9 @@
 export class DatosBancariosItem {
   idPersona: String;
-  nif: String;
-  idCuenta: String[];
+  idInstitucion: String;
+  nifTitular: String;
+  idCuentas: String[];
+  idCuenta: String;
   titular: String;
   iban: String;
   bic: String;
@@ -10,6 +12,15 @@ export class DatosBancariosItem {
   fechaFirmaProductos: Date;
   fechaBaja: Date;
   historico: boolean;
+  banco: String;
+  tipoCuenta: String[];
+  cuentaContable: String;
+  // referenciaProducto: String;
+  // esquemaProducto: String;
+  // tipoPagoProducto: String;
+  // referenciaServicio: String;
+  // esquemaServicio: String;
+  // tipoPagoServicio: String;
 
   constructor() {}
 }

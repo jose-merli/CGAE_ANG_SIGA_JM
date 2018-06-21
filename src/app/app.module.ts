@@ -236,6 +236,8 @@ import { DatosIntegrantesComponent } from './features/censo/datos-integrantes/da
 import { DatosBancariosComponent } from './features/censo/datos-bancarios/datos-bancarios.component';
 import { ConsultarDatosBancariosComponent } from './features/censo/consultar-datos-bancarios/consultar-datos-bancarios.component';
 import { DatosCuentaBancariaComponent } from './features/censo/datos-cuenta-bancaria/datos-cuenta-bancaria.component';
+import { DatosMandatosComponent } from './features/censo/datos-mandatos/datos-mandatos.component';
+import { ListadoFicherosAnexosComponent } from './features/censo/listado-ficheros-anexos/listado-ficheros-anexos.component';
 
 @NgModule({
   declarations: [
@@ -425,7 +427,9 @@ import { DatosCuentaBancariaComponent } from './features/censo/datos-cuenta-banc
     DatosIntegrantesComponent,
     DatosBancariosComponent,
     ConsultarDatosBancariosComponent,
-    DatosCuentaBancariaComponent
+    DatosCuentaBancariaComponent,
+    DatosMandatosComponent,
+    ListadoFicherosAnexosComponent
   ],
   imports: [
     BrowserModule,

@@ -7,8 +7,8 @@
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
     <!--<app-datos-generales *ngSwitchCase="'generales'"></app-datos-generales>-->
     <app-datos-cuenta-bancaria *ngSwitchCase="'datosCuentaBancaria'"></app-datos-cuenta-bancaria>
-    <!--<app-datos-integrantes *ngSwitchCase="'datosMandatos'"></app-datos-integrantes>
-    <app-datos-bancarios *ngSwitchCase="'listadoFicherosAnexos'"></app-datos-bancarios>-->
+    <app-datos-mandatos *ngSwitchCase="'datosMandatos'"></app-datos-mandatos>
+    <!--<app-datos-bancarios *ngSwitchCase="'listadoFicherosAnexos'"></app-datos-bancarios>-->
   </div>
 
   <div class="mt-3 text-right main-button ">

@@ -109,6 +109,13 @@ export class SigaServices {
     datosRegistrales_update: "perJuridicaDatosRegistrales/update",
     datosBancarios_search: "busquedaPerJuridica/datosBancariosSearch",
     datosBancarios_delete: "busquedaPerJuridica/datosBancariosDelete",
+    datosCuentaBancaria_search:
+      "busquedaPerJuridica/datosBancariosGeneralSearch",
+    datosCuentaBancaria_update: "busquedaPerJuridica/datosBancariosUpdate",
+    datosCuentaBancaria_insert: "busquedaPerJuridica/datosBancariosInsert",
+    datosMandatos_search: "busquedaPerJuridica/MandatosSearch",
+    datosMandatos_update: "busquedaPerJuridica/mandatosUpdate",
+    datosMandatos_comboEsquema: "busquedaPerJuridica/comboEsquema",
     retenciones_tipoRetencion: "retenciones/tipoRetencion",
     retenciones_search: "retenciones/search",
     retenciones_update: "retenciones/update"

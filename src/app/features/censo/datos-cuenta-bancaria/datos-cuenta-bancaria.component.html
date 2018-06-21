@@ -1,3 +1,5 @@
+<p-growl [(value)]="msgs "></p-growl>
+
 <div class="busqueda-container">
 
   <!--DATOS GENERALES-->
@@ -11,11 +13,11 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-end mb-1">
-            <label class="mr-auto title-ficha">Notario</label>
+            <label class="mr-auto title-ficha">Datos Cuenta Bancaria</label>
           </div>
           <div class="d-flex justify-content-between">
             <label>Titular <span>{{ body.titular }}</span></label>
-            <label>{{"administracion.usuarios.literal.NIF" | translate}} <span>{{ body.nif }}</span></label>
+            <label>{{"administracion.usuarios.literal.NIF" | translate}} <span>{{ body.nifTitular }}</span></label>
             <label>IBAN <span>{{ body.iban }}</span></label>
             <i (click)="abrirFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
           </div>
@@ -32,51 +34,67 @@
 
     <!--cuerpo datos generales-->
     <div *ngIf="openFicha" class="card-body card-body-ficha">
+
       <div class="row">
-        <div class="bloque col-lg-6 col-md-6">
+        <div class="bloque col-lg-12 col-md-12">
           <div class="form-row">
+
             <div class="form-group col-lg-6 col-md-6">
               <label>Titular</label>
               <input type="text" class="form-control" [(ngModel)]="body.titular" pInputText>
+              <div *ngIf="titularValido == false"><label class="labelError">{{"El campo no puede estar vacío"}}</label></div>
             </div>
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
-              <input type="text" class="form-control" [(ngModel)]="body.nif" pInputText>
-            </div>
-            <div class="form-group col-lg-6 col-md-6">
-              <label>IBAN</label>
-              <input type="text" class="form-control" [(ngModel)]="body.iban" pInputText>
-            </div>
-            <!--<div class="form-group col-lg-6 col-md-6"></div>-->
-            <!--<div class="form-group col-lg-6 col-md-6">
-              <label>BIC </label>
-              <input [(ngModel)]="body.bic" type="text" class="form-control" [(disabled)]="!editar" pInputText>
-            </div>-->
-            <!--<div class="form-group col-lg-6 col-md-6">
-              <label>Banco</label>
+
+            <div class="row col-lg-6 col-md-6">
+              <div class="form-group col-lg-6 col-md-6">
+                <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
+                <input type="text" class="form-control" [(ngModel)]="body.nifTitular" [disabled]="!editar" pInputText>
+              </div>
+              <div class="form-group col-lg-6 col-md-6">
+                <label>IBAN</label>
+                <input type="text" class="form-control" [(ngModel)]="body.iban" pInputText>
+                <div *ngIf="ibanValido == false"><label class="labelError">{{"IBAN incorrecto"}}</label></div>
+              </div>
 
             </div>
-            <div class="form-group col-lg-3 col-md-6 ">
-              <label>Operación</label>
-              <p-dropdown class="select-form" [(ngModel)]="body.uso" [options]="comboTipo"></p-dropdown>
+
+            <div class="row col-lg-6 col-md-6">
+              <div class="form-group col-lg-6 col-md-6">
+                <label>BIC </label>
+                <input [(ngModel)]="body.bic" type="text" class="form-control" [disabled]="!editar" pInputText>
+              </div>
+              <div class="form-group col-lg-6 col-md-6">
+                <label>Banco</label>
+                <input [(ngModel)]="body.banco" type="text" class="form-control" [disabled]="!editar" pInputText>
+              </div>
             </div>
-            <div class="form-group col-lg-3 col-md-6 ">
-              <label>Cuenta contable</label>
-              <input type="text " class="form-control " [(ngModel)]="body.iban" [(disabled)]="!editar" pInputText>
+
+            <div class="row col-lg-6 col-md-6">
+              <div class="form-group col-lg-6 col-md-6">
+                <label>Tipo de cuenta</label>
+                <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='selectedTipo' [options]="tipoCuenta" [selectedItemsLabel]="textSelected"
+                  maxSelectedLabels="1" autoWidth="false" defaultLabel="" maxSelectedLabels="1" optionLabel="name"></p-multiSelect>
+              </div>
+              <div class="form-group col-lg-6 col-md-6">
+                <label>Cuenta contable</label>
+                <input type="text" class="form-control " [(ngModel)]="body.cuentaContable" pInputText>
+              </div>
             </div>
-          </div>-->
           </div>
         </div>
-        <br>
-        <div class="card-footer ">
-          <div class="text-right main-button ">
-            <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
-            <button (click)="restablecer()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="Restablecer"></button>
-          </div>
+      </div>
+      <br>
+      <div class="card-footer ">
+        <div class="text-right main-button ">
+          <button (click)="validarFormulario()" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
+          <button (click)="restablecer()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="Restablecer"></button>
         </div>
-        <!--END DATOS GENERALES-->
       </div>
-      <p-growl [(value)]="msgs "></p-growl>
-      <div *ngIf="progressSpinner " class="overlay-spinner ">
-        <div class="loader "></div>
-      </div>
+      <!--END DATOS GENERALES-->
+    </div>
+
+    <div *ngIf="progressSpinner " class="overlay-spinner ">
+      <div class="loader "></div>
+    </div>
+
+    <app-dialog></app-dialog>

@@ -1,0 +1,92 @@
+<p-growl [(value)]="msgs" life="3000"></p-growl>
+<div class="busqueda-container">
+
+  <!--<div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
+    <app-datos-generales *ngSwitchCase="'generales'"></app-datos-generales>
+  </div>-->
+
+  <!--DATOS REGISTRALES-->
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-hand-o-right icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha">Datos Mandatos</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <br>
+            <i (click)="abrirFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-hand-o-right icon-ficha"></i>
+        </div>
+        <label class="title-ficha">Datos Mandatos</label>
+        <i (click)="abrirFicha()" class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <!--cuerpo datos colegiales-->
+
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-6 col-md-6">
+
+          <div class="form-row">
+
+            <div class="form-group col-lg-12 col-md-12">
+              <label style="font-weight: bold;">Datos Generales Productos</label>
+            </div>
+
+            <div class="form-group col-lg-12 col-md-12">
+              <label>Referencia</label>
+              <input [(ngModel)]="body.referenciaProducto" type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Tipo de pago</label>
+              <input [(ngModel)]="body.tipoPagoProducto" type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Esquema utilizado</label>
+              <input [(ngModel)]="body.esquemaProducto" type="text" class="form-control" pInputText>
+            </div>
+          </div>
+        </div>
+
+        <div class="bloque col-lg-6 col-md-6">
+
+          <div class="form-row">
+
+            <div class="form-group col-lg-12 col-md-12">
+              <label style="text-align:center; font-weight: bold;">Datos Generales Servicios</label>
+            </div>
+
+            <div class="form-group col-lg-12 col-md-12">
+              <label>Referencia</label>
+              <input [(ngModel)]="body.referenciaServicio" type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Tipo de pago</label>
+              <input [(ngModel)]="body.tipoPagoServicio" type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Esquema utilizado</label>
+              <input [(ngModel)]="body.esquemaServicio" type="text" class="form-control" pInputText>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="card-footer ">
+        <div class="text-right main-button ">
+          <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
+        </div>
+      </div>
+    </div>
+  </div>

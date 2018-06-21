@@ -19,7 +19,6 @@ export class DatosBancariosComponent implements OnInit {
   openFicha: boolean = false;
   selectAll: boolean = false;
   selectMultiple: boolean = false;
-  editar: boolean = false;
   progressSpinner: boolean = false;
   historico: boolean = false;
 
@@ -69,7 +68,7 @@ export class DatosBancariosComponent implements OnInit {
     this.nif = this.usuarioBody[0].nif;
 
     this.body.idPersona = this.idPersona;
-    this.body.nif = this.nif;
+    this.body.nifTitular = this.nif;
 
     this.cargarDatosBancarios();
     //this.datosPrueba();
@@ -130,7 +129,7 @@ export class DatosBancariosComponent implements OnInit {
 
     this.body.historico = false;
     this.body.idPersona = this.idPersona;
-    this.body.nif = this.nif;
+    this.body.nifTitular = this.nif;
 
     this.buscarDatosBancarios();
 
@@ -214,18 +213,14 @@ export class DatosBancariosComponent implements OnInit {
       var enviarDatos = null;
       if (dato && dato.length > 0) {
         enviarDatos = dato[0];
-      }
-
-      if (enviarDatos != null) {
-        this.router.navigate(["/consultarDatosBancarios"]);
-
-        sessionStorage.setItem("datos", JSON.stringify(enviarDatos));
+        sessionStorage.setItem("idCuenta", enviarDatos.idCuenta);
+        sessionStorage.setItem("editar", "true");
       } else {
-        this.router.navigate(["/consultarDatosBancarios"]);
+        sessionStorage.setItem("editar", "false");
       }
-      // this.editar = true;
+
+      this.router.navigate(["/consultarDatosBancarios"]);
     } else {
-      // this.editar = false;
       this.numSelected = this.selectedDatos.length;
     }
   }
@@ -257,11 +252,11 @@ export class DatosBancariosComponent implements OnInit {
   eliminarRegistro(selectedDatos) {
     let item = new DatosBancariosItem();
 
-    item.idCuenta = [];
+    item.idCuentas = [];
     item.idPersona = this.idPersona;
 
     selectedDatos.forEach(element => {
-      item.idCuenta.push(element.idCuenta);
+      item.idCuentas.push(element.idCuenta);
     });
 
     // item.idPersona = this.idPersona;
