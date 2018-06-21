@@ -214,7 +214,7 @@ const appRoutes: Routes = [
 
   {
     path: "searchNoColegiados",
-     component: BusquedaPersonasJuridicas,
+    component: BusquedaPersonasJuridicas,
     // component: SearchNoColegiadosComponent,
     canActivate: [AuthGuard]
   },
@@ -827,22 +827,22 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: "informesGenericos",
+    path: "definirTipoPlantilla",
     component: DefinirTipoPlantillaComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: "informesGenericos",
+    path: "listaCorreos",
     component: ListaCorreosComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: "informesGenericos",
+    path: "bandejaSalida",
     component: BandejaSalidaComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: "informesGenericos",
+    path: "bandejaEntrada",
     component: BandejaEntradaComponent,
     canActivate: [AuthGuard]
   },
