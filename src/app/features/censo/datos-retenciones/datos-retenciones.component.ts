@@ -178,6 +178,13 @@ export class DatosRetencionesComponent implements OnInit {
         this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
+  isValidIBAN(iban: String): boolean {
+    return (
+      iban &&
+      typeof iban === "string" &&
+      /ES\d{2}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}|ES\d{22}/.test(iban)
+    );
+  }
   checkTypeCIF(value: String): boolean {
     if (this.isValidDNI(value)) {
       this.tipoCIF = "10";
@@ -236,7 +243,7 @@ export class DatosRetencionesComponent implements OnInit {
       fechaInicio: this.datepipe.transform(new Date(valur2), "dd-MM-yyyy"),
       fechaFin: "-",
       descripcionRetencion: "",
-      porcentajeRetencion: ""
+      porcentajeRetencion: "-"
     };
     this.datos = [dummy, ...this.datos];
 

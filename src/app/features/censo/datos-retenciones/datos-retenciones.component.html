@@ -64,8 +64,8 @@
                     <p-column [sortable]="true" field="descripcionRetencion" [header]="TipoRentencionIRPF" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                         filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
-
                             <span>{{car[col.field]}}</span>
+                            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                             <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='newRetencion.descripcionRetencion' type="text"
                                 class="form-control" (onChange)="onChangeForm()" pInputText>
                         </ng-template>
