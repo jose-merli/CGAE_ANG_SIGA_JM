@@ -3,7 +3,7 @@ import { NgModule } from "@angular/core";
 import { HttpModule } from "@angular/http";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { APP_BASE_HREF } from "@angular/common";
+import { APP_BASE_HREF, DatePipe } from "@angular/common";
 import { ValidationModule } from "./commons/validation/validation.module";
 import { MenubarModule } from "primeng/menubar";
 import { PanelMenuModule } from "primeng/panelmenu";
@@ -232,13 +232,14 @@ import { DatosRetencionesComponent } from "./features/censo/datos-retenciones/da
 
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
-import { DatosIntegrantesComponent } from './features/censo/datos-integrantes/datos-integrantes.component';
+import { DatosIntegrantesComponent } from "./features/censo/datos-integrantes/datos-integrantes.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     TranslatePipe,
     ImagePipe,
+
     MyIframeComponent,
     MenuComponent,
     LoginComponent,
@@ -423,6 +424,7 @@ import { DatosIntegrantesComponent } from './features/censo/datos-integrantes/da
   ],
   imports: [
     BrowserModule,
+
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
@@ -459,6 +461,7 @@ import { DatosIntegrantesComponent } from './features/censo/datos-integrantes/da
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     TranslateService,
     ImagePipe,
+    DatePipe,
     OldSigaServices,
     SigaServices,
     HeaderGestionEntidadService,
@@ -479,4 +482,4 @@ import { DatosIntegrantesComponent } from './features/censo/datos-integrantes/da
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
