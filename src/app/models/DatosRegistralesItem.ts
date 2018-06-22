@@ -14,5 +14,6 @@ export class DatosRegistralesItem {
   identificadorRegistroProvincial: String;
   numeroRegistro: String;
   combooItems: ComboItem[];
+  sociedadProfesional: number;
   constructor() {}
 }

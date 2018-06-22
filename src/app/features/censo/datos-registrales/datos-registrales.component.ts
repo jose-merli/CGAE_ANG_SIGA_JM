@@ -82,6 +82,7 @@ export class DatosRegistralesComponent implements OnInit {
   fechaCancelacion: Date;
   fechaRegistro: Date;
 
+  sociedadProfesional: Boolean;
   fichasActivas: Array<any> = [];
   todo: boolean = false;
   textFilter: String = "Elegir";
@@ -158,20 +159,6 @@ export class DatosRegistralesComponent implements OnInit {
     this.search();
     console.log(this.body);
 
-    // this.sigaServices
-    //   .postPaginado("datosRegistrales_search", "?numPagina=1", this.body)
-    //   .subscribe(
-    //     data => {
-    //       console.log(data);
-    //       this.personaSearch = JSON.parse(data["body"]);
-    //       if (this.personaSearch.datosRegistralesItems.length > 0)
-    //         this.body = this.personaSearch.datosRegistralesItems[0];
-    //     },
-    //     err => {
-    //       console.log(err);
-    //     }
-    //   );
-
     this.sigaServices.get("datosRegistrales_actividadesDisponible").subscribe(
       n => {
         this.actividadesDisponibles = n.combooItems;
@@ -225,11 +212,16 @@ export class DatosRegistralesComponent implements OnInit {
           this.personaSearch = JSON.parse(data["body"]);
           this.body = this.personaSearch.datosRegistralesItems[0];
           this.body.idPersona = this.idPersonaEditar;
+
           this.fechaConstitucion = this.body.fechaConstitucion;
           this.fechaFin = this.body.fechaFin;
           this.fechaCancelacion = this.body.fechaCancelacion;
           this.fechaRegistro = this.body.fechaRegistro;
-          this.selectActividad = this.body.actividades;
+
+          if ((this.body.sociedadProfesional = 1))
+            this.sociedadProfesional = true;
+          else this.body.sociedadProfesional = 0;
+          this.sociedadProfesional = false;
         },
         err => {
           console.log(err);
@@ -268,12 +260,13 @@ export class DatosRegistralesComponent implements OnInit {
     } else {
       this.body.actividades = [];
     }
-    if (this.body.companiaAseg == undefined) {
-      this.body.companiaAseg = "";
-    }
-    if (this.body.numeroPoliza == undefined) {
-      this.body.numeroPoliza = "";
-    }
+    if (this.body.companiaAseg == undefined) this.body.companiaAseg = "";
+
+    if (this.body.numeroPoliza == undefined) this.body.numeroPoliza = "";
+
+    if (this.sociedadProfesional == true) this.body.sociedadProfesional = 1;
+    else this.body.sociedadProfesional = 0;
+
     console.log(this.body);
     this.sigaServices.post("datosRegistrales_update", this.body).subscribe(
       data => {
@@ -291,26 +284,18 @@ export class DatosRegistralesComponent implements OnInit {
   }
 
   arreglarFechas() {
-    console.log(this.fechaConstitucion);
-    console.log(JSON.stringify(this.fechaFin));
-
-    let fechaConst1 = JSON.stringify(this.fechaConstitucion);
-    let fechaBaja1 = JSON.stringify(this.fechaFin);
-    let fechaReg1 = JSON.stringify(this.fechaRegistro);
-    let fechaCanc1 = JSON.stringify(this.fechaCancelacion);
-
-    if (fechaConst1 != undefined) {
+    if (this.fechaConstitucion != undefined) {
       this.body.fechaConstitucion = this.transformaFecha(
         this.fechaConstitucion
       );
     }
-    if (fechaBaja1 != undefined) {
+    if (this.fechaFin != undefined) {
       this.body.fechaFin = this.transformaFecha(this.fechaFin);
     }
-    if (fechaReg1 != undefined) {
+    if (this.fechaRegistro != undefined) {
       this.body.fechaRegistro = this.transformaFecha(this.fechaRegistro);
     }
-    if (fechaCanc1 != undefined) {
+    if (this.fechaCancelacion != undefined) {
       this.body.fechaCancelacion = this.transformaFecha(this.fechaCancelacion);
     }
   }
@@ -319,9 +304,9 @@ export class DatosRegistralesComponent implements OnInit {
     let jsonDate = JSON.stringify(fecha);
     let rawDate = jsonDate.slice(1, -1);
     if (rawDate.length < 14) {
-      let splitDate = rawDate.split("-");
+      let splitDate = rawDate.split("/");
       let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
-      fecha = new Date((arrayDate += "T23:59:59.001Z"));
+      fecha = new Date((arrayDate += "T00:00:00.001Z"));
     } else {
       fecha = new Date(fecha);
     }
@@ -358,34 +343,6 @@ export class DatosRegistralesComponent implements OnInit {
       i++;
     }
     return ret;
-  }
-
-  toSociedadProfesional() {
-    let mess =
-      "¿Está seguro de que desea traspasar esta sociedad a Sociedad Profesional?";
-    let icon = "fas fa-book";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Confirmed",
-            detail: "Sociedad traspasada correctamente"
-          }
-        ];
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Rejected",
-            detail: "Acción cancelada por el usuario"
-          }
-        ];
-      }
-    });
   }
 
   onHideDatosGenerales() {
