@@ -68,13 +68,16 @@ export class DatosRetencionesComponent implements OnInit {
   colegios_seleccionados: any[];
   datos: any[];
   select: any[];
+
   es: any = esCalendar;
   selectedValue: string = "simple";
   textSelected: String = "{0} perfiles seleccionados";
   persona: String;
   // selectedDatos: any = []
   body: DatosRetencionesItem = new DatosRetencionesItem();
+  retencionNow: DatosRetencionesItem = new DatosRetencionesItem();
   newRetencion: DatosRetencionesItem = new DatosRetencionesItem();
+
   searchRetenciones: DatosRetencionesObject = new DatosRetencionesObject();
   showDatosGenerales: boolean = true;
   showDatosColegiales: boolean = false;
@@ -82,7 +85,7 @@ export class DatosRetencionesComponent implements OnInit {
   isVolver: boolean = true;
   isCrear: boolean = false;
   isEditar: boolean = true;
-  isEliminar: boolean = true;
+  isEliminar: boolean = false;
   rowsPerPage: any = [];
   selectMultiple: boolean = false;
   progressSpinner: boolean = false;
@@ -93,6 +96,7 @@ export class DatosRetencionesComponent implements OnInit {
   usuarioBody: any[];
   selectedItem: number = 10;
   idPersona: String;
+
   @ViewChild("table") table;
   selectedDatos;
   tipoCIF: String;
@@ -160,6 +164,7 @@ export class DatosRetencionesComponent implements OnInit {
     this.sigaServices.get("retenciones_tipoRetencion").subscribe(
       n => {
         this.tiposRetenciones = n.maestroRetencionItem;
+        console.log(n.maestroRetencionItem);
       },
       err => {
         console.log(err);
@@ -227,31 +232,116 @@ export class DatosRetencionesComponent implements OnInit {
     this.search();
     this.isVolver = true;
     this.isCrear = false;
+    this.isEditar = true;
+    this.isEliminar = false;
   }
   crear() {
     this.isVolver = false;
     this.isCrear = true;
-    let value = this.table.first;
-    // this.createArrayEdit(dummy, value);
+    this.isEliminar = true;
     let valur2 = new Date().setMilliseconds(new Date().getMilliseconds());
+    if (
+      this.datos == null ||
+      this.datos == undefined ||
+      this.datos.length == 0
+    ) {
+      this.datos = [];
+    } else {
+      let value = this.table.first;
+      // this.createArrayEdit(dummy, value);
+      this.datos.forEach((value: any, key: number) => {
+        if (value.fechaFin == null || value.fechaFin == undefined) {
+          this.datos[key].fechaFin = this.transformarFecha(
+            new Date(valur2 - 86400000)
+          );
+        }
+      });
+    }
 
-    this.datos[0].fechaFin = this.datepipe.transform(
-      new Date(valur2 - 86400000),
-      "dd-MM-yyyy"
-    );
+    // let dummy = new DatosRetencionesItem();
+    // dummy.fechaInicio = this.datepipe.transform(new Date(valur2), "dd-MM-yyyy");
+    // dummy.fechaFin = undefined;
+    // dummy.descripcionRetencion = "";
+    // dummy.porcentajeRetencion = "";
     let dummy = {
-      fechaInicio: this.datepipe.transform(new Date(valur2), "dd-MM-yyyy"),
-      fechaFin: "-",
+      idPersona: this.idPersona,
+      fechaInicio: this.transformarFecha(new Date(valur2)),
+      fechaFin: undefined,
       descripcionRetencion: "",
-      porcentajeRetencion: "-"
+      porcentajeRetencion: ""
     };
     this.datos = [dummy, ...this.datos];
 
     console.log(this.datos);
     this.table.reset();
   }
-  confirmEdit() {}
-  confirmarBorrar() {}
+  confirmEdit() {
+    this.progressSpinner = true;
+    this.body.idPersona = this.idPersona;
+    this.body.idInstitucion = "";
+    this.body.idLenguaje = "";
+    this.datos[0].fechaFin = "";
+
+    this.sigaServices
+      .postPaginado(
+        "retenciones_update",
+        "?idPersona=" + this.idPersona,
+        this.datos
+      )
+      .subscribe(
+        data => {
+          console.log(data);
+          // this.searchRetenciones = JSON.parse(data["body"]);
+          // this.datos = this.searchRetenciones.retencionesItemList;
+          this.progressSpinner = false;
+          // console.log("DATOS: " + this.datos.toString);
+          // this.searchCatalogo = JSON.parse(data["body"]);
+          // this.datosEdit = this.searchCatalogo.catalogoMaestroItem;
+          // this.datosHist = this.searchCatalogo.catalogoMaestroItem;
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.volver();
+        }
+      );
+  }
+  confirmarBorrar() {
+    this.progressSpinner = true;
+    this.body.idPersona = this.idPersona;
+    this.body.idInstitucion = "";
+    this.body.idLenguaje = "";
+    let datosDelete = [];
+
+    this.datos.forEach((value: DatosRetencionesItem, key: number) => {
+      if (key != 0) {
+        if (key == 1) {
+          value.fechaFin = undefined;
+        }
+        datosDelete.push(value);
+      }
+    });
+
+    this.sigaServices
+      .postPaginado(
+        "retenciones_update",
+        "?idPersona=" + this.idPersona,
+        datosDelete
+      )
+      .subscribe(
+        data => {
+          console.log(data);
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.volver();
+        }
+      );
+  }
   search() {
     this.progressSpinner = true;
     this.body.idPersona = this.idPersona;
@@ -263,23 +353,67 @@ export class DatosRetencionesComponent implements OnInit {
       .subscribe(
         data => {
           console.log(data);
-
           this.searchRetenciones = JSON.parse(data["body"]);
-          this.datos = this.searchRetenciones.retencionesItemList;
+          if (this.searchRetenciones.retencionesItemList != null) {
+            this.datos = this.searchRetenciones.retencionesItemList;
+          } else {
+            this.datos = [];
+          }
           this.progressSpinner = false;
-          console.log("DATOS: " + this.datos.toString);
-          // this.searchCatalogo = JSON.parse(data["body"]);
-          // this.datosEdit = this.searchCatalogo.catalogoMaestroItem;
-          // this.datosHist = this.searchCatalogo.catalogoMaestroItem;
         },
-        err => {}
+        err => {
+          console.log(err);
+        },
+        () => {
+          if (this.datos.length > 0) {
+            this.retencionNow = this.datos[0];
+            this.datos.forEach((value: any, key: number) => {
+              if (value.fechaInicio != undefined) {
+                this.datos[key].fechaInicio = this.transformarFecha(
+                  value.fechaInicio
+                );
+              }
+              if (value.fechaFin != undefined) {
+                this.datos[key].fechaFin = this.transformarFecha(
+                  value.fechaFin
+                );
+              }
+            });
+          }
+        }
       );
   }
-
-  onChangeRowsPerPages(event) {
-    this.selectedItem = event.value;
-    this.changeDetectorRef.detectChanges();
-    this.table.reset();
+  transformarFecha(fecha) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -1);
+    if (rawDate.length < 14) {
+      let splitDate = rawDate.split("-");
+      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+      fecha = new Date((arrayDate += "T23:59:59.001Z"));
+    } else {
+      fecha = new Date(fecha);
+    }
+    return fecha;
+  }
+  onChangeDrop(event) {
+    console.log(event);
+    this.newRetencion.descripcionRetencion = "";
+    this.tiposRetenciones.forEach((value: any, key: number) => {
+      if (value.value == event.value) {
+        if (value.value == "") {
+          this.newRetencion.porcentajeRetencion = "-";
+          this.datos[0].porcentajeRetencion = "-";
+          this.isEditar = true;
+        } else {
+          this.newRetencion.porcentajeRetencion = value.porcentajeRetencion;
+          this.datos[0].porcentajeRetencion = value.porcentajeRetencion;
+          this.datos[0].idRetencion = value.value;
+          this.isEditar = false;
+          console.log(this.newRetencion);
+          this.table.reset();
+        }
+      }
+    });
   }
 
   isBuscar() {
