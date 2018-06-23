@@ -15,12 +15,8 @@ export class DatosBancariosItem {
   banco: String;
   tipoCuenta: String[];
   cuentaContable: String;
-  // referenciaProducto: String;
-  // esquemaProducto: String;
-  // tipoPagoProducto: String;
-  // referenciaServicio: String;
-  // esquemaServicio: String;
-  // tipoPagoServicio: String;
+  status: String;
+  revisionCuentas: boolean;
 
   constructor() {}
 }

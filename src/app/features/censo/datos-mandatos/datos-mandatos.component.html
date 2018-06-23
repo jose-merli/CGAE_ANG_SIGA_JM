@@ -46,15 +46,20 @@
 
             <div class="form-group col-lg-12 col-md-12">
               <label>Referencia</label>
-              <input [(ngModel)]="body.referenciaProducto" type="text" class="form-control" pInputText>
+              <input [(ngModel)]="body.referenciaProducto" type="text" class="form-control" [disabled]="!editar" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Tipo de pago</label>
-              <input [(ngModel)]="body.tipoPagoProducto" type="text" class="form-control" pInputText>
+              <input [(ngModel)]="body.tipoPagoProducto" type="text" class="form-control" [disabled]="!editar" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Esquema utilizado</label>
-              <input [(ngModel)]="body.esquemaProducto" type="text" class="form-control" pInputText>
+              <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaProducto' optionLabel="label" *ngIf="nuevo" [disabled]="!editar"
+                [options]="combooItemsProducto" (onChange)="onChangeEsquemaProducto($event)">
+                </p-dropdown>
+                <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaProducto' optionLabel="label" *ngIf="!nuevo" [options]="combooItemsProducto"
+                  (onChange)="onChangeEsquemaProducto($event)">
+                  </p-dropdown>
             </div>
           </div>
         </div>
@@ -69,24 +74,33 @@
 
             <div class="form-group col-lg-12 col-md-12">
               <label>Referencia</label>
-              <input [(ngModel)]="body.referenciaServicio" type="text" class="form-control" pInputText>
+              <input [(ngModel)]="body.referenciaServicio" type="text" class="form-control" [disabled]="!editar" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Tipo de pago</label>
-              <input [(ngModel)]="body.tipoPagoServicio" type="text" class="form-control" pInputText>
+              <input [(ngModel)]="body.tipoPagoServicio" type="text" class="form-control" [disabled]="!editar" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Esquema utilizado</label>
-              <input [(ngModel)]="body.esquemaServicio" type="text" class="form-control" pInputText>
+              <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaServicio' optionLabel="label" *ngIf="nuevo" [disabled]="!editar"
+                [options]="combooItemsServicio" (onChange)="onChangeEsquemaServicio($event)">
+                </p-dropdown>
+                <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaServicio' optionLabel="label" *ngIf="!nuevo" [options]="combooItemsServicio"
+                  (onChange)="onChangeEsquemaServicio($event)">
+                  </p-dropdown>
             </div>
           </div>
         </div>
       </div>
       <br>
-      <div class="card-footer ">
-        <div class="text-right main-button ">
+      <div *ngIf="!nuevo" class="card-footer">
+        <div class="text-right main-button">
           <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
         </div>
       </div>
     </div>
+  </div>
+
+  <div *ngIf="progressSpinner " class="overlay-spinner ">
+    <div class="loader "></div>
   </div>

@@ -228,7 +228,7 @@ export class DatosBancariosComponent implements OnInit {
   confirmarEliminar(selectedDatos) {
     let mess = this.translateService.instant("messages.deleteConfirmation");
     let icon = "fa fa-trash-alt";
-
+    console.log("AQUI");
     this.confirmationService.confirm({
       message: mess,
       icon: icon,
@@ -250,6 +250,8 @@ export class DatosBancariosComponent implements OnInit {
   }
 
   eliminarRegistro(selectedDatos) {
+    this.progressSpinner = true;
+
     let item = new DatosBancariosItem();
 
     item.idCuentas = [];
@@ -265,8 +267,10 @@ export class DatosBancariosComponent implements OnInit {
     //     value.idPersona = this.idPersona;
     //   }
     // );
+
     this.sigaServices.post("datosBancarios_delete", item).subscribe(
       data => {
+        this.progressSpinner = false;
         if (selectedDatos.length == 1) {
           this.showSuccess(
             this.translateService.instant("messages.deleted.success")
@@ -281,6 +285,7 @@ export class DatosBancariosComponent implements OnInit {
       },
       error => {
         console.log(error);
+        this.progressSpinner = false;
       },
       () => {
         this.cargarDatosBancarios();

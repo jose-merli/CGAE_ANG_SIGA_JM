@@ -8,6 +8,9 @@ import { SelectItem } from "primeng/api";
 import { DatosBancariosItem } from "./../../../../app/models/DatosBancariosItem";
 import { DatosBancariosObject } from "./../../../../app/models/DatosBancariosObject";
 
+import { BancoBicItem } from "./../../../../app/models/BancoBicItem";
+import { BancoBicObject } from "./../../../../app/models/BancoBicObject";
+
 import { SigaServices } from "./../../../_services/siga.service";
 
 @Component({
@@ -22,6 +25,8 @@ export class DatosCuentaBancariaComponent implements OnInit {
   formValido: boolean;
   ibanValido: boolean;
   titularValido: boolean;
+  tipoCuentaSeleccionado: boolean;
+  revisionCuentas: boolean = false;
 
   idCuenta: String;
   idPersona: String;
@@ -38,6 +43,9 @@ export class DatosCuentaBancariaComponent implements OnInit {
 
   body: DatosBancariosItem = new DatosBancariosItem();
   bodySearch: DatosBancariosObject = new DatosBancariosObject();
+
+  bodyBancoBic: BancoBicItem = new BancoBicItem();
+  bodyBancoBicSearch: BancoBicObject = new BancoBicObject();
 
   constructor(
     private sigaServices: SigaServices,
@@ -56,20 +64,26 @@ export class DatosCuentaBancariaComponent implements OnInit {
 
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.idPersona = this.usuarioBody[0].idPersona;
-    this.idCuenta = sessionStorage.getItem("idCuenta");
+
     this.registroEditable = sessionStorage.getItem("editar");
 
     if (this.registroEditable == "true") {
       this.cargarDatosCuentaBancaria();
+
+      this.editar = true;
     } else {
       this.body.titular = this.usuarioBody[0].denominacion;
       this.body.nifTitular = this.usuarioBody[0].nif;
+
+      this.editar = false;
     }
   }
 
   cargarDatosCuentaBancaria() {
     this.body.idPersona = this.idPersona;
-    this.body.idCuenta = this.idCuenta;
+    this.body.idCuenta = sessionStorage.getItem("idCuenta");
+
+    console.log("eewe", this.body);
 
     this.sigaServices
       .postPaginado("datosCuentaBancaria_search", "?numPagina=1", this.body)
@@ -106,11 +120,21 @@ export class DatosCuentaBancariaComponent implements OnInit {
     });
   }
 
-  guardar() {
+  guardarRegistro() {
+    this.progressSpinner = true;
+
+    this.body.revisionCuentas = this.revisionCuentas;
+    this.body.idPersona = this.idPersona;
+
+    this.getArrayTipoCuenta();
+
+    console.log("ere", this.body);
+
     this.sigaServices.post("datosCuentaBancaria_insert", this.body).subscribe(
       data => {
         this.progressSpinner = false;
-        console.log(data);
+        this.body.status = data.status;
+        this.showSuccess("Se han guardado correctamente los datos");
       },
       error => {
         this.bodySearch = JSON.parse(error["error"]);
@@ -121,28 +145,61 @@ export class DatosCuentaBancariaComponent implements OnInit {
     );
   }
 
-  restablecer() {
-    let mess = this.translateService.instant("¿Desea restablecer los cambios?");
-    let icon = "fa fa-info";
+  getArrayTipoCuenta() {
+    this.body.tipoCuenta = [];
+    this.selectedTipo.forEach(element => {
+      this.body.tipoCuenta.push(element.code);
+    });
+  }
 
+  restablecer() {
     this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
+      message: "¿Desea restablecer los datos?",
+      icon: "fa fa-info",
       accept: () => {
+        this.showInfo("Datos restablecidos");
         this.cargarDatosCuentaBancaria();
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "info",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
       }
     });
+  }
+
+  autogenerarDatos() {
+    if (this.isValidIBAN() && this.body.iban.length == 24) {
+      this.recuperarBicBanco();
+      this.ibanValido = true;
+    } else {
+      this.body.banco = "";
+      this.body.bic = "";
+    }
+  }
+
+  recuperarBicBanco() {
+    this.sigaServices
+      .post("datosCuentaBancaria_BIC_BANCO", this.body)
+      .subscribe(
+        data => {
+          console.log("data", data);
+          this.bodyBancoBicSearch = JSON.parse(data["body"]);
+          this.bodyBancoBic = this.bodyBancoBicSearch.bancoBicItem[0];
+
+          this.body.banco = this.bodyBancoBic.banco;
+          this.body.bic = this.bodyBancoBic.bic;
+
+          console.log("bic", this.bodyBancoBic.bicEspanol);
+
+          if (this.bodyBancoBic.bicEspanol == "1") {
+            this.editar = false;
+          } else {
+            this.editar = true;
+          }
+        },
+        error => {
+          this.bodyBancoBicSearch = JSON.parse(error["error"]);
+          this.showFail(
+            JSON.stringify(this.bodyBancoBicSearch.error.description)
+          );
+        }
+      );
   }
 
   isValidIBAN(): boolean {
@@ -158,39 +215,81 @@ export class DatosCuentaBancariaComponent implements OnInit {
   validarIban() {
     if (
       (this.body.iban != null || this.body.iban != undefined) &&
-      this.isValidIBAN()
+      this.isValidIBAN() &&
+      this.body.iban.length == 24
     ) {
       this.ibanValido = true;
+      return true;
     } else {
       this.ibanValido = false;
+      return false;
     }
   }
 
   validarTitular() {
-    if (this.body.titular != "" || this.body.titular != undefined) {
+    if (this.body.titular.trim() != "" && this.body.titular != undefined) {
       this.titularValido = true;
+      return true;
     } else {
       this.titularValido = false;
+      return false;
     }
   }
 
+  validarTipoCuenta() {
+    if (this.selectedTipo.length >= 1) {
+      this.tipoCuentaSeleccionado = true;
+      return true;
+    } else {
+      this.tipoCuentaSeleccionado = false;
+      return false;
+    }
+  }
+
+  validarBIC() {
+    if (this.body.bic.length) {
+    }
+  }
+
+  validarCuentaCargo() {
+    this.confirmationService.confirm({
+      message: this.translateService.instant(
+        "censo.tipoCuenta.cargo.confirmacionProcesoAltaCuentaCargos"
+      ),
+      icon: "fa fa-info",
+      accept: () => {
+        this.revisionCuentas = true;
+
+        if (this.registroEditable == "false") {
+          this.guardarRegistro();
+        }
+      },
+      reject: () => {
+        this.revisionCuentas = false;
+
+        if (this.registroEditable == "false") {
+          this.guardarRegistro();
+        }
+      }
+    });
+  }
+
   validarFormulario() {
-    if (this.validarIban() && this.validarTitular()) {
+    var revisionCuentas;
+    if (
+      this.validarIban() &&
+      this.validarTitular() &&
+      this.validarTipoCuenta()
+    ) {
       this.formValido = true;
+
+      this.getArrayTipoCuenta();
+      if (this.body.tipoCuenta.indexOf("C") !== -1) {
+        this.validarCuentaCargo();
+      }
     } else {
       this.formValido = false;
     }
-
-    //   (this.selectedTipo.length >= 1 &&
-    //     (this.body.iban != null &&
-    //       this.body.iban != undefined &&
-    //       this.isValidIBAN()))
-    // ) {
-    //   this.habilitarGuardar = true;
-    //   this.guardar();
-    // } else {
-    //   this.habilitarGuardar = false;
-    // }
   }
 
   abrirFicha() {
@@ -205,5 +304,10 @@ export class DatosCuentaBancariaComponent implements OnInit {
   showSuccess(mensaje: string) {
     this.msgs = [];
     this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showInfo(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
   }
 }

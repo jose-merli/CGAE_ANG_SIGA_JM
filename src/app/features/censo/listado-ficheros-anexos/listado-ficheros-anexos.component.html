@@ -32,19 +32,13 @@
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
         [(selection)]="selectedDatos" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="bodySearch.datosBancariosItem"
-        [sortOrder]="1" [paginator]="activarPaginacion()" (onRowSelect)="redireccionar(selectedDatos)" paginatorPosition="both"
-        [rows]="selectedItem">
+        [sortOrder]="1" [paginator]="activarPaginacion()" paginatorPosition="both" [rows]="selectedItem">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true" filterMatchMode="contains">
 
-          <ng-template let-datoH="rowData" pTemplate="body">
-            <div *ngIf="setItalic(datoH)">
-              <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
-            </div>
-            <div *ngIf="!setItalic(datoH)">
-              <span>{{datoH[col.field]}}</span>
-            </div>
-          </ng-template>
+          <!--<ng-template *ngIf="col.field === 'publicable'" let-dato="rowData" pTemplate="body">
+            <p-dropdown class="select-form" [(ngModel)]='selectedPublicable' optionLabel="label" [options]="comboPublicable">
+          </ng-template>-->
 
           </p-column>
 
@@ -62,13 +56,8 @@
           </ng-template>
           <p-footer>
             <div class="text-right main-button">
-              <button (click)="cargarHistorico()" *ngIf="!historico" pButton type="button" icon="fa fa-history" iconPos="left" label="Consultar histórico"></button>
-              <button (click)="cargarDatosBancarios()" [disabled]="!selectedDatos" *ngIf="historico" pButton type="button" icon="fa fa-history"
-                iconPos="left" label="Restablecer"></button>
-                <button (click)="redireccionar(selectedDatos)" *ngIf="!historico" pButton type="button" icon="fa fa-plus" iconPos="left"
-                  label="Nuevo"></button>
-                  <button *ngIf="selectedDatos && selectedDatos != '' && !historico" (click)="confirmarEliminar(selectedDatos)" pButton type="button"
-                    icon="fa fa-trash-alt" iconPos="left" label="Eliminar"></button>
+              <button *ngIf="selectedDatos && selectedDatos != ''" (click)="descargarXml(selectedDatos)" pButton type="button" icon="fa fa-download"
+                iconPos="left" label="Descargar"></button>
             </div>
 
           </p-footer>

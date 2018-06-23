@@ -37,64 +37,58 @@
 
       <div class="row">
         <div class="bloque col-lg-12 col-md-12">
-          <div class="form-row">
 
-            <div class="form-group col-lg-6 col-md-6">
+          <div class="row">
+            <div class="form-group col-lg-3 col-md-6">
               <label>Titular</label>
               <input type="text" class="form-control" [(ngModel)]="body.titular" pInputText>
               <div *ngIf="titularValido == false"><label class="labelError">{{"El campo no puede estar vacío"}}</label></div>
             </div>
-
-            <div class="row col-lg-6 col-md-6">
-              <div class="form-group col-lg-6 col-md-6">
-                <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
-                <input type="text" class="form-control" [(ngModel)]="body.nifTitular" [disabled]="!editar" pInputText>
-              </div>
-              <div class="form-group col-lg-6 col-md-6">
-                <label>IBAN</label>
-                <input type="text" class="form-control" [(ngModel)]="body.iban" pInputText>
-                <div *ngIf="ibanValido == false"><label class="labelError">{{"IBAN incorrecto"}}</label></div>
-              </div>
-
+            <div class="form-group col-lg-3 col-md-6">
+              <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
+              <input type="text" class="form-control" [(ngModel)]="body.nifTitular" [disabled]="!editar" pInputText>
             </div>
-
-            <div class="row col-lg-6 col-md-6">
-              <div class="form-group col-lg-6 col-md-6">
-                <label>BIC </label>
-                <input [(ngModel)]="body.bic" type="text" class="form-control" [disabled]="!editar" pInputText>
-              </div>
-              <div class="form-group col-lg-6 col-md-6">
-                <label>Banco</label>
-                <input [(ngModel)]="body.banco" type="text" class="form-control" [disabled]="!editar" pInputText>
-              </div>
+            <div class="form-group col-lg-3 col-md-6">
+              <label>IBAN</label>
+              <input type="text" class="form-control" [(ngModel)]="body.iban" (ngModelChange)="autogenerarDatos()" pInputText>
+              <div *ngIf="ibanValido == false"><label class="labelError">{{"IBAN incorrecto"}}</label></div>
             </div>
-
-            <div class="row col-lg-6 col-md-6">
-              <div class="form-group col-lg-6 col-md-6">
-                <label>Tipo de cuenta</label>
-                <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='selectedTipo' [options]="tipoCuenta" [selectedItemsLabel]="textSelected"
-                  maxSelectedLabels="1" autoWidth="false" defaultLabel="" maxSelectedLabels="1" optionLabel="name"></p-multiSelect>
-              </div>
-              <div class="form-group col-lg-6 col-md-6">
-                <label>Cuenta contable</label>
-                <input type="text" class="form-control " [(ngModel)]="body.cuentaContable" pInputText>
-              </div>
+            <div class="form-group col-lg-3 col-md-6">
+              <label>BIC</label>
+              <input [(ngModel)]="body.bic" type="text" class="form-control" (ngModelChange)="recuperarBicBanco()" [disabled]="!editar"
+                pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-6">
+              <label>Banco</label>
+              <input [(ngModel)]="body.banco" type="text" class="form-control" [disabled]="!editar" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-6">
+              <label>Tipo de cuenta</label>
+              <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='selectedTipo' [options]="tipoCuenta" [selectedItemsLabel]="textSelected"
+                maxSelectedLabels="1" autoWidth="false" defaultLabel="" maxSelectedLabels="1" optionLabel="name"></p-multiSelect>
+                <div *ngIf="tipoCuentaSeleccionado == false"><label class="labelError">{{"Debe seleccionar al menos 1 elemento"}}</label></div>
+            </div>
+            <div class="form-group col-lg-3 col-md-6">
+              <label>Cuenta contable</label>
+              <input type="text" class="form-control " [(ngModel)]="body.cuentaContable" pInputText>
             </div>
           </div>
+
+
+
         </div>
       </div>
       <br>
       <div class="card-footer ">
         <div class="text-right main-button ">
           <button (click)="validarFormulario()" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
-          <button (click)="restablecer()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="Restablecer"></button>
+          <button (click)="restablecer()" [disabled]="editar==false" pButton type="button" icon="fa fa-repeat" iconPos="left" label="Restablecer"></button>
         </div>
       </div>
       <!--END DATOS GENERALES-->
+      <app-dialog></app-dialog>
     </div>
 
     <div *ngIf="progressSpinner " class="overlay-spinner ">
       <div class="loader "></div>
     </div>
-
-    <app-dialog></app-dialog>
