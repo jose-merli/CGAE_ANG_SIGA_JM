@@ -15,14 +15,30 @@
           </div>
           <div class="d-flex justify-content-between">
             <div *ngIf="datosIntegrantes.datosIntegrantesItems.length == 1">
-              <label>{{"administracion.usuarios.literal.NIF" | translate}} <span>{{ body.nif }}</span></label>
-              <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}} <span>{{ body.nombre }}</span></label>
-              <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}} <span>{{ body.apellidos }}</span></label>
-              <label>Fecha de alta – fecha de baja <span>{{ body.fechaInicioCargo }} - {{ body.fechaFinCargo }}</span></label>
-              <label>Cargos del integrante <span>{{ body.cargo }}</span></label>
-              <label>Liquidación como sociedad <span> hola </span></label>
-              <label>Ejerciente <span> mundo </span></label>
-              <label>Participación en la sociedad <span>{{ body.participacionSociedad }}</span></label>
+              <label>{{"administracion.usuarios.literal.NIF" | translate}}
+                <span>{{ body.nif }}</span>
+              </label>
+              <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}
+                <span>{{ body.nombre }}</span>
+              </label>
+              <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}
+                <span>{{ body.apellidos }}</span>
+              </label>
+              <label>Fecha de alta – fecha de baja
+                <span>{{ body.fechaInicioCargo }} - {{ body.fechaFinCargo }}</span>
+              </label>
+              <label>Cargos del integrante
+                <span>{{ body.cargo }}</span>
+              </label>
+              <label>Liquidación como sociedad
+                <span> hola </span>
+              </label>
+              <label>Ejerciente
+                <span> mundo </span>
+              </label>
+              <label>Participación en la sociedad
+                <span>{{ body.participacionSociedad }}</span>
+              </label>
             </div>
             <div *ngIf="datosIntegrantes.datosIntegrantesItems.length > 1">
               <div class="row mb-1">
@@ -82,7 +98,7 @@
       </div>
       <!--END DATOS GENERALES-->
     </div>
-    <p-growl [(value)]="msgs "></p-growl>
-    <div *ngIf="progressSpinner " class="overlay-spinner ">
-      <div class="loader "></div>
-    </div>
+    <!-- <p-growl [(value)]="msgs"></p-growl>
+    <div *ngIf="progressSpinner" class="overlay-spinner">
+      <div class="loader"></div>
+    </div> -->

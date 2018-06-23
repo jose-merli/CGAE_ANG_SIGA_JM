@@ -3,7 +3,7 @@ import { NgModule } from "@angular/core";
 import { HttpModule } from "@angular/http";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { APP_BASE_HREF } from "@angular/common";
+import { APP_BASE_HREF, DatePipe } from "@angular/common";
 import { ValidationModule } from "./commons/validation/validation.module";
 import { MenubarModule } from "primeng/menubar";
 import { PanelMenuModule } from "primeng/panelmenu";
@@ -232,18 +232,19 @@ import { DatosRetencionesComponent } from "./features/censo/datos-retenciones/da
 
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
-import { DatosIntegrantesComponent } from './features/censo/datos-integrantes/datos-integrantes.component';
-import { DatosBancariosComponent } from './features/censo/datos-bancarios/datos-bancarios.component';
-import { ConsultarDatosBancariosComponent } from './features/censo/consultar-datos-bancarios/consultar-datos-bancarios.component';
-import { DatosCuentaBancariaComponent } from './features/censo/datos-cuenta-bancaria/datos-cuenta-bancaria.component';
-import { DatosMandatosComponent } from './features/censo/datos-mandatos/datos-mandatos.component';
-import { ListadoFicherosAnexosComponent } from './features/censo/listado-ficheros-anexos/listado-ficheros-anexos.component';
+import { DatosBancariosComponent } from "./features/censo/datos-bancarios/datos-bancarios.component";
+import { ConsultarDatosBancariosComponent } from "./features/censo/consultar-datos-bancarios/consultar-datos-bancarios.component";
+import { DatosCuentaBancariaComponent } from "./features/censo/datos-cuenta-bancaria/datos-cuenta-bancaria.component";
+import { DatosMandatosComponent } from "./features/censo/datos-mandatos/datos-mandatos.component";
+import { ListadoFicherosAnexosComponent } from "./features/censo/listado-ficheros-anexos/listado-ficheros-anexos.component";
+import { DatosIntegrantesComponent } from "./features/censo/datos-integrantes/datos-integrantes.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     TranslatePipe,
     ImagePipe,
+
     MyIframeComponent,
     MenuComponent,
     LoginComponent,
@@ -433,6 +434,7 @@ import { ListadoFicherosAnexosComponent } from './features/censo/listado-fichero
   ],
   imports: [
     BrowserModule,
+
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
@@ -469,6 +471,7 @@ import { ListadoFicherosAnexosComponent } from './features/censo/listado-fichero
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     TranslateService,
     ImagePipe,
+    DatePipe,
     OldSigaServices,
     SigaServices,
     HeaderGestionEntidadService,
@@ -489,4 +492,4 @@ import { ListadoFicherosAnexosComponent } from './features/censo/listado-fichero
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

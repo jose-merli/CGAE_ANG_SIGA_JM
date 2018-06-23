@@ -1,4 +1,4 @@
-export class RetencionesItem {
+export class DatosRetencionesItem {
   idPersona: String;
   fechaInicio: Date;
   fechaFin: Date;
