@@ -4,6 +4,7 @@ export class DatosBancariosItem {
   nifTitular: String;
   idCuentas: String[];
   idCuenta: String;
+  id: String;
   titular: String;
   iban: String;
   bic: String;
