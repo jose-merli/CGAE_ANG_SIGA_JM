@@ -3,6 +3,6 @@ import { ErrorItem } from "./ErrorItem";
 
 export class DatosIntegrantesObject {
   error: ErrorItem;
-  datosIntegrantesItems: DatosIntegrantesItem[] = [];
+  datosIntegrantesItem: DatosIntegrantesItem[] = [];
   constructor() {}
 }

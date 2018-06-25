@@ -39,6 +39,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
   tipoPersona: String;
   usuarioBody: any[];
   notario: any;
+  notario1: any;
   guardarNotario: boolean = false;
   desasociar: boolean = false;
 
@@ -56,6 +57,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
   ngOnInit() {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.tipoPersona = "Notario";
+
     if (
       sessionStorage.getItem("notario") != undefined &&
       sessionStorage.getItem("notario") != null
@@ -78,6 +80,8 @@ export class AccesoFichaPersonaComponent implements OnInit {
       }
       if (this.notario[0].nombre != undefined) {
         this.body.nombre = this.notario[0].nombre;
+      } else if (this.notario[0].denominacion != undefined) {
+        this.body.nombre = this.notario[0].denominacion;
       }
       if (this.notario[0].primerApellido != undefined) {
         this.body.apellido1 = this.notario[0].primerApellido;

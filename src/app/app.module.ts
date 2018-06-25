@@ -238,6 +238,7 @@ import { DatosCuentaBancariaComponent } from "./features/censo/datos-cuenta-banc
 import { DatosMandatosComponent } from "./features/censo/datos-mandatos/datos-mandatos.component";
 import { ListadoFicherosAnexosComponent } from "./features/censo/listado-ficheros-anexos/listado-ficheros-anexos.component";
 import { DatosIntegrantesComponent } from "./features/censo/datos-integrantes/datos-integrantes.component";
+import { DetalleIntegranteComponent } from "./features/censo/datos-integrantes/detalleIntegrante/detalleIntegrante.component";
 
 @NgModule({
   declarations: [
@@ -284,7 +285,7 @@ import { DatosIntegrantesComponent } from "./features/censo/datos-integrantes/da
     DatosRegistralesComponent,
     DatosPersonaJuridicaComponent,
     DatosRetencionesComponent,
-
+    DetalleIntegranteComponent,
     //SJRS
     DesignacionesComponent,
     BajasTemporalesComponent,

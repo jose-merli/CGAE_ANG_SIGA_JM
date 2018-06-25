@@ -122,7 +122,8 @@ export class SigaServices {
     datosMandatos_comboEsquema: "busquedaPerJuridica/comboEsquema",
     retenciones_tipoRetencion: "retenciones/tipoRetencion",
     retenciones_search: "retenciones/search",
-    retenciones_update: "retenciones/update"
+    retenciones_update: "retenciones/update",
+    integrantes_search: "busquedaPerJuridica/datosIntegrantesSearch"
   };
 
   private menuToggled = new Subject<any>();
