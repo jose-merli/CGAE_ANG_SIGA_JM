@@ -388,12 +388,14 @@ export class BusquedaGeneralComponent {
         sessionStorage.getItem("notario") != undefined
       ) {
         sessionStorage.removeItem("notario");
-
-        id.tipoIdentificacion = this.tipoCIF;
+        this.checkTypeCIF(id[0].nif);
+        id[0].tipoIdentificacion = this.tipoCIF;
         sessionStorage.setItem("notario", JSON.stringify(id));
         this.location.back();
       } else {
-        id.tipoIdentificacion = this.tipoCIF;
+        this.checkTypeCIF(id[0].nif);
+        id[0].tipoIdentificacion = this.tipoCIF;
+
         sessionStorage.setItem("notario", JSON.stringify(id));
         this.location.back();
       }
