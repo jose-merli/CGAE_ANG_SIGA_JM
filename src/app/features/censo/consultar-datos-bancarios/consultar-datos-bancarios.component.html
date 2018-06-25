@@ -6,9 +6,8 @@
     <p>Consultar editar datos bancarios</p>
   </div>
 
+  <!-- Datos cuenta bancaria -->
   <div class="busqueda-container">
-
-    <!--DATOS GENERALES-->
     <div class="card">
       <div class="card-header header-ficha">
         <div *ngIf="!openFichaCuentaBancaria" class="form-row">
@@ -38,12 +37,9 @@
         </div>
       </div>
 
-      <!--cuerpo datos generales-->
       <div *ngIf="openFichaCuentaBancaria" class="card-body card-body-ficha">
-
         <div class="row">
           <div class="bloque col-lg-12 col-md-12">
-
             <div class="row">
               <div class="form-group col-lg-3 col-md-6">
                 <label>Titular</label>
@@ -79,9 +75,6 @@
                 <input type="text" class="form-control " [(ngModel)]="body.cuentaContable" pInputText>
               </div>
             </div>
-
-
-
           </div>
         </div>
         <br>
@@ -92,129 +85,253 @@
             <button *ngIf="nuevo" (click)="restablecerNuevo()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="Restablecer"></button>
           </div>
         </div>
-        <!--END DATOS GENERALES-->
-
       </div>
-
-      <!--<div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
-    <app-datos-cuenta-bancaria *ngSwitchCase="'datosCuentaBancaria'"></app-datos-cuenta-bancaria>
-    <app-datos-mandatos *ngSwitchCase="'datosMandatos'"></app-datos-mandatos>
-  </div>-->
-
-
     </div>
+  </div>
 
-
-    <div class="busqueda-container">
-
-      <!--<div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
-    <app-datos-generales *ngSwitchCase="'generales'"></app-datos-generales>
-  </div>-->
-
-      <!--DATOS REGISTRALES-->
-      <div class="card">
-        <div class="card-header header-ficha">
-          <div *ngIf="!openFichaDatosMandatos" class="form-row">
-            <div class="col-lg-1 col-md-2">
-              <div class="img-colegiado">
-                <i class="fa fa-hand-o-right icon-ficha"></i>
-              </div>
-            </div>
-            <div class="col-lg-11 col-md-10 ">
-              <div class="d-flex justify-content-end mb-1">
-                <label class="mr-auto title-ficha">Datos Mandatos</label>
-              </div>
-              <div class="d-flex justify-content-between">
-                <br>
-                <i (click)="abrirFichaDatosMandatos()" [ngClass]="{ 'fa fa-angle-up': openFichaDatosMandatos, 'fa fa-angle-down': !openFichaDatosMandatos} "></i>
-              </div>
-            </div>
-          </div>
-          <div *ngIf="openFichaDatosMandatos" class=" header-ficha-open d-flex justify-content-start align-items-center">
+  <!-- Datos Mandatos -->
+  <div class="busqueda-container">
+    <div class="card">
+      <div class="card-header header-ficha">
+        <div *ngIf="!openFichaDatosMandatos" class="form-row">
+          <div class="col-lg-1 col-md-2">
             <div class="img-colegiado">
               <i class="fa fa-hand-o-right icon-ficha"></i>
             </div>
-            <label class="title-ficha">Datos Mandatos</label>
-            <i (click)="abrirFichaDatosMandatos()" class="fa fa-angle-up ml-auto"></i>
           </div>
-        </div>
-        <!--cuerpo datos colegiales-->
-
-        <div *ngIf="openFichaDatosMandatos" class="card-body card-body-ficha">
-          <div class="row">
-            <div class="bloque col-lg-6 col-md-6">
-
-              <div class="form-row">
-
-                <div class="form-group col-lg-12 col-md-12">
-                  <label style="font-weight: bold;">Datos Generales Productos</label>
-                </div>
-
-                <div class="form-group col-lg-12 col-md-12">
-                  <label>Referencia</label>
-                  <input [(ngModel)]="bodyDatosMandatos.referenciaProducto" type="text" class="form-control" [disabled]="!editarMandato" pInputText>
-                </div>
-                <div class="form-group col-lg-6 col-md-6">
-                  <label>Tipo de pago</label>
-                  <input [(ngModel)]="bodyDatosMandatos.tipoPagoProducto" type="text" class="form-control" [disabled]="!editarMandato" pInputText>
-                </div>
-                <div class="form-group col-lg-6 col-md-6">
-                  <label>Esquema utilizado</label>
-                  <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaProducto' optionLabel="label" *ngIf="nuevo" [disabled]="!editarMandato"
-                    [options]="combooItemsProducto" (onChange)="onChangeEsquemaProducto($event)">
-                    </p-dropdown>
-                    <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaProducto' optionLabel="label" *ngIf="!nuevo" [options]="combooItemsProducto"
-                      (onChange)="onChangeEsquemaProducto($event)">
-                      </p-dropdown>
-                      <!--<p-checkbox [(ngModel)]='check' binary="true"></p-checkbox>-->
-                </div>
-              </div>
+          <div class="col-lg-11 col-md-10 ">
+            <div class="d-flex justify-content-end mb-1">
+              <label class="mr-auto title-ficha">Datos Mandatos</label>
             </div>
-
-            <div class="bloque col-lg-6 col-md-6">
-
-              <div class="form-row">
-
-                <div class="form-group col-lg-12 col-md-12">
-                  <label style="text-align:center; font-weight: bold;">Datos Generales Servicios</label>
-                </div>
-
-                <div class="form-group col-lg-12 col-md-12">
-                  <label>Referencia</label>
-                  <input [(ngModel)]="bodyDatosMandatos.referenciaServicio" type="text" class="form-control" [disabled]="!editarMandato" pInputText>
-                </div>
-                <div class="form-group col-lg-6 col-md-6">
-                  <label>Tipo de pago</label>
-                  <input [(ngModel)]="bodyDatosMandatos.tipoPagoServicio" type="text" class="form-control" [disabled]="!editarMandato" pInputText>
-                </div>
-                <div class="form-group col-lg-6 col-md-6">
-                  <label>Esquema utilizado</label>
-                  <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaServicio' optionLabel="label" *ngIf="nuevo" [disabled]="!editarMandato"
-                    [options]="combooItemsServicio" (onChange)="onChangeEsquemaServicio($event)">
-                    </p-dropdown>
-                    <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaServicio' optionLabel="label" *ngIf="!nuevo" [options]="combooItemsServicio"
-                      (onChange)="onChangeEsquemaServicio($event)">
-                      </p-dropdown>
-                      <!--<p-checkbox [(ngModel)]='check' binary="true"></p-checkbox>-->
-                </div>
-              </div>
-            </div>
-          </div>
-          <br>
-          <div *ngIf="!nuevo" class="card-footer">
-            <div class="text-right main-button">
-              <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
+            <div class="d-flex justify-content-between">
+              <br>
+              <i (click)="abrirFichaDatosMandatos()" [ngClass]="{ 'fa fa-angle-up': openFichaDatosMandatos, 'fa fa-angle-down': !openFichaDatosMandatos} "></i>
             </div>
           </div>
         </div>
+        <div *ngIf="openFichaDatosMandatos" class=" header-ficha-open d-flex justify-content-start align-items-center">
+          <div class="img-colegiado">
+            <i class="fa fa-hand-o-right icon-ficha"></i>
+          </div>
+          <label class="title-ficha">Datos Mandatos</label>
+          <i (click)="abrirFichaDatosMandatos()" class="fa fa-angle-up ml-auto"></i>
+        </div>
       </div>
 
-      <div class="mt-3 text-right main-button ">
-        <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="Volver"></button>
-      </div>
+      <div *ngIf="openFichaDatosMandatos" class="card-body card-body-ficha">
+        <div class="row">
+          <div class="bloque col-lg-6 col-md-6">
 
-      <app-dialog></app-dialog>
+            <div class="form-row">
 
-      <div *ngIf="progressSpinner " class="overlay-spinner ">
-        <div class="loader "></div>
+              <div class="form-group col-lg-12 col-md-12">
+                <label style="font-weight: bold;">Datos Generales Productos</label>
+              </div>
+
+              <div class="form-group col-lg-12 col-md-12">
+                <label>Referencia</label>
+                <input [(ngModel)]="bodyDatosMandatos.referenciaProducto" type="text" class="form-control" [disabled]="!editarMandato" pInputText>
+              </div>
+              <div class="form-group col-lg-6 col-md-6">
+                <label>Tipo de pago</label>
+                <input [(ngModel)]="bodyDatosMandatos.tipoPagoProducto" type="text" class="form-control" [disabled]="!editarMandato" pInputText>
+              </div>
+              <div class="form-group col-lg-6 col-md-6">
+                <label>Esquema utilizado</label>
+                <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaProducto' optionLabel="label" *ngIf="nuevo" [disabled]="!editarMandato"
+                  [options]="combooItemsProducto" (onChange)="onChangeEsquemaProducto($event)">
+                  </p-dropdown>
+                  <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaProducto' optionLabel="label" *ngIf="!nuevo" [options]="combooItemsProducto"
+                    (onChange)="onChangeEsquemaProducto($event)">
+                    </p-dropdown>
+              </div>
+              <p-checkbox *ngIf="isSelectedProducto == true" [(ngModel)]='checkProducto' binary="true" (ngModelChange)="validarCheckProducto()"
+                label='{{ "censo.fichaCliente.datosBancarios.autorizacion.b2b" }}'></p-checkbox>
+                <br>
+                <div *ngIf="isCheckedProducto == false"><label class="labelError">{{"facturacion.ficheroBancarioPagos.errorMandatos.mensajeMandatoB2BNoAutorizado"}}</label></div>
+            </div>
+          </div>
+
+          <div class="bloque col-lg-6 col-md-6">
+
+            <div class="form-row">
+
+              <div class="form-group col-lg-12 col-md-12">
+                <label style="text-align:center; font-weight: bold;">Datos Generales Servicios</label>
+              </div>
+
+              <div class="form-group col-lg-12 col-md-12">
+                <label>Referencia</label>
+                <input [(ngModel)]="bodyDatosMandatos.referenciaServicio" type="text" class="form-control" [disabled]="!editarMandato" pInputText>
+              </div>
+              <div class="form-group col-lg-6 col-md-6">
+                <label>Tipo de pago</label>
+                <input [(ngModel)]="bodyDatosMandatos.tipoPagoServicio" type="text" class="form-control" [disabled]="!editarMandato" pInputText>
+              </div>
+              <div class="form-group col-lg-6 col-md-6">
+                <label>Esquema utilizado</label>
+                <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaServicio' optionLabel="label" *ngIf="nuevo" [disabled]="!editarMandato"
+                  [options]="combooItemsServicio" (onChange)="onChangeEsquemaServicio($event)">
+                  </p-dropdown>
+                  <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaServicio' optionLabel="label" *ngIf="!nuevo" [options]="combooItemsServicio"
+                    (onChange)="onChangeEsquemaServicio($event)">
+                    </p-dropdown>
+              </div>
+              <p-checkbox *ngIf="isSelectedServicio == true" [(ngModel)]='checkServicio' binary="true" (ngModelChange)="validarCheckServicio()"
+                label='{{ "censo.fichaCliente.datosBancarios.autorizacion.b2b" }}'></p-checkbox>
+                <br>
+                <div *ngIf="isCheckedServicio == false"><label class="labelError">{{"facturacion.ficheroBancarioPagos.errorMandatos.mensajeMandatoB2BNoAutorizado"}}</label></div>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div *ngIf="!nuevo" class="card-footer">
+          <div class="text-right main-button">
+            <button (click)="validarGuardarMandato()" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
+          </div>
+        </div>
       </div>
+    </div>
+  </div>
+
+  <!--Listado ficheros anexo -->
+  <div class="busqueda-container">
+    <div class="card">
+      <div class="card-header header-ficha">
+        <div *ngIf="!openFichaListadoFicherosAnexos" class="form-row">
+          <div class="col-lg-1 col-md-2">
+            <div class="img-colegiado">
+              <i class="fa fa-list-ul icon-ficha"></i>
+            </div>
+          </div>
+          <div class="col-lg-11 col-md-10">
+            <div class="d-flex justify-content-end mb-1">
+              <label class="mr-auto title-ficha">Listado ficheros y anexos</label>
+            </div>
+            <div class="d-flex justify-content-between">
+              <br>
+              <i (click)="abrirFichaListadoFicherosAnexos()" [ngClass]="{ 'fa fa-angle-up': openFichaListadoFicherosAnexos, 'fa fa-angle-down': !openFichaListadoFicherosAnexos} "></i>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="openFichaListadoFicherosAnexos" class=" header-ficha-open d-flex justify-content-start align-items-center">
+          <div class="img-colegiado ">
+            <i class="fa fa-list-ul icon-ficha"></i>
+          </div>
+          <label class="title-ficha">Listado ficheros y anexos</label>
+          <i (click)="abrirFichaListadoFicherosAnexos()" class="fa fa-angle-up ml-auto"></i>
+        </div>
+      </div>
+      <div *ngIf="openFichaListadoFicherosAnexos" class="card-body card-body-ficha">
+        <!--<p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+          [(selection)]="selectedDatos" [responsive]="true" selectionMode="single" #table class="tabla-listado" [value]="bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem"
+          [sortOrder]="1" [paginator]="activarPaginacion()" paginatorPosition="both" [rows]="selectedItem">-->
+        <p-dataTable #table emptyMessage="{{ 'general.message.no.registros' | translate}}" [value]="bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem"
+          [responsive]="true" class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]="activarPaginacion()"
+          paginatorPosition="both" [rows]="selectedItem" selectionMode="single">
+          <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="{{ 'general.boton.search' | translate}} "
+            [filter]="true " filterMatchMode="contains ">
+
+            <!--<ng-template *ngIf="col[col.field]=='descripcion' " let-dato="rowData " pTemplate="body ">
+              <input *ngIf="dato[col.field]=='' " type="text " class="form-control " pInputText [(ngModel)]="dato[col.field] ">
+            </ng-template>-->
+
+
+            </p-column>
+            <!--<p-column field="descripcion " header="Descripcion " [sortable]="true " [filter]="true " [editable]="editar ">
+            <ng-template let-row="rowData " let-index="rowIndex " pTemplate="body ">
+              <div *ngIf="!editar ">{{bodyDatosBancariosAnexo.descripcion}}</div>
+              <div *ngIf="editar ">
+                <input type="text " [(ngModel)]="bodyDatosBancariosAnexo.descripcion ">
+              </div>
+            </ng-template>
+          </p-column>-->
+            <!--<p-column field="descripcion " header="Descripcion " [editable]="isEditable ">
+            <template let-col let-row="rowData " let-index="rowIndex " pTemplate="body ">
+              <span *ngIf="!row.isEditable ">{{row.descripcion}}</span>
+              <span *ngIf="row.isEditable "><input type="text " [(ngModel)]="row.descripcion "></span>
+            </template>
+          </p-column>
+          <p-column field="tipo " header="Tipo " [sortable]="true " [filter]="true "></p-column>
+          <p-column field="tipoMandato " header="Tipo Mandato " [sortable]="true " [filter]="true "></p-column>
+          <p-column field="fechaUso " header="Fecha Uso " [sortable]="true " [filter]="true "></p-column>
+          <p-column field="firmaFecha " header="Fecha de Firma " [sortable]="true " [filter]="true "></p-column>
+          <p-column field="firmaLugar " header="Lugar de la firma " [sortable]="true " [filter]="true "></p-column>-->
+
+            <!--<p-column field="bodyDatosBancariosAnexo.descripcion " [editable]="true " header="Descripcion ">
+            <ng-template let-col let-color="rowData " pTemplate="editor ">
+              <input *ngIf="editar " type="text " class="form-control " pInputText [(ngModel)]="bodyDatosBancariosAnexo.descripcion ">
+            </ng-template>
+          </p-column>-->
+
+            <ng-template pTemplate="paginatorLeft ">
+              <div class="mostrar d-flex text-right justify-content-end ">
+                <label class="pr-3 registros-totales ">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                <label>{{ "general.message.mostrar " | translate}}</label>
+                <p-dropdown [(ngModel)]="selectedItem " [options]="rowsPerPage " (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                <label class="pl-1 "> {{"cargaMasivaDatosCurriculares.numRegistros.literal " | translate}}</label>
+              </div>
+            </ng-template>
+            <p-footer>
+              <div class="text-right main-button ">
+                <button *ngIf="selectedDatos && selectedDatos !=''" (click)="descargarXml(selectedDatos)" pButton type="button" icon="fa fa-download"
+                  iconPos="left" label="Descargar"></button>
+                  <button *ngIf="selectedDatos && selectedDatos !=''" (click)="firmar(selectedDatos)" pButton type="button" icon="fa fa-rupee"
+                    iconPos="left" label="Firmar"></button>
+                    <button *ngIf="selectedDatos && selectedDatos !=''" (click)="comunicar(selectedDatos)" pButton type="button" icon="fa fa-comment"
+                      iconPos="left" label="Comunicar"></button>
+                      <button *ngIf="selectedDatos && selectedDatos !='' && !editar" (click)="activarEdicion(selectedDatos)" pButton type="button"
+                        icon="fa fa-edit" iconPos="left" label="Editar"></button>
+                        <button *ngIf="editar " (click)="actualizarAnexo(selectedDatos)" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                        <button (click)="insertarAnexo(selectedDatos)" pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"></button>
+              </div>
+
+            </p-footer>
+
+            </p-dataTable>
+            <!--END DATOS GENERALES-->
+      </div>
+    </div>
+  </div>
+
+  <!--FIRMA-->
+  <p-dialog header="SIGA- Ficheros y Anexos" [(visible)]="displayFirmar" [modal]="true" [responsive]="true" [minHeight]="500"
+    [minWidth]="500">
+
+    <div class="bloque col-lg-12 col-md-12">
+
+      <div class="form-row">
+
+        <!--<div class="form-group col-lg-6 col-md-6">
+          <p-checkbox name="groupname" label="Firmado(*)" [(ngModel)]="checkFirma"></p-checkbox>
+        </div>-->
+        <!--<div class="form-group col-lg-12ccol-md-12">
+          <p-calendar [(ngModel)]="bodyDatosBancariosAnexo.firmaFecha" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
+            [style]="{ 'position': 'relative', 'z-index': '1000' }"></p-calendar>
+        </div>-->
+        <div class="form-group col-lg-12 col-md-12">
+          <input type="text" [(ngModel)]="bodyDatosBancariosAnexo.firmaLugar" class="form-control" pInputText>
+        </div>
+        <div class="form-group col-lg-12 col-md-12">
+          <p-fileUpload mode="basic" name="demo[]" url="./upload.php" accept="image/*" maxFileSize="1000000" (onUpload)="onBasicUpload($event)"></p-fileUpload>
+        </div>
+      </div>
+    </div>
+
+    <p-footer>
+      <div class="text-right main-button ">
+        <button (click)="guardarFirma()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="restablecerDatosFirma()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="Restablecer"></button>
+      </div>
+    </p-footer>
+    </p-dialog>
+
+    <div class="mt-3 text-right main-button ">
+      <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="Volver"></button>
+    </div>
+
+    <app-dialog></app-dialog>
+
+    <div *ngIf="progressSpinner " class="overlay-spinner">
+      <div class="loader "></div>
+    </div>
