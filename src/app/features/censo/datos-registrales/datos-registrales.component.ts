@@ -220,10 +220,11 @@ export class DatosRegistralesComponent implements OnInit {
             this.fechaCancelacion = this.body.fechaCancelacion;
             this.fechaRegistro = this.body.fechaRegistro;
           }
-          if ((this.body.sociedadProfesional = 1))
+          if (this.body.sociedadProfesional == "1") {
             this.sociedadProfesional = true;
-          else this.body.sociedadProfesional = 0;
-          this.sociedadProfesional = false;
+          } else if (this.body.sociedadProfesional == "0") {
+            this.sociedadProfesional = false;
+          }
         },
         err => {
           console.log(err);
@@ -266,8 +267,11 @@ export class DatosRegistralesComponent implements OnInit {
 
     if (this.body.numeroPoliza == undefined) this.body.numeroPoliza = "";
 
-    if (this.sociedadProfesional == true) this.body.sociedadProfesional = 1;
-    else this.body.sociedadProfesional = 0;
+    if (this.sociedadProfesional == true) {
+      this.body.sociedadProfesional = "1";
+    } else {
+      this.body.sociedadProfesional = "0";
+    }
 
     console.log(this.body);
     this.sigaServices.post("datosRegistrales_update", this.body).subscribe(
