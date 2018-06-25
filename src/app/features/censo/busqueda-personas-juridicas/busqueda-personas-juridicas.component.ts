@@ -105,6 +105,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   ngOnInit() {
     this.checkAcceso(); //coger tipos
     sessionStorage.removeItem("notario");
+    if (sessionStorage.getItem("busqueda") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("busqueda"));
+      sessionStorage.removeItem("busqueda");
+    }
     this.sigaServices.get("busquedaPerJuridica_tipo").subscribe(
       n => {
         this.tipos = n.combooItems;
@@ -549,6 +553,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       if (id && id.length > 0) {
         ir = id[0];
       }
+      sessionStorage.setItem("busqueda", JSON.stringify(this.body));
       sessionStorage.setItem("usuarioBody", JSON.stringify(id));
       sessionStorage.setItem(
         "privilegios",

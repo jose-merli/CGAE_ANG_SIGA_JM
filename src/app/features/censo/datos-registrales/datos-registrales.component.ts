@@ -211,13 +211,15 @@ export class DatosRegistralesComponent implements OnInit {
           console.log(data);
           this.personaSearch = JSON.parse(data["body"]);
           this.body = this.personaSearch.datosRegistralesItems[0];
-          this.body.idPersona = this.idPersonaEditar;
-
-          this.fechaConstitucion = this.body.fechaConstitucion;
-          this.fechaFin = this.body.fechaFin;
-          this.fechaCancelacion = this.body.fechaCancelacion;
-          this.fechaRegistro = this.body.fechaRegistro;
-
+          if (this.body == undefined) {
+            this.body = new DatosRegistralesItem();
+          } else {
+            this.body.idPersona = this.idPersonaEditar;
+            this.fechaConstitucion = this.body.fechaConstitucion;
+            this.fechaFin = this.body.fechaFin;
+            this.fechaCancelacion = this.body.fechaCancelacion;
+            this.fechaRegistro = this.body.fechaRegistro;
+          }
           if ((this.body.sociedadProfesional = 1))
             this.sociedadProfesional = true;
           else this.body.sociedadProfesional = 0;
