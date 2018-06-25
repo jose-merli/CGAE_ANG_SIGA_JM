@@ -44,6 +44,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   nuevo: boolean = false;
   checkProducto: boolean = false;
   checkServicio: boolean = false;
+  checkFirma: boolean = false;
   isSelectedProducto: boolean;
   isSelectedServicio: boolean;
   isCheckedProducto: boolean;
@@ -52,6 +53,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   isInterEmpresaServicio: boolean;
   selectAll: boolean = false;
   selectMultiple: boolean = false;
+  displayFirmar: boolean = false;
 
   idCuenta: String;
   idPersona: String;
@@ -70,6 +72,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   selectedTipo: any[] = [];
   combooItemsProducto: any[] = [];
   combooItemsServicio: any[] = [];
+  uploadedFiles: any[] = [];
   selectedEsquemaProducto: any = {};
   selectedEsquemaServicio: any = {};
 
@@ -129,12 +132,12 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         header: "Descripcion"
       },
       {
-        field: "tipoMandato",
-        header: "Tipo Mandato"
-      },
-      {
         field: "tipo",
         header: "Tipo"
+      },
+      {
+        field: "tipoMandato",
+        header: "Tipo Mandato"
       },
       {
         field: "fechaUso",
@@ -686,7 +689,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   activarEdicion(dato) {
+    console.log("datrte", dato);
     this.editar = !this.editar;
+
+    this.actualizarAnexos(dato);
   }
 
   // onChangeSelectAll() {
@@ -712,7 +718,36 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   //   }
   // }
 
-  actualizarAnexos() {}
+  actualizarAnexos(dato) {
+    this.progressSpinner = true;
+    this.sigaServices.post("anexos_update", dato).subscribe(
+      data => {
+        this.progressSpinner = false;
+        this.bodyDatosBancariosAnexo.status = data.status;
+
+        this.showSuccess("Se han editado correctamente los datos");
+      },
+      error => {
+        this.bodyDatosMandatosSearch = JSON.parse(error["error"]);
+        this.showFail(
+          JSON.stringify(this.bodyDatosMandatosSearch.error.message)
+        );
+        console.log(error);
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  firmar(dato) {
+    this.displayFirmar = true;
+  }
+
+  onBasicUpload(event) {
+    this.showInfo("Fichero adjuntado");
+  }
+
+  guardarFirma() {}
+  restablecerDatosFirma() {}
 
   // Métodos comunes
 

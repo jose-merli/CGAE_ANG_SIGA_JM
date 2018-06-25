@@ -10,6 +10,7 @@ export class DatosBancariosSearchAnexosItem {
   fechaUso: String;
   firmaFecha: String;
   firmaLugar: String;
+  status: String;
 
   constructor() {}
 }
