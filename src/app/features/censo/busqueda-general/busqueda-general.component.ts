@@ -318,6 +318,10 @@ export class BusquedaGeneralComponent {
       if (this.bodyJuridica.numColegiado == undefined) {
         this.bodyJuridica.numColegiado = "";
       }
+      if (this.bodyJuridica.Abreviatura == undefined) {
+        this.bodyJuridica.Abreviatura = "";
+      }
+
       this.bodyJuridica.idInstitucion = [];
       this.colegios_seleccionados.forEach((value: ComboItem, key: number) => {
         this.bodyJuridica.idInstitucion.push(value.value);
@@ -334,6 +338,7 @@ export class BusquedaGeneralComponent {
             console.log(data);
             this.progressSpinner = false;
             this.searchJuridica = JSON.parse(data["body"]);
+            this.datos = [];
             this.datos = this.searchJuridica.busquedaPerJuridicaItems;
 
             // this.table.paginator = true;
@@ -350,10 +355,13 @@ export class BusquedaGeneralComponent {
             ) {
               if (
                 this.bodyJuridica.nif != null &&
-                this.bodyJuridica.nif != undefined
-              )
-                if (this.bodyJuridica.denominacion.trim() == "")
-                  this.noDataFoundWithDNI();
+                this.bodyJuridica.nif != undefined &&
+                this.bodyJuridica.denominacion.trim() == "" &&
+                this.bodyJuridica.Abreviatura.trim() == "" &&
+                this.bodyJuridica.tipo.trim() == ""
+              ) {
+                this.noDataFoundWithDNI();
+              }
             }
           }
         );
@@ -403,7 +411,7 @@ export class BusquedaGeneralComponent {
 
   noDataFoundWithDNI() {
     let mess = "";
-    if ((this.persona = "J")) {
+    if (this.persona == "f") {
       mess =
         "No existe ningun elemento con el NIF seleccionado, ¿Desea crear un elemento?";
     } else {
@@ -423,7 +431,22 @@ export class BusquedaGeneralComponent {
           notarioNIF.nif = this.bodyJuridica.nif;
         }
 
-        notarioNIF.tipoIdentificacion = this.tipoCIF;
+        // busqueda fisica => todos los tipos de identificacion menos CIF
+        if (this.persona == "f") {
+          if (this.tipoCIF == "20") {
+            notarioNIF.tipoIdentificacion = "50";
+          } else {
+            notarioNIF.tipoIdentificacion = this.tipoCIF;
+          }
+        } else {
+          // busqueda juridica => solo CIF u Otro
+          if (this.tipoCIF == "20") {
+            notarioNIF.tipoIdentificacion = this.tipoCIF;
+          } else {
+            notarioNIF.tipoIdentificacion = "50";
+          }
+        }
+
         notarioNIF.nombre = "";
         let notariosNEW = [];
         notariosNEW.push(notarioNIF);
