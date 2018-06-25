@@ -168,21 +168,13 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       }
     ];
 
-    // Poner check "Sociedades Profesionales a activo por defecto"
+    // Poner check "Sociedades Profesionales a activo pork "Sociedades Profesionales a activo por defecto"
     this.body.sociedadesProfesionales = true;
-
-    // if (sessionStorage.getItem("editedUser") != null) {
-    //   this.selectedDatos = JSON.parse(sessionStorage.getItem("editedUser"));
-    // }
-    // sessionStorage.removeItem("editedUser");
-    // if (sessionStorage.getItem("searchUser") != null) {
-    //   this.body = JSON.parse(sessionStorage.getItem("searchUser"));
-    //   this.isBuscar();
-    //   sessionStorage.removeItem("searchUser");
-    //   sessionStorage.removeItem("usuarioBody");
-    // } else {
-    //   this.body = new PersonaJuridicaRequestDto();
-    // }
+    if (sessionStorage.getItem("busquedaJuridica") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("busquedaJuridica"));
+      sessionStorage.removeItem("busquedaJuridica");
+      this.Search();
+    }
   }
 
   toHistorico() {
@@ -286,30 +278,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
-  // sendEdit() {
-  //   console.log(this.body);
-  //   if (this.body.codigoExterno == undefined) {
-  //     this.body.codigoExterno = "";
-  //   }
-  //   if (this.body.grupo == undefined) {
-  //     this.body.grupo = "";
-  //   }
-  //   this.sigaServices.post("usuarios_update", this.body).subscribe(
-  //     data => {
-  //       this.showSuccess();
-  //       console.log(data);
-  //     },
-  //     err => {
-  //       this.showFail();
-  //       console.log(err);
-  //     },
-  //     () => {
-  //       this.cancelar();
-  //       this.isBuscar();
-  //       this.table.reset();
-  //     }
-  //   );
-  // }
 
   isBuscar() {
     this.arreglarFecha();
@@ -317,15 +285,13 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   Search() {
-    //this.arreglarFecha(); sobra porque se entra siempre en this.isBuscar();
-
     this.progressSpinner = true;
     this.buscar = true;
     this.historico = false;
     this.selectAll = false;
     this.selectMultiple = false;
     this.selectedDatos = "";
-    // comprobaciones para body de search
+
     this.body.fechaConstitucion = this.fechaConstitucionArreglada;
     if (this.body.tipo == undefined) {
       this.body.tipo = "";
@@ -554,6 +520,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         "privilegios",
         JSON.stringify(this.activacionEditar)
       );
+      sessionStorage.setItem("busquedaJuridica", JSON.stringify(this.body));
       sessionStorage.setItem("first", JSON.stringify(this.table.first));
       this.router.navigate(["fichaPersonaJuridica"]);
     } else {

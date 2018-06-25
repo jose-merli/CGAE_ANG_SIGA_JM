@@ -28,6 +28,7 @@ import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/co
 import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
 import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/gestion-subtiposCV.component";
 import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
+import { DetalleIntegranteComponent } from "./features/censo/datos-integrantes/detalleIntegrante/detalleIntegrante.component";
 //Certificados
 import { ComunicacionInterprofesionalComponent } from "./features/certificados/comunicacion-interprofesional/comunicacion-interprofesional.component";
 import { SolicitarCompraComponent } from "./features/certificados/solicitar-compra/solicitar-compra.component";
@@ -214,7 +215,7 @@ const appRoutes: Routes = [
 
   {
     path: "searchNoColegiados",
-     component: BusquedaPersonasJuridicas,
+    component: BusquedaPersonasJuridicas,
     // component: SearchNoColegiadosComponent,
     canActivate: [AuthGuard]
   },
@@ -269,6 +270,11 @@ const appRoutes: Routes = [
   {
     path: "busquedaSanciones",
     component: BusquedaSancionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "detalleIntegrante",
+    component: DetalleIntegranteComponent,
     canActivate: [AuthGuard]
   },
 

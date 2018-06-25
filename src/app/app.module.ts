@@ -233,6 +233,7 @@ import { DatosRetencionesComponent } from "./features/censo/datos-retenciones/da
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
 import { DatosIntegrantesComponent } from "./features/censo/datos-integrantes/datos-integrantes.component";
+import { DetalleIntegranteComponent } from "./features/censo/datos-integrantes/detalleIntegrante/detalleIntegrante.component";
 
 @NgModule({
   declarations: [
@@ -279,7 +280,7 @@ import { DatosIntegrantesComponent } from "./features/censo/datos-integrantes/da
     DatosRegistralesComponent,
     DatosPersonaJuridicaComponent,
     DatosRetencionesComponent,
-
+    DetalleIntegranteComponent,
     //SJRS
     DesignacionesComponent,
     BajasTemporalesComponent,

@@ -39,6 +39,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
   tipoPersona: String;
   usuarioBody: any[];
   notario: any;
+  notario1: any;
   guardarNotario: boolean = false;
   desasociar: boolean = false;
 
@@ -55,8 +56,11 @@ export class AccesoFichaPersonaComponent implements OnInit {
 
   ngOnInit() {
     this.comboTipoIdentificacion = [
-      { label: "NIF", value: "NIF" },
-      { label: "NIE", value: "NIE" }
+      { label: "NIF", value: "10" },
+      { label: "CIF", value: "20" },
+      { label: "Pasaporte", value: "30" },
+      { label: "NIE", value: "40" },
+      { label: "Otro", value: "50" }
     ];
 
     this.comboSituacion = [
@@ -89,6 +93,8 @@ export class AccesoFichaPersonaComponent implements OnInit {
       }
       if (this.notario[0].nombre != undefined) {
         this.body.nombre = this.notario[0].nombre;
+      } else if (this.notario[0].denominacion != undefined) {
+        this.body.nombre = this.notario[0].denominacion;
       }
       if (this.notario[0].primerApellido != undefined) {
         this.body.apellido1 = this.notario[0].primerApellido;

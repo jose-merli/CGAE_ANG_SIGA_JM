@@ -14,7 +14,7 @@
             <label class="mr-auto title-ficha">Integrantes</label>
           </div>
           <div class="d-flex justify-content-between">
-            <div>
+            <div *ngIf="datosIntegrantes.datosIntegrantesItems.length == 1">
               <label>{{"administracion.usuarios.literal.NIF" | translate}}
                 <span>{{ body.nif }}</span>
               </label>
@@ -40,9 +40,9 @@
                 <span>{{ body.participacionSociedad }}</span>
               </label>
             </div>
-            <!-- <div *ngIf="datos.length > 1">
+            <div *ngIf="datosIntegrantes.datosIntegrantesItems.length > 1">
               <div class="row">
-                <div *ngFor="let integrante of datos; let last = last">
+                <div *ngFor="let integrante of datosIntegrantes.datosIntegrantesItems; let last = last">
                   <div *ngIf="!last">
                     <p>&nbsp;{{ integrante.nombre }}, </p>
                   </div>
@@ -53,7 +53,7 @@
                 <div>
                 </div>
               </div>
-            </div> -->
+            </div>
             <i (click)="abrirFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
           </div>
         </div>
@@ -90,7 +90,9 @@
 
           </ng-template>
           <ng-template>
-
+            <ng-template *ngIf="col.field =='perfiles'" pTemplate="body" let-dato="rowData"  >
+              <p-multiSelect [options]="usuarios_perfil" styleClass="ui-column-filter" [style]="{'width':'100%'}" appendTo="body" (onChange)="confirmarRolDefecto($event, dato )"></p-multiSelect>
+            </ng-template>
 
           </ng-template>
         </p-column>

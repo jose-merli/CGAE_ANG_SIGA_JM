@@ -1,4 +1,4 @@
-import { OldSigaServices } from "../../../_services/oldSiga.service";
+import { OldSigaServices } from "../../../../_services/oldSiga.service";
 import {
   Component,
   OnInit,
@@ -19,13 +19,13 @@ import {
   FormControl
 } from "@angular/forms";
 import { SelectItem } from "primeng/api";
-import { esCalendar } from "../../../utils/calendar";
+import { esCalendar } from "../../../../utils/calendar";
 import { TableModule } from "primeng/table";
-import { SigaServices } from "./../../../_services/siga.service";
+import { SigaServices } from "./../../../../_services/siga.service";
 import { DropdownModule } from "primeng/dropdown";
 import { DataTable } from "primeng/datatable";
-import { TranslateService } from "../../../commons/translate/translation.service";
-import { USER_VALIDATIONS } from "../../../properties/val-properties";
+import { TranslateService } from "../../../../commons/translate/translation.service";
+import { USER_VALIDATIONS } from "../../../../properties/val-properties";
 import { ButtonModule } from "primeng/button";
 import { Router, ActivatedRoute } from "@angular/router";
 import { InputTextModule } from "primeng/inputtext";
@@ -37,26 +37,26 @@ import { GrowlModule } from "primeng/growl";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
-import { ComboItem } from "./../../../../app/models/ComboItem";
+import { ComboItem } from "./../../../../../app/models/ComboItem";
 import { MultiSelectModule } from "primeng/multiSelect";
-import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
+import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
 import { Location, getLocaleDateTimeFormat, DatePipe } from "@angular/common";
 import { Observable } from "rxjs/Rx";
-import { BusquedaFisicaItem } from "./../../../../app/models/BusquedaFisicaItem";
-import { BusquedaJuridicaItem } from "./../../../../app/models/BusquedaJuridicaItem";
-import { BusquedaJuridicaObject } from "./../../../../app/models/BusquedaJuridicaObject";
-import { BusquedaFisicaObject } from "./../../../../app/models/BusquedaFisicaObject";
-import { DatosNotarioItem } from "../../../models/DatosNotarioItem";
-import { DatosIntegrantesItem } from "../../../models/DatosIntegrantesItem";
-import { DatosIntegrantesObject } from "../../../models/DatosIntegrantesObject";
+import { BusquedaFisicaItem } from "./../../../../../app/models/BusquedaFisicaItem";
+import { BusquedaJuridicaItem } from "./../../../../../app/models/BusquedaJuridicaItem";
+import { BusquedaJuridicaObject } from "./../../../../../app/models/BusquedaJuridicaObject";
+import { BusquedaFisicaObject } from "./../../../../../app/models/BusquedaFisicaObject";
+import { DatosNotarioItem } from "../../../../models/DatosNotarioItem";
+import { DatosIntegrantesItem } from "../../../../models/DatosIntegrantesItem";
+import { DatosIntegrantesObject } from "../../../../models/DatosIntegrantesObject";
 /*** COMPONENTES ***/
 
 @Component({
-  selector: "app-datos-integrantes",
-  templateUrl: "./datos-integrantes.component.html",
-  styleUrls: ["./datos-integrantes.component.scss"]
+  selector: "app-detalleIntegrante",
+  templateUrl: "./detalleIntegrante.component.html",
+  styleUrls: ["./detalleIntegrante.component.scss"]
 })
-export class DatosIntegrantesComponent implements OnInit {
+export class DetalleIntegranteComponent implements OnInit {
   usuarios_rol: any[];
   usuarios_perfil: any[];
   usuarios_activo: any[];
@@ -88,9 +88,9 @@ export class DatosIntegrantesComponent implements OnInit {
   selectAll: boolean = false;
   progressSpinner: boolean = false;
   numSelected: number = 0;
-  usuarioBody: any[];
+
   openFicha: boolean = false;
-  idPersona: String;
+
   body: DatosIntegrantesItem = new DatosIntegrantesItem();
   datosIntegrantes: DatosIntegrantesObject = new DatosIntegrantesObject();
 
@@ -116,17 +116,13 @@ export class DatosIntegrantesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    if (this.usuarioBody != undefined) {
-      this.idPersona = this.usuarioBody[0].idPersona;
-    }
     this.cols = [
       { field: "nif", header: "administracion.usuarios.literal.NIF" },
       {
         field: "nombre",
         header: "administracion.parametrosGenerales.literal.nombre"
       },
-      { field: "apellidos1", header: "Apellidos" },
+      { field: "apellidos", header: "Apellidos" },
       { field: "fechaInicioCargo", header: "Fecha de alta - fecha de baja" },
       { field: "cargos", header: "Cargos del integrante" },
       { field: "liquidacionComoSociedad", header: "Liquidación como sociedad" },
@@ -152,9 +148,6 @@ export class DatosIntegrantesComponent implements OnInit {
         value: 40
       }
     ];
-
-    this.search();
-
     // Descomentar si se quiere probar
     this.unInteg();
     this.masDe1Integ();
@@ -200,17 +193,14 @@ export class DatosIntegrantesComponent implements OnInit {
     this.openFicha = !this.openFicha;
   }
   search() {
-    this.historico = false;
-    let searchObject = new DatosIntegrantesItem();
-    searchObject.idPersona = this.idPersona;
-    searchObject.historico = false;
+    this.historico = true;
     this.buscar = false;
     this.selectMultiple = false;
     this.selectedDatos = "";
     this.progressSpinner = true;
     this.selectAll = false;
     this.sigaServices
-      .postPaginado("integrantes_search", "?numPagina=1", searchObject)
+      .postPaginado("busquedaPerJuridica_history", "?numPagina=1", this.body)
       .subscribe(
         data => {
           console.log(data);
@@ -226,26 +216,15 @@ export class DatosIntegrantesComponent implements OnInit {
         () => {}
       );
   }
-  editarIntegrante() {
-    this.router.navigate(["detalleIntegrante"]);
-  }
-  setItalic(datoH) {
-    if (datoH.fechaBaja == null) return false;
-    else return true;
-  }
-
   searchHistorico() {
     this.historico = true;
-    let searchObject = new DatosIntegrantesItem();
-    searchObject.idPersona = this.body.idPersona;
-    searchObject.historico = true;
     this.buscar = false;
     this.selectMultiple = false;
     this.selectedDatos = "";
     this.progressSpinner = true;
     this.selectAll = false;
     this.sigaServices
-      .postPaginado("integrantes_search", "?numPagina=1", searchObject)
+      .postPaginado("busquedaPerJuridica_history", "?numPagina=1", this.body)
       .subscribe(
         data => {
           console.log(data);

@@ -187,6 +187,9 @@ export class BusquedaGeneralComponent {
     if (this.isValidDNI(value)) {
       this.tipoCIF = "10";
       return true;
+    } else if (this.isValidCIF(value)) {
+      this.tipoCIF = "20";
+      return true;
     } else if (this.isValidNIE(value)) {
       this.tipoCIF = "40";
       return true;
@@ -319,7 +322,7 @@ export class BusquedaGeneralComponent {
       this.colegios_seleccionados.forEach((value: ComboItem, key: number) => {
         this.bodyJuridica.idInstitucion.push(value.value);
       });
-
+      this.checkTypeCIF(this.bodyJuridica.nif);
       this.sigaServices
         .postPaginado(
           "busquedaPer_searchJuridica",
@@ -340,11 +343,18 @@ export class BusquedaGeneralComponent {
             this.progressSpinner = false;
           },
           () => {
-            // if (sessionStorage.getItem("first") != null) {
-            //   let first = JSON.parse(sessionStorage.getItem("first")) as number;
-            //   this.table.first = first;
-            //   sessionStorage.removeItem("first");
-            // }
+            if (
+              this.datos.length == 0 ||
+              this.datos == null ||
+              this.datos == undefined
+            ) {
+              if (
+                this.bodyJuridica.nif != null &&
+                this.bodyJuridica.nif != undefined
+              )
+                if (this.bodyJuridica.denominacion.trim() == "")
+                  this.noDataFoundWithDNI();
+            }
           }
         );
     }
@@ -391,15 +401,27 @@ export class BusquedaGeneralComponent {
   }
 
   noDataFoundWithDNI() {
-    let mess =
-      "No existe ningun elemento con el NIF seleccionado, ¿Desea crear un elemento?";
+    let mess = "";
+    if ((this.persona = "J")) {
+      mess =
+        "No existe ningun elemento con el NIF seleccionado, ¿Desea crear un elemento?";
+    } else {
+      mess =
+        "No existe ningun elemento con el CIF seleccionado, ¿Desea crear un elemento?";
+    }
+
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
       message: mess,
       icon: icon,
       accept: () => {
         let notarioNIF = new DatosNotarioItem();
-        notarioNIF.nif = this.bodyFisica.nif;
+        if (this.bodyFisica.nif != null || this.bodyFisica.nif != undefined) {
+          notarioNIF.nif = this.bodyFisica.nif;
+        } else {
+          notarioNIF.nif = this.bodyJuridica.nif;
+        }
+
         notarioNIF.tipoIdentificacion = this.tipoCIF;
         notarioNIF.nombre = "";
         let notariosNEW = [];
