@@ -1,17 +1,26 @@
 export class DatosIntegrantesItem {
-  nif: String;
-  nombre: String;
-  apellido1: String;
-  apellido2: String;
+  idPersona: String;
+  idInstitucion: String;
+  idComponente: String;
   cargo: String;
-  descripcionCargo: String;
-  fechaInicioCargo: Date;
-  fechaFinCargo: Date;
-  participacionSociedad: String;
+  fechaCargo: String;
+  fechaBajaCargo: String;
+  idPersonaComponente: String;
+  sociedad: String;
+  capitalSocial: String;
+  fechaCargoInforme: String;
+  ejerciente: String;
+  fechaHistorico: String;
+  nifCif: String;
+  nombre: String;
+  apellidos: String;
+  apellidos1: String;
+  apellidos2: String;
+  nombreCompleto: String;
+  idTipoColegio: String;
   numColegiado: String;
-  colegioProfesional: String;
-  provincia: String;
-  tipoColegio: String;
-
+  idCargo: String;
+  idProvincia: String;
+  historico: boolean;
   constructor() {}
 }

@@ -28,9 +28,7 @@ import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/co
 import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
 import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/gestion-subtiposCV.component";
 import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
-import { AccesoFichaPersonaComponent } from "./features/censo/accesoFichaPersona/accesoFichaPersona.component";
-import { ConsultarDatosBancariosComponent } from "./features/censo/consultar-datos-bancarios/consultar-datos-bancarios.component";
-import { DatosBancariosComponent } from "./features/censo/datos-bancarios/datos-bancarios.component";
+import { DetalleIntegranteComponent } from "./features/censo/datos-integrantes/detalleIntegrante/detalleIntegrante.component";
 //Certificados
 import { ComunicacionInterprofesionalComponent } from "./features/certificados/comunicacion-interprofesional/comunicacion-interprofesional.component";
 import { SolicitarCompraComponent } from "./features/certificados/solicitar-compra/solicitar-compra.component";
@@ -175,6 +173,9 @@ import { DatosGenerales } from "./features/censo/datos-generales/datos-generales
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
+import { AccesoFichaPersonaComponent } from "./features/censo/accesoFichaPersona/accesoFichaPersona.component";
+import { DatosBancariosComponent } from "./features/censo/datos-bancarios/datos-bancarios.component";
+import { ConsultarDatosBancariosComponent } from "./features/censo/consultar-datos-bancarios/consultar-datos-bancarios.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -217,7 +218,7 @@ const appRoutes: Routes = [
 
   {
     path: "searchNoColegiados",
-     component: BusquedaPersonasJuridicas,
+    component: BusquedaPersonasJuridicas,
     // component: SearchNoColegiadosComponent,
     canActivate: [AuthGuard]
   },
@@ -272,6 +273,11 @@ const appRoutes: Routes = [
   {
     path: "busquedaSanciones",
     component: BusquedaSancionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "detalleIntegrante",
+    component: DetalleIntegranteComponent,
     canActivate: [AuthGuard]
   },
 
@@ -845,22 +851,22 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: "informesGenericos",
+    path: "definirTipoPlantilla",
     component: DefinirTipoPlantillaComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: "informesGenericos",
+    path: "listaCorreos",
     component: ListaCorreosComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: "informesGenericos",
+    path: "bandejaSalida",
     component: BandejaSalidaComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: "informesGenericos",
+    path: "bandejaEntrada",
     component: BandejaEntradaComponent,
     canActivate: [AuthGuard]
   },

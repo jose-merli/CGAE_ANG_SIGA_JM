@@ -101,6 +101,8 @@ export class SigaServices {
     accesoFichaPersona_desasociarPersona: "fichaPersona/desasociarPersona",
     accesoFichaPersona_guardar: "fichaPersona/guardar",
     fichaPersona_crearNotario: "fichaPersona/crearNotario",
+    fichaPersona_tipoIdentificacionCombo:
+      "fichaPersona/tipoIdentificacionCombo",
     busquedaPerJuridica_update: "busquedaPerJuridica/update",
     datosRegistrales_actividadesPersona:
       "perJuridicaDatosRegistrales/actividadProfesionalPer",
@@ -122,7 +124,8 @@ export class SigaServices {
     anexos_update: "busquedaPerJuridica/updateAnexos",
     retenciones_tipoRetencion: "retenciones/tipoRetencion",
     retenciones_search: "retenciones/search",
-    retenciones_update: "retenciones/update"
+    retenciones_update: "retenciones/update",
+    integrantes_search: "busquedaPerJuridica/datosIntegrantesSearch"
   };
 
   private menuToggled = new Subject<any>();
