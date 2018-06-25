@@ -68,7 +68,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   blockCrear: boolean = true;
   selectedItem: number = 10;
   first: number = 0;
-  dniCorrecto: boolean;
   es: any = esCalendar;
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   personaDelete: PersonaJuridicaObject = new PersonaJuridicaObject();
@@ -235,8 +234,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       let arrayDesde: any[] = fechaString.split("-");
       arrayDesde[2] = parseInt(arrayDesde[2]) + 1;
       let returnDesde =
-        arrayDesde[1] + "/" + arrayDesde[2] + "/" + arrayDesde[0];
-      this.fechaConstitucionArreglada = new Date(returnDesde);
+        arrayDesde[0] + "-" + arrayDesde[1] + "-" + arrayDesde[2];
+      this.fechaConstitucionArreglada = new Date(returnDesde + "T02:00:05Z");
+    } else {
+      this.fechaConstitucionArreglada = undefined;
     }
   }
 
@@ -252,8 +253,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       (this.body.nif != "" && this.body.nif != undefined) &&
       (this.body.denominacion != "" && this.body.denominacion != undefined) &&
       (this.body.abreviatura != "" && this.body.abreviatura != undefined) &&
-      this.body.fechaConstitucion != undefined &&
-      this.dniCorrecto
+      this.fechaConstitucion != undefined
     ) {
       this.blockCrear = false;
     } else {
@@ -359,29 +359,9 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   paginate(event) {
     console.log(event);
   }
-  // editarUsuario(selectedItem) {
-  //   // if (!this.selectMultiple) {
-  //   if (selectedItem.length == 1) {
-  //     this.body = new UsuarioRequestDto();
-  //     this.body = selectedItem[0];
-  //     this.editar = false;
-  //     this.disabledRadio = false;
-  //   } else {
-  //     this.editar = false;
-  //     this.dniCorrecto = null;
-  //     this.body = new UsuarioRequestDto();
-  //     this.body.activo = selectedItem[0].activo;
-  //   }
-  //   if (this.body.activo == "N") {
-  //     this.activo = true;
-  //   } else {
-  //     this.activo = false;
-  //   }
-  // }
 
   cancelar() {
     this.editar = true;
-    this.dniCorrecto = null;
     this.body = new PersonaJuridicaItem();
     this.disabledRadio = false;
   }
@@ -437,7 +417,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       },
       () => {
         this.editar = true;
-        this.dniCorrecto = null;
         this.body = new PersonaJuridicaItem();
         this.disabledRadio = false;
         this.isBuscar();
@@ -455,7 +434,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   crear() {
-    let a = this.body;
+    this.body.fechaConstitucion = this.fechaConstitucion;
     this.sigaServices.post("busquedaPerJuridica_create", this.body).subscribe(
       data => {
         this.personaSearch = JSON.parse(data["body"]);
@@ -463,7 +442,9 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       },
       error => {
         this.personaSearch = JSON.parse(error["error"]);
-        this.showduplicateFail(this.personaSearch.error.message.toString());
+        this.showduplicateFail(
+          JSON.stringify(this.personaSearch.error.message)
+        );
         console.log(error);
         this.showFail();
       },
@@ -530,7 +511,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       this.router.navigate(["fichaPersonaJuridica"]);
     } else {
       this.editar = true;
-      this.dniCorrecto = null;
       this.body = new PersonaJuridicaItem();
     }
   }
