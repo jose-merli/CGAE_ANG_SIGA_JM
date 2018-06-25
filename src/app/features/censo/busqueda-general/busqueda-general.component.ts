@@ -395,7 +395,6 @@ export class BusquedaGeneralComponent {
       } else {
         this.checkTypeCIF(id[0].nif);
         id[0].tipoIdentificacion = this.tipoCIF;
-
         sessionStorage.setItem("notario", JSON.stringify(id));
         this.location.back();
       }
