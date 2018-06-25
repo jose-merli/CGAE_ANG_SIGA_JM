@@ -1,11 +1,13 @@
 import { ComboItem } from "./ComboItem";
 export class DatosMandatosItem {
+  idMandato: String;
   idMandatoProducto: String;
   idMandatoServicio: String;
   idPersona: String;
   idInstitucion: String;
   idCuenta: String;
   referenciaProducto: String;
+  esquema: String;
   esquemaProducto: String;
   tipoPagoProducto: String;
   referenciaServicio: String;

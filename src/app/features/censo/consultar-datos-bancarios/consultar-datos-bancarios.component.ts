@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 
 import { Location } from "@angular/common";
 
@@ -6,6 +6,7 @@ import { ConfirmationService, Message } from "primeng/components/common/api";
 import { TranslateService } from "../../../commons/translate/translation.service";
 
 import { SelectItem } from "primeng/api";
+import { DataTable } from "primeng/datatable";
 
 import { DatosBancariosItem } from "./../../../../app/models/DatosBancariosItem";
 import { DatosBancariosObject } from "./../../../../app/models/DatosBancariosObject";
@@ -15,6 +16,9 @@ import { BancoBicObject } from "./../../../../app/models/BancoBicObject";
 
 import { DatosMandatosItem } from "./../../../../app/models/DatosMandatosItem";
 import { DatosMandatosObject } from "./../../../../app/models/DatosMandatosObject";
+
+import { DatosBancariosSearchAnexosItem } from "./../../../../app/models/DatosBancariosSearchAnexosItem";
+import { DatosBancariosAnexoObject } from "./../../../../app/models/DatosBancariosAnexoObject";
 
 import { SigaServices } from "./../../../_services/siga.service";
 
@@ -28,6 +32,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   openFichaCuentaBancaria: boolean = false;
   openFichaDatosMandatos: boolean = false;
+  openFichaListadoFicherosAnexos: boolean = false;
   progressSpinner: boolean = false;
   editar: boolean = false;
   editarMandato: boolean = false;
@@ -37,10 +42,20 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   tipoCuentaSeleccionado: boolean;
   revisionCuentas: boolean = false;
   nuevo: boolean = false;
-  check: boolean = false;
+  checkProducto: boolean = false;
+  checkServicio: boolean = false;
+  isSelectedProducto: boolean;
+  isSelectedServicio: boolean;
+  isCheckedProducto: boolean;
+  isCheckedServicio: boolean;
+  isInterEmpresaProducto: boolean;
+  isInterEmpresaServicio: boolean;
+  selectAll: boolean = false;
+  selectMultiple: boolean = false;
 
   idCuenta: String;
   idPersona: String;
+
   nifTitular: String;
   titular: String;
   textFilter: String;
@@ -49,12 +64,17 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   msgs: Message[];
   usuarioBody: any[];
+  cols: any = [];
+  rowsPerPage: any = [];
   tipoCuenta: any[] = [];
   selectedTipo: any[] = [];
   combooItemsProducto: any[] = [];
   combooItemsServicio: any[] = [];
-  selectedEsquemaProducto: any[] = [];
-  selectedEsquemaServicio: any[] = [];
+  selectedEsquemaProducto: any = {};
+  selectedEsquemaServicio: any = {};
+
+  numSelected: number = 0;
+  selectedItem: number = 10;
 
   body: DatosBancariosItem = new DatosBancariosItem();
   bodySearch: DatosBancariosObject = new DatosBancariosObject();
@@ -65,29 +85,21 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   bodyDatosMandatos: DatosMandatosItem = new DatosMandatosItem();
   bodyDatosMandatosSearch: DatosMandatosObject = new DatosMandatosObject();
 
+  bodyDatosBancariosAnexo: DatosBancariosSearchAnexosItem = new DatosBancariosSearchAnexosItem();
+  bodyDatosBancariosAnexoSearch: DatosBancariosAnexoObject = new DatosBancariosAnexoObject();
+
+  @ViewChild("table") table: DataTable;
+  selectedDatos;
+
   constructor(
     private location: Location,
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    // this.fichasPosibles = [
-    //   {
-    //     key: "datosCuentaBancaria",
-    //     activa: false
-    //   },
-    //   {
-    //     key: "datosMandatos",
-    //     activa: false
-    //   },
-    //   {
-    //     key: "listadoFicherosAnexos",
-    //     activa: false
-    //   }
-    // ];
-
     this.textFilter = "Elegir";
 
     this.tipoCuenta = [
@@ -109,7 +121,70 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       // nuevo
       this.cargarModoNuevoRegistro();
     }
+
+    // Columnas para la ficha Listado ficheros anexos
+    this.cols = [
+      {
+        field: "descripcion",
+        header: "Descripcion"
+      },
+      {
+        field: "tipoMandato",
+        header: "Tipo Mandato"
+      },
+      {
+        field: "tipo",
+        header: "Tipo"
+      },
+      {
+        field: "fechaUso",
+        header: "Fecha Uso"
+      },
+      {
+        field: "firmaFecha",
+        header: "Fecha de Firma"
+      },
+      {
+        field: "firmaLugar",
+        header: "Lugar de la firma"
+      }
+    ];
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
   }
+
+  // Abrir fichasPosibles
+
+  abrirFichaCuentaBancaria() {
+    this.openFichaCuentaBancaria = !this.openFichaCuentaBancaria;
+  }
+
+  abrirFichaDatosMandatos() {
+    this.openFichaDatosMandatos = !this.openFichaDatosMandatos;
+  }
+
+  abrirFichaListadoFicherosAnexos() {
+    this.openFichaListadoFicherosAnexos = !this.openFichaListadoFicherosAnexos;
+  }
+
+  // Métodos datosCuentaBancaria
 
   cargarModoEdicion() {
     this.cargarDatosCuentaBancaria();
@@ -117,6 +192,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
     this.cargarDatosMandatos();
     this.nuevo = false;
+
+    this.cargarDatosAnexos();
   }
 
   cargarModoNuevoRegistro() {
@@ -306,7 +383,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     );
   }
 
-  validarIban() {
+  validarIban(): boolean {
     if (
       (this.body.iban != null || this.body.iban != undefined) &&
       this.isValidIBAN() &&
@@ -320,7 +397,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     }
   }
 
-  validarTitular() {
+  validarTitular(): boolean {
     if (this.body.titular.trim() != "" && this.body.titular != undefined) {
       this.titularValido = true;
       return true;
@@ -330,7 +407,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     }
   }
 
-  validarTipoCuenta() {
+  validarTipoCuenta(): boolean {
     if (this.selectedTipo.length >= 1) {
       this.tipoCuentaSeleccionado = true;
       return true;
@@ -390,10 +467,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     }
   }
 
-  abrirFichaCuentaBancaria() {
-    this.openFichaCuentaBancaria = !this.openFichaCuentaBancaria;
-  }
-
   // Funciones datos datosMandatos
 
   cargarDatosMandatos() {
@@ -411,7 +484,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.progressSpinner = false;
           this.bodyDatosMandatosSearch = JSON.parse(data["body"]);
           this.bodyDatosMandatos = this.bodyDatosMandatosSearch.mandatosItem[0];
-
+          console.log("mandato", this.bodyDatosMandatos);
           this.rellenarComboEsquema();
         },
         error => {
@@ -424,8 +497,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         }
       );
   }
-
-  actualizarMandatos() {}
 
   rellenarComboEsquema() {
     this.sigaServices.get("datosMandatos_comboEsquema").subscribe(
@@ -467,39 +538,181 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   onChangeEsquemaProducto(e) {
     this.selectedEsquemaProducto = e.value;
+    if (this.capturarEventoInterempresa(e, this.selectedEsquemaProducto)) {
+      this.isInterEmpresaProducto = true;
+      this.isSelectedProducto = true;
+    } else {
+      this.isInterEmpresaProducto = false;
+      this.isSelectedProducto = false;
+    }
     console.log("Seleccionado", this.selectedEsquemaProducto);
   }
 
   onChangeEsquemaServicio(e) {
     this.selectedEsquemaServicio = e.value;
+    if (this.capturarEventoInterempresa(e, this.selectedEsquemaServicio)) {
+      this.isInterEmpresaServicio = true;
+      this.isSelectedServicio = true;
+    } else {
+      this.isInterEmpresaServicio = false;
+      this.isSelectedServicio = false;
+    }
+    console.log("Seleccionado", this.selectedEsquemaServicio);
   }
 
-  guardar() {
+  capturarEventoInterempresa(evento, esquema): boolean {
+    if (evento && esquema.value == "2") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  guardarMandato() {
     console.log("Body mandato a guardar", this.bodyDatosMandatos);
     this.bodyDatosMandatos.idPersona = this.idPersona;
     this.bodyDatosMandatos.idCuenta = this.idCuenta;
 
+    if (this.selectedEsquemaProducto) {
+      this.bodyDatosMandatos.idMandato = this.bodyDatosMandatos.idMandatoProducto;
+      this.bodyDatosMandatos.esquema = this.selectedEsquemaProducto.value;
+      this.guardar(this.bodyDatosMandatos);
+    }
+
+    if (this.selectedEsquemaServicio) {
+      this.bodyDatosMandatos.idMandato = this.bodyDatosMandatos.idMandatoServicio;
+      this.bodyDatosMandatos.esquema = this.selectedEsquemaServicio.value;
+      this.guardar(this.bodyDatosMandatos);
+    }
+  }
+
+  guardar(body) {
+    this.progressSpinner = true;
+    this.sigaServices.post("datosMandatos_insert", body).subscribe(
+      data => {
+        this.progressSpinner = false;
+        this.bodyDatosMandatos.status = data.status;
+
+        this.showSuccess("Se ha guardado el esquema");
+      },
+      error => {
+        this.bodyDatosMandatosSearch = JSON.parse(error["error"]);
+        this.showFail(
+          JSON.stringify(this.bodyDatosMandatosSearch.error.message)
+        );
+        console.log(error);
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  validarCheckProducto(): boolean {
+    if (this.checkProducto === true) {
+      this.isCheckedProducto = true;
+      return true;
+    } else {
+      this.isCheckedProducto = false;
+      return false;
+    }
+  }
+
+  validarCheckServicio(): boolean {
+    if (this.checkServicio === true) {
+      this.isCheckedServicio = true;
+      return true;
+    } else {
+      this.isCheckedServicio = false;
+      return false;
+    }
+  }
+
+  validarGuardarMandato() {
+    if (
+      (this.isInterEmpresaProducto &&
+        this.validarCheckProducto() &&
+        (this.isInterEmpresaServicio && this.validarCheckServicio())) ||
+      !this.isInterEmpresaServicio ||
+      !this.isInterEmpresaProducto
+    ) {
+      this.formValido = true;
+      this.guardarMandato();
+    } else {
+      this.formValido = false;
+    }
+  }
+
+  // Métodos listadoFicherosAnexos
+
+  cargarDatosAnexos() {
+    this.progressSpinner = false;
+    this.bodyDatosBancariosAnexo.idPersona = this.idPersona;
+    this.bodyDatosBancariosAnexo.idCuenta = this.idCuenta;
+
     this.sigaServices
-      .post("datosMandatos_insert", this.bodyDatosMandatos)
+      .postPaginado(
+        "anexos_search",
+        "?numPagina=1",
+        this.bodyDatosBancariosAnexo
+      )
       .subscribe(
         data => {
           this.progressSpinner = false;
-          this.bodyDatosMandatos.status = data.status;
+          this.bodyDatosBancariosAnexoSearch = JSON.parse(data["body"]);
+          this.bodyDatosBancariosAnexo = this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem[0];
+          console.log("anexo", this.bodyDatosBancariosAnexo);
         },
         error => {
-          this.bodyDatosMandatosSearch = JSON.parse(error["error"]);
-          this.showFail(
-            JSON.stringify(this.bodyDatosMandatosSearch.error.message)
-          );
+          this.bodyDatosBancariosAnexoSearch = JSON.parse(error["error"]);
+          this.showFail(JSON.stringify(this.bodySearch.error.message));
           console.log(error);
           this.progressSpinner = false;
         }
       );
   }
 
-  abrirFichaDatosMandatos() {
-    this.openFichaDatosMandatos = !this.openFichaDatosMandatos;
+  activarPaginacion() {
+    if (
+      !this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem ||
+      this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem.length == 0
+    )
+      return false;
+    else return true;
   }
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
+
+  activarEdicion(dato) {
+    this.editar = !this.editar;
+  }
+
+  // onChangeSelectAll() {
+  //   if (this.selectAll === true) {
+  //     this.numSelected = this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem.length;
+  //     this.selectMultiple = false;
+  //     this.selectedDatos = this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem;
+  //   } else {
+  //     this.selectedDatos = [];
+  //     this.numSelected = 0;
+  //   }
+  // }
+
+  // isSelectMultiple() {
+  //   this.selectMultiple = !this.selectMultiple;
+  //   if (!this.selectMultiple) {
+  //     this.numSelected = 0;
+  //     this.selectedDatos = [];
+  //   } else {
+  //     this.selectAll = false;
+  //     this.selectedDatos = [];
+  //     this.numSelected = 0;
+  //   }
+  // }
+
+  actualizarAnexos() {}
 
   // Métodos comunes
 
