@@ -1,6 +1,11 @@
-.nombre-colegio {
-  padding: 0.5em 0em;
-  display: block;
+.labelError {
+  color: red;
+  font-weight: bold;
+}
+
+.labelOK {
+  color: green;
+  font-weight: bold;
 }
 
 .ui-growl-message-info .ui-growl-item {

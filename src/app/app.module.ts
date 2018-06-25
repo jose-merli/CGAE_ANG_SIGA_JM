@@ -232,6 +232,11 @@ import { DatosRetencionesComponent } from "./features/censo/datos-retenciones/da
 
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
+import { DatosBancariosComponent } from "./features/censo/datos-bancarios/datos-bancarios.component";
+import { ConsultarDatosBancariosComponent } from "./features/censo/consultar-datos-bancarios/consultar-datos-bancarios.component";
+import { DatosCuentaBancariaComponent } from "./features/censo/datos-cuenta-bancaria/datos-cuenta-bancaria.component";
+import { DatosMandatosComponent } from "./features/censo/datos-mandatos/datos-mandatos.component";
+import { ListadoFicherosAnexosComponent } from "./features/censo/listado-ficheros-anexos/listado-ficheros-anexos.component";
 import { DatosIntegrantesComponent } from "./features/censo/datos-integrantes/datos-integrantes.component";
 import { DetalleIntegranteComponent } from "./features/censo/datos-integrantes/detalleIntegrante/detalleIntegrante.component";
 
@@ -421,7 +426,12 @@ import { DetalleIntegranteComponent } from "./features/censo/datos-integrantes/d
     EditarPerfilesComponent,
     PermisosComponent,
     PoliticaCookiesComponent,
-    DatosIntegrantesComponent
+    DatosIntegrantesComponent,
+    DatosBancariosComponent,
+    ConsultarDatosBancariosComponent,
+    DatosCuentaBancariaComponent,
+    DatosMandatosComponent,
+    ListadoFicherosAnexosComponent
   ],
   imports: [
     BrowserModule,

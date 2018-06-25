@@ -173,6 +173,9 @@ import { DatosGenerales } from "./features/censo/datos-generales/datos-generales
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
+import { AccesoFichaPersonaComponent } from "./features/censo/accesoFichaPersona/accesoFichaPersona.component";
+import { DatosBancariosComponent } from "./features/censo/datos-bancarios/datos-bancarios.component";
+import { ConsultarDatosBancariosComponent } from "./features/censo/consultar-datos-bancarios/consultar-datos-bancarios.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -316,6 +319,21 @@ const appRoutes: Routes = [
   {
     path: "gestionSubtiposCV",
     component: GestionSubtiposCVComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fichaNotario",
+    component: AccesoFichaPersonaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "datosBancarios",
+    component: DatosBancariosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "consultarDatosBancarios",
+    component: ConsultarDatosBancariosComponent,
     canActivate: [AuthGuard]
   },
 
@@ -833,22 +851,22 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: "informesGenericos",
+    path: "definirTipoPlantilla",
     component: DefinirTipoPlantillaComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: "informesGenericos",
+    path: "listaCorreos",
     component: ListaCorreosComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: "informesGenericos",
+    path: "bandejaSalida",
     component: BandejaSalidaComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: "informesGenericos",
+    path: "bandejaEntrada",
     component: BandejaEntradaComponent,
     canActivate: [AuthGuard]
   },
