@@ -379,11 +379,11 @@ export class BusquedaGeneralComponent {
       ) {
         sessionStorage.removeItem("notario");
 
-        id.tipoIdentificacion = this.tipoCIF;
+        id[0].tipoIdentificacion = this.tipoCIF;
         sessionStorage.setItem("notario", JSON.stringify(id));
         this.location.back();
       } else {
-        id.tipoIdentificacion = this.tipoCIF;
+        id[0].tipoIdentificacion = this.tipoCIF;
         sessionStorage.setItem("notario", JSON.stringify(id));
         this.location.back();
       }
