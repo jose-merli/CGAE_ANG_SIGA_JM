@@ -53,7 +53,7 @@
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
-          <input type="text" class="form-control" [(ngModel)]="body.nombre" [disabled]="!editar" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.nombre" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}</label>
@@ -200,7 +200,7 @@
       <div class="row">
         <div class="form-group col-lg-3 col-md-6">
           <label>Fecha Carga</label>
-          <p-calendar [locale]="es" [(ngModel)]="body.fechaCargoInforme" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+          <p-calendar [(ngModel)]="fechaCarga" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>Cargo</label>

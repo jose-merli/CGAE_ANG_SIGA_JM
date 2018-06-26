@@ -122,6 +122,7 @@ export class SigaServices {
     datosMandatos_comboEsquema: "busquedaPerJuridica/comboEsquema",
     anexos_search: "busquedaPerJuridica/AnexosSearch",
     anexos_update: "busquedaPerJuridica/updateAnexos",
+    anexos_insert: "busquedaPerJuridica/insertAnexos",
     retenciones_tipoRetencion: "retenciones/tipoRetencion",
     retenciones_search: "retenciones/search",
     retenciones_update: "retenciones/update",
