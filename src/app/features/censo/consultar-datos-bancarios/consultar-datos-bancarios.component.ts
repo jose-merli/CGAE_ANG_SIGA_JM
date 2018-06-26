@@ -44,7 +44,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   nuevo: boolean = false;
   checkProducto: boolean = false;
   checkServicio: boolean = false;
-  checkFirma: boolean = false;
+  checkFirma: boolean = true;
   isSelectedProducto: boolean;
   isSelectedServicio: boolean;
   isCheckedProducto: boolean;
@@ -54,6 +54,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   selectAll: boolean = false;
   selectMultiple: boolean = false;
   displayFirmar: boolean = false;
+  displayNuevo: boolean = false;
+  isEditable: boolean = false;
 
   idCuenta: String;
   idPersona: String;
@@ -63,6 +65,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   textFilter: String;
   textSelected: String = "{0} grupos seleccionados";
   registroEditable: String;
+  descripcion: String;
+  firmaFechaDate: Date;
+  firmaLugar: String;
 
   msgs: Message[];
   usuarioBody: any[];
@@ -75,9 +80,15 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   uploadedFiles: any[] = [];
   selectedEsquemaProducto: any = {};
   selectedEsquemaServicio: any = {};
+  comboProductoServicio: any[] = [];
+  selectedProductoServicio: any = {};
+  datosPrevios: any = {};
 
   numSelected: number = 0;
   selectedItem: number = 10;
+
+  datefechaUso: Date;
+  datefirmaFecha: Date;
 
   body: DatosBancariosItem = new DatosBancariosItem();
   bodySearch: DatosBancariosObject = new DatosBancariosObject();
@@ -171,6 +182,12 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         value: 40
       }
     ];
+  }
+
+  ngAfterViewChecked() {
+    console.log("! changement de la date du composant !");
+    // this.bodyDatosBancariosAnexo.firmaFecha = new Date().toDateString();
+    this.changeDetectorRef.detectChanges();
   }
 
   // Abrir fichasPosibles
@@ -661,8 +678,17 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         data => {
           this.progressSpinner = false;
           this.bodyDatosBancariosAnexoSearch = JSON.parse(data["body"]);
+          console.log("body seearch", this.bodyDatosBancariosAnexoSearch);
           this.bodyDatosBancariosAnexo = this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem[0];
           console.log("anexo", this.bodyDatosBancariosAnexo);
+          this.rellenarComboProductoServicio(
+            this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem
+          );
+
+          console.log(
+            "longitud anexo1",
+            this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem.length
+          );
         },
         error => {
           this.bodyDatosBancariosAnexoSearch = JSON.parse(error["error"]);
@@ -671,6 +697,34 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.progressSpinner = false;
         }
       );
+  }
+
+  rellenarComboProductoServicio(bodyDatosBancariosAnexo) {
+    this.comboProductoServicio.push({
+      label: "Seleccione el tipo",
+      value: ""
+    });
+
+    bodyDatosBancariosAnexo.forEach(element => {
+      if (element.tipo === "MANDATO") {
+        this.comboProductoServicio.push({
+          label: element.tipoMandato,
+          value: element.idMandato
+        });
+      }
+    });
+
+    this.selectedProductoServicio = this.comboProductoServicio[0];
+
+    console.log("Combo anexo producto/servicio", this.comboProductoServicio);
+  }
+
+  onChangeComboProductoServicio(e) {
+    this.selectedProductoServicio = e.value;
+    console.log(
+      "Selected combo producto servicio",
+      this.selectedProductoServicio
+    );
   }
 
   activarPaginacion() {
@@ -692,7 +746,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     console.log("datrte", dato);
     this.editar = !this.editar;
 
-    this.actualizarAnexos(dato);
+    //this.actualizarAnexos(dato);
   }
 
   // onChangeSelectAll() {
@@ -718,36 +772,173 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   //   }
   // }
 
-  actualizarAnexos(dato) {
-    this.progressSpinner = true;
-    this.sigaServices.post("anexos_update", dato).subscribe(
-      data => {
-        this.progressSpinner = false;
-        this.bodyDatosBancariosAnexo.status = data.status;
+  // Operaciones insertar anexo
 
-        this.showSuccess("Se han editado correctamente los datos");
-      },
-      error => {
-        this.bodyDatosMandatosSearch = JSON.parse(error["error"]);
-        this.showFail(
-          JSON.stringify(this.bodyDatosMandatosSearch.error.message)
-        );
-        console.log(error);
-        this.progressSpinner = false;
-      }
-    );
+  mostrarDialogoNuevo() {
+    this.displayNuevo = true;
   }
 
-  firmar(dato) {
+  validarInsertarAnexo(): boolean {
+    if (
+      this.datefechaUso != null &&
+      this.selectedProductoServicio.length == 1
+    ) {
+      this.formValido = true;
+    } else {
+      this.formValido = false;
+    }
+
+    return this.formValido;
+  }
+
+  insertarAnexo() {
+    this.bodyDatosBancariosAnexo.idPersona = this.idPersona;
+    this.bodyDatosBancariosAnexo.idCuenta = this.idCuenta;
+    this.bodyDatosBancariosAnexo.idAnexo = "";
+    this.bodyDatosBancariosAnexo.idMandato = this.selectedProductoServicio;
+    this.bodyDatosBancariosAnexo.esquema = "";
+    this.bodyDatosBancariosAnexo.firmaLugar = "";
+    this.bodyDatosBancariosAnexo.firmaFecha = null;
+    // var options = {
+    //   year: "numeric",
+    //   month: "2-digit",
+    //   day: "numeric"
+    // };
+
+    // this.bodyDatosBancariosAnexo.firmaFecha = this.datefirmaFecha.toLocaleString(
+    //   "es",
+    //   options
+    // );
+    this.bodyDatosBancariosAnexo.fechaUsoDate = this.datefechaUso;
+    this.bodyDatosBancariosAnexo.descripcion = this.descripcion;
+
+    this.progressSpinner = true;
+
+    this.sigaServices
+      .post("anexos_insert", this.bodyDatosBancariosAnexo)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.bodyDatosBancariosAnexo.status = data.status;
+          this.bodyDatosBancariosAnexo.id = data.id;
+
+          this.showSuccess("Se han guardado correctamente los datos");
+
+          this.displayNuevo = false;
+        },
+        error => {
+          this.bodyDatosMandatosSearch = JSON.parse(error["error"]);
+          this.showFail(
+            JSON.stringify(this.bodyDatosMandatosSearch.error.message)
+          );
+          console.log(error);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.limpiarDatosAnexo();
+        }
+      );
+  }
+
+  limpiarDatosAnexo() {
+    this.descripcion = "";
+    this.datefechaUso = null;
+    this.selectedProductoServicio = [];
+    this.comboProductoServicio = [];
+
+    this.cargarDatosAnexos();
+  }
+
+  // Operaciones editar/firmar
+
+  mostrarDialogoFirmar(dato) {
+    console.log("Selected row", dato);
     this.displayFirmar = true;
+
+    this.bodyDatosBancariosAnexo.idPersona = this.idPersona;
+    this.bodyDatosBancariosAnexo.idCuenta = this.idCuenta;
+    this.bodyDatosBancariosAnexo.idAnexo = dato.idAnexo;
+    this.bodyDatosBancariosAnexo.idMandato = dato.idMandato;
+    this.bodyDatosBancariosAnexo.esquema = "";
+    this.firmaLugar = dato.firmaLugar;
+    this.bodyDatosBancariosAnexo.firmaLugar = this.firmaLugar;
+    this.bodyDatosBancariosAnexo.fechaUsoDate = dato.fechaUso;
+    let fFirma = this.obtenerFecha(dato.firmaFecha);
+    this.firmaFechaDate = new Date(fFirma);
+    this.bodyDatosBancariosAnexo.firmaFechaDate = this.firmaFechaDate;
+    this.bodyDatosBancariosAnexo.descripcion = "";
+
+    this.datosPrevios = this.bodyDatosBancariosAnexo;
+  }
+
+  obtenerFecha(fecha): string {
+    var firstElem = fecha.substring(0, fecha.indexOf("/"));
+    var secondElem = fecha.substring(
+      fecha.indexOf("/") + 1,
+      fecha.lastIndexOf("/")
+    );
+    var lastElem = fecha.substring(fecha.lastIndexOf("/") + 1, fecha.length);
+
+    return lastElem + "/" + secondElem + "/" + firstElem;
+  }
+
+  restablecerDatosFirma() {
+    console.log("datos previos", this.datosPrevios);
+
+    this.firmaLugar = this.datosPrevios.firmaLugar;
+    this.firmaFechaDate = this.datosPrevios.firmaFechaDate;
+    this.checkFirma = true;
+
+    console.log("datos ahora", this.bodyDatosBancariosAnexo);
+    return this.datosPrevios;
+  }
+
+  validarFirma(): boolean {
+    if (
+      this.checkFirma == true &&
+      (this.bodyDatosBancariosAnexo.firmaLugar != "" ||
+        this.bodyDatosBancariosAnexo.firmaLugar != undefined) &&
+      this.bodyDatosBancariosAnexo.firmaFechaDate != null
+    ) {
+      this.formValido = true;
+    } else {
+      this.formValido = false;
+    }
+
+    return this.formValido;
+  }
+
+  actualizarAnexos() {
+    console.log("Esdita", this.bodyDatosBancariosAnexo);
+    this.progressSpinner = true;
+    this.sigaServices
+      .post("anexos_update", this.bodyDatosBancariosAnexo)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.bodyDatosBancariosAnexo.status = data.status;
+
+          this.showSuccess("Se han editado correctamente los datos");
+
+          this.displayFirmar = false;
+        },
+        error => {
+          this.bodyDatosBancariosAnexoSearch = JSON.parse(error["error"]);
+          this.showFail(
+            JSON.stringify(this.bodyDatosBancariosAnexoSearch.error.message)
+          );
+          console.log(error);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.cargarDatosAnexos();
+        }
+      );
   }
 
   onBasicUpload(event) {
     this.showInfo("Fichero adjuntado");
   }
-
-  guardarFirma() {}
-  restablecerDatosFirma() {}
 
   // Métodos comunes
 
