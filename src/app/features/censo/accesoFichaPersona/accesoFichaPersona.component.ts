@@ -310,7 +310,10 @@ export class AccesoFichaPersonaComponent implements OnInit {
     this.router.navigate(["/busquedaGeneral"]);
   }
 
-  redireccionar() {}
+  redireccionar() {
+    this.openFicha = !this.openFicha;
+    //Aquí debajo lo que vaya a hacer
+  }
 
   uploadImage(event: any) {
     // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen

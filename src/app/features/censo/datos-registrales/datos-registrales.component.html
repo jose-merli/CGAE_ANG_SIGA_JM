@@ -7,7 +7,7 @@
 
   <!--DATOS REGISTRALES-->
   <div class="card">
-    <div class="card-header header-ficha">
+    <div class="card-header header-ficha" (click)="abreCierraFicha('registrales')">
       <div *ngIf="!esFichaActiva('registrales')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -26,7 +26,7 @@
             <label>{{"censo.consultaDatosRegistrales.literal.idRegProv" | translate}} <span>{{body.identificadorRegistroProvincial}}</span></label>
             <label>{{"censo.consultaDatosRegistrales.literal.numRegistro" | translate}} <span>{{body.numeroRegistro}}</span></label>
 
-            <i *ngIf="!esFichaActiva('registrales')" (click)="abrirFicha('registrales')" class="fa fa-angle-down float-right"></i>
+            <i *ngIf="!esFichaActiva('registrales')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -35,7 +35,7 @@
           <i class="far fa-address-book icon-ficha"></i>
         </div>
         <label class="title-ficha">Datos Registrales</label>
-        <i (click)="cerrarFicha('registrales')" class="fa fa-angle-up ml-auto"></i>
+        <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <!--cuerpo datos colegiales-->
@@ -67,12 +67,14 @@
 
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.general.literal.FechaConstitucion" | translate}} (*)</label>
-              <p-calendar [(ngModel)]="fechaConstitucion" [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
-              <div *ngIf="fechaCorrecta == false"><label class="labelError">La fecha no puede ser superior a la actual **** </label></div>
+              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaConstitucion" [locale]="es"
+                [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
+                <div *ngIf="fechaCorrecta == false"><label class="labelError">La fecha no puede ser superior a la actual</label></div>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}</label>
-              <p-calendar [(ngModel)]="fechaFin" [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
+              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaFin" [locale]="es" [utc]="true"
+                icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Actividad Profesional: </label> <br>
@@ -93,7 +95,7 @@
               </div>
               <div class="form-group col-lg-4 col-md-4">
                 <input [(ngModel)]="body.contadorNumsspp" type="text" class="form-control" pInputText>
-                <div *ngIf="contadorNoCorrecto == true"><label class="labelError">Solo números **** </label></div>
+                <div *ngIf="contadorNoCorrecto == true"><label class="labelError">Solo números</label></div>
               </div>
               <div class="form-group col-lg-4 col-md-4">
                 <input [(ngModel)]="body.sufijoNumsspp" type="text" class="form-control" pInputText>
@@ -106,11 +108,13 @@
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatosRegistrales.literal.fechaRegistro" | translate}}</label>
-              <p-calendar [(ngModel)]="fechaRegistro" [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
+              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaRegistro" [locale]="es"
+                [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatosRegistrales.literal.fechaCancelacion" | translate}}</label>
-              <p-calendar [(ngModel)]="fechaCancelacion" [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
+              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaCancelacion" [locale]="es"
+                [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
             </div>
             <div class="form-check col-lg-6 col-md-6">
               <br>
@@ -125,7 +129,7 @@
       <div class="text-right main-button ">
         <!--<button (click)="toSociedadProfesional()" class="sociedadprof" pButton type="button " icon="fas fa-book " iconPos="left"
           label="Sociedad Profesional"></button>-->
-        <button (click)="search()" pButton type="button " icon="fa fa-redo " iconPos="left" label="Restablecer"></button>
+        <button (click)="search()" pButton type="button " icon="fa fa-undo " iconPos="left" label="Restablecer"></button>
         <button (click)="guardar()" [disabled]="desactivadoGuardar()" pButton type="button " icon="far fa-save " iconPos="left" label="Guardar"></button>
       </div>
     </div>
