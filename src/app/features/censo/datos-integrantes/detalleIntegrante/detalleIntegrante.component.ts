@@ -100,7 +100,6 @@ export class DetalleIntegranteComponent implements OnInit {
   datosIntegrantes: DatosIntegrantesObject = new DatosIntegrantesObject();
   fechaCarga: Date;
   columnasTabla: any = [];
-
   // Obj extras
   body1: DatosIntegrantesItem = new DatosIntegrantesItem();
   body2: DatosIntegrantesItem = new DatosIntegrantesItem();

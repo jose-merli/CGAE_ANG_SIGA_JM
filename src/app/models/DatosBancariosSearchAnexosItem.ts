@@ -15,6 +15,6 @@ export class DatosBancariosSearchAnexosItem {
   firmaLugar: String;
   status: String;
   esquema: String;
-
+  editar: boolean = false;
   constructor() {}
 }

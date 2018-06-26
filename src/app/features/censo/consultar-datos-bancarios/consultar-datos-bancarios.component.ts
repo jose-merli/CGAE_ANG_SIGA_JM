@@ -35,6 +35,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   openFichaListadoFicherosAnexos: boolean = false;
   progressSpinner: boolean = false;
   editar: boolean = false;
+  blockCrear: boolean = true;
+
   editarMandato: boolean = false;
   formValido: boolean;
   ibanValido: boolean;
@@ -744,7 +746,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   activarEdicion(dato) {
     console.log("datrte", dato);
-    this.editar = !this.editar;
+    // this.editar = !this.editar;
+    this.selectMultiple = !this.selectMultiple;
 
     //this.actualizarAnexos(dato);
   }
@@ -940,6 +943,43 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.showInfo("Fichero adjuntado");
   }
 
+  editarCompleto(event) {
+    console.log(event);
+    let data = event.data;
+    //compruebo si la edicion es correcta con la basedatos
+    if (this.onlySpaces(data.descripcion)) {
+      this.blockCrear = true;
+    } else {
+      this.editar = true;
+      this.blockCrear = false;
+      this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem.forEach(
+        (value: DatosBancariosSearchAnexosItem, key: number) => {
+          if (value.tipo == "MANDATO") {
+            if (value.idMandato == data.idMandato) {
+              value.editar = true;
+            }
+          } else {
+            if (value.idAnexo == data.idAnexo) {
+              value.editar = true;
+            }
+          }
+        }
+      );
+      console.log(this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem);
+    }
+  }
+  onlySpaces(str) {
+    let i = 0;
+    var ret;
+    ret = true;
+    while (i < str.length) {
+      if (str[i] != " ") {
+        ret = false;
+      }
+      i++;
+    }
+    return ret;
+  }
   // Métodos comunes
 
   showFail(mensaje: string) {
