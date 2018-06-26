@@ -241,6 +241,7 @@ export class BusquedaGeneralComponent {
 
   search() {
     this.progressSpinner = true;
+    this.buscar = true;
     if (this.persona == "f") {
       if (this.bodyFisica.nif == undefined) {
         this.bodyFisica.nif = "";

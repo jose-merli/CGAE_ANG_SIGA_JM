@@ -74,15 +74,11 @@ export class DatosPersonaJuridicaComponent implements OnInit {
         activa: false
       },
       {
-        key: "direcciones",
+        key: "registrales",
         activa: false
       },
       {
         key: "notario",
-        activa: false
-      },
-      {
-        key: "registrales",
         activa: false
       },
       {
@@ -95,6 +91,10 @@ export class DatosPersonaJuridicaComponent implements OnInit {
       },
       {
         key: "retenciones",
+        activa: false
+      },
+      {
+        key: "interes",
         activa: false
       }
     ];

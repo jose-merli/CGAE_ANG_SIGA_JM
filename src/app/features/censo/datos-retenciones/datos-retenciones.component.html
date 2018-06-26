@@ -2,7 +2,7 @@
 
     <!--DATOS REGISTRALES-->
     <div class="card">
-        <div class="card-header header-ficha">
+        <div class="card-header header-ficha" (click)="abrirFicha()">
             <div *ngIf="!openFicha" class="form-row">
                 <div class="col-lg-1 col-md-2">
                     <div class="img-colegiado">
@@ -12,20 +12,20 @@
                 </div>
                 <div class="col-lg-11 col-md-10">
                     <div class="d-flex justify-content-end mb-1">
-                        <label class="mr-auto title-ficha">Retenciones</label>
+                        <label class="mr-auto title-ficha">{{"menu.justiciaGratuita.maestros.retenciones" | translate}}</label>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <label>Fecha Inicio
+                        <label>{{"facturacion.seriesFacturacion.literal.fInicio" | translate}}
                             <span>{{retencionNow.fechaInicio | date: "dd-MM-yyyy"}}</span>
                         </label>
 
-                        <label>Descripción
+                        <label>{{"general.description" | translate}}
                             <span>{{retencionNow.descripcionRetencion}}</span>
                         </label>
-                        <label>Retención
+                        <label>{{"FactSJCS.mantRetencionesJ.literal.tramoLec" | translate}}
                             <span>{{retencionNow.porcentajeRetencion}}</span>
                         </label>
-                        <i (click)="abrirFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+                        <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
                     </div>
                 </div>
             </div>
@@ -33,8 +33,8 @@
                 <div class="img-colegiado">
                     <i class="fa fa-dollar icon-ficha"></i>
                 </div>
-                <label class="title-ficha">Retenciones</label>
-                <i (click)="abrirFicha()" class="fa fa-angle-up ml-auto"></i>
+                <label class="title-ficha">{{"menu.justiciaGratuita.maestros.retenciones" | translate}}</label>
+                <i class="fa fa-angle-up ml-auto"></i>
             </div>
         </div>
         <!--cuerpo datos generales-->
@@ -56,44 +56,44 @@
                             <span>{{car[col.field] | date: "dd-MM-yyyy"}}</span>
 
                         </ng-template>
-                    </p-column>
-                    <p-column [sortable]="true" field="descripcionRetencion" [header]="TipoRentencionIRPF" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-                        filterMatchMode="contains">
-                        <ng-template let-col let-car="rowData" pTemplate="body">
-                            <span>{{car[col.field]}}</span>
-                            <p-dropdown *ngIf="car[col.field] == '' " [(ngModel)]="newRetencion.descripcionRetencion" [options]="tiposRetenciones" (onChange)="onChangeDrop($event)"></p-dropdown>
-                            <!-- <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='newRetencion.descripcionRetencion' type="text"
+                        </p-column>
+                        <p-column [sortable]="true" field="descripcionRetencion" [header]="TipoRentencionIRPF" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                            filterMatchMode="contains">
+                            <ng-template let-col let-car="rowData" pTemplate="body">
+                                <span>{{car[col.field]}}</span>
+                                <p-dropdown *ngIf="car[col.field] == '' " [(ngModel)]="newRetencion.descripcionRetencion" [options]="tiposRetenciones" (onChange)="onChangeDrop($event)"></p-dropdown>
+                                <!-- <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='newRetencion.descripcionRetencion' type="text"
                                 class="form-control" (onChange)="onChangeForm()" pInputText> -->
-                        </ng-template>
-                    </p-column>
-                    <p-column [sortable]="true" field="porcentajeRetencion" [header]="Porcentaje" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-                        filterMatchMode="contains">
-                        <ng-template let-col let-car="rowData" pTemplate="body">
-                            <span>{{car[col.field]}}</span>
+                            </ng-template>
+                            </p-column>
+                            <p-column [sortable]="true" field="porcentajeRetencion" [header]="Porcentaje" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                                filterMatchMode="contains">
+                                <ng-template let-col let-car="rowData" pTemplate="body">
+                                    <span>{{car[col.field]}}</span>
 
-                        </ng-template>
-                    </p-column>
+                                </ng-template>
+                                </p-column>
 
-                    <ng-template pTemplate="paginatorLeft">
-                        <div class="mostrar">
-                            <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                            <label>Mostrar</label>
-                            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                            <label> registros</label>
-                        </div>
-                    </ng-template>
-                    <p-footer>
-                        <div class="text-right main-button">
-                            <button (click)="volver();" [(disabled)]="isVolver" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-                            <button (click)="crear()" [(disabled)]="isCrear" pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-                            <button (click)="confirmEdit();" [(disabled)]="isEditar" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-                            <button (click)="confirmarBorrar()" [(disabled)]="isEliminar" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
-                                label="{{'general.boton.eliminar'  | translate}}"></button>
-                        </div>
-                    </p-footer>
-                </p-dataTable>
+                                <ng-template pTemplate="paginatorLeft">
+                                    <div class="mostrar">
+                                        <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                                        <label>Mostrar</label>
+                                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                                        <label> registros</label>
+                                    </div>
+                                </ng-template>
+                                <p-footer>
+                                    <div class="text-right main-button">
+                                        <button (click)="volver();" [(disabled)]="isVolver" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+                                        <button (click)="crear()" [(disabled)]="isCrear" pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+                                        <button (click)="confirmEdit();" [(disabled)]="isEditar" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                                        <button (click)="confirmarBorrar()" [(disabled)]="isEliminar" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
+                                            label="{{'general.boton.eliminar'  | translate}}"></button>
+                                    </div>
+                                </p-footer>
+                                </p-dataTable>
 
-                <!-- <div class="bloque col-lg-6 col-md-6">
+                                <!-- <div class="bloque col-lg-6 col-md-6">
                     <div class="form-row">
                         <div class="form-group col-lg-3 col-md-6">
                             <label>{{"censo.fichaCliente.literal.identificacion"  | translate}} (*)</label>

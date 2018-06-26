@@ -7,7 +7,7 @@
 
   <!--DATOS GENERALES-->
   <div class="card">
-    <div class="card-header header-ficha">
+    <div class="card-header header-ficha" (click)="abreCierraFicha('generales')">
       <div *ngIf="!esFichaActiva('generales')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -38,7 +38,7 @@
             <label>{{"gratuita.definirTurnosIndex.literal.abreviatura" | translate}}
               <span>{{body.abreviatura}}</span>
             </label>
-            <i *ngIf="!esFichaActiva('generales')" (click)="abrirFicha('generales')" class="fa fa-angle-down float-right"></i>
+            <i *ngIf="!esFichaActiva('generales')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -47,7 +47,7 @@
           <i class="fa fa-user icon-ficha"></i>
         </div>
         <label class="title-ficha">{{ "general.message.datos.generales" | translate}}</label>
-        <i (click)="cerrarFicha('generales')" class="fa fa-angle-up ml-auto"></i>
+        <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <!--cuerpo datos generales-->
@@ -55,7 +55,6 @@
     <div *ngIf="esFichaActiva('generales')" class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque col-lg-3 col-md-3">
-          <label class="d-block">Foto</label>
           <div class="img-colegiado my-2">
             <i class="fa fa-user" style="font-size:130px;color:grey"></i>
             <!--<img src="{{imagenURL}}">-->
@@ -76,11 +75,11 @@
               <p-dropdown class="select-form" [(ngModel)]="body.identificacion" [options]="comboIdentificacion" optionLabel="label" (ngModelChange)="onChangeForm()"></p-dropdown>
             </div>
             <div *ngIf="comboTipo.length > 1" class="form-group col-lg-6 col-md-6">
-              <label>Tipo de persona (*)</label>
+              <label>{{"censo.fichaCliente.literal.tipoPersona" | translate}} (*)</label>
               <p-dropdown class="select-form" [(ngModel)]="body.tipo" [options]="comboTipo" (ngModelChange)="onChangeForm()"></p-dropdown>
             </div>
             <div *ngIf="comboTipo.length == 1" class="form-group col-lg-6 col-md-6">
-              <label>Tipo de persona (*)</label>
+              <label>{{"censo.fichaCliente.literal.tipoPersona" | translate}} (*)</label>
               <input [(ngModel)]="comboTipo[0]" type="text" class="form-control" (ngModelChange)="onChangeForm()" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
@@ -115,7 +114,7 @@
               <input type="text " class="form-control " [(ngModel)]="body.cuentaContable " pInputText>
             </div>
             <div class="form-group col-lg-8 col-md-8">
-              <label>Anotaciones: </label>
+              <label>{{"censo.general.literal.anotaciones" | translate}}: </label>
               <textarea pInputTextarea [(ngModel)]="body.anotaciones"></textarea>
             </div>
             <div class="form-group col-lg-8 col-md-8">

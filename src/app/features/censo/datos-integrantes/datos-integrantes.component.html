@@ -9,7 +9,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-end mb-1">
-            <label class="mr-auto title-ficha">Integrantes</label>
+            <label class="mr-auto title-ficha">{{"censo.datosRegistrales.literal.integrantes" | translate}}</label>
           </div>
           <div *ngIf="only" class="d-flex justify-content-between">
 
@@ -22,19 +22,19 @@
             <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}
               <span>{{ body.apellidos }}</span>
             </label>
-            <label>Fecha de alta
+            <label>{{"administracion.usuarios.literal.fechaAlta" | translate}}
               <span>{{ body.fechaHistorico }} </span>
             </label>
-            <label>Cargos
+            <label>{{"censo.busquedaComisiones.literal.cargos" | translate}}
               <span>{{ body.cargo }}</span>
             </label>
-            <label>Liquidación
+            <label>{{"censo.busquedaClientes.literal.liquidacion" | translate}}
               <span> {{ body.liquidacionComoSociedad }} </span>
             </label>
-            <label>Ejerciente
+            <label>{{"censo.consultaDatosGenerales.literal.ejerciente" | translate}}
               <span> {{ body.ejerciente }} </span>
             </label>
-            <label>Participación
+            <label>{{"censo.consultaComponentesJuridicos.literal.Participacion" | translate}}
               <span>{{ body.participacion }}</span>
             </label>
             <i (click)="abrirFicha('integrantes')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
@@ -52,7 +52,7 @@
           <div class="img-colegiado">
             <i class="far fa-users icon-ficha"></i>
           </div>
-          <label class="title-ficha">Datos Integrantes</label>
+          <label class="title-ficha">{{"gratuita.operarEJG.literal.datosIntegrantes" | translate}}</label>
           <i (click)="cerrarFicha('integrantes')" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
@@ -60,7 +60,7 @@
         <div class="img-colegiado">
           <i class="fa fa-users icon-ficha"> </i>
         </div>
-        <label class="title-ficha">Integrantes</label>
+        <label class="title-ficha">{{"censo.datosRegistrales.literal.integrantes" | translate}}</label>
         <i (click)="cerrarFicha('integrantes')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -92,37 +92,37 @@
 
 
           </ng-template>
-        </p-column>
+          </p-column>
 
-        <ng-template pTemplate="paginatorLeft">
-          <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
-            <label>{{ "general.message.mostrar" | translate}}</label>
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-            <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
-            </div>
-            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+          <ng-template pTemplate="paginatorLeft">
+            <div class="mostrar d-flex text-right justify-content-end">
+              <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+              <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+              <label>{{ "general.message.mostrar" | translate}}</label>
+              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+              <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+              <div class="ml-3 selectAll">
+                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
+              </div>
+              <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
               <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+            </div>
+          </ng-template>
+
+
+
+          </p-dataTable>
+
+          <br>
+          <div class="card-footer ">
+            <div class="text-right main-button ">
+              <button (click)="anadirIntegrante()" pButton type="button" icon="fa-user-plus" iconPos="left" label="Nuevo"></button>
+              <button (click)="editarIntegrante()" pButton type="button" icon="fa fa-edit" iconPos="left" label="Editar"></button>
+              <button (click)="eliminarIntegrante()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="Borrar"></button>
+              <button (click)="buscarIntegrante()" pButton type="button" icon="fa fa-search" iconPos="left" label="Historico/Buscar"></button>
+            </div>
           </div>
-        </ng-template>
-
-
-
-      </p-dataTable>
-
-      <br>
-      <div class="card-footer ">
-        <div class="text-right main-button ">
-          <button (click)="anadirIntegrante()" pButton type="button" icon="fa-user-plus" iconPos="left" label="Nuevo"></button>
-          <button (click)="editarIntegrante()" pButton type="button" icon="fa fa-edit" iconPos="left" label="Editar"></button>
-          <button (click)="eliminarIntegrante()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="Borrar"></button>
-          <button (click)="buscarIntegrante()" pButton type="button" icon="fa fa-search" iconPos="left" label="Historico/Buscar"></button>
-        </div>
-      </div>
-      <!--END DATOS GENERALES-->
+          <!--END DATOS GENERALES-->
     </div>
   </div>
 </div>

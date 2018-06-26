@@ -187,8 +187,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   ngAfterViewChecked() {
-    console.log("! changement de la date du composant !");
-    // this.bodyDatosBancariosAnexo.firmaFecha = new Date().toDateString();
     this.changeDetectorRef.detectChanges();
   }
 
@@ -863,15 +861,33 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.bodyDatosBancariosAnexo.idAnexo = dato.idAnexo;
     this.bodyDatosBancariosAnexo.idMandato = dato.idMandato;
     this.bodyDatosBancariosAnexo.esquema = "";
-    this.firmaLugar = dato.firmaLugar;
-    this.bodyDatosBancariosAnexo.firmaLugar = this.firmaLugar;
-    this.bodyDatosBancariosAnexo.fechaUsoDate = dato.fechaUso;
-    let fFirma = this.obtenerFecha(dato.firmaFecha);
-    this.firmaFechaDate = new Date(fFirma);
-    this.bodyDatosBancariosAnexo.firmaFechaDate = this.firmaFechaDate;
+
+    if (dato.firmaLugar != null) {
+      this.firmaLugar = dato.firmaLugar;
+    } else {
+      this.firmaLugar = null;
+    }
+
+    if (dato.fechaUso != null) {
+      let fUso = this.obtenerFecha(dato.fechaUso);
+      this.bodyDatosBancariosAnexo.fechaUsoDate = new Date(fUso);
+    } else {
+      this.bodyDatosBancariosAnexo.fechaUsoDate = null;
+    }
+
+    if (dato.firmaFecha != null) {
+      let fFirma = this.obtenerFecha(dato.firmaFecha);
+      this.firmaFechaDate = new Date(fFirma);
+    } else {
+      this.firmaFechaDate = null;
+    }
+
     this.bodyDatosBancariosAnexo.descripcion = "";
 
-    this.datosPrevios = this.bodyDatosBancariosAnexo;
+    this.datosPrevios = {
+      firmaLugar: this.firmaLugar,
+      firmaFechaDate: this.firmaFechaDate
+    };
   }
 
   obtenerFecha(fecha): string {
@@ -891,17 +907,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.firmaLugar = this.datosPrevios.firmaLugar;
     this.firmaFechaDate = this.datosPrevios.firmaFechaDate;
     this.checkFirma = true;
-
-    console.log("datos ahora", this.bodyDatosBancariosAnexo);
-    return this.datosPrevios;
   }
 
   validarFirma(): boolean {
     if (
       this.checkFirma == true &&
-      (this.bodyDatosBancariosAnexo.firmaLugar != "" ||
-        this.bodyDatosBancariosAnexo.firmaLugar != undefined) &&
-      this.bodyDatosBancariosAnexo.firmaFechaDate != null
+      (this.firmaLugar != null || this.firmaLugar != undefined) &&
+      this.firmaFechaDate != null
     ) {
       this.formValido = true;
     } else {
@@ -912,6 +924,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   actualizarAnexos() {
+    this.bodyDatosBancariosAnexo.firmaFechaDate = this.firmaFechaDate;
+    this.bodyDatosBancariosAnexo.firmaLugar = this.firmaLugar;
     console.log("Esdita", this.bodyDatosBancariosAnexo);
     this.progressSpinner = true;
     this.sigaServices
