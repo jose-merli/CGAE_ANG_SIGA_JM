@@ -394,14 +394,9 @@ export class DatosRegistralesComponent implements OnInit {
     this.table.reset();
   }
 
-  abrirFicha(key) {
+  abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = true;
-  }
-
-  cerrarFicha(key) {
-    let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = false;
+    fichaPosible.activa = !fichaPosible.activa;
   }
 
   esFichaActiva(key) {

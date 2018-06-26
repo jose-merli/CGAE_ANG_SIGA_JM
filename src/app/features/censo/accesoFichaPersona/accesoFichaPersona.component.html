@@ -2,7 +2,7 @@
 
     <!--DATOS GENERALES-->
     <div class="card">
-        <div class="card-header header-ficha">
+        <div class="card-header header-ficha" (click)="abrirFicha()">
             <div *ngIf="!openFicha" class="form-row">
                 <div class="col-lg-1 col-md-2">
                     <div class="img-colegiado">
@@ -22,7 +22,7 @@
                         </label>
                         <div></div>
                         <div><i (click)="redireccionar()" [ngClass]="{ 'fa fa-rotate-right redirect': openFicha, 'fa fa-rotate-right redirect': !openFicha} "></i>
-                            <i (click)="abrirFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+                            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
                         </div>
 
                     </div>
@@ -35,7 +35,7 @@
                 <label class="title-ficha">Notario</label>
                 <div class="ml-auto">
                     <i (click)="redireccionar()" class="fa fa-rotate-right redirect"></i>
-                    <i (click)="abrirFicha()" class="fa fa-angle-up "></i>
+                    <i class="fa fa-angle-up "></i>
                 </div>
             </div>
         </div>

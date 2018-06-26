@@ -84,6 +84,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   fechaConstitucionArreglada: Date;
   historico: boolean = false;
   numSelected: number = 0;
+  textFilter: String = "Elegir";
 
   constructor(
     private sigaServices: SigaServices,

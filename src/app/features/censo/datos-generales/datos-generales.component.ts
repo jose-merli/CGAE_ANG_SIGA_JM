@@ -361,26 +361,14 @@ export class DatosGenerales implements OnInit {
     }
   }
 
-  abrirFicha(key) {
+  abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = true;
-  }
-
-  cerrarFicha(key) {
-    let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = false;
+    fichaPosible.activa = !fichaPosible.activa;
   }
 
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
-  }
-
-  onAbrirTodoClick() {
-    this.showAll = !this.showAll;
-    this.fichasPosibles.forEach((ficha: any) => {
-      ficha.activa = this.showAll;
-    });
   }
 
   getFichaPosibleByKey(key): any {

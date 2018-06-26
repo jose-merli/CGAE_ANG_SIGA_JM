@@ -34,6 +34,8 @@ import { CheckboxModule } from "primeng/checkbox";
 import { RadioButtonModule } from "primeng/radiobutton";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { GrowlModule } from "primeng/growl";
+import { CommonModule } from "@angular/common";
+import { DataTableModule } from "primeng/datatable";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
@@ -96,7 +98,7 @@ export class DetalleIntegranteComponent implements OnInit {
   fichasPosibles: any[];
   body: DatosIntegrantesItem = new DatosIntegrantesItem();
   datosIntegrantes: DatosIntegrantesObject = new DatosIntegrantesObject();
-
+  fechaCarga: Date;
   columnasTabla: any = [];
 
   // Obj extras
@@ -130,7 +132,7 @@ export class DetalleIntegranteComponent implements OnInit {
       },
       {
         key: "vinculacion",
-        activa: false
+        activa: true
       }
     ];
     this.cols = [
@@ -189,6 +191,7 @@ export class DetalleIntegranteComponent implements OnInit {
         console.log(err);
       }
     );
+    this.body = JSON.parse(sessionStorage.getItem("integrante"));
   }
   verMasFiltros() {
     this.masFiltros = !this.masFiltros;
@@ -198,6 +201,23 @@ export class DetalleIntegranteComponent implements OnInit {
     else return true;
   }
   pInputText;
+  transformaFecha(fecha) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -1);
+    if (rawDate.length < 14) {
+      let splitDate = rawDate.split("/");
+      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+      fecha = new Date((arrayDate += "T00:00:00.001Z"));
+    } else {
+      fecha = new Date(fecha);
+    }
+    return fecha;
+  }
+  arreglarFechas() {
+    if (this.fechaCarga != undefined) {
+      this.body.fechaCargo = this.transformaFecha(this.fechaCarga);
+    }
+  }
 
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
