@@ -236,7 +236,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       arrayDesde[2] = parseInt(arrayDesde[2]) + 1;
       let returnDesde =
         arrayDesde[0] + "-" + arrayDesde[1] + "-" + arrayDesde[2];
-      this.fechaConstitucionArreglada = new Date(returnDesde + "T00:00:05Z");
+      this.fechaConstitucionArreglada = new Date(returnDesde + "T12:00:05Z");
     } else {
       this.fechaConstitucionArreglada = undefined;
     }
