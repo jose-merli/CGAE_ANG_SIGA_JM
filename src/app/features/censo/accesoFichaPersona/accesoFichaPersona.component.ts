@@ -27,7 +27,7 @@ import { TranslateService } from "../../../commons/translate";
 })
 export class AccesoFichaPersonaComponent implements OnInit {
   comboTipoIdentificacion: SelectItem[];
-  comboSituacion: SelectItem[];
+  selectedTipoIdentificacion: any = {};
   msgs: Message[];
   openFicha: boolean = false;
   editar: boolean = false;
@@ -55,22 +55,9 @@ export class AccesoFichaPersonaComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.comboTipoIdentificacion = [
-      { label: "NIF", value: "10" },
-      { label: "CIF", value: "20" },
-      { label: "Pasaporte", value: "30" },
-      { label: "NIE", value: "40" },
-      { label: "Otro", value: "50" }
-    ];
-
-    this.comboSituacion = [
-      { label: "", value: "" },
-      { label: "Ejerciente Residente", value: "Ejerciente Residente" },
-      { label: "No colegiado", value: "No colegiado" },
-      { label: "Sociedad", value: "Sociedad" }
-    ];
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.tipoPersona = "Notario";
+
     if (
       sessionStorage.getItem("notario") != undefined &&
       sessionStorage.getItem("notario") != null
@@ -116,6 +103,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
       sessionStorage.getItem("notario") != null
     ) {
       sessionStorage.removeItem("notario");
+      this.obtenerTiposIdentificacion();
     } else {
       this.search();
     }
@@ -133,13 +121,18 @@ export class AccesoFichaPersonaComponent implements OnInit {
         data => {
           this.progressSpinner = false;
           this.bodySearch = JSON.parse(data["body"]);
-          if (this.bodySearch.fichaPersonaItem != undefined) {
+          // if (this.bodySearch.fichaPersonaItem != undefined && this.bodySearch.fichaPersonaItem != null) {
+          //   this.body = this.bodySearch.fichaPersonaItem[0];
+          //   this.desasociar = true;
+          //   this.obtenerTiposIdentificacion();
+          // }
+          if (
+            this.bodySearch.fichaPersonaItem != undefined &&
+            this.bodySearch.fichaPersonaItem != null
+          ) {
             this.body = this.bodySearch.fichaPersonaItem[0];
             this.desasociar = true;
-          }
-          if (this.bodySearch.fichaPersonaItem != null) {
-            this.body = this.bodySearch.fichaPersonaItem[0];
-            this.desasociar = true;
+            this.obtenerTiposIdentificacion();
           } else {
             this.guardarNotario = false;
             this.desasociar = false;
@@ -277,6 +270,34 @@ export class AccesoFichaPersonaComponent implements OnInit {
     }
   }
 
+  obtenerTiposIdentificacion() {
+    this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
+      n => {
+        this.comboTipoIdentificacion = n.combooItems;
+
+        // obtener la identificacion a seleccionar
+        if (this.body.tipoIdentificacion != undefined) {
+          let ident = this.comboTipoIdentificacion.find(
+            item => item.value == this.body.tipoIdentificacion
+          );
+
+          this.selectedTipoIdentificacion = ident.value;
+        } else {
+          let ident: SelectItem;
+          ident.value = "";
+          this.selectedTipoIdentificacion = ident;
+        }
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+  filtrarItemsComboEsquema(comboEsquema, buscarElemento) {
+    return comboEsquema.filter(function(obj) {
+      return obj.value == buscarElemento;
+    });
+  }
   abrirFicha() {
     this.openFicha = !this.openFicha;
   }

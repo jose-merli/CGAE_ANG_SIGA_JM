@@ -101,6 +101,8 @@ export class SigaServices {
     accesoFichaPersona_desasociarPersona: "fichaPersona/desasociarPersona",
     accesoFichaPersona_guardar: "fichaPersona/guardar",
     fichaPersona_crearNotario: "fichaPersona/crearNotario",
+    fichaPersona_tipoIdentificacionCombo:
+      "fichaPersona/tipoIdentificacionCombo",
     busquedaPerJuridica_update: "busquedaPerJuridica/update",
     datosRegistrales_actividadesPersona:
       "perJuridicaDatosRegistrales/actividadProfesionalPer",
@@ -118,6 +120,8 @@ export class SigaServices {
     datosMandatos_search: "busquedaPerJuridica/MandatosSearch",
     datosMandatos_insert: "busquedaPerJuridica/mandatosInsert",
     datosMandatos_comboEsquema: "busquedaPerJuridica/comboEsquema",
+    anexos_search: "busquedaPerJuridica/AnexosSearch",
+    anexos_update: "busquedaPerJuridica/updateAnexos",
     retenciones_tipoRetencion: "retenciones/tipoRetencion",
     retenciones_search: "retenciones/search",
     retenciones_update: "retenciones/update",

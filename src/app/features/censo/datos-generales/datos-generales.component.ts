@@ -208,10 +208,7 @@ export class DatosGenerales implements OnInit {
       error => {}
     );
 
-  
-
     this.comboTipo.push(this.tipoPersonaJuridica);
- 
   }
 
   datosGeneralesSearch() {
@@ -231,7 +228,11 @@ export class DatosGenerales implements OnInit {
         data => {
           this.progressSpinner = false;
           this.personaSearch = JSON.parse(data["body"]);
-          this.body = this.personaSearch.personaJuridicaItems[0];
+          if (this.personaSearch.personaJuridicaItems.length != 0) {
+            this.body = this.personaSearch.personaJuridicaItems[0];
+          } else {
+            this.body = new DatosGeneralesItem();
+          }
         },
         error => {
           this.personaSearch = JSON.parse(error["error"]);

@@ -220,10 +220,11 @@ export class DatosRegistralesComponent implements OnInit {
             this.fechaCancelacion = this.body.fechaCancelacion;
             this.fechaRegistro = this.body.fechaRegistro;
           }
-          if ((this.body.sociedadProfesional = 1))
+          if (this.body.sociedadProfesional == "1") {
             this.sociedadProfesional = true;
-          else this.body.sociedadProfesional = 0;
-          this.sociedadProfesional = false;
+          } else if (this.body.sociedadProfesional == "0") {
+            this.sociedadProfesional = false;
+          }
         },
         err => {
           console.log(err);
@@ -266,8 +267,11 @@ export class DatosRegistralesComponent implements OnInit {
 
     if (this.body.numeroPoliza == undefined) this.body.numeroPoliza = "";
 
-    if (this.sociedadProfesional == true) this.body.sociedadProfesional = 1;
-    else this.body.sociedadProfesional = 0;
+    if (this.sociedadProfesional == true) {
+      this.body.sociedadProfesional = "1";
+    } else {
+      this.body.sociedadProfesional = "0";
+    }
 
     console.log(this.body);
     this.sigaServices.post("datosRegistrales_update", this.body).subscribe(
@@ -316,17 +320,19 @@ export class DatosRegistralesComponent implements OnInit {
   }
 
   desactivadoGuardar() {
+    //VALIDAR CONTADORNUMSSPP SOLO PUEDE SER NUMÉRICO
     if (
       this.body.objetoSocial != undefined &&
       !this.onlySpaces(this.body.objetoSocial) &&
       this.body.resena != undefined &&
       !this.onlySpaces(this.body.resena) &&
       this.fechaConstitucion != undefined &&
-      this.body.identificadorRegistroProvincial != undefined &&
-      !this.onlySpaces(this.body.identificadorRegistroProvincial) &&
-      this.body.numeroRegistro != undefined &&
-      !this.onlySpaces(this.body.numeroRegistro) &&
-      this.fechaRegistro != undefined
+      this.body.prefijoNumsspp != undefined &&
+      !this.onlySpaces(this.body.prefijoNumsspp) &&
+      this.body.contadorNumsspp != undefined &&
+      !this.onlySpaces(this.body.contadorNumsspp) &&
+      this.body.sufijoNumsspp != undefined &&
+      !this.onlySpaces(this.body.sufijoNumsspp)
     ) {
       return false;
     } else {
