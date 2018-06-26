@@ -125,7 +125,10 @@ export class SigaServices {
     retenciones_tipoRetencion: "retenciones/tipoRetencion",
     retenciones_search: "retenciones/search",
     retenciones_update: "retenciones/update",
-    integrantes_search: "busquedaPerJuridica/datosIntegrantesSearch"
+    integrantes_search: "busquedaPerJuridica/datosIntegrantesSearch",
+    integrantes_tipoColegio: "tarjetaIntegrantes/tipoColegio",
+    integrantes_provincias: "tarjetaIntegrantes/provincias",
+    integrantes_cargos: "tarjetaIntegrantes/cargos"
   };
 
   private menuToggled = new Subject<any>();

@@ -49,6 +49,7 @@ import { BusquedaFisicaObject } from "./../../../../app/models/BusquedaFisicaObj
 import { DatosNotarioItem } from "../../../models/DatosNotarioItem";
 import { DatosIntegrantesItem } from "../../../models/DatosIntegrantesItem";
 import { DatosIntegrantesObject } from "../../../models/DatosIntegrantesObject";
+import { DatosPersonaJuridicaComponent } from "../datosPersonaJuridica/datosPersonaJuridica.component";
 /*** COMPONENTES ***/
 
 @Component({
@@ -75,6 +76,7 @@ export class DatosIntegrantesComponent implements OnInit {
   disabledRadio: boolean = false;
   disabled: boolean = false;
   selectMultiple: boolean = false;
+  only: boolean = true;
   blockCrear: boolean = true;
   selectedItem: number = 10;
   first: number = 0;
@@ -112,7 +114,8 @@ export class DatosIntegrantesComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
-    private location: Location
+    private location: Location,
+    private fichasPosibles: DatosPersonaJuridicaComponent
   ) {}
 
   ngOnInit() {
@@ -121,17 +124,17 @@ export class DatosIntegrantesComponent implements OnInit {
       this.idPersona = this.usuarioBody[0].idPersona;
     }
     this.cols = [
-      { field: "nif", header: "administracion.usuarios.literal.NIF" },
+      { field: "nifCif", header: "administracion.usuarios.literal.NIF" },
       {
         field: "nombre",
         header: "administracion.parametrosGenerales.literal.nombre"
       },
-      { field: "apellidos1", header: "Apellidos" },
-      { field: "fechaInicioCargo", header: "Fecha de alta - fecha de baja" },
-      { field: "cargos", header: "Cargos del integrante" },
+      { field: "apellidos", header: "Apellidos" },
+      { field: "fechaHistorico", header: "Fecha de alta" },
+      { field: "cargo", header: "Cargos del integrante" },
       { field: "liquidacionComoSociedad", header: "Liquidación como sociedad" },
       { field: "ejerciente", header: "Ejerciente" },
-      { field: "participacion", header: "Participación en la sociedad" }
+      { field: "capitalSocial", header: "Participación en la sociedad" }
     ];
 
     this.rowsPerPage = [
@@ -154,22 +157,13 @@ export class DatosIntegrantesComponent implements OnInit {
     ];
 
     this.search();
-
-    // Descomentar si se quiere probar
-    this.unInteg();
-    this.masDe1Integ();
   }
   activarPaginacion() {
     if (!this.datos || this.datos.length == 0) return false;
     else return true;
   }
   // funciones de relleno de datos fantasmas
-  masDe1Integ() {
-    this.body1.nombre = "JACINTO";
-    this.datos.push(this.body1);
-    this.body2.nombre = "ALBERTO";
-    this.datos.push(this.body2);
-  }
+
   pInputText;
 
   isSelectMultiple() {
@@ -196,8 +190,27 @@ export class DatosIntegrantesComponent implements OnInit {
     this.datos.push(this.body);
   }
 
-  abrirFicha() {
-    this.openFicha = !this.openFicha;
+  abrirFicha(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    fichaPosible.activa = true;
+  }
+  cerrarFicha(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    fichaPosible.activa = false;
+  }
+
+  esFichaActiva(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    return fichaPosible.activa;
+  }
+  getFichaPosibleByKey(key): any {
+    let fichaPosible = this.fichasPosibles.getFichasPosibles().filter(elto => {
+      return elto.key === key;
+    });
+    if (fichaPosible && fichaPosible.length) {
+      return fichaPosible[0];
+    }
+    return {};
   }
   search() {
     this.historico = false;
@@ -217,7 +230,12 @@ export class DatosIntegrantesComponent implements OnInit {
           this.progressSpinner = false;
           this.searchIntegrantes = JSON.parse(data["body"]);
           this.datos = this.searchIntegrantes.datosIntegrantesItem;
-          this.table.paginator = true;
+          if (this.datos.length == 1) {
+            this.body = this.datos[0];
+            this.only = true;
+          } else {
+            this.only = false;
+          }
         },
         err => {
           console.log(err);
@@ -260,5 +278,22 @@ export class DatosIntegrantesComponent implements OnInit {
         },
         () => {}
       );
+  }
+
+  goToDetails(selectedDatos) {
+    console.log(selectedDatos);
+    if (!this.selectMultiple) {
+      var ir = null;
+      if (selectedDatos && selectedDatos.length > 0) {
+        ir = selectedDatos[0];
+      }
+      sessionStorage.removeItem("integrante");
+      sessionStorage.setItem("integrante", JSON.stringify(ir));
+      this.router.navigate(["detalleIntegrante"]);
+    } else {
+      this.editar = false;
+      this.numSelected = this.selectedDatos.length;
+      this.dniCorrecto = null;
+    }
   }
 }

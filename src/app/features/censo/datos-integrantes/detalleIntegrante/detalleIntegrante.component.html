@@ -1,9 +1,7 @@
 <div class="busqueda-container">
-
-  <!--DATOS GENERALES-->
   <div class="card">
     <div class="card-header header-ficha">
-      <div *ngIf="!openFicha" class="form-row">
+      <div *ngIf="!esFichaActiva('identificacion')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
             <i class="fa fa-users icon-ficha"> </i>
@@ -11,123 +9,223 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-end mb-1">
-            <label class="mr-auto title-ficha">Integrantes</label>
+            <label class="mr-auto title-ficha">Datos de Identificacion</label>
           </div>
           <div class="d-flex justify-content-between">
-            <div *ngIf="datosIntegrantes.datosIntegrantesItems.length == 1">
-              <label>{{"administracion.usuarios.literal.NIF" | translate}}
-                <span>{{ body.nif }}</span>
-              </label>
-              <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}
-                <span>{{ body.nombre }}</span>
-              </label>
-              <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}
-                <span>{{ body.apellidos }}</span>
-              </label>
-              <label>Fecha de alta – fecha de baja
-                <span>{{ body.fechaInicioCargo }} - {{ body.fechaFinCargo }}</span>
-              </label>
-              <label>Cargos del integrante
-                <span>{{ body.cargo }}</span>
-              </label>
-              <label>Liquidación como sociedad
-                <span> hola </span>
-              </label>
-              <label>Ejerciente
-                <span> mundo </span>
-              </label>
-              <label>Participación en la sociedad
-                <span>{{ body.participacionSociedad }}</span>
-              </label>
-            </div>
-            <div *ngIf="datosIntegrantes.datosIntegrantesItems.length > 1">
-              <div class="row">
-                <div *ngFor="let integrante of datosIntegrantes.datosIntegrantesItems; let last = last">
-                  <div *ngIf="!last">
-                    <p>&nbsp;{{ integrante.nombre }}, </p>
-                  </div>
-                  <div *ngIf="last">
-                    <p>&nbsp;{{ integrante.nombre }}</p>
-                  </div>
-                </div>
-                <div>
-                </div>
-              </div>
-            </div>
-            <i (click)="abrirFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+            <label>{{"administracion.usuarios.literal.NIF" | translate}}
+              <span>{{ body.nifCif }}</span>
+            </label>
+            <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}
+              <span>{{ body.nombre }}</span>
+            </label>
+            <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}
+              <span>{{ body.apellidos1 }}</span>
+            </label>
+            <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}
+              <span>{{ body.apellidos2 }} </span>
+            </label>
+            <i (click)="abrirFicha('identificacion')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
           </div>
+
+        </div>
+        <div *ngIf="esFichaActiva('identificacion')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+          <div class="img-colegiado">
+            <i class="far fa-users icon-ficha"></i>
+          </div>
+          <label class="title-ficha">Datos de Identificacion</label>
+          <i (click)="cerrarFicha('identificacion')" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+      <div *ngIf="esFichaActiva('identificacion')" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
           <i class="fa fa-users icon-ficha"> </i>
         </div>
-        <label class="title-ficha">Integrantes</label>
-        <i (click)="abrirFicha()" class="fa fa-angle-up ml-auto"></i>
+        <label class="title-ficha">Datos de Identificacion</label>
+        <i (click)="cerrarFicha('identificacion')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
-
-    <!--cuerpo datos generales-->
-    <div *ngIf="openFicha" class="card-body card-body-ficha">
-
-      <div class="m-3 d-flex text-right justify-content-end">
-        <div>
-          <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
+    <!--cuerpo datos identificacion-->
+    <div *ngIf="esFichaActiva('identificacion')" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="form-group col-lg-3 col-md-6">
+          <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
+          <input type="text" class="form-control" [(ngModel)]="body.nifCif" pInputText>
         </div>
-        <label *ngIf="activarPaginacion() == true" class="ml-3" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
-          <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+        <div class="form-group col-lg-3 col-md-6">
+          <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
+          <input type="text" class="form-control" [(ngModel)]="body.nombre" [disabled]="!editar" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-6">
+          <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}</label>
+          <input type="text" class="form-control" [(ngModel)]="body.apellidos1" (ngModelChange)="autogenerarDatos()" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-6">
+          <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}</label>
+          <input [(ngModel)]="body.apellidos2" type="text" class="form-control" [disabled]="!editar" pInputText>
+        </div>
       </div>
-      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-        [(selection)]="selectedDatos" (onRowSelect)="irEditarUsuario(selectedDatos)" pageLinks="2" dataKey="nif" [responsive]="true"
-        selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="activarPaginacion()"
-        paginatorPosition="both" [rows]="selectedItem">
-        <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-          [filter]="true" filterMatchMode="contains">
-          <ng-template let-datoH="rowData" pTemplate="body">
-
-            <span *ngIf="setItalic(datoH)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
-            <span *ngIf="!setItalic(datoH)">{{datoH[col.field]}}</span>
-
-          </ng-template>
-          <ng-template>
-            <ng-template *ngIf="col.field =='perfiles'" pTemplate="body" let-dato="rowData"  >
-              <p-multiSelect [options]="usuarios_perfil" styleClass="ui-column-filter" [style]="{'width':'100%'}" appendTo="body" (onChange)="confirmarRolDefecto($event, dato )"></p-multiSelect>
-            </ng-template>
-
-          </ng-template>
-        </p-column>
-
-        <ng-template pTemplate="paginatorLeft">
-          <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
-            <label>{{ "general.message.mostrar" | translate}}</label>
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-            <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
-            </div>
-            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
-              <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
-          </div>
-        </ng-template>
-
-
-
-      </p-dataTable>
-
       <br>
-      <div class="card-footer ">
+      <!-- <div class="card-footer ">
         <div class="text-right main-button ">
           <button (click)="anadirIntegrante()" pButton type="button" icon="fa-user-plus" iconPos="left" label="Nuevo"></button>
           <button (click)="editarIntegrante()" pButton type="button" icon="fa fa-edit" iconPos="left" label="Editar"></button>
           <button (click)="eliminarIntegrante()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="Borrar"></button>
           <button (click)="buscarIntegrante()" pButton type="button" icon="fa fa-search" iconPos="left" label="Historico/Buscar"></button>
         </div>
-      </div>
+      </div> -->
       <!--END DATOS GENERALES-->
     </div>
-    <!-- <p-growl [(value)]="msgs"></p-growl>
-    <div *ngIf="progressSpinner" class="overlay-spinner">
-      <div class="loader"></div>
-    </div> -->
+  </div>
+  <!-- COMIENZA COLEGIACION -->
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div *ngIf="!esFichaActiva('colegiacion')" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-users icon-ficha"> </i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha">Datos de Colegiación</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>Tipo de Colegio
+              <span>{{ body.idTipoColegio }}</span>
+            </label>
+            <label>Provincia
+              <span>{{ body.idProvincia }}</span>
+            </label>
+            <label>Numero de Colegiado
+              <span>{{ body.numColegiado }}</span>
+            </label>
+            <i (click)="abrirFicha('colegiacion')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+          </div>
+
+        </div>
+        <div *ngIf="esFichaActiva('colegiacion')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+          <div class="img-colegiado">
+            <i class="far fa-users icon-ficha"></i>
+          </div>
+          <label class="title-ficha">Datos de Colegiación</label>
+          <i (click)="cerrarFicha('colegiacion')" class="fa fa-angle-up ml-auto"></i>
+        </div>
+      </div>
+      <div *ngIf="esFichaActiva('colegiacion')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-users icon-ficha"> </i>
+        </div>
+        <label class="title-ficha">Datos de Colegiación</label>
+        <i (click)="cerrarFicha('colegiacion')" class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <!--cuerpo datos generales-->
+    <div *ngIf="esFichaActiva('colegiacion')" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="form-group col-lg-3 col-md-6">
+          <label>Tipo Colegio</label>
+          <p-dropdown [(ngModel)]="body.idTipoColegio" class="select-form" [options]="colegiosArray"></p-dropdown>
+        </div>
+        <div class="form-group col-lg-3 col-md-6">
+          <label>Provincia</label>
+          <p-dropdown [(ngModel)]="body.idProvincia" class="select-form" [options]="provinciasArray"></p-dropdown>
+        </div>
+        <div class="form-group col-lg-3 col-md-6">
+          <label>Numero de Colegiado</label>
+          <input type="text" class="form-control" [(ngModel)]="body.numColegiado" pInputText>
+        </div>
+
+      </div>
+      <br>
+      <!-- <div class="card-footer ">
+          <div class="text-right main-button ">
+            <button (click)="anadirIntegrante()" pButton type="button" icon="fa-user-plus" iconPos="left" label="Nuevo"></button>
+            <button (click)="editarIntegrante()" pButton type="button" icon="fa fa-edit" iconPos="left" label="Editar"></button>
+            <button (click)="eliminarIntegrante()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="Borrar"></button>
+            <button (click)="buscarIntegrante()" pButton type="button" icon="fa fa-search" iconPos="left" label="Historico/Buscar"></button>
+          </div>
+        </div> -->
+      <!--END DATOS GENERALES-->
+    </div>
+  </div>
+
+  <!-- COMIENZA VINCULACION -->
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div *ngIf="!esFichaActiva('vinculacion')" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-users icon-ficha"> </i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha">Vinculación con la Sociedad</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>Fecha Carga
+              <span>{{ body.fechaCargoInforme }}</span>
+            </label>
+            <label>Cargo
+              <span>{{ body.idCargo }}</span>
+            </label>
+            <label>Descripcion del Cargo
+              <span>{{ body.cargo }}</span>
+            </label>
+            <label>Participación Sociedad
+              <span>{{ body.capitalSocial }}</span>
+            </label>
+            <i (click)="abrirFicha('vinculacion')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+          </div>
+
+        </div>
+        <div *ngIf="esFichaActiva('vinculacion')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+          <div class="img-colegiado">
+            <i class="far fa-users icon-ficha"></i>
+          </div>
+          <label class="title-ficha">Vinculación con la Sociedad</label>
+          <i (click)="cerrarFicha('vinculacion')" class="fa fa-angle-up ml-auto"></i>
+        </div>
+      </div>
+      <div *ngIf="esFichaActiva('vinculacion')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-users icon-ficha"> </i>
+        </div>
+        <label class="title-ficha">Vinculación con la Sociedad</label>
+        <i (click)="cerrarFicha('vinculacion')" class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <!--cuerpo datos generales-->
+    <div *ngIf="esFichaActiva('vinculacion')" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="form-group col-lg-3 col-md-6">
+          <label>Fecha Carga</label>
+          <p-calendar [locale]="es" [(ngModel)]="body.fechaCargoInforme" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+        </div>
+        <div class="form-group col-lg-3 col-md-6">
+          <label>Cargo</label>
+          <p-dropdown [(ngModel)]="body.idCargo" class="select-form" [options]="cargosArray"></p-dropdown>
+
+        </div>
+        <div class="form-group col-lg-3 col-md-6">
+          <label>Descripcion del Cargo</label>
+          <input type="text" class="form-control" [(ngModel)]="body.cargo" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-6">
+          <label>Participación Sociedad</label>
+          <input type="text" class="form-control" [(ngModel)]="body.capitalSocial" pInputText>
+        </div>
+      </div>
+      <br>
+      <!-- <div class="card-footer ">
+          <div class="text-right main-button ">
+            <button (click)="anadirIntegrante()" pButton type="button" icon="fa-user-plus" iconPos="left" label="Nuevo"></button>
+            <button (click)="editarIntegrante()" pButton type="button" icon="fa fa-edit" iconPos="left" label="Editar"></button>
+            <button (click)="eliminarIntegrante()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="Borrar"></button>
+            <button (click)="buscarIntegrante()" pButton type="button" icon="fa fa-search" iconPos="left" label="Historico/Buscar"></button>
+          </div>
+        </div> -->
+      <!--END DATOS GENERALES-->
+    </div>
+  </div>
+</div>

@@ -83,14 +83,17 @@ export class DetalleIntegranteComponent implements OnInit {
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   permisosTree: any;
   permisosArray: any[];
+  cargosArray: any[];
+  colegiosArray: any[];
+  provinciasArray: any[];
   derechoAcceso: any;
   activacionEditar: boolean;
   selectAll: boolean = false;
   progressSpinner: boolean = false;
   numSelected: number = 0;
-
+  masFiltros: boolean = false;
   openFicha: boolean = false;
-
+  fichasPosibles: any[];
   body: DatosIntegrantesItem = new DatosIntegrantesItem();
   datosIntegrantes: DatosIntegrantesObject = new DatosIntegrantesObject();
 
@@ -116,6 +119,20 @@ export class DetalleIntegranteComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.fichasPosibles = [
+      {
+        key: "identificacion",
+        activa: true
+      },
+      {
+        key: "colegiacion",
+        activa: true
+      },
+      {
+        key: "vinculacion",
+        activa: false
+      }
+    ];
     this.cols = [
       { field: "nif", header: "administracion.usuarios.literal.NIF" },
       {
@@ -148,20 +165,37 @@ export class DetalleIntegranteComponent implements OnInit {
         value: 40
       }
     ];
-    // Descomentar si se quiere probar
-    this.unInteg();
-    this.masDe1Integ();
+    this.sigaServices.get("integrantes_tipoColegio").subscribe(
+      n => {
+        this.colegiosArray = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+    this.sigaServices.get("integrantes_provincias").subscribe(
+      n => {
+        this.provinciasArray = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+    this.sigaServices.get("integrantes_cargos").subscribe(
+      n => {
+        this.cargosArray = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+  verMasFiltros() {
+    this.masFiltros = !this.masFiltros;
   }
   activarPaginacion() {
     if (!this.datos || this.datos.length == 0) return false;
     else return true;
-  }
-  // funciones de relleno de datos fantasmas
-  masDe1Integ() {
-    this.body1.nombre = "JACINTO";
-    this.datos.push(this.body1);
-    this.body2.nombre = "ALBERTO";
-    this.datos.push(this.body2);
   }
   pInputText;
 
@@ -174,23 +208,27 @@ export class DetalleIntegranteComponent implements OnInit {
       this.selectedDatos = [];
     }
   }
-  unInteg() {
-    this.body.nifCif = "String";
-    this.body.nombre = "PEPE";
-    this.body.apellidos1 = "String";
-    this.body.apellidos2 = "String";
-    this.body.cargo = "String";
-    this.body.cargo = "String";
-    this.body.fechaCargo = "String";
-    this.body.fechaBajaCargo = "String";
-    this.body.numColegiado = "String";
-    this.body.idTipoColegio = "String";
-
-    this.datos.push(this.body);
+  abrirFicha(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    fichaPosible.activa = true;
+  }
+  cerrarFicha(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    fichaPosible.activa = false;
   }
 
-  abrirFicha() {
-    this.openFicha = !this.openFicha;
+  esFichaActiva(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    return fichaPosible.activa;
+  }
+  getFichaPosibleByKey(key): any {
+    let fichaPosible = this.fichasPosibles.filter(elto => {
+      return elto.key === key;
+    });
+    if (fichaPosible && fichaPosible.length) {
+      return fichaPosible[0];
+    }
+    return {};
   }
   search() {
     this.historico = true;
