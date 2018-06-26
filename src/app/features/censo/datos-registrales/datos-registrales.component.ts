@@ -73,8 +73,9 @@ export class DatosRegistralesComponent implements OnInit {
   select: any[];
   es: any = esCalendar;
   msgs: Message[];
+  bodyInicio: DatosRegistralesItem = new DatosRegistralesItem();
   body: DatosRegistralesItem = new DatosRegistralesItem();
-  bodyviejo: DatosRegistralesItem = new DatosRegistralesItem();
+  bodyAnterior: DatosRegistralesItem = new DatosRegistralesItem();
   personaSearch: DatosRegistralesObject = new DatosRegistralesObject();
 
   fechaConstitucion: Date;
@@ -109,11 +110,12 @@ export class DatosRegistralesComponent implements OnInit {
   tratamientos: any[];
   actividadesDisponibles: any[];
   fecha;
-
+  fechaCorrecta: boolean;
   fechaConst: Date;
   fechaBaja: Date;
   fechaReg: Date;
   fechaCanc: Date;
+  contadorNoCorrecto: boolean;
 
   selectActividad: any[];
   idiomas: any[] = [
@@ -150,13 +152,13 @@ export class DatosRegistralesComponent implements OnInit {
 
   ngOnInit() {
     this.desactivadoGuardar();
-    this.bodyviejo = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    if (this.bodyviejo != null) {
-      this.body.idPersona = this.bodyviejo[0].idPersona;
-      this.idPersonaEditar = this.bodyviejo[0].idPersona;
+    this.bodyAnterior = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    if (this.bodyAnterior != null) {
+      this.body.idPersona = this.bodyAnterior[0].idPersona;
+      this.idPersonaEditar = this.bodyAnterior[0].idPersona;
     }
-
     this.search();
+
     console.log(this.body);
 
     this.sigaServices.get("datosRegistrales_actividadesDisponible").subscribe(
@@ -182,6 +184,26 @@ export class DatosRegistralesComponent implements OnInit {
       { label: "Mujer", value: "M" },
       { label: "Hombre", value: "H" }
     ];
+  }
+
+  compruebaFechaConstitucion() {
+    if (this.fechaConstitucion > new Date()) {
+      this.fechaCorrecta = false;
+    } else {
+      this.fechaCorrecta = true;
+      return true;
+    }
+  }
+
+  compruebaRegistro() {
+    var a = this.body.contadorNumsspp;
+    if (Number(this.body.contadorNumsspp)) {
+      this.contadorNoCorrecto = false;
+      return true;
+    } else {
+      this.contadorNoCorrecto = true;
+      return false;
+    }
   }
 
   getActividadesPersona() {
@@ -320,17 +342,21 @@ export class DatosRegistralesComponent implements OnInit {
   }
 
   desactivadoGuardar() {
+    //VALIDAR CONTADORNUMSSPP SOLO PUEDE SER NUMÉRICO y si no hay cambios no se debe guardar
     if (
       this.body.objetoSocial != undefined &&
       !this.onlySpaces(this.body.objetoSocial) &&
       this.body.resena != undefined &&
       !this.onlySpaces(this.body.resena) &&
       this.fechaConstitucion != undefined &&
-      this.body.identificadorRegistroProvincial != undefined &&
-      !this.onlySpaces(this.body.identificadorRegistroProvincial) &&
-      this.body.numeroRegistro != undefined &&
-      !this.onlySpaces(this.body.numeroRegistro) &&
-      this.fechaRegistro != undefined
+      this.body.prefijoNumsspp != undefined &&
+      !this.onlySpaces(this.body.prefijoNumsspp) &&
+      this.body.contadorNumsspp != undefined &&
+      !this.onlySpaces(this.body.contadorNumsspp) &&
+      this.body.sufijoNumsspp != undefined &&
+      !this.onlySpaces(this.body.sufijoNumsspp) &&
+      this.compruebaRegistro() &&
+      this.compruebaFechaConstitucion()
     ) {
       return false;
     } else {

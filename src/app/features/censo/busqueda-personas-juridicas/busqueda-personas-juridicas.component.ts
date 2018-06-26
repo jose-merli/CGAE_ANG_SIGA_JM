@@ -80,10 +80,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   progressSpinner: boolean = false;
   tipos: any[];
   fechaConstitucion: Date;
-  textSelected: String = "{0} grupos seleccionados";
-  textFilter = "Elegir";
+  textSelected: String = "{0} etiquetas seleccionadas";
   fechaConstitucionArreglada: Date;
   historico: boolean = false;
+  numSelected: number = 0;
 
   constructor(
     private sigaServices: SigaServices,
@@ -235,7 +235,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       arrayDesde[2] = parseInt(arrayDesde[2]) + 1;
       let returnDesde =
         arrayDesde[0] + "-" + arrayDesde[1] + "-" + arrayDesde[2];
-      this.fechaConstitucionArreglada = new Date(returnDesde + "T02:00:05Z");
+      this.fechaConstitucionArreglada = new Date(returnDesde + "T12:00:05Z");
     } else {
       this.fechaConstitucionArreglada = undefined;
     }
@@ -256,8 +256,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       this.fechaConstitucion != undefined
     ) {
       this.blockCrear = false;
+      this.numSelected = this.selectedDatos.length;
     } else {
       this.blockCrear = true;
+      this.numSelected = this.selectedDatos.length;
     }
   }
 
@@ -273,9 +275,11 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.selectMultiple = !this.selectMultiple;
     if (!this.selectMultiple) {
       this.selectedDatos = [];
+      this.numSelected = 0;
     } else {
       this.selectAll = false;
       this.selectedDatos = [];
+      this.numSelected = 0;
     }
   }
 
@@ -494,6 +498,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     });
   }
 
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
+
   irEditarPersona(id) {
     if (!this.selectMultiple) {
       var ir = null;
@@ -512,6 +520,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     } else {
       this.editar = true;
       this.body = new PersonaJuridicaItem();
+      this.numSelected = this.selectedDatos.length;
     }
   }
 
@@ -519,8 +528,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     if (this.selectAll === true) {
       this.selectMultiple = false;
       this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
     } else {
       this.selectedDatos = [];
+      this.numSelected = 0;
     }
   }
 

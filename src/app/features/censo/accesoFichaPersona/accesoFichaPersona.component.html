@@ -20,8 +20,11 @@
                         <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}
                             <span>{{ body.nombre }} {{ body.apellido1 }} {{ body.apellido2 }}</span>
                         </label>
-                        <i (click)="redireccionar()" class="fa fa-rotate-right"></i>
-                        <i (click)="abrirFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+                        <div></div>
+                        <div><i (click)="redireccionar()" [ngClass]="{ 'fa fa-rotate-right redirect': openFicha, 'fa fa-rotate-right redirect': !openFicha} "></i>
+                            <i (click)="abrirFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -30,7 +33,10 @@
                     <i class=" fa fa-user   icon-ficha"></i>
                 </div>
                 <label class="title-ficha">Notario</label>
-                <i (click)="abrirFicha()" class="fa fa-angle-up ml-auto"></i>
+                <div class="ml-auto">
+                    <i (click)="redireccionar()" class="fa fa-rotate-right redirect"></i>
+                    <i (click)="abrirFicha()" class="fa fa-angle-up "></i>
+                </div>
             </div>
         </div>
 
@@ -42,7 +48,7 @@
                         <i class="fa fa-user" style="font-size:130px;color:grey"></i>
                         <p-fileUpload #fubauto chooseLabel="" class="edit" mode="basic" name="file" auto="true" accept="image/*" (change)="uploadImage($event)"
                             auto="true">
-                        </p-fileUpload>
+                            </p-fileUpload>
                     </div>
                 </div>
                 <div class="bloque col-lg-6 col-md-6">

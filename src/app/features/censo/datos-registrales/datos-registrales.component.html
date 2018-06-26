@@ -68,6 +68,7 @@
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.general.literal.FechaConstitucion" | translate}} (*)</label>
               <p-calendar [(ngModel)]="fechaConstitucion" [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
+              <div *ngIf="fechaCorrecta == false"><label class="labelError">La fecha no puede ser superior a la actual **** </label></div>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}</label>
@@ -75,7 +76,7 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Actividad Profesional: </label> <br>
-              <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='selectActividad' [options]="actividadesDisponibles"
+              <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='body.actividades' [options]="actividadesDisponibles"
                 optionLabel="label" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" [panelStyle]="{width:'100%'}"></p-multiSelect>
             </div>
           </div>
@@ -83,16 +84,28 @@
 
         <div class="bloque col-lg-6 col-md-6">
           <div class="form-row">
+            <div class="form-row col-lg-6 col-md-6">
+              <div class="col-lg-12 col-md-12">
+                <label>{{"censo.consultaDatosRegistrales.literal.numRegistro" | translate}} (*)</label>
+              </div>
+              <div class="form-group col-lg-4 col-md-4">
+                <input [(ngModel)]="body.prefijoNumsspp" type="text" class="form-control" pInputText>
+              </div>
+              <div class="form-group col-lg-4 col-md-4">
+                <input [(ngModel)]="body.contadorNumsspp" type="text" class="form-control" pInputText>
+                <div *ngIf="contadorNoCorrecto == true"><label class="labelError">Solo números **** </label></div>
+              </div>
+              <div class="form-group col-lg-4 col-md-4">
+                <input [(ngModel)]="body.sufijoNumsspp" type="text" class="form-control" pInputText>
+              </div>
+            </div>
+
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.consultaDatosRegistrales.literal.idRegProv" | translate}} (*)</label>
+              <label>{{"censo.consultaDatosRegistrales.literal.idRegProv" | translate}}</label>
               <input [(ngModel)]="body.identificadorRegistroProvincial" type="text" class="form-control" pInputText>
             </div>
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.consultaDatosRegistrales.literal.numRegistro" | translate}} (*)</label>
-              <input [(ngModel)]="body.numeroRegistro" type="text" class="form-control" pInputText>
-            </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
-              <label>{{"censo.consultaDatosRegistrales.literal.fechaRegistro" | translate}} (*)</label>
+              <label>{{"censo.consultaDatosRegistrales.literal.fechaRegistro" | translate}}</label>
               <p-calendar [(ngModel)]="fechaRegistro" [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
