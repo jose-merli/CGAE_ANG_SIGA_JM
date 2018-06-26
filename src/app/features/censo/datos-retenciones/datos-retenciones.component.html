@@ -12,17 +12,17 @@
                 </div>
                 <div class="col-lg-11 col-md-10">
                     <div class="d-flex justify-content-end mb-1">
-                        <label class="mr-auto title-ficha">Retenciones</label>
+                        <label class="mr-auto title-ficha">{{"menu.justiciaGratuita.maestros.retenciones" | translate}}</label>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <label>Fecha Inicio
+                        <label>{{"facturacion.seriesFacturacion.literal.fInicio" | translate}}
                             <span>{{retencionNow.fechaInicio | date: "dd-MM-yyyy"}}</span>
                         </label>
 
-                        <label>Descripción
+                        <label>{{"general.description" | translate}}
                             <span>{{retencionNow.descripcionRetencion}}</span>
                         </label>
-                        <label>Retención
+                        <label>{{"FactSJCS.mantRetencionesJ.literal.tramoLec" | translate}}
                             <span>{{retencionNow.porcentajeRetencion}}</span>
                         </label>
                         <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
@@ -33,7 +33,7 @@
                 <div class="img-colegiado">
                     <i class="fa fa-dollar icon-ficha"></i>
                 </div>
-                <label class="title-ficha">Retenciones</label>
+                <label class="title-ficha">{{"menu.justiciaGratuita.maestros.retenciones" | translate}}</label>
                 <i class="fa fa-angle-up ml-auto"></i>
             </div>
         </div>
