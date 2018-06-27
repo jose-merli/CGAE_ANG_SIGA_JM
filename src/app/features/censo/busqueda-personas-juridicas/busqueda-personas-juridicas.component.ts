@@ -108,6 +108,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     if (sessionStorage.getItem("busqueda") != null) {
       this.body = JSON.parse(sessionStorage.getItem("busqueda"));
       sessionStorage.removeItem("busqueda");
+      this.Search();
     }
     this.sigaServices.get("busquedaPerJuridica_tipo").subscribe(
       n => {
@@ -173,12 +174,12 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     ];
 
     // Poner check "Sociedades Profesionales a activo pork "Sociedades Profesionales a activo por defecto"
-    this.body.sociedadesProfesionales = true;
-    if (sessionStorage.getItem("busquedaJuridica") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("busquedaJuridica"));
-      sessionStorage.removeItem("busquedaJuridica");
-      this.Search();
-    }
+    // this.body.sociedadesProfesionales = true;
+    // if (sessionStorage.getItem("busquedaJuridica") != null) {
+    //   this.body = JSON.parse(sessionStorage.getItem("busquedaJuridica"));
+    //   sessionStorage.removeItem("busquedaJuridica");
+    //   this.Search();
+    // }
   }
 
   toHistorico() {
@@ -228,18 +229,35 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     );
   }
 
+  // arreglarFecha() {
+  //   if (this.fechaConstitucion != undefined) {
+  //     let fechaString = JSON.stringify(this.fechaConstitucion);
+  //     fechaString = fechaString.substring(1, 11);
+  //     let arrayDesde: any[] = fechaString.split("-");
+  //     arrayDesde[2] = parseInt(arrayDesde[2]) + 1;
+  //     let returnDesde =
+  //       arrayDesde[0] + "-" + arrayDesde[1] + "-" + arrayDesde[2];
+  //     this.fechaConstitucionArreglada = new Date(returnDesde + "T12:00:05Z");
+  //   } else {
+  //     this.fechaConstitucionArreglada = undefined;
+  //   }
+  // }
+
   arreglarFecha() {
     if (this.fechaConstitucion != undefined) {
-      let fechaString = JSON.stringify(this.fechaConstitucion);
-      fechaString = fechaString.substring(1, 11);
-      let arrayDesde: any[] = fechaString.split("-");
-      arrayDesde[2] = parseInt(arrayDesde[2]) + 1;
-      let returnDesde =
-        arrayDesde[0] + "-" + arrayDesde[1] + "-" + arrayDesde[2];
-      this.fechaConstitucionArreglada = new Date(returnDesde + "T12:00:05Z");
+      let jsonDate = JSON.stringify(this.fechaConstitucion);
+      let rawDate = jsonDate.slice(1, -1);
+      if (rawDate.length < 14) {
+        let splitDate = rawDate.split("-");
+        let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+        this.fechaConstitucion = new Date((arrayDate += "T00:00:00.001Z"));
+      } else {
+        this.fechaConstitucion = new Date(rawDate);
+      }
     } else {
-      this.fechaConstitucionArreglada = undefined;
+      this.fechaConstitucion = undefined;
     }
+    this.body.fechaConstitucion = this.fechaConstitucion;
   }
 
   activarPaginacion() {
@@ -301,7 +319,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.selectMultiple = false;
     this.selectedDatos = "";
 
-    this.body.fechaConstitucion = this.fechaConstitucionArreglada;
     if (this.body.tipo == undefined) {
       this.body.tipo = "";
     }
@@ -429,6 +446,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       }
     );
   }
+
   showduplicateFail(message: string) {
     this.msgs = [];
     this.msgs.push({
@@ -515,7 +533,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         "privilegios",
         JSON.stringify(this.activacionEditar)
       );
-      sessionStorage.setItem("busquedaJuridica", JSON.stringify(this.body));
       sessionStorage.setItem("first", JSON.stringify(this.table.first));
       this.router.navigate(["fichaPersonaJuridica"]);
     } else {

@@ -1,6 +1,6 @@
 <div class="busqueda-container">
   <div class="card">
-    <div class="card-header header-ficha">
+    <div class="card-header header-ficha" (click)="abreCierraFicha('integrantes')">
       <div *ngIf="!esFichaActiva('integrantes')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -37,14 +37,14 @@
             <label>{{"censo.consultaComponentesJuridicos.literal.Participacion" | translate}}
               <span>{{ body.participacion }}</span>
             </label>
-            <i (click)="abrirFicha('integrantes')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
           </div>
           <div *ngIf="!only" class="d-flex justify-content-between">
             <div class="row">
               <div *ngFor="let integrante of datos">
                 <label>&nbsp;{{ integrante.nombre }}</label>
               </div>
-              <i (click)="abrirFicha('integrantes')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+              <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
             </div>
           </div>
         </div>
@@ -53,7 +53,7 @@
             <i class="far fa-users icon-ficha"></i>
           </div>
           <label class="title-ficha">{{"gratuita.operarEJG.literal.datosIntegrantes" | translate}}</label>
-          <i (click)="cerrarFicha('integrantes')" class="fa fa-angle-up ml-auto"></i>
+          <i class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
       <div *ngIf="esFichaActiva('integrantes')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -61,7 +61,7 @@
           <i class="fa fa-users icon-ficha"> </i>
         </div>
         <label class="title-ficha">{{"censo.datosRegistrales.literal.integrantes" | translate}}</label>
-        <i (click)="cerrarFicha('integrantes')" class="fa fa-angle-up ml-auto"></i>
+        <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
 
