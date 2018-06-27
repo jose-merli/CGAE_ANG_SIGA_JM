@@ -190,19 +190,16 @@ export class DatosIntegrantesComponent implements OnInit {
     this.datos.push(this.body);
   }
 
-  abrirFicha(key) {
-    let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = true;
-  }
-  cerrarFicha(key) {
-    let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = false;
-  }
-
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
   }
+
+  abreCierraFicha(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    fichaPosible.activa = !fichaPosible.activa;
+  }
+
   getFichaPosibleByKey(key): any {
     let fichaPosible = this.fichasPosibles.getFichasPosibles().filter(elto => {
       return elto.key === key;
