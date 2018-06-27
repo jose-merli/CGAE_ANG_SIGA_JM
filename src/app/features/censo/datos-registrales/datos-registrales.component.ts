@@ -211,11 +211,10 @@ export class DatosRegistralesComponent implements OnInit {
       .post("datosRegistrales_actividadesPersona", this.body)
       .subscribe(
         data => {
-          this.body.actividades = [];
-          let seleccionadas = JSON.parse(data["body"]).combooItems;
-          seleccionadas.forEach((value: any, index: number) => {
-            this.body.actividades.push(value.value);
-          });
+          this.selectActividad = JSON.parse(data["body"]).combooItems;
+          // seleccionadas.forEach((value: any, index: number) => {
+          //   this.selectActividad.push(value.value);
+          // });
         },
         err => {
           console.log(err);
