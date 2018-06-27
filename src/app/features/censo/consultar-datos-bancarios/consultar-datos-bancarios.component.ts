@@ -103,6 +103,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   bodyDatosBancariosAnexo: DatosBancariosSearchAnexosItem = new DatosBancariosSearchAnexosItem();
   bodyDatosBancariosAnexoSearch: DatosBancariosAnexoObject = new DatosBancariosAnexoObject();
+  bodyEditar: DatosBancariosSearchAnexosItem = new DatosBancariosSearchAnexosItem();
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -742,36 +743,17 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.table.reset();
   }
 
-  activarEdicion(dato) {
-    console.log("datrte", dato);
-    // this.editar = !this.editar;
+  isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
-
-    //this.actualizarAnexos(dato);
+    if (!this.selectMultiple) {
+      this.numSelected = 0;
+      this.selectedDatos = [];
+    } else {
+      this.selectAll = false;
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
   }
-
-  // onChangeSelectAll() {
-  //   if (this.selectAll === true) {
-  //     this.numSelected = this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem.length;
-  //     this.selectMultiple = false;
-  //     this.selectedDatos = this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem;
-  //   } else {
-  //     this.selectedDatos = [];
-  //     this.numSelected = 0;
-  //   }
-  // }
-
-  // isSelectMultiple() {
-  //   this.selectMultiple = !this.selectMultiple;
-  //   if (!this.selectMultiple) {
-  //     this.numSelected = 0;
-  //     this.selectedDatos = [];
-  //   } else {
-  //     this.selectAll = false;
-  //     this.selectedDatos = [];
-  //     this.numSelected = 0;
-  //   }
-  // }
 
   // Operaciones insertar anexo
 
@@ -923,34 +905,83 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     return this.formValido;
   }
 
+  editarDescripcion() {
+    var keepGoing = true;
+
+    this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem.forEach(
+      (value: DatosBancariosSearchAnexosItem, key: number) => {
+        if (keepGoing) {
+          if (value.editar == true) {
+            this.bodyEditar = new DatosBancariosSearchAnexosItem();
+            this.bodyEditar.idPersona = value.idPersona;
+            this.bodyEditar.idCuenta = value.idCuenta;
+            this.bodyEditar.idAnexo = value.idAnexo;
+            this.bodyEditar.idMandato = value.idMandato;
+            this.bodyEditar.esquema = "";
+            this.bodyEditar.firmaLugar = value.firmaLugar;
+
+            if (value.fechaUso != null) {
+              let fUso = this.obtenerFecha(value.fechaUso);
+              this.bodyEditar.fechaUsoDate = new Date(fUso);
+            } else {
+              this.bodyEditar.fechaUsoDate = null;
+            }
+
+            if (value.firmaFecha != null) {
+              let fecha = this.obtenerFecha(value.firmaFecha);
+              let fFirma = fecha.replace(/\//g, "-");
+              this.bodyEditar.firmaFechaDate = new Date(
+                (fFirma += "T00:00:00.001Z")
+              );
+            } else {
+              this.bodyEditar.firmaFecha = null;
+            }
+
+            this.bodyEditar.descripcion = value.descripcion;
+            console.log("Editar fila", this.bodyEditar);
+
+            keepGoing = false;
+          }
+        }
+      }
+    );
+
+    this.actualizar(this.bodyEditar);
+  }
+
   actualizarAnexos() {
     this.bodyDatosBancariosAnexo.firmaFechaDate = this.firmaFechaDate;
     this.bodyDatosBancariosAnexo.firmaLugar = this.firmaLugar;
-    console.log("Esdita", this.bodyDatosBancariosAnexo);
+
+    this.actualizar(this.bodyDatosBancariosAnexo);
+  }
+
+  actualizar(body) {
     this.progressSpinner = true;
-    this.sigaServices
-      .post("anexos_update", this.bodyDatosBancariosAnexo)
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.bodyDatosBancariosAnexo.status = data.status;
+    this.sigaServices.post("anexos_update", body).subscribe(
+      data => {
+        this.progressSpinner = false;
+        this.bodyDatosBancariosAnexo.status = data.status;
 
-          this.showSuccess("Se han editado correctamente los datos");
+        this.showSuccess("Se han editado correctamente los datos");
 
-          this.displayFirmar = false;
-        },
-        error => {
-          this.bodyDatosBancariosAnexoSearch = JSON.parse(error["error"]);
-          this.showFail(
-            JSON.stringify(this.bodyDatosBancariosAnexoSearch.error.message)
-          );
-          console.log(error);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.cargarDatosAnexos();
-        }
-      );
+        this.displayFirmar = false;
+      },
+      error => {
+        this.bodyDatosBancariosAnexoSearch = JSON.parse(error["error"]);
+        this.showFail(
+          JSON.stringify(this.bodyDatosBancariosAnexoSearch.error.message)
+        );
+        console.log(error);
+        this.progressSpinner = false;
+      },
+      () => {
+        this.selectedProductoServicio = [];
+        this.comboProductoServicio = [];
+
+        this.cargarDatosAnexos();
+      }
+    );
   }
 
   onBasicUpload(event) {
@@ -958,7 +989,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   editarCompleto(event) {
-    console.log(event);
     let data = event.data;
     //compruebo si la edicion es correcta con la basedatos
     if (this.onlySpaces(data.descripcion)) {
@@ -968,20 +998,19 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.blockCrear = false;
       this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem.forEach(
         (value: DatosBancariosSearchAnexosItem, key: number) => {
-          if (value.tipo == "MANDATO") {
-            if (value.idMandato == data.idMandato) {
-              value.editar = true;
-            }
-          } else {
-            if (value.idAnexo == data.idAnexo) {
+          if (value.tipo == "ANEXO") {
+            if (
+              value.idMandato == data.idMandato &&
+              value.idAnexo == data.idAnexo
+            ) {
               value.editar = true;
             }
           }
         }
       );
-      console.log(this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem);
     }
   }
+
   onlySpaces(str) {
     let i = 0;
     var ret;
@@ -994,6 +1023,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     }
     return ret;
   }
+
   // Métodos comunes
 
   showFail(mensaje: string) {
