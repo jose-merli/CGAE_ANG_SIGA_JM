@@ -58,6 +58,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   displayFirmar: boolean = false;
   displayNuevo: boolean = false;
   isEditable: boolean = false;
+  isCancelEdit: boolean = false;
 
   idCuenta: String;
   idPersona: String;
@@ -74,6 +75,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   msgs: Message[];
   usuarioBody: any[];
   cols: any = [];
+  cols2: any = [];
   rowsPerPage: any = [];
   tipoCuenta: any[] = [];
   selectedTipo: any[] = [];
@@ -104,6 +106,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   bodyDatosBancariosAnexo: DatosBancariosSearchAnexosItem = new DatosBancariosSearchAnexosItem();
   bodyDatosBancariosAnexoSearch: DatosBancariosAnexoObject = new DatosBancariosAnexoObject();
   bodyEditar: DatosBancariosSearchAnexosItem = new DatosBancariosSearchAnexosItem();
+
+  averahora: boolean = false;
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -139,33 +143,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.cargarModoNuevoRegistro();
     }
 
-    // Columnas para la ficha Listado ficheros anexos
-    this.cols = [
-      {
-        field: "descripcion",
-        header: "Descripcion"
-      },
-      {
-        field: "tipo",
-        header: "Tipo"
-      },
-      {
-        field: "tipoMandato",
-        header: "Tipo Mandato"
-      },
-      {
-        field: "fechaUso",
-        header: "Fecha Uso"
-      },
-      {
-        field: "firmaFecha",
-        header: "Fecha de Firma"
-      },
-      {
-        field: "firmaLugar",
-        header: "Lugar de la firma"
-      }
-    ];
+    // Listado ficheros anexos
 
     this.rowsPerPage = [
       {
@@ -185,8 +163,27 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         value: 40
       }
     ];
+
+    this.cols = [{ field: "descripcion", header: "Descripcion" }];
+    this.cols2 = [
+      { field: "tipo", header: "Tipo" },
+      { field: "tipoMandato", header: "Tipo mandato" },
+      { field: "fechaUso", header: "Fecha Uso" },
+      { field: "firmaFecha", header: "Fecha de firma" },
+      { field: "firmaLugar", header: "Lugar de la firma" }
+    ];
   }
 
+  // setItalic(datoH) {
+  //   let a = datoH;
+  //   if (datoH.tipo == "ANEXO") {
+  //     this.averahora = true;
+  //     return true;
+  //   } else if (datoH.tipo == "MANDATO") {
+  //     this.averahora = false;
+  //     return false;
+  //   }
+  // }
   ngAfterViewChecked() {
     this.changeDetectorRef.detectChanges();
   }
@@ -938,6 +935,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
             }
 
             this.bodyEditar.descripcion = value.descripcion;
+            this.bodyEditar.tipo = value.tipo;
             console.log("Editar fila", this.bodyEditar);
 
             keepGoing = false;
@@ -946,14 +944,18 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       }
     );
 
-    this.actualizar(this.bodyEditar);
+    this.actualizarDescripcionAnexo(this.bodyEditar);
   }
 
-  actualizarAnexos() {
+  firmarFicheroAnexo() {
     this.bodyDatosBancariosAnexo.firmaFechaDate = this.firmaFechaDate;
     this.bodyDatosBancariosAnexo.firmaLugar = this.firmaLugar;
 
     this.actualizar(this.bodyDatosBancariosAnexo);
+    // console.log("value selection", this.selectMultiple);
+    // this.selectedDatos = [];
+    // this.selectedDatos.push(this.datosPrevios);
+    this.selectMultiple = false;
   }
 
   actualizar(body) {
@@ -984,12 +986,30 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     );
   }
 
+  actualizarDescripcionAnexo(body) {
+    if (body.tipo == "ANEXO") {
+      this.actualizar(body);
+      this.editar = false;
+    } else {
+      this.showFail("No se puede editar la descripción de un mandato.");
+      this.selectedProductoServicio = [];
+      this.comboProductoServicio = [];
+      this.editar = false;
+      this.cargarDatosAnexos();
+    }
+  }
+
   onBasicUpload(event) {
     this.showInfo("Fichero adjuntado");
   }
 
+  onEditCancel() {
+    this.editar = false;
+  }
+
   editarCompleto(event) {
     let data = event.data;
+    console.log("DAta aaaa", data);
     //compruebo si la edicion es correcta con la basedatos
     if (this.onlySpaces(data.descripcion)) {
       this.blockCrear = true;
@@ -998,13 +1018,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.blockCrear = false;
       this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem.forEach(
         (value: DatosBancariosSearchAnexosItem, key: number) => {
-          if (value.tipo == "ANEXO") {
-            if (
-              value.idMandato == data.idMandato &&
-              value.idAnexo == data.idAnexo
-            ) {
-              value.editar = true;
-            }
+          // if (value.tipo == "ANEXO") {
+          if (
+            value.idMandato == data.idMandato &&
+            value.idAnexo == data.idAnexo
+          ) {
+            value.editar = true;
+            // }
           }
         }
       );
@@ -1022,6 +1042,14 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       i++;
     }
     return ret;
+  }
+
+  controlarEdicion() {
+    if (!this.selectMultiple) {
+      this.editar = true;
+    } else {
+      this.editar = false;
+    }
   }
 
   // Métodos comunes
