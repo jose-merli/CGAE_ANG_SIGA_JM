@@ -241,14 +241,30 @@ export class DatosIntegrantesComponent implements OnInit {
         () => {}
       );
   }
-  editarIntegrante() {
-    this.router.navigate(["detalleIntegrante"]);
-  }
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;
     else return true;
   }
-
+  consultarIntegrante(selectedDatos) {
+    var ir = null;
+    if (selectedDatos && selectedDatos.length > 0) {
+      ir = selectedDatos[0];
+      ir.editar = false;
+    }
+    sessionStorage.removeItem("integrante");
+    sessionStorage.setItem("integrante", JSON.stringify(ir));
+    this.router.navigate(["detalleIntegrante"]);
+  }
+  editarIntegrante(selectedDatos) {
+    var ir = null;
+    if (selectedDatos && selectedDatos.length > 0) {
+      ir = selectedDatos[0];
+      ir.editar = true;
+    }
+    sessionStorage.removeItem("integrante");
+    sessionStorage.setItem("integrante", JSON.stringify(ir));
+    this.router.navigate(["detalleIntegrante"]);
+  }
   searchHistorico() {
     this.historico = true;
     let searchObject = new DatosIntegrantesItem();
@@ -284,9 +300,9 @@ export class DatosIntegrantesComponent implements OnInit {
       if (selectedDatos && selectedDatos.length > 0) {
         ir = selectedDatos[0];
       }
-      sessionStorage.removeItem("integrante");
-      sessionStorage.setItem("integrante", JSON.stringify(ir));
-      this.router.navigate(["detalleIntegrante"]);
+      // sessionStorage.removeItem("integrante");
+      // sessionStorage.setItem("integrante", JSON.stringify(ir));
+      // this.router.navigate(["detalleIntegrante"]);
     } else {
       this.editar = false;
       this.numSelected = this.selectedDatos.length;

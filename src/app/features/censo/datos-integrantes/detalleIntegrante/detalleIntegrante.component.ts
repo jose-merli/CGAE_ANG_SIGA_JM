@@ -120,18 +120,20 @@ export class DetalleIntegranteComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.body = JSON.parse(sessionStorage.getItem("integrante"));
+    this.editar = this.body.editar;
     this.fichasPosibles = [
       {
         key: "identificacion",
-        activa: true
+        activa: this.editar
       },
       {
         key: "colegiacion",
-        activa: true
+        activa: this.editar
       },
       {
         key: "vinculacion",
-        activa: true
+        activa: this.editar
       }
     ];
     this.cols = [
@@ -190,7 +192,6 @@ export class DetalleIntegranteComponent implements OnInit {
         console.log(err);
       }
     );
-    this.body = JSON.parse(sessionStorage.getItem("integrante"));
   }
   verMasFiltros() {
     this.masFiltros = !this.masFiltros;
@@ -198,6 +199,9 @@ export class DetalleIntegranteComponent implements OnInit {
   activarPaginacion() {
     if (!this.datos || this.datos.length == 0) return false;
     else return true;
+  }
+  backTo() {
+    this.location.back();
   }
   pInputText;
   transformaFecha(fecha) {
