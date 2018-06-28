@@ -132,7 +132,8 @@ export class SigaServices {
     integrantes_provincias: "tarjetaIntegrantes/provincias",
     integrantes_cargos: "tarjetaIntegrantes/cargos",
     integrantes_update: "tarjetaIntegrantes/update",
-    integrantes_insert: "tarjetaIntegrantes/create"
+    integrantes_insert: "tarjetaIntegrantes/create",
+    integrantes_delete: "tarjetaIntegrantes/delete"
   };
 
   private menuToggled = new Subject<any>();

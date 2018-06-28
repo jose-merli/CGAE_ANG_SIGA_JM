@@ -491,7 +491,7 @@ export class BusquedaGeneralComponent {
           integranteNew.nombre = "";
           integranteNew.completo = false;
           let integrantesNEW = [];
-          integrantesNEW.push(integrantesNEW);
+          integrantesNEW.push(integranteNew);
 
           sessionStorage.removeItem("nIntegrante");
           sessionStorage.setItem("nIntegrante", JSON.stringify(integrantesNEW));
