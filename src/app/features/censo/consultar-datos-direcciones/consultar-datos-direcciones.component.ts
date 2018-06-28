@@ -1,8 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 
 import { Location } from "@angular/common";
-import { Message } from "primeng/components/common/api";
 
+import { ConfirmationService, Message } from "primeng/components/common/api";
+
+import { TranslateService } from "../../../commons/translate/translation.service";
 import { SigaServices } from "./../../../_services/siga.service";
 
 import { DatosDireccionesItem } from "./../../../../app/models/DatosDireccionesItem";
@@ -20,6 +22,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   openFicha: boolean = false;
   progressSpinner: boolean = false;
   codigoPostalValido: boolean = false;
+  formValido: boolean = false;
 
   isEditable: boolean = false;
   nuevo: boolean = false;
@@ -46,7 +49,12 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   bodyCodigoPostal: DatosDireccionesCodigoPostalItem = new DatosDireccionesCodigoPostalItem();
   bodyCodigoPostalSearch: DatosDireccionesCodigoPostalObject = new DatosDireccionesCodigoPostalObject();
 
-  constructor(private location: Location, private sigaServices: SigaServices) {}
+  constructor(
+    private location: Location,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService,
+    private sigaServices: SigaServices
+  ) {}
 
   ngOnInit() {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
@@ -227,10 +235,10 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   recuperarProvinciaPoblacion() {
     this.sigaServices.post("direcciones_codigoPostal", this.body).subscribe(
       data => {
-        console.log("data", data);
-        this.bodyCodigoPostalSearch = JSON.parse(data["body"]);
-        this.bodyCodigoPostal = this.bodyCodigoPostalSearch.datosDireccionesItem[0];
+        //this.bodyCodigoPostalSearch = JSON.parse(data["body"]);
+        //this.bodyCodigoPostal = this.bodyCodigoPostalSearch.datosDireccionesItem[0];
 
+        this.bodyCodigoPostal = new DatosDireccionesCodigoPostalItem();
         // Esto es teórico
         this.bodyCodigoPostal.provincia = "LAS PALMAS";
       },
@@ -242,6 +250,46 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       }
     );
   }
+
+  validarFormulario(dato) {
+    if (this.validarCodigoPostal()) {
+      this.formValido = true;
+
+      this.confirmarInsercion(dato);
+    } else {
+      this.formValido = false;
+    }
+  }
+
+  confirmarInsercion(dato) {
+    let mess = this.translateService.instant("messages.deleteConfirmation");
+    let icon = "fa fa-info";
+
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.insertarRegistro(dato);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  insertarRegistro(dato) {}
+
+  restablecer() {}
+
+  duplicarRegistro() {}
 
   // Mensajes
   showFail(mensaje: string) {

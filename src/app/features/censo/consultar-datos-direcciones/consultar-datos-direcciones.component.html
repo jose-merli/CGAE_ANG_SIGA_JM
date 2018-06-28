@@ -19,7 +19,7 @@
             </div>
             <div class="d-flex justify-content-between">
               <br>
-              <i  [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+              <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
             </div>
           </div>
         </div>
@@ -66,8 +66,7 @@
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>Provincia</label>
-                <input [(ngModel)]="body.tipoPagoProducto" type="text" class="form-control" [disabled]="!editarMandato" (ngModelChange)="recuperarProvinciaPoblacion()"
-                  pInputText>
+                <input [(ngModel)]="body.provincia" type="text" class="form-control" (ngModelChange)="recuperarProvinciaPoblacion()" pInputText>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>Población</label>
@@ -103,9 +102,11 @@
           </div>
         </div>
         <br>
-        <div *ngIf="!nuevo" class="card-footer">
-          <div class="text-right main-button">
-            <button (click)="validarGuardarMandato()" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
+        <div class="card-footer ">
+          <div class="text-right main-button ">
+            <button *ngIf="!nuevo" (click)="duplicarRegistro()" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="Duplicar"></button>
+            <button (click)="validarFormulario(selectedDatos)" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
+            <button (click)="restablecer()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="Restablecer"></button>
           </div>
         </div>
       </div>
