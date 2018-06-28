@@ -230,6 +230,7 @@ import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-ju
 import { DatosGenerales } from "./features/censo/datos-generales/datos-generales.component";
 import { DatosRegistralesComponent } from "./features/censo/datos-registrales/datos-registrales.component";
 import { DatosRetencionesComponent } from "./features/censo/datos-retenciones/datos-retenciones.component";
+import { ServiciosInteresComponent } from "./features/censo/servicios-interes/servicios-interes.component";
 
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
@@ -287,6 +288,7 @@ import { DetalleIntegranteComponent } from "./features/censo/datos-integrantes/d
     DatosPersonaJuridicaComponent,
     DatosRetencionesComponent,
     DetalleIntegranteComponent,
+    ServiciosInteresComponent,
     //SJRS
     DesignacionesComponent,
     BajasTemporalesComponent,

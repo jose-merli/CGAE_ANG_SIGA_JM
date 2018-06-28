@@ -22,10 +22,7 @@
             <label>{{"censo.general.literal.FechaConstitucion" | translate}} <span>{{body.fechaConstitucion}}</span></label>
             <label>{{"censo.consultaDatosRegistrales.literal.Resenia" | translate}} <span>{{body.resena}}</span></label>
             <label>{{"censo.consultaDatosRegistrales.literal.objSocial" | translate}} <span>{{body.objSocial}}</span></label>
-            <label>{{"censo.consultaDatosRegistrales.literal.fechaRegistro" | translate}} <span>{{body.fechaRegistro}}</span></label>
-            <label>{{"censo.consultaDatosRegistrales.literal.idRegProv" | translate}} <span>{{body.identificadorRegistroProvincial}}</span></label>
             <label>{{"censo.consultaDatosRegistrales.literal.numRegistro" | translate}} <span>{{body.numeroRegistro}}</span></label>
-
             <i *ngIf="!esFichaActiva('registrales')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
@@ -78,7 +75,7 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.fichaCliente.literal.actprofesional" | translate}} </label> <br>
-              <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='body.actividades' [options]="actividadesDisponibles"
+              <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='selectActividad' [options]="actividadesDisponibles"
                 optionLabel="label" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" [panelStyle]="{width:'100%'}"></p-multiSelect>
             </div>
           </div>
