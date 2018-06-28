@@ -111,6 +111,7 @@ export class DatosRegistralesComponent implements OnInit {
   actividadesDisponibles: any[];
   fecha;
   fechaCorrecta: boolean;
+  fechaBajaCorrecta: boolean;
   fechaConst: Date;
   fechaBaja: Date;
   fechaReg: Date;
@@ -191,6 +192,20 @@ export class DatosRegistralesComponent implements OnInit {
       this.fechaCorrecta = false;
     } else {
       this.fechaCorrecta = true;
+      return true;
+    }
+  }
+
+  compruebaFechaBaja() {
+    let fecha = this.transformaFecha(this.fechaConstitucion);
+    if (this.fechaFin != undefined) {
+      if (fecha > this.fechaFin) {
+        this.fechaBajaCorrecta = false;
+      } else {
+        this.fechaBajaCorrecta = true;
+      }
+    }
+    if (this.compruebaFechaConstitucion()) {
       return true;
     }
   }
@@ -355,7 +370,8 @@ export class DatosRegistralesComponent implements OnInit {
       this.body.sufijoNumsspp != undefined &&
       !this.onlySpaces(this.body.sufijoNumsspp) &&
       this.compruebaRegistro() &&
-      this.compruebaFechaConstitucion()
+      this.compruebaFechaConstitucion() &&
+      this.compruebaFechaBaja()
     ) {
       return false;
     } else {
