@@ -125,7 +125,7 @@ export class DatosRegistralesComponent implements OnInit {
     { label: "Euskara", value: "euskera" },
     { label: "Galego", value: "gallego" }
   ];
-  textSelected: String = "{0} grupos seleccionados";
+  textSelected: String = "{0} actividades seleccionadas";
   idPersona: String;
   idPersonaEditar: String;
   datos: any[];

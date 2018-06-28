@@ -129,12 +129,27 @@ export class DatosIntegrantesComponent implements OnInit {
         field: "nombre",
         header: "administracion.parametrosGenerales.literal.nombre"
       },
-      { field: "apellidos", header: "Apellidos" },
-      { field: "fechaHistorico", header: "Fecha de alta" },
-      { field: "cargo", header: "Cargos del integrante" },
-      { field: "liquidacionComoSociedad", header: "Liquidación como sociedad" },
-      { field: "ejerciente", header: "Ejerciente" },
-      { field: "capitalSocial", header: "Participación en la sociedad" }
+      {
+        field: "apellidos",
+        header: "gratuita.mantenimientoTablasMaestra.literal.apellidos"
+      },
+      {
+        field: "fechaHistorico",
+        header: "administracion.usuarios.literal.fechaAlta"
+      },
+      { field: "cargo", header: "censo.busquedaComisiones.literal.cargos" },
+      {
+        field: "liquidacionComoSociedad",
+        header: "censo.busquedaClientes.literal.liquidacion"
+      },
+      {
+        field: "ejerciente",
+        header: "censo.consultaDatosGenerales.literal.ejerciente"
+      },
+      {
+        field: "capitalSocial",
+        header: "censo.consultaComponentesJuridicos.literal.Participacion"
+      }
     ];
 
     this.rowsPerPage = [
