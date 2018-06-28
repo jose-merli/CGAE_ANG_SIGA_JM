@@ -29,6 +29,12 @@ import { CensoDocumentacionComponent } from "./features/censo/censo-documentacio
 import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/gestion-subtiposCV.component";
 import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
 import { DetalleIntegranteComponent } from "./features/censo/datos-integrantes/detalleIntegrante/detalleIntegrante.component";
+import { AccesoFichaPersonaComponent } from "./features/censo/accesoFichaPersona/accesoFichaPersona.component";
+import { DatosBancariosComponent } from "./features/censo/datos-bancarios/datos-bancarios.component";
+import { ConsultarDatosBancariosComponent } from "./features/censo/consultar-datos-bancarios/consultar-datos-bancarios.component";
+import { DatosDireccionesComponent } from "./features/censo/datos-direcciones/datos-direcciones.component";
+import { ConsultarDatosDireccionesComponent } from "./features/censo/consultar-datos-direcciones/consultar-datos-direcciones.component";
+
 //Certificados
 import { ComunicacionInterprofesionalComponent } from "./features/certificados/comunicacion-interprofesional/comunicacion-interprofesional.component";
 import { SolicitarCompraComponent } from "./features/certificados/solicitar-compra/solicitar-compra.component";
@@ -173,9 +179,6 @@ import { DatosGenerales } from "./features/censo/datos-generales/datos-generales
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
-import { AccesoFichaPersonaComponent } from "./features/censo/accesoFichaPersona/accesoFichaPersona.component";
-import { DatosBancariosComponent } from "./features/censo/datos-bancarios/datos-bancarios.component";
-import { ConsultarDatosBancariosComponent } from "./features/censo/consultar-datos-bancarios/consultar-datos-bancarios.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -334,6 +337,16 @@ const appRoutes: Routes = [
   {
     path: "consultarDatosBancarios",
     component: ConsultarDatosBancariosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "datosDirecciones",
+    component: DatosDireccionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "consultarDatosDirecciones",
+    component: ConsultarDatosDireccionesComponent,
     canActivate: [AuthGuard]
   },
 
