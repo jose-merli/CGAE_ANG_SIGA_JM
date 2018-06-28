@@ -49,19 +49,19 @@
       <div class="row">
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
-          <input type="text" class="form-control" [(ngModel)]="body.nifCif" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.nifCif" [(disabled)]="update" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
-          <input type="text" class="form-control" [(ngModel)]="body.nombre" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.nombre" [(disabled)]="update" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}</label>
-          <input type="text" class="form-control" [(ngModel)]="body.apellidos1" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.apellidos1" [(disabled)]="update" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}</label>
-          <input [(ngModel)]="body.apellidos2" type="text" class="form-control" pInputText>
+          <input [(ngModel)]="body.apellidos2" type="text" class="form-control" [(disabled)]="update" pInputText>
         </div>
       </div>
       <br>
@@ -124,15 +124,15 @@
       <div class="row">
         <div class="form-group col-lg-3 col-md-6">
           <label>Tipo Colegio</label>
-          <p-dropdown [(ngModel)]="body.idTipoColegio" class="select-form" [options]="colegiosArray"></p-dropdown>
+          <p-dropdown [(ngModel)]="body.idTipoColegio" class="select-form" [options]="colegiosArray" [(disabled)]="update"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>Provincia</label>
-          <p-dropdown [(ngModel)]="body.idProvincia" class="select-form" [options]="provinciasArray"></p-dropdown>
+          <p-dropdown [(ngModel)]="body.idProvincia" class="select-form" [options]="provinciasArray" [(disabled)]="update"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>Numero de Colegiado</label>
-          <input type="text" class="form-control" [(ngModel)]="body.numColegiado" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.numColegiado" [(disabled)]="update" pInputText>
         </div>
 
       </div>
@@ -207,7 +207,7 @@
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>Fecha fin cargo</label>
-          <p-calendar [(ngModel)]="fechaCarga" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+          <p-calendar [(ngModel)]="body.fechaBajaCargo" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(disabled)]="update"></p-calendar>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>Cargo</label>

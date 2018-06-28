@@ -175,20 +175,6 @@ export class DatosIntegrantesComponent implements OnInit {
       this.selectedDatos = [];
     }
   }
-  unInteg() {
-    this.body.nifCif = "String";
-    this.body.nombre = "PEPE";
-    this.body.apellidos1 = "String";
-    this.body.apellidos2 = "String";
-    this.body.cargo = "String";
-    this.body.cargo = "String";
-    this.body.fechaCargo = "String";
-    this.body.fechaBajaCargo = "String";
-    this.body.numColegiado = "String";
-    this.body.idTipoColegio = "String";
-
-    this.datos.push(this.body);
-  }
 
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
@@ -245,25 +231,23 @@ export class DatosIntegrantesComponent implements OnInit {
     if (datoH.fechaBaja == null) return false;
     else return true;
   }
-  consultarIntegrante(selectedDatos) {
-    var ir = null;
-    if (selectedDatos && selectedDatos.length > 0) {
-      ir = selectedDatos[0];
+  consultarIntegrante(id) {
+    if (!this.selectMultiple) {
+      var ir = null;
+      ir = id[0];
       ir.editar = false;
+      sessionStorage.removeItem("integrante");
+      sessionStorage.setItem("integrante", JSON.stringify(ir));
+      this.router.navigate(["detalleIntegrante"]);
     }
-    sessionStorage.removeItem("integrante");
-    sessionStorage.setItem("integrante", JSON.stringify(ir));
-    this.router.navigate(["detalleIntegrante"]);
   }
-  editarIntegrante(selectedDatos) {
-    var ir = null;
-    if (selectedDatos && selectedDatos.length > 0) {
-      ir = selectedDatos[0];
-      ir.editar = true;
-    }
-    sessionStorage.removeItem("integrante");
-    sessionStorage.setItem("integrante", JSON.stringify(ir));
-    this.router.navigate(["detalleIntegrante"]);
+  anadirIntegrante() {
+    let dummy = {
+      integrante: true
+    };
+    sessionStorage.removeItem("newIntegrante");
+    sessionStorage.setItem("newIntegrante", JSON.stringify(dummy));
+    this.router.navigate(["/busquedaGeneral"]);
   }
   searchHistorico() {
     this.historico = true;

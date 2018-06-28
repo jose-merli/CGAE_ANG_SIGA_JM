@@ -91,6 +91,7 @@ export class DetalleIntegranteComponent implements OnInit {
   derechoAcceso: any;
   activacionEditar: boolean;
   selectAll: boolean = false;
+  update: boolean = true;
   progressSpinner: boolean = false;
   numSelected: number = 0;
   masFiltros: boolean = false;
@@ -121,6 +122,13 @@ export class DetalleIntegranteComponent implements OnInit {
 
   ngOnInit() {
     this.body = JSON.parse(sessionStorage.getItem("integrante"));
+    this.update = true;
+    if (
+      sessionStorage.getItem("nIntegrante") != null ||
+      sessionStorage.getItem("nIntegrante") != undefined
+    ) {
+      this.beanNewIntegrante();
+    }
     this.editar = this.body.editar;
     this.fichasPosibles = [
       {
@@ -201,7 +209,7 @@ export class DetalleIntegranteComponent implements OnInit {
     else return true;
   }
   backTo() {
-    this.location.back();
+    this.router.navigate(["fichaPersonaJuridica"]);
   }
   pInputText;
   transformaFecha(fecha) {
@@ -221,7 +229,51 @@ export class DetalleIntegranteComponent implements OnInit {
       this.body.fechaCargo = this.transformaFecha(this.fechaCarga);
     }
   }
+  beanNewIntegrante() {
+    var ir = null;
+    this.body = new DatosIntegrantesItem();
+    ir = JSON.parse(sessionStorage.getItem("nIntegrante"));
+    if (ir[0].idPersona != null) {
+      this.body.idPersona = ir[0].idPersona;
+    }
+    if (ir[0].idInstitucion != null) {
+      this.body.idInstitucion = ir[0].idInstitucion;
+    }
 
+    if (ir[0].fechaAlta != null) {
+      this.body.cargo = ir[0].fechaAlta;
+    } else if (ir[0].fechaConstitucion) {
+      this.body.fechaCargo = ir[0].fechaConstitucion;
+    }
+
+    if (ir[0].nif != null) {
+      this.body.nifCif = ir[0].nif;
+    }
+    if (ir[0].nombre != null) {
+      this.body.nombre = ir[0].nombre;
+    } else if (ir[0].denominacion != null) {
+      this.body.nombre = ir[0].denominacion;
+    }
+
+    if (ir[0].apellidos != null) {
+      this.body.apellidos = ir[0].apellidos;
+    }
+    if (ir[0].apellidos1 != null) {
+      this.body.apellidos1 = ir[0].primerApellido;
+    }
+    if (ir[0].apellidos2 != null) {
+      this.body.apellidos2 = ir[0].segundoApellido;
+    }
+    if (ir[0].nombre != null && ir[0].apellidos) {
+      this.body.nombreCompleto = ir[0].nombre + " " + ir[0].apellidos;
+    }
+
+    if (ir[0].numeroColegiado != null) {
+      this.body.numColegiado = ir[0].numeroColegiado;
+    } else if (ir[0].numColegiado != null) {
+      this.body.numColegiado = ir[0].numeroColegiado;
+    }
+  }
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
     if (!this.selectMultiple) {
