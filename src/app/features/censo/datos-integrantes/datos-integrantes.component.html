@@ -69,29 +69,15 @@
     <!--cuerpo datos generales-->
     <div *ngIf="esFichaActiva('integrantes')" class="card-body card-body-ficha">
 
-      <div class="m-3 d-flex text-right justify-content-end">
-        <div>
-          <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
-        </div>
-        <label *ngIf="activarPaginacion() == true" class="ml-3" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
-          <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
-      </div>
-      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-        [(selection)]="selectedDatos" (onRowSelect)="goToDetails(selectedDatos)" pageLinks="2" dataKey="nif" [responsive]="true"
-        selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="activarPaginacion()"
-        paginatorPosition="both" [rows]="selectedItem">
+
+      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="2" dataKey="nif"
+        [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="activarPaginacion()"
+        paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="consultarIntegrante(selectedDatos)">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true" filterMatchMode="contains">
           <ng-template let-datoH="rowData" pTemplate="body">
-
             <span *ngIf="setItalic(datoH)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
             <span *ngIf="!setItalic(datoH)">{{datoH[col.field]}}</span>
-
-
-          </ng-template>
-          <ng-template>
-
-
           </ng-template>
           </p-column>
 
@@ -117,10 +103,13 @@
           <br>
           <div class="card-footer ">
             <div class="text-right main-button ">
+
               <button (click)="anadirIntegrante()" pButton type="button" icon="fa-user-plus" iconPos="left" label="Nuevo"></button>
-              <button (click)="editarIntegrante()" pButton type="button" icon="fa fa-edit" iconPos="left" label="Editar"></button>
-              <button (click)="eliminarIntegrante()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="Borrar"></button>
-              <button (click)="buscarIntegrante()" pButton type="button" icon="fa fa-search" iconPos="left" label="Historico/Buscar"></button>
+              <button *ngIf="selectedDatos && selectedDatos != '' && historico==false" (click)="confirmarBorrar(selectedDatos); selectedDatos=false"
+                pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{'general.boton.borrar' | translate}}"></button>
+                <button *ngIf="historico" (click)="buscarIntegrante()" pButton type="button" icon="fa fa-search" iconPos="left" label="Buscar"></button>
+
+                <button *ngIf="!historico" (click)="searchHistorico()" pButton type="button" icon="fa fa-search" iconPos="left" label="Historico"></button>
             </div>
           </div>
           <!--END DATOS GENERALES-->

@@ -22,5 +22,6 @@ export class DatosIntegrantesItem {
   idCargo: String;
   idProvincia: String;
   historico: boolean;
+  editar :boolean = true;
   constructor() {}
 }

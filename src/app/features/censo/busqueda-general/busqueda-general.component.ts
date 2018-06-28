@@ -88,7 +88,7 @@ export class BusquedaGeneralComponent {
   @ViewChild("table") table;
   selectedDatos;
   tipoCIF: String;
-
+  newIntegrante: boolean = false;
   masFiltros: boolean = false;
   labelFiltros: string;
   fichasPosibles = [
@@ -127,6 +127,12 @@ export class BusquedaGeneralComponent {
 
   ngOnInit() {
     this.persona = "f";
+    if (
+      sessionStorage.getItem("newIntegrante") != null ||
+      sessionStorage.getItem("newIntegrante") != undefined
+    ) {
+      this.newIntegrante = JSON.parse(sessionStorage.getItem("newIntegrante"));
+    }
     this.colsFisicas = [
       { field: "nif", header: "NIF/CIF" },
       { field: "nombre", header: "Nombre" },
@@ -389,24 +395,26 @@ export class BusquedaGeneralComponent {
   }
 
   irFichaColegial(id) {
-    if (sessionStorage.getItem("ficha") == "Y") {
-    }
-    if (!this.selectMultiple && !this.selectAll) {
-      if (
-        sessionStorage.getItem("notario") != null ||
-        sessionStorage.getItem("notario") != undefined
-      ) {
-        sessionStorage.removeItem("notario");
-        this.checkTypeCIF(id[0].nif);
-        id[0].tipoIdentificacion = this.tipoCIF;
-        sessionStorage.setItem("notario", JSON.stringify(id));
-        this.location.back();
-      } else {
+    if (!this.newIntegrante) {
+      if (!this.selectMultiple && !this.selectAll) {
+        if (
+          sessionStorage.getItem("notario") != null ||
+          sessionStorage.getItem("notario") != undefined
+        ) {
+          sessionStorage.removeItem("notario");
+        }
         this.checkTypeCIF(id[0].nif);
         id[0].tipoIdentificacion = this.tipoCIF;
         sessionStorage.setItem("notario", JSON.stringify(id));
         this.location.back();
       }
+    } else {
+      sessionStorage.removeItem("notario");
+      this.checkTypeCIF(id[0].nif);
+      id[0].tipoIdentificacion = this.tipoCIF;
+      sessionStorage.removeItem("nIntegrante");
+      sessionStorage.setItem("nIntegrante", JSON.stringify(id));
+      this.router.navigate(["detalleIntegrante"]);
     }
   }
 
