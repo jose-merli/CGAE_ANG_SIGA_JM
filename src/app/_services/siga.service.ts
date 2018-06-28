@@ -130,7 +130,9 @@ export class SigaServices {
     integrantes_search: "busquedaPerJuridica/datosIntegrantesSearch",
     integrantes_tipoColegio: "tarjetaIntegrantes/tipoColegio",
     integrantes_provincias: "tarjetaIntegrantes/provincias",
-    integrantes_cargos: "tarjetaIntegrantes/cargos"
+    integrantes_cargos: "tarjetaIntegrantes/cargos",
+    integrantes_update: "tarjetaIntegrantes/update",
+    integrantes_insert: "tarjetaIntegrantes/create"
   };
 
   private menuToggled = new Subject<any>();
