@@ -96,6 +96,10 @@ export class DatosPersonaJuridicaComponent implements OnInit {
       {
         key: "interes",
         activa: false
+      },
+      {
+        key: "direcciones",
+        activa: false
       }
     ];
   }

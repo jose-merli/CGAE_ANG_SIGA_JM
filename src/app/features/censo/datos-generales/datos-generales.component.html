@@ -94,7 +94,7 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.denominacion" | translate}} (*)</label>
-              <input [(ngModel)]="body.denominacion" type="text" class="form-control" pInputText>
+              <input [(ngModel)]="body.denominacion" type="text" class="form-control" (ngModelChange)="onChangeForm()" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"gratuita.definirTurnosIndex.literal.abreviatura" | translate}} (*)</label>

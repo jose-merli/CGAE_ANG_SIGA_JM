@@ -239,6 +239,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.bodySearch = JSON.parse(data["body"]);
           this.body = this.bodySearch.datosBancariosItem[0];
 
+          if (this.body == undefined) {
+            this.body = new DatosBancariosItem();
+          }
+
           this.rellenarComboTipoCuenta(this.body.tipoCuenta);
         },
         error => {
@@ -503,7 +507,11 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.progressSpinner = false;
           this.bodyDatosMandatosSearch = JSON.parse(data["body"]);
           this.bodyDatosMandatos = this.bodyDatosMandatosSearch.mandatosItem[0];
-          console.log("mandato", this.bodyDatosMandatos);
+
+          if (this.bodyDatosMandatos == undefined) {
+            this.bodyDatosMandatos = new DatosMandatosItem();
+          }
+
           this.rellenarComboEsquema();
         },
         error => {
@@ -526,7 +534,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.selectedEsquemaProducto = this.combooItemsProducto[0];
         this.selectedEsquemaServicio = this.combooItemsServicio[0];
 
-        if (this.body != null) {
+        if (this.bodyDatosMandatos != null) {
           console.log("combo", this.combooItemsProducto);
           var producto = this.filtrarItemsComboEsquema(
             this.combooItemsProducto,
@@ -680,6 +688,11 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           console.log("body seearch", this.bodyDatosBancariosAnexoSearch);
           this.bodyDatosBancariosAnexo = this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem[0];
           console.log("anexo", this.bodyDatosBancariosAnexo);
+
+          if (this.bodyDatosBancariosAnexo == undefined) {
+            this.bodyDatosBancariosAnexo = new DatosBancariosSearchAnexosItem();
+          }
+
           this.rellenarComboProductoServicio(
             this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem
           );
