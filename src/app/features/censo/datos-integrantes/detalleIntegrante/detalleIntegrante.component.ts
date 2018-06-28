@@ -247,52 +247,61 @@ export class DetalleIntegranteComponent implements OnInit {
     var ir = null;
     this.body = new DatosIntegrantesItem();
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    this.todoDisable();
-    this.ajustarPantallaParaAsignar();
+
     ir = JSON.parse(sessionStorage.getItem("nIntegrante"));
-    if (ir[0].idPersona != null) {
-      this.body.idPersona = ir[0].idPersona;
-      this.body.idPersonaIntegrante = ir[0].idPersona;
-    }
-    if (ir[0].idInstitucion != null) {
-      this.body.idInstitucion = ir[0].idInstitucion;
-      this.body.idInstitucionIntegrante = ir[0].idInstitucion;
-    }
-    if (ir[0].fechaAlta != null) {
-      this.body.cargo = ir[0].fechaAlta;
-    } else if (ir[0].fechaConstitucion) {
-      this.body.fechaCargo = ir[0].fechaConstitucion;
-    }
+    if (ir[0].completo) {
+      this.todoDisable();
+      this.ajustarPantallaParaAsignar();
+      if (ir[0].idPersona != null) {
+        this.body.idPersona = ir[0].idPersona;
+        this.body.idPersonaIntegrante = ir[0].idPersona;
+      }
+      if (ir[0].idInstitucion != null) {
+        this.body.idInstitucion = ir[0].idInstitucion;
+        this.body.idInstitucionIntegrante = ir[0].idInstitucion;
+      }
+      if (ir[0].fechaAlta != null) {
+        this.body.cargo = ir[0].fechaAlta;
+      } else if (ir[0].fechaConstitucion) {
+        this.body.fechaCargo = ir[0].fechaConstitucion;
+      }
 
-    if (ir[0].nif != null) {
+      if (ir[0].nif != null) {
+        this.body.nifCif = ir[0].nif;
+      }
+      if (ir[0].nombre != null) {
+        this.body.nombre = ir[0].nombre;
+      } else if (ir[0].denominacion != null) {
+        this.body.nombre = ir[0].denominacion;
+      }
+
+      if (ir[0].apellidos != null) {
+        this.body.apellidos = ir[0].apellidos;
+      }
+      if (ir[0].apellidos1 != null) {
+        this.body.apellidos1 = ir[0].primerApellido;
+      }
+      if (ir[0].apellidos2 != null) {
+        this.body.apellidos2 = ir[0].segundoApellido;
+      }
+      if (ir[0].nombre != null && ir[0].apellidos) {
+        this.body.nombreCompleto = ir[0].nombre + " " + ir[0].apellidos;
+      }
+
+      if (ir[0].numeroColegiado != null) {
+        this.body.numColegiado = ir[0].numeroColegiado;
+      } else if (ir[0].numColegiado != null) {
+        this.body.numColegiado = ir[0].numColegiado;
+      }
+      this.body.idPersonaPadre = this.usuarioBody[0].idPersona;
+      this.body.tipoIdentificacion = ir[0].tipoIdentificacion;
+    } else {
+      this.todoDisable();
+      this.ajustarPantallaParaCrear();
       this.body.nifCif = ir[0].nif;
+      this.body.idPersonaPadre = this.usuarioBody[0].idPersona;
+      this.body.tipoIdentificacion = ir[0].tipoIdentificacion;
     }
-    if (ir[0].nombre != null) {
-      this.body.nombre = ir[0].nombre;
-    } else if (ir[0].denominacion != null) {
-      this.body.nombre = ir[0].denominacion;
-    }
-
-    if (ir[0].apellidos != null) {
-      this.body.apellidos = ir[0].apellidos;
-    }
-    if (ir[0].apellidos1 != null) {
-      this.body.apellidos1 = ir[0].primerApellido;
-    }
-    if (ir[0].apellidos2 != null) {
-      this.body.apellidos2 = ir[0].segundoApellido;
-    }
-    if (ir[0].nombre != null && ir[0].apellidos) {
-      this.body.nombreCompleto = ir[0].nombre + " " + ir[0].apellidos;
-    }
-
-    if (ir[0].numeroColegiado != null) {
-      this.body.numColegiado = ir[0].numeroColegiado;
-    } else if (ir[0].numColegiado != null) {
-      this.body.numColegiado = ir[0].numColegiado;
-    }
-    this.body.idPersonaPadre = this.usuarioBody[0].idPersona;
-    this.body.tipoIdentificacion = ir[0].tipoIdentificacion;
   }
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;

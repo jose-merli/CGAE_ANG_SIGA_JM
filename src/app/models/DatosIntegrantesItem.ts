@@ -28,5 +28,6 @@ export class DatosIntegrantesItem {
   idPersonaIntegrante: String;
   idInstitucionIntegrante: String;
   tipo: String;
+  completo: boolean = false;
   constructor() {}
 }

@@ -46,7 +46,7 @@ import { BusquedaJuridicaItem } from "./../../../../app/models/BusquedaJuridicaI
 import { BusquedaJuridicaObject } from "./../../../../app/models/BusquedaJuridicaObject";
 import { BusquedaFisicaObject } from "./../../../../app/models/BusquedaFisicaObject";
 import { DatosNotarioItem } from "../../../models/DatosNotarioItem";
-
+import { DatosIntegrantesItem } from "../../../models/DatosIntegrantesItem";
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -412,6 +412,7 @@ export class BusquedaGeneralComponent {
       sessionStorage.removeItem("notario");
       this.checkTypeCIF(id[0].nif);
       id[0].tipoIdentificacion = this.tipoCIF;
+      id[0].completo = true;
       sessionStorage.removeItem("nIntegrante");
       sessionStorage.setItem("nIntegrante", JSON.stringify(id));
       this.router.navigate(["detalleIntegrante"]);
@@ -433,37 +434,69 @@ export class BusquedaGeneralComponent {
       message: mess,
       icon: icon,
       accept: () => {
-        let notarioNIF = new DatosNotarioItem();
-        if (this.bodyFisica.nif != null || this.bodyFisica.nif != undefined) {
-          notarioNIF.nif = this.bodyFisica.nif;
-        } else {
-          notarioNIF.nif = this.bodyJuridica.nif;
-        }
-
-        // busqueda fisica => todos los tipos de identificacion menos CIF
-        if (this.persona == "f") {
-          if (this.tipoCIF == "20") {
-            notarioNIF.tipoIdentificacion = "50";
+        if (!this.newIntegrante) {
+          let notarioNIF = new DatosNotarioItem();
+          if (this.bodyFisica.nif != null || this.bodyFisica.nif != undefined) {
+            notarioNIF.nif = this.bodyFisica.nif;
           } else {
-            notarioNIF.tipoIdentificacion = this.tipoCIF;
+            notarioNIF.nif = this.bodyJuridica.nif;
           }
-        } else {
-          // busqueda juridica => solo CIF u Otro
-          if (this.tipoCIF == "20") {
-            notarioNIF.tipoIdentificacion = this.tipoCIF;
+
+          // busqueda fisica => todos los tipos de identificacion menos CIF
+          if (this.persona == "f") {
+            if (this.tipoCIF == "20") {
+              notarioNIF.tipoIdentificacion = "50";
+            } else {
+              notarioNIF.tipoIdentificacion = this.tipoCIF;
+            }
           } else {
-            notarioNIF.tipoIdentificacion = "50";
+            // busqueda juridica => solo CIF u Otro
+            if (this.tipoCIF == "20") {
+              notarioNIF.tipoIdentificacion = this.tipoCIF;
+            } else {
+              notarioNIF.tipoIdentificacion = "50";
+            }
           }
+
+          notarioNIF.nombre = "";
+          let notariosNEW = [];
+          notariosNEW.push(notarioNIF);
+
+          sessionStorage.removeItem("notario");
+
+          sessionStorage.setItem("notario", JSON.stringify(notariosNEW));
+          this.location.back();
+        } else {
+          let integranteNew = new DatosIntegrantesItem();
+          if (this.bodyFisica.nif != null || this.bodyFisica.nif != undefined) {
+            integranteNew.nifCif = this.bodyFisica.nif;
+          } else {
+            integranteNew.nifCif = this.bodyJuridica.nif;
+          }
+          // busqueda fisica => todos los tipos de identificacion menos CIF
+          if (this.persona == "f") {
+            if (this.tipoCIF == "20") {
+              integranteNew.tipoIdentificacion = "50";
+            } else {
+              integranteNew.tipoIdentificacion = this.tipoCIF;
+            }
+          } else {
+            // busqueda juridica => solo CIF u Otro
+            if (this.tipoCIF == "20") {
+              integranteNew.tipoIdentificacion = this.tipoCIF;
+            } else {
+              integranteNew.tipoIdentificacion = "50";
+            }
+          }
+          integranteNew.nombre = "";
+          integranteNew.completo = false;
+          let integrantesNEW = [];
+          integrantesNEW.push(integrantesNEW);
+
+          sessionStorage.removeItem("nIntegrante");
+          sessionStorage.setItem("nIntegrante", JSON.stringify(integrantesNEW));
+          this.router.navigate(["detalleIntegrante"]);
         }
-
-        notarioNIF.nombre = "";
-        let notariosNEW = [];
-        notariosNEW.push(notarioNIF);
-
-        sessionStorage.removeItem("notario");
-
-        sessionStorage.setItem("notario", JSON.stringify(notariosNEW));
-        this.location.back();
       },
       reject: () => {
         this.msgs = [
