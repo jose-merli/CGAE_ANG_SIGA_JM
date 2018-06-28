@@ -49,19 +49,19 @@
       <div class="row">
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
-          <input type="text" class="form-control" [(ngModel)]="body.nifCif" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.nifCif" [(disabled)]="isDisablednifCif" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
-          <input type="text" class="form-control" [(ngModel)]="body.nombre" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.nombre" [(disabled)]="isDisabledNombre" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}</label>
-          <input type="text" class="form-control" [(ngModel)]="body.apellidos1" (ngModelChange)="autogenerarDatos()" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.apellidos1" [(disabled)]="isDisabledApellidos1" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}</label>
-          <input [(ngModel)]="body.apellidos2" type="text" class="form-control" [disabled]="!editar" pInputText>
+          <input [(ngModel)]="body.apellidos2" type="text" class="form-control" [(disabled)]="isDisabledApellidos2" pInputText>
         </div>
       </div>
       <br>
@@ -124,15 +124,15 @@
       <div class="row">
         <div class="form-group col-lg-3 col-md-6">
           <label>Tipo Colegio</label>
-          <p-dropdown [(ngModel)]="body.idTipoColegio" class="select-form" [options]="colegiosArray"></p-dropdown>
+          <p-dropdown [(ngModel)]="body.idTipoColegio" class="select-form" [options]="colegiosArray" [(disabled)]="isDisabledTipoColegio"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>Provincia</label>
-          <p-dropdown [(ngModel)]="body.idProvincia" class="select-form" [options]="provinciasArray"></p-dropdown>
+          <p-dropdown [(ngModel)]="body.idProvincia" class="select-form" [options]="provinciasArray" [(disabled)]="isDisabledProvincia"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>Numero de Colegiado</label>
-          <input type="text" class="form-control" [(ngModel)]="body.numColegiado" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.numColegiado" [(disabled)]="isDisabledNumColegio" pInputText>
         </div>
 
       </div>
@@ -163,8 +163,11 @@
             <label class="mr-auto title-ficha">Vinculación con la Sociedad</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>Fecha Carga
-              <span>{{ body.fechaCargoInforme }}</span>
+            <label>Fecha cargo
+              <span>{{ body.fechaCargo }}</span>
+            </label>
+            <label>Fecha fin cargo
+              <span>{{ body.fechaBajaCargo }}</span>
             </label>
             <label>Cargo
               <span>{{ body.idCargo }}</span>
@@ -199,13 +202,16 @@
     <div *ngIf="esFichaActiva('vinculacion')" class="card-body card-body-ficha">
       <div class="row">
         <div class="form-group col-lg-3 col-md-6">
-          <label>Fecha Carga</label>
+          <label>Fecha cargo</label>
           <p-calendar [(ngModel)]="fechaCarga" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+        </div>
+        <div class="form-group col-lg-3 col-md-6">
+          <label>Fecha fin cargo</label>
+          <p-calendar [(ngModel)]="body.fechaBajaCargo" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(disabled)]="isDisabledFechaFinCargo"></p-calendar>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>Cargo</label>
           <p-dropdown [(ngModel)]="body.idCargo" class="select-form" [options]="cargosArray"></p-dropdown>
-
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>Descripcion del Cargo</label>
@@ -227,5 +233,10 @@
         </div> -->
       <!--END DATOS GENERALES-->
     </div>
+  </div>
+  <div class="mt-3 text-right main-button ">
+
+    <button *ngIf="editar" (click)="guardar();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+    <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="Volver"></button>
   </div>
 </div>

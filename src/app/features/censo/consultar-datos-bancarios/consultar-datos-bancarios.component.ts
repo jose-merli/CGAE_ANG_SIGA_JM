@@ -107,7 +107,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   bodyDatosBancariosAnexoSearch: DatosBancariosAnexoObject = new DatosBancariosAnexoObject();
   bodyEditar: DatosBancariosSearchAnexosItem = new DatosBancariosSearchAnexosItem();
 
-  averahora: boolean = false;
+  file: File = undefined;
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -184,6 +184,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   //     return false;
   //   }
   // }
+
   ngAfterViewChecked() {
     this.changeDetectorRef.detectChanges();
   }
@@ -852,6 +853,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.bodyDatosBancariosAnexo.idCuenta = this.idCuenta;
     this.bodyDatosBancariosAnexo.idAnexo = dato.idAnexo;
     this.bodyDatosBancariosAnexo.idMandato = dato.idMandato;
+    this.bodyDatosBancariosAnexo.tipoMandato = dato.tipoMandato;
     this.bodyDatosBancariosAnexo.esquema = "";
 
     if (dato.firmaLugar != null) {
@@ -978,6 +980,20 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.progressSpinner = false;
         this.bodyDatosBancariosAnexo.status = data.status;
 
+        this.sigaServices
+          .postSendFileAndParametersDataBank(
+            "busquedaPerJuridica_uploadFile",
+            this.file,
+            body.idPersona,
+            body.idCuenta,
+            body.idMandato,
+            body.idAnexo,
+            body.tipoMandato
+          )
+          .subscribe(data => {
+            this.file = undefined;
+          });
+
         this.showSuccess("Se han editado correctamente los datos");
 
         this.displayFirmar = false;
@@ -1084,5 +1100,35 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   backTo() {
     this.location.back();
+  }
+
+  uploadFile(event: any) {
+    // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
+    let fileList: FileList = event.target.files;
+
+    let nombreCompletoArchivo = fileList[0].name;
+    let extensionArchivo = nombreCompletoArchivo.substring(
+      nombreCompletoArchivo.lastIndexOf("."),
+      nombreCompletoArchivo.length
+    );
+
+    if (extensionArchivo == null) {
+      // Mensaje de error de formato de imagen y deshabilitar boton guardar
+      this.file = undefined;
+
+      this.showFailUploadedImage();
+    } else {
+      // se almacena el archivo para habilitar boton guardar
+      this.file = fileList[0];
+    }
+  }
+
+  showFailUploadedImage() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Error",
+      detail: "Error al adjuntar la imagen"
+    });
   }
 }

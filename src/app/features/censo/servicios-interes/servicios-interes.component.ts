@@ -69,8 +69,6 @@ export class ServiciosInteresComponent implements OnInit {
   @ViewChild(ServiciosInteresComponent)
   serviciosInteresComponent: ServiciosInteresComponent;
 
-  // "./features/facturacion/facturas/facturas.component";
-
   @ViewChild("table") table;
 
   constructor(
@@ -92,6 +90,7 @@ export class ServiciosInteresComponent implements OnInit {
   }
   irAuditoria() {
     this.router.navigate(["/auditoriaUsuarios"]);
+    sessionStorage.setItem("tarjeta", "/fichaPersonaJuridica");
   }
   irComunicaciones() {
     this.router.navigate(["/informesGenericos"]);

@@ -129,12 +129,27 @@ export class DatosIntegrantesComponent implements OnInit {
         field: "nombre",
         header: "administracion.parametrosGenerales.literal.nombre"
       },
-      { field: "apellidos", header: "Apellidos" },
-      { field: "fechaHistorico", header: "Fecha de alta" },
-      { field: "cargo", header: "Cargos del integrante" },
-      { field: "liquidacionComoSociedad", header: "Liquidación como sociedad" },
-      { field: "ejerciente", header: "Ejerciente" },
-      { field: "capitalSocial", header: "Participación en la sociedad" }
+      {
+        field: "apellidos",
+        header: "gratuita.mantenimientoTablasMaestra.literal.apellidos"
+      },
+      {
+        field: "fechaHistorico",
+        header: "administracion.usuarios.literal.fechaAlta"
+      },
+      { field: "cargo", header: "censo.busquedaComisiones.literal.cargos" },
+      {
+        field: "liquidacionComoSociedad",
+        header: "censo.busquedaClientes.literal.liquidacion"
+      },
+      {
+        field: "ejerciente",
+        header: "censo.consultaDatosGenerales.literal.ejerciente"
+      },
+      {
+        field: "capitalSocial",
+        header: "censo.consultaComponentesJuridicos.literal.Participacion"
+      }
     ];
 
     this.rowsPerPage = [
@@ -174,20 +189,6 @@ export class DatosIntegrantesComponent implements OnInit {
       this.selectAll = false;
       this.selectedDatos = [];
     }
-  }
-  unInteg() {
-    this.body.nifCif = "String";
-    this.body.nombre = "PEPE";
-    this.body.apellidos1 = "String";
-    this.body.apellidos2 = "String";
-    this.body.cargo = "String";
-    this.body.cargo = "String";
-    this.body.fechaCargo = "String";
-    this.body.fechaBajaCargo = "String";
-    this.body.numColegiado = "String";
-    this.body.idTipoColegio = "String";
-
-    this.datos.push(this.body);
   }
 
   esFichaActiva(key) {
@@ -241,14 +242,28 @@ export class DatosIntegrantesComponent implements OnInit {
         () => {}
       );
   }
-  editarIntegrante() {
-    this.router.navigate(["detalleIntegrante"]);
-  }
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;
     else return true;
   }
-
+  consultarIntegrante(id) {
+    if (!this.selectMultiple) {
+      var ir = null;
+      ir = id[0];
+      ir.editar = false;
+      sessionStorage.removeItem("integrante");
+      sessionStorage.setItem("integrante", JSON.stringify(ir));
+      this.router.navigate(["detalleIntegrante"]);
+    }
+  }
+  anadirIntegrante() {
+    let dummy = {
+      integrante: true
+    };
+    sessionStorage.removeItem("newIntegrante");
+    sessionStorage.setItem("newIntegrante", JSON.stringify(dummy));
+    this.router.navigate(["/busquedaGeneral"]);
+  }
   searchHistorico() {
     this.historico = true;
     let searchObject = new DatosIntegrantesItem();
@@ -284,9 +299,9 @@ export class DatosIntegrantesComponent implements OnInit {
       if (selectedDatos && selectedDatos.length > 0) {
         ir = selectedDatos[0];
       }
-      sessionStorage.removeItem("integrante");
-      sessionStorage.setItem("integrante", JSON.stringify(ir));
-      this.router.navigate(["detalleIntegrante"]);
+      // sessionStorage.removeItem("integrante");
+      // sessionStorage.setItem("integrante", JSON.stringify(ir));
+      // this.router.navigate(["detalleIntegrante"]);
     } else {
       this.editar = false;
       this.numSelected = this.selectedDatos.length;

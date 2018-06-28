@@ -128,10 +128,22 @@ export class DatosRetencionesComponent implements OnInit {
   ngOnInit() {
     this.persona = "f";
     this.colsFisicas = [
-      { field: "fechaInicio", header: "Fecha Desde" },
-      { field: "fechaFin", header: "Fecha Hasta" },
-      { field: "descripcionRetencion", header: "Tipo Rentencion IRPF" },
-      { field: "porcentajeRetencion", header: "Porcentaje" }
+      {
+        field: "fechaInicio",
+        header: "administracion.auditoriaUsuarios.fechaDesde"
+      },
+      {
+        field: "fechaFin",
+        header: "administracion.auditoriaUsuarios.fechaHasta"
+      },
+      {
+        field: "descripcionRetencion",
+        header: "factSJCS.datosPagos.literal.tipoRetencion"
+      },
+      {
+        field: "porcentajeRetencion",
+        header: "factSJCS.datosPagos.literal.porcentajeRetencion"
+      }
     ];
 
     this.rowsPerPage = [

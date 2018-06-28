@@ -60,12 +60,12 @@ export class OldSigaServices {
         //Productos y Servicios
         categoriasProducto: "Dispatcher.do?proceso=400",
         categoriasServicios: "Dispatcher.do?proceso=401",
-        mantenimientoProductos: "Dispatcher.do?proceso=40",
-        mantenimientoServicios: "Dispatcher.do?proceso=41",
+        mantenimientoProductos: "Dispatcher.do?proceso=34",
+        mantenimientoServicios: "Dispatcher.do?proceso=35",
         gestionarSolicitudes: "Dispatcher.do?proceso=36",
         solicitudCompraSubscripcion: "Dispatcher.do?proceso=37",
         solicitudAnulacion: "Dispatcher.do?proceso=40",
-        cargaCompras: "Dispatcher.do?proceso=44",
+        cargaCompras: "Dispatcher.do?proceso=38",
 
         //Expedientes
         tiposExpedientes: "Dispatcher.do?proceso=41",

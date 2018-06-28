@@ -48,6 +48,7 @@ import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { HeaderGestionEntidadService } from "./../../../_services/headerGestionEntidad.service";
+import { ComboItem } from "./../../../../app/models/ComboItem";
 
 /*** COMPONENTES ***/
 import { FichaColegialComponent } from "./../../../new-features/censo/ficha-colegial/ficha-colegial.component";
@@ -109,7 +110,7 @@ export class DatosGenerales implements OnInit {
   idiomas: any[];
   usuarioBody: any[];
   edadCalculada: String;
-  textSelected: String = "{0} grupos seleccionados";
+  textSelected: String = "{0} etiquetas seleccionados";
   idPersona: String;
   tipoPersonaJuridica: String;
   datos: any[];
@@ -184,17 +185,14 @@ export class DatosGenerales implements OnInit {
             n => {
               // coger etiquetas de una persona juridica
               this.etiquetasPersonaJuridica = JSON.parse(n["body"]).combooItems;
-            },
-            err => {
-              console.log(err);
-            },
-            () => {
-              // dejar etiquetas de persona juridica seleccionadas en <p-multiSelect></p-multiSelect>
               this.etiquetasPersonaJuridica.forEach(
                 (value: any, index: number) => {
                   this.etiquetasPersonaJuridicaSelecionados.push(value.value);
                 }
               );
+            },
+            err => {
+              console.log(err);
             }
           );
       }
@@ -276,9 +274,18 @@ export class DatosGenerales implements OnInit {
     this.body.idPersona = this.idPersona; //"2005005356";
 
     // guardar imagen en bd y refresca header.component
-    // datosGenerales_update
+    // datosGenerales_update o busquedaPerJuridica_update
+    if (this.etiquetasPersonaJuridicaSelecionados != undefined) {
+      this.body.grupos = [];
+      this.etiquetasPersonaJuridicaSelecionados.forEach(
+        (value: String, key: number) => {
+          this.body.grupos.push(value);
+        }
+      );
+    }
+    this.body.idioma = this.idiomaPreferenciaSociedad;
 
-    this.sigaServices.post("datosGenerales_update", this.body).subscribe(
+    this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
       data => {
         this.showSuccess();
         console.log(data);
@@ -398,16 +405,14 @@ export class DatosGenerales implements OnInit {
 
   onChangeForm() {
     if (
-      this.body.nif != "" &&
-      this.body.nif != undefined &&
-      (this.body.abreviatura != "" && this.body.abreviatura != undefined) &&
-      (this.body.denominacion != "" && this.body.denominacion != undefined) &&
-      this.body.fechaConstitucion != undefined &&
-      (this.body.nif != "" && this.body.nif.length >= 9)
+      (this.body.nif != "" || this.body.nif != undefined) &&
+      (this.body.abreviatura != "" || this.body.abreviatura != undefined) &&
+      (this.body.denominacion != "" || this.body.denominacion != undefined) &&
+      this.body.fechaConstitucion != undefined
     ) {
-      this.showGuardar = false;
-    } else {
       this.showGuardar = true;
+    } else {
+      this.showGuardar = false;
     }
   }
 
