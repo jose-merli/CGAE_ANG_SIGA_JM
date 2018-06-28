@@ -123,6 +123,7 @@ export class SigaServices {
     anexos_search: "busquedaPerJuridica/AnexosSearch",
     anexos_update: "busquedaPerJuridica/updateAnexos",
     anexos_insert: "busquedaPerJuridica/insertAnexos",
+    busquedaPerJuridica_uploadFile: "busquedaPerJuridica/uploadFile",
     retenciones_tipoRetencion: "retenciones/tipoRetencion",
     retenciones_search: "retenciones/search",
     retenciones_update: "retenciones/update",
@@ -229,6 +230,41 @@ export class SigaServices {
 
     // pasar parametros por la request
     formData.append("idPersona", idPersona);
+
+    let headers = new HttpHeaders();
+
+    headers.append("Content-Type", "multipart/form-data");
+    headers.append("Accept", "application/json");
+
+    return this.http
+      .post(environment.newSigaUrl + this.endpoints[service], formData, {
+        headers: headers
+      })
+      .map(response => {
+        return response;
+      });
+  }
+
+  postSendFileAndParametersDataBank(
+    service: string,
+    file: any,
+    idPersona: any,
+    idCuenta: any,
+    idMandato: any,
+    idAnexo: any,
+    tipoMandato: any
+  ): Observable<any> {
+    let formData: FormData = new FormData();
+    if (file != undefined) {
+      formData.append("uploadFile", file, file.name);
+    }
+
+    // pasar parametros por la request
+    formData.append("idPersona", idPersona);
+    formData.append("idCuenta", idCuenta);
+    formData.append("idMandato", idMandato);
+    formData.append("idAnexo", idAnexo);
+    formData.append("tipoMandato", tipoMandato);
 
     let headers = new HttpHeaders();
 
