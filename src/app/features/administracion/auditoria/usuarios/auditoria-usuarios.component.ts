@@ -33,7 +33,7 @@ import { Observable } from "rxjs/Rx";
 import { DataTable } from "primeng/datatable";
 
 export enum KEY_CODE {
-  ENTER = 13,
+  ENTER = 13
 }
 
 @Component({
@@ -41,7 +41,7 @@ export enum KEY_CODE {
   templateUrl: "./auditoria-usuarios.component.html",
   styleUrls: ["./auditoria-usuarios.component.scss"],
   host: {
-    '(document:keypress)': 'onKeyPress($event)'
+    "(document:keypress)": "onKeyPress($event)"
   },
   encapsulation: ViewEncapsulation.None
 })
@@ -71,6 +71,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   arrayHasta: any[];
   progressSpinner: boolean = false;
 
+  volver: boolean = false;
 
   constructor(
     private sigaServices: SigaServices,
@@ -89,6 +90,9 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   @ViewChild("table") table: DataTable;
   selectedDatos;
   ngOnInit() {
+    if (sessionStorage.getItem("tarjeta") != null) {
+      this.volver = true;
+    }
     this.sigaServices.get("auditoriaUsuarios_tipoAccion").subscribe(
       n => {
         this.tipoAcciones = n.combooItems;
@@ -96,10 +100,11 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
       para poder filtrar el dato con o sin estos caracteres*/
         this.tipoAcciones.map(e => {
-          e.labelSinTilde = e.label.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+          e.labelSinTilde = e.label
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
           return e.labelSinTilde;
         });
-
       },
       err => {
         console.log(err);
@@ -185,6 +190,10 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     sessionStorage.removeItem("editedUser");
   }
 
+  volverAFicha() {
+    this.router.navigate([sessionStorage.getItem("tarjeta")]);
+    sessionStorage.removeItem("tarjeta");
+  }
 
   isBuscar() {
     this.progressSpinner = true;
@@ -204,24 +213,24 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("auditoriaUsuarios_search", "?numPagina=1", this.bodySearch)
       .subscribe(
-      data => {
-        console.log(data);
-        this.searchParametros = JSON.parse(data["body"]);
-        this.datosUsuarios = this.searchParametros.historicoUsuarioItem;
-        this.buscar = true;
-        this.progressSpinner = false;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      },
-      () => {
-        if (sessionStorage.getItem("first") != null) {
-          let first = JSON.parse(sessionStorage.getItem("first")) as number;
-          this.table.first = first;
-          sessionStorage.removeItem("first");
+        data => {
+          console.log(data);
+          this.searchParametros = JSON.parse(data["body"]);
+          this.datosUsuarios = this.searchParametros.historicoUsuarioItem;
+          this.buscar = true;
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          if (sessionStorage.getItem("first") != null) {
+            let first = JSON.parse(sessionStorage.getItem("first")) as number;
+            this.table.first = first;
+            sessionStorage.removeItem("first");
+          }
         }
-      }
       );
   }
 
@@ -273,7 +282,6 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     )
       return false;
     else return true;
-
   }
 
   onHideDatosGenerales() {
@@ -427,12 +435,14 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   }
 
   //búsqueda con enter
-  @HostListener('document:keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
-    if (event.keyCode === KEY_CODE.ENTER && this.fechaDesdeCalendar != undefined &&
-      this.fechaHastaCalendar != undefined) {
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (
+      event.keyCode === KEY_CODE.ENTER &&
+      this.fechaDesdeCalendar != undefined &&
+      this.fechaHastaCalendar != undefined
+    ) {
       this.isBuscar();
     }
-
   }
-
 }

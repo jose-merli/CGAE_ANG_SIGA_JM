@@ -43,57 +43,59 @@
                 <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" (onRowSelect)="irFichaColegial(selectedDatos)"
                     dataKey="nif" selectionMode="simple" [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1"
                     sortField="fechaFin" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" [editable]="true">
-                    <p-column [sortable]="true" field="fechaInicio" [header]="FechaDesde" [filter]="true" filterMatchMode="contains">
+
+                    <p-column [sortable]="true" field="fechaInicio" filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[0].header | translate"
+                        [filter]="true" filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span>{{car[col.field] | date: "dd-MM-yyyy"}} </span>
 
                         </ng-template>
-                    </p-column>
-                    <p-column [sortable]="true" field="fechaFin" [header]="FechaHasta" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-                        filterMatchMode="contains">
-                        <ng-template let-col let-car="rowData" pTemplate="body">
-
-                            <span>{{car[col.field] | date: "dd-MM-yyyy"}}</span>
-
-                        </ng-template>
                         </p-column>
-                        <p-column [sortable]="true" field="descripcionRetencion" [header]="TipoRentencionIRPF" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                        <p-column [sortable]="true" field="fechaFin" [header]="cols[1].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                             filterMatchMode="contains">
                             <ng-template let-col let-car="rowData" pTemplate="body">
-                                <span>{{car[col.field]}}</span>
-                                <p-dropdown *ngIf="car[col.field] == '' " [(ngModel)]="newRetencion.descripcionRetencion" [options]="tiposRetenciones" (onChange)="onChangeDrop($event)"></p-dropdown>
-                                <!-- <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='newRetencion.descripcionRetencion' type="text"
-                                class="form-control" (onChange)="onChangeForm()" pInputText> -->
+
+                                <span>{{car[col.field] | date: "dd-MM-yyyy"}}</span>
+
                             </ng-template>
                             </p-column>
-                            <p-column [sortable]="true" field="porcentajeRetencion" [header]="Porcentaje" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                            <p-column [sortable]="true" field="descripcionRetencion" [header]="cols[2].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                                 filterMatchMode="contains">
                                 <ng-template let-col let-car="rowData" pTemplate="body">
                                     <span>{{car[col.field]}}</span>
-
+                                    <p-dropdown *ngIf="car[col.field] == '' " [(ngModel)]="newRetencion.descripcionRetencion" [options]="tiposRetenciones" (onChange)="onChangeDrop($event)"></p-dropdown>
+                                    <!-- <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='newRetencion.descripcionRetencion' type="text"
+                                class="form-control" (onChange)="onChangeForm()" pInputText> -->
                                 </ng-template>
                                 </p-column>
+                                <p-column [sortable]="true" field="porcentajeRetencion" [header]="cols[3].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                                    filterMatchMode="contains">
+                                    <ng-template let-col let-car="rowData" pTemplate="body">
+                                        <span>{{car[col.field]}}</span>
 
-                                <ng-template pTemplate="paginatorLeft">
-                                    <div class="mostrar">
-                                        <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                                        <label>Mostrar</label>
-                                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                                        <label> registros</label>
-                                    </div>
-                                </ng-template>
-                                <p-footer>
-                                    <div class="text-right main-button">
-                                        <button (click)="volver();" [(disabled)]="isVolver" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-                                        <button (click)="crear()" [(disabled)]="isCrear" pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-                                        <button (click)="confirmEdit();" [(disabled)]="isEditar" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-                                        <button (click)="confirmarBorrar()" [(disabled)]="isEliminar" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
-                                            label="{{'general.boton.eliminar'  | translate}}"></button>
-                                    </div>
-                                </p-footer>
-                                </p-dataTable>
+                                    </ng-template>
+                                    </p-column>
 
-                                <!-- <div class="bloque col-lg-6 col-md-6">
+                                    <ng-template pTemplate="paginatorLeft">
+                                        <div class="mostrar">
+                                            <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                                            <label>Mostrar</label>
+                                            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                                            <label> registros</label>
+                                        </div>
+                                    </ng-template>
+                                    <p-footer>
+                                        <div class="text-right main-button">
+                                            <button (click)="volver();" [(disabled)]="isVolver" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+                                            <button (click)="crear()" [(disabled)]="isCrear" pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+                                            <button (click)="confirmEdit();" [(disabled)]="isEditar" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                                            <button (click)="confirmarBorrar()" [(disabled)]="isEliminar" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
+                                                label="{{'general.boton.eliminar'  | translate}}"></button>
+                                        </div>
+                                    </p-footer>
+                                    </p-dataTable>
+
+                                    <!-- <div class="bloque col-lg-6 col-md-6">
                     <div class="form-row">
                         <div class="form-group col-lg-3 col-md-6">
                             <label>{{"censo.fichaCliente.literal.identificacion"  | translate}} (*)</label>
