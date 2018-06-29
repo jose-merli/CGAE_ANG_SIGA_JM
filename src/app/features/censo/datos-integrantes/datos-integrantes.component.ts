@@ -243,7 +243,7 @@ export class DatosIntegrantesComponent implements OnInit {
       );
   }
   setItalic(datoH) {
-    if (datoH.fechaBaja == null) return false;
+    if (datoH.fechaBajaCargo == null) return false;
     else return true;
   }
   consultarIntegrante(id) {
@@ -254,6 +254,16 @@ export class DatosIntegrantesComponent implements OnInit {
       sessionStorage.removeItem("integrante");
       sessionStorage.setItem("integrante", JSON.stringify(ir));
       this.router.navigate(["detalleIntegrante"]);
+    }
+  }
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.selectMultiple = false;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
     }
   }
   anadirIntegrante() {
@@ -267,7 +277,7 @@ export class DatosIntegrantesComponent implements OnInit {
   searchHistorico() {
     this.historico = true;
     let searchObject = new DatosIntegrantesItem();
-    searchObject.idPersona = this.body.idPersona;
+    searchObject.idPersona = this.idPersona;
     searchObject.historico = true;
     this.buscar = false;
     this.selectMultiple = false;
