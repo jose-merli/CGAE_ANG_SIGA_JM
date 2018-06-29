@@ -78,6 +78,14 @@ export class DetalleIntegranteComponent implements OnInit {
   disabled: boolean = false;
   selectMultiple: boolean = false;
   blockCrear: boolean = true;
+  isDisablednifCif: boolean = true;
+  isDisabledNombre: boolean = true;
+  isDisabledApellidos1: boolean = true;
+  isDisabledApellidos2: boolean = true;
+  isDisabledTipoColegio: boolean = true;
+  isDisabledProvincia: boolean = true;
+  isDisabledNumColegio: boolean = true;
+  isDisabledFechaFinCargo: boolean = true;
   selectedItem: number = 10;
   first: number = 0;
   activo: boolean = false;
@@ -85,6 +93,7 @@ export class DetalleIntegranteComponent implements OnInit {
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   permisosTree: any;
   permisosArray: any[];
+  usuarioBody: any[];
   cargosArray: any[];
   colegiosArray: any[];
   provinciasArray: any[];
@@ -122,14 +131,17 @@ export class DetalleIntegranteComponent implements OnInit {
 
   ngOnInit() {
     this.body = JSON.parse(sessionStorage.getItem("integrante"));
-    this.update = true;
     if (
       sessionStorage.getItem("nIntegrante") != null ||
       sessionStorage.getItem("nIntegrante") != undefined
     ) {
       this.beanNewIntegrante();
+    } else {
+      this.todoDisable();
     }
+
     this.editar = this.body.editar;
+    this.editar = true;
     this.fichasPosibles = [
       {
         key: "identificacion",
@@ -209,6 +221,8 @@ export class DetalleIntegranteComponent implements OnInit {
     else return true;
   }
   backTo() {
+    sessionStorage.removeItem("nIntegrante");
+    sessionStorage.removeItem("integrante");
     this.router.navigate(["fichaPersonaJuridica"]);
   }
   pInputText;
@@ -232,46 +246,63 @@ export class DetalleIntegranteComponent implements OnInit {
   beanNewIntegrante() {
     var ir = null;
     this.body = new DatosIntegrantesItem();
+    this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+
     ir = JSON.parse(sessionStorage.getItem("nIntegrante"));
-    if (ir[0].idPersona != null) {
-      this.body.idPersona = ir[0].idPersona;
-    }
-    if (ir[0].idInstitucion != null) {
-      this.body.idInstitucion = ir[0].idInstitucion;
-    }
+    this.body.completo = ir[0].completo;
+    if (ir[0].completo) {
+      this.todoDisable();
+      this.ajustarPantallaParaAsignar();
 
-    if (ir[0].fechaAlta != null) {
-      this.body.cargo = ir[0].fechaAlta;
-    } else if (ir[0].fechaConstitucion) {
-      this.body.fechaCargo = ir[0].fechaConstitucion;
-    }
+      if (ir[0].idPersona != null) {
+        this.body.idPersona = ir[0].idPersona;
+        this.body.idPersonaIntegrante = ir[0].idPersona;
+      }
+      if (ir[0].colegio != null) {
+        this.body.idInstitucion = ir[0].colegio;
+        this.body.idInstitucionIntegrante = ir[0].colegio;
+      }
+      if (ir[0].fechaAlta != null) {
+        this.body.cargo = ir[0].fechaAlta;
+      } else if (ir[0].fechaConstitucion) {
+        this.body.fechaCargo = ir[0].fechaConstitucion;
+      }
 
-    if (ir[0].nif != null) {
-      this.body.nifCif = ir[0].nif;
-    }
-    if (ir[0].nombre != null) {
-      this.body.nombre = ir[0].nombre;
-    } else if (ir[0].denominacion != null) {
-      this.body.nombre = ir[0].denominacion;
-    }
+      if (ir[0].nif != null) {
+        this.body.nifCif = ir[0].nif;
+      }
+      if (ir[0].nombre != null) {
+        this.body.nombre = ir[0].nombre;
+      } else if (ir[0].denominacion != null) {
+        this.body.nombre = ir[0].denominacion;
+      }
 
-    if (ir[0].apellidos != null) {
-      this.body.apellidos = ir[0].apellidos;
-    }
-    if (ir[0].apellidos1 != null) {
-      this.body.apellidos1 = ir[0].primerApellido;
-    }
-    if (ir[0].apellidos2 != null) {
-      this.body.apellidos2 = ir[0].segundoApellido;
-    }
-    if (ir[0].nombre != null && ir[0].apellidos) {
-      this.body.nombreCompleto = ir[0].nombre + " " + ir[0].apellidos;
-    }
+      if (ir[0].apellidos != null) {
+        this.body.apellidos = ir[0].apellidos;
+      }
+      if (ir[0].primerApellido != null) {
+        this.body.apellidos1 = ir[0].primerApellido;
+      }
+      if (ir[0].segundoApellido != null) {
+        this.body.apellidos2 = ir[0].segundoApellido;
+      }
+      if (ir[0].nombre != null && ir[0].apellidos) {
+        this.body.nombreCompleto = ir[0].nombre + " " + ir[0].apellidos;
+      }
 
-    if (ir[0].numeroColegiado != null) {
-      this.body.numColegiado = ir[0].numeroColegiado;
-    } else if (ir[0].numColegiado != null) {
-      this.body.numColegiado = ir[0].numeroColegiado;
+      if (ir[0].numeroColegiado != null) {
+        this.body.numColegiado = ir[0].numeroColegiado;
+      } else if (ir[0].numColegiado != null) {
+        this.body.numColegiado = ir[0].numColegiado;
+      }
+      this.body.idPersonaPadre = this.usuarioBody[0].idPersona;
+      this.body.tipoIdentificacion = ir[0].tipoIdentificacion;
+    } else {
+      this.body.nifCif = ir[0].nifCif;
+      this.body.idPersonaPadre = this.usuarioBody[0].idPersona;
+      this.body.tipoIdentificacion = ir[0].tipoIdentificacion;
+      this.todoDisable();
+      this.ajustarPantallaParaCrear();
     }
   }
   isSelectMultiple() {
@@ -282,6 +313,37 @@ export class DetalleIntegranteComponent implements OnInit {
       this.selectAll = false;
       this.selectedDatos = [];
     }
+  }
+  ajustarPantallaParaCrear() {
+    this.isDisablednifCif = true;
+    this.isDisabledNombre = false;
+    this.isDisabledApellidos1 = false;
+    this.isDisabledApellidos2 = false;
+    this.isDisabledTipoColegio = false;
+    this.isDisabledProvincia = false;
+    this.isDisabledNumColegio = true;
+    this.isDisabledFechaFinCargo = true;
+  }
+  ajustarPantallaParaAsignar() {
+    this.isDisablednifCif = true;
+    this.isDisabledNombre = true;
+    this.isDisabledApellidos1 = true;
+    this.isDisabledApellidos2 = true;
+    this.isDisabledTipoColegio = false;
+    this.isDisabledProvincia = false;
+    this.isDisabledNumColegio = true;
+    this.isDisabledFechaFinCargo = true;
+  }
+
+  todoDisable() {
+    this.isDisablednifCif = true;
+    this.isDisabledNombre = true;
+    this.isDisabledApellidos1 = true;
+    this.isDisabledApellidos2 = true;
+    this.isDisabledTipoColegio = true;
+    this.isDisabledProvincia = true;
+    this.isDisabledNumColegio = true;
+    this.isDisabledFechaFinCargo = true;
   }
   abrirFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
@@ -306,7 +368,7 @@ export class DetalleIntegranteComponent implements OnInit {
     return {};
   }
   search() {
-    this.historico = true;
+    this.historico = false;
     this.buscar = false;
     this.selectMultiple = false;
     this.selectedDatos = "";
@@ -352,5 +414,320 @@ export class DetalleIntegranteComponent implements OnInit {
         },
         () => {}
       );
+  }
+
+  guardar() {
+    if (
+      sessionStorage.getItem("nIntegrante") != null ||
+      sessionStorage.getItem("nIntegrante") != undefined
+    ) {
+      this.crearIntegrante();
+    } else {
+      this.updateIntegrante();
+    }
+  }
+
+  updateIntegrante() {
+    let updateIntegrante = new DatosIntegrantesItem();
+    if (this.body.fechaCargo != undefined && this.body.fechaBajaCargo != null) {
+      updateIntegrante.fechaCargo = this.body.fechaCargo;
+    } else {
+      updateIntegrante.fechaCargo = "";
+    }
+    if (this.body.cargo != undefined && this.body.cargo != null) {
+      updateIntegrante.cargo = this.body.cargo;
+    } else {
+      updateIntegrante.cargo = "";
+    }
+    if (this.body.idCargo != undefined && this.body.idCargo != null) {
+      updateIntegrante.idCargo = this.body.idCargo;
+    } else {
+      updateIntegrante.idCargo = "";
+    }
+    if (
+      this.body.capitalSocial != undefined &&
+      this.body.capitalSocial != null
+    ) {
+      updateIntegrante.capitalSocial = this.body.capitalSocial;
+    } else {
+      updateIntegrante.capitalSocial = "";
+    }
+    if (this.body.idPersona != undefined && this.body.idPersona != null) {
+      updateIntegrante.idPersona = this.body.idPersona;
+    }
+    if (this.body.idComponente != undefined && this.body.idComponente != null) {
+      updateIntegrante.idComponente = this.body.idComponente;
+    }
+    this.sigaServices
+      .postPaginado("integrantes_update", "?numPagina=1", updateIntegrante)
+      .subscribe(
+        data => {
+          console.log(data);
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.backTo();
+        }
+      );
+  }
+  crearIntegrante() {
+    let newIntegrante = new DatosIntegrantesItem();
+    if (this.body.completo) {
+      if (this.body.nombre != undefined && this.body.nombre != null) {
+        newIntegrante.nombre = this.body.nombre;
+      } else {
+        newIntegrante.nombre = "";
+      }
+      if (this.body.apellidos1 != undefined && this.body.apellidos1 != null) {
+        newIntegrante.apellidos1 = this.body.apellidos1;
+      } else {
+        newIntegrante.apellidos1 = "";
+      }
+      if (this.body.apellidos2 != undefined && this.body.apellidos2 != null) {
+        newIntegrante.apellidos2 = this.body.apellidos2;
+      } else {
+        newIntegrante.apellidos2 = "";
+      }
+      if (this.body.nifCif != undefined && this.body.nifCif != null) {
+        newIntegrante.nifCif = this.body.nifCif;
+      } else {
+        newIntegrante.nifCif = "";
+      }
+      if (
+        this.body.tipoIdentificacion != undefined &&
+        this.body.tipoIdentificacion != null
+      ) {
+        newIntegrante.tipoIdentificacion = this.body.tipoIdentificacion;
+      } else {
+        newIntegrante.tipoIdentificacion = "";
+      }
+      if (this.body.fechaCargo != undefined && this.body.fechaCargo != null) {
+        newIntegrante.fechaCargo = this.body.fechaCargo;
+      } else {
+        newIntegrante.fechaCargo = "";
+      }
+      if (this.body.cargo != undefined && this.body.cargo != null) {
+        newIntegrante.cargo = this.body.cargo;
+      } else {
+        newIntegrante.cargo = "";
+      }
+      if (this.body.idCargo != undefined && this.body.idCargo != null) {
+        newIntegrante.idCargo = this.body.idCargo;
+      } else {
+        newIntegrante.idCargo = "";
+      }
+      if (
+        this.body.capitalSocial != undefined &&
+        this.body.capitalSocial != null
+      ) {
+        newIntegrante.capitalSocial = this.body.capitalSocial;
+      } else {
+        newIntegrante.capitalSocial = "";
+      }
+      if (
+        this.body.idComponente != undefined &&
+        this.body.idComponente != null
+      ) {
+        newIntegrante.idComponente = this.body.idComponente;
+      } else {
+        newIntegrante.idComponente = "";
+      }
+      if (
+        this.body.idPersonaPadre != undefined &&
+        this.body.idPersonaPadre != null
+      ) {
+        newIntegrante.idPersonaPadre = this.body.idPersonaPadre;
+      } else {
+        newIntegrante.idPersonaPadre = "";
+      }
+      if (
+        this.body.idPersonaIntegrante != undefined &&
+        this.body.idPersonaIntegrante != null
+      ) {
+        newIntegrante.idPersonaIntegrante = this.body.idPersonaIntegrante;
+      } else {
+        newIntegrante.idPersonaIntegrante = "";
+      }
+      if (
+        this.body.idInstitucionIntegrante != undefined &&
+        this.body.idInstitucionIntegrante != null
+      ) {
+        newIntegrante.idInstitucionIntegrante = this.body.idInstitucionIntegrante;
+      } else {
+        newIntegrante.idInstitucionIntegrante = "";
+      }
+      if (
+        this.body.idTipoColegio != undefined &&
+        this.body.idTipoColegio != null
+      ) {
+        newIntegrante.idTipoColegio = this.body.idTipoColegio;
+      } else {
+        newIntegrante.idTipoColegio = "";
+      }
+      if (this.body.idProvincia != undefined && this.body.idProvincia != null) {
+        newIntegrante.idProvincia = this.body.idProvincia;
+      } else {
+        newIntegrante.idProvincia = "";
+      }
+      if (
+        this.body.numColegiado != undefined &&
+        this.body.numColegiado != null
+      ) {
+        newIntegrante.numColegiado = this.body.numColegiado;
+      } else {
+        newIntegrante.numColegiado = "";
+      }
+      if (this.body.tipo != undefined && this.body.tipo != null) {
+        newIntegrante.tipo = this.body.tipo;
+      } else {
+        newIntegrante.tipo = "";
+      }
+
+      this.sigaServices
+        .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
+        .subscribe(
+          data => {
+            console.log(data);
+            this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.backTo();
+          }
+        );
+    } else {
+      if (this.body.nombre != undefined && this.body.nombre != null) {
+        newIntegrante.nombre = this.body.nombre;
+      } else {
+        newIntegrante.nombre = "";
+      }
+      if (this.body.apellidos1 != undefined && this.body.apellidos1 != null) {
+        newIntegrante.apellidos1 = this.body.apellidos1;
+      } else {
+        newIntegrante.apellidos1 = "";
+      }
+      if (this.body.apellidos2 != undefined && this.body.apellidos2 != null) {
+        newIntegrante.apellidos2 = this.body.apellidos2;
+      } else {
+        newIntegrante.apellidos2 = "";
+      }
+      if (this.body.nifCif != undefined && this.body.nifCif != null) {
+        newIntegrante.nifCif = this.body.nifCif;
+      } else {
+        newIntegrante.nifCif = "";
+      }
+      if (
+        this.body.tipoIdentificacion != undefined &&
+        this.body.tipoIdentificacion != null
+      ) {
+        newIntegrante.tipoIdentificacion = this.body.tipoIdentificacion;
+      } else {
+        newIntegrante.tipoIdentificacion = "";
+      }
+      if (this.body.fechaCargo != undefined && this.body.fechaCargo != null) {
+        newIntegrante.fechaCargo = this.body.fechaCargo;
+      } else {
+        newIntegrante.fechaCargo = "";
+      }
+      if (this.body.cargo != undefined && this.body.cargo != null) {
+        newIntegrante.cargo = this.body.cargo;
+      } else {
+        newIntegrante.cargo = "";
+      }
+      if (this.body.idCargo != undefined && this.body.idCargo != null) {
+        newIntegrante.idCargo = this.body.idCargo;
+      } else {
+        newIntegrante.idCargo = "";
+      }
+      if (
+        this.body.capitalSocial != undefined &&
+        this.body.capitalSocial != null
+      ) {
+        newIntegrante.capitalSocial = this.body.capitalSocial;
+      } else {
+        newIntegrante.capitalSocial = "";
+      }
+      if (
+        this.body.idComponente != undefined &&
+        this.body.idComponente != null
+      ) {
+        newIntegrante.idComponente = this.body.idComponente;
+      } else {
+        newIntegrante.idComponente = "";
+      }
+      if (
+        this.body.idPersonaPadre != undefined &&
+        this.body.idPersonaPadre != null
+      ) {
+        newIntegrante.idPersonaPadre = this.body.idPersonaPadre;
+      } else {
+        newIntegrante.idPersonaPadre = "";
+      }
+      if (
+        this.body.idPersonaIntegrante != undefined &&
+        this.body.idPersonaIntegrante != null
+      ) {
+        newIntegrante.idPersonaIntegrante = this.body.idPersonaIntegrante;
+      } else {
+        newIntegrante.idPersonaIntegrante = "";
+      }
+      if (
+        this.body.idInstitucionIntegrante != undefined &&
+        this.body.idInstitucionIntegrante != null
+      ) {
+        newIntegrante.idInstitucionIntegrante = this.body.idInstitucionIntegrante;
+      } else {
+        newIntegrante.idInstitucionIntegrante = "";
+      }
+      if (
+        this.body.idTipoColegio != undefined &&
+        this.body.idTipoColegio != null
+      ) {
+        newIntegrante.idTipoColegio = this.body.idTipoColegio;
+      } else {
+        newIntegrante.idTipoColegio = "";
+      }
+      if (this.body.idProvincia != undefined && this.body.idProvincia != null) {
+        newIntegrante.idProvincia = this.body.idProvincia;
+      } else {
+        newIntegrante.idProvincia = "";
+      }
+      if (
+        this.body.numColegiado != undefined &&
+        this.body.numColegiado != null
+      ) {
+        newIntegrante.numColegiado = this.body.numColegiado;
+      } else {
+        newIntegrante.numColegiado = "";
+      }
+      if (this.body.tipo != undefined && this.body.tipo != null) {
+        newIntegrante.tipo = this.body.tipo;
+      } else {
+        newIntegrante.tipo = "";
+      }
+
+      this.sigaServices
+        .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
+        .subscribe(
+          data => {
+            console.log(data);
+            this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.backTo();
+          }
+        );
+    }
   }
 }

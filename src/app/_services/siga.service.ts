@@ -84,8 +84,8 @@ export class SigaServices {
     busquedaPerJuridica_search: "busquedaPerJuridica/search",
     busquedaPerJuridica_delete: "busquedaPerJuridica/delete",
     busquedaPerJuridica_history: "busquedaPerJuridica/searchHistoric",
-    datosGenerales_update: "/personaJuridica/update",
-    datosGenerales_insert: "/personaJuridica/create",
+    datosGenerales_update: "personaJuridica/update",
+    datosGenerales_insert: "personaJuridica/create",
     datosGenerales_identificacion: "DatosGenerales/identificacion",
     busquedaPer_colegio: "busquedaPer/colegio",
     busquedaPer_searchJuridica: "busquedaPerJuridica/searchJuridica",
@@ -133,7 +133,18 @@ export class SigaServices {
     integrantes_search: "busquedaPerJuridica/datosIntegrantesSearch",
     integrantes_tipoColegio: "tarjetaIntegrantes/tipoColegio",
     integrantes_provincias: "tarjetaIntegrantes/provincias",
-    integrantes_cargos: "tarjetaIntegrantes/cargos"
+    integrantes_cargos: "tarjetaIntegrantes/cargos",
+    direcciones_search: "",
+    direcciones_update: "",
+    direcciones_insert: "",
+    direcciones_remove: "",
+    direcciones_codigoPostal: "",
+    direcciones_comboPoblacion: "",
+    direcciones_comboPais: "",
+    direcciones_comboTipoDireccion: "",
+    integrantes_update: "tarjetaIntegrantes/update",
+    integrantes_insert: "tarjetaIntegrantes/create",
+    integrantes_delete: "tarjetaIntegrantes/delete"
   };
 
   private menuToggled = new Subject<any>();

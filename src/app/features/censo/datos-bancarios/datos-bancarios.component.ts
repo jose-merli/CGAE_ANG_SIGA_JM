@@ -49,19 +49,6 @@ export class DatosBancariosComponent implements OnInit {
     private translateService: TranslateService
   ) {}
 
-  datosPrueba() {
-    this.body.bic = "string";
-    this.body.fechaBaja = new Date();
-    this.body.fechaFirmaProductos = new Date();
-    this.body.fechaFirmaServicios = new Date();
-    this.body.iban = "123456789";
-    this.body.titular = "string";
-    this.body.uso = "string";
-
-    this.bodySearch.datosBancariosItem.push(this.body);
-    this.bodySearch.datosBancariosItem.push(this.body);
-  }
-
   ngOnInit() {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.idPersona = this.usuarioBody[0].idPersona;
@@ -71,7 +58,6 @@ export class DatosBancariosComponent implements OnInit {
     this.body.nifTitular = this.nif;
 
     this.cargarDatosBancarios();
-    //this.datosPrueba();
 
     this.cols = [
       {

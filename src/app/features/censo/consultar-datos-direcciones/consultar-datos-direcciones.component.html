@@ -1,0 +1,120 @@
+<div class="busqueda-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>Consulta edición y creación de una dirección</p>
+  </div>
+
+  <div class="busqueda-container">
+    <div class="card">
+      <div class="card-header header-ficha" (click)="abrirFicha()">
+        <div *ngIf="!openFicha" class="form-row">
+          <div class="col-lg-1 col-md-2">
+            <div class="img-colegiado">
+              <i class="fa fa-mail-forward icon-ficha"></i>
+            </div>
+          </div>
+          <div class="col-lg-11 col-md-10 ">
+            <div class="d-flex justify-content-end mb-1">
+              <label class="mr-auto title-ficha">Edición - Creación</label>
+            </div>
+            <div class="d-flex justify-content-between">
+              <br>
+              <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+          <div class="img-colegiado">
+            <i class="fa fa-mail-forward icon-ficha"></i>
+          </div>
+          <label class="title-ficha">Edición - Creación</label>
+          <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+      </div>
+
+      <div *ngIf="openFicha" class="card-body card-body-ficha">
+        <div class="row">
+          <div class="bloque col-lg-6 col-md-6">
+
+            <div class="form-row">
+
+              <div class="form-group col-lg-12 col-md-12">
+                <label style="font-weight: bold;">Datos Dirección</label>
+              </div>
+
+              <div class="form-group col-lg-6 col-md-6">
+                <label>Fecha Modificación</label>
+                <p-calendar [(ngModel)]="body.fechaModificacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [disabled]="!isEditable"
+                  [style]="{ 'position': 'relative', 'z-index': '1000' }"></p-calendar>
+              </div>
+              <div class="form-group col-lg-12 col-md-12">
+                <label>Dirección</label>
+                <input [(ngModel)]="body.direccion" type="text" class="form-control" pInputText>
+              </div>
+              <div class="form-group col-lg-6 col-md-6">
+                <label>País</label>
+                <p-dropdown class="select-form" [(ngModel)]='selectedPais' optionLabel="label" [options]="comboPais" (onChange)="onChangePais($event)">
+                </p-dropdown>
+              </div>
+              <div class="form-group col-lg-6 col-md-6">
+                <label>Código postal</label>
+                <input [(ngModel)]="body.codigoPostal" type="text" class="form-control" (ngModelChange)="autogenerarProvinciaPoblacion()"
+                  pInputText>
+                  <div *ngIf="codigoPostalValido == false">
+                    <label class="labelError">{{"Código Postal incorrecto"}}</label>
+                  </div>
+              </div>
+              <div class="form-group col-lg-6 col-md-6">
+                <label>Provincia</label>
+                <input [(ngModel)]="body.provincia" type="text" class="form-control" (ngModelChange)="recuperarProvinciaPoblacion()" pInputText>
+              </div>
+              <div class="form-group col-lg-6 col-md-6">
+                <label>Población</label>
+                <p-dropdown class="select-form" [(ngModel)]='selectedPoblacion' optionLabel="label" [options]="comboPoblacion" (onChange)="onChangePoblacion($event)">
+                </p-dropdown>
+              </div>
+              <div class="form-group col-lg-6 col-md-6">
+                <label>Tipo dirección</label>
+                <p-dropdown class="select-form" [(ngModel)]='selectedTipoDireccion' optionLabel="label" [options]="comboTipoDireccion" (onChange)="onChangeTipoDireccion($event)">
+                </p-dropdown>
+              </div>
+            </div>
+          </div>
+
+          <div class="bloque col-lg-6 col-md-6">
+
+            <div class="form-row">
+
+              <div class="form-group col-lg-12 col-md-12">
+                <label style="text-align:center; font-weight: bold;">Datos contacto</label>
+              </div>
+
+              <div class="form-group col-lg-6 col-md-6">
+                <label>Tipo de contacto</label>
+                <p-dropdown class="select-form" [(ngModel)]='selectedContacto' optionLabel="label" [options]="comboTipoContacto" (onChange)="onChangeTipoContacto($event)">
+                </p-dropdown>
+              </div>
+              <div class="form-group col-lg-6 col-md-6">
+                <label>Contacto</label>
+                <input [(ngModel)]="body.contacto" type="text" class="form-control" pInputText>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="card-footer ">
+          <div class="text-right main-button ">
+            <button *ngIf="!nuevo" (click)="duplicarRegistro()" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="Duplicar"></button>
+            <button (click)="validarFormulario(selectedDatos)" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
+            <button (click)="restablecer()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="Restablecer"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-3 text-right main-button ">
+    <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="Volver"></button>
+  </div>
+
+</div>
