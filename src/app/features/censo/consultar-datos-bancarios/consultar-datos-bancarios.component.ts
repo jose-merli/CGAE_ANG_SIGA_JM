@@ -21,6 +21,8 @@ import { DatosBancariosSearchAnexosItem } from "./../../../../app/models/DatosBa
 import { DatosBancariosAnexoObject } from "./../../../../app/models/DatosBancariosAnexoObject";
 
 import { SigaServices } from "./../../../_services/siga.service";
+//import "rxjs/Rx";
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: "app-consultar-datos-bancarios",
@@ -172,6 +174,29 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       { field: "firmaFecha", header: "Fecha de firma" },
       { field: "firmaLugar", header: "Lugar de la firma" }
     ];
+  }
+
+  downloadAnexo(dato) {
+    let filename;
+    this.sigaServices
+      .post("busquedaPerJuridica_fileDownloadInformation", dato)
+      .subscribe(data => {
+        let a = JSON.parse(data["body"]);
+        filename = a.value + a.label;
+      }),
+      () => {
+        this.sigaServices
+          .postDownloadFiles("busquedaPerJuridica_downloadFile", dato)
+          .subscribe(data => {
+            const blob = new Blob([data], { type: "text/csv" });
+            if (blob.size == 0) {
+              this.showFail("no existe fichero para descargar");
+            } else {
+              //let filename = "2006002472110.pdf";
+              saveAs(data, filename);
+            }
+          });
+      };
   }
 
   // setItalic(datoH) {
