@@ -40,12 +40,8 @@
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
           </div>
           <div *ngIf="!only" class="d-flex justify-content-between">
-            <div class="row">
-              <div *ngFor="let integrante of datos">
-                <label>&nbsp;{{ integrante.nombre }}</label>
-              </div>
-              <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
-            </div>
+            <label *ngFor="let integrante of datos">&nbsp;{{ integrante.nombre }}</label>
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
           </div>
         </div>
         <div *ngIf="esFichaActiva('integrantes')" class=" header-ficha-open d-flex justify-content-start align-items-center">
