@@ -124,6 +124,9 @@ export class SigaServices {
     anexos_update: "busquedaPerJuridica/updateAnexos",
     anexos_insert: "busquedaPerJuridica/insertAnexos",
     busquedaPerJuridica_uploadFile: "busquedaPerJuridica/uploadFile",
+    busquedaPerJuridica_fileDownloadInformation:
+      "busquedaPerJuridica/fileDownloadInformation",
+    busquedaPerJuridica_downloadFile: "busquedaPerJuridica/downloadFile",
     retenciones_tipoRetencion: "retenciones/tipoRetencion",
     retenciones_search: "retenciones/search",
     retenciones_update: "retenciones/update",
@@ -207,12 +210,26 @@ export class SigaServices {
       });
   }
 
+  postDownloadFiles(service: string, body: any): Observable<any> {
+    let headers = new HttpHeaders({
+      "Content-Type": "application/json"
+    });
+    return this.http
+      .post(environment.newSigaUrl + this.endpoints[service], body, {
+        headers: headers,
+        observe: "body", // si observe: "response" no sirve. Si se quita el observe sirve
+        responseType: "blob"
+      })
+      .map(response => {
+        return response;
+      });
+  }
+
   postSendContent(service: string, file: any): Observable<any> {
     let formData: FormData = new FormData();
     if (file != undefined) {
       formData.append("uploadFile", file, file.name);
     }
-
     let headers = new HttpHeaders();
 
     headers.append("Content-Type", "multipart/form-data");

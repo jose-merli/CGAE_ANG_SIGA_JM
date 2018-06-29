@@ -9,7 +9,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-end mb-1">
-            <label class="mr-auto title-ficha">Datos de Identificacion</label>
+            <label class="mr-auto title-ficha">{{"censo.busquedaClientes.literal.datosIdentificacion" | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label>{{"administracion.usuarios.literal.NIF" | translate}}
@@ -18,10 +18,10 @@
             <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}
               <span>{{ body.nombre }}</span>
             </label>
-            <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}
+            <label>{{"censo.busquedaClientes.literal.apellido1" | translate}}
               <span>{{ body.apellidos1 }}</span>
             </label>
-            <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}
+            <label>{{"censo.busquedaClientes.literal.apellido2" | translate}}
               <span>{{ body.apellidos2 }} </span>
             </label>
             <i (click)="abrirFicha('identificacion')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
@@ -32,7 +32,7 @@
           <div class="img-colegiado">
             <i class="far fa-users icon-ficha"></i>
           </div>
-          <label class="title-ficha">Datos de Identificacion</label>
+          <label class="title-ficha">{{"censo.busquedaClientes.literal.datosIdentificacion" | translate}}</label>
           <i (click)="cerrarFicha('identificacion')" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
@@ -40,7 +40,7 @@
         <div class="img-colegiado">
           <i class="fa fa-users icon-ficha"> </i>
         </div>
-        <label class="title-ficha">Datos de Identificacion</label>
+        <label class="title-ficha">{{"censo.busquedaClientes.literal.datosIdentificacion" | translate}}</label>
         <i (click)="cerrarFicha('identificacion')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -87,16 +87,16 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-end mb-1">
-            <label class="mr-auto title-ficha">Datos de Colegiación</label>
+            <label class="mr-auto title-ficha">{{"censo.busquedaClientes.literal.datosColegiacion" | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>Tipo de Colegio
+            <label>{{"censo.busquedaClientesAvanzada.literal.tipoColegio" | translate}}
               <span>{{ body.idTipoColegio }}</span>
             </label>
-            <label>Provincia
+            <label>{{"censo.datosDireccion.literal.provincia" | translate}}
               <span>{{ body.idProvincia }}</span>
             </label>
-            <label>Numero de Colegiado
+            <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}
               <span>{{ body.numColegiado }}</span>
             </label>
             <i (click)="abrirFicha('colegiacion')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
@@ -107,7 +107,7 @@
           <div class="img-colegiado">
             <i class="far fa-users icon-ficha"></i>
           </div>
-          <label class="title-ficha">Datos de Colegiación</label>
+          <label class="title-ficha">{{"censo.busquedaClientes.literal.datosColegiacion " | translate}}</label>
           <i (click)="cerrarFicha('colegiacion')" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
@@ -115,7 +115,7 @@
         <div class="img-colegiado">
           <i class="fa fa-users icon-ficha"> </i>
         </div>
-        <label class="title-ficha">Datos de Colegiación</label>
+        <label class="title-ficha">{{"censo.busquedaClientes.literal.datosColegiacion " | translate}}</label>
         <i (click)="cerrarFicha('colegiacion')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -123,15 +123,15 @@
     <div *ngIf="esFichaActiva('colegiacion')" class="card-body card-body-ficha">
       <div class="row">
         <div class="form-group col-lg-3 col-md-6">
-          <label>Tipo Colegio</label>
+          <label>{{"censo.busquedaClientesAvanzada.literal.tipoColegio" | translate}}</label>
           <p-dropdown [(ngModel)]="body.idTipoColegio" class="select-form" [options]="colegiosArray" [(disabled)]="isDisabledTipoColegio"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-6">
-          <label>Provincia</label>
+          <label>{{"censo.datosDireccion.literal.provincia" | translate}}</label>
           <p-dropdown [(ngModel)]="body.idProvincia" class="select-form" [options]="provinciasArray" [(disabled)]="isDisabledProvincia"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-6">
-          <label>Numero de Colegiado</label>
+          <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
           <input type="text" class="form-control" [(ngModel)]="body.numColegiado" [(disabled)]="isDisabledNumColegio" pInputText>
         </div>
 
@@ -160,22 +160,22 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-end mb-1">
-            <label class="mr-auto title-ficha">Vinculación con la Sociedad</label>
+            <label class="mr-auto title-ficha">{{"censo.busquedaClientes.literal.cargo" | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>Fecha cargo
+            <label>{{"censo.consultaComponentesJuridicos.literal.fechaCargo" | translate}}
               <span>{{ body.fechaCargo }}</span>
             </label>
-            <label>Fecha fin cargo
+            <label>{{"censo.consultaComponentesJuridicos.literal.fechaFinCargo" | translate}}
               <span>{{ body.fechaBajaCargo }}</span>
             </label>
-            <label>Cargo
+            <label>{{"censo.consultaComponentesJuridicos.literal.cargo" | translate}}
               <span>{{ body.idCargo }}</span>
             </label>
-            <label>Descripcion del Cargo
+            <label>  {{"censo.consultaComponentesJuridicos.literal.descripcioncargo" | translate}}
               <span>{{ body.cargo }}</span>
             </label>
-            <label>Participación Sociedad
+            <label>{{"censo.consultaComponentesJuridicos.literal.Participacion" | translate}}
               <span>{{ body.capitalSocial }}</span>
             </label>
             <i (click)="abrirFicha('vinculacion')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
@@ -186,7 +186,7 @@
           <div class="img-colegiado">
             <i class="far fa-users icon-ficha"></i>
           </div>
-          <label class="title-ficha">Vinculación con la Sociedad</label>
+          <label class="title-ficha">{{"censo.busquedaClientes.literal.cargo" | translate}}</label>
           <i (click)="cerrarFicha('vinculacion')" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
@@ -194,7 +194,7 @@
         <div class="img-colegiado">
           <i class="fa fa-users icon-ficha"> </i>
         </div>
-        <label class="title-ficha">Vinculación con la Sociedad</label>
+        <label class="title-ficha">{{"censo.busquedaClientes.literal.cargo" | translate}}</label>
         <i (click)="cerrarFicha('vinculacion')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -202,23 +202,24 @@
     <div *ngIf="esFichaActiva('vinculacion')" class="card-body card-body-ficha">
       <div class="row">
         <div class="form-group col-lg-3 col-md-6">
-          <label>Fecha cargo</label>
-          <p-calendar [(ngModel)]="fechaCarga" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+          <label>{{"censo.consultaComponentesJuridicos.literal.fechaCargo" | translate}}</label>
+          <p-calendar [(ngModel)]="fechaCarga" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [monthNavigator]="true"
+            [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaRegistro" [locale]="es" [utc]="true"></p-calendar>
         </div>
         <div class="form-group col-lg-3 col-md-6">
-          <label>Fecha fin cargo</label>
+          <label>{{"censo.consultaComponentesJuridicos.literal.fechaFinCargo" | translate}}</label>
           <p-calendar [(ngModel)]="body.fechaBajaCargo" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(disabled)]="isDisabledFechaFinCargo"></p-calendar>
         </div>
         <div class="form-group col-lg-3 col-md-6">
-          <label>Cargo</label>
+          <label>{{"censo.consultaComponentesJuridicos.literal.cargo" | translate}}</label>
           <p-dropdown [(ngModel)]="body.idCargo" class="select-form" [options]="cargosArray"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-6">
-          <label>Descripcion del Cargo</label>
+          <label>{{"censo.consultaComponentesJuridicos.literal.descripcioncargo" | translate}}</label>
           <input type="text" class="form-control" [(ngModel)]="body.cargo" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-6">
-          <label>Participación Sociedad</label>
+          <label>{{"censo.consultaComponentesJuridicos.literal.Participacion" | translate}}</label>
           <input type="text" class="form-control" [(ngModel)]="body.capitalSocial" pInputText>
         </div>
       </div>

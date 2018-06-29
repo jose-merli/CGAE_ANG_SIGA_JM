@@ -168,10 +168,13 @@ export class AccesoFichaPersonaComponent implements OnInit {
         data => {
           this.progressSpinner = false;
           this.body.status = data.status;
+
+          this.showSuccess("Notario desasociado");
         },
         error => {
           this.bodySearch = JSON.parse(error["error"]);
           this.showFail(JSON.stringify(this.bodySearch.error.description));
+          this.showFail("Ha ocurrido un error");
           console.log(error);
           this.progressSpinner = false;
         },
@@ -199,12 +202,15 @@ export class AccesoFichaPersonaComponent implements OnInit {
           this.progressSpinner = false;
           console.log(data);
           this.body.status = data.status;
+
+          this.showSuccess("Se ha guardado correctamente");
         },
         error => {
           this.bodySearch = JSON.parse(error["error"]);
           this.showFail(JSON.stringify(this.bodySearch.error.description));
           console.log(error);
           this.progressSpinner = false;
+          this.showFail("Ha habido un error al guardar");
         },
         () => {
           this.guardarNotario = false;
@@ -237,11 +243,15 @@ export class AccesoFichaPersonaComponent implements OnInit {
               this.progressSpinner = false;
               console.log(data);
               this.body.status = data.status;
+
+              this.showSuccess("Se ha creado correctamente");
             },
             error => {
               this.bodySearch = JSON.parse(error["error"]);
               this.showFail(JSON.stringify(this.bodySearch.error.description));
               console.log(error);
+
+              this.showFail("Ha habido un error al crear el notario");
               this.progressSpinner = false;
             },
             () => {

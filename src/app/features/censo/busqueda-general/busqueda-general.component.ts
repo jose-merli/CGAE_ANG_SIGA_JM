@@ -297,11 +297,13 @@ export class BusquedaGeneralComponent {
               this.datos == null ||
               this.datos == undefined
             ) {
+              console.log("DAtos", this.datos);
               if (
-                this.bodyFisica.nif != null &&
+                this.bodyFisica.nif != "" &&
                 this.bodyFisica.nif != undefined
-              )
-                if (this.bodyFisica.nombre.trim() == "")
+              ) {
+                console.log("DAtos", this.bodyFisica.nif);
+                if (this.bodyFisica.nombre.trim() == "") {
                   if (
                     this.bodyFisica.primerApellido.trim() == "" &&
                     this.bodyFisica.segundoApellido.trim() == "" &&
@@ -309,6 +311,8 @@ export class BusquedaGeneralComponent {
                   ) {
                     this.noDataFoundWithDNI();
                   }
+                }
+              }
             }
           }
         );
@@ -565,5 +569,9 @@ export class BusquedaGeneralComponent {
     if (event.keyCode === KEY_CODE.ENTER) {
       this.isBuscar();
     }
+  }
+
+  backTo() {
+    this.location.back();
   }
 }
