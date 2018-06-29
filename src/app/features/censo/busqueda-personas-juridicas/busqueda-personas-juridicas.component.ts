@@ -173,13 +173,8 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       }
     ];
 
-    // Poner check "Sociedades Profesionales a activo pork "Sociedades Profesionales a activo por defecto"
-    // this.body.sociedadesProfesionales = true;
-    // if (sessionStorage.getItem("busquedaJuridica") != null) {
-    //   this.body = JSON.parse(sessionStorage.getItem("busquedaJuridica"));
-    //   sessionStorage.removeItem("busquedaJuridica");
-    //   this.Search();
-    // }
+    // Poner check "Sociedades Profesionales a activo porque "Sociedades Profesionales a activo por defecto"
+    this.body.sociedadesProfesionales = true;
   }
 
   toHistorico() {
