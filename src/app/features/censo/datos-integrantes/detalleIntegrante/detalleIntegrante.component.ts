@@ -438,7 +438,8 @@ export class DetalleIntegranteComponent implements OnInit {
 
   updateIntegrante() {
     let updateIntegrante = new DatosIntegrantesItem();
-    if (this.body.fechaCargo != undefined && this.body.fechaBajaCargo != null) {
+    if (this.fechaCarga != undefined && this.fechaCarga != null) {
+      this.arreglarFechas();
       updateIntegrante.fechaCargo = this.body.fechaCargo;
     } else {
       updateIntegrante.fechaCargo = "";
