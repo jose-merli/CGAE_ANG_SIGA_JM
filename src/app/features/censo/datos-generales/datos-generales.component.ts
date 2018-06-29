@@ -161,13 +161,17 @@ export class DatosGenerales implements OnInit {
   ngOnInit() {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
 
-    if (this.usuarioBody != undefined) {
+if(sessionStorage.getItem("crearnuevo")!= null){
+  this.editar = true;
+   this.abreCierraFicha('generales');
+}
+    if (this.usuarioBody[0] != undefined) {
       this.idPersona = this.usuarioBody[0].idPersona;
       this.tipoPersonaJuridica = this.usuarioBody[0].tipo;
+    }    
+    if(this.body.idPersona != undefined){
+        this.datosGeneralesSearch();
     }
-
-    this.datosGeneralesSearch();
-
     this.textFilter = "Elegir";
 
     this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
@@ -179,6 +183,8 @@ export class DatosGenerales implements OnInit {
         console.log(err);
       },
       () => {
+        if(this.body.idPersona != undefined || this.body.idPersona != null){
+
         this.sigaServices
           .post("busquedaPerJuridica_etiquetasPersona", this.body)
           .subscribe(
@@ -195,6 +201,7 @@ export class DatosGenerales implements OnInit {
               console.log(err);
             }
           );
+           }
       }
     );
 
@@ -207,6 +214,7 @@ export class DatosGenerales implements OnInit {
     );
 
     this.comboTipo.push(this.tipoPersonaJuridica);
+  
   }
 
   datosGeneralesSearch() {
@@ -215,7 +223,6 @@ export class DatosGenerales implements OnInit {
     this.body.idPersona = this.idPersona;
     this.body.idLenguaje = "";
     this.body.idInstitucion = "";
-
     this.sigaServices
       .postPaginado(
         "busquedaPerJuridica_datosGeneralesSearch",
@@ -271,6 +278,17 @@ export class DatosGenerales implements OnInit {
   }
 
   guardar() {
+    if(sessionStorage.getItem("crearnuevo") != null){
+    this.sigaServices.post("busquedaPerJuridica_create", this.body).subscribe(
+      data => {
+        this.showSuccess();
+      },
+      error => {
+        console.log(error);
+        this.showError(); 
+      }
+    );
+    }else{
     this.body.idPersona = this.idPersona; //"2005005356";
 
     // guardar imagen en bd y refresca header.component
@@ -336,6 +354,7 @@ export class DatosGenerales implements OnInit {
           }
         );
     }
+    }
   }
 
   restablecer() {
@@ -392,9 +411,7 @@ export class DatosGenerales implements OnInit {
     for (let file of event.files) {
       this.uploadedFiles.push(file);
     }
-
     console.log("image", this.uploadedFiles);
-
     this.msgs = [];
     this.msgs.push({ severity: "info", summary: "File Uploaded", detail: "" });
   }
@@ -442,6 +459,17 @@ export class DatosGenerales implements OnInit {
       severity: "success",
       summary: this.translateService.instant("general.message.correct"),
       detail: this.translateService.instant("general.message.accion.realizada")
+    });
+  }
+
+  showError() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "general.message.error.realiza.accion"
+      )
     });
   }
 

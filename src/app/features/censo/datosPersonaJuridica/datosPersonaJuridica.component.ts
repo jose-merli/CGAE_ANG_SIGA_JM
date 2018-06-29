@@ -61,7 +61,8 @@ import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-co
   styleUrls: ["./datosPersonaJuridica.component.scss"]
 })
 export class DatosPersonaJuridicaComponent implements OnInit {
-  fichasPosibles: any[];
+  fichasPosibles: any[] = [];
+  generales: boolean = false;
   constructor(
     public sigaServices: OldSigaServices,
     private location: Location
@@ -104,6 +105,7 @@ export class DatosPersonaJuridicaComponent implements OnInit {
     ];
   }
   backTo() {
+    sessionStorage.removeItem("usuarioBody");
     this.location.back();
   }
 
