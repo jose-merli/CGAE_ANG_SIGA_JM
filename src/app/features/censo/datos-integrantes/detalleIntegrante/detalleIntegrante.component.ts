@@ -68,6 +68,7 @@ export class DetalleIntegranteComponent implements OnInit {
   datosActivos: any[];
   select: any[];
   msgs: Message[] = [];
+  es: any = esCalendar;
   rowsPerPage: any = [];
   showDatosGenerales: boolean = true;
   pButton;
@@ -138,6 +139,10 @@ export class DetalleIntegranteComponent implements OnInit {
       this.beanNewIntegrante();
     } else {
       this.todoDisable();
+      var a = JSON.parse(sessionStorage.getItem("integrante"));
+      if (a.fechaCargo != null || a.fechaCargo != undefined) {
+        this.fechaCarga = a.fechaCargo;
+      }
     }
 
     this.editar = this.body.editar;
@@ -238,11 +243,13 @@ export class DetalleIntegranteComponent implements OnInit {
     }
     return fecha;
   }
+
   arreglarFechas() {
     if (this.fechaCarga != undefined) {
       this.body.fechaCargo = this.transformaFecha(this.fechaCarga);
     }
   }
+
   beanNewIntegrante() {
     var ir = null;
     this.body = new DatosIntegrantesItem();
@@ -263,9 +270,11 @@ export class DetalleIntegranteComponent implements OnInit {
         this.body.idInstitucionIntegrante = ir[0].colegio;
       }
       if (ir[0].fechaAlta != null) {
-        this.body.cargo = ir[0].fechaAlta;
-      } else if (ir[0].fechaConstitucion) {
+        this.body.fechaCargo = ir[0].fechaAlta;
+        this.fechaCarga = ir[0].fechaAlta;
+      } else if (ir[0].fechaConstitucion != null) {
         this.body.fechaCargo = ir[0].fechaConstitucion;
+        this.fechaCarga = ir[0].fechaConstitucion;
       }
 
       if (ir[0].nif != null) {
@@ -429,7 +438,8 @@ export class DetalleIntegranteComponent implements OnInit {
 
   updateIntegrante() {
     let updateIntegrante = new DatosIntegrantesItem();
-    if (this.body.fechaCargo != undefined && this.body.fechaBajaCargo != null) {
+    if (this.fechaCarga != undefined && this.fechaCarga != null) {
+      this.arreglarFechas();
       updateIntegrante.fechaCargo = this.body.fechaCargo;
     } else {
       updateIntegrante.fechaCargo = "";

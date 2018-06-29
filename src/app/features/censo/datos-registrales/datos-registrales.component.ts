@@ -154,12 +154,13 @@ export class DatosRegistralesComponent implements OnInit {
   ngOnInit() {
     this.desactivadoGuardar();
     this.bodyAnterior = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    if (this.bodyAnterior != null) {
-      this.body.idPersona = this.bodyAnterior[0].idPersona;
-      this.idPersonaEditar = this.bodyAnterior[0].idPersona;
-    }
-    this.search();
-
+    if(this.bodyAnterior[0] != undefined){
+        if (this.bodyAnterior != null) {
+          this.body.idPersona = this.bodyAnterior[0].idPersona;
+          this.idPersonaEditar = this.bodyAnterior[0].idPersona;
+        }
+        this.search();
+     }
     console.log(this.body);
 
     this.sigaServices.get("datosRegistrales_actividadesDisponible").subscribe(

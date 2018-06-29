@@ -3,15 +3,6 @@
         <i class="fa fa-square"></i>
         <p>Datos generales: --Nombre Persona-- | Nº Colegiado: 0000 (Estado Actual)</p>
     </div>
-    <!--<div class="breadCrumb d-flex justify-content-between">
-    <label>Censo <i class="fa fa-angle-right"></i> Ficha colegial </label>
-    <label (click)="onAbrirTodoClick()" class="desplegar-todo">Desplegar todo <i class="fa" [ngClass]="{'fa-angle-down':!showAll,'fa-angle-up':showAll}"></i></label>
-  </div>-->
-
-    <!--<div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
-    <app-datos-generales *ngSwitchCase="'generales'"></app-datos-generales>
-  </div>-->
-
     <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
         <app-datos-generales *ngSwitchCase="'generales'"></app-datos-generales>
         <app-datos-registrales *ngSwitchCase="'registrales'"></app-datos-registrales>
@@ -23,13 +14,9 @@
         <!--<app-datos-direcciones *ngSwitchCase="'direcciones'"></app-datos-direcciones>-->
     </div>
     <!--END DATOS GENERALES-->
-
     <!--DATOS COLEGIALES-->
-
-
     <!--DATOS RETENCIONES-->
     <!--END DATOS RETENCIONES-->
-
     <div class="mt-3 text-right main-button ">
         <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="Volver"></button>
     </div>

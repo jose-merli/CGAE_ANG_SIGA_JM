@@ -65,7 +65,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   disabledRadio: boolean = false;
   disabled: boolean = false;
   selectMultiple: boolean = false;
-  blockCrear: boolean = true;
   selectedItem: number = 10;
   first: number = 0;
   es: any = esCalendar;
@@ -105,6 +104,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   ngOnInit() {
     this.checkAcceso(); //coger tipos
     sessionStorage.removeItem("notario");
+        sessionStorage.removeItem("crearnuevo");
     if (sessionStorage.getItem("busqueda") != null) {
       this.body = JSON.parse(sessionStorage.getItem("busqueda"));
       sessionStorage.removeItem("busqueda");
@@ -269,10 +269,8 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       (this.body.abreviatura != "" && this.body.abreviatura != undefined) &&
       this.fechaConstitucion != undefined
     ) {
-      this.blockCrear = false;
       this.numSelected = this.selectedDatos.length;
     } else {
-      this.blockCrear = true;
       this.numSelected = this.selectedDatos.length;
     }
   }
@@ -452,26 +450,30 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   crear() {
-    this.body.fechaConstitucion = this.fechaConstitucion;
-    this.sigaServices.post("busquedaPerJuridica_create", this.body).subscribe(
-      data => {
-        this.personaSearch = JSON.parse(data["body"]);
-        this.showSuccess();
-      },
-      error => {
-        this.personaSearch = JSON.parse(error["error"]);
-        this.showduplicateFail(
-          JSON.stringify(this.personaSearch.error.message)
-        );
-        console.log(error);
-        this.showFail();
-      },
-      () => {
-        this.cancelar();
-        this.isBuscar();
-        this.table.reset();
-      }
-    );
+      sessionStorage.setItem("crearnuevo", JSON.stringify("true"));          
+      this.body = new PersonaJuridicaItem();
+      sessionStorage.setItem("usuarioBody", JSON.stringify(this.body));
+      this.router.navigate(["fichaPersonaJuridica"]);
+    // this.body.fechaConstitucion = this.fechaConstitucion;
+    // this.sigaServices.post("busquedaPerJuridica_create", this.body).subscribe(
+    //   data => {
+    //     this.personaSearch = JSON.parse(data["body"]);
+    //     this.showSuccess();
+    //   },
+    //   error => {
+    //     this.personaSearch = JSON.parse(error["error"]);
+    //     this.showduplicateFail(
+    //       JSON.stringify(this.personaSearch.error.message)
+    //     );
+    //     console.log(error);
+    //     this.showFail();
+    //   },
+    //   () => {
+    //     this.cancelar();
+    //     this.isBuscar();
+    //     this.table.reset();
+    //   }
+    // );
   }
 
   showSuccess() {
