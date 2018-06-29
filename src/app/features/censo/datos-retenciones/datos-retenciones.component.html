@@ -64,8 +64,6 @@
                                 <ng-template let-col let-car="rowData" pTemplate="body">
                                     <span>{{car[col.field]}}</span>
                                     <p-dropdown *ngIf="car[col.field] == '' " [(ngModel)]="newRetencion.descripcionRetencion" [options]="tiposRetenciones" (onChange)="onChangeDrop($event)"></p-dropdown>
-                                    <!-- <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='newRetencion.descripcionRetencion' type="text"
-                                class="form-control" (onChange)="onChangeForm()" pInputText> -->
                                 </ng-template>
                                 </p-column>
                                 <p-column [sortable]="true" field="porcentajeRetencion" [header]="cols[3].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
@@ -86,67 +84,20 @@
                                     </ng-template>
                                     <p-footer>
                                         <div class="text-right main-button">
-                                            <button (click)="volver();" [(disabled)]="isVolver" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-                                            <button (click)="crear()" [(disabled)]="isCrear" pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+
+
                                             <button (click)="confirmEdit();" [(disabled)]="isEditar" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                                            <button (click)="volver();" [(disabled)]="isVolver" pButton type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
                                             <button (click)="confirmarBorrar()" [(disabled)]="isEliminar" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
                                                 label="{{'general.boton.eliminar'  | translate}}"></button>
+                                                <button (click)="crear()" [(disabled)]="isCrear" pButton type="button" icon="fa fa-plus-square" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
                                         </div>
                                     </p-footer>
                                     </p-dataTable>
 
-                                    <!-- <div class="bloque col-lg-6 col-md-6">
-                    <div class="form-row">
-                        <div class="form-group col-lg-3 col-md-6">
-                            <label>{{"censo.fichaCliente.literal.identificacion"  | translate}} (*)</label>
-                            <input type="text" class="form-control" [(ngModel)]="body.nif" [(disabled)]="!editar" pInputText>
-                        </div>
-                        <div class="form-group col-lg-3 col-md-6">
-                            <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
-                            <p-dropdown class="select-form" [(ngModel)]="selectedcomboTipoIdentificacion" [options]="comboTipoIdentificacion" [(disabled)]="!editar"></p-dropdown>
-                        </div>
-                        <div class="form-group col-lg-3 col-md-6"></div>
-                        <div class="form-group col-lg-6 col-md-6">
-                            <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
-                            <input [(ngModel)]="body.nombre" type="text" class="form-control" [(disabled)]="!editar" pInputText>
-                        </div>
-                        <div class="form-group col-lg-3 col-md-6">
-                            <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}</label>
-                            <input [(ngModel)]="body.apellido1 " type="text " class="form-control" [(disabled)]="!editar" pInputText>
-                        </div>
-                        <div class="form-group col-lg-3 col-md-6">
-                            <label></label>
-                            <input [(ngModel)]="body.apellido2 " type="text " class="form-control" [(disabled)]="!editar" pInputText>
-                        </div>
-                        <div class="form-group col-lg-3 col-md-6 ">
-                            <label>{{"censo.fichaCliente.situacion.cabecera" | translate}}</label>
-                            <p-dropdown class="select-form" [(ngModel)]="body.situacion" [options]="comboSituacion" [(disabled)]="!editar"></p-dropdown>
-                        </div>
-                        <div class="form-group col-lg-3 col-md-6 ">
-                            <label>Nº Colegiado/Registro</label>
-                            <input type="text " class="form-control " [(ngModel)]="body.numeroColegiado" [(disabled)]="!editar" pInputText>
-                        </div>
-                        <div class="form-group col-lg-6 col-md-6 form-group-date">
-                            <label>Fecha incorporación/Registro</label>
-                            <p-calendar [defaultDate]="null" [(ngModel)]="body.fechaAlta" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
-                                [(disabled)]="!editar"></p-calendar>
-                        </div>
-                    </div>
-                </div> -->
+
             </div>
             <br>
 
-            <!-- <div class="card-footer ">
-                <div class="text-right main-button ">
-                    <button (click)="isSearch()" pButton type="button" icon="fa fa-search" iconPos="left" label="Buscar"></button>
-                    <button (click)="desasociarPersona()" pButton type="button" icon="fa fa-undo" iconPos="left" label="Desasociar"></button>
-                    <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
-                    <button (click)="isEditar()" pButton type="button" icon="fa fa-edit" iconPos="left" label="Editar"></button>
-                </div>
-            </div> -->
-            <!--END DATOS GENERALES-->
+
         </div>
-        <!-- <p-growl [(value)]="msgs"></p-growl>
-        <div *ngIf="progressSpinner" class="overlay-spinner">
-            <div class="loader"></div>
-        </div> -->
