@@ -114,6 +114,7 @@ export class DatosGenerales implements OnInit {
   idPersona: String;
   tipoPersonaJuridica: String;
   datos: any[];
+  selectedTipo: any;
   idiomaPreferenciaSociedad: String;
 
   @ViewChild(DatosGeneralesComponent)
@@ -159,6 +160,7 @@ export class DatosGenerales implements OnInit {
   }
 
   ngOnInit() {
+    this.busquedaIdioma();
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
 
 if(sessionStorage.getItem("crearnuevo")!= null){
@@ -217,6 +219,17 @@ if(sessionStorage.getItem("crearnuevo")!= null){
   
   }
 
+  busquedaIdioma(){
+    this.sigaServices.get("etiquetas_lenguaje").subscribe(
+            n => {
+              this.idiomas = n.combooItems;
+            },
+            err => {
+              console.log(err);
+            }
+          );
+  }
+
   datosGeneralesSearch() {
     this.progressSpinner = true;
 
@@ -247,20 +260,16 @@ if(sessionStorage.getItem("crearnuevo")!= null){
         },
         () => {
           // obtengo los idiomas y establecer el del la persona jurídica
-          this.sigaServices.get("etiquetas_lenguaje").subscribe(
-            n => {
-              this.idiomas = n.combooItems;
-            },
-            err => {
-              console.log(err);
-            },
-            () => {
               this.idiomaPreferenciaSociedad = this.body.idLenguajeSociedad;
-            }
-          );
         }
       );
   }
+
+  getTipo(event){
+    this.selectedTipo = event.value;
+    this.body.tipo = this.selectedTipo;
+    console.log(this.body.tipo);
+}
 
   createLegalPerson() {
     this.sigaServices.post("datosGenerales_insert", this.body).subscribe(
@@ -279,6 +288,16 @@ if(sessionStorage.getItem("crearnuevo")!= null){
 
   guardar() {
     if(sessionStorage.getItem("crearnuevo") != null){
+ this.body.idPersona = this.idPersona;
+          if (this.etiquetasPersonaJuridicaSelecionados != undefined) {
+      this.body.grupos = [];
+      this.etiquetasPersonaJuridicaSelecionados.forEach(
+        (value: String, key: number) => {
+          this.body.grupos.push(value);
+        }
+      );
+    }
+        this.body.idioma = this.idiomaPreferenciaSociedad;
     this.sigaServices.post("busquedaPerJuridica_create", this.body).subscribe(
       data => {
         this.showSuccess();

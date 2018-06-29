@@ -74,12 +74,12 @@
               <label>{{"censo.fichaCliente.literal.identificacion" | translate}} (*)</label>
               <input [(ngModel)]="body.nif" type="text" class="form-control" (ngModelChange)="onChangeForm()" pInputText>
             </div>
-            <div *ngIf="comboTipo.length > 1" class="form-group col-lg-6 col-md-6">
+            <div *ngIf="editar" class="form-group col-lg-6 col-md-6">
               <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
-              <p-dropdown class="select-form" [(ngModel)]="comboTipo" [options]="comboIdentificacion" optionLabel="label" (ngModelChange)="onChangeForm()"></p-dropdown>
+              <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion" optionLabel="label" (ngModelChange)="getTipo($event)"></p-dropdown>
               <!--<p-dropdown class="select-form" [(ngModel)]="body.tipo" [options]="comboTipo" (ngModelChange)="onChangeForm()"></p-dropdown>-->
             </div>
-            <div *ngIf="comboTipo.length == 1" class="form-group col-lg-6 col-md-6">
+            <div *ngIf="!editar" class="form-group col-lg-6 col-md-6">
               <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
               <input [(ngModel)]="comboTipo[0]" type="text" class="form-control" (ngModelChange)="onChangeForm()" pInputText>
             </div>
@@ -90,8 +90,7 @@
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}</label>
-              <p-calendar [locale]="es" [(ngModel)]="body.fechaBaja" dateFormat="dd-mm-yy" icon="far fa-calendar-alt" showIcon="true" (onSelect)="calculaEdad()"
-                [(disabled)]="!editar"></p-calendar>
+              <p-calendar [locale]="es" [(ngModel)]="body.fechaBaja" dateFormat="dd-mm-yy" icon="far fa-calendar-alt" showIcon="true" [(disabled)]="!editar"></p-calendar>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.denominacion" | translate}} (*)</label>
