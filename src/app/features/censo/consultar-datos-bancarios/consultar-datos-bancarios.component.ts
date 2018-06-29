@@ -472,9 +472,11 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   validarCuentaCargo() {
     this.confirmationService.confirm({
-      message: this.translateService.instant(
-        "censo.tipoCuenta.cargo.confirmacionProcesoAltaCuentaCargos"
-      ),
+      message:
+        "¿Desea guardar los cambios?" /*this.translateService.instant(
+        //"censo.tipoCuenta.cargo.confirmacionProcesoAltaCuentaCargos"
+       
+      ),*/,
       icon: "fa fa-info",
       accept: () => {
         this.revisionCuentas = true;
