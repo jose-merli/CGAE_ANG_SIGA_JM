@@ -169,7 +169,7 @@ if(sessionStorage.getItem("crearnuevo")!= null){
       this.idPersona = this.usuarioBody[0].idPersona;
       this.tipoPersonaJuridica = this.usuarioBody[0].tipo;
     }    
-    if(this.body.idPersona != undefined){
+    if(this.idPersona != undefined){
         this.datosGeneralesSearch();
     }
     this.textFilter = "Elegir";
