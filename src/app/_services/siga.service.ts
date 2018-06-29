@@ -140,7 +140,8 @@ export class SigaServices {
     direcciones_comboPais: "",
     direcciones_comboTipoDireccion: "",
     integrantes_update: "tarjetaIntegrantes/update",
-    integrantes_insert: "tarjetaIntegrantes/create"
+    integrantes_insert: "tarjetaIntegrantes/create",
+    integrantes_delete: "tarjetaIntegrantes/delete"
   };
 
   private menuToggled = new Subject<any>();

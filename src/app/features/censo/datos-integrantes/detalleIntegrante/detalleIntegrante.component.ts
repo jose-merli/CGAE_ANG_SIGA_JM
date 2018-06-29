@@ -131,15 +131,15 @@ export class DetalleIntegranteComponent implements OnInit {
 
   ngOnInit() {
     this.body = JSON.parse(sessionStorage.getItem("integrante"));
-    this.update = true;
     if (
       sessionStorage.getItem("nIntegrante") != null ||
       sessionStorage.getItem("nIntegrante") != undefined
     ) {
       this.beanNewIntegrante();
+    } else {
+      this.todoDisable();
     }
-    this.todoDisable();
-    this.ajustarPantallaParaAsignar();
+
     this.editar = this.body.editar;
     this.editar = true;
     this.fichasPosibles = [
@@ -249,16 +249,18 @@ export class DetalleIntegranteComponent implements OnInit {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
 
     ir = JSON.parse(sessionStorage.getItem("nIntegrante"));
+    this.body.completo = ir[0].completo;
     if (ir[0].completo) {
       this.todoDisable();
       this.ajustarPantallaParaAsignar();
+
       if (ir[0].idPersona != null) {
         this.body.idPersona = ir[0].idPersona;
         this.body.idPersonaIntegrante = ir[0].idPersona;
       }
-      if (ir[0].idInstitucion != null) {
-        this.body.idInstitucion = ir[0].idInstitucion;
-        this.body.idInstitucionIntegrante = ir[0].idInstitucion;
+      if (ir[0].colegio != null) {
+        this.body.idInstitucion = ir[0].colegio;
+        this.body.idInstitucionIntegrante = ir[0].colegio;
       }
       if (ir[0].fechaAlta != null) {
         this.body.cargo = ir[0].fechaAlta;
@@ -278,10 +280,10 @@ export class DetalleIntegranteComponent implements OnInit {
       if (ir[0].apellidos != null) {
         this.body.apellidos = ir[0].apellidos;
       }
-      if (ir[0].apellidos1 != null) {
+      if (ir[0].primerApellido != null) {
         this.body.apellidos1 = ir[0].primerApellido;
       }
-      if (ir[0].apellidos2 != null) {
+      if (ir[0].segundoApellido != null) {
         this.body.apellidos2 = ir[0].segundoApellido;
       }
       if (ir[0].nombre != null && ir[0].apellidos) {
@@ -296,11 +298,11 @@ export class DetalleIntegranteComponent implements OnInit {
       this.body.idPersonaPadre = this.usuarioBody[0].idPersona;
       this.body.tipoIdentificacion = ir[0].tipoIdentificacion;
     } else {
-      this.todoDisable();
-      this.ajustarPantallaParaCrear();
-      this.body.nifCif = ir[0].nif;
+      this.body.nifCif = ir[0].nifCif;
       this.body.idPersonaPadre = this.usuarioBody[0].idPersona;
       this.body.tipoIdentificacion = ir[0].tipoIdentificacion;
+      this.todoDisable();
+      this.ajustarPantallaParaCrear();
     }
   }
   isSelectMultiple() {
@@ -320,17 +322,17 @@ export class DetalleIntegranteComponent implements OnInit {
     this.isDisabledTipoColegio = false;
     this.isDisabledProvincia = false;
     this.isDisabledNumColegio = true;
-    this.isDisabledFechaFinCargo = false;
+    this.isDisabledFechaFinCargo = true;
   }
   ajustarPantallaParaAsignar() {
-    this.isDisablednifCif = false;
+    this.isDisablednifCif = true;
     this.isDisabledNombre = true;
     this.isDisabledApellidos1 = true;
     this.isDisabledApellidos2 = true;
     this.isDisabledTipoColegio = false;
     this.isDisabledProvincia = false;
     this.isDisabledNumColegio = true;
-    this.isDisabledFechaFinCargo = false;
+    this.isDisabledFechaFinCargo = true;
   }
 
   todoDisable() {
@@ -366,7 +368,7 @@ export class DetalleIntegranteComponent implements OnInit {
     return {};
   }
   search() {
-    this.historico = true;
+    this.historico = false;
     this.buscar = false;
     this.selectMultiple = false;
     this.selectedDatos = "";
@@ -415,7 +417,14 @@ export class DetalleIntegranteComponent implements OnInit {
   }
 
   guardar() {
-    this.crearIntegrante();
+    if (
+      sessionStorage.getItem("nIntegrante") != null ||
+      sessionStorage.getItem("nIntegrante") != undefined
+    ) {
+      this.crearIntegrante();
+    } else {
+      this.updateIntegrante();
+    }
   }
 
   updateIntegrante() {
@@ -446,6 +455,9 @@ export class DetalleIntegranteComponent implements OnInit {
     if (this.body.idPersona != undefined && this.body.idPersona != null) {
       updateIntegrante.idPersona = this.body.idPersona;
     }
+    if (this.body.idComponente != undefined && this.body.idComponente != null) {
+      updateIntegrante.idComponente = this.body.idComponente;
+    }
     this.sigaServices
       .postPaginado("integrantes_update", "?numPagina=1", updateIntegrante)
       .subscribe(
@@ -464,125 +476,258 @@ export class DetalleIntegranteComponent implements OnInit {
   }
   crearIntegrante() {
     let newIntegrante = new DatosIntegrantesItem();
+    if (this.body.completo) {
+      if (this.body.nombre != undefined && this.body.nombre != null) {
+        newIntegrante.nombre = this.body.nombre;
+      } else {
+        newIntegrante.nombre = "";
+      }
+      if (this.body.apellidos1 != undefined && this.body.apellidos1 != null) {
+        newIntegrante.apellidos1 = this.body.apellidos1;
+      } else {
+        newIntegrante.apellidos1 = "";
+      }
+      if (this.body.apellidos2 != undefined && this.body.apellidos2 != null) {
+        newIntegrante.apellidos2 = this.body.apellidos2;
+      } else {
+        newIntegrante.apellidos2 = "";
+      }
+      if (this.body.nifCif != undefined && this.body.nifCif != null) {
+        newIntegrante.nifCif = this.body.nifCif;
+      } else {
+        newIntegrante.nifCif = "";
+      }
+      if (
+        this.body.tipoIdentificacion != undefined &&
+        this.body.tipoIdentificacion != null
+      ) {
+        newIntegrante.tipoIdentificacion = this.body.tipoIdentificacion;
+      } else {
+        newIntegrante.tipoIdentificacion = "";
+      }
+      if (this.body.fechaCargo != undefined && this.body.fechaCargo != null) {
+        newIntegrante.fechaCargo = this.body.fechaCargo;
+      } else {
+        newIntegrante.fechaCargo = "";
+      }
+      if (this.body.cargo != undefined && this.body.cargo != null) {
+        newIntegrante.cargo = this.body.cargo;
+      } else {
+        newIntegrante.cargo = "";
+      }
+      if (this.body.idCargo != undefined && this.body.idCargo != null) {
+        newIntegrante.idCargo = this.body.idCargo;
+      } else {
+        newIntegrante.idCargo = "";
+      }
+      if (
+        this.body.capitalSocial != undefined &&
+        this.body.capitalSocial != null
+      ) {
+        newIntegrante.capitalSocial = this.body.capitalSocial;
+      } else {
+        newIntegrante.capitalSocial = "";
+      }
+      if (
+        this.body.idComponente != undefined &&
+        this.body.idComponente != null
+      ) {
+        newIntegrante.idComponente = this.body.idComponente;
+      } else {
+        newIntegrante.idComponente = "";
+      }
+      if (
+        this.body.idPersonaPadre != undefined &&
+        this.body.idPersonaPadre != null
+      ) {
+        newIntegrante.idPersonaPadre = this.body.idPersonaPadre;
+      } else {
+        newIntegrante.idPersonaPadre = "";
+      }
+      if (
+        this.body.idPersonaIntegrante != undefined &&
+        this.body.idPersonaIntegrante != null
+      ) {
+        newIntegrante.idPersonaIntegrante = this.body.idPersonaIntegrante;
+      } else {
+        newIntegrante.idPersonaIntegrante = "";
+      }
+      if (
+        this.body.idInstitucionIntegrante != undefined &&
+        this.body.idInstitucionIntegrante != null
+      ) {
+        newIntegrante.idInstitucionIntegrante = this.body.idInstitucionIntegrante;
+      } else {
+        newIntegrante.idInstitucionIntegrante = "";
+      }
+      if (
+        this.body.idTipoColegio != undefined &&
+        this.body.idTipoColegio != null
+      ) {
+        newIntegrante.idTipoColegio = this.body.idTipoColegio;
+      } else {
+        newIntegrante.idTipoColegio = "";
+      }
+      if (this.body.idProvincia != undefined && this.body.idProvincia != null) {
+        newIntegrante.idProvincia = this.body.idProvincia;
+      } else {
+        newIntegrante.idProvincia = "";
+      }
+      if (
+        this.body.numColegiado != undefined &&
+        this.body.numColegiado != null
+      ) {
+        newIntegrante.numColegiado = this.body.numColegiado;
+      } else {
+        newIntegrante.numColegiado = "";
+      }
+      if (this.body.tipo != undefined && this.body.tipo != null) {
+        newIntegrante.tipo = this.body.tipo;
+      } else {
+        newIntegrante.tipo = "";
+      }
 
-    if (this.body.nombre != undefined && this.body.nombre != null) {
-      newIntegrante.nombre = this.body.nombre;
+      this.sigaServices
+        .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
+        .subscribe(
+          data => {
+            console.log(data);
+            this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.backTo();
+          }
+        );
     } else {
-      newIntegrante.nombre = "";
-    }
-    if (this.body.apellidos1 != undefined && this.body.apellidos1 != null) {
-      newIntegrante.apellidos1 = this.body.apellidos1;
-    } else {
-      newIntegrante.apellidos1 = "";
-    }
-    if (this.body.apellidos2 != undefined && this.body.apellidos2 != null) {
-      newIntegrante.apellidos2 = this.body.apellidos2;
-    } else {
-      newIntegrante.apellidos2 = "";
-    }
-    if (this.body.nifCif != undefined && this.body.nifCif != null) {
-      newIntegrante.nifCif = this.body.nifCif;
-    } else {
-      newIntegrante.nifCif = "";
-    }
-    if (
-      this.body.tipoIdentificacion != undefined &&
-      this.body.tipoIdentificacion != null
-    ) {
-      newIntegrante.tipoIdentificacion = this.body.tipoIdentificacion;
-    } else {
-      newIntegrante.tipoIdentificacion = "";
-    }
-    if (this.body.fechaCargo != undefined && this.body.fechaCargo != null) {
-      newIntegrante.fechaCargo = this.body.fechaCargo;
-    } else {
-      newIntegrante.fechaCargo = "";
-    }
-    if (this.body.cargo != undefined && this.body.cargo != null) {
-      newIntegrante.cargo = this.body.cargo;
-    } else {
-      newIntegrante.cargo = "";
-    }
-    if (this.body.idCargo != undefined && this.body.idCargo != null) {
-      newIntegrante.idCargo = this.body.idCargo;
-    } else {
-      newIntegrante.idCargo = "";
-    }
-    if (
-      this.body.capitalSocial != undefined &&
-      this.body.capitalSocial != null
-    ) {
-      newIntegrante.capitalSocial = this.body.capitalSocial;
-    } else {
-      newIntegrante.capitalSocial = "";
-    }
-    if (this.body.idComponente != undefined && this.body.idComponente != null) {
-      newIntegrante.idComponente = this.body.idComponente;
-    } else {
-      newIntegrante.idComponente = "";
-    }
-    if (
-      this.body.idPersonaPadre != undefined &&
-      this.body.idPersonaPadre != null
-    ) {
-      newIntegrante.idPersonaPadre = this.body.idPersonaPadre;
-    } else {
-      newIntegrante.idPersonaPadre = "";
-    }
-    if (
-      this.body.idPersonaIntegrante != undefined &&
-      this.body.idPersonaIntegrante != null
-    ) {
-      newIntegrante.idPersonaIntegrante = this.body.idPersonaIntegrante;
-    } else {
-      newIntegrante.idPersonaIntegrante = "";
-    }
-    if (
-      this.body.idInstitucionIntegrante != undefined &&
-      this.body.idInstitucionIntegrante != null
-    ) {
-      newIntegrante.idInstitucionIntegrante = this.body.idInstitucionIntegrante;
-    } else {
-      newIntegrante.idInstitucionIntegrante = "";
-    }
-    if (
-      this.body.idTipoColegio != undefined &&
-      this.body.idTipoColegio != null
-    ) {
-      newIntegrante.idTipoColegio = this.body.idTipoColegio;
-    } else {
-      newIntegrante.idTipoColegio = "";
-    }
-    if (this.body.idProvincia != undefined && this.body.idProvincia != null) {
-      newIntegrante.idProvincia = this.body.idProvincia;
-    } else {
-      newIntegrante.idProvincia = "";
-    }
-    if (this.body.numColegiado != undefined && this.body.numColegiado != null) {
-      newIntegrante.numColegiado = this.body.numColegiado;
-    } else {
-      newIntegrante.numColegiado = "";
-    }
-    if (this.body.tipo != undefined && this.body.tipo != null) {
-      newIntegrante.tipo = this.body.tipo;
-    } else {
-      newIntegrante.tipo = "";
-    }
+      if (this.body.nombre != undefined && this.body.nombre != null) {
+        newIntegrante.nombre = this.body.nombre;
+      } else {
+        newIntegrante.nombre = "";
+      }
+      if (this.body.apellidos1 != undefined && this.body.apellidos1 != null) {
+        newIntegrante.apellidos1 = this.body.apellidos1;
+      } else {
+        newIntegrante.apellidos1 = "";
+      }
+      if (this.body.apellidos2 != undefined && this.body.apellidos2 != null) {
+        newIntegrante.apellidos2 = this.body.apellidos2;
+      } else {
+        newIntegrante.apellidos2 = "";
+      }
+      if (this.body.nifCif != undefined && this.body.nifCif != null) {
+        newIntegrante.nifCif = this.body.nifCif;
+      } else {
+        newIntegrante.nifCif = "";
+      }
+      if (
+        this.body.tipoIdentificacion != undefined &&
+        this.body.tipoIdentificacion != null
+      ) {
+        newIntegrante.tipoIdentificacion = this.body.tipoIdentificacion;
+      } else {
+        newIntegrante.tipoIdentificacion = "";
+      }
+      if (this.body.fechaCargo != undefined && this.body.fechaCargo != null) {
+        newIntegrante.fechaCargo = this.body.fechaCargo;
+      } else {
+        newIntegrante.fechaCargo = "";
+      }
+      if (this.body.cargo != undefined && this.body.cargo != null) {
+        newIntegrante.cargo = this.body.cargo;
+      } else {
+        newIntegrante.cargo = "";
+      }
+      if (this.body.idCargo != undefined && this.body.idCargo != null) {
+        newIntegrante.idCargo = this.body.idCargo;
+      } else {
+        newIntegrante.idCargo = "";
+      }
+      if (
+        this.body.capitalSocial != undefined &&
+        this.body.capitalSocial != null
+      ) {
+        newIntegrante.capitalSocial = this.body.capitalSocial;
+      } else {
+        newIntegrante.capitalSocial = "";
+      }
+      if (
+        this.body.idComponente != undefined &&
+        this.body.idComponente != null
+      ) {
+        newIntegrante.idComponente = this.body.idComponente;
+      } else {
+        newIntegrante.idComponente = "";
+      }
+      if (
+        this.body.idPersonaPadre != undefined &&
+        this.body.idPersonaPadre != null
+      ) {
+        newIntegrante.idPersonaPadre = this.body.idPersonaPadre;
+      } else {
+        newIntegrante.idPersonaPadre = "";
+      }
+      if (
+        this.body.idPersonaIntegrante != undefined &&
+        this.body.idPersonaIntegrante != null
+      ) {
+        newIntegrante.idPersonaIntegrante = this.body.idPersonaIntegrante;
+      } else {
+        newIntegrante.idPersonaIntegrante = "";
+      }
+      if (
+        this.body.idInstitucionIntegrante != undefined &&
+        this.body.idInstitucionIntegrante != null
+      ) {
+        newIntegrante.idInstitucionIntegrante = this.body.idInstitucionIntegrante;
+      } else {
+        newIntegrante.idInstitucionIntegrante = "";
+      }
+      if (
+        this.body.idTipoColegio != undefined &&
+        this.body.idTipoColegio != null
+      ) {
+        newIntegrante.idTipoColegio = this.body.idTipoColegio;
+      } else {
+        newIntegrante.idTipoColegio = "";
+      }
+      if (this.body.idProvincia != undefined && this.body.idProvincia != null) {
+        newIntegrante.idProvincia = this.body.idProvincia;
+      } else {
+        newIntegrante.idProvincia = "";
+      }
+      if (
+        this.body.numColegiado != undefined &&
+        this.body.numColegiado != null
+      ) {
+        newIntegrante.numColegiado = this.body.numColegiado;
+      } else {
+        newIntegrante.numColegiado = "";
+      }
+      if (this.body.tipo != undefined && this.body.tipo != null) {
+        newIntegrante.tipo = this.body.tipo;
+      } else {
+        newIntegrante.tipo = "";
+      }
 
-    this.sigaServices
-      .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
-      .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.backTo();
-        }
-      );
+      this.sigaServices
+        .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
+        .subscribe(
+          data => {
+            console.log(data);
+            this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.backTo();
+          }
+        );
+    }
   }
 }

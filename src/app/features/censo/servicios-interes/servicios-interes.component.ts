@@ -68,7 +68,7 @@ import { DatosPersonaJuridicaComponent } from "../datosPersonaJuridica/datosPers
 export class ServiciosInteresComponent implements OnInit {
   @ViewChild(ServiciosInteresComponent)
   serviciosInteresComponent: ServiciosInteresComponent;
-
+  msgs: any[];
   @ViewChild("table") table;
 
   constructor(
@@ -81,9 +81,9 @@ export class ServiciosInteresComponent implements OnInit {
     private sigaServices: SigaServices,
     private headerGestionEntidadService: HeaderGestionEntidadService,
     private fichasPosibles: DatosPersonaJuridicaComponent
-  ) {}
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   irFacturacion() {
     this.router.navigate(["/facturas"]);

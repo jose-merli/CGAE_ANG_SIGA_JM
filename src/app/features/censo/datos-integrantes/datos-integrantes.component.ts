@@ -292,6 +292,26 @@ export class DatosIntegrantesComponent implements OnInit {
       );
   }
 
+  borrar(selectedItem) {
+    let deleteIntegrantes = new DatosIntegrantesObject();
+    deleteIntegrantes.datosIntegrantesItem = selectedItem;
+    this.sigaServices
+      .post("integrantes_delete", deleteIntegrantes.datosIntegrantesItem)
+      .subscribe(
+        data => {
+          console.log(data);
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.editar = false;
+          this.dniCorrecto = null;
+          this.disabledRadio = false;
+          this.search();
+        }
+      );
+  }
   goToDetails(selectedDatos) {
     console.log(selectedDatos);
     if (!this.selectMultiple) {
