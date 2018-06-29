@@ -87,9 +87,9 @@ import { CommonModule } from "@angular/common";
 import { AccesoFichaPersonaComponent } from "./features/censo/accesoFichaPersona/accesoFichaPersona.component";
 import { DatosBancariosComponent } from "./features/censo/datos-bancarios/datos-bancarios.component";
 import { ConsultarDatosBancariosComponent } from "./features/censo/consultar-datos-bancarios/consultar-datos-bancarios.component";
-import { DatosCuentaBancariaComponent } from "./features/censo/datos-cuenta-bancaria/datos-cuenta-bancaria.component";
-import { DatosMandatosComponent } from "./features/censo/datos-mandatos/datos-mandatos.component";
-import { ListadoFicherosAnexosComponent } from "./features/censo/listado-ficheros-anexos/listado-ficheros-anexos.component";
+// import { DatosCuentaBancariaComponent } from "./features/censo/datos-cuenta-bancaria/datos-cuenta-bancaria.component";
+// import { DatosMandatosComponent } from "./features/censo/datos-mandatos/datos-mandatos.component";
+// import { ListadoFicherosAnexosComponent } from "./features/censo/listado-ficheros-anexos/listado-ficheros-anexos.component";
 import { DatosIntegrantesComponent } from "./features/censo/datos-integrantes/datos-integrantes.component";
 import { DetalleIntegranteComponent } from "./features/censo/datos-integrantes/detalleIntegrante/detalleIntegrante.component";
 import { DatosDireccionesComponent } from "./features/censo/datos-direcciones/datos-direcciones.component";
@@ -434,9 +434,9 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     DatosIntegrantesComponent,
     DatosBancariosComponent,
     ConsultarDatosBancariosComponent,
-    DatosCuentaBancariaComponent,
-    DatosMandatosComponent,
-    ListadoFicherosAnexosComponent,
+    // DatosCuentaBancariaComponent,
+    // DatosMandatosComponent,
+    // ListadoFicherosAnexosComponent,
     DatosDireccionesComponent,
     ConsultarDatosDireccionesComponent
   ],
