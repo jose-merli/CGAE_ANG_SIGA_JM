@@ -107,21 +107,23 @@
           <div class="form-row">
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"censo.fichaCliente.situacion.idiomaPref" | translate}}</label>
-              <p-dropdown class="select-form" [options]="idiomas" [(ngModel)]="idiomaPreferenciaSociedad" [filter]="true" filterBy="label"></p-dropdown>
+              <p-dropdown class="select-form" [options]="idiomas" [(ngModel)]="idiomaPreferenciaSociedad" [filter]="true" (ngModelChange)="onChangeForm()"
+                filterBy="label"></p-dropdown>
             </div>
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
-              <input type="text " class="form-control " [(ngModel)]="body.cuentaContable " pInputText>
+              <input type="text " class="form-control " [(ngModel)]="body.cuentaContable " (ngModelChange)="onChangeForm()" pInputText>
             </div>
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"censo.general.literal.anotaciones" | translate}}: </label>
-              <textarea pInputTextarea [(ngModel)]="body.anotaciones"></textarea>
+              <textarea pInputTextarea [(ngModel)]="body.anotaciones" (ngModelChange)="onChangeForm()"></textarea>
             </div>
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"menu.administracion.gestionMultiidioma.etiquetas" | translate}}</label>
               <br>
               <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='etiquetasPersonaJuridicaSelecionados' [options]="comboEtiquetas"
-                [selectedItemsLabel]="textSelected" maxSelectedLabels="1" autoWidth="false" defaultLabel="" maxSelectedLabels="1"></p-multiSelect>
+                [selectedItemsLabel]="textSelected" maxSelectedLabels="1" autoWidth="false" defaultLabel="" maxSelectedLabels="1"
+                (ngModelChange)="onChangeForm()"></p-multiSelect>
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 <div class="busqueda-container">
     <div class="header-title">
         <i class="fa fa-square"></i>
-        <p>Datos generales: --Nombre Persona-- | Nº Colegiado: 0000 (Estado Actual)</p>
+        <p>Datos generales</p>
     </div>
     <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
         <app-datos-generales *ngSwitchCase="'generales'"></app-datos-generales>

@@ -39,8 +39,14 @@
             </label>
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
           </div>
-          <div *ngIf="!only" class="d-flex justify-content-between">
-            <label *ngFor="let integrante of datos">&nbsp;{{ integrante.nombre }}</label>
+          <div *ngIf="!only && searchIntegrantes.datosIntegrantesItem.length >3" class="d-flex justify-content-between">
+            <label>Número total de Integrantes: <span>{{ searchIntegrantes.datosIntegrantesItem.length }}</span></label>
+
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+          </div>
+          <div *ngIf="!only && searchIntegrantes.datosIntegrantesItem.length <4" class="d-flex justify-content-between">
+            <label *ngFor="let integrante of datos">&nbsp;{{ integrante.nombre }} &nbsp;{{ integrante.apellidos }}</label>
+
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
           </div>
         </div>
