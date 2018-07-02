@@ -312,7 +312,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       },
       error => {
         this.bodySearch = JSON.parse(error["error"]);
-        this.showFail(JSON.stringify(this.bodySearch.error.message));
+        this.showFail(this.bodySearch.error.message.toString());
         console.log(error);
         this.progressSpinner = false;
       },
@@ -340,7 +340,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       },
       error => {
         this.bodySearch = JSON.parse(error["error"]);
-        this.showFail(JSON.stringify(this.bodySearch.error.message));
+        this.showFail(this.bodySearch.error.message.toString());
         console.log(error);
         this.progressSpinner = false;
       }
@@ -488,13 +488,12 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         }
       },
       reject: () => {
-        this.revisionCuentas = false;
-
-        if (this.registroEditable == "false") {
-          this.guardarRegistro();
-        } else {
-          this.editarRegistro();
-        }
+        // this.revisionCuentas = false;
+        // if (this.registroEditable == "false") {
+        //   this.guardarRegistro();
+        // } else {
+        //   this.editarRegistro();
+        // }
       }
     });
   }
@@ -1119,7 +1118,11 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   showFail(mensaje: string) {
     this.msgs = [];
-    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+    this.msgs.push({
+      severity: "error",
+      summary: "",
+      detail: this.translateService.instant(mensaje)
+    });
   }
 
   showSuccess(mensaje: string) {
