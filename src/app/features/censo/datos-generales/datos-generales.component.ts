@@ -56,7 +56,7 @@ import { DatosGeneralesComponent } from "./../../../new-features/censo/ficha-col
 import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-colegial/datos-colegiales/datos-colegiales.component";
 import { DatosGeneralesItem } from "./../../../../app/models/DatosGeneralesItem";
 import { DatosGeneralesObject } from "./../../../../app/models/DatosGeneralesObject";
-import { MultiSelectModule } from "primeng/multiSelect";
+import { MultiSelectModule } from "primeng/multiselect";
 
 @Component({
   selector: "app-datos-generales",
