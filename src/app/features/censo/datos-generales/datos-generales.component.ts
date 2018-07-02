@@ -57,6 +57,8 @@ import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-co
 import { DatosGeneralesItem } from "./../../../../app/models/DatosGeneralesItem";
 import { DatosGeneralesObject } from "./../../../../app/models/DatosGeneralesObject";
 import { MultiSelectModule } from "primeng/multiSelect";
+import { Subscription } from "rxjs/Subscription";
+import { cardService } from "./../../../_services/cardSearch.service";
 
 @Component({
   selector: "app-datos-generales",
@@ -73,6 +75,7 @@ export class DatosGenerales implements OnInit {
   msgs: Message[];
   body: DatosGeneralesItem = new DatosGeneralesItem();
   bodyviejo: DatosGeneralesItem = new DatosGeneralesItem();
+  suscripcionBusquedaNuevo: Subscription;
 
   personaSearch: DatosGeneralesObject = new DatosGeneralesObject();
   fichasActivas: Array<any> = [];
@@ -151,6 +154,7 @@ export class DatosGenerales implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private translateService: TranslateService,
     private location: Location,
+    private cardService: cardService,
     private sigaServices: SigaServices,
     private headerGestionEntidadService: HeaderGestionEntidadService
   ) {
@@ -301,6 +305,11 @@ export class DatosGenerales implements OnInit {
       this.sigaServices.post("busquedaPerJuridica_create", this.body).subscribe(
         data => {
           this.showSuccess();
+          let respuesta = JSON.parse(data["body"]);
+          this.idPersona = respuesta.id;
+          sessionStorage.removeItem("crearnuevo");
+          this.datosGeneralesSearch();
+          this.cardService.searchNewAnnounce.next(this.idPersona);
         },
         error => {
           console.log(error);
@@ -442,14 +451,37 @@ export class DatosGenerales implements OnInit {
 
   onChangeForm() {
     if (
-      (this.body.nif != "" || this.body.nif != undefined) &&
-      (this.body.abreviatura != "" || this.body.abreviatura != undefined) &&
-      (this.body.denominacion != "" || this.body.denominacion != undefined)
+      (this.body.abreviatura != "" ||
+        this.body.abreviatura != undefined ||
+        !this.onlySpaces(this.body.abreviatura)) &&
+      (this.body.nif != "" ||
+        this.body.nif != undefined ||
+        !this.onlySpaces(this.body.nif)) &&
+      (this.body.denominacion != "" ||
+        this.body.denominacion != undefined ||
+        !this.onlySpaces(this.body.denominacion)) &&
+      (this.body.nif != "" ||
+        this.body.nif != undefined ||
+        !this.onlySpaces(this.body.nif)) &&
+      this.idiomaPreferenciaSociedad != ""
     ) {
       this.showGuardar = true;
     } else {
       this.showGuardar = false;
     }
+  }
+
+  onlySpaces(str) {
+    let i = 0;
+    var ret;
+    ret = true;
+    while (i < str.length) {
+      if (str[i] != " ") {
+        ret = false;
+      }
+      i++;
+    }
+    return ret;
   }
 
   showSuccessUploadedImage() {

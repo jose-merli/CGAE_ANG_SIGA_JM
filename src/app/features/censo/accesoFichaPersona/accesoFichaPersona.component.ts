@@ -20,6 +20,9 @@ import { DatosNotarioItem } from "./../../../../app/models/DatosNotarioItem";
 import { DatosNotarioObject } from "./../../../../app/models/DatosNotarioObject";
 import { TranslateService } from "../../../commons/translate";
 
+import { cardService } from "./../../../_services/cardSearch.service";
+import { Subscription } from "rxjs/Subscription";
+
 @Component({
   selector: "app-accesoFichaPersona",
   templateUrl: "./accesoFichaPersona.component.html",
@@ -42,6 +45,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
   notario1: any;
   guardarNotario: boolean = false;
   desasociar: boolean = false;
+  suscripcionBusquedaNuevo: Subscription;
 
   file: File = undefined;
 
@@ -51,12 +55,22 @@ export class AccesoFichaPersonaComponent implements OnInit {
     private sigaServices: SigaServices,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private cardService: cardService
   ) {}
 
   ngOnInit() {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.tipoPersona = "Notario";
+
+    this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
+      id => {
+        if (id !== null) {
+          this.idPersona = id;
+          this.search();
+        }
+      }
+    );
 
     if (
       sessionStorage.getItem("notario") != undefined &&
@@ -93,7 +107,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
         this.body.tipoIdentificacion = this.notario[0].tipoIdentificacion;
       }
     }
-    if (this.usuarioBody != null) {
+    if (this.usuarioBody != null && this.usuarioBody[0] != undefined) {
       this.idPersona = this.usuarioBody[0].idPersona;
     }
 

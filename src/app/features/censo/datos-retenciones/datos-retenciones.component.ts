@@ -167,7 +167,7 @@ export class DatosRetencionesComponent implements OnInit {
     this.getTiposRetenciones();
 
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    if (this.usuarioBody != undefined)
+    if (this.usuarioBody[0] != undefined)
       this.idPersona = this.usuarioBody[0].idPersona;
     this.checkStatusInit();
     this.search();
