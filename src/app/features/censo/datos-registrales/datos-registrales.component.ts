@@ -30,7 +30,7 @@ import { TooltipModule } from "primeng/tooltip";
 import { ChipsModule } from "primeng/chips";
 import { RadioButtonModule } from "primeng/radiobutton";
 import { FileUploadModule } from "primeng/fileupload";
-import { MultiSelectModule } from "primeng/multiSelect";
+import { MultiSelectModule } from "primeng/multiselect";
 
 import { Http, Response } from "@angular/http";
 import { MenuItem } from "primeng/api";

@@ -49,7 +49,7 @@
             <div class="row">
               <div class="form-group col-lg-3 col-md-6">
                 <label>Titular</label>
-                <input type="text" class="form-control" [(ngModel)]="body.titular" pInputText>
+                <input type="text" class="form-control" [(ngModel)]="body.titular" (ngModelChange)="editarNif()" pInputText>
                 <div *ngIf="titularValido == false">
                   <label class="labelError">{{"El campo no puede estar vacío"}}</label>
                 </div>
@@ -154,7 +154,7 @@
                   [options]="combooItemsProducto" (onChange)="onChangeEsquemaProducto($event)">
                   </p-dropdown>
                   <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaProducto' optionLabel="label" *ngIf="!nuevo" [options]="combooItemsProducto"
-                    (onChange)="onChangeEsquemaProducto($event)">
+                    (onChange)="onChangeEsquemaProducto($event)" [disabled]="mandatoAnexoVacio">
                     </p-dropdown>
               </div>
               <p-checkbox *ngIf="isSelectedProducto == true" [(ngModel)]='checkProducto' binary="true" (ngModelChange)="validarCheckProducto()"></p-checkbox>
@@ -189,7 +189,7 @@
                   [options]="combooItemsServicio" (onChange)="onChangeEsquemaServicio($event)">
                   </p-dropdown>
                   <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaServicio' optionLabel="label" *ngIf="!nuevo" [options]="combooItemsServicio"
-                    (onChange)="onChangeEsquemaServicio($event)">
+                    (onChange)="onChangeEsquemaServicio($event)" [disabled]="mandatoAnexoVacio">
                     </p-dropdown>
               </div>
               <p-checkbox *ngIf="isSelectedServicio == true" [(ngModel)]='checkServicio' binary="true" (ngModelChange)="validarCheckServicio()"></p-checkbox>
@@ -205,7 +205,7 @@
         <br>
         <div *ngIf="!nuevo" class="card-footer">
           <div class="text-right main-button">
-            <button (click)="validarGuardarMandato()" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
+            <button (click)="validarGuardarMandato()" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" [disabled]="mandatoAnexoVacio"></button>
           </div>
         </div>
       </div>
@@ -340,10 +340,12 @@
                         <p-footer>
                           <div *ngIf="editar == true" class="text-right main-button">
                             <button (click)="editarDescripcion()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-                            <button *ngIf="!nuevo" (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"></button>
+                            <button *ngIf="!nuevo" [(disabled)]="mandatoAnexoVacio" (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus"
+                              iconPos="left" label="Nuevo"></button>
                           </div>
                           <div *ngIf="editar == false" class="text-right main-button">
-                            <button *ngIf="!nuevo" (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"></button>
+                            <button *ngIf="!nuevo" [(disabled)]="mandatoAnexoVacio" (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus"
+                              iconPos="left" label="Nuevo"></button>
                           </div>
                         </p-footer>
                         </p-dataTable>

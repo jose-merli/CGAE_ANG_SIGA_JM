@@ -36,7 +36,7 @@ import { UsuarioResponseDto } from "./../../../../app/models/UsuarioResponseDto"
 import { UsuarioDeleteRequestDto } from "./../../../../app/models/UsuarioDeleteRequestDto";
 import { UsuarioItem } from "./../../../../app/models/UsuarioItem";
 import { ComboItem } from "./../../../../app/models/ComboItem";
-import { MultiSelectModule } from "primeng/multiSelect";
+import { MultiSelectModule } from "primeng/multiselect";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { Location } from "@angular/common";
 import { Observable } from "rxjs/Rx";

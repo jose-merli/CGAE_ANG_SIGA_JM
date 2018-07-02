@@ -59,6 +59,7 @@ import { DatosGeneralesObject } from "./../../../../app/models/DatosGeneralesObj
 import { MultiSelectModule } from "primeng/multiSelect";
 import { Subscription } from "rxjs/Subscription";
 import { cardService } from "./../../../_services/cardSearch.service";
+import { MultiSelectModule } from "primeng/multiselect";
 
 @Component({
   selector: "app-datos-generales",
