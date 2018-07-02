@@ -511,6 +511,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.getArrayTipoCuenta();
       if (this.body.tipoCuenta.indexOf("C") !== -1) {
         this.validarCuentaCargo();
+      } else {
+        this.revisionCuentas = false;
+        if (this.registroEditable == "false") {
+          this.guardarRegistro();
+        } else {
+          this.editarRegistro();
+        }
       }
     } else {
       this.formValido = false;
