@@ -157,12 +157,13 @@
                     (onChange)="onChangeEsquemaProducto($event)">
                     </p-dropdown>
               </div>
-              <p-checkbox *ngIf="isSelectedProducto == true" [(ngModel)]='checkProducto' binary="true" (ngModelChange)="validarCheckProducto()"
-                label='{{ "censo.fichaCliente.datosBancarios.autorizacion.b2b" }}'></p-checkbox>
-                <br>
-                <div *ngIf="isCheckedProducto == false">
-                  <label class="labelError">{{"facturacion.ficheroBancarioPagos.errorMandatos.mensajeMandatoB2BNoAutorizado"}}</label>
-                </div>
+              <p-checkbox *ngIf="isSelectedProducto == true" [(ngModel)]='checkProducto' binary="true" (ngModelChange)="validarCheckProducto()"></p-checkbox>
+              <label *ngIf="isSelectedProducto == true">{{"censo.fichaCliente.datosBancarios.autorizacion.b2b"  | translate}}</label>
+
+
+            </div>
+            <div *ngIf="isCheckedProducto == false">
+              <label class="labelError">{{"facturacion.ficheroBancarioPagos.errorMandatos.mensajeMandatoB2BNoAutorizado" | translate}}</label>
             </div>
           </div>
 
@@ -191,12 +192,13 @@
                     (onChange)="onChangeEsquemaServicio($event)">
                     </p-dropdown>
               </div>
-              <p-checkbox *ngIf="isSelectedServicio == true" [(ngModel)]='checkServicio' binary="true" (ngModelChange)="validarCheckServicio()"
-                label='{{ "censo.fichaCliente.datosBancarios.autorizacion.b2b" }}'></p-checkbox>
-                <br>
-                <div *ngIf="isCheckedServicio == false">
-                  <label class="labelError">{{"facturacion.ficheroBancarioPagos.errorMandatos.mensajeMandatoB2BNoAutorizado"}}</label>
-                </div>
+              <p-checkbox *ngIf="isSelectedServicio == true" [(ngModel)]='checkServicio' binary="true" (ngModelChange)="validarCheckServicio()"></p-checkbox>
+              <label *ngIf="isSelectedServicio == true">{{"censo.fichaCliente.datosBancarios.autorizacion.b2b"  | translate}}</label>
+
+
+            </div>
+            <div *ngIf="isCheckedServicio == false">
+              <label class="labelError">{{"facturacion.ficheroBancarioPagos.errorMandatos.mensajeMandatoB2BNoAutorizado" | translate}}</label>
             </div>
           </div>
         </div>
