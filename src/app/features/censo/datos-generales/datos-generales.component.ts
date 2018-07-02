@@ -163,16 +163,16 @@ export class DatosGenerales implements OnInit {
     this.busquedaIdioma();
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
 
-if(sessionStorage.getItem("crearnuevo")!= null){
-  this.editar = true;
-   this.abreCierraFicha('generales');
-}
+    if (sessionStorage.getItem("crearnuevo") != null) {
+      this.editar = true;
+      this.abreCierraFicha("generales");
+    }
     if (this.usuarioBody[0] != undefined) {
       this.idPersona = this.usuarioBody[0].idPersona;
       this.tipoPersonaJuridica = this.usuarioBody[0].tipo;
-    }    
-    if(this.idPersona != undefined){
-        this.datosGeneralesSearch();
+    }
+    if (this.idPersona != undefined) {
+      this.datosGeneralesSearch();
     }
     this.textFilter = "Elegir";
 
@@ -185,25 +185,26 @@ if(sessionStorage.getItem("crearnuevo")!= null){
         console.log(err);
       },
       () => {
-        if(this.body.idPersona != undefined || this.body.idPersona != null){
-
-        this.sigaServices
-          .post("busquedaPerJuridica_etiquetasPersona", this.body)
-          .subscribe(
-            n => {
-              // coger etiquetas de una persona juridica
-              this.etiquetasPersonaJuridica = JSON.parse(n["body"]).combooItems;
-              this.etiquetasPersonaJuridica.forEach(
-                (value: any, index: number) => {
-                  this.etiquetasPersonaJuridicaSelecionados.push(value.value);
-                }
-              );
-            },
-            err => {
-              console.log(err);
-            }
-          );
-           }
+        if (this.body.idPersona != undefined || this.body.idPersona != null) {
+          this.sigaServices
+            .post("busquedaPerJuridica_etiquetasPersona", this.body)
+            .subscribe(
+              n => {
+                // coger etiquetas de una persona juridica
+                this.etiquetasPersonaJuridica = JSON.parse(
+                  n["body"]
+                ).combooItems;
+                this.etiquetasPersonaJuridica.forEach(
+                  (value: any, index: number) => {
+                    this.etiquetasPersonaJuridicaSelecionados.push(value.value);
+                  }
+                );
+              },
+              err => {
+                console.log(err);
+              }
+            );
+        }
       }
     );
 
@@ -216,18 +217,17 @@ if(sessionStorage.getItem("crearnuevo")!= null){
     );
 
     this.comboTipo.push(this.tipoPersonaJuridica);
-  
   }
 
-  busquedaIdioma(){
+  busquedaIdioma() {
     this.sigaServices.get("etiquetas_lenguaje").subscribe(
-            n => {
-              this.idiomas = n.combooItems;
-            },
-            err => {
-              console.log(err);
-            }
-          );
+      n => {
+        this.idiomas = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   datosGeneralesSearch() {
@@ -260,16 +260,16 @@ if(sessionStorage.getItem("crearnuevo")!= null){
         },
         () => {
           // obtengo los idiomas y establecer el del la persona jurídica
-              this.idiomaPreferenciaSociedad = this.body.idLenguajeSociedad;
+          this.idiomaPreferenciaSociedad = this.body.idLenguajeSociedad;
         }
       );
   }
 
-  getTipo(event){
+  getTipo(event) {
     this.selectedTipo = event.value;
     this.body.tipo = this.selectedTipo;
     console.log(this.body.tipo);
-}
+  }
 
   createLegalPerson() {
     this.sigaServices.post("datosGenerales_insert", this.body).subscribe(
@@ -287,92 +287,93 @@ if(sessionStorage.getItem("crearnuevo")!= null){
   }
 
   guardar() {
-    if(sessionStorage.getItem("crearnuevo") != null){
- this.body.idPersona = this.idPersona;
-          if (this.etiquetasPersonaJuridicaSelecionados != undefined) {
-      this.body.grupos = [];
-      this.etiquetasPersonaJuridicaSelecionados.forEach(
-        (value: String, key: number) => {
-          this.body.grupos.push(value);
-        }
-      );
-    }
-        this.body.idioma = this.idiomaPreferenciaSociedad;
-    this.sigaServices.post("busquedaPerJuridica_create", this.body).subscribe(
-      data => {
-        this.showSuccess();
-      },
-      error => {
-        console.log(error);
-        this.showError(); 
-      }
-    );
-    }else{
-    this.body.idPersona = this.idPersona; //"2005005356";
-
-    // guardar imagen en bd y refresca header.component
-    // datosGenerales_update o busquedaPerJuridica_update
-    if (this.etiquetasPersonaJuridicaSelecionados != undefined) {
-      this.body.grupos = [];
-      this.etiquetasPersonaJuridicaSelecionados.forEach(
-        (value: String, key: number) => {
-          this.body.grupos.push(value);
-        }
-      );
-    }
-    this.body.idioma = this.idiomaPreferenciaSociedad;
-
-    this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
-      data => {
-        this.showSuccess();
-        console.log(data);
-      },
-      error => {
-        this.personaSearch = JSON.parse(error["error"]);
-        this.showFail(JSON.stringify(this.personaSearch.error.description));
-        console.log(error);
-      }
-    );
-
-    let lenguajeeImagen: boolean = false;
-    if (this.file != undefined) {
-      this.sigaServices
-        .postSendFileAndParameters(
-          "personaJuridica_uploadFotografia",
-          this.file,
-          this.body.idPersona
-        )
-        .subscribe(
-          data => {
-            console.log(data);
-            this.file = undefined;
-            this.archivoDisponible = false;
-
-            // this.imagenURL =
-            //   this.sigaServices.getNewSigaUrl() +
-            //   this.sigaServices.getServucePath(
-            //     "personaJuridica_cargarFotografia"
-            //   ) +
-            //   "?random=" +
-            //   new Date().getTime();
-
-            this.imagenURL = this.sigaServices.post(
-              "personaJuridica_cargarFotografia",
-              this.body
-            );
-
-            this.imagenURL = this.imagenURL + "?random=" + new Date().getTime();
-
-            var ajsdka = this.imagenURL;
-            if (!lenguajeeImagen) {
-              this.showSuccessUploadedImage();
-            }
-          },
-          err => {
-            console.log(err);
+    if (sessionStorage.getItem("crearnuevo") != null) {
+      this.body.idPersona = this.idPersona;
+      if (this.etiquetasPersonaJuridicaSelecionados != undefined) {
+        this.body.grupos = [];
+        this.etiquetasPersonaJuridicaSelecionados.forEach(
+          (value: String, key: number) => {
+            this.body.grupos.push(value);
           }
         );
-    }
+      }
+      this.body.idioma = this.idiomaPreferenciaSociedad;
+      this.sigaServices.post("busquedaPerJuridica_create", this.body).subscribe(
+        data => {
+          this.showSuccess();
+        },
+        error => {
+          console.log(error);
+          this.showError();
+        }
+      );
+    } else {
+      this.body.idPersona = this.idPersona; //"2005005356";
+
+      // guardar imagen en bd y refresca header.component
+      // datosGenerales_update o busquedaPerJuridica_update
+      if (this.etiquetasPersonaJuridicaSelecionados != undefined) {
+        this.body.grupos = [];
+        this.etiquetasPersonaJuridicaSelecionados.forEach(
+          (value: String, key: number) => {
+            this.body.grupos.push(value);
+          }
+        );
+      }
+      this.body.idioma = this.idiomaPreferenciaSociedad;
+
+      this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
+        data => {
+          this.showSuccess();
+          console.log(data);
+        },
+        error => {
+          this.personaSearch = JSON.parse(error["error"]);
+          this.showFail(JSON.stringify(this.personaSearch.error.description));
+          console.log(error);
+        }
+      );
+
+      let lenguajeeImagen: boolean = false;
+      if (this.file != undefined) {
+        this.sigaServices
+          .postSendFileAndParameters(
+            "personaJuridica_uploadFotografia",
+            this.file,
+            this.body.idPersona
+          )
+          .subscribe(
+            data => {
+              console.log(data);
+              this.file = undefined;
+              this.archivoDisponible = false;
+
+              // this.imagenURL =
+              //   this.sigaServices.getNewSigaUrl() +
+              //   this.sigaServices.getServucePath(
+              //     "personaJuridica_cargarFotografia"
+              //   ) +
+              //   "?random=" +
+              //   new Date().getTime();
+
+              this.imagenURL = this.sigaServices.post(
+                "personaJuridica_cargarFotografia",
+                this.body
+              );
+
+              this.imagenURL =
+                this.imagenURL + "?random=" + new Date().getTime();
+
+              var ajsdka = this.imagenURL;
+              if (!lenguajeeImagen) {
+                this.showSuccessUploadedImage();
+              }
+            },
+            err => {
+              console.log(err);
+            }
+          );
+      }
     }
   }
 
@@ -443,8 +444,7 @@ if(sessionStorage.getItem("crearnuevo")!= null){
     if (
       (this.body.nif != "" || this.body.nif != undefined) &&
       (this.body.abreviatura != "" || this.body.abreviatura != undefined) &&
-      (this.body.denominacion != "" || this.body.denominacion != undefined) &&
-      this.body.fechaConstitucion != undefined
+      (this.body.denominacion != "" || this.body.denominacion != undefined)
     ) {
       this.showGuardar = true;
     } else {
