@@ -79,12 +79,12 @@ export class DatosRegistralesComponent implements OnInit {
   body: DatosRegistralesItem = new DatosRegistralesItem();
   bodyAnterior: DatosRegistralesItem = new DatosRegistralesItem();
   personaSearch: DatosRegistralesObject = new DatosRegistralesObject();
-
+  prefijoBlock: boolean = false;
   fechaConstitucion: Date;
   fechaFin: Date;
   fechaCancelacion: Date;
   fechaRegistro: Date;
-
+  requiredContador: boolean = false;
   sociedadProfesional: Boolean;
   fichasActivas: Array<any> = [];
   todo: boolean = false;
@@ -157,6 +157,7 @@ export class DatosRegistralesComponent implements OnInit {
 
   ngOnInit() {
     this.desactivadoGuardar();
+    this.onChangeSociedad();
     this.bodyAnterior = JSON.parse(sessionStorage.getItem("usuarioBody"));
     if (this.bodyAnterior[0] != undefined) {
       if (this.bodyAnterior != null) {
@@ -225,7 +226,10 @@ export class DatosRegistralesComponent implements OnInit {
 
   compruebaRegistro() {
     var a = this.body.contadorNumsspp;
-    if (Number(this.body.contadorNumsspp)) {
+    if (
+      Number(this.body.contadorNumsspp) ||
+      this.onlySpaces(this.body.contadorNumsspp)
+    ) {
       this.contadorNoCorrecto = false;
       return true;
     } else {
@@ -301,6 +305,15 @@ export class DatosRegistralesComponent implements OnInit {
     });
   }
 
+  showCustomFail(mensaje) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: mensaje
+    });
+  }
+
   guardar() {
     this.arreglarFechas();
     this.body.idPersona = this.idPersonaEditar;
@@ -321,21 +334,30 @@ export class DatosRegistralesComponent implements OnInit {
     } else {
       this.body.sociedadProfesional = "0";
     }
-
-    console.log(this.body);
-    this.sigaServices.post("datosRegistrales_update", this.body).subscribe(
-      data => {
-        this.showSuccess();
-        console.log(data);
-      },
-      err => {
-        this.showFail();
-        console.log(err);
-      },
-      () => {
-        this.search();
-      }
-    );
+    if (
+      this.body.contadorNumsspp != undefined &&
+      !this.onlySpaces(this.body.contadorNumsspp) &&
+      this.requiredContador
+    ) {
+      console.log(this.body);
+      this.sigaServices.post("datosRegistrales_update", this.body).subscribe(
+        data => {
+          this.showSuccess();
+          console.log(data);
+        },
+        err => {
+          this.showFail();
+          console.log(err);
+        },
+        () => {
+          this.search();
+        }
+      );
+    } else {
+      this.showCustomFail(
+        "Las sociedades profesionales deben especificar el número de registro"
+      );
+    }
   }
 
   arreglarFechas() {
@@ -368,20 +390,24 @@ export class DatosRegistralesComponent implements OnInit {
     return fecha;
   }
 
+  onChangeSociedad() {
+    if (this.sociedadProfesional == true) {
+      this.prefijoBlock = true;
+      this.body.prefijoNumsspp = "SP/";
+      this.requiredContador = true;
+    } else {
+      this.prefijoBlock = false;
+      this.requiredContador = false;
+    }
+  }
+
   desactivadoGuardar() {
-    //VALIDAR CONTADORNUMSSPP SOLO PUEDE SER NUMÉRICO y si no hay cambios no se debe guardar
     if (
       this.body.objetoSocial != undefined &&
       !this.onlySpaces(this.body.objetoSocial) &&
       this.body.resena != undefined &&
       !this.onlySpaces(this.body.resena) &&
       this.fechaConstitucion != undefined &&
-      this.body.prefijoNumsspp != undefined &&
-      !this.onlySpaces(this.body.prefijoNumsspp) &&
-      this.body.contadorNumsspp != undefined &&
-      !this.onlySpaces(this.body.contadorNumsspp) &&
-      this.body.sufijoNumsspp != undefined &&
-      !this.onlySpaces(this.body.sufijoNumsspp) &&
       this.compruebaRegistro() &&
       this.compruebaFechaConstitucion() &&
       this.compruebaFechaBaja()
