@@ -335,9 +335,9 @@ export class DatosRegistralesComponent implements OnInit {
       this.body.sociedadProfesional = "0";
     }
     if (
-      this.body.contadorNumsspp != undefined &&
-      !this.onlySpaces(this.body.contadorNumsspp) &&
-      this.requiredContador
+      (this.body.contadorNumsspp != undefined &&
+        !this.onlySpaces(this.body.contadorNumsspp)) ||
+      !this.requiredContador
     ) {
       console.log(this.body);
       this.sigaServices.post("datosRegistrales_update", this.body).subscribe(
