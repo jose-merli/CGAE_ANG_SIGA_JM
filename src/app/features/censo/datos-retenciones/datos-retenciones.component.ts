@@ -51,6 +51,10 @@ import { DatosNotarioItem } from "../../../models/DatosNotarioItem";
 import { DatosRetencionesObject } from "../../../../app/models/DatosRetencionesObject";
 import { DatosRetencionesItem } from "../../../../app/models/DatosRetencionesItem";
 import { DatosPersonaJuridicaComponent } from "../datosPersonaJuridica/datosPersonaJuridica.component";
+
+import { cardService } from "./../../../_services/cardSearch.service";
+import { Subscription } from "rxjs/Subscription";
+
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -104,6 +108,8 @@ export class DatosRetencionesComponent implements OnInit {
   masFiltros: boolean = false;
   labelFiltros: string;
 
+  suscripcionBusquedaNuevo: Subscription;
+
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
   constructor(
     private formBuilder: FormBuilder,
@@ -115,7 +121,8 @@ export class DatosRetencionesComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
     private location: Location,
-    public datepipe: DatePipe
+    public datepipe: DatePipe,
+    private cardService: cardService
   ) {
     this.formBusqueda = this.formBuilder.group({
       cif: null,
@@ -127,6 +134,14 @@ export class DatosRetencionesComponent implements OnInit {
 
   ngOnInit() {
     this.persona = "f";
+    this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
+      id => {
+        if (id !== null) {
+          this.idPersona = id;
+          this.search();
+        }
+      }
+    );
     this.colsFisicas = [
       {
         field: "fechaInicio",
@@ -167,7 +182,7 @@ export class DatosRetencionesComponent implements OnInit {
     this.getTiposRetenciones();
 
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    if (this.usuarioBody != undefined)
+    if (this.usuarioBody[0] != undefined)
       this.idPersona = this.usuarioBody[0].idPersona;
     this.checkStatusInit();
     this.search();
@@ -359,41 +374,42 @@ export class DatosRetencionesComponent implements OnInit {
     this.body.idPersona = this.idPersona;
     this.body.idInstitucion = "";
     this.body.idLenguaje = "";
-
-    this.sigaServices
-      .postPaginado("retenciones_search", "?numPagina=1", this.body)
-      .subscribe(
-        data => {
-          console.log(data);
-          this.searchRetenciones = JSON.parse(data["body"]);
-          if (this.searchRetenciones.retencionesItemList != null) {
-            this.datos = this.searchRetenciones.retencionesItemList;
-          } else {
-            this.datos = [];
+    if (this.idPersona != undefined && this.idPersona != null) {
+      this.sigaServices
+        .postPaginado("retenciones_search", "?numPagina=1", this.body)
+        .subscribe(
+          data => {
+            console.log(data);
+            this.searchRetenciones = JSON.parse(data["body"]);
+            if (this.searchRetenciones.retencionesItemList != null) {
+              this.datos = this.searchRetenciones.retencionesItemList;
+            } else {
+              this.datos = [];
+            }
+            this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+          },
+          () => {
+            if (this.datos.length > 0) {
+              this.retencionNow = this.datos[0];
+              this.datos.forEach((value: any, key: number) => {
+                if (value.fechaInicio != undefined) {
+                  this.datos[key].fechaInicio = this.transformarFecha(
+                    value.fechaInicio
+                  );
+                }
+                if (value.fechaFin != undefined) {
+                  this.datos[key].fechaFin = this.transformarFecha(
+                    value.fechaFin
+                  );
+                }
+              });
+            }
           }
-          this.progressSpinner = false;
-        },
-        err => {
-          console.log(err);
-        },
-        () => {
-          if (this.datos.length > 0) {
-            this.retencionNow = this.datos[0];
-            this.datos.forEach((value: any, key: number) => {
-              if (value.fechaInicio != undefined) {
-                this.datos[key].fechaInicio = this.transformarFecha(
-                  value.fechaInicio
-                );
-              }
-              if (value.fechaFin != undefined) {
-                this.datos[key].fechaFin = this.transformarFecha(
-                  value.fechaFin
-                );
-              }
-            });
-          }
-        }
-      );
+        );
+    }
   }
   transformarFecha(fecha) {
     let jsonDate = JSON.stringify(fecha);

@@ -13,6 +13,7 @@ import { DialogModule } from "primeng/dialog";
 import { AuthGuard } from "./_guards/auth.guards";
 import { OldSigaServices } from "./_services/oldSiga.service";
 import { SigaServices } from "./_services/siga.service";
+import { cardService } from "./_services/cardSearch.service";
 import { CookieService } from "ngx-cookie-service";
 // prueba
 import { HeaderGestionEntidadService } from "./_services/headerGestionEntidad.service";
@@ -484,6 +485,7 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     DatePipe,
     OldSigaServices,
     SigaServices,
+    cardService,
     HeaderGestionEntidadService,
     MessageService,
     AuthenticationService,

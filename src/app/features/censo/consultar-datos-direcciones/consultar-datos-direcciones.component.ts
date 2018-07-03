@@ -33,6 +33,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   comboPoblacion: any[] = [];
   comboTipoDireccion: any[] = [];
   comboTipoContacto: any[] = [];
+  comboDirecciones: any[] = [];
 
   selectedPais: any = {};
   selectedPoblacion: any = {};
@@ -60,7 +61,13 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.idPersona = this.usuarioBody[0].idPersona;
     this.idDireccion = sessionStorage.getItem("idDireccion");
-
+    // Combo de identificación
+    this.sigaServices.get("integrantes_provincias").subscribe(
+      n => {
+        this.comboDirecciones = n.combooItems;
+      },
+      error => {}
+    );
     this.registroEditable = sessionStorage.getItem("editar");
 
     if (this.registroEditable == "true") {

@@ -53,6 +53,8 @@ import { HeaderGestionEntidadService } from "./../../../_services/headerGestionE
 import { FichaColegialComponent } from "./../../../new-features/censo/ficha-colegial/ficha-colegial.component";
 import { DatosGeneralesComponent } from "./../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
 import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-colegial/datos-colegiales/datos-colegiales.component";
+import { cardService } from "./../../../_services/cardSearch.service";
+import { Subscription } from "rxjs/Subscription";
 
 // import
 @Component({
@@ -65,7 +67,8 @@ export class DatosPersonaJuridicaComponent implements OnInit {
   generales: boolean = false;
   constructor(
     public sigaServices: OldSigaServices,
-    private location: Location
+    private location: Location,
+    private cardService: cardService
   ) {}
 
   ngOnInit() {
@@ -106,6 +109,8 @@ export class DatosPersonaJuridicaComponent implements OnInit {
   }
   backTo() {
     sessionStorage.removeItem("usuarioBody");
+    this.cardService.searchNewAnnounce.next(null);
+
     this.location.back();
   }
 

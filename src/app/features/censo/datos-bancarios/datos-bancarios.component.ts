@@ -10,6 +10,9 @@ import { SigaServices } from "./../../../_services/siga.service";
 import { DatosBancariosItem } from "./../../../../app/models/DatosBancariosItem";
 import { DatosBancariosObject } from "./../../../../app/models/DatosBancariosObject";
 
+import { cardService } from "./../../../_services/cardSearch.service";
+import { Subscription } from "rxjs/Subscription";
+
 @Component({
   selector: "app-datos-bancarios",
   templateUrl: "./datos-bancarios.component.html",
@@ -38,6 +41,8 @@ export class DatosBancariosComponent implements OnInit {
   customLabel: String;
   nif: String;
 
+  suscripcionBusquedaNuevo: Subscription;
+
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -46,18 +51,31 @@ export class DatosBancariosComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private cardService: cardService
   ) {}
 
   ngOnInit() {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    this.idPersona = this.usuarioBody[0].idPersona;
-    this.nif = this.usuarioBody[0].nif;
 
-    this.body.idPersona = this.idPersona;
-    this.body.nifTitular = this.nif;
+    if (this.usuarioBody[0] != undefined) {
+      this.idPersona = this.usuarioBody[0].idPersona;
+      this.nif = this.usuarioBody[0].nif;
 
-    this.cargarDatosBancarios();
+      this.body.idPersona = this.idPersona;
+      this.body.nifTitular = this.nif;
+
+      this.cargarDatosBancarios();
+    }
+
+    this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
+      id => {
+        if (id !== null) {
+          this.idPersona = id;
+          this.cargarDatosBancarios();
+        }
+      }
+    );
 
     this.cols = [
       {

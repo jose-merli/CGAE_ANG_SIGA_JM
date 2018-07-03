@@ -64,6 +64,10 @@ export class DatosDireccionesComponent implements OnInit {
         header: "Población"
       },
       {
+        field: "provincia",
+        header: "Provincia"
+      },
+      {
         field: "telefono",
         header: "Teléfono"
       },

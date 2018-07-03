@@ -20,6 +20,9 @@ import { DatosNotarioItem } from "./../../../../app/models/DatosNotarioItem";
 import { DatosNotarioObject } from "./../../../../app/models/DatosNotarioObject";
 import { TranslateService } from "../../../commons/translate";
 
+import { cardService } from "./../../../_services/cardSearch.service";
+import { Subscription } from "rxjs/Subscription";
+
 @Component({
   selector: "app-accesoFichaPersona",
   templateUrl: "./accesoFichaPersona.component.html",
@@ -42,6 +45,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
   notario1: any;
   guardarNotario: boolean = false;
   desasociar: boolean = false;
+  suscripcionBusquedaNuevo: Subscription;
 
   file: File = undefined;
 
@@ -51,12 +55,22 @@ export class AccesoFichaPersonaComponent implements OnInit {
     private sigaServices: SigaServices,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private cardService: cardService
   ) {}
 
   ngOnInit() {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.tipoPersona = "Notario";
+
+    this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
+      id => {
+        if (id !== null) {
+          this.idPersona = id;
+          this.search();
+        }
+      }
+    );
 
     if (
       sessionStorage.getItem("notario") != undefined &&
@@ -93,7 +107,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
         this.body.tipoIdentificacion = this.notario[0].tipoIdentificacion;
       }
     }
-    if (this.usuarioBody != null) {
+    if (this.usuarioBody != null && this.usuarioBody[0] != undefined) {
       this.idPersona = this.usuarioBody[0].idPersona;
     }
 
@@ -115,37 +129,40 @@ export class AccesoFichaPersonaComponent implements OnInit {
     this.body.idPersona = this.idPersona;
     this.body.tipoPersona = this.tipoPersona;
     this.body.idInstitucion = "";
-    this.sigaServices
-      .postPaginado("accesoFichaPersona_search", "?numPagina=1", this.body)
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.bodySearch = JSON.parse(data["body"]);
-          // if (this.bodySearch.fichaPersonaItem != undefined && this.bodySearch.fichaPersonaItem != null) {
-          //   this.body = this.bodySearch.fichaPersonaItem[0];
-          //   this.desasociar = true;
-          //   this.obtenerTiposIdentificacion();
-          // }
-          if (
-            this.bodySearch.fichaPersonaItem != undefined &&
-            this.bodySearch.fichaPersonaItem != null
-          ) {
-            this.body = this.bodySearch.fichaPersonaItem[0];
-            this.desasociar = true;
-            this.obtenerTiposIdentificacion();
-          } else {
-            this.guardarNotario = false;
-            this.desasociar = false;
-            this.limpiarCamposNotario();
+    if (this.idPersona != undefined && this.idPersona != null) {
+      this.sigaServices
+        .postPaginado("accesoFichaPersona_search", "?numPagina=1", this.body)
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.bodySearch = JSON.parse(data["body"]);
+            // if (this.bodySearch.fichaPersonaItem != undefined && this.bodySearch.fichaPersonaItem != null) {
+            //   this.body = this.bodySearch.fichaPersonaItem[0];
+            //   this.desasociar = true;
+            //   this.obtenerTiposIdentificacion();
+            // }
+            if (
+              this.bodySearch.fichaPersonaItem != undefined &&
+              this.bodySearch.fichaPersonaItem != null
+            ) {
+              this.body = this.bodySearch.fichaPersonaItem[0];
+              this.desasociar = true;
+              this.obtenerTiposIdentificacion();
+            } else {
+              this.guardarNotario = false;
+              this.desasociar = false;
+              this.limpiarCamposNotario();
+            }
+          },
+          error => {
+            this.bodySearch = JSON.parse(error["error"]);
+            this.showFail(JSON.stringify(this.bodySearch.error.description));
+            console.log(error);
+            this.progressSpinner = false;
           }
-        },
-        error => {
-          this.bodySearch = JSON.parse(error["error"]);
-          this.showFail(JSON.stringify(this.bodySearch.error.description));
-          console.log(error);
-          this.progressSpinner = false;
-        }
-      );
+        );
+    }
+    this.progressSpinner = false;
   }
 
   limpiarCamposNotario() {

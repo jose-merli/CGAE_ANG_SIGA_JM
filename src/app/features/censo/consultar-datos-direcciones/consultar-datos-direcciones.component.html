@@ -67,6 +67,8 @@
               <div class="form-group col-lg-6 col-md-6">
                 <label>Provincia</label>
                 <input [(ngModel)]="body.provincia" type="text" class="form-control" (ngModelChange)="recuperarProvinciaPoblacion()" pInputText>
+                <p-dropdown class="select-form" [(ngModel)]='selectedPoblacion' optionLabel="label" [options]="comboDirecciones" (onChange)="onChangePoblacion($event)">
+                </p-dropdown>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>Población</label>
