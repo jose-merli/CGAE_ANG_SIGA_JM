@@ -231,10 +231,21 @@ export class BusquedaGeneralComponent {
       this.cols = this.colsFisicas;
       this.colegios_seleccionados = [];
       this.datos = [];
+
+      this.bodyFisica.nif = "";
+      this.bodyFisica.nombre = "";
+      this.bodyFisica.primerApellido = "";
+      this.bodyFisica.segundoApellido = "";
+      this.bodyFisica.numeroColegiado = "";
     } else {
       this.cols = this.colsJuridicas;
       this.colegios_seleccionados = [];
       this.datos = [];
+
+      this.bodyJuridica.tipo = "";
+      this.bodyJuridica.nif = "";
+      this.bodyJuridica.denominacion = "";
+      this.bodyJuridica.Abreviatura = "";
     }
   }
   checkStatusInit() {
