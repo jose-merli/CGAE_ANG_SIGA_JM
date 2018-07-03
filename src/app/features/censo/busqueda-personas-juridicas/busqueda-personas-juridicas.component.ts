@@ -35,7 +35,7 @@ import { MessageService } from "primeng/components/common/messageservice";
 import { PersonaJuridicaObject } from "./../../../../app/models/PersonaJuridicaObject";
 import { PersonaJuridicaItem } from "./../../../../app/models/PersonaJuridicaItem";
 import { ComboItem } from "./../../../../app/models/ComboItem";
-import { MultiSelectModule } from "primeng/multiSelect";
+import { MultiSelectModule } from "primeng/multiselect";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { Location } from "@angular/common";
 import { Observable } from "rxjs/Rx";

@@ -61,6 +61,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   displayNuevo: boolean = false;
   isEditable: boolean = false;
   isCancelEdit: boolean = false;
+  mandatoAnexoVacio: boolean = false;
 
   idCuenta: String;
   idPersona: String;
@@ -232,7 +233,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   cargarModoEdicion() {
     this.cargarDatosCuentaBancaria();
-    this.editar = false;
 
     this.cargarDatosMandatos();
     this.nuevo = false;
@@ -250,6 +250,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   // Funciones datos cuenta bancaria
   cargarDatosCuentaBancaria() {
+    this.editar = false;
+
     this.body.idPersona = this.idPersona;
     this.body.idCuenta = this.idCuenta;
     //this.body.idCuenta = sessionStorage.getItem("idCuenta");
@@ -309,6 +311,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.body = JSON.parse(data["body"]);
 
         this.showSuccess("Se han guardado correctamente los datos");
+        sessionStorage.setItem("editar", "true");
       },
       error => {
         this.bodySearch = JSON.parse(error["error"]);
@@ -343,6 +346,11 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.showFail(this.bodySearch.error.message.toString());
         console.log(error);
         this.progressSpinner = false;
+      },
+      () => {
+        this.idCuenta = this.body.idCuenta;
+        this.cargarDatosMandatos();
+        this.cargarDatosAnexos();
       }
     );
   }
@@ -472,15 +480,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   validarCuentaCargo() {
     this.confirmationService.confirm({
-      message:
-        "¿Desea guardar los cambios?" /*this.translateService.instant(
-        //"censo.tipoCuenta.cargo.confirmacionProcesoAltaCuentaCargos"
-       
-      ),*/,
+      message: this.translateService.instant(
+        "censo.tipoCuenta.cargo.confirmacionProcesoAltaCuentaCargos"
+      ),
       icon: "fa fa-info",
       accept: () => {
         this.revisionCuentas = true;
-
+        this.registroEditable = sessionStorage.getItem("editar");
         if (this.registroEditable == "false") {
           this.guardarRegistro();
         } else {
@@ -512,6 +518,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.validarCuentaCargo();
       } else {
         this.revisionCuentas = false;
+        this.registroEditable = sessionStorage.getItem("editar");
         if (this.registroEditable == "false") {
           this.guardarRegistro();
         } else {
@@ -543,6 +550,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
           if (this.bodyDatosMandatos == undefined) {
             this.bodyDatosMandatos = new DatosMandatosItem();
+            this.mandatoAnexoVacio = true;
+          } else {
+            this.mandatoAnexoVacio = false;
           }
 
           this.rellenarComboEsquema();
@@ -724,6 +734,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
           if (this.bodyDatosBancariosAnexo == undefined) {
             this.bodyDatosBancariosAnexo = new DatosBancariosSearchAnexosItem();
+            this.mandatoAnexoVacio = true;
+          } else {
+            this.mandatoAnexoVacio = false;
           }
 
           this.rellenarComboProductoServicio(
@@ -1112,6 +1125,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     } else {
       this.editar = false;
     }
+  }
+
+  editarNif() {
+    this.editar = true;
   }
 
   // Métodos comunes

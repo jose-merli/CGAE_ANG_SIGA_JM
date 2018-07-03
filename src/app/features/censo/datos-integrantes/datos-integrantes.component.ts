@@ -38,7 +38,7 @@ import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
 import { ComboItem } from "./../../../../app/models/ComboItem";
-import { MultiSelectModule } from "primeng/multiSelect";
+import { MultiSelectModule } from "primeng/multiselect";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { Location, getLocaleDateTimeFormat, DatePipe } from "@angular/common";
 import { Observable } from "rxjs/Rx";
@@ -120,7 +120,7 @@ export class DatosIntegrantesComponent implements OnInit {
 
   ngOnInit() {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    if (this.usuarioBody != undefined) {
+    if (this.usuarioBody[0] != undefined) {
       this.idPersona = this.usuarioBody[0].idPersona;
     }
     this.cols = [

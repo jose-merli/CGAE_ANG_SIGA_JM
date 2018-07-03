@@ -274,6 +274,7 @@ export class DatosBancariosComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
+        this.historico = true;
         this.cargarDatosBancarios();
       }
     );

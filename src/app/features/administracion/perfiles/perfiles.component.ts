@@ -27,7 +27,7 @@ import { RadioButtonModule } from "primeng/radiobutton";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { GrowlModule } from "primeng/growl";
 import { ConfirmationService } from "primeng/api";
-import { MultiSelectModule } from "primeng/multiSelect";
+import { MultiSelectModule } from "primeng/multiselect";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
 import { PerfilItem } from "./../../../../app/models/PerfilItem";

@@ -13,6 +13,7 @@ import { DialogModule } from "primeng/dialog";
 import { AuthGuard } from "./_guards/auth.guards";
 import { OldSigaServices } from "./_services/oldSiga.service";
 import { SigaServices } from "./_services/siga.service";
+import { cardService } from "./_services/cardSearch.service";
 import { CookieService } from "ngx-cookie-service";
 // prueba
 import { HeaderGestionEntidadService } from "./_services/headerGestionEntidad.service";
@@ -48,7 +49,7 @@ import { RadioButtonModule } from "primeng/radiobutton";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ConfirmationService } from "primeng/api";
 import { GrowlModule } from "primeng/growl";
-import { MultiSelectModule } from "primeng/multiSelect";
+import { MultiSelectModule } from "primeng/multiselect";
 import { ProgressSpinnerModule } from "primeng/progressspinner";
 import { CalendarModule } from "primeng/calendar";
 import { AutoCompleteModule } from "primeng/autocomplete";
@@ -484,6 +485,7 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     DatePipe,
     OldSigaServices,
     SigaServices,
+    cardService,
     HeaderGestionEntidadService,
     MessageService,
     AuthenticationService,

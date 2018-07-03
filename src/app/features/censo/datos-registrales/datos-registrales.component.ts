@@ -30,7 +30,7 @@ import { TooltipModule } from "primeng/tooltip";
 import { ChipsModule } from "primeng/chips";
 import { RadioButtonModule } from "primeng/radiobutton";
 import { FileUploadModule } from "primeng/fileupload";
-import { MultiSelectModule } from "primeng/multiSelect";
+import { MultiSelectModule } from "primeng/multiselect";
 
 import { Http, Response } from "@angular/http";
 import { MenuItem } from "primeng/api";
@@ -47,10 +47,12 @@ import { Message } from "primeng/components/common/api";
 import { Location } from "@angular/common";
 
 import { SigaServices } from "./../../../_services/siga.service";
+import { cardService } from "./../../../_services/cardSearch.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { HeaderGestionEntidadService } from "./../../../_services/headerGestionEntidad.service";
 import { ComboItem } from "./../../../../app/models/ComboItem";
+import { Subscription } from "rxjs/Subscription";
 
 /*** COMPONENTES ***/
 import { FichaColegialComponent } from "./../../../new-features/censo/ficha-colegial/ficha-colegial.component";
@@ -117,7 +119,6 @@ export class DatosRegistralesComponent implements OnInit {
   fechaReg: Date;
   fechaCanc: Date;
   contadorNoCorrecto: boolean;
-
   selectActividad: any[];
   idiomas: any[] = [
     { label: "", value: "" },
@@ -130,6 +131,8 @@ export class DatosRegistralesComponent implements OnInit {
   idPersona: String;
   idPersonaEditar: String;
   datos: any[];
+  suscripcionBusquedaNuevo: Subscription;
+
   @ViewChild(DatosRegistralesComponent)
   datosRegistralesComponent: DatosRegistralesComponent;
 
@@ -143,6 +146,7 @@ export class DatosRegistralesComponent implements OnInit {
     private location: Location,
     private confirmationService: ConfirmationService,
     private sigaServices: SigaServices,
+    private cardService: cardService,
     private headerGestionEntidadService: HeaderGestionEntidadService,
     private fichasPosibles: DatosPersonaJuridicaComponent
   ) {
@@ -154,14 +158,24 @@ export class DatosRegistralesComponent implements OnInit {
   ngOnInit() {
     this.desactivadoGuardar();
     this.bodyAnterior = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    if(this.bodyAnterior[0] != undefined){
-        if (this.bodyAnterior != null) {
-          this.body.idPersona = this.bodyAnterior[0].idPersona;
-          this.idPersonaEditar = this.bodyAnterior[0].idPersona;
-        }
-        this.search();
-     }
+    if (this.bodyAnterior[0] != undefined) {
+      if (this.bodyAnterior != null) {
+        this.body.idPersona = this.bodyAnterior[0].idPersona;
+        this.idPersonaEditar = this.bodyAnterior[0].idPersona;
+      }
+      this.search();
+      this.getActividadesPersona();
+    }
     console.log(this.body);
+
+    this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
+      id => {
+        if (id !== null) {
+          this.idPersonaEditar = id;
+          this.search();
+        }
+      }
+    );
 
     this.sigaServices.get("datosRegistrales_actividadesDisponible").subscribe(
       n => {
@@ -171,8 +185,6 @@ export class DatosRegistralesComponent implements OnInit {
         console.log(err);
       }
     );
-
-    this.getActividadesPersona();
 
     this.select = [
       { label: "", value: null },
