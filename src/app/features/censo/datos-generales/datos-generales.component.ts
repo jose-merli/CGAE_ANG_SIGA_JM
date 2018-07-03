@@ -120,6 +120,7 @@ export class DatosGenerales implements OnInit {
   selectedTipo: any;
   idiomaPreferenciaSociedad: String;
 
+  cuentaIncorrecta: Boolean = false;
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
 
@@ -161,6 +162,14 @@ export class DatosGenerales implements OnInit {
     this.formBusqueda = this.formBuilder.group({
       cif: null
     });
+  }
+
+  isValidCIF(cif: String): boolean {
+    return (
+      cif &&
+      typeof cif === "string" &&
+      /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif)
+    );
   }
 
   ngOnInit() {
@@ -252,6 +261,7 @@ export class DatosGenerales implements OnInit {
           this.personaSearch = JSON.parse(data["body"]);
           if (this.personaSearch.personaJuridicaItems.length != 0) {
             this.body = this.personaSearch.personaJuridicaItems[0];
+            this.selectedTipo = this.body.tipo;
           } else {
             this.body = new DatosGeneralesItem();
           }
@@ -265,13 +275,14 @@ export class DatosGenerales implements OnInit {
         () => {
           // obtengo los idiomas y establecer el del la persona jurídica
           this.idiomaPreferenciaSociedad = this.body.idLenguajeSociedad;
+          this.showGuardar = false;
         }
       );
   }
 
   getTipo(event) {
-    this.selectedTipo = event.value;
-    this.body.tipo = this.selectedTipo;
+    // this.selectedTipo = event.value;
+    this.body.tipo = event.value;
     console.log(this.body.tipo);
   }
 
@@ -292,30 +303,38 @@ export class DatosGenerales implements OnInit {
 
   guardar() {
     if (sessionStorage.getItem("crearnuevo") != null) {
-      this.body.idPersona = this.idPersona;
-      if (this.etiquetasPersonaJuridicaSelecionados != undefined) {
-        this.body.grupos = [];
-        this.etiquetasPersonaJuridicaSelecionados.forEach(
-          (value: String, key: number) => {
-            this.body.grupos.push(value);
-          }
-        );
-      }
-      this.body.idioma = this.idiomaPreferenciaSociedad;
-      this.sigaServices.post("busquedaPerJuridica_create", this.body).subscribe(
-        data => {
-          this.showSuccess();
-          let respuesta = JSON.parse(data["body"]);
-          this.idPersona = respuesta.id;
-          sessionStorage.removeItem("crearnuevo");
-          this.datosGeneralesSearch();
-          this.cardService.searchNewAnnounce.next(this.idPersona);
-        },
-        error => {
-          console.log(error);
-          this.showError();
+      // comprobacion de cif
+      if (this.isValidCIF(this.body.nif)) {
+        this.body.idPersona = this.idPersona;
+
+        if (this.etiquetasPersonaJuridicaSelecionados != undefined) {
+          this.body.grupos = [];
+          this.etiquetasPersonaJuridicaSelecionados.forEach(
+            (value: String, key: number) => {
+              this.body.grupos.push(value);
+            }
+          );
         }
-      );
+        this.body.idioma = this.idiomaPreferenciaSociedad;
+        this.sigaServices
+          .post("busquedaPerJuridica_create", this.body)
+          .subscribe(
+            data => {
+              this.showSuccess();
+              let respuesta = JSON.parse(data["body"]);
+              this.idPersona = respuesta.id;
+              sessionStorage.removeItem("crearnuevo");
+              this.datosGeneralesSearch();
+              this.cardService.searchNewAnnounce.next(this.idPersona);
+            },
+            error => {
+              console.log(error);
+              this.showError();
+            }
+          );
+      } else {
+        this.showFail("el cif introducido no es correcto");
+      }
     } else {
       this.body.idPersona = this.idPersona; //"2005005356";
 
@@ -450,25 +469,76 @@ export class DatosGenerales implements OnInit {
   }
 
   onChangeForm() {
+    if (this.editar) {
+      if (this.body.nif.length == 9 && this.isValidCIF(this.body.nif)) {
+        // rellena el filtro tipo según el cif aplicado
+        this.selectedTipo = this.comboIdentificacion.find(
+          item => item.value == this.body.nif[0]
+        );
+
+        // si no corresponde con ninguna sociedad => otro tipo de sociedad
+        if (this.selectedTipo == undefined) {
+          this.selectedTipo = this.comboIdentificacion.find(
+            item => item.value == "V"
+          );
+        }
+      } else {
+        this.selectedTipo = this.comboIdentificacion[0];
+      }
+    }
+
     if (
-      (this.body.abreviatura != "" ||
-        this.body.abreviatura != undefined ||
-        !this.onlySpaces(this.body.abreviatura)) &&
-      (this.body.nif != "" ||
-        this.body.nif != undefined ||
-        !this.onlySpaces(this.body.nif)) &&
-      (this.body.denominacion != "" ||
-        this.body.denominacion != undefined ||
-        !this.onlySpaces(this.body.denominacion)) &&
-      (this.body.nif != "" ||
-        this.body.nif != undefined ||
-        !this.onlySpaces(this.body.nif)) &&
-      this.idiomaPreferenciaSociedad != ""
+      this.body.abreviatura != "" &&
+      this.body.abreviatura != undefined &&
+      !this.onlySpaces(this.body.abreviatura) &&
+      this.body.nif != "" &&
+      this.body.nif != undefined &&
+      !this.onlySpaces(this.body.nif) &&
+      this.body.denominacion != "" &&
+      this.body.denominacion != undefined &&
+      !this.onlySpaces(this.body.denominacion) &&
+      this.body.nif != "" &&
+      this.body.nif != undefined &&
+      !this.onlySpaces(this.body.nif) &&
+      this.idiomaPreferenciaSociedad != "" &&
+      this.idiomaPreferenciaSociedad != undefined
     ) {
-      this.showGuardar = true;
+      if (
+        this.editar &&
+        (this.body.fechaConstitucion != undefined ||
+          this.body.fechaConstitucion != null)
+      ) {
+        if (this.body.nif.length == 9 && this.isValidCIF(this.body.nif)) {
+          // rellena el filtro tipo según el cif aplicado
+          // this.selectedTipo = this.comboIdentificacion.find(
+          //   item => item.value == this.body.nif[0]
+          // );
+
+          // // si no corresponde con ninguna sociedad => otro tipo de sociedad
+          // if (this.selectedTipo == undefined) {
+          //   this.selectedTipo = this.comboIdentificacion.find(
+          //     item => item.value == "V"
+          //   );
+          // }
+          this.showGuardar = true;
+        } else {
+          // this.selectedTipo = this.comboIdentificacion[0];
+          this.showGuardar = true;
+        }
+      } else if (!this.editar) {
+        this.showGuardar = true;
+      } else {
+        this.showGuardar = false;
+      }
     } else {
       this.showGuardar = false;
     }
+
+    // if (this.body.cuentaContable.length != 24) {
+    //   this.cuentaIncorrecta = true;
+    // } else {
+    //   this.cuentaIncorrecta = false;
+    // }
   }
 
   onlySpaces(str) {

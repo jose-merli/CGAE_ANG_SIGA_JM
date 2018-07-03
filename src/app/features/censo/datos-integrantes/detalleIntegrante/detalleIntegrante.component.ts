@@ -436,8 +436,18 @@ export class DetalleIntegranteComponent implements OnInit {
     }
   }
 
+  showFail(message: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Error",
+      detail: message
+    });
+  }
+
   updateIntegrante() {
     let updateIntegrante = new DatosIntegrantesItem();
+    let isParticipacionNumerico = false;
     if (this.fechaCarga != undefined && this.fechaCarga != null) {
       this.arreglarFechas();
       updateIntegrante.fechaCargo = this.body.fechaCargo;
@@ -458,8 +468,15 @@ export class DetalleIntegranteComponent implements OnInit {
       this.body.capitalSocial != undefined &&
       this.body.capitalSocial != null
     ) {
-      updateIntegrante.capitalSocial = this.body.capitalSocial;
+      // comprueba si es numérico
+      if (Number(this.body.capitalSocial)) {
+        isParticipacionNumerico = true;
+        updateIntegrante.capitalSocial = this.body.capitalSocial;
+      } else {
+        isParticipacionNumerico = false;
+      }
     } else {
+      isParticipacionNumerico = true;
       updateIntegrante.capitalSocial = "";
     }
     if (this.body.idPersona != undefined && this.body.idPersona != null) {
@@ -468,24 +485,31 @@ export class DetalleIntegranteComponent implements OnInit {
     if (this.body.idComponente != undefined && this.body.idComponente != null) {
       updateIntegrante.idComponente = this.body.idComponente;
     }
-    this.sigaServices
-      .postPaginado("integrantes_update", "?numPagina=1", updateIntegrante)
-      .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.backTo();
-        }
-      );
+
+    if (isParticipacionNumerico) {
+      this.sigaServices
+        .postPaginado("integrantes_update", "?numPagina=1", updateIntegrante)
+        .subscribe(
+          data => {
+            console.log(data);
+            this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.backTo();
+          }
+        );
+    } else {
+      this.showFail("el campo Participación debe ser numérico");
+    }
   }
   crearIntegrante() {
     let newIntegrante = new DatosIntegrantesItem();
+    let isParticipacionNumerico = false;
+
     if (this.body.completo) {
       if (this.body.nombre != undefined && this.body.nombre != null) {
         newIntegrante.nombre = this.body.nombre;
@@ -515,7 +539,8 @@ export class DetalleIntegranteComponent implements OnInit {
       } else {
         newIntegrante.tipoIdentificacion = "";
       }
-      if (this.body.fechaCargo != undefined && this.body.fechaCargo != null) {
+      if (this.fechaCarga != undefined && this.fechaCarga != null) {
+        this.arreglarFechas();
         newIntegrante.fechaCargo = this.body.fechaCargo;
       } else {
         newIntegrante.fechaCargo = "";
@@ -534,8 +559,14 @@ export class DetalleIntegranteComponent implements OnInit {
         this.body.capitalSocial != undefined &&
         this.body.capitalSocial != null
       ) {
-        newIntegrante.capitalSocial = this.body.capitalSocial;
+        if (Number(this.body.capitalSocial)) {
+          isParticipacionNumerico = true;
+          newIntegrante.capitalSocial = this.body.capitalSocial;
+        } else {
+          isParticipacionNumerico = false;
+        }
       } else {
+        isParticipacionNumerico = true;
         newIntegrante.capitalSocial = "";
       }
       if (
@@ -597,21 +628,25 @@ export class DetalleIntegranteComponent implements OnInit {
         newIntegrante.tipo = "";
       }
 
-      this.sigaServices
-        .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
-        .subscribe(
-          data => {
-            console.log(data);
-            this.progressSpinner = false;
-          },
-          err => {
-            console.log(err);
-            this.progressSpinner = false;
-          },
-          () => {
-            this.backTo();
-          }
-        );
+      if (isParticipacionNumerico) {
+        this.sigaServices
+          .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
+          .subscribe(
+            data => {
+              console.log(data);
+              this.progressSpinner = false;
+            },
+            err => {
+              console.log(err);
+              this.progressSpinner = false;
+            },
+            () => {
+              this.backTo();
+            }
+          );
+      } else {
+        this.showFail("el campo Participación debe ser numérico");
+      }
     } else {
       if (this.body.nombre != undefined && this.body.nombre != null) {
         newIntegrante.nombre = this.body.nombre;
@@ -641,7 +676,8 @@ export class DetalleIntegranteComponent implements OnInit {
       } else {
         newIntegrante.tipoIdentificacion = "";
       }
-      if (this.body.fechaCargo != undefined && this.body.fechaCargo != null) {
+      if (this.fechaCarga != undefined && this.fechaCarga != null) {
+        this.arreglarFechas();
         newIntegrante.fechaCargo = this.body.fechaCargo;
       } else {
         newIntegrante.fechaCargo = "";
@@ -660,8 +696,14 @@ export class DetalleIntegranteComponent implements OnInit {
         this.body.capitalSocial != undefined &&
         this.body.capitalSocial != null
       ) {
-        newIntegrante.capitalSocial = this.body.capitalSocial;
+        if (Number(this.body.capitalSocial)) {
+          isParticipacionNumerico = true;
+          newIntegrante.capitalSocial = this.body.capitalSocial;
+        } else {
+          isParticipacionNumerico = false;
+        }
       } else {
+        isParticipacionNumerico = true;
         newIntegrante.capitalSocial = "";
       }
       if (
@@ -723,21 +765,25 @@ export class DetalleIntegranteComponent implements OnInit {
         newIntegrante.tipo = "";
       }
 
-      this.sigaServices
-        .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
-        .subscribe(
-          data => {
-            console.log(data);
-            this.progressSpinner = false;
-          },
-          err => {
-            console.log(err);
-            this.progressSpinner = false;
-          },
-          () => {
-            this.backTo();
-          }
-        );
+      if (isParticipacionNumerico) {
+        this.sigaServices
+          .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
+          .subscribe(
+            data => {
+              console.log(data);
+              this.progressSpinner = false;
+            },
+            err => {
+              console.log(err);
+              this.progressSpinner = false;
+            },
+            () => {
+              this.backTo();
+            }
+          );
+      } else {
+        this.showFail("el campo Participación debe ser numérico");
+      }
     }
   }
 }

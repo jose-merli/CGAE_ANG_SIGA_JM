@@ -129,37 +129,40 @@ export class AccesoFichaPersonaComponent implements OnInit {
     this.body.idPersona = this.idPersona;
     this.body.tipoPersona = this.tipoPersona;
     this.body.idInstitucion = "";
-    this.sigaServices
-      .postPaginado("accesoFichaPersona_search", "?numPagina=1", this.body)
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.bodySearch = JSON.parse(data["body"]);
-          // if (this.bodySearch.fichaPersonaItem != undefined && this.bodySearch.fichaPersonaItem != null) {
-          //   this.body = this.bodySearch.fichaPersonaItem[0];
-          //   this.desasociar = true;
-          //   this.obtenerTiposIdentificacion();
-          // }
-          if (
-            this.bodySearch.fichaPersonaItem != undefined &&
-            this.bodySearch.fichaPersonaItem != null
-          ) {
-            this.body = this.bodySearch.fichaPersonaItem[0];
-            this.desasociar = true;
-            this.obtenerTiposIdentificacion();
-          } else {
-            this.guardarNotario = false;
-            this.desasociar = false;
-            this.limpiarCamposNotario();
+    if (this.idPersona != undefined && this.idPersona != null) {
+      this.sigaServices
+        .postPaginado("accesoFichaPersona_search", "?numPagina=1", this.body)
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.bodySearch = JSON.parse(data["body"]);
+            // if (this.bodySearch.fichaPersonaItem != undefined && this.bodySearch.fichaPersonaItem != null) {
+            //   this.body = this.bodySearch.fichaPersonaItem[0];
+            //   this.desasociar = true;
+            //   this.obtenerTiposIdentificacion();
+            // }
+            if (
+              this.bodySearch.fichaPersonaItem != undefined &&
+              this.bodySearch.fichaPersonaItem != null
+            ) {
+              this.body = this.bodySearch.fichaPersonaItem[0];
+              this.desasociar = true;
+              this.obtenerTiposIdentificacion();
+            } else {
+              this.guardarNotario = false;
+              this.desasociar = false;
+              this.limpiarCamposNotario();
+            }
+          },
+          error => {
+            this.bodySearch = JSON.parse(error["error"]);
+            this.showFail(JSON.stringify(this.bodySearch.error.description));
+            console.log(error);
+            this.progressSpinner = false;
           }
-        },
-        error => {
-          this.bodySearch = JSON.parse(error["error"]);
-          this.showFail(JSON.stringify(this.bodySearch.error.description));
-          console.log(error);
-          this.progressSpinner = false;
-        }
-      );
+        );
+    }
+    this.progressSpinner = false;
   }
 
   limpiarCamposNotario() {

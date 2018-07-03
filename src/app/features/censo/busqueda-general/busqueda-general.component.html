@@ -69,7 +69,7 @@
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>Abreviatura</label>
-                        <input type="text" class="form-control" pInputText [(ngModel)]='bodyJuridica.Abreviatura'>
+                        <input type="text" class="form-control" pInputText [(ngModel)]='bodyJuridica.abreviatura'>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>Colegio</label>
@@ -98,20 +98,20 @@
                 [rows]="selectedItem">
                 <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                     filterMatchMode="contains"></p-column>
-                    <ng-template pTemplate="paginatorLeft">
-                        <div class="mostrar">
-                            <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                            <label>Mostrar</label>
-                            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                            <label> registros</label>
-                        </div>
-                    </ng-template>
-                    <p-footer *ngIf="selectedDatos && selectedDatos != ''">
-                        <div class="text-right main-button">
-                            <button pButton type="button" icon="fa fa-download" iconPos="left" label="Descargar"></button>
-                        </div>
-                    </p-footer>
-                    </p-dataTable>
+                <ng-template pTemplate="paginatorLeft">
+                    <div class="mostrar">
+                        <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                        <label>Mostrar</label>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                        <label> registros</label>
+                    </div>
+                </ng-template>
+                <p-footer *ngIf="selectedDatos && selectedDatos != ''">
+                    <div class="text-right main-button">
+                        <button pButton type="button" icon="fa fa-download" iconPos="left" label="Descargar"></button>
+                    </div>
+                </p-footer>
+            </p-dataTable>
         </div>
     </div>
 </div>

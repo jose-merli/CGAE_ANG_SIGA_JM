@@ -53,6 +53,9 @@ import { DatosIntegrantesItem } from "../../../models/DatosIntegrantesItem";
 import { DatosIntegrantesObject } from "../../../models/DatosIntegrantesObject";
 import { DatosPersonaJuridicaComponent } from "../datosPersonaJuridica/datosPersonaJuridica.component";
 
+import { cardService } from "./../../../_services/cardSearch.service";
+import { Subscription } from "rxjs/Subscription";
+
 @Component({
   selector: "app-datos-direcciones",
   templateUrl: "./datos-direcciones.component.html",
@@ -443,7 +446,9 @@ export class DatosDireccionesComponent implements OnInit {
   body1: DatosIntegrantesItem = new DatosIntegrantesItem();
   body2: DatosIntegrantesItem = new DatosIntegrantesItem();
 
-  @ViewChild("table") table;
+  suscripcionBusquedaNuevo: Subscription;
+
+  @ViewChild("table") table: DataTable;
   selectedDatos;
 
   constructor(
@@ -456,7 +461,8 @@ export class DatosDireccionesComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
     private location: Location,
-    private fichasPosibles: DatosPersonaJuridicaComponent
+    private fichasPosibles: DatosPersonaJuridicaComponent,
+    private cardService: cardService
   ) {}
 
   ngOnInit() {
@@ -464,6 +470,15 @@ export class DatosDireccionesComponent implements OnInit {
     if (this.usuarioBody[0] != undefined) {
       this.idPersona = this.usuarioBody[0].idPersona;
     }
+
+    this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
+      id => {
+        if (id !== null) {
+          this.body.idPersona = id;
+        }
+      }
+    );
+
     this.cols = [
       {
         field: "tipoDireccion",
@@ -673,7 +688,6 @@ export class DatosDireccionesComponent implements OnInit {
     let deleteDirecciones = new DatosDireccionesObject();
     deleteDirecciones.datosDireccionesItem = selectedItem;
     let datosDelete = [];
-    selectedItem;
     selectedItem.forEach((value: DatosDireccionesItem, key: number) => {
       value.idPersona = this.idPersona;
       datosDelete.push(value);
