@@ -50,6 +50,9 @@ import { DatosNotarioItem } from "../../../models/DatosNotarioItem";
 import { DatosIntegrantesItem } from "../../../models/DatosIntegrantesItem";
 import { DatosIntegrantesObject } from "../../../models/DatosIntegrantesObject";
 import { DatosPersonaJuridicaComponent } from "../datosPersonaJuridica/datosPersonaJuridica.component";
+import { cardService } from "./../../../_services/cardSearch.service";
+import { Subscription } from "rxjs/Subscription";
+
 /*** COMPONENTES ***/
 
 @Component({
@@ -95,6 +98,7 @@ export class DatosIntegrantesComponent implements OnInit {
   idPersona: String;
   body: DatosIntegrantesItem = new DatosIntegrantesItem();
   datosIntegrantes: DatosIntegrantesObject = new DatosIntegrantesObject();
+  suscripcionBusquedaNuevo: Subscription;
 
   columnasTabla: any = [];
 
@@ -115,11 +119,20 @@ export class DatosIntegrantesComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
     private location: Location,
-    private fichasPosibles: DatosPersonaJuridicaComponent
+    private fichasPosibles: DatosPersonaJuridicaComponent,
+    private cardService: cardService
   ) {}
 
   ngOnInit() {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
+      id => {
+        if (id !== null) {
+          this.idPersona = id;
+          this.search();
+        }
+      }
+    );
     if (this.usuarioBody[0] != undefined) {
       this.idPersona = this.usuarioBody[0].idPersona;
     }
@@ -220,27 +233,29 @@ export class DatosIntegrantesComponent implements OnInit {
     this.selectedDatos = "";
     this.progressSpinner = true;
     this.selectAll = false;
-    this.sigaServices
-      .postPaginado("integrantes_search", "?numPagina=1", searchObject)
-      .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-          this.searchIntegrantes = JSON.parse(data["body"]);
-          this.datos = this.searchIntegrantes.datosIntegrantesItem;
-          if (this.datos.length == 1) {
-            this.body = this.datos[0];
-            this.only = true;
-          } else {
-            this.only = false;
-          }
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {}
-      );
+    if (this.idPersona != undefined && this.idPersona != null) {
+      this.sigaServices
+        .postPaginado("integrantes_search", "?numPagina=1", searchObject)
+        .subscribe(
+          data => {
+            console.log(data);
+            this.progressSpinner = false;
+            this.searchIntegrantes = JSON.parse(data["body"]);
+            this.datos = this.searchIntegrantes.datosIntegrantesItem;
+            if (this.datos.length == 1) {
+              this.body = this.datos[0];
+              this.only = true;
+            } else {
+              this.only = false;
+            }
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {}
+        );
+    }
   }
   setItalic(datoH) {
     if (datoH.fechaBajaCargo == null) return false;
