@@ -120,6 +120,7 @@ export class DatosGenerales implements OnInit {
   selectedTipo: any;
   idiomaPreferenciaSociedad: String;
 
+  cuentaIncorrecta: Boolean = false;
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
 
@@ -252,6 +253,7 @@ export class DatosGenerales implements OnInit {
           this.personaSearch = JSON.parse(data["body"]);
           if (this.personaSearch.personaJuridicaItems.length != 0) {
             this.body = this.personaSearch.personaJuridicaItems[0];
+            this.selectedTipo = this.body.tipo;
           } else {
             this.body = new DatosGeneralesItem();
           }
@@ -270,8 +272,8 @@ export class DatosGenerales implements OnInit {
   }
 
   getTipo(event) {
-    this.selectedTipo = event.value;
-    this.body.tipo = this.selectedTipo;
+    // this.selectedTipo = event.value;
+    this.body.tipo = event.value;
     console.log(this.body.tipo);
   }
 
@@ -469,6 +471,12 @@ export class DatosGenerales implements OnInit {
       this.showGuardar = true;
     } else {
       this.showGuardar = false;
+    }
+
+    if (this.body.cuentaContable.length != 24) {
+      this.cuentaIncorrecta = true;
+    } else {
+      this.cuentaIncorrecta = false;
     }
   }
 
