@@ -84,7 +84,7 @@
               </div>
               <div class="form-group col-lg-3 col-md-6">
                 <label>Cuenta contable</label>
-                <input type="text" class="form-control " [(ngModel)]="body.cuentaContable" pInputText>
+                <input type="text" class="form-control " [(ngModel)]="body.cuentaContable" [maxLength]="20" pInputText>
               </div>
             </div>
           </div>

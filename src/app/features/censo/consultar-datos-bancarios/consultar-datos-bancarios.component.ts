@@ -315,7 +315,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       },
       error => {
         this.bodySearch = JSON.parse(error["error"]);
-        this.showFail(this.bodySearch.error.message.toString());
+        this.showFail(JSON.stringify(this.bodySearch.error.message));
         console.log(error);
         this.progressSpinner = false;
       },
@@ -393,6 +393,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   autogenerarDatos() {
+    var a = this.body.iban.replace(/\s/g, "");
+    this.body.iban = a;
+
     if (this.isValidIBAN()) {
       this.recuperarBicBanco();
       this.ibanValido = true;
@@ -402,8 +405,12 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     }
   }
 
+  eliminarEspacios(str) {
+    if (str.length == 0) return "";
+    //recursova
+  }
+
   recuperarBicBanco() {
-    this.body.iban = this.body.iban.replace(/\s+/g, "");
     this.sigaServices
       .post("datosCuentaBancaria_BIC_BANCO", this.body)
       .subscribe(
