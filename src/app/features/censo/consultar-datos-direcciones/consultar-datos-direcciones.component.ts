@@ -59,6 +59,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
 
   ngOnInit() {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    if (sessionStorage.getItem("direccion") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("direccion"));
+    }
     this.idPersona = this.usuarioBody[0].idPersona;
     this.idDireccion = sessionStorage.getItem("idDireccion");
     // Combo de identificación
@@ -81,13 +84,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
 
   // ---------------------------------------------------------
   datosPrueba() {
-    this.body.fechaModificacion = new Date();
-    this.body.direccion = "c/Granadilla, 6";
-    this.body.pais = "España";
     this.body.codigoPostal = "35200";
-    this.body.otraProvincia = false;
-    this.body.provincia = "Las Palmas";
-    this.body.poblacion = "TELDE";
     this.body.tipoDireccion = "despacho";
     return this.body;
   }
@@ -131,7 +128,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   }
 
   cargarModoNuevoRegistro() {
-    this.body.fechaModificacion = null;
+    // this.body.fechaModificacion = null;
     this.nuevo = true;
 
     this.rellenarComboPais();
@@ -150,7 +147,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
 
         if (this.registroEditable == "true" && this.body != null) {
           // quizás sobre lo de body != null
-          var combo = this.filtrarItemsCombo(this.comboPais, this.body.pais);
+          var combo = this.filtrarItemsCombo(this.comboPais, this.body.idPais);
 
           this.selectedPais = combo[0];
         } else {
@@ -182,7 +179,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         if (this.body != null) {
           var combo = this.filtrarItemsCombo(
             this.comboPoblacion,
-            this.body.poblacion
+            this.body.idPoblacion
           );
 
           this.selectedPoblacion = combo[0];
@@ -233,7 +230,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.recuperarProvinciaPoblacion();
       this.codigoPostalValido = true;
     } else {
-      this.body.provincia = "";
+      this.body.idProvincia = "";
       this.comboPoblacion = [];
       this.selectedPoblacion = "";
     }
