@@ -3,7 +3,7 @@ export class BusquedaJuridicaItem {
   idPersona: String;
   nif: String;
   denominacion: String;
-  Abreviatura: String;
+  abreviatura: String;
   fechaConstitucion: Date; // etiquetas en pantalla
   tipo: String;
   numColegiado: String;

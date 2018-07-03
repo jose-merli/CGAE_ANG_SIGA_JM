@@ -329,8 +329,8 @@ export class BusquedaGeneralComponent {
       if (this.bodyJuridica.numColegiado == undefined) {
         this.bodyJuridica.numColegiado = "";
       }
-      if (this.bodyJuridica.Abreviatura == undefined) {
-        this.bodyJuridica.Abreviatura = "";
+      if (this.bodyJuridica.abreviatura == undefined) {
+        this.bodyJuridica.abreviatura = "";
       }
 
       this.bodyJuridica.idInstitucion = [];
@@ -368,7 +368,7 @@ export class BusquedaGeneralComponent {
                 this.bodyJuridica.nif != null &&
                 this.bodyJuridica.nif != undefined &&
                 this.bodyJuridica.denominacion.trim() == "" &&
-                this.bodyJuridica.Abreviatura.trim() == "" &&
+                this.bodyJuridica.abreviatura.trim() == "" &&
                 this.bodyJuridica.tipo.trim() == ""
               ) {
                 this.noDataFoundWithDNI();
