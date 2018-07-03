@@ -67,8 +67,8 @@ export class AuthenticationService {
             'Content-Type': 'application/x-www-form-urlencoded',
         })
         let options = { headers: headers, observe: 'response', responseType: 'text' }
-        //return this.http.post(this.oldSigaServices.getOldSigaUrl("loginDevelop"), params.toString(), { headers: headers, observe: 'response', responseType: 'text' })
-        return this.http.post('developmentLogin.do', params.toString(), { headers: headers, observe: 'response', responseType: 'text' })
+        return this.http.post(this.oldSigaServices.getOldSigaUrl("loginDevelop"), params.toString(), { headers: headers, observe: 'response', responseType: 'text' })
+
 
     }
 
