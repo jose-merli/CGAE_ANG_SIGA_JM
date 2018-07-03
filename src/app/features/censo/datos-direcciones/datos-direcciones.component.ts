@@ -11,6 +11,9 @@ import { SigaServices } from "./../../../_services/siga.service";
 import { DatosDireccionesItem } from "./../../../../app/models/DatosDireccionesItem";
 import { DatosDireccionesObject } from "./../../../../app/models/DatosDireccionesObject";
 
+import { cardService } from "./../../../_services/cardSearch.service";
+import { Subscription } from "rxjs/Subscription";
+
 @Component({
   selector: "app-datos-direcciones",
   templateUrl: "./datos-direcciones.component.html",
@@ -34,6 +37,8 @@ export class DatosDireccionesComponent implements OnInit {
   body: DatosDireccionesItem = new DatosDireccionesItem();
   bodySearch: DatosDireccionesObject = new DatosDireccionesObject();
 
+  suscripcionBusquedaNuevo: Subscription;
+
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -42,10 +47,20 @@ export class DatosDireccionesComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private cardService: cardService
   ) {}
 
   ngOnInit() {
+    this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
+      id => {
+        if (id !== null) {
+          this.body.idPersona = id;
+          this.cargarDatosDirecciones();
+        }
+      }
+    );
+
     this.cols = [
       {
         field: "tipoDireccion",

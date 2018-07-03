@@ -451,19 +451,20 @@ export class DatosGenerales implements OnInit {
 
   onChangeForm() {
     if (
-      (this.body.abreviatura != "" ||
-        this.body.abreviatura != undefined ||
-        !this.onlySpaces(this.body.abreviatura)) &&
-      (this.body.nif != "" ||
-        this.body.nif != undefined ||
-        !this.onlySpaces(this.body.nif)) &&
-      (this.body.denominacion != "" ||
-        this.body.denominacion != undefined ||
-        !this.onlySpaces(this.body.denominacion)) &&
-      (this.body.nif != "" ||
-        this.body.nif != undefined ||
-        !this.onlySpaces(this.body.nif)) &&
-      this.idiomaPreferenciaSociedad != ""
+      this.body.abreviatura != "" &&
+      this.body.abreviatura != undefined &&
+      !this.onlySpaces(this.body.abreviatura) &&
+      this.body.nif != "" &&
+      this.body.nif != undefined &&
+      !this.onlySpaces(this.body.nif) &&
+      this.body.denominacion != "" &&
+      this.body.denominacion != undefined &&
+      !this.onlySpaces(this.body.denominacion) &&
+      this.body.nif != "" &&
+      this.body.nif != undefined &&
+      !this.onlySpaces(this.body.nif) &&
+      this.idiomaPreferenciaSociedad != "" &&
+      this.idiomaPreferenciaSociedad != undefined
     ) {
       this.showGuardar = true;
     } else {
