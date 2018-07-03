@@ -53,11 +53,16 @@ export class HeaderComponent implements OnInit {
 
   logout() {
     sessionStorage.removeItem("authenticated");
-    this.router.navigate(["/login"]);
+
+    window.location.href =
+      "http://demo.redabogacia.org/pra/accesoSeleccionaColegio/";
+    // this.router.navigate(["/"]).then(result => {
+    //   window.location.href =
+    //     "http://demo.redabogacia.org/pra/accesoSeleccionaColegio/";
+    // });
   }
 
   navigateTo() {
-    this.router.navigate(['/login]']);
+    this.router.navigate(["/login]"]);
   }
-
 }
