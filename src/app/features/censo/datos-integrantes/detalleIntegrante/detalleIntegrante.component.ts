@@ -436,8 +436,19 @@ export class DetalleIntegranteComponent implements OnInit {
     }
   }
 
+
+  showFail(message: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Error",
+      detail: message
+    });
+  }
+
   updateIntegrante() {
     let updateIntegrante = new DatosIntegrantesItem();
+    let isParticipacionNumerico = false;
     if (this.fechaCarga != undefined && this.fechaCarga != null) {
       this.arreglarFechas();
       updateIntegrante.fechaCargo = this.body.fechaCargo;
@@ -458,7 +469,16 @@ export class DetalleIntegranteComponent implements OnInit {
       this.body.capitalSocial != undefined &&
       this.body.capitalSocial != null
     ) {
-      updateIntegrante.capitalSocial = this.body.capitalSocial;
+
+      // comprueba si es numérico
+      if(Number(this.body.capitalSocial)){
+          isParticipacionNumerico = true;
+         updateIntegrante.capitalSocial = this.body.capitalSocial;
+      }
+      else{
+          isParticipacionNumerico = false;
+      }
+     
     } else {
       updateIntegrante.capitalSocial = "";
     }
@@ -468,7 +488,11 @@ export class DetalleIntegranteComponent implements OnInit {
     if (this.body.idComponente != undefined && this.body.idComponente != null) {
       updateIntegrante.idComponente = this.body.idComponente;
     }
-    this.sigaServices
+
+
+
+    if(isParticipacionNumerico){
+      this.sigaServices
       .postPaginado("integrantes_update", "?numPagina=1", updateIntegrante)
       .subscribe(
         data => {
@@ -483,6 +507,11 @@ export class DetalleIntegranteComponent implements OnInit {
           this.backTo();
         }
       );
+    }
+    else{
+      this.showFail("el campo Participación debe ser numérico");
+    }
+    
   }
   crearIntegrante() {
     let newIntegrante = new DatosIntegrantesItem();
