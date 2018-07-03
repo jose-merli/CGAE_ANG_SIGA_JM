@@ -315,7 +315,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       },
       error => {
         this.bodySearch = JSON.parse(error["error"]);
-        this.showFail(this.bodySearch.error.message.toString());
+        this.showFail(JSON.stringify(this.bodySearch.error.message));
         console.log(error);
         this.progressSpinner = false;
       },
@@ -393,13 +393,21 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   autogenerarDatos() {
-    if (this.isValidIBAN() && this.body.iban.length == 24) {
+    var a = this.body.iban.replace(/\s/g, "");
+    this.body.iban = a;
+
+    if (this.isValidIBAN()) {
       this.recuperarBicBanco();
       this.ibanValido = true;
     } else {
       this.body.banco = "";
       this.body.bic = "";
     }
+  }
+
+  eliminarEspacios(str) {
+    if (str.length == 0) return "";
+    //recursova
   }
 
   recuperarBicBanco() {
@@ -433,7 +441,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     return (
       this.body.iban &&
       typeof this.body.iban === "string" &&
-      /ES\d{2}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}|ES\d{22}/.test(
+      // /ES\d{2}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}|ES\d{22}/.test(
+      /[A-Z]{2}\d{2} ?\d{4} ?\d{4} ?\d{2} ?\d{10} ?[\d]{0,2}/.test(
         this.body.iban
       )
     );
@@ -442,8 +451,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   validarIban(): boolean {
     if (
       (this.body.iban != null || this.body.iban != undefined) &&
-      this.isValidIBAN() &&
-      this.body.iban.length == 24
+      this.isValidIBAN()
     ) {
       this.ibanValido = true;
       return true;

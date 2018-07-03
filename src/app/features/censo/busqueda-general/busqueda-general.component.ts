@@ -231,10 +231,21 @@ export class BusquedaGeneralComponent {
       this.cols = this.colsFisicas;
       this.colegios_seleccionados = [];
       this.datos = [];
+
+      this.bodyFisica.nif = "";
+      this.bodyFisica.nombre = "";
+      this.bodyFisica.primerApellido = "";
+      this.bodyFisica.segundoApellido = "";
+      this.bodyFisica.numeroColegiado = "";
     } else {
       this.cols = this.colsJuridicas;
       this.colegios_seleccionados = [];
       this.datos = [];
+
+      this.bodyJuridica.tipo = "";
+      this.bodyJuridica.nif = "";
+      this.bodyJuridica.denominacion = "";
+      this.bodyJuridica.Abreviatura = "";
     }
   }
   checkStatusInit() {
@@ -329,8 +340,8 @@ export class BusquedaGeneralComponent {
       if (this.bodyJuridica.numColegiado == undefined) {
         this.bodyJuridica.numColegiado = "";
       }
-      if (this.bodyJuridica.Abreviatura == undefined) {
-        this.bodyJuridica.Abreviatura = "";
+      if (this.bodyJuridica.abreviatura == undefined) {
+        this.bodyJuridica.abreviatura = "";
       }
 
       this.bodyJuridica.idInstitucion = [];
@@ -368,7 +379,7 @@ export class BusquedaGeneralComponent {
                 this.bodyJuridica.nif != null &&
                 this.bodyJuridica.nif != undefined &&
                 this.bodyJuridica.denominacion.trim() == "" &&
-                this.bodyJuridica.Abreviatura.trim() == "" &&
+                this.bodyJuridica.abreviatura.trim() == "" &&
                 this.bodyJuridica.tipo.trim() == ""
               ) {
                 this.noDataFoundWithDNI();

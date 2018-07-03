@@ -89,7 +89,7 @@
                 <label>{{"censo.consultaDatosRegistrales.literal.numRegistro" | translate}} (*)</label>
               </div>
               <div class="form-group col-lg-4 col-md-4">
-                <input [(ngModel)]="body.prefijoNumsspp" type="text" class="form-control" pInputText>
+                <input [(ngModel)]="body.prefijoNumsspp" type="text" class="form-control" [(disabled)]="prefijoBlock" pInputText>
               </div>
               <div class="form-group col-lg-4 col-md-4">
                 <input [(ngModel)]="body.contadorNumsspp" type="text" class="form-control" pInputText>
@@ -117,7 +117,7 @@
             <div class="form-check col-lg-6 col-md-6">
               <br>
               <label class="form-group-label">{{"censo.busquedaClientes.noColegiados.sociedadesProfesionales" | translate}}</label>              &nbsp;&nbsp;
-              <p-checkbox [(ngModel)]='sociedadProfesional' binary="true"></p-checkbox>
+              <p-checkbox [(ngModel)]='sociedadProfesional' binary="true" (ngModelChange)="onChangeSociedad()"></p-checkbox>
             </div>
           </div>
         </div>

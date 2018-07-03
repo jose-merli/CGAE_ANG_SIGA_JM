@@ -68,7 +68,8 @@ export class DatosPersonaJuridicaComponent implements OnInit {
   constructor(
     public sigaServices: OldSigaServices,
     private location: Location,
-    private cardService: cardService
+    private cardService: cardService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -111,7 +112,8 @@ export class DatosPersonaJuridicaComponent implements OnInit {
     sessionStorage.removeItem("usuarioBody");
     this.cardService.searchNewAnnounce.next(null);
 
-    this.location.back();
+    //this.location.back();
+    this.router.navigate(["searchNoColegiados"]);
   }
 
   getFichasPosibles() {
