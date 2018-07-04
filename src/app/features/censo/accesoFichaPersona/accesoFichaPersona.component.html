@@ -21,7 +21,8 @@
                             <span>{{ body.nombre }} {{ body.apellido1 }} {{ body.apellido2 }}</span>
                         </label>
                         <div></div>
-                        <div><i (click)="redireccionar()" [ngClass]="{ 'fa fa-rotate-right redirect': openFicha, 'fa fa-rotate-right redirect': !openFicha} "></i>
+                        <div>
+                            <i (click)="redireccionar()" [ngClass]="{ 'fa fa-rotate-right redirect': openFicha, 'fa fa-rotate-right redirect': !openFicha} "></i>
                             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
                         </div>
 
@@ -48,7 +49,7 @@
                         <i class="fa fa-user" style="font-size:130px;color:grey"></i>
                         <p-fileUpload #fubauto chooseLabel="" class="edit" mode="basic" name="file" auto="true" accept="image/*" (change)="uploadImage($event)"
                             auto="true">
-                            </p-fileUpload>
+                        </p-fileUpload>
                     </div>
                 </div>
                 <div class="bloque col-lg-6 col-md-6">
@@ -91,7 +92,7 @@
             </div>
             <!--END DATOS GENERALES-->
         </div>
-        <p-growl [(value)]="msgs "></p-growl>
+        <p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
         <div *ngIf="progressSpinner " class="overlay-spinner ">
             <div class="loader "></div>
         </div>

@@ -52,7 +52,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
@@ -304,7 +304,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
     );
   }
   filtrarItemsComboEsquema(comboEsquema, buscarElemento) {
-    return comboEsquema.filter(function(obj) {
+    return comboEsquema.filter(function (obj) {
       return obj.value == buscarElemento;
     });
   }
@@ -360,7 +360,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
     });
   }
 
-  seleccionarFecha(event) {}
+  seleccionarFecha(event) { }
 
   showFail(mensaje: string) {
     this.msgs = [];
@@ -370,5 +370,10 @@ export class AccesoFichaPersonaComponent implements OnInit {
   showSuccess(mensaje: string) {
     this.msgs = [];
     this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+
+  clear() {
+    this.msgs = [];
   }
 }

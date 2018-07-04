@@ -206,4 +206,8 @@ export class EditarCatalogosMaestrosComponent extends SigaWrapper
   volver() {
     this.router.navigate(["/catalogosMaestros"]);
   }
+
+  clear() {
+    this.msgs = [];
+  }
 }

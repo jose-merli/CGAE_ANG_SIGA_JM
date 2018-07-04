@@ -43,7 +43,7 @@ export class DatosDireccionesComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private sigaServices: SigaServices
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.cols = [
@@ -152,7 +152,7 @@ export class DatosDireccionesComponent implements OnInit {
     // llamar a buscar otra vez
   }
 
-  editarDireccion(dato) {}
+  editarDireccion(dato) { }
 
   confirmarEliminar(dato) {
     let mess = this.translateService.instant("messages.deleteConfirmation");
@@ -248,5 +248,10 @@ export class DatosDireccionesComponent implements OnInit {
   showSuccess(mensaje: string) {
     this.msgs = [];
     this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+
+  clear() {
+    this.msgs = [];
   }
 }

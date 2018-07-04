@@ -42,7 +42,6 @@ export class MenuComponent implements OnInit {
 
   onCloseMenu() {
     this.closeMenu = !this.closeMenu;
-    console.log(this.items)
     this.sigaServices.notifyMenuToggled();
   }
 
@@ -66,8 +65,8 @@ export class MenuComponent implements OnInit {
 
     this.router.navigate([ruta]);
     if (ruta !== " ") {
-      this.closeMenu = true;
-      console.log(ruta)
+      this.closeMenu = !this.closeMenu;
+      console.log(this.closeMenu)
     }
   }
 

@@ -215,18 +215,18 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
         this.body.idGrupo == this.checkBody.idGrupo &&
         this.body.descripcionGrupo == this.checkBody.descripcionGrupo &&
         JSON.stringify(this.rolesAsignados) ===
-          JSON.stringify(this.saveRolesAsignados) &&
+        JSON.stringify(this.saveRolesAsignados) &&
         JSON.stringify(this.rolesNoAsignados) ===
-          JSON.stringify(this.saveRolesNoAsignados)
+        JSON.stringify(this.saveRolesNoAsignados)
       ) {
         return true;
       } else if (
         this.body.idGrupo == this.checkBody.idGrupo &&
         this.body.descripcionGrupo == this.checkBody.descripcionGrupo &&
         JSON.stringify(this.rolesAsignados) ===
-          JSON.stringify(this.saveRolesAsignados) &&
+        JSON.stringify(this.saveRolesAsignados) &&
         JSON.stringify(this.rolesNoAsignados) ===
-          JSON.stringify(this.saveRolesNoAsignados)
+        JSON.stringify(this.saveRolesNoAsignados)
       ) {
         return true;
       } else {
@@ -285,5 +285,10 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
   volver() {
     sessionStorage.removeItem("perfil");
     this.location.back();
+  }
+
+
+  clear() {
+    this.msgs = [];
   }
 }

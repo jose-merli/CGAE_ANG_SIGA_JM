@@ -445,4 +445,10 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
       this.isBuscar();
     }
   }
+
+  clear() {
+    this.msgs = [];
+  }
 }
+
+

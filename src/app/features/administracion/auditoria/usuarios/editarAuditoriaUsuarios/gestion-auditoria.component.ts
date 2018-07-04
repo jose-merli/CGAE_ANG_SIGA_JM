@@ -231,4 +231,8 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
       this.habilitarBotonGuardarCerrar = false;
     else this.habilitarBotonGuardarCerrar = true;
   }
+
+  clear() {
+    this.msgs = [];
+  }
 }

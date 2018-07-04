@@ -47,7 +47,7 @@ export class DatosBancariosComponent implements OnInit {
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
@@ -264,8 +264,8 @@ export class DatosBancariosComponent implements OnInit {
         } else {
           this.showSuccess(
             selectedDatos.length +
-              " " +
-              this.translateService.instant("messages.deleted.selected.success")
+            " " +
+            this.translateService.instant("messages.deleted.selected.success")
           );
         }
       },
@@ -296,5 +296,10 @@ export class DatosBancariosComponent implements OnInit {
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;
     else return true;
+  }
+
+
+  clear() {
+    this.msgs = [];
   }
 }
