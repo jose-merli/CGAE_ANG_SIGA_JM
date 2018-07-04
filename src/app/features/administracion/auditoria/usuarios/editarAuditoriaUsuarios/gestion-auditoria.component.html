@@ -1,70 +1,75 @@
-<p-growl [(value)]="msgs" life="3000"></p-growl>
-<div class="busqueda-container">
-  <div class="header-title">
-    <i class="fa fa-square"></i>
-    <p>{{'menu.administracion.auditoria' | translate}} <i class="pl-1 fa fa-angle-right"></i> {{"administracion.usuarios.edicion.usuarios"
-      | translate}}</p>
+<p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
+<div class=" busqueda-container ">
+  <div class="header-title ">
+    <i class="fa fa-square "></i>
+    <p>{{'menu.administracion.auditoria' | translate}}
+      <i class="pl-1 fa fa-angle-right "></i> {{"administracion.usuarios.edicion.usuarios " | translate}}</p>
   </div>
-  <!--<div class="breadCrumb">
-    <p>{{'menu.administracion.auditoria' | translate}} <i class="fa fa-angle-right"></i> {{"general.boton.edit" | translate}}
-      <i class="fa fa-angle-right"></i> {{ 'menu.administracion.usuarios' | translate}}
+  <!--<div class="breadCrumb ">
+    <p>{{'menu.administracion.auditoria' | translate}} <i class="fa fa-angle-right "></i> {{"general.boton.edit " | translate}}
+      <i class="fa fa-angle-right "></i> {{ 'menu.administracion.usuarios' | translate}}
     </p>
   </div>-->
 
-  <div class="card">
-    <div class="card-body">
-      <p class="title-module">{{"administracion.usuarios.literal.datos" | translate}}
-        <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
-        <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+  <div class="card ">
+    <div class="card-body ">
+      <p class="title-module ">{{"administracion.usuarios.literal.datos " | translate}}
+        <i (click)="onHideDatosGenerales() " *ngIf="showDatosGenerales " class="fa fa-angle-up float-right "></i>
+        <i (click)="onHideDatosGenerales() " *ngIf="!showDatosGenerales " class="fa fa-angle-down float-right "></i>
       </p>
 
-      <div *ngIf="showDatosGenerales" class="module vista-avanzada">
-        <div class="form-row">
+      <div *ngIf="showDatosGenerales " class="module vista-avanzada ">
+        <div class="form-row ">
 
-          <div class="form-group col-lg-3 col-md-3">
-            <label class="d-block pb-2">{{"censo.consultaHistorico.literal.nombreUsu" | translate}}</label>
-            <label class="d-block pb-2">{{itemBody.persona}}</label>
+          <div class="form-group col-lg-3 col-md-3 ">
+            <label class="d-block pb-2 ">{{"censo.consultaHistorico.literal.nombreUsu " | translate}}</label>
+            <label class="d-block pb-2 ">{{itemBody.persona}}</label>
           </div>
 
-          <div class="form-group col-lg-3 col-md-3">
-            <label class="d-block pb-2">{{"administracion.auditoriaUsuarios.literal.tipoAccion" | translate}}</label>
-            <label class="d-block pb-2">{{itemBody.descTipoCambio}}</label>
+          <div class="form-group col-lg-3 col-md-3 ">
+            <label class="d-block pb-2 ">{{"administracion.auditoriaUsuarios.literal.tipoAccion " | translate}}</label>
+            <label class="d-block pb-2 ">{{itemBody.descTipoCambio}}</label>
           </div>
 
-          <div class="form-group col-lg-3 col-md-3">
-            <label class="d-block pb-2">{{"gratuita.listarDesignasTurno.literal.fechaEntrada" | translate}} (*)</label>
-            <p-calendar disabled="true" [(ngModel)]="itemBody.fechaEntrada" dateFormat="dd-mm-yy" [utc]="true" [locale]="es" [showIcon]="true"></p-calendar>
+          <div class="form-group col-lg-3 col-md-3 ">
+            <label class="d-block pb-2 ">{{"gratuita.listarDesignasTurno.literal.fechaEntrada " | translate}} (*)</label>
+            <p-calendar disabled="true " [(ngModel)]="itemBody.fechaEntrada " dateFormat="dd-mm-yy " [utc]="true
+  " [locale]="es " [showIcon]="true "></p-calendar>
           </div>
 
-          <div class="form-group col-lg-3 col-md-3">
-            <label class="d-block pb-2">{{"administracion.auditoriaUsuarios.literal.fechaEfectiva" | translate}} (*)</label>
-            <p-calendar disabled="true" [(ngModel)]="itemBody.fechaEfectiva" dateFormat="dd-mm-yy" [utc]="true" [locale]="es" [showIcon]="true"></p-calendar>
+          <div class="form-group col-lg-3 col-md-3 ">
+            <label class="d-block pb-2 ">{{"administracion.auditoriaUsuarios.literal.fechaEfectiva " | translate}} (*)</label>
+            <p-calendar disabled="true " [(ngModel)]="itemBody.fechaEfectiva " dateFormat="dd-mm-yy " [utc]="true
+  " [locale]="es " [showIcon]="true "></p-calendar>
           </div>
 
-          <div class="form-group col-lg-6 col-md-6">
-            <label class="d-block pb-2">{{"administracion.auditoriaUsuarios.literal.motivo" | translate}} (*)</label>
-            <!--<input type="text" name="prefijo" class="form-control" [(ngModel)]='itemBody.motivo' (ngModelChange)="actualizarBotonGuardarCerrar()"
+          <div class="form-group col-lg-6 col-md-6 ">
+            <label class="d-block pb-2 ">{{"administracion.auditoriaUsuarios.literal.motivo " | translate}} (*)</label>
+            <!--<input type="text " name="prefijo " class="form-control
+  " [(ngModel)]='itemBody.motivo' (ngModelChange)="actualizarBotonGuardarCerrar() "
               pInputText>-->
-            <textarea [(disabled)]="!activacionEditar" name="prefijo" class="form-control" pInputTextarea [(ngModel)]="itemBody.motivo"
-              autoResize="autoResize" (ngModelChange)="actualizarBotonGuardarCerrar()"></textarea>
+            <textarea [(disabled)]="!activacionEditar " name="prefijo " class="form-control
+  " pInputTextarea [(ngModel)]="itemBody.motivo " autoResize="autoResize " (ngModelChange)="actualizarBotonGuardarCerrar() "></textarea>
           </div>
 
-          <div class="form-group col-lg-6 col-md-6">
-            <label class="d-block pb-2">{{"general.description" | translate}}</label>
-            <!--<input type="text" name="descripcion" disabled="true" class="form-control" [(ngModel)]='itemBody.descripcion' pInputText>-->
-            <textarea name="descripcion" disabled="true" class="form-control" pInputTextarea [(ngModel)]="itemBody.descripcion" autoResize="autoResize"></textarea>
+          <div class="form-group col-lg-6 col-md-6 ">
+            <label class="d-block pb-2 ">{{"general.description " | translate}}</label>
+            <!--<input type="text " name="descripcion " disabled="true " class="form-control " [(ngModel)]='itemBody.descripcion' pInputText>-->
+            <textarea name="descripcion " disabled="true " class="form-control " pInputTextarea [(ngModel)]="itemBody.descripcion
+  " autoResize="autoResize "></textarea>
           </div>
 
         </div>
       </div>
     </div>
 
-    <div class="card-footer">
+    <div class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="confirmEdit()" pButton type="button" [disabled]="isHabilitadoGuardarCerrar()" icon="	fa fa-edit " iconPos="left"
-          label="{{ 'general.boton.guardarCerrar' | translate}}" [disabled]="formGroup.invalid"></button>
+        <button (click)="confirmEdit() " pButton type="button " [disabled]="isHabilitadoGuardarCerrar() " icon=" fa fa-edit
+  " iconPos="left " label="{{ 'general.boton.guardarCerrar' | translate}} " [disabled]="formGroup.invalid "></button>
 
-          <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+        <button (click)="volver(); " pButton type="button " icon=" fa fa-close " iconPos="left " label="{{
+  'general.boton.cancel' | translate}} "></button>
       </div>
     </div>
     <app-dialog></app-dialog>

@@ -750,4 +750,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       this.isBuscar();
     }
   }
+
+  clear() {
+    this.msgs = [];
+  }
 }

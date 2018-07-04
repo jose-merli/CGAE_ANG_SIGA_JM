@@ -134,7 +134,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
 
-  onChangeForm() {}
+  onChangeForm() { }
 
   confirmarBuscar() {
     if (this.selectedModulo != "") {
@@ -406,10 +406,14 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
       this.isBuscar();
     }
   }
+
+  clear() {
+    this.msgs = [];
+  }
 }
 
 export class ComboItem {
   label: String;
   value: String;
-  constructor() {}
+  constructor() { }
 }

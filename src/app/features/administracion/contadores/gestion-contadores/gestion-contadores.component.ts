@@ -259,4 +259,8 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   volver() {
     this.router.navigate([JSON.parse(sessionStorage.getItem("url"))]);
   }
+
+  clear() {
+    this.msgs = [];
+  }
 }

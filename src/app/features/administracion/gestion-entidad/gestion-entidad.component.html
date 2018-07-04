@@ -1,9 +1,9 @@
-<p-growl [(value)]="msgs" life="3000"></p-growl>
+<p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
 <div class="busqueda-container">
     <div class="header-title">
         <i class="fa fa-square"></i>
-        <p>{{'menu.administracion' | translate}} <i class="pl-1 fa fa-angle-right"></i>{{'menu.administracion.configurarInterfazAplicacion'
-            | translate}}</p>
+        <p>{{'menu.administracion' | translate}}
+            <i class="pl-1 fa fa-angle-right"></i>{{'menu.administracion.configurarInterfazAplicacion' | translate}}</p>
     </div>
     <!--<div class="breadCrumb">
         <p>{{'menu.administracion' | translate}} <i class="fa fa-angle-right"></i> {{'menu.administracion.configurarInterfazAplicacion'
