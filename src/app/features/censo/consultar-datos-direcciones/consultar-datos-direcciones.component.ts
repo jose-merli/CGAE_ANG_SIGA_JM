@@ -57,7 +57,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   ngOnInit() {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.textFilter = "Elegir";
-    this.getDatosContactos();
+
     this.getComboProvincia();
     // this.getComboPoblacion();
     this.getComboPais();
@@ -67,6 +67,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     if (sessionStorage.getItem("direccion") != null) {
       this.body = JSON.parse(sessionStorage.getItem("direccion"));
     }
+    this.getDatosContactos();
   }
   getDatosContactos() {
     this.columnasDirecciones = [
@@ -188,6 +189,11 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     this.getComboPoblacion();
   }
   onChangeOtherProvincia(event) {
+    if (event) {
+      this.body.otraProvincia = "1";
+    } else {
+      this.body.otraProvincia = "0";
+    }
     console.log(event);
   }
   // autogenerarProvinciaPoblacion() {
