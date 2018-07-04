@@ -113,8 +113,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.sigaServices.get("busquedaPerJuridica_tipo").subscribe(
       n => {
         this.tipos = n.combooItems;
-        let first = { label: "", value: "" };
-        this.tipos.unshift(first);
       },
       err => {
         console.log(err);
@@ -271,7 +269,9 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     ) {
       this.numSelected = this.selectedDatos.length;
     } else {
-      this.numSelected = this.selectedDatos.length;
+      if (this.selectedDatos != undefined) {
+        this.numSelected = this.selectedDatos.length;
+      }
     }
   }
 
