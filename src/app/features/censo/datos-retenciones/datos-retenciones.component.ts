@@ -278,8 +278,9 @@ export class DatosRetencionesComponent implements OnInit {
       // this.createArrayEdit(dummy, value);
       this.datos.forEach((value: any, key: number) => {
         if (value.fechaFin == null || value.fechaFin == undefined) {
-          this.datos[key].fechaFin = this.transformarFecha(
-            new Date(valur2 - 86400000)
+          this.datos[key].fechaFin = this.datepipe.transform(
+            new Date(valur2 - 86400000),
+            "dd/MM/yyyy"
           );
         }
       });
@@ -292,7 +293,7 @@ export class DatosRetencionesComponent implements OnInit {
     // dummy.porcentajeRetencion = "";
     let dummy = {
       idPersona: this.idPersona,
-      fechaInicio: this.transformarFecha(new Date(valur2)),
+      fechaInicio: this.datepipe.transform(new Date(valur2), "dd/MM/yyyy"),
       fechaFin: undefined,
       descripcionRetencion: "",
       porcentajeRetencion: ""
@@ -334,7 +335,8 @@ export class DatosRetencionesComponent implements OnInit {
         }
       );
   }
-  confirmarBorrar() {
+
+  borrar() {
     this.progressSpinner = true;
     this.body.idPersona = this.idPersona;
     this.body.idInstitucion = "";
@@ -369,6 +371,31 @@ export class DatosRetencionesComponent implements OnInit {
         }
       );
   }
+
+  confirmarBorrar() {
+    let mess = this.translateService.instant("messages.deleteConfirmation");
+    let icon = "fa fa-trash-alt";
+
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.borrar();
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.error.realiza.accion"
+            )
+          }
+        ];
+      }
+    });
+  }
+
   search() {
     this.progressSpinner = true;
     this.body.idPersona = this.idPersona;
@@ -394,35 +421,34 @@ export class DatosRetencionesComponent implements OnInit {
           () => {
             if (this.datos.length > 0) {
               this.retencionNow = this.datos[0];
-              this.datos.forEach((value: any, key: number) => {
-                if (value.fechaInicio != undefined) {
-                  this.datos[key].fechaInicio = this.transformarFecha(
-                    value.fechaInicio
-                  );
-                }
-                if (value.fechaFin != undefined) {
-                  this.datos[key].fechaFin = this.transformarFecha(
-                    value.fechaFin
-                  );
-                }
-              });
+              // this.datos.forEach((value: any, key: number) => {
+              //   if (value.fechaInicio != undefined) {
+              //       value.fechaInicio
+              //     );
+              //   }
+              //   if (value.fechaFin != undefined) {
+              //     this.datos[key].fechaFin = this.transformarFecha(
+              //       value.fechaFin
+              //     );
+              //   }
+              // });
             }
           }
         );
     }
   }
-  transformarFecha(fecha) {
-    let jsonDate = JSON.stringify(fecha);
-    let rawDate = jsonDate.slice(1, -1);
-    if (rawDate.length < 14) {
-      let splitDate = rawDate.split("-");
-      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
-      fecha = new Date((arrayDate += "T23:59:59.001Z"));
-    } else {
-      fecha = new Date(fecha);
-    }
-    return fecha;
-  }
+  // transformarFecha(fecha) {
+  //   let jsonDate = JSON.stringify(fecha);
+  //   let rawDate = jsonDate.slice(1, -1);
+  //   if (rawDate.length < 14) {
+  //     let splitDate = rawDate.split("-");
+  //     let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+  //     fecha = new Date((arrayDate += "T23:59:59.001Z"));
+  //   } else {
+  //     fecha = new Date(fecha);
+  //   }
+  //   return fecha;
+  // }
   onChangeDrop(event) {
     console.log(event);
     this.newRetencion.descripcionRetencion = "";
