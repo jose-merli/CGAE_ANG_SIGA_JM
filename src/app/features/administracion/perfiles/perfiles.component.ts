@@ -151,29 +151,29 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("perfiles_search", "?numPagina=1", null)
       .subscribe(
-      data => {
-        console.log(data);
-        this.searchPerfiles = JSON.parse(data["body"]);
-        this.datos = this.searchPerfiles.usuarioGrupoItems;
-        this.buscar = true;
-        this.table.paginator = true;
-        this.sigaServices.get("usuarios_rol").subscribe(
-          n => { },
-          err => {
-            console.log(err);
+        data => {
+          console.log(data);
+          this.searchPerfiles = JSON.parse(data["body"]);
+          this.datos = this.searchPerfiles.usuarioGrupoItems;
+          this.buscar = true;
+          this.table.paginator = true;
+          this.sigaServices.get("usuarios_rol").subscribe(
+            n => { },
+            err => {
+              console.log(err);
+            }
+          );
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          if (sessionStorage.getItem("first") != null) {
+            let first = JSON.parse(sessionStorage.getItem("first")) as number;
+            this.table.first = first;
+            sessionStorage.removeItem("first");
           }
-        );
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        if (sessionStorage.getItem("first") != null) {
-          let first = JSON.parse(sessionStorage.getItem("first")) as number;
-          this.table.first = first;
-          sessionStorage.removeItem("first");
         }
-      }
       );
   }
 
@@ -358,9 +358,9 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
             severity: "success",
             summary: "Correcto",
             detail:
-            selectedDatos.length +
-            " " +
-            this.translateService.instant("messages.deleted.selected.success")
+              selectedDatos.length +
+              " " +
+              this.translateService.instant("messages.deleted.selected.success")
           });
         }
       },
@@ -380,18 +380,18 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("perfiles_historico", "?numPagina=1", null)
       .subscribe(
-      data => {
-        console.log(data);
-        this.searchPerfiles = JSON.parse(data["body"]);
-        this.datos = this.searchPerfiles.usuarioGrupoItems;
-        this.buscar = false;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.table.reset();
-      }
+        data => {
+          console.log(data);
+          this.searchPerfiles = JSON.parse(data["body"]);
+          this.datos = this.searchPerfiles.usuarioGrupoItems;
+          this.buscar = false;
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.table.reset();
+        }
       );
   }
   confirmarBorrar(selectedDatos) {
@@ -439,5 +439,10 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       this.selectedDatos = [];
       this.numSelected = 0;
     }
+  }
+
+
+  clear() {
+    this.msgs = [];
   }
 }

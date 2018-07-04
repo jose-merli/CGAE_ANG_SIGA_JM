@@ -121,7 +121,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.textFilter = "Elegir";
@@ -609,7 +609,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   filtrarItemsComboEsquema(comboEsquema, buscarElemento) {
-    return comboEsquema.filter(function(obj) {
+    return comboEsquema.filter(function (obj) {
       return obj.value == buscarElemento;
     });
   }
@@ -1192,5 +1192,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       summary: "Error",
       detail: "Error al adjuntar la imagen"
     });
+  }
+
+
+  clear() {
+    this.msgs = [];
   }
 }

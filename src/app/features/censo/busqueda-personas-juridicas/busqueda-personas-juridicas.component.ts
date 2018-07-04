@@ -196,7 +196,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {}
+        () => { }
       );
   }
 
@@ -561,5 +561,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     if (event.keyCode === KEY_CODE.ENTER) {
       this.isBuscar();
     }
+  }
+
+
+  clear() {
+    this.msgs = [];
   }
 }

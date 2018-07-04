@@ -209,7 +209,7 @@ export class DatosGenerales implements OnInit {
       n => {
         this.comboIdentificacion = n.combooItems;
       },
-      error => {}
+      error => { }
     );
 
     this.comboTipo.push(this.tipoPersonaJuridica);
@@ -339,6 +339,7 @@ export class DatosGenerales implements OnInit {
               this.datosGeneralesSearch();
               this.obtenerEtiquetasPersonaJuridicaConcreta();
               this.cardService.searchNewAnnounce.next(this.idPersona);
+              this.editar = false;
             },
             error => {
               console.log(error);
@@ -604,5 +605,10 @@ export class DatosGenerales implements OnInit {
       summary: "Incorrecto",
       detail: mensaje
     });
+  }
+
+
+  clear() {
+    this.msgs = [];
   }
 }
