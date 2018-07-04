@@ -245,7 +245,7 @@ export class BusquedaGeneralComponent {
       this.bodyJuridica.tipo = "";
       this.bodyJuridica.nif = "";
       this.bodyJuridica.denominacion = "";
-      this.bodyJuridica.Abreviatura = "";
+      this.bodyJuridica.abreviatura = "";
     }
   }
   checkStatusInit() {
