@@ -402,9 +402,6 @@ export class DatosDireccionesComponent implements OnInit {
   //   this.msgs = [];
   //   this.msgs.push({ severity: "success", summary: "", detail: mensaje });
   // }
-  usuarios_rol: any[];
-  usuarios_perfil: any[];
-  usuarios_activo: any[];
   cols: any = [];
   datos: any[];
   searchDirecciones = new DatosDireccionesObject();
@@ -470,11 +467,11 @@ export class DatosDireccionesComponent implements OnInit {
     if (this.usuarioBody[0] != undefined) {
       this.idPersona = this.usuarioBody[0].idPersona;
     }
-
     this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
       id => {
         if (id !== null) {
           this.body.idPersona = id;
+          this.search();
         }
       }
     );

@@ -3,7 +3,7 @@ import { Component, OnInit } from "@angular/core";
 import { Location } from "@angular/common";
 
 import { ConfirmationService, Message } from "primeng/components/common/api";
-
+import { ComboItem } from "./../../../../app/models/ComboItem";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { SigaServices } from "./../../../_services/siga.service";
 
@@ -19,31 +19,28 @@ import { DatosDireccionesCodigoPostalObject } from "./../../../../app/models/Dat
   styleUrls: ["./consultar-datos-direcciones.component.scss"]
 })
 export class ConsultarDatosDireccionesComponent implements OnInit {
-  openFicha: boolean = false;
+  openFicha: boolean = true;
   progressSpinner: boolean = false;
   codigoPostalValido: boolean = false;
   formValido: boolean = false;
-
+  textFilter: String;
   isEditable: boolean = false;
   nuevo: boolean = false;
-
+  datosContacto: any[];
   msgs: Message[];
+  columnasDirecciones: any = [];
   usuarioBody: any[];
-  comboPais: any[] = [];
-  comboPoblacion: any[] = [];
-  comboTipoDireccion: any[] = [];
-  comboTipoContacto: any[] = [];
-  comboDirecciones: any[] = [];
-
-  selectedPais: any = {};
-  selectedPoblacion: any = {};
-  selectedTipoDireccion: any = {};
-  selectedTipoContacto: any = {};
-
+  comboPais: any[];
+  comboPoblacion: any[];
+  comboTipoDireccion: any[];
+  comboTipoContacto: any[];
+  comboProvincia: any[];
+  checkOtraProvincia: boolean = false;
+  paisSeleccionado: any;
   registroEditable: String;
   idDireccion: String;
   idPersona: String;
-
+  textSelected: String = "{0} etiquetas seleccionadas";
   body: DatosDireccionesItem = new DatosDireccionesItem();
   bodySearch: DatosDireccionesObject = new DatosDireccionesObject();
 
@@ -59,148 +56,108 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
 
   ngOnInit() {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    this.textFilter = "Elegir";
+    this.getDatosContactos();
+    this.getComboProvincia();
+    // this.getComboPoblacion();
+    this.getComboPais();
+    this.getComboTipoDireccion();
+    console.log(this.body.idPais);
+    this.registroEditable = sessionStorage.getItem("editar");
     if (sessionStorage.getItem("direccion") != null) {
       this.body = JSON.parse(sessionStorage.getItem("direccion"));
     }
-    this.idPersona = this.usuarioBody[0].idPersona;
-    this.idDireccion = sessionStorage.getItem("idDireccion");
+  }
+  getDatosContactos() {
+    this.columnasDirecciones = [
+      {
+        field: "tipo",
+        header: "Tipo"
+      },
+      {
+        field: "valor",
+        header: "administracion.parametrosGenerales.literal.valor"
+      }
+    ];
+    this.datosContacto = [
+      {
+        tipo: "Telefono",
+        valor: this.body.telefono
+      },
+      {
+        tipo: "Fax",
+        valor: this.body.fax
+      },
+      {
+        tipo: "Móvil",
+        valor: this.body.movil
+      },
+      {
+        tipo: "Correo-Electrónico",
+        valor: this.body.correoElectronico
+      },
+      {
+        tipo: "Página Web",
+        valor: this.body.paginaWeb
+      }
+    ];
+  }
+  getComboProvincia() {
     // Combo de identificación
     this.sigaServices.get("integrantes_provincias").subscribe(
       n => {
-        this.comboDirecciones = n.combooItems;
+        this.comboProvincia = n.combooItems;
       },
-      error => {}
+      error => {},
+      () => {
+        if (this.body.idProvincia != null) {
+          this.getComboPoblacion();
+        }
+      }
     );
-    this.registroEditable = sessionStorage.getItem("editar");
-
-    if (this.registroEditable == "true") {
-      // editar
-      this.cargarModoEdicion();
-    } else {
-      // nuevo
-      this.cargarModoNuevoRegistro();
-    }
   }
-
-  // ---------------------------------------------------------
-  datosPrueba() {
-    this.body.codigoPostal = "35200";
-    this.body.tipoDireccion = "despacho";
-    return this.body;
-  }
-  // ------------------------------------------------------------
-
-  abrirFicha() {
-    this.openFicha = !this.openFicha;
-  }
-
-  cargarDatos() {
-    this.progressSpinner = false;
-    this.body.idPersona = this.idPersona;
-    this.body.idDireccion = this.idDireccion;
-
+  getComboPoblacion() {
+    this.progressSpinner = true;
     this.sigaServices
-      .postPaginado("direcciones_search", "?numPagina=1", this.body)
+      .getParam(
+        "direcciones_comboPoblacion",
+        "?idProvincia=" + this.body.idProvincia
+      )
       .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.bodySearch = JSON.parse(data["body"]);
-
-          // Hay que pasarle esto --> this.body = this.bodySearch.datosDireccionesItem[0];
-          this.body = this.datosPrueba();
-
-          this.rellenarComboPais();
-          this.rellenarComboPoblacion();
+        n => {
+          this.comboPoblacion = n.combooItems;
         },
-        error => {
-          this.bodySearch = JSON.parse(error["error"]);
-          this.showFail(JSON.stringify(this.bodySearch.error.message));
-          console.log(error);
+        error => {},
+        () => {
           this.progressSpinner = false;
         }
       );
   }
-
-  cargarModoEdicion() {
-    this.cargarDatos();
-    this.isEditable = false;
-    this.nuevo = false;
-  }
-
-  cargarModoNuevoRegistro() {
-    // this.body.fechaModificacion = null;
-    this.nuevo = true;
-
-    this.rellenarComboPais();
-    this.rellenarComboPoblacion();
-  }
-
-  rellenarComboPais() {
+  getComboPais() {
     this.sigaServices.get("direcciones_comboPais").subscribe(
-      data => {
-        // Hay que pasar esto --> this.comboPais = data.combooItems;
-
-        this.comboPais.push({ label: "España", value: "1" });
-        this.comboPais.push({ label: "Francia", value: "2" });
-        this.comboPais.push({ label: "Italia", value: "3" });
-        this.comboPais.push({ label: "Alemania", value: "4" });
-
-        if (this.registroEditable == "true" && this.body != null) {
-          // quizás sobre lo de body != null
-          var combo = this.filtrarItemsCombo(this.comboPais, this.body.idPais);
-
-          this.selectedPais = combo[0];
-        } else {
-          this.selectedPais = this.comboPais[3]; // Aquí sería el índice de España
-        }
+      n => {
+        this.comboPais = n.combooItems;
       },
-      error => {
-        this.bodySearch = JSON.parse(error["error"]);
-        this.showFail(JSON.stringify(this.bodySearch.error.message));
+      error => {},
+      () => {
+        this.paisSeleccionado = this.comboPais.find(
+          item => item.value == this.body.idPais
+        );
+        console.log(this.paisSeleccionado);
       }
     );
   }
-
-  onChangePais(event) {
-    this.selectedPais = event.value;
-    console.log("País", this.selectedPais);
-  }
-
-  rellenarComboPoblacion() {
-    this.sigaServices.get("direcciones_comboPoblacion").subscribe(
-      data => {
-        // Hay que pasar esto -->  this.comboPoblacion = data.combooItems;
-
-        this.comboPoblacion.push({ label: "Telde", value: "1" });
-        this.comboPoblacion.push({ label: "Vecindario", value: "2" });
-
-        this.selectedPoblacion = this.comboPoblacion[0];
-
-        if (this.body != null) {
-          var combo = this.filtrarItemsCombo(
-            this.comboPoblacion,
-            this.body.idPoblacion
-          );
-
-          this.selectedPoblacion = combo[0];
-        }
+  getComboTipoDireccion() {
+    this.sigaServices.get("direcciones_comboTipoDireccion").subscribe(
+      n => {
+        this.comboTipoDireccion = n.combooItems;
       },
-      error => {
-        this.bodySearch = JSON.parse(error["error"]);
-        this.showFail(JSON.stringify(this.bodySearch.error.message));
-      }
+      error => {}
     );
   }
 
-  filtrarItemsCombo(combo, buscarElemento) {
-    return combo.filter(function(obj) {
-      return obj.value == buscarElemento;
-    });
-  }
-
-  onChangePoblacion(event) {
-    this.selectedPoblacion = event.value;
-    console.log("Población", this.selectedPoblacion);
+  abrirFicha() {
+    this.openFicha = !this.openFicha;
   }
 
   isValidCodigoPostal(): boolean {
@@ -224,76 +181,44 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       return false;
     }
   }
-
-  autogenerarProvinciaPoblacion() {
-    if (this.isValidCodigoPostal() && this.body.codigoPostal.length == 5) {
-      this.recuperarProvinciaPoblacion();
-      this.codigoPostalValido = true;
-    } else {
-      this.body.idProvincia = "";
-      this.comboPoblacion = [];
-      this.selectedPoblacion = "";
-    }
+  onChangePais(event) {
+    console.log(this.body.idPais);
   }
-
-  recuperarProvinciaPoblacion() {
-    this.sigaServices.post("direcciones_codigoPostal", this.body).subscribe(
-      data => {
-        //this.bodyCodigoPostalSearch = JSON.parse(data["body"]);
-        //this.bodyCodigoPostal = this.bodyCodigoPostalSearch.datosDireccionesItem[0];
-
-        this.bodyCodigoPostal = new DatosDireccionesCodigoPostalItem();
-        // Esto es teórico
-        this.bodyCodigoPostal.provincia = "LAS PALMAS";
-      },
-      error => {
-        this.bodyCodigoPostalSearch = JSON.parse(error["error"]);
-        this.showFail(
-          JSON.stringify(this.bodyCodigoPostalSearch.error.message)
-        );
-      }
-    );
+  onChangeProvincia(event) {
+    this.getComboPoblacion();
   }
-
-  validarFormulario(dato) {
-    if (this.validarCodigoPostal()) {
-      this.formValido = true;
-
-      this.confirmarInsercion(dato);
-    } else {
-      this.formValido = false;
-    }
+  onChangeOtherProvincia(event) {
+    console.log(event);
   }
+  // autogenerarProvinciaPoblacion() {
+  //   if (this.isValidCodigoPostal() && this.body.codigoPostal.length == 5) {
+  //     this.recuperarProvinciaPoblacion();
+  //     this.codigoPostalValido = true;
+  //   } else {
+  //     this.body.idProvincia = "";
+  //     this.comboPoblacion = [];
+  //     this.selectedPoblacion = "";
+  //   }
+  // }
 
-  confirmarInsercion(dato) {
-    let mess = this.translateService.instant("messages.deleteConfirmation");
-    let icon = "fa fa-info";
+  // recuperarProvinciaPoblacion() {
+  //   this.sigaServices.post("direcciones_codigoPostal", this.body).subscribe(
+  //     data => {
+  //       //this.bodyCodigoPostalSearch = JSON.parse(data["body"]);
+  //       //this.bodyCodigoPostal = this.bodyCodigoPostalSearch.datosDireccionesItem[0];
 
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.insertarRegistro(dato);
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "info",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
-      }
-    });
-  }
-
-  insertarRegistro(dato) {}
-
-  restablecer() {}
-
-  duplicarRegistro() {}
+  //       this.bodyCodigoPostal = new DatosDireccionesCodigoPostalItem();
+  //       // Esto es teórico
+  //       this.bodyCodigoPostal.provincia = "LAS PALMAS";
+  //     },
+  //     error => {
+  //       this.bodyCodigoPostalSearch = JSON.parse(error["error"]);
+  //       this.showFail(
+  //         JSON.stringify(this.bodyCodigoPostalSearch.error.message)
+  //       );
+  //     }
+  //   );
+  // }
 
   // Mensajes
   showFail(mensaje: string) {

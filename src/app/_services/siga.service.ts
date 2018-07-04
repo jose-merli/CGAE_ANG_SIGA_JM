@@ -139,9 +139,9 @@ export class SigaServices {
     direcciones_insert: "",
     direcciones_remove: "tarjetaDirecciones/delete",
     direcciones_codigoPostal: "",
-    direcciones_comboPoblacion: "",
-    direcciones_comboPais: "",
-    direcciones_comboTipoDireccion: "",
+    direcciones_comboPoblacion: "tarjetaDirecciones/poblacion",
+    direcciones_comboPais: "tarjetaDirecciones/pais",
+    direcciones_comboTipoDireccion: "tarjetaDirecciones/tipoDireccion",
     integrantes_update: "tarjetaIntegrantes/update",
     integrantes_insert: "tarjetaIntegrantes/create",
     integrantes_delete: "tarjetaIntegrantes/delete"
@@ -161,6 +161,14 @@ export class SigaServices {
   get(service: string): Observable<any> {
     return this.http
       .get(environment.newSigaUrl + this.endpoints[service])
+      .map(response => {
+        return response;
+      });
+  }
+
+  getParam(service: string, body: any): Observable<any> {
+    return this.http
+      .get(environment.newSigaUrl + this.endpoints[service] + body)
       .map(response => {
         return response;
       });

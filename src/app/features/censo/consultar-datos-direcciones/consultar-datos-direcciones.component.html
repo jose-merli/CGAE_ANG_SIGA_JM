@@ -53,7 +53,7 @@
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>País</label>
-                <p-dropdown class="select-form" [(ngModel)]='idExternoPais' optionLabel="label" [options]="comboPais" (onChange)="onChangePais($event)">
+                <p-dropdown class="select-form" [(ngModel)]="body.idPais" [options]="comboPais" (onChange)="onChangePais($event)">
                 </p-dropdown>
               </div>
               <div class="form-group col-lg-6 col-md-6">
@@ -66,19 +66,22 @@
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>Provincia</label>
-                <input [(ngModel)]="body.provincia" type="text" class="form-control" (ngModelChange)="recuperarProvinciaPoblacion()" pInputText>
-                <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' optionLabel="label" [options]="comboDirecciones" (onChange)="onChangePoblacion($event)">
+                <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' [options]="comboProvincia" (onChange)="onChangeProvincia($event)">
                 </p-dropdown>
               </div>
               <div class="form-group col-lg-6 col-md-6">
+                <label>Otra Provincia</label>
+                <p-checkbox name="otraProvincia" [(ngModel)]="checkOtraProvincia" binary="true" (onChange)="onChangeOtherProvincia($event)"></p-checkbox>
+              </div>
+              <div class="form-group col-lg-6 col-md-6">
                 <label>Población</label>
-                <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' optionLabel="label" [options]="comboPoblacion" (onChange)="onChangePoblacion($event)">
+                <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' [options]="comboPoblacion" (onChange)="onChangePoblacion($event)">
                 </p-dropdown>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>Tipo dirección</label>
-                <p-dropdown class="select-form" [(ngModel)]='body.idDireccion' optionLabel="label" [options]="comboTipoDireccion" (onChange)="onChangeTipoDireccion($event)">
-                </p-dropdown>
+                <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='body.idTipoDireccion' [options]="comboTipoDireccion"
+                  [selectedItemsLabel]="textSelected" maxSelectedLabels="1" maxSelectedLabels="1"></p-multiSelect>
               </div>
             </div>
           </div>
@@ -90,15 +93,21 @@
               <div class="form-group col-lg-12 col-md-12">
                 <label style="text-align:center; font-weight: bold;">Datos contacto</label>
               </div>
+              <div class="form-group col-lg-12 col-md-12">
+                <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [value]="datosContacto" [editable]="true" [responsive]="true"
+                  #table class="tabla-listado" [sortOrder]="1" paginatorPosition="both" [rows]="selectedItem" [editable]="true"
+                  (onRowSelect)="onRowSelect($event)">
+                  <p-column *ngFor="let col of columnasDirecciones" [sortable]="true" [field]="col.field" [header]="col.header | translate">
+                    <ng-template *ngIf="col.field == 'valor'" let-dato="rowData" pTemplate="body">
+                      <span class="input-group">
+                        <input type="text"   class="form-control" pInputText [(ngModel)]="dato[col.field]" (input)="guardar($event,dato)"></span>
+                    </ng-template>
+                    <ng-template *ngIf="col.field == 'tipo'" let-dato="rowData" pTemplate="body">
+                      <label>{{dato.tipo}}</label>
+                    </ng-template>
+                  </p-column>
+                  </p-dataTable>
 
-              <div class="form-group col-lg-6 col-md-6">
-                <label>Tipo de contacto</label>
-                <p-dropdown class="select-form" [(ngModel)]='selectedContacto' optionLabel="label" [options]="comboTipoContacto" (onChange)="onChangeTipoContacto($event)">
-                </p-dropdown>
-              </div>
-              <div class="form-group col-lg-6 col-md-6">
-                <label>Contacto</label>
-                <input [(ngModel)]="body.contacto" type="text" class="form-control" pInputText>
               </div>
             </div>
           </div>
@@ -119,4 +128,9 @@
     <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="Volver"></button>
   </div>
 
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+  <div class="loader"></div>
 </div>

@@ -20,6 +20,7 @@ export class DatosDireccionesItem {
 
   fechaBaja: String;
   tipoDireccion: String;
+  idTipoDireccion: String[];
   idDireccion: String;
   codigoPostal: String;
   domicilio: String;
@@ -39,5 +40,6 @@ export class DatosDireccionesItem {
   nombreProvincia: String;
   paginaWeb: String;
   historico: boolean = false;
+  otraProvincia: String;
   constructor() {}
 }
