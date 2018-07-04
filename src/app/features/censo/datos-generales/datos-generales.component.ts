@@ -199,24 +199,7 @@ export class DatosGenerales implements OnInit {
       },
       () => {
         if (this.body.idPersona != undefined || this.body.idPersona != null) {
-          this.sigaServices
-            .post("busquedaPerJuridica_etiquetasPersona", this.body)
-            .subscribe(
-              n => {
-                // coger etiquetas de una persona juridica
-                this.etiquetasPersonaJuridica = JSON.parse(
-                  n["body"]
-                ).combooItems;
-                this.etiquetasPersonaJuridica.forEach(
-                  (value: any, index: number) => {
-                    this.etiquetasPersonaJuridicaSelecionados.push(value.value);
-                  }
-                );
-              },
-              err => {
-                console.log(err);
-              }
-            );
+          this.obtenerEtiquetasPersonaJuridicaConcreta();
         }
       }
     );
@@ -230,6 +213,25 @@ export class DatosGenerales implements OnInit {
     );
 
     this.comboTipo.push(this.tipoPersonaJuridica);
+  }
+
+  obtenerEtiquetasPersonaJuridicaConcreta() {
+    this.sigaServices
+      .post("busquedaPerJuridica_etiquetasPersona", this.body)
+      .subscribe(
+        n => {
+          // coger etiquetas de una persona juridica
+          this.etiquetasPersonaJuridica = JSON.parse(n["body"]).combooItems;
+          // en cada busqueda vaciamos el vector para añadir las nuevas etiquetas
+          this.etiquetasPersonaJuridicaSelecionados = [];
+          this.etiquetasPersonaJuridica.forEach((value: any, index: number) => {
+            this.etiquetasPersonaJuridicaSelecionados.push(value.value);
+          });
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 
   busquedaIdioma() {
@@ -275,7 +277,16 @@ export class DatosGenerales implements OnInit {
         () => {
           // obtengo los idiomas y establecer el del la persona jurídica
           this.idiomaPreferenciaSociedad = this.body.idLenguajeSociedad;
+          // si esta en modo edicion y guarda => rellenar tipo
+          if (this.editar) {
+            this.comboTipo = [];
+            let newTipo = this.comboIdentificacion.find(
+              item => item.value == this.body.tipo
+            );
+            this.comboTipo.push(newTipo.label);
+          }
           this.showGuardar = false;
+          this.editar = false;
         }
       );
   }
@@ -316,6 +327,7 @@ export class DatosGenerales implements OnInit {
           );
         }
         this.body.idioma = this.idiomaPreferenciaSociedad;
+        this.body.tipo = this.selectedTipo.value;
         this.sigaServices
           .post("busquedaPerJuridica_create", this.body)
           .subscribe(
@@ -325,6 +337,7 @@ export class DatosGenerales implements OnInit {
               this.idPersona = respuesta.id;
               sessionStorage.removeItem("crearnuevo");
               this.datosGeneralesSearch();
+              this.obtenerEtiquetasPersonaJuridicaConcreta();
               this.cardService.searchNewAnnounce.next(this.idPersona);
             },
             error => {
@@ -359,6 +372,10 @@ export class DatosGenerales implements OnInit {
           this.personaSearch = JSON.parse(error["error"]);
           this.showFail(JSON.stringify(this.personaSearch.error.description));
           console.log(error);
+        },
+        () => {
+          this.datosGeneralesSearch();
+          this.obtenerEtiquetasPersonaJuridicaConcreta();
         }
       );
 
@@ -509,20 +526,6 @@ export class DatosGenerales implements OnInit {
           this.body.fechaConstitucion != null)
       ) {
         if (this.body.nif.length == 9 && this.isValidCIF(this.body.nif)) {
-          // rellena el filtro tipo según el cif aplicado
-          // this.selectedTipo = this.comboIdentificacion.find(
-          //   item => item.value == this.body.nif[0]
-          // );
-
-          // // si no corresponde con ninguna sociedad => otro tipo de sociedad
-          // if (this.selectedTipo == undefined) {
-          //   this.selectedTipo = this.comboIdentificacion.find(
-          //     item => item.value == "V"
-          //   );
-          // }
-          this.showGuardar = true;
-        } else {
-          // this.selectedTipo = this.comboIdentificacion[0];
           this.showGuardar = true;
         }
       } else if (!this.editar) {
