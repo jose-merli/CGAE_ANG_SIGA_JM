@@ -326,6 +326,7 @@ export class DatosGenerales implements OnInit {
               sessionStorage.removeItem("crearnuevo");
               this.datosGeneralesSearch();
               this.cardService.searchNewAnnounce.next(this.idPersona);
+              this.editar = false;
             },
             error => {
               console.log(error);

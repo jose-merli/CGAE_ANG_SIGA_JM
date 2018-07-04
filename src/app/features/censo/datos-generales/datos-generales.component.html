@@ -70,14 +70,14 @@
         </div>
         <div class="bloque col-lg-5 col-md-5">
           <div class="form-row">
-            <div *ngIf="editar" class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.fichaCliente.literal.identificacion" | translate}} (*)</label>
-              <input [(ngModel)]="body.nif" type="text" class="form-control" (ngModelChange)="onChangeForm()" pInputText>
+              <input [(ngModel)]="body.nif" type="text" class="form-control" (ngModelChange)="onChangeForm()" [disabled]="!editar" pInputText>
             </div>
-            <div *ngIf="!editar" class="form-group col-lg-6 col-md-6">
+            <!--<div *ngIf="!editar" class="form-group col-lg-6 col-md-6">
               <label>{{"censo.fichaCliente.literal.identificacion" | translate}} (*)</label>
               <input [(ngModel)]="body.nif" type="text" class="form-control" (ngModelChange)="onChangeForm()" [disabled]="true" pInputText>
-            </div>
+            </div>-->
             <div *ngIf="editar" class="form-group col-lg-6 col-md-6">
               <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
               <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion" optionLabel="label" (ngModelChange)="getTipo($event)"
