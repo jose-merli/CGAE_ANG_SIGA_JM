@@ -198,28 +198,28 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.sigaServices
         .postSendContent("entidad_uploadFile", this.file)
         .subscribe(
-        data => {
-          console.log(data);
-          this.file = undefined;
-          this.archivoDisponible = false;
-          this.nombreImagen = "";
+          data => {
+            console.log(data);
+            this.file = undefined;
+            this.archivoDisponible = false;
+            this.nombreImagen = "";
 
-          this.imagenURL =
-            this.sigaServices.getNewSigaUrl() +
-            this.sigaServices.getServucePath("header_logo") +
-            "?random=" +
-            new Date().getTime();
+            this.imagenURL =
+              this.sigaServices.getNewSigaUrl() +
+              this.sigaServices.getServucePath("header_logo") +
+              "?random=" +
+              new Date().getTime();
 
-          // Aqui se refresca el header.component, gracias al servicio headerGestionEntidadService
-          this.headerGestionEntidadService.changeUrl(this.imagenURL);
+            // Aqui se refresca el header.component, gracias al servicio headerGestionEntidadService
+            this.headerGestionEntidadService.changeUrl(this.imagenURL);
 
-          if (!lenguajeeImagen) {
-            this.showSuccessUploadedImage();
+            if (!lenguajeeImagen) {
+              this.showSuccessUploadedImage();
+            }
+          },
+          err => {
+            console.log(err);
           }
-        },
-        err => {
-          console.log(err);
-        }
         );
     }
 
@@ -230,27 +230,27 @@ para poder filtrar el dato con o sin estos caracteres*/
     ) {
       this.sigaServices
         .post(
-        "entidad_uploadLenguage",
-        JSON.stringify(this.selectedIdiomaBusqueda)
+          "entidad_uploadLenguage",
+          JSON.stringify(this.selectedIdiomaBusqueda)
         )
         .subscribe(
-        data => {
-          console.log(data);
-          this.lenguajeInstitucion = this.selectedIdiomaBusqueda;
-          if (!lenguajeeImagen) {
-            this.showSuccessUploadedLenguage();
+          data => {
+            console.log(data);
+            this.lenguajeInstitucion = this.selectedIdiomaBusqueda;
+            if (!lenguajeeImagen) {
+              this.showSuccessUploadedLenguage();
+            }
+          },
+          err => {
+            console.log(err);
+          },
+          () => {
+            // mensaje conjunto
+            if (lenguajeeImagen) {
+              this.showSuccessUploadedLenguageImage();
+              lenguajeeImagen = false;
+            }
           }
-        },
-        err => {
-          console.log(err);
-        },
-        () => {
-          // mensaje conjunto
-          if (lenguajeeImagen) {
-            this.showSuccessUploadedLenguageImage();
-            lenguajeeImagen = false;
-          }
-        }
         );
     }
   }
@@ -265,5 +265,10 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else this.guardarHabilitado = true;
 
     return this.guardarHabilitado;
+  }
+
+
+  clear() {
+    this.msgs = [];
   }
 }

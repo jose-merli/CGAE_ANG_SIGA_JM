@@ -225,4 +225,9 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
   volver() {
     this.location.back();
   }
+
+
+  clear() {
+    this.msgs = [];
+  }
 }

@@ -1,9 +1,9 @@
-<p-growl [(value)]="msgs" life="3000"></p-growl>
+<p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
 <div class="busqueda-container">
     <div class="header-title">
         <i class="fa fa-square"></i>
-        <p>{{'menu.administracion' | translate}} <i class="pl-1 fa fa-angle-right"></i>{{'menu.administracion.gestionMultiidioma'
-            | translate}}
+        <p>{{'menu.administracion' | translate}}
+            <i class="pl-1 fa fa-angle-right"></i>{{'menu.administracion.gestionMultiidioma' | translate}}
             <i class="pl-1 fa fa-angle-right"></i>{{'menu.administracion.gestionMultiidioma.catalogos' | translate}}</p>
     </div>
     <!--<div class="breadCrumb">
@@ -53,30 +53,30 @@
                     <ng-template *ngIf="col.field == 'descripcionTraduccion'" let-dato="rowData" pTemplate="body">
                         <div class="input-group">
                             <span class="input-group">
-                <button pButton type="button" [pTooltip]="obtenerRecurso(dato)"  tooltipPosition="top" icon="fa fa-question"></button> &nbsp;&nbsp;
-              <input type="text" class="form-control" [(disabled)]="!editar"  pInputText [(ngModel)]="dato[col.field]" (input)="Guardar($event,dato)">
-              </span>
+                                <button pButton type="button" [pTooltip]="obtenerRecurso(dato)" tooltipPosition="top" icon="fa fa-question"></button> &nbsp;&nbsp;
+                                <input type="text" class="form-control" [(disabled)]="!editar" pInputText [(ngModel)]="dato[col.field]" (input)="Guardar($event,dato)">
+                            </span>
                         </div>
                     </ng-template>
-                    </p-column>
+                </p-column>
 
-                    <ng-template pTemplate="paginatorLeft">
-                        <div class="mostrar">
-                            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                            <label>{{ 'general.message.mostrar' | translate}}</label>
-                            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                            <label>{{ 'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
-                        </div>
-                    </ng-template>
-                    <p-footer>
-                        <div class="text-right main-button">
-                            <button (click)="isRestablecer()" pButton type="button" [(disabled)]="!habilitarBotones" icon="fa fa-history " iconPos="left"
-                                label="{{'general.boton.restablecer' | translate}}"></button>
-                                <button (click)="isGuardar()" pButton type="button " [(disabled)]="!habilitarBotones" icon="fa fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-                        </div>
-                    </p-footer>
+                <ng-template pTemplate="paginatorLeft">
+                    <div class="mostrar">
+                        <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                        <label>{{ 'general.message.mostrar' | translate}}</label>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                        <label>{{ 'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
+                    </div>
+                </ng-template>
+                <p-footer>
+                    <div class="text-right main-button">
+                        <button (click)="isRestablecer()" pButton type="button" [(disabled)]="!habilitarBotones" icon="fa fa-history " iconPos="left"
+                            label="{{'general.boton.restablecer' | translate}}"></button>
+                        <button (click)="isGuardar()" pButton type="button " [(disabled)]="!habilitarBotones" icon="fa fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                    </div>
+                </p-footer>
 
-                    </p-dataTable>
+            </p-dataTable>
         </div>
     </div>
     <app-dialog></app-dialog>
