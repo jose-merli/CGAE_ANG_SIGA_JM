@@ -1,9 +1,9 @@
-<p-growl [(value)]="msgs" life="3000"></p-growl>
+<p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{ 'menu.administracion' | translate}} <i class="pl-1 fa fa-angle-right"></i>{{ 'administracion.contadores.busqueda.contadores'
-      | translate}}</p>
+    <p>{{ 'menu.administracion' | translate}}
+      <i class="pl-1 fa fa-angle-right"></i>{{ 'administracion.contadores.busqueda.contadores' | translate}}</p>
   </div>
   <!--<div class="breadCrumb">
     <p>{{ "menu.administracion" | translate}} <i class="fa fa-angle-right"></i> {{ 'menu.administracion.contador' | translate}}
@@ -61,17 +61,18 @@
         [paginator]="activarPaginacion()">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true" filterMatchMode="contains">
-          </p-column>
+        </p-column>
 
-          <ng-template pTemplate="paginatorLeft">
-            <div class="mostrar">
-              <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-              <label>{{ "general.message.mostrar" | translate}}</label>
-              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> <label>{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-            </div>
-          </ng-template>
+        <ng-template pTemplate="paginatorLeft">
+          <div class="mostrar">
+            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+            <label>{{ "general.message.mostrar" | translate}}</label>
+            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+            <label>{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+          </div>
+        </ng-template>
 
-          </p-dataTable>
+      </p-dataTable>
     </div>
   </div>
   <!--FIN DE PRINCIPAL-->

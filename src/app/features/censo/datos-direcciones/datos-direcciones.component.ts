@@ -462,6 +462,7 @@ export class DatosDireccionesComponent implements OnInit {
     private cardService: cardService
   ) {}
 
+
   ngOnInit() {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     if (this.usuarioBody[0] != undefined) {
@@ -566,6 +567,7 @@ export class DatosDireccionesComponent implements OnInit {
   getFichaPosibleByKey(key): any {
     let fichaPosible = this.fichasPosibles.getFichasPosibles().filter(elto => {
       return elto.key === key;
+
     });
     if (fichaPosible && fichaPosible.length) {
       return fichaPosible[0];
@@ -720,5 +722,10 @@ export class DatosDireccionesComponent implements OnInit {
       this.numSelected = this.selectedDatos.length;
       this.dniCorrecto = null;
     }
+  }
+
+
+  clear() {
+    this.msgs = [];
   }
 }

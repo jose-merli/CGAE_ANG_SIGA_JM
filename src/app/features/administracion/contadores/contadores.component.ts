@@ -191,9 +191,9 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.table.reset();
   }
   // Control de buscar desactivado por ahora (hasta tener primer elemento del combo preparado)
-  onChangeCatalogo() {}
+  onChangeCatalogo() { }
   //cada vez que cambia el formulario comprueba esto
-  onChangeForm() {}
+  onChangeForm() { }
 
   showSuccess() {
     this.msgs = [];
@@ -329,5 +329,9 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (event.keyCode === KEY_CODE.ENTER) {
       this.isBuscar();
     }
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }

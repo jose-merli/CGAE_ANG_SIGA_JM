@@ -104,7 +104,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   ngOnInit() {
     this.checkAcceso(); //coger tipos
     sessionStorage.removeItem("notario");
-        sessionStorage.removeItem("crearnuevo");
+    sessionStorage.removeItem("crearnuevo");
     if (sessionStorage.getItem("busqueda") != null) {
       this.body = JSON.parse(sessionStorage.getItem("busqueda"));
       sessionStorage.removeItem("busqueda");
@@ -113,8 +113,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.sigaServices.get("busquedaPerJuridica_tipo").subscribe(
       n => {
         this.tipos = n.combooItems;
-        let first = { label: "", value: "" };
-        this.tipos.unshift(first);
       },
       err => {
         console.log(err);
@@ -198,7 +196,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {}
+        () => { }
       );
   }
 
@@ -271,7 +269,9 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     ) {
       this.numSelected = this.selectedDatos.length;
     } else {
-      this.numSelected = this.selectedDatos.length;
+      if (this.selectedDatos != undefined) {
+        this.numSelected = this.selectedDatos.length;
+      }
     }
   }
 
@@ -450,10 +450,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   crear() {
-      sessionStorage.setItem("crearnuevo", JSON.stringify("true"));          
-      this.body = new PersonaJuridicaItem();
-      sessionStorage.setItem("usuarioBody", JSON.stringify(this.body));
-      this.router.navigate(["fichaPersonaJuridica"]);
+    sessionStorage.setItem("crearnuevo", JSON.stringify("true"));
+    this.body = new PersonaJuridicaItem();
+    sessionStorage.setItem("usuarioBody", JSON.stringify(this.body));
+    this.router.navigate(["fichaPersonaJuridica"]);
     // this.body.fechaConstitucion = this.fechaConstitucion;
     // this.sigaServices.post("busquedaPerJuridica_create", this.body).subscribe(
     //   data => {
@@ -561,5 +561,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     if (event.keyCode === KEY_CODE.ENTER) {
       this.isBuscar();
     }
+  }
+
+
+  clear() {
+    this.msgs = [];
   }
 }

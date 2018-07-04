@@ -314,12 +314,13 @@ export class BusquedaGeneralComponent {
                 this.bodyFisica.nif != undefined
               ) {
                 console.log("DAtos", this.bodyFisica.nif);
-                if (this.bodyFisica.nombre.trim() == "") {
-                  if (
-                    this.bodyFisica.primerApellido.trim() == "" &&
-                    this.bodyFisica.segundoApellido.trim() == "" &&
-                    this.bodyFisica.numeroColegiado.trim() == ""
-                  ) {
+                if (
+                  this.bodyFisica.nombre.trim() == "" &&
+                  this.bodyFisica.primerApellido.trim() == "" &&
+                  this.bodyFisica.segundoApellido.trim() == "" &&
+                  this.bodyFisica.numeroColegiado.trim() == ""
+                ) {
+                  if (this.tipoIdentificacionPermitido(this.bodyFisica.nif)) {
                     this.noDataFoundWithDNI();
                   }
                 }
@@ -382,7 +383,9 @@ export class BusquedaGeneralComponent {
                 this.bodyJuridica.abreviatura.trim() == "" &&
                 this.bodyJuridica.tipo.trim() == ""
               ) {
-                this.noDataFoundWithDNI();
+                if (this.tipoIdentificacionPermitido(this.bodyJuridica.nif)) {
+                  this.noDataFoundWithDNI();
+                }
               }
             }
           }
@@ -434,6 +437,28 @@ export class BusquedaGeneralComponent {
     }
   }
 
+  tipoIdentificacionPermitido(value: String): boolean {
+    // busqueda fisica => todos menos cif
+    if (this.persona == "f") {
+      if (this.isValidCIF(value)) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      // busqueda juridica => cif u otros
+      if (
+        !this.isValidDNI(value) &&
+        !this.isValidNIE(value) &&
+        !this.isValidPassport(value)
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
   noDataFoundWithDNI() {
     let mess = "";
     if (this.persona == "f") {
@@ -457,21 +482,7 @@ export class BusquedaGeneralComponent {
             notarioNIF.nif = this.bodyJuridica.nif;
           }
 
-          // busqueda fisica => todos los tipos de identificacion menos CIF
-          if (this.persona == "f") {
-            if (this.tipoCIF == "20") {
-              notarioNIF.tipoIdentificacion = "50";
-            } else {
-              notarioNIF.tipoIdentificacion = this.tipoCIF;
-            }
-          } else {
-            // busqueda juridica => solo CIF u Otro
-            if (this.tipoCIF == "20") {
-              notarioNIF.tipoIdentificacion = this.tipoCIF;
-            } else {
-              notarioNIF.tipoIdentificacion = "50";
-            }
-          }
+          notarioNIF.tipoIdentificacion = this.tipoCIF;
 
           notarioNIF.nombre = "";
           let notariosNEW = [];
@@ -488,21 +499,10 @@ export class BusquedaGeneralComponent {
           } else {
             integranteNew.nifCif = this.bodyJuridica.nif;
           }
-          // busqueda fisica => todos los tipos de identificacion menos CIF
-          if (this.persona == "f") {
-            if (this.tipoCIF == "20") {
-              integranteNew.tipoIdentificacion = "50";
-            } else {
-              integranteNew.tipoIdentificacion = this.tipoCIF;
-            }
-          } else {
-            // busqueda juridica => solo CIF u Otro
-            if (this.tipoCIF == "20") {
-              integranteNew.tipoIdentificacion = this.tipoCIF;
-            } else {
-              integranteNew.tipoIdentificacion = "50";
-            }
-          }
+
+          // sirve tanto para ambas busquedas (fisica, juridica)
+          integranteNew.tipoIdentificacion = this.tipoCIF;
+
           integranteNew.nombre = "";
           integranteNew.completo = false;
           let integrantesNEW = [];
@@ -526,6 +526,16 @@ export class BusquedaGeneralComponent {
       }
     });
   }
+
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: mensaje
+    });
+  }
+
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
     if (!this.selectMultiple) {
@@ -584,5 +594,9 @@ export class BusquedaGeneralComponent {
 
   backTo() {
     this.location.back();
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }

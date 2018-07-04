@@ -58,16 +58,19 @@ export class AuthenticationService {
             formData.append(key, formValues[key]);
         }
 
-        let params = new URLSearchParams();
+        //let params = new URLSearchParams();
+        let params = '?';
         for (let key in formValues) {
-            params.set(key, formValues[key]);
+            //params.set(key, formValues[key]);
+            params = params + key + '=' + formValues[key] + '&';
         }
 
         let headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded',
         })
         let options = { headers: headers, observe: 'response', responseType: 'text' }
-        return this.http.post(this.oldSigaServices.getOldSigaUrl("loginDevelop"), params.toString(), { headers: headers, observe: 'response', responseType: 'text' })
+
+        return this.http.get(this.oldSigaServices.getOldSigaUrl("loginDevelop") + params, { observe: 'response', responseType: "text" });
 
 
     }

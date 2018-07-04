@@ -21,7 +21,9 @@
                             <span>{{ body.nombre }} {{ body.apellido1 }} {{ body.apellido2 }}</span>
                         </label>
                         <div></div>
-                        <div><i class="fa fa-rotate-right redirect"></i>
+
+                        <div>
+                            <i class="fa fa-rotate-right redirect"></i>
                             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
                         </div>
 
@@ -34,7 +36,7 @@
                 </div>
                 <label class="title-ficha">{{"censo.datosRegistrales.literal.titulo3" | translate}}</label>
                 <div class="ml-auto">
-                    <i (click)="redireccionar()" class="fa fa-rotate-right redirect"></i>
+                    <i class="fa fa-rotate-right redirect"></i>
                     <i class="fa fa-angle-up "></i>
                 </div>
             </div>
@@ -91,7 +93,7 @@
             </div>
             <!--END DATOS GENERALES-->
         </div>
-        <p-growl [(value)]="msgs "></p-growl>
+        <p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
         <div *ngIf="progressSpinner " class="overlay-spinner ">
             <div class="loader "></div>
         </div>

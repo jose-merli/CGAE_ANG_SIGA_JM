@@ -349,4 +349,9 @@ export class Catalogos extends SigaWrapper implements OnInit {
       this.isBuscar();
     }
   }
+
+
+  clear() {
+    this.msgs = [];
+  }
 }

@@ -74,6 +74,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   descripcion: String;
   firmaFechaDate: Date;
   firmaLugar: String;
+  iban: String;
 
   msgs: Message[];
   usuarioBody: any[];
@@ -265,6 +266,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.progressSpinner = false;
           this.bodySearch = JSON.parse(data["body"]);
           this.body = this.bodySearch.datosBancariosItem[0];
+          //this.iban = this.body.iban;
 
           if (this.body == undefined) {
             this.body = new DatosBancariosItem();
@@ -274,7 +276,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         },
         error => {
           this.bodySearch = JSON.parse(error["error"]);
-          this.showFail(JSON.stringify(this.bodySearch.error.message));
+          this.showFail(this.bodySearch.error.message.toString());
           console.log(error);
           this.progressSpinner = false;
         }
@@ -315,7 +317,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       },
       error => {
         this.bodySearch = JSON.parse(error["error"]);
-        this.showFail(JSON.stringify(this.bodySearch.error.message));
+        this.showFail(this.bodySearch.error.message.toString());
         console.log(error);
         this.progressSpinner = false;
       },
@@ -380,6 +382,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.body.titular = this.usuarioBody[0].denominacion;
         this.body.nifTitular = this.usuarioBody[0].nif;
         this.body.iban = "";
+        this.iban = "";
         this.body.bic = "";
         this.body.banco = "";
         this.body.cuentaContable = "";
@@ -393,21 +396,15 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   autogenerarDatos() {
-    var a = this.body.iban.replace(/\s/g, "");
-    this.body.iban = a;
-
+    this.body.iban = this.iban;
     if (this.isValidIBAN()) {
       this.recuperarBicBanco();
+
       this.ibanValido = true;
     } else {
       this.body.banco = "";
       this.body.bic = "";
     }
-  }
-
-  eliminarEspacios(str) {
-    if (str.length == 0) return "";
-    //recursova
   }
 
   recuperarBicBanco() {
@@ -421,7 +418,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
           this.body.banco = this.bodyBancoBic.banco;
           this.body.bic = this.bodyBancoBic.bic;
-
+          this.iban = this.body.iban.replace(/\s/g, "");
           console.log("bic", this.bodyBancoBic.bicEspanol);
 
           if (this.bodyBancoBic.bicEspanol == "1") {
@@ -432,19 +429,19 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         },
         error => {
           this.bodyBancoBicSearch = JSON.parse(error["error"]);
-          this.showFail(JSON.stringify(this.bodyBancoBicSearch.error.message));
+          this.showFail(this.bodyBancoBicSearch.error.message.toString());
         }
       );
   }
 
   isValidIBAN(): boolean {
+    this.body.iban = this.body.iban.replace(/\s/g, "");
     return (
       this.body.iban &&
       typeof this.body.iban === "string" &&
       // /ES\d{2}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}|ES\d{22}/.test(
-      /[A-Z]{2}\d{2} ?\d{4} ?\d{4} ?\d{2} ?\d{10} ?[\d]{0,2}/.test(
-        this.body.iban
-      )
+      ///[A-Z]{2}\d{22}?[\d]{0,2}/.test(this.body.iban)
+      /^ES\d{22}$/.test(this.body.iban)
     );
   }
 
@@ -567,9 +564,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         },
         error => {
           this.bodyDatosMandatosSearch = JSON.parse(error["error"]);
-          this.showFail(
-            JSON.stringify(this.bodyDatosMandatosSearch.error.message)
-          );
+          this.showFail(this.bodyDatosMandatosSearch.error.message.toString());
           console.log(error);
           this.progressSpinner = false;
         }
@@ -603,7 +598,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       },
       error => {
         this.bodySearch = JSON.parse(error["error"]);
-        this.showFail(JSON.stringify(this.bodySearch.error.message));
+        this.showFail(this.bodySearch.error.message.toString());
       }
     );
   }
@@ -675,9 +670,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       },
       error => {
         this.bodyDatosMandatosSearch = JSON.parse(error["error"]);
-        this.showFail(
-          JSON.stringify(this.bodyDatosMandatosSearch.error.message)
-        );
+        this.showFail(this.bodyDatosMandatosSearch.error.message.toString());
         console.log(error);
         this.progressSpinner = false;
       }
@@ -758,7 +751,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         },
         error => {
           this.bodyDatosBancariosAnexoSearch = JSON.parse(error["error"]);
-          this.showFail(JSON.stringify(this.bodySearch.error.message));
+          this.showFail(
+            this.bodyDatosBancariosAnexoSearch.error.message.toString()
+          );
           console.log(error);
           this.progressSpinner = false;
         }
@@ -876,9 +871,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         },
         error => {
           this.bodyDatosMandatosSearch = JSON.parse(error["error"]);
-          this.showFail(
-            JSON.stringify(this.bodyDatosMandatosSearch.error.message)
-          );
+          this.showFail(this.bodyDatosMandatosSearch.error.message.toString());
           console.log(error);
           this.progressSpinner = false;
         },
@@ -929,8 +922,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     } else {
       this.firmaFechaDate = null;
     }
-
-    this.bodyDatosBancariosAnexo.descripcion = "";
 
     this.datosPrevios = {
       firmaLugar: this.firmaLugar,
@@ -1034,19 +1025,21 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.progressSpinner = false;
         this.bodyDatosBancariosAnexo.status = data.status;
 
-        this.sigaServices
-          .postSendFileAndParametersDataBank(
-            "busquedaPerJuridica_uploadFile",
-            this.file,
-            body.idPersona,
-            body.idCuenta,
-            body.idMandato,
-            body.idAnexo,
-            body.tipoMandato
-          )
-          .subscribe(data => {
-            this.file = undefined;
-          });
+        if (this.file != undefined) {
+          this.sigaServices
+            .postSendFileAndParametersDataBank(
+              "busquedaPerJuridica_uploadFile",
+              this.file,
+              body.idPersona,
+              body.idCuenta,
+              body.idMandato,
+              body.idAnexo,
+              body.tipoMandato
+            )
+            .subscribe(data => {
+              this.file = undefined;
+            });
+        }
 
         this.showSuccess("Se han editado correctamente los datos");
 
@@ -1055,7 +1048,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       error => {
         this.bodyDatosBancariosAnexoSearch = JSON.parse(error["error"]);
         this.showFail(
-          JSON.stringify(this.bodyDatosBancariosAnexoSearch.error.message)
+          this.bodyDatosBancariosAnexoSearch.error.message.toString()
         );
         console.log(error);
         this.progressSpinner = false;
@@ -1074,7 +1067,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.actualizar(body);
       this.editar = false;
     } else {
-      this.showFail("No se puede editar la descripción de un mandato.");
+      this.showFail("message.error.editar.descripcion.mandato");
       this.selectedProductoServicio = [];
       this.comboProductoServicio = [];
       this.editar = false;
@@ -1165,6 +1158,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   uploadFile(event: any) {
+    console.log("Event", event);
     // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
     let fileList: FileList = event.target.files;
 
@@ -1192,5 +1186,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       summary: "Error",
       detail: "Error al adjuntar la imagen"
     });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }

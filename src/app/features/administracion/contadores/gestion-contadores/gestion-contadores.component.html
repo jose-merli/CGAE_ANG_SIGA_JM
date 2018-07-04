@@ -1,8 +1,9 @@
-<p-growl [(value)]="msgs" life="1500"></p-growl>
+<p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{"general.boton.edit" | translate}} <i class="pl-1 fa fa-angle-right"></i>{{"administracion.contador.titulo" | translate}}</p>
+    <p>{{"general.boton.edit" | translate}}
+      <i class="pl-1 fa fa-angle-right"></i>{{"administracion.contador.titulo" | translate}}</p>
   </div>
   <!--<div class="breadCrumb">
     <p>{{"general.boton.edit" | translate}} <i class="fa fa-angle-right"></i> {{ 'menu.administracion.usuarios' | translate}}
@@ -107,9 +108,9 @@
       <div class="text-right main-button ">
         <button (click)="confirmEdit();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"
           [disabled]="checkEditar()"></button>
-          <button [disabled]="checkEditar()" (click)="isRestablecer();" pButton type="button" icon="	fa fa-eraser " iconPos="left"
-            label="{{ 'general.boton.restablecer' | translate}}"></button>
-            <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+        <button [disabled]="checkEditar()" (click)="isRestablecer();" pButton type="button" icon="	fa fa-eraser " iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
       </div>
     </div>
     <app-dialog></app-dialog>
