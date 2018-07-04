@@ -26,13 +26,11 @@
           </div>
           <div class="form-group col-lg-3 col-md-3 ">
             <label>{{'administracion.multidioma.etiquetas.literal.idioma' | translate}}</label>
-            <p-dropdown class="select-form " [(ngModel)]='selectedIdiomaBusqueda' [options]="idiomaBusqueda
-  " [filter]="true " filterBy="label,labelSinTilde "></p-dropdown> &nbsp;&nbsp;
+            <p-dropdown class="select-form " [(ngModel)]='selectedIdiomaBusqueda' [options]="idiomaBusqueda" [filter]="true " filterBy="label,labelSinTilde "></p-dropdown> &nbsp;&nbsp;
           </div>
           <div class="form-group col-lg-3 col-md-3 ">
             <label>{{'administracion.multidioma.etiquetas.literal.idiomaATraducir' | translate}}</label>
-            <p-dropdown class="select-form " [(ngModel)]='selectedIdiomaTraduccion' [options]="idiomaTraduccion
-  " [filter]="true " filterBy="label,labelSinTilde "></p-dropdown> &nbsp;&nbsp;
+            <p-dropdown class="select-form " [(ngModel)]='selectedIdiomaTraduccion' [options]="idiomaTraduccion" [filter]="true " filterBy="label,labelSinTilde "></p-dropdown> &nbsp;&nbsp;
           </div>
         </div>
       </div>
@@ -40,28 +38,25 @@
     </div>
     <div class="card-footer " *ngIf="showDatosGenerales ">
       <div class="text-right main-button ">
-        <button (click)="isBuscar() " [disabled]="isHabilitadoBuscar() " pButton type="button " icon="fa fa-search
-  " iconPos="left " label="{{ 'general.boton.search' | translate}} "></button>
-        <button (click)="generarRecursos() " pButton type="button " icon="fa fa-history " iconPos="left " label="{{
-  'general.boton.generarRecursos' | translate}} "></button>
+        <button (click)="isBuscar() " [disabled]="isHabilitadoBuscar() " pButton type="button " icon="fa fa-search" iconPos="left "
+          label="{{ 'general.boton.search' | translate}} "></button>
+        <button (click)="generarRecursos() " pButton type="button " icon="fa fa-history " iconPos="left " label="{{'general.boton.generarRecursos' | translate}} "></button>
       </div>
     </div>
   </div>
   <!--FIN CARD-->
   <div *ngIf="buscarSeleccionado==t rue " class="card mt-3 ">
     <div class="card-body p-0 ">
-      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}} " [value]="datosTraduccion
-  " [editable]="true " [responsive]="true " #table class="tabla-listado " [sortOrder]="1 " [paginator]="activarPaginacion() "
-        paginatorPosition="both
-  " [rows]="selectedItem ">
-        <p-column *ngFor="let col of columnasTabla " [sortable]="true " [field]="col.field " [header]="col.header | translate
-  " [filter]="true " filterPlaceholder="{{ 'general.boton.search' | translate}} " filterMatchMode="contains ">
+      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}} " [value]="datosTraduccion" [editable]="true "
+        [responsive]="true " #table class="tabla-listado " [sortOrder]="1 " [paginator]="activarPaginacion() " paginatorPosition="both"
+        [rows]="selectedItem ">
+        <p-column *ngFor="let col of columnasTabla " [sortable]="true " [field]="col.field " [header]="col.header | translate" [filter]="true "
+          filterPlaceholder="{{ 'general.boton.search' | translate}} " filterMatchMode="contains ">
           <ng-template *ngIf="col.field=='descripcionTraduccion' " let-dato="rowData " pTemplate="body ">
             <div class="input-group ">
               <span class="input-group ">
                 <button pButton type="button " [pTooltip]="obtenerRecurso(dato) " tooltipPosition="top " icon="fa fa-question "></button> &nbsp;&nbsp;
-                <input type="text " [(disabled)]="!editar " class="form-control " pInputText [(ngModel)]="dato[col.field]
-  " (input)="Guardar($event,dato) ">
+                <input type="text " [(disabled)]="!editar " class="form-control " pInputText [(ngModel)]="dato[col.field]" (input)="Guardar($event,dato) ">
               </span>
             </div>
           </ng-template>
@@ -78,10 +73,10 @@
 
         <p-footer>
           <div class="text-right main-button ">
-            <button (click)="isRestablecer() " pButton type="button " [(disabled)]="!habilitarBotones " icon="fa fa-history
-  " iconPos="left " label="{{ 'general.boton.restablecer' | translate}} "></button>
-            <button (click)="isGuardar() " pButton type="button " [(disabled)]="!habilitarBotones " icon="fa fa-save
-  " iconPos="left " label="{{ 'general.boton.guardar' | translate}} "></button>
+            <button (click)="isRestablecer() " pButton type="button " [(disabled)]="!habilitarBotones " icon="fa fa-history" iconPos="left"
+              label="{{ 'general.boton.restablecer' | translate}} "></button>
+            <button (click)="isGuardar() " pButton type="button " [(disabled)]="!habilitarBotones " icon="fa fa-save" iconPos="left "
+              label="{{ 'general.boton.guardar' | translate}} "></button>
           </div>
         </p-footer>
 
