@@ -1,4 +1,4 @@
-<p-growl [(value)]="msgs" life="1500"></p-growl>
+<p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
 <div class="busqueda-container">
 
   <!--<div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
@@ -60,8 +60,8 @@
             <!--<img src="{{imagenURL}}">-->
             <p-fileUpload #fubauto chooseLabel="" class="edit" mode="basic" name="file" auto="true" accept="image/*" (change)="uploadImage($event)"
               auto="true">
-              </p-fileUpload>
-              <!--<p-fileUpload *ngIf="archivoDisponible" #fubauto mode="basic" name="file" accept="image/*" (change)="uploadImage($event)" auto="true" chooseLabel="{{'administracion.gestionEntidad.buscarLogotipo' | translate}}">
+            </p-fileUpload>
+            <!--<p-fileUpload *ngIf="archivoDisponible" #fubauto mode="basic" name="file" accept="image/*" (change)="uploadImage($event)" auto="true" chooseLabel="{{'administracion.gestionEntidad.buscarLogotipo' | translate}}">
                             </p-fileUpload>-->
 
           </div>

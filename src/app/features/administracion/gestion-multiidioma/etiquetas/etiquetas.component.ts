@@ -322,4 +322,9 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.isBuscar();
     }
   }
+
+
+  clear() {
+    this.msgs = [];
+  }
 }

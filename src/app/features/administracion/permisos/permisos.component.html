@@ -1,9 +1,9 @@
-<p-growl [(value)]="msgs" life="3000"></p-growl>
+<p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
 <div #widthContent class="permisos-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{'menu.administracion' | translate}} <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.administracion.gestionarPermisosAplicacion'
-      | translate}}</p>
+    <p>{{'menu.administracion' | translate}}
+      <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.administracion.gestionarPermisosAplicacion' | translate}}</p>
   </div>
   <div class="mt-4 permisos-filters d-flex  justify-content-start">
     <div class="mr-auto pl-0 form-group col-lg-3 col-md-3">
@@ -16,8 +16,12 @@
       <div class="mt-2">
         <p-checkbox *ngIf="activacionEditar" (onChange)="onChangeSelectAll(node)" [(ngModel)]="selectAll" class="d-inline-block mr-2"
           binary="true" label="Seleccionar todo"></p-checkbox>
-          <label *ngIf="!todoDesplegado" (click)="expandAll()" class="desplegar-todo">Desplegar todo <i class="fa fa-angle-down"></i></label>
-          <label *ngIf="todoDesplegado" (click)="collapseAll()" class="desplegar-todo">Plegar todo <i class="fa fa-angle-up"></i></label>
+        <label *ngIf="!todoDesplegado" (click)="expandAll()" class="desplegar-todo">Desplegar todo
+          <i class="fa fa-angle-down"></i>
+        </label>
+        <label *ngIf="todoDesplegado" (click)="collapseAll()" class="desplegar-todo">Plegar todo
+          <i class="fa fa-angle-up"></i>
+        </label>
       </div>
     </div>
   </div>
@@ -34,14 +38,14 @@
         <label (click)="onChangePropagate(node)">{{node.label}}</label>
       </ng-template>
 
-      </p-tree>
-      <p-tree *ngIf="!activacionEditar" (onNodeSelect)="onNodeSelect()" (onNodeUnselect)="onNodeUnselect()" [(selection)]="selectedPermiso"
-        #expandingTree [value]="permisosTree" [propagateSelectionDown]="propagateDown">
-        <ng-template let-node pTemplate="default">
-          <i class="fa fa-circle icon-acceso" [ngClass]="{ 'color-sinAsignar':node.derechoacceso == 0 , 'color-denegado':node.derechoacceso == 1 ,'color-lectura':node.derechoacceso == 2,  'color-total':node.derechoacceso == 3}"></i>
-          <label (click)="onChangePropagate(node)">{{node.label}}</label>
-        </ng-template>
-        </p-tree>
+    </p-tree>
+    <p-tree *ngIf="!activacionEditar" (onNodeSelect)="onNodeSelect()" (onNodeUnselect)="onNodeUnselect()" [(selection)]="selectedPermiso"
+      #expandingTree [value]="permisosTree" [propagateSelectionDown]="propagateDown">
+      <ng-template let-node pTemplate="default">
+        <i class="fa fa-circle icon-acceso" [ngClass]="{ 'color-sinAsignar':node.derechoacceso == 0 , 'color-denegado':node.derechoacceso == 1 ,'color-lectura':node.derechoacceso == 2,  'color-total':node.derechoacceso == 3}"></i>
+        <label (click)="onChangePropagate(node)">{{node.label}}</label>
+      </ng-template>
+    </p-tree>
   </div>
 
 
@@ -78,12 +82,12 @@
       <div class="ml-auto main-button d-inline-block">
         <button [disabled]="isButtonDisabled()" (click)="savePermisos()" class="mr-2" pButton type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
-          <button [disabled]="savedPermisos" (click)="restablecerPermisos()" pButton type="button" icon="fa fa-redo" iconPos="left"
-            label="{{'general.boton.restablecer' | translate}}"></button>
+        <button [disabled]="savedPermisos" (click)="restablecerPermisos()" pButton type="button" icon="fa fa-redo" iconPos="left"
+          label="{{'general.boton.restablecer' | translate}}"></button>
       </div>
     </div>
 
 
   </div>
 
-  </div>
+</div>

@@ -1,8 +1,9 @@
-<p-growl [(value)]="msgs" life="3000"></p-growl>
+<p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
 <div class="busqueda-container">
     <div class="header-title">
         <i class="fa fa-square"></i>
-        <p>{{'menu.administracion' | translate}} <i class="pl-1 fa fa-angle-right"></i>{{'menu.administracion.auditoria' | translate}}</p>
+        <p>{{'menu.administracion' | translate}}
+            <i class="pl-1 fa fa-angle-right"></i>{{'menu.administracion.auditoria' | translate}}</p>
     </div>
     <!--<div class="breadCrumb">
         <p>{{'menu.administracion' | translate}} <i class="fa fa-angle-right"></i> {{'menu.administracion.auditoria' | translate}}
@@ -31,7 +32,7 @@
                     </div>
                     <div class="form-check col-lg-3 col-md-3">
                         <br>
-                        <label class="form-group-label">{{'administracion.auditoriaUsuarios.literal.usuarioAutomatico' | translate}}</label>                        &nbsp;&nbsp;
+                        <label class="form-group-label">{{'administracion.auditoriaUsuarios.literal.usuarioAutomatico' | translate}}</label> &nbsp;&nbsp;
                         <p-checkbox [(ngModel)]='valorCheckUsuarioAutomatico' binary="true"></p-checkbox>
                     </div>
                 </div>
@@ -73,16 +74,17 @@
                 [rows]="selectedItem" (onRowSelect)="irEditarUsuario(selectedDatos)" selectionMode="single">
                 <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true"
                     filterMatchMode="contains" filterPlaceholder="{{'general.boton.search' | translate}}">
-                    </p-column>
+                </p-column>
 
-                    <ng-template pTemplate="paginatorLeft">
-                        <div class="mostrar">
-                            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                            <label>{{ 'general.message.mostrar' | translate}}</label>
-                            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> <label>{{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
-                        </div>
-                    </ng-template>
-                    </p-dataTable>
+                <ng-template pTemplate="paginatorLeft">
+                    <div class="mostrar">
+                        <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                        <label>{{ 'general.message.mostrar' | translate}}</label>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                        <label>{{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
+                    </div>
+                </ng-template>
+            </p-dataTable>
         </div>
     </div>
     <app-dialog></app-dialog>
