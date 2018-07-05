@@ -242,46 +242,48 @@ export class DatosRegistralesComponent implements OnInit {
     this.sigaServices
       .post("datosRegistrales_actividadesPersona", this.body)
       .subscribe(
-      data => {
-        this.selectActividad = JSON.parse(data["body"]).combooItems;
-        // seleccionadas.forEach((value: any, index: number) => {
-        //   this.selectActividad.push(value.value);
-        // });
-      },
-      err => {
-        console.log(err);
-      }
+        data => {
+          this.selectActividad = JSON.parse(data["body"]).combooItems;
+          // seleccionadas.forEach((value: any, index: number) => {
+          //   this.selectActividad.push(value.value);
+          // });
+        },
+        err => {
+          console.log(err);
+        }
       );
   }
 
   search() {
     this.body.idPersona = this.idPersonaEditar;
+    this.contadorNoCorrecto = false;
+    this.fechaCorrecta = true;
     this.getActividadesPersona();
     this.sigaServices
       .postPaginado("datosRegistrales_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
-        this.personaSearch = JSON.parse(data["body"]);
-        this.body = this.personaSearch.datosRegistralesItems[0];
-        if (this.body == undefined) {
-          this.body = new DatosRegistralesItem();
-        } else {
-          this.body.idPersona = this.idPersonaEditar;
-          this.fechaConstitucion = this.body.fechaConstitucion;
-          this.fechaFin = this.body.fechaFin;
-          this.fechaCancelacion = this.body.fechaCancelacion;
-          this.fechaRegistro = this.body.fechaRegistro;
+        data => {
+          console.log(data);
+          this.personaSearch = JSON.parse(data["body"]);
+          this.body = this.personaSearch.datosRegistralesItems[0];
+          if (this.body == undefined) {
+            this.body = new DatosRegistralesItem();
+          } else {
+            this.body.idPersona = this.idPersonaEditar;
+            this.fechaConstitucion = this.body.fechaConstitucion;
+            this.fechaFin = this.body.fechaFin;
+            this.fechaCancelacion = this.body.fechaCancelacion;
+            this.fechaRegistro = this.body.fechaRegistro;
+          }
+          if (this.body.sociedadProfesional == "1") {
+            this.sociedadProfesional = true;
+          } else if (this.body.sociedadProfesional == "0") {
+            this.sociedadProfesional = false;
+          }
+        },
+        err => {
+          console.log(err);
         }
-        if (this.body.sociedadProfesional == "1") {
-          this.sociedadProfesional = true;
-        } else if (this.body.sociedadProfesional == "0") {
-          this.sociedadProfesional = false;
-        }
-      },
-      err => {
-        console.log(err);
-      }
       );
   }
 
