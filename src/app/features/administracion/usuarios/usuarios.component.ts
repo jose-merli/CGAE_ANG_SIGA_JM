@@ -153,12 +153,16 @@ para poder filtrar el dato con o sin estos caracteres*/
         field: "nombreApellidos",
         header: "administracion.usuarios.literal.nombre"
       },
-      { field: "nif", header: "administracion.usuarios.literal.NIF" },
+      { field: "nif", header: "administracion.usuarios.literal.NIF", width: "12%" },
       {
         field: "fechaAlta",
-        header: "administracion.usuarios.literal.fechaAlta"
+        header: "administracion.usuarios.literal.fechaAlta",
+        width: "12%"
       },
-      { field: "roles", header: "administracion.usuarios.literal.roles" }
+      {
+        field: "roles", header: "administracion.usuarios.literal.roles",
+        width: "18%"
+      }
     ];
 
     this.rowsPerPage = [

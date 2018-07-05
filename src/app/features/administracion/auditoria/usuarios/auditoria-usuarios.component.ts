@@ -113,7 +113,9 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     this.columnasTabla = [
       {
         field: "persona",
-        header: "administracion.auditoriaUsuarios.persona"
+        header: "administracion.auditoriaUsuarios.persona",
+        width: "13%"
+
       },
       {
         field: "descripcionUsuario",
@@ -125,7 +127,8 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
       },
       {
         field: "fechaEfectiva",
-        header: "administracion.auditoriaUsuarios.literal.fechaEfectiva"
+        header: "administracion.auditoriaUsuarios.literal.fechaEfectiva",
+        width: "13%"
       },
       {
         field: "motivo",
