@@ -68,13 +68,13 @@
     </div>
     <div class="card-footer">
       <div class="text-right main-button">
-        <<<<<<< HEAD <button (click)="crear()" pButton type="button" icon="	fa fa-plus-square " iconPos="left" [disabled]="!activacionEditar"
+        <button (click)="crear()" pButton type="button" icon="	fa fa-plus-square " iconPos="left" [disabled]="!activacionEditar"
           label="{{ 'general.boton.new' | translate}}">
           </button>
-          <button (click)="isBuscar(); selectedDatos = ''" pButton type="button " icon="fa fa-search " iconPos="left" label="{{'general.boton.search' | translate}}"></button>          =======
+          <button (click)="isBuscar(); selectedDatos = ''" pButton type="button " icon="fa fa-search " iconPos="left" label="{{'general.boton.search' | translate}}"></button>
           <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
           <button (click)="crear()" pButton type="button" icon="fa fa-plus-square" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-          <button (click)="isBuscar(); selectedDatos = ''" pButton type="button " icon="fa fa-search " iconPos="left" label="{{'general.boton.search' | translate}}"></button>          >>>>>>> a53d9e70a6d69d001e4c7149ebd06d67ea912b38
+          <button (click)="isBuscar(); selectedDatos = ''" pButton type="button " icon="fa fa-search " iconPos="left" label="{{'general.boton.search' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -120,9 +120,9 @@
             <div class="text-right main-button">
               <button (click)="toHistorico()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.historico' | translate}}"></button>
               <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash" iconPos="left" label="{{'general.boton.eliminar' | translate}}"
-                <<<<<<< HEAD [disabled]="selectedDatos == '' && !activacionEditar"></button>
-                ======= [disabled]="selectedDatos == ''"></button>
-                >>>>>>> a53d9e70a6d69d001e4c7149ebd06d67ea912b38
+                [disabled]="selectedDatos == '' && !activacionEditar"></button>
+
+
             </div>
           </p-footer>
           </p-dataTable>
