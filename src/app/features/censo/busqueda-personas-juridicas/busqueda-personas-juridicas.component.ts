@@ -563,6 +563,20 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     }
   }
 
+  restablecer() {
+    //Para limpiar los campos
+    this.body = new PersonaJuridicaItem();
+    this.body.sociedadesProfesionales = true;
+    this.fechaConstitucion = null;
+
+    //Para no mostrar la tabla
+    this.buscar = false;
+    this.historico = false;
+
+    //Para limpiar la tabla
+    this.datos = [];
+  }
+
   clear() {
     this.msgs = [];
   }
