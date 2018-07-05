@@ -47,14 +47,14 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   revisionCuentas: boolean = false;
   nuevo: boolean = false;
   checkProducto: boolean = false;
-  checkServicio: boolean = false;
+  checkServicio: boolean;
   checkFirma: boolean = true;
   isSelectedProducto: boolean;
   isSelectedServicio: boolean;
   isCheckedProducto: boolean;
   isCheckedServicio: boolean;
-  isInterEmpresaProducto: boolean;
-  isInterEmpresaServicio: boolean;
+  isInterEmpresaProducto: boolean = false;
+  isInterEmpresaServicio: boolean = false;
   selectAll: boolean = false;
   selectMultiple: boolean = false;
   displayFirmar: boolean = false;
@@ -62,6 +62,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   isEditable: boolean = false;
   isCancelEdit: boolean = false;
   mandatoAnexoVacio: boolean = false;
+  activarMsgErrorProd: boolean;
+  activarMsgErrorServ: boolean;
 
   idCuenta: String;
   idPersona: String;
@@ -266,7 +268,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.progressSpinner = false;
           this.bodySearch = JSON.parse(data["body"]);
           this.body = this.bodySearch.datosBancariosItem[0];
-          //this.iban = this.body.iban;
+          this.iban = this.body.iban;
 
           if (this.body == undefined) {
             this.body = new DatosBancariosItem();
@@ -369,6 +371,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       message: "¿Desea restablecer los datos?",
       icon: "fa fa-info",
       accept: () => {
+        this.selectedDatos = [];
         this.cargarDatosCuentaBancaria();
       }
     });
@@ -614,6 +617,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     if (this.capturarEventoInterempresa(e, this.selectedEsquemaProducto)) {
       this.isInterEmpresaProducto = true;
       this.isSelectedProducto = true;
+      this.checkProducto = false;
     } else {
       this.isInterEmpresaProducto = false;
       this.isSelectedProducto = false;
@@ -626,6 +630,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     if (this.capturarEventoInterempresa(e, this.selectedEsquemaServicio)) {
       this.isInterEmpresaServicio = true;
       this.isSelectedServicio = true;
+      this.checkServicio = false;
     } else {
       this.isInterEmpresaServicio = false;
       this.isSelectedServicio = false;
@@ -698,17 +703,41 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   validarGuardarMandato() {
+    // if (
+    //   (this.isInterEmpresaProducto && this.validarCheckProducto()) ||
+    //   !this.isInterEmpresaProducto ||
+    //   (this.isInterEmpresaServicio && this.validarCheckServicio()) ||
+    //   !this.isInterEmpresaServicio ||
+    //   (this.isInterEmpresaProducto &&
+    //     this.validarCheckProducto() &&
+    //     (this.isInterEmpresaServicio && this.validarCheckServicio()))
+    // ) {
+    //   this.formValido = true;
+    //   this.guardarMandato();
+    // } else {
+    //   this.formValido = false;
+    // }
     if (
-      (this.isInterEmpresaProducto &&
-        this.validarCheckProducto() &&
-        (this.isInterEmpresaServicio && this.validarCheckServicio())) ||
-      !this.isInterEmpresaServicio ||
-      !this.isInterEmpresaProducto
+      ((this.isInterEmpresaProducto && this.validarCheckProducto()) ||
+        !this.isInterEmpresaProducto) &&
+      ((this.isInterEmpresaServicio && this.validarCheckServicio()) ||
+        !this.isInterEmpresaServicio)
     ) {
       this.formValido = true;
       this.guardarMandato();
+
+      this.activarMsgErrorProd = false;
+      this.activarMsgErrorServ = false;
     } else {
       this.formValido = false;
+
+      if (this.isSelectedProducto == true) {
+        this.activarMsgErrorProd = true;
+      }
+
+      if (this.isSelectedServicio == true) {
+        this.activarMsgErrorServ = true;
+      }
     }
   }
 
