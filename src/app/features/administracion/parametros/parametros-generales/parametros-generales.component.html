@@ -19,7 +19,7 @@
 
             <div *ngIf="showDatosGenerales" class="module vista-avanzada">
                 <div class="form-row">
-                    <div class="form-group col-lg-1 col-md-1">
+                    <div class="form-group col-lg-3 col-md-4">
                         <label>{{'administracion.parametrosGenerales.literal.modulo' | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='selectedModulo' [options]="modulos" (ngModelChange)="onChangeForm()" [filter]="true"
                             filterBy="label"></p-dropdown>
@@ -56,8 +56,10 @@
                 <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true"
                     filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
                     <ng-template *ngIf="col.field == 'valor'" let-dato="rowData" pTemplate="body">
-                        <span class="input-group">
-                            <button pButton type="button" icon="fa fa-question" [pTooltip]="dato.descripcion" tooltipPosition="top"></button> &nbsp;&nbsp;
+                        <span class="input-group input-ayuda">
+                            <div class="ayuda-btn" [pTooltip]="dato.descripcion" tooltipPosition="top">
+                                <i class="fa fa-question"></i>
+                            </div> &nbsp;&nbsp;
                             <input type="text" [(disabled)]="!activacionEditar" class="form-control" pInputText [(ngModel)]="dato[col.field]" (input)="guardar($event,dato)"
                                 tooltipPosition="bottom">
                         </span>
@@ -109,8 +111,7 @@
                 <ng-template pTemplate="paginatorLeft">
                     <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
                     <label>{{ 'general.message.mostrar' | translate}}
-                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage"
-                            (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
                 </ng-template>
                 <p-footer>
                     <div *ngIf="activarPaginacionHistorico() == true" class="text-right main-button">
