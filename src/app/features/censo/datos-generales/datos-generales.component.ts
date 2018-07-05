@@ -59,6 +59,7 @@ import { DatosGeneralesObject } from "./../../../../app/models/DatosGeneralesObj
 import { MultiSelectModule } from "primeng/multiSelect";
 import { Subscription } from "rxjs/Subscription";
 import { cardService } from "./../../../_services/cardSearch.service";
+import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 
 @Component({
   selector: "app-datos-generales",
@@ -119,7 +120,7 @@ export class DatosGenerales implements OnInit {
   datos: any[];
   selectedTipo: any;
   idiomaPreferenciaSociedad: String;
-
+  activacionEditar: boolean;
   cuentaIncorrecta: Boolean = false;
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
@@ -173,6 +174,7 @@ export class DatosGenerales implements OnInit {
   }
 
   ngOnInit() {
+    this.checkAcceso();
     this.busquedaIdioma();
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
 
@@ -209,10 +211,33 @@ export class DatosGenerales implements OnInit {
       n => {
         this.comboIdentificacion = n.combooItems;
       },
-      error => { }
+      error => {}
     );
 
     this.comboTipo.push(this.tipoPersonaJuridica);
+  }
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "120";
+    let derechoAcceso;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else {
+          this.activacionEditar = false;
+        }
+      }
+    );
   }
 
   obtenerEtiquetasPersonaJuridicaConcreta() {
@@ -606,7 +631,6 @@ export class DatosGenerales implements OnInit {
       detail: mensaje
     });
   }
-
 
   clear() {
     this.msgs = [];

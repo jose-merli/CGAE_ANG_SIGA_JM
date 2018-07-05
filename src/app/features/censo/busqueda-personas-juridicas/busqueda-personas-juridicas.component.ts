@@ -102,7 +102,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   selectedDatos;
 
   ngOnInit() {
-    this.checkAcceso(); //coger tipos
+    this.checkAcceso();
     sessionStorage.removeItem("notario");
     sessionStorage.removeItem("crearnuevo");
     if (sessionStorage.getItem("busqueda") != null) {
@@ -196,7 +196,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => { }
+        () => {}
       );
   }
 
@@ -562,7 +562,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       this.isBuscar();
     }
   }
-
 
   clear() {
     this.msgs = [];
