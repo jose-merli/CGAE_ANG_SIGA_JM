@@ -197,7 +197,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
             .subscribe(data => {
               const blob = new Blob([data], { type: "text/csv" });
               if (blob.size == 0) {
-                this.showFail("no existe fichero para descargar");
+                this.showFail("messages.general.error.ficheroNoExiste");
               } else {
                 //let filename = "2006002472110.pdf";
                 saveAs(data, filename);
