@@ -57,11 +57,10 @@
       </div>
     </div>
     <div class="card-footer ">
-      <div class="text-right main-button ">
-        <button [disabled]="checkIgual() || hasErrors( 'idGrupo') || hasErrors( 'descripcionGrupo') " (click)="confirmEdit(); " pButton
-          type="button " icon=" fa fa-edit " iconPos="left " label="{{ 'general.boton.guardarCerrar' | translate}} "></button>
-        <button (click)="volver(); " pButton type="button " icon=" fa fa-close " iconPos="left " label="{{
-  'general.boton.cancel' | translate}} "></button>
+      <div class="text-right main-button">
+        <button [disabled]="checkIgual() || hasErrors( 'idGrupo') || hasErrors( 'descripcionGrupo') " (click)="confirmEdit()" pButton
+          type="button" icon="fa fa-edit" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}} "></button>
+        <button (click)="volver()" pButton type="button" icon=" fa fa-close" iconPos="left" label="{{'general.boton.cancel' | translate}} "></button>
       </div>
     </div>
   </div>

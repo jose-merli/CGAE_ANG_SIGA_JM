@@ -256,6 +256,8 @@ export class DatosRegistralesComponent implements OnInit {
 
   search() {
     this.body.idPersona = this.idPersonaEditar;
+    this.contadorNoCorrecto = false;
+    this.fechaCorrecta = true;
     this.getActividadesPersona();
     this.sigaServices
       .postPaginado("datosRegistrales_search", "?numPagina=1", this.body)
@@ -473,5 +475,8 @@ export class DatosRegistralesComponent implements OnInit {
       return fichaPosible[0];
     }
     return {};
+  }
+  clear() {
+    this.msgs = [];
   }
 }

@@ -132,18 +132,21 @@ para poder filtrar el dato con o sin estos caracteres*/
         field: "nombre",
         header: "administracion.parametrosGenerales.literal.nombre"
       },
-      { field: "descripcion", header: "general.description" },
+      {
+        field: "descripcion", header: "general.description",
+        width: "25%"
+      },
       {
         field: "prefijo",
-        header: "administracion.parametrosGenerales.literal.prefijo"
+        header: "administracion.parametrosGenerales.literal.prefijo",
       },
       {
         field: "contador",
-        header: "administracion.parametrosGenerales.literal.contadorActual"
+        header: "administracion.parametrosGenerales.literal.contadorActual",
       },
       {
         field: "sufijo",
-        header: "administracion.parametrosGenerales.literal.sufijo"
+        header: "administracion.parametrosGenerales.literal.sufijo",
       }
     ];
 

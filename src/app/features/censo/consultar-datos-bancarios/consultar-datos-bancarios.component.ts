@@ -43,18 +43,19 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   formValido: boolean;
   ibanValido: boolean;
   titularValido: boolean;
+  identificacionValida: boolean;
   tipoCuentaSeleccionado: boolean;
   revisionCuentas: boolean = false;
   nuevo: boolean = false;
   checkProducto: boolean = false;
-  checkServicio: boolean = false;
+  checkServicio: boolean;
   checkFirma: boolean = true;
   isSelectedProducto: boolean;
   isSelectedServicio: boolean;
   isCheckedProducto: boolean;
   isCheckedServicio: boolean;
-  isInterEmpresaProducto: boolean;
-  isInterEmpresaServicio: boolean;
+  isInterEmpresaProducto: boolean = false;
+  isInterEmpresaServicio: boolean = false;
   selectAll: boolean = false;
   selectMultiple: boolean = false;
   displayFirmar: boolean = false;
@@ -62,6 +63,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   isEditable: boolean = false;
   isCancelEdit: boolean = false;
   mandatoAnexoVacio: boolean = false;
+  activarMsgErrorProd: boolean;
+  activarMsgErrorServ: boolean;
+  //activarRestablecer: boolean = false;
 
   idCuenta: String;
   idPersona: String;
@@ -75,6 +79,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   firmaFechaDate: Date;
   firmaLugar: String;
   iban: String;
+  tipoCIF: String;
 
   msgs: Message[];
   usuarioBody: any[];
@@ -115,6 +120,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
+
+  private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
   constructor(
     private location: Location,
@@ -180,37 +187,32 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   downloadAnexo(dato) {
     let filename;
+
     this.sigaServices
       .post("busquedaPerJuridica_fileDownloadInformation", dato)
-      .subscribe(data => {
-        let a = JSON.parse(data["body"]);
-        filename = a.value + a.label;
-      }),
-      () => {
-        this.sigaServices
-          .postDownloadFiles("busquedaPerJuridica_downloadFile", dato)
-          .subscribe(data => {
-            const blob = new Blob([data], { type: "text/csv" });
-            if (blob.size == 0) {
-              this.showFail("no existe fichero para descargar");
-            } else {
-              //let filename = "2006002472110.pdf";
-              saveAs(data, filename);
-            }
-          });
-      };
+      .subscribe(
+        data => {
+          let a = JSON.parse(data["body"]);
+          filename = a.value + a.label;
+        },
+        error => {
+          console.log(error);
+        },
+        () => {
+          this.sigaServices
+            .postDownloadFiles("busquedaPerJuridica_downloadFile", dato)
+            .subscribe(data => {
+              const blob = new Blob([data], { type: "text/csv" });
+              if (blob.size == 0) {
+                this.showFail("messages.general.error.ficheroNoExiste");
+              } else {
+                //let filename = "2006002472110.pdf";
+                saveAs(data, filename);
+              }
+            });
+        }
+      );
   }
-
-  // setItalic(datoH) {
-  //   let a = datoH;
-  //   if (datoH.tipo == "ANEXO") {
-  //     this.averahora = true;
-  //     return true;
-  //   } else if (datoH.tipo == "MANDATO") {
-  //     this.averahora = false;
-  //     return false;
-  //   }
-  // }
 
   ngAfterViewChecked() {
     this.changeDetectorRef.detectChanges();
@@ -255,9 +257,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
     this.body.idPersona = this.idPersona;
     this.body.idCuenta = this.idCuenta;
-    //this.body.idCuenta = sessionStorage.getItem("idCuenta");
-
-    console.log("eewe", this.body);
 
     this.sigaServices
       .postPaginado("datosCuentaBancaria_search", "?numPagina=1", this.body)
@@ -266,13 +265,24 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.progressSpinner = false;
           this.bodySearch = JSON.parse(data["body"]);
           this.body = this.bodySearch.datosBancariosItem[0];
-          //this.iban = this.body.iban;
+          this.iban = this.body.iban;
 
           if (this.body == undefined) {
             this.body = new DatosBancariosItem();
           }
 
           this.rellenarComboTipoCuenta(this.body.tipoCuenta);
+          console.log("Tipo", this.selectedTipo);
+
+          // if (this.activarRestablecer) {
+          //   if (this.selectedTipo.length == 1) {
+          //     this.textSelected = this.selectedTipo[0].name;
+          //   } else {
+          //     this.textSelected = "" + this.selectedTipo.length;
+          //   }
+
+          //   this.textFilter = this.textSelected;
+          // }
         },
         error => {
           this.bodySearch = JSON.parse(error["error"]);
@@ -323,6 +333,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       },
       () => {
         this.idCuenta = this.body.id;
+        this.selectedTipo = [];
+
         this.cargarModoEdicion();
       }
     );
@@ -369,7 +381,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       message: "¿Desea restablecer los datos?",
       icon: "fa fa-info",
       accept: () => {
+        this.selectedTipo = [];
         this.cargarDatosCuentaBancaria();
+
+        //this.activarRestablecer = true;
       }
     });
   }
@@ -433,6 +448,57 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         }
       );
   }
+
+  // Validar IDENTIFICACIÓN
+
+  isValidDNI(dni: String): boolean {
+    return (
+      dni &&
+      typeof dni === "string" &&
+      /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
+      dni.substr(8, 9).toUpperCase() ===
+        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+    );
+  }
+  checkTypeCIF(value: String): boolean {
+    if (this.isValidDNI(value)) {
+      this.tipoCIF = "10";
+      return true;
+    } else if (this.isValidCIF(value)) {
+      this.tipoCIF = "20";
+      return true;
+    } else if (this.isValidNIE(value)) {
+      this.tipoCIF = "40";
+      return true;
+    } else if (this.isValidPassport(value)) {
+      this.tipoCIF = "30";
+      return true;
+    } else {
+      this.tipoCIF = "50";
+      return false;
+    }
+  }
+  isValidPassport(dni: String): boolean {
+    return (
+      dni && typeof dni === "string" && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni)
+    );
+  }
+  isValidNIE(nie: String): boolean {
+    return (
+      nie &&
+      typeof nie === "string" &&
+      /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie)
+    );
+  }
+  isValidCIF(cif: String): boolean {
+    return (
+      cif &&
+      typeof cif === "string" &&
+      /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif)
+    );
+  }
+
+  // Resto de validaciones
 
   isValidIBAN(): boolean {
     this.body.iban = this.body.iban.replace(/\s/g, "");
@@ -509,12 +575,23 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     });
   }
 
+  validarIdentificacion() {
+    if (this.checkTypeCIF(this.body.nifTitular)) {
+      this.identificacionValida = true;
+      return true;
+    } else {
+      this.identificacionValida = false;
+      return false;
+    }
+  }
+
   validarFormulario() {
     var revisionCuentas;
     if (
       this.validarIban() &&
       this.validarTitular() &&
-      this.validarTipoCuenta()
+      this.validarTipoCuenta() &&
+      this.validarIdentificacion()
     ) {
       this.formValido = true;
 
@@ -614,6 +691,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     if (this.capturarEventoInterempresa(e, this.selectedEsquemaProducto)) {
       this.isInterEmpresaProducto = true;
       this.isSelectedProducto = true;
+      this.checkProducto = false;
     } else {
       this.isInterEmpresaProducto = false;
       this.isSelectedProducto = false;
@@ -626,6 +704,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     if (this.capturarEventoInterempresa(e, this.selectedEsquemaServicio)) {
       this.isInterEmpresaServicio = true;
       this.isSelectedServicio = true;
+      this.checkServicio = false;
     } else {
       this.isInterEmpresaServicio = false;
       this.isSelectedServicio = false;
@@ -699,16 +778,26 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   validarGuardarMandato() {
     if (
-      (this.isInterEmpresaProducto &&
-        this.validarCheckProducto() &&
-        (this.isInterEmpresaServicio && this.validarCheckServicio())) ||
-      !this.isInterEmpresaServicio ||
-      !this.isInterEmpresaProducto
+      ((this.isInterEmpresaProducto && this.validarCheckProducto()) ||
+        !this.isInterEmpresaProducto) &&
+      ((this.isInterEmpresaServicio && this.validarCheckServicio()) ||
+        !this.isInterEmpresaServicio)
     ) {
       this.formValido = true;
       this.guardarMandato();
+
+      this.activarMsgErrorProd = false;
+      this.activarMsgErrorServ = false;
     } else {
       this.formValido = false;
+
+      if (this.isSelectedProducto == true) {
+        this.activarMsgErrorProd = true;
+      }
+
+      if (this.isSelectedServicio == true) {
+        this.activarMsgErrorServ = true;
+      }
     }
   }
 
