@@ -163,7 +163,7 @@
 
 
             </div>
-            <div *ngIf="isCheckedProducto == false">
+            <div *ngIf="activarMsgErrorProd == true && checkProducto == false">
               <label class="labelError">{{"facturacion.ficheroBancarioPagos.errorMandatos.mensajeMandatoB2BNoAutorizado" | translate}}</label>
             </div>
           </div>
@@ -200,7 +200,7 @@
 
 
             </div>
-            <div *ngIf="isCheckedServicio == false">
+            <div *ngIf="activarMsgErrorServ == true && checkServicio == false">
               <label class="labelError">{{"facturacion.ficheroBancarioPagos.errorMandatos.mensajeMandatoB2BNoAutorizado" | translate}}</label>
             </div>
           </div>

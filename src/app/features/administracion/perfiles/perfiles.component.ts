@@ -98,11 +98,13 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     this.cols = [
       {
         field: "idGrupo",
-        header: "administracion.grupos.literal.id"
+        header: "administracion.grupos.literal.id",
+        width: "10%"
       },
       {
         field: "descripcionGrupo",
-        header: "general.description"
+        header: "general.description",
+        width: "40%"
       },
       {
         field: "descripcionRol",
