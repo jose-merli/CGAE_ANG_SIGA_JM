@@ -118,8 +118,9 @@
             </div>
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
-              <input type="text " class="form-control " [(ngModel)]="body.cuentaContable" (ngModelChange)="onChangeForm()" pInputText>
-              <!--<div *ngIf="cuentaIncorrecta == true"><label class="labelError">La cuenta bancaria debe tener 24 caracteres</label></div>-->
+              <input type="text " class="form-control " [(ngModel)]="body.cuentaContable" (ngModelChange)="onChangeForm()" [maxLength]="24"
+                pInputText>
+                <!--<div *ngIf="cuentaIncorrecta == true"><label class="labelError">La cuenta bancaria debe tener 24 caracteres</label></div>-->
             </div>
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"censo.general.literal.anotaciones" | translate}}: </label>
