@@ -20,15 +20,15 @@
             </p>
             <div *ngIf="showDatosGenerales" class="module vista-avanzada">
                 <div class="form-row">
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group col-lg-4 col-md-4">
                         <label>{{'administracion.multidioma.etiquetas.literal.entidad' | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='selectedEntidad' [options]="entidad" [filter]="true" filterBy="label" (onChange)="datos($event)"></p-dropdown> &nbsp;&nbsp;
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group col-lg-4 col-md-4">
                         <label>{{'administracion.multidioma.etiquetas.literal.idioma' | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='selectedIdiomaBusqueda' [options]="idiomaBusqueda" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown> &nbsp;&nbsp;
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group col-lg-4 col-md-4">
                         <label>{{'administracion.multidioma.etiquetas.literal.idiomaATraducir' | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='selectedIdiomaTraduccion' [options]="idiomaTraduccion" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown> &nbsp;&nbsp;
                     </div>
@@ -51,9 +51,11 @@
                 <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true"
                     filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
                     <ng-template *ngIf="col.field == 'descripcionTraduccion'" let-dato="rowData" pTemplate="body">
-                        <div class="input-group">
+                        <div class="input-group input-ayuda">
                             <span class="input-group">
-                                <button pButton type="button" [pTooltip]="obtenerRecurso(dato)" tooltipPosition="top" icon="fa fa-question"></button> &nbsp;&nbsp;
+                                <div class="ayuda-btn" [pTooltip]="obtenerRecurso(dato)" tooltipPosition="top">
+                                    <i class="fa fa-question"></i>
+                                </div> &nbsp;&nbsp;
                                 <input type="text" class="form-control" [(disabled)]="!editar" pInputText [(ngModel)]="dato[col.field]" (input)="Guardar($event,dato)">
                             </span>
                         </div>

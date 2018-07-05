@@ -61,6 +61,7 @@ import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-co
 import { DatosRegistralesItem } from "./../../../../app/models/DatosRegistralesItem";
 import { DatosRegistralesObject } from "./../../../../app/models/DatosRegistralesObject";
 import { DatosPersonaJuridicaComponent } from "../datosPersonaJuridica/datosPersonaJuridica.component";
+import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 
 @Component({
   selector: "app-datos-registrales",
@@ -132,6 +133,7 @@ export class DatosRegistralesComponent implements OnInit {
   idPersonaEditar: String;
   datos: any[];
   suscripcionBusquedaNuevo: Subscription;
+  activacionEditar: boolean;
 
   @ViewChild(DatosRegistralesComponent)
   datosRegistralesComponent: DatosRegistralesComponent;
@@ -156,6 +158,7 @@ export class DatosRegistralesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.checkAcceso();
     this.desactivadoGuardar();
     this.onChangeSociedad();
     this.bodyAnterior = JSON.parse(sessionStorage.getItem("usuarioBody"));
@@ -199,6 +202,29 @@ export class DatosRegistralesComponent implements OnInit {
       { label: "Mujer", value: "M" },
       { label: "Hombre", value: "H" }
     ];
+  }
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "12a";
+    let derechoAcceso;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else {
+          this.activacionEditar = false;
+        }
+      }
+    );
   }
 
   compruebaFechaConstitucion() {
@@ -256,6 +282,8 @@ export class DatosRegistralesComponent implements OnInit {
 
   search() {
     this.body.idPersona = this.idPersonaEditar;
+    this.contadorNoCorrecto = false;
+    this.fechaCorrecta = true;
     this.getActividadesPersona();
     this.sigaServices
       .postPaginado("datosRegistrales_search", "?numPagina=1", this.body)
@@ -412,7 +440,11 @@ export class DatosRegistralesComponent implements OnInit {
       this.compruebaFechaConstitucion() &&
       this.compruebaFechaBaja()
     ) {
-      return false;
+      if (this.activacionEditar != true) {
+        return true;
+      } else {
+        return false;
+      }
     } else {
       return true;
     }
@@ -473,5 +505,8 @@ export class DatosRegistralesComponent implements OnInit {
       return fichaPosible[0];
     }
     return {};
+  }
+  clear() {
+    this.msgs = [];
   }
 }

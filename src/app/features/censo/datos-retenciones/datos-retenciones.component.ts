@@ -89,7 +89,7 @@ export class DatosRetencionesComponent implements OnInit {
   isVolver: boolean = true;
   isCrear: boolean = false;
   isEditar: boolean = true;
-  isEliminar: boolean = false;
+  isEliminar: boolean = true;
   rowsPerPage: any = [];
   selectMultiple: boolean = false;
   progressSpinner: boolean = false;
@@ -278,10 +278,20 @@ export class DatosRetencionesComponent implements OnInit {
       // this.createArrayEdit(dummy, value);
       this.datos.forEach((value: any, key: number) => {
         if (value.fechaFin == null || value.fechaFin == undefined) {
-          this.datos[key].fechaFin = this.datepipe.transform(
-            new Date(valur2 - 86400000),
-            "dd/MM/yyyy"
-          );
+          if (
+            this.datos[key].fechaInicio ==
+            this.datepipe.transform(new Date(valur2), "dd/MM/yyyy")
+          ) {
+            this.datos[key].fechaFin = this.datepipe.transform(
+              new Date(valur2),
+              "dd/MM/yyyy"
+            );
+          } else {
+            this.datos[key].fechaFin = this.datepipe.transform(
+              new Date(valur2 - 86400000),
+              "dd/MM/yyyy"
+            );
+          }
         }
       });
     }
@@ -332,6 +342,16 @@ export class DatosRetencionesComponent implements OnInit {
         },
         () => {
           this.volver();
+
+          //Al haber añadido uno nuevo, actualizamos la cabecera de la tarjeta con la nueva retención activa (lo que se verá con la tarjeta colapsada)
+          if (this.datos.length > 0) {
+            this.datos.forEach((value: any, key: number) => {
+              //Si la fecha fin no viene informada, es la que está activa, es la que mostramos con la tarjeta colapsada
+              if (value.fechaFin == undefined) {
+                this.retencionNow = this.datos[key];
+              }
+            });
+          }
         }
       );
   }
@@ -420,18 +440,13 @@ export class DatosRetencionesComponent implements OnInit {
           },
           () => {
             if (this.datos.length > 0) {
-              this.retencionNow = this.datos[0];
-              // this.datos.forEach((value: any, key: number) => {
-              //   if (value.fechaInicio != undefined) {
-              //       value.fechaInicio
-              //     );
-              //   }
-              //   if (value.fechaFin != undefined) {
-              //     this.datos[key].fechaFin = this.transformarFecha(
-              //       value.fechaFin
-              //     );
-              //   }
-              // });
+              this.isEliminar = false;
+              this.datos.forEach((value: any, key: number) => {
+                //Si la fecha fin no viene informada, es la que está activa, es la que mostramos con la tarjeta colapsada
+                if (value.fechaFin == undefined) {
+                  this.retencionNow = this.datos[key];
+                }
+              });
             }
           }
         );
@@ -460,6 +475,7 @@ export class DatosRetencionesComponent implements OnInit {
           this.isEditar = true;
         } else {
           this.newRetencion.porcentajeRetencion = value.porcentajeRetencion;
+          this.newRetencion.descripcionRetencion = value.descripcionRetencion;
           this.datos[0].porcentajeRetencion = value.porcentajeRetencion;
           this.datos[0].idRetencion = value.value;
           this.isEditar = false;
