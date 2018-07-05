@@ -270,17 +270,17 @@
                             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
                             <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
-                  <i class="pr-2 fa fa-mouse-pointer"></i>Seleccionar fila </label>
+                  <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.seleccionarFila" | translate}}</label>
                           </div>
                         </ng-template>
                         <p-footer>
                           <div class="text-right main-button ">
                             <button *ngIf="selectedDatos && selectedDatos !=''" (click)="downloadAnexo(selectedDatos)" pButton type="button" icon="fa fa-download"
-                              iconPos="left" label="Descargar"></button>
+                              iconPos="left" label="{{ 'general.boton.download' | translate}}"></button>
                               <button *ngIf="selectedDatos && selectedDatos !=''" (click)="mostrarDialogoFirmar(selectedDatos)" pButton type="button" icon="fa fa-rupee"
-                                iconPos="left" label="Firmar"></button>
+                                iconPos="left" label="{{ 'censo.sociedades.datosBancarios.firmar' | translate}}"></button>
                                 <button *ngIf="selectedDatos && selectedDatos !=''" (click)="comunicar(selectedDatos)" pButton type="button" icon="fa fa-comment"
-                                  iconPos="left" label="Comunicar"></button>
+                                  iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
                                   <button *ngIf="!nuevo" (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"></button>
                           </div>
                         </p-footer>
@@ -319,39 +319,39 @@
 
 
 
-            <p-column field="descripcion" header="Descripcion" [sortable]="true" [editable]="!selectMultiple" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-              filterMatchMode="contains">
+            <p-column field="descripcion" header="{{ 'general.description' | translate}}" [sortable]="true" [editable]="!selectMultiple"
+              [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
 
               </p-column>
-              <p-column field="tipo" header="Tipo" [editable]="selectMultiple" [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-                filterMatchMode="contains">
+              <p-column field="tipo" header="{{ 'censo.busquedaClientesAvanzada.literal.tipoCliente' | translate}}" [editable]="selectMultiple"
+                [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
                 </p-column>
-                <p-column field="tipoMandato" header="Tipo Mandato" [editable]="selectMultiple" [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-                  filterMatchMode="contains"></p-column>
-                  <p-column field="fechaUso" header="Fecha Uso" [editable]="selectMultiple" [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-                    filterMatchMode="contains"></p-column>
-                    <p-column field="firmaFecha" header="Fecha de Firma" [editable]="selectMultiple" [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-                      filterMatchMode="contains"></p-column>
-                      <p-column field="firmaLugar" header="Lugar de la firma" [editable]="selectMultiple" [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-                        filterMatchMode="contains"></p-column>
+                <p-column field="tipoMandato" header="{{ 'censo.sociedades.datosBancarios.tipoMandato' | translate}}" [editable]="selectMultiple"
+                  [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
+                  <p-column field="fechaUso" header="{{ 'censo.sociedades.datosBancarios.fechaUso' | translate}}" [editable]="selectMultiple"
+                    [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
+                    <p-column field="firmaFecha" header="{{ 'censo.fichaCliente.bancos.mandatos.anexos.fechaFirmada' | translate}}" [editable]="selectMultiple"
+                      [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
+                      <p-column field="firmaLugar" header="{{ 'censo.fichaCliente.bancos.mandatos.anexos.lugarFirma' | translate}}" [editable]="selectMultiple"
+                        [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
 
                         <ng-template pTemplate="paginatorLeft">
                           <div class="mostrar d-flex text-right justify-content-end">
                             <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
                             <label>{{ "general.message.mostrar" | translate}}</label>
                             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown><label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-                            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false"><i class="pr-2 fa fa-mouse-pointer"></i>Seleccionar fila </label>
+                            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false"><i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.seleccionarFila" | translate}}</label>
                           </div>
                         </ng-template>
                         <p-footer>
                           <div *ngIf="editar == true" class="text-right main-button">
                             <button (click)="editarDescripcion()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
                             <button *ngIf="!nuevo" [(disabled)]="mandatoAnexoVacio" (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus"
-                              iconPos="left" label="Nuevo"></button>
+                              iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
                           </div>
                           <div *ngIf="editar == false" class="text-right main-button">
                             <button *ngIf="!nuevo" [(disabled)]="mandatoAnexoVacio" (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus"
-                              iconPos="left" label="Nuevo"></button>
+                              iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
                           </div>
                         </p-footer>
                         </p-dataTable>
@@ -366,29 +366,30 @@
   <p-dialog [(visible)]="displayFirmar" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500"
     [minWidth]="500">
     <p-header class="title">
-      <label>SIGA- Ficheros y Anexos</label>
+      <label>{{"general.ventana.cgae" | translate}} - {{"pestana.fichaCliente.datosBancarios.ficherosAnexos" | translate}}</label>
     </p-header>
 
     <div class="bloque col-lg-12 col-md-12">
       <div class="row">
         <div class="form-group col-lg-6 col-md-6">
           <br>
-          <p-checkbox name="groupname" binary="true" label="Firmado(*)" [(ngModel)]="checkFirma"></p-checkbox>
+          <p-checkbox name="groupname" binary="true" label="{{ 'censo.fichaCliente.bancos.mandatos.anexos.documentoFirmado' | translate}} (*)"
+            [(ngModel)]="checkFirma"></p-checkbox>
         </div>
         <div class="form-group col-lg-6 col-md-6">
-          <label>Fecha firma (*)</label>
+          <label>{{"censo.fichaCliente.bancos.mandatos.anexos.fechaFirmada" | translate}} (*)</label>
           <p-calendar [(ngModel)]="firmaFechaDate" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [style]="{ 'position': 'relative', 'z-index': '1000' }"></p-calendar>
         </div>
       </div>
       <div class="row">
         <div class="form-group col-lg-12 col-md-12">
-          <label>Lugar firma (*)</label>
+          <label>{{"censo.fichaCliente.bancos.mandatos.anexos.lugarFirma" | translate}} (*)</label>
           <input type="text" [(ngModel)]="firmaLugar" class="form-control" pInputText>
         </div>
         <div class="form-group col-lg-12 col-md-12">
-          <label>Adjuntar</label>
+          <label>{{"censo.sociedades.datosBancarios.adjuntar" | translate}}</label>
           <br>
-          <p-fileUpload #fubauto mode="basic" name="file" (change)="uploadFile($event)" auto="true" chooseLabel="Seleccionar archivo"></p-fileUpload>
+          <p-fileUpload #fubauto mode="basic" name="file" (change)="uploadFile($event)" auto="true" chooseLabel="{{ 'censo.sociedades.datosBancarios.seleccionarArchivo' | translate}}"></p-fileUpload>
         </div>
       </div>
     </div>
@@ -396,7 +397,7 @@
       <div class="text-right main-button ">
         <button (click)="firmarFicheroAnexo()" [disabled]="!validarFirma()" pButton type="button" icon="fa fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
-          <button (click)="restablecerDatosFirma()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="Restablecer"></button>
+          <button (click)="restablecerDatosFirma()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
       </div>
     </p-footer>
     </p-dialog>
@@ -406,18 +407,18 @@
     <p-dialog [(visible)]="displayNuevo" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500"
       [minWidth]="500">
       <p-header class="title">
-        <label>SIGA - Insertar Anexo</label>
+        <label>{{"general.ventana.cgae" | translate}} - {{"censo.sociedades.datosBancarios.insertarAnexo" | translate}}</label>
       </p-header>
 
       <div class="bloque col-lg-12 col-md-12">
         <div class="row">
           <div class="form-group col-lg-6 col-md-6">
-            <label>Fecha uso (*)</label>
+            <label>{{"censo.sociedades.datosBancarios.fechaUso" | translate}} (*)</label>
             <p-calendar [(ngModel)]="datefechaUso" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [style]="{ 'position': 'relative', 'z-index': '1000' }"
               [required]="true"></p-calendar>
           </div>
           <div class="form-group col-lg-6 col-md-6">
-            <label>Tipo (*)</label>
+            <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
             <br>
             <p-dropdown [(ngModel)]="selectedProductoServicio" [options]="comboProductoServicio" [style]="{'width':'250px'}" (onChange)="onChangeComboProductoServicio($event)"></p-dropdown>
           </div>
@@ -425,7 +426,7 @@
         <br>
         <div class="row">
           <div class="form-group col-lg-12 col-md-12">
-            <label>Descripción</label>
+            <label>{{"general.description" | translate}}</label>
             <textarea pInputTextarea autoResize="autoResize" [(ngModel)]="descripcion"></textarea>
           </div>
         </div>
@@ -434,13 +435,13 @@
         <div class="text-right main-button ">
           <button (click)="insertarAnexo()" [disabled]="!validarInsertarAnexo()" pButton type="button" icon="fa fa-save" iconPos="left"
             label="{{ 'general.boton.guardar' | translate}}"></button>
-            <button (click)="limpiarDatosAnexo()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="Restablecer"></button>
+            <button (click)="limpiarDatosAnexo()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
         </div>
       </p-footer>
       </p-dialog>
 
       <div class="mt-3 text-right main-button ">
-        <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="Volver"></button>
+        <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
       </div>
 
       <app-dialog></app-dialog>
