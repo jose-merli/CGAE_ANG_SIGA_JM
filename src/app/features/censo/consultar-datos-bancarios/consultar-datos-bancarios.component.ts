@@ -329,6 +329,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.bodySearch = JSON.parse(error["error"]);
         this.showFail(this.bodySearch.error.message.toString());
         console.log(error);
+        //Error al insertar los mandatos de las cuentas
+        if (
+          this.bodySearch.error.message.toString() ==
+          "messages.censo.direcciones.facturacion"
+        ) {
+          this.eliminarItem();
+        }
         this.progressSpinner = false;
       },
       () => {
@@ -359,6 +366,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.bodySearch = JSON.parse(error["error"]);
         this.showFail(this.bodySearch.error.message.toString());
         console.log(error);
+        //
+        if (
+          this.bodySearch.error.message.toString() ==
+          "messages.censo.direcciones.facturacion"
+        ) {
+          this.eliminarItem();
+        }
         this.progressSpinner = false;
       },
       () => {
@@ -367,6 +381,16 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.cargarDatosAnexos();
       }
     );
+  }
+
+  eliminarItem() {
+    let values: any[] = [];
+    this.selectedTipo.forEach((value: any, key: number) => {
+      if (value.code != "C") {
+        values.push(value);
+      }
+    });
+    this.selectedTipo = values;
   }
 
   getArrayTipoCuenta() {
