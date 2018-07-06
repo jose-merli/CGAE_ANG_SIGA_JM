@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 
-import { Location } from "@angular/common";
+import { Location, DatePipe } from "@angular/common";
 
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { ComboItem } from "./../../../../app/models/ComboItem";
@@ -27,6 +27,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   isDisabledCodigoPostal: boolean = true;
   formValido: boolean = false;
   textFilter: String;
+  fechaModificacion: String;
   isEditable: boolean = false;
   nuevo: boolean = false;
   datosContacto: any[];
@@ -55,7 +56,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     private location: Location,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    public datepipe: DatePipe
   ) {}
 
   ngOnInit() {
@@ -69,9 +71,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       sessionStorage.getItem("editarDireccion")
     );
     if (this.registroEditable) {
-      this.nuevo = true;
-    } else {
       this.nuevo = false;
+    } else {
+      this.nuevo = true;
     }
     if (sessionStorage.getItem("direccion") != null) {
       this.body = JSON.parse(sessionStorage.getItem("direccion"));
@@ -85,6 +87,15 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         this.isDisabledPoblacion = true;
       } else {
         this.isDisabledPoblacion = false;
+      }
+      if (
+        this.body.fechaModificacion != null ||
+        this.body.fechaModificacion != undefined
+      ) {
+        this.fechaModificacion = this.datepipe.transform(
+          new Date(this.body.fechaModificacion),
+          "dd/MM/yyyy"
+        );
       }
       this.onChangePais();
 
@@ -208,17 +219,19 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   }
   onChangePais() {
     console.log(this.body.idPais);
-    if (this.body.idPais != "191") {
-      this.isDisabledCodigoPostal = true;
-      this.body.codigoPostal = "";
-      this.provinciaSelecionada = "";
-      this.body.idProvincia = "";
-      this.body.idPoblacion = "";
+    if (!this.nuevo) {
+      if (this.body.idPais != "191") {
+        this.isDisabledCodigoPostal = true;
+        this.body.codigoPostal = "";
+        this.provinciaSelecionada = "";
+        this.body.idProvincia = "";
+        this.body.idPoblacion = "";
+      } else {
+        this.isDisabledCodigoPostal = false;
+      }
     } else {
       this.isDisabledCodigoPostal = false;
-      this.body = JSON.parse(sessionStorage.getItem("direccion"));
-      this.body.idPersona = this.usuarioBody[0].idPersona;
-      this.provinciaSelecionada = this.body.idProvincia;
+      this.isDisabledPoblacion = true;
     }
 
     this.isDisabledProvincia = true;
@@ -233,6 +246,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       if (value != this.body.idProvincia) {
         this.body.idProvincia = this.provinciaSelecionada;
         this.isDisabledProvincia = true;
+        this.isDisabledPoblacion = false;
         this.getComboPoblacion();
       }
       this.codigoPostalValido = true;
@@ -315,13 +329,15 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     console.log(this.body);
     console.log(this.datosContacto);
     this.body.idDireccion = null;
-    this.nuevo = false;
+    this.nuevo = true;
     this.progressSpinner = true;
     this.comprobarTablaDatosContactos();
     this.comprobarCheckProvincia();
     console.log(this.body);
     this.sigaServices.post("direcciones_insert", this.body).subscribe(
       data => {
+        // this.bodySearch = JSON.parse(data["body"]);
+        this.body.idDireccion = JSON.parse(data["body"]).id;
         this.progressSpinner = false;
       },
       error => {

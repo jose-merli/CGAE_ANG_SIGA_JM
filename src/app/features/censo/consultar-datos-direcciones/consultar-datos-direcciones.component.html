@@ -45,7 +45,7 @@
 
               <div class="form-group col-lg-6 col-md-6">
                 <label>Fecha Modificación</label>
-                <p-calendar [(ngModel)]="body.fechaModificacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [disabled]="!isEditable"
+                <p-calendar [(ngModel)]="fechaModificacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [disabled]="!isEditable"
                   [style]="{ 'position': 'relative', 'z-index': '1000' }"></p-calendar>
               </div>
               <div class="form-group col-lg-12 col-md-12">
@@ -116,7 +116,7 @@
         <br>
         <div class="card-footer ">
           <div class="text-right main-button ">
-            <button *ngIf="nuevo == true" (click)="duplicarRegistro()" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="Duplicar"></button>
+            <button *ngIf="nuevo == false" (click)="duplicarRegistro()" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="Duplicar"></button>
             <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
             <button (click)="restablecer()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="Restablecer"></button>
           </div>
