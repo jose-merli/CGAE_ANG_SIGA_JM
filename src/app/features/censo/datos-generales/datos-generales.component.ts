@@ -480,7 +480,9 @@ export class DatosGenerales implements OnInit {
 
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = !fichaPosible.activa;
+    if (this.activacionEditar == true) {
+      fichaPosible.activa = !fichaPosible.activa;
+    }
   }
 
   esFichaActiva(key) {

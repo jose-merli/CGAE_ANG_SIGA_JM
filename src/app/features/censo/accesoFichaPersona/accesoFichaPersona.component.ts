@@ -22,6 +22,7 @@ import { TranslateService } from "../../../commons/translate";
 
 import { cardService } from "./../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
+import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 
 @Component({
   selector: "app-accesoFichaPersona",
@@ -47,6 +48,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
   desasociar: boolean = false;
   suscripcionBusquedaNuevo: Subscription;
 
+  activacionEditar: boolean;
   file: File = undefined;
 
   constructor(
@@ -121,6 +123,29 @@ export class AccesoFichaPersonaComponent implements OnInit {
     } else {
       this.search();
     }
+  }
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "121";
+    let derechoAcceso;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else {
+          this.activacionEditar = false;
+        }
+      }
+    );
   }
 
   search() {
@@ -321,12 +346,14 @@ export class AccesoFichaPersonaComponent implements OnInit {
     );
   }
   filtrarItemsComboEsquema(comboEsquema, buscarElemento) {
-    return comboEsquema.filter(function (obj) {
+    return comboEsquema.filter(function(obj) {
       return obj.value == buscarElemento;
     });
   }
   abrirFicha() {
-    this.openFicha = !this.openFicha;
+    if (this.activacionEditar == true) {
+      this.openFicha = !this.openFicha;
+    }
   }
 
   backTo() {
@@ -377,7 +404,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
     });
   }
 
-  seleccionarFecha(event) { }
+  seleccionarFecha(event) {}
 
   showFail(mensaje: string) {
     this.msgs = [];
@@ -388,7 +415,6 @@ export class AccesoFichaPersonaComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({ severity: "success", summary: "", detail: mensaje });
   }
-
 
   clear() {
     this.msgs = [];
