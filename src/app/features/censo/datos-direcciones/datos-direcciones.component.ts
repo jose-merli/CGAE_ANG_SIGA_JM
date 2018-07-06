@@ -140,39 +140,39 @@ export class DatosDireccionesComponent implements OnInit {
     this.cols = [
       {
         field: "tipoDireccion",
-        header: "Tipo Dirección"
+        header: "censo.datosDireccion.literal.tipo.direccion"
       },
       {
         field: "domicilioLista",
-        header: "Dirección"
+        header: "censo.consultaDirecciones.literal.direccion"
       },
       {
         field: "codigoPostal",
-        header: "Código Postal"
+        header: "censo.ws.literal.codigopostal"
       },
       {
         field: "nombrePoblacion",
-        header: "Población"
+        header: "censo.consultaDirecciones.literal.poblacion"
       },
       {
         field: "nombreProvincia",
-        header: "Provincia"
+        header: "censo.datosDireccion.literal.provincia"
       },
       {
         field: "telefono",
-        header: "Teléfono"
+        header: "censo.ws.literal.telefono"
       },
       {
         field: "fax",
-        header: "Fax"
+        header: "censo.ws.literal.fax"
       },
       {
         field: "movil",
-        header: "Móvil"
+        header: "censo.datosDireccion.literal.movil"
       },
       {
         field: "correoElectronico",
-        header: "Correo electrónico"
+        header: "censo.datosDireccion.literal.correo"
       }
     ];
     this.rowsPerPage = [

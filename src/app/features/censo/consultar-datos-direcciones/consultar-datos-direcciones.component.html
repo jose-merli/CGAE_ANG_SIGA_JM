@@ -116,7 +116,7 @@
         <br>
         <div class="card-footer ">
           <div class="text-right main-button ">
-            <button *ngIf="!nuevo" (click)="duplicarRegistro()" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="Duplicar"></button>
+            <button *ngIf="nuevo == true" (click)="duplicarRegistro()" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="Duplicar"></button>
             <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
             <button (click)="restablecer()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="Restablecer"></button>
           </div>

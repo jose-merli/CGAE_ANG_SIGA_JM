@@ -69,9 +69,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       sessionStorage.getItem("editarDireccion")
     );
     if (this.registroEditable) {
-      this.nuevo = false;
-    } else {
       this.nuevo = true;
+    } else {
+      this.nuevo = false;
     }
     if (sessionStorage.getItem("direccion") != null) {
       this.body = JSON.parse(sessionStorage.getItem("direccion"));
@@ -96,7 +96,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     this.columnasDirecciones = [
       {
         field: "tipo",
-        header: "Tipo"
+        header: "censo.consultaDatosGenerales.literal.tipoCliente"
       },
       {
         field: "valor",
@@ -316,6 +316,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     console.log(this.datosContacto);
     this.body.idDireccion = null;
     this.nuevo = false;
+    this.progressSpinner = true;
     this.comprobarTablaDatosContactos();
     this.comprobarCheckProvincia();
     console.log(this.body);

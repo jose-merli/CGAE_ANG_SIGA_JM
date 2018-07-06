@@ -9,10 +9,10 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-end mb-1">
-            <label class="mr-auto title-ficha">Direcciones</label>
+            <label class="mr-auto title-ficha">{{"censo.fichaCliente.datosDirecciones.cabecera" | translate}}</label>
           </div>
           <div *ngIf="!only" class="d-flex justify-content-between">
-            <label>Número total de Direcciones: <span>{{ searchDirecciones.datosDireccionesItem.length }}</span></label>
+            <label>{{"censo.datosDireccion.literal.numero.direccion" | translate}}: <span>{{ searchDirecciones.datosDireccionesItem.length }}</span></label>
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
           </div>
         </div>
@@ -21,7 +21,7 @@
           <div class="img-colegiado">
             <i class="fa fa-map-marker icon-ficha"></i>
           </div>
-          <label class="mr-auto title-ficha">Direcciones</label>
+          <label class="mr-auto title-ficha">{{"censo.fichaCliente.datosDirecciones.cabecera" | translate}}</label>
           <i class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
@@ -29,7 +29,7 @@
         <div class="img-colegiado">
           <i class="fa fa-map-marker icon-ficha"> </i>
         </div>
-        <label class="title-ficha">Direcciones</label>
+        <label class="title-ficha">{{"censo.fichaCliente.datosDirecciones.cabecera" | translate}}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -74,12 +74,12 @@
           <br>
           <div class="card-footer ">
             <div class="text-right main-button ">
-              <button (click)="nuevo()" *ngIf="!historico" pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"></button>
+              <button (click)="nuevo()" *ngIf="!historico" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
               <button *ngIf="selectedDatos && selectedDatos != '' && historico==false" (click)="borrar(selectedDatos); selectedDatos=false"
                 pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.borrar' | translate}}"></button>
-                <button *ngIf="historico" (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="Buscar"></button>
+                <button *ngIf="historico" (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
 
-                <button *ngIf="!historico" (click)="searchHistorico()" pButton type="button" icon="fa fa-search" iconPos="left" label="Historico"></button>
+                <button *ngIf="!historico" (click)="searchHistorico()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.message.historico' | translate}}"></button>
 
             </div>
           </div>
