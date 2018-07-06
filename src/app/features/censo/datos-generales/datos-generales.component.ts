@@ -450,6 +450,7 @@ export class DatosGenerales implements OnInit {
 
   restablecer() {
     this.datosGeneralesSearch();
+    this.obtenerEtiquetasPersonaJuridicaConcreta();
   }
 
   uploadImage(event: any) {

@@ -105,6 +105,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.checkAcceso();
     sessionStorage.removeItem("notario");
     sessionStorage.removeItem("crearnuevo");
+
+  // Poner check "Sociedades Profesionales a activo porque "Sociedades Profesionales a activo por defecto"
+    this.body.sociedadesProfesionales = true;
+
     if (sessionStorage.getItem("busqueda") != null) {
       this.body = JSON.parse(sessionStorage.getItem("busqueda"));
       sessionStorage.removeItem("busqueda");
@@ -170,9 +174,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         value: 40
       }
     ];
-
-    // Poner check "Sociedades Profesionales a activo porque "Sociedades Profesionales a activo por defecto"
-    this.body.sociedadesProfesionales = true;
   }
 
   toHistorico() {

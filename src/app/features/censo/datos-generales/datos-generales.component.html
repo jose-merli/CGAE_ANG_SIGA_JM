@@ -101,12 +101,12 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.denominacion" | translate}} (*)</label>
               <input [(ngModel)]="body.denominacion" type="text" class="form-control" [disabled]="!activacionEditar" (ngModelChange)="onChangeForm()"
-                pInputText>
+                [maxLength]="99" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"gratuita.definirTurnosIndex.literal.abreviatura" | translate}} (*)</label>
               <input [(ngModel)]="body.abreviatura" type="text" class="form-control" [disabled]="!activacionEditar" (ngModelChange)="onChangeForm()"
-                pInputText>
+                [maxLength]="100" pInputText>
             </div>
           </div>
         </div>
@@ -120,13 +120,13 @@
             </div>
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
-              <input type="text " class="form-control " [(ngModel)]="body.cuentaContable" [disabled]="!activacionEditar" [maxLength]="24"
+              <input type="text " class="form-control " [(ngModel)]="body.cuentaContable" [disabled]="!activacionEditar" [maxLength]="20"
                 (ngModelChange)="onChangeForm()" pInputText>
                 <!--<div *ngIf="cuentaIncorrecta == true"><label class="labelError">La cuenta bancaria debe tener 24 caracteres</label></div>-->
             </div>
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"censo.general.literal.anotaciones" | translate}}: </label>
-              <textarea pInputTextarea [(ngModel)]="body.anotaciones" [disabled]="!activacionEditar" (ngModelChange)="onChangeForm()"></textarea>
+              <textarea pInputTextarea [(ngModel)]="body.anotaciones" [disabled]="!activacionEditar" (ngModelChange)="onChangeForm()" [maxLength]="2000"></textarea>
             </div>
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"menu.administracion.gestionMultiidioma.etiquetas" | translate}}</label>
