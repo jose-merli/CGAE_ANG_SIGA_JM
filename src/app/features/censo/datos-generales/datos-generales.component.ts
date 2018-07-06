@@ -96,6 +96,7 @@ export class DatosGenerales implements OnInit {
   selectedDoc: string = "NIF";
   newDireccion: boolean = false;
   nuevo: boolean = false;
+  identificacionValida: boolean;
 
   editar: boolean = false;
   archivoDisponible: boolean = false;
@@ -528,8 +529,11 @@ export class DatosGenerales implements OnInit {
             item => item.value == "V"
           );
         }
+
+        this.identificacionValida = true;
       } else {
         this.selectedTipo = this.comboIdentificacion[0];
+        this.identificacionValida = false;
       }
     }
 
