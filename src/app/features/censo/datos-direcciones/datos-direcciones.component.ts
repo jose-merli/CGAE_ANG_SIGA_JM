@@ -123,6 +123,7 @@ export class DatosDireccionesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.checkAcceso();
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     if (this.usuarioBody[0] != undefined) {
       this.idPersona = this.usuarioBody[0].idPersona;
@@ -213,6 +214,29 @@ export class DatosDireccionesComponent implements OnInit {
     }
   }
 
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "122";
+    let derechoAcceso;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else {
+          this.activacionEditar = false;
+        }
+      }
+    );
+  }
+
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
@@ -220,7 +244,9 @@ export class DatosDireccionesComponent implements OnInit {
 
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = !fichaPosible.activa;
+    if (this.activacionEditar == true) {
+      fichaPosible.activa = !fichaPosible.activa;
+    }
   }
 
   getFichaPosibleByKey(key): any {

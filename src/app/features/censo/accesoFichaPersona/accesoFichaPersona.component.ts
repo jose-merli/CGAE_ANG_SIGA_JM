@@ -62,6 +62,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // this.checkAcceso();
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.tipoPersona = "Notario";
 
@@ -125,28 +126,28 @@ export class AccesoFichaPersonaComponent implements OnInit {
     }
   }
 
-  checkAcceso() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "121";
-    let derechoAcceso;
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisosTree = JSON.parse(data.body);
-        let permisosArray = permisosTree.permisoItems;
-        derechoAcceso = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        if (derechoAcceso == 3) {
-          this.activacionEditar = true;
-        } else {
-          this.activacionEditar = false;
-        }
-      }
-    );
-  }
+  // checkAcceso() {
+  //   let controlAcceso = new ControlAccesoDto();
+  //   controlAcceso.idProceso = "121";
+  //   let derechoAcceso;
+  //   this.sigaServices.post("acces_control", controlAcceso).subscribe(
+  //     data => {
+  //       let permisosTree = JSON.parse(data.body);
+  //       let permisosArray = permisosTree.permisoItems;
+  //       derechoAcceso = permisosArray[0].derechoacceso;
+  //     },
+  //     err => {
+  //       console.log(err);
+  //     },
+  //     () => {
+  //       if (derechoAcceso == 3) {
+  //         this.activacionEditar = true;
+  //       } else {
+  //         this.activacionEditar = false;
+  //       }
+  //     }
+  //   );
+  // }
 
   search() {
     this.progressSpinner = true;
@@ -351,9 +352,9 @@ export class AccesoFichaPersonaComponent implements OnInit {
     });
   }
   abrirFicha() {
-    if (this.activacionEditar == true) {
-      this.openFicha = !this.openFicha;
-    }
+    // if (this.activacionEditar == true) {
+    this.openFicha = !this.openFicha;
+    // }
   }
 
   backTo() {

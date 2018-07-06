@@ -124,6 +124,7 @@ export class DatosIntegrantesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.checkAcceso();
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
       id => {
@@ -211,7 +212,7 @@ export class DatosIntegrantesComponent implements OnInit {
 
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
-    if (this.activacionEditar != true) {
+    if (this.activacionEditar == true) {
       fichaPosible.activa = !fichaPosible.activa;
     }
   }
