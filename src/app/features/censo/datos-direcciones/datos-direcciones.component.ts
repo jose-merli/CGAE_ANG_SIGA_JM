@@ -360,6 +360,7 @@ export class DatosDireccionesComponent implements OnInit {
   }
 
   borrar(selectedItem) {
+    this.progressSpinner = true;
     let deleteDirecciones = new DatosDireccionesObject();
     deleteDirecciones.datosDireccionesItem = selectedItem;
     let datosDelete = [];
@@ -376,6 +377,7 @@ export class DatosDireccionesComponent implements OnInit {
         console.log(err);
       },
       () => {
+        this.progressSpinner = false;
         this.editar = false;
         this.dniCorrecto = null;
         this.disabledRadio = false;
