@@ -1,58 +1,26 @@
-import { OldSigaServices } from "../../../_services/oldSiga.service";
 import {
   Component,
   OnInit,
-  ViewEncapsulation,
   ViewChild,
   ChangeDetectorRef,
-  Input,
-  HostListener,
-  SystemJsNgModuleLoader
+  HostListener
 } from "@angular/core";
-import { CalendarModule } from "primeng/calendar";
-import { Http, Response } from "@angular/http";
-import { MenuItem } from "primeng/api";
 import {
   FormBuilder,
   FormGroup,
   Validators,
   FormControl
 } from "@angular/forms";
-import { SelectItem } from "primeng/api";
-import { esCalendar } from "../../../utils/calendar";
-import { TableModule } from "primeng/table";
-import { SigaServices } from "./../../../_services/siga.service";
-import { DropdownModule } from "primeng/dropdown";
-import { DataTable } from "primeng/datatable";
-import { TranslateService } from "../../../commons/translate/translation.service";
-import { USER_VALIDATIONS } from "../../../properties/val-properties";
-import { ButtonModule } from "primeng/button";
-import { Router, ActivatedRoute } from "@angular/router";
-import { InputTextModule } from "primeng/inputtext";
-import { InputTextareaModule } from "primeng/inputtextarea";
-import { CheckboxModule } from "primeng/checkbox";
-import { RadioButtonModule } from "primeng/radiobutton";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { GrowlModule } from "primeng/growl";
+import { esCalendar } from "../../../../utils/calendar";
+import { SigaServices } from "./../../../../_services/siga.service";
+import { TranslateService } from "../../../../commons/translate/translation.service";
 import { ConfirmationService } from "primeng/api";
-import { Message } from "primeng/components/common/api";
-import { MessageService } from "primeng/components/common/messageservice";
-import { ComboItem } from "./../../../../app/models/ComboItem";
-import { MultiSelectModule } from "primeng/multiselect";
-import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
-import { Location, getLocaleDateTimeFormat, DatePipe } from "@angular/common";
-import { Observable } from "rxjs/Rx";
-import { BusquedaFisicaItem } from "./../../../../app/models/BusquedaFisicaItem";
-import { BusquedaJuridicaItem } from "./../../../../app/models/BusquedaJuridicaItem";
-import { BusquedaJuridicaObject } from "./../../../../app/models/BusquedaJuridicaObject";
-import { BusquedaFisicaObject } from "./../../../../app/models/BusquedaFisicaObject";
-import { DatosNotarioItem } from "../../../models/DatosNotarioItem";
+import { DatePipe } from "@angular/common";
 /*** COMPONENTES ***/
-import { DatosRetencionesObject } from "../../../../app/models/DatosRetencionesObject";
-import { DatosRetencionesItem } from "../../../../app/models/DatosRetencionesItem";
-import { DatosPersonaJuridicaComponent } from "../datosPersonaJuridica/datosPersonaJuridica.component";
+import { DatosRetencionesObject } from "../../../../../app/models/DatosRetencionesObject";
+import { DatosRetencionesItem } from "../../../../../app/models/DatosRetencionesItem";
 
-import { cardService } from "./../../../_services/cardSearch.service";
+import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
 
 export enum KEY_CODE {
@@ -89,7 +57,7 @@ export class DatosRetencionesComponent implements OnInit {
   isVolver: boolean = true;
   isCrear: boolean = false;
   isEditar: boolean = true;
-  isEliminar: boolean = false;
+  isEliminar: boolean = true;
   rowsPerPage: any = [];
   selectMultiple: boolean = false;
   progressSpinner: boolean = false;
@@ -109,18 +77,14 @@ export class DatosRetencionesComponent implements OnInit {
   labelFiltros: string;
 
   suscripcionBusquedaNuevo: Subscription;
-
+  activacionEditar: boolean;
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
   constructor(
     private formBuilder: FormBuilder,
-    private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
-    private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
-    private location: Location,
     public datepipe: DatePipe,
     private cardService: cardService
   ) {
@@ -133,6 +97,7 @@ export class DatosRetencionesComponent implements OnInit {
   }
 
   ngOnInit() {
+    // this.checkAcceso();
     this.persona = "f";
     this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
       id => {
@@ -187,6 +152,30 @@ export class DatosRetencionesComponent implements OnInit {
     this.checkStatusInit();
     this.search();
   }
+
+  // checkAcceso() {
+  //   let controlAcceso = new ControlAccesoDto();
+  //   controlAcceso.idProceso = "";
+  //   let derechoAcceso;
+  //   this.sigaServices.post("acces_control", controlAcceso).subscribe(
+  //     data => {
+  //       let permisosTree = JSON.parse(data.body);
+  //       let permisosArray = permisosTree.permisoItems;
+  //       derechoAcceso = permisosArray[0].derechoacceso;
+  //     },
+  //     err => {
+  //       console.log(err);
+  //     },
+  //     () => {
+  //       if (derechoAcceso == 3) {
+  //         this.activacionEditar = true;
+  //       } else {
+  //         this.activacionEditar = false;
+  //       }
+  //     }
+  //   );
+  // }
+
   getTiposRetenciones() {
     this.sigaServices.get("retenciones_tipoRetencion").subscribe(
       n => {
@@ -278,10 +267,20 @@ export class DatosRetencionesComponent implements OnInit {
       // this.createArrayEdit(dummy, value);
       this.datos.forEach((value: any, key: number) => {
         if (value.fechaFin == null || value.fechaFin == undefined) {
-          this.datos[key].fechaFin = this.datepipe.transform(
-            new Date(valur2 - 86400000),
-            "dd/MM/yyyy"
-          );
+          if (
+            this.datos[key].fechaInicio ==
+            this.datepipe.transform(new Date(valur2), "dd/MM/yyyy")
+          ) {
+            this.datos[key].fechaFin = this.datepipe.transform(
+              new Date(valur2),
+              "dd/MM/yyyy"
+            );
+          } else {
+            this.datos[key].fechaFin = this.datepipe.transform(
+              new Date(valur2 - 86400000),
+              "dd/MM/yyyy"
+            );
+          }
         }
       });
     }
@@ -332,6 +331,16 @@ export class DatosRetencionesComponent implements OnInit {
         },
         () => {
           this.volver();
+
+          //Al haber añadido uno nuevo, actualizamos la cabecera de la tarjeta con la nueva retención activa (lo que se verá con la tarjeta colapsada)
+          if (this.datos.length > 0) {
+            this.datos.forEach((value: any, key: number) => {
+              //Si la fecha fin no viene informada, es la que está activa, es la que mostramos con la tarjeta colapsada
+              if (value.fechaFin == undefined) {
+                this.retencionNow = this.datos[key];
+              }
+            });
+          }
         }
       );
   }
@@ -420,18 +429,13 @@ export class DatosRetencionesComponent implements OnInit {
           },
           () => {
             if (this.datos.length > 0) {
-              this.retencionNow = this.datos[0];
-              // this.datos.forEach((value: any, key: number) => {
-              //   if (value.fechaInicio != undefined) {
-              //       value.fechaInicio
-              //     );
-              //   }
-              //   if (value.fechaFin != undefined) {
-              //     this.datos[key].fechaFin = this.transformarFecha(
-              //       value.fechaFin
-              //     );
-              //   }
-              // });
+              this.isEliminar = false;
+              this.datos.forEach((value: any, key: number) => {
+                //Si la fecha fin no viene informada, es la que está activa, es la que mostramos con la tarjeta colapsada
+                if (value.fechaFin == undefined) {
+                  this.retencionNow = this.datos[key];
+                }
+              });
             }
           }
         );
@@ -460,6 +464,7 @@ export class DatosRetencionesComponent implements OnInit {
           this.isEditar = true;
         } else {
           this.newRetencion.porcentajeRetencion = value.porcentajeRetencion;
+          this.newRetencion.descripcionRetencion = value.descripcionRetencion;
           this.datos[0].porcentajeRetencion = value.porcentajeRetencion;
           this.datos[0].idRetencion = value.value;
           this.isEditar = false;
@@ -493,7 +498,9 @@ export class DatosRetencionesComponent implements OnInit {
   }
 
   abrirFicha() {
+    // if (this.activacionEditar == true) {
     this.openFicha = !this.openFicha;
+    // }
   }
 
   onChangeSelectAll() {

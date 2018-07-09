@@ -1,66 +1,17 @@
-import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  ViewChild,
-  ChangeDetectorRef,
-  Input
-} from "@angular/core";
-import { OldSigaServices } from "../../../_services/oldSiga.service";
-
-import {
-  /*** MODULOS ***/
-  NgModule
-} from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { CalendarModule } from "primeng/calendar";
-import { InputTextModule } from "primeng/inputtext";
-import { InputTextareaModule } from "primeng/inputtextarea";
-import { DropdownModule } from "primeng/dropdown";
-import { CheckboxModule } from "primeng/checkbox";
-import { ButtonModule } from "primeng/button";
-import { DataTableModule } from "primeng/datatable";
-// import { MenubarModule } from 'primeng/menubar';
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-// import { DialogModule } from 'primeng/dialog';
-import { AutoCompleteModule } from "primeng/autocomplete";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { TooltipModule } from "primeng/tooltip";
-import { ChipsModule } from "primeng/chips";
-import { RadioButtonModule } from "primeng/radiobutton";
-import { FileUploadModule } from "primeng/fileupload";
-
-import { Http, Response } from "@angular/http";
-import { MenuItem } from "primeng/api";
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl
-} from "@angular/forms";
-import { SelectItem } from "primeng/api";
-import { esCalendar } from "../../../utils/calendar";
-import { Router } from "@angular/router";
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { esCalendar } from "../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
 import { Location } from "@angular/common";
-
-import { SigaServices } from "./../../../_services/siga.service";
-import { SigaWrapper } from "../../../wrapper/wrapper.class";
-import { TranslateService } from "../../../commons/translate/translation.service";
-import { HeaderGestionEntidadService } from "./../../../_services/headerGestionEntidad.service";
-import { ComboItem } from "./../../../../app/models/ComboItem";
-
+import { SigaServices } from "./../../../../_services/siga.service";
+import { TranslateService } from "../../../../commons/translate/translation.service";
 /*** COMPONENTES ***/
-import { FichaColegialComponent } from "./../../../new-features/censo/ficha-colegial/ficha-colegial.component";
-import { DatosGeneralesComponent } from "./../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
-import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-colegial/datos-colegiales/datos-colegiales.component";
-import { DatosGeneralesItem } from "./../../../../app/models/DatosGeneralesItem";
-import { DatosGeneralesObject } from "./../../../../app/models/DatosGeneralesObject";
-import { MultiSelectModule } from "primeng/multiSelect";
+import { DatosGeneralesComponent } from "./../../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
+import { DatosGeneralesItem } from "./../../../../../app/models/DatosGeneralesItem";
+import { DatosGeneralesObject } from "./../../../../../app/models/DatosGeneralesObject";
 import { Subscription } from "rxjs/Subscription";
-import { cardService } from "./../../../_services/cardSearch.service";
-
-import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
+import { cardService } from "./../../../../_services/cardSearch.service";
+import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
 
 @Component({
   selector: "app-datos-generales",
@@ -97,6 +48,7 @@ export class DatosGenerales implements OnInit {
   selectedDoc: string = "NIF";
   newDireccion: boolean = false;
   nuevo: boolean = false;
+  identificacionValida: boolean;
 
   editar: boolean = false;
   archivoDisponible: boolean = false;
@@ -121,12 +73,8 @@ export class DatosGenerales implements OnInit {
   datos: any[];
   selectedTipo: any;
   idiomaPreferenciaSociedad: String;
-
-  existeImagen: boolean = false;
-  imagenPersonaJuridica: any;
-
+  activacionEditar: boolean;
   cuentaIncorrecta: Boolean = false;
-
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
 
@@ -157,14 +105,10 @@ export class DatosGenerales implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private router: Router,
-    private changeDetectorRef: ChangeDetectorRef,
     private translateService: TranslateService,
     private location: Location,
     private cardService: cardService,
-    private sigaServices: SigaServices,
-    private headerGestionEntidadService: HeaderGestionEntidadService,
-    private sanitizer: DomSanitizer
+    private sigaServices: SigaServices
   ) {
     this.formBusqueda = this.formBuilder.group({
       cif: null
@@ -180,6 +124,7 @@ export class DatosGenerales implements OnInit {
   }
 
   ngOnInit() {
+    this.checkAcceso();
     this.busquedaIdioma();
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
 
@@ -191,10 +136,8 @@ export class DatosGenerales implements OnInit {
       this.idPersona = this.usuarioBody[0].idPersona;
       this.tipoPersonaJuridica = this.usuarioBody[0].tipo;
     }
-    // estamos en modo edicion (NO en creacion)
     if (this.idPersona != undefined) {
       this.datosGeneralesSearch();
-      this.cargarImagen(this.body.idPersona);
     }
     this.textFilter = "Elegir";
 
@@ -222,6 +165,29 @@ export class DatosGenerales implements OnInit {
     );
 
     this.comboTipo.push(this.tipoPersonaJuridica);
+  }
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "120";
+    let derechoAcceso;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else {
+          this.activacionEditar = false;
+        }
+      }
+    );
   }
 
   obtenerEtiquetasPersonaJuridicaConcreta() {
@@ -345,11 +311,6 @@ export class DatosGenerales implements OnInit {
               let respuesta = JSON.parse(data["body"]);
               this.idPersona = respuesta.id;
               sessionStorage.removeItem("crearnuevo");
-              // pasamos el idPersona creado para la nueva sociedad
-              if (this.file != undefined) {
-                this.guardarImagen(this.idPersona);
-              }
-              this.cargarImagen(this.idPersona);
               this.datosGeneralesSearch();
               this.obtenerEtiquetasPersonaJuridicaConcreta();
               this.cardService.searchNewAnnounce.next(this.idPersona);
@@ -377,13 +338,9 @@ export class DatosGenerales implements OnInit {
         );
       }
       this.body.idioma = this.idiomaPreferenciaSociedad;
-      if (this.file != undefined) {
-        this.guardarImagen(this.body.idPersona);
-      }
 
       this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
         data => {
-          this.cargarImagen(this.body.idPersona);
           this.showSuccess();
           console.log(data);
         },
@@ -397,59 +354,53 @@ export class DatosGenerales implements OnInit {
           this.obtenerEtiquetasPersonaJuridicaConcreta();
         }
       );
+
+      let lenguajeeImagen: boolean = false;
+      if (this.file != undefined) {
+        this.sigaServices
+          .postSendFileAndParameters(
+            "personaJuridica_uploadFotografia",
+            this.file,
+            this.body.idPersona
+          )
+          .subscribe(
+            data => {
+              console.log(data);
+              this.file = undefined;
+              this.archivoDisponible = false;
+
+              // this.imagenURL =
+              //   this.sigaServices.getNewSigaUrl() +
+              //   this.sigaServices.getServucePath(
+              //     "personaJuridica_cargarFotografia"
+              //   ) +
+              //   "?random=" +
+              //   new Date().getTime();
+
+              this.imagenURL = this.sigaServices.post(
+                "personaJuridica_cargarFotografia",
+                this.body
+              );
+
+              this.imagenURL =
+                this.imagenURL + "?random=" + new Date().getTime();
+
+              var ajsdka = this.imagenURL;
+              if (!lenguajeeImagen) {
+                this.showSuccessUploadedImage();
+              }
+            },
+            err => {
+              console.log(err);
+            }
+          );
+      }
     }
   }
 
   restablecer() {
-    // si ya existe la sociedad
-    if (sessionStorage.getItem("crearnuevo") == null) {
-      this.datosGeneralesSearch();
-      this.obtenerEtiquetasPersonaJuridicaConcreta();
-      this.cargarImagen(this.body.idPersona);
-      this.file = undefined;
-    }
-  }
-
-  cargarImagen(idPersona: String) {
-    let datosParaImagenJuridica: DatosGeneralesItem = new DatosGeneralesItem();
-    datosParaImagenJuridica.idPersona = idPersona;
-
-    this.sigaServices
-      .postDownloadFiles(
-        "personaJuridica_cargarFotografia",
-        datosParaImagenJuridica
-      )
-      .subscribe(data => {
-        const blob = new Blob([data], { type: "text/csv" });
-        if (blob.size == 0) {
-          this.showFail("messages.general.error.ficheroNoExiste");
-          this.existeImagen = false;
-        } else {
-          let urlCreator = window.URL;
-          this.imagenPersonaJuridica = this.sanitizer.bypassSecurityTrustUrl(
-            urlCreator.createObjectURL(blob)
-          );
-          this.existeImagen = true;
-        }
-      });
-  }
-
-  guardarImagen(idPersona: String) {
-    this.sigaServices
-      .postSendFileAndParameters(
-        "personaJuridica_uploadFotografia",
-        this.file,
-        idPersona
-      )
-      .subscribe(
-        data => {
-          console.log(data);
-          this.file = undefined;
-        },
-        error => {
-          console.log(error);
-        }
-      );
+    this.datosGeneralesSearch();
+    this.obtenerEtiquetasPersonaJuridicaConcreta();
   }
 
   uploadImage(event: any) {
@@ -470,27 +421,19 @@ export class DatosGenerales implements OnInit {
       // Mensaje de error de formato de imagen y deshabilitar boton guardar
       this.file = undefined;
       this.archivoDisponible = false;
-      this.existeImagen = false;
       this.showFailUploadedImage();
     } else {
       // se almacena el archivo para habilitar boton guardar
       this.file = fileList[0];
       this.archivoDisponible = true;
-      //
-      this.existeImagen = true;
-      let urlCreator = window.URL;
-      this.imagenPersonaJuridica = this.sanitizer.bypassSecurityTrustUrl(
-        urlCreator.createObjectURL(this.file)
-      );
     }
-
-    // para comprobar los cambios de la imagen tambien
-    this.onChangeForm();
   }
 
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = !fichaPosible.activa;
+    if (this.activacionEditar == true) {
+      fichaPosible.activa = !fichaPosible.activa;
+    }
   }
 
   esFichaActiva(key) {
@@ -508,12 +451,20 @@ export class DatosGenerales implements OnInit {
     return {};
   }
 
+  onUpload(event) {
+    for (let file of event.files) {
+      this.uploadedFiles.push(file);
+    }
+    console.log("image", this.uploadedFiles);
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "File Uploaded", detail: "" });
+  }
+
   backTo() {
     this.location.back();
   }
 
   onChangeForm() {
-    // modo creacion
     if (this.editar) {
       if (this.body.nif.length == 9 && this.isValidCIF(this.body.nif)) {
         // rellena el filtro tipo según el cif aplicado
@@ -527,8 +478,11 @@ export class DatosGenerales implements OnInit {
             item => item.value == "V"
           );
         }
+
+        this.identificacionValida = true;
       } else {
         this.selectedTipo = this.comboIdentificacion[0];
+        this.identificacionValida = false;
       }
     }
 
@@ -546,8 +500,7 @@ export class DatosGenerales implements OnInit {
       this.body.nif != undefined &&
       !this.onlySpaces(this.body.nif) &&
       this.idiomaPreferenciaSociedad != "" &&
-      this.idiomaPreferenciaSociedad != undefined &&
-      this.file != undefined
+      this.idiomaPreferenciaSociedad != undefined
     ) {
       if (
         this.editar &&
