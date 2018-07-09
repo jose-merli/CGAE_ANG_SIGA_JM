@@ -109,7 +109,7 @@ export class DatosRetencionesComponent implements OnInit {
   labelFiltros: string;
 
   suscripcionBusquedaNuevo: Subscription;
-
+  activacionEditar: boolean;
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
   constructor(
     private formBuilder: FormBuilder,
@@ -133,6 +133,7 @@ export class DatosRetencionesComponent implements OnInit {
   }
 
   ngOnInit() {
+    // this.checkAcceso();
     this.persona = "f";
     this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
       id => {
@@ -187,6 +188,30 @@ export class DatosRetencionesComponent implements OnInit {
     this.checkStatusInit();
     this.search();
   }
+
+  // checkAcceso() {
+  //   let controlAcceso = new ControlAccesoDto();
+  //   controlAcceso.idProceso = "";
+  //   let derechoAcceso;
+  //   this.sigaServices.post("acces_control", controlAcceso).subscribe(
+  //     data => {
+  //       let permisosTree = JSON.parse(data.body);
+  //       let permisosArray = permisosTree.permisoItems;
+  //       derechoAcceso = permisosArray[0].derechoacceso;
+  //     },
+  //     err => {
+  //       console.log(err);
+  //     },
+  //     () => {
+  //       if (derechoAcceso == 3) {
+  //         this.activacionEditar = true;
+  //       } else {
+  //         this.activacionEditar = false;
+  //       }
+  //     }
+  //   );
+  // }
+
   getTiposRetenciones() {
     this.sigaServices.get("retenciones_tipoRetencion").subscribe(
       n => {
@@ -509,7 +534,9 @@ export class DatosRetencionesComponent implements OnInit {
   }
 
   abrirFicha() {
-    this.openFicha = !this.openFicha;
+    // if (this.activacionEditar == true) {
+      this.openFicha = !this.openFicha;
+    // }
   }
 
   onChangeSelectAll() {
