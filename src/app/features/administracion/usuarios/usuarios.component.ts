@@ -133,7 +133,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.cols = [
       {
         field: "nombreApellidos",
-        header: "administracion.usuarios.literal.nombre"
+        header: this.cargarLabel()
       },
       {
         field: "nif",
@@ -654,5 +654,16 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   clear() {
     this.msgs = [];
+  }
+
+  cargarLabel(): string {
+    return this.translateService
+      .instant("gratuita.mantenimientoTablasMaestra.literal.apellidos")
+      .concat(" & ")
+      .concat(
+        this.translateService.instant(
+          "administracion.parametrosGenerales.literal.nombre"
+        )
+      );
   }
 }
