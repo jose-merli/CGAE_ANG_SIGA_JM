@@ -3,14 +3,8 @@
   display: block;
 }
 
-.labelError {
-  color: red;
-  font-weight: bold;
-}
-
-.labelOK {
-  color: green;
-  font-weight: bold;
+.widthAll {
+  width: 100%;
 }
 
 .ui-growl-message-info .ui-growl-item {
@@ -33,8 +27,9 @@
   background-color: #dc3545 !important;
 }
 
-.widthAll {
-  width: 100%;
+.labelError {
+  color: red;
+  font-weight: bold;
 }
 
 #formu {
@@ -48,10 +43,10 @@
   padding-left: 0.8em;
 }
 
-.ui-tooltip {
-  .ui-tooltip-text {
-    background: gray;
-    color: black;
-    font-size: 0.8rem;
-  }
+// .card .card-body-ficha .bloque:first-child {
+//   padding: 2.5em !important;
+// }
+
+::ng-deep .ui-fileupload-choose .fa-plus::before {
+  content: "\F303";
 }

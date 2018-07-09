@@ -41,20 +41,9 @@ import {
 import { SelectItem } from "primeng/api";
 import { esCalendar } from "../../../utils/calendar";
 import { Router } from "@angular/router";
-import { Message } from "primeng/components/common/api";
 import { Location } from "@angular/common";
 
-import { SigaServices } from "./../../../_services/siga.service";
-import { SigaWrapper } from "../../../wrapper/wrapper.class";
-import { TranslateService } from "../../../commons/translate/translation.service";
-import { HeaderGestionEntidadService } from "./../../../_services/headerGestionEntidad.service";
-
-/*** COMPONENTES ***/
-import { FichaColegialComponent } from "./../../../new-features/censo/ficha-colegial/ficha-colegial.component";
-import { DatosGeneralesComponent } from "./../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
-import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-colegial/datos-colegiales/datos-colegiales.component";
 import { cardService } from "./../../../_services/cardSearch.service";
-import { Subscription } from "rxjs/Subscription";
 
 // import
 @Component({
@@ -67,7 +56,6 @@ export class DatosPersonaJuridicaComponent implements OnInit {
   generales: boolean = false;
   constructor(
     public sigaServices: OldSigaServices,
-    private location: Location,
     private cardService: cardService,
     private router: Router
   ) {}
@@ -91,10 +79,6 @@ export class DatosPersonaJuridicaComponent implements OnInit {
         activa: false
       },
       {
-        key: "direcciones",
-        activa: false
-      },
-      {
         key: "bancarios",
         activa: false
       },
@@ -104,6 +88,10 @@ export class DatosPersonaJuridicaComponent implements OnInit {
       },
       {
         key: "interes",
+        activa: false
+      },
+      {
+        key: "direcciones",
         activa: false
       }
     ];

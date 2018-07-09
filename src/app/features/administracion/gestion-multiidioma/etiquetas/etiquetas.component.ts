@@ -6,14 +6,30 @@ import {
   ChangeDetectorRef,
   HostListener
 } from "@angular/core";
+
 import { SigaServices } from "./../../../../_services/siga.service";
+import { Router } from "@angular/router";
+import { MessageService } from "primeng/components/common/messageservice";
+import { ConfirmationService } from "primeng/api";
 import { TranslateService } from "../../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../../properties/val-properties";
 import { SigaWrapper } from "../../../../wrapper/wrapper.class";
+
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl
+} from "@angular/forms";
+
+import { InputTextModule } from "primeng/inputtext";
 import { Message } from "primeng/components/common/api";
+import { TooltipModule } from "primeng/tooltip";
+
 import { EtiquetaUpdateDto } from "../../../../models/EtiquetaUpdateDto";
 import { EtiquetaSearchDto } from "../../../../models/EtiquetaSearchDto";
 import { EtiquetaDto } from "../../../../models/EtiquetaDto";
+import { EtiquetaItem } from "../../../../models/EtiquetaItem";
 import { ControlAccesoDto } from "../../../../../app/models/ControlAccesoDto";
 
 export enum KEY_CODE {
@@ -58,7 +74,11 @@ export class Etiquetas extends SigaWrapper implements OnInit {
 
   constructor(
     private sigaServices: SigaServices,
+    private formBuilder: FormBuilder,
+    private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService,
     private translateService: TranslateService
   ) {
     super(USER_VALIDATIONS);
@@ -302,6 +322,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.isBuscar();
     }
   }
+
 
   clear() {
     this.msgs = [];

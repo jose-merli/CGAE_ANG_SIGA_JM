@@ -9,7 +9,6 @@ import { HomeComponent } from "./features/home/home.component";
 // Censo
 import { SearchColegiadosComponent } from "./features/censo/search-colegiados/search-colegiados.component";
 import { SearchNoColegiadosComponent } from "./features/censo/search-no-colegiados/search-no-colegiados.component";
-import { BusquedaNoColegiadosComponent } from "./features/censo/busqueda-no-colegiados/busqueda-no-colegiados.component";
 import { CertificadosAcaComponent } from "./features/censo/certificados-aca/certificados-aca.component";
 import { ComisionesCargosComponent } from "./features/censo/comisiones-cargos/comisiones-cargos.component";
 import { SolicitudesGenericasComponent } from "./features/censo/solicitudes-genericas/solicitudes-genericas.component";
@@ -29,12 +28,12 @@ import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/co
 import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
 import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/gestion-subtiposCV.component";
 import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
-import { DetalleIntegranteComponent } from "./features/censo/datos-integrantes/detalleIntegrante/detalleIntegrante.component";
-import { AccesoFichaPersonaComponent } from "./features/censo/accesoFichaPersona/accesoFichaPersona.component";
-import { DatosBancariosComponent } from "./features/censo/datos-bancarios/datos-bancarios.component";
-import { ConsultarDatosBancariosComponent } from "./features/censo/consultar-datos-bancarios/consultar-datos-bancarios.component";
-import { DatosDireccionesComponent } from "./features/censo/datos-direcciones/datos-direcciones.component";
-import { ConsultarDatosDireccionesComponent } from "./features/censo/consultar-datos-direcciones/consultar-datos-direcciones.component";
+import { DetalleIntegranteComponent } from "./features/censo/datosPersonaJuridica/datos-integrantes/detalleIntegrante/detalleIntegrante.component";
+import { AccesoFichaPersonaComponent } from "./features/censo/datosPersonaJuridica/accesoFichaPersona/accesoFichaPersona.component";
+import { DatosBancariosComponent } from "./features/censo/datosPersonaJuridica/datos-bancarios/datos-bancarios.component";
+import { ConsultarDatosBancariosComponent } from "./features/censo/datosPersonaJuridica/datos-bancarios/consultar-datos-bancarios/consultar-datos-bancarios.component";
+import { DatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/datos-direcciones.component";
+import { ConsultarDatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/consultar-datos-direcciones/consultar-datos-direcciones.component";
 
 //Certificados
 import { ComunicacionInterprofesionalComponent } from "./features/certificados/comunicacion-interprofesional/comunicacion-interprofesional.component";
@@ -176,7 +175,7 @@ import { AuditoriaUsuarios } from "./features/administracion/auditoria/usuarios/
 import { GestionAuditoriaComponent } from "./features/administracion/auditoria/usuarios/editarAuditoriaUsuarios/gestion-auditoria.component";
 import { GestionEntidad } from "./features/administracion/gestion-entidad/gestion-entidad.component";
 import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component";
-import { DatosGenerales } from "./features/censo/datos-generales/datos-generales.component";
+import { DatosGenerales } from "./features/censo/datosPersonaJuridica/datos-generales/datos-generales.component";
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
@@ -224,12 +223,6 @@ const appRoutes: Routes = [
     path: "searchNoColegiados",
     component: BusquedaPersonasJuridicas,
     // component: SearchNoColegiadosComponent,
-    canActivate: [AuthGuard]
-  },
-
-  {
-    path: "busquedaNoColegiados",
-    component: BusquedaNoColegiadosComponent,
     canActivate: [AuthGuard]
   },
   {

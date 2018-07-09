@@ -2,10 +2,15 @@ import {
   Component,
   OnInit,
   ViewEncapsulation,
+  ViewChild,
   ChangeDetectorRef
 } from "@angular/core";
 
-import { DomSanitizer } from "@angular/platform-browser";
+import {
+  DomSanitizer,
+  SafeResourceUrl,
+  SafeUrl
+} from "@angular/platform-browser";
 
 // prueba
 import { HeaderGestionEntidadService } from "./../../../_services/headerGestionEntidad.service";
@@ -18,9 +23,20 @@ import { TranslateService } from "../../../commons/translate/translation.service
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
 
-import { FormBuilder } from "@angular/forms";
+import { HeaderComponent } from "../../../commons/header/header.component";
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl
+} from "@angular/forms";
 
+import { InputTextModule } from "primeng/inputtext";
 import { Message } from "primeng/components/common/api";
+import { TooltipModule } from "primeng/tooltip";
+import { ListboxModule } from "primeng/listbox";
+import { FileUploadModule } from "primeng/fileupload";
+
 
 @Component({
   selector: "app-gestion-entidad",
@@ -45,7 +61,13 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
   imagenURL: any;
   constructor(
     private sigaServices: SigaServices,
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private changeDetectorRef: ChangeDetectorRef,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService,
     private translateService: TranslateService,
+    private sanitizer: DomSanitizer,
     private headerGestionEntidadService: HeaderGestionEntidadService
   ) {
     super(USER_VALIDATIONS);
@@ -63,9 +85,7 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
             /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
             this.idiomaBusqueda.map(e => {
-              e.labelSinTilde = e.label
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "");
+              e.labelSinTilde = e.label.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
               return e.labelSinTilde;
             });
 
@@ -246,6 +266,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
     return this.guardarHabilitado;
   }
+
 
   clear() {
     this.msgs = [];

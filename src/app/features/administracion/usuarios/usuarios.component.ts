@@ -4,10 +4,13 @@ import {
   ViewEncapsulation,
   ViewChild,
   ChangeDetectorRef,
+  Input,
   HostListener
 } from "@angular/core";
 import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
+import { SelectItem } from "primeng/api";
+import { DropdownModule } from "primeng/dropdown";
 import {
   FormBuilder,
   FormGroup,
@@ -17,15 +20,26 @@ import {
 import { DataTable } from "primeng/datatable";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
-import { Router } from "@angular/router";
+import { ButtonModule } from "primeng/button";
+import { Router, ActivatedRoute } from "@angular/router";
+import { InputTextModule } from "primeng/inputtext";
+import { InputTextareaModule } from "primeng/inputtextarea";
+import { CheckboxModule } from "primeng/checkbox";
+import { RadioButtonModule } from "primeng/radiobutton";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { GrowlModule } from "primeng/growl";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
+import { MessageService } from "primeng/components/common/messageservice";
 import { UsuarioRequestDto } from "./../../../../app/models/UsuarioRequestDto";
 import { UsuarioResponseDto } from "./../../../../app/models/UsuarioResponseDto";
 import { UsuarioDeleteRequestDto } from "./../../../../app/models/UsuarioDeleteRequestDto";
 import { UsuarioItem } from "./../../../../app/models/UsuarioItem";
 import { ComboItem } from "./../../../../app/models/ComboItem";
+import { MultiSelectModule } from "primeng/multiselect";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
+import { Location } from "@angular/common";
+import { Observable } from "rxjs/Rx";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -79,10 +93,14 @@ export class Usuarios extends SigaWrapper implements OnInit {
 
   constructor(
     private sigaServices: SigaServices,
+    private formBuilder: FormBuilder,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
+    private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private activatedRoute: ActivatedRoute,
+    private translateService: TranslateService,
+    private location: Location
   ) {
     super(USER_VALIDATIONS);
   }
@@ -135,19 +153,14 @@ para poder filtrar el dato con o sin estos caracteres*/
         field: "nombreApellidos",
         header: this.cargarLabel()
       },
-      {
-        field: "nif",
-        header: "administracion.usuarios.literal.NIF",
-        width: "12%"
-      },
+      { field: "nif", header: "administracion.usuarios.literal.NIF", width: "12%" },
       {
         field: "fechaAlta",
         header: "administracion.usuarios.literal.fechaAlta",
         width: "12%"
       },
       {
-        field: "roles",
-        header: "administracion.usuarios.literal.roles",
+        field: "roles", header: "administracion.usuarios.literal.roles",
         width: "18%"
       }
     ];
@@ -192,7 +205,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
 
@@ -651,6 +664,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.isBuscar();
     }
   }
+
 
   clear() {
     this.msgs = [];

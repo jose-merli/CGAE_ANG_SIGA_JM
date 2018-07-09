@@ -9,8 +9,20 @@ import {
 } from "@angular/core";
 import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { SelectItem } from "primeng/api";
+import { MenuItem } from "primeng/api";
+import { Http, Response } from "@angular/http";
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl
+} from "@angular/forms";
+import { DropdownModule } from "primeng/dropdown";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
+import { ButtonModule } from "primeng/button";
+import { InputTextModule } from "primeng/inputtext";
+import { InputTextareaModule } from "primeng/inputtextarea";
 import { Router } from "@angular/router";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { MessageService } from "primeng/components/common/messageservice";
@@ -107,7 +119,9 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private sigaServices: SigaServices,
+    private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
+    private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
   ) {

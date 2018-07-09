@@ -8,17 +8,33 @@ import {
 } from "@angular/core";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { SigaWrapper } from "./../../../../../wrapper/wrapper.class";
+import { SelectItem } from "primeng/api";
+import { DropdownModule } from "primeng/dropdown";
 import { esCalendar } from "./../../../../../utils/calendar";
-import { FormBuilder } from "@angular/forms";
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl
+} from "@angular/forms";
 import { TranslateService } from "./../../../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "./../../../../../properties/val-properties";
+import { ButtonModule } from "primeng/button";
 import { Router, ActivatedRoute } from "@angular/router";
+import { InputTextModule } from "primeng/inputtext";
+import { InputTextareaModule } from "primeng/inputtextarea";
+import { CheckboxModule } from "primeng/checkbox";
+import { MultiSelectModule } from "primeng/multiselect";
+import { RadioButtonModule } from "primeng/radiobutton";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { GrowlModule } from "primeng/growl";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
 import { HistoricoUsuarioItem } from "./../../../../../../app/models/HistoricoUsuarioItem";
 import { HistoricoUsuarioUpdateDto } from "./../../../../../../app/models/HistoricoUsuarioUpdateDto";
 import { HistoricoUsuarioRequestDto } from "./../../../../../../app/models/HistoricoUsuarioRequestDto";
+import { ComboItem } from "./../../../../../../app/models/ComboItem";
 import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
 import { Location } from "@angular/common";
 @Component({
@@ -59,7 +75,12 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
 
   constructor(
     private sigaServices: SigaServices,
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private changeDetectorRef: ChangeDetectorRef,
+    private messageService: MessageService,
     private confirmationService: ConfirmationService,
+    private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
     private location: Location
   ) {

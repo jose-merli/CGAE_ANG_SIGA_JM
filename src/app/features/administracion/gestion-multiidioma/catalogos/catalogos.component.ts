@@ -15,9 +15,16 @@ import { TranslateService } from "../../../../commons/translate/translation.serv
 import { USER_VALIDATIONS } from "../../../../properties/val-properties";
 import { SigaWrapper } from "../../../../wrapper/wrapper.class";
 
-import { FormBuilder } from "@angular/forms";
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl
+} from "@angular/forms";
 
+import { InputTextModule } from "primeng/inputtext";
 import { Message } from "primeng/components/common/api";
+import { TooltipModule } from "primeng/tooltip";
 
 import { MultiidiomaCatalogoDto } from "../../../../models/MultiidiomaCatalogoDto";
 import { MultiidiomaCatalogoSearchDto } from "../../../../models/MultiidiomaCatalogoSearchDto";
@@ -70,7 +77,11 @@ export class Catalogos extends SigaWrapper implements OnInit {
 
   constructor(
     private sigaServices: SigaServices,
+    private formBuilder: FormBuilder,
+    private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService,
     private translateService: TranslateService
   ) {
     super(USER_VALIDATIONS);
@@ -338,6 +349,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
       this.isBuscar();
     }
   }
+
 
   clear() {
     this.msgs = [];

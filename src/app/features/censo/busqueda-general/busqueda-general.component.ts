@@ -1,46 +1,23 @@
-import { OldSigaServices } from "../../../_services/oldSiga.service";
 import {
   Component,
-  OnInit,
-  ViewEncapsulation,
   ViewChild,
   ChangeDetectorRef,
-  Input,
   HostListener
 } from "@angular/core";
-import { CalendarModule } from "primeng/calendar";
-import { Http, Response } from "@angular/http";
-import { MenuItem } from "primeng/api";
 import {
   FormBuilder,
   FormGroup,
   Validators,
   FormControl
 } from "@angular/forms";
-import { SelectItem } from "primeng/api";
 import { esCalendar } from "../../../utils/calendar";
-import { TableModule } from "primeng/table";
 import { SigaServices } from "./../../../_services/siga.service";
-import { DropdownModule } from "primeng/dropdown";
-import { DataTable } from "primeng/datatable";
 import { TranslateService } from "../../../commons/translate/translation.service";
-import { USER_VALIDATIONS } from "../../../properties/val-properties";
-import { ButtonModule } from "primeng/button";
 import { Router, ActivatedRoute } from "@angular/router";
-import { InputTextModule } from "primeng/inputtext";
-import { InputTextareaModule } from "primeng/inputtextarea";
-import { CheckboxModule } from "primeng/checkbox";
-import { RadioButtonModule } from "primeng/radiobutton";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { GrowlModule } from "primeng/growl";
 import { ConfirmationService } from "primeng/api";
-import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
 import { ComboItem } from "./../../../../app/models/ComboItem";
-import { MultiSelectModule } from "primeng/multiselect";
-import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { Location } from "@angular/common";
-import { Observable } from "rxjs/Rx";
 import { BusquedaFisicaItem } from "./../../../../app/models/BusquedaFisicaItem";
 import { BusquedaJuridicaItem } from "./../../../../app/models/BusquedaJuridicaItem";
 import { BusquedaJuridicaObject } from "./../../../../app/models/BusquedaJuridicaObject";
@@ -446,12 +423,8 @@ export class BusquedaGeneralComponent {
         return true;
       }
     } else {
-      // busqueda juridica => cif u otros
-      if (
-        !this.isValidDNI(value) &&
-        !this.isValidNIE(value) &&
-        !this.isValidPassport(value)
-      ) {
+      // busqueda juridica => cif
+      if (this.isValidCIF(value)) {
         return true;
       } else {
         return false;
@@ -594,7 +567,6 @@ export class BusquedaGeneralComponent {
 
   backTo() {
     this.location.back();
-    sessionStorage.setItem("abrirFichaIntegrante", "true");
   }
 
   clear() {
