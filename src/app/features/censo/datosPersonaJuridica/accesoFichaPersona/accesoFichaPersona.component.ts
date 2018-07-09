@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  ViewChild,
-  ChangeDetectorRef,
-  Input
-} from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 
 import { Router } from "@angular/router";
 import { Message } from "primeng/components/common/api";
@@ -14,15 +7,15 @@ import { ConfirmationService } from "primeng/api";
 import { MessageService } from "primeng/components/common/messageservice";
 import { SelectItem } from "primeng/api";
 
-import { SigaServices } from "./../../../_services/siga.service";
+import { SigaServices } from "./../../../../_services/siga.service";
 
-import { DatosNotarioItem } from "./../../../../app/models/DatosNotarioItem";
-import { DatosNotarioObject } from "./../../../../app/models/DatosNotarioObject";
-import { TranslateService } from "../../../commons/translate";
+import { DatosNotarioItem } from "./../../../../../app/models/DatosNotarioItem";
+import { DatosNotarioObject } from "./../../../../../app/models/DatosNotarioObject";
+import { TranslateService } from "../../../../commons/translate";
 
-import { cardService } from "./../../../_services/cardSearch.service";
+import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
-import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
+import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
 
 @Component({
   selector: "app-accesoFichaPersona",
@@ -55,9 +48,6 @@ export class AccesoFichaPersonaComponent implements OnInit {
     private router: Router,
     private location: Location,
     private sigaServices: SigaServices,
-    private messageService: MessageService,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService,
     private cardService: cardService
   ) {}
 

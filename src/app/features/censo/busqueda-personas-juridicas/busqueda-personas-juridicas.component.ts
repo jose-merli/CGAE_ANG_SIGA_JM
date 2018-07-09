@@ -4,41 +4,23 @@ import {
   ViewEncapsulation,
   ViewChild,
   ChangeDetectorRef,
-  Input,
   HostListener
 } from "@angular/core";
 import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
-import { SelectItem } from "primeng/api";
-import { DropdownModule } from "primeng/dropdown";
 import { esCalendar } from "./../../../utils/calendar";
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl
-} from "@angular/forms";
+import { FormBuilder } from "@angular/forms";
 import { DataTable } from "primeng/datatable";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
-import { ButtonModule } from "primeng/button";
 import { Router, ActivatedRoute } from "@angular/router";
-import { InputTextModule } from "primeng/inputtext";
-import { InputTextareaModule } from "primeng/inputtextarea";
-import { CheckboxModule } from "primeng/checkbox";
-import { RadioButtonModule } from "primeng/radiobutton";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { GrowlModule } from "primeng/growl";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
 import { PersonaJuridicaObject } from "./../../../../app/models/PersonaJuridicaObject";
 import { PersonaJuridicaItem } from "./../../../../app/models/PersonaJuridicaItem";
-import { ComboItem } from "./../../../../app/models/ComboItem";
-import { MultiSelectModule } from "primeng/multiselect";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { Location } from "@angular/common";
-import { Observable } from "rxjs/Rx";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -87,14 +69,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
 
   constructor(
     private sigaServices: SigaServices,
-    private formBuilder: FormBuilder,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
-    private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private activatedRoute: ActivatedRoute,
-    private translateService: TranslateService,
-    private location: Location
+    private translateService: TranslateService
   ) {
     super(USER_VALIDATIONS);
   }
@@ -125,8 +103,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
       n => {
         this.etiquetas = n.combooItems;
-        // let first = { label: "", value: "" };
-        // this.etiquetas.unshift(first);
       },
       err => {
         console.log(err);
@@ -466,26 +442,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.body = new PersonaJuridicaItem();
     sessionStorage.setItem("usuarioBody", JSON.stringify(this.body));
     this.router.navigate(["fichaPersonaJuridica"]);
-    // this.body.fechaConstitucion = this.fechaConstitucion;
-    // this.sigaServices.post("busquedaPerJuridica_create", this.body).subscribe(
-    //   data => {
-    //     this.personaSearch = JSON.parse(data["body"]);
-    //     this.showSuccess();
-    //   },
-    //   error => {
-    //     this.personaSearch = JSON.parse(error["error"]);
-    //     this.showduplicateFail(
-    //       JSON.stringify(this.personaSearch.error.message)
-    //     );
-    //     console.log(error);
-    //     this.showFail();
-    //   },
-    //   () => {
-    //     this.cancelar();
-    //     this.isBuscar();
-    //     this.table.reset();
-    //   }
-    // );
   }
 
   showSuccess() {

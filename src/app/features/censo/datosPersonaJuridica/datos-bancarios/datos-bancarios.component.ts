@@ -3,16 +3,16 @@ import { Router } from "@angular/router";
 import { DataTable } from "primeng/datatable";
 
 import { ConfirmationService, Message } from "primeng/components/common/api";
-import { TranslateService } from "../../../commons/translate/translation.service";
+import { TranslateService } from "../../../../commons/translate/translation.service";
 
-import { SigaServices } from "./../../../_services/siga.service";
+import { SigaServices } from "./../../../../_services/siga.service";
 
-import { DatosBancariosItem } from "./../../../../app/models/DatosBancariosItem";
-import { DatosBancariosObject } from "./../../../../app/models/DatosBancariosObject";
+import { DatosBancariosItem } from "./../../../../../app/models/DatosBancariosItem";
+import { DatosBancariosObject } from "./../../../../../app/models/DatosBancariosObject";
 
-import { cardService } from "./../../../_services/cardSearch.service";
+import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
-import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
+import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
 
 @Component({
   selector: "app-datos-bancarios",

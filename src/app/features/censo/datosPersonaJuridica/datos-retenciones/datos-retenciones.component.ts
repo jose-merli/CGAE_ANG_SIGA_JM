@@ -1,58 +1,26 @@
-import { OldSigaServices } from "../../../_services/oldSiga.service";
 import {
   Component,
   OnInit,
-  ViewEncapsulation,
   ViewChild,
   ChangeDetectorRef,
-  Input,
-  HostListener,
-  SystemJsNgModuleLoader
+  HostListener
 } from "@angular/core";
-import { CalendarModule } from "primeng/calendar";
-import { Http, Response } from "@angular/http";
-import { MenuItem } from "primeng/api";
 import {
   FormBuilder,
   FormGroup,
   Validators,
   FormControl
 } from "@angular/forms";
-import { SelectItem } from "primeng/api";
-import { esCalendar } from "../../../utils/calendar";
-import { TableModule } from "primeng/table";
-import { SigaServices } from "./../../../_services/siga.service";
-import { DropdownModule } from "primeng/dropdown";
-import { DataTable } from "primeng/datatable";
-import { TranslateService } from "../../../commons/translate/translation.service";
-import { USER_VALIDATIONS } from "../../../properties/val-properties";
-import { ButtonModule } from "primeng/button";
-import { Router, ActivatedRoute } from "@angular/router";
-import { InputTextModule } from "primeng/inputtext";
-import { InputTextareaModule } from "primeng/inputtextarea";
-import { CheckboxModule } from "primeng/checkbox";
-import { RadioButtonModule } from "primeng/radiobutton";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { GrowlModule } from "primeng/growl";
+import { esCalendar } from "../../../../utils/calendar";
+import { SigaServices } from "./../../../../_services/siga.service";
+import { TranslateService } from "../../../../commons/translate/translation.service";
 import { ConfirmationService } from "primeng/api";
-import { Message } from "primeng/components/common/api";
-import { MessageService } from "primeng/components/common/messageservice";
-import { ComboItem } from "./../../../../app/models/ComboItem";
-import { MultiSelectModule } from "primeng/multiselect";
-import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
-import { Location, getLocaleDateTimeFormat, DatePipe } from "@angular/common";
-import { Observable } from "rxjs/Rx";
-import { BusquedaFisicaItem } from "./../../../../app/models/BusquedaFisicaItem";
-import { BusquedaJuridicaItem } from "./../../../../app/models/BusquedaJuridicaItem";
-import { BusquedaJuridicaObject } from "./../../../../app/models/BusquedaJuridicaObject";
-import { BusquedaFisicaObject } from "./../../../../app/models/BusquedaFisicaObject";
-import { DatosNotarioItem } from "../../../models/DatosNotarioItem";
+import { DatePipe } from "@angular/common";
 /*** COMPONENTES ***/
-import { DatosRetencionesObject } from "../../../../app/models/DatosRetencionesObject";
-import { DatosRetencionesItem } from "../../../../app/models/DatosRetencionesItem";
-import { DatosPersonaJuridicaComponent } from "../datosPersonaJuridica/datosPersonaJuridica.component";
+import { DatosRetencionesObject } from "../../../../../app/models/DatosRetencionesObject";
+import { DatosRetencionesItem } from "../../../../../app/models/DatosRetencionesItem";
 
-import { cardService } from "./../../../_services/cardSearch.service";
+import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
 
 export enum KEY_CODE {
@@ -113,14 +81,10 @@ export class DatosRetencionesComponent implements OnInit {
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
   constructor(
     private formBuilder: FormBuilder,
-    private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
-    private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
-    private location: Location,
     public datepipe: DatePipe,
     private cardService: cardService
   ) {
@@ -535,7 +499,7 @@ export class DatosRetencionesComponent implements OnInit {
 
   abrirFicha() {
     // if (this.activacionEditar == true) {
-      this.openFicha = !this.openFicha;
+    this.openFicha = !this.openFicha;
     // }
   }
 

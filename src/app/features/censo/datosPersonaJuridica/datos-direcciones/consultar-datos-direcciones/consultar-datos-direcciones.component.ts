@@ -3,15 +3,14 @@ import { Component, OnInit } from "@angular/core";
 import { Location, DatePipe } from "@angular/common";
 
 import { ConfirmationService, Message } from "primeng/components/common/api";
-import { ComboItem } from "./../../../../app/models/ComboItem";
-import { TranslateService } from "../../../commons/translate/translation.service";
-import { SigaServices } from "./../../../_services/siga.service";
+import { TranslateService } from "../../../../../commons/translate/translation.service";
+import { SigaServices } from "./../../../../../_services/siga.service";
 
-import { DatosDireccionesItem } from "./../../../../app/models/DatosDireccionesItem";
-import { DatosDireccionesObject } from "./../../../../app/models/DatosDireccionesObject";
+import { DatosDireccionesItem } from "./../../../../../../app/models/DatosDireccionesItem";
+import { DatosDireccionesObject } from "./../../../../../../app/models/DatosDireccionesObject";
 
-import { DatosDireccionesCodigoPostalItem } from "./../../../../app/models/DatosDireccionesCodigoPostalItem";
-import { DatosDireccionesCodigoPostalObject } from "./../../../../app/models/DatosDireccionesCodigoPostalObject";
+import { DatosDireccionesCodigoPostalItem } from "./../../../../../../app/models/DatosDireccionesCodigoPostalItem";
+import { DatosDireccionesCodigoPostalObject } from "./../../../../../../app/models/DatosDireccionesCodigoPostalObject";
 
 @Component({
   selector: "app-consultar-datos-direcciones",
@@ -54,8 +53,6 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
 
   constructor(
     private location: Location,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService,
     private sigaServices: SigaServices,
     public datepipe: DatePipe
   ) {}

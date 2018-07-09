@@ -86,16 +86,16 @@ import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
 import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
 import { CommonModule } from "@angular/common";
-import { AccesoFichaPersonaComponent } from "./features/censo/accesoFichaPersona/accesoFichaPersona.component";
-import { DatosBancariosComponent } from "./features/censo/datos-bancarios/datos-bancarios.component";
-import { ConsultarDatosBancariosComponent } from "./features/censo/consultar-datos-bancarios/consultar-datos-bancarios.component";
+import { AccesoFichaPersonaComponent } from "./features/censo/datosPersonaJuridica/accesoFichaPersona/accesoFichaPersona.component";
+import { DatosBancariosComponent } from "./features/censo/datosPersonaJuridica/datos-bancarios/datos-bancarios.component";
+import { ConsultarDatosBancariosComponent } from "./features/censo/datosPersonaJuridica/datos-bancarios/consultar-datos-bancarios/consultar-datos-bancarios.component";
 // import { DatosCuentaBancariaComponent } from "./features/censo/datos-cuenta-bancaria/datos-cuenta-bancaria.component";
 // import { DatosMandatosComponent } from "./features/censo/datos-mandatos/datos-mandatos.component";
 // import { ListadoFicherosAnexosComponent } from "./features/censo/listado-ficheros-anexos/listado-ficheros-anexos.component";
-import { DatosIntegrantesComponent } from "./features/censo/datos-integrantes/datos-integrantes.component";
-import { DetalleIntegranteComponent } from "./features/censo/datos-integrantes/detalleIntegrante/detalleIntegrante.component";
-import { DatosDireccionesComponent } from "./features/censo/datos-direcciones/datos-direcciones.component";
-import { ConsultarDatosDireccionesComponent } from "./features/censo/consultar-datos-direcciones/consultar-datos-direcciones.component";
+import { DatosIntegrantesComponent } from "./features/censo/datosPersonaJuridica/datos-integrantes/datos-integrantes.component";
+import { DetalleIntegranteComponent } from "./features/censo/datosPersonaJuridica/datos-integrantes/detalleIntegrante/detalleIntegrante.component";
+import { DatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/datos-direcciones.component";
+import { ConsultarDatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/consultar-datos-direcciones/consultar-datos-direcciones.component";
 
 // Modulo de administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
@@ -238,10 +238,10 @@ import { BandejaEntradaComponent } from "./features/comunicaciones/bandeja-entra
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from "./new-features/censo/busqueda-colegiados/busqueda-colegiados.component";
 import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component";
-import { DatosGenerales } from "./features/censo/datos-generales/datos-generales.component";
-import { DatosRegistralesComponent } from "./features/censo/datos-registrales/datos-registrales.component";
-import { DatosRetencionesComponent } from "./features/censo/datos-retenciones/datos-retenciones.component";
-import { ServiciosInteresComponent } from "./features/censo/servicios-interes/servicios-interes.component";
+import { DatosGenerales } from "./features/censo/datosPersonaJuridica/datos-generales/datos-generales.component";
+import { DatosRegistralesComponent } from "./features/censo/datosPersonaJuridica/datos-registrales/datos-registrales.component";
+import { DatosRetencionesComponent } from "./features/censo/datosPersonaJuridica/datos-retenciones/datos-retenciones.component";
+import { ServiciosInteresComponent } from "./features/censo/datosPersonaJuridica/servicios-interes/servicios-interes.component";
 
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
@@ -506,4 +506,4 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

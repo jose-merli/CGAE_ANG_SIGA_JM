@@ -1,26 +1,17 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
-
 import { Location } from "@angular/common";
-
 import { ConfirmationService, Message } from "primeng/components/common/api";
-import { TranslateService } from "../../../commons/translate/translation.service";
-
-import { SelectItem } from "primeng/api";
+import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { DataTable } from "primeng/datatable";
-
-import { DatosBancariosItem } from "./../../../../app/models/DatosBancariosItem";
-import { DatosBancariosObject } from "./../../../../app/models/DatosBancariosObject";
-
-import { BancoBicItem } from "./../../../../app/models/BancoBicItem";
-import { BancoBicObject } from "./../../../../app/models/BancoBicObject";
-
-import { DatosMandatosItem } from "./../../../../app/models/DatosMandatosItem";
-import { DatosMandatosObject } from "./../../../../app/models/DatosMandatosObject";
-
-import { DatosBancariosSearchAnexosItem } from "./../../../../app/models/DatosBancariosSearchAnexosItem";
-import { DatosBancariosAnexoObject } from "./../../../../app/models/DatosBancariosAnexoObject";
-
-import { SigaServices } from "./../../../_services/siga.service";
+import { DatosBancariosItem } from "./../../../../../../app/models/DatosBancariosItem";
+import { DatosBancariosObject } from "./../../../../../../app/models/DatosBancariosObject";
+import { BancoBicItem } from "./../../../../../../app/models/BancoBicItem";
+import { BancoBicObject } from "./../../../../../../app/models/BancoBicObject";
+import { DatosMandatosItem } from "./../../../../../../app/models/DatosMandatosItem";
+import { DatosMandatosObject } from "./../../../../../../app/models/DatosMandatosObject";
+import { DatosBancariosSearchAnexosItem } from "./../../../../../../app/models/DatosBancariosSearchAnexosItem";
+import { DatosBancariosAnexoObject } from "./../../../../../../app/models/DatosBancariosAnexoObject";
+import { SigaServices } from "./../../../../../_services/siga.service";
 //import "rxjs/Rx";
 import { saveAs } from "file-saver/FileSaver";
 
