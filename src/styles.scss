@@ -1007,6 +1007,12 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   margin-left: -8px;
 }
 
+.ui-dropdown.ui-state-disabled .ui-dropdown-trigger,
+.ui-dropdown.ui-state-disabled .ui-dropdown-label,
+.ui-widget:disabled {
+  background-color: #e9ecef;
+}
+
 .ui-datepicker.ui-widget .ui-datepicker-calendar td a.ui-state-active {
   background: $secondary-color;
 }
