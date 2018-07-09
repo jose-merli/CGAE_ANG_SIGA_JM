@@ -1,24 +1,52 @@
 <p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
-<div #widthContent class="permisos-container">
+<div class="busqueda-container">
     <div class="header-title">
         <i class="fa fa-square"></i>
         <p>{{'menu.administracion' | translate}}
             <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.administracion.parametrosGenerales' | translate}}</p>
     </div>
-    <div class="mt-4 permisos-filters d-flex  justify-content-start">
-        <div class="mr-auto pl-0 form-group col-lg-3 col-md-3">
-            <label>{{'administracion.parametrosGenerales.literal.modulo' | translate}}</label>
-            <p-dropdown class="select-form" [(ngModel)]='selectedModulo' [options]="modulos" (ngModelChange)="onChangeForm($event)" [filter]="true"
-                filterBy="label"></p-dropdown>
-        </div>
+    <!--<div class="breadCrumb">
+        <p>{{'menu.administracion' | translate}} <i class="fa fa-angle-right"></i> {{ 'menu.administracion.parametrosGenerales'
+            | translate}}
+        </p>
+    </div>-->
+    <div class="card">
+        <div class="card-body">
+            <p class="title-module">{{'administracion.catalogos.titulo.datos.generales' | translate}}
+                <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+                <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+            </p>
 
-    </div>
-    <div class="card" *ngIf="showDatosGenerales && !buscar">
-        <div class="py-2 card-body">
-            <p class="text-center">Selecciona un módulo para comenzar</p>
+            <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+                <div class="form-row">
+                    <div class="form-group col-lg-3 col-md-4">
+                        <label>{{'administracion.parametrosGenerales.literal.modulo' | translate}}</label>
+                        <p-dropdown class="select-form" [(ngModel)]='selectedModulo' [options]="modulos" (ngModelChange)="onChangeForm()" [filter]="true"
+                            filterBy="label"></p-dropdown>
+                    </div>
+                    <!--
+                    <div class="form-group col-lg-1 col-md-1">
+                        <br/>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-6">
+                        <label id="formu" class="form-group-label">{{'administracion.parametrosGenerales.literal.checkParametros' | translate}} <p-checkbox [(ngModel)]='valorCheckParametros' binary="true" id="check"></p-checkbox></label>
+
+                    </div>-->
+
+                    <div class="form-group col-lg-3 col-md-2">
+                        <br>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="card-footer" *ngIf="showDatosGenerales">
+            <div class="text-right main-button">
+                <button (click)="confirmarBuscar()" [disabled]="isHabilitadoBuscar()" pButton type="button " icon="fa fa-search" iconPos="left"
+                    label="{{'general.boton.search' | translate}}"></button>
+            </div>
         </div>
     </div>
-
     <!--FIN CARD-->
     <div *ngIf="buscar == true" class="card mt-3">
         <div class="card-body p-0">
@@ -29,7 +57,7 @@
                     filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
                     <ng-template *ngIf="col.field == 'valor'" let-dato="rowData" pTemplate="body">
                         <span class="input-group input-ayuda">
-                            <div class="ayuda-btn" [pTooltip]="mostrarDatosTooltip(dato.descripcion)" tooltipPosition="top">
+                            <div class="ayuda-btn" [pTooltip]="dato.descripcion" tooltipPosition="top">
                                 <i class="fa fa-question"></i>
                             </div> &nbsp;&nbsp;
                             <input type="text" [(disabled)]="!activacionEditar" class="form-control" pInputText [(ngModel)]="dato[col.field]" (input)="guardar($event,dato)"
@@ -40,28 +68,28 @@
 
                         <label>{{dato.parametro}}</label>
                     </ng-template>
-                    </p-column>
-                    <ng-template pTemplate="paginatorLeft">
-                        <div class="mostrar">
-                            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                            <label>{{ 'general.message.mostrar' | translate}}</label>
-                            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                            <label> {{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
-                        </div>
-                    </ng-template>
+                </p-column>
+                <ng-template pTemplate="paginatorLeft">
+                    <div class="mostrar">
+                        <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                        <label>{{ 'general.message.mostrar' | translate}}</label>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                        <label> {{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
+                    </div>
+                </ng-template>
 
-                    <p-footer>
-                        <div *ngIf="activarPaginacionBuscar() == true" class="text-right main-button">
-                            <!-- misma funcion de disabled para botones de restablecer  y guardar-->
-                            <button (click)="isGuardar()" pButton type="button" [(disabled)]="!isHabilitadoSave" icon="fa fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-                            <button (click)="isRestablecer()" pButton type="button" [(disabled)]="!isHabilitadoSave" icon="fa fa-history " iconPos="left"
-                                label="{{'general.boton.restablecer' | translate}}"></button>
-                                <button (click)="confirmarEliminar(filaSelecionadaTabla)" pButton type="button" [disabled]="isHabilitadoEliminar()" icon="fa fa-trash-alt "
-                                    iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-                                    <button (click)="isHistorico()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.historico' | translate}}"></button>
-                        </div>
-                    </p-footer>
-                    </p-dataTable>
+                <p-footer>
+                    <div *ngIf="activarPaginacionBuscar() == true" class="text-right main-button">
+                        <!-- misma funcion de disabled para botones de restablecer  y guardar-->
+                        <button (click)="isGuardar()" pButton type="button" [(disabled)]="!isHabilitadoSave" icon="fa fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                        <button (click)="isRestablecer()" pButton type="button" [(disabled)]="!isHabilitadoSave" icon="fa fa-history " iconPos="left"
+                            label="{{'general.boton.restablecer' | translate}}"></button>
+                        <button (click)="confirmarEliminar(filaSelecionadaTabla)" pButton type="button" [disabled]="isHabilitadoEliminar()" icon="fa fa-trash-alt "
+                            iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+                        <button (click)="isHistorico()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.historico' | translate}}"></button>
+                    </div>
+                </p-footer>
+            </p-dataTable>
         </div>
     </div>
     <div *ngIf="historico == true" class="card mt-3">
@@ -79,20 +107,20 @@
                             <span>{{datoH[col.field]}}</span>
                         </div>
                     </ng-template>
-                    </p-column>
-                    <ng-template pTemplate="paginatorLeft">
-                        <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                        <label>{{ 'general.message.mostrar' | translate}}
+                </p-column>
+                <ng-template pTemplate="paginatorLeft">
+                    <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                    <label>{{ 'general.message.mostrar' | translate}}
                         <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
-                    </ng-template>
-                    <p-footer>
-                        <div *ngIf="activarPaginacionHistorico() == true" class="text-right main-button">
-                            <button (click)="confirmarEliminar(filaSelecionadaTabla)" pButton type="button" [disabled]="isHabilitadoEliminar()" icon="fa fa-trash-alt "
-                                iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-                                <button (click)="isBuscar()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
-                        </div>
-                    </p-footer>
-                    </p-dataTable>
+                </ng-template>
+                <p-footer>
+                    <div *ngIf="activarPaginacionHistorico() == true" class="text-right main-button">
+                        <button (click)="confirmarEliminar(filaSelecionadaTabla)" pButton type="button" [disabled]="isHabilitadoEliminar()" icon="fa fa-trash-alt "
+                            iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+                        <button (click)="isBuscar()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
+                    </div>
+                </p-footer>
+            </p-dataTable>
         </div>
     </div>
     <app-dialog></app-dialog>
