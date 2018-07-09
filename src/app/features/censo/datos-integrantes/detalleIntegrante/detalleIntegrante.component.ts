@@ -216,6 +216,12 @@ export class DetalleIntegranteComponent implements OnInit {
       err => {
         console.log(err);
       }
+      //   ,
+      //   () => {
+      //     this.cargosArray.forEach((value:ComboItem, key:number)){
+
+      //   }
+      // }
     );
   }
   verMasFiltros() {
@@ -228,6 +234,7 @@ export class DetalleIntegranteComponent implements OnInit {
   backTo() {
     sessionStorage.removeItem("nIntegrante");
     sessionStorage.removeItem("integrante");
+    sessionStorage.setItem("editarIntegrante", "true");
     this.router.navigate(["fichaPersonaJuridica"]);
   }
   pInputText;

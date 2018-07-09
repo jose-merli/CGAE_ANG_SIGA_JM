@@ -186,6 +186,10 @@ export class DatosIntegrantesComponent implements OnInit {
     ];
 
     this.search();
+    if (sessionStorage.getItem("editarIntegrante") != null) {
+      this.abreCierraFicha("integrantes");
+    }
+    sessionStorage.removeItem("editarIntegrante");
   }
   activarPaginacion() {
     if (!this.datos || this.datos.length == 0) return false;
@@ -212,7 +216,10 @@ export class DatosIntegrantesComponent implements OnInit {
 
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
-    if (this.activacionEditar == true) {
+    if (
+      this.activacionEditar == true ||
+      sessionStorage.getItem("editarIntegrante")
+    ) {
       fichaPosible.activa = !fichaPosible.activa;
     }
   }
