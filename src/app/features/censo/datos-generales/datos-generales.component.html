@@ -73,6 +73,9 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.fichaCliente.literal.identificacion" | translate}} (*)</label>
               <input [(ngModel)]="body.nif" type="text" class="form-control" (ngModelChange)="onChangeForm()" [disabled]="!editar" pInputText>
+              <div *ngIf="identificacionValida == false">
+                <label class="labelError">{{"El cif es inválido"}}</label>
+              </div>
             </div>
             <!--<div *ngIf="!editar" class="form-group col-lg-6 col-md-6">
               <label>{{"censo.fichaCliente.literal.identificacion" | translate}} (*)</label>

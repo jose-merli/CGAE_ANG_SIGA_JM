@@ -281,6 +281,7 @@ export class DatosRegistralesComponent implements OnInit {
   }
 
   search() {
+    this.prefijoBlock = false;
     this.body.idPersona = this.idPersonaEditar;
     this.contadorNoCorrecto = false;
     this.fechaCorrecta = true;
