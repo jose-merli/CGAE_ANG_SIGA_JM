@@ -366,7 +366,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.bodySearch = JSON.parse(error["error"]);
         this.showFail(this.bodySearch.error.message.toString());
         console.log(error);
-        //
+        //Error al insertar los mandatos de las cuentas
         if (
           this.bodySearch.error.message.toString() ==
           "messages.censo.direcciones.facturacion"
@@ -609,12 +609,24 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     }
   }
 
+  condiciones() {
+    if (
+      this.body.iban == null ||
+      this.body.iban == undefined ||
+      this.selectedTipo.length == 0
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   validarFormulario() {
     var revisionCuentas;
     if (
       this.validarIban() &&
-      this.validarTitular() &&
       this.validarTipoCuenta() &&
+      this.validarTitular() &&
       this.validarIdentificacion()
     ) {
       this.formValido = true;
@@ -1241,10 +1253,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     }
   }
 
-  editarNif() {
-    this.editar = true;
-  }
-
   // Métodos comunes
 
   showFail(mensaje: string) {
@@ -1268,6 +1276,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   backTo() {
     this.location.back();
+    sessionStorage.setItem("abrirNotario", "true");
   }
 
   uploadFile(event: any) {

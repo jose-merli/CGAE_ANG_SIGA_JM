@@ -125,6 +125,14 @@ export class DatosIntegrantesComponent implements OnInit {
 
   ngOnInit() {
     this.checkAcceso();
+
+    // Cuando viene de la edición de un integrante
+    if (sessionStorage.getItem("abrirFichaIntegrante") == "true") {
+      let fichaPosible = this.getFichaPosibleByKey("integrantes");
+      fichaPosible.activa = !fichaPosible.activa;
+      sessionStorage.removeItem("abrirFichaIntegrante");
+    }
+
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
       id => {

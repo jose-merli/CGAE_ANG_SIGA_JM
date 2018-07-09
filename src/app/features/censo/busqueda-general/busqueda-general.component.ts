@@ -594,6 +594,7 @@ export class BusquedaGeneralComponent {
 
   backTo() {
     this.location.back();
+    sessionStorage.setItem("abrirFichaIntegrante", "true");
   }
 
   clear() {
