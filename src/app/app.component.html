@@ -6,14 +6,18 @@
         </div>
         <div (scroll)="onWindowScroll($event,content)" #content class="content">
             <router-outlet></router-outlet>
-            <div class="scroll-arrow" *ngIf="scroll" (click)="subirTop($event, content)"><i class="fa fa-arrow-up"></i></div>
+            <div class="scroll-arrow" *ngIf="scroll" (click)="subirTop($event, content)">
+                <i class="fa fa-arrow-up"></i>
+            </div>
         </div>
     </div>
 </div>
 
 <div *ngIf="isLogged()" class="cookies" [style.bottom.%]="bottomCookies">
     <h3>Uso de cookies en Abogacía Española</h3>
-    <p>{{cookieValue}}<a href="http://www.abogacia.es/informacion-sobre-cookies/" target="_blank"> Más información.</a></p>
+    <p>{{cookieValue}}
+        <a href="http://www.abogacia.es/informacion-sobre-cookies/" target="_blank"> Más información.</a>
+    </p>
     <button pButton type="button " label="{{'general.boton.submit' | translate}}" (click)='onHideCookies()'></button>
 </div>
 

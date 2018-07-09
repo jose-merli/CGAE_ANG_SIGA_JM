@@ -1,4 +1,4 @@
-<p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
+<p-growl [(value)]="msgs" [life]="30000" (onHover)="clear()"></p-growl>
 <div class="busqueda-container">
 
   <!--<div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
@@ -74,17 +74,17 @@
               <label>{{"censo.general.literal.FechaConstitucion" | translate}} (*)</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaConstitucion" [locale]="es"
                 [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
-                <div *ngIf="fechaCorrecta == false">
-                  <label class="labelError">La fecha no puede ser superior a la actual</label>
-                </div>
+              <div *ngIf="fechaCorrecta == false">
+                <label class="labelError">La fecha no puede ser superior a la actual</label>
+              </div>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaFin" [locale]="es" [utc]="true"
                 icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
-                <div *ngIf="fechaBajaCorrecta == false">
-                  <label class="labelError">La fecha de baja no puede ser anterior a la fecha de constitución</label>
-                </div>
+              <div *ngIf="fechaBajaCorrecta == false">
+                <label class="labelError">La fecha de baja no puede ser anterior a la fecha de constitución</label>
+              </div>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.fichaCliente.literal.actprofesional" | translate}} </label>
@@ -131,7 +131,7 @@
             </div>
             <div class="form-check col-lg-6 col-md-6">
               <br>
-              <label class="form-group-label">{{"censo.busquedaClientes.noColegiados.sociedadesProfesionales" | translate}}</label>              &nbsp;&nbsp;
+              <label class="form-group-label">{{"censo.busquedaClientes.noColegiados.sociedadesProfesionales" | translate}}</label> &nbsp;&nbsp;
               <p-checkbox [(ngModel)]='sociedadProfesional' binary="true" (ngModelChange)="onChangeSociedad()"></p-checkbox>
 
             </div>

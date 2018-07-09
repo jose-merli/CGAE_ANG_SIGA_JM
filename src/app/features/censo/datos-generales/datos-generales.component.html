@@ -1,4 +1,4 @@
-<p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
+<p-growl [(value)]="msgs" [life]="30000" (onHover)="clear()"></p-growl>
 <div class="busqueda-container">
 
   <!--<div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
@@ -60,8 +60,8 @@
             <!--<img src="{{imagenURL}}">-->
             <p-fileUpload #fubauto chooseLabel="" class="edit" mode="basic" name="file" auto="true" accept="image/*" (change)="uploadImage($event)"
               auto="true">
-              </p-fileUpload>
-              <!--<p-fileUpload *ngIf="archivoDisponible" #fubauto mode="basic" name="file" accept="image/*" (change)="uploadImage($event)" auto="true" chooseLabel="{{'administracion.gestionEntidad.buscarLogotipo' | translate}}">
+            </p-fileUpload>
+            <!--<p-fileUpload *ngIf="archivoDisponible" #fubauto mode="basic" name="file" accept="image/*" (change)="uploadImage($event)" auto="true" chooseLabel="{{'administracion.gestionEntidad.buscarLogotipo' | translate}}">
                             </p-fileUpload>-->
 
           </div>
@@ -85,7 +85,7 @@
               <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
               <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion" optionLabel="label" (ngModelChange)="getTipo($event)"
                 [disabled]="true"></p-dropdown>
-                <!--<p-dropdown class="select-form" [(ngModel)]="body.tipo" [options]="comboTipo" (ngModelChange)="onChangeForm()"></p-dropdown>-->
+              <!--<p-dropdown class="select-form" [(ngModel)]="body.tipo" [options]="comboTipo" (ngModelChange)="onChangeForm()"></p-dropdown>-->
             </div>
             <div *ngIf="!editar" class="form-group col-lg-6 col-md-6">
               <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
@@ -125,7 +125,7 @@
               <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
               <input type="text " class="form-control " [(ngModel)]="body.cuentaContable" [maxLength]="20" (ngModelChange)="onChangeForm()"
                 pInputText>
-                <!--<div *ngIf="cuentaIncorrecta == true"><label class="labelError">La cuenta bancaria debe tener 24 caracteres</label></div>-->
+              <!--<div *ngIf="cuentaIncorrecta == true"><label class="labelError">La cuenta bancaria debe tener 24 caracteres</label></div>-->
             </div>
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"censo.general.literal.anotaciones" | translate}}: </label>
@@ -146,7 +146,7 @@
         <div class="text-right main-button ">
           <button (click)="restablecer()" [disabled]="editar || !activacionEditar" pButton type="button" icon="fa fa-undo" iconPos="left"
             label="Restablecer"></button>
-            <button (click)="guardar()" [disabled]="!showGuardar" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
+          <button (click)="guardar()" [disabled]="!showGuardar" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
         </div>
       </div>
     </div>
