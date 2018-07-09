@@ -3,36 +3,19 @@ import {
   OnInit,
   ViewEncapsulation,
   ViewChild,
-  ChangeDetectorRef,
-  Input
+  ChangeDetectorRef
 } from "@angular/core";
 import { SigaServices } from "./../../../../_services/siga.service";
 import { SigaWrapper } from "../../../../wrapper/wrapper.class";
-import { SelectItem } from "primeng/api";
-import { DropdownModule } from "primeng/dropdown";
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl
-} from "@angular/forms";
+import { FormBuilder } from "@angular/forms";
 import { TranslateService } from "../../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../../properties/val-properties";
-import { ButtonModule } from "primeng/button";
 import { Router } from "@angular/router";
-import { InputTextModule } from "primeng/inputtext";
-import { InputTextareaModule } from "primeng/inputtextarea";
-import { CheckboxModule } from "primeng/checkbox";
-import { MultiSelectModule } from "primeng/multiselect";
-import { RadioButtonModule } from "primeng/radiobutton";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { GrowlModule } from "primeng/growl";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
 import { CatalogoRequestDto } from "../../../../../app/models/CatalogoRequestDto";
 import { CatalogoUpdateRequestDto } from "../../../../../app/models/CatalogoUpdateRequestDto";
-import { ComboItem } from "../../../../../app/models/ComboItem";
 import { ActivatedRoute } from "@angular/router";
 @Component({
   selector: "app-editarCatalogosMaestros",
@@ -68,12 +51,8 @@ export class EditarCatalogosMaestrosComponent extends SigaWrapper
   activacionEditar: boolean;
   constructor(
     private sigaServices: SigaServices,
-    private formBuilder: FormBuilder,
     private router: Router,
-    private changeDetectorRef: ChangeDetectorRef,
-    private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private activatedRoute: ActivatedRoute,
     private translateService: TranslateService
   ) {
     super(USER_VALIDATIONS);
