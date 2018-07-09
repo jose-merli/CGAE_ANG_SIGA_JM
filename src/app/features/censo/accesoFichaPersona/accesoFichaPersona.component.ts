@@ -63,6 +63,13 @@ export class AccesoFichaPersonaComponent implements OnInit {
 
   ngOnInit() {
     // this.checkAcceso();
+
+    // Esto se activará cuando venimos de datos bancarios
+    if (sessionStorage.getItem("abrirNotario") == "true") {
+      this.openFicha = !this.openFicha;
+      sessionStorage.removeItem("abrirNotario");
+    }
+
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.tipoPersona = "Notario";
 

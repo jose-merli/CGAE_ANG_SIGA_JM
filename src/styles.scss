@@ -857,56 +857,55 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   // }
 
   .notice-item {
-      background: #f9edbe url(assets/images/icons/warning.png) no-repeat 2px;
-      -moz-border-radius: 6px;
-      -webkit-border-radius: 6px;
-      border-radius: 6px;
-      border-radius: 6px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      color: #000;
-      padding: 10px 10px 10px 50px;
-      font-size: 13px;
-      font-weight: bold;
-      border: 2px solid #999;
-      display: block;
-      position: relative;
-      margin: 2px 2px 12px 2px;
-      left: 0;
-      // &:before{
-      //   content: "\f071";
-      //   font-family: FontAwesome;
-      //   display: flex;
-      //   font-size: 2rem;
-      // }
+    background: #f9edbe url(assets/images/icons/warning.png) no-repeat 2px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    color: #000;
+    padding: 10px 10px 10px 50px;
+    font-size: 13px;
+    font-weight: bold;
+    border: 2px solid #999;
+    display: block;
+    position: relative;
+    margin: 2px 2px 12px 2px;
+    left: 0;
+    // &:before{
+    //   content: "\f071";
+    //   font-family: FontAwesome;
+    //   display: flex;
+    //   font-size: 2rem;
+    // }
   }
 }
 
-.input-ayuda .ui-state-default,.input-ayuda .ui-widget-content .ui-state-default, .input-ayuda .ui-widget-header .ui-state-default{
+.input-ayuda .ui-state-default,
+.input-ayuda .ui-widget-content .ui-state-default,
+.input-ayuda .ui-widget-header .ui-state-default {
   background: white;
   border-radius: 3px;
 }
 
-.input-ayuda .ui-widget:disabled{
+.input-ayuda .ui-widget:disabled {
   opacity: 1;
 }
 
-.input-ayuda .ayuda-btn{
+.input-ayuda .ayuda-btn {
   border-radius: 3px;
   background: $blue3;
   border: 1px solid #c6c7c8;
   color: $grey1;
-  padding: .25rem .6rem;
+  padding: 0.25rem 0.6rem;
   cursor: pointer;
 }
 
-.input-group .form-control:not(:first-child){
-    border-top-left-radius: 3px; 
-    border-bottom-left-radius: 3px;
+.input-group .form-control:not(:first-child) {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
 }
 
-
-
-  
 /**RESPONSIVE**/
 
 @media (max-width: 55em) {
@@ -979,14 +978,19 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   top: 2em !important;
   width: 1.8em;
   height: 1.8em;
- 
 }
 
 .ui-datepicker .ui-datepicker-prev span,
-.ui-datepicker .ui-datepicker-next span{
+.ui-datepicker .ui-datepicker-next span {
   margin-left: -8px;
 }
 
-.ui-datepicker.ui-widget .ui-datepicker-calendar td a.ui-state-active{
+.ui-dropdown.ui-state-disabled .ui-dropdown-trigger,
+.ui-dropdown.ui-state-disabled .ui-dropdown-label,
+.ui-widget:disabled {
+  background-color: #e9ecef;
+}
+
+.ui-datepicker.ui-widget .ui-datepicker-calendar td a.ui-state-active {
   background: $secondary-color;
 }

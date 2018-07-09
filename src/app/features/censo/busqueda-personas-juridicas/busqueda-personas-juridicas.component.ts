@@ -106,7 +106,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     sessionStorage.removeItem("notario");
     sessionStorage.removeItem("crearnuevo");
 
-  // Poner check "Sociedades Profesionales a activo porque "Sociedades Profesionales a activo por defecto"
+    // Poner check "Sociedades Profesionales a activo porque "Sociedades Profesionales a activo por defecto"
     this.body.sociedadesProfesionales = true;
 
     if (sessionStorage.getItem("busqueda") != null) {
@@ -365,11 +365,22 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   obtenerIntegrantes(dato) {
-    return dato.numeroIntegrantes;
+    if (dato.numeroIntegrantes == 0) {
+      return "Sin integrantes";
+    } else {
+      return dato.numeroIntegrantes;
+    }
   }
 
   obtenerNombreIntegrantes(dato) {
-    return dato.nombresIntegrantes;
+    if (dato.numeroIntegrantes > 0) {
+      //return dato.nombresIntegrantes.replace(';', ' ');
+      while (dato.nombresIntegrantes.toString().indexOf(";") != -1)
+        dato.nombresIntegrantes = dato.nombresIntegrantes
+          .toString()
+          .replace(";", "\n");
+      return dato.nombresIntegrantes;
+    }
   }
 
   paginate(event) {

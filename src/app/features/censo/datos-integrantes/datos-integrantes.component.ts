@@ -125,6 +125,14 @@ export class DatosIntegrantesComponent implements OnInit {
 
   ngOnInit() {
     this.checkAcceso();
+
+    // Cuando viene de la edición de un integrante
+    if (sessionStorage.getItem("abrirFichaIntegrante") == "true") {
+      let fichaPosible = this.getFichaPosibleByKey("integrantes");
+      fichaPosible.activa = !fichaPosible.activa;
+      sessionStorage.removeItem("abrirFichaIntegrante");
+    }
+
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
       id => {
@@ -186,6 +194,10 @@ export class DatosIntegrantesComponent implements OnInit {
     ];
 
     this.search();
+    if (sessionStorage.getItem("editarIntegrante") != null) {
+      this.abreCierraFicha("integrantes");
+    }
+    sessionStorage.removeItem("editarIntegrante");
   }
   activarPaginacion() {
     if (!this.datos || this.datos.length == 0) return false;
@@ -212,7 +224,10 @@ export class DatosIntegrantesComponent implements OnInit {
 
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
-    if (this.activacionEditar == true) {
+    if (
+      this.activacionEditar == true ||
+      sessionStorage.getItem("editarIntegrante")
+    ) {
       fichaPosible.activa = !fichaPosible.activa;
     }
   }
