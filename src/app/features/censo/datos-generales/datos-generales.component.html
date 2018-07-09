@@ -11,7 +11,8 @@
       <div *ngIf="!esFichaActiva('generales')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
-            <i class="fa fa-user icon-ficha"></i>
+            <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+            <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -44,7 +45,8 @@
       </div>
       <div *ngIf="esFichaActiva('generales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
-          <i class="fa fa-user icon-ficha"></i>
+          <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+          <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
         </div>
         <label class="title-ficha">{{ "general.message.datos.generales" | translate}}</label>
         <i class="fa fa-angle-up ml-auto"></i>
@@ -55,18 +57,19 @@
     <div *ngIf="esFichaActiva('generales')" class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque col-lg-3 col-md-3">
-          <div class="img-colegiado my-2">
-            <i class="fa fa-user" style="font-size:130px;color:grey"></i>
-            <!--<img src="{{imagenURL}}">-->
-            <p-fileUpload #fubauto chooseLabel="" class="edit" mode="basic" name="file" auto="true" accept="image/*" (change)="uploadImage($event)"
-              auto="true">
-              </p-fileUpload>
-              <!--<p-fileUpload *ngIf="archivoDisponible" #fubauto mode="basic" name="file" accept="image/*" (change)="uploadImage($event)" auto="true" chooseLabel="{{'administracion.gestionEntidad.buscarLogotipo' | translate}}">
-                            </p-fileUpload>-->
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <div class="img-colegiado my-2">
+                <i *ngIf="!existeImagen" class="fa fa-user" style="font-size:130px;color:grey"></i>
+                <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="imagenCentrada">
 
+              </div>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <p-fileUpload class="buttonUpload" #fubauto name="file" (change)="uploadImage($event)" auto="true" choo styleClass="pi pi-pencil"
+                chooseLabel=""></p-fileUpload>
+            </div>
           </div>
-          <!--<p-checkbox binary="true" [(ngModel)]="body.utilizarFoto" label="{{ 'censo.consultaDatosGenerales.literal.usarFoto' | translate}}"
-            name="groupname "></p-checkbox>-->
         </div>
         <div class="bloque col-lg-5 col-md-5">
           <div class="form-row">

@@ -60,6 +60,8 @@ import { MultiSelectModule } from "primeng/multiSelect";
 import { Subscription } from "rxjs/Subscription";
 import { cardService } from "./../../../_services/cardSearch.service";
 
+import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
+
 @Component({
   selector: "app-datos-generales",
   templateUrl: "./datos-generales.component.html",
@@ -120,7 +122,11 @@ export class DatosGenerales implements OnInit {
   selectedTipo: any;
   idiomaPreferenciaSociedad: String;
 
+  existeImagen: boolean = false;
+  imagenPersonaJuridica: any;
+
   cuentaIncorrecta: Boolean = false;
+
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
 
@@ -157,7 +163,8 @@ export class DatosGenerales implements OnInit {
     private location: Location,
     private cardService: cardService,
     private sigaServices: SigaServices,
-    private headerGestionEntidadService: HeaderGestionEntidadService
+    private headerGestionEntidadService: HeaderGestionEntidadService,
+    private sanitizer: DomSanitizer
   ) {
     this.formBusqueda = this.formBuilder.group({
       cif: null
@@ -184,8 +191,10 @@ export class DatosGenerales implements OnInit {
       this.idPersona = this.usuarioBody[0].idPersona;
       this.tipoPersonaJuridica = this.usuarioBody[0].tipo;
     }
+    // estamos en modo edicion (NO en creacion)
     if (this.idPersona != undefined) {
       this.datosGeneralesSearch();
+      this.cargarImagen(this.body.idPersona);
     }
     this.textFilter = "Elegir";
 
@@ -209,7 +218,7 @@ export class DatosGenerales implements OnInit {
       n => {
         this.comboIdentificacion = n.combooItems;
       },
-      error => { }
+      error => {}
     );
 
     this.comboTipo.push(this.tipoPersonaJuridica);
@@ -336,6 +345,11 @@ export class DatosGenerales implements OnInit {
               let respuesta = JSON.parse(data["body"]);
               this.idPersona = respuesta.id;
               sessionStorage.removeItem("crearnuevo");
+              // pasamos el idPersona creado para la nueva sociedad
+              if (this.file != undefined) {
+                this.guardarImagen(this.idPersona);
+              }
+              this.cargarImagen(this.idPersona);
               this.datosGeneralesSearch();
               this.obtenerEtiquetasPersonaJuridicaConcreta();
               this.cardService.searchNewAnnounce.next(this.idPersona);
@@ -363,9 +377,13 @@ export class DatosGenerales implements OnInit {
         );
       }
       this.body.idioma = this.idiomaPreferenciaSociedad;
+      if (this.file != undefined) {
+        this.guardarImagen(this.body.idPersona);
+      }
 
       this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
         data => {
+          this.cargarImagen(this.body.idPersona);
           this.showSuccess();
           console.log(data);
         },
@@ -379,52 +397,59 @@ export class DatosGenerales implements OnInit {
           this.obtenerEtiquetasPersonaJuridicaConcreta();
         }
       );
-
-      let lenguajeeImagen: boolean = false;
-      if (this.file != undefined) {
-        this.sigaServices
-          .postSendFileAndParameters(
-            "personaJuridica_uploadFotografia",
-            this.file,
-            this.body.idPersona
-          )
-          .subscribe(
-            data => {
-              console.log(data);
-              this.file = undefined;
-              this.archivoDisponible = false;
-
-              // this.imagenURL =
-              //   this.sigaServices.getNewSigaUrl() +
-              //   this.sigaServices.getServucePath(
-              //     "personaJuridica_cargarFotografia"
-              //   ) +
-              //   "?random=" +
-              //   new Date().getTime();
-
-              this.imagenURL = this.sigaServices.post(
-                "personaJuridica_cargarFotografia",
-                this.body
-              );
-
-              this.imagenURL =
-                this.imagenURL + "?random=" + new Date().getTime();
-
-              var ajsdka = this.imagenURL;
-              if (!lenguajeeImagen) {
-                this.showSuccessUploadedImage();
-              }
-            },
-            err => {
-              console.log(err);
-            }
-          );
-      }
     }
   }
 
   restablecer() {
-    this.datosGeneralesSearch();
+    // si ya existe la sociedad
+    if (sessionStorage.getItem("crearnuevo") == null) {
+      this.datosGeneralesSearch();
+      this.obtenerEtiquetasPersonaJuridicaConcreta();
+      this.cargarImagen(this.body.idPersona);
+      this.file = undefined;
+    }
+  }
+
+  cargarImagen(idPersona: String) {
+    let datosParaImagenJuridica: DatosGeneralesItem = new DatosGeneralesItem();
+    datosParaImagenJuridica.idPersona = idPersona;
+
+    this.sigaServices
+      .postDownloadFiles(
+        "personaJuridica_cargarFotografia",
+        datosParaImagenJuridica
+      )
+      .subscribe(data => {
+        const blob = new Blob([data], { type: "text/csv" });
+        if (blob.size == 0) {
+          this.showFail("messages.general.error.ficheroNoExiste");
+          this.existeImagen = false;
+        } else {
+          let urlCreator = window.URL;
+          this.imagenPersonaJuridica = this.sanitizer.bypassSecurityTrustUrl(
+            urlCreator.createObjectURL(blob)
+          );
+          this.existeImagen = true;
+        }
+      });
+  }
+
+  guardarImagen(idPersona: String) {
+    this.sigaServices
+      .postSendFileAndParameters(
+        "personaJuridica_uploadFotografia",
+        this.file,
+        idPersona
+      )
+      .subscribe(
+        data => {
+          console.log(data);
+          this.file = undefined;
+        },
+        error => {
+          console.log(error);
+        }
+      );
   }
 
   uploadImage(event: any) {
@@ -445,12 +470,22 @@ export class DatosGenerales implements OnInit {
       // Mensaje de error de formato de imagen y deshabilitar boton guardar
       this.file = undefined;
       this.archivoDisponible = false;
+      this.existeImagen = false;
       this.showFailUploadedImage();
     } else {
       // se almacena el archivo para habilitar boton guardar
       this.file = fileList[0];
       this.archivoDisponible = true;
+      //
+      this.existeImagen = true;
+      let urlCreator = window.URL;
+      this.imagenPersonaJuridica = this.sanitizer.bypassSecurityTrustUrl(
+        urlCreator.createObjectURL(this.file)
+      );
     }
+
+    // para comprobar los cambios de la imagen tambien
+    this.onChangeForm();
   }
 
   abreCierraFicha(key) {
@@ -473,20 +508,12 @@ export class DatosGenerales implements OnInit {
     return {};
   }
 
-  onUpload(event) {
-    for (let file of event.files) {
-      this.uploadedFiles.push(file);
-    }
-    console.log("image", this.uploadedFiles);
-    this.msgs = [];
-    this.msgs.push({ severity: "info", summary: "File Uploaded", detail: "" });
-  }
-
   backTo() {
     this.location.back();
   }
 
   onChangeForm() {
+    // modo creacion
     if (this.editar) {
       if (this.body.nif.length == 9 && this.isValidCIF(this.body.nif)) {
         // rellena el filtro tipo según el cif aplicado
@@ -519,7 +546,8 @@ export class DatosGenerales implements OnInit {
       this.body.nif != undefined &&
       !this.onlySpaces(this.body.nif) &&
       this.idiomaPreferenciaSociedad != "" &&
-      this.idiomaPreferenciaSociedad != undefined
+      this.idiomaPreferenciaSociedad != undefined &&
+      this.file != undefined
     ) {
       if (
         this.editar &&
@@ -606,7 +634,6 @@ export class DatosGenerales implements OnInit {
       detail: mensaje
     });
   }
-
 
   clear() {
     this.msgs = [];

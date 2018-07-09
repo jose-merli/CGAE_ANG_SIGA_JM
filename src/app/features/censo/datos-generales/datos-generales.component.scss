@@ -42,3 +42,11 @@
   vertical-align: middle !important;
   padding-left: 0.8em;
 }
+
+// .card .card-body-ficha .bloque:first-child {
+//   padding: 2.5em !important;
+// }
+
+::ng-deep .ui-fileupload-choose .fa-plus::before {
+  content: "\F303";
+}

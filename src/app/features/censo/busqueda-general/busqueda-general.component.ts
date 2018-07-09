@@ -446,12 +446,8 @@ export class BusquedaGeneralComponent {
         return true;
       }
     } else {
-      // busqueda juridica => cif u otros
-      if (
-        !this.isValidDNI(value) &&
-        !this.isValidNIE(value) &&
-        !this.isValidPassport(value)
-      ) {
+      // busqueda juridica => cif
+      if (this.isValidCIF(value)) {
         return true;
       } else {
         return false;
