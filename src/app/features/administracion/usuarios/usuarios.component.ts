@@ -151,16 +151,21 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.cols = [
       {
         field: "nombreApellidos",
-        header: this.cargarLabel()
+        header: "administracion.parametrosGenerales.literal.nombre.apellidos"
       },
-      { field: "nif", header: "administracion.usuarios.literal.NIF", width: "12%" },
+      {
+        field: "nif",
+        header: "administracion.usuarios.literal.NIF",
+        width: "12%"
+      },
       {
         field: "fechaAlta",
         header: "administracion.usuarios.literal.fechaAlta",
         width: "12%"
       },
       {
-        field: "roles", header: "administracion.usuarios.literal.roles",
+        field: "roles",
+        header: "administracion.usuarios.literal.roles",
         width: "18%"
       }
     ];
@@ -205,7 +210,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
 
@@ -665,19 +670,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
 
-
   clear() {
     this.msgs = [];
-  }
-
-  cargarLabel(): string {
-    return this.translateService
-      .instant("gratuita.mantenimientoTablasMaestra.literal.apellidos")
-      .concat(" & ")
-      .concat(
-        this.translateService.instant(
-          "administracion.parametrosGenerales.literal.nombre"
-        )
-      );
   }
 }
