@@ -151,7 +151,8 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.cols = [
       {
         field: "nombreApellidos",
-        header: "administracion.parametrosGenerales.literal.nombre.apellidos"
+        header: "administracion.parametrosGenerales.literal.nombre.apellidos",
+        width: "18%"
       },
       {
         field: "nif",

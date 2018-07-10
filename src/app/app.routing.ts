@@ -179,6 +179,8 @@ import { DatosGenerales } from "./features/censo/datosPersonaJuridica/datos-gene
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
+//ERROR
+import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -960,6 +962,10 @@ const appRoutes: Routes = [
     path: "gestionAuditoria",
     component: GestionAuditoriaComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path: "errorAcceso",
+    component: ErrorAccesoComponent
   },
   { path: "**", redirectTo: "home" }
 ];
