@@ -350,7 +350,11 @@ export class AccesoFichaPersonaComponent implements OnInit {
   }
   abrirFicha() {
     // if (this.activacionEditar == true) {
-    this.openFicha = !this.openFicha;
+    // si no se esta creando una nueva sociedad
+    if (sessionStorage.getItem("crearnuevo") == null) {
+      this.openFicha = !this.openFicha;
+    }
+
     // }
   }
 
