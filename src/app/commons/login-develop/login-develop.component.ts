@@ -67,11 +67,11 @@ para poder filtrar el dato con o sin estos caracteres*/
       posMenu: new FormControl(0)
     });
     //this.onChange(this.form.controls['tmpLoginInstitucion'].value);
-    this.form.controls[
-      "tmpLoginInstitucion"
-    ].valueChanges.subscribe(newValue => {
-      this.form.controls["location"].setValue(newValue);
-    });
+    this.form.controls["tmpLoginInstitucion"].valueChanges.subscribe(
+      newValue => {
+        this.form.controls["location"].setValue(newValue);
+      }
+    );
 
     this.form.controls["tmpLoginPerfil"].valueChanges.subscribe(n => {
       this.form.controls["profile"].setValue(n);
@@ -98,10 +98,8 @@ para poder filtrar el dato con o sin estos caracteres*/
         console.log("ERROR", error);
         if (error.status == 403) {
           let codError = error.status;
-          let descError = error.statusText;
 
           sessionStorage.setItem("codError", codError);
-          sessionStorage.setItem("descError", descError);
 
           this.router.navigate(["/errorAcceso"]);
         }
