@@ -35,9 +35,9 @@ export class LoginDevelopComponent implements OnInit {
     private service: AuthenticationService,
     private sigaServices: SigaServices,
     private router: Router
-  ) {}
+  ) { }
 
-  onSubmit() {}
+  onSubmit() { }
 
   ngOnInit() {
     this.sigaServices.getBackend("instituciones").subscribe(n => {
@@ -46,10 +46,16 @@ export class LoginDevelopComponent implements OnInit {
       /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
       this.instituciones.map(e => {
-        e.labelSinTilde = e.label
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "");
-        return e.labelSinTilde;
+        let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+        let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+        let i;
+        let x;
+        for (i = 0; i < e.label.length; i++) {
+          if ((x = accents.indexOf(e.label[i])) != -1) {
+            e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+            return e.labelSinTilde;
+          }
+        }
       });
 
       this.isLetrado = "N";

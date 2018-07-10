@@ -32,7 +32,9 @@
    }
 
 .ui-tooltip {
-  max-width: 100%;
+  max-width: 80%;
+  box-shadow:  none;
+
   .ui-tooltip-text {
     background: gray;
     color: black;

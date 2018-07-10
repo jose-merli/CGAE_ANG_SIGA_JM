@@ -42,7 +42,9 @@
 }
 
 .ui-tooltip {
-  max-width: 100%;
+
+  max-width: 80%;
+  box-shadow:  none;
   .ui-tooltip-text {
     font-size: 0.8rem;
   }
