@@ -25,12 +25,27 @@
 <div class="menu-user" [ngClass]="{'menuVisible': !menuHide, 'menuHide': menuHide}">
   <label class="mb-4">Usuario</label>
   <ul *ngFor="let item of menuUser">
-    <li>Nombre: <span>{{item.nombre}}</span></li>
-    <li>DNI: <span>{{item.dni}}</span></li>
-    <li>Grupo: <span>{{item.grupo}}</span></li>
-    <li>Institución: <span>{{item.institucion}}</span></li>
-    <li>Idioma: <span>{{item.idioma}}</span></li>
-    <li>Última conexión: <span>{{item.ultimaConex}}</span></li>
+    <li>Nombre:
+      <span>{{item.nombre}}</span>
+    </li>
+    <li>DNI:
+      <span>{{item.dni}}</span>
+    </li>
+    <li>Grupo:
+      <span>{{item.grupo}}</span>
+    </li>
+    <li>Institución:
+      <span>{{item.institucion}}</span>
+    </li>
+    <li>Idioma:
+      <span>{{item.idioma}}</span>
+    </li>
+    <li>Última conexión:
+      <span>{{item.ultimaConex}}</span>
+    </li>
     <li (click)="logout()" class="cerrar-sesion">Cerrar sesión</li>
+    <li class="link-cookies">
+      <a href="http://www.abogacia.es/informacion-sobre-cookies/" target="_blank">Política de Cookies</a>
+    </li>
   </ul>
 </div>
