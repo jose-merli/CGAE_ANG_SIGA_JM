@@ -126,12 +126,12 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
 
   onChangeForm(event) {
     this.selectedModulo = event;
-    this.isBuscar(this.selectedModulo);
+    this.isBuscar();
   }
 
   confirmarBuscar() {
     if (this.selectedModulo != "") {
-      this.isBuscar(this.selectedModulo);
+      this.isBuscar();
     }
   }
 
@@ -157,9 +157,9 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     );
   }
 
-  isBuscar(selectedModulo) {
-    if (selectedModulo != undefined) {
-      this.body.modulo = selectedModulo;
+  isBuscar() {
+    if (this.selectedModulo != undefined) {
+      this.body.modulo = this.selectedModulo;
     } else this.body.modulo = "";
 
     this.body.parametrosGenerales = "S";
@@ -201,7 +201,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
       },
       () => {
         this.elementosAGuardar = [];
-        this.isBuscar(this.selectedModulo);
+        this.isBuscar();
         this.table.reset();
         this.eliminar = true;
       }
@@ -238,7 +238,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
           },
           () => {
             this.elementosAGuardar = [];
-            this.isBuscar(this.selectedModulo);
+            this.isBuscar();
             this.table.reset();
             this.eliminar = true;
             this.isHabilitadoSave = false;
@@ -388,18 +388,15 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   isRestablecer() {
     this.elementosAGuardar = [];
     this.body = this.bodySave;
-    this.isBuscar(this.selectedModulo);
+    this.isBuscar();
     this.isHabilitadoSave = false;
   }
 
-  mostrarDatosTooltip(dato) {
-    return dato.replace(/\\\\n/g, "").replace(/\./g, "\n");
-  }
   //búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER && !this.botonBuscar) {
-      this.isBuscar(this.selectedModulo);
+      this.isBuscar();
     }
   }
 

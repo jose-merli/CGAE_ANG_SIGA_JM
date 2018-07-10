@@ -151,7 +151,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.cols = [
       {
         field: "nombreApellidos",
-        header: "administracion.usuarios.literal.nombre"
+        header: "administracion.parametrosGenerales.literal.nombre.apellidos"
       },
       {
         field: "nif",
@@ -204,6 +204,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.body.activo = "S";
     }
   }
+
   isValidDNI(dni: string): boolean {
     let DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
