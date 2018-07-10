@@ -2,12 +2,12 @@
 <div class="busqueda-container">
     <div class="header-title">
         <i class="fa fa-square"></i>
-        <p>Búsqueda de Colegiados</p>
-    </div>
-    <div class="breadCrumb">
         <p>Censo
             <i class="fa fa-angle-right"></i> Búsqueda de Colegiados</p>
     </div>
+    <!--<div class="breadCrumb">
+
+    </div>-->
     <div class="card">
 
         <div class="card-body">
@@ -39,7 +39,7 @@
                         <label>Segundo Apellido</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]='bodyFisica.segundoApellido'>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group col-lg-6 col-md-6">
                         <label>Colegio</label>
                         <!--<p-multiSelect [filter]="true" filterBy="label" [options]="colegios_rol" optionLabel="label" [defaultLabel]="textFilter"
                             styleClass="widthAll" [(ngModel)]='colegios_seleccionados' maxSelectedLabels="1" [panelStyle]="{width:'100%'}"></p-multiSelect>-->
@@ -72,7 +72,7 @@
                         <label>Abreviatura</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]='bodyJuridica.abreviatura'>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group col-lg-6 col-md-6">
                         <label>Colegio</label>
                         <p-multiSelect [filter]="true" filterBy="label" [options]="colegios_rol" optionLabel="label" [defaultLabel]="textFilter"
                             styleClass="widthAll" [(ngModel)]='colegios_seleccionados' maxSelectedLabels="1" [panelStyle]="{width:'100%'}"></p-multiSelect>
@@ -90,29 +90,29 @@
     </div>
     <div *ngIf="buscar == true" class="card mt-3">
         <div class="card-body p-0">
-            <div class="m-3 d-flex justify-content-end">
+            <!--<div class="m-3 d-flex justify-content-end">
 
-            </div>
+            </div>-->
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-                [(selection)]="selectedDatos" (onRowSelect)="irFichaColegial(selectedDatos)" dataKey="nif" selectionMode="multiple"
-                [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both"
+                [(selection)]="selectedDatos" (onRowSelect)="irFichaColegial(selectedDatos)" dataKey="nif" [responsive]="true"
+                selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both"
                 [rows]="selectedItem">
                 <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                     filterMatchMode="contains"></p-column>
-                <ng-template pTemplate="paginatorLeft">
-                    <div class="mostrar">
-                        <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                        <label>Mostrar</label>
-                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                        <label> registros</label>
-                    </div>
-                </ng-template>
-                <p-footer *ngIf="selectedDatos && selectedDatos != ''">
-                    <div class="text-right main-button">
-                        <button pButton type="button" icon="fa fa-download" iconPos="left" label="Descargar"></button>
-                    </div>
-                </p-footer>
-            </p-dataTable>
+                    <ng-template pTemplate="paginatorLeft">
+                        <div class="mostrar">
+                            <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                            <label>Mostrar</label>
+                            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                            <label> registros</label>
+                        </div>
+                    </ng-template>
+                    <p-footer *ngIf="selectedDatos && selectedDatos != ''">
+                        <div class="text-right main-button">
+                            <button pButton type="button" icon="fa fa-download" iconPos="left" label="Descargar"></button>
+                        </div>
+                    </p-footer>
+                    </p-dataTable>
         </div>
     </div>
 </div>

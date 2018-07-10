@@ -9,6 +9,7 @@ import { HomeComponent } from "./features/home/home.component";
 // Censo
 import { SearchColegiadosComponent } from "./features/censo/search-colegiados/search-colegiados.component";
 import { SearchNoColegiadosComponent } from "./features/censo/search-no-colegiados/search-no-colegiados.component";
+import { BusquedaNoColegiadosComponent } from "./features/censo/busqueda-no-colegiados/busqueda-no-colegiados.component";
 import { CertificadosAcaComponent } from "./features/censo/certificados-aca/certificados-aca.component";
 import { ComisionesCargosComponent } from "./features/censo/comisiones-cargos/comisiones-cargos.component";
 import { SolicitudesGenericasComponent } from "./features/censo/solicitudes-genericas/solicitudes-genericas.component";
@@ -179,6 +180,8 @@ import { DatosGenerales } from "./features/censo/datosPersonaJuridica/datos-gene
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
+//ERROR
+import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -223,6 +226,12 @@ const appRoutes: Routes = [
     path: "searchNoColegiados",
     component: BusquedaPersonasJuridicas,
     // component: SearchNoColegiadosComponent,
+    canActivate: [AuthGuard]
+  },
+
+  {
+    path: "busquedaNoColegiados",
+    component: BusquedaNoColegiadosComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -960,6 +969,10 @@ const appRoutes: Routes = [
     path: "gestionAuditoria",
     component: GestionAuditoriaComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path: "errorAcceso",
+    component: ErrorAccesoComponent
   },
   { path: "**", redirectTo: "home" }
 ];

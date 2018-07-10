@@ -47,8 +47,11 @@ import { Observable } from "rxjs/Rx";
 })
 export class PerfilesComponent extends SigaWrapper implements OnInit {
   perfiles_data: any[];
+  usuarios_rol: any[];
   cols: any = [];
+  textFilter: String;
   datos: any[];
+  rolesNoAsignados: any[];
   msgs: Message[] = [];
   searchPerfiles: PerfilesResponseDto = new PerfilesResponseDto();
   requestPerfiles: PerfilesRequestDto = new PerfilesRequestDto();
@@ -77,9 +80,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private activatedRoute: ActivatedRoute,
-    private translateService: TranslateService,
-    private location: Location
+    private translateService: TranslateService
   ) {
     super(USER_VALIDATIONS);
   }
@@ -89,6 +90,15 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   ngOnInit() {
     let tablaAnterior = JSON.parse(sessionStorage.getItem("searchOrHistory"));
     sessionStorage.removeItem("searchOrHistory");
+    this.textFilter = "Elegir";
+    this.sigaServices.get("usuarios_rol").subscribe(
+      n => {
+        this.usuarios_rol = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
     if (tablaAnterior == "history") {
       this.historico();
     } else {
@@ -106,12 +116,9 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         header: "general.description",
         width: "40%"
       },
+
       {
-        field: "descripcionRol",
-        header: "administracion.usuarios.literal.roles"
-      },
-      {
-        field: "asignarRolDefecto",
+        field: "rolesAsignados",
         header: "menu.administracion.perfilrol"
       }
     ];
@@ -160,7 +167,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
           this.buscar = true;
           this.table.paginator = true;
           this.sigaServices.get("usuarios_rol").subscribe(
-            n => { },
+            n => {},
             err => {
               console.log(err);
             }
@@ -318,29 +325,29 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   }
   irEditarUsuario(id) {
     if (!this.selectMultiple) {
-      var ir = null;
-      if (id && id.length > 0) {
-        ir = id[0];
-      }
-      sessionStorage.setItem("crear", JSON.stringify(false));
-      sessionStorage.removeItem("perfil");
-      sessionStorage.removeItem("privilegios");
-      sessionStorage.removeItem("first");
-      sessionStorage.setItem("perfil", JSON.stringify(id));
-      sessionStorage.setItem("editedUser", JSON.stringify(this.selectedDatos));
-      sessionStorage.setItem("first", JSON.stringify(this.table.first));
-      if (id[0].fechaBaja != null) {
-        sessionStorage.setItem("privilegios", JSON.stringify(false));
-      } else {
-        sessionStorage.setItem(
-          "privilegios",
-          JSON.stringify(this.activacionEditar)
-        );
-      }
-      this.router.navigate(["/EditarPerfiles"]);
+      // var ir = null;
+      // if (id && id.length > 0) {
+      //   ir = id[0];
+      // }
+      // sessionStorage.setItem("crear", JSON.stringify(false));
+      // sessionStorage.removeItem("perfil");
+      // sessionStorage.removeItem("privilegios");
+      // sessionStorage.removeItem("first");
+      // sessionStorage.setItem("perfil", JSON.stringify(id));
+      // sessionStorage.setItem("editedUser", JSON.stringify(this.selectedDatos));
+      // sessionStorage.setItem("first", JSON.stringify(this.table.first));
+      // if (id[0].fechaBaja != null) {
+      //   sessionStorage.setItem("privilegios", JSON.stringify(false));
+      // } else {
+      //   sessionStorage.setItem(
+      //     "privilegios",
+      //     JSON.stringify(this.activacionEditar)
+      //   );
+      // }
+      // this.router.navigate(["/EditarPerfiles"]);
     } else {
       this.editar = false;
-      this.numSelected = this.selectedDatos.length
+      this.numSelected = this.selectedDatos.length;
     }
   }
   isEliminar(selectedDatos) {
@@ -442,7 +449,6 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       this.numSelected = 0;
     }
   }
-
 
   clear() {
     this.msgs = [];

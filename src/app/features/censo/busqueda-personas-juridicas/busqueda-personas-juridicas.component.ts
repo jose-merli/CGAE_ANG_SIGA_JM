@@ -87,7 +87,11 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("busqueda"));
       sessionStorage.removeItem("busqueda");
       this.Search();
+    }else{
+      // Poner check "Sociedades Profesionales a activo porque "Sociedades Profesionales a activo por defecto"
+      this.body.sociedadesProfesionales = true;
     }
+
     this.sigaServices.get("busquedaPerJuridica_tipo").subscribe(
       n => {
         this.tipos = n.combooItems;
@@ -147,8 +151,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       }
     ];
 
-    // Poner check "Sociedades Profesionales a activo porque "Sociedades Profesionales a activo por defecto"
-    this.body.sociedadesProfesionales = true;
   }
 
   toHistorico() {

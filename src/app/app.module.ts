@@ -61,6 +61,7 @@ import { FileUploadModule } from "primeng/fileupload";
 // Modulo de censo
 import { SearchColegiadosComponent } from "./features/censo/search-colegiados/search-colegiados.component";
 import { SearchNoColegiadosComponent } from "./features/censo/search-no-colegiados/search-no-colegiados.component";
+import { BusquedaNoColegiadosComponent } from "./features/censo/busqueda-no-colegiados/busqueda-no-colegiados.component";
 import { CertificadosAcaComponent } from "./features/censo/certificados-aca/certificados-aca.component";
 import { ComisionesCargosComponent } from "./features/censo/comisiones-cargos/comisiones-cargos.component";
 import { SolicitudesGenericasComponent } from "./features/censo/solicitudes-genericas/solicitudes-genericas.component";
@@ -244,6 +245,7 @@ import { ServiciosInteresComponent } from "./features/censo/datosPersonaJuridica
 
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
+import { ErrorAccesoComponent } from './commons/error/error-acceso/error-acceso.component';
 
 @NgModule({
   declarations: [
@@ -263,6 +265,7 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     SearchColegiadosComponent,
     BusquedaGeneralComponent,
     SearchNoColegiadosComponent,
+    BusquedaNoColegiadosComponent,
     CertificadosAcaComponent,
     ComisionesCargosComponent,
     SolicitudesGenericasComponent,
@@ -439,7 +442,8 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     // DatosMandatosComponent,
     // ListadoFicherosAnexosComponent,
     DatosDireccionesComponent,
-    ConsultarDatosDireccionesComponent
+    ConsultarDatosDireccionesComponent,
+    ErrorAccesoComponent
   ],
   imports: [
     BrowserModule,
