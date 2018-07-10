@@ -3,15 +3,31 @@ import {
   OnInit,
   ViewEncapsulation,
   ViewChild,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  Input
 } from "@angular/core";
 import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
-import { FormBuilder } from "@angular/forms";
+import { SelectItem } from "primeng/api";
+import { DropdownModule } from "primeng/dropdown";
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl
+} from "@angular/forms";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
+import { ButtonModule } from "primeng/button";
 import { Router, ActivatedRoute } from "@angular/router";
+import { InputTextModule } from "primeng/inputtext";
+import { InputTextareaModule } from "primeng/inputtextarea";
+import { CheckboxModule } from "primeng/checkbox";
+import { RadioButtonModule } from "primeng/radiobutton";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { GrowlModule } from "primeng/growl";
 import { ConfirmationService } from "primeng/api";
+import { MultiSelectModule } from "primeng/multiselect";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
 import { PerfilItem } from "./../../../../app/models/PerfilItem";
@@ -21,6 +37,7 @@ import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { ComboItem } from "./../../../../app/models/ComboItem";
 import { DataTable } from "primeng/datatable";
 import { Location } from "@angular/common";
+import { Observable } from "rxjs/Rx";
 
 @Component({
   selector: "app-perfiles",
@@ -30,8 +47,11 @@ import { Location } from "@angular/common";
 })
 export class PerfilesComponent extends SigaWrapper implements OnInit {
   perfiles_data: any[];
+  usuarios_rol: any[];
   cols: any = [];
+  textFilter: String;
   datos: any[];
+  rolesNoAsignados: any[];
   msgs: Message[] = [];
   searchPerfiles: PerfilesResponseDto = new PerfilesResponseDto();
   requestPerfiles: PerfilesRequestDto = new PerfilesRequestDto();
@@ -55,8 +75,10 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
 
   constructor(
     private sigaServices: SigaServices,
+    private formBuilder: FormBuilder,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
+    private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
   ) {
@@ -68,6 +90,15 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   ngOnInit() {
     let tablaAnterior = JSON.parse(sessionStorage.getItem("searchOrHistory"));
     sessionStorage.removeItem("searchOrHistory");
+    this.textFilter = "Elegir";
+    this.sigaServices.get("usuarios_rol").subscribe(
+      n => {
+        this.usuarios_rol = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
     if (tablaAnterior == "history") {
       this.historico();
     } else {
@@ -85,12 +116,9 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         header: "general.description",
         width: "40%"
       },
+
       {
-        field: "descripcionRol",
-        header: "administracion.usuarios.literal.roles"
-      },
-      {
-        field: "asignarRolDefecto",
+        field: "rolesAsignados",
         header: "menu.administracion.perfilrol"
       }
     ];
@@ -297,26 +325,26 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   }
   irEditarUsuario(id) {
     if (!this.selectMultiple) {
-      var ir = null;
-      if (id && id.length > 0) {
-        ir = id[0];
-      }
-      sessionStorage.setItem("crear", JSON.stringify(false));
-      sessionStorage.removeItem("perfil");
-      sessionStorage.removeItem("privilegios");
-      sessionStorage.removeItem("first");
-      sessionStorage.setItem("perfil", JSON.stringify(id));
-      sessionStorage.setItem("editedUser", JSON.stringify(this.selectedDatos));
-      sessionStorage.setItem("first", JSON.stringify(this.table.first));
-      if (id[0].fechaBaja != null) {
-        sessionStorage.setItem("privilegios", JSON.stringify(false));
-      } else {
-        sessionStorage.setItem(
-          "privilegios",
-          JSON.stringify(this.activacionEditar)
-        );
-      }
-      this.router.navigate(["/EditarPerfiles"]);
+      // var ir = null;
+      // if (id && id.length > 0) {
+      //   ir = id[0];
+      // }
+      // sessionStorage.setItem("crear", JSON.stringify(false));
+      // sessionStorage.removeItem("perfil");
+      // sessionStorage.removeItem("privilegios");
+      // sessionStorage.removeItem("first");
+      // sessionStorage.setItem("perfil", JSON.stringify(id));
+      // sessionStorage.setItem("editedUser", JSON.stringify(this.selectedDatos));
+      // sessionStorage.setItem("first", JSON.stringify(this.table.first));
+      // if (id[0].fechaBaja != null) {
+      //   sessionStorage.setItem("privilegios", JSON.stringify(false));
+      // } else {
+      //   sessionStorage.setItem(
+      //     "privilegios",
+      //     JSON.stringify(this.activacionEditar)
+      //   );
+      // }
+      // this.router.navigate(["/EditarPerfiles"]);
     } else {
       this.editar = false;
       this.numSelected = this.selectedDatos.length;
