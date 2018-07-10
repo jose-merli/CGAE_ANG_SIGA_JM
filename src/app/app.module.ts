@@ -245,6 +245,7 @@ import { ServiciosInteresComponent } from "./features/censo/datosPersonaJuridica
 
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
+import { ErrorAccesoComponent } from './commons/error/error-acceso/error-acceso.component';
 
 @NgModule({
   declarations: [
@@ -441,7 +442,8 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
     // DatosMandatosComponent,
     // ListadoFicherosAnexosComponent,
     DatosDireccionesComponent,
-    ConsultarDatosDireccionesComponent
+    ConsultarDatosDireccionesComponent,
+    ErrorAccesoComponent
   ],
   imports: [
     BrowserModule,

@@ -887,10 +887,6 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   background: white;
   border-radius: 3px;
 }
-// .input-ayuda .ui-state-default,.input-ayuda .ui-widget-content .ui-state-default, .input-ayuda .ui-widget-header .ui-state-default{
-//   background: white;
-//   border-radius: 3px;
-// }
 
 .input-ayuda .ui-widget:disabled {
   opacity: 1;
@@ -969,6 +965,28 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   }
 }
 
+.ui-fileupload-buttonbar {
+  width: 53px !important;
+  height: 53px !important;
+  border: transparent !important;
+  background-color: white;
+}
+.ui-widget-header {
+  background: transparent;
+}
+.ui-fileupload-buttonbar .ui-button {
+  width: 29px !important;
+  height: 29px !important;
+  border: transparent !important;
+  background-color: white;
+}
+.ui-fileupload-content {
+  background-color: transparent;
+  border: none;
+}
+.ui-fileupload {
+  background-color: transparent;
+}
 @media (max-width: 1600px) {
   .menu-accesos {
     display: block;

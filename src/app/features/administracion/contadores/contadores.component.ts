@@ -46,7 +46,7 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
 
   formBusqueda: FormGroup;
   cols: any = [];
-  datos: any[];
+  datos: any[] = [];
   select: any[];
   selectedDatos: any;
 

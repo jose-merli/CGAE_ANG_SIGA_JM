@@ -46,7 +46,6 @@ export class DatosGenerales implements OnInit {
   showAll: boolean = false;
   showGuardar: boolean = false;
   progressSpinner: boolean = false;
-  openFicha: boolean = false;
 
   selectedItem: number = 10;
   selectedDoc: string = "NIF";
@@ -133,23 +132,18 @@ export class DatosGenerales implements OnInit {
   }
 
   ngOnInit() {
-    // dentro de este metodo se llama a continueOnInit()
     this.checkAcceso();
-  }
-  continueOnInit() {
     this.busquedaIdioma();
-
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+
     if (sessionStorage.getItem("crearnuevo") != null) {
       this.editar = true;
-      this.abreCierraFicha();
+      this.abreCierraFicha("generales");
     }
-
     if (this.usuarioBody[0] != undefined) {
       this.idPersona = this.usuarioBody[0].idPersona;
       this.tipoPersonaJuridica = this.usuarioBody[0].tipo;
     }
-
     // estamos en modo edicion (NO en creacion)
     if (this.idPersona != undefined) {
       this.datosGeneralesSearch();
@@ -182,6 +176,7 @@ export class DatosGenerales implements OnInit {
 
     this.comboTipo.push(this.tipoPersonaJuridica);
   }
+
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = "120";
@@ -201,7 +196,6 @@ export class DatosGenerales implements OnInit {
         } else {
           this.activacionEditar = false;
         }
-        this.continueOnInit();
       }
     );
   }
@@ -470,11 +464,10 @@ export class DatosGenerales implements OnInit {
     this.onChangeForm();
   }
 
-  abreCierraFicha() {
-    // let fichaPosible = this.getFichaPosibleByKey(key);
+  abreCierraFicha(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
     if (this.activacionEditar == true) {
-      // fichaPosible.activa = !fichaPosible.activa;
-      this.openFicha = !this.openFicha;
+      fichaPosible.activa = !fichaPosible.activa;
     }
   }
 
@@ -534,8 +527,8 @@ export class DatosGenerales implements OnInit {
       this.body.nif != undefined &&
       !this.onlySpaces(this.body.nif) &&
       this.idiomaPreferenciaSociedad != "" &&
-      this.idiomaPreferenciaSociedad != undefined
-      //this.file != undefined
+      this.idiomaPreferenciaSociedad != undefined &&
+      this.file != undefined
     ) {
       if (
         this.editar &&
@@ -545,7 +538,7 @@ export class DatosGenerales implements OnInit {
         if (this.body.nif.length == 9 && this.isValidCIF(this.body.nif)) {
           this.showGuardar = true;
         }
-      } else if (!this.editar && this.file != undefined) {
+      } else if (!this.editar) {
         this.showGuardar = true;
       } else {
         this.showGuardar = false;

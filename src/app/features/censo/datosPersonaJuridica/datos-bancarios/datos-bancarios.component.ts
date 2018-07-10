@@ -326,11 +326,7 @@ export class DatosBancariosComponent implements OnInit {
   }
 
   abrirFicha() {
-    // si no se esta creando una nueva sociedad
-    if (
-      this.activacionEditar == true &&
-      sessionStorage.getItem("crearnuevo") == null
-    ) {
+    if (this.activacionEditar == true) {
       this.openFicha = !this.openFicha;
     }
   }

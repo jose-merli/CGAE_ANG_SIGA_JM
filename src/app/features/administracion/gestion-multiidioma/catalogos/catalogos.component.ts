@@ -271,7 +271,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
       (value: MultiidiomaCatalogoItem, key: number) => {
         if (value.editar == true) {
           this.bodyUpdate = new MultiidiomaCatalogoUpdateDto();
-          this.bodyUpdate.descripcion = value.descripcionTraduccion.trim();
+          this.bodyUpdate.descripcion = value.descripcionTraduccion;
           this.bodyUpdate.idLenguaje = value.idLenguajeTraducir;
           this.bodyUpdate.idRecurso = value.idRecurso;
           this.bodyUpdate.local = this.local;
@@ -338,6 +338,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
       this.isBuscar();
     }
   }
+
 
   clear() {
     this.msgs = [];

@@ -60,13 +60,26 @@ export class LoginComponent implements OnInit {
 
   submit() {
     var ir = null;
-    this.service.autenticate().subscribe(response => {
-      if (response) {
-        this.router.navigate(["/home"]);
-      } else {
-        this.router.navigate(["/landpage"]);
+    this.service.autenticate().subscribe(
+      response => {
+        if (response) {
+          this.router.navigate(["/home"]);
+        } else {
+          this.router.navigate(["/landpage"]);
+        }
+      },
+      error => {
+        if (error.status == 403) {
+          let codError = error.status;
+          let descError = error.statusText;
+
+          sessionStorage.setItem("codError", codError);
+          sessionStorage.setItem("descError", descError);
+
+          this.router.navigate(["/errorAcceso"]);
+        }
       }
-    });
+    );
   }
 
   onChange(newValue) {

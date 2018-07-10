@@ -429,11 +429,7 @@ export class DatosRegistralesComponent implements OnInit {
 
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
-    // si no se esta creando una nueva sociedad
-    if (
-      this.activacionEditar == true &&
-      sessionStorage.getItem("crearnuevo") == null
-    ) {
+    if (this.activacionEditar == true) {
       fichaPosible.activa = !fichaPosible.activa;
     }
   }

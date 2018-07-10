@@ -20,7 +20,7 @@
         <div class="form-row">
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ "menu.justiciaGratuita.maestros.procedimientos" | translate }}</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.idmodulo' [(disabled)]="editar" [options]="contadores_modo" (ngModelChange)="onChangeForm()"
+            <p-dropdown class="select-form" [(ngModel)]='body.idmodulo' [(disabled)]="editar" [options]="contadores_modo" (ngModelChange)="onChangeForm($event)"
               [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
 
           </div>
@@ -61,18 +61,18 @@
         [paginator]="activarPaginacion()">
         <p-column [style]="{'width': col.width}" *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate"
           filterPlaceholder="{{'general.boton.search' | translate}}" [filter]="true" filterMatchMode="contains">
-        </p-column>
+          </p-column>
 
-        <ng-template pTemplate="paginatorLeft">
-          <div class="mostrar">
-            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-            <label>{{ "general.message.mostrar" | translate}}</label>
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-            <label>{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-          </div>
-        </ng-template>
+          <ng-template pTemplate="paginatorLeft">
+            <div class="mostrar">
+              <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+              <label>{{ "general.message.mostrar" | translate}}</label>
+              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+              <label>{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+            </div>
+          </ng-template>
 
-      </p-dataTable>
+          </p-dataTable>
     </div>
   </div>
   <!--FIN DE PRINCIPAL-->

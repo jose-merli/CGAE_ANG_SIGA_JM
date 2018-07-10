@@ -74,9 +74,9 @@
     <div *ngIf="esFichaActiva('integrantes')" class="card-body card-body-ficha">
 
 
-      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="2" dataKey="idComponente"
+      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="2" dataKey="nifCif"
         [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="activarPaginacion()"
-        paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="consultarIntegrante(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)">
+        paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="consultarIntegrante(selectedDatos)">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true" filterMatchMode="contains">
           <ng-template let-datoH="rowData" pTemplate="body">
@@ -99,6 +99,8 @@
               <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
             </div>
           </ng-template>
+
+
 
           </p-dataTable>
 

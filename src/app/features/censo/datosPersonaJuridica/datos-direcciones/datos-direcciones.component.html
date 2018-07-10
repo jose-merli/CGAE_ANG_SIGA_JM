@@ -11,19 +11,19 @@
           <div class="d-flex justify-content-end mb-1">
             <label class="mr-auto title-ficha">{{"censo.fichaCliente.datosDirecciones.cabecera" | translate}}</label>
           </div>
-          <div *ngIf="!only" class="d-flex justify-content-between">
-            <label>{{"censo.datosDireccion.literal.numero.direccion" | translate}}: <span>{{ searchDirecciones.datosDireccionesItem.length }}</span></label>
+          <div class="d-flex justify-content-between">
+            <div *ngIf="!only && searchDirecciones.datosDireccionesItem.length >3" class="d-flex justify-content-between">
+              <label>Número total de Direcciones:
+                <span>{{ searchDirecciones.datosDireccionesItem.length }}</span>
+              </label>
+
+              <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+            </div>
+            <br>
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
           </div>
         </div>
 
-        <div *ngIf="esFichaActiva('direcciones')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-          <div class="img-colegiado">
-            <i class="fa fa-map-marker icon-ficha"></i>
-          </div>
-          <label class="mr-auto title-ficha">{{"censo.fichaCliente.datosDirecciones.cabecera" | translate}}</label>
-          <i class="fa fa-angle-up ml-auto"></i>
-        </div>
       </div>
       <div *ngIf="esFichaActiva('direcciones')" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
@@ -39,7 +39,7 @@
     <div *ngIf="esFichaActiva('direcciones')" class="card-body card-body-ficha">
 
 
-      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="2" dataKey="idDireccion"
+      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="2" dataKey="nifCif"
         [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="activarPaginacion()"
         paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionar(selectedDatos)">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
@@ -48,42 +48,42 @@
             <span *ngIf="setItalic(datoH)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
             <span *ngIf="!setItalic(datoH)">{{datoH[col.field]}}</span>
           </ng-template>
-          </p-column>
+        </p-column>
 
-          <ng-template pTemplate="paginatorLeft">
-            <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-              <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
-              <label>{{ "general.message.mostrar" | translate}}</label>
-              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-              <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-              <div class="ml-3 selectAll">
-                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
-              </div>
-              <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+        <ng-template pTemplate="paginatorLeft">
+          <div class="mostrar d-flex text-right justify-content-end">
+            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+            <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+            <label>{{ "general.message.mostrar" | translate}}</label>
+            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+            <div class="ml-3 selectAll">
+              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
+            </div>
+            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
               <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
-            </div>
-          </ng-template>
-
-
-
-          </p-dataTable>
-
-
-
-          <br>
-          <div class="card-footer ">
-            <div class="text-right main-button ">
-              <button (click)="nuevo()" *ngIf="!historico" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-              <button *ngIf="selectedDatos && selectedDatos != '' && historico==false" (click)="borrar(selectedDatos); selectedDatos=false"
-                pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.borrar' | translate}}"></button>
-                <button *ngIf="historico" (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
-
-                <button *ngIf="!historico" (click)="searchHistorico()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.message.historico' | translate}}"></button>
-
-            </div>
           </div>
-          <!--END DATOS GENERALES-->
+        </ng-template>
+
+
+
+      </p-dataTable>
+
+
+
+      <br>
+      <div class="card-footer ">
+        <div class="text-right main-button ">
+          <button (click)="nuevo()" *ngIf="!historico" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+          <button *ngIf="selectedDatos && selectedDatos != '' && historico==false" (click)="borrar(selectedDatos); selectedDatos=false"
+            pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.borrar' | translate}}"></button>
+          <button *ngIf="historico" (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+
+          <button *ngIf="!historico" (click)="searchHistorico()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.message.historico' | translate}}"></button>
+
+        </div>
+      </div>
+      <!--END DATOS GENERALES-->
     </div>
   </div>
 </div>

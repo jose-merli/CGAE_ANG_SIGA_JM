@@ -60,25 +60,25 @@
                             </span>
                         </div>
                     </ng-template>
-                    </p-column>
+                </p-column>
 
-                    <ng-template pTemplate="paginatorLeft">
-                        <div class="mostrar">
-                            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                            <label>{{ 'general.message.mostrar' | translate}}</label>
-                            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                            <label>{{ 'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
-                        </div>
-                    </ng-template>
-                    <p-footer>
-                        <div class="text-right main-button">
-                            <button (click)="isRestablecer()" pButton type="button" [(disabled)]="!habilitarBotones" icon="fa fa-history " iconPos="left"
-                                label="{{'general.boton.restablecer' | translate}}"></button>
-                                <button (click)="isGuardar()" pButton type="button " [(disabled)]="!habilitarBotones" icon="fa fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-                        </div>
-                    </p-footer>
+                <ng-template pTemplate="paginatorLeft">
+                    <div class="mostrar">
+                        <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                        <label>{{ 'general.message.mostrar' | translate}}</label>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                        <label>{{ 'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
+                    </div>
+                </ng-template>
+                <p-footer>
+                    <div class="text-right main-button">
+                        <button (click)="isRestablecer()" pButton type="button" [(disabled)]="!habilitarBotones" icon="fa fa-history " iconPos="left"
+                            label="{{'general.boton.restablecer' | translate}}"></button>
+                        <button (click)="isGuardar()" pButton type="button " [(disabled)]="!habilitarBotones" icon="fa fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                    </div>
+                </p-footer>
 
-                    </p-dataTable>
+            </p-dataTable>
         </div>
     </div>
     <app-dialog></app-dialog>
