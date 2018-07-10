@@ -80,9 +80,13 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   selectedDatos;
 
   ngOnInit() {
-    this.checkAcceso(); //coger tipos
+    this.checkAcceso();
     sessionStorage.removeItem("notario");
     sessionStorage.removeItem("crearnuevo");
+
+    // Poner check "Sociedades Profesionales a activo porque "Sociedades Profesionales a activo por defecto"
+    this.body.sociedadesProfesionales = true;
+
     if (sessionStorage.getItem("busqueda") != null) {
       this.body = JSON.parse(sessionStorage.getItem("busqueda"));
       sessionStorage.removeItem("busqueda");
@@ -146,9 +150,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         value: 40
       }
     ];
-
-    // Poner check "Sociedades Profesionales a activo porque "Sociedades Profesionales a activo por defecto"
-    this.body.sociedadesProfesionales = true;
   }
 
   toHistorico() {
@@ -172,7 +173,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => { }
+        () => {}
       );
   }
 
@@ -340,11 +341,22 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   obtenerIntegrantes(dato) {
-    return dato.numeroIntegrantes;
+    if (dato.numeroIntegrantes == 0) {
+      return "Sin integrantes";
+    } else {
+      return dato.numeroIntegrantes;
+    }
   }
 
   obtenerNombreIntegrantes(dato) {
-    return dato.nombresIntegrantes;
+    if (dato.numeroIntegrantes > 0) {
+      //return dato.nombresIntegrantes.replace(';', ' ');
+      while (dato.nombresIntegrantes.toString().indexOf(";") != -1)
+        dato.nombresIntegrantes = dato.nombresIntegrantes
+          .toString()
+          .replace(";", "\n");
+      return dato.nombresIntegrantes;
+    }
   }
 
   paginate(event) {
@@ -519,6 +531,19 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     }
   }
 
+  restablecer() {
+    //Para limpiar los campos
+    this.body = new PersonaJuridicaItem();
+    this.body.sociedadesProfesionales = true;
+    this.fechaConstitucion = null;
+
+    //Para no mostrar la tabla
+    this.buscar = false;
+    this.historico = false;
+
+    //Para limpiar la tabla
+    this.datos = [];
+  }
 
   clear() {
     this.msgs = [];

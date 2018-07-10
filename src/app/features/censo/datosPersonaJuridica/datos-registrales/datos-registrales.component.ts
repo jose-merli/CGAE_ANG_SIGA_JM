@@ -87,6 +87,7 @@ export class DatosRegistralesComponent implements OnInit {
   idPersonaEditar: String;
   datos: any[];
   suscripcionBusquedaNuevo: Subscription;
+  activacionEditar: boolean;
 
   @ViewChild(DatosRegistralesComponent)
   datosRegistralesComponent: DatosRegistralesComponent;
@@ -107,6 +108,7 @@ export class DatosRegistralesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.checkAcceso();
     this.desactivadoGuardar();
     this.onChangeSociedad();
     this.bodyAnterior = JSON.parse(sessionStorage.getItem("usuarioBody"));
@@ -150,6 +152,29 @@ export class DatosRegistralesComponent implements OnInit {
       { label: "Mujer", value: "M" },
       { label: "Hombre", value: "H" }
     ];
+  }
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "12a";
+    let derechoAcceso;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else {
+          this.activacionEditar = false;
+        }
+      }
+    );
   }
 
   compruebaFechaConstitucion() {
@@ -206,6 +231,7 @@ export class DatosRegistralesComponent implements OnInit {
   }
 
   search() {
+    this.prefijoBlock = false;
     this.body.idPersona = this.idPersonaEditar;
     this.contadorNoCorrecto = false;
     this.fechaCorrecta = true;
@@ -403,7 +429,9 @@ export class DatosRegistralesComponent implements OnInit {
 
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = !fichaPosible.activa;
+    if (this.activacionEditar == true) {
+      fichaPosible.activa = !fichaPosible.activa;
+    }
   }
 
   esFichaActiva(key) {

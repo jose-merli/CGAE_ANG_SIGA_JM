@@ -41,6 +41,7 @@ export class DatosBancariosComponent implements OnInit {
   idPersona: String;
   customLabel: String;
   nif: String;
+  activacionEditar: boolean;
 
   suscripcionBusquedaNuevo: Subscription;
 
@@ -57,6 +58,7 @@ export class DatosBancariosComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.checkAcceso();
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
 
     if (this.usuarioBody[0] != undefined) {
@@ -142,6 +144,29 @@ export class DatosBancariosComponent implements OnInit {
       this.selectMultiple = false;
       this.selectAll = false;
     }
+  }
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "123";
+    let derechoAcceso;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else {
+          this.activacionEditar = false;
+        }
+      }
+    );
   }
 
   cargarHistorico() {
@@ -294,13 +319,16 @@ export class DatosBancariosComponent implements OnInit {
       },
       () => {
         this.historico = true;
+        this.selectedDatos = [];
         this.cargarDatosBancarios();
       }
     );
   }
 
   abrirFicha() {
-    this.openFicha = !this.openFicha;
+    if (this.activacionEditar == true) {
+      this.openFicha = !this.openFicha;
+    }
   }
 
   showFail(mensaje: string) {

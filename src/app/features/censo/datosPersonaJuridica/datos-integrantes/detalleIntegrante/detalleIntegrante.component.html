@@ -49,15 +49,15 @@
     <div *ngIf="esFichaActiva('identificacion')" class="card-body card-body-ficha">
       <div class="row">
         <div class="form-group col-lg-3 col-md-6">
-          <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
+          <label>{{"administracion.usuarios.literal.NIF" | translate}} (*)</label>
           <input type="text" class="form-control" [(ngModel)]="body.nifCif" [(disabled)]="isDisablednifCif" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-6">
-          <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
+          <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}} (*)</label>
           <input type="text" class="form-control" [(ngModel)]="body.nombre" [(disabled)]="isDisabledNombre" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-6">
-          <label>{{"censo.busquedaClientes.literal.apellido1" | translate}}</label>
+          <label>{{"censo.busquedaClientes.literal.apellido1" | translate}} (*)</label>
           <input type="text" class="form-control" [(ngModel)]="body.apellidos1" [(disabled)]="isDisabledApellidos1" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-6">
@@ -108,7 +108,7 @@
           <div class="img-colegiado">
             <i class="far fa-users icon-ficha"></i>
           </div>
-          <label class="title-ficha">{{"censo.busquedaClientes.literal.datosColegiacion " | translate}}</label>
+          <label class="title-ficha">{{"censo.busquedaClientes.literal.datosColegiacion" | translate}}</label>
           <i (click)="cerrarFicha('colegiacion')" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
@@ -116,7 +116,7 @@
         <div class="img-colegiado">
           <i class="fa fa-users icon-ficha"> </i>
         </div>
-        <label class="title-ficha">{{"censo.busquedaClientes.literal.datosColegiacion " | translate}}</label>
+        <label class="title-ficha">{{"censo.busquedaClientes.literal.datosColegiacion" | translate}}</label>
         <i (click)="cerrarFicha('colegiacion')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>

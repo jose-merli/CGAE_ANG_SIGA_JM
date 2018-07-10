@@ -1,13 +1,3 @@
-.labelError {
-  color: red;
-  font-weight: bold;
-}
-
-.labelOK {
-  color: green;
-  font-weight: bold;
-}
-
 .ui-growl-message-info .ui-growl-item {
   color: white !important;
   background-color: #33a1ff !important;
@@ -26,4 +16,14 @@
 .ui-growl-message-error .ui-growl-item {
   color: white !important;
   background-color: #dc3545 !important;
+}
+
+.labelError {
+  color: red;
+  font-weight: bold;
+}
+
+.labelOK {
+  color: green;
+  font-weight: bold;
 }

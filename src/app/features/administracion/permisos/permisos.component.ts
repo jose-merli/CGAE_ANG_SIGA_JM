@@ -4,22 +4,15 @@ import {
   ViewChild,
   ElementRef,
   ChangeDetectorRef,
-  DoCheck,
   ViewEncapsulation
 } from "@angular/core";
 import { Message, MenuItem } from "primeng/components/common/api";
 import { Tree } from "primeng/components/tree/tree";
 import { TreeNode } from "../../../utils/treenode";
 import { TranslateService } from "../../../commons/translate/translation.service";
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl
-} from "@angular/forms";
+import { FormBuilder, FormGroup } from "@angular/forms";
 import { SigaServices } from "./../../../_services/siga.service";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
-
 import { PermisosAplicacionesDto } from "./../../../../app/models/PermisosAplicacionesDto";
 
 @Component({
@@ -67,7 +60,7 @@ export class PermisosComponent implements OnInit {
   permisosChange: Map<String, PermisosAplicacionesDto> = new Map<
     String,
     PermisosAplicacionesDto
-    >();
+  >();
 
   @ViewChild("widthContent") widthContent: any;
 
@@ -90,12 +83,10 @@ export class PermisosComponent implements OnInit {
     this.numCambios = 0;
     this.totalPermisos = 0;
 
-
     this.sigaServices.menuToggled$.subscribe(() => {
       this.isWidthChange = !this.isWidthChange;
     });
   }
-
 
   // ngDoCheck() {
   //   setTimeout(() => {
@@ -111,17 +102,17 @@ export class PermisosComponent implements OnInit {
       n => {
         this.grupos = n.combooItems;
         this.first = { label: "", value: "" };
-        console.log(this.first)
+        console.log(this.first);
         this.grupos.unshift(this.first);
 
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.grupos.map(e => {
-          e.labelSinTilde = e.label.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+          e.labelSinTilde = e.label
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
           return e.labelSinTilde;
         });
-
-
       },
       err => {
         console.log(err);
@@ -453,7 +444,6 @@ para poder filtrar el dato con o sin estos caracteres*/
   onChangePropagate(node) {
     this.propagateDown = false;
   }
-
 
   clear() {
     this.msgs = [];

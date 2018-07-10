@@ -72,7 +72,6 @@ export class AuthenticationService {
 
         return this.http.get(this.oldSigaServices.getOldSigaUrl("loginDevelop") + params, { observe: 'response', responseType: "text" });
 
-
     }
 
     oldSigaLogin(): Observable<any> {

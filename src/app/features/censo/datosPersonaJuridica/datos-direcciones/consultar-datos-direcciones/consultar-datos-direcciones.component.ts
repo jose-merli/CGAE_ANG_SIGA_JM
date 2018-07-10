@@ -20,9 +20,13 @@ import { DatosDireccionesCodigoPostalObject } from "./../../../../../../app/mode
 export class ConsultarDatosDireccionesComponent implements OnInit {
   openFicha: boolean = true;
   progressSpinner: boolean = false;
-  codigoPostalValido: boolean = false;
+  codigoPostalValido: boolean = true;
+  isDisabledPoblacion: boolean = true;
+  isDisabledProvincia: boolean = true;
+  isDisabledCodigoPostal: boolean = true;
   formValido: boolean = false;
   textFilter: String;
+  fechaModificacion: String;
   isEditable: boolean = false;
   nuevo: boolean = false;
   datosContacto: any[];
@@ -36,7 +40,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   comboProvincia: any[];
   checkOtraProvincia: boolean = false;
   paisSeleccionado: any;
-  registroEditable: String;
+  provinciaSelecionada: String;
+  registroEditable: boolean = false;
   idDireccion: String;
   idPersona: String;
   textSelected: String = "{0} etiquetas seleccionadas";
@@ -55,15 +60,43 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   ngOnInit() {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.textFilter = "Elegir";
-
     this.getComboProvincia();
-    // this.getComboPoblacion();
     this.getComboPais();
     this.getComboTipoDireccion();
     console.log(this.body.idPais);
-    this.registroEditable = sessionStorage.getItem("editar");
+    this.registroEditable = JSON.parse(
+      sessionStorage.getItem("editarDireccion")
+    );
+    if (this.registroEditable) {
+      this.nuevo = false;
+    } else {
+      this.nuevo = true;
+    }
     if (sessionStorage.getItem("direccion") != null) {
       this.body = JSON.parse(sessionStorage.getItem("direccion"));
+      this.body.idPersona = this.usuarioBody[0].idPersona;
+      this.provinciaSelecionada = this.body.idProvincia;
+      if (
+        this.body.idPoblacion == null ||
+        this.body.idPoblacion == "" ||
+        this.body.idPoblacion == undefined
+      ) {
+        this.isDisabledPoblacion = true;
+      } else {
+        this.isDisabledPoblacion = false;
+      }
+      if (
+        this.body.fechaModificacion != null ||
+        this.body.fechaModificacion != undefined
+      ) {
+        this.fechaModificacion = this.datepipe.transform(
+          new Date(this.body.fechaModificacion),
+          "dd/MM/yyyy"
+        );
+      }
+      this.onChangePais();
+
+      this.isDisabledProvincia = true;
     }
     this.getDatosContactos();
   }
@@ -71,7 +104,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     this.columnasDirecciones = [
       {
         field: "tipo",
-        header: "Tipo"
+        header: "censo.consultaDatosGenerales.literal.tipoCliente"
       },
       {
         field: "valor",
@@ -128,6 +161,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         },
         error => {},
         () => {
+          // this.isDisabledPoblacion = false;
           this.progressSpinner = false;
         }
       );
@@ -180,50 +214,203 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       return false;
     }
   }
-  onChangePais(event) {
+  onChangePais() {
     console.log(this.body.idPais);
+    if (!this.nuevo) {
+      if (this.body.idPais != "191") {
+        this.isDisabledCodigoPostal = true;
+        this.body.codigoPostal = "";
+        this.provinciaSelecionada = "";
+        this.body.idProvincia = "";
+        this.body.idPoblacion = "";
+      } else {
+        this.isDisabledCodigoPostal = false;
+      }
+    } else {
+      this.isDisabledCodigoPostal = false;
+      this.isDisabledPoblacion = true;
+    }
+
+    this.isDisabledProvincia = true;
+  }
+  onChangeCodigoPostal(event) {
+    console.log(event);
+
+    if (this.isValidCodigoPostal() && this.body.codigoPostal.length == 5) {
+      // this.recuperarProvinciaPoblacion();
+      let value = this.body.codigoPostal.substring(0, 2);
+      this.provinciaSelecionada = value;
+      if (value != this.body.idProvincia) {
+        this.body.idProvincia = this.provinciaSelecionada;
+        this.isDisabledProvincia = true;
+        this.isDisabledPoblacion = false;
+        this.getComboPoblacion();
+      }
+      this.codigoPostalValido = true;
+    } else {
+      this.codigoPostalValido = false;
+      // this.body.idProvincia = "";
+    }
   }
   onChangeProvincia(event) {
-    this.getComboPoblacion();
+    if (this.checkOtraProvincia == false) {
+      this.getComboPoblacion();
+    }
   }
   onChangeOtherProvincia(event) {
     if (event) {
+      this.isDisabledPoblacion = true;
+      this.isDisabledProvincia = false;
       this.body.otraProvincia = "1";
     } else {
+      this.isDisabledPoblacion = false;
+      this.isDisabledProvincia = true;
+      this.onChangeCodigoPostal(event);
       this.body.otraProvincia = "0";
     }
     console.log(event);
   }
-  // autogenerarProvinciaPoblacion() {
-  //   if (this.isValidCodigoPostal() && this.body.codigoPostal.length == 5) {
-  //     this.recuperarProvinciaPoblacion();
-  //     this.codigoPostalValido = true;
-  //   } else {
-  //     this.body.idProvincia = "";
-  //     this.comboPoblacion = [];
-  //     this.selectedPoblacion = "";
-  //   }
-  // }
+  guardar() {
+    if (
+      this.body.idTipoDireccion != null &&
+      this.body.idTipoDireccion != undefined &&
+      this.body.idTipoDireccion.length > 0
+    ) {
+      this.progressSpinner = true;
+      if (this.registroEditable) {
+        console.log(this.body);
+        console.log(this.datosContacto);
+        this.comprobarTablaDatosContactos();
+        this.comprobarCheckProvincia();
+        this.body.idProvincia = this.provinciaSelecionada;
+        console.log(this.body);
+        this.sigaServices.post("direcciones_update", this.body).subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.body = JSON.parse(data["body"]);
+            this.backTo();
+          },
+          error => {
+            this.bodySearch = JSON.parse(error["error"]);
+            this.showFail(this.bodySearch.error.message.toString());
+            console.log(error);
+            this.progressSpinner = false;
+          }
+        );
+      } else {
+        console.log(this.body);
+        console.log(this.datosContacto);
+        this.comprobarTablaDatosContactos();
+        this.comprobarCheckProvincia();
+        this.body.idProvincia = this.provinciaSelecionada;
+        console.log(this.body);
+        this.sigaServices.post("direcciones_insert", this.body).subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.body = JSON.parse(data["body"]);
+            this.backTo();
+          },
+          error => {
+            this.bodySearch = JSON.parse(error["error"]);
+            this.showFail(this.bodySearch.error.message.toString());
+            console.log(error);
+            this.progressSpinner = false;
+          }
+        );
+      }
+    } else {
+      this.showFail("Debe de haber un tipo de Contacto seleccionado.");
+    }
+  }
+  duplicarRegistro() {
+    console.log(this.body);
+    console.log(this.datosContacto);
+    this.body.idDireccion = null;
+    this.nuevo = true;
+    this.progressSpinner = true;
+    this.comprobarTablaDatosContactos();
+    this.comprobarCheckProvincia();
+    console.log(this.body);
+    this.sigaServices.post("direcciones_insert", this.body).subscribe(
+      data => {
+        // this.bodySearch = JSON.parse(data["body"]);
+        this.body.idDireccion = JSON.parse(data["body"]).id;
+        this.progressSpinner = false;
+      },
+      error => {
+        this.bodySearch = JSON.parse(error["error"]);
+        this.showFail(this.bodySearch.error.message.toString());
+        console.log(error);
+        this.progressSpinner = false;
+      }
+    );
+  }
+  comprobarCheckProvincia() {
+    if (this.checkOtraProvincia) {
+      this.body.otraProvincia = "1";
+    } else {
+      this.body.otraProvincia = "0";
+    }
+  }
+  autogenerarProvinciaPoblacion() {
+    if (this.isValidCodigoPostal() && this.body.codigoPostal.length == 5) {
+      // this.recuperarProvinciaPoblacion();
+      this.codigoPostalValido = true;
+    } else {
+      this.body.idProvincia = "";
+    }
+  }
+  comprobarTablaDatosContactos() {
+    if (
+      this.datosContacto[0].valor != null ||
+      this.datosContacto[0].valor != undefined
+    ) {
+      if (this.datosContacto[0].valor != this.body.telefono) {
+        this.body.telefono = this.datosContacto[0].valor;
+      }
+    }
+    if (
+      this.datosContacto[1].valor != null ||
+      this.datosContacto[1].valor != undefined
+    ) {
+      if (this.datosContacto[1].valor != this.body.fax) {
+        this.body.fax = this.datosContacto[1].valor;
+      }
+    }
+    if (
+      this.datosContacto[2].valor != null ||
+      this.datosContacto[2].valor != undefined
+    ) {
+      if (this.datosContacto[2].valor != this.body.movil) {
+        this.body.movil = this.datosContacto[2].valor;
+      }
+    }
+    if (
+      this.datosContacto[3].valor != null ||
+      this.datosContacto[3].valor != undefined
+    ) {
+      if (this.datosContacto[3].valor != this.body.correoElectronico) {
+        this.body.correoElectronico = this.datosContacto[3].valor;
+      }
+    }
+    if (
+      this.datosContacto[4].valor != null ||
+      this.datosContacto[4].valor != undefined
+    ) {
+      if (this.datosContacto[4].valor != this.body.paginaWeb) {
+        this.body.paginaWeb = this.datosContacto[4].valor;
+      }
+    }
+  }
 
-  // recuperarProvinciaPoblacion() {
-  //   this.sigaServices.post("direcciones_codigoPostal", this.body).subscribe(
-  //     data => {
-  //       //this.bodyCodigoPostalSearch = JSON.parse(data["body"]);
-  //       //this.bodyCodigoPostal = this.bodyCodigoPostalSearch.datosDireccionesItem[0];
-
-  //       this.bodyCodigoPostal = new DatosDireccionesCodigoPostalItem();
-  //       // Esto es teórico
-  //       this.bodyCodigoPostal.provincia = "LAS PALMAS";
-  //     },
-  //     error => {
-  //       this.bodyCodigoPostalSearch = JSON.parse(error["error"]);
-  //       this.showFail(
-  //         JSON.stringify(this.bodyCodigoPostalSearch.error.message)
-  //       );
-  //     }
-  //   );
-  // }
-
+  restablecer() {
+    if (sessionStorage.getItem("direccion") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("direccion"));
+      this.body.idPersona = this.usuarioBody[0].idPersona;
+      this.provinciaSelecionada = this.body.idProvincia;
+      this.getDatosContactos();
+    }
+  }
   // Mensajes
   showFail(mensaje: string) {
     this.msgs = [];

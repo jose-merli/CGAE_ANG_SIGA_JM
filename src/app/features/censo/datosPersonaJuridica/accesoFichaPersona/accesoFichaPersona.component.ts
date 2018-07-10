@@ -41,6 +41,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
   desasociar: boolean = false;
   suscripcionBusquedaNuevo: Subscription;
 
+  activacionEditar: boolean;
   file: File = undefined;
 
   constructor(
@@ -51,6 +52,14 @@ export class AccesoFichaPersonaComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // this.checkAcceso();
+
+    // Esto se activará cuando venimos de datos bancarios
+    if (sessionStorage.getItem("abrirNotario") == "true") {
+      this.openFicha = !this.openFicha;
+      sessionStorage.removeItem("abrirNotario");
+    }
+
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.tipoPersona = "Notario";
 
@@ -113,6 +122,29 @@ export class AccesoFichaPersonaComponent implements OnInit {
       this.search();
     }
   }
+
+  // checkAcceso() {
+  //   let controlAcceso = new ControlAccesoDto();
+  //   controlAcceso.idProceso = "121";
+  //   let derechoAcceso;
+  //   this.sigaServices.post("acces_control", controlAcceso).subscribe(
+  //     data => {
+  //       let permisosTree = JSON.parse(data.body);
+  //       let permisosArray = permisosTree.permisoItems;
+  //       derechoAcceso = permisosArray[0].derechoacceso;
+  //     },
+  //     err => {
+  //       console.log(err);
+  //     },
+  //     () => {
+  //       if (derechoAcceso == 3) {
+  //         this.activacionEditar = true;
+  //       } else {
+  //         this.activacionEditar = false;
+  //       }
+  //     }
+  //   );
+  // }
 
   search() {
     this.progressSpinner = true;
@@ -317,7 +349,9 @@ export class AccesoFichaPersonaComponent implements OnInit {
     });
   }
   abrirFicha() {
+    // if (this.activacionEditar == true) {
     this.openFicha = !this.openFicha;
+    // }
   }
 
   backTo() {

@@ -9,6 +9,7 @@ import { HomeComponent } from "./features/home/home.component";
 // Censo
 import { SearchColegiadosComponent } from "./features/censo/search-colegiados/search-colegiados.component";
 import { SearchNoColegiadosComponent } from "./features/censo/search-no-colegiados/search-no-colegiados.component";
+import { BusquedaNoColegiadosComponent } from "./features/censo/busqueda-no-colegiados/busqueda-no-colegiados.component";
 import { CertificadosAcaComponent } from "./features/censo/certificados-aca/certificados-aca.component";
 import { ComisionesCargosComponent } from "./features/censo/comisiones-cargos/comisiones-cargos.component";
 import { SolicitudesGenericasComponent } from "./features/censo/solicitudes-genericas/solicitudes-genericas.component";
@@ -223,6 +224,12 @@ const appRoutes: Routes = [
     path: "searchNoColegiados",
     component: BusquedaPersonasJuridicas,
     // component: SearchNoColegiadosComponent,
+    canActivate: [AuthGuard]
+  },
+
+  {
+    path: "busquedaNoColegiados",
+    component: BusquedaNoColegiadosComponent,
     canActivate: [AuthGuard]
   },
   {

@@ -79,6 +79,10 @@ export class DatosPersonaJuridicaComponent implements OnInit {
         activa: false
       },
       {
+        key: "direcciones",
+        activa: false
+      },
+      {
         key: "bancarios",
         activa: false
       },
@@ -88,10 +92,6 @@ export class DatosPersonaJuridicaComponent implements OnInit {
       },
       {
         key: "interes",
-        activa: false
-      },
-      {
-        key: "direcciones",
         activa: false
       }
     ];
