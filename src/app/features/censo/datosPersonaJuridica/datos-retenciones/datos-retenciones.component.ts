@@ -498,9 +498,9 @@ export class DatosRetencionesComponent implements OnInit {
   }
 
   abrirFicha() {
-    // if (this.activacionEditar == true) {
-    this.openFicha = !this.openFicha;
-    // }
+    if (sessionStorage.getItem("crearnuevo") == null) {
+      this.openFicha = !this.openFicha;
+    }
   }
 
   onChangeSelectAll() {
