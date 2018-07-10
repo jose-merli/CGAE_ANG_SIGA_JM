@@ -151,16 +151,21 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.cols = [
       {
         field: "nombreApellidos",
-        header: "administracion.usuarios.literal.nombre"
+        header: "administracion.parametrosGenerales.literal.nombre.apellidos"
       },
-      { field: "nif", header: "administracion.usuarios.literal.NIF", width: "12%" },
+      {
+        field: "nif",
+        header: "administracion.usuarios.literal.NIF",
+        width: "12%"
+      },
       {
         field: "fechaAlta",
         header: "administracion.usuarios.literal.fechaAlta",
         width: "12%"
       },
       {
-        field: "roles", header: "administracion.usuarios.literal.roles",
+        field: "roles",
+        header: "administracion.usuarios.literal.roles",
         width: "18%"
       }
     ];
@@ -199,14 +204,26 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.body.activo = "S";
     }
   }
-  isValidDNI(dni: String): boolean {
-    return (
-      dni &&
-      typeof dni === "string" &&
-      /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
-      dni.substr(8, 9).toUpperCase() ===
-      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
-    );
+
+  isValidDNI(dni: string): boolean {
+    let DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
+
+    let DNI_REGEX = /^(\d{8})([A-Z])$/;
+    let CIF_REGEX = /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/;
+    let NIE_REGEX = /^[XYZ]\d{7,8}[A-Z]$/;
+
+    if (DNI_REGEX.test(dni) || CIF_REGEX.test(dni) || NIE_REGEX.test(dni)) {
+      return true;
+    } else {
+      return false;
+    }
+    // return (
+    //   dni &&
+    //   typeof dni === "string" &&
+    //   /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
+    //   dni.substr(8, 9).toUpperCase() ===
+    //     DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+    // );
   }
 
   toHistorico() {
@@ -293,8 +310,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       (this.body.nif != "" && this.body.nif != undefined) &&
       (this.body.rol != "" && this.body.rol != undefined) &&
       (this.body.grupo != "" && this.body.grupo != undefined) &&
-      this.body.nif != "" &&
-      this.body.nif.length >= 9
+      this.body.nif != ""
     ) {
       this.blockCrear = false;
     } else {
@@ -352,14 +368,11 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   isBuscar() {
     if (
-      this.isValidDNI(this.body.nif) ||
+      this.isValidDNI("" + this.body.nif) ||
       this.body.nif == "" ||
       this.body.nif == undefined
     ) {
-      this.dniCorrecto = true;
       this.Search();
-    } else {
-      this.dniCorrecto = false;
     }
   }
 
@@ -488,24 +501,29 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   crear() {
     let a = this.body;
-    this.sigaServices.post("usuarios_insert", this.body).subscribe(
-      data => {
-        this.searchUser = JSON.parse(data["body"]);
+    if (this.isValidDNI("" + this.body.nif)) {
+      this.sigaServices.post("usuarios_insert", this.body).subscribe(
+        data => {
+          this.searchUser = JSON.parse(data["body"]);
 
-        this.showSuccess();
-      },
-      error => {
-        this.searchUser = JSON.parse(error["error"]);
-        this.showduplicateFail(this.searchUser.error.message.toString());
-        console.log(error);
-        this.showFail();
-      },
-      () => {
-        this.cancelar();
-        this.isBuscar();
-        this.table.reset();
-      }
-    );
+          this.showSuccess();
+        },
+        error => {
+          this.searchUser = JSON.parse(error["error"]);
+          this.showduplicateFail(this.searchUser.error.message.toString());
+          console.log(error);
+          this.showFail();
+        },
+        () => {
+          this.cancelar();
+          this.isBuscar();
+          this.table.reset();
+        }
+      );
+      this.dniCorrecto = null;
+    } else {
+      this.dniCorrecto = false;
+    }
   }
 
   showSuccess() {
@@ -664,7 +682,6 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.isBuscar();
     }
   }
-
 
   clear() {
     this.msgs = [];

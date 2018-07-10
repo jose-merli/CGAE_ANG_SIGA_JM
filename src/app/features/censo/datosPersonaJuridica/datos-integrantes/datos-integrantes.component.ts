@@ -147,9 +147,11 @@ export class DatosIntegrantesComponent implements OnInit {
     this.selectMultiple = !this.selectMultiple;
     if (!this.selectMultiple) {
       this.selectedDatos = [];
+      this.numSelected = 0;
     } else {
       this.selectAll = false;
       this.selectedDatos = [];
+      this.numSelected = 0;
     }
   }
 
@@ -221,6 +223,8 @@ export class DatosIntegrantesComponent implements OnInit {
       sessionStorage.removeItem("integrante");
       sessionStorage.setItem("integrante", JSON.stringify(ir));
       this.router.navigate(["detalleIntegrante"]);
+    } else {
+      this.numSelected = this.selectedDatos.length;
     }
   }
   onChangeSelectAll() {
@@ -232,6 +236,9 @@ export class DatosIntegrantesComponent implements OnInit {
       this.selectedDatos = [];
       this.numSelected = 0;
     }
+  }
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
   }
   anadirIntegrante() {
     let dummy = {
