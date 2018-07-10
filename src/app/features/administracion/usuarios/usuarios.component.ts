@@ -4,10 +4,13 @@ import {
   ViewEncapsulation,
   ViewChild,
   ChangeDetectorRef,
+  Input,
   HostListener
 } from "@angular/core";
 import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
+import { SelectItem } from "primeng/api";
+import { DropdownModule } from "primeng/dropdown";
 import {
   FormBuilder,
   FormGroup,
@@ -17,15 +20,26 @@ import {
 import { DataTable } from "primeng/datatable";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
-import { Router } from "@angular/router";
+import { ButtonModule } from "primeng/button";
+import { Router, ActivatedRoute } from "@angular/router";
+import { InputTextModule } from "primeng/inputtext";
+import { InputTextareaModule } from "primeng/inputtextarea";
+import { CheckboxModule } from "primeng/checkbox";
+import { RadioButtonModule } from "primeng/radiobutton";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { GrowlModule } from "primeng/growl";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
+import { MessageService } from "primeng/components/common/messageservice";
 import { UsuarioRequestDto } from "./../../../../app/models/UsuarioRequestDto";
 import { UsuarioResponseDto } from "./../../../../app/models/UsuarioResponseDto";
 import { UsuarioDeleteRequestDto } from "./../../../../app/models/UsuarioDeleteRequestDto";
 import { UsuarioItem } from "./../../../../app/models/UsuarioItem";
 import { ComboItem } from "./../../../../app/models/ComboItem";
+import { MultiSelectModule } from "primeng/multiselect";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
+import { Location } from "@angular/common";
+import { Observable } from "rxjs/Rx";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -79,10 +93,14 @@ export class Usuarios extends SigaWrapper implements OnInit {
 
   constructor(
     private sigaServices: SigaServices,
+    private formBuilder: FormBuilder,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
+    private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private activatedRoute: ActivatedRoute,
+    private translateService: TranslateService,
+    private location: Location
   ) {
     super(USER_VALIDATIONS);
   }
@@ -133,7 +151,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.cols = [
       {
         field: "nombreApellidos",
-        header: this.cargarLabel()
+        header: "administracion.usuarios.literal.nombre"
       },
       {
         field: "nif",
@@ -186,14 +204,25 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.body.activo = "S";
     }
   }
-  isValidDNI(dni: String): boolean {
-    return (
-      dni &&
-      typeof dni === "string" &&
-      /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
-      dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
-    );
+  isValidDNI(dni: string): boolean {
+    let DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
+
+    let DNI_REGEX = /^(\d{8})([A-Z])$/;
+    let CIF_REGEX = /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/;
+    let NIE_REGEX = /^[XYZ]\d{7,8}[A-Z]$/;
+
+    if (DNI_REGEX.test(dni) || CIF_REGEX.test(dni) || NIE_REGEX.test(dni)) {
+      return true;
+    } else {
+      return false;
+    }
+    // return (
+    //   dni &&
+    //   typeof dni === "string" &&
+    //   /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
+    //   dni.substr(8, 9).toUpperCase() ===
+    //     DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+    // );
   }
 
   toHistorico() {
@@ -280,8 +309,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       (this.body.nif != "" && this.body.nif != undefined) &&
       (this.body.rol != "" && this.body.rol != undefined) &&
       (this.body.grupo != "" && this.body.grupo != undefined) &&
-      this.body.nif != "" &&
-      this.body.nif.length >= 9
+      this.body.nif != ""
     ) {
       this.blockCrear = false;
     } else {
@@ -339,14 +367,11 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   isBuscar() {
     if (
-      this.isValidDNI(this.body.nif) ||
+      this.isValidDNI("" + this.body.nif) ||
       this.body.nif == "" ||
       this.body.nif == undefined
     ) {
-      this.dniCorrecto = true;
       this.Search();
-    } else {
-      this.dniCorrecto = false;
     }
   }
 
@@ -475,24 +500,29 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   crear() {
     let a = this.body;
-    this.sigaServices.post("usuarios_insert", this.body).subscribe(
-      data => {
-        this.searchUser = JSON.parse(data["body"]);
+    if (this.isValidDNI("" + this.body.nif)) {
+      this.sigaServices.post("usuarios_insert", this.body).subscribe(
+        data => {
+          this.searchUser = JSON.parse(data["body"]);
 
-        this.showSuccess();
-      },
-      error => {
-        this.searchUser = JSON.parse(error["error"]);
-        this.showduplicateFail(this.searchUser.error.message.toString());
-        console.log(error);
-        this.showFail();
-      },
-      () => {
-        this.cancelar();
-        this.isBuscar();
-        this.table.reset();
-      }
-    );
+          this.showSuccess();
+        },
+        error => {
+          this.searchUser = JSON.parse(error["error"]);
+          this.showduplicateFail(this.searchUser.error.message.toString());
+          console.log(error);
+          this.showFail();
+        },
+        () => {
+          this.cancelar();
+          this.isBuscar();
+          this.table.reset();
+        }
+      );
+      this.dniCorrecto = null;
+    } else {
+      this.dniCorrecto = false;
+    }
   }
 
   showSuccess() {
@@ -654,16 +684,5 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   clear() {
     this.msgs = [];
-  }
-
-  cargarLabel(): string {
-    return this.translateService
-      .instant("gratuita.mantenimientoTablasMaestra.literal.apellidos")
-      .concat(" & ")
-      .concat(
-        this.translateService.instant(
-          "administracion.parametrosGenerales.literal.nombre"
-        )
-      );
   }
 }

@@ -50,52 +50,50 @@
                             <span>{{car[col.field]}} </span>
 
                         </ng-template>
-                        </p-column>
-                        <p-column [sortable]="true" field="fechaFin" [header]="cols[1].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-                            filterMatchMode="contains">
-                            <ng-template let-col let-car="rowData" pTemplate="body">
+                    </p-column>
+                    <p-column [sortable]="true" field="fechaFin" [header]="cols[1].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                        filterMatchMode="contains">
+                        <ng-template let-col let-car="rowData" pTemplate="body">
 
-                                <span>{{car[col.field]}}</span>
+                            <span>{{car[col.field]}}</span>
 
-                            </ng-template>
-                            </p-column>
-                            <p-column [sortable]="true" field="descripcionRetencion" [header]="cols[2].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-                                filterMatchMode="contains">
-                                <ng-template let-col let-car="rowData" pTemplate="body">
-                                    <span>{{car[col.field]}}</span>
-                                    <p-dropdown *ngIf="car[col.field] == '' " [(ngModel)]="newRetencion.descripcionRetencion" [options]="tiposRetenciones" (onChange)="onChangeDrop($event)"></p-dropdown>
-                                </ng-template>
-                                </p-column>
-                                <p-column [sortable]="true" field="porcentajeRetencion" [header]="cols[3].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-                                    filterMatchMode="contains">
-                                    <ng-template let-col let-car="rowData" pTemplate="body">
-                                        <span>{{car[col.field]}}</span>
+                        </ng-template>
+                    </p-column>
+                    <p-column [sortable]="true" field="descripcionRetencion" [header]="cols[2].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                        filterMatchMode="contains">
+                        <ng-template let-col let-car="rowData" pTemplate="body">
+                            <span>{{car[col.field]}}</span>
+                            <p-dropdown *ngIf="car[col.field] == '' " [(ngModel)]="newRetencion.descripcionRetencion" [options]="tiposRetenciones" (onChange)="onChangeDrop($event)"></p-dropdown>
+                        </ng-template>
+                    </p-column>
+                    <p-column [sortable]="true" field="porcentajeRetencion" [header]="cols[3].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                        filterMatchMode="contains">
+                        <ng-template let-col let-car="rowData" pTemplate="body">
+                            <span>{{car[col.field]}}</span>
 
-                                    </ng-template>
-                                    </p-column>
+                        </ng-template>
+                    </p-column>
 
-                                    <ng-template pTemplate="paginatorLeft">
-                                        <div class="mostrar">
-                                            <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                                            <label>Mostrar</label>
-                                            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                                            <label> registros</label>
-                                        </div>
-                                    </ng-template>
-                                    <p-footer>
-                                        <div class="text-right main-button">
-
-                                            <button (click)="crear()" [(disabled)]="isCrear" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-                                            <button (click)="confirmarBorrar()" [(disabled)]="isEliminar" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
-                                                label="{{'general.boton.eliminar'  | translate}}"></button>
-                                                <button (click)="volver();" [(disabled)]="isVolver" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-                                                <button (click)="confirmEdit();" [(disabled)]="isEditar" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                    <ng-template pTemplate="paginatorLeft">
+                        <div class="mostrar">
+                            <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                            <label>Mostrar</label>
+                            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                            <label> registros</label>
+                        </div>
+                    </ng-template>
+                    <p-footer>
+                        <div class="text-right main-button">
 
 
-
-                                        </div>
-                                    </p-footer>
-                                    </p-dataTable>
+                            <button (click)="confirmEdit();" [(disabled)]="isEditar" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                            <button (click)="volver();" [(disabled)]="isVolver" pButton type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+                            <button (click)="confirmarBorrar()" [(disabled)]="isEliminar" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
+                                label="{{'general.boton.eliminar'  | translate}}"></button>
+                            <button (click)="crear()" [(disabled)]="isCrear" pButton type="button" icon="fa fa-plus-square" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+                        </div>
+                    </p-footer>
+                </p-dataTable>
 
 
             </div>

@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { esCalendar } from "../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
 import { Location } from "@angular/common";
 import { SigaServices } from "./../../../../_services/siga.service";
-import { TranslateService } from "../../../../commons/translate/translation.service";
+
 /*** COMPONENTES ***/
 import { DatosGeneralesComponent } from "./../../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
 import { DatosGeneralesItem } from "./../../../../../app/models/DatosGeneralesItem";
@@ -13,7 +13,8 @@ import { Subscription } from "rxjs/Subscription";
 import { cardService } from "./../../../../_services/cardSearch.service";
 
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
-import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
+import { ControlAccesoDto } from "../../../../models/ControlAccesoDto";
+import { TranslateService } from "../../../../commons/translate";
 
 @Component({
   selector: "app-datos-generales",
@@ -37,7 +38,7 @@ export class DatosGenerales implements OnInit {
   todo: boolean = false;
   textFilter: String;
   selectedDatos: any = [];
-
+  activacionEditar: boolean = false;
   showDatosGenerales: boolean = true;
   showDatosColegiales: boolean = false;
   showDatosFacturacion: boolean = false;
@@ -50,6 +51,7 @@ export class DatosGenerales implements OnInit {
   selectedDoc: string = "NIF";
   newDireccion: boolean = false;
   nuevo: boolean = false;
+  identificacionValida: boolean;
 
   editar: boolean = false;
   archivoDisponible: boolean = false;
@@ -113,13 +115,8 @@ export class DatosGenerales implements OnInit {
     private translateService: TranslateService,
     private location: Location,
     private cardService: cardService,
-<<<<<<< HEAD:src/app/features/censo/datos-generales/datos-generales.component.ts
-    private sigaServices: SigaServices,
-    private headerGestionEntidadService: HeaderGestionEntidadService,
-    private sanitizer: DomSanitizer
-=======
+    private sanitizer: DomSanitizer,
     private sigaServices: SigaServices
->>>>>>> [anunezescamilla] refactorizacion codigo censo:src/app/features/censo/datosPersonaJuridica/datos-generales/datos-generales.component.ts
   ) {
     this.formBusqueda = this.formBuilder.group({
       cif: null
@@ -135,6 +132,7 @@ export class DatosGenerales implements OnInit {
   }
 
   ngOnInit() {
+    this.checkAcceso();
     this.busquedaIdioma();
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
 
@@ -177,6 +175,29 @@ export class DatosGenerales implements OnInit {
     );
 
     this.comboTipo.push(this.tipoPersonaJuridica);
+  }
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "120";
+    let derechoAcceso;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else {
+          this.activacionEditar = false;
+        }
+      }
+    );
   }
 
   obtenerEtiquetasPersonaJuridicaConcreta() {
@@ -445,7 +466,9 @@ export class DatosGenerales implements OnInit {
 
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = !fichaPosible.activa;
+    if (this.activacionEditar == true) {
+      fichaPosible.activa = !fichaPosible.activa;
+    }
   }
 
   esFichaActiva(key) {
@@ -482,8 +505,11 @@ export class DatosGenerales implements OnInit {
             item => item.value == "V"
           );
         }
+
+        this.identificacionValida = true;
       } else {
         this.selectedTipo = this.comboIdentificacion[0];
+        this.identificacionValida = false;
       }
     }
 
