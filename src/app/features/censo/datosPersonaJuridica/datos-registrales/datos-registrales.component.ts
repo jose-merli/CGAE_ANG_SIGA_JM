@@ -182,8 +182,8 @@ export class DatosRegistralesComponent implements OnInit {
       this.fechaCorrecta = false;
     } else {
       this.fechaCorrecta = true;
-      return true;
     }
+    return this.fechaCorrecta;
   }
 
   compruebaFechaBaja() {
@@ -196,12 +196,15 @@ export class DatosRegistralesComponent implements OnInit {
       }
     }
     if (this.compruebaFechaConstitucion()) {
-      return true;
+      return this.fechaBajaCorrecta;
     }
   }
 
   compruebaRegistro() {
     var a = this.body.contadorNumsspp;
+    // if (this.body.contadorNumsspp.length > 10) {
+    //   this.body.contadorNumsspp = this.body.contadorNumsspp.substring(0, 9);
+    // }
     if (
       Number(this.body.contadorNumsspp) ||
       this.onlySpaces(this.body.contadorNumsspp)
