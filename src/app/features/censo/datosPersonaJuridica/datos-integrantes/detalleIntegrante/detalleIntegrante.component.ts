@@ -1,56 +1,11 @@
-import { OldSigaServices } from "../../../../_services/oldSiga.service";
-import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  ViewChild,
-  ChangeDetectorRef,
-  Input,
-  HostListener,
-  SystemJsNgModuleLoader
-} from "@angular/core";
-import { CalendarModule } from "primeng/calendar";
-import { Http, Response } from "@angular/http";
-import { MenuItem } from "primeng/api";
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl
-} from "@angular/forms";
-import { SelectItem } from "primeng/api";
-import { esCalendar } from "../../../../utils/calendar";
-import { TableModule } from "primeng/table";
-import { SigaServices } from "./../../../../_services/siga.service";
-import { DropdownModule } from "primeng/dropdown";
-import { DataTable } from "primeng/datatable";
-import { TranslateService } from "../../../../commons/translate/translation.service";
-import { USER_VALIDATIONS } from "../../../../properties/val-properties";
-import { ButtonModule } from "primeng/button";
-import { Router, ActivatedRoute } from "@angular/router";
-import { InputTextModule } from "primeng/inputtext";
-import { InputTextareaModule } from "primeng/inputtextarea";
-import { CheckboxModule } from "primeng/checkbox";
-import { RadioButtonModule } from "primeng/radiobutton";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { GrowlModule } from "primeng/growl";
-import { CommonModule } from "@angular/common";
-import { DataTableModule } from "primeng/datatable";
-import { ConfirmationService } from "primeng/api";
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { esCalendar } from "../../../../../utils/calendar";
+import { SigaServices } from "./../../../../../_services/siga.service";
+import { Router } from "@angular/router";
 import { Message } from "primeng/components/common/api";
-import { MessageService } from "primeng/components/common/messageservice";
-import { ComboItem } from "./../../../../../app/models/ComboItem";
-import { MultiSelectModule } from "primeng/multiselect";
-import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
-import { Location, getLocaleDateTimeFormat, DatePipe } from "@angular/common";
-import { Observable } from "rxjs/Rx";
-import { BusquedaFisicaItem } from "./../../../../../app/models/BusquedaFisicaItem";
-import { BusquedaJuridicaItem } from "./../../../../../app/models/BusquedaJuridicaItem";
-import { BusquedaJuridicaObject } from "./../../../../../app/models/BusquedaJuridicaObject";
-import { BusquedaFisicaObject } from "./../../../../../app/models/BusquedaFisicaObject";
-import { DatosNotarioItem } from "../../../../models/DatosNotarioItem";
-import { DatosIntegrantesItem } from "../../../../models/DatosIntegrantesItem";
-import { DatosIntegrantesObject } from "../../../../models/DatosIntegrantesObject";
+import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
+import { DatosIntegrantesItem } from "../../../../../models/DatosIntegrantesItem";
+import { DatosIntegrantesObject } from "../../../../../models/DatosIntegrantesObject";
 /*** COMPONENTES ***/
 
 @Component({
@@ -118,17 +73,7 @@ export class DetalleIntegranteComponent implements OnInit {
   @ViewChild("table") table;
   selectedDatos;
 
-  constructor(
-    private sigaServices: SigaServices,
-    private formBuilder: FormBuilder,
-    private router: Router,
-    private changeDetectorRef: ChangeDetectorRef,
-    private messageService: MessageService,
-    private confirmationService: ConfirmationService,
-    private activatedRoute: ActivatedRoute,
-    private translateService: TranslateService,
-    private location: Location
-  ) {}
+  constructor(private sigaServices: SigaServices, private router: Router) {}
 
   ngOnInit() {
     this.body = JSON.parse(sessionStorage.getItem("integrante"));

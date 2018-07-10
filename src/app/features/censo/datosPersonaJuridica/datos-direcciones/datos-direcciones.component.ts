@@ -1,59 +1,20 @@
 import { Router } from "@angular/router";
 import { DataTable } from "primeng/datatable";
 import { ConfirmationService, Message } from "primeng/components/common/api";
-import { TranslateService } from "../../../commons/translate/translation.service";
-import { SigaServices } from "./../../../_services/siga.service";
-import { DatosDireccionesItem } from "./../../../../app/models/DatosDireccionesItem";
-import { DatosDireccionesObject } from "./../../../../app/models/DatosDireccionesObject";
-import { OldSigaServices } from "../../../_services/oldSiga.service";
-import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  ViewChild,
-  ChangeDetectorRef,
-  Input,
-  HostListener,
-  SystemJsNgModuleLoader
-} from "@angular/core";
-import { CalendarModule } from "primeng/calendar";
-import { Http, Response } from "@angular/http";
-import { MenuItem } from "primeng/api";
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl
-} from "@angular/forms";
-import { SelectItem } from "primeng/api";
-import { esCalendar } from "../../../utils/calendar";
-import { TableModule } from "primeng/table";
-import { DropdownModule } from "primeng/dropdown";
-import { USER_VALIDATIONS } from "../../../properties/val-properties";
-import { ButtonModule } from "primeng/button";
+import { TranslateService } from "../../../../commons/translate/translation.service";
+import { SigaServices } from "./../../../../_services/siga.service";
+import { DatosDireccionesItem } from "./../../../../../app/models/DatosDireccionesItem";
+import { DatosDireccionesObject } from "./../../../../../app/models/DatosDireccionesObject";
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { FormBuilder } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
-import { InputTextModule } from "primeng/inputtext";
-import { InputTextareaModule } from "primeng/inputtextarea";
-import { CheckboxModule } from "primeng/checkbox";
-import { RadioButtonModule } from "primeng/radiobutton";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { MessageService } from "primeng/components/common/messageservice";
-import { GrowlModule } from "primeng/growl";
-import { ComboItem } from "./../../../../app/models/ComboItem";
-import { MultiSelectModule } from "primeng/multiselect";
-import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
-import { Location, getLocaleDateTimeFormat, DatePipe } from "@angular/common";
-import { Observable } from "rxjs/Rx";
-import { BusquedaFisicaItem } from "./../../../../app/models/BusquedaFisicaItem";
-import { BusquedaJuridicaItem } from "./../../../../app/models/BusquedaJuridicaItem";
-import { BusquedaJuridicaObject } from "./../../../../app/models/BusquedaJuridicaObject";
-import { BusquedaFisicaObject } from "./../../../../app/models/BusquedaFisicaObject";
-import { DatosNotarioItem } from "../../../models/DatosNotarioItem";
-import { DatosIntegrantesItem } from "../../../models/DatosIntegrantesItem";
-import { DatosIntegrantesObject } from "../../../models/DatosIntegrantesObject";
-import { DatosPersonaJuridicaComponent } from "../datosPersonaJuridica/datosPersonaJuridica.component";
-
-import { cardService } from "./../../../_services/cardSearch.service";
+import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
+import { Location } from "@angular/common";
+import { DatosIntegrantesItem } from "../../../../models/DatosIntegrantesItem";
+import { DatosIntegrantesObject } from "../../../../models/DatosIntegrantesObject";
+import { DatosPersonaJuridicaComponent } from "../../datosPersonaJuridica/datosPersonaJuridica.component";
+import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
 
 @Component({
@@ -450,14 +411,7 @@ export class DatosDireccionesComponent implements OnInit {
 
   constructor(
     private sigaServices: SigaServices,
-    private formBuilder: FormBuilder,
     private router: Router,
-    private changeDetectorRef: ChangeDetectorRef,
-    private messageService: MessageService,
-    private confirmationService: ConfirmationService,
-    private activatedRoute: ActivatedRoute,
-    private translateService: TranslateService,
-    private location: Location,
     private fichasPosibles: DatosPersonaJuridicaComponent,
     private cardService: cardService
   ) {}
