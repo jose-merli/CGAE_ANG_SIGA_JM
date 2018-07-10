@@ -951,7 +951,7 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
     padding: 0.4em;
     min-width: 30%;
     display: inline-block;
-    margin: -0.4em 1em -0.4em -0.4em;
+    margin: -.4em 1em -0.4em -0.4em;
   }
 
   .icon-color,
@@ -960,6 +960,28 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   }
 }
 
+.ui-fileupload-buttonbar {
+  width: 53px !important;
+  height: 53px !important;
+  border: transparent !important;
+  background-color: white;
+}
+.ui-widget-header {
+  background: transparent;
+}
+.ui-fileupload-buttonbar .ui-button {
+  width: 29px !important;
+  height: 29px !important;
+  border: transparent !important;
+  background-color: white;
+}
+.ui-fileupload-content {
+  background-color: transparent;
+  border: none;
+}
+.ui-fileupload {
+  background-color: transparent;
+}
 @media (max-width: 1600px) {
   .menu-accesos {
     display: block;
