@@ -85,8 +85,16 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
             /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
             this.idiomaBusqueda.map(e => {
-              e.labelSinTilde = e.label.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-              return e.labelSinTilde;
+              let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+              let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+              let i;
+              let x;
+              for (i = 0; i < e.label.length; i++) {
+                if ((x = accents.indexOf(e.label[i])) != -1) {
+                  e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+                  return e.labelSinTilde;
+                }
+              }
             });
 
             this.valorDefectoIdioma = this.idiomaBusqueda.find(
