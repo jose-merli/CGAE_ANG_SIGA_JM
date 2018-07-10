@@ -182,7 +182,11 @@ para poder filtrar el dato con o sin estos caracteres*/
   // Control de buscar desactivado por ahora (hasta tener primer elemento del combo preparado)
   onChangeCatalogo() {}
   //cada vez que cambia el formulario comprueba esto
-  onChangeForm() {}
+  onChangeForm(event) {
+    this.idModulo = event;
+    this.body.idmodulo = this.idModulo;
+    this.isBuscar();
+  }
 
   showSuccess() {
     this.msgs = [];

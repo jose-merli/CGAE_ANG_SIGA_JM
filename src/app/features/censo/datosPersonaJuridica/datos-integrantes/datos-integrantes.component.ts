@@ -255,6 +255,8 @@ export class DatosIntegrantesComponent implements OnInit {
       sessionStorage.removeItem("integrante");
       sessionStorage.setItem("integrante", JSON.stringify(ir));
       this.router.navigate(["detalleIntegrante"]);
+    } else {
+      this.numSelected = this.selectedDatos.length;
     }
   }
   onChangeSelectAll() {
