@@ -1,4 +1,4 @@
-<p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
+<p-growl [(value)]="msgs" [life]="30000" (onHover)="clear()"></p-growl>
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -68,9 +68,11 @@
     </div>
     <div class="card-footer">
       <div class="text-right main-button">
-        <button (click)="crear()" pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-
+        <button (click)="crear()" pButton type="button" icon="	fa fa-plus-square " iconPos="left" [disabled]="!activacionEditar"
+          label="{{ 'general.boton.new' | translate}}">
+        </button>
         <button (click)="isBuscar(); selectedDatos = ''" pButton type="button " icon="fa fa-search " iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+        <button (click)="restablecer()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -107,16 +109,15 @@
             </div>
             <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
               <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
-
           </div>
         </ng-template>
-
 
         <p-footer>
           <div class="text-right main-button">
             <button (click)="toHistorico()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.historico' | translate}}"></button>
             <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash" iconPos="left" label="{{'general.boton.eliminar' | translate}}"
-              [disabled]="selectedDatos == ''"></button>
+              [disabled]="selectedDatos == '' && !activacionEditar"></button>
+
           </div>
         </p-footer>
       </p-dataTable>
@@ -158,18 +159,26 @@
         </p-column>
 
         <ng-template pTemplate="paginatorLeft">
-          <div class="mostrar">
+          <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+            <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
             <label>{{ "general.message.mostrar" | translate}}</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-            <label>{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+            <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+            <div class="ml-3 selectAll">
+              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
+            </div>
+            <label *ngIf="activarPaginacion() == true" class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}"
+              (click)="isSelectMultiple(); selectedDatos=false">
+              <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
           </div>
         </ng-template>
-
 
         <p-footer>
           <div class="text-right main-button">
             <button (click)="isBuscar()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
+            <!--<button (click)="confirmarBorrar(selectedDatos)" [disabled]="!activacionEditar" pButton type="button" icon="fa fa-trash"
+                iconPos="left" label="{{'general.boton.eliminar' | translate}}" disabled></button>-->
             <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash" iconPos="left" label="{{'general.boton.eliminar' | translate}}"
               disabled></button>
           </div>

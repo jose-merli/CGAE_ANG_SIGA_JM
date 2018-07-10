@@ -1,4 +1,4 @@
-<p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
+<p-growl [(value)]="msgs" [life]="30000" (onHover)="clear()"></p-growl>
 <div class="busqueda-container">
 
   <!--<div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
@@ -62,7 +62,6 @@
               <div class="img-colegiado my-2">
                 <i *ngIf="!existeImagen" class="fa fa-user" style="font-size:130px;color:grey"></i>
                 <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="imagenCentrada">
-
               </div>
             </div>
             <div class="form-group col-lg-6 col-md-6">
@@ -85,7 +84,7 @@
               <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
               <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion" optionLabel="label" (ngModelChange)="getTipo($event)"
                 [disabled]="true"></p-dropdown>
-                <!--<p-dropdown class="select-form" [(ngModel)]="body.tipo" [options]="comboTipo" (ngModelChange)="onChangeForm()"></p-dropdown>-->
+              <!--<p-dropdown class="select-form" [(ngModel)]="body.tipo" [options]="comboTipo" (ngModelChange)="onChangeForm()"></p-dropdown>-->
             </div>
             <div *ngIf="!editar" class="form-group col-lg-6 col-md-6">
               <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
@@ -121,7 +120,8 @@
             </div>
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
-              <input type="text " class="form-control " [(ngModel)]="body.cuentaContable" (ngModelChange)="onChangeForm()" pInputText>
+              <input type="text " class="form-control " [(ngModel)]="body.cuentaContable" [maxLength]="20" (ngModelChange)="onChangeForm()"  pInputText>
+
               <!--<div *ngIf="cuentaIncorrecta == true"><label class="labelError">La cuenta bancaria debe tener 24 caracteres</label></div>-->
             </div>
             <div class="form-group col-lg-8 col-md-8">
@@ -141,7 +141,8 @@
       <br>
       <div *ngIf="esFichaActiva('generales') " class="card-footer ">
         <div class="text-right main-button ">
-          <button (click)="restablecer()" [disabled]="editar" pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"></button>
+          <button (click)="restablecer()" [disabled]="editar || !activacionEditar" pButton type="button" icon="fa fa-undo" iconPos="left"
+            label="Restablecer"></button>
           <button (click)="guardar()" [disabled]="!showGuardar" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
         </div>
       </div>

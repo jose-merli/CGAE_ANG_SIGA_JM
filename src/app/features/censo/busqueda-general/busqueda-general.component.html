@@ -1,4 +1,4 @@
-<p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
+<p-growl [(value)]="msgs" [life]="30000" (onHover)="clear()"></p-growl>
 <div class="busqueda-container">
     <div class="header-title">
         <i class="fa fa-square"></i>
@@ -117,7 +117,7 @@
     </div>
 </div>
 <app-dialog></app-dialog>
-<p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
+<p-growl [(value)]="msgs" [life]="30000" (onHover)="clear()"></p-growl>
 
 <div class="mt-3 text-right main-button ">
     <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="Volver"></button>

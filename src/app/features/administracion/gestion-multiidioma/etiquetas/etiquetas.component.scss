@@ -33,9 +33,13 @@
 
 .ui-tooltip {
   max-width: 100%;
+  box-shadow:  none;
   .ui-tooltip-text {
-    background: gray;
-    color: black;
+    background: white;
+    color: #595959;
     font-size: 0.8rem;
+  }
+  .ui-tooltip-arrow{
+    border-top-color: rgba(0,0,0,0.3);
   }
 }
