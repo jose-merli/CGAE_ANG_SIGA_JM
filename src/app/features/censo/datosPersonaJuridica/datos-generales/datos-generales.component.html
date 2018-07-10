@@ -76,6 +76,9 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.fichaCliente.literal.identificacion" | translate}} (*)</label>
               <input [(ngModel)]="body.nif" type="text" class="form-control" (ngModelChange)="onChangeForm()" [disabled]="!editar" pInputText>
+              <div *ngIf="identificacionValida == false">
+                <label class="labelError">{{"El cif es inválido"}}</label>
+              </div>
             </div>
             <!--<div *ngIf="!editar" class="form-group col-lg-6 col-md-6">
               <label>{{"censo.fichaCliente.literal.identificacion" | translate}} (*)</label>
@@ -85,7 +88,7 @@
               <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
               <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion" optionLabel="label" (ngModelChange)="getTipo($event)"
                 [disabled]="true"></p-dropdown>
-                <!--<p-dropdown class="select-form" [(ngModel)]="body.tipo" [options]="comboTipo" (ngModelChange)="onChangeForm()"></p-dropdown>-->
+              <!--<p-dropdown class="select-form" [(ngModel)]="body.tipo" [options]="comboTipo" (ngModelChange)="onChangeForm()"></p-dropdown>-->
             </div>
             <div *ngIf="!editar" class="form-group col-lg-6 col-md-6">
               <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
@@ -103,11 +106,13 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.denominacion" | translate}} (*)</label>
-              <input [(ngModel)]="body.denominacion" type="text" class="form-control" (ngModelChange)="onChangeForm()" pInputText>
+              <input [(ngModel)]="body.denominacion" type="text" class="form-control" (ngModelChange)="onChangeForm()" [maxLength]="99"
+                pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"gratuita.definirTurnosIndex.literal.abreviatura" | translate}} (*)</label>
-              <input [(ngModel)]="body.abreviatura" type="text" class="form-control" (ngModelChange)="onChangeForm()" pInputText>
+              <input [(ngModel)]="body.abreviatura" type="text" class="form-control" (ngModelChange)="onChangeForm()" [maxLength]="100"
+                pInputText>
             </div>
           </div>
         </div>
@@ -121,12 +126,13 @@
             </div>
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
-              <input type="text " class="form-control " [(ngModel)]="body.cuentaContable" (ngModelChange)="onChangeForm()" pInputText>
+              <input type="text " class="form-control " [(ngModel)]="body.cuentaContable" [maxLength]="20" (ngModelChange)="onChangeForm()"
+                pInputText>
               <!--<div *ngIf="cuentaIncorrecta == true"><label class="labelError">La cuenta bancaria debe tener 24 caracteres</label></div>-->
             </div>
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"censo.general.literal.anotaciones" | translate}}: </label>
-              <textarea pInputTextarea [(ngModel)]="body.anotaciones" (ngModelChange)="onChangeForm()"></textarea>
+              <textarea pInputTextarea [(ngModel)]="body.anotaciones" (ngModelChange)="onChangeForm()" [maxLength]="2000"></textarea>
             </div>
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"menu.administracion.gestionMultiidioma.etiquetas" | translate}}</label>

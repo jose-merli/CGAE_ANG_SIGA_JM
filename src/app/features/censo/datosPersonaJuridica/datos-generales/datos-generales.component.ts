@@ -3,9 +3,7 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { esCalendar } from "../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
 import { Location } from "@angular/common";
-
 import { SigaServices } from "./../../../../_services/siga.service";
-import { TranslateService } from "../../../../commons/translate/translation.service";
 
 /*** COMPONENTES ***/
 import { DatosGeneralesComponent } from "./../../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
@@ -13,9 +11,10 @@ import { DatosGeneralesItem } from "./../../../../../app/models/DatosGeneralesIt
 import { DatosGeneralesObject } from "./../../../../../app/models/DatosGeneralesObject";
 import { Subscription } from "rxjs/Subscription";
 import { cardService } from "./../../../../_services/cardSearch.service";
-import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
 
-import { DomSanitizer } from "@angular/platform-browser";
+import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
+import { ControlAccesoDto } from "../../../../models/ControlAccesoDto";
+import { TranslateService } from "../../../../commons/translate";
 
 @Component({
   selector: "app-datos-generales",
@@ -116,8 +115,8 @@ export class DatosGenerales implements OnInit {
     private translateService: TranslateService,
     private location: Location,
     private cardService: cardService,
-    private sigaServices: SigaServices,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private sigaServices: SigaServices
   ) {
     this.formBusqueda = this.formBuilder.group({
       cif: null

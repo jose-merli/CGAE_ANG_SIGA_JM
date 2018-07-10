@@ -114,6 +114,16 @@ header {
     padding-top: 0.33rem;
     cursor: pointer;
   }
+  .link-cookies{
+    font-size: 0.75rem;
+    position: absolute;
+    bottom: 0;
+    a{
+      color: $grey1;
+      text-decoration: none;
+    }
+  
+  }
 }
 
 .menuHide {

@@ -4,25 +4,12 @@ import {
   ViewEncapsulation,
   ViewChild,
   ChangeDetectorRef,
-  Input,
   HostListener
 } from "@angular/core";
 import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
-import { SelectItem } from "primeng/api";
-import { MenuItem } from "primeng/api";
-import { Http, Response } from "@angular/http";
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl
-} from "@angular/forms";
-import { DropdownModule } from "primeng/dropdown";
+import { FormBuilder, FormGroup } from "@angular/forms";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
-import { ButtonModule } from "primeng/button";
-import { InputTextModule } from "primeng/inputtext";
-import { InputTextareaModule } from "primeng/inputtextarea";
 import { Router, ActivatedRoute } from "@angular/router";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { MessageService } from "primeng/components/common/messageservice";
@@ -90,8 +77,6 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
     private sigaServices: SigaServices,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
-    private messageService: MessageService,
-    private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private activatedRoute: ActivatedRoute
   ) {
@@ -197,11 +182,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   // Control de buscar desactivado por ahora (hasta tener primer elemento del combo preparado)
   onChangeCatalogo() {}
   //cada vez que cambia el formulario comprueba esto
-  onChangeForm(event) {
-    this.idModulo = event;
-    this.body.idmodulo = this.idModulo;
-    this.isBuscar();
-  }
+  onChangeForm() {}
 
   showSuccess() {
     this.msgs = [];

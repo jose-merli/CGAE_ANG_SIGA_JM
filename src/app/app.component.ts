@@ -20,10 +20,11 @@ export class AppComponent implements OnInit {
   cookieValue = 'UNKNOWN';
 
   hideCookies: boolean = true;
-  bottomCookies: string = "-100"
-
-
-
+  bottomCookies: string = "0"
+  expires: number;
+  date: any;
+  currentDate: any;
+  dateExpires: any;
 
   scroll: boolean = false;
   isScrollReseteable: boolean = false;
@@ -38,17 +39,28 @@ export class AppComponent implements OnInit {
     // this.activatedRoute.data.subscribe((result: any) => {
     //   this.isScrollReseteable = result.scrollReset;
     //   console.log(result)
-    // })
+    // })  
 
     this.subscribeNavigationEnd();
+    this.getDateExpire();
 
-    if (sessionStorage.getItem('cookies') === 'true') {
-      this.bottomCookies = "-100";
+    this.currentDate = JSON.stringify(new Date(new Date().getTime()));
+
+    if (this.currentDate !== this.dateExpires) {
+      if (localStorage.getItem('cookies') === 'true') {
+        this.bottomCookies = "-100";
+      }
     } else {
+      localStorage.setItem('cookies', 'false');
       this.bottomCookies = "0";
-      this.cookieService.set('Test', 'Utilizamos cookies propias y de analítica para mejorar tu experiencia de usuario. Si continúas navegando, consideramos que aceptas su uso.');
-      this.cookieValue = this.cookieService.get('Test');
     }
+
+    this.cookieService.set('Test', 'Utilizamos cookies propias y de analítica para mejorar tu experiencia de usuario. Si continúas navegando, consideramos que aceptas su uso.');
+    this.cookieValue = this.cookieService.get('Test');
+
+
+
+
   }
 
   subscribeNavigationEnd() {
@@ -85,6 +97,29 @@ export class AppComponent implements OnInit {
 
   }
 
+  set(
+    expires?: number | Date,
+  ): void {
+    // expires = 2;
+    if (expires) {
+      if (typeof expires === 'number') {
+        const dateExpires = new Date(new Date().getTime() + expires * 1000 * 60 * 60 * 24);
+        this.date = { value: "date", dateExpires }
+        localStorage.setItem("date", JSON.stringify(this.date));
+      }
+    }
+  }
+
+  getDateExpire() {
+    this.date = localStorage.getItem('date');
+    let objectDate = JSON.parse(this.date);
+    if (this.date != undefined) {
+      this.dateExpires = objectDate.dateExpires;
+    }
+
+  }
+
+
 
   // @HostListener("window:scroll", ['$event'])
   onWindowScroll(event, content) {
@@ -106,7 +141,9 @@ export class AppComponent implements OnInit {
   }
 
   onHideCookies() {
-    sessionStorage.setItem('cookies', 'true');
+    this.expires = 365;
+    localStorage.setItem('cookies', 'true');
     this.bottomCookies = '-100';
+    this.set(this.expires);
   }
 }

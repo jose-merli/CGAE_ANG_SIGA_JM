@@ -77,6 +77,7 @@ export class DatosDireccionesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.checkAcceso();
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     if (this.usuarioBody[0] != undefined) {
       this.idPersona = this.usuarioBody[0].idPersona;
@@ -93,39 +94,39 @@ export class DatosDireccionesComponent implements OnInit {
     this.cols = [
       {
         field: "tipoDireccion",
-        header: "Tipo Dirección"
+        header: "censo.datosDireccion.literal.tipo.direccion"
       },
       {
         field: "domicilioLista",
-        header: "Dirección"
+        header: "censo.consultaDirecciones.literal.direccion"
       },
       {
         field: "codigoPostal",
-        header: "Código Postal"
+        header: "censo.ws.literal.codigopostal"
       },
       {
         field: "nombrePoblacion",
-        header: "Población"
+        header: "censo.consultaDirecciones.literal.poblacion"
       },
       {
         field: "nombreProvincia",
-        header: "Provincia"
+        header: "censo.datosDireccion.literal.provincia"
       },
       {
         field: "telefono",
-        header: "Teléfono"
+        header: "censo.ws.literal.telefono"
       },
       {
         field: "fax",
-        header: "Fax"
+        header: "censo.ws.literal.fax"
       },
       {
         field: "movil",
-        header: "Móvil"
+        header: "censo.datosDireccion.literal.movil"
       },
       {
         field: "correoElectronico",
-        header: "Correo electrónico"
+        header: "censo.datosDireccion.literal.correo"
       }
     ];
     this.rowsPerPage = [
@@ -167,6 +168,29 @@ export class DatosDireccionesComponent implements OnInit {
     }
   }
 
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "122";
+    let derechoAcceso;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else {
+          this.activacionEditar = false;
+        }
+      }
+    );
+  }
+
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
@@ -185,6 +209,13 @@ export class DatosDireccionesComponent implements OnInit {
       return fichaPosible[0];
     }
     return {};
+  }
+  nuevo() {
+    let newDireccion = new DatosDireccionesItem();
+    sessionStorage.setItem("direccion", JSON.stringify(newDireccion));
+    sessionStorage.removeItem("editarDireccion");
+    sessionStorage.setItem("editarDireccion", "false");
+    this.router.navigate(["/consultarDatosDirecciones"]);
   }
   search() {
     this.historico = false;
@@ -222,16 +253,7 @@ export class DatosDireccionesComponent implements OnInit {
     if (datoH.fechaBaja == null) return false;
     else return true;
   }
-  consultarIntegrante(id) {
-    if (!this.selectMultiple) {
-      var ir = null;
-      ir = id[0];
-      ir.editar = false;
-      sessionStorage.removeItem("integrante");
-      sessionStorage.setItem("integrante", JSON.stringify(ir));
-      this.router.navigate(["detalleIntegrante"]);
-    }
-  }
+
   redireccionar(dato) {
     if (!this.selectMultiple && !this.historico) {
       var enviarDatos = null;
@@ -239,7 +261,8 @@ export class DatosDireccionesComponent implements OnInit {
         enviarDatos = dato[0];
         sessionStorage.setItem("idDireccion", enviarDatos.idDireccion);
         sessionStorage.setItem("direccion", JSON.stringify(enviarDatos));
-        sessionStorage.setItem("editar", "true");
+        sessionStorage.removeItem("editarDireccion");
+        sessionStorage.setItem("editarDireccion", "true");
       } else {
         sessionStorage.setItem("editar", "false");
       }
@@ -259,14 +282,7 @@ export class DatosDireccionesComponent implements OnInit {
       this.numSelected = 0;
     }
   }
-  anadirIntegrante() {
-    let dummy = {
-      integrante: true
-    };
-    sessionStorage.removeItem("newIntegrante");
-    sessionStorage.setItem("newIntegrante", JSON.stringify(dummy));
-    this.router.navigate(["/busquedaGeneral"]);
-  }
+
   searchHistorico() {
     this.historico = true;
     let searchObject = new DatosDireccionesItem();
@@ -296,6 +312,7 @@ export class DatosDireccionesComponent implements OnInit {
   }
 
   borrar(selectedItem) {
+    this.progressSpinner = true;
     let deleteDirecciones = new DatosDireccionesObject();
     deleteDirecciones.datosDireccionesItem = selectedItem;
     let datosDelete = [];
@@ -312,6 +329,7 @@ export class DatosDireccionesComponent implements OnInit {
         console.log(err);
       },
       () => {
+        this.progressSpinner = false;
         this.editar = false;
         this.dniCorrecto = null;
         this.disabledRadio = false;

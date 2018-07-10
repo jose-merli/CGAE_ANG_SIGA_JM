@@ -906,6 +906,11 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   border-bottom-left-radius: 3px;
 }
 
+.box,
+.boxCombo {
+  border-radius: 0;
+}
+
 /**RESPONSIVE**/
 
 @media (max-width: 55em) {
@@ -951,7 +956,7 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
     padding: 0.4em;
     min-width: 30%;
     display: inline-block;
-    margin: -.4em 1em -0.4em -0.4em;
+    margin: -0.4em 1em -0.4em -0.4em;
   }
 
   .icon-color,
@@ -1015,4 +1020,8 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
 
 .ui-datepicker.ui-widget .ui-datepicker-calendar td a.ui-state-active {
   background: $secondary-color;
+}
+
+.datepicker-change-year {
+  padding-bottom: 0.4em;
 }

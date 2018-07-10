@@ -34,6 +34,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   formValido: boolean;
   ibanValido: boolean;
   titularValido: boolean;
+  identificacionValida: boolean;
   tipoCuentaSeleccionado: boolean;
   revisionCuentas: boolean = false;
   nuevo: boolean = false;
@@ -55,6 +56,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   mandatoAnexoVacio: boolean = false;
   activarMsgErrorProd: boolean;
   activarMsgErrorServ: boolean;
+  //activarRestablecer: boolean = false;
 
   idCuenta: String;
   idPersona: String;
@@ -68,6 +70,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   firmaFechaDate: Date;
   firmaLugar: String;
   iban: String;
+  tipoCIF: String;
 
   msgs: Message[];
   usuarioBody: any[];
@@ -108,6 +111,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
+
+  private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
   constructor(
     private location: Location,
@@ -200,17 +205,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       );
   }
 
-  // setItalic(datoH) {
-  //   let a = datoH;
-  //   if (datoH.tipo == "ANEXO") {
-  //     this.averahora = true;
-  //     return true;
-  //   } else if (datoH.tipo == "MANDATO") {
-  //     this.averahora = false;
-  //     return false;
-  //   }
-  // }
-
   ngAfterViewChecked() {
     this.changeDetectorRef.detectChanges();
   }
@@ -254,9 +248,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
     this.body.idPersona = this.idPersona;
     this.body.idCuenta = this.idCuenta;
-    //this.body.idCuenta = sessionStorage.getItem("idCuenta");
-
-    console.log("eewe", this.body);
 
     this.sigaServices
       .postPaginado("datosCuentaBancaria_search", "?numPagina=1", this.body)
@@ -272,6 +263,17 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           }
 
           this.rellenarComboTipoCuenta(this.body.tipoCuenta);
+          console.log("Tipo", this.selectedTipo);
+
+          // if (this.activarRestablecer) {
+          //   if (this.selectedTipo.length == 1) {
+          //     this.textSelected = this.selectedTipo[0].name;
+          //   } else {
+          //     this.textSelected = "" + this.selectedTipo.length;
+          //   }
+
+          //   this.textFilter = this.textSelected;
+          // }
         },
         error => {
           this.bodySearch = JSON.parse(error["error"]);
@@ -318,10 +320,19 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.bodySearch = JSON.parse(error["error"]);
         this.showFail(this.bodySearch.error.message.toString());
         console.log(error);
+        //Error al insertar los mandatos de las cuentas
+        if (
+          this.bodySearch.error.message.toString() ==
+          "messages.censo.direcciones.facturacion"
+        ) {
+          this.eliminarItem();
+        }
         this.progressSpinner = false;
       },
       () => {
         this.idCuenta = this.body.id;
+        this.selectedTipo = [];
+
         this.cargarModoEdicion();
       }
     );
@@ -346,6 +357,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.bodySearch = JSON.parse(error["error"]);
         this.showFail(this.bodySearch.error.message.toString());
         console.log(error);
+        //Error al insertar los mandatos de las cuentas
+        if (
+          this.bodySearch.error.message.toString() ==
+          "messages.censo.direcciones.facturacion"
+        ) {
+          this.eliminarItem();
+        }
         this.progressSpinner = false;
       },
       () => {
@@ -354,6 +372,16 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.cargarDatosAnexos();
       }
     );
+  }
+
+  eliminarItem() {
+    let values: any[] = [];
+    this.selectedTipo.forEach((value: any, key: number) => {
+      if (value.code != "C") {
+        values.push(value);
+      }
+    });
+    this.selectedTipo = values;
   }
 
   getArrayTipoCuenta() {
@@ -368,8 +396,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       message: "¿Desea restablecer los datos?",
       icon: "fa fa-info",
       accept: () => {
-        this.selectedDatos = [];
+        this.selectedTipo = [];
         this.cargarDatosCuentaBancaria();
+
+        //this.activarRestablecer = true;
       }
     });
   }
@@ -433,6 +463,57 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         }
       );
   }
+
+  // Validar IDENTIFICACIÓN
+
+  isValidDNI(dni: String): boolean {
+    return (
+      dni &&
+      typeof dni === "string" &&
+      /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
+      dni.substr(8, 9).toUpperCase() ===
+        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+    );
+  }
+  checkTypeCIF(value: String): boolean {
+    if (this.isValidDNI(value)) {
+      this.tipoCIF = "10";
+      return true;
+    } else if (this.isValidCIF(value)) {
+      this.tipoCIF = "20";
+      return true;
+    } else if (this.isValidNIE(value)) {
+      this.tipoCIF = "40";
+      return true;
+    } else if (this.isValidPassport(value)) {
+      this.tipoCIF = "30";
+      return true;
+    } else {
+      this.tipoCIF = "50";
+      return false;
+    }
+  }
+  isValidPassport(dni: String): boolean {
+    return (
+      dni && typeof dni === "string" && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni)
+    );
+  }
+  isValidNIE(nie: String): boolean {
+    return (
+      nie &&
+      typeof nie === "string" &&
+      /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie)
+    );
+  }
+  isValidCIF(cif: String): boolean {
+    return (
+      cif &&
+      typeof cif === "string" &&
+      /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif)
+    );
+  }
+
+  // Resto de validaciones
 
   isValidIBAN(): boolean {
     this.body.iban = this.body.iban.replace(/\s/g, "");
@@ -509,12 +590,35 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     });
   }
 
+  validarIdentificacion() {
+    if (this.checkTypeCIF(this.body.nifTitular)) {
+      this.identificacionValida = true;
+      return true;
+    } else {
+      this.identificacionValida = false;
+      return false;
+    }
+  }
+
+  condiciones() {
+    if (
+      this.body.iban == null ||
+      this.body.iban == undefined ||
+      this.selectedTipo.length == 0
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   validarFormulario() {
     var revisionCuentas;
     if (
       this.validarIban() &&
+      this.validarTipoCuenta() &&
       this.validarTitular() &&
-      this.validarTipoCuenta()
+      this.validarIdentificacion()
     ) {
       this.formValido = true;
 
@@ -700,20 +804,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   validarGuardarMandato() {
-    // if (
-    //   (this.isInterEmpresaProducto && this.validarCheckProducto()) ||
-    //   !this.isInterEmpresaProducto ||
-    //   (this.isInterEmpresaServicio && this.validarCheckServicio()) ||
-    //   !this.isInterEmpresaServicio ||
-    //   (this.isInterEmpresaProducto &&
-    //     this.validarCheckProducto() &&
-    //     (this.isInterEmpresaServicio && this.validarCheckServicio()))
-    // ) {
-    //   this.formValido = true;
-    //   this.guardarMandato();
-    // } else {
-    //   this.formValido = false;
-    // }
     if (
       ((this.isInterEmpresaProducto && this.validarCheckProducto()) ||
         !this.isInterEmpresaProducto) &&
@@ -1154,10 +1244,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     }
   }
 
-  editarNif() {
-    this.editar = true;
-  }
-
   // Métodos comunes
 
   showFail(mensaje: string) {
@@ -1181,6 +1267,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   backTo() {
     this.location.back();
+    sessionStorage.setItem("abrirNotario", "true");
   }
 
   uploadFile(event: any) {

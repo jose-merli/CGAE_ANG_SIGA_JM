@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs"></p-growl>
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -44,7 +45,7 @@
 
               <div class="form-group col-lg-6 col-md-6">
                 <label>Fecha Modificación</label>
-                <p-calendar [(ngModel)]="body.fechaModificacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [disabled]="!isEditable"
+                <p-calendar [(ngModel)]="fechaModificacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [disabled]="!isEditable"
                   [style]="{ 'position': 'relative', 'z-index': '1000' }"></p-calendar>
               </div>
               <div class="form-group col-lg-12 col-md-12">
@@ -53,21 +54,20 @@
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>País</label>
-                <p-dropdown class="select-form" [(ngModel)]="body.idPais" [options]="comboPais" (onChange)="onChangePais($event)">
+                <p-dropdown class="select-form" [(ngModel)]="body.idPais" [options]="comboPais" (onChange)="onChangePais()">
                 </p-dropdown>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>Código postal</label>
-                <input [(ngModel)]="body.codigoPostal" type="text" class="form-control" (ngModelChange)="autogenerarProvinciaPoblacion()"
+                <input [(ngModel)]="body.codigoPostal" type="text" class="form-control" [(disabled)]="isDisabledCodigoPostal" (ngModelChange)="onChangeCodigoPostal($event)"
                   pInputText>
-                  <div *ngIf="codigoPostalValido == false">
-                    <label class="labelError">{{"Código Postal incorrecto"}}</label>
-                  </div>
+
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>Provincia</label>
-                <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' [options]="comboProvincia" (onChange)="onChangeProvincia($event)">
-                </p-dropdown>
+                <p-dropdown class="select-form" [(ngModel)]='provinciaSelecionada' [(disabled)]="isDisabledProvincia" [options]="comboProvincia"
+                  (onChange)="onChangeProvincia($event)">
+                  </p-dropdown>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>Otra Provincia</label>
@@ -75,8 +75,9 @@
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>Población</label>
-                <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' [options]="comboPoblacion" (onChange)="onChangePoblacion($event)">
-                </p-dropdown>
+                <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' [(disabled)]="isDisabledPoblacion" [options]="comboPoblacion"
+                  (onChange)="onChangePoblacion($event)">
+                  </p-dropdown>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>Tipo dirección</label>
@@ -100,7 +101,7 @@
                   <p-column *ngFor="let col of columnasDirecciones" [sortable]="true" [field]="col.field" [header]="col.header | translate">
                     <ng-template *ngIf="col.field == 'valor'" let-dato="rowData" pTemplate="body">
                       <span class="input-group">
-                        <input type="text"   class="form-control" pInputText [(ngModel)]="dato[col.field]" (input)="guardar($event,dato)"></span>
+                        <input type="text"   class="form-control" pInputText [(ngModel)]="dato[col.field]"  ></span>
                     </ng-template>
                     <ng-template *ngIf="col.field == 'tipo'" let-dato="rowData" pTemplate="body">
                       <label>{{dato.tipo}}</label>
@@ -115,8 +116,8 @@
         <br>
         <div class="card-footer ">
           <div class="text-right main-button ">
-            <button *ngIf="!nuevo" (click)="duplicarRegistro()" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="Duplicar"></button>
-            <button (click)="validarFormulario(selectedDatos)" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
+            <button *ngIf="nuevo == false" (click)="duplicarRegistro()" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="Duplicar"></button>
+            <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
             <button (click)="restablecer()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="Restablecer"></button>
           </div>
         </div>

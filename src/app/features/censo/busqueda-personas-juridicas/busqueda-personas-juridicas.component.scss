@@ -50,8 +50,12 @@
 
 .ui-tooltip {
   .ui-tooltip-text {
-    background: gray;
+    background: white;
     color: black;
     font-size: 0.8rem;
   }
+}
+
+.input-group .ui-button {
+  width: 100%;
 }

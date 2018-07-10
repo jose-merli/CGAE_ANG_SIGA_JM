@@ -4,7 +4,6 @@ import {
   ViewEncapsulation,
   ViewChild,
   ChangeDetectorRef,
-  Input,
   HostListener
 } from "@angular/core";
 
@@ -16,14 +15,8 @@ import { TranslateService } from "../../../../commons/translate/translation.serv
 import { USER_VALIDATIONS } from "../../../../properties/val-properties";
 import { SigaWrapper } from "../../../../wrapper/wrapper.class";
 
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl
-} from "@angular/forms";
+import { FormBuilder } from "@angular/forms";
 
-import { CheckboxModule } from "primeng/checkbox";
 import { Message } from "primeng/components/common/api";
 
 import { ParametroRequestDto } from "../../../../models/ParametroRequestDto";
@@ -78,10 +71,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
 
   constructor(
     private sigaServices: SigaServices,
-    private formBuilder: FormBuilder,
-    private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
-    private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
   ) {
@@ -134,7 +124,10 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
 
-  onChangeForm() { }
+  onChangeForm(event) {
+    this.selectedModulo = event;
+    this.isBuscar();
+  }
 
   confirmarBuscar() {
     if (this.selectedModulo != "") {
@@ -415,5 +408,5 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
 export class ComboItem {
   label: String;
   value: String;
-  constructor() { }
+  constructor() {}
 }

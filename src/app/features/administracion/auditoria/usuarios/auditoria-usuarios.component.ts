@@ -22,14 +22,12 @@ import {
   FormControl
 } from "@angular/forms";
 
-import { InputTextModule } from "primeng/inputtext";
 import { Message } from "primeng/components/common/api";
 import { esCalendar } from "./../../../../utils/calendar";
 
 import { HistoricoUsuarioDto } from "../../../../models/HistoricoUsuarioDto";
 import { HistoricoUsuarioRequestDto } from "../../../../models/HistoricoUsuarioRequestDto";
 import { Location } from "@angular/common";
-import { Observable } from "rxjs/Rx";
 import { DataTable } from "primeng/datatable";
 
 export enum KEY_CODE {
@@ -115,7 +113,6 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
         field: "persona",
         header: "administracion.auditoriaUsuarios.persona",
         width: "13%"
-
       },
       {
         field: "descripcionUsuario",
@@ -453,5 +450,3 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     this.msgs = [];
   }
 }
-
-
