@@ -6,10 +6,6 @@
       <i class="pl-1 fa fa-angle-right"></i>{{ 'administracion.grupos.titulo' | translate}}
     </p>
   </div>
-  <!--<div class="breadCrumb">
-    <p>{{ "menu.administracion" | translate}} <i class="fa fa-angle-right"></i> {{'administracion.usuarios.literal.usuariosyperfiles'
-      | translate}} <i class="fa fa-angle-right"></i> {{ 'administracion.grupos.titulo' | translate}}</p>
-  </div>-->
   <div class="card">
     <div class="card-body">
       <p class="title-module">{{ "general.message.datos.generales" | translate}}
@@ -27,9 +23,12 @@
               <p-column [style]="{'width': col.width}" *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate"
                 filterPlaceholder="{{'general.boton.search' | translate}}" [filter]="true" filterMatchMode="contains">
 
-                <ng-template *ngIf="col.field=='asignarRolDefecto'" pTemplate="body" let-dato="rowData"  >
-                  <p-dropdown [disabled]="!activacionEditar" [options]="dato['asignarRolDefecto']" styleClass="ui-column-filter" [style]="{'width':'100%'}"
-                    appendTo="body" (onChange)="confirmarRolDefecto($event, dato )"></p-dropdown>
+                <ng-template *ngIf="col.field=='rolesAsignados'" pTemplate="body" let-dato="rowData"  >
+                  <!-- <p-dropdown [disabled]="!activacionEditar" [options]="dato['asignarRolDefecto']" styleClass="ui-column-filter" [style]="{'width':'100%'}"
+                    appendTo="body" (onChange)="confirmarRolDefecto($event, dato )"></p-dropdown> -->
+                  <p-multiSelect [disabled]="!activacionEditar" [defaultLabel]="textFilter" styleClass="widthAll" (onChange)="confirmarRolDefecto($event, dato )"
+                    [options]="usuarios_rol" optionLabel="label" [selectedItemsLabel]="textSelected" maxSelectedLabels="4"
+                    [panelStyle]="{width:'100%'}"></p-multiSelect>
                 </ng-template>
 
               </p-column>

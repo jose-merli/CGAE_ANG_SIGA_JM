@@ -71,10 +71,8 @@ export class LoginComponent implements OnInit {
       error => {
         if (error.status == 403) {
           let codError = error.status;
-          let descError = error.statusText;
 
           sessionStorage.setItem("codError", codError);
-          sessionStorage.setItem("descError", descError);
 
           this.router.navigate(["/errorAcceso"]);
         }
