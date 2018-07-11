@@ -546,10 +546,8 @@ export class DatosGenerales implements OnInit {
         if (this.body.nif.length == 9 && this.isValidCIF(this.body.nif)) {
           this.showGuardar = true;
         }
-      } else if (!this.editar && this.file != undefined) {
-        this.showGuardar = true;
       } else {
-        this.showGuardar = false;
+        this.showGuardar = true;
       }
     } else {
       this.showGuardar = false;
