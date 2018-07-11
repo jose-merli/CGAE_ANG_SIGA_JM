@@ -12,12 +12,11 @@
             <label class="mr-auto title-ficha">{{"censo.fichaCliente.datosDirecciones.cabecera" | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
-            <div *ngIf="!only && searchDirecciones.datosDireccionesItem.length >3" class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between">
               <label>Número total de Direcciones:
                 <span>{{ searchDirecciones.datosDireccionesItem.length }}</span>
               </label>
 
-              <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
             </div>
             <br>
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>

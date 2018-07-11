@@ -56,7 +56,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
 
     // Esto se activará cuando venimos de datos bancarios
     if (sessionStorage.getItem("abrirNotario") == "true") {
-      this.openFicha = !this.openFicha;
+      this.openFicha = true;
       sessionStorage.removeItem("abrirNotario");
     }
 
@@ -348,10 +348,12 @@ export class AccesoFichaPersonaComponent implements OnInit {
       return obj.value == buscarElemento;
     });
   }
+
   abrirFicha() {
-    // if (this.activacionEditar == true) {
-    this.openFicha = !this.openFicha;
-    // }
+    // si no se esta creando una nueva sociedad
+    if (sessionStorage.getItem("crearnuevo") == null) {
+      this.openFicha = !this.openFicha;
+    }
   }
 
   backTo() {

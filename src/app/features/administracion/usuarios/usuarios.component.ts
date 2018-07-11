@@ -387,6 +387,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   Search() {
+    this.buscar = true;
     this.progressSpinner = true;
     // if (this.body.nif == "" || this.body.nif == null) {
     //   this.dniCorrecto = null;

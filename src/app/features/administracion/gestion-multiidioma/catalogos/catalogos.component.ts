@@ -89,8 +89,10 @@ export class Catalogos extends SigaWrapper implements OnInit {
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
    para poder filtrar el dato con o sin estos caracteres*/
         this.idiomaBusqueda.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
           let i;
           let x;
           for (i = 0; i < e.label.length; i++) {
@@ -104,8 +106,10 @@ export class Catalogos extends SigaWrapper implements OnInit {
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
     para poder filtrar el dato con o sin estos caracteres*/
         this.idiomaTraduccion.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
           let i;
           let x;
           for (i = 0; i < e.label.length; i++) {
@@ -199,7 +203,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
     console.log(event);
     this.bodySearch.local = event.value;
     this.local = event.value;
-    this.bodySearch.nombreTabla = event.originalEvent.srcElement.innerText;
+    this.bodySearch.nombreTabla = event.originalEvent.srcElement.innerText.trim();
   }
   isRestablecer() {
     this.elementosAGuardar = [];
