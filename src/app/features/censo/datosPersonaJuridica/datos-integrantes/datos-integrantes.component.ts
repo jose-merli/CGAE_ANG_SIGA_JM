@@ -175,7 +175,10 @@ export class DatosIntegrantesComponent implements OnInit {
 
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = !fichaPosible.activa;
+    // si no se esta creando una nueva sociedad
+    if (sessionStorage.getItem("crearnuevo") == null) {
+      fichaPosible.activa = !fichaPosible.activa;
+    }
   }
 
   getFichaPosibleByKey(key): any {
@@ -245,6 +248,11 @@ export class DatosIntegrantesComponent implements OnInit {
         );
     }
   }
+
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
+
   setItalic(datoH) {
     if (datoH.fechaBajaCargo == null) return false;
     else return true;

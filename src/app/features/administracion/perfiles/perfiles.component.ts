@@ -154,6 +154,10 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     }
   }
 
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
+
   isBuscar() {
     sessionStorage.setItem("searchOrHistory", JSON.stringify("search"));
     this.historicoActive = false;

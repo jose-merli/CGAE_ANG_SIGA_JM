@@ -177,6 +177,10 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     }
   }
 
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
+  
   isEditar() {
     this.datosHist.forEach(
       (value: CatalogoMaestroItem, key: number) => {

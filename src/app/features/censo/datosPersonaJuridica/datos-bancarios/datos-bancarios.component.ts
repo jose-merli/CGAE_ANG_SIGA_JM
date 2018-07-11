@@ -209,6 +209,10 @@ export class DatosBancariosComponent implements OnInit {
     else return true;
   }
 
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
+
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
@@ -326,7 +330,11 @@ export class DatosBancariosComponent implements OnInit {
   }
 
   abrirFicha() {
-    if (this.activacionEditar == true) {
+    // si no se esta creando una nueva sociedad
+    if (
+      this.activacionEditar == true &&
+      sessionStorage.getItem("crearnuevo") == null
+    ) {
       this.openFicha = !this.openFicha;
     }
   }
