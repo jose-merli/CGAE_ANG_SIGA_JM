@@ -18,5 +18,6 @@ export const environment = {
   //newSigaUrl: "http://localhost:8180/siga-web-1.1.0-SNAPSHOT/"
   newSigaUrl: "https://localhost/siga-web/"
 
+
   // newSigaUrl: '/siga-web/'
 };
