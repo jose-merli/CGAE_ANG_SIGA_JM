@@ -233,6 +233,10 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.formToBody();
     }
 
+    if(this.body.idmodulo == "0"){
+      this.body.idmodulo = "";
+    }
+
     this.sigaServices
       .postPaginado("contadores_search", "?numPagina=1", this.body)
       .subscribe(

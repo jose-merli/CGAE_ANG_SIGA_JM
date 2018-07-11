@@ -5,7 +5,8 @@ import {
   ViewChild,
   ChangeDetectorRef,
   Input,
-  HostListener
+  HostListener,
+  ElementRef
 } from "@angular/core";
 import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
@@ -101,7 +102,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   controlEditar: boolean = false;
   rowsPerPage: any = [];
   numSelected: number = 0;
-
+  @ViewChild("input1") inputEl: ElementRef;
   @ViewChild("table") table;
   selectedDatos;
   constructor(
@@ -218,6 +219,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
             }
           );
         }
+
         value.editar = false;
       },
       () => {
@@ -266,21 +268,33 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       this.datosNew = [dummy, ...this.datosHist];
     }
   }
+
   editarCompleto(event) {
     console.log(event);
     let data = event.data;
-    //compruebo si la edicion es correcta con la basedatos
-    if (this.onlySpaces(data.descripcion)) {
-      this.blockCrear = true;
-    } else {
-      this.editar = true;
-      this.blockCrear = false;
+
+    if (data.descripcion.length > 2000 || data.codigoExt.length > 10) {
       this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
         if (value.idRegistro == data.idRegistro) {
-          value.editar = true;
+          value.descripcion = data.descripcion.substring(0, 2000);
+          value.codigoExt = data.codigoExt.substring(0, 10);
         }
       });
-      console.log(this.datosHist);
+      this.inputEl.nativeElement.focus();
+    } else {
+      //compruebo si la edicion es correcta con la basedatos
+      if (this.onlySpaces(data.descripcion)) {
+        this.blockCrear = true;
+      } else {
+        this.editar = true;
+        this.blockCrear = false;
+        this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
+          if (value.idRegistro == data.idRegistro) {
+            value.editar = true;
+          }
+        });
+        console.log(this.datosHist);
+      }
     }
   }
 

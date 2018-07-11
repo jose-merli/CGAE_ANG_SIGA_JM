@@ -127,7 +127,7 @@
           <p-footer>
 
             <div *ngIf="editar == true" class="text-right main-button">
-              <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+              <button (click)="volver();" pButton #input1 type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
               <button (click)="confirmEdit();" [(disabled)]="blockCrear" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
               <button (click)="historico(); selectedDatos=[]" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.historico' | translate}}"></button>
               <button (click)="newData();" (disabled)="!activacionEditar" pButton type="button" icon="fa fa-plus-square  " iconPos="left"
@@ -165,7 +165,7 @@
 
             <span>{{car[col.field]}}</span>
             <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='newCatalogo.codigoExt' type="text" class="form-control"
-              (onChange)="onChangeForm()" pInputText>
+              (onChange)="onChangeForm()" [maxLength]="10" pInputText>
           </ng-template>
         </p-column>
         <p-column [sortable]="true" field="descripcion" [header]="'general.description' | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
@@ -174,7 +174,7 @@
 
             <span>{{car[col.field]}}</span>
             <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='newCatalogo.descripcion' type="text" class="form-control"
-              (onChange)="onChangeForm()" pInputText>
+              (onChange)="onChangeForm()" [maxLength]="2000" pInputText>
           </ng-template>
         </p-column>
 

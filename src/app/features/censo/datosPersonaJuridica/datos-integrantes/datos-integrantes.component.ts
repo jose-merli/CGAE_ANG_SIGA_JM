@@ -160,9 +160,11 @@ export class DatosIntegrantesComponent implements OnInit {
     this.selectMultiple = !this.selectMultiple;
     if (!this.selectMultiple) {
       this.selectedDatos = [];
+      this.numSelected = 0;
     } else {
       this.selectAll = false;
       this.selectedDatos = [];
+      this.numSelected = 0;
     }
   }
 
