@@ -78,7 +78,7 @@
         <button *ngIf="!activacionEditar" (click)="crear()" pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"
           disabled></button>
 
-        <button (click)="isBuscar(); selectedDatos = false; buscar = true" pButton type="button " icon="fa fa-search " iconPos="left"
+        <button (click)="Search(); selectedDatos = false; buscar = true" pButton type="button " icon="fa fa-search " iconPos="left"
           label="{{'general.boton.search' | translate}}"></button>
       </div>
     </div>

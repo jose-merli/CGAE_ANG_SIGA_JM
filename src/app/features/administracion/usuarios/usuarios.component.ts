@@ -117,8 +117,10 @@ export class Usuarios extends SigaWrapper implements OnInit {
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.usuarios_rol.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
           let i;
           let x;
           for (i = 0; i < e.label.length; i++) {
@@ -141,8 +143,10 @@ para poder filtrar el dato con o sin estos caracteres*/
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.usuarios_perfil.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
           let i;
           let x;
           for (i = 0; i < e.label.length; i++) {
@@ -208,7 +212,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     sessionStorage.removeItem("editedUser");
     if (sessionStorage.getItem("searchUser") != null) {
       this.body = JSON.parse(sessionStorage.getItem("searchUser"));
-      this.isBuscar();
+      this.Search();
       this.buscar = true;
       sessionStorage.removeItem("searchUser");
       sessionStorage.removeItem("usuarioBody");
@@ -372,27 +376,17 @@ para poder filtrar el dato con o sin estos caracteres*/
       },
       () => {
         this.cancelar();
-        this.isBuscar();
+        this.Search();
         this.table.reset();
       }
     );
   }
 
-  isBuscar() {
-    if (
-      this.isValidDNI("" + this.body.nif) ||
-      this.body.nif == "" ||
-      this.body.nif == undefined
-    ) {
-      this.Search();
-    }
-  }
-
   Search() {
     this.progressSpinner = true;
-    if (this.body.nif == "" || this.body.nif == null) {
-      this.dniCorrecto = null;
-    }
+    // if (this.body.nif == "" || this.body.nif == null) {
+    //   this.dniCorrecto = null;
+    // }
     if (this.body.nombreApellidos == undefined) {
       this.body.nombreApellidos = "";
     }
@@ -497,7 +491,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.body = new UsuarioRequestDto();
         this.body.activo = selectedItem[0].activo;
         this.disabledRadio = false;
-        this.isBuscar();
+        this.Search();
         this.table.reset();
       }
     );
@@ -528,7 +522,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         },
         () => {
           this.cancelar();
-          this.isBuscar();
+          this.Search();
           this.table.reset();
         }
       );
@@ -691,7 +685,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      this.isBuscar();
+      this.Search();
     }
   }
 

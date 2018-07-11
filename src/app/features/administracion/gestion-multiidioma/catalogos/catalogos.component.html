@@ -21,7 +21,7 @@
             <div *ngIf="showDatosGenerales" class="module vista-avanzada">
                 <div class="form-row">
                     <div class="form-group col-lg-4 col-md-4">
-                        <label>{{'administracion.multidioma.etiquetas.literal.entidad' | translate}} (*)</label>
+                        <label>{{'menu.administracion.gestionMultiidioma.catalogo' | translate}} (*)</label>
                         <p-dropdown class="select-form" [(ngModel)]='selectedEntidad' [options]="entidad" [filter]="true" filterBy="label" (onChange)="datos($event)"></p-dropdown> &nbsp;&nbsp;
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
@@ -38,8 +38,7 @@
         </div>
         <div class="card-footer" *ngIf="showDatosGenerales">
             <div class="text-right main-button">
-                <button (click)="isBuscar()" [disabled]="isHabilitadoBuscar()" pButton type="button " icon="fa fa-search" iconPos="left"
-                    label="{{'general.boton.search' | translate}}"></button>
+                <button (click)="Search()" [disabled]="isHabilitadoBuscar()" pButton type="button " icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
             </div>
         </div>
     </div>
