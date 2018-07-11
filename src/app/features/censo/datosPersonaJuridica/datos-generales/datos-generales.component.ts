@@ -3,7 +3,9 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { esCalendar } from "../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
 import { Location } from "@angular/common";
+
 import { SigaServices } from "./../../../../_services/siga.service";
+import { TranslateService } from "../../../../commons/translate/translation.service";
 
 /*** COMPONENTES ***/
 import { DatosGeneralesComponent } from "./../../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
@@ -11,10 +13,9 @@ import { DatosGeneralesItem } from "./../../../../../app/models/DatosGeneralesIt
 import { DatosGeneralesObject } from "./../../../../../app/models/DatosGeneralesObject";
 import { Subscription } from "rxjs/Subscription";
 import { cardService } from "./../../../../_services/cardSearch.service";
+import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
 
-import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
-import { ControlAccesoDto } from "../../../../models/ControlAccesoDto";
-import { TranslateService } from "../../../../commons/translate";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
   selector: "app-datos-generales",
@@ -46,6 +47,7 @@ export class DatosGenerales implements OnInit {
   showAll: boolean = false;
   showGuardar: boolean = false;
   progressSpinner: boolean = false;
+  openFicha: boolean = false;
 
   selectedItem: number = 10;
   selectedDoc: string = "NIF";
@@ -115,8 +117,8 @@ export class DatosGenerales implements OnInit {
     private translateService: TranslateService,
     private location: Location,
     private cardService: cardService,
-    private sanitizer: DomSanitizer,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private sanitizer: DomSanitizer
   ) {
     this.formBusqueda = this.formBuilder.group({
       cif: null
@@ -132,18 +134,23 @@ export class DatosGenerales implements OnInit {
   }
 
   ngOnInit() {
+    // dentro de este metodo se llama a continueOnInit()
     this.checkAcceso();
+  }
+  continueOnInit() {
     this.busquedaIdioma();
-    this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
 
+    this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     if (sessionStorage.getItem("crearnuevo") != null) {
       this.editar = true;
-      this.abreCierraFicha("generales");
+      this.abreCierraFicha();
     }
+
     if (this.usuarioBody[0] != undefined) {
       this.idPersona = this.usuarioBody[0].idPersona;
       this.tipoPersonaJuridica = this.usuarioBody[0].tipo;
     }
+
     // estamos en modo edicion (NO en creacion)
     if (this.idPersona != undefined) {
       this.datosGeneralesSearch();
@@ -176,7 +183,6 @@ export class DatosGenerales implements OnInit {
 
     this.comboTipo.push(this.tipoPersonaJuridica);
   }
-
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = "120";
@@ -196,6 +202,7 @@ export class DatosGenerales implements OnInit {
         } else {
           this.activacionEditar = false;
         }
+        this.continueOnInit();
       }
     );
   }
@@ -464,10 +471,11 @@ export class DatosGenerales implements OnInit {
     this.onChangeForm();
   }
 
-  abreCierraFicha(key) {
-    let fichaPosible = this.getFichaPosibleByKey(key);
+  abreCierraFicha() {
+    // let fichaPosible = this.getFichaPosibleByKey(key);
     if (this.activacionEditar == true) {
-      fichaPosible.activa = !fichaPosible.activa;
+      // fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
     }
   }
 
@@ -527,8 +535,8 @@ export class DatosGenerales implements OnInit {
       this.body.nif != undefined &&
       !this.onlySpaces(this.body.nif) &&
       this.idiomaPreferenciaSociedad != "" &&
-      this.idiomaPreferenciaSociedad != undefined &&
-      this.file != undefined
+      this.idiomaPreferenciaSociedad != undefined
+      //this.file != undefined
     ) {
       if (
         this.editar &&
@@ -538,7 +546,7 @@ export class DatosGenerales implements OnInit {
         if (this.body.nif.length == 9 && this.isValidCIF(this.body.nif)) {
           this.showGuardar = true;
         }
-      } else if (!this.editar) {
+      } else if (!this.editar && this.file != undefined) {
         this.showGuardar = true;
       } else {
         this.showGuardar = false;
