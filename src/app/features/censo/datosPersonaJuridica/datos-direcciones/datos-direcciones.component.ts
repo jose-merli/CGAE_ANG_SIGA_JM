@@ -210,6 +210,11 @@ export class DatosDireccionesComponent implements OnInit {
     }
     return {};
   }
+
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
+  
   nuevo() {
     let newDireccion = new DatosDireccionesItem();
     sessionStorage.setItem("direccion", JSON.stringify(newDireccion));

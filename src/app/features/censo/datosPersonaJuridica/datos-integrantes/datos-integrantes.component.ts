@@ -243,6 +243,11 @@ export class DatosIntegrantesComponent implements OnInit {
         );
     }
   }
+
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
+
   setItalic(datoH) {
     if (datoH.fechaBajaCargo == null) return false;
     else return true;
