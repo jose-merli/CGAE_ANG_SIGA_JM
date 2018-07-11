@@ -58,6 +58,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    sessionStorage.setItem("editarDirecciones", "true");
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.textFilter = "Elegir";
     this.getComboProvincia();

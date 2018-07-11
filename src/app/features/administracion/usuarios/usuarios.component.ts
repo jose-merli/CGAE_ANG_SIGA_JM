@@ -354,6 +354,10 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
 
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
+  
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
