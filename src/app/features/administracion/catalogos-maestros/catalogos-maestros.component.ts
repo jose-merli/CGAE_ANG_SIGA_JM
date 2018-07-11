@@ -276,7 +276,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     if (data.descripcion.length > 2000 || data.codigoExt.length > 10) {
       this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
         if (value.idRegistro == data.idRegistro) {
-          value.descripcion = data.descripcion.substring(0, 2000);
+          value.descripcion = data.descripcion.substring(0, 1950);
           value.codigoExt = data.codigoExt.substring(0, 10);
         }
       });
@@ -397,6 +397,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
   // cada vez que cambia el formulario comprueba esto
   onChangeForm() {
+    //this.newCatalogo.descripcion = this.newCatalogo.descripcion.trim();
     if (this.newCatalogo.codigoExt == undefined) {
       this.newCatalogo.codigoExt = "";
     }
@@ -407,6 +408,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     ) {
       this.blockCrear = true;
     } else {
+      this.newCatalogo.descripcion = this.newCatalogo.descripcion.trim();
       this.blockCrear = false;
     }
   }
