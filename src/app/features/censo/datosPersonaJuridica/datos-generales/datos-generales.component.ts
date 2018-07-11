@@ -305,6 +305,7 @@ export class DatosGenerales implements OnInit {
   }
 
   guardar() {
+    this.progressSpinner = true;
     if (sessionStorage.getItem("crearnuevo") != null) {
       // comprobacion de cif
       if (this.isValidCIF(this.body.nif)) {
@@ -381,6 +382,7 @@ export class DatosGenerales implements OnInit {
         }
       );
     }
+    this.progressSpinner = false;
   }
 
   restablecer() {
