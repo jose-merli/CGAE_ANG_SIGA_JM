@@ -3,31 +3,14 @@ import {
   OnInit,
   ViewEncapsulation,
   ViewChild,
-  ChangeDetectorRef,
-  Input
+  ChangeDetectorRef
 } from "@angular/core";
 import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
-import { SelectItem } from "primeng/api";
-import { DropdownModule } from "primeng/dropdown";
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl
-} from "@angular/forms";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
-import { ButtonModule } from "primeng/button";
-import { Router, ActivatedRoute } from "@angular/router";
-import { InputTextModule } from "primeng/inputtext";
-import { InputTextareaModule } from "primeng/inputtextarea";
-import { CheckboxModule } from "primeng/checkbox";
-import { RadioButtonModule } from "primeng/radiobutton";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { GrowlModule } from "primeng/growl";
+import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
-import { MultiSelectModule } from "primeng/multiselect";
 import { Message } from "primeng/components/common/api";
 import { MessageService } from "primeng/components/common/messageservice";
 import { PerfilItem } from "./../../../../app/models/PerfilItem";
@@ -36,8 +19,6 @@ import { PerfilesRequestDto } from "./../../../../app/models/PerfilesRequestDto"
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { ComboItem } from "./../../../../app/models/ComboItem";
 import { DataTable } from "primeng/datatable";
-import { Location } from "@angular/common";
-import { Observable } from "rxjs/Rx";
 
 @Component({
   selector: "app-perfiles",
@@ -51,17 +32,22 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   cols: any = [];
   textFilter: String;
   datos: any[];
+  textSelected: String = "{0} grupos seleccionados";
   rolesNoAsignados: any[];
   msgs: Message[] = [];
   searchPerfiles: PerfilesResponseDto = new PerfilesResponseDto();
   requestPerfiles: PerfilesRequestDto = new PerfilesRequestDto();
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
+  newPerfil: PerfilItem = new PerfilItem();
   rowsPerPage: any = [];
   showDatosGenerales: boolean = true;
   pButton;
   editar: boolean = false;
   buscar: boolean = true;
+  pressNew: boolean = true;
+  progressSpinner: boolean = false;
   historicoActive: boolean = false;
+  blockSeleccionar: boolean = false;
   disabled: boolean = false;
   selectMultiple: boolean = false;
   blockCrear: boolean = true;
@@ -75,7 +61,6 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
 
   constructor(
     private sigaServices: SigaServices,
-    private formBuilder: FormBuilder,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
     private messageService: MessageService,
@@ -189,7 +174,26 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         }
       );
   }
-
+  isEditar() {
+    this.progressSpinner = true;
+    this.datos.forEach(
+      (value: PerfilItem, key: number) => {
+        if (value.editar) {
+          this.sigaServices.post("perfiles_update", value).subscribe(
+            data => {},
+            err => {
+              this.showFail();
+              console.log(err);
+            }
+          );
+        }
+      },
+      () => {
+        this.progressSpinner = false;
+        this.isBuscar();
+      }
+    );
+  }
   paginate(event) {
     console.log(event);
   }
@@ -239,15 +243,77 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       }
     );
   }
+  isGuardar() {
+    if (this.datos[0].new) {
+      this.isNew();
+    } else {
+      this.isEditar();
+    }
+  }
+  editRol(event, dato) {
+    console.log(event);
+    console.log(dato);
+    this.datos.forEach((value: PerfilItem, key: number) => {
+      if (value.idGrupo == dato.idGrupo) {
+        value.editar = true;
+      }
+    });
+  }
+  newData() {
+    this.blockSeleccionar = true;
+    console.log(this.datos);
+    let dummy = {
+      idGrupo: "",
+      grupo: [],
+      descripcionGrupo: "",
+      descripcionRol: "",
+      asignarRolDefecto: [],
+      nombre: "",
+      rolesAsignados: [],
+      rolesNoAsignados: [],
+      fechaBaja: null,
+      editar: false,
+      new: true
+    };
+    let value = this.table.first;
+    this.pressNew = true;
+    // this.buscar = false;
+    // this.createArrayEdit(dummy, value);
+    this.datos = [dummy, ...this.datos];
+
+    this.table.reset();
+  }
+  onChangeForm() {
+    if (this.newPerfil.idGrupo.length > 3) {
+      this.newPerfil.idGrupo = this.newPerfil.idGrupo.substring(0, 3);
+      this.newPerfil.idGrupo = this.newPerfil.idGrupo.toLocaleUpperCase();
+    } else {
+      this.newPerfil.idGrupo = this.newPerfil.idGrupo.toLocaleUpperCase();
+    }
+  }
+  isNew() {
+    let newPerfil = this.datos[0];
+    newPerfil.idGrupo = this.newPerfil.idGrupo;
+    newPerfil.descripcionGrupo = this.newPerfil.descripcionGrupo;
+    this.sigaServices.post("perfiles_insert", newPerfil).subscribe(
+      data => {},
+      error => {
+        console.log(error);
+      },
+      () => {
+        this.isEditar();
+      }
+    );
+  }
   confirmarRolDefecto(event, dato) {
-    let mess = "¿Desea asignar este rol?";
+    let mess = "¿Desea asignar este rol?" + dato;
     let icon = "fa fa-plus";
 
     this.confirmationService.confirm({
       message: mess,
       icon: icon,
       accept: () => {
-        this.rolDefecto(event, dato);
+        // this.rolDefecto(event, dato);
       },
       reject: () => {
         this.msgs = [
@@ -259,7 +325,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
             )
           }
         ];
-        this.isBuscar();
+        // this.isBuscar();
       }
     });
   }
