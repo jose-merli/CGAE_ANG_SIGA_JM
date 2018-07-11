@@ -58,6 +58,10 @@ export class DatosBancariosComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    if (sessionStorage.getItem("editarDatosBancarios") == "true") {
+      this.openFicha = !this.openFicha;
+      sessionStorage.removeItem("editarDatosBancarios");
+    }
     this.checkAcceso();
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
 

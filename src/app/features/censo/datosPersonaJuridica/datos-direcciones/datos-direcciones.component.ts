@@ -77,6 +77,12 @@ export class DatosDireccionesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    if (sessionStorage.getItem("editarDirecciones") == "true") {
+      let fichaPosible = this.getFichaPosibleByKey("direcciones");
+      fichaPosible.activa = true;
+      sessionStorage.removeItem("editarDirecciones");
+    }
+
     this.checkAcceso();
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     if (this.usuarioBody[0] != undefined) {
@@ -198,7 +204,6 @@ export class DatosDireccionesComponent implements OnInit {
 
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
-
     // si no se esta creando una nueva sociedad
     if (sessionStorage.getItem("crearnuevo") == null) {
       fichaPosible.activa = !fichaPosible.activa;

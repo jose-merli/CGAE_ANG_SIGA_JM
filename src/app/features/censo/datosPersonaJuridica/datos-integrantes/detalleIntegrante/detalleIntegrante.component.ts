@@ -76,6 +76,7 @@ export class DetalleIntegranteComponent implements OnInit {
   constructor(private sigaServices: SigaServices, private router: Router) {}
 
   ngOnInit() {
+    sessionStorage.setItem("editarIntegrante", "true");
     this.body = JSON.parse(sessionStorage.getItem("integrante"));
     if (
       sessionStorage.getItem("nIntegrante") != null ||

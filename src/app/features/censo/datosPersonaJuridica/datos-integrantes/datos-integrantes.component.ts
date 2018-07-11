@@ -76,10 +76,10 @@ export class DatosIntegrantesComponent implements OnInit {
     this.checkAcceso();
 
     // Cuando viene de la edición de un integrante
-    if (sessionStorage.getItem("abrirFichaIntegrante") == "true") {
+    if (sessionStorage.getItem("editarIntegrante") == "true") {
       let fichaPosible = this.getFichaPosibleByKey("integrantes");
       fichaPosible.activa = !fichaPosible.activa;
-      sessionStorage.removeItem("abrirFichaIntegrante");
+      sessionStorage.removeItem("editarIntegrante");
     }
 
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));

@@ -123,6 +123,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    sessionStorage.setItem("editarDatosBancarios", "true");
     this.textFilter = "Elegir";
 
     this.tipoCuenta = [
@@ -1267,7 +1268,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   backTo() {
     this.location.back();
-    sessionStorage.setItem("abrirNotario", "true");
   }
 
   uploadFile(event: any) {
