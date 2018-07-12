@@ -83,6 +83,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   //elementos del form
   formDescripcion: String;
   formCodigo: String;
+  cdgoExt: String;
+  descripcion: String;
 
   //mensajes
   msgs: Message[] = [];
@@ -104,6 +106,9 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   numSelected: number = 0;
   first: number = 0;
   @ViewChild("input1") inputEl: ElementRef;
+  @ViewChild("inputDesc") inputDesc: ElementRef;
+  @ViewChild("inputCdgoExt") inputCdgoExt: ElementRef;
+
   @ViewChild("table") table;
   selectedDatos;
   constructor(
@@ -404,10 +409,16 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
   // cada vez que cambia el formulario comprueba esto
   onChangeForm() {
-    //this.newCatalogo.descripcion = this.newCatalogo.descripcion.trim();
+    this.newCatalogo.descripcion = this.descripcion;
+    this.newCatalogo.descripcion = this.newCatalogo.descripcion.replace(
+      /^\s+|\s+$/g,
+      ""
+    );
+
     if (this.newCatalogo.codigoExt == undefined) {
       this.newCatalogo.codigoExt = "";
     }
+
     if (
       this.newCatalogo.descripcion == "" ||
       this.newCatalogo.descripcion == undefined ||
@@ -415,8 +426,42 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     ) {
       this.blockCrear = true;
     } else {
-      this.newCatalogo.descripcion = this.newCatalogo.descripcion.trim();
+      this.descripcion = this.newCatalogo.descripcion.replace(/^\s+|\s+$/g, "");
       this.blockCrear = false;
+    }
+  }
+
+  onChangeFormCdgoExt() {
+    this.newCatalogo.codigoExt = this.cdgoExt;
+    this.newCatalogo.codigoExt = this.newCatalogo.codigoExt.replace(
+      /^\s+|\s+$/g,
+      ""
+    );
+
+    if (this.newCatalogo.codigoExt == undefined) {
+      this.newCatalogo.codigoExt = "";
+    } else {
+      this.cdgoExt = this.newCatalogo.codigoExt.replace(/^\s+|\s+$/g, "");
+    }
+  }
+
+  descripcionEvent(e) {
+    if (e) {
+      this.newCatalogo.descripcion = e.srcElement.value.trim();
+      this.newCatalogo.descripcion = this.newCatalogo.descripcion.trim();
+      this.descripcion = this.newCatalogo.descripcion;
+      this.inputDesc.nativeElement.value = e.srcElement.value.trim();
+      console.log(this.inputDesc);
+    }
+  }
+
+  cdgoEvent(e) {
+    if (e) {
+      this.newCatalogo.codigoExt = e.srcElement.value.trim();
+      this.newCatalogo.codigoExt = this.newCatalogo.codigoExt.trim();
+      this.cdgoExt = this.newCatalogo.codigoExt;
+      this.inputCdgoExt.nativeElement.value = e.srcElement.value.trim();
+      console.log(this.inputCdgoExt);
     }
   }
 

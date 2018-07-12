@@ -165,8 +165,8 @@
           <ng-template let-col let-car="rowData" pTemplate="body">
 
             <span>{{car[col.field]}}</span>
-            <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='newCatalogo.codigoExt' type="text" class="form-control"
-              (ngModelChange)="onChangeForm()" [maxLength]="10" pInputText>
+            <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='cdgoExt' type="text" class="form-control" (ngModelChange)="onChangeFormCdgoExt()"
+              [attr.maxlength]="10" on-focusout="cdgoEvent($event)" (onBlur)="cdgoEvent($event)" #inputCdgoExt pInputText>
           </ng-template>
         </p-column>
         <p-column [sortable]="true" field="descripcion" [header]="'general.description' | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
@@ -174,8 +174,9 @@
           <ng-template let-col let-car="rowData" pTemplate="body">
 
             <span>{{car[col.field]}}</span>
-            <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='newCatalogo.descripcion' type="text" class="form-control"
-              (ngModelChange)="onChangeForm()" [maxLength]="2000" pInputText>
+            <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='descripcion' type="text" class="form-control"
+              (ngModelChange)="onChangeForm()" [attr.maxlength]="2000" on-focusout="descripcionEvent($event)" (onBlur)="descripcionEvent($event)"
+              #inputDesc pInputText>
           </ng-template>
         </p-column>
 
