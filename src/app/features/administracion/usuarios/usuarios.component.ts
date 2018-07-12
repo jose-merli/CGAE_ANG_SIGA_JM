@@ -168,22 +168,22 @@ para poder filtrar el dato con o sin estos caracteres*/
       {
         field: "nombreApellidos",
         header: "administracion.parametrosGenerales.literal.nombre.apellidos",
-        width: "18%"
+        width: "25%"
       },
       {
         field: "nif",
         header: "administracion.usuarios.literal.NIF",
-        width: "12%"
-      },
-      {
-        field: "fechaAlta",
-        header: "administracion.usuarios.literal.fechaAlta",
-        width: "12%"
+        width: "5%"
       },
       {
         field: "roles",
         header: "administracion.usuarios.literal.roles",
-        width: "18%"
+        width: "25%"
+      },
+      {
+        field: "fechaAlta",
+        header: "administracion.usuarios.literal.fechaAlta",
+        width: "5%"
       }
     ];
 
@@ -357,7 +357,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
   }
-  
+
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }

@@ -2,9 +2,11 @@
   color: red;
   font-weight: bold;
 }
-.ui-tooltip .ui-tooltip-text {
-  white-space: pre-line;
-}
+
+// .ui-tooltip {
+//   background-color: white;
+// }
+
 .labelOK {
   color: green;
   font-weight: bold;
@@ -41,10 +43,17 @@
   padding-left: 0.8em;
 }
 
-.ui-tooltip {
+.ui-tooltip .ui-tooltip-text {
+  white-space: pre-line !important;
+}
 
+.ui-tooltip-text.ui-shadow.ui-corner-all {
+  background-color: white;
+}
+
+.ui-tooltip {
   max-width: 80%;
-  box-shadow:  none;
+  box-shadow: none;
   .ui-tooltip-text {
     font-size: 0.8rem;
   }
