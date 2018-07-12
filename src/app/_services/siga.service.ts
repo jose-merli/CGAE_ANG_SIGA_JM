@@ -27,6 +27,7 @@ export class SigaServices {
     testDb: "db",
     login: "login",
     loginDevelop: "loginDevelop",
+    validaInstitucion: "validaInstitucion",
     menu: "menu",
     entorno: "getEntorno",
     usuario: "usuario",
@@ -91,29 +92,29 @@ export class SigaServices {
     busquedaPer_searchJuridica: "busquedaPerJuridica/searchJuridica",
     busquedaPer_searchFisica: "busquedaPerJuridica/searchFisica",
     busquedaPerJuridica_etiquetasPersona:
-      "busquedaPerJuridica/etiquetasPersona",
+    "busquedaPerJuridica/etiquetasPersona",
     personaJuridica_uploadFotografia: "personaJuridica/uploadFotografia",
     personaJuridica_cargarFotografia: "personaJuridica/cargarFotografia",
     busquedaPerJuridica_datosGeneralesSearch:
-      "busquedaPerJuridica/datosGeneralesSearch",
+    "busquedaPerJuridica/datosGeneralesSearch",
     busquedaPerJuridica_create: "busquedaPerJuridica/create",
     accesoFichaPersona_search: "fichaPersona/search",
     accesoFichaPersona_desasociarPersona: "fichaPersona/desasociarPersona",
     accesoFichaPersona_guardar: "fichaPersona/guardar",
     fichaPersona_crearNotario: "fichaPersona/crearNotario",
     fichaPersona_tipoIdentificacionCombo:
-      "fichaPersona/tipoIdentificacionCombo",
+    "fichaPersona/tipoIdentificacionCombo",
     busquedaPerJuridica_update: "busquedaPerJuridica/update",
     datosRegistrales_actividadesPersona:
-      "perJuridicaDatosRegistrales/actividadProfesionalPer",
+    "perJuridicaDatosRegistrales/actividadProfesionalPer",
     datosRegistrales_actividadesDisponible:
-      "perJuridicaDatosRegistrales/actividadProfesional",
+    "perJuridicaDatosRegistrales/actividadProfesional",
     datosRegistrales_search: "perJuridicaDatosRegistrales/search",
     datosRegistrales_update: "perJuridicaDatosRegistrales/update",
     datosBancarios_search: "busquedaPerJuridica/datosBancariosSearch",
     datosBancarios_delete: "busquedaPerJuridica/datosBancariosDelete",
     datosCuentaBancaria_search:
-      "busquedaPerJuridica/datosBancariosGeneralSearch",
+    "busquedaPerJuridica/datosBancariosGeneralSearch",
     datosCuentaBancaria_update: "busquedaPerJuridica/datosBancariosUpdate",
     datosCuentaBancaria_insert: "busquedaPerJuridica/datosBancariosInsert",
     datosCuentaBancaria_BIC_BANCO: "busquedaPerJuridica/BanksSearch",
@@ -125,7 +126,7 @@ export class SigaServices {
     anexos_insert: "busquedaPerJuridica/insertAnexos",
     busquedaPerJuridica_uploadFile: "busquedaPerJuridica/uploadFile",
     busquedaPerJuridica_fileDownloadInformation:
-      "busquedaPerJuridica/fileDownloadInformation",
+    "busquedaPerJuridica/fileDownloadInformation",
     busquedaPerJuridica_downloadFile: "busquedaPerJuridica/downloadFile",
     retenciones_tipoRetencion: "retenciones/tipoRetencion",
     retenciones_search: "retenciones/search",
@@ -193,10 +194,10 @@ export class SigaServices {
   getPerfil(service: string, institucion: string): Observable<any> {
     return this.httpbackend
       .get(
-        environment.newSigaUrl +
-          this.endpoints[service] +
-          "?institucion=" +
-          institucion
+      environment.newSigaUrl +
+      this.endpoints[service] +
+      "?institucion=" +
+      institucion
       )
       .map(response => {
         return response;
