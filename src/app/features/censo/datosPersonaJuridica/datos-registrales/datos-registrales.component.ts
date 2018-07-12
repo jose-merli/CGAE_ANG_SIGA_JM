@@ -46,6 +46,7 @@ export class DatosRegistralesComponent implements OnInit {
   textFilter: String = "Elegir";
   selectedDatos: any = [];
 
+  progressSpinner: boolean = false;
   showDatosGenerales: boolean = true;
   showDatosColegiales: boolean = false;
   showDatosFacturacion: boolean = false;
@@ -294,6 +295,7 @@ export class DatosRegistralesComponent implements OnInit {
   }
 
   guardar() {
+    this.progressSpinner = true;
     this.arreglarFechas();
     this.body.idPersona = this.idPersonaEditar;
     if (this.selectActividad != undefined) {
@@ -323,10 +325,12 @@ export class DatosRegistralesComponent implements OnInit {
         data => {
           this.showSuccess();
           console.log(data);
+          this.progressSpinner = false;
         },
         err => {
           this.showFail();
           console.log(err);
+          this.progressSpinner = false;
         },
         () => {
           this.search();
@@ -336,6 +340,7 @@ export class DatosRegistralesComponent implements OnInit {
       this.showCustomFail(
         "Las sociedades profesionales deben especificar el número de registro"
       );
+      this.progressSpinner = false;
     }
   }
 

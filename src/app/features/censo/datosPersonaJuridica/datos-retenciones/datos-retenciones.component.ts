@@ -60,7 +60,6 @@ export class DatosRetencionesComponent implements OnInit {
   isEliminar: boolean = true;
   rowsPerPage: any = [];
   selectMultiple: boolean = false;
-  progressSpinner: boolean = false;
   textFilter: String = "Elegir";
   buscar: boolean = false;
   selectAll: boolean = false;
@@ -303,7 +302,6 @@ export class DatosRetencionesComponent implements OnInit {
     this.table.reset();
   }
   confirmEdit() {
-    this.progressSpinner = true;
     this.body.idPersona = this.idPersona;
     this.body.idInstitucion = "";
     this.body.idLenguaje = "";
@@ -320,7 +318,6 @@ export class DatosRetencionesComponent implements OnInit {
           console.log(data);
           // this.searchRetenciones = JSON.parse(data["body"]);
           // this.datos = this.searchRetenciones.retencionesItemList;
-          this.progressSpinner = false;
           // console.log("DATOS: " + this.datos.toString);
           // this.searchCatalogo = JSON.parse(data["body"]);
           // this.datosEdit = this.searchCatalogo.catalogoMaestroItem;
@@ -346,7 +343,6 @@ export class DatosRetencionesComponent implements OnInit {
   }
 
   borrar() {
-    this.progressSpinner = true;
     this.body.idPersona = this.idPersona;
     this.body.idInstitucion = "";
     this.body.idLenguaje = "";
@@ -370,7 +366,6 @@ export class DatosRetencionesComponent implements OnInit {
       .subscribe(
         data => {
           console.log(data);
-          this.progressSpinner = false;
         },
         err => {
           console.log(err);
@@ -406,7 +401,6 @@ export class DatosRetencionesComponent implements OnInit {
   }
 
   search() {
-    this.progressSpinner = true;
     this.body.idPersona = this.idPersona;
     this.body.idInstitucion = "";
     this.body.idLenguaje = "";
@@ -422,7 +416,6 @@ export class DatosRetencionesComponent implements OnInit {
             } else {
               this.datos = [];
             }
-            this.progressSpinner = false;
           },
           err => {
             console.log(err);

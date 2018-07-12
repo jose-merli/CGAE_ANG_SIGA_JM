@@ -83,20 +83,6 @@ export class DatosDireccionesComponent implements OnInit {
       sessionStorage.removeItem("editarDirecciones");
     }
 
-    this.checkAcceso();
-    this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    if (this.usuarioBody[0] != undefined) {
-      this.idPersona = this.usuarioBody[0].idPersona;
-    }
-    this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
-      id => {
-        if (id !== null) {
-          this.body.idPersona = id;
-          this.search();
-        }
-      }
-    );
-
     this.cols = [
       {
         field: "tipoDireccion",
@@ -154,7 +140,20 @@ export class DatosDireccionesComponent implements OnInit {
       }
     ];
 
-    this.search();
+    this.checkAcceso();
+    this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    if (this.usuarioBody[0] != undefined) {
+      this.idPersona = this.usuarioBody[0].idPersona;
+      this.search();
+    }
+    this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
+      id => {
+        if (id !== null) {
+          this.body.idPersona = id;
+          this.search();
+        }
+      }
+    );
   }
   activarPaginacion() {
     if (!this.datos || this.datos.length == 0) return false;
@@ -241,27 +240,29 @@ export class DatosDireccionesComponent implements OnInit {
     this.selectedDatos = "";
     this.progressSpinner = true;
     this.selectAll = false;
-    this.sigaServices
-      .postPaginado("direcciones_search", "?numPagina=1", searchObject)
-      .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-          this.searchDirecciones = JSON.parse(data["body"]);
-          this.datos = this.searchDirecciones.datosDireccionesItem;
-          if (this.datos.length == 1) {
-            this.body = this.datos[0];
-            this.only = true;
-          } else {
-            this.only = false;
-          }
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {}
-      );
+    if (this.idPersona != undefined && this.idPersona != null) {
+      this.sigaServices
+        .postPaginado("direcciones_search", "?numPagina=1", searchObject)
+        .subscribe(
+          data => {
+            console.log(data);
+            this.progressSpinner = false;
+            this.searchDirecciones = JSON.parse(data["body"]);
+            this.datos = this.searchDirecciones.datosDireccionesItem;
+            if (this.datos.length == 1) {
+              this.body = this.datos[0];
+              this.only = true;
+            } else {
+              this.only = false;
+            }
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {}
+        );
+    }
   }
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;

@@ -123,6 +123,7 @@ export class DatosGenerales implements OnInit {
     this.formBusqueda = this.formBuilder.group({
       cif: null
     });
+    this.progressSpinner = false;
   }
 
   isValidCIF(cif: String): boolean {
@@ -338,14 +339,17 @@ export class DatosGenerales implements OnInit {
               this.obtenerEtiquetasPersonaJuridicaConcreta();
               this.cardService.searchNewAnnounce.next(this.idPersona);
               this.editar = false;
+              this.progressSpinner = false;
             },
             error => {
               console.log(error);
               this.showError();
+              this.progressSpinner = false;
             }
           );
       } else {
         this.showFail("el cif introducido no es correcto");
+        this.progressSpinner = false;
       }
     } else {
       this.body.idPersona = this.idPersona; //"2005005356";
@@ -370,19 +374,21 @@ export class DatosGenerales implements OnInit {
           this.cargarImagen(this.body.idPersona);
           this.showSuccess();
           console.log(data);
+          this.progressSpinner = false;
         },
         error => {
           this.personaSearch = JSON.parse(error["error"]);
           this.showFail(JSON.stringify(this.personaSearch.error.description));
           console.log(error);
+          this.progressSpinner = false;
         },
         () => {
           this.datosGeneralesSearch();
           this.obtenerEtiquetasPersonaJuridicaConcreta();
+          this.progressSpinner = false;
         }
       );
     }
-    this.progressSpinner = false;
   }
 
   restablecer() {
