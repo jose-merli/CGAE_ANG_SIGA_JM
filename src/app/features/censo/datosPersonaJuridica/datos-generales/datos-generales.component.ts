@@ -48,6 +48,7 @@ export class DatosGenerales implements OnInit {
   showGuardar: boolean = false;
   progressSpinner: boolean = false;
   openFicha: boolean = false;
+  displayAuditoria: boolean = false;
 
   selectedItem: number = 10;
   selectedDoc: string = "NIF";
@@ -83,6 +84,7 @@ export class DatosGenerales implements OnInit {
   imagenPersonaJuridica: any;
 
   cuentaIncorrecta: Boolean = false;
+  showGuardarAuditoria: boolean = false;
 
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
@@ -279,6 +281,8 @@ export class DatosGenerales implements OnInit {
           }
           this.showGuardar = false;
           this.editar = false;
+          // restablece motivo de auditoria
+          this.body.motivo = undefined;
         }
       );
   }
@@ -320,10 +324,12 @@ export class DatosGenerales implements OnInit {
         }
         this.body.idioma = this.idiomaPreferenciaSociedad;
         this.body.tipo = this.selectedTipo.value;
+        this.body.motivo = "registro creado";
         this.sigaServices
           .post("busquedaPerJuridica_create", this.body)
           .subscribe(
             data => {
+              this.cerrarAuditoria();
               this.showSuccess();
               let respuesta = JSON.parse(data["body"]);
               this.idPersona = respuesta.id;
@@ -366,6 +372,7 @@ export class DatosGenerales implements OnInit {
 
       this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
         data => {
+          this.cerrarAuditoria();
           this.cargarImagen(this.body.idPersona);
           this.showSuccess();
           console.log(data);
@@ -552,12 +559,29 @@ export class DatosGenerales implements OnInit {
     } else {
       this.showGuardar = false;
     }
+  }
 
-    // if (this.body.cuentaContable.length != 24) {
-    //   this.cuentaIncorrecta = true;
-    // } else {
-    //   this.cuentaIncorrecta = false;
-    // }
+  comprobarAuditoria() {
+    // modo creación
+    if (sessionStorage.getItem("crearnuevo") != null) {
+      this.guardar();
+    }
+    // modo edición
+    else {
+      this.displayAuditoria = true;
+    }
+  }
+
+  cerrarAuditoria() {
+    this.displayAuditoria = false;
+  }
+
+  comprobarCampoMotivo() {
+    if (this.body.motivo != undefined && this.body.motivo != "") {
+      this.showGuardarAuditoria = true;
+    } else {
+      this.showGuardarAuditoria = false;
+    }
   }
 
   onlySpaces(str) {
