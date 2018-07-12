@@ -14,13 +14,25 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-end mb-1">
+          <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha">{{"facturacion.tarjetas.literal.serviciosInteres" | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label><a (click)="irFacturacion()"><span style="color: blue; text-decoration: underline" >{{"menu.facturacion" | translate}}</span></a></label>
-            <label><a (click)="irAuditoria()"><span style="color: blue; text-decoration: underline" >{{"menu.administracion.auditoria" | translate}}</span></a></label>
-            <label><a (click)="irComunicaciones()"><span style="color: blue; text-decoration: underline" >{{"facturacion.consultamorosos.literal.comunicaciones" | translate}}</span></a></label>
+            <label>
+              <a (click)="irFacturacion()">
+                <span style="color: blue; text-decoration: underline">{{"menu.facturacion" | translate}}</span>
+              </a>
+            </label>
+            <label>
+              <a (click)="irAuditoria()">
+                <span style="color: blue; text-decoration: underline">{{"menu.administracion.auditoria" | translate}}</span>
+              </a>
+            </label>
+            <label>
+              <a (click)="irComunicaciones()">
+                <span style="color: blue; text-decoration: underline">{{"facturacion.consultamorosos.literal.comunicaciones" | translate}}</span>
+              </a>
+            </label>
             <i class="float-right"></i>
           </div>
         </div>
