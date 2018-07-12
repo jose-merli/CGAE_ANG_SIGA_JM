@@ -54,7 +54,7 @@
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>País</label>
-                <p-dropdown class="select-form" [(ngModel)]="body.idPais" [options]="comboPais" (onChange)="onChangePais()">
+                <p-dropdown class="select-form" [(ngModel)]="body.idPais" [options]="comboPais" (onChange)="onChangePais()" [filter]="true">
                 </p-dropdown>
               </div>
               <div class="form-group col-lg-6 col-md-6">
@@ -66,8 +66,8 @@
               <div class="form-group col-lg-6 col-md-6">
                 <label>Provincia</label>
                 <p-dropdown class="select-form" [(ngModel)]='provinciaSelecionada' [(disabled)]="isDisabledProvincia" [options]="comboProvincia"
-                  (onChange)="onChangeProvincia($event)">
-                  </p-dropdown>
+                  (onChange)="onChangeProvincia($event)" [filter]="true">
+                </p-dropdown>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>Otra Provincia</label>
@@ -76,8 +76,8 @@
               <div class="form-group col-lg-6 col-md-6">
                 <label>Población</label>
                 <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' [(disabled)]="isDisabledPoblacion" [options]="comboPoblacion"
-                  (onChange)="onChangePoblacion($event)">
-                  </p-dropdown>
+                  (onChange)="onChangePoblacion($event)" [filter]="true">
+                </p-dropdown>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>Tipo dirección</label>
@@ -101,13 +101,14 @@
                   <p-column *ngFor="let col of columnasDirecciones" [sortable]="true" [field]="col.field" [header]="col.header | translate">
                     <ng-template *ngIf="col.field == 'valor'" let-dato="rowData" pTemplate="body">
                       <span class="input-group">
-                        <input type="text"   class="form-control" pInputText [(ngModel)]="dato[col.field]"  ></span>
+                        <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]">
+                      </span>
                     </ng-template>
                     <ng-template *ngIf="col.field == 'tipo'" let-dato="rowData" pTemplate="body">
                       <label>{{dato.tipo}}</label>
                     </ng-template>
                   </p-column>
-                  </p-dataTable>
+                </p-dataTable>
 
               </div>
             </div>
