@@ -3,7 +3,8 @@ import {
   OnInit,
   ViewEncapsulation,
   ViewChild,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ElementRef
 } from "@angular/core";
 import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
@@ -44,8 +45,12 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   pButton;
   editar: boolean = false;
   buscar: boolean = true;
+  isRestablecer: boolean = false;
+  save: boolean = false;
+  isForSave: boolean = true;
   pressNew: boolean = true;
   progressSpinner: boolean = false;
+  isforNew: boolean = true;
   historicoActive: boolean = false;
   blockSeleccionar: boolean = false;
   disabled: boolean = false;
@@ -54,7 +59,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   permisosTree: any;
   permisosArray: any[];
   derechoAcceso: any;
-  activacionEditar: boolean;
+  activacionEditar: boolean = false;
   selectedItem: number = 10;
   selectAll: boolean = false;
   numSelected: number = 0;
@@ -69,13 +74,13 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   ) {
     super(USER_VALIDATIONS);
   }
+  @ViewChild("input2") inputEl: ElementRef;
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
   ngOnInit() {
-    let tablaAnterior = JSON.parse(sessionStorage.getItem("searchOrHistory"));
-    sessionStorage.removeItem("searchOrHistory");
     this.textFilter = "Elegir";
+    this.activacionEditar = false;
     this.sigaServices.get("usuarios_rol").subscribe(
       n => {
         this.usuarios_rol = n.combooItems;
@@ -84,12 +89,9 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         console.log(err);
       }
     );
-    if (tablaAnterior == "history") {
-      this.historico();
-    } else {
-      this.isBuscar();
-    }
+    this.isBuscar();
     this.checkAcceso();
+    this.reestablecer();
     this.cols = [
       {
         field: "idGrupo",
@@ -145,7 +147,9 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
 
   isBuscar() {
     sessionStorage.setItem("searchOrHistory", JSON.stringify("search"));
+    this.progressSpinner = true;
     this.historicoActive = false;
+    this.isforNew = true;
     this.sigaServices
       .postPaginado("perfiles_search", "?numPagina=1", null)
       .subscribe(
@@ -154,6 +158,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
           this.searchPerfiles = JSON.parse(data["body"]);
           this.datos = this.searchPerfiles.usuarioGrupoItems;
           this.buscar = true;
+
           this.table.paginator = true;
           this.sigaServices.get("usuarios_rol").subscribe(
             n => {},
@@ -171,6 +176,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
             this.table.first = first;
             sessionStorage.removeItem("first");
           }
+          this.progressSpinner = false;
         }
       );
   }
@@ -258,9 +264,20 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         value.editar = true;
       }
     });
+    this.isForSave = false;
+    this.save = true;
+  }
+  reestablecer() {
+    this.isforNew = true;
+    this.save = false;
+    this.activacionEditar = false;
+    this.isRestablecer = false;
+    this.isBuscar();
   }
   newData() {
+    this.isforNew = false;
     this.blockSeleccionar = true;
+    this.activacionEditar = true;
     console.log(this.datos);
     let dummy = {
       idGrupo: "",
@@ -277,24 +294,55 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     };
     let value = this.table.first;
     this.pressNew = true;
+    this.save = true;
     // this.buscar = false;
     // this.createArrayEdit(dummy, value);
     this.datos = [dummy, ...this.datos];
 
     this.table.reset();
   }
-  onChangeForm() {
-    if (this.newPerfil.idGrupo.length > 3) {
-      this.newPerfil.idGrupo = this.newPerfil.idGrupo.substring(0, 3);
-      this.newPerfil.idGrupo = this.newPerfil.idGrupo.toLocaleUpperCase();
+  onChangeId() {
+    if (this.newPerfil.idGrupo != null && this.newPerfil.idGrupo != undefined) {
+      if (this.newPerfil.idGrupo.length >= 3) {
+        this.newPerfil.idGrupo = this.newPerfil.idGrupo.substring(0, 3);
+        this.newPerfil.idGrupo = this.newPerfil.idGrupo.toLocaleUpperCase();
+        this.inputEl.nativeElement.focus();
+      } else {
+        this.newPerfil.idGrupo = this.newPerfil.idGrupo.toLocaleUpperCase();
+      }
+    }
+    if (
+      this.newPerfil.idGrupo != null &&
+      this.newPerfil.idGrupo != undefined &&
+      this.newPerfil.idGrupo.trim() != null &&
+      this.newPerfil.descripcionGrupo != null &&
+      this.newPerfil.descripcionGrupo != undefined &&
+      this.newPerfil.descripcionGrupo.trim() != ""
+    ) {
+      this.isForSave = false;
     } else {
-      this.newPerfil.idGrupo = this.newPerfil.idGrupo.toLocaleUpperCase();
+      this.isForSave = true;
+    }
+  }
+  onChangeForm() {
+    if (
+      this.newPerfil.idGrupo != null &&
+      this.newPerfil.idGrupo != undefined &&
+      this.newPerfil.idGrupo.trim() != null &&
+      this.newPerfil.descripcionGrupo != null &&
+      this.newPerfil.descripcionGrupo != undefined &&
+      this.newPerfil.descripcionGrupo.trim() != ""
+    ) {
+      this.isForSave = false;
+    } else {
+      this.isForSave = true;
     }
   }
   isNew() {
     let newPerfil = this.datos[0];
     newPerfil.idGrupo = this.newPerfil.idGrupo;
     newPerfil.descripcionGrupo = this.newPerfil.descripcionGrupo;
+    this.progressSpinner = true;
     this.sigaServices.post("perfiles_insert", newPerfil).subscribe(
       data => {},
       error => {
@@ -395,6 +443,11 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   }
   irEditarUsuario(id) {
     if (!this.selectMultiple) {
+      if (this.activacionEditar) {
+        this.selectedDatos = [];
+        this.isRestablecer = true;
+      }
+
       // var ir = null;
       // if (id && id.length > 0) {
       //   ir = id[0];
@@ -456,6 +509,8 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     sessionStorage.setItem("searchOrHistory", JSON.stringify("history"));
     this.historicoActive = true;
     this.selectMultiple = false;
+    this.progressSpinner = true;
+    this.isforNew = false;
     this.sigaServices
       .postPaginado("perfiles_historico", "?numPagina=1", null)
       .subscribe(
@@ -464,6 +519,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
           this.searchPerfiles = JSON.parse(data["body"]);
           this.datos = this.searchPerfiles.usuarioGrupoItems;
           this.buscar = false;
+          this.progressSpinner = false;
         },
         err => {
           console.log(err);

@@ -26,7 +26,7 @@
                 <ng-template let-col let-car="rowData" pTemplate="body">
                   <span>{{car[col.field]}}</span>
                   <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='newPerfil.idGrupo' type="text" class="form-control"
-                    (ngModelChange)="onChangeForm($event)" pInputText>
+                    (ngModelChange)="onChangeId($event)" [attr.maxlength]="3" pInputText>
                 </ng-template>
               </p-column>
               <p-column [sortable]="true" field="descripcionGrupo" [header]="'general.description' | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
@@ -35,7 +35,7 @@
 
                   <span>{{car[col.field]}}</span>
                   <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='newPerfil.descripcionGrupo' type="text" class="form-control"
-                    [formControl]="this.formGroup.controls[ 'descripcionGrupo'] " (onChange)="onChangeForm()" pInputText>
+                    [formControl]="this.formGroup.controls[ 'descripcionGrupo'] " (ngModelChange)="onChangeForm()" pInputText>
                 </ng-template>
               </p-column>
               <p-column [sortable]="true" field="rolesAsignados" [header]="'menu.administracion.perfilrol' | translate" [filter]="true"
@@ -43,9 +43,12 @@
 
 
                 <ng-template pTemplate="body" let-dato="rowData"  >
+                  <p-multiSelect *ngIf="dato.idGrupo == '' " [defaultLabel]="textFilter" styleClass="widthAll" (onChange)="editRol($event, dato )"
+                    [(ngModel)]="dato.rolesAsignados" [options]="usuarios_rol" optionLabel="label" [selectedItemsLabel]="textSelected"
+                    [panelStyle]="{width:'100%'}"></p-multiSelect>
                   <!-- <p-dropdown [disabled]="!activacionEditar" [options]="dato['asignarRolDefecto']" styleClass="ui-column-filter" [style]="{'width':'100%'}"
                   appendTo="body" (onChange)="confirmarRolDefecto($event, dato )"></p-dropdown> -->
-                  <p-multiSelect [disabled]="!activacionEditar" [defaultLabel]="textFilter" styleClass="widthAll" (onChange)="editRol($event, dato )"
+                  <p-multiSelect *ngIf="dato.idGrupo != '' " [disabled]="!isforNew" [defaultLabel]="textFilter" styleClass="widthAll" (onChange)="editRol($event, dato )"
                     [(ngModel)]="dato.rolesAsignados" [options]="usuarios_rol" optionLabel="label" [selectedItemsLabel]="textSelected"
                     [panelStyle]="{width:'100%'}"></p-multiSelect>
                 </ng-template>
@@ -85,13 +88,15 @@
               </ng-template>
               <p-footer>
                 <div class="text-right main-button">
-                  <button *ngIf="selectedDatos && selectedDatos != ''" (click)="selectedDatos=false" pButton type="button" icon="fa fa-check"
-                    iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
+
+                  <button *ngIf="!isforNew" (click)="reestablecer()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+                  <button *ngIf="(selectedDatos && selectedDatos != '') || isRestablecer" (click)="selectedDatos=false; reestablecer()" pButton
+                    type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
                   <button (click)="historico(); selectedDatos=false" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.historico' | translate}}"></button>
-                  <button (click)="newData()" pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+                  <button *ngIf="isforNew" (click)="newData()" pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
                   <button *ngIf="selectedDatos && selectedDatos != ''" [disabled]="!activacionEditar" (click)="confirmarBorrar(selectedDatos); selectedDatos=false"
                     pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
-                  <button *ngIf="selectedDatos && selectedDatos != ''" (click)="isGuardar()" pButton type="button" icon="fa fa-save" iconPos="left"
+                  <button *ngIf="save" [disabled]="isForSave" (click)="isGuardar()" #input2 pButton type="button" icon="fa fa-save" iconPos="left"
                     label="{{'general.boton.guardar' | translate}}"></button>
                 </div>
               </p-footer>
@@ -142,7 +147,7 @@
           <div class="card-footer">
             <div class="text-right main-button">
               <button (click)="isBuscar()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
-              <button (click)="crear()" pButton type="button" icon="fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+              <!-- <button (click)="crear()" pButton type="button" icon="fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button> -->
             </div>
           </div>
         </div>
@@ -151,4 +156,8 @@
   </div>
   <!--FIN CARD-->
   <app-dialog></app-dialog>
+</div>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+  <div class="loader"></div>
 </div>
