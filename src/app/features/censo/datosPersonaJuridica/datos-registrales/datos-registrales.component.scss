@@ -7,6 +7,10 @@
   width: 100%;
 }
 
+.card-header * {
+  cursor: pointer;
+}
+
 #formu {
   display: table !important;
   padding-left: 1.4em;

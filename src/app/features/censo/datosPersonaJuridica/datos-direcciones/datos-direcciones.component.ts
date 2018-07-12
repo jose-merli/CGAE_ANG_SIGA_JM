@@ -77,19 +77,11 @@ export class DatosDireccionesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.checkAcceso();
-    this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    if (this.usuarioBody[0] != undefined) {
-      this.idPersona = this.usuarioBody[0].idPersona;
+    if (sessionStorage.getItem("editarDirecciones") == "true") {
+      let fichaPosible = this.getFichaPosibleByKey("direcciones");
+      fichaPosible.activa = true;
+      sessionStorage.removeItem("editarDirecciones");
     }
-    this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
-      id => {
-        if (id !== null) {
-          this.body.idPersona = id;
-          this.search();
-        }
-      }
-    );
 
     this.cols = [
       {
@@ -148,7 +140,20 @@ export class DatosDireccionesComponent implements OnInit {
       }
     ];
 
-    this.search();
+    this.checkAcceso();
+    this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    if (this.usuarioBody[0] != undefined) {
+      this.idPersona = this.usuarioBody[0].idPersona;
+      this.search();
+    }
+    this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
+      id => {
+        if (id !== null) {
+          this.body.idPersona = id;
+          this.search();
+        }
+      }
+    );
   }
   activarPaginacion() {
     if (!this.datos || this.datos.length == 0) return false;
@@ -198,7 +203,6 @@ export class DatosDireccionesComponent implements OnInit {
 
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
-
     // si no se esta creando una nueva sociedad
     if (sessionStorage.getItem("crearnuevo") == null) {
       fichaPosible.activa = !fichaPosible.activa;
@@ -236,27 +240,29 @@ export class DatosDireccionesComponent implements OnInit {
     this.selectedDatos = "";
     this.progressSpinner = true;
     this.selectAll = false;
-    this.sigaServices
-      .postPaginado("direcciones_search", "?numPagina=1", searchObject)
-      .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-          this.searchDirecciones = JSON.parse(data["body"]);
-          this.datos = this.searchDirecciones.datosDireccionesItem;
-          if (this.datos.length == 1) {
-            this.body = this.datos[0];
-            this.only = true;
-          } else {
-            this.only = false;
-          }
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {}
-      );
+    if (this.idPersona != undefined && this.idPersona != null) {
+      this.sigaServices
+        .postPaginado("direcciones_search", "?numPagina=1", searchObject)
+        .subscribe(
+          data => {
+            console.log(data);
+            this.progressSpinner = false;
+            this.searchDirecciones = JSON.parse(data["body"]);
+            this.datos = this.searchDirecciones.datosDireccionesItem;
+            if (this.datos.length == 1) {
+              this.body = this.datos[0];
+              this.only = true;
+            } else {
+              this.only = false;
+            }
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {}
+        );
+    }
   }
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;

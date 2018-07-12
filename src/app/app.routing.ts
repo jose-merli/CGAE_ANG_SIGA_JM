@@ -905,7 +905,7 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: "contadores/:id",
+    path: "contadores/:id/:modulo",
     component: ContadoresComponent,
     canActivate: [AuthGuard]
   },

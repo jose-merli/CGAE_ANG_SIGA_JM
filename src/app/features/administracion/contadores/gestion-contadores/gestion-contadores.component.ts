@@ -157,13 +157,27 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   pInputText;
   isEditar() {
     this.modificableToBody();
-    this.body.nombre = this.body.nombre.trim();
-    this.body.descripcion = this.body.descripcion.trim();
-    this.body.prefijo = this.body.prefijo.trim();
-    this.body.idcontador = this.body.idcontador.trim();
-    this.body.reconfiguracionprefijo = this.body.reconfiguracionprefijo.trim();
-    this.body.reconfiguracionsufijo = this.body.reconfiguracionsufijo.trim();
-    this.body.reconfiguracioncontador = this.body.reconfiguracioncontador.trim();
+    if (this.body.nombre != null) {
+      this.body.nombre = this.body.nombre.trim();
+    }
+    if (this.body.descripcion != null) {
+      this.body.descripcion = this.body.descripcion.trim();
+    }
+    if (this.body.prefijo != null) {
+      this.body.prefijo = this.body.prefijo.trim();
+    }
+    if (this.body.idcontador != null) {
+      this.body.idcontador = this.body.idcontador.trim();
+    }
+    if (this.body.reconfiguracionprefijo != null) {
+      this.body.reconfiguracionprefijo = this.body.reconfiguracionprefijo.trim();
+    }
+    if (this.body.reconfiguracionsufijo != null) {
+      this.body.reconfiguracionsufijo = this.body.reconfiguracionsufijo.trim();
+    }
+    if (this.body.reconfiguracioncontador != null) {
+      this.body.reconfiguracioncontador = this.body.reconfiguracioncontador.trim();
+    }
     this.sigaServices.post("contadores_update", this.body).subscribe(
       data => {
         this.showSuccess();

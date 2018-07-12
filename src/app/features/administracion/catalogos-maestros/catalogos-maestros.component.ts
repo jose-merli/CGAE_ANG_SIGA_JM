@@ -5,7 +5,8 @@ import {
   ViewChild,
   ChangeDetectorRef,
   Input,
-  HostListener
+  HostListener,
+  ElementRef
 } from "@angular/core";
 import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
@@ -82,6 +83,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   //elementos del form
   formDescripcion: String;
   formCodigo: String;
+  cdgoExt: String;
+  descripcion: String;
 
   //mensajes
   msgs: Message[] = [];
@@ -101,6 +104,10 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   controlEditar: boolean = false;
   rowsPerPage: any = [];
   numSelected: number = 0;
+  first: number = 0;
+  @ViewChild("input1") inputEl: ElementRef;
+  @ViewChild("inputDesc") inputDesc: ElementRef;
+  @ViewChild("inputCdgoExt") inputCdgoExt: ElementRef;
 
   @ViewChild("table") table;
   selectedDatos;
@@ -179,8 +186,9 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
   }
-  
+
   isEditar() {
+    sessionStorage.setItem("first", JSON.stringify(this.table.first));
     this.datosHist.forEach(
       (value: CatalogoMaestroItem, key: number) => {
         if (value.editar) {
@@ -217,11 +225,13 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
               this.searchCatalogo = JSON.parse(error["error"]);
               this.showFail(JSON.stringify(this.searchCatalogo.error.message));
               console.log(error);
-              this.table.reset();
+              //this.table.reset();
+
               this.isBuscar();
             }
           );
         }
+
         value.editar = false;
       },
       () => {
@@ -270,21 +280,33 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       this.datosNew = [dummy, ...this.datosHist];
     }
   }
+
   editarCompleto(event) {
     console.log(event);
     let data = event.data;
-    //compruebo si la edicion es correcta con la basedatos
-    if (this.onlySpaces(data.descripcion)) {
-      this.blockCrear = true;
-    } else {
-      this.editar = true;
-      this.blockCrear = false;
+
+    if (data.descripcion.length > 2000 || data.codigoExt.length > 10) {
       this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
         if (value.idRegistro == data.idRegistro) {
-          value.editar = true;
+          value.descripcion = data.descripcion.substring(0, 1950);
+          value.codigoExt = data.codigoExt.substring(0, 10);
         }
       });
-      console.log(this.datosHist);
+      this.inputEl.nativeElement.focus();
+    } else {
+      //compruebo si la edicion es correcta con la basedatos
+      if (this.onlySpaces(data.descripcion)) {
+        this.blockCrear = true;
+      } else {
+        this.editar = true;
+        this.blockCrear = false;
+        this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
+          if (value.idRegistro == data.idRegistro) {
+            value.editar = true;
+          }
+        });
+        console.log(this.datosHist);
+      }
     }
   }
 
@@ -387,9 +409,16 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
   // cada vez que cambia el formulario comprueba esto
   onChangeForm() {
+    this.newCatalogo.descripcion = this.descripcion;
+    this.newCatalogo.descripcion = this.newCatalogo.descripcion.replace(
+      /^\s+|\s+$/g,
+      ""
+    );
+
     if (this.newCatalogo.codigoExt == undefined) {
       this.newCatalogo.codigoExt = "";
     }
+
     if (
       this.newCatalogo.descripcion == "" ||
       this.newCatalogo.descripcion == undefined ||
@@ -397,7 +426,42 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     ) {
       this.blockCrear = true;
     } else {
+      this.descripcion = this.newCatalogo.descripcion.replace(/^\s+|\s+$/g, "");
       this.blockCrear = false;
+    }
+  }
+
+  onChangeFormCdgoExt() {
+    this.newCatalogo.codigoExt = this.cdgoExt;
+    this.newCatalogo.codigoExt = this.newCatalogo.codigoExt.replace(
+      /^\s+|\s+$/g,
+      ""
+    );
+
+    if (this.newCatalogo.codigoExt == undefined) {
+      this.newCatalogo.codigoExt = "";
+    } else {
+      this.cdgoExt = this.newCatalogo.codigoExt.replace(/^\s+|\s+$/g, "");
+    }
+  }
+
+  descripcionEvent(e) {
+    if (e) {
+      this.newCatalogo.descripcion = e.srcElement.value.trim();
+      this.newCatalogo.descripcion = this.newCatalogo.descripcion.trim();
+      this.descripcion = this.newCatalogo.descripcion;
+      this.inputDesc.nativeElement.value = e.srcElement.value.trim();
+      console.log(this.inputDesc);
+    }
+  }
+
+  cdgoEvent(e) {
+    if (e) {
+      this.newCatalogo.codigoExt = e.srcElement.value.trim();
+      this.newCatalogo.codigoExt = this.newCatalogo.codigoExt.trim();
+      this.cdgoExt = this.newCatalogo.codigoExt;
+      this.inputCdgoExt.nativeElement.value = e.srcElement.value.trim();
+      console.log(this.inputCdgoExt);
     }
   }
 

@@ -9,5 +9,7 @@ export class PerfilItem {
   rolesAsignados: ComboItem[];
   rolesNoAsignados: ComboItem[];
   fechaBaja: Date;
-  constructor() { }
+  editar: boolean = false;
+  new: boolean = false;
+  constructor() {}
 }

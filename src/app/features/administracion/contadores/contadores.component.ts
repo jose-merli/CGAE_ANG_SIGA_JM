@@ -68,6 +68,7 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
   blockBuscar: boolean = true;
   blockCrear: boolean = true;
   idModulo: String;
+  idPantalla: String;
   first: number = 0;
   rowsPerPage: any = [];
 
@@ -87,8 +88,14 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
   //Cargo el combo nada mas comenzar
   ngOnInit() {
     this.idModulo = this.activatedRoute.snapshot.params["id"];
-    if (this.idModulo == "0") {
+    this.idPantalla = this.activatedRoute.snapshot.params["modulo"];
+    if (this.idModulo == "0" || this.idPantalla == "admin") {
       this.editar = false;
+    }
+    else {
+      //   sessionStorage.setItem("moduloAcceso", JSON.stringify("1"));
+      this.body.idmodulo = this.idModulo;
+      this.isBuscar();
     }
     this.body = new ContadorItem();
     this.sigaServices.get("contadores_module").subscribe(
@@ -186,7 +193,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.table.reset();
   }
   // Control de buscar desactivado por ahora (hasta tener primer elemento del combo preparado)
-  onChangeCatalogo() {}
+  onChangeCatalogo() { }
   //cada vez que cambia el formulario comprueba esto
   onChangeForm(event) {
     this.idModulo = event;
@@ -233,27 +240,31 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.formToBody();
     }
 
+    if (this.body.idmodulo == "0") {
+      this.body.idmodulo = "";
+    }
+
     this.sigaServices
       .postPaginado("contadores_search", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          console.log(data);
+      data => {
+        console.log(data);
 
-          this.search = JSON.parse(data["body"]);
-          this.datos = this.search.contadorItems;
-          console.log(this.datos);
-          this.table.reset();
-        },
-        err => {
-          console.log(err);
-        },
-        () => {
-          if (sessionStorage.getItem("first") != null) {
-            let first = JSON.parse(sessionStorage.getItem("first")) as number;
-            this.table.first = first;
-            sessionStorage.removeItem("first");
-          }
+        this.search = JSON.parse(data["body"]);
+        this.datos = this.search.contadorItems;
+        console.log(this.datos);
+        this.table.reset();
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (sessionStorage.getItem("first") != null) {
+          let first = JSON.parse(sessionStorage.getItem("first")) as number;
+          this.table.first = first;
+          sessionStorage.removeItem("first");
         }
+      }
       );
   }
   paginate(event) {
@@ -293,7 +304,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
   irEditarContador(id) {
     var ir = null;
-    var url = "/contadores/" + this.idModulo;
+    var url = "/contadores/" + this.idModulo + "/" + this.idPantalla;
     if (id && id.length > 0) {
       ir = id[0];
     }

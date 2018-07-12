@@ -8,26 +8,25 @@
   font-weight: bold;
 }
 
-.ui-growl-message-info
-   .ui-growl-item{
+.ui-growl-message-info .ui-growl-item {
   color: white !important;
-  background-color:	#33a1ff   !important;
-   }
+  background-color: #33a1ff !important;
+}
 
- .ui-growl-message-success
-   .ui-growl-item{
+.ui-growl-message-success .ui-growl-item {
   color: white !important;
-  background-color: #28a745   !important;
-   }
+  background-color: #28a745 !important;
+}
 
- .ui-growl-message-warn
-   .ui-growl-item{
+.ui-growl-message-warn .ui-growl-item {
   color: white !important;
-  background-color:	#ffc107   !important;
-   }
+  background-color: #ffc107 !important;
+}
 
- .ui-growl-message-error
-   .ui-growl-item{
+.ui-growl-message-error .ui-growl-item {
   color: white !important;
-  background-color: #dc3545   !important;
-   }
+  background-color: #dc3545 !important;
+}
+.widthAll.ui-multiselect.ui-widget.ui-state-default.ui-corner-all.ui-state-disabled {
+  opacity: 0.75;
+}
