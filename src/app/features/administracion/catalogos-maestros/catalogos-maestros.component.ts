@@ -102,6 +102,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   controlEditar: boolean = false;
   rowsPerPage: any = [];
   numSelected: number = 0;
+  first: number = 0;
   @ViewChild("input1") inputEl: ElementRef;
   @ViewChild("table") table;
   selectedDatos;
@@ -180,8 +181,9 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
   }
-  
+
   isEditar() {
+    sessionStorage.setItem("first", JSON.stringify(this.table.first));
     this.datosHist.forEach(
       (value: CatalogoMaestroItem, key: number) => {
         if (value.editar) {
@@ -218,7 +220,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
               this.searchCatalogo = JSON.parse(error["error"]);
               this.showFail(JSON.stringify(this.searchCatalogo.error.message));
               console.log(error);
-              this.table.reset();
+              //this.table.reset();
+
               this.isBuscar();
             }
           );
