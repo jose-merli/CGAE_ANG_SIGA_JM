@@ -577,6 +577,7 @@ export class DatosGenerales implements OnInit {
     // modo edición
     else {
       this.displayAuditoria = true;
+      this.showGuardarAuditoria = true;
       this.body.motivo = undefined;
     }
   }

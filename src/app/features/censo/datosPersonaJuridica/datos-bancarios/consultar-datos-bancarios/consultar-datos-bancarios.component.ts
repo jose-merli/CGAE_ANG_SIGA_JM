@@ -585,6 +585,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.guardarRegistro();
         } else {
           this.displayAuditoria = true;
+    this.showGuardarAuditoria = true;
+
           this.body.motivo = undefined;
         }
       },
@@ -641,6 +643,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.guardarRegistro();
         } else {
           this.displayAuditoria = true;
+          this.showGuardarAuditoria = true;
           this.body.motivo = undefined;
         }
       }

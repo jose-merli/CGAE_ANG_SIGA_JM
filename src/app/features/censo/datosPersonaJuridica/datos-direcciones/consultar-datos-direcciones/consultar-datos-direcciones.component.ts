@@ -436,6 +436,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     // modo edicion
     if (this.registroEditable) {
       this.displayAuditoria = true;
+      this.showGuardarAuditoria = true;
+
       this.body.motivo = undefined;
     }
     // modo creacion
