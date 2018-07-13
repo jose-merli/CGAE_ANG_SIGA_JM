@@ -585,7 +585,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.guardarRegistro();
         } else {
           this.displayAuditoria = true;
-    this.showGuardarAuditoria = true;
+    this.showGuardarAuditoria = false;
 
           this.body.motivo = undefined;
         }
@@ -643,7 +643,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.guardarRegistro();
         } else {
           this.displayAuditoria = true;
-          this.showGuardarAuditoria = true;
+          this.showGuardarAuditoria = false;
           this.body.motivo = undefined;
         }
       }
@@ -1137,7 +1137,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   comprobarCampoMotivo() {
-    if (this.body.motivo != undefined && this.body.motivo != "") {
+    if (this.body.motivo != undefined && this.body.motivo != ""&& this.body.motivo.trim() != "") {
       this.showGuardarAuditoria = true;
     } else {
       this.showGuardarAuditoria = false;
