@@ -118,7 +118,7 @@
         <div class="card-footer ">
           <div class="text-right main-button ">
             <button *ngIf="nuevo == false" (click)="duplicarRegistro()" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="Duplicar"></button>
-            <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
+            <button (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
             <button (click)="restablecer()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="Restablecer"></button>
           </div>
         </div>
@@ -136,3 +136,28 @@
   <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
   <div class="loader"></div>
 </div>
+
+
+<!-- AUDITORIA -->
+
+<p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500"
+  [minWidth]="500">
+  <p-header class="title">
+    <label>{{"general.ventana.cgae" | translate}} -{{"censo.consultaHistorico.cabecera" | translate}}</label>
+  </p-header>
+
+  <div class="bloque col-lg-12 col-md-12">
+    <div class="row">
+      <div class="form-group col-lg-12 col-md-12">
+        <label>{{"censo.datosHistorico.literal.motivo" | translate}} (*)</label>
+        <textarea pInputTextarea [(ngModel)]="body.motivo" (ngModelChange)="comprobarCampoMotivo()"></textarea>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <div class="text-right main-button ">
+      <button (click)="guardar()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+      <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
+    </div>
+  </p-footer>
+</p-dialog>

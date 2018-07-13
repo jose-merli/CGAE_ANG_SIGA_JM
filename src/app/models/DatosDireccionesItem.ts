@@ -25,5 +25,6 @@ export class DatosDireccionesItem {
   paginaWeb: String;
   historico: boolean = false;
   otraProvincia: String;
+  motivo: String;
   constructor() {}
 }

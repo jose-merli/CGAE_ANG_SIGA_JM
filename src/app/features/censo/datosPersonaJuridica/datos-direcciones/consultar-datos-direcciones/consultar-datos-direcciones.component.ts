@@ -51,6 +51,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   bodyCodigoPostal: DatosDireccionesCodigoPostalItem = new DatosDireccionesCodigoPostalItem();
   bodyCodigoPostalSearch: DatosDireccionesCodigoPostalObject = new DatosDireccionesCodigoPostalObject();
 
+  displayAuditoria: boolean = false;
+  showGuardarAuditoria: boolean = false;
+
   constructor(
     private location: Location,
     private sigaServices: SigaServices,
@@ -253,11 +256,13 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       // this.body.idProvincia = "";
     }
   }
+
   onChangeProvincia(event) {
     if (this.checkOtraProvincia == false) {
       this.getComboPoblacion();
     }
   }
+
   onChangeOtherProvincia(event) {
     if (event) {
       this.isDisabledPoblacion = true;
@@ -271,6 +276,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     }
     console.log(event);
   }
+
   guardar() {
     if (
       this.body.idTipoDireccion != null &&
@@ -278,6 +284,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.body.idTipoDireccion.length > 0
     ) {
       this.progressSpinner = true;
+      // modo edicion
       if (this.registroEditable) {
         console.log(this.body);
         console.log(this.datosContacto);
@@ -296,14 +303,22 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
             this.showFail(this.bodySearch.error.message.toString());
             console.log(error);
             this.progressSpinner = false;
+          },
+          () => {
+            // auditoria
+            this.cerrarAuditoria();
+            this.body.motivo = undefined;
           }
         );
-      } else {
+      }
+      // modo creacion
+      else {
         console.log(this.body);
         console.log(this.datosContacto);
         this.comprobarTablaDatosContactos();
         this.comprobarCheckProvincia();
         this.body.idProvincia = this.provinciaSelecionada;
+        this.body.motivo = "registro creado";
         console.log(this.body);
         this.sigaServices.post("direcciones_insert", this.body).subscribe(
           data => {
@@ -316,6 +331,10 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
             this.showFail(this.bodySearch.error.message.toString());
             console.log(error);
             this.progressSpinner = false;
+          },
+          () => {
+            // auditoria
+            this.body.motivo = undefined;
           }
         );
       }
@@ -412,6 +431,19 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.getDatosContactos();
     }
   }
+
+  comprobarAuditoria() {
+    // modo edicion
+    if (this.registroEditable) {
+      this.displayAuditoria = true;
+      this.body.motivo = undefined;
+    }
+    // modo creacion
+    else {
+      this.guardar();
+    }
+  }
+
   // Mensajes
   showFail(mensaje: string) {
     this.msgs = [];
@@ -425,5 +457,17 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
 
   backTo() {
     this.location.back();
+  }
+
+  cerrarAuditoria() {
+    this.displayAuditoria = false;
+  }
+
+  comprobarCampoMotivo() {
+    if (this.body.motivo != undefined && this.body.motivo != "") {
+      this.showGuardarAuditoria = true;
+    } else {
+      this.showGuardarAuditoria = false;
+    }
   }
 }
