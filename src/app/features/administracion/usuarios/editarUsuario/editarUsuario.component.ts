@@ -29,6 +29,7 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
   editar: boolean = true;
   disabled: boolean = false;
   activo: boolean = false;
+  isPerfiles: boolean = false;
   correcto: boolean = false;
   dniCorrecto: boolean;
   showDatosGenerales: boolean = true;
@@ -72,13 +73,23 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
         sessionStorage.removeItem("usuarioBody");
         sessionStorage.removeItem("privilegios");
         this.selectPerfil = [];
-        this.body.perfiles.forEach((valuePerfil: String, key: number) => {
-          this.usuarios_perfil.forEach((value: ComboItem, key: number) => {
-            if (valuePerfil == value.value) {
-              this.selectPerfil.push(value);
-            }
+        if (
+          this.body.roles == null ||
+          this.body.roles == undefined ||
+          this.body.roles.length == 0
+        ) {
+          this.textFilter = "No tiene ningún rol asignado";
+          this.isPerfiles = true;
+        } else {
+          this.isPerfiles = false;
+          this.body.perfiles.forEach((valuePerfil: String, key: number) => {
+            this.usuarios_perfil.forEach((value: ComboItem, key: number) => {
+              if (valuePerfil == value.value) {
+                this.selectPerfil.push(value);
+              }
+            });
           });
-        });
+        }
       }
     );
   }
