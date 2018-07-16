@@ -82,8 +82,8 @@
       </div>-->
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
         [(selection)]="selectedDatos" (onRowSelect)="irEditarPersona(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-        pageLinks="2" dataKey="nif" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos"
-        [sortOrder]="1" [paginator]="activarPaginacion()" paginatorPosition="both" [rows]="selectedItem">
+        pageLinks="4" dataKey="nif" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos"
+        [sortOrder]="sortO" [paginator]="activarPaginacion()" paginatorPosition="both" [rows]="selectedItem">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true" filterMatchMode="contains">
           <ng-template *ngIf="col.field == 'numeroIntegrantes'" let-dato="rowData" pTemplate="body">
@@ -92,6 +92,18 @@
                 <button pButton type="button" [pTooltip]="obtenerNombreIntegrantes(dato)" [label]="obtenerIntegrantes(dato)" tooltipPosition="top"></button> &nbsp;&nbsp;
               </span>
             </div>
+          </ng-template>
+
+          <ng-template *ngIf="col.field == 'numeroIntegrantes'" let-dato="rowData" pTemplate="body">
+            <div class="input-group">
+              <span class="input-group">
+                <button pButton type="button" [pTooltip]="obtenerNombreIntegrantes(dato)" [label]="obtenerIntegrantes(dato)" tooltipPosition="top"></button> &nbsp;&nbsp;
+              </span>
+            </div>
+          </ng-template>
+
+          <ng-template *ngIf="col.field == 'fechaConstitucion'" let-dato="rowData" pTemplate="body">
+            <label>{{ dato.fechaConstitucion | date: 'dd/MM/yyyy'}}</label>
           </ng-template>
         </p-column>
 
@@ -133,7 +145,7 @@
           <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
       </div>
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-        [(selection)]="selectedDatos" (onRowSelect)="irEditarPersona(selectedDatos)" pageLinks="2" dataKey="nif" [responsive]="true"
+        [(selection)]="selectedDatos" (onRowSelect)="irEditarPersona(selectedDatos)" pageLinks="4" dataKey="nif" [responsive]="true"
         selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="activarPaginacion()"
         paginatorPosition="both" [rows]="selectedItem">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
@@ -154,6 +166,11 @@
               </div>
             </ng-template>
 
+          </ng-template>
+
+
+          <ng-template *ngIf="col.field == 'fechaConstitucion'" let-dato="rowData" pTemplate="body">
+            <label>{{ dato.fechaConstitucion | date: 'dd/MM/yyyy'}}</label>
           </ng-template>
         </p-column>
 

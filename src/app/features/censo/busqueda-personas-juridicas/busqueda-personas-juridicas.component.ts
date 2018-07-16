@@ -20,7 +20,6 @@ import { MessageService } from "primeng/components/common/messageservice";
 import { PersonaJuridicaObject } from "./../../../../app/models/PersonaJuridicaObject";
 import { PersonaJuridicaItem } from "./../../../../app/models/PersonaJuridicaItem";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
-import { Location } from "@angular/common";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -66,6 +65,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   historico: boolean = false;
   numSelected: number = 0;
   textFilter: String = "Elegir";
+  sortO: number = 1;
 
   constructor(
     private sigaServices: SigaServices,
@@ -76,6 +76,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   ) {
     super(USER_VALIDATIONS);
   }
+
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -87,7 +88,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("busqueda"));
       sessionStorage.removeItem("busqueda");
       this.Search();
-    }else{
+    } else {
       // Poner check "Sociedades Profesionales a activo porque "Sociedades Profesionales a activo por defecto"
       this.body.sociedadesProfesionales = true;
     }
@@ -150,7 +151,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         value: 40
       }
     ];
-
   }
 
   toHistorico() {
@@ -174,7 +174,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => { }
+        () => {}
       );
   }
 
@@ -236,7 +236,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     else return true;
   }
 
-  onChangeForm() {
+  geForm() {
     if (
       this.body.tipo != "" &&
       this.body.tipo != undefined &&
@@ -253,7 +253,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     }
   }
 
-  onChangeRowsPerPages(event) {
+  geRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
@@ -325,6 +325,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
           this.progressSpinner = false;
           this.personaSearch = JSON.parse(data["body"]);
           this.datos = this.personaSearch.busquedaJuridicaItems;
+
+          this.convertirStringADate(this.datos);
+
+          console.log("datos", this.datos);
           this.table.paginator = true;
         },
         err => {
@@ -339,6 +343,31 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
           // }
         }
       );
+  }
+
+  isValidDate(d) {
+    return d instanceof Date && !isNaN(d.getTime());
+  }
+
+  convertirStringADate(datos) {
+    datos.forEach(element => {
+      if (
+        element.fechaConstitucion == "" ||
+        element.fechaConstitucion == null
+      ) {
+        element.fechaConstitucion = null;
+      } else {
+        var posIni = element.fechaConstitucion.indexOf("/");
+        var posFin = element.fechaConstitucion.lastIndexOf("/");
+        var year = element.fechaConstitucion.substring(
+          posFin + 1,
+          element.fechaConstitucion.length
+        );
+        var day = element.fechaConstitucion.substring(0, posIni);
+        var month = element.fechaConstitucion.substring(posIni + 1, posFin);
+        element.fechaConstitucion = new Date(year, month - 1, day);
+      }
+    });
   }
 
   obtenerIntegrantes(dato) {
@@ -497,7 +526,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     }
   }
 
-  onChangeSelectAll() {
+  geSelectAll() {
     if (this.selectAll === true) {
       this.selectMultiple = false;
       this.selectedDatos = this.datos;
@@ -520,7 +549,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       this.isBuscar();
     }
   }
-
 
   clear() {
     this.msgs = [];

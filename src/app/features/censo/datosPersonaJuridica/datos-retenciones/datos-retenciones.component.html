@@ -42,7 +42,7 @@
             <div class="row">
                 <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" (onRowSelect)="irFichaColegial(selectedDatos)"
                     dataKey="nif" selectionMode="simple" [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1"
-                    sortField="fechaFin" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" [editable]="true">
+                    sortField="fechaFin" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" pageLinks="4" [editable]="true">
 
                     <p-column [sortable]="true" field="fechaInicio" filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[0].header | translate"
                         [filter]="true" filterMatchMode="contains">
