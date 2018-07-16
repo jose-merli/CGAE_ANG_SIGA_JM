@@ -195,7 +195,7 @@ export class DatosRetencionesComponent implements OnInit {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
   isValidIBAN(iban: String): boolean {
@@ -308,38 +308,38 @@ export class DatosRetencionesComponent implements OnInit {
     this.datos[0].fechaFin = "";
     this.sigaServices
       .postPaginado(
-        "retenciones_update",
-        "?idPersona=" + this.idPersona,
-        this.datos
+      "retenciones_update",
+      "?idPersona=" + this.idPersona,
+      this.datos
       )
       .subscribe(
-        data => {
-          console.log(data);
-          this.showSuccess();
-          // this.searchRetenciones = JSON.parse(data["body"]);
-          // this.datos = this.searchRetenciones.retencionesItemList;
-          // console.log("DATOS: " + this.datos.toString);
-          // this.searchCatalogo = JSON.parse(data["body"]);
-          // this.datosEdit = this.searchCatalogo.catalogoMaestroItem;
-          // this.datosHist = this.searchCatalogo.catalogoMaestroItem;
-        },
-        err => {
-          console.log(err);
-          this.showFail();
-        },
-        () => {
-          this.volver();
+      data => {
+        console.log(data);
+        this.showSuccess();
+        // this.searchRetenciones = JSON.parse(data["body"]);
+        // this.datos = this.searchRetenciones.retencionesItemList;
+        // console.log("DATOS: " + this.datos.toString);
+        // this.searchCatalogo = JSON.parse(data["body"]);
+        // this.datosEdit = this.searchCatalogo.catalogoMaestroItem;
+        // this.datosHist = this.searchCatalogo.catalogoMaestroItem;
+      },
+      err => {
+        console.log(err);
+        this.showFail();
+      },
+      () => {
+        this.volver();
 
-          //Al haber añadido uno nuevo, actualizamos la cabecera de la tarjeta con la nueva retención activa (lo que se verá con la tarjeta colapsada)
-          if (this.datos.length > 0) {
-            this.datos.forEach((value: any, key: number) => {
-              //Si la fecha fin no viene informada, es la que está activa, es la que mostramos con la tarjeta colapsada
-              if (value.fechaFin == undefined) {
-                this.retencionNow = this.datos[key];
-              }
-            });
-          }
+        //Al haber añadido uno nuevo, actualizamos la cabecera de la tarjeta con la nueva retención activa (lo que se verá con la tarjeta colapsada)
+        if (this.datos.length > 0) {
+          this.datos.forEach((value: any, key: number) => {
+            //Si la fecha fin no viene informada, es la que está activa, es la que mostramos con la tarjeta colapsada
+            if (value.fechaFin == undefined) {
+              this.retencionNow = this.datos[key];
+            }
+          });
         }
+      }
       );
   }
 
@@ -380,20 +380,20 @@ export class DatosRetencionesComponent implements OnInit {
 
     this.sigaServices
       .postPaginado(
-        "retenciones_update",
-        "?idPersona=" + this.idPersona,
-        datosDelete
+      "retenciones_update",
+      "?idPersona=" + this.idPersona,
+      datosDelete
       )
       .subscribe(
-        data => {
-          console.log(data);
-        },
-        err => {
-          console.log(err);
-        },
-        () => {
-          this.volver();
-        }
+      data => {
+        console.log(data);
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.volver();
+      }
       );
   }
 
@@ -429,29 +429,29 @@ export class DatosRetencionesComponent implements OnInit {
       this.sigaServices
         .postPaginado("retenciones_search", "?numPagina=1", this.body)
         .subscribe(
-          data => {
-            console.log(data);
-            this.searchRetenciones = JSON.parse(data["body"]);
-            if (this.searchRetenciones.retencionesItemList != null) {
-              this.datos = this.searchRetenciones.retencionesItemList;
-            } else {
-              this.datos = [];
-            }
-          },
-          err => {
-            console.log(err);
-          },
-          () => {
-            if (this.datos.length > 0) {
-              this.isEliminar = false;
-              this.datos.forEach((value: any, key: number) => {
-                //Si la fecha fin no viene informada, es la que está activa, es la que mostramos con la tarjeta colapsada
-                if (value.fechaFin == undefined) {
-                  this.retencionNow = this.datos[key];
-                }
-              });
-            }
+        data => {
+          console.log(data);
+          this.searchRetenciones = JSON.parse(data["body"]);
+          if (this.searchRetenciones.retencionesItemList != null) {
+            this.datos = this.searchRetenciones.retencionesItemList;
+          } else {
+            this.datos = [];
           }
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          if (this.datos.length > 0) {
+            this.isEliminar = false;
+            this.datos.forEach((value: any, key: number) => {
+              //Si la fecha fin no viene informada, es la que está activa, es la que mostramos con la tarjeta colapsada
+              if (value.fechaFin == undefined) {
+                this.retencionNow = this.datos[key];
+              }
+            });
+          }
+        }
         );
     }
   }
@@ -538,5 +538,8 @@ export class DatosRetencionesComponent implements OnInit {
     if (event.keyCode === KEY_CODE.ENTER) {
       this.isBuscar();
     }
+  }
+  clear() {
+    this.msgs = [];
   }
 }
