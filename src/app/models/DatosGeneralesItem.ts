@@ -18,6 +18,6 @@ export class DatosGeneralesItem {
   grupos: String[];
   idLenguajeSociedad: String;
   motivo: String;
-
+  error: Error;
   constructor() {}
 }

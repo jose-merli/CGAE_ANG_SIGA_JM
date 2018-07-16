@@ -349,7 +349,8 @@ export class DatosGenerales implements OnInit {
             },
             error => {
               console.log(error);
-              this.showError();
+              this.bodyviejo = JSON.parse(error["error"]);
+              this.showCustomFail(this.bodyviejo.error.message);
               this.progressSpinner = false;
             }
           );
@@ -587,7 +588,11 @@ export class DatosGenerales implements OnInit {
   }
 
   comprobarCampoMotivo() {
-    if (this.body.motivo != undefined && this.body.motivo != ""&& this.body.motivo.trim() != "") {
+    if (
+      this.body.motivo != undefined &&
+      this.body.motivo != "" &&
+      this.body.motivo.trim() != ""
+    ) {
       this.showGuardarAuditoria = true;
     } else {
       this.showGuardarAuditoria = false;
@@ -644,6 +649,15 @@ export class DatosGenerales implements OnInit {
       detail: this.translateService.instant(
         "general.message.error.realiza.accion"
       )
+    });
+  }
+
+  showCustomFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(mensaje)
     });
   }
 
