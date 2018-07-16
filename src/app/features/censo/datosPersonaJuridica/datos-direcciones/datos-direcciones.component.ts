@@ -270,7 +270,10 @@ export class DatosDireccionesComponent implements OnInit {
   }
 
   redireccionar(dato) {
-    if (!this.selectMultiple && !this.historico) {
+    if (!this.selectMultiple) {
+      if (dato[0].fechaBaja != null) {
+        sessionStorage.setItem("historicoDir", "true");
+      }
       var enviarDatos = null;
       if (dato && dato.length > 0) {
         enviarDatos = dato[0];

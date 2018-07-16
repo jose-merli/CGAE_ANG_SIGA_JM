@@ -56,7 +56,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
 
     // Esto se activará cuando venimos de datos bancarios
     if (sessionStorage.getItem("abrirNotario") == "true") {
-      this.openFicha = true;
+      this.openFicha = !this.openFicha;
       sessionStorage.removeItem("abrirNotario");
     }
 
@@ -361,6 +361,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
   }
 
   isSearch() {
+    sessionStorage.setItem("abrirNotario", "true");
     this.router.navigate(["/busquedaGeneral"]);
   }
 

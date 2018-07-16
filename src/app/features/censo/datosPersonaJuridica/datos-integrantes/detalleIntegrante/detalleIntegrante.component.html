@@ -1,7 +1,14 @@
 <p-growl [(value)]="msgs" life="3000"></p-growl>
+
 <div class="busqueda-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{"menu.censo" | translate}}
+      <i class="fa fa-angle-right"></i>{{"gratuita.operarEJG.literal.datosIntegrantes" | translate}}</p>
+
+  </div>
   <div class="card">
-    <div class="card-header header-ficha">
+    <div class="card-header header-ficha" (click)="abrirFicha('identificacion')">
       <div *ngIf="!esFichaActiva('identificacion')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -25,7 +32,7 @@
             <label>{{"censo.busquedaClientes.literal.apellido2" | translate}}
               <span>{{ body.apellidos2 }} </span>
             </label>
-            <i (click)="abrirFicha('identificacion')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
           </div>
 
         </div>
@@ -34,7 +41,7 @@
             <i class="far fa-users icon-ficha"></i>
           </div>
           <label class="title-ficha">{{"censo.busquedaClientes.literal.datosIdentificacion" | translate}}</label>
-          <i (click)="cerrarFicha('identificacion')" class="fa fa-angle-up ml-auto"></i>
+          <i class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
       <div *ngIf="esFichaActiva('identificacion')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -42,7 +49,7 @@
           <i class="fa fa-users icon-ficha"> </i>
         </div>
         <label class="title-ficha">{{"censo.busquedaClientes.literal.datosIdentificacion" | translate}}</label>
-        <i (click)="cerrarFicha('identificacion')" class="fa fa-angle-up ml-auto"></i>
+        <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <!--cuerpo datos identificacion-->
@@ -79,7 +86,7 @@
   </div>
   <!-- COMIENZA COLEGIACION -->
   <div class="card">
-    <div class="card-header header-ficha">
+    <div class="card-header header-ficha" (click)="abrirFicha('colegiacion')">
       <div *ngIf="!esFichaActiva('colegiacion')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -100,7 +107,7 @@
             <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}
               <span>{{ body.numColegiado }}</span>
             </label>
-            <i (click)="abrirFicha('colegiacion')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
           </div>
 
         </div>
@@ -109,7 +116,7 @@
             <i class="far fa-users icon-ficha"></i>
           </div>
           <label class="title-ficha">{{"censo.busquedaClientes.literal.datosColegiacion" | translate}}</label>
-          <i (click)="cerrarFicha('colegiacion')" class="fa fa-angle-up ml-auto"></i>
+          <i (click)="abrirFicha('colegiacion')" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
       <div *ngIf="esFichaActiva('colegiacion')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -117,7 +124,7 @@
           <i class="fa fa-users icon-ficha"> </i>
         </div>
         <label class="title-ficha">{{"censo.busquedaClientes.literal.datosColegiacion" | translate}}</label>
-        <i (click)="cerrarFicha('colegiacion')" class="fa fa-angle-up ml-auto"></i>
+        <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <!--cuerpo datos generales-->
@@ -152,7 +159,7 @@
 
   <!-- COMIENZA VINCULACION -->
   <div class="card">
-    <div class="card-header header-ficha">
+    <div class="card-header header-ficha" (click)="abrirFicha('vinculacion')">
       <div *ngIf="!esFichaActiva('vinculacion')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -173,13 +180,13 @@
             <label>{{"censo.consultaComponentesJuridicos.literal.cargo" | translate}}
               <span>{{ body.idCargo }}</span>
             </label>
-            <label>  {{"censo.consultaComponentesJuridicos.literal.descripcioncargo" | translate}}
+            <label> {{"censo.consultaComponentesJuridicos.literal.descripcioncargo" | translate}}
               <span>{{ body.cargo }}</span>
             </label>
             <label>{{"censo.consultaComponentesJuridicos.literal.Participacion" | translate}}
               <span>{{ body.capitalSocial }}</span>
             </label>
-            <i (click)="abrirFicha('vinculacion')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
           </div>
 
         </div>
@@ -188,7 +195,7 @@
             <i class="far fa-users icon-ficha"></i>
           </div>
           <label class="title-ficha">{{"censo.busquedaClientes.literal.cargo" | translate}}</label>
-          <i (click)="cerrarFicha('vinculacion')" class="fa fa-angle-up ml-auto"></i>
+          <i class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
       <div *ngIf="esFichaActiva('vinculacion')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -196,7 +203,7 @@
           <i class="fa fa-users icon-ficha"> </i>
         </div>
         <label class="title-ficha">{{"censo.busquedaClientes.literal.cargo" | translate}}</label>
-        <i (click)="cerrarFicha('vinculacion')" class="fa fa-angle-up ml-auto"></i>
+        <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <!--cuerpo datos generales-->
@@ -205,7 +212,8 @@
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.consultaComponentesJuridicos.literal.fechaCargo" | translate}}</label>
           <p-calendar [(ngModel)]="fechaCarga" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [monthNavigator]="true"
-            [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaRegistro" [locale]="es" [utc]="true"></p-calendar>
+            [yearNavigator]="true" yearRange="1930:2050" [(disabled)]="historico" [(ngModel)]="fechaRegistro" [locale]="es"
+            [utc]="true"></p-calendar>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.consultaComponentesJuridicos.literal.fechaFinCargo" | translate}}</label>
@@ -213,15 +221,15 @@
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.consultaComponentesJuridicos.literal.cargo" | translate}}</label>
-          <p-dropdown [(ngModel)]="body.idCargo" class="select-form" [options]="cargosArray"></p-dropdown>
+          <p-dropdown [(ngModel)]="body.idCargo" [(disabled)]="historico" class="select-form" [options]="cargosArray"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.consultaComponentesJuridicos.literal.descripcioncargo" | translate}}</label>
-          <input type="text" class="form-control" [(ngModel)]="body.cargo" pInputText>
+          <input type="text" class="form-control" [(disabled)]="historico" [(ngModel)]="body.cargo" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-6">
-          <label>{{"censo.consultaComponentesJuridicos.literal.Participacion" | translate}}</label>
-          <input type="text" class="form-control" [(ngModel)]="body.capitalSocial" pInputText>
+          <label>{{"censo.consultaComponentesJuridicos.literal.Participacion" | translate}} (*)</label>
+          <input type="text" class="form-control" [(disabled)]="historico" [(ngModel)]="body.capitalSocial" pInputText>
         </div>
       </div>
       <br>
@@ -238,7 +246,8 @@
   </div>
   <div class="mt-3 text-right main-button ">
 
-    <button *ngIf="editar" (click)="guardar();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+    <button *ngIf="editar" (click)="guardar();" pButton type="button" icon="	fa fa-edit " [(disabled)]="historico" iconPos="left"
+      label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
     <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="Volver"></button>
   </div>
 </div>
