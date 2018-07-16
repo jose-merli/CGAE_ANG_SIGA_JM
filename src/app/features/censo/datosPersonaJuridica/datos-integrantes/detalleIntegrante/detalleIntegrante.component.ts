@@ -76,6 +76,11 @@ export class DetalleIntegranteComponent implements OnInit {
   constructor(private sigaServices: SigaServices, private router: Router) {}
 
   ngOnInit() {
+    if (sessionStorage.getItem("historicoInt") != null) {
+      this.historico = true;
+    }
+    sessionStorage.removeItem("historicoInt");
+
     sessionStorage.setItem("editarIntegrante", "true");
     this.body = JSON.parse(sessionStorage.getItem("integrante"));
     if (
@@ -309,11 +314,7 @@ export class DetalleIntegranteComponent implements OnInit {
   }
   abrirFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = true;
-  }
-  cerrarFicha(key) {
-    let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = false;
+    fichaPosible.activa = !fichaPosible.activa;
   }
 
   esFichaActiva(key) {
@@ -330,7 +331,6 @@ export class DetalleIntegranteComponent implements OnInit {
     return {};
   }
   search() {
-    this.historico = false;
     this.buscar = false;
     this.selectMultiple = false;
     this.selectedDatos = "";
@@ -353,30 +353,30 @@ export class DetalleIntegranteComponent implements OnInit {
         () => {}
       );
   }
-  searchHistorico() {
-    this.historico = true;
-    this.buscar = false;
-    this.selectMultiple = false;
-    this.selectedDatos = "";
-    this.progressSpinner = true;
-    this.selectAll = false;
-    this.sigaServices
-      .postPaginado("busquedaPerJuridica_history", "?numPagina=1", this.body)
-      .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-          this.searchIntegrantes = JSON.parse(data["body"]);
-          this.datos = this.searchIntegrantes.datosIntegrantesItem;
-          this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {}
-      );
-  }
+  // searchHistorico() {
+  //   this.historico = true;
+  //   this.buscar = false;
+  //   this.selectMultiple = false;
+  //   this.selectedDatos = "";
+  //   this.progressSpinner = true;
+  //   this.selectAll = false;
+  //   this.sigaServices
+  //     .postPaginado("busquedaPerJuridica_history", "?numPagina=1", this.body)
+  //     .subscribe(
+  //       data => {
+  //         console.log(data);
+  //         this.progressSpinner = false;
+  //         this.searchIntegrantes = JSON.parse(data["body"]);
+  //         this.datos = this.searchIntegrantes.datosIntegrantesItem;
+  //         this.table.paginator = true;
+  //       },
+  //       err => {
+  //         console.log(err);
+  //         this.progressSpinner = false;
+  //       },
+  //       () => {}
+  //     );
+  // }
 
   guardar() {
     if (
@@ -405,7 +405,7 @@ export class DetalleIntegranteComponent implements OnInit {
       this.arreglarFechas();
       updateIntegrante.fechaCargo = this.body.fechaCargo;
     } else {
-      updateIntegrante.fechaCargo = "";
+      updateIntegrante.fechaCargo = undefined;
     }
     if (this.body.cargo != undefined && this.body.cargo != null) {
       updateIntegrante.cargo = this.body.cargo;
@@ -496,7 +496,7 @@ export class DetalleIntegranteComponent implements OnInit {
         this.arreglarFechas();
         newIntegrante.fechaCargo = this.body.fechaCargo;
       } else {
-        newIntegrante.fechaCargo = "";
+        newIntegrante.fechaCargo = undefined;
       }
       if (this.body.cargo != undefined && this.body.cargo != null) {
         newIntegrante.cargo = this.body.cargo;
@@ -633,7 +633,7 @@ export class DetalleIntegranteComponent implements OnInit {
         this.arreglarFechas();
         newIntegrante.fechaCargo = this.body.fechaCargo;
       } else {
-        newIntegrante.fechaCargo = "";
+        newIntegrante.fechaCargo = undefined;
       }
       if (this.body.cargo != undefined && this.body.cargo != null) {
         newIntegrante.cargo = this.body.cargo;

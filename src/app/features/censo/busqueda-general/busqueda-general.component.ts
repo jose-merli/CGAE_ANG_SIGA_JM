@@ -103,7 +103,6 @@ export class BusquedaGeneralComponent {
   }
 
   ngOnInit() {
-    sessionStorage.setItem("abrirNotario", "true");
     this.persona = "f";
     if (
       sessionStorage.getItem("newIntegrante") != null ||
@@ -388,6 +387,7 @@ export class BusquedaGeneralComponent {
 
   isBuscar() {
     this.buscar = true;
+    this.search();
   }
 
   irFichaColegial(id) {

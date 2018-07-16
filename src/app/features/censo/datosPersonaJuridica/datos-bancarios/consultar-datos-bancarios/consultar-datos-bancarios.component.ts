@@ -107,6 +107,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   bodyDatosBancariosAnexoSearch: DatosBancariosAnexoObject = new DatosBancariosAnexoObject();
   bodyEditar: DatosBancariosSearchAnexosItem = new DatosBancariosSearchAnexosItem();
 
+  displayAuditoria: boolean = false;
+  showGuardarAuditoria: boolean = false;
+
   file: File = undefined;
 
   @ViewChild("table") table: DataTable;
@@ -308,7 +311,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.getArrayTipoCuenta();
 
     console.log("ere", this.body);
-
+    this.body.motivo = "registro creado";
     this.sigaServices.post("datosCuentaBancaria_insert", this.body).subscribe(
       data => {
         this.progressSpinner = false;
@@ -333,7 +336,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       () => {
         this.idCuenta = this.body.id;
         this.selectedTipo = [];
-
+        this.body.motivo = undefined;
         this.cargarModoEdicion();
       }
     );
@@ -368,6 +371,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
+        // auditoria
+        this.cerrarAuditoria();
+        this.body.motivo = undefined;
+
         this.idCuenta = this.body.idCuenta;
         this.cargarDatosMandatos();
         this.cargarDatosAnexos();
@@ -577,7 +584,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         if (this.registroEditable == "false") {
           this.guardarRegistro();
         } else {
-          this.editarRegistro();
+          this.displayAuditoria = true;
+    this.showGuardarAuditoria = false;
+
+          this.body.motivo = undefined;
         }
       },
       reject: () => {
@@ -632,7 +642,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         if (this.registroEditable == "false") {
           this.guardarRegistro();
         } else {
-          this.editarRegistro();
+          this.displayAuditoria = true;
+          this.showGuardarAuditoria = false;
+          this.body.motivo = undefined;
         }
       }
     } else {
@@ -1124,6 +1136,14 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.actualizarDescripcionAnexo(this.bodyEditar);
   }
 
+  comprobarCampoMotivo() {
+    if (this.body.motivo != undefined && this.body.motivo != ""&& this.body.motivo.trim() != "") {
+      this.showGuardarAuditoria = true;
+    } else {
+      this.showGuardarAuditoria = false;
+    }
+  }
+
   firmarFicheroAnexo() {
     this.bodyDatosBancariosAnexo.firmaFechaDate = this.firmaFechaDate;
     this.bodyDatosBancariosAnexo.firmaLugar = this.firmaLugar;
@@ -1222,6 +1242,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         }
       );
     }
+  }
+
+  cerrarAuditoria() {
+    this.displayAuditoria = false;
   }
 
   onlySpaces(str) {

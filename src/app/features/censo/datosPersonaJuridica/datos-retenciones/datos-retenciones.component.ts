@@ -306,7 +306,6 @@ export class DatosRetencionesComponent implements OnInit {
     this.body.idInstitucion = "";
     this.body.idLenguaje = "";
     this.datos[0].fechaFin = "";
-
     this.sigaServices
       .postPaginado(
         "retenciones_update",
@@ -316,6 +315,7 @@ export class DatosRetencionesComponent implements OnInit {
       .subscribe(
         data => {
           console.log(data);
+          this.showSuccess();
           // this.searchRetenciones = JSON.parse(data["body"]);
           // this.datos = this.searchRetenciones.retencionesItemList;
           // console.log("DATOS: " + this.datos.toString);
@@ -325,6 +325,7 @@ export class DatosRetencionesComponent implements OnInit {
         },
         err => {
           console.log(err);
+          this.showFail();
         },
         () => {
           this.volver();
@@ -340,6 +341,26 @@ export class DatosRetencionesComponent implements OnInit {
           }
         }
       );
+  }
+
+  showFail() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "general.message.error.realiza.accion"
+      )
+    });
+  }
+
+  showSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant("general.message.accion.realizada")
+    });
   }
 
   borrar() {

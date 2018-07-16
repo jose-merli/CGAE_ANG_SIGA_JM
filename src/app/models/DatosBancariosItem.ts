@@ -18,6 +18,7 @@ export class DatosBancariosItem {
   cuentaContable: String;
   status: String;
   revisionCuentas: boolean;
+  motivo: String;
 
   constructor() {}
 }

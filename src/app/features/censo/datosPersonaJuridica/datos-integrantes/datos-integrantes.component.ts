@@ -8,6 +8,7 @@ import { DatosIntegrantesObject } from "../../../../models/DatosIntegrantesObjec
 import { DatosPersonaJuridicaComponent } from "../../datosPersonaJuridica/datosPersonaJuridica.component";
 import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
+import { DetalleIntegranteComponent } from "./detalleIntegrante/detalleIntegrante.component";
 
 /*** COMPONENTES ***/
 
@@ -259,11 +260,21 @@ export class DatosIntegrantesComponent implements OnInit {
   }
   consultarIntegrante(id) {
     if (!this.selectMultiple) {
+      if (id[0].fechaBajaCargo != null) {
+        sessionStorage.setItem("historicoInt", "true");
+      }
       var ir = null;
       ir = id[0];
       ir.editar = false;
       sessionStorage.removeItem("integrante");
       sessionStorage.setItem("integrante", JSON.stringify(ir));
+
+      let dummy = {
+        integrante: true
+      };
+      sessionStorage.removeItem("newIntegrante");
+      sessionStorage.setItem("newIntegrante", JSON.stringify(dummy));
+
       this.router.navigate(["detalleIntegrante"]);
     } else {
       this.numSelected = this.selectedDatos.length;
@@ -317,7 +328,11 @@ export class DatosIntegrantesComponent implements OnInit {
 
   borrar(selectedItem) {
     let deleteIntegrantes = new DatosIntegrantesObject();
-    deleteIntegrantes.datosIntegrantesItem = selectedItem;
+    let integranteBorrar = selectedItem;
+    for (let i in integranteBorrar) {
+      integranteBorrar[i].fechaCargo = new Date(integranteBorrar[i].fechaCargo);
+    }
+    deleteIntegrantes.datosIntegrantesItem = integranteBorrar;
     this.sigaServices
       .post("integrantes_delete", deleteIntegrantes.datosIntegrantesItem)
       .subscribe(

@@ -251,7 +251,18 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   }
   isGuardar() {
     if (this.datos[0].new) {
-      this.isNew();
+      if (
+        this.datos[0].idGrupo != null &&
+        this.datos[0].idGrupo != undefined &&
+        this.datos[0].idGrupo.trim() != null &&
+        this.datos[0].descripcionGrupo != null &&
+        this.datos[0].descripcionGrupo != undefined &&
+        this.datos[0].descripcionGrupo.trim() != ""
+      ) {
+        this.isNew();
+      } else {
+        this.showFail2();
+      }
     } else {
       this.isEditar();
     }
@@ -431,6 +442,15 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       detail: this.translateService.instant(
         "general.message.error.realiza.accion"
       )
+    });
+  }
+
+  showFail2() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Error",
+      detail: "Revise los campos Id y Descripción"
     });
   }
   crear() {
