@@ -37,7 +37,7 @@
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
         [(selection)]="selectedDatos" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="bodySearch.datosBancariosItem"
         [sortOrder]="1" [paginator]="activarPaginacion()" (onRowSelect)="redireccionar(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-        paginatorPosition="both" [rows]="selectedItem">
+        paginatorPosition="both" [rows]="selectedItem" pageLinks="4">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true" filterMatchMode="contains">
 

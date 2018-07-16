@@ -45,8 +45,8 @@
 
               <div class="form-group col-lg-6 col-md-6">
                 <label>Fecha Modificación</label>
-                <p-calendar [(ngModel)]="fechaModificacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [disabled]="!isEditable"
-                  [style]="{ 'position': 'relative', 'z-index': '1000' }"></p-calendar>
+                <input [(ngModel)]="fechaModificacion" dateFormat="dd/mm/yy" [disabled]="!isEditable" [style]="{ 'position': 'relative', 'z-index': '1000' }"
+                  type="text" class="form-control" pInputText>
               </div>
               <div class="form-group col-lg-12 col-md-12">
                 <label>Dirección</label>
@@ -97,7 +97,7 @@
               <div class="form-group col-lg-12 col-md-12">
                 <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [value]="datosContacto" [editable]="true" [responsive]="true"
                   #table class="tabla-listado" [sortOrder]="1" paginatorPosition="both" [rows]="selectedItem" [editable]="true"
-                  (onRowSelect)="onRowSelect($event)">
+                  (onRowSelect)="onRowSelect($event)" pageLinks="4">
                   <p-column *ngFor="let col of columnasDirecciones" [sortable]="true" [field]="col.field" [header]="col.header | translate">
                     <ng-template *ngIf="col.field == 'valor'" let-dato="rowData" pTemplate="body">
                       <span class="input-group">

@@ -252,7 +252,7 @@
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
             [(selection)]="selectedDatos" [paginator]="activarPaginacion()" selectionMode="single" [responsive]="true" #table
             class="tabla-listado" [value]="bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem" [sortOrder]="1" (onRowSelect)="controlarEdicion()"
-            [paginator]="true" paginatorPosition="both" [rows]="selectedItem" [editable]="true">
+            [paginator]="true" paginatorPosition="both" [rows]="selectedItem" [editable]="true" pageLinks="4">
 
             <p-column field="descripcion" header="Descripcion" [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
               filterMatchMode="contains"></p-column>
@@ -295,7 +295,7 @@
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
             [paginator]="activarPaginacion()" #table class="tabla-listado" [value]="bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem"
             [paginator]="true" paginatorPosition="both" [rows]="selectedItem" [editable]="!selectMultiple" (onEdit)="editarCompleto($event)"
-            (onEditInit)="editar=true" (onEditCancel)="onEditCancel()" (onRowSelect)="controlarEdicion()">
+            (onEditInit)="editar=true" (onEditCancel)="onEditCancel()" (onRowSelect)="controlarEdicion()" pageLinks="4">
 
             <!--<p-column *ngFor="let col of cols" [sortable]="true" [style]="{'width': '20%'}" [field]="col.field" [header]="col.header"
               [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
