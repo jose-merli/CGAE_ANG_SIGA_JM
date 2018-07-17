@@ -101,9 +101,12 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       {
         field: "descripcionGrupo",
         header: "general.description",
-        width: "40%"
+        width: "30%"
       },
-
+      {
+        field: "asignarRolDefecto",
+        header: "menu.administracion.perfilrol"
+      },
       {
         field: "rolesAsignados",
         header: "menu.administracion.perfilrol"
@@ -286,6 +289,8 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   }
   isGuardar() {
     if (this.datos[0].new) {
+      this.datos[0].idGrupo = this.newPerfil.idGrupo;
+      this.datos[0].descripcionGrupo = this.newPerfil.descripcionGrupo;
       if (
         this.datos[0].idGrupo != null &&
         this.datos[0].idGrupo != undefined &&
@@ -400,14 +405,14 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     );
   }
   confirmarRolDefecto(event, dato) {
-    let mess = "¿Desea asignar este rol?" + dato;
+    let mess = "¿Desea asignar este rol?";
     let icon = "fa fa-plus";
 
     this.confirmationService.confirm({
       message: mess,
       icon: icon,
       accept: () => {
-        // this.rolDefecto(event, dato);
+        this.rolDefecto(event, dato);
       },
       reject: () => {
         this.msgs = [
