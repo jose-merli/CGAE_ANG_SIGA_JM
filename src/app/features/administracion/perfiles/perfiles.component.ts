@@ -41,6 +41,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   newPerfil: PerfilItem = new PerfilItem();
   rowsPerPage: any = [];
+  elementosAGuardar: PerfilItem[] = [];
   showDatosGenerales: boolean = true;
   pButton;
   editar: boolean = false;
@@ -68,7 +69,6 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     private sigaServices: SigaServices,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
-    private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
   ) {
@@ -180,25 +180,60 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         }
       );
   }
+  terminarEditar() {
+    this.progressSpinner = false;
+    this.isBuscar();
+  }
   isEditar() {
     this.progressSpinner = true;
-    this.datos.forEach(
-      (value: PerfilItem, key: number) => {
-        if (value.editar) {
-          this.sigaServices.post("perfiles_update", value).subscribe(
-            data => {},
-            err => {
-              this.showFail();
-              console.log(err);
-            }
-          );
-        }
+    this.elementosAGuardar = [];
+    this.datos.forEach((value: PerfilItem, key: number) => {
+      if (value.editar) {
+        this.elementosAGuardar.push(value);
+      }
+    });
+    this.sigaServices.post("perfiles_update", this.elementosAGuardar).subscribe(
+      data => {},
+      err => {
+        this.showFail();
+        console.log(err);
       },
       () => {
         this.progressSpinner = false;
+        this.selectedDatos = [];
         this.isBuscar();
       }
     );
+    // for( let i=0; this.datos.length; i++){
+    //   if (this.datos[i].editar) {
+    //     this.sigaServices.post("perfiles_update", this.datos[i]).subscribe(
+    //       data => {
+    //         this.progressSpinner = false;
+    //       },
+    //       err => {
+    //         this.showFail();
+    //         console.log(err);
+    //       }
+    //     );
+    //   }
+    // }
+
+    // this.datos.forEach(
+    //   (value: PerfilItem, key: number) => {
+    //     if (value.editar) {
+    //       this.sigaServices.post("perfiles_update", value).subscribe(
+    //         data => {
+    //           this.progressSpinner = false;
+    //         },
+    //         err => {
+    //           this.showFail();
+    //           console.log(err);
+    //         }
+    //       );
+    //     }
+    //   }
+    // ).finally(this.progressSpinner = false;
+    //   this.isBuscar());
   }
   paginate(event) {
     console.log(event);
