@@ -152,12 +152,14 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     sessionStorage.setItem("searchOrHistory", JSON.stringify("search"));
     this.progressSpinner = true;
     this.historicoActive = false;
+    this.getColSearch();
     this.isforNew = true;
     this.sigaServices
       .postPaginado("perfiles_search", "?numPagina=1", null)
       .subscribe(
         data => {
           console.log(data);
+
           this.searchPerfiles = JSON.parse(data["body"]);
           this.datos = this.searchPerfiles.usuarioGrupoItems;
           this.buscar = true;
@@ -565,17 +567,59 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       }
     );
   }
+  getColHistory() {
+    this.cols = [
+      {
+        field: "idGrupo",
+        header: "administracion.grupos.literal.id",
+        width: "10%"
+      },
+      {
+        field: "descripcionGrupo",
+        header: "general.description",
+        width: "30%"
+      },
+      {
+        field: "rolesAsignados",
+        header: "menu.administracion.perfilrol"
+      }
+    ];
+  }
+  getColSearch() {
+    this.cols = [
+      {
+        field: "idGrupo",
+        header: "administracion.grupos.literal.id",
+        width: "10%"
+      },
+      {
+        field: "descripcionGrupo",
+        header: "general.description",
+        width: "30%"
+      },
+      {
+        field: "asignarRolDefecto",
+        header: "menu.administracion.perfilrol"
+      },
+      {
+        field: "rolesAsignados",
+        header: "menu.administracion.perfilrol"
+      }
+    ];
+  }
   historico() {
     sessionStorage.setItem("searchOrHistory", JSON.stringify("history"));
     this.historicoActive = true;
     this.selectMultiple = false;
     this.progressSpinner = true;
     this.isforNew = false;
+    this.getColHistory();
     this.sigaServices
       .postPaginado("perfiles_historico", "?numPagina=1", null)
       .subscribe(
         data => {
           console.log(data);
+
           this.searchPerfiles = JSON.parse(data["body"]);
           this.datos = this.searchPerfiles.usuarioGrupoItems;
           this.buscar = false;

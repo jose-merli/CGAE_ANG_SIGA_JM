@@ -129,9 +129,16 @@
                     <span>{{dato[col.field]}}</span>
                   </div>
                 </ng-template>
+                <ng-template *ngIf="col.field =='asignarRolDefecto'" pTemplate="body" let-datoo="rowData">
 
+                  <ng-template pTemplate="body" let-datoo="rowData"  >
+                    <p-dropdown [options]="datoo['asignarRolDefecto']" styleClass="ui-column-filter" [style]="{'width':'100%'}" appendTo="body"
+                      (onChange)="confirmarRolDefecto($event, datoo )" [placeholder]="datoo['descripcionRol'] "></p-dropdown>
+                  </ng-template>
+
+                </ng-template>
                 <ng-template *ngIf="col.field =='rolesAsignados'" pTemplate="body" let-dato="rowData">
-                  <div *ngIf="setItalic(dato)">p
+                  <div *ngIf="setItalic(dato)">
                     <p-multiSelect [disabled]="true" [defaultLabel]="textFilter" styleClass="widthAll" (onChange)="editRol($event, dato )" [(ngModel)]="dato.rolesAsignados"
                       [options]="usuarios_rol" optionLabel="label" [selectedItemsLabel]="textSelected" [panelStyle]="{width:'100%'}"></p-multiSelect>
                   </div>
