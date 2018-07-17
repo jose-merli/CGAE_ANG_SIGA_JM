@@ -7,8 +7,9 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpParams, HttpResponseBase } f
 export class OldSigaServices {
 
     oldServices = {
-        //Censo
 
+        mantenerSesion: "notImplemented.do",
+        //Censo
         busquedaSanciones: "Dispatcher.do?proceso=566",
         certificadosAca: "Dispatcher.do?proceso=130",
         comisionesCargos: "Dispatcher.do?proceso=48",
