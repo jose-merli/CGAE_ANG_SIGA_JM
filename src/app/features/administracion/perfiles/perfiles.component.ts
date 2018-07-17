@@ -198,7 +198,9 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       }
     });
     this.sigaServices.post("perfiles_update", this.elementosAGuardar).subscribe(
-      data => {},
+      data => {
+        this.showSuccess();
+      },
       err => {
         this.showFail();
         console.log(err);
@@ -397,7 +399,9 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     newPerfil.descripcionGrupo = this.newPerfil.descripcionGrupo;
     this.progressSpinner = true;
     this.sigaServices.post("perfiles_insert", newPerfil).subscribe(
-      data => {},
+      data => {
+        this.showSuccess();
+      },
       error => {
         console.log(error);
       },
