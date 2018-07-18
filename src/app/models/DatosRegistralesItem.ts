@@ -13,7 +13,7 @@ export class DatosRegistralesItem {
   numeroPoliza: String;
   companiaAseg: String;
   fechaRegistro: Date;
-  fechaCancelacion: Date;
+  fechaBaja: Date;
   identificadorRegistroProvincial: String;
   numeroRegistro: String;
   combooItems: ComboItem[];
