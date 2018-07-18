@@ -80,6 +80,7 @@ export class DetalleIntegranteComponent implements OnInit {
       this.historico = true;
     }
     sessionStorage.removeItem("historicoInt");
+    sessionStorage.removeItem("newIntegrante");
 
     sessionStorage.setItem("editarIntegrante", "true");
     this.body = JSON.parse(sessionStorage.getItem("integrante"));

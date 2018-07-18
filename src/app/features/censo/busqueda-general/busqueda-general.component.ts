@@ -109,6 +109,7 @@ export class BusquedaGeneralComponent {
       sessionStorage.getItem("newIntegrante") != undefined
     ) {
       this.newIntegrante = JSON.parse(sessionStorage.getItem("newIntegrante"));
+      sessionStorage.removeItem("newIntegrante");
     }
     this.colsFisicas = [
       { field: "nif", header: "NIF/CIF" },
