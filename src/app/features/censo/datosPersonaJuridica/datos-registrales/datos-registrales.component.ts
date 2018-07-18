@@ -265,6 +265,21 @@ export class DatosRegistralesComponent implements OnInit {
       );
   }
 
+  // Esto es para cuando sepamos como tratar al número de registro
+  fillWithCeros(cadena: String, lengthCadena: number) {
+    var cadenaWithCeros: string = "";
+
+    var length: number = lengthCadena - cadena.length;
+
+    if (length >= 1) {
+      for (let i = 0; i < length; i++) {
+        cadenaWithCeros += "0";
+      }
+
+      return cadenaWithCeros + cadena;
+    } else return cadena;
+  }
+
   showSuccess() {
     this.msgs = [];
     this.msgs.push({

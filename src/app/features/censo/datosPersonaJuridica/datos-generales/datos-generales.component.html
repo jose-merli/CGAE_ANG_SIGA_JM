@@ -92,8 +92,10 @@
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}</label>
-              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="body.fechaBaja"
-                (ngModelChange)="onChangeForm()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [disabled]="true"></p-calendar>
+              <!-- <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="body.fechaBaja"
+                (ngModelChange)="onChangeForm()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [disabled]="true"></p-calendar> -->
+              <input [(ngModel)]="body.fechaBaja" dateFormat="dd/mm/yy" [disabled]="true" [style]="{ 'position': 'relative', 'z-index': '1000' }"
+                type="text" class="form-control" (ngModelChange)="onChangeForm()" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.denominacion" | translate}} (*)</label>

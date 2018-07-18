@@ -69,7 +69,7 @@
         </ng-template>
         <p-footer>
           <div class="text-right main-button">
-            <button (click)="cargarHistorico()" *ngIf="!historico" pButton type="button" icon="fa fa-search" iconPos="left" label="Histórico"></button>
+            <button (click)="cargarHistorico()" *ngIf="!historico" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.message.historico' | translate}}"></button>
             <button (click)="cargarDatosBancarios()" *ngIf="historico" pButton type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
             <button (click)="redireccionar(selectedDatos)" *ngIf="!historico" pButton type="button" icon="fa-user-plus" iconPos="left"
               label="Nuevo"></button>
