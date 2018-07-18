@@ -397,22 +397,22 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     }
   }
   isNew() {
-    let newPerfil = this.datos[0];
-    newPerfil.idGrupo = this.newPerfil.idGrupo;
-    newPerfil.descripcionGrupo = this.newPerfil.descripcionGrupo;
     this.progressSpinner = true;
-    this.sigaServices.post("perfiles_insert", newPerfil).subscribe(
+    this.sigaServices.post("perfiles_insert", this.newPerfil).subscribe(
       data => {
+        this.progressSpinner = false;
         this.showSuccess();
       },
       error => {
         this.progressSpinner = false;
         let mess = JSON.parse(error["error"]);
         this.showFailError(mess.error.message.toString());
+        // this.newPerfil.idGrupo = newPerfil.idGrupo;
+        // this.newPerfil.descripcionGrupo = newPerfil.descripcionGrupo;
+        this.datos[0].idGrupo = "";
+        this.datos[0].descripcionGrupo = "";
+
         console.log(error);
-      },
-      () => {
-        this.isEditar();
       }
     );
   }
