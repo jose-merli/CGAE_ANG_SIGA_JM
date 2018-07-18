@@ -20,6 +20,7 @@ import { PerfilesRequestDto } from "./../../../../app/models/PerfilesRequestDto"
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { ComboItem } from "./../../../../app/models/ComboItem";
 import { DataTable } from "primeng/datatable";
+import { Error } from "../../../models/Error";
 
 @Component({
   selector: "app-perfiles",
@@ -347,6 +348,8 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       editar: false,
       new: true
     };
+    this.newPerfil.idGrupo = "";
+    this.newPerfil.descripcionGrupo = "";
     let value = this.table.first;
     this.pressNew = true;
     this.save = true;
@@ -403,6 +406,9 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         this.showSuccess();
       },
       error => {
+        this.progressSpinner = false;
+        let mess = JSON.parse(error["error"]);
+        this.showFailError(mess.error.message.toString());
         console.log(error);
       },
       () => {
@@ -490,7 +496,14 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       )
     });
   }
-
+  showFailError(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "",
+      detail: this.translateService.instant(mensaje)
+    });
+  }
   showFail2() {
     this.msgs = [];
     this.msgs.push({
