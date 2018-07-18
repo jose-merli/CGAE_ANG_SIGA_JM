@@ -974,6 +974,6 @@ const appRoutes: Routes = [
     path: "errorAcceso",
     component: ErrorAccesoComponent
   },
-  { path: "**", redirectTo: "home" }
+  { path: " ", redirectTo: "home" }
 ];
 export const routing = RouterModule.forRoot(appRoutes);

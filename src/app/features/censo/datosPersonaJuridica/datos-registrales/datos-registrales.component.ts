@@ -250,7 +250,7 @@ export class DatosRegistralesComponent implements OnInit {
             this.body.idPersona = this.idPersonaEditar;
             this.fechaConstitucion = this.body.fechaConstitucion;
             this.fechaFin = this.body.fechaFin;
-            this.fechaCancelacion = this.body.fechaCancelacion;
+            this.fechaBaja = this.body.fechaBaja;
             this.fechaRegistro = this.body.fechaRegistro;
           }
           if (this.body.sociedadProfesional == "1") {
@@ -263,6 +263,21 @@ export class DatosRegistralesComponent implements OnInit {
           console.log(err);
         }
       );
+  }
+
+  // Esto es para cuando sepamos como tratar al número de registro
+  fillWithCeros(cadena: String, lengthCadena: number) {
+    var cadenaWithCeros: string = "";
+
+    var length: number = lengthCadena - cadena.length;
+
+    if (length >= 1) {
+      for (let i = 0; i < length; i++) {
+        cadenaWithCeros += "0";
+      }
+
+      return cadenaWithCeros + cadena;
+    } else return cadena;
   }
 
   showSuccess() {
@@ -356,8 +371,8 @@ export class DatosRegistralesComponent implements OnInit {
     if (this.fechaRegistro != undefined) {
       this.body.fechaRegistro = this.transformaFecha(this.fechaRegistro);
     }
-    if (this.fechaCancelacion != undefined) {
-      this.body.fechaCancelacion = this.transformaFecha(this.fechaCancelacion);
+    if (this.fechaBaja != undefined) {
+      this.body.fechaBaja = this.transformaFecha(this.fechaBaja);
     }
   }
 
