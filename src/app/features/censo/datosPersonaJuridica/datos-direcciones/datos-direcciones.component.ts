@@ -302,6 +302,7 @@ export class DatosDireccionesComponent implements OnInit {
   }
 
   searchHistorico() {
+    this.progressSpinner = true;
     this.historico = true;
     let searchObject = new DatosDireccionesItem();
     searchObject.idPersona = this.idPersona;
@@ -309,17 +310,16 @@ export class DatosDireccionesComponent implements OnInit {
     this.buscar = false;
     this.selectMultiple = false;
     this.selectedDatos = "";
-    this.progressSpinner = true;
     this.selectAll = false;
     this.sigaServices
       .postPaginado("direcciones_search", "?numPagina=1", searchObject)
       .subscribe(
         data => {
           console.log(data);
-          this.progressSpinner = false;
           this.searchDirecciones = JSON.parse(data["body"]);
           this.datos = this.searchDirecciones.datosDireccionesItem;
           this.table.paginator = true;
+          this.progressSpinner = false;
         },
         err => {
           console.log(err);

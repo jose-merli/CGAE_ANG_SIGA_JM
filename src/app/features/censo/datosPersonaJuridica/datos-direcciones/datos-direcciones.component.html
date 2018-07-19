@@ -63,13 +63,7 @@
               <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
           </div>
         </ng-template>
-
-
-
       </p-dataTable>
-
-
-
       <br>
       <div class="card-footer ">
         <div class="text-right main-button ">
@@ -79,10 +73,14 @@
           <button *ngIf="historico" (click)="search()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
 
           <button *ngIf="!historico" (click)="searchHistorico()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.message.historico' | translate}}"></button>
-
         </div>
       </div>
       <!--END DATOS GENERALES-->
     </div>
   </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+  <div class="loader"></div>
 </div>
