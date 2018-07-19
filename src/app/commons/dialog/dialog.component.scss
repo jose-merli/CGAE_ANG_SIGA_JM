@@ -1,63 +1,63 @@
-@import "../../../sass/variables.scss";
+// @import "../../../sass/variables.scss";
 
 
-    .menu-censo{
-        height: 100%;
-        padding-top: 7rem;   
+//     .menu-censo{
+//         height: 100%;
+//         padding-top: 7rem;   
           
-        .container-fluid{
-            padding:0;
-            height: 100%;
-            display: flex;
-            box-shadow: 0 0 2px $grey4;
-            border-left: none;
-            background: white;  
-                .col-items{
-                    padding:0;
-                    width: 20em;
-                    flex-grow: 1;
-                    .ui-state-default{
-                        border: none;
+//         .container-fluid{
+//             padding:0;
+//             height: 100%;
+//             display: flex;
+//             box-shadow: 0 0 2px $grey4;
+//             border-left: none;
+//             background: white;  
+//                 .col-items{
+//                     padding:0;
+//                     width: 20em;
+//                     flex-grow: 1;
+//                     .ui-state-default{
+//                         border: none;
                         
-                    }
-                    li{
-                        padding: 1rem ;
-                        margin: 0 ;
-                        font-family: $general-font;
-                        font-size: .95rem;
-                        border-bottom: 1px solid $lightGrey;
-                        &:hover{
-                            color: white;
-                            transition: all .2s;
-                            cursor: pointer; 
-                            background: $primary-color;
-                        }
-                    }
-                    .menu-item-active{
-                        color: white;
-                        background:  $primary-color;
-                    }
+//                     }
+//                     li{
+//                         padding: 1rem ;
+//                         margin: 0 ;
+//                         font-family: $general-font;
+//                         font-size: .95rem;
+//                         border-bottom: 1px solid $lightGrey;
+//                         &:hover{
+//                             color: white;
+//                             transition: all .2s;
+//                             cursor: pointer; 
+//                             background: $primary-color;
+//                         }
+//                     }
+//                     .menu-item-active{
+//                         color: white;
+//                         background:  $primary-color;
+//                     }
 
-                    .breadCrumbMenu{                            
-                            font-size: .8rem;
-                            color: $secondary-color;
-                    }
-                }
-                .menu-arrow{
-                    padding:0;
-                    border-left: 1px solid $lightGrey;
-                    text-align: center;   
-                    flex-grow: 1;                 
-                    i{                      
-                        margin: .5em auto;   
-                        color: $grey1;       
-                        cursor: pointer;              
-                    }
-                }
+//                     .breadCrumbMenu{                            
+//                             font-size: .8rem;
+//                             color: $secondary-color;
+//                     }
+//                 }
+//                 .menu-arrow{
+//                     padding:0;
+//                     border-left: 1px solid $lightGrey;
+//                     text-align: center;   
+//                     flex-grow: 1;                 
+//                     i{                      
+//                         margin: .5em auto;   
+//                         color: $grey1;       
+//                         cursor: pointer;              
+//                     }
+//                 }
             
-        }    
+//         }    
         
-    }
+//     }
 
     // body .ui-panelmenu {
     //     .ui-panelmenu-header{
@@ -72,71 +72,71 @@
     //     }
         
     // }
-    .closedMenu{
-        margin-left: -20em;
-        transition: all 1s;
-    }
+    // .closedMenu{
+    //     margin-left: -20em;
+    //     transition: all 1s;
+    // }
 
     
-    .openedMenu{
-        margin-left: 0;
-        transition: all 1s;
-    }
+    // .openedMenu{
+    //     margin-left: 0;
+    //     transition: all 1s;
+    // }
 
-    @media screen and (max-width: 1200px){
-        .menu-censo{
-            height: 100%;
-            position: fixed;
-            z-index: 100;
-            .col-items{
-                padding:0;
-            }
+    // @media screen and (max-width: 1200px){
+    //     .menu-censo{
+    //         height: 100%;
+    //         position: fixed;
+    //         z-index: 100;
+    //         .col-items{
+    //             padding:0;
+    //         }
 
-        }
-        .openedMenu{
-            margin-left: -20em;
-            transition: all 1s;
-        }
-         .closedMenu{
-            margin-left: 0;
-            transition: all 1s;
-        }
+    //     }
+    //     .openedMenu{
+    //         margin-left: -20em;
+    //         transition: all 1s;
+    //     }
+    //      .closedMenu{
+    //         margin-left: 0;
+    //         transition: all 1s;
+    //     }
 
-        .icono-menu{
-            :before{
-                content: "\f0C9"
-            }
-        }
+    //     .icono-menu{
+    //         :before{
+    //             content: "\f0C9"
+    //         }
+    //     }
 
-        .icono-menu-flecha{
-            :before{
-                content: "\f00D"
-            }
-        }
+    //     .icono-menu-flecha{
+    //         :before{
+    //             content: "\f00D"
+    //         }
+    //     }
 
-    }
+    // }
 
 
-    @media screen and (max-width: 768px){
-         .menu-censo{
-            padding-top: 7rem;
-         }
-    }
+    // @media screen and (max-width: 768px){
+    //      .menu-censo{
+    //         padding-top: 7rem;
+    //      }
+    // }
 
-    @media screen and (max-width: 400px){
-         .menu-censo{    
-             padding-top: 7rem;
-            .container-fluid{
-                .col-items{
-                    padding:0;
-                    width: 18em;
-                }
-            }
-        }
+    // @media screen and (max-width: 400px){
+    //      .menu-censo{    
+    //          padding-top: 7rem;
+    //         .container-fluid{
+    //             .col-items{
+    //                 padding:0;
+    //                 width: 18em;
+    //             }
+    //         }
+    //     }
 
-        .openedMenu{
-            margin-left: -18em;
-        }
+    //     .openedMenu{
+    //         margin-left: -18em;
+    //     }
       
-    }
+    // }
     

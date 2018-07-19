@@ -37,3 +37,11 @@
      padding-left: 24rem;
      transition: padding-left 1s;
    }
+
+   
+   @media screen and (max-width: 1300px){
+    .widthNotChange{
+      padding-left: 4rem;
+    }
+ 
+}
