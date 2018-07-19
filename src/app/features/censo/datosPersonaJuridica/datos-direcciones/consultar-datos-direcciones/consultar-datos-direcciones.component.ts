@@ -73,10 +73,12 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     } else {
       this.nuevo = true;
     }
+
     if (sessionStorage.getItem("direccion") != null) {
       this.body = JSON.parse(sessionStorage.getItem("direccion"));
       this.body.idPersona = this.usuarioBody[0].idPersona;
       this.provinciaSelecionada = this.body.idProvincia;
+      this.getDatosContactos();
       if (
         this.body.idPoblacion == null ||
         this.body.idPoblacion == "" ||
@@ -99,7 +101,11 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
 
       this.isDisabledProvincia = true;
     }
-    this.getDatosContactos();
+    else {
+      this.getDatosContactos();
+    }
+
+
   }
   getDatosContactos() {
     this.columnasDirecciones = [
