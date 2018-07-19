@@ -13,7 +13,7 @@
         </div>
 
     </div>
-    <div class="card" *ngIf="showDatosGenerales && !buscar">
+    <div class="card" *ngIf="showDatosGenerales && !buscar && !historico">
         <div class="py-2 card-body">
             <p class="text-center">Selecciona un módulo para comenzar</p>
         </div>
@@ -53,8 +53,8 @@
                 <p-footer>
                     <div *ngIf="activarPaginacionBuscar() == true" class="text-right main-button">
                         <!-- misma funcion de disabled para botones de restablecer  y guardar-->
-                        <button (click)="isGuardar()" pButton type="button" [(disabled)]="!isHabilitadoSave" icon="far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-                        <button (click)="isRestablecer()" pButton type="button" [(disabled)]="!isHabilitadoSave" icon="fa fa-undo " iconPos="left"
+                        <button (click)="isGuardar()" pButton type="button" [(disabled)]="!isHabilitadoSave" icon="fa fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                        <button (click)="isRestablecer()" pButton type="button" [(disabled)]="!isHabilitadoSave" icon="fa fa-history " iconPos="left"
                             label="{{'general.boton.restablecer' | translate}}"></button>
                         <button (click)="confirmarEliminar(filaSelecionadaTabla)" pButton type="button" [disabled]="isHabilitadoEliminar()" icon="fa fa-trash-alt "
                             iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
@@ -89,7 +89,7 @@
                     <div *ngIf="activarPaginacionHistorico() == true" class="text-right main-button">
                         <button (click)="confirmarEliminar(filaSelecionadaTabla)" pButton type="button" [disabled]="isHabilitadoEliminar()" icon="fa fa-trash-alt "
                             iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-                        <button (click)="isBuscar()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
+                        <button (click)="isBuscar()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
                     </div>
                 </p-footer>
             </p-dataTable>
