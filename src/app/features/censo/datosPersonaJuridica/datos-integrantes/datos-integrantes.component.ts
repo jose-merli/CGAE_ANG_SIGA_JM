@@ -8,7 +8,6 @@ import { DatosIntegrantesObject } from "../../../../models/DatosIntegrantesObjec
 import { DatosPersonaJuridicaComponent } from "../../datosPersonaJuridica/datosPersonaJuridica.component";
 import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
-import { DetalleIntegranteComponent } from "./detalleIntegrante/detalleIntegrante.component";
 
 /*** COMPONENTES ***/
 
@@ -230,7 +229,6 @@ export class DatosIntegrantesComponent implements OnInit {
         .postPaginado("integrantes_search", "?numPagina=1", searchObject)
         .subscribe(
           data => {
-            console.log(data);
             this.progressSpinner = false;
             this.searchIntegrantes = JSON.parse(data["body"]);
             this.datos = this.searchIntegrantes.datosIntegrantesItem;
@@ -312,7 +310,6 @@ export class DatosIntegrantesComponent implements OnInit {
       .postPaginado("integrantes_search", "?numPagina=1", searchObject)
       .subscribe(
         data => {
-          console.log(data);
           this.progressSpinner = false;
           this.searchIntegrantes = JSON.parse(data["body"]);
           this.datos = this.searchIntegrantes.datosIntegrantesItem;
@@ -336,9 +333,7 @@ export class DatosIntegrantesComponent implements OnInit {
     this.sigaServices
       .post("integrantes_delete", deleteIntegrantes.datosIntegrantesItem)
       .subscribe(
-        data => {
-          console.log(data);
-        },
+        data => {},
         err => {
           console.log(err);
         },
@@ -351,7 +346,6 @@ export class DatosIntegrantesComponent implements OnInit {
       );
   }
   goToDetails(selectedDatos) {
-    console.log(selectedDatos);
     if (!this.selectMultiple) {
       var ir = null;
       if (selectedDatos && selectedDatos.length > 0) {

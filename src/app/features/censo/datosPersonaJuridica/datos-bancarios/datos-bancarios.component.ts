@@ -266,7 +266,6 @@ export class DatosBancariosComponent implements OnInit {
   confirmarEliminar(selectedDatos) {
     let mess = this.translateService.instant("messages.deleteConfirmation");
     let icon = "fa fa-trash-alt";
-    console.log("AQUI");
     this.confirmationService.confirm({
       message: mess,
       icon: icon,
@@ -298,13 +297,6 @@ export class DatosBancariosComponent implements OnInit {
     selectedDatos.forEach(element => {
       item.idCuentas.push(element.idCuenta);
     });
-
-    // item.idPersona = this.idPersona;
-    // item.datosBancariosItem.forEach(
-    //   (value: DatosBancariosItem, key: number) => {
-    //     value.idPersona = this.idPersona;
-    //   }
-    // );
 
     this.sigaServices.post("datosBancarios_delete", item).subscribe(
       data => {

@@ -77,9 +77,6 @@
   <!--FIN CARD-->
   <div *ngIf="buscar == true" class="card mt-3">
     <div class="card-body p-0">
-      <!--<div class="m-3 d-flex text-right justify-content-start">
-       
-      </div>-->
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
         [(selection)]="selectedDatos" (onRowSelect)="irEditarPersona(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
         pageLinks="4" dataKey="nif" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos"
@@ -199,6 +196,5 @@
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
-  <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
   <div class="loader"></div>
 </div>

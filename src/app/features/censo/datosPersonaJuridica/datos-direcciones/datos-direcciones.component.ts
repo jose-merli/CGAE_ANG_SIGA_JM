@@ -1,16 +1,11 @@
 import { Router } from "@angular/router";
 import { DataTable } from "primeng/datatable";
-import { ConfirmationService, Message } from "primeng/components/common/api";
-import { TranslateService } from "../../../../commons/translate/translation.service";
+import {  Message } from "primeng/components/common/api";
 import { SigaServices } from "./../../../../_services/siga.service";
 import { DatosDireccionesItem } from "./../../../../../app/models/DatosDireccionesItem";
 import { DatosDireccionesObject } from "./../../../../../app/models/DatosDireccionesObject";
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
-import { ActivatedRoute } from "@angular/router";
-import { MessageService } from "primeng/components/common/messageservice";
 import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
-import { Location } from "@angular/common";
 import { DatosIntegrantesItem } from "../../../../models/DatosIntegrantesItem";
 import { DatosIntegrantesObject } from "../../../../models/DatosIntegrantesObject";
 import { DatosPersonaJuridicaComponent } from "../../datosPersonaJuridica/datosPersonaJuridica.component";
@@ -245,7 +240,6 @@ export class DatosDireccionesComponent implements OnInit {
         .postPaginado("direcciones_search", "?numPagina=1", searchObject)
         .subscribe(
           data => {
-            console.log(data);
             this.progressSpinner = false;
             this.searchDirecciones = JSON.parse(data["body"]);
             this.datos = this.searchDirecciones.datosDireccionesItem;
@@ -315,7 +309,6 @@ export class DatosDireccionesComponent implements OnInit {
       .postPaginado("direcciones_search", "?numPagina=1", searchObject)
       .subscribe(
         data => {
-          console.log(data);
           this.progressSpinner = false;
           this.searchDirecciones = JSON.parse(data["body"]);
           this.datos = this.searchDirecciones.datosDireccionesItem;
@@ -341,7 +334,6 @@ export class DatosDireccionesComponent implements OnInit {
 
     this.sigaServices.post("direcciones_remove", datosDelete).subscribe(
       data => {
-        console.log(data);
       },
       err => {
         console.log(err);
@@ -356,7 +348,6 @@ export class DatosDireccionesComponent implements OnInit {
     );
   }
   goToDetails(selectedDatos) {
-    console.log(selectedDatos);
     if (!this.selectMultiple) {
       var ir = null;
       if (selectedDatos && selectedDatos.length > 0) {

@@ -291,7 +291,6 @@ export class DatosGenerales implements OnInit {
   getTipo(event) {
     // this.selectedTipo = event.value;
     this.body.tipo = event.value;
-    console.log(this.body.tipo);
   }
 
   createLegalPerson() {
@@ -299,7 +298,6 @@ export class DatosGenerales implements OnInit {
       data => {
         this.body.fechaConstitucion = new Date();
         this.showSuccess();
-        console.log(data);
       },
       error => {
         this.personaSearch = JSON.parse(error["error"]);
@@ -381,7 +379,6 @@ export class DatosGenerales implements OnInit {
           this.cerrarAuditoria();
           this.cargarImagen(this.body.idPersona);
           this.showSuccess();
-          console.log(data);
           this.progressSpinner = false;
         },
         error => {
@@ -442,7 +439,6 @@ export class DatosGenerales implements OnInit {
       )
       .subscribe(
         data => {
-          console.log(data);
           this.file = undefined;
         },
         error => {

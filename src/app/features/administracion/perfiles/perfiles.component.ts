@@ -212,36 +212,6 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         this.isBuscar();
       }
     );
-    // for( let i=0; this.datos.length; i++){
-    //   if (this.datos[i].editar) {
-    //     this.sigaServices.post("perfiles_update", this.datos[i]).subscribe(
-    //       data => {
-    //         this.progressSpinner = false;
-    //       },
-    //       err => {
-    //         this.showFail();
-    //         console.log(err);
-    //       }
-    //     );
-    //   }
-    // }
-
-    // this.datos.forEach(
-    //   (value: PerfilItem, key: number) => {
-    //     if (value.editar) {
-    //       this.sigaServices.post("perfiles_update", value).subscribe(
-    //         data => {
-    //           this.progressSpinner = false;
-    //         },
-    //         err => {
-    //           this.showFail();
-    //           console.log(err);
-    //         }
-    //       );
-    //     }
-    //   }
-    // ).finally(this.progressSpinner = false;
-    //   this.isBuscar());
   }
   paginate(event) {
     console.log(event);
@@ -402,6 +372,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       data => {
         this.progressSpinner = false;
         this.showSuccess();
+        this.isBuscar();
       },
       error => {
         this.progressSpinner = false;

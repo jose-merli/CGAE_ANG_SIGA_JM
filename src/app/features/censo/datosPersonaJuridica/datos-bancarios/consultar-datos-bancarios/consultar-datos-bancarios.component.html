@@ -297,29 +297,6 @@
             [paginator]="true" paginatorPosition="both" [rows]="selectedItem" [editable]="!selectMultiple" (onEdit)="editarCompleto($event)"
             (onEditInit)="editar=true" (onEditCancel)="onEditCancel()" (onRowSelect)="controlarEdicion()" pageLinks="4">
 
-            <!--<p-column *ngFor="let col of cols" [sortable]="true" [style]="{'width': '20%'}" [field]="col.field" [header]="col.header"
-              [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-              <<ng-template let-datoH="rowData" pTemplate="body">
-                <div *ngIf="setItalic(datoH)">
-                 <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
-                  <input [disabled]="!averahora" type="text" [(ngModel)]="datoH[col.field]" class="form-control" pInputText>
-                </div>
-                <div *ngIf="!setItalic(datoH)">
-                  <span>{{datoH[col.field]}}</span>
-                </div>
-                </ng-template>
-                </p-column>
-                <p-column *ngFor="let col of cols2" filterPlaceholder="{{'general.boton.search' | translate}}" [sortable]="true" [field]="col.field"
-                  [header]="col.header" [filter]="true" filterMatchMode="contains">
-                  <ng-template let-datoH="rowData" pTemplate="body">
-              <div *ngIf="setItalic(datoH)">
-                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
-              </div>
-              <div *ngIf="!setItalic(datoH)">
-                <span>{{datoH[col.field]}}</span>
-              </div>
-            </ng-template>
-                  </p-column>-->
 
 
 

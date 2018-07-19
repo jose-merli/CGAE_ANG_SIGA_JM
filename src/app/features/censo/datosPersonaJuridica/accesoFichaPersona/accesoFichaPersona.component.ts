@@ -1,21 +1,13 @@
 import { Component, OnInit } from "@angular/core";
-
 import { Router } from "@angular/router";
 import { Message } from "primeng/components/common/api";
 import { Location } from "@angular/common";
-import { ConfirmationService } from "primeng/api";
-import { MessageService } from "primeng/components/common/messageservice";
 import { SelectItem } from "primeng/api";
-
 import { SigaServices } from "./../../../../_services/siga.service";
-
 import { DatosNotarioItem } from "./../../../../../app/models/DatosNotarioItem";
 import { DatosNotarioObject } from "./../../../../../app/models/DatosNotarioObject";
-import { TranslateService } from "../../../../commons/translate";
-
 import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
-import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
 
 @Component({
   selector: "app-accesoFichaPersona",
@@ -40,10 +32,8 @@ export class AccesoFichaPersonaComponent implements OnInit {
   guardarNotario: boolean = false;
   desasociar: boolean = false;
   suscripcionBusquedaNuevo: Subscription;
-
   activacionEditar: boolean;
   file: File = undefined;
-
   constructor(
     private router: Router,
     private location: Location,
@@ -52,7 +42,6 @@ export class AccesoFichaPersonaComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // this.checkAcceso();
 
     // Esto se activará cuando venimos de datos bancarios
     if (sessionStorage.getItem("abrirNotario") == "true") {
@@ -122,29 +111,6 @@ export class AccesoFichaPersonaComponent implements OnInit {
       this.search();
     }
   }
-
-  // checkAcceso() {
-  //   let controlAcceso = new ControlAccesoDto();
-  //   controlAcceso.idProceso = "121";
-  //   let derechoAcceso;
-  //   this.sigaServices.post("acces_control", controlAcceso).subscribe(
-  //     data => {
-  //       let permisosTree = JSON.parse(data.body);
-  //       let permisosArray = permisosTree.permisoItems;
-  //       derechoAcceso = permisosArray[0].derechoacceso;
-  //     },
-  //     err => {
-  //       console.log(err);
-  //     },
-  //     () => {
-  //       if (derechoAcceso == 3) {
-  //         this.activacionEditar = true;
-  //       } else {
-  //         this.activacionEditar = false;
-  //       }
-  //     }
-  //   );
-  // }
 
   search() {
     this.progressSpinner = true;
@@ -240,7 +206,6 @@ export class AccesoFichaPersonaComponent implements OnInit {
       this.sigaServices.post("accesoFichaPersona_guardar", this.body).subscribe(
         data => {
           this.progressSpinner = false;
-          console.log(data);
           this.body.status = data.status;
 
           this.showSuccess("Se ha guardado correctamente");
@@ -281,7 +246,6 @@ export class AccesoFichaPersonaComponent implements OnInit {
           .subscribe(
             data => {
               this.progressSpinner = false;
-              console.log(data);
               this.body.status = data.status;
 
               this.showSuccess("Se ha creado correctamente");
@@ -304,7 +268,6 @@ export class AccesoFichaPersonaComponent implements OnInit {
   }
 
   activarGuardarNotarioNoExistente(event) {
-    console.log(event);
     if (
       this.editar &&
       this.body.nombre != undefined &&

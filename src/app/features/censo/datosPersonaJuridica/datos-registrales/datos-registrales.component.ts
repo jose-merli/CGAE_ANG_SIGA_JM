@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
-import { NgModule } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { esCalendar } from "../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
@@ -7,7 +6,6 @@ import { Message } from "primeng/components/common/api";
 import { SigaServices } from "./../../../../_services/siga.service";
 import { cardService } from "./../../../../_services/cardSearch.service";
 import { TranslateService } from "../../../../commons/translate/translation.service";
-import { HeaderGestionEntidadService } from "./../../../../_services/headerGestionEntidad.service";
 import { Subscription } from "rxjs/Subscription";
 
 /*** COMPONENTES ***/
@@ -121,7 +119,6 @@ export class DatosRegistralesComponent implements OnInit {
       this.search();
       this.getActividadesPersona();
     }
-    console.log(this.body);
 
     this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
       id => {
@@ -241,7 +238,6 @@ export class DatosRegistralesComponent implements OnInit {
       .postPaginado("datosRegistrales_search", "?numPagina=1", this.body)
       .subscribe(
         data => {
-          console.log(data);
           this.personaSearch = JSON.parse(data["body"]);
           this.body = this.personaSearch.datosRegistralesItems[0];
           if (this.body == undefined) {
@@ -335,11 +331,9 @@ export class DatosRegistralesComponent implements OnInit {
         !this.onlySpaces(this.body.contadorNumsspp)) ||
       !this.requiredContador
     ) {
-      console.log(this.body);
       this.sigaServices.post("datosRegistrales_update", this.body).subscribe(
         data => {
           this.showSuccess();
-          console.log(data);
           this.progressSpinner = false;
         },
         err => {
@@ -441,7 +435,6 @@ export class DatosRegistralesComponent implements OnInit {
   }
 
   onChangeRowsPerPages(event) {
-    console.log(event);
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();

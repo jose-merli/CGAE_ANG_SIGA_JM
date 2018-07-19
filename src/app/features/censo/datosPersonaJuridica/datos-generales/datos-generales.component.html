@@ -1,10 +1,5 @@
 <p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
 <div class="busqueda-container">
-
-  <!--<div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
-    <app-datos-generales *ngSwitchCase="'generales'"></app-datos-generales>
-  </div>-->
-
   <!--DATOS GENERALES-->
   <div class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha()">
@@ -176,6 +171,5 @@
   </p-dialog>
 
   <div *ngIf="progressSpinner" class="overlay-spinner">
-    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
     <div class="loader"></div>
   </div>

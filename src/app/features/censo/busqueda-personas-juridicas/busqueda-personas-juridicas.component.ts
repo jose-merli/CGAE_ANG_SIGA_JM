@@ -9,14 +9,12 @@ import {
 import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
 import { esCalendar } from "./../../../utils/calendar";
-import { FormBuilder } from "@angular/forms";
 import { DataTable } from "primeng/datatable";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router  } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
-import { MessageService } from "primeng/components/common/messageservice";
 import { PersonaJuridicaObject } from "./../../../../app/models/PersonaJuridicaObject";
 import { PersonaJuridicaItem } from "./../../../../app/models/PersonaJuridicaItem";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
@@ -164,7 +162,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       .postPaginado("busquedaPerJuridica_history", "?numPagina=1", this.body)
       .subscribe(
         data => {
-          console.log(data);
           this.progressSpinner = false;
           this.personaSearch = JSON.parse(data["body"]);
           this.datos = this.personaSearch.busquedaJuridicaItems;
@@ -316,32 +313,20 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     if (this.body.integrante == undefined) {
       this.body.integrante = "";
     }
-    // this.body.idInstitucion = "2000";
     this.sigaServices
       .postPaginado("busquedaPerJuridica_search", "?numPagina=1", this.body)
       .subscribe(
         data => {
-          console.log(data);
           this.progressSpinner = false;
           this.personaSearch = JSON.parse(data["body"]);
           this.datos = this.personaSearch.busquedaJuridicaItems;
-
           this.convertirStringADate(this.datos);
-
-          console.log("datos", this.datos);
           this.table.paginator = true;
         },
         err => {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {
-          // if (sessionStorage.getItem("first") != null) {
-          //   let first = JSON.parse(sessionStorage.getItem("first")) as number;
-          //   this.table.first = first;
-          //   sessionStorage.removeItem("first");
-          // }
-        }
       );
   }
 
@@ -425,9 +410,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     var personaItem = new PersonaJuridicaItem();
     selectedItem.forEach((value: PersonaJuridicaItem, key: number) => {
       personaItem.idPersonaDelete.push(value.idPersona);
-      // this.personaDelete.busquedaJuridicaItems.push(personaItem);
-      console.log(value);
-      // deletePersonas.push(value.idPersona);
     });
     this.sigaServices.post("busquedaPerJuridica_delete", personaItem).subscribe(
       data => {

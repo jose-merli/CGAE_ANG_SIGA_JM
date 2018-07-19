@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { esCalendar } from "../../../../../utils/calendar";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { Router } from "@angular/router";
@@ -341,7 +341,6 @@ export class DetalleIntegranteComponent implements OnInit {
       .postPaginado("busquedaPerJuridica_history", "?numPagina=1", this.body)
       .subscribe(
         data => {
-          console.log(data);
           this.progressSpinner = false;
           this.searchIntegrantes = JSON.parse(data["body"]);
           this.datos = this.searchIntegrantes.datosIntegrantesItem;
@@ -353,31 +352,7 @@ export class DetalleIntegranteComponent implements OnInit {
         },
         () => {}
       );
-  }
-  // searchHistorico() {
-  //   this.historico = true;
-  //   this.buscar = false;
-  //   this.selectMultiple = false;
-  //   this.selectedDatos = "";
-  //   this.progressSpinner = true;
-  //   this.selectAll = false;
-  //   this.sigaServices
-  //     .postPaginado("busquedaPerJuridica_history", "?numPagina=1", this.body)
-  //     .subscribe(
-  //       data => {
-  //         console.log(data);
-  //         this.progressSpinner = false;
-  //         this.searchIntegrantes = JSON.parse(data["body"]);
-  //         this.datos = this.searchIntegrantes.datosIntegrantesItem;
-  //         this.table.paginator = true;
-  //       },
-  //       err => {
-  //         console.log(err);
-  //         this.progressSpinner = false;
-  //       },
-  //       () => {}
-  //     );
-  // }
+  } 
 
   guardar() {
     if (
@@ -445,7 +420,6 @@ export class DetalleIntegranteComponent implements OnInit {
         .postPaginado("integrantes_update", "?numPagina=1", updateIntegrante)
         .subscribe(
           data => {
-            console.log(data);
             this.progressSpinner = false;
           },
           err => {
@@ -587,7 +561,6 @@ export class DetalleIntegranteComponent implements OnInit {
           .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
           .subscribe(
             data => {
-              console.log(data);
               this.progressSpinner = false;
             },
             err => {
@@ -724,7 +697,6 @@ export class DetalleIntegranteComponent implements OnInit {
           .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
           .subscribe(
             data => {
-              console.log(data);
               this.progressSpinner = false;
             },
             err => {

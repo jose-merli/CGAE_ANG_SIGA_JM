@@ -1,10 +1,5 @@
 <p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
 <div class="busqueda-container">
-
-  <!--<div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
-    <app-datos-generales *ngSwitchCase="'generales'"></app-datos-generales>
-  </div>-->
-
   <!--DATOS REGISTRALES-->
   <div class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha('registrales')">
@@ -65,10 +60,7 @@
               <label>{{"censo.consultaDatosRegistrales.literal.Compania" | translate}}</label>
               <input [(ngModel)]="body.companiaAseg" type="text" class="form-control" pInputText>
             </div>
-            <!--<div class="form-group col-lg-6 col-md-6">
-              <label></label>
-              <input value="Mestanza" type="text" class="form-control" pInputText>
-            </div>-->
+
 
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.general.literal.FechaConstitucion" | translate}} (*)</label>
@@ -141,17 +133,13 @@
     </div>
     <div *ngIf="esFichaActiva('registrales')" class="card-footer">
       <div class="text-right main-button ">
-        <!--<button (click)="toSociedadProfesional()" class="sociedadprof" pButton type="button " icon="fas fa-book " iconPos="left"
-          label="Sociedad Profesional"></button>-->
         <button (click)="search()" pButton type="button " icon="fa fa-undo " iconPos="left" label="Restablecer"></button>
         <button (click)="guardar()" [disabled]="desactivadoGuardar()" pButton type="button " icon="far fa-save " iconPos="left" label="Guardar"></button>
       </div>
     </div>
   </div>
 </div>
-<!--<app-dialog></app-dialog>-->
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
-  <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
   <div class="loader"></div>
 </div>
