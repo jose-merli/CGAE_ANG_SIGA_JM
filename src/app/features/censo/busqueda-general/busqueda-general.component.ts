@@ -109,6 +109,8 @@ export class BusquedaGeneralComponent {
       sessionStorage.getItem("newIntegrante") != undefined
     ) {
       this.newIntegrante = JSON.parse(sessionStorage.getItem("newIntegrante"));
+      sessionStorage.removeItem("newIntegrante");
+
     }
     this.colsFisicas = [
       { field: "nif", header: "NIF/CIF" },
@@ -163,7 +165,7 @@ export class BusquedaGeneralComponent {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
   checkTypeCIF(value: String): boolean {
@@ -263,47 +265,47 @@ export class BusquedaGeneralComponent {
       this.checkTypeCIF(this.bodyFisica.nif);
       this.sigaServices
         .postPaginado(
-          "busquedaPer_searchFisica",
-          "?numPagina=1",
-          this.bodyFisica
+        "busquedaPer_searchFisica",
+        "?numPagina=1",
+        this.bodyFisica
         )
         .subscribe(
-          data => {
-            console.log(data);
-            this.progressSpinner = false;
-            this.searchFisica = JSON.parse(data["body"]);
-            this.datos = [];
-            this.datos = this.searchFisica.busquedaFisicaItems;
-          },
-          err => {
-            console.log(err);
-            this.progressSpinner = false;
-          },
-          () => {
+        data => {
+          console.log(data);
+          this.progressSpinner = false;
+          this.searchFisica = JSON.parse(data["body"]);
+          this.datos = [];
+          this.datos = this.searchFisica.busquedaFisicaItems;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          if (
+            this.datos.length == 0 ||
+            this.datos == null ||
+            this.datos == undefined
+          ) {
+            console.log("DAtos", this.datos);
             if (
-              this.datos.length == 0 ||
-              this.datos == null ||
-              this.datos == undefined
+              this.bodyFisica.nif != "" &&
+              this.bodyFisica.nif != undefined
             ) {
-              console.log("DAtos", this.datos);
+              console.log("DAtos", this.bodyFisica.nif);
               if (
-                this.bodyFisica.nif != "" &&
-                this.bodyFisica.nif != undefined
+                this.bodyFisica.nombre.trim() == "" &&
+                this.bodyFisica.primerApellido.trim() == "" &&
+                this.bodyFisica.segundoApellido.trim() == "" &&
+                this.bodyFisica.numeroColegiado.trim() == ""
               ) {
-                console.log("DAtos", this.bodyFisica.nif);
-                if (
-                  this.bodyFisica.nombre.trim() == "" &&
-                  this.bodyFisica.primerApellido.trim() == "" &&
-                  this.bodyFisica.segundoApellido.trim() == "" &&
-                  this.bodyFisica.numeroColegiado.trim() == ""
-                ) {
-                  if (this.tipoIdentificacionPermitido(this.bodyFisica.nif)) {
-                    this.noDataFoundWithDNI();
-                  }
+                if (this.tipoIdentificacionPermitido(this.bodyFisica.nif)) {
+                  this.noDataFoundWithDNI();
                 }
               }
             }
           }
+        }
         );
     } else {
       if (this.bodyJuridica.tipo == undefined) {
@@ -329,43 +331,43 @@ export class BusquedaGeneralComponent {
       this.checkTypeCIF(this.bodyJuridica.nif);
       this.sigaServices
         .postPaginado(
-          "busquedaPer_searchJuridica",
-          "?numPagina=1",
-          this.bodyJuridica
+        "busquedaPer_searchJuridica",
+        "?numPagina=1",
+        this.bodyJuridica
         )
         .subscribe(
-          data => {
-            console.log(data);
-            this.progressSpinner = false;
-            this.searchJuridica = JSON.parse(data["body"]);
-            this.datos = [];
-            this.datos = this.searchJuridica.busquedaPerJuridicaItems;
+        data => {
+          console.log(data);
+          this.progressSpinner = false;
+          this.searchJuridica = JSON.parse(data["body"]);
+          this.datos = [];
+          this.datos = this.searchJuridica.busquedaPerJuridicaItems;
 
-            // this.table.paginator = true;
-          },
-          err => {
-            console.log(err);
-            this.progressSpinner = false;
-          },
-          () => {
+          // this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          if (
+            this.datos.length == 0 ||
+            this.datos == null ||
+            this.datos == undefined
+          ) {
             if (
-              this.datos.length == 0 ||
-              this.datos == null ||
-              this.datos == undefined
+              this.bodyJuridica.nif != null &&
+              this.bodyJuridica.nif != undefined &&
+              this.bodyJuridica.denominacion.trim() == "" &&
+              this.bodyJuridica.abreviatura.trim() == "" &&
+              this.bodyJuridica.tipo.trim() == ""
             ) {
-              if (
-                this.bodyJuridica.nif != null &&
-                this.bodyJuridica.nif != undefined &&
-                this.bodyJuridica.denominacion.trim() == "" &&
-                this.bodyJuridica.abreviatura.trim() == "" &&
-                this.bodyJuridica.tipo.trim() == ""
-              ) {
-                if (this.tipoIdentificacionPermitido(this.bodyJuridica.nif)) {
-                  this.noDataFoundWithDNI();
-                }
+              if (this.tipoIdentificacionPermitido(this.bodyJuridica.nif)) {
+                this.noDataFoundWithDNI();
               }
             }
           }
+        }
         );
     }
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 
 import { Location, DatePipe } from "@angular/common";
 
@@ -8,7 +8,7 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 
 import { DatosDireccionesItem } from "./../../../../../../app/models/DatosDireccionesItem";
 import { DatosDireccionesObject } from "./../../../../../../app/models/DatosDireccionesObject";
-
+import { DataTable } from "primeng/datatable";
 import { DatosDireccionesCodigoPostalItem } from "./../../../../../../app/models/DatosDireccionesCodigoPostalItem";
 import { DatosDireccionesCodigoPostalObject } from "./../../../../../../app/models/DatosDireccionesCodigoPostalObject";
 
@@ -55,8 +55,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     private location: Location,
     private sigaServices: SigaServices,
     public datepipe: DatePipe
-  ) {}
-
+  ) { }
+  @ViewChild("table") table: DataTable;
   ngOnInit() {
     sessionStorage.setItem("editarDirecciones", "true");
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
@@ -141,7 +141,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       n => {
         this.comboProvincia = n.combooItems;
       },
-      error => {},
+      error => { },
       () => {
         if (this.body.idProvincia != null) {
           this.getComboPoblacion();
@@ -153,18 +153,18 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices
       .getParam(
-        "direcciones_comboPoblacion",
-        "?idProvincia=" + this.body.idProvincia
+      "direcciones_comboPoblacion",
+      "?idProvincia=" + this.body.idProvincia
       )
       .subscribe(
-        n => {
-          this.comboPoblacion = n.combooItems;
-        },
-        error => {},
-        () => {
-          // this.isDisabledPoblacion = false;
-          this.progressSpinner = false;
-        }
+      n => {
+        this.comboPoblacion = n.combooItems;
+      },
+      error => { },
+      () => {
+        // this.isDisabledPoblacion = false;
+        this.progressSpinner = false;
+      }
       );
   }
   getComboPais() {
@@ -172,7 +172,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       n => {
         this.comboPais = n.combooItems;
       },
-      error => {},
+      error => { },
       () => {
         this.paisSeleccionado = this.comboPais.find(
           item => item.value == this.body.idPais
@@ -186,7 +186,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       n => {
         this.comboTipoDireccion = n.combooItems;
       },
-      error => {}
+      error => { }
     );
   }
 

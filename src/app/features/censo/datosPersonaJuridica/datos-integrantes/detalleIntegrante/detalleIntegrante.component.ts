@@ -73,13 +73,15 @@ export class DetalleIntegranteComponent implements OnInit {
   @ViewChild("table") table;
   selectedDatos;
 
-  constructor(private sigaServices: SigaServices, private router: Router) {}
+  constructor(private sigaServices: SigaServices, private router: Router) { }
 
   ngOnInit() {
     if (sessionStorage.getItem("historicoInt") != null) {
       this.historico = true;
     }
     sessionStorage.removeItem("historicoInt");
+    sessionStorage.removeItem("newIntegrante");
+
 
     sessionStorage.setItem("editarIntegrante", "true");
     this.body = JSON.parse(sessionStorage.getItem("integrante"));
@@ -339,18 +341,18 @@ export class DetalleIntegranteComponent implements OnInit {
     this.sigaServices
       .postPaginado("busquedaPerJuridica_history", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-          this.searchIntegrantes = JSON.parse(data["body"]);
-          this.datos = this.searchIntegrantes.datosIntegrantesItem;
-          this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {}
+      data => {
+        console.log(data);
+        this.progressSpinner = false;
+        this.searchIntegrantes = JSON.parse(data["body"]);
+        this.datos = this.searchIntegrantes.datosIntegrantesItem;
+        this.table.paginator = true;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => { }
       );
   }
   // searchHistorico() {
@@ -443,17 +445,17 @@ export class DetalleIntegranteComponent implements OnInit {
       this.sigaServices
         .postPaginado("integrantes_update", "?numPagina=1", updateIntegrante)
         .subscribe(
-          data => {
-            console.log(data);
-            this.progressSpinner = false;
-          },
-          err => {
-            console.log(err);
-            this.progressSpinner = false;
-          },
-          () => {
-            this.backTo();
-          }
+        data => {
+          console.log(data);
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.backTo();
+        }
         );
     } else {
       this.showFail("el campo Participación debe ser numérico");
@@ -585,17 +587,17 @@ export class DetalleIntegranteComponent implements OnInit {
         this.sigaServices
           .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
           .subscribe(
-            data => {
-              console.log(data);
-              this.progressSpinner = false;
-            },
-            err => {
-              console.log(err);
-              this.progressSpinner = false;
-            },
-            () => {
-              this.backTo();
-            }
+          data => {
+            console.log(data);
+            this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.backTo();
+          }
           );
       } else {
         this.showFail("el campo Participación debe ser numérico");
@@ -722,17 +724,17 @@ export class DetalleIntegranteComponent implements OnInit {
         this.sigaServices
           .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
           .subscribe(
-            data => {
-              console.log(data);
-              this.progressSpinner = false;
-            },
-            err => {
-              console.log(err);
-              this.progressSpinner = false;
-            },
-            () => {
-              this.backTo();
-            }
+          data => {
+            console.log(data);
+            this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.backTo();
+          }
           );
       } else {
         this.showFail("el campo Participación debe ser numérico");
