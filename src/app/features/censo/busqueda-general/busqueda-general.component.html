@@ -79,8 +79,8 @@
         </div>
         <div class="card-footer">
             <div class="text-right main-button ">
-                <button (click)="changeColsAndData()" pButton type="button " icon="fa fa-eraser " iconPos="left" label="Limpiar"></button>
-                <button (click)="search()" pButton type="button " icon="fa fa-search " iconPos="left" label="Buscar"></button>
+                <button (click)="changeColsAndData()" pButton type="button " icon="fa fa-eraser " iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
+                <button (click)="search()" pButton type="button " icon="fa fa-search " iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
             </div>
         </div>
     </div>
@@ -105,7 +105,7 @@
                 </ng-template>
                 <p-footer *ngIf="selectedDatos && selectedDatos != ''">
                     <div class="text-right main-button">
-                        <button pButton type="button" icon="fa fa-download" iconPos="left" label="Descargar"></button>
+                        <button pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate}}"></button>
                     </div>
                 </p-footer>
             </p-dataTable>
@@ -116,7 +116,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
 
 <div class="mt-3 text-right main-button ">
-    <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="Volver"></button>
+    <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
 </div>
 
 <div *ngIf="progressSpinner " class="overlay-spinner ">

@@ -72,9 +72,10 @@
                 </ng-template>
                 <p-footer>
                     <div class="text-right main-button">
-                        <button (click)="isRestablecer()" pButton type="button" [(disabled)]="!habilitarBotones" icon="fa fa-history " iconPos="left"
+                        <button (click)="isRestablecer()" pButton type="button" [(disabled)]="!habilitarBotones" icon="fa fa-undo " iconPos="left"
                             label="{{'general.boton.restablecer' | translate}}"></button>
-                        <button (click)="isGuardar()" pButton type="button " [(disabled)]="!habilitarBotones" icon="fa fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                        <button (click)="isGuardar()" pButton type="button " [(disabled)]="!habilitarBotones" icon="far fa-save " iconPos="left"
+                            label="{{ 'general.boton.guardar' | translate}}"></button>
                     </div>
                 </p-footer>
 

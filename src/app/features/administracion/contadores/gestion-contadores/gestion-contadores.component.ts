@@ -1,23 +1,13 @@
-import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  ViewChild,
-  ChangeDetectorRef,
-  Input
-} from "@angular/core";
+import { Component, OnInit, ViewEncapsulation, ViewChild } from "@angular/core";
 import { SigaServices } from "./../../../../_services/siga.service";
 import { SigaWrapper } from "../../../../wrapper/wrapper.class";
 import { esCalendar } from "./../../../../utils/calendar";
-import { FormBuilder } from "@angular/forms";
 import { TranslateService } from "../../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../../properties/val-properties";
 import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
-import { MessageService } from "primeng/components/common/messageservice";
 import { ContadorItem } from "../../../../../app/models/ContadorItem";
-import { ActivatedRoute } from "@angular/router";
 import { ControlAccesoDto } from "../../../../../app/models/ControlAccesoDto";
 
 @Component({
@@ -32,13 +22,9 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   body: ContadorItem = new ContadorItem();
   bodyPermanente: ContadorItem = new ContadorItem();
   pButton;
-  textSelected: String = "{0} grupos seleccionados";
-  textFilter: String;
   editar: boolean = false;
   disabled: boolean = false;
-  activo: boolean = false;
   correcto: boolean = false;
-  dniCorrecto: boolean;
   checkmodificable: boolean = false;
   fechareconfiguracion: Date;
   showDatosGenerales: boolean = true;
@@ -48,7 +34,6 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   rawDate: string;
   splitDate: any[];
   arrayDate: string;
-  addedDay: number;
 
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   permisos: any;

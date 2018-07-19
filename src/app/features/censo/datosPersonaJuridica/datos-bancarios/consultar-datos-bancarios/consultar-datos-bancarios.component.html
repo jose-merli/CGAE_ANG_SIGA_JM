@@ -96,9 +96,9 @@
         <div class="card-footer ">
           <div class="text-right main-button ">
             <button (click)="validarFormulario()" [disabled]="condiciones()" pButton type="button" icon="far fa-save" iconPos="left"
-              label="Guardar"></button>
-            <button *ngIf="!nuevo" (click)="restablecer()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="Restablecer"></button>
-            <button *ngIf="nuevo" (click)="restablecerNuevo()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="Restablecer"></button>
+              label="{{ 'general.boton.guardar' | translate}}"></button>
+            <button *ngIf="!nuevo" (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+            <button *ngIf="nuevo" (click)="restablecerNuevo()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
           </div>
         </div>
       </div>
@@ -212,7 +212,8 @@
         <br>
         <div *ngIf="!nuevo" class="card-footer">
           <div class="text-right main-button">
-            <button (click)="validarGuardarMandato()" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" [disabled]="mandatoAnexoVacio"></button>
+            <button (click)="validarGuardarMandato()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
+              [disabled]="mandatoAnexoVacio"></button>
           </div>
         </div>
       </div>
@@ -285,7 +286,7 @@
                   iconPos="left" label="{{ 'censo.sociedades.datosBancarios.firmar' | translate}}"></button>
                 <button *ngIf="selectedDatos && selectedDatos !=''" (click)="comunicar(selectedDatos)" pButton type="button" icon="fa fa-comment"
                   iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
-                <button *ngIf="!nuevo" (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"></button>
+                <button *ngIf="!nuevo" (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
               </div>
             </p-footer>
           </p-dataTable>
@@ -328,7 +329,7 @@
             </ng-template>
             <p-footer>
               <div *ngIf="editar == true" class="text-right main-button">
-                <button (click)="editarDescripcion()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                <button (click)="editarDescripcion()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
                 <button *ngIf="!nuevo" [(disabled)]="mandatoAnexoVacio" (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus"
                   iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
               </div>
@@ -416,9 +417,9 @@
     </div>
     <p-footer>
       <div class="text-right main-button ">
-        <button (click)="insertarAnexo()" [disabled]="!validarInsertarAnexo()" pButton type="button" icon="fa fa-save" iconPos="left"
+        <button (click)="insertarAnexo()" [disabled]="!validarInsertarAnexo()" pButton type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button (click)="limpiarDatosAnexo()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="limpiarDatosAnexo()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
       </div>
     </p-footer>
   </p-dialog>

@@ -1,6 +1,6 @@
 import { Router } from "@angular/router";
 import { DataTable } from "primeng/datatable";
-import {  Message } from "primeng/components/common/api";
+import { Message } from "primeng/components/common/api";
 import { SigaServices } from "./../../../../_services/siga.service";
 import { DatosDireccionesItem } from "./../../../../../app/models/DatosDireccionesItem";
 import { DatosDireccionesObject } from "./../../../../../app/models/DatosDireccionesObject";
@@ -296,6 +296,7 @@ export class DatosDireccionesComponent implements OnInit {
   }
 
   searchHistorico() {
+    this.progressSpinner = true;
     this.historico = true;
     let searchObject = new DatosDireccionesItem();
     searchObject.idPersona = this.idPersona;
@@ -303,7 +304,6 @@ export class DatosDireccionesComponent implements OnInit {
     this.buscar = false;
     this.selectMultiple = false;
     this.selectedDatos = "";
-    this.progressSpinner = true;
     this.selectAll = false;
     this.sigaServices
       .postPaginado("direcciones_search", "?numPagina=1", searchObject)
@@ -333,8 +333,7 @@ export class DatosDireccionesComponent implements OnInit {
     });
 
     this.sigaServices.post("direcciones_remove", datosDelete).subscribe(
-      data => {
-      },
+      data => {},
       err => {
         console.log(err);
       },

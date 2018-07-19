@@ -12,8 +12,6 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { Router, ActivatedRoute } from "@angular/router";
 import { TranslateService } from "../../../commons/translate/translation.service";
-import { MessageService } from "primeng/components/common/messageservice";
-import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { ContadorItem } from "./../../../../app/models/ContadorItem";
 import { ContadorResponseDto } from "./../../../../app/models/ContadorResponseDto";
@@ -34,7 +32,6 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
 
   //Creo los objetos para interactuar con sus respectivos DTO
   search: ContadorResponseDto = new ContadorResponseDto();
-
   pButton;
   buscar: boolean = false;
   tablaHistorico: boolean = false;
@@ -53,12 +50,8 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
   //Array de opciones del dropdown
   contadores_modo: any[];
 
-  //elemento seleccionado en el dropdown
-  catalogoSeleccionado: String;
-
   //elementos del form
   formDescripcion: String;
-  formCodigo: String;
 
   //mensajes
   msgs: Message[] = [];
@@ -91,9 +84,7 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
     this.idPantalla = this.activatedRoute.snapshot.params["modulo"];
     if (this.idModulo == "0" || this.idPantalla == "admin") {
       this.editar = false;
-    }
-    else {
-      //   sessionStorage.setItem("moduloAcceso", JSON.stringify("1"));
+    } else {
       this.body.idmodulo = this.idModulo;
       this.isBuscar();
     }
@@ -105,8 +96,10 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.contadores_modo.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
           let i;
           let x;
           for (i = 0; i < e.label.length; i++) {
@@ -193,7 +186,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.table.reset();
   }
   // Control de buscar desactivado por ahora (hasta tener primer elemento del combo preparado)
-  onChangeCatalogo() { }
+  onChangeCatalogo() {}
   //cada vez que cambia el formulario comprueba esto
   onChangeForm(event) {
     this.idModulo = event;
@@ -247,24 +240,24 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices
       .postPaginado("contadores_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.search = JSON.parse(data["body"]);
-        this.datos = this.search.contadorItems;
-        console.log(this.datos);
-        this.table.reset();
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        if (sessionStorage.getItem("first") != null) {
-          let first = JSON.parse(sessionStorage.getItem("first")) as number;
-          this.table.first = first;
-          sessionStorage.removeItem("first");
+          this.search = JSON.parse(data["body"]);
+          this.datos = this.search.contadorItems;
+          console.log(this.datos);
+          this.table.reset();
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          if (sessionStorage.getItem("first") != null) {
+            let first = JSON.parse(sessionStorage.getItem("first")) as number;
+            this.table.first = first;
+            sessionStorage.removeItem("first");
+          }
         }
-      }
       );
   }
   paginate(event) {

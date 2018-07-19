@@ -1,22 +1,13 @@
-import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  ViewChild,
-  ChangeDetectorRef
-} from "@angular/core";
+import { Component, OnInit, ViewEncapsulation, ViewChild } from "@angular/core";
 import { SigaServices } from "./../../../../_services/siga.service";
 import { SigaWrapper } from "../../../../wrapper/wrapper.class";
-import { FormBuilder } from "@angular/forms";
 import { TranslateService } from "../../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../../properties/val-properties";
 import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
-import { MessageService } from "primeng/components/common/messageservice";
 import { CatalogoRequestDto } from "../../../../../app/models/CatalogoRequestDto";
 import { CatalogoUpdateRequestDto } from "../../../../../app/models/CatalogoUpdateRequestDto";
-import { ActivatedRoute } from "@angular/router";
 @Component({
   selector: "app-editarCatalogosMaestros",
   templateUrl: "./editarCatalogosMaestros.component.html",
@@ -25,29 +16,19 @@ import { ActivatedRoute } from "@angular/router";
 })
 export class EditarCatalogosMaestrosComponent extends SigaWrapper
   implements OnInit {
-  usuarios_rol: any[];
-  usuarios_perfil: any[];
   select: any[];
   msgs: Message[] = [];
   body: CatalogoRequestDto = new CatalogoRequestDto();
   checkBody: CatalogoRequestDto = new CatalogoRequestDto();
   upd: CatalogoUpdateRequestDto = new CatalogoUpdateRequestDto();
-  pButton;
-  textSelected: String = "{0} grupos seleccionados";
   textFilter: String;
   editar: boolean = true;
-  disabled: boolean = false;
-  activo: boolean = false;
   correcto: boolean = false;
-  dniCorrecto: boolean;
   blockSeleccionar: boolean = false;
   showDatosGenerales: boolean = true;
-  //elementos del form
-  formDescripcion: String;
-  formCodigo: String;
   //Array de opciones del dropdown
   catalogoArray: any[];
-
+  pButton;
   activacionEditar: boolean;
   constructor(
     private sigaServices: SigaServices,
