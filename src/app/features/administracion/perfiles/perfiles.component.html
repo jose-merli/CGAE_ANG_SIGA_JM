@@ -25,8 +25,8 @@
                 filterMatchMode="contains">
                 <ng-template let-col let-car="rowData" pTemplate="body">
                   <span>{{car[col.field]}}</span>
-                  <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='newPerfil.idGrupo' type="text" class="form-control"
-                    (ngModelChange)="onChangeId($event)" [attr.maxlength]="3" pInputText>
+                  <input *ngIf="car[col.field] == '' " [(ngModel)]='newPerfil.idGrupo' type="text" class="form-control" (ngModelChange)="onChangeId($event)"
+                    [attr.maxlength]="3" pInputText>
                 </ng-template>
               </p-column>
               <p-column [sortable]="true" field="descripcionGrupo" [header]="'general.description' | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
@@ -34,8 +34,8 @@
                 <ng-template let-col let-car="rowData" pTemplate="body">
 
                   <span>{{car[col.field]}}</span>
-                  <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='newPerfil.descripcionGrupo' type="text" class="form-control"
-                    [formControl]="this.formGroup.controls[ 'descripcionGrupo'] " (ngModelChange)="onChangeForm()" pInputText>
+                  <input *ngIf="car[col.field] == '' " [(ngModel)]='newPerfil.descripcionGrupo' type="text" class="form-control" (ngModelChange)="onChangeForm()"
+                    pInputText>
                 </ng-template>
               </p-column>
               <p-column [sortable]="true" field="rolesAsignados" [header]="'menu.administracion.perfilrol' | translate" [filter]="true"

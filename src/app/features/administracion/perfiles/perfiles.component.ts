@@ -20,6 +20,7 @@ import { PerfilesRequestDto } from "./../../../../app/models/PerfilesRequestDto"
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { ComboItem } from "./../../../../app/models/ComboItem";
 import { DataTable } from "primeng/datatable";
+import { Error } from "../../../models/Error";
 
 @Component({
   selector: "app-perfiles",
@@ -347,6 +348,8 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       editar: false,
       new: true
     };
+    this.newPerfil.idGrupo = "";
+    this.newPerfil.descripcionGrupo = "";
     let value = this.table.first;
     this.pressNew = true;
     this.save = true;
@@ -394,19 +397,22 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     }
   }
   isNew() {
-    let newPerfil = this.datos[0];
-    newPerfil.idGrupo = this.newPerfil.idGrupo;
-    newPerfil.descripcionGrupo = this.newPerfil.descripcionGrupo;
     this.progressSpinner = true;
-    this.sigaServices.post("perfiles_insert", newPerfil).subscribe(
+    this.sigaServices.post("perfiles_insert", this.newPerfil).subscribe(
       data => {
+        this.progressSpinner = false;
         this.showSuccess();
       },
       error => {
+        this.progressSpinner = false;
+        let mess = JSON.parse(error["error"]);
+        this.showFailError(mess.error.message.toString());
+        // this.newPerfil.idGrupo = newPerfil.idGrupo;
+        // this.newPerfil.descripcionGrupo = newPerfil.descripcionGrupo;
+        this.datos[0].idGrupo = "";
+        this.datos[0].descripcionGrupo = "";
+
         console.log(error);
-      },
-      () => {
-        this.isEditar();
       }
     );
   }
@@ -490,7 +496,14 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       )
     });
   }
-
+  showFailError(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "",
+      detail: this.translateService.instant(mensaje)
+    });
+  }
   showFail2() {
     this.msgs = [];
     this.msgs.push({

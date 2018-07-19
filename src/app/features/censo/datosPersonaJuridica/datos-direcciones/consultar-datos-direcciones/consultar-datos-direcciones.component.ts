@@ -47,7 +47,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   textSelected: String = "{0} etiquetas seleccionadas";
   body: DatosDireccionesItem = new DatosDireccionesItem();
   bodySearch: DatosDireccionesObject = new DatosDireccionesObject();
-
+  historyDisable: Boolean = false;
   bodyCodigoPostal: DatosDireccionesCodigoPostalItem = new DatosDireccionesCodigoPostalItem();
   bodyCodigoPostalSearch: DatosDireccionesCodigoPostalObject = new DatosDireccionesCodigoPostalObject();
 
@@ -58,13 +58,16 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    if (sessionStorage.getItem("historicoDir") != null) {
+      this.historyDisable = true;
+    }
+    sessionStorage.removeItem("historicoDir");
     sessionStorage.setItem("editarDirecciones", "true");
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.textFilter = "Elegir";
     this.getComboProvincia();
     this.getComboPais();
     this.getComboTipoDireccion();
-    console.log(this.body.idPais);
     this.registroEditable = JSON.parse(
       sessionStorage.getItem("editarDireccion")
     );
@@ -84,7 +87,11 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       ) {
         this.isDisabledPoblacion = true;
       } else {
-        this.isDisabledPoblacion = false;
+        if (this.historyDisable == true) {
+          this.isDisabledPoblacion = true;
+        } else {
+          this.isDisabledPoblacion = false;
+        }
       }
       if (
         this.body.fechaModificacion != null ||
@@ -177,7 +184,6 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         this.paisSeleccionado = this.comboPais.find(
           item => item.value == this.body.idPais
         );
-        console.log(this.paisSeleccionado);
       }
     );
   }
@@ -216,7 +222,6 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     }
   }
   onChangePais() {
-    console.log(this.body.idPais);
     if (!this.nuevo) {
       if (this.body.idPais != "191") {
         this.isDisabledCodigoPostal = true;
@@ -225,18 +230,24 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         this.body.idProvincia = "";
         this.body.idPoblacion = "";
       } else {
-        this.isDisabledCodigoPostal = false;
+        if (this.historyDisable == true) {
+          this.isDisabledCodigoPostal = true;
+        } else {
+          this.isDisabledCodigoPostal = false;
+        }
       }
     } else {
-      this.isDisabledCodigoPostal = false;
+      if (this.historyDisable == true) {
+        this.isDisabledCodigoPostal = true;
+      } else {
+        this.isDisabledCodigoPostal = false;
+      }
       this.isDisabledPoblacion = true;
     }
 
     this.isDisabledProvincia = true;
   }
   onChangeCodigoPostal(event) {
-    console.log(event);
-
     if (this.isValidCodigoPostal() && this.body.codigoPostal.length == 5) {
       // this.recuperarProvinciaPoblacion();
       let value = this.body.codigoPostal.substring(0, 2);
@@ -244,7 +255,11 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       if (value != this.body.idProvincia) {
         this.body.idProvincia = this.provinciaSelecionada;
         this.isDisabledProvincia = true;
-        this.isDisabledPoblacion = false;
+        if (this.historyDisable == true) {
+          this.isDisabledPoblacion = true;
+        } else {
+          this.isDisabledPoblacion = false;
+        }
         this.getComboPoblacion();
       }
       this.codigoPostalValido = true;
@@ -264,12 +279,15 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.isDisabledProvincia = false;
       this.body.otraProvincia = "1";
     } else {
-      this.isDisabledPoblacion = false;
+      if (this.historyDisable == true) {
+        this.isDisabledPoblacion = true;
+      } else {
+        this.isDisabledPoblacion = false;
+      }
       this.isDisabledProvincia = true;
       this.onChangeCodigoPostal(event);
       this.body.otraProvincia = "0";
     }
-    console.log(event);
   }
   guardar() {
     if (
@@ -279,12 +297,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     ) {
       this.progressSpinner = true;
       if (this.registroEditable) {
-        console.log(this.body);
-        console.log(this.datosContacto);
         this.comprobarTablaDatosContactos();
         this.comprobarCheckProvincia();
         this.body.idProvincia = this.provinciaSelecionada;
-        console.log(this.body);
         this.sigaServices.post("direcciones_update", this.body).subscribe(
           data => {
             this.progressSpinner = false;
@@ -299,12 +314,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
           }
         );
       } else {
-        console.log(this.body);
-        console.log(this.datosContacto);
         this.comprobarTablaDatosContactos();
         this.comprobarCheckProvincia();
         this.body.idProvincia = this.provinciaSelecionada;
-        console.log(this.body);
         this.sigaServices.post("direcciones_insert", this.body).subscribe(
           data => {
             this.progressSpinner = false;
@@ -324,14 +336,11 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     }
   }
   duplicarRegistro() {
-    console.log(this.body);
-    console.log(this.datosContacto);
     this.body.idDireccion = null;
     this.nuevo = true;
     this.progressSpinner = true;
     this.comprobarTablaDatosContactos();
     this.comprobarCheckProvincia();
-    console.log(this.body);
     this.sigaServices.post("direcciones_insert", this.body).subscribe(
       data => {
         // this.bodySearch = JSON.parse(data["body"]);
