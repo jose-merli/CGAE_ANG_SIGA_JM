@@ -8,26 +8,17 @@ import {
 } from "@angular/core";
 
 import { SigaServices } from "./../../../../_services/siga.service";
-import { Router, ActivatedRoute } from "@angular/router";
-import { MessageService } from "primeng/components/common/messageservice";
+import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
 import { TranslateService } from "../../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../../properties/val-properties";
 import { SigaWrapper } from "../../../../wrapper/wrapper.class";
-
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl
-} from "@angular/forms";
 
 import { Message } from "primeng/components/common/api";
 import { esCalendar } from "./../../../../utils/calendar";
 
 import { HistoricoUsuarioDto } from "../../../../models/HistoricoUsuarioDto";
 import { HistoricoUsuarioRequestDto } from "../../../../models/HistoricoUsuarioRequestDto";
-import { Location } from "@angular/common";
 import { DataTable } from "primeng/datatable";
 
 export enum KEY_CODE {
@@ -60,7 +51,6 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   datosUsuarios: any[];
   bodySearch: HistoricoUsuarioRequestDto = new HistoricoUsuarioRequestDto();
   searchParametros: HistoricoUsuarioDto = new HistoricoUsuarioDto();
-  jsonDate: string;
   msgs: Message[] = [];
   habilitarInputUsuario: boolean = false;
   returnDesde: string;
@@ -68,19 +58,15 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   arrayDesde: any[];
   arrayHasta: any[];
   progressSpinner: boolean = false;
-
   volver: boolean = false;
+  pButton;
 
   constructor(
     private sigaServices: SigaServices,
-    private formBuilder: FormBuilder,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
-    private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private activatedRoute: ActivatedRoute,
-    private translateService: TranslateService,
-    private location: Location
+    private translateService: TranslateService
   ) {
     super(USER_VALIDATIONS);
   }
@@ -98,8 +84,10 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
       para poder filtrar el dato con o sin estos caracteres*/
         this.tipoAcciones.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
           let i;
           let x;
           for (i = 0; i < e.label.length; i++) {

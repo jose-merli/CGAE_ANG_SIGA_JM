@@ -139,9 +139,9 @@
       <br>
       <div *ngIf="openFicha" class="card-footer ">
         <div class="text-right main-button ">
-          <button (click)="restablecer()" [disabled]="editar" pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"></button>
+          <button (click)="restablecer()" [disabled]="editar" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
           <button (click)="comprobarAuditoria()" [disabled]="!showGuardar" pButton type="button" icon="far fa-save" iconPos="left"
-            label="Guardar"></button>
+            label="{{ 'general.boton.guardar' | translate}}"></button>
         </div>
       </div>
     </div>

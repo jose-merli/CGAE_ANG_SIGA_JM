@@ -143,8 +143,8 @@
       <div class="text-right main-button ">
         <!--<button (click)="toSociedadProfesional()" class="sociedadprof" pButton type="button " icon="fas fa-book " iconPos="left"
           label="Sociedad Profesional"></button>-->
-        <button (click)="search()" pButton type="button " icon="fa fa-undo " iconPos="left" label="Restablecer"></button>
-        <button (click)="guardar()" [disabled]="desactivadoGuardar()" pButton type="button " icon="far fa-save " iconPos="left" label="Guardar"></button>
+        <button (click)="search()" pButton type="button " icon="fa fa-undo " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="guardar()" [disabled]="desactivadoGuardar()" pButton type="button " icon="far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

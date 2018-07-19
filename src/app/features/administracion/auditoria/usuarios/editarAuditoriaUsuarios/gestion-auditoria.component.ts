@@ -1,21 +1,11 @@
-import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  ViewChild,
-  ChangeDetectorRef,
-  Input
-} from "@angular/core";
+import { Component, OnInit, ViewEncapsulation, ViewChild } from "@angular/core";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { SigaWrapper } from "./../../../../../wrapper/wrapper.class";
 import { esCalendar } from "./../../../../../utils/calendar";
-import { FormBuilder } from "@angular/forms";
 import { TranslateService } from "./../../../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "./../../../../../properties/val-properties";
-import { Router, ActivatedRoute } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
-import { MessageService } from "primeng/components/common/messageservice";
 import { HistoricoUsuarioItem } from "./../../../../../../app/models/HistoricoUsuarioItem";
 import { HistoricoUsuarioUpdateDto } from "./../../../../../../app/models/HistoricoUsuarioUpdateDto";
 import { HistoricoUsuarioRequestDto } from "./../../../../../../app/models/HistoricoUsuarioRequestDto";
@@ -33,24 +23,14 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   body: HistoricoUsuarioRequestDto = new HistoricoUsuarioRequestDto();
   update: HistoricoUsuarioUpdateDto = new HistoricoUsuarioUpdateDto();
   itemBody: HistoricoUsuarioItem = new HistoricoUsuarioItem();
-  pButton;
-  textSelected: String = "{0} grupos seleccionados";
-  textFilter: String;
-  fechaEntrada: Date;
-  fechaEfectiva: Date;
   disabled: boolean;
   showDatosGenerales: boolean = true;
   showReconfiguracion: boolean = true;
   es: any = esCalendar;
-  jsonDate: string;
-  rawDate: string;
-  splitDate: any[];
-  arrayDate: string;
-  addedDay: number;
   correcto: boolean;
   habilitarBotonGuardarCerrar: boolean = true;
   motivoSinModificar: String;
-
+  pButton;
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   permisos: any;
   permisosArray: any[];
@@ -76,7 +56,6 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
 
     this.motivoSinModificar = this.itemBody.motivo;
 
-    // this.bodyToForm();
     this.checkMode();
   }
 
