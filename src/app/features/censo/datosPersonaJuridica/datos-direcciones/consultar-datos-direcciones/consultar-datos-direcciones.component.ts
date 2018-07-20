@@ -107,6 +107,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     }
     this.getDatosContactos();
   }
+
   getDatosContactos() {
     this.columnasDirecciones = [
       {
@@ -121,23 +122,28 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     this.datosContacto = [
       {
         tipo: "Telefono",
-        valor: this.body.telefono
+        valor: this.body.telefono,
+        longitud: 20
       },
       {
         tipo: "Fax",
-        valor: this.body.fax
+        valor: this.body.fax,
+        longitud: 20
       },
       {
         tipo: "Móvil",
-        valor: this.body.movil
+        valor: this.body.movil,
+        longitud: 20
       },
       {
         tipo: "Correo-Electrónico",
-        valor: this.body.correoElectronico
+        valor: this.body.correoElectronico,
+        longitud: 100
       },
       {
         tipo: "Página Web",
-        valor: this.body.paginaWeb
+        valor: this.body.paginaWeb,
+        longitud: 100
       }
     ];
   }
