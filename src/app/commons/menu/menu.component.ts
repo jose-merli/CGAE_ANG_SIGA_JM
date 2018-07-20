@@ -58,11 +58,11 @@ export class MenuComponent implements OnInit {
   }
 
   navigateTo(ruta) {
-    this.router.navigate([ruta]);
     if (ruta !== " ") {
       if (ruta !== "opcionMenu") {
         this.closeMenu = !this.closeMenu;
         console.log(this.closeMenu);
+        this.router.navigate([ruta]);
       }
     }
   }
