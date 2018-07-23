@@ -13,14 +13,12 @@ import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
-import { MessageService } from "primeng/components/common/messageservice";
 import { PerfilItem } from "./../../../../app/models/PerfilItem";
 import { PerfilesResponseDto } from "./../../../../app/models/PerfilesResponseDto";
 import { PerfilesRequestDto } from "./../../../../app/models/PerfilesRequestDto";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { ComboItem } from "./../../../../app/models/ComboItem";
 import { DataTable } from "primeng/datatable";
-import { Error } from "../../../models/Error";
 
 @Component({
   selector: "app-perfiles",
@@ -331,9 +329,11 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   }
   onChangeId() {
     if (this.newPerfil.idGrupo != null && this.newPerfil.idGrupo != undefined) {
-      if (this.newPerfil.idGrupo.length >= 3) {
-        this.newPerfil.idGrupo = this.newPerfil.idGrupo.substring(0, 3);
-        this.newPerfil.idGrupo = this.newPerfil.idGrupo.toLocaleUpperCase();
+      if (this.newPerfil.idGrupo.trim().length >= 3) {
+        this.newPerfil.idGrupo = this.newPerfil.idGrupo.trim().substring(0, 3);
+        this.newPerfil.idGrupo = this.newPerfil.idGrupo
+          .trim()
+          .toLocaleUpperCase();
         this.inputEl.nativeElement.focus();
       } else {
         this.newPerfil.idGrupo = this.newPerfil.idGrupo.toLocaleUpperCase();
@@ -342,7 +342,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     if (
       this.newPerfil.idGrupo != null &&
       this.newPerfil.idGrupo != undefined &&
-      this.newPerfil.idGrupo.trim() != null &&
+      this.newPerfil.idGrupo.trim() != "" &&
       this.newPerfil.descripcionGrupo != null &&
       this.newPerfil.descripcionGrupo != undefined &&
       this.newPerfil.descripcionGrupo.trim() != ""
@@ -356,7 +356,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     if (
       this.newPerfil.idGrupo != null &&
       this.newPerfil.idGrupo != undefined &&
-      this.newPerfil.idGrupo.trim() != null &&
+      this.newPerfil.idGrupo.trim() != "" &&
       this.newPerfil.descripcionGrupo != null &&
       this.newPerfil.descripcionGrupo != undefined &&
       this.newPerfil.descripcionGrupo.trim() != ""

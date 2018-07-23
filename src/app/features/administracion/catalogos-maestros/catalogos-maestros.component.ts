@@ -4,7 +4,6 @@ import {
   ViewEncapsulation,
   ViewChild,
   ChangeDetectorRef,
-  Input,
   HostListener,
   ElementRef
 } from "@angular/core";
@@ -274,14 +273,35 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     console.log(event);
     let data = event.data;
 
-    if (data.descripcion.length > 2000 || data.codigoExt.length > 10) {
-      this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
-        if (value.idRegistro == data.idRegistro) {
-          value.descripcion = data.descripcion.substring(0, 1950);
-          value.codigoExt = data.codigoExt.substring(0, 10);
+    if (data.codigoExt != null && data.codigoExt != undefined) {
+      if (
+        data.descripcion.length > 2000 ||
+        (data.codigoExt.length > 10 &&
+          data.codigoExt != null &&
+          data.codigoExt != undefined)
+      ) {
+        this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
+          if (value.idRegistro == data.idRegistro) {
+            value.descripcion = data.descripcion.substring(0, 1950);
+            value.codigoExt = data.codigoExt.substring(0, 10);
+          }
+        });
+        this.inputEl.nativeElement.focus();
+      } else {
+        //compruebo si la edicion es correcta con la basedatos
+        if (this.onlySpaces(data.descripcion)) {
+          this.blockCrear = true;
+        } else {
+          this.editar = true;
+          this.blockCrear = false;
+          this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
+            if (value.idRegistro == data.idRegistro) {
+              value.editar = true;
+            }
+          });
+          console.log(this.datosHist);
         }
-      });
-      this.inputEl.nativeElement.focus();
+      }
     } else {
       //compruebo si la edicion es correcta con la basedatos
       if (this.onlySpaces(data.descripcion)) {

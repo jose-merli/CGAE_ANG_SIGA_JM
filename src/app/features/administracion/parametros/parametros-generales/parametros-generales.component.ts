@@ -8,17 +8,11 @@ import {
 } from "@angular/core";
 
 import { SigaServices } from "./../../../../_services/siga.service";
-import { Router } from "@angular/router";
-import { MessageService } from "primeng/components/common/messageservice";
 import { ConfirmationService } from "primeng/api";
 import { TranslateService } from "../../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../../properties/val-properties";
 import { SigaWrapper } from "../../../../wrapper/wrapper.class";
-
-import { FormBuilder } from "@angular/forms";
-
 import { Message } from "primeng/components/common/api";
-
 import { ParametroRequestDto } from "../../../../models/ParametroRequestDto";
 import { ParametroDto } from "../../../../models/ParametroDto";
 import { ParametroDeleteDto } from "../../../../models/ParametroDeleteDto";
