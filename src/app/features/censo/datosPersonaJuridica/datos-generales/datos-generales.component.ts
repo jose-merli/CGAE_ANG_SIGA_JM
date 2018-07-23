@@ -418,7 +418,6 @@ export class DatosGenerales implements OnInit {
       .subscribe(data => {
         const blob = new Blob([data], { type: "text/csv" });
         if (blob.size == 0) {
-          this.showFail("messages.general.error.ficheroNoExiste");
           this.existeImagen = false;
         } else {
           let urlCreator = window.URL;
