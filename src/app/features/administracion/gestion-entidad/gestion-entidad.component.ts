@@ -27,9 +27,6 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
   archivoDisponible: boolean = false;
   file: File = undefined;
   nombreImagen: any;
-  base64String: any;
-  source: any;
-  imageBase64: any;
   imagenURL: any;
   constructor(
     private sigaServices: SigaServices,

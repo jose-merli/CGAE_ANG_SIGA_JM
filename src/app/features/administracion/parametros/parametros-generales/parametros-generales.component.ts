@@ -154,7 +154,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   isBuscar(selectedModulo) {
     if (selectedModulo != undefined) {
       this.body.modulo = selectedModulo;
-    } else this.body.modulo = "";
+    }
 
     this.body.parametrosGenerales = "S";
 

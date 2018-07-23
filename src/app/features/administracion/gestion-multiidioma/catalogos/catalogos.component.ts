@@ -55,7 +55,6 @@ export class Catalogos extends SigaWrapper implements OnInit {
   permisos: any;
   permisosArray: any[];
   derechoAcceso: any;
-  comparacion: boolean;
   editar: boolean = false;
   habilitarBotones: boolean = false;
   local: String;

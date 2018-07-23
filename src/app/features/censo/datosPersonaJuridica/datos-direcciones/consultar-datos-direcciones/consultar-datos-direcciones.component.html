@@ -50,23 +50,24 @@
               </div>
               <div class="form-group col-lg-12 col-md-12">
                 <label>Dirección</label>
-                <input [(ngModel)]="body.domicilio" type="text" class="form-control" [(disabled)]="historyDisable" pInputText>
+                <input [(ngModel)]="body.domicilio" type="text" class="form-control" [(disabled)]="historyDisable" [maxLength]="99" pInputText>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>País</label>
-                <p-dropdown class="select-form" [(ngModel)]="body.idPais" [options]="comboPais" [(disabled)]="historyDisable" (onChange)="onChangePais()">
+                <p-dropdown class="select-form" [(ngModel)]="body.idPais" [filter]="true" filterMatchMode="contains" [options]="comboPais"
+                  [(disabled)]="historyDisable" (onChange)="onChangePais()">
                 </p-dropdown>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>Código postal</label>
-                <input [(ngModel)]="body.codigoPostal" type="text" class="form-control" [(disabled)]="isDisabledCodigoPostal" (ngModelChange)="onChangeCodigoPostal($event)"
-                  pInputText>
+                <input [(ngModel)]="body.codigoPostal" type="text" class="form-control" [(disabled)]="isDisabledCodigoPostal" [maxLength]="5"
+                  (ngModelChange)="onChangeCodigoPostal()" pInputText>
 
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>Provincia</label>
-                <p-dropdown class="select-form" [(ngModel)]='provinciaSelecionada' [(disabled)]="isDisabledProvincia" [options]="comboProvincia"
-                  (onChange)="onChangeProvincia($event)">
+                <p-dropdown class="select-form" [(ngModel)]='provinciaSelecionada' [filter]="true" filterMatchMode="contains" [(disabled)]="isDisabledProvincia"
+                  [options]="comboProvincia" (onChange)="onChangeProvincia()">
                 </p-dropdown>
               </div>
               <div class="form-group col-lg-6 col-md-6">
@@ -75,12 +76,12 @@
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>Población</label>
-                <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' [(disabled)]="isDisabledPoblacion" [options]="comboPoblacion"
-                  (onChange)="onChangePoblacion($event)">
+                <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true" filterMatchMode="contains" [(disabled)]="isDisabledPoblacion"
+                  [options]="comboPoblacion" (onChange)="onChangePoblacion($event)">
                 </p-dropdown>
               </div>
               <div class="form-group col-lg-6 col-md-6">
-                <label>Tipo dirección</label>
+                <label>Tipo dirección (*)</label>
                 <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='body.idTipoDireccion' [options]="comboTipoDireccion"
                   [selectedItemsLabel]="textSelected" maxSelectedLabels="1" maxSelectedLabels="1" [(disabled)]="historyDisable"></p-multiSelect>
               </div>
@@ -101,7 +102,7 @@
                   <p-column *ngFor="let col of columnasDirecciones" [sortable]="true" [field]="col.field" [header]="col.header | translate">
                     <ng-template *ngIf="col.field == 'valor'" let-dato="rowData" pTemplate="body">
                       <span class="input-group">
-                        <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" [(disabled)]="historyDisable">
+                        <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" [maxLength]="dato.longitud" [(disabled)]="historyDisable">
                       </span>
                     </ng-template>
                     <ng-template *ngIf="col.field == 'tipo'" let-dato="rowData" pTemplate="body">

@@ -52,7 +52,7 @@ export class DatosDireccionesComponent implements OnInit {
   idPersona: String;
   body: DatosIntegrantesItem = new DatosIntegrantesItem();
   datosIntegrantes: DatosIntegrantesObject = new DatosIntegrantesObject();
-
+  camposDesactivados: boolean;
   columnasTabla: any = [];
 
   // Obj extras
@@ -77,7 +77,7 @@ export class DatosDireccionesComponent implements OnInit {
       fichaPosible.activa = true;
       sessionStorage.removeItem("editarDirecciones");
     }
-
+    this.checkAcceso();
     this.cols = [
       {
         field: "tipoDireccion",
@@ -134,8 +134,6 @@ export class DatosDireccionesComponent implements OnInit {
         value: 40
       }
     ];
-
-    this.checkAcceso();
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     if (this.usuarioBody[0] != undefined) {
       this.idPersona = this.usuarioBody[0].idPersona;
@@ -149,6 +147,9 @@ export class DatosDireccionesComponent implements OnInit {
         }
       }
     );
+    if (sessionStorage.getItem("historicoSociedad") != null) {
+      this.camposDesactivados = true;
+    }
   }
   activarPaginacion() {
     if (!this.datos || this.datos.length == 0) return false;
@@ -182,8 +183,11 @@ export class DatosDireccionesComponent implements OnInit {
         console.log(err);
       },
       () => {
-        if (derechoAcceso == 3) {
+        if (derechoAcceso >= 2) {
           this.activacionEditar = true;
+          if (derechoAcceso == 2) {
+            this.camposDesactivados = true;
+          }
         } else {
           this.activacionEditar = false;
         }
@@ -264,24 +268,26 @@ export class DatosDireccionesComponent implements OnInit {
   }
 
   redireccionar(dato) {
-    if (!this.selectMultiple) {
-      if (dato[0].fechaBaja != null) {
-        sessionStorage.setItem("historicoDir", "true");
-      }
-      var enviarDatos = null;
-      if (dato && dato.length > 0) {
-        enviarDatos = dato[0];
-        sessionStorage.setItem("idDireccion", enviarDatos.idDireccion);
-        sessionStorage.setItem("direccion", JSON.stringify(enviarDatos));
-        sessionStorage.removeItem("editarDireccion");
-        sessionStorage.setItem("editarDireccion", "true");
-      } else {
-        sessionStorage.setItem("editar", "false");
-      }
+    if (this.camposDesactivados != true) {
+      if (!this.selectMultiple) {
+        if (dato[0].fechaBaja != null) {
+          sessionStorage.setItem("historicoDir", "true");
+        }
+        var enviarDatos = null;
+        if (dato && dato.length > 0) {
+          enviarDatos = dato[0];
+          sessionStorage.setItem("idDireccion", enviarDatos.idDireccion);
+          sessionStorage.setItem("direccion", JSON.stringify(enviarDatos));
+          sessionStorage.removeItem("editarDireccion");
+          sessionStorage.setItem("editarDireccion", "true");
+        } else {
+          sessionStorage.setItem("editar", "false");
+        }
 
-      this.router.navigate(["/consultarDatosDirecciones"]);
-    } else {
-      this.numSelected = this.selectedDatos.length;
+        this.router.navigate(["/consultarDatosDirecciones"]);
+      } else {
+        this.numSelected = this.selectedDatos.length;
+      }
     }
   }
   onChangeSelectAll() {

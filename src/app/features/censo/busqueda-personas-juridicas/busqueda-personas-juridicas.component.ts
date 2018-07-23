@@ -12,7 +12,7 @@ import { esCalendar } from "./../../../utils/calendar";
 import { DataTable } from "primeng/datatable";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
-import { Router  } from "@angular/router";
+import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { PersonaJuridicaObject } from "./../../../../app/models/PersonaJuridicaObject";
@@ -64,7 +64,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   numSelected: number = 0;
   textFilter: String = "Elegir";
   sortO: number = 1;
-
+  etiquetasSelected: any[];
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
@@ -149,6 +149,17 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         value: 40
       }
     ];
+  }
+
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.selectMultiple = false;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
   }
 
   toHistorico() {
@@ -286,7 +297,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.selectAll = false;
     this.selectMultiple = false;
     this.selectedDatos = "";
-
+    // this.body.grupos = this.etiquetasSelected;
     if (this.body.tipo == undefined) {
       this.body.tipo = "";
     }
@@ -326,7 +337,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         err => {
           console.log(err);
           this.progressSpinner = false;
-        },
+        }
       );
   }
 
@@ -492,6 +503,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       var ir = null;
       if (id && id.length > 0) {
         ir = id[0];
+      }
+      sessionStorage.removeItem("historicoSociedad");
+      if (id[0].fechaBaja != null || id[0].fechaBaja != undefined) {
+        sessionStorage.setItem("historicoSociedad", "true");
       }
       sessionStorage.setItem("busqueda", JSON.stringify(this.body));
       sessionStorage.setItem("usuarioBody", JSON.stringify(id));

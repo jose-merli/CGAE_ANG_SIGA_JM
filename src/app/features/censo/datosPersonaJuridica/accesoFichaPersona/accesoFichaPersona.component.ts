@@ -33,6 +33,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
   desasociar: boolean = false;
   suscripcionBusquedaNuevo: Subscription;
   activacionEditar: boolean;
+  camposDesactivados: boolean;
   file: File = undefined;
   constructor(
     private router: Router,
@@ -42,7 +43,10 @@ export class AccesoFichaPersonaComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-
+    if (sessionStorage.getItem("historicoSociedad") != null) {
+      this.camposDesactivados = true;
+      this.desasociar = false;
+    }
     // Esto se activará cuando venimos de datos bancarios
     if (sessionStorage.getItem("abrirNotario") == "true") {
       this.openFicha = !this.openFicha;
@@ -76,7 +80,9 @@ export class AccesoFichaPersonaComponent implements OnInit {
         this.guardarNotario = true;
       } else {
         // modo de creacion + asignacion de notario
-        this.editar = true;
+        if (this.camposDesactivados != true) {
+          this.editar = true;
+        }
       }
       if (this.notario[0].nif != undefined) {
         this.body.nif = this.notario[0].nif;
@@ -125,17 +131,14 @@ export class AccesoFichaPersonaComponent implements OnInit {
           data => {
             this.progressSpinner = false;
             this.bodySearch = JSON.parse(data["body"]);
-            // if (this.bodySearch.fichaPersonaItem != undefined && this.bodySearch.fichaPersonaItem != null) {
-            //   this.body = this.bodySearch.fichaPersonaItem[0];
-            //   this.desasociar = true;
-            //   this.obtenerTiposIdentificacion();
-            // }
             if (
               this.bodySearch.fichaPersonaItem != undefined &&
               this.bodySearch.fichaPersonaItem != null
             ) {
               this.body = this.bodySearch.fichaPersonaItem[0];
-              this.desasociar = true;
+              if (this.camposDesactivados != true) {
+                this.desasociar = true;
+              }
               this.obtenerTiposIdentificacion();
             } else {
               this.guardarNotario = false;
