@@ -12,7 +12,7 @@ import { esCalendar } from "./../../../utils/calendar";
 import { DataTable } from "primeng/datatable";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
-import { Router  } from "@angular/router";
+import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { PersonaJuridicaObject } from "./../../../../app/models/PersonaJuridicaObject";
@@ -149,6 +149,17 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         value: 40
       }
     ];
+  }
+
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.selectMultiple = false;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
   }
 
   toHistorico() {
@@ -326,7 +337,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         err => {
           console.log(err);
           this.progressSpinner = false;
-        },
+        }
       );
   }
 
