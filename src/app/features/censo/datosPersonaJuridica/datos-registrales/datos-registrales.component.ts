@@ -87,6 +87,7 @@ export class DatosRegistralesComponent implements OnInit {
   datos: any[];
   suscripcionBusquedaNuevo: Subscription;
   activacionEditar: boolean;
+  camposDesactivados: boolean = false;
 
   @ViewChild(DatosRegistralesComponent)
   datosRegistralesComponent: DatosRegistralesComponent;
@@ -110,6 +111,10 @@ export class DatosRegistralesComponent implements OnInit {
     this.checkAcceso();
     this.desactivadoGuardar();
     this.onChangeSociedad();
+    if (sessionStorage.getItem("historicoSociedad") != null) {
+      this.camposDesactivados = true;
+      this.prefijoBlock = true;
+    }
     this.bodyAnterior = JSON.parse(sessionStorage.getItem("usuarioBody"));
     if (this.bodyAnterior[0] != undefined) {
       if (this.bodyAnterior != null) {
@@ -166,8 +171,11 @@ export class DatosRegistralesComponent implements OnInit {
         console.log(err);
       },
       () => {
-        if (derechoAcceso == 3) {
+        if (derechoAcceso >= 2) {
           this.activacionEditar = true;
+          if (derechoAcceso == 2) {
+            this.camposDesactivados = true;
+          }
         } else {
           this.activacionEditar = false;
         }
@@ -229,7 +237,6 @@ export class DatosRegistralesComponent implements OnInit {
   }
 
   search() {
-    this.prefijoBlock = false;
     this.body.idPersona = this.idPersonaEditar;
     this.contadorNoCorrecto = false;
     this.fechaCorrecta = true;
@@ -389,7 +396,9 @@ export class DatosRegistralesComponent implements OnInit {
       this.body.prefijoNumsspp = "SP/";
       this.requiredContador = true;
     } else {
-      this.prefijoBlock = false;
+      if (this.camposDesactivados == true) {
+        this.prefijoBlock = false;
+      }
       this.requiredContador = false;
     }
   }
@@ -405,7 +414,11 @@ export class DatosRegistralesComponent implements OnInit {
       this.compruebaFechaConstitucion() &&
       this.compruebaFechaBaja()
     ) {
-      return false;
+      if (this.camposDesactivados == true) {
+        return true;
+      } else {
+        return false;
+      }
     } else {
       return true;
     }

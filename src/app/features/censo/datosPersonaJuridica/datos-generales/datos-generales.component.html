@@ -59,7 +59,8 @@
                 <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="imagenCentrada">
               </div>
             </div>
-            <p-fileUpload #fubauto name="file" mode="basic" (change)="uploadImage($event)" auto="true" styleClass="pi pi-pencil" chooseLabel="Selecciona una fotografía"></p-fileUpload>
+            <p-fileUpload [(disabled)]="camposDesactivados" #fubauto name="file" mode="basic" (change)="uploadImage($event)" auto="true"
+              styleClass="pi pi-pencil" chooseLabel="Selecciona una fotografía"></p-fileUpload>
           </div>
         </div>
         <div class="bloque col-lg-5 col-md-5">
@@ -94,13 +95,13 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.denominacion" | translate}} (*)</label>
-              <input [(ngModel)]="body.denominacion" type="text" class="form-control" (ngModelChange)="onChangeForm()" [maxLength]="99"
-                pInputText>
+              <input [(ngModel)]="body.denominacion" type="text" class="form-control" (ngModelChange)="onChangeForm()" [(disabled)]="camposDesactivados"
+                [maxLength]="99" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"gratuita.definirTurnosIndex.literal.abreviatura" | translate}} (*)</label>
-              <input [(ngModel)]="body.abreviatura" type="text" class="form-control" (ngModelChange)="onChangeForm()" [maxLength]="100"
-                pInputText>
+              <input [(ngModel)]="body.abreviatura" type="text" class="form-control" (ngModelChange)="onChangeForm()" [(disabled)]="camposDesactivados"
+                [maxLength]="100" pInputText>
             </div>
           </div>
         </div>
@@ -109,24 +110,25 @@
           <div class="form-row">
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"censo.fichaCliente.situacion.idiomaPref" | translate}} (*)</label>
-              <p-dropdown class="select-form" [options]="idiomas" [(ngModel)]="idiomaPreferenciaSociedad" [filter]="true" (ngModelChange)="onChangeForm()"
-                filterBy="label"></p-dropdown>
+              <p-dropdown class="select-form" [options]="idiomas" [(disabled)]="camposDesactivados" [(ngModel)]="idiomaPreferenciaSociedad"
+                [filter]="true" (ngModelChange)="onChangeForm()" filterBy="label"></p-dropdown>
             </div>
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
-              <input type="text " class="form-control " [(ngModel)]="body.cuentaContable" [maxLength]="20" (ngModelChange)="onChangeForm()"
-                pInputText>
+              <input type="text " class="form-control " [(disabled)]="camposDesactivados" [(ngModel)]="body.cuentaContable" [maxLength]="20"
+                (ngModelChange)="onChangeForm()" pInputText>
             </div>
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"censo.general.literal.anotaciones" | translate}}: </label>
-              <textarea pInputTextarea [(ngModel)]="body.anotaciones" (ngModelChange)="onChangeForm()" [maxLength]="2000"></textarea>
+              <textarea pInputTextarea [(ngModel)]="body.anotaciones" [(disabled)]="camposDesactivados" (ngModelChange)="onChangeForm()"
+                [maxLength]="2000"></textarea>
             </div>
             <div class="form-group col-lg-8 col-md-8">
               <label>{{"menu.administracion.gestionMultiidioma.etiquetas" | translate}}</label>
               <br>
-              <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='etiquetasPersonaJuridicaSelecionados' [options]="comboEtiquetas"
-                [selectedItemsLabel]="textSelected" maxSelectedLabels="1" autoWidth="false" defaultLabel="" maxSelectedLabels="1"
-                (ngModelChange)="onChangeForm()"></p-multiSelect>
+              <p-multiSelect [defaultLabel]="textFilter" [(disabled)]="camposDesactivados" styleClass="widthAll" [(ngModel)]='etiquetasPersonaJuridicaSelecionados'
+                [options]="comboEtiquetas" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" autoWidth="false" defaultLabel=""
+                maxSelectedLabels="1" (ngModelChange)="onChangeForm()"></p-multiSelect>
             </div>
           </div>
         </div>
