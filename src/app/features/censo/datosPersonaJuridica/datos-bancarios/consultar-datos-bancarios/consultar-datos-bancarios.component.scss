@@ -12,6 +12,10 @@
   cursor: pointer;
 }
 
+.widthAll {
+  width: 100%;
+}
+
 .ui-growl-message-info .ui-growl-item {
   color: white !important;
   background-color: #33a1ff !important;
@@ -30,4 +34,8 @@
 .ui-growl-message-error .ui-growl-item {
   color: white !important;
   background-color: #dc3545 !important;
+}
+
+.ui-multiselect .ui-multiselect-label {
+  padding: 0.112em !important;
 }

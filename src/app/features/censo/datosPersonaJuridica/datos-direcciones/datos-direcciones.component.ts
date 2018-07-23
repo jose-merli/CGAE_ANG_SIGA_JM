@@ -1,16 +1,11 @@
 import { Router } from "@angular/router";
 import { DataTable } from "primeng/datatable";
-import { ConfirmationService, Message } from "primeng/components/common/api";
-import { TranslateService } from "../../../../commons/translate/translation.service";
+import { Message } from "primeng/components/common/api";
 import { SigaServices } from "./../../../../_services/siga.service";
 import { DatosDireccionesItem } from "./../../../../../app/models/DatosDireccionesItem";
 import { DatosDireccionesObject } from "./../../../../../app/models/DatosDireccionesObject";
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
-import { ActivatedRoute } from "@angular/router";
-import { MessageService } from "primeng/components/common/messageservice";
 import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
-import { Location } from "@angular/common";
 import { DatosIntegrantesItem } from "../../../../models/DatosIntegrantesItem";
 import { DatosIntegrantesObject } from "../../../../models/DatosIntegrantesObject";
 import { DatosPersonaJuridicaComponent } from "../../datosPersonaJuridica/datosPersonaJuridica.component";
@@ -57,7 +52,7 @@ export class DatosDireccionesComponent implements OnInit {
   idPersona: String;
   body: DatosIntegrantesItem = new DatosIntegrantesItem();
   datosIntegrantes: DatosIntegrantesObject = new DatosIntegrantesObject();
-
+  camposDesactivados: boolean;
   columnasTabla: any = [];
 
   // Obj extras
@@ -82,7 +77,7 @@ export class DatosDireccionesComponent implements OnInit {
       fichaPosible.activa = true;
       sessionStorage.removeItem("editarDirecciones");
     }
-
+    this.checkAcceso();
     this.cols = [
       {
         field: "tipoDireccion",
@@ -139,8 +134,6 @@ export class DatosDireccionesComponent implements OnInit {
         value: 40
       }
     ];
-
-    this.checkAcceso();
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     if (this.usuarioBody[0] != undefined) {
       this.idPersona = this.usuarioBody[0].idPersona;
@@ -154,6 +147,9 @@ export class DatosDireccionesComponent implements OnInit {
         }
       }
     );
+    if (sessionStorage.getItem("historicoSociedad") != null) {
+      this.camposDesactivados = true;
+    }
   }
   activarPaginacion() {
     if (!this.datos || this.datos.length == 0) return false;
@@ -187,8 +183,11 @@ export class DatosDireccionesComponent implements OnInit {
         console.log(err);
       },
       () => {
-        if (derechoAcceso == 3) {
+        if (derechoAcceso >= 2) {
           this.activacionEditar = true;
+          if (derechoAcceso == 2) {
+            this.camposDesactivados = true;
+          }
         } else {
           this.activacionEditar = false;
         }
@@ -245,7 +244,6 @@ export class DatosDireccionesComponent implements OnInit {
         .postPaginado("direcciones_search", "?numPagina=1", searchObject)
         .subscribe(
           data => {
-            console.log(data);
             this.progressSpinner = false;
             this.searchDirecciones = JSON.parse(data["body"]);
             this.datos = this.searchDirecciones.datosDireccionesItem;
@@ -270,24 +268,26 @@ export class DatosDireccionesComponent implements OnInit {
   }
 
   redireccionar(dato) {
-    if (!this.selectMultiple) {
-      if (dato[0].fechaBaja != null) {
-        sessionStorage.setItem("historicoDir", "true");
-      }
-      var enviarDatos = null;
-      if (dato && dato.length > 0) {
-        enviarDatos = dato[0];
-        sessionStorage.setItem("idDireccion", enviarDatos.idDireccion);
-        sessionStorage.setItem("direccion", JSON.stringify(enviarDatos));
-        sessionStorage.removeItem("editarDireccion");
-        sessionStorage.setItem("editarDireccion", "true");
-      } else {
-        sessionStorage.setItem("editar", "false");
-      }
+    if (this.camposDesactivados != true) {
+      if (!this.selectMultiple) {
+        if (dato[0].fechaBaja != null) {
+          sessionStorage.setItem("historicoDir", "true");
+        }
+        var enviarDatos = null;
+        if (dato && dato.length > 0) {
+          enviarDatos = dato[0];
+          sessionStorage.setItem("idDireccion", enviarDatos.idDireccion);
+          sessionStorage.setItem("direccion", JSON.stringify(enviarDatos));
+          sessionStorage.removeItem("editarDireccion");
+          sessionStorage.setItem("editarDireccion", "true");
+        } else {
+          sessionStorage.setItem("editar", "false");
+        }
 
-      this.router.navigate(["/consultarDatosDirecciones"]);
-    } else {
-      this.numSelected = this.selectedDatos.length;
+        this.router.navigate(["/consultarDatosDirecciones"]);
+      } else {
+        this.numSelected = this.selectedDatos.length;
+      }
     }
   }
   onChangeSelectAll() {
@@ -302,6 +302,7 @@ export class DatosDireccionesComponent implements OnInit {
   }
 
   searchHistorico() {
+    this.progressSpinner = true;
     this.historico = true;
     let searchObject = new DatosDireccionesItem();
     searchObject.idPersona = this.idPersona;
@@ -309,13 +310,11 @@ export class DatosDireccionesComponent implements OnInit {
     this.buscar = false;
     this.selectMultiple = false;
     this.selectedDatos = "";
-    this.progressSpinner = true;
     this.selectAll = false;
     this.sigaServices
       .postPaginado("direcciones_search", "?numPagina=1", searchObject)
       .subscribe(
         data => {
-          console.log(data);
           this.progressSpinner = false;
           this.searchDirecciones = JSON.parse(data["body"]);
           this.datos = this.searchDirecciones.datosDireccionesItem;
@@ -340,9 +339,7 @@ export class DatosDireccionesComponent implements OnInit {
     });
 
     this.sigaServices.post("direcciones_remove", datosDelete).subscribe(
-      data => {
-        console.log(data);
-      },
+      data => {},
       err => {
         console.log(err);
       },
@@ -356,7 +353,6 @@ export class DatosDireccionesComponent implements OnInit {
     );
   }
   goToDetails(selectedDatos) {
-    console.log(selectedDatos);
     if (!this.selectMultiple) {
       var ir = null;
       if (selectedDatos && selectedDatos.length > 0) {

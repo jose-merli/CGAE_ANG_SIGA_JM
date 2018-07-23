@@ -5,11 +5,6 @@
     <p>{{'menu.administracion.auditoria' | translate}}
       <i class="pl-1 fa fa-angle-right "></i> {{"administracion.usuarios.edicion.usuarios " | translate}}</p>
   </div>
-  <!--<div class="breadCrumb ">
-    <p>{{'menu.administracion.auditoria' | translate}} <i class="fa fa-angle-right "></i> {{"general.boton.edit " | translate}}
-      <i class="fa fa-angle-right "></i> {{ 'menu.administracion.usuarios' | translate}}
-    </p>
-  </div>-->
 
   <div class="card ">
     <div class="card-body ">
@@ -45,16 +40,14 @@
 
           <div class="form-group col-lg-6 col-md-6 ">
             <label class="d-block pb-2 ">{{"administracion.auditoriaUsuarios.literal.motivo " | translate}} (*)</label>
-            <!--<input type="text " name="prefijo " class="form-control
-  " [(ngModel)]='itemBody.motivo' (ngModelChange)="actualizarBotonGuardarCerrar() "
-              pInputText>-->
+
             <textarea [(disabled)]="!activacionEditar " name="prefijo " class="form-control
   " pInputTextarea [(ngModel)]="itemBody.motivo " autoResize="autoResize " (ngModelChange)="actualizarBotonGuardarCerrar() "></textarea>
           </div>
 
           <div class="form-group col-lg-6 col-md-6 ">
             <label class="d-block pb-2 ">{{"general.description " | translate}}</label>
-            <!--<input type="text " name="descripcion " disabled="true " class="form-control " [(ngModel)]='itemBody.descripcion' pInputText>-->
+
             <textarea name="descripcion " disabled="true " class="form-control " pInputTextarea [(ngModel)]="itemBody.descripcion
   " autoResize="autoResize "></textarea>
           </div>

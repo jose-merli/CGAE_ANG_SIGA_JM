@@ -8,7 +8,6 @@ import { DatosIntegrantesObject } from "../../../../models/DatosIntegrantesObjec
 import { DatosPersonaJuridicaComponent } from "../../datosPersonaJuridica/datosPersonaJuridica.component";
 import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
-import { DetalleIntegranteComponent } from "./detalleIntegrante/detalleIntegrante.component";
 
 /*** COMPONENTES ***/
 
@@ -56,7 +55,7 @@ export class DatosIntegrantesComponent implements OnInit {
   body: DatosIntegrantesItem = new DatosIntegrantesItem();
   datosIntegrantes: DatosIntegrantesObject = new DatosIntegrantesObject();
   suscripcionBusquedaNuevo: Subscription;
-
+  camposDesactivados: boolean;
   columnasTabla: any = [];
 
   // Obj extras
@@ -81,6 +80,10 @@ export class DatosIntegrantesComponent implements OnInit {
       let fichaPosible = this.getFichaPosibleByKey("integrantes");
       fichaPosible.activa = !fichaPosible.activa;
       sessionStorage.removeItem("editarIntegrante");
+    }
+
+    if (sessionStorage.getItem("historicoSociedad") != null) {
+      this.camposDesactivados = true;
     }
 
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
@@ -206,8 +209,11 @@ export class DatosIntegrantesComponent implements OnInit {
         console.log(err);
       },
       () => {
-        if (derechoAcceso == 3) {
+        if (derechoAcceso >= 2) {
           this.activacionEditar = true;
+          if (derechoAcceso == 2) {
+            this.camposDesactivados = true;
+          }
         } else {
           this.activacionEditar = false;
         }
@@ -230,7 +236,6 @@ export class DatosIntegrantesComponent implements OnInit {
         .postPaginado("integrantes_search", "?numPagina=1", searchObject)
         .subscribe(
           data => {
-            console.log(data);
             this.progressSpinner = false;
             this.searchIntegrantes = JSON.parse(data["body"]);
             this.datos = this.searchIntegrantes.datosIntegrantesItem;
@@ -259,25 +264,27 @@ export class DatosIntegrantesComponent implements OnInit {
     else return true;
   }
   consultarIntegrante(id) {
-    if (!this.selectMultiple) {
-      if (id[0].fechaBajaCargo != null) {
-        sessionStorage.setItem("historicoInt", "true");
+    if (this.camposDesactivados != true) {
+      if (!this.selectMultiple) {
+        if (id[0].fechaBajaCargo != null) {
+          sessionStorage.setItem("historicoInt", "true");
+        }
+        var ir = null;
+        ir = id[0];
+        ir.editar = false;
+        sessionStorage.removeItem("integrante");
+        sessionStorage.setItem("integrante", JSON.stringify(ir));
+
+        let dummy = {
+          integrante: true
+        };
+        sessionStorage.removeItem("newIntegrante");
+        sessionStorage.setItem("newIntegrante", JSON.stringify(dummy));
+
+        this.router.navigate(["detalleIntegrante"]);
+      } else {
+        this.numSelected = this.selectedDatos.length;
       }
-      var ir = null;
-      ir = id[0];
-      ir.editar = false;
-      sessionStorage.removeItem("integrante");
-      sessionStorage.setItem("integrante", JSON.stringify(ir));
-
-      let dummy = {
-        integrante: true
-      };
-      sessionStorage.removeItem("newIntegrante");
-      sessionStorage.setItem("newIntegrante", JSON.stringify(dummy));
-
-      this.router.navigate(["detalleIntegrante"]);
-    } else {
-      this.numSelected = this.selectedDatos.length;
     }
   }
   onChangeSelectAll() {
@@ -312,7 +319,6 @@ export class DatosIntegrantesComponent implements OnInit {
       .postPaginado("integrantes_search", "?numPagina=1", searchObject)
       .subscribe(
         data => {
-          console.log(data);
           this.progressSpinner = false;
           this.searchIntegrantes = JSON.parse(data["body"]);
           this.datos = this.searchIntegrantes.datosIntegrantesItem;
@@ -336,9 +342,7 @@ export class DatosIntegrantesComponent implements OnInit {
     this.sigaServices
       .post("integrantes_delete", deleteIntegrantes.datosIntegrantesItem)
       .subscribe(
-        data => {
-          console.log(data);
-        },
+        data => {},
         err => {
           console.log(err);
         },
@@ -351,7 +355,6 @@ export class DatosIntegrantesComponent implements OnInit {
       );
   }
   goToDetails(selectedDatos) {
-    console.log(selectedDatos);
     if (!this.selectMultiple) {
       var ir = null;
       if (selectedDatos && selectedDatos.length > 0) {

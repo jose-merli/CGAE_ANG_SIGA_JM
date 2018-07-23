@@ -27,7 +27,7 @@ export class DatosBancariosComponent implements OnInit {
   historico: boolean = false;
 
   msgs: Message[];
-
+  camposDesactivados: boolean;
   usuarioBody: any[];
   cols: any = [];
   rowsPerPage: any = [];
@@ -62,6 +62,11 @@ export class DatosBancariosComponent implements OnInit {
       this.openFicha = !this.openFicha;
       sessionStorage.removeItem("editarDatosBancarios");
     }
+
+    if (sessionStorage.getItem("historicoSociedad") != null) {
+      this.camposDesactivados = true;
+    }
+
     this.checkAcceso();
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
 
@@ -164,8 +169,11 @@ export class DatosBancariosComponent implements OnInit {
         console.log(err);
       },
       () => {
-        if (derechoAcceso == 3) {
+        if (derechoAcceso >= 2) {
           this.activacionEditar = true;
+          if (derechoAcceso == 2) {
+            this.camposDesactivados = true;
+          }
         } else {
           this.activacionEditar = false;
         }
@@ -247,26 +255,27 @@ export class DatosBancariosComponent implements OnInit {
   }
 
   redireccionar(dato) {
-    if (!this.selectMultiple && !this.historico) {
-      var enviarDatos = null;
-      if (dato && dato.length > 0) {
-        enviarDatos = dato[0];
-        sessionStorage.setItem("idCuenta", enviarDatos.idCuenta);
-        sessionStorage.setItem("editar", "true");
-      } else {
-        sessionStorage.setItem("editar", "false");
-      }
+    if (this.camposDesactivados != true) {
+      if (!this.selectMultiple && !this.historico) {
+        var enviarDatos = null;
+        if (dato && dato.length > 0) {
+          enviarDatos = dato[0];
+          sessionStorage.setItem("idCuenta", enviarDatos.idCuenta);
+          sessionStorage.setItem("editar", "true");
+        } else {
+          sessionStorage.setItem("editar", "false");
+        }
 
-      this.router.navigate(["/consultarDatosBancarios"]);
-    } else {
-      this.numSelected = this.selectedDatos.length;
+        this.router.navigate(["/consultarDatosBancarios"]);
+      } else {
+        this.numSelected = this.selectedDatos.length;
+      }
     }
   }
 
   confirmarEliminar(selectedDatos) {
     let mess = this.translateService.instant("messages.deleteConfirmation");
     let icon = "fa fa-trash-alt";
-    console.log("AQUI");
     this.confirmationService.confirm({
       message: mess,
       icon: icon,
@@ -298,13 +307,6 @@ export class DatosBancariosComponent implements OnInit {
     selectedDatos.forEach(element => {
       item.idCuentas.push(element.idCuenta);
     });
-
-    // item.idPersona = this.idPersona;
-    // item.datosBancariosItem.forEach(
-    //   (value: DatosBancariosItem, key: number) => {
-    //     value.idPersona = this.idPersona;
-    //   }
-    // );
 
     this.sigaServices.post("datosBancarios_delete", item).subscribe(
       data => {

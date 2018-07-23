@@ -5,10 +5,6 @@
     <p> {{ 'menu.administracion' | translate}}
       <i class="pl-1 fa fa-angle-right"></i>{{ 'administracion.catalogos.titulo' | translate}}</p>
   </div>
-  <!--<div class="breadCrumb">
-    <p>{{ 'menu.administracion' | translate}} <i class="fa fa-angle-right"></i> {{ 'administracion.catalogos.titulo' | translate}}
-    </p>
-  </div>-->
   <div class="card">
     <div class="card-body">
       <p class="title-module">{{ 'general.message.datos.generales' | translate}}
@@ -89,8 +85,7 @@
           <p-footer>
             <div class="text-right main-button">
               <button (click)="historico(); selectedDatos=[]" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.historico' | translate}}"></button>
-              <button (click)="newData();" (disabled)="!activacionEditar" pButton type="button" icon="fa fa-plus-square  " iconPos="left"
-                label="{{ 'general.boton.new' | translate}}"></button>
+              <button (click)="newData();" (disabled)="!activacionEditar" pButton type="button" icon="fa fa-plus  " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
               <button *ngIf="selectedDatos && selectedDatos != '' && activacionEditar" (click)="confirmarBorrar(selectedDatos)" pButton
                 type="button" icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
               <button *ngIf="selectedDatos && selectedDatos != '' && !activacionEditar" disabled pButton type="button" icon="fa fa-trash-alt "
@@ -128,11 +123,10 @@
           <p-footer>
 
             <div *ngIf="editar == true" class="text-right main-button">
-              <button (click)="volver();" #input1 pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-              <button (click)="confirmEdit();" [(disabled)]="blockCrear" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+              <button (click)="volver();" #input1 pButton type="button" icon="	fa fa-undo " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+              <button (click)="confirmEdit();" [(disabled)]="blockCrear" pButton type="button" icon="	far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
               <button (click)="historico(); selectedDatos=[]" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.historico' | translate}}"></button>
-              <button (click)="newData();" (disabled)="!activacionEditar" pButton type="button" icon="fa fa-plus-square  " iconPos="left"
-                label="{{ 'general.boton.new' | translate}}"></button>
+              <button (click)="newData();" (disabled)="!activacionEditar" pButton type="button" icon="fa fa-plus  " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
               <button *ngIf="selectedDatos && selectedDatos != '' && activacionEditar" (click)="confirmarBorrar(selectedDatos)" pButton
                 type="button" icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
               <button *ngIf="selectedDatos && selectedDatos != '' && !activacionEditar" disabled pButton type="button" icon="fa fa-trash-alt "
@@ -140,8 +134,7 @@
             </div>
             <div *ngIf="editar == false" class="text-right main-button">
               <button (click)="historico(); selectedDatos=[]" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.historico' | translate}}"></button>
-              <button (click)="newData();" pButton (disabled)="!activacionEditar" type="button" icon="fa fa-plus-square  " iconPos="left"
-                label="{{ 'general.boton.new' | translate}}"></button>
+              <button (click)="newData();" pButton (disabled)="!activacionEditar" type="button" icon="fa fa-plus  " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
               <button *ngIf="selectedDatos && selectedDatos != '' && activacionEditar" (click)="confirmarBorrar(selectedDatos)" pButton
                 type="button" icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
               <button *ngIf="selectedDatos && selectedDatos != '' && !activacionEditar" disabled pButton type="button" icon="fa fa-trash-alt "
@@ -156,8 +149,6 @@
   <div *ngIf="pressNew == true" class="card mt-3">
     <div class="card-body p-0">
 
-      <!--<p-dataTable #table class="tabla-listado" [value]="datosNew" [editable]="true" emptyMessage="{{ 'general.message.no.registros' | translate}}"
-        [ngClass]="{'customCursor': selectMultiple}">-->
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
         [paginator]="activarPaginacion()" #table class="tabla-listado" [value]="datosNew" [paginator]="true" paginatorPosition="both"
         datakey="descripcion" [rows]="selectedItem" [editable]="!selectMultiple" (onEdit)="editarCompleto($event)" (onEditInit)="editar=true">
@@ -197,12 +188,12 @@
         </ng-template>
         <p-footer>
           <div class="text-right main-button">
-            <button *ngIf="activacionEditar" (click)="confirmarCrear()" pButton type="button " icon="	fa fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-            <button *ngIf="!activacionEditar" (click)="confirmarCrear()" pButton type="button " icon="	fa fa-plus-square " iconPos="left"
-              label="{{ 'general.boton.new' | translate}}" disabled></button>
+            <button *ngIf="activacionEditar" (click)="confirmarCrear()" pButton type="button " icon="	far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+            <button *ngIf="!activacionEditar" (click)="confirmarCrear()" pButton type="button " icon="	fa fa-plus " iconPos="left" label="{{ 'general.boton.new' | translate}}"
+              disabled></button>
             <!--deshabilitar botón a menos que el campo obligatorio esté relleno-->
 
-            <button (click)="reset()" pButton type="button" icon="fa fa-eraser " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+            <button (click)="reset()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
           </div>
         </p-footer>
       </p-dataTable>
@@ -256,7 +247,7 @@
 
         <p-footer>
           <div class="text-right main-button" *ngIf="activarPaginacion() == true">
-            <button (click)="isBuscar(); selectedDatos=[]" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
+            <button (click)="isBuscar(); selectedDatos=[]" pButton type="button" icon="fa fa-undo " iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
             <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt " [disabled]="isHabilitadoEliminar()"
               iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
           </div>

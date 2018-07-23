@@ -6,7 +6,7 @@ import {
   ChangeDetectorRef,
   ViewEncapsulation
 } from "@angular/core";
-import { Message, MenuItem } from "primeng/components/common/api";
+import { Message } from "primeng/components/common/api";
 import { Tree } from "primeng/components/tree/tree";
 import { TreeNode } from "../../../utils/treenode";
 import { TranslateService } from "../../../commons/translate/translation.service";
@@ -70,10 +70,7 @@ export class PermisosComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private elementRef: ElementRef,
-    private changeDetectorRef: ChangeDetectorRef,
-    private sigaServices: SigaServices,
-    private translateService: TranslateService
+    private sigaServices: SigaServices
   ) {
     this.formPermisos = this.formBuilder.group({
       grupo: null
@@ -108,9 +105,10 @@ export class PermisosComponent implements OnInit {
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.grupos.map(e => {
-
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
           let i;
           let x;
           for (i = 0; i < e.label.length; i++) {

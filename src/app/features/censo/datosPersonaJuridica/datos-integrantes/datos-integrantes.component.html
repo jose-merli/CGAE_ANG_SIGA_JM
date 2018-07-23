@@ -39,6 +39,13 @@
             </label>
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}" class="pull-right"></i>
           </div>
+          <div *ngIf="!only && searchIntegrantes.datosIntegrantesItem.length == 0" class="d-flex justify-content-between">
+            <label>Número total de Integrantes:
+              <span>{{ searchIntegrantes.datosIntegrantesItem.length }}</span>
+            </label>
+
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}" class="pull-right"></i>
+          </div>
           <div *ngIf="!only && searchIntegrantes.datosIntegrantesItem.length >3" class="d-flex justify-content-between">
             <label>Número total de Integrantes:
               <span>{{ searchIntegrantes.datosIntegrantesItem.length }}</span>
@@ -46,15 +53,14 @@
 
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}" class="pull-right"></i>
           </div>
-          <div *ngIf="!only && searchIntegrantes.datosIntegrantesItem.length <4" class="d-flex justify-content-between">
+          <div *ngIf="!only && searchIntegrantes.datosIntegrantesItem.length > 0 && searchIntegrantes.datosIntegrantesItem.length <4"
+            class="d-flex justify-content-between">
             <label *ngFor="let integrante of datos">&nbsp;{{ integrante.nombre }} &nbsp;{{ integrante.apellidos }}</label>
             &nbsp;
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}" class="pull-right"></i>
           </div>
 
-          <!-- <div *ngIf="!only" class="col-md-10">
-            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
-          </div> -->
+
 
         </div>
         <div *ngIf="esFichaActiva( 'integrantes')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -115,10 +121,11 @@
       <div class="card-footer">
         <div class="text-right main-button">
 
-          <button (click)="anadirIntegrante()" pButton type="button" icon="fa-user-plus" iconPos="left" label="Nuevo"></button>
-          <button *ngIf="historico" (click)="search()" pButton type="button" icon="fa fa-redo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-          <button *ngIf="!historico" (click)="searchHistorico()" pButton type="button" icon="fa fa-history" iconPos="left" label="Historico"></button>
-          <button *ngIf="selectedDatos && selectedDatos !='' && historico==false" (click)="borrar(selectedDatos); selectedDatos=false"
+          <button (click)="anadirIntegrante()" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-plus" iconPos="left"
+            label="{{ 'general.boton.new' | translate}}"></button>
+          <button *ngIf="historico" (click)="search()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+          <button *ngIf="!historico" (click)="searchHistorico()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.historico' | translate}}"></button>
+          <button *ngIf="selectedDatos && selectedDatos !='' && historico==false" [(disabled)]="camposDesactivados" (click)="borrar(selectedDatos); selectedDatos=false"
             pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
         </div>
       </div>
@@ -126,7 +133,3 @@
     </div>
   </div>
 </div>
-<!-- <p-growl [(value)]="msgs "></p-growl>
-    <div *ngIf="progressSpinner " class="overlay-spinner ">
-      <div class="loader "></div>
-    </div> -->

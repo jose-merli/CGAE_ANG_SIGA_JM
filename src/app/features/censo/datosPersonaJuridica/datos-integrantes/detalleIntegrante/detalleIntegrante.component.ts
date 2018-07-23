@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { esCalendar } from "../../../../../utils/calendar";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { Router } from "@angular/router";
@@ -14,9 +14,6 @@ import { DatosIntegrantesObject } from "../../../../../models/DatosIntegrantesOb
   styleUrls: ["./detalleIntegrante.component.scss"]
 })
 export class DetalleIntegranteComponent implements OnInit {
-  usuarios_rol: any[];
-  usuarios_perfil: any[];
-  usuarios_activo: any[];
   cols: any = [];
   datos: any[];
   searchIntegrantes = new DatosIntegrantesObject();
@@ -41,7 +38,6 @@ export class DetalleIntegranteComponent implements OnInit {
   isDisabledTipoColegio: boolean = true;
   isDisabledProvincia: boolean = true;
   isDisabledNumColegio: boolean = true;
-  isDisabledFechaFinCargo: boolean = true;
   selectedItem: number = 10;
   first: number = 0;
   activo: boolean = false;
@@ -65,6 +61,7 @@ export class DetalleIntegranteComponent implements OnInit {
   body: DatosIntegrantesItem = new DatosIntegrantesItem();
   datosIntegrantes: DatosIntegrantesObject = new DatosIntegrantesObject();
   fechaCarga: Date;
+  fechaBajaCargo: Date;
   columnasTabla: any = [];
   // Obj extras
   body1: DatosIntegrantesItem = new DatosIntegrantesItem();
@@ -95,6 +92,9 @@ export class DetalleIntegranteComponent implements OnInit {
       var a = JSON.parse(sessionStorage.getItem("integrante"));
       if (a.fechaCargo != null || a.fechaCargo != undefined) {
         this.fechaCarga = a.fechaCargo;
+      }
+      if (a.fechaBajaCargo != null || a.fechaBajaCargo != undefined) {
+        this.fechaBajaCargo = a.fechaBajaCargo;
       }
     }
 
@@ -208,6 +208,9 @@ export class DetalleIntegranteComponent implements OnInit {
     if (this.fechaCarga != undefined) {
       this.body.fechaCargo = this.transformaFecha(this.fechaCarga);
     }
+    if (this.fechaBajaCargo != undefined) {
+      this.body.fechaBajaCargo = this.transformaFecha(this.fechaBajaCargo);
+    }
   }
 
   beanNewIntegrante() {
@@ -228,6 +231,9 @@ export class DetalleIntegranteComponent implements OnInit {
       if (ir[0].colegio != null) {
         this.body.idInstitucion = ir[0].colegio;
         this.body.idInstitucionIntegrante = ir[0].colegio;
+      } else {
+        this.body.idInstitucion = ir[0].idInstitucion;
+        this.body.idInstitucionIntegrante = ir[0].idInstitucion;
       }
       if (ir[0].fechaAlta != null) {
         this.body.fechaCargo = ir[0].fechaAlta;
@@ -236,14 +242,23 @@ export class DetalleIntegranteComponent implements OnInit {
         this.body.fechaCargo = ir[0].fechaConstitucion;
         this.fechaCarga = ir[0].fechaConstitucion;
       }
-
+      if (ir[0].fechaBajaCargo != null) {
+        this.body.fechaBajaCargo = ir[0].fechaBajaCargo;
+        this.fechaBajaCargo = ir[0].fechaBajaCargo;
+      }
       if (ir[0].nif != null) {
         this.body.nifCif = ir[0].nif;
       }
       if (ir[0].nombre != null) {
         this.body.nombre = ir[0].nombre;
       } else if (ir[0].denominacion != null) {
-        this.body.nombre = ir[0].denominacion;
+        //this.body.nombre = ir[0].denominacion;
+        let denominacion = ir[0].denominacion;
+        this.body.nombre = denominacion.substring(0, denominacion.indexOf(" "));
+        this.body.apellidos1 = denominacion.substring(
+          denominacion.indexOf(" "),
+          denominacion.length
+        );
       }
 
       if (ir[0].apellidos != null) {
@@ -283,6 +298,7 @@ export class DetalleIntegranteComponent implements OnInit {
       this.selectedDatos = [];
     }
   }
+
   ajustarPantallaParaCrear() {
     this.isDisablednifCif = true;
     this.isDisabledNombre = false;
@@ -291,8 +307,8 @@ export class DetalleIntegranteComponent implements OnInit {
     this.isDisabledTipoColegio = false;
     this.isDisabledProvincia = false;
     this.isDisabledNumColegio = true;
-    this.isDisabledFechaFinCargo = true;
   }
+
   ajustarPantallaParaAsignar() {
     this.isDisablednifCif = true;
     this.isDisabledNombre = true;
@@ -301,7 +317,6 @@ export class DetalleIntegranteComponent implements OnInit {
     this.isDisabledTipoColegio = false;
     this.isDisabledProvincia = false;
     this.isDisabledNumColegio = true;
-    this.isDisabledFechaFinCargo = true;
   }
 
   todoDisable() {
@@ -312,8 +327,8 @@ export class DetalleIntegranteComponent implements OnInit {
     this.isDisabledTipoColegio = true;
     this.isDisabledProvincia = true;
     this.isDisabledNumColegio = true;
-    this.isDisabledFechaFinCargo = true;
   }
+
   abrirFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     fichaPosible.activa = !fichaPosible.activa;
@@ -323,6 +338,7 @@ export class DetalleIntegranteComponent implements OnInit {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
   }
+
   getFichaPosibleByKey(key): any {
     let fichaPosible = this.fichasPosibles.filter(elto => {
       return elto.key === key;
@@ -332,6 +348,7 @@ export class DetalleIntegranteComponent implements OnInit {
     }
     return {};
   }
+
   search() {
     this.buscar = false;
     this.selectMultiple = false;
@@ -341,44 +358,20 @@ export class DetalleIntegranteComponent implements OnInit {
     this.sigaServices
       .postPaginado("busquedaPerJuridica_history", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
-        this.progressSpinner = false;
-        this.searchIntegrantes = JSON.parse(data["body"]);
-        this.datos = this.searchIntegrantes.datosIntegrantesItem;
-        this.table.paginator = true;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      },
-      () => { }
+        data => {
+          this.progressSpinner = false;
+          this.searchIntegrantes = JSON.parse(data["body"]);
+          this.datos = this.searchIntegrantes.datosIntegrantesItem;
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {}
+
       );
   }
-  // searchHistorico() {
-  //   this.historico = true;
-  //   this.buscar = false;
-  //   this.selectMultiple = false;
-  //   this.selectedDatos = "";
-  //   this.progressSpinner = true;
-  //   this.selectAll = false;
-  //   this.sigaServices
-  //     .postPaginado("busquedaPerJuridica_history", "?numPagina=1", this.body)
-  //     .subscribe(
-  //       data => {
-  //         console.log(data);
-  //         this.progressSpinner = false;
-  //         this.searchIntegrantes = JSON.parse(data["body"]);
-  //         this.datos = this.searchIntegrantes.datosIntegrantesItem;
-  //         this.table.paginator = true;
-  //       },
-  //       err => {
-  //         console.log(err);
-  //         this.progressSpinner = false;
-  //       },
-  //       () => {}
-  //     );
-  // }
 
   guardar() {
     if (
@@ -408,6 +401,12 @@ export class DetalleIntegranteComponent implements OnInit {
       updateIntegrante.fechaCargo = this.body.fechaCargo;
     } else {
       updateIntegrante.fechaCargo = undefined;
+    }
+    if (this.fechaBajaCargo != undefined && this.fechaBajaCargo != null) {
+      this.arreglarFechas();
+      updateIntegrante.fechaBajaCargo = this.body.fechaBajaCargo;
+    } else {
+      updateIntegrante.fechaBajaCargo = undefined;
     }
     if (this.body.cargo != undefined && this.body.cargo != null) {
       updateIntegrante.cargo = this.body.cargo;
@@ -445,22 +444,23 @@ export class DetalleIntegranteComponent implements OnInit {
       this.sigaServices
         .postPaginado("integrantes_update", "?numPagina=1", updateIntegrante)
         .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.backTo();
-        }
+
+          data => {
+            this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.backTo();
+          }
         );
     } else {
       this.showFail("el campo Participación debe ser numérico");
     }
   }
+
   crearIntegrante() {
     let newIntegrante = new DatosIntegrantesItem();
     let isParticipacionNumerico = false;
@@ -500,6 +500,12 @@ export class DetalleIntegranteComponent implements OnInit {
       } else {
         newIntegrante.fechaCargo = undefined;
       }
+      if (this.fechaBajaCargo != undefined && this.fechaBajaCargo != null) {
+        this.arreglarFechas();
+        newIntegrante.fechaBajaCargo = this.body.fechaBajaCargo;
+      } else {
+        newIntegrante.fechaBajaCargo = undefined;
+      }
       if (this.body.cargo != undefined && this.body.cargo != null) {
         newIntegrante.cargo = this.body.cargo;
       } else {
@@ -587,17 +593,17 @@ export class DetalleIntegranteComponent implements OnInit {
         this.sigaServices
           .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
           .subscribe(
-          data => {
-            console.log(data);
-            this.progressSpinner = false;
-          },
-          err => {
-            console.log(err);
-            this.progressSpinner = false;
-          },
-          () => {
-            this.backTo();
-          }
+
+            data => {
+              this.progressSpinner = false;
+            },
+            err => {
+              console.log(err);
+              this.progressSpinner = false;
+            },
+            () => {
+              this.backTo();
+            }
           );
       } else {
         this.showFail("el campo Participación debe ser numérico");
@@ -637,6 +643,12 @@ export class DetalleIntegranteComponent implements OnInit {
       } else {
         newIntegrante.fechaCargo = undefined;
       }
+      if (this.fechaBajaCargo != undefined && this.fechaBajaCargo != null) {
+        this.arreglarFechas();
+        newIntegrante.fechaBajaCargo = this.body.fechaBajaCargo;
+      } else {
+        newIntegrante.fechaBajaCargo = undefined;
+      }
       if (this.body.cargo != undefined && this.body.cargo != null) {
         newIntegrante.cargo = this.body.cargo;
       } else {
@@ -724,17 +736,16 @@ export class DetalleIntegranteComponent implements OnInit {
         this.sigaServices
           .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
           .subscribe(
-          data => {
-            console.log(data);
-            this.progressSpinner = false;
-          },
-          err => {
-            console.log(err);
-            this.progressSpinner = false;
-          },
-          () => {
-            this.backTo();
-          }
+            data => {
+              this.progressSpinner = false;
+            },
+            err => {
+              console.log(err);
+              this.progressSpinner = false;
+            },
+            () => {
+              this.backTo();
+            }
           );
       } else {
         this.showFail("el campo Participación debe ser numérico");

@@ -86,9 +86,9 @@
             <br>
             <div class="card-footer ">
                 <div class="text-right main-button ">
-                    <button (click)="isSearch()" pButton type="button" icon="fa fa-search" iconPos="left" label="Buscar"></button>
-                    <button (click)="desasociarPersona()" [(disabled)]="!desasociar" pButton type="button" icon="fa fa-undo" iconPos="left" label="Desasociar"></button>
-                    <button (click)="guardar()" [(disabled)]="!guardarNotario" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
+                    <button (click)="isSearch()" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
+                    <button (click)="desasociarPersona()" [(disabled)]="!desasociar" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate}}"></button>
+                    <button (click)="guardar()" [(disabled)]="!guardarNotario" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
                 </div>
             </div>
             <!--END DATOS GENERALES-->

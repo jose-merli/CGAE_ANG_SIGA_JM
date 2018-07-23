@@ -6,12 +6,6 @@
             <i class="pl-1 fa fa-angle-right"></i>{{'menu.administracion.gestionMultiidioma' | translate}}
             <i class="pl-1 fa fa-angle-right"></i>{{'menu.administracion.gestionMultiidioma.catalogos' | translate}}</p>
     </div>
-    <!--<div class="breadCrumb">
-        <p>{{'menu.administracion' | translate}} <i class="fa fa-angle-right"></i> {{'menu.administracion.gestionMultiidioma'
-            | translate}}
-            <i class="fa fa-angle-right"></i> {{'menu.administracion.gestionMultiidioma.catalogos' | translate}}
-        </p>
-    </div>-->
     <div class="card">
         <div class="card-body">
             <p class="title-module">{{'administracion.catalogos.titulo.datos.generales' | translate}}
@@ -72,9 +66,10 @@
                 </ng-template>
                 <p-footer>
                     <div class="text-right main-button">
-                        <button (click)="isRestablecer()" pButton type="button" [(disabled)]="!habilitarBotones" icon="fa fa-history " iconPos="left"
+                        <button (click)="isRestablecer()" pButton type="button" [(disabled)]="!habilitarBotones" icon="fa fa-undo " iconPos="left"
                             label="{{'general.boton.restablecer' | translate}}"></button>
-                        <button (click)="isGuardar()" pButton type="button " [(disabled)]="!habilitarBotones" icon="fa fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                        <button (click)="isGuardar()" pButton type="button " [(disabled)]="!habilitarBotones" icon="far fa-save " iconPos="left"
+                            label="{{ 'general.boton.guardar' | translate}}"></button>
                     </div>
                 </p-footer>
 
@@ -86,6 +81,5 @@
 
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
-    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
     <div class="loader"></div>
 </div>

@@ -64,7 +64,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   numSelected: number = 0;
   textFilter: String = "Elegir";
   sortO: number = 1;
-
+  etiquetasSelected: any[];
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
@@ -172,17 +172,18 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("busquedaPerJuridica_history", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        this.progressSpinner = false;
-        this.personaSearch = JSON.parse(data["body"]);
-        this.datos = this.personaSearch.busquedaJuridicaItems;
-        this.table.paginator = true;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      },
-      () => { }
+        data => {
+          this.progressSpinner = false;
+          this.personaSearch = JSON.parse(data["body"]);
+          this.datos = this.personaSearch.busquedaJuridicaItems;
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {}
+
       );
   }
 
@@ -297,7 +298,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.selectAll = false;
     this.selectMultiple = false;
     this.selectedDatos = "";
-
+    // this.body.grupos = this.etiquetasSelected;
     if (this.body.tipo == undefined) {
       this.body.tipo = "";
     }
@@ -327,17 +328,17 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("busquedaPerJuridica_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        this.progressSpinner = false;
-        this.personaSearch = JSON.parse(data["body"]);
-        this.datos = this.personaSearch.busquedaJuridicaItems;
-        this.convertirStringADate(this.datos);
-        this.table.paginator = true;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      }
+        data => {
+          this.progressSpinner = false;
+          this.personaSearch = JSON.parse(data["body"]);
+          this.datos = this.personaSearch.busquedaJuridicaItems;
+          this.convertirStringADate(this.datos);
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        }
       );
   }
 
@@ -503,6 +504,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       var ir = null;
       if (id && id.length > 0) {
         ir = id[0];
+      }
+      sessionStorage.removeItem("historicoSociedad");
+      if (id[0].fechaBaja != null || id[0].fechaBaja != undefined) {
+        sessionStorage.setItem("historicoSociedad", "true");
       }
       sessionStorage.setItem("busqueda", JSON.stringify(this.body));
       sessionStorage.setItem("usuarioBody", JSON.stringify(id));

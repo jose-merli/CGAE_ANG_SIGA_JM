@@ -96,9 +96,9 @@
         <div class="card-footer ">
           <div class="text-right main-button ">
             <button (click)="validarFormulario()" [disabled]="condiciones()" pButton type="button" icon="far fa-save" iconPos="left"
-              label="Guardar"></button>
-            <button *ngIf="!nuevo" (click)="restablecer()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="Restablecer"></button>
-            <button *ngIf="nuevo" (click)="restablecerNuevo()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="Restablecer"></button>
+              label="{{ 'general.boton.guardar' | translate}}"></button>
+            <button *ngIf="!nuevo" (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+            <button *ngIf="nuevo" (click)="restablecerNuevo()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
           </div>
         </div>
       </div>
@@ -116,7 +116,7 @@
             </div>
           </div>
           <div class="col-lg-11 col-md-10 ">
-            <div class="d-flex justify-content-end mb-1">
+            <div class="d-flex justify-content-start mb-1">
               <label class="mr-auto title-ficha">Datos Mandatos</label>
             </div>
             <div class="d-flex justify-content-between">
@@ -212,7 +212,8 @@
         <br>
         <div *ngIf="!nuevo" class="card-footer">
           <div class="text-right main-button">
-            <button (click)="validarGuardarMandato()" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" [disabled]="mandatoAnexoVacio"></button>
+            <button (click)="validarGuardarMandato()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
+              [disabled]="mandatoAnexoVacio"></button>
           </div>
         </div>
       </div>
@@ -230,7 +231,7 @@
             </div>
           </div>
           <div class="col-lg-11 col-md-10">
-            <div class="d-flex justify-content-end mb-1">
+            <div class="d-flex justify-content-start mb-1">
               <label class="mr-auto title-ficha">Listado ficheros y anexos</label>
             </div>
             <div class="d-flex justify-content-between">
@@ -285,7 +286,7 @@
                   iconPos="left" label="{{ 'censo.sociedades.datosBancarios.firmar' | translate}}"></button>
                 <button *ngIf="selectedDatos && selectedDatos !=''" (click)="comunicar(selectedDatos)" pButton type="button" icon="fa fa-comment"
                   iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
-                <button *ngIf="!nuevo" (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"></button>
+                <button *ngIf="!nuevo" (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
               </div>
             </p-footer>
           </p-dataTable>
@@ -297,29 +298,6 @@
             [paginator]="true" paginatorPosition="both" [rows]="selectedItem" [editable]="!selectMultiple" (onEdit)="editarCompleto($event)"
             (onEditInit)="editar=true" (onEditCancel)="onEditCancel()" (onRowSelect)="controlarEdicion()" pageLinks="4">
 
-            <!--<p-column *ngFor="let col of cols" [sortable]="true" [style]="{'width': '20%'}" [field]="col.field" [header]="col.header"
-              [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-              <<ng-template let-datoH="rowData" pTemplate="body">
-                <div *ngIf="setItalic(datoH)">
-                 <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
-                  <input [disabled]="!averahora" type="text" [(ngModel)]="datoH[col.field]" class="form-control" pInputText>
-                </div>
-                <div *ngIf="!setItalic(datoH)">
-                  <span>{{datoH[col.field]}}</span>
-                </div>
-                </ng-template>
-                </p-column>
-                <p-column *ngFor="let col of cols2" filterPlaceholder="{{'general.boton.search' | translate}}" [sortable]="true" [field]="col.field"
-                  [header]="col.header" [filter]="true" filterMatchMode="contains">
-                  <ng-template let-datoH="rowData" pTemplate="body">
-              <div *ngIf="setItalic(datoH)">
-                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
-              </div>
-              <div *ngIf="!setItalic(datoH)">
-                <span>{{datoH[col.field]}}</span>
-              </div>
-            </ng-template>
-                  </p-column>-->
 
 
 
@@ -351,7 +329,7 @@
             </ng-template>
             <p-footer>
               <div *ngIf="editar == true" class="text-right main-button">
-                <button (click)="editarDescripcion()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                <button (click)="editarDescripcion()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
                 <button *ngIf="!nuevo" [(disabled)]="mandatoAnexoVacio" (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus"
                   iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
               </div>
@@ -420,13 +398,12 @@
       <div class="row">
         <div class="form-group col-lg-6 col-md-6">
           <label>{{"censo.sociedades.datosBancarios.fechaUso" | translate}} (*)</label>
-          <p-calendar [(ngModel)]="datefechaUso" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [style]="{ 'position': 'relative', 'z-index': '1000' }"
-            [required]="true"></p-calendar>
+          <p-calendar [(ngModel)]="datefechaUso" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [required]="true"></p-calendar>
         </div>
         <div class="form-group col-lg-6 col-md-6">
           <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
           <br>
-          <p-dropdown [(ngModel)]="selectedProductoServicio" [options]="comboProductoServicio" [style]="{'width':'250px'}" (onChange)="onChangeComboProductoServicio($event)"></p-dropdown>
+          <p-dropdown [(ngModel)]="selectedProductoServicio" [options]="comboProductoServicio" styleClass="widthAll" (onChange)="onChangeComboProductoServicio($event)"></p-dropdown>
         </div>
       </div>
       <br>
@@ -439,9 +416,9 @@
     </div>
     <p-footer>
       <div class="text-right main-button ">
-        <button (click)="insertarAnexo()" [disabled]="!validarInsertarAnexo()" pButton type="button" icon="fa fa-save" iconPos="left"
+        <button (click)="insertarAnexo()" [disabled]="!validarInsertarAnexo()" pButton type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button (click)="limpiarDatosAnexo()" pButton type="button" icon="fa fa-repeat" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="limpiarDatosAnexo()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
       </div>
     </p-footer>
   </p-dialog>

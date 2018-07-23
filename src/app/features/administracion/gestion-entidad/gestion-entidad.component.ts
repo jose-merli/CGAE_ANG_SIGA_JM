@@ -1,24 +1,12 @@
-import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  ChangeDetectorRef
-} from "@angular/core";
-
-import { DomSanitizer } from "@angular/platform-browser";
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 
 // prueba
 import { HeaderGestionEntidadService } from "./../../../_services/headerGestionEntidad.service";
 
 import { SigaServices } from "./../../../_services/siga.service";
-import { Router } from "@angular/router";
-import { MessageService } from "primeng/components/common/messageservice";
-import { ConfirmationService } from "primeng/api";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
-
-import { FormBuilder } from "@angular/forms";
 
 import { Message } from "primeng/components/common/api";
 
@@ -39,9 +27,6 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
   archivoDisponible: boolean = false;
   file: File = undefined;
   nombreImagen: any;
-  base64String: any;
-  source: any;
-  imageBase64: any;
   imagenURL: any;
   constructor(
     private sigaServices: SigaServices,
@@ -63,8 +48,10 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
             /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
             this.idiomaBusqueda.map(e => {
-              let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-              let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+              let accents =
+                "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+              let accentsOut =
+                "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
               let i;
               let x;
               for (i = 0; i < e.label.length; i++) {
@@ -73,7 +60,6 @@ para poder filtrar el dato con o sin estos caracteres*/
                   return e.labelSinTilde;
                 }
               }
-
             });
 
             this.valorDefectoIdioma = this.idiomaBusqueda.find(

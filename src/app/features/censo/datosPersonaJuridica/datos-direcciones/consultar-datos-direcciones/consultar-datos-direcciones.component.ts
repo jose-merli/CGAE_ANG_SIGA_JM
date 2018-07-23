@@ -108,9 +108,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     } else {
       this.getDatosContactos();
     }
-
   }
-
 
 
   getDatosContactos() {
@@ -208,12 +206,13 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   onChangePais() {
     if (!this.nuevo) {
       if (this.body.idPais != "191") {
-        this.isDisabledCodigoPostal = true;
-        this.body.codigoPostal = "";
         this.provinciaSelecionada = "";
         this.body.idProvincia = "";
         this.body.idPoblacion = "";
+
+        this.isDisabledCodigoPostal = false;
       } else {
+        this.onChangeCodigoPostal();
         if (this.historyDisable == true) {
           this.isDisabledCodigoPostal = true;
         } else {
@@ -225,34 +224,42 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         this.isDisabledCodigoPostal = true;
       } else {
         this.isDisabledCodigoPostal = false;
+
+        this.body.codigoPostal = "";
+        this.provinciaSelecionada = "";
+        this.body.idProvincia = "";
+        this.body.idPoblacion = "";
       }
       this.isDisabledPoblacion = true;
     }
 
     this.isDisabledProvincia = true;
   }
-  onChangeCodigoPostal(event) {
-    if (this.isValidCodigoPostal() && this.body.codigoPostal.length == 5) {
-      // this.recuperarProvinciaPoblacion();
-      let value = this.body.codigoPostal.substring(0, 2);
-      this.provinciaSelecionada = value;
-      if (value != this.body.idProvincia) {
-        this.body.idProvincia = this.provinciaSelecionada;
-        this.isDisabledProvincia = true;
-        if (this.historyDisable == true) {
-          this.isDisabledPoblacion = true;
-        } else {
-          this.isDisabledPoblacion = false;
+
+  onChangeCodigoPostal() {
+    if (this.body.idPais == "191") {
+      if (this.isValidCodigoPostal() && this.body.codigoPostal.length == 5) {
+        // this.recuperarProvinciaPoblacion();
+        let value = this.body.codigoPostal.substring(0, 2);
+        this.provinciaSelecionada = value;
+        if (value != this.body.idProvincia) {
+          this.body.idProvincia = this.provinciaSelecionada;
+          this.isDisabledProvincia = true;
+          if (this.historyDisable == true) {
+            this.isDisabledPoblacion = true;
+          } else {
+            this.isDisabledPoblacion = false;
+          }
+          this.getComboPoblacion();
         }
-        this.getComboPoblacion();
+        this.codigoPostalValido = true;
+      } else {
+        this.codigoPostalValido = false;
+        // this.body.idProvincia = "";
       }
-      this.codigoPostalValido = true;
-    } else {
-      this.codigoPostalValido = false;
-      // this.body.idProvincia = "";
     }
   }
-  onChangeProvincia(event) {
+  onChangeProvincia() {
     if (this.checkOtraProvincia == false) {
       this.getComboPoblacion();
     }
@@ -260,16 +267,20 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   onChangeOtherProvincia(event) {
     if (event) {
       this.isDisabledPoblacion = true;
-      this.isDisabledProvincia = false;
+      if (this.body.idPais == "191") {
+        this.isDisabledProvincia = false;
+      }
       this.body.otraProvincia = "1";
     } else {
       if (this.historyDisable == true) {
         this.isDisabledPoblacion = true;
       } else {
-        this.isDisabledPoblacion = false;
+        if (this.body.idPais == "191") {
+          this.isDisabledPoblacion = false;
+        }
       }
       this.isDisabledProvincia = true;
-      this.onChangeCodigoPostal(event);
+      this.onChangeCodigoPostal();
       this.body.otraProvincia = "0";
     }
   }

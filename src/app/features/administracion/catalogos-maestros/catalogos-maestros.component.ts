@@ -4,7 +4,6 @@ import {
   ViewEncapsulation,
   ViewChild,
   ChangeDetectorRef,
-  Input,
   HostListener,
   ElementRef
 } from "@angular/core";
@@ -12,9 +11,7 @@ import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
-import { Router } from "@angular/router";
 import { TranslateService } from "../../../commons/translate/translation.service";
-import { MessageService } from "primeng/components/common/messageservice";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { CatalogoRequestDto } from "./../../../../app/models/CatalogoRequestDto";
@@ -43,7 +40,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   maestros_update: String;
   maestros_create: String;
   maestros_delete: String;
-
+  pButton;
   body: CatalogoRequestDto = new CatalogoRequestDto();
 
   //Creo los objetos para interactuar con sus respectivos DTO
@@ -53,12 +50,11 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   cre: CatalogoCreateRequestDto = new CatalogoCreateRequestDto();
   del: CatalogoDeleteRequestDto = new CatalogoDeleteRequestDto();
 
-  pButton;
   buscar: boolean = false;
   tablaHistorico: boolean = false;
   editar: boolean = false;
   eliminar: boolean = false;
-  s;
+
   selectMultiple: boolean = false;
   selectedItem: number = 10;
   selectAll: boolean = false;
@@ -101,7 +97,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   activacionEditar: boolean = true;
   newCatalogo: CatalogoMaestroItem = new CatalogoMaestroItem();
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
-  controlEditar: boolean = false;
   rowsPerPage: any = [];
   numSelected: number = 0;
   first: number = 0;
@@ -205,12 +200,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
 
           this.upd.local = this.local;
 
-          // if (
-          //   this.codigoExtAux == this.upd.codigoExt &&
-          //   this.descripcionAux != this.upd.descripcion
-          // ) {
-          //   this.codigoExtAux = this.codigoExtAux + " ";
-          // }
           this.sigaServices.post("maestros_update", this.upd).subscribe(
             data => {
               this.showSuccess();
@@ -225,7 +214,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
               this.searchCatalogo = JSON.parse(error["error"]);
               this.showFail(JSON.stringify(this.searchCatalogo.error.message));
               console.log(error);
-              //this.table.reset();
 
               this.isBuscar();
             }
@@ -257,7 +245,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     let value = this.table.first;
     this.pressNew = true;
     this.buscar = false;
-    // this.createArrayEdit(dummy, value);
+
     this.datosNew = [dummy, ...this.datosHist];
 
     this.newCatalogo = new CatalogoMaestroItem();
@@ -285,14 +273,35 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     console.log(event);
     let data = event.data;
 
-    if (data.descripcion.length > 2000 || data.codigoExt.length > 10) {
-      this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
-        if (value.idRegistro == data.idRegistro) {
-          value.descripcion = data.descripcion.substring(0, 1950);
-          value.codigoExt = data.codigoExt.substring(0, 10);
+    if (data.codigoExt != null && data.codigoExt != undefined) {
+      if (
+        data.descripcion.length > 2000 ||
+        (data.codigoExt.length > 10 &&
+          data.codigoExt != null &&
+          data.codigoExt != undefined)
+      ) {
+        this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
+          if (value.idRegistro == data.idRegistro) {
+            value.descripcion = data.descripcion.substring(0, 1950);
+            value.codigoExt = data.codigoExt.substring(0, 10);
+          }
+        });
+        this.inputEl.nativeElement.focus();
+      } else {
+        //compruebo si la edicion es correcta con la basedatos
+        if (this.onlySpaces(data.descripcion)) {
+          this.blockCrear = true;
+        } else {
+          this.editar = true;
+          this.blockCrear = false;
+          this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
+            if (value.idRegistro == data.idRegistro) {
+              value.editar = true;
+            }
+          });
+          console.log(this.datosHist);
         }
-      });
-      this.inputEl.nativeElement.focus();
+      }
     } else {
       //compruebo si la edicion es correcta con la basedatos
       if (this.onlySpaces(data.descripcion)) {
@@ -659,21 +668,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       if (id && id.length > 0) {
         ir = id[0];
       }
-      // sessionStorage.removeItem("catalogoBody");
-      // sessionStorage.removeItem("privilegios");
-      // sessionStorage.removeItem("searchCatalogo");
-      // sessionStorage.setItem("catalogoBody", JSON.stringify(id));
-      // sessionStorage.setItem("searchCatalogo", JSON.stringify(this.body));
-      // if (id[0].fechaBaja != null) {
-      //   sessionStorage.setItem("privilegios", JSON.stringify(false));
-      // } else {
-      //   sessionStorage.setItem(
-      //     "privilegios",
-      //     JSON.stringify(this.activacionEditar)
-      //   );
-      // }
-
-      // this.router.navigate(["/EditarCatalogosMaestros"]);
     } else {
       this.editar = false;
       this.numSelected = this.selectedDatos.length;

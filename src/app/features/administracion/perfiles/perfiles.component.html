@@ -28,18 +28,19 @@
                   <input *ngIf="car[col.field] == '' " [(ngModel)]='newPerfil.idGrupo' type="text" class="form-control" (ngModelChange)="onChangeId($event)"
                     [attr.maxlength]="3" pInputText>
                 </ng-template>
-                </p-column>
-                <p-column [sortable]="true" field="descripcionGrupo" [header]="'general.description' | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-                  filterMatchMode="contains">
-                  <ng-template let-col let-car="rowData" pTemplate="body">
+              </p-column>
+              <p-column [sortable]="true" field="descripcionGrupo" [header]="'general.description' | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                filterMatchMode="contains">
+                <ng-template let-col let-car="rowData" pTemplate="body">
 
-                    <span>{{car[col.field]}}</span>
-                    <input *ngIf="car[col.field] == '' " [(ngModel)]='newPerfil.descripcionGrupo' type="text" class="form-control" (ngModelChange)="onChangeForm()"
-                      pInputText>
-                  </ng-template>
-                  </p-column>
-                  <p-column [sortable]="true" field="rolesAsignados" [header]="'menu.administracion.perfilrol' | translate" [filter]="true"
-                    filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+                  <span>{{car[col.field]}}</span>
+                  <input *ngIf="car[col.field] == '' " [(ngModel)]='newPerfil.descripcionGrupo' type="text" class="form-control" (ngModelChange)="onChangeForm()"
+                    pInputText>
+                </ng-template>
+              </p-column>
+              <p-column [sortable]="true" field="rolesAsignados" [header]="'menu.administracion.perfilrol' | translate" [filter]="true"
+                filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+
 
 
                     <ng-template pTemplate="body" let-dato="rowData"  >
@@ -91,24 +92,25 @@
                           </div>
                           <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
                     <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
-                        </div>
-                      </ng-template>
-                      <p-footer>
-                        <div class="text-right main-button">
 
-                          <button *ngIf="!isforNew" (click)="reestablecer()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
-                          <button *ngIf="(selectedDatos && selectedDatos != '') || isRestablecer" (click)="selectedDatos=false; reestablecer()" pButton
-                            type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
-                            <button (click)="historico(); selectedDatos=false" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.historico' | translate}}"></button>
-                            <button *ngIf="isforNew" (click)="newData()" pButton type="button" icon="	fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-                            <button *ngIf="selectedDatos && selectedDatos != ''" [disabled]="!activacionEditar" (click)="confirmarBorrar(selectedDatos); selectedDatos=false"
-                              pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
-                              <button *ngIf="save" [disabled]="isForSave" (click)="isGuardar()" #input2 pButton type="button" icon="fa fa-save" iconPos="left"
-                                label="{{'general.boton.guardar' | translate}}"></button>
-                        </div>
-                      </p-footer>
+                </div>
+              </ng-template>
+              <p-footer>
+                <div class="text-right main-button">
 
-                      </p-dataTable>
+                  <button *ngIf="!isforNew" (click)="reestablecer()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+                  <button *ngIf="(selectedDatos && selectedDatos != '') || isRestablecer" (click)="selectedDatos=false; reestablecer()" pButton
+                    type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
+                  <button (click)="historico(); selectedDatos=false" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.historico' | translate}}"></button>
+                  <button *ngIf="isforNew" (click)="newData()" pButton type="button" icon="	fa fa-plus " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+                  <button *ngIf="selectedDatos && selectedDatos != ''" [disabled]="!activacionEditar" (click)="confirmarBorrar(selectedDatos); selectedDatos=false"
+                    pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
+                  <button *ngIf="save" [disabled]="isForSave" (click)="isGuardar()" #input2 pButton type="button" icon="far fa-save" iconPos="left"
+                    label="{{'general.boton.guardar' | translate}}"></button>
+                </div>
+              </p-footer>
+
+            </p-dataTable>
           </div>
         </div>
 
@@ -160,7 +162,7 @@
           </div>
           <div class="card-footer">
             <div class="text-right main-button">
-              <button (click)="isBuscar()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
+              <button (click)="isBuscar()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
               <!-- <button (click)="crear()" pButton type="button" icon="fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button> -->
             </div>
           </div>

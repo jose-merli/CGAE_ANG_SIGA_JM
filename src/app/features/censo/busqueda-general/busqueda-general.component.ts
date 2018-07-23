@@ -13,9 +13,8 @@ import {
 import { esCalendar } from "../../../utils/calendar";
 import { SigaServices } from "./../../../_services/siga.service";
 import { TranslateService } from "../../../commons/translate/translation.service";
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
-import { MessageService } from "primeng/components/common/messageservice";
 import { ComboItem } from "./../../../../app/models/ComboItem";
 import { Location } from "@angular/common";
 import { BusquedaFisicaItem } from "./../../../../app/models/BusquedaFisicaItem";
@@ -46,7 +45,6 @@ export class BusquedaGeneralComponent {
   selectedValue: string = "simple";
   textSelected: String = "{0} perfiles seleccionados";
   persona: String;
-  // selectedDatos: any = []
   bodyFisica: BusquedaFisicaItem = new BusquedaFisicaItem();
   bodyJuridica: BusquedaJuridicaItem = new BusquedaJuridicaItem();
   searchFisica: BusquedaFisicaObject = new BusquedaFisicaObject();
@@ -88,9 +86,7 @@ export class BusquedaGeneralComponent {
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
-    private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
     private location: Location
   ) {
@@ -227,6 +223,60 @@ export class BusquedaGeneralComponent {
       this.bodyJuridica.abreviatura = "";
     }
   }
+  checkFilterFisic() {
+    if (
+      (this.bodyFisica.nombre == null ||
+        this.bodyFisica.nombre == null ||
+        this.bodyFisica.nombre.trim().length < 3) &&
+      (this.bodyFisica.primerApellido == null ||
+        this.bodyFisica.primerApellido == null ||
+        this.bodyFisica.primerApellido.trim().length < 3) &&
+      (this.bodyFisica.segundoApellido == null ||
+        this.bodyFisica.segundoApellido == null ||
+        this.bodyFisica.segundoApellido.trim().length < 3) &&
+      (this.bodyFisica.numeroColegiado == null ||
+        this.bodyFisica.numeroColegiado == null ||
+        this.bodyFisica.numeroColegiado.trim().length < 3) &&
+      (this.bodyFisica.nif == null ||
+        this.bodyFisica.nif == null ||
+        this.bodyFisica.nif.trim().length < 3) &&
+      (this.colegios_seleccionados == undefined ||
+        this.colegios_seleccionados == null ||
+        this.colegios_seleccionados.length < 1)
+    ) {
+      this.showSearchIncorrect();
+      this.progressSpinner = false;
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  checkFilterJuridic() {
+    if (
+      (this.bodyJuridica.tipo == null ||
+        this.bodyJuridica.tipo == null ||
+        this.bodyJuridica.tipo.trim().length < 3) &&
+      (this.bodyJuridica.abreviatura == null ||
+        this.bodyJuridica.abreviatura == null ||
+        this.bodyJuridica.abreviatura.trim().length < 3) &&
+      (this.bodyJuridica.denominacion == null ||
+        this.bodyJuridica.denominacion == null ||
+        this.bodyJuridica.denominacion.trim().length < 3) &&
+      (this.bodyJuridica.nif == null ||
+        this.bodyJuridica.nif == null ||
+        this.bodyJuridica.nif.trim().length < 3) &&
+      (this.colegios_seleccionados == undefined ||
+        this.colegios_seleccionados == null ||
+        this.colegios_seleccionados.length < 1)
+    ) {
+      this.showSearchIncorrect();
+      this.progressSpinner = false;
+      return false;
+    } else {
+      return true;
+    }
+  }
   checkStatusInit() {
     if (this.persona == "f") {
       this.cols = this.colsFisicas;
@@ -238,137 +288,141 @@ export class BusquedaGeneralComponent {
   search() {
     this.progressSpinner = true;
     this.buscar = true;
+
     if (this.persona == "f") {
-      if (this.bodyFisica.nif == undefined) {
-        this.bodyFisica.nif = "";
-      }
-      if (this.colegios_seleccionados != undefined) {
-        this.bodyFisica.idInstitucion = [];
-        this.colegios_seleccionados.forEach((value: ComboItem, key: number) => {
-          this.bodyFisica.idInstitucion.push(value.value);
-        });
-      } else {
-        this.bodyFisica.idInstitucion = [];
-      }
-      if (this.bodyFisica.nombre == undefined) {
-        this.bodyFisica.nombre = "";
-      }
-      if (this.bodyFisica.primerApellido == undefined) {
-        this.bodyFisica.primerApellido = "";
-      }
-      if (this.bodyFisica.segundoApellido == undefined) {
-        this.bodyFisica.segundoApellido = "";
-      }
-      if (this.bodyFisica.numeroColegiado == undefined) {
-        this.bodyFisica.numeroColegiado = "";
-      }
-      this.checkTypeCIF(this.bodyFisica.nif);
-      this.sigaServices
-        .postPaginado(
-        "busquedaPer_searchFisica",
-        "?numPagina=1",
-        this.bodyFisica
-        )
-        .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-          this.searchFisica = JSON.parse(data["body"]);
-          this.datos = [];
-          this.datos = this.searchFisica.busquedaFisicaItems;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          if (
-            this.datos.length == 0 ||
-            this.datos == null ||
-            this.datos == undefined
-          ) {
-            console.log("DAtos", this.datos);
-            if (
-              this.bodyFisica.nif != "" &&
-              this.bodyFisica.nif != undefined
-            ) {
-              console.log("DAtos", this.bodyFisica.nif);
+      if (this.checkFilterFisic()) {
+        if (this.bodyFisica.nif == undefined) {
+          this.bodyFisica.nif = "";
+        }
+        if (this.colegios_seleccionados != undefined) {
+          this.bodyFisica.idInstitucion = [];
+          this.colegios_seleccionados.forEach(
+            (value: ComboItem, key: number) => {
+              this.bodyFisica.idInstitucion.push(value.value);
+            }
+          );
+        } else {
+          this.bodyFisica.idInstitucion = [];
+        }
+        if (this.bodyFisica.nombre == undefined) {
+          this.bodyFisica.nombre = "";
+        }
+        if (this.bodyFisica.primerApellido == undefined) {
+          this.bodyFisica.primerApellido = "";
+        }
+        if (this.bodyFisica.segundoApellido == undefined) {
+          this.bodyFisica.segundoApellido = "";
+        }
+        if (this.bodyFisica.numeroColegiado == undefined) {
+          this.bodyFisica.numeroColegiado = "";
+        }
+        this.checkTypeCIF(this.bodyFisica.nif);
+        this.sigaServices
+          .postPaginado(
+            "busquedaPer_searchFisica",
+            "?numPagina=1",
+            this.bodyFisica
+          )
+          .subscribe(
+            data => {
+              this.progressSpinner = false;
+              this.searchFisica = JSON.parse(data["body"]);
+              this.datos = [];
+              this.datos = this.searchFisica.busquedaFisicaItems;
+            },
+            err => {
+              console.log(err);
+              this.progressSpinner = false;
+            },
+            () => {
               if (
-                this.bodyFisica.nombre.trim() == "" &&
-                this.bodyFisica.primerApellido.trim() == "" &&
-                this.bodyFisica.segundoApellido.trim() == "" &&
-                this.bodyFisica.numeroColegiado.trim() == ""
+                this.datos.length == 0 ||
+                this.datos == null ||
+                this.datos == undefined
               ) {
-                if (this.tipoIdentificacionPermitido(this.bodyFisica.nif)) {
-                  this.noDataFoundWithDNI();
+                if (
+                  this.bodyFisica.nif != "" &&
+                  this.bodyFisica.nif != undefined
+                ) {
+                  if (
+                    this.bodyFisica.nombre.trim() == "" &&
+                    this.bodyFisica.primerApellido.trim() == "" &&
+                    this.bodyFisica.segundoApellido.trim() == "" &&
+                    this.bodyFisica.numeroColegiado.trim() == ""
+                  ) {
+                    if (this.tipoIdentificacionPermitido(this.bodyFisica.nif)) {
+                      this.noDataFoundWithDNI();
+                    }
+                  }
                 }
               }
             }
-          }
-        }
-        );
+          );
+      }
     } else {
-      if (this.bodyJuridica.tipo == undefined) {
-        this.bodyJuridica.tipo = "";
-      }
-      if (this.bodyJuridica.nif == undefined) {
-        this.bodyJuridica.nif = "";
-      }
-      if (this.bodyJuridica.denominacion == undefined) {
-        this.bodyJuridica.denominacion = "";
-      }
-      if (this.bodyJuridica.numColegiado == undefined) {
-        this.bodyJuridica.numColegiado = "";
-      }
-      if (this.bodyJuridica.abreviatura == undefined) {
-        this.bodyJuridica.abreviatura = "";
-      }
+      if (this.checkFilterJuridic()) {
+        if (this.bodyJuridica.tipo == undefined) {
+          this.bodyJuridica.tipo = "";
+        }
+        if (this.bodyJuridica.nif == undefined) {
+          this.bodyJuridica.nif = "";
+        }
+        if (this.bodyJuridica.denominacion == undefined) {
+          this.bodyJuridica.denominacion = "";
+        }
+        if (this.bodyJuridica.numColegiado == undefined) {
+          this.bodyJuridica.numColegiado = "";
+        }
+        if (this.bodyJuridica.abreviatura == undefined) {
+          this.bodyJuridica.abreviatura = "";
+        }
 
-      this.bodyJuridica.idInstitucion = [];
-      this.colegios_seleccionados.forEach((value: ComboItem, key: number) => {
-        this.bodyJuridica.idInstitucion.push(value.value);
-      });
-      this.checkTypeCIF(this.bodyJuridica.nif);
-      this.sigaServices
-        .postPaginado(
-        "busquedaPer_searchJuridica",
-        "?numPagina=1",
-        this.bodyJuridica
-        )
-        .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-          this.searchJuridica = JSON.parse(data["body"]);
-          this.datos = [];
-          this.datos = this.searchJuridica.busquedaPerJuridicaItems;
+        this.bodyJuridica.idInstitucion = [];
+        this.colegios_seleccionados.forEach((value: ComboItem, key: number) => {
+          this.bodyJuridica.idInstitucion.push(value.value);
+        });
+        this.checkTypeCIF(this.bodyJuridica.nif);
+        this.sigaServices
+          .postPaginado(
+            "busquedaPer_searchJuridica",
+            "?numPagina=1",
+            this.bodyJuridica
+          )
+          .subscribe(
+            data => {
+              this.progressSpinner = false;
+              this.searchJuridica = JSON.parse(data["body"]);
+              this.datos = [];
+              this.datos = this.searchJuridica.busquedaPerJuridicaItems;
 
-          // this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          if (
-            this.datos.length == 0 ||
-            this.datos == null ||
-            this.datos == undefined
-          ) {
-            if (
-              this.bodyJuridica.nif != null &&
-              this.bodyJuridica.nif != undefined &&
-              this.bodyJuridica.denominacion.trim() == "" &&
-              this.bodyJuridica.abreviatura.trim() == "" &&
-              this.bodyJuridica.tipo.trim() == ""
-            ) {
-              if (this.tipoIdentificacionPermitido(this.bodyJuridica.nif)) {
-                this.noDataFoundWithDNI();
+              // this.table.paginator = true;
+            },
+            err => {
+              console.log(err);
+              this.progressSpinner = false;
+            },
+            () => {
+              if (
+                this.datos.length == 0 ||
+                this.datos == null ||
+                this.datos == undefined
+              ) {
+                if (
+                  this.bodyJuridica.nif != null &&
+                  this.bodyJuridica.nif != undefined &&
+                  this.bodyJuridica.denominacion.trim() == "" &&
+                  this.bodyJuridica.abreviatura.trim() == "" &&
+                  this.bodyJuridica.tipo.trim() == ""
+                ) {
+                  if (this.tipoIdentificacionPermitido(this.bodyJuridica.nif)) {
+                    this.noDataFoundWithDNI();
+                  }
+                }
               }
             }
-          }
-        }
-        );
+          );
+      }
+
     }
   }
   onHideDatosGenerales() {
@@ -509,6 +563,16 @@ export class BusquedaGeneralComponent {
       severity: "error",
       summary: "Incorrecto",
       detail: mensaje
+    });
+  }
+  showSearchIncorrect() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "cen.busqueda.error.busquedageneral"
+      )
     });
   }
 
