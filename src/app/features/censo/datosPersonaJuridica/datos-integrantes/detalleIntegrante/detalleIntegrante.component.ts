@@ -230,6 +230,9 @@ export class DetalleIntegranteComponent implements OnInit {
       if (ir[0].colegio != null) {
         this.body.idInstitucion = ir[0].colegio;
         this.body.idInstitucionIntegrante = ir[0].colegio;
+      } else {
+        this.body.idInstitucion = ir[0].idInstitucion;
+        this.body.idInstitucionIntegrante = ir[0].idInstitucion;
       }
       if (ir[0].fechaAlta != null) {
         this.body.fechaCargo = ir[0].fechaAlta;
@@ -248,7 +251,13 @@ export class DetalleIntegranteComponent implements OnInit {
       if (ir[0].nombre != null) {
         this.body.nombre = ir[0].nombre;
       } else if (ir[0].denominacion != null) {
-        this.body.nombre = ir[0].denominacion;
+        //this.body.nombre = ir[0].denominacion;
+        let denominacion = ir[0].denominacion;
+        this.body.nombre = denominacion.substring(0, denominacion.indexOf(" "));
+        this.body.apellidos1 = denominacion.substring(
+          denominacion.indexOf(" "),
+          denominacion.length
+        );
       }
 
       if (ir[0].apellidos != null) {
