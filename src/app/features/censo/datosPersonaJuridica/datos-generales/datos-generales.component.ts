@@ -79,7 +79,7 @@ export class DatosGenerales implements OnInit {
   datos: any[];
   selectedTipo: any;
   idiomaPreferenciaSociedad: String;
-
+  camposDesactivados: boolean = false;
   existeImagen: boolean = false;
   imagenPersonaJuridica: any;
 
@@ -143,6 +143,9 @@ export class DatosGenerales implements OnInit {
   continueOnInit() {
     this.busquedaIdioma();
 
+    if (sessionStorage.getItem("historicoSociedad") != null) {
+      this.camposDesactivados = true;
+    }
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     if (sessionStorage.getItem("crearnuevo") != null) {
       this.editar = true;
@@ -200,8 +203,11 @@ export class DatosGenerales implements OnInit {
         console.log(err);
       },
       () => {
-        if (derechoAcceso == 3) {
+        if (derechoAcceso >= 2) {
           this.activacionEditar = true;
+          if (derechoAcceso == 2) {
+            this.camposDesactivados = true;
+          }
         } else {
           this.activacionEditar = false;
         }

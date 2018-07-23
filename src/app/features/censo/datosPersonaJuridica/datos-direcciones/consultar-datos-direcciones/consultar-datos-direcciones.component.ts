@@ -79,6 +79,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("direccion"));
       this.body.idPersona = this.usuarioBody[0].idPersona;
       this.provinciaSelecionada = this.body.idProvincia;
+      this.getDatosContactos();
       if (
         this.body.idPoblacion == null ||
         this.body.idPoblacion == "" ||
@@ -104,8 +105,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.onChangePais();
 
       this.isDisabledProvincia = true;
+    } else {
+      this.getDatosContactos();
     }
-    this.getDatosContactos();
   }
 
   getDatosContactos() {
@@ -119,33 +121,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         header: "administracion.parametrosGenerales.literal.valor"
       }
     ];
-    this.datosContacto = [
-      {
-        tipo: "Telefono",
-        valor: this.body.telefono,
-        longitud: 20
-      },
-      {
-        tipo: "Fax",
-        valor: this.body.fax,
-        longitud: 20
-      },
-      {
-        tipo: "Móvil",
-        valor: this.body.movil,
-        longitud: 20
-      },
-      {
-        tipo: "Correo-Electrónico",
-        valor: this.body.correoElectronico,
-        longitud: 100
-      },
-      {
-        tipo: "Página Web",
-        valor: this.body.paginaWeb,
-        longitud: 100
-      }
-    ];
+    this.generarTabla();
   }
   getComboProvincia() {
     // Combo de identificación
@@ -428,12 +404,42 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     }
   }
 
+  generarTabla() {
+    this.datosContacto = [
+      {
+        tipo: "Telefono",
+        valor: this.body.telefono,
+        longitud: 20
+      },
+      {
+        tipo: "Fax",
+        valor: this.body.fax,
+        longitud: 20
+      },
+      {
+        tipo: "Móvil",
+        valor: this.body.movil,
+        longitud: 20
+      },
+      {
+        tipo: "Correo-Electrónico",
+        valor: this.body.correoElectronico,
+        longitud: 100
+      },
+      {
+        tipo: "Página Web",
+        valor: this.body.paginaWeb,
+        longitud: 100
+      }
+    ];
+  }
   restablecer() {
     if (sessionStorage.getItem("direccion") != null) {
       this.body = JSON.parse(sessionStorage.getItem("direccion"));
       this.body.idPersona = this.usuarioBody[0].idPersona;
       this.provinciaSelecionada = this.body.idProvincia;
-      this.getDatosContactos();
+      // this.getDatosContactos();
+      this.generarTabla();
     }
   }
   // Mensajes
