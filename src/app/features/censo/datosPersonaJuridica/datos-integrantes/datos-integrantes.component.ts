@@ -55,7 +55,7 @@ export class DatosIntegrantesComponent implements OnInit {
   body: DatosIntegrantesItem = new DatosIntegrantesItem();
   datosIntegrantes: DatosIntegrantesObject = new DatosIntegrantesObject();
   suscripcionBusquedaNuevo: Subscription;
-
+  camposDesactivados: boolean;
   columnasTabla: any = [];
 
   // Obj extras
@@ -80,6 +80,10 @@ export class DatosIntegrantesComponent implements OnInit {
       let fichaPosible = this.getFichaPosibleByKey("integrantes");
       fichaPosible.activa = !fichaPosible.activa;
       sessionStorage.removeItem("editarIntegrante");
+    }
+
+    if (sessionStorage.getItem("historicoSociedad") != null) {
+      this.camposDesactivados = true;
     }
 
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
@@ -205,8 +209,11 @@ export class DatosIntegrantesComponent implements OnInit {
         console.log(err);
       },
       () => {
-        if (derechoAcceso == 3) {
+        if (derechoAcceso >= 2) {
           this.activacionEditar = true;
+          if (derechoAcceso == 2) {
+            this.camposDesactivados = true;
+          }
         } else {
           this.activacionEditar = false;
         }
@@ -257,25 +264,27 @@ export class DatosIntegrantesComponent implements OnInit {
     else return true;
   }
   consultarIntegrante(id) {
-    if (!this.selectMultiple) {
-      if (id[0].fechaBajaCargo != null) {
-        sessionStorage.setItem("historicoInt", "true");
+    if (this.camposDesactivados != true) {
+      if (!this.selectMultiple) {
+        if (id[0].fechaBajaCargo != null) {
+          sessionStorage.setItem("historicoInt", "true");
+        }
+        var ir = null;
+        ir = id[0];
+        ir.editar = false;
+        sessionStorage.removeItem("integrante");
+        sessionStorage.setItem("integrante", JSON.stringify(ir));
+
+        let dummy = {
+          integrante: true
+        };
+        sessionStorage.removeItem("newIntegrante");
+        sessionStorage.setItem("newIntegrante", JSON.stringify(dummy));
+
+        this.router.navigate(["detalleIntegrante"]);
+      } else {
+        this.numSelected = this.selectedDatos.length;
       }
-      var ir = null;
-      ir = id[0];
-      ir.editar = false;
-      sessionStorage.removeItem("integrante");
-      sessionStorage.setItem("integrante", JSON.stringify(ir));
-
-      let dummy = {
-        integrante: true
-      };
-      sessionStorage.removeItem("newIntegrante");
-      sessionStorage.setItem("newIntegrante", JSON.stringify(dummy));
-
-      this.router.navigate(["detalleIntegrante"]);
-    } else {
-      this.numSelected = this.selectedDatos.length;
     }
   }
   onChangeSelectAll() {

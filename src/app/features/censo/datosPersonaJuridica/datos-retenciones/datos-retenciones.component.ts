@@ -40,7 +40,7 @@ export class DatosRetencionesComponent implements OnInit {
   colegios_seleccionados: any[];
   datos: any[];
   select: any[];
-
+  camposDesactivados: boolean;
   es: any = esCalendar;
   selectedValue: string = "simple";
   textSelected: String = "{0} perfiles seleccionados";
@@ -150,6 +150,10 @@ export class DatosRetencionesComponent implements OnInit {
       this.idPersona = this.usuarioBody[0].idPersona;
     this.checkStatusInit();
     this.search();
+    if (sessionStorage.getItem("historicoSociedad") != null) {
+      this.camposDesactivados = true;
+      this.isCrear = true;
+    }
   }
 
   getTiposRetenciones() {
@@ -219,10 +223,17 @@ export class DatosRetencionesComponent implements OnInit {
   }
   volver() {
     this.search();
-    this.isVolver = true;
-    this.isCrear = false;
-    this.isEditar = true;
-    this.isEliminar = false;
+    if (this.camposDesactivados == true) {
+      this.isVolver = true;
+      this.isCrear = true;
+      this.isEditar = true;
+      this.isEliminar = true;
+    } else {
+      this.isVolver = true;
+      this.isCrear = false;
+      this.isEditar = true;
+      this.isEliminar = false;
+    }
   }
   crear() {
     this.isVolver = false;
@@ -401,7 +412,9 @@ export class DatosRetencionesComponent implements OnInit {
           },
           () => {
             if (this.datos.length > 0) {
-              this.isEliminar = false;
+              if (this.camposDesactivados != true) {
+                this.isEliminar = false;
+              }
               this.datos.forEach((value: any, key: number) => {
                 //Si la fecha fin no viene informada, es la que está activa, es la que mostramos con la tarjeta colapsada
                 if (value.fechaFin == undefined) {
