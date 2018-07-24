@@ -1,4 +1,4 @@
-<p-growl [(value)]="msgs" (onHover)="clear()"></p-growl>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div #widthContent class="permisos-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -79,7 +79,7 @@
       <div (click)="onChangeAcceso('sinAsignar')" class="mr-3 btn-acceso sin-asignar d-flex align-items-center">
         <p>Sin asignar ({{sinAsignar}})</p>
       </div>
-      <div class="ml-auto main-button d-inline-block">
+      <div class="ml-auto main-button d-flex">
         <button [disabled]="isButtonDisabled()" (click)="savePermisos()" class="mr-2" pButton type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
         <button [disabled]="savedPermisos" (click)="restablecerPermisos()" pButton type="button" icon="fa fa-redo" iconPos="left"

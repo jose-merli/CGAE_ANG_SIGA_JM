@@ -717,12 +717,14 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
         border-bottom: 1px solid $lightGrey;
         .ui-treenode-label {
           color: $grey1 !important;
+          background: none;
         }
         .ui-tree-toggler {
           float: right;
           line-height: 1.5rem;
           width: 100%;
           text-align: right;
+          // border-bottom: 1px solid $lightGrey;
         }
 
         .fa-caret-right:before {
@@ -743,7 +745,13 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
           margin-bottom: 0;
           .ui-treenode-content {
             padding: 0.7rem 1rem 0rem 2.5rem;
-            border-bottom: 0;
+            border-bottom: 0;         
+            .ui-tree-toggler {
+              border-bottom: 1px solid $lightGrey;             
+            }
+            &:first-child{
+              border: none;
+            }
           }
         }
       }
@@ -1022,6 +1030,9 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   background: $secondary-color;
 }
 
-.datepicker-change-year {
-  padding-bottom: 0.4em;
+#datepicker-change-year {
+  height: 32px;
+  text-align: center;
 }
+
+
