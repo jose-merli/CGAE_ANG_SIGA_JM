@@ -60,7 +60,7 @@ export class PermisosComponent implements OnInit {
   permisosChange: Map<String, PermisosAplicacionesDto> = new Map<
     String,
     PermisosAplicacionesDto
-  >();
+    >();
 
   @ViewChild("widthContent") widthContent: any;
 
@@ -82,6 +82,7 @@ export class PermisosComponent implements OnInit {
 
     this.sigaServices.menuToggled$.subscribe(() => {
       this.isWidthChange = !this.isWidthChange;
+      console.log(this.isWidthChange)
     });
   }
 
