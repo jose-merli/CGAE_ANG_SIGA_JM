@@ -212,7 +212,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
             },
             error => {
               this.searchCatalogo = JSON.parse(error["error"]);
-              this.showFail(JSON.stringify(this.searchCatalogo.error.message));
+              let mensaje = JSON.stringify(this.searchCatalogo.error.message);
+              this.showFail(mensaje.substring(1, mensaje.length - 1));
               console.log(error);
 
               this.isBuscar();
@@ -250,7 +251,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
 
     this.newCatalogo = new CatalogoMaestroItem();
     this.newCatalogo.catalogo = this.body.catalogo;
-
+    this.cdgoExt = "";
+    this.descripcion = "";
     console.log(this.datosHist);
     this.table.reset();
   }
@@ -345,7 +347,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       },
       error => {
         this.searchCatalogo = JSON.parse(error["error"]);
-        this.showFail(JSON.stringify(this.searchCatalogo.error.message));
+        let mensaje = JSON.stringify(this.searchCatalogo.error.message);
+        this.showFail(mensaje.substring(1, mensaje.length - 1));
         console.log(error);
       },
       () => {
@@ -622,7 +625,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       },
       error => {
         this.searchCatalogo = JSON.parse(error["error"]);
-        this.showFail(JSON.stringify(this.searchCatalogo.error.message));
+        let mensaje = JSON.stringify(this.searchCatalogo.error.message);
+        this.showFail(mensaje.substring(1, mensaje.length - 1));
         console.log(error);
         this.table.reset();
         this.isBuscar();
