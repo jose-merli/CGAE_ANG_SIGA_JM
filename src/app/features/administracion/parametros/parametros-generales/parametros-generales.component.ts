@@ -53,7 +53,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   bodyUpdate: ParametroUpdateDto = new ParametroUpdateDto();
   historico: boolean = false;
   msgs: Message[] = [];
-
+  progressSpinner: boolean = false;
   isHabilitadoSave: boolean = false;
   elementosAGuardar: ParametroUpdateDto[] = [];
 
@@ -155,7 +155,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     if (selectedModulo != undefined) {
       this.body.modulo = selectedModulo;
     }
-
+    this.progressSpinner = true;
     this.body.parametrosGenerales = "S";
 
     this.bodySave = this.body;
@@ -164,18 +164,20 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
       .subscribe(
         data => {
           console.log(data);
-
+          this.progressSpinner = false;
           this.searchParametros = JSON.parse(data["body"]);
           this.datosBuscar = this.searchParametros.parametrosItems;
         },
         err => {
+          this.progressSpinner = false;
           console.log(err);
+        },
+        () => {
+          this.buscar = true;
+          this.eliminar = true;
+          this.historico = false;
         }
       );
-
-    this.buscar = true;
-    this.eliminar = true;
-    this.historico = false;
   }
 
   isEliminar() {
