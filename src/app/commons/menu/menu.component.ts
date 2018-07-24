@@ -69,7 +69,6 @@ export class MenuComponent implements OnInit {
       }
     }
   }
-
   viewChild(e, i) {
     if (e) {
       this.showChild = true;
