@@ -162,6 +162,12 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     }
   }
 
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
+
   toHistorico() {
     this.historico = true;
     this.buscar = false;
@@ -183,7 +189,6 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
           this.progressSpinner = false;
         },
         () => {}
-
       );
   }
 
