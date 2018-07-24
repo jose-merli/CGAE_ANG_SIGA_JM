@@ -26,7 +26,7 @@ export class MenuComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
 
   // TODO: Revisar si tiene sentido que las rutas las devuelva el back
@@ -65,17 +65,17 @@ export class MenuComponent implements OnInit {
         this.router.navigate([ruta]);
       }
 
-    if (ruta == "permisos") {
-      setTimeout(() => {
-        this.onCloseMenu()
-      }, 100);
+      if (ruta == "permisos") {
+        setTimeout(() => {
+          this.onCloseMenu()
+        }, 100);
 
-      this.router.navigate([ruta]);
+        this.router.navigate([ruta]);
+
+      }
 
     }
-
   }
-
   viewChild(e, i) {
     if (e) {
       this.showChild = true;
