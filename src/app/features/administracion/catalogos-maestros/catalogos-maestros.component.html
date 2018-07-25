@@ -57,9 +57,9 @@
     <div class="card-body p-0">
       <div *ngIf="selectMultiple == true">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-          [(selection)]="selectedDatos" [paginator]="activarPaginacion()" (onRowSelect)="irEditarCatalogo(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-          dataKey="descripcion" selectionMode="multiple" [responsive]="true" #table class="tabla-listado" [value]="datosHist"
-          [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" [editable]="true">
+          [paginator]="activarPaginacion()" (onRowSelect)="irEditarCatalogo(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+          dataKey="descripcion" selectionMode="multiple" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
+          [value]="datosHist" [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" [editable]="true">
           <p-column [sortable]="true" [style]="{'width': '20%'}" field="codigoExt" [header]="'general.codeext' | translate" [filter]="true"
             filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains" [editable]="true">
           </p-column>
@@ -97,8 +97,8 @@
       <div *ngIf="selectMultiple==false">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
           [paginator]="activarPaginacion()" #table class="tabla-listado" [value]="datosHist" [paginator]="true" paginatorPosition="both"
-          datakey="descripcion" [rows]="selectedItem" [editable]="!selectMultiple" (onEdit)="editarCompleto($event)" (onEditInit)="editar=true; guardarCodigo($event)"
-          [(first)]="first">
+          datakey="descripcion" [(selection)]="selectedDatos" [rows]="selectedItem" [editable]="!selectMultiple" (onEdit)="editarCompleto($event)"
+          (onEditInit)="editar=true; guardarCodigo($event)" [(first)]="first">
 
           <p-column [sortable]="true" [style]="{'width': '20%'}" field="codigoExt" [header]="'general.codeext' | translate" [filter]="true"
             filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains" [editable]="!selectMultiple">

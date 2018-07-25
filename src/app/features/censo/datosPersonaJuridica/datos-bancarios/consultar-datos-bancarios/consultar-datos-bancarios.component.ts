@@ -111,6 +111,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   showGuardarAuditoria: boolean = false;
 
   file: File = undefined;
+  ocultarMotivo: boolean = undefined;
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -128,6 +129,29 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   ngOnInit() {
     sessionStorage.setItem("editarDatosBancarios", "true");
     this.textFilter = "Elegir";
+
+    // obtener parametro para saber si se oculta la auditoria
+    let parametro = {
+      valor: "OCULTAR_MOTIVO_MODIFICACION"
+    };
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          let parametroOcultarMotivo = JSON.parse(data.body);
+          if (parametroOcultarMotivo.parametro == "S") {
+            this.ocultarMotivo = true;
+          } else if (parametroOcultarMotivo.parametro == "N") {
+            this.ocultarMotivo = false;
+          } else {
+            this.ocultarMotivo = undefined;
+          }
+        },
+        err => {
+          console.log(err);
+        }
+      );
 
     this.tipoCuenta = [
       { name: "Abono", code: "A" },
@@ -267,8 +291,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           }
 
           this.rellenarComboTipoCuenta(this.body.tipoCuenta);
-
-          
         },
         error => {
           this.bodySearch = JSON.parse(error["error"]);
@@ -572,15 +594,17 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         if (this.registroEditable == "false") {
           this.guardarRegistro();
         } else {
-          this.displayAuditoria = true;
-    this.showGuardarAuditoria = false;
-
+          // dependiendo de esta variable, se muestra o no la auditoria
           this.body.motivo = undefined;
+          if (this.ocultarMotivo) {
+            this.editarRegistro();
+          } else {
+            this.displayAuditoria = true;
+            this.showGuardarAuditoria = false;
+          }
         }
       },
-      reject: () => {
-        
-      }
+      reject: () => {}
     });
   }
 
@@ -877,7 +901,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     });
 
     this.selectedProductoServicio = this.comboProductoServicio[0];
-
   }
 
   onChangeComboProductoServicio(e) {
@@ -938,7 +961,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.bodyDatosBancariosAnexo.esquema = "";
     this.bodyDatosBancariosAnexo.firmaLugar = "";
     this.bodyDatosBancariosAnexo.firmaFecha = null;
-    
+
     this.bodyDatosBancariosAnexo.fechaUsoDate = this.datefechaUso;
     this.bodyDatosBancariosAnexo.descripcion = this.descripcion;
 
@@ -1090,7 +1113,11 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   comprobarCampoMotivo() {
-    if (this.body.motivo != undefined && this.body.motivo != ""&& this.body.motivo.trim() != "") {
+    if (
+      this.body.motivo != undefined &&
+      this.body.motivo != "" &&
+      this.body.motivo.trim() != ""
+    ) {
       this.showGuardarAuditoria = true;
     } else {
       this.showGuardarAuditoria = false;
@@ -1102,7 +1129,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.bodyDatosBancariosAnexo.firmaLugar = this.firmaLugar;
 
     this.actualizar(this.bodyDatosBancariosAnexo);
-    
+
     this.selectMultiple = false;
   }
 
