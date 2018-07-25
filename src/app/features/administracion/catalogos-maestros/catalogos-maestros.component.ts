@@ -253,7 +253,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.newCatalogo.catalogo = this.body.catalogo;
     this.cdgoExt = "";
     this.descripcion = "";
-    console.log(this.datosHist);
     this.table.reset();
   }
 
@@ -331,30 +330,34 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.isBuscar();
   }
   confirmarCrear() {
-    console.log(this.datosHist[0]);
-    console.log(this.newCatalogo);
-    this.cre = new CatalogoCreateRequestDto();
-    this.cre.tabla = this.newCatalogo.catalogo;
-    this.cre.idRegistro = "";
-    this.cre.codigoExt = this.newCatalogo.codigoExt;
-    this.cre.descripcion = this.newCatalogo.descripcion;
-    this.cre.idInstitucion = "";
-    this.cre.local = this.local;
+    if (this.newCatalogo.descripcion) {
+      console.log(this.datosHist[0]);
+      console.log(this.newCatalogo);
+      this.cre = new CatalogoCreateRequestDto();
+      this.cre.tabla = this.newCatalogo.catalogo;
+      this.cre.idRegistro = "";
+      this.cre.codigoExt = this.newCatalogo.codigoExt;
+      this.cre.descripcion = this.newCatalogo.descripcion;
+      this.cre.idInstitucion = "";
+      this.cre.local = this.local;
 
-    this.sigaServices.post("maestros_create", this.cre).subscribe(
-      data => {
-        this.showSuccess();
-      },
-      error => {
-        this.searchCatalogo = JSON.parse(error["error"]);
-        let mensaje = JSON.stringify(this.searchCatalogo.error.message);
-        this.showFail(mensaje.substring(1, mensaje.length - 1));
-        console.log(error);
-      },
-      () => {
-        this.reset();
-      }
-    );
+      this.sigaServices.post("maestros_create", this.cre).subscribe(
+        data => {
+          this.showSuccess();
+        },
+        error => {
+          this.searchCatalogo = JSON.parse(error["error"]);
+          let mensaje = JSON.stringify(this.searchCatalogo.error.message);
+          this.showFail(mensaje.substring(1, mensaje.length - 1));
+          console.log(error);
+        },
+        () => {
+          this.reset();
+        }
+      );
+    } else {
+      this.showFail("La descripción no puede estar vacía");
+    }
   }
 
   checkAcceso() {
@@ -501,6 +504,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.selectMultiple = false;
     this.catalogoSeleccionado = this.body.catalogo;
     this.local = this.body.local;
+    this.selectAll = false;
     this.body = new CatalogoRequestDto();
     this.body.catalogo = this.catalogoSeleccionado;
     this.body.local = this.local;
@@ -543,7 +547,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       this.selectAll = false;
       this.selectedDatos = [];
       this.numSelected = 0;
-      console.log(this.selectAll);
     }
     this.volver();
   }
@@ -562,6 +565,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.buscar = true;
     this.blockBuscar = false;
     this.blockCrear = false;
+    this.selectAll = false;
+    this.selectMultiple = false;
     this.tablaHistorico = false;
     this.eliminar = false;
     if (this.body.codigoExt != undefined) {

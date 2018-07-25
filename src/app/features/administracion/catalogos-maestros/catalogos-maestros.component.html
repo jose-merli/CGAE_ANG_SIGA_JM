@@ -57,9 +57,9 @@
     <div class="card-body p-0">
       <div *ngIf="selectMultiple == true">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-          [(selection)]="selectedDatos" [paginator]="activarPaginacion()" (onRowSelect)="irEditarCatalogo(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-          dataKey="descripcion" selectionMode="multiple" [responsive]="true" #table class="tabla-listado" [value]="datosHist"
-          [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" [editable]="true">
+          [paginator]="activarPaginacion()" (onRowSelect)="irEditarCatalogo(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+          dataKey="descripcion" selectionMode="multiple" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
+          [value]="datosHist" [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" [editable]="true">
           <p-column [sortable]="true" [style]="{'width': '20%'}" field="codigoExt" [header]="'general.codeext' | translate" [filter]="true"
             filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains" [editable]="true">
           </p-column>
