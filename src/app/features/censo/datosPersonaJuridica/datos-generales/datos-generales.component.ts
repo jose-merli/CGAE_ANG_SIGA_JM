@@ -86,6 +86,8 @@ export class DatosGenerales implements OnInit {
   cuentaIncorrecta: Boolean = false;
   showGuardarAuditoria: boolean = false;
 
+  ocultarMotivo: boolean = undefined;
+
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
 
@@ -188,7 +190,31 @@ export class DatosGenerales implements OnInit {
     );
 
     this.comboTipo.push(this.tipoPersonaJuridica);
+
+    // obtener parametro para saber si se oculta la auditoria
+    let parametro = {
+      valor: "OCULTAR_MOTIVO_MODIFICACION"
+    };
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          let parametroOcultarMotivo = JSON.parse(data.body);
+          if (parametroOcultarMotivo.parametro == "S") {
+            this.ocultarMotivo = true;
+          } else if (parametroOcultarMotivo.parametro == "N") {
+            this.ocultarMotivo = false;
+          } else {
+            this.ocultarMotivo = undefined;
+          }
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
+
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = "120";
@@ -578,9 +604,15 @@ export class DatosGenerales implements OnInit {
     }
     // modo edición
     else {
-      this.displayAuditoria = true;
-      this.showGuardarAuditoria = false;
+      // mostrar la auditoria depende de un parámetro que varía según la institución
       this.body.motivo = undefined;
+
+      if (this.ocultarMotivo) {
+        this.guardar();
+      } else {
+        this.displayAuditoria = true;
+        this.showGuardarAuditoria = false;
+      }
     }
   }
 

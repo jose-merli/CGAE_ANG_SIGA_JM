@@ -3,7 +3,7 @@
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>Consultar editar datos bancarios</p>
+    <p>{{"general.boton.consultareditar.bancarios" | translate}}</p>
   </div>
 
   <!-- Datos cuenta bancaria -->
@@ -18,16 +18,16 @@
           </div>
           <div class="col-lg-11 col-md-10">
             <div class="d-flex justify-content-start mb-1">
-              <label class="mr-auto title-ficha">Datos Cuenta Bancaria</label>
+              <label class="mr-auto title-ficha">{{"configuracion.literal.cuentas" | translate}}</label>
             </div>
             <div class="d-flex justify-content-between">
-              <label>Titular
+              <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}}
                 <span>{{ body.titular }}</span>
               </label>
               <label>{{"administracion.usuarios.literal.NIF" | translate}}
                 <span>{{ body.nifTitular }}</span>
               </label>
-              <label>IBAN
+              <label>{{"censo.mutualidad.literal.iban" | translate}}
                 <span>{{ body.iban }}</span>
               </label>
               <i [ngClass]="{ 'fa fa-angle-up': openFichaCuentaBancaria, 'fa fa-angle-down': !openFichaCuentaBancaria} "></i>
@@ -38,7 +38,7 @@
           <div class="img-colegiado">
             <i class="fa fa-credit-card icon-ficha"></i>
           </div>
-          <label class="title-ficha">Datos Cuenta Bancaria</label>
+          <label class="title-ficha">{{"configuracion.literal.cuentas" | translate}}</label>
           <i class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
@@ -48,7 +48,7 @@
           <div class="bloque col-lg-12 col-md-12">
             <div class="row">
               <div class="form-group col-lg-3 col-md-6">
-                <label>Titular</label>
+                <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}}</label>
                 <input type="text" class="form-control" [(ngModel)]="body.titular" pInputText>
                 <div *ngIf="titularValido == false">
                   <label class="labelError">{{"El campo no puede estar vacío"}}</label>
@@ -62,23 +62,23 @@
                 </div>
               </div>
               <div class="form-group col-lg-3 col-md-6">
-                <label>IBAN (*)</label>
+                <label>{{"censo.mutualidad.literal.iban" | translate}} (*)</label>
                 <input type="text" class="form-control" [(ngModel)]="iban" (ngModelChange)="autogenerarDatos()" pInputText>
                 <div *ngIf="ibanValido == false">
                   <label class="labelError">{{"IBAN incorrecto"}}</label>
                 </div>
               </div>
               <div class="form-group col-lg-3 col-md-6">
-                <label>BIC</label>
+                <label>{{"censo.fichaCliente.datosBancarios.cuentaBancaria.bic" | translate}}</label>
                 <input [(ngModel)]="body.bic" type="text" class="form-control" (ngModelChange)="recuperarBicBanco()" [disabled]="!editar"
                   pInputText>
               </div>
               <div class="form-group col-lg-3 col-md-6">
-                <label>Banco</label>
+                <label>{{"censo.tipoAbono.banco" | translate}}</label>
                 <input [(ngModel)]="body.banco" type="text" class="form-control" [disabled]="!editar" pInputText>
               </div>
               <div class="form-group col-lg-3 col-md-6">
-                <label>Tipo de cuenta (*)</label>
+                <label>{{"censo.datosCuentaBancaria.literal.tipoCuenta" | translate}} (*)</label>
                 <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='selectedTipo' [options]="tipoCuenta" [selectedItemsLabel]="textSelected"
                   maxSelectedLabels="1" autoWidth="false" defaultLabel="" maxSelectedLabels="1" optionLabel="name"></p-multiSelect>
                 <div *ngIf="tipoCuentaSeleccionado == false">
@@ -86,7 +86,7 @@
                 </div>
               </div>
               <div class="form-group col-lg-3 col-md-6">
-                <label>Cuenta contable</label>
+                <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
                 <input type="text" class="form-control " [(ngModel)]="body.cuentaContable" [maxLength]="20" pInputText>
               </div>
             </div>
@@ -117,7 +117,7 @@
           </div>
           <div class="col-lg-11 col-md-10 ">
             <div class="d-flex justify-content-start mb-1">
-              <label class="mr-auto title-ficha">Datos Mandatos</label>
+              <label class="mr-auto title-ficha">{{"administracion.catalogos.titulo.datos.mandatos" | translate}}</label>
             </div>
             <div class="d-flex justify-content-between">
               <br>
@@ -129,7 +129,7 @@
           <div class="img-colegiado">
             <i class="fa fa-hand-o-right icon-ficha"></i>
           </div>
-          <label class="title-ficha">Datos Mandatos</label>
+          <label class="title-ficha">{{"administracion.catalogos.titulo.datos.mandatos" | translate}}</label>
           <i class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
@@ -141,19 +141,19 @@
             <div class="form-row">
 
               <div class="form-group col-lg-12 col-md-12">
-                <label style="font-weight: bold;">Datos Generales Productos</label>
+                <label style="font-weight: bold;">{{ "general.message.datos.generales" | translate}} {{"menu.productosYServicios.categorias.productos" | translate}}</label>
               </div>
 
               <div class="form-group col-lg-12 col-md-12">
-                <label>Referencia</label>
+                <label>{{"factSJCS.detalleFacturacion.literal.referencia" | translate}}</label>
                 <input [(ngModel)]="bodyDatosMandatos.referenciaProducto" type="text" class="form-control" [disabled]="!editarMandato" pInputText>
               </div>
               <div class="form-group col-lg-6 col-md-6">
-                <label>Tipo de pago</label>
+                <label>{{"censo.fichaCliente.datosBancarios.tipoPago" | translate}}</label>
                 <input [(ngModel)]="bodyDatosMandatos.tipoPagoProducto" type="text" class="form-control" [disabled]="!editarMandato" pInputText>
               </div>
               <div class="form-group col-lg-6 col-md-6">
-                <label>Esquema utilizado</label>
+                <label>{{"censo.fichaCliente.datosBancarios.esquemaUtil" | translate}}</label>
                 <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaProducto' optionLabel="label" *ngIf="nuevo" [disabled]="!editarMandato"
                   [options]="combooItemsProducto" (onChange)="onChangeEsquemaProducto($event)">
                 </p-dropdown>
@@ -177,19 +177,19 @@
             <div class="form-row">
 
               <div class="form-group col-lg-12 col-md-12">
-                <label style="text-align:center; font-weight: bold;">Datos Generales Servicios</label>
+                <label style="text-align:center; font-weight: bold;">{{ "general.message.datos.generales" | translate}} {{"menu.productosYServicios.categorias.servicios" | translate}}</label>
               </div>
 
               <div class="form-group col-lg-12 col-md-12">
-                <label>Referencia</label>
+                <label>{{"factSJCS.detalleFacturacion.literal.referencia" | translate}}</label>
                 <input [(ngModel)]="bodyDatosMandatos.referenciaServicio" type="text" class="form-control" [disabled]="!editarMandato" pInputText>
               </div>
               <div class="form-group col-lg-6 col-md-6">
-                <label>Tipo de pago</label>
+                <label>{{"censo.fichaCliente.datosBancarios.tipoPago" | translate}}</label>
                 <input [(ngModel)]="bodyDatosMandatos.tipoPagoServicio" type="text" class="form-control" [disabled]="!editarMandato" pInputText>
               </div>
               <div class="form-group col-lg-6 col-md-6">
-                <label>Esquema utilizado</label>
+                <label>{{"censo.fichaCliente.datosBancarios.esquemaUtil" | translate}}</label>
                 <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaServicio' optionLabel="label" *ngIf="nuevo" [disabled]="!editarMandato"
                   [options]="combooItemsServicio" (onChange)="onChangeEsquemaServicio($event)">
 
@@ -232,7 +232,7 @@
           </div>
           <div class="col-lg-11 col-md-10">
             <div class="d-flex justify-content-start mb-1">
-              <label class="mr-auto title-ficha">Listado ficheros y anexos</label>
+              <label class="mr-auto title-ficha">{{"censo.fichaCliente.bancos.mandatos.ficheros.listado" | translate}}</label>
             </div>
             <div class="d-flex justify-content-between">
               <br>
@@ -244,7 +244,7 @@
           <div class="img-colegiado ">
             <i class="fa fa-list-ul icon-ficha"></i>
           </div>
-          <label class="title-ficha">Listado ficheros y anexos</label>
+          <label class="title-ficha">{{"censo.fichaCliente.bancos.mandatos.ficheros.listado" | translate}}</label>
           <i class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
@@ -255,18 +255,18 @@
             class="tabla-listado" [value]="bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem" [sortOrder]="1" (onRowSelect)="controlarEdicion()"
             [paginator]="true" paginatorPosition="both" [rows]="selectedItem" [editable]="true" pageLinks="4">
 
-            <p-column field="descripcion" header="Descripcion" [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+            <p-column field="descripcion" header="{{'general.description' | translate}}" [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
               filterMatchMode="contains"></p-column>
-            <p-column field="tipo" header="Tipo" [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-              filterMatchMode="contains"></p-column>
-            <p-column field="tipoMandato" header="Tipo Mandato" [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-              filterMatchMode="contains"></p-column>
-            <p-column field="fechaUso" header="Fecha Uso" [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-              filterMatchMode="contains"></p-column>
-            <p-column field="firmaFecha" header="Fecha de Firma" [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-              filterMatchMode="contains"></p-column>
-            <p-column field="firmaLugar" header="Lugar de la firma" [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-              filterMatchMode="contains"></p-column>
+            <p-column field="tipo" header="{{'censo.busquedaClientesAvanzada.literal.tipoCliente' | translate}}" [sortable]="true" [filter]="true"
+              filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
+            <p-column field="tipoMandato" header="{{'censo.sociedades.datosBancarios.tipoMandato' | translate}}" [sortable]="true" [filter]="true"
+              filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
+            <p-column field="fechaUso" header="{{'censo.sociedades.datosBancarios.fechaUso' | translate}}" [sortable]="true" [filter]="true"
+              filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
+            <p-column field="firmaFecha" header="{{'censo.fichaCliente.bancos.mandatos.anexos.fechaFirmada' | translate}}" [sortable]="true"
+              [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
+            <p-column field="firmaLugar" header="{{'censo.fichaCliente.bancos.mandatos.anexos.lugarFirma' | translate}}" [sortable]="true"
+              [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
 
             <ng-template pTemplate="paginatorLeft">
               <div class="mostrar d-flex text-right justify-content-end">
@@ -396,14 +396,15 @@
 
     <div class="bloque col-lg-12 col-md-12">
       <div class="row">
-        <div class="form-group col-lg-6 col-md-6">
-          <label>{{"censo.sociedades.datosBancarios.fechaUso" | translate}} (*)</label>
-          <p-calendar [(ngModel)]="datefechaUso" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [required]="true"></p-calendar>
-        </div>
+
         <div class="form-group col-lg-6 col-md-6">
           <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
           <br>
           <p-dropdown [(ngModel)]="selectedProductoServicio" [options]="comboProductoServicio" styleClass="widthAll" (onChange)="onChangeComboProductoServicio($event)"></p-dropdown>
+        </div>
+        <div class="form-group col-lg-6 col-md-6">
+          <label>{{"censo.sociedades.datosBancarios.fechaUso" | translate}} (*)</label>
+          <p-calendar [(ngModel)]="datefechaUso" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [required]="true"></p-calendar>
         </div>
       </div>
       <br>
