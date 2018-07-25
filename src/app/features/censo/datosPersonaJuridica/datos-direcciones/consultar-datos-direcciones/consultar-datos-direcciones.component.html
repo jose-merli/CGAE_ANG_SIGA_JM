@@ -111,7 +111,7 @@
                       <label>{{dato.tipo}}</label>
                     </ng-template>
                   </p-column>
-                  </p-dataTable>
+                </p-dataTable>
 
               </div>
             </div>
@@ -121,7 +121,7 @@
         <div class="card-footer ">
           <div class="text-right main-button ">
             <button *ngIf="nuevo == false" (click)="duplicarRegistro()" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
-            <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+            <button (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
             <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
           </div>
         </div>
@@ -134,6 +134,34 @@
   </div>
 
 </div>
+
+
+<!-- AUDITORIA -->
+
+<p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500"
+  [minWidth]="500">
+  <p-header class="title">
+    <label>{{"general.ventana.cgae" | translate}} -{{"censo.consultaHistorico.cabecera" | translate}}</label>
+  </p-header>
+
+  <div class="bloque col-lg-12 col-md-12">
+    <div class="row">
+      <div class="form-group col-lg-12 col-md-12">
+        <label>{{"censo.datosHistorico.literal.motivo" | translate}} (*)</label>
+        <textarea pInputTextarea [(ngModel)]="body.motivo" (ngModelChange)="comprobarCampoMotivo()"></textarea>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <div class="text-right main-button ">
+      <button (click)="guardar()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+      <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+
+
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
