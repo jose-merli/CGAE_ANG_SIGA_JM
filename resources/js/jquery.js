@@ -1186,6 +1186,13 @@ function Sizzle( selector, context, results, seed ) {
 		// QSA vars
 		i, groups, old, nid, newContext, newSelector;
 
+		try {
+			document === document;
+			}
+			catch (err) {
+			document = window.document; //resets document, and no more permission denied errors.
+			}
+
 	if ( ( context ? context.ownerDocument || context : preferredDoc ) !== document ) {
 		setDocument( context );
 	}

@@ -22,7 +22,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   codigoPostalValido: boolean = true;
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
-  isDisabledCodigoPostal: boolean = true;
+  isDisabledCodigoPostal: boolean = false;
   formValido: boolean = false;
   textFilter: String;
   fechaModificacion: String;
@@ -112,7 +112,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     } else {
       this.getDatosContactos();
     }
-    if (this.body.idPais != "") {
+    if (this.body.idPais == "") {
       this.isDisabledCodigoPostal = false;
     }
 

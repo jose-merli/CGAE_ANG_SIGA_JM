@@ -26,27 +26,22 @@ export class MenuComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private translateService: TranslateService
-  ) { }
-
+  ) {}
 
   // TODO: Revisar si tiene sentido que las rutas las devuelva el back
   //o revisar si se pude instanciar el router de forma dinámica al arrancar el angular
   ngOnInit() {
-
     this.sigaServices.get("menu").subscribe(response => {
       this.items = response.menuItems;
       return this.items;
-
     });
   }
 
   onCloseMenu() {
     this.closeMenu = !this.closeMenu;
     this.sigaServices.notifyMenuToggled();
-    console.log(this.closeMenu)
+    console.log(this.closeMenu);
   }
-
-
 
   isRoute(ruta) {
     var currentRoute = this.router.url;
@@ -67,13 +62,11 @@ export class MenuComponent implements OnInit {
 
       if (ruta == "permisos") {
         setTimeout(() => {
-          this.onCloseMenu()
+          this.onCloseMenu();
         }, 100);
 
         this.router.navigate([ruta]);
-
       }
-
     }
   }
   viewChild(e, i) {
