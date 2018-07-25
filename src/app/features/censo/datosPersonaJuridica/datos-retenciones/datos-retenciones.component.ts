@@ -19,9 +19,9 @@ import { DatePipe } from "@angular/common";
 /*** COMPONENTES ***/
 import { DatosRetencionesObject } from "../../../../../app/models/DatosRetencionesObject";
 import { DatosRetencionesItem } from "../../../../../app/models/DatosRetencionesItem";
-
 import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
+import { DataTable } from "../../../../../../node_modules/primeng/primeng";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -40,6 +40,8 @@ export class DatosRetencionesComponent implements OnInit {
   colegios_seleccionados: any[];
   datos: any[];
   select: any[];
+  sortO: number = 1;
+  sortF: string = "";
   camposDesactivados: boolean;
   es: any = esCalendar;
   selectedValue: string = "simple";
@@ -48,8 +50,9 @@ export class DatosRetencionesComponent implements OnInit {
   // selectedDatos: any = []
   body: DatosRetencionesItem = new DatosRetencionesItem();
   retencionNow: DatosRetencionesItem = new DatosRetencionesItem();
+  retencionActiveAnt: DatosRetencionesItem = new DatosRetencionesItem();
   newRetencion: DatosRetencionesItem = new DatosRetencionesItem();
-
+  nuevafecha: Date;
   searchRetenciones: DatosRetencionesObject = new DatosRetencionesObject();
   showDatosGenerales: boolean = true;
   showDatosColegiales: boolean = false;
@@ -68,7 +71,7 @@ export class DatosRetencionesComponent implements OnInit {
   selectedItem: number = 10;
   idPersona: String;
 
-  @ViewChild("table") table;
+  @ViewChild("table") table: DataTable;
   selectedDatos;
   tipoCIF: String;
   openFicha: boolean = false;
@@ -154,8 +157,34 @@ export class DatosRetencionesComponent implements OnInit {
       this.camposDesactivados = true;
       this.isCrear = true;
     }
+    this.nuevafecha = new Date();
+    let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
+    this.changeSort(event);
   }
 
+  changeSort(event) {
+    this.sortF = "fechaFin";
+    this.sortO = 1;
+    this.table.sortMultiple();
+  }
+  onChangeCalendar(event) {
+    console.log(new Date(event - 86400000));
+    console.log(this.datos);
+    console.log(this.table);
+    if (this.datos.length > 1) {
+      this.datos.forEach((value: any, key: number) => {
+        if (value.idRetencion == this.retencionActiveAnt.idRetencion) {
+          this.datos[key].fechaFin = this.datepipe.transform(
+            new Date(event - 86400000),
+            "dd/MM/yyyy"
+          );
+        }
+      });
+    }
+
+    let evento = { field: "fechaFin", order: 1, multisortmeta: undefined };
+    this.changeSort(evento);
+  }
   getTiposRetenciones() {
     this.sigaServices.get("retenciones_tipoRetencion").subscribe(
       n => {
@@ -251,40 +280,57 @@ export class DatosRetencionesComponent implements OnInit {
       // this.createArrayEdit(dummy, value);
       this.datos.forEach((value: any, key: number) => {
         if (value.fechaFin == null || value.fechaFin == undefined) {
-          if (
-            this.datos[key].fechaInicio ==
-            this.datepipe.transform(new Date(valur2), "dd/MM/yyyy")
-          ) {
-            this.datos[key].fechaFin = this.datepipe.transform(
-              new Date(valur2),
-              "dd/MM/yyyy"
-            );
-          } else {
-            this.datos[key].fechaFin = this.datepipe.transform(
-              new Date(valur2 - 86400000),
-              "dd/MM/yyyy"
-            );
-          }
+          // if (
+          //   this.datos[key].fechaInicio ==
+          //   this.datepipe.transform(new Date(valur2), "dd/MM/yyyy")
+          // ) {
+          //   this.datos[key].fechaFin = this.datepipe.transform(
+          //     new Date(valur2),
+          //     "dd/MM/yyyy"
+          //   );
+          // } else {
+          //   this.datos[key].fechaFin = this.datepipe.transform(
+          //     new Date(valur2 - 86400000),
+          //     "dd/MM/yyyy"
+          //   );
+          this.retencionActiveAnt = this.datos[key];
+          this.datos[key].fechaFin = this.datepipe.transform(
+            new Date(valur2 - 86400000),
+            "dd/MM/yyyy"
+          );
         }
       });
     }
 
+    // let dummy = {
+    //   idPersona: this.idPersona,
+    //   fechaInicio: this.datepipe.transform(new Date(valur2), "dd/MM/yyyy"),
+    //   fechaFin: undefined,
+    //   descripcionRetencion: "",
+    //   porcentajeRetencion: ""
+    // };
     let dummy = {
       idPersona: this.idPersona,
-      fechaInicio: this.datepipe.transform(new Date(valur2), "dd/MM/yyyy"),
+      fechaInicio: "",
       fechaFin: undefined,
       descripcionRetencion: "",
       porcentajeRetencion: ""
     };
     this.datos = [dummy, ...this.datos];
 
-    this.table.reset();
+    // this.table.reset();
+    let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
+    this.changeSort(event);
   }
   confirmEdit() {
     this.body.idPersona = this.idPersona;
     this.body.idInstitucion = "";
     this.body.idLenguaje = "";
     this.datos[0].fechaFin = "";
+    this.datos[0].fechaInicio = this.datepipe.transform(
+      new Date(this.nuevafecha),
+      "dd/MM/yyyy"
+    );
     this.sigaServices
       .postPaginado(
         "retenciones_update",
