@@ -69,12 +69,13 @@
         </ng-template>
         <p-footer>
           <div class="text-right main-button">
-            <button (click)="redireccionar(selectedDatos)" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-plus"
-              iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-            <button (click)="cargarHistorico()" *ngIf="!historico" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.historico' | translate}}"></button>
+
             <button (click)="cargarDatosBancarios()" *ngIf="historico" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+            <button (click)="cargarHistorico()" *ngIf="!historico" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.historico' | translate}}"></button>
             <button *ngIf="selectedDatos && selectedDatos != '' && !historico" (click)="confirmarEliminar(selectedDatos)" pButton type="button"
               icon="fa fa-trash-alt" iconPos="left" [(disabled)]="camposDesactivados" label="{{'general.boton.eliminar'  | translate}}"></button>
+            <button (click)="redireccionar(selectedDatos)" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-plus"
+              iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
           </div>
 
         </p-footer>

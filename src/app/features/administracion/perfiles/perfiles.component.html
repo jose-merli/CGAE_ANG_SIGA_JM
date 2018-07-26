@@ -43,26 +43,26 @@
 
 
 
-                    <ng-template pTemplate="body" let-dato="rowData"  >
-                      <p-multiSelect *ngIf="dato.idGrupo == '' " [defaultLabel]="textFilter" styleClass="widthAll" (onChange)="editRol($event, dato )"
-                        [(ngModel)]="dato.rolesAsignados" [options]="usuarios_rol" optionLabel="label" [selectedItemsLabel]="textSelected"
-                        [panelStyle]="{width:'100%'}"></p-multiSelect>
-                        <!-- <p-dropdown [disabled]="!activacionEditar" [options]="dato['asignarRolDefecto']" styleClass="ui-column-filter" [style]="{'width':'100%'}"
+                <ng-template pTemplate="body" let-dato="rowData"  >
+                  <p-multiSelect *ngIf="dato.idGrupo == '' " [defaultLabel]="textFilter" styleClass="widthAll" (onChange)="editRol($event, dato )"
+                    [(ngModel)]="dato.rolesAsignados" [options]="usuarios_rol" optionLabel="label" [selectedItemsLabel]="textSelected"
+                    [panelStyle]="{width:'100%'}"></p-multiSelect>
+                  <!-- <p-dropdown [disabled]="!activacionEditar" [options]="dato['asignarRolDefecto']" styleClass="ui-column-filter" [style]="{'width':'100%'}"
                   appendTo="body" (onChange)="confirmarRolDefecto($event, dato )"></p-dropdown> -->
-                        <p-multiSelect *ngIf="dato.idGrupo != '' " [disabled]="!isforNew" [defaultLabel]="textFilter" styleClass="widthAll" (onChange)="editRol($event, dato )"
-                          [(ngModel)]="dato.rolesAsignados" [options]="usuarios_rol" optionLabel="label" [selectedItemsLabel]="textSelected"
-                          [panelStyle]="{width:'100%'}"></p-multiSelect>
-                    </ng-template>
+                  <p-multiSelect *ngIf="dato.idGrupo != '' " [disabled]="!isforNew" [defaultLabel]="textFilter" styleClass="widthAll" (onChange)="editRol($event, dato )"
+                    [(ngModel)]="dato.rolesAsignados" [options]="usuarios_rol" optionLabel="label" [selectedItemsLabel]="textSelected"
+                    [panelStyle]="{width:'100%'}"></p-multiSelect>
+                </ng-template>
 
-                    </p-column>
-                    <p-column [sortable]="true" field="asignarRolDefecto" [header]="'administracion.usuarios.literal.roles' | translate" [filter]="true"
-                      filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                      <ng-template pTemplate="body" let-datoo="rowData"  >
-                        <p-dropdown [options]="datoo['asignarRolDefecto']" styleClass="ui-column-filter" [style]="{'width':'100%'}" appendTo="body"
-                          (onChange)="confirmarRolDefecto($event, datoo )" [placeholder]="datoo['descripcionRol'] "></p-dropdown>
-                      </ng-template>
-                      </p-column>
-                      <!-- 
+              </p-column>
+              <p-column [sortable]="true" field="asignarRolDefecto" [header]="'administracion.usuarios.literal.roles' | translate" [filter]="true"
+                filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+                <ng-template pTemplate="body" let-datoo="rowData"  >
+                  <p-dropdown [options]="datoo['asignarRolDefecto']" styleClass="ui-column-filter" [style]="{'width':'100%'}" appendTo="body"
+                    (onChange)="confirmarRolDefecto($event, datoo )" [placeholder]="datoo['descripcionRol'] "></p-dropdown>
+                </ng-template>
+              </p-column>
+              <!-- 
               <p-column [style]="{'width': col.width}" *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate"
               filterPlaceholder="{{'general.boton.search' | translate}}" [filter]="true" filterMatchMode="contains">
                 <ng-template let-col let-car="rowData" pTemplate="body">
@@ -80,17 +80,17 @@
                 </ng-template>
 
               </p-column> -->
-                      <ng-template pTemplate="paginatorLeft">
-                        <div class="mostrar d-flex text-right justify-content-end">
-                          <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                          <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
-                          <label>{{ "general.message.mostrar" | translate}}</label>
-                          <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                          <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-                          <div class="ml-3 selectAll">
-                            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
-                          </div>
-                          <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+              <ng-template pTemplate="paginatorLeft">
+                <div class="mostrar d-flex text-right justify-content-end">
+                  <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                  <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+                  <label>{{ "general.message.mostrar" | translate}}</label>
+                  <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                  <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                  <div class="ml-3 selectAll">
+                    <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
+                  </div>
+                  <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
                     <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
 
                 </div>
@@ -101,12 +101,12 @@
                   <button *ngIf="!isforNew" (click)="reestablecer()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
                   <button *ngIf="(selectedDatos && selectedDatos != '') || isRestablecer" (click)="selectedDatos=false; reestablecer()" pButton
                     type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
-                  <button (click)="historico(); selectedDatos=false" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.historico' | translate}}"></button>
-                  <button *ngIf="isforNew" (click)="newData()" pButton type="button" icon="	fa fa-plus " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
                   <button *ngIf="selectedDatos && selectedDatos != ''" [disabled]="!activacionEditar" (click)="confirmarBorrar(selectedDatos); selectedDatos=false"
                     pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
                   <button *ngIf="save" [disabled]="isForSave" (click)="isGuardar()" #input2 pButton type="button" icon="far fa-save" iconPos="left"
                     label="{{'general.boton.guardar' | translate}}"></button>
+                  <button (click)="historico(); selectedDatos=false" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.historico' | translate}}"></button>
+                  <button *ngIf="isforNew" (click)="newData()" pButton type="button" icon="	fa fa-plus " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
                 </div>
               </p-footer>
 
@@ -151,14 +151,14 @@
                   </div>
                 </ng-template>
 
-                </p-column>
-                <ng-template pTemplate="paginatorLeft">
-                  <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                  <label>{{ "general.message.mostrar" | translate}}
+              </p-column>
+              <ng-template pTemplate="paginatorLeft">
+                <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                <label>{{ "general.message.mostrar" | translate}}
                   <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-                </ng-template>
+              </ng-template>
 
-                </p-dataTable>
+            </p-dataTable>
           </div>
           <div class="card-footer">
             <div class="text-right main-button">

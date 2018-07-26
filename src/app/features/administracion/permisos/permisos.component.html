@@ -57,12 +57,6 @@
     <div>
       <label class="mr-2">Seleccionados {{numSeleccionados}}/{{totalPermisos}}</label>
       <label class="mr-2">Cambios {{numCambios}}/{{totalPermisos}}</label>
-      <!--<div class="main-button d-inline-block">
-        <button [disabled]="isButtonDisabled()" (click)="savePermisos()" class="mr-2" pButton type="button" icon="far fa-save" iconPos="left"
-          label="Guardar"></button>
-          <button [disabled]="savedPermisos" (click)="restablecerPermisos()" pButton type="button" icon="fa fa-redo" iconPos="left"
-            label="Restablecer"></button>
-      </div>-->
     </div>
   </div>
   <div class="ml-auto">
@@ -80,10 +74,10 @@
         <p>Sin asignar ({{sinAsignar}})</p>
       </div>
       <div class="ml-auto main-button d-flex">
-        <button [disabled]="isButtonDisabled()" (click)="savePermisos()" class="mr-2" pButton type="button" icon="far fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}"></button>
         <button [disabled]="savedPermisos" (click)="restablecerPermisos()" pButton type="button" icon="fa fa-redo" iconPos="left"
           label="{{'general.boton.restablecer' | translate}}"></button>
+        <button [disabled]="isButtonDisabled()" (click)="savePermisos()" class="mr-2" pButton type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
 

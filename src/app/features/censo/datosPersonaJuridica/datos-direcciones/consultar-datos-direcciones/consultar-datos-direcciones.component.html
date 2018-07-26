@@ -2,7 +2,10 @@
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>Consulta edición y creación de una dirección</p>
+    <p>{{ 'menu.censo' | translate}}
+      <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.censo.buscarSociedades' | translate}}
+      <i class="pl-1 fa fa-angle-right"></i>
+      {{"censo.fichaCliente.datosDirecciones.cabecera" | translate}}</p>
   </div>
 
   <div class="busqueda-container">
@@ -121,8 +124,8 @@
         <div class="card-footer ">
           <div class="text-right main-button ">
             <button *ngIf="nuevo == false" (click)="duplicarRegistro()" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
-            <button (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
             <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+            <button (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
           </div>
         </div>
       </div>
@@ -154,8 +157,9 @@
   </div>
   <p-footer>
     <div class="text-right main-button ">
-      <button (click)="guardar()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
       <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
+      <button (click)="guardar()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+
     </div>
   </p-footer>
 </p-dialog>

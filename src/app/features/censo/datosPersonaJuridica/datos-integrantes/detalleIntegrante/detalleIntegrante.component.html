@@ -4,7 +4,8 @@
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p>{{"menu.censo" | translate}}
-      <i class="fa fa-angle-right"></i>{{"gratuita.operarEJG.literal.datosIntegrantes" | translate}}</p>
+      <i class="fa fa-angle-right"></i> {{'menu.censo.buscarSociedades' | translate}}
+      <i class="pl-1 fa fa-angle-right"></i>{{"gratuita.operarEJG.literal.datosIntegrantes" | translate}}</p>
   </div>
   <div class="card">
     <div class="card-header header-ficha" (click)="abrirFicha('identificacion')">
@@ -206,8 +207,8 @@
     </div>
   </div>
   <div class="mt-3 text-right main-button ">
+    <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
     <button *ngIf="editar" (click)="guardar();" pButton type="button" icon="	fa fa-edit " [(disabled)]="historico" iconPos="left"
       label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
-    <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
   </div>
 </div>

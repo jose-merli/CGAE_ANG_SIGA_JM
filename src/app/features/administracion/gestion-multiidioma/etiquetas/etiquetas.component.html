@@ -33,11 +33,9 @@
     </div>
     <div class="card-footer " *ngIf="showDatosGenerales ">
       <div class="text-right main-button ">
+        <button (click)="generarRecursos() " pButton type="button " icon="fa fa-history " iconPos="left" label="{{'general.boton.generarRecursos' | translate}} "></button>
         <button (click)="isBuscar()" [disabled]="isHabilitadoBuscar() " pButton type="button" icon="fa fa-search" iconPos="left"
           label="{{ 'general.boton.search' | translate}} "></button>
-
-        <button (click)="generarRecursos() " pButton type="button " icon="fa fa-history " iconPos="left" label="{{'general.boton.generarRecursos' | translate}} "></button>
-
       </div>
     </div>
   </div>

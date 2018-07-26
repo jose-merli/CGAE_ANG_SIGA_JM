@@ -51,7 +51,6 @@
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label class="d-block pb-2">{{"administracion.usuarios.literal.activo" | translate}}</label>
-            <!--<p-dropdown class="select-form" [options]="select"></p-dropdown>-->
             <p-radioButton label="{{'messages.si' | translate}}" name="activo" value="S" class="pr-3" [(ngModel)]="body.activo" [disabled]="!activacionEditar"></p-radioButton>
             <p-radioButton label="{{'general.boton.no' | translate}}" name="activo" value="N" class="pr-3" [(ngModel)]="body.activo"
               [disabled]="!activacionEditar">
@@ -62,9 +61,9 @@
     </div>
     <div class="card-footer">
       <div class="text-right main-button ">
+        <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
         <button (click)="confirmEdit();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"
           [disabled]="!edicion"></button>
-        <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
       </div>
     </div>
   </div>
