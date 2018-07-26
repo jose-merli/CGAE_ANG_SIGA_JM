@@ -94,7 +94,7 @@
           </p-footer>
         </p-dataTable>
       </div>
-      <div *ngIf="selectMultiple==false">
+      <div *ngIf="selectMultiple == false">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
           [paginator]="activarPaginacion()" #table class="tabla-listado" [value]="datosHist" [paginator]="true" paginatorPosition="both"
           datakey="descripcion" [(selection)]="selectedDatos" [rows]="selectedItem" [editable]="!selectMultiple" (onEdit)="editarCompleto($event)"
