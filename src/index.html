@@ -12,8 +12,30 @@
   <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
-  <!-- <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js"></script> -->
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+  <script type="text/javascript">
+    function Sizzle(selector, context, results, seed) {
+      var match, elem, m, nodeType,
+        // QSA vars
+        i, groups, old, nid, newContext, newSelector;
+
+      // MY EDIT - this try/catch seems to fix IE 'permission denied' errors as described here:
+      // http://bugs.jquery.com/ticket/14535
+      try {
+        document === document; //may cause permission denied
+      }
+      catch (err) {
+        document = window.document; //resets document, and no more permission denied errors.
+      }
+
+      if ((context ? context.ownerDocument || context : preferredDoc) !== document) {
+        setDocument(context);
+      }
+
+      //...... snip .........//
+    }
+  </script>
 
 </head>
 
