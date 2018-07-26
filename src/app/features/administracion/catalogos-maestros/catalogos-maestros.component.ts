@@ -544,11 +544,12 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       this.selectedDatos = [];
       this.numSelected = 0;
     } else {
+      this.pressNew = false;
       this.selectAll = false;
       this.selectedDatos = [];
       this.numSelected = 0;
     }
-    this.volver();
+    // this.volver();
   }
 
   activarPaginacion() {
