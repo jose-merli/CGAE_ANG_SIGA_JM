@@ -537,6 +537,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         this.reset();
       }
     );
+    this.numSelected = 0;
   }
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
@@ -606,6 +607,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
           });
         }
       );
+    this.numSelected = 0;
   }
 
   isLimpiar() {
