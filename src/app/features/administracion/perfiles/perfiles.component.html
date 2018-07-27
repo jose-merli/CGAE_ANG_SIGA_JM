@@ -105,7 +105,7 @@
                     pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
                   <button *ngIf="save" [disabled]="isForSave" (click)="isGuardar()" #input2 pButton type="button" icon="far fa-save" iconPos="left"
                     label="{{'general.boton.guardar' | translate}}"></button>
-                  <button (click)="historico(); selectedDatos=false" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.historico' | translate}}"></button>
+                  <button (click)="historico(); selectedDatos=false" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
                   <button *ngIf="isforNew" (click)="newData()" pButton type="button" icon="	fa fa-plus " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
                 </div>
               </p-footer>
@@ -162,7 +162,7 @@
           </div>
           <div class="card-footer">
             <div class="text-right main-button">
-              <button (click)="isBuscar()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
+              <button (click)="isBuscar()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
               <!-- <button (click)="crear()" pButton type="button" icon="fa fa-plus-square " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button> -->
             </div>
           </div>
