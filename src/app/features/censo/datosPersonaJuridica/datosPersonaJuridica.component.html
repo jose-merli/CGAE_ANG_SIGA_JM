@@ -1,7 +1,8 @@
 <div class="busqueda-container">
     <div class="header-title">
         <i class="fa fa-square"></i>
-        <p>Datos generales</p>
+        <p>{{ "menu.censo" | translate}}
+            <i class="fa fa-angle-right"></i> {{'censo.busquedaClientes.sociedades.titulo' | translate}}</p>
     </div>
     <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
         <app-datos-generales *ngSwitchCase="'generales'"></app-datos-generales>
