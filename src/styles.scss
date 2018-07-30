@@ -745,11 +745,11 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
           margin-bottom: 0;
           .ui-treenode-content {
             padding: 0.7rem 1rem 0rem 2.5rem;
-            border-bottom: 0;         
+            border-bottom: 0;
             .ui-tree-toggler {
-              border-bottom: 1px solid $lightGrey;             
+              border-bottom: 1px solid $lightGrey;
             }
-            &:first-child{
+            &:first-child {
               border: none;
             }
           }
@@ -1035,4 +1035,34 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   text-align: center;
 }
 
+.ui-state-highlight .colorRojo {
+  background: red !important;
+  border-radius: 3px;
+  margin: 10%;
+}
 
+.ui-state-highlight .colorVerde {
+  background: green;
+}
+.ui-state-highlight > .colorAmarillo {
+  background: yellow;
+}
+
+.ui-chips-token-icon {
+  margin-left: 2% !important;
+}
+
+.ui-dropdown-filter-container {
+  display: none;
+}
+
+.drop-item {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid #d5d5d5;
+  padding: 5px;
+}
+
+.item-disabled {
+  padding: 0px;
+}
