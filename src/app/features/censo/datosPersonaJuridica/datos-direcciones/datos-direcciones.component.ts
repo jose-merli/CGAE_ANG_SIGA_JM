@@ -76,6 +76,7 @@ export class DatosDireccionesComponent implements OnInit {
       let fichaPosible = this.getFichaPosibleByKey("direcciones");
       fichaPosible.activa = true;
       sessionStorage.removeItem("editarDirecciones");
+      sessionStorage.removeItem("historicoDir");
     }
     this.checkAcceso();
     this.cols = [

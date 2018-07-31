@@ -78,7 +78,7 @@
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>Otra Provincia</label>
-                <p-checkbox name="otraProvincia" [(ngModel)]="checkOtraProvincia" [(disabled)]="historyDisable" binary="true" (onChange)="onChangeOtherProvincia($event)"></p-checkbox>
+                <p-checkbox name="otraProvincia" [(ngModel)]="checkOtraProvincia" [(disabled)]="disableCheck" binary="true" (onChange)="onChangeOtherProvincia($event)"></p-checkbox>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>Población</label>
@@ -109,7 +109,8 @@
                   <p-column *ngFor="let col of columnasDirecciones" [sortable]="true" [field]="col.field" [header]="col.header | translate">
                     <ng-template *ngIf="col.field == 'valor'" let-dato="rowData" pTemplate="body">
                       <span class="input-group">
-                        <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" [maxLength]="dato.longitud" [(disabled)]="historyDisable">
+                        <input type="text" class="form-control" [(ngModel)]="dato[col.field]" [maxLength]="dato.longitud" [(disabled)]="historyDisable"
+                          pInputText>
                       </span>
                     </ng-template>
                     <ng-template *ngIf="col.field == 'tipo'" let-dato="rowData" pTemplate="body">

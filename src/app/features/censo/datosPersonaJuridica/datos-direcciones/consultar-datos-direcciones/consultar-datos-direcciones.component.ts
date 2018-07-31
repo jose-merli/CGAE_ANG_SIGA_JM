@@ -22,7 +22,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   codigoPostalValido: boolean = true;
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
-  isDisabledCodigoPostal: boolean = false;
+  isDisabledCodigoPostal: boolean = true;
   formValido: boolean = false;
   textFilter: String;
   fechaModificacion: String;
@@ -46,10 +46,11 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   textSelected: String = "{0} etiquetas seleccionadas";
   body: DatosDireccionesItem = new DatosDireccionesItem();
   bodySearch: DatosDireccionesObject = new DatosDireccionesObject();
-  historyDisable: Boolean = false;
+  historyDisable: boolean = false;
   bodyCodigoPostal: DatosDireccionesCodigoPostalItem = new DatosDireccionesCodigoPostalItem();
   bodyCodigoPostalSearch: DatosDireccionesCodigoPostalObject = new DatosDireccionesCodigoPostalObject();
-
+  disableCheck: boolean;
+  poblacionExtranjera: boolean;
   displayAuditoria: boolean = false;
   showGuardarAuditoria: boolean = false;
   ocultarMotivo: boolean = undefined;
@@ -63,8 +64,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   ngOnInit() {
     if (sessionStorage.getItem("historicoDir") != null) {
       this.historyDisable = true;
+      this.disableCheck = true;
     }
-    sessionStorage.removeItem("historicoDir");
     sessionStorage.setItem("editarDirecciones", "true");
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.textFilter = "Elegir";
@@ -93,8 +94,11 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       } else {
         if (this.historyDisable == true) {
           this.isDisabledPoblacion = true;
+          this.disableCheck = true;
+          this.isDisabledCodigoPostal = true;
         } else {
           this.isDisabledPoblacion = false;
+          this.isDisabledCodigoPostal = false;
         }
       }
       if (
@@ -113,7 +117,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.getDatosContactos();
     }
     if (this.body.idPais == "") {
-      this.isDisabledCodigoPostal = false;
+      this.isDisabledCodigoPostal = this.historyDisable;
     }
 
     // obtener parametro para saber si se oculta la auditoria
@@ -237,18 +241,26 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.provinciaSelecionada = "";
       this.body.idProvincia = "";
       this.body.idPoblacion = "";
-
-      this.isDisabledCodigoPostal = false;
+      this.disableCheck = true;
+      //si al final se pone un campo de texto, solo habrá que usar un ngIf con esta variable para controlar cuando sale cada input distinto.
+      this.poblacionExtranjera = true;
+      this.isDisabledCodigoPostal = this.historyDisable;
+      this.isDisabledPoblacion = true;
     } else {
+      this.disableCheck = this.historyDisable;
+      this.poblacionExtranjera = false;
       this.onChangeCodigoPostal();
       if (this.historyDisable == true) {
         this.isDisabledCodigoPostal = true;
         this.isDisabledProvincia = true;
+        this.disableCheck = true;
       } else {
         this.isDisabledCodigoPostal = false;
       }
       if (this.provinciaSelecionada != "") {
         this.isDisabledPoblacion = false;
+      } else {
+        this.isDisabledPoblacion = true;
       }
     }
   }
@@ -263,6 +275,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
           this.isDisabledProvincia = true;
           if (this.historyDisable == true) {
             this.isDisabledPoblacion = true;
+            this.disableCheck = true;
           } else {
             this.isDisabledPoblacion = false;
           }
@@ -289,8 +302,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     } else {
       if (this.historyDisable == true) {
         this.isDisabledPoblacion = true;
+        this.disableCheck = true;
       } else {
-        if (this.body.idPais == "191") {
+        if (this.body.idPais == "191" && !this.historyDisable) {
           this.isDisabledPoblacion = false;
         }
       }
