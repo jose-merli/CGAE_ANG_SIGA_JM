@@ -178,6 +178,7 @@ export class DatosRetencionesComponent implements OnInit {
             new Date(event - 86400000),
             "dd/MM/yyyy"
           );
+          this.isEditar = false;
         }
       });
     }
@@ -293,6 +294,7 @@ export class DatosRetencionesComponent implements OnInit {
           //     new Date(valur2 - 86400000),
           //     "dd/MM/yyyy"
           //   );
+          this.nuevafecha = new Date();
           this.retencionActiveAnt = this.datos[key];
           this.datos[key].fechaFin = this.datepipe.transform(
             new Date(valur2 - 86400000),
@@ -326,11 +328,15 @@ export class DatosRetencionesComponent implements OnInit {
     this.body.idPersona = this.idPersona;
     this.body.idInstitucion = "";
     this.body.idLenguaje = "";
-    this.datos[0].fechaFin = "";
-    this.datos[0].fechaInicio = this.datepipe.transform(
-      new Date(this.nuevafecha),
-      "dd/MM/yyyy"
-    );
+    this.datos.forEach((value: any, key: number) => {
+      if (value.fechaFin == null || value.fechaFin == undefined) {
+        this.datos[key].fechaInicio = this.datepipe.transform(
+          new Date(this.nuevafecha),
+          "dd/MM/yyyy"
+        );
+      }
+    });
+
     this.sigaServices
       .postPaginado(
         "retenciones_update",
@@ -449,6 +455,11 @@ export class DatosRetencionesComponent implements OnInit {
             this.searchRetenciones = JSON.parse(data["body"]);
             if (this.searchRetenciones.retencionesItemList != null) {
               this.datos = this.searchRetenciones.retencionesItemList;
+              if (this.datos.length > 1) {
+                this.retencionActiveAnt = this.datos[1];
+              } else {
+                this.retencionActiveAnt = this.datos[0];
+              }
             } else {
               this.datos = [];
             }
@@ -473,21 +484,23 @@ export class DatosRetencionesComponent implements OnInit {
     }
   }
   onChangeDrop(event) {
+    console.log(event.value);
+    let dat: any;
     this.newRetencion.descripcionRetencion = "";
     this.tiposRetenciones.forEach((value: any, key: number) => {
       if (value.value == event.value) {
-        if (value.value == "") {
-          this.newRetencion.porcentajeRetencion = "-";
-          this.datos[0].porcentajeRetencion = "-";
-          this.isEditar = true;
-        } else {
-          this.newRetencion.porcentajeRetencion = value.porcentajeRetencion;
-          this.newRetencion.descripcionRetencion = value.descripcionRetencion;
-          this.datos[0].porcentajeRetencion = value.porcentajeRetencion;
-          this.datos[0].idRetencion = value.value;
-          this.isEditar = false;
-          this.table.reset();
-        }
+        dat = value;
+      }
+    });
+    this.datos.forEach((value: any, key: number) => {
+      if (value.idRetencion == this.selectedDatos[0].idRetencion) {
+        this.newRetencion.porcentajeRetencion = dat.porcentajeRetencion;
+        this.newRetencion.descripcionRetencion = dat.value;
+        value.porcentajeRetencion = dat.porcentajeRetencion;
+        value.idRetencion = dat.value;
+        value.descripcionRetencion = dat.label;
+        this.isEditar = false;
+        this.table.reset();
       }
     });
   }
@@ -496,7 +509,16 @@ export class DatosRetencionesComponent implements OnInit {
     this.buscar = true;
   }
 
-  irFichaColegial(id) {}
+  irFichaColegial(id) {
+    console.log(id[0].fechaInicio);
+    if (id[0].fechaFin == null && id[0].fechaInicio != "") {
+      this.nuevafecha = id[0].fechaInicio;
+      id[0].fechaInicio = "";
+      this.newRetencion.descripcionRetencion = id[0].idRetencion;
+      // this.onChangeDrop(this.newRetencion.descripcionRetencion);
+      id[0].descripcionRetencion = "";
+    }
+  }
 
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
