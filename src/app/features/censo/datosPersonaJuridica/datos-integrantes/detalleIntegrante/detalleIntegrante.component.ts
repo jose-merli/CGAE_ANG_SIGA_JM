@@ -391,6 +391,10 @@ export class DetalleIntegranteComponent implements OnInit {
     });
   }
 
+  clear() {
+    this.msgs = [];
+  }
+
   updateIntegrante() {
     let updateIntegrante = new DatosIntegrantesItem();
     let isParticipacionNumerico = false;
