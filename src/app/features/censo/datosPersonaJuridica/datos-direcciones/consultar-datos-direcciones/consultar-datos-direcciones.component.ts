@@ -105,10 +105,12 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         this.body.fechaModificacion != null ||
         this.body.fechaModificacion != undefined
       ) {
-        this.fechaModificacion = this.datepipe.transform(
-          new Date(this.body.fechaModificacion),
-          "dd/MM/yyyy"
-        );
+        let dateSplit = this.body.fechaModificacion.toString().split("-");
+        let a = dateSplit[0];
+        let m = dateSplit[1];
+        let dateSplit2 = dateSplit[2].split(" ");
+        let d = dateSplit2[0];
+        this.fechaModificacion = d + "/" + m + "/" + a;
       }
       this.onChangePais();
 
