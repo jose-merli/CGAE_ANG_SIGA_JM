@@ -70,7 +70,7 @@ export class DetalleIntegranteComponent implements OnInit {
   @ViewChild("table") table;
   selectedDatos;
 
-  constructor(private sigaServices: SigaServices, private router: Router) { }
+  constructor(private sigaServices: SigaServices, private router: Router) {}
 
   ngOnInit() {
     if (sessionStorage.getItem("historicoInt") != null) {
@@ -78,7 +78,6 @@ export class DetalleIntegranteComponent implements OnInit {
     }
     sessionStorage.removeItem("historicoInt");
     sessionStorage.removeItem("newIntegrante");
-
 
     sessionStorage.setItem("editarIntegrante", "true");
     this.body = JSON.parse(sessionStorage.getItem("integrante"));
@@ -369,7 +368,6 @@ export class DetalleIntegranteComponent implements OnInit {
           this.progressSpinner = false;
         },
         () => {}
-
       );
   }
 
@@ -422,8 +420,12 @@ export class DetalleIntegranteComponent implements OnInit {
       this.body.capitalSocial != undefined &&
       this.body.capitalSocial != null
     ) {
-      // comprueba si es numérico
-      if (Number(this.body.capitalSocial)) {
+      // comprueba si es numérico + permite el 0 como valor y que este vacio el campo
+      if (
+        Number(this.body.capitalSocial) ||
+        this.body.capitalSocial == "" ||
+        this.body.capitalSocial == "0"
+      ) {
         isParticipacionNumerico = true;
         updateIntegrante.capitalSocial = this.body.capitalSocial;
       } else {
@@ -444,7 +446,6 @@ export class DetalleIntegranteComponent implements OnInit {
       this.sigaServices
         .postPaginado("integrantes_update", "?numPagina=1", updateIntegrante)
         .subscribe(
-
           data => {
             this.progressSpinner = false;
           },
@@ -457,7 +458,7 @@ export class DetalleIntegranteComponent implements OnInit {
           }
         );
     } else {
-      this.showFail("el campo Participación debe ser numérico");
+      this.showFail("El campo participación debe ser numérico");
     }
   }
 
@@ -593,7 +594,6 @@ export class DetalleIntegranteComponent implements OnInit {
         this.sigaServices
           .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
           .subscribe(
-
             data => {
               this.progressSpinner = false;
             },
