@@ -170,17 +170,33 @@ export class DatosRetencionesComponent implements OnInit {
     this.table.sortField = this.sortF;
     // this.table.sortMultiple();
   }
+
   onChangeCalendar(event) {
     console.log(new Date(event - 86400000));
     console.log(this.datos);
     console.log(this.table);
+    this.isVolver = false;
     if (this.datos.length > 1) {
       this.datos.forEach((value: any, key: number) => {
-        if (value.idRetencion == this.retencionActiveAnt.idRetencion) {
+        if (
+          value.recursoRetencion == this.retencionActiveAnt.recursoRetencion &&
+          value.fechaInicio == this.retencionActiveAnt.fechaInicio
+        ) {
           this.datos[key].fechaFin = this.datepipe.transform(
             new Date(event - 86400000),
             "dd/MM/yyyy"
           );
+
+          // this.datos.forEach((value: any, key: number) => {
+          //   if (value.fechaFin == null || value.fechaFin == undefined) {
+          //     this.retencionActiveAnt = this.datos[key];
+          //     this.datos[key].fechaFin = this.datepipe.transform(
+          //       new Date(valur2 - 86400000),
+          //       "dd/MM/yyyy"
+          //     );
+          //   }
+          // });
+
           if (
             this.newRetencion.descripcionRetencion != "" &&
             this.newRetencion.descripcionRetencion != undefined
@@ -195,6 +211,7 @@ export class DatosRetencionesComponent implements OnInit {
     let evento = { field: "fechaFin", order: 1, multisortmeta: undefined };
     this.changeSort(evento);
   }
+
   getTiposRetenciones() {
     this.sigaServices.get("retenciones_tipoRetencion").subscribe(
       n => {
@@ -279,7 +296,13 @@ export class DatosRetencionesComponent implements OnInit {
     this.isVolver = false;
     this.isCrear = true;
     this.isEliminar = true;
-    let valur2 = new Date().setMilliseconds(new Date().getMilliseconds());
+    // let valur2 = new Date().setMilliseconds(new Date().getMilliseconds());
+    let valur2;
+    if (this.fechaMinima == undefined || this.fechaMinima == null) {
+      valur2 = new Date().setMilliseconds(new Date().getMilliseconds());
+    } else {
+      valur2 = this.fechaMinima;
+    }
     if (
       this.datos == null ||
       this.datos == undefined ||
@@ -287,7 +310,7 @@ export class DatosRetencionesComponent implements OnInit {
     ) {
       this.datos = [];
     } else {
-      let value = this.table.first;
+      // let value = this.table.first;
       // this.createArrayEdit(dummy, value);
       this.datos.forEach((value: any, key: number) => {
         if (value.fechaFin == null || value.fechaFin == undefined) {
@@ -307,6 +330,7 @@ export class DatosRetencionesComponent implements OnInit {
     //   descripcionRetencion: "",
     //   porcentajeRetencion: ""
     // };
+
     let dummy = {
       idPersona: this.idPersona,
       fechaInicio: "",
