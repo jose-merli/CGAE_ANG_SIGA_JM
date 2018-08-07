@@ -53,8 +53,6 @@
                 <p-footer>
                     <div *ngIf="activarPaginacionBuscar() == true" class="text-right main-button">
                         <!-- misma funcion de disabled para botones de restablecer  y guardar-->
-                        <button (click)="isRestablecer()" pButton type="button" [(disabled)]="!isHabilitadoSave" icon="fa fa-undo " iconPos="left"
-                            label="{{'general.message.ocultarHistorico' | translate}}"></button>
                         <button (click)="isGuardar()" pButton type="button" [(disabled)]="!isHabilitadoSave" icon="fa fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
                         <button (click)="isHistorico()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
                         <button (click)="confirmarEliminar(filaSelecionadaTabla)" pButton type="button" [disabled]="isHabilitadoEliminar()" icon="fa fa-trash-alt "
