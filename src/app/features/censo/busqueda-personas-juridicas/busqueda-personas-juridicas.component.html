@@ -77,13 +77,6 @@
         [sortOrder]="sortO" [paginator]="activarPaginacion()" paginatorPosition="both" [rows]="selectedItem">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true" filterMatchMode="contains">
-          <ng-template *ngIf="col.field == 'numeroIntegrantes'" let-dato="rowData" pTemplate="body">
-            <div class="input-group">
-              <span class="input-group">
-                <button pButton type="button" [pTooltip]="obtenerNombreIntegrantes(dato)" [label]="obtenerIntegrantes(dato)" tooltipPosition="top"></button> &nbsp;&nbsp;
-              </span>
-            </div>
-          </ng-template>
 
           <ng-template *ngIf="col.field == 'numeroIntegrantes'" let-dato="rowData" pTemplate="body">
             <div class="input-group">
@@ -130,32 +123,37 @@
     <div class="card-body p-0">
 
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-        [(selection)]="selectedDatos" (onRowSelect)="irEditarPersona(selectedDatos)" pageLinks="4" dataKey="nif" [responsive]="true"
-        selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="activarPaginacion()"
-        paginatorPosition="both" [rows]="selectedItem">
+        [(selection)]="selectedDatos" (onRowSelect)="irEditarPersona(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+        pageLinks="4" dataKey="nif" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos"
+        [sortOrder]="sortO" [paginator]="activarPaginacion()" paginatorPosition="both" [rows]="selectedItem">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true" filterMatchMode="contains">
-          <ng-template let-datoH="rowData" pTemplate="body">
+
+          <ng-template *ngIf="col.field == 'numeroIntegrantes'" let-dato="rowData" pTemplate="body">
+            <div class="input-group">
+              <span class="input-group">
+                <button pButton type="button" [pTooltip]="obtenerNombreIntegrantes(dato)" [label]="obtenerIntegrantes(dato)" tooltipPosition="top"></button> &nbsp;&nbsp;
+              </span>
+            </div>
+          </ng-template>
+
+          <ng-template *ngIf="col.field != 'numeroIntegrantes'" let-datoH="rowData" pTemplate="body">
             <div *ngIf="setItalic(datoH)">
               <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
             </div>
             <div *ngIf="!setItalic(datoH)">
               <span>{{datoH[col.field]}}</span>
             </div>
-
-            <ng-template *ngIf="col.field == 'numeroIntegrantes'" let-dato="rowData" pTemplate="body">
-              <div class="input-group">
-                <span class="input-group">
-                  <button pButton type="button" [pTooltip]="obtenerNombreIntegrantes(dato)" [label]="obtenerIntegrantes(dato)" tooltipPosition="top"></button> &nbsp;&nbsp;
-                </span>
-              </div>
-            </ng-template>
-
           </ng-template>
 
 
           <ng-template *ngIf="col.field == 'fechaConstitucion'" let-dato="rowData" pTemplate="body">
-            <label>{{ dato.fechaConstitucion | date: 'dd/MM/yyyy'}}</label>
+            <div *ngIf="setItalic(dato)">
+              <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato.fechaConstitucion | date: 'dd/MM/yyyy'}}</label>
+            </div>
+            <div *ngIf="!setItalic(dato)">
+              <label>{{ dato.fechaConstitucion | date: 'dd/MM/yyyy'}}</label>
+            </div>
           </ng-template>
         </p-column>
 

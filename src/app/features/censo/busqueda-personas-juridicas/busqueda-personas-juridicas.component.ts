@@ -161,36 +161,11 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       this.numSelected = 0;
     }
   }
-  
+
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
-  }
-  
-  toHistorico() {
-    this.historico = true;
-    this.buscar = false;
-    this.selectMultiple = false;
-    this.selectedDatos = "";
-    this.progressSpinner = true;
-    this.selectAll = false;
-    this.sigaServices
-      .postPaginado("busquedaPerJuridica_history", "?numPagina=1", this.body)
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.personaSearch = JSON.parse(data["body"]);
-          this.datos = this.personaSearch.busquedaJuridicaItems;
-          this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {}
-
-      );
   }
 
   checkAcceso() {
@@ -295,6 +270,57 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   isBuscar() {
     this.arreglarFecha();
     this.Search();
+  }
+
+  toHistorico() {
+    this.historico = true;
+    this.buscar = false;
+    this.selectMultiple = false;
+    this.selectedDatos = "";
+    this.progressSpinner = true;
+    this.selectAll = false;
+    if (this.body.tipo == undefined) {
+      this.body.tipo = "";
+    }
+    if (
+      this.body.sociedadesProfesionales == undefined ||
+      this.body.sociedadesProfesionales == false
+    ) {
+      this.body.sociedadesProfesionales = false;
+    } else {
+      this.body.sociedadesProfesionales = true;
+    }
+    if (this.body.nif == undefined) {
+      this.body.nif = "";
+    }
+    if (this.body.denominacion == undefined) {
+      this.body.denominacion = "";
+    }
+    if (this.body.abreviatura == undefined) {
+      this.body.abreviatura = "";
+    }
+    if (this.body.grupos == undefined) {
+      this.body.grupos = [];
+    }
+    if (this.body.integrante == undefined) {
+      this.body.integrante = "";
+    }
+    this.sigaServices
+      .postPaginado("busquedaPerJuridica_history", "?numPagina=1", this.body)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.personaSearch = JSON.parse(data["body"]);
+          this.datos = this.personaSearch.busquedaJuridicaItems;
+          this.convertirStringADate(this.datos);
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {}
+      );
   }
 
   Search() {
