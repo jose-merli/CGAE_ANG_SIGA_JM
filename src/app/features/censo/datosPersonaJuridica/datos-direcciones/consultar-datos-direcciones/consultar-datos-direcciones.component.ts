@@ -198,9 +198,16 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       },
       error => {},
       () => {
-        this.paisSeleccionado = this.comboPais.find(
-          item => item.value == this.body.idPais
-        );
+        // modo edicion
+        if (this.body.idPais != undefined) {
+          this.paisSeleccionado = this.comboPais.find(
+            item => item.value == this.body.idPais
+          );
+          // modo creacion => pais España por defecto
+        } else {
+          this.body.idPais = this.comboPais[1].value;
+          this.onChangePais();
+        }
       }
     );
   }

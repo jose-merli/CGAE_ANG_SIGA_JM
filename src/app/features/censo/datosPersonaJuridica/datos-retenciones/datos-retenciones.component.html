@@ -17,14 +17,14 @@
                     </div>
                     <div class="d-flex justify-content-between">
                         <label>{{"facturacion.seriesFacturacion.literal.fInicio" | translate}}
-                            <span>{{retencionNow.fechaInicio | date: "dd-MM-yyyy"}}</span>
+                            <span>{{retencionNow.fechaInicio}}</span>
                         </label>
 
                         <label>{{"general.description" | translate}}
                             <span>{{retencionNow.descripcionRetencion}}</span>
                         </label>
                         <label>{{"FactSJCS.mantRetencionesJ.literal.tramoLec" | translate}}
-                            <span>{{retencionNow.porcentajeRetencion}}</span>
+                            <span>{{retencionNow.porcentajeRetencion}} %</span>
                         </label>
                         <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
                     </div>
@@ -42,20 +42,19 @@
         <div *ngIf="openFicha" class="card-body card-body-ficha">
             <div class="row">
                 <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" (onRowSelect)="irFichaColegial(selectedDatos)"
-                    dataKey="nif" selectionMode="simple" [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1"
-                    sortField="fechaFin" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" pageLinks="4" [editable]="true"
-                    [sortField]="sortF" [sortOrder]="sortO" (onSort)="changeSort($event)">
+                    dataKey="fechaInicio" selectionMode="multiple" [responsive]="true" #table class="tabla-listado" [value]="datos"
+                    [sortOrder]="1" sortField="fechaFin" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" pageLinks="4"
+                    [editable]="true" [sortField]="sortF" [sortOrder]="sortO" (onSort)="changeSort($event)">
 
                     <p-column [sortable]="true" field="fechaInicio" filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[0].header | translate"
                         [filter]="true" filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
-                            <span>{{car[col.field]}} </span>
-                            <p-calendar *ngIf="car[col.field] == '' " [(ngModel)]="nuevafecha" dateFormat="dd/mm/yy" [utc]="true" [locale]="es" [showIcon]="true"
-                                (onSelect)="onChangeCalendar($event)">
+                            <span>{{car[col.field]}}</span>
+                            <p-calendar *ngIf="car[col.field] == ''" [(ngModel)]="nuevafecha" [minDate]="fechaMinima" dateFormat="dd/mm/yy" [utc]="true"
+                                [locale]="es" [showIcon]="true" (onSelect)="onChangeCalendar($event)">
                             </p-calendar>
-
-
                         </ng-template>
+
                     </p-column>
                     <p-column [sortable]="true" field="fechaFin" [header]="cols[1].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                         filterMatchMode="contains">
@@ -101,4 +100,8 @@
             </div>
             <br>
             <!--FIN DE PRINCIPAL-->
+        </div>
+
+        <div *ngIf="progressSpinner" class="overlay-spinner">
+            <div class="loader"></div>
         </div>
