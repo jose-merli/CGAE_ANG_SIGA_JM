@@ -147,7 +147,15 @@ export class SigaServices {
     direcciones_comboTipoDireccion: "tarjetaDirecciones/tipoDireccion",
     integrantes_update: "tarjetaIntegrantes/update",
     integrantes_insert: "tarjetaIntegrantes/create",
-    integrantes_delete: "tarjetaIntegrantes/delete"
+    integrantes_delete: "tarjetaIntegrantes/delete",
+
+    // censoII
+    busquedaColegiados_situacion: "busquedaColegiados/situacion",
+    busquedaColegiados_estadoCivil: "busquedaColegiados/estadoCivil",
+    busquedaColegiados_categoriaCurricular:
+      "busquedaColegiados/categoriaCurricular",
+    busquedaColegiados_provincias: "busquedaColegiados/provincias",
+    busquedaColegiados_tipoDireccion: "busquedaColegiados/tipoDireccion"
   };
 
   private menuToggled = new Subject<any>();
