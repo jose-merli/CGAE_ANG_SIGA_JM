@@ -148,6 +148,15 @@ export class SigaServices {
     integrantes_update: "tarjetaIntegrantes/update",
     integrantes_insert: "tarjetaIntegrantes/create",
     integrantes_delete: "tarjetaIntegrantes/delete",
+
+    // censoII
+    busquedaColegiados_situacion: "busquedaColegiados/situacion",
+    busquedaColegiados_estadoCivil: "busquedaColegiados/estadoCivil",
+    busquedaColegiados_categoriaCurricular:
+      "busquedaColegiados/categoriaCurricular",
+    busquedaColegiados_provincias: "busquedaColegiados/provincias",
+    busquedaColegiados_tipoDireccion: "busquedaColegiados/tipoDireccion",
+
     busquedaNoColegiados_estadoCivil: "/busquedaNoColegiados/estadoCivil",
     busquedaNoColegiados_provincias: "/busquedaNoColegiados/provincias",
     busquedaNoColegiados_poblacion: "/busquedaNoColegiados/poblacion",
