@@ -1,0 +1,65 @@
+.nombre-colegio {
+  padding: 0.5em 0em;
+  display: block;
+}
+
+.labelError {
+  color: red;
+  font-weight: bold;
+}
+
+.labelOK {
+  color: green;
+  font-weight: bold;
+}
+
+.ui-tooltip .ui-tooltip-text {
+  white-space: pre-line !important;
+}
+
+.ui-growl-message-info .ui-growl-item {
+  color: white !important;
+  background-color: #33a1ff !important;
+}
+
+.ui-growl-message-success .ui-growl-item {
+  color: white !important;
+  background-color: #28a745 !important;
+}
+
+.ui-growl-message-warn .ui-growl-item {
+  color: white !important;
+  background-color: #ffc107 !important;
+}
+
+.ui-growl-message-error .ui-growl-item {
+  color: white !important;
+  background-color: #dc3545 !important;
+}
+
+.widthAll {
+  width: 100%;
+}
+
+#formu {
+  display: table !important;
+  padding-left: 1.4em;
+}
+
+#check {
+  display: table-cell !important;
+  vertical-align: middle !important;
+  padding-left: 0.8em;
+}
+
+.ui-tooltip {
+  .ui-tooltip-text {
+    background: white;
+    color: black;
+    font-size: 0.8rem;
+  }
+}
+
+.input-group .ui-button {
+  width: 100%;
+}
