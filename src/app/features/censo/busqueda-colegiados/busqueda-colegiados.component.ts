@@ -14,6 +14,7 @@ import { TranslateService } from "../../../commons/translate/translation.service
 import { ConfirmationService } from "primeng/api";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { DataTable } from "primeng/datatable";
+import { esCalendar } from "./../../../utils/calendar";
 
 @Component({
   selector: "app-busqueda-colegiados",
@@ -38,12 +39,34 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   textFilter: String = "Elegir";
   buscar: boolean = false;
 
+  es: any = esCalendar;
+
   editar: boolean = true;
 
   etiquetas: any[];
+  situacion: any[];
+  residencia: any[] = [];
+  inscrito: any[] = [];
+  sexo: any[] = [];
+  estadoCivil: any[];
+  categoriaCurricular: any[];
+  subtipoCV: any[];
+  provincias: any[];
+  poblaciones: any[];
+  tiposDireccion: any[];
+
   textSelected: String = "{0} etiquetas seleccionadas";
 
   pruebas: string = "pruebas";
+  siNoResidencia: any;
+  siNoInscrito: any;
+  selectedEstadoCivil: any;
+  selectedCategoriaCurricular: any;
+  selectedSubtipoCV: any;
+  selectedProvincia: any;
+  selectedPoblacion: any;
+  selectedTipoDireccion: any;
+
   etiquetasPersonaJuridicaSelecionados: any = [];
 
   constructor(
@@ -66,6 +89,75 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
       n => {
         this.etiquetas = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
+    // obtener situación
+    this.sigaServices.get("busquedaColegiados_situacion").subscribe(
+      n => {
+        this.situacion = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
+    // residencia
+    this.residencia = [
+      { label: "", value: 0 },
+      { label: "Sí", value: 1 },
+      { label: "No", value: 2 }
+    ];
+    // inscrito
+    this.inscrito = [
+      { label: "", value: 0 },
+      { label: "Sí", value: 1 },
+      { label: "No", value: 2 }
+    ];
+    // sexo
+    this.sexo = [
+      { label: "", value: 0 },
+      { label: "Hombre", value: 1 },
+      { label: "Mujer", value: 2 }
+    ];
+
+    // estado civil
+    this.sigaServices.get("busquedaColegiados_estadoCivil").subscribe(
+      n => {
+        this.estadoCivil = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
+    // categoria curricular
+    this.sigaServices.get("busquedaColegiados_categoriaCurricular").subscribe(
+      n => {
+        this.categoriaCurricular = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
+    // provincias
+    this.sigaServices.get("busquedaColegiados_provincias").subscribe(
+      n => {
+        this.provincias = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
+    // tipos direccion
+    this.sigaServices.get("busquedaColegiados_tipoDireccion").subscribe(
+      n => {
+        this.tiposDireccion = n.combooItems;
       },
       err => {
         console.log(err);
@@ -123,6 +215,14 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   onHideDatosColegiales() {
     this.showDatosColegiales = !this.showDatosColegiales;
+  }
+
+  onHideDatosGeneralesAvanzados() {
+    this.showDatosGeneneralesAvanzado = !this.showDatosGeneneralesAvanzado;
+  }
+
+  onHideDireccion() {
+    this.showDatosDireccion = !this.showDatosDireccion;
   }
 
   irEditarColegiado(id) {}
