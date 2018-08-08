@@ -13,20 +13,27 @@
             <div *ngIf="esFichaActiva('generales')" class="module vista-simple">
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
-                        <label>Nº Identificación</label>
-                        <input type="text" class="form-control" pInputText>
+                        <label>{{"censo.consultaDatosColegiacion.literal.numIden" | translate}}</label>
+                        <input [formControl]="formBusqueda.controls['id']" type="text" class="form-control" pInputText [(ngModel)]="body.id">
+                        <small class="input-error" *ngIf="!formBusqueda.controls['id'].pristine && formBusqueda.controls['id'].value==null ">
+                            Debe tener como mínimo tres carácteres</small>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>Apellidos</label>
-                        <input type="text" class="form-control" pInputText>
+                        <input [formControl]="formBusqueda.controls['apellidos']" type="text" class="form-control" pInputText [(ngModel)]="body.apellidos">
+                        <small class="input-error" *ngIf="!formBusqueda.controls['apellidos'].pristine && formBusqueda.controls['apellidos'].value==null ">
+                            Debe tener como mínimo tres carácteres</small>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>Nombre</label>
-                        <input type="text" class="form-control" pInputText>
+                        <input [formControl]="formBusqueda.controls['nombre']" type="text" class="form-control" pInputText [(ngModel)]="body.nombre">
+                        <small class="input-error" *ngIf="!formBusqueda.controls['nombre'].pristine && formBusqueda.controls['nombre'].value==null ">
+                            Debe tener como mínimo tres carácteres</small>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
-                        <label>Etiquetas</label>
-                        <p-dropdown class="select-form" [options]="select"></p-dropdown>
+                        <label>{{"menu.administracion.gestionMultiidioma.etiquetas" | translate}}</label>
+                        <p-multiSelect [disabled]="!editar" [defaultLabel]="textFilter" autoWidth="false" [options]="comboEtiquetas" [selectedItemsLabel]="textSelected"
+                            maxSelectedLabels="1" styleClass="widthAll" defaultLabel="" [(ngModel)]="body.etiquetas"></p-multiSelect>
                     </div>
                 </div>
             </div>
@@ -38,26 +45,26 @@
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
                         <label>Sexo</label>
-                        <p-dropdown class="select-form" [options]="select"></p-dropdown>
+                        <p-dropdown class="select-form" [options]="comboSexo" [(ngModel)]="body.sexo"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>Estado Civil</label>
-                        <p-dropdown class="select-form" [options]="select"></p-dropdown>
+                        <p-dropdown class="select-form" [options]="comboEstadoCivil" [(ngModel)]="body.estadoCivil"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>Fecha Nacimiento</label>
-                        <p-calendar [formControl]="formBusqueda.controls['fechaNacimiento'] " [keepInvalid]="true" selectionMode="range" [locale]="es"
-                            icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                        <p-calendar [formControl]="formBusqueda.controls['fechaNacimiento']" [keepInvalid]="true" selectionMode="range" [locale]="es"
+                            icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="body.fchaNacimiento"></p-calendar>
                         <small class="input-error" *ngIf="!formBusqueda.controls['fechaNacimiento'].pristine && formBusqueda.controls['fechaNacimiento'].value==null ">
                             El formato correcto es d/m/y - d/m/y</small>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>Categoría Curricular</label>
-                        <p-dropdown class="select-form" [options]="select"></p-dropdown>
+                        <p-dropdown class="select-form" [options]="comboCategoriaCurricular" [(ngModel)]="body.categoria"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>Subtipo Curriculares</label>
-                        <p-dropdown class="select-form" [options]="select"></p-dropdown>
+                        <p-dropdown class="select-form" [options]="select" [(ngModel)]="body.subCategoria"></p-dropdown>
                     </div>
                 </div>
             </div>
@@ -69,35 +76,77 @@
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
                         <label>Código Postal</label>
-                        <input type="text" class="form-control" pInputText>
+                        <input type="text" class="form-control" [maxLength]="5" pInputText [(ngModel)]="body.codigoPostal" (input)="onChangeCodigoPostal($event)">
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>Provincia</label>
-                        <p-dropdown class="select-form" [options]="select"></p-dropdown>
+                        <p-dropdown class="select-form" [options]="comboProvincias" [(ngModel)]="body.idProvincia" [(disabled)]="isDisabledProvincia"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>Población</label>
-                        <p-dropdown class="select-form" [options]="select"></p-dropdown>
+                        <p-dropdown class="select-form" [options]="comboPoblacion" [(ngModel)]='body.idPoblacion' [(disabled)]="isDisabledPoblacion"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>Tipo Dirección</label>
-                        <p-dropdown class="select-form" [options]="select"></p-dropdown>
+                        <p-dropdown class="select-form" [options]="comboTipoDireccion" [(ngModel)]='body.tipoDireccion'></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>Correo Electrónico</label>
-                        <input type="text" class="form-control" pInputText>
+                        <input type="text" class="form-control" pInputText [(ngModel)]='body.mail'>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
-                        <label>Teléfono/Móvil</label>
-                        <input type="text" class="form-control" pInputText>
+                        <label>Teléfono</label>
+                        <input type="text" class="form-control" pInputText [(ngModel)]='body.tlf'>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Móvil</label>
+                        <input type="text" class="form-control" pInputText [(ngModel)]='body.movil'>
                     </div>
                 </div>
             </div>
         </div>
         <div class="card-footer">
             <div class="text-right main-button ">
-                <button pButton type="button " icon="fa fa-eraser " iconPos="left" label="Limpiar"></button>
-                <button (click)="isBuscar()" pButton type="button " icon="fa fa-search " iconPos="left" label="Buscar"></button>
+                <button (click)="isLimpiar()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="Limpiar"></button>
+                <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="Buscar"></button>
             </div>
         </div>
     </div>
+    <div *ngIf="buscar == true" class="card mt-3">
+        <div class="card-body p-0">
+            <p-dataTable [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" dataKey="id" selectionMode="multiple"
+                [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both"
+                [rows]="selectedItem">
+                <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header"></p-column>
+                <ng-template pTemplate="paginatorLeft">
+                    <div class="mostrar d-flex text-right justify-content-end">
+                        <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                        <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+                        <label>{{ "general.message.mostrar" | translate}}</label>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                        <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                        <div class="ml-3 selectAll">
+                            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
+                        </div>
+                        <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+                            <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+                    </div>
+                </ng-template>
+                <p-footer>
+                    <div class="text-right main-button">
+                        <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-send" iconPos="left" label="Comunicar"
+                            disabled></button>
+                        <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"
+                            disabled></button>
+                        <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+                        <button (click)="isCrear()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button>
+                    </div>
+                </p-footer>
+            </p-dataTable>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>
