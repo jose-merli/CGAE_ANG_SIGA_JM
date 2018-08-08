@@ -125,28 +125,28 @@
 
                     <div class="form-group col-lg-2 col-md-2">
                         <label>{{"censo.busquedaClientesAvanzada.literal.cp" | translate}}</label>
-                        <input type="text" name="codigoPostal" class="form-control" [(ngModel)]='pruebas' pInputText>
+                        <input type="text" name="codigoPostal" class="form-control" [maxLength]="5" [(ngModel)]='body.codigoPostal' pInputText (input)="onChangeCodigoPostal($event)">
                     </div>
                     <div class="form-group col-lg-2 col-md-2">
                         <label>{{"censo.datosDireccion.literal.provincia" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='selectedProvincia' [options]="provincias" [filter]="true" filterBy="label"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' [options]="provincias" [filter]="true" filterBy="label" [(disabled)]="isDisabledProvincia"></p-dropdown>
                     </div>
 
                     <div class="form-group col-lg-2 col-md-2">
                         <label>{{"gratuita.partidosJudiciales.literal.poblaciones" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='selectedPoblacion' [options]="poblaciones" [filter]="true" filterBy="label"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' [options]="poblaciones" [filter]="true" filterBy="label"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.datosDireccion.literal.tipo.direccion" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='selectedTipoDireccion' [options]="tiposDireccion" [filter]="true" filterBy="label"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.tipoDireccion' [options]="tiposDireccion" [filter]="true" filterBy="label"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.datosDireccion.literal.correo" | translate}}</label>
-                        <input type="text" name="correo" class="form-control" [(ngModel)]='pruebas' pInputText>
+                        <input type="text" name="correo" class="form-control" [(ngModel)]='body.mail' pInputText>
                     </div>
                     <div class="form-group col-lg-2 col-md-2">
                         <label>{{"censo.datosDireccion.literal.telefonoOMovil" | translate}}</label>
-                        <input type="text" name="telefonoOMovil" class="form-control" [(ngModel)]='pruebas' pInputText>
+                        <input type="text" name="telefonoOMovil" class="form-control" [(ngModel)]='body.movil' pInputText>
                     </div>
 
                 </div>

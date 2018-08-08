@@ -15,6 +15,7 @@ import { ConfirmationService } from "primeng/api";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { DataTable } from "primeng/datatable";
 import { esCalendar } from "./../../../utils/calendar";
+import { DatosColegiadosItem } from "../../../models/DatosColegiadosItem";
 
 @Component({
   selector: "app-busqueda-colegiados",
@@ -24,9 +25,12 @@ import { esCalendar } from "./../../../utils/calendar";
 })
 export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   showDatosGenerales: boolean = true;
-  showDatosColegiales: boolean = false;
+  showDatosColegiales: boolean = true;
   showDatosGeneneralesAvanzado: boolean = false;
   showDatosDireccion: boolean = false;
+  progressSpinner: boolean = false;
+  isDisabledPoblacion: boolean = true;
+  isDisabledProvincia: boolean = true;
 
   numSelected: number = 0;
   datos: any[];
@@ -56,8 +60,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   tiposDireccion: any[];
 
   textSelected: String = "{0} etiquetas seleccionadas";
+  body: DatosColegiadosItem = new DatosColegiadosItem();
 
-  pruebas: string = "pruebas";
   siNoResidencia: any;
   siNoInscrito: any;
   selectedEstadoCivil: any;
@@ -84,7 +88,108 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   ngOnInit() {
     this.etiquetasPersonaJuridicaSelecionados = "";
+    this.getCombos();
+    this.getInfo();
+  }
 
+  onHideDatosGenerales() {
+    this.showDatosGenerales = !this.showDatosGenerales;
+  }
+
+  onHideDatosColegiales() {
+    this.showDatosColegiales = !this.showDatosColegiales;
+  }
+
+  onHideDatosGeneralesAvanzados() {
+    this.showDatosGeneneralesAvanzado = !this.showDatosGeneneralesAvanzado;
+  }
+
+  onHideDireccion() {
+    this.showDatosDireccion = !this.showDatosDireccion;
+  }
+
+  irEditarColegiado(id) {}
+
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
+
+  activarPaginacion() {
+    if (!this.datos || this.datos.length == 0) return false;
+    else return true;
+  }
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
+
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.selectMultiple = false;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
+  isSelectMultiple() {
+    this.selectMultiple = !this.selectMultiple;
+    if (!this.selectMultiple) {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    } else {
+      this.selectAll = false;
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
+  getComboPoblacion() {
+    this.progressSpinner = true;
+    this.sigaServices
+      .getParam(
+        "direcciones_comboPoblacion",
+        "?idProvincia=" + this.body.idProvincia
+      )
+      .subscribe(
+        n => {
+          this.isDisabledPoblacion = false;
+          this.poblaciones = n.combooItems;
+        },
+        error => {},
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  onChangeCodigoPostal(event) {
+    if (this.isValidCodigoPostal() && this.body.codigoPostal.length == 5) {
+      let value = this.body.codigoPostal.substring(0, 2);
+      if (
+        value != this.body.idProvincia ||
+        this.body.idProvincia == undefined
+      ) {
+        this.body.idProvincia = value;
+        this.poblaciones = [];
+        this.getComboPoblacion();
+      }
+    }
+  }
+
+  isValidCodigoPostal(): boolean {
+    return (
+      this.body.codigoPostal &&
+      typeof this.body.codigoPostal === "string" &&
+      /^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(this.body.codigoPostal)
+    );
+  }
+
+  getCombos() {
     // obtener etiquetas
     this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
       n => {
@@ -163,7 +268,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         console.log(err);
       }
     );
+  }
 
+  getInfo() {
     // columnas de la tabla de datos tras la busqueda
     this.cols = [
       {
@@ -207,61 +314,5 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         header: "censo.datosDireccion.literal.movil"
       }
     ];
-  }
-
-  onHideDatosGenerales() {
-    this.showDatosGenerales = !this.showDatosGenerales;
-  }
-
-  onHideDatosColegiales() {
-    this.showDatosColegiales = !this.showDatosColegiales;
-  }
-
-  onHideDatosGeneralesAvanzados() {
-    this.showDatosGeneneralesAvanzado = !this.showDatosGeneneralesAvanzado;
-  }
-
-  onHideDireccion() {
-    this.showDatosDireccion = !this.showDatosDireccion;
-  }
-
-  irEditarColegiado(id) {}
-
-  actualizaSeleccionados(selectedDatos) {
-    this.numSelected = selectedDatos.length;
-  }
-
-  activarPaginacion() {
-    if (!this.datos || this.datos.length == 0) return false;
-    else return true;
-  }
-
-  onChangeRowsPerPages(event) {
-    this.selectedItem = event.value;
-    this.changeDetectorRef.detectChanges();
-    this.table.reset();
-  }
-
-  onChangeSelectAll() {
-    if (this.selectAll === true) {
-      this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
-    } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    }
-  }
-
-  isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    } else {
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    }
   }
 }

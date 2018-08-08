@@ -187,10 +187,6 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       );
   }
 
-  onChangeProvincia(event) {
-    console.log(event);
-  }
-
   onChangeCodigoPostal(event) {
     if (this.isValidCodigoPostal() && this.body.codigoPostal.length == 5) {
       let value = this.body.codigoPostal.substring(0, 2);
