@@ -88,6 +88,8 @@ export class DatosGenerales implements OnInit {
 
   ocultarMotivo: boolean = undefined;
 
+  contadorNoCorrecto: boolean = false;
+
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
 
@@ -186,7 +188,7 @@ export class DatosGenerales implements OnInit {
       n => {
         this.comboIdentificacion = n.combooItems;
       },
-      error => {}
+      error => { }
     );
 
     this.comboTipo.push(this.tipoPersonaJuridica);
@@ -406,26 +408,34 @@ export class DatosGenerales implements OnInit {
         this.guardarImagen(this.body.idPersona);
       }
 
-      this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
-        data => {
-          this.cerrarAuditoria();
-          this.cargarImagen(this.body.idPersona);
-          this.showSuccess();
-          this.progressSpinner = false;
-        },
-        error => {
-          this.personaSearch = JSON.parse(error["error"]);
-          this.showFail(JSON.stringify(this.personaSearch.error.description));
-          console.log(error);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.datosGeneralesSearch();
-          this.obtenerEtiquetasPersonaJuridicaConcreta();
-          this.progressSpinner = false;
-        }
-      );
+      if ((this.body.contadorNumsspp != undefined &&
+        !this.onlySpaces(this.body.contadorNumsspp))) {
+
+
+        this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
+          data => {
+            this.cerrarAuditoria();
+            this.cargarImagen(this.body.idPersona);
+            this.showSuccess();
+            this.progressSpinner = false;
+          },
+          error => {
+            this.personaSearch = JSON.parse(error["error"]);
+            this.showFail(JSON.stringify(this.personaSearch.error.description));
+            console.log(error);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.datosGeneralesSearch();
+            this.obtenerEtiquetasPersonaJuridicaConcreta();
+            this.progressSpinner = false;
+          }
+        );
+      }
+
     }
+
+
   }
 
   restablecer() {
@@ -705,5 +715,20 @@ export class DatosGenerales implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+
+  compruebaRegistro() {
+    var a = this.body.contadorNumsspp;
+    if (
+      Number(this.body.contadorNumsspp) ||
+      this.onlySpaces(this.body.contadorNumsspp)
+    ) {
+      this.contadorNoCorrecto = false;
+      return true;
+    } else {
+      this.contadorNoCorrecto = true;
+      return false;
+    }
   }
 }

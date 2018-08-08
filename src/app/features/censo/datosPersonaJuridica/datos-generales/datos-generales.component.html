@@ -103,6 +103,23 @@
               <input [(ngModel)]="body.abreviatura" type="text" class="form-control" (ngModelChange)="onChangeForm()" [(disabled)]="camposDesactivados"
                 [maxLength]="100" pInputText>
             </div>
+            <div class="form-row p-1 col-lg-6 col-md-6">
+              <div class="col-lg-12 col-md-12">
+                <label>{{"censo.consultaDatosRegistrales.literal.numRegistro" | translate}} (*)</label>
+              </div>
+              <div class="form-group col-lg-4 col-md-4 pr-0">
+                <input [(ngModel)]="body.prefijoNumsspp" type="text" class="form-control" [(disabled)]="prefijoBlock" pInputText>
+              </div>
+              <div class="form-group col-lg-4 col-md-4 pr-0">
+                <input [(disabled)]="camposDesactivados" [(ngModel)]="body.contadorNumsspp" type="text" class="form-control" pInputText (input)="compruebaRegistro()">
+                <div *ngIf="contadorNoCorrecto == true">
+                  <label class="labelError">Solo números</label>
+                </div>
+              </div>
+              <div class="form-group col-lg-4 col-md-4 pr-0">
+                <input [(disabled)]="camposDesactivados" [(ngModel)]="body.sufijoNumsspp" type="text" class="form-control" pInputText>
+              </div>
+            </div>
           </div>
         </div>
         <!-- INFORMACIÓN ADICIONAL -->
