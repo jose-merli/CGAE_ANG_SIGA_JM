@@ -63,30 +63,45 @@
                   [(disabled)]="historyDisable" (onChange)="onChangePais()">
                 </p-dropdown>
               </div>
+
               <div class="form-group col-lg-6 col-md-6">
-                <label>Código postal</label>
+                <label>Código postal (*)</label>
                 <input [(ngModel)]="body.codigoPostal" type="text" class="form-control" [(disabled)]="isDisabledCodigoPostal" [maxLength]="5"
                   (ngModelChange)="onChangeCodigoPostal()" pInputText>
 
               </div>
+
               <div class="form-group col-lg-6 col-md-6">
                 <label>Provincia</label>
                 <p-dropdown class="select-form" [(ngModel)]='provinciaSelecionada' [filter]="true" filterMatchMode="contains" [(disabled)]="isDisabledProvincia"
                   [options]="comboProvincia" (onChange)="onChangeProvincia()">
                 </p-dropdown>
-
               </div>
+
+              <!-- <div *ngIf="poblacionExtranjera" class="form-group col-lg-6 col-md-6">
+                <label>Provincia</label>
+                <input [(ngModel)]="body.poblacionExtranjera" type="text" class="form-control" [maxLength]="99" pInputText>
+              </div> -->
+
+
               <div class="form-group col-lg-6 col-md-6">
                 <label>Otra Provincia</label>
                 <p-checkbox name="otraProvincia" [(ngModel)]="checkOtraProvincia" [(disabled)]="disableCheck" binary="true" (onChange)="onChangeOtherProvincia($event)"></p-checkbox>
               </div>
-              <div class="form-group col-lg-6 col-md-6">
+              <!-- *ngIf="!poblacionExtranjera" -->
+              <div *ngIf="!poblacionExtranjera" class="form-group col-lg-6 col-md-6">
                 <label>Población</label>
                 <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true" filterMatchMode="contains" [(disabled)]="isDisabledPoblacion"
                   [options]="comboPoblacion" (onChange)="onChangePoblacion($event)">
                 </p-dropdown>
+              </div>
+
+              <div *ngIf="poblacionExtranjera" class="form-group col-lg-6 col-md-6">
+                <label>Población</label>
+                <input [(ngModel)]="body.poblacionExtranjera" type="text" class="form-control" [maxLength]="99" pInputText>
 
               </div>
+
               <div class="form-group col-lg-6 col-md-6">
                 <label>Tipo dirección (*)</label>
                 <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='body.idTipoDireccion' [options]="comboTipoDireccion"

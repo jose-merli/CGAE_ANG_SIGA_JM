@@ -253,6 +253,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.disableCheck = true;
       //si al final se pone un campo de texto, solo habrá que usar un ngIf con esta variable para controlar cuando sale cada input distinto.
       this.poblacionExtranjera = true;
+      this.body.idPoblacion = "";
       this.isDisabledCodigoPostal = this.historyDisable;
       this.isDisabledPoblacion = true;
     } else {
@@ -325,59 +326,67 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     }
   }
   guardar() {
-    if (
-      this.body.idTipoDireccion != null &&
-      this.body.idTipoDireccion != undefined &&
-      this.body.idTipoDireccion.length > 0
-    ) {
-      this.progressSpinner = true;
-      // modo edicion
-      if (this.registroEditable) {
-        this.comprobarTablaDatosContactos();
-        this.comprobarCheckProvincia();
-        this.body.idProvincia = this.provinciaSelecionada;
-        this.sigaServices.post("direcciones_update", this.body).subscribe(
-          data => {
-            this.progressSpinner = false;
-            this.body = JSON.parse(data["body"]);
-            this.backTo();
-          },
-          error => {
-            this.bodySearch = JSON.parse(error["error"]);
-            this.showFail(this.bodySearch.error.message.toString());
-            console.log(error);
-            this.progressSpinner = false;
-          }
-        );
-      }
-      // modo creacion
-      else {
-        this.comprobarTablaDatosContactos();
-        this.comprobarCheckProvincia();
-        this.body.idProvincia = this.provinciaSelecionada;
-        this.body.motivo = "registro creado";
-        this.sigaServices.post("direcciones_insert", this.body).subscribe(
-          data => {
-            this.progressSpinner = false;
-            this.body = JSON.parse(data["body"]);
-            this.backTo();
-          },
-          error => {
-            this.bodySearch = JSON.parse(error["error"]);
-            this.showFail(this.bodySearch.error.message.toString());
-            console.log(error);
-            this.progressSpinner = false;
-          },
-          () => {
-            // auditoria
-            this.body.motivo = undefined;
-          }
-        );
-      }
+    if (this.body.codigoPostal == null || this.body.codigoPostal == undefined) {
+      this.showFail("Debe especificar el Código Postal");
     } else {
-      this.showFail("Debe de haber un tipo de Contacto seleccionado.");
+      if (
+        this.body.idTipoDireccion != null &&
+        this.body.idTipoDireccion != undefined &&
+        this.body.idTipoDireccion.length > 0
+      ) {
+        this.progressSpinner = true;
+        // modo edicion
+        if (this.registroEditable) {
+          this.comprobarTablaDatosContactos();
+          this.comprobarCheckProvincia();
+          this.body.idProvincia = this.provinciaSelecionada;
+          if(this.body.idPais == "191"){
+            this.body.poblacionExtranjera = "";
+          }
+          this.sigaServices.post("direcciones_update", this.body).subscribe(
+            data => {
+              this.progressSpinner = false;
+              this.body = JSON.parse(data["body"]);
+              this.backTo();
+            },
+            error => {
+              this.bodySearch = JSON.parse(error["error"]);
+              this.showFail(this.bodySearch.error.message.toString());
+              console.log(error);
+              this.progressSpinner = false;
+            }
+          );
+        }
+        // modo creacion
+        else {
+          this.comprobarTablaDatosContactos();
+          this.comprobarCheckProvincia();
+          this.body.idProvincia = this.provinciaSelecionada;
+          this.body.motivo = "registro creado";
+          this.sigaServices.post("direcciones_insert", this.body).subscribe(
+            data => {
+              this.progressSpinner = false;
+              this.body = JSON.parse(data["body"]);
+              this.backTo();
+            },
+            error => {
+              this.bodySearch = JSON.parse(error["error"]);
+              this.showFail(this.bodySearch.error.message.toString());
+              console.log(error);
+              this.progressSpinner = false;
+            },
+            () => {
+              // auditoria
+              this.body.motivo = undefined;
+            }
+          );
+        }
+      } else {
+        this.showFail("Debe de haber un tipo de Contacto seleccionado.");
+      }
     }
   }
+
   duplicarRegistro() {
     this.body.idDireccion = null;
     this.nuevo = true;
