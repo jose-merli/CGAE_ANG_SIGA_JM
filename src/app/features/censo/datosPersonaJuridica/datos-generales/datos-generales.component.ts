@@ -373,9 +373,9 @@ export class DatosGenerales implements OnInit {
               this.cargarImagen(this.idPersona);
               this.datosGeneralesSearch();
               this.obtenerEtiquetasPersonaJuridicaConcreta();
-              this.cardService.searchNewAnnounce.next(this.idPersona);
               this.editar = false;
               this.progressSpinner = false;
+              this.cardService.searchNewAnnounce.next(this.idPersona);
             },
             error => {
               console.log(error);

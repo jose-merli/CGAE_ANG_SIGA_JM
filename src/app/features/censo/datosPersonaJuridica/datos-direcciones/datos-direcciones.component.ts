@@ -76,6 +76,7 @@ export class DatosDireccionesComponent implements OnInit {
       let fichaPosible = this.getFichaPosibleByKey("direcciones");
       fichaPosible.activa = true;
       sessionStorage.removeItem("editarDirecciones");
+      sessionStorage.removeItem("historicoDir");
     }
     this.checkAcceso();
     this.cols = [
@@ -143,6 +144,7 @@ export class DatosDireccionesComponent implements OnInit {
       id => {
         if (id !== null) {
           this.body.idPersona = id;
+          this.idPersona = id;
           this.search();
         }
       }
@@ -239,6 +241,7 @@ export class DatosDireccionesComponent implements OnInit {
     this.selectedDatos = "";
     this.progressSpinner = true;
     this.selectAll = false;
+    // Se comprueba si hay idpersona para cuando se crea una sociedad (sociedad ya existente)
     if (this.idPersona != undefined && this.idPersona != null) {
       this.sigaServices
         .postPaginado("direcciones_search", "?numPagina=1", searchObject)
@@ -260,6 +263,9 @@ export class DatosDireccionesComponent implements OnInit {
           },
           () => {}
         );
+    } else {
+      // Sociedad no existente,
+      this.progressSpinner = false;
     }
   }
   setItalic(datoH) {
@@ -352,6 +358,7 @@ export class DatosDireccionesComponent implements OnInit {
       }
     );
   }
+
   goToDetails(selectedDatos) {
     if (!this.selectMultiple) {
       var ir = null;

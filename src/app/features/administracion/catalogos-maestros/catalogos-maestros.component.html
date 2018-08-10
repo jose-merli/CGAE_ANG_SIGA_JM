@@ -248,9 +248,9 @@
 
         <p-footer>
           <div class="text-right main-button" *ngIf="activarPaginacion() == true">
+            <button (click)="isBuscar(); selectedDatos=[]" pButton type="button" icon="fa fa-undo " iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
             <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt " [disabled]="isHabilitadoEliminar()"
               iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-            <button (click)="isBuscar(); selectedDatos=[]" pButton type="button" icon="fa fa-undo " iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
           </div>
         </p-footer>
       </p-dataTable>
