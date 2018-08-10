@@ -1,1 +1,103 @@
-<app-my-iframe url="{{ url }}"></app-my-iframe>
+<div class="busqueda-container">
+    <div class="header-title">
+        <i class="fa fa-square"></i>
+        <p>{{ "menu.censo" | translate}}
+            <i class="fa fa-angle-right"></i> {{'censo.busquedaClientes.busquedaNoColegiados.titulo' | translate}}</p>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <p class="title-module"> {{'general.message.datos.generales' | translate }}
+                <i (click)="abrirFicha('generales')" *ngIf="!esFichaActiva('generales')" class="fa fa-angle-up float-right"></i>
+                <i (click)="cerrarFicha('generales')" *ngIf="esFichaActiva('generales')" class="fa fa-angle-down float-right"></i>
+            </p>
+            <div *ngIf="esFichaActiva('generales')" class="module vista-simple">
+                <div class="form-row">
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Nº Identificación</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Apellidos</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Nombre</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Etiquetas</label>
+                        <p-dropdown class="select-form" [options]="select"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+            <p class="title-module">Datos Generales Avanzado
+                <i (click)="abrirFicha('avanzado')" *ngIf="!esFichaActiva('avanzado')" class="fa fa-angle-down float-right"></i>
+                <i (click)="cerrarFicha('avanzado')" *ngIf="esFichaActiva('avanzado')" class="fa fa-angle-up float-right"></i>
+            </p>
+            <div *ngIf="esFichaActiva('avanzado')" class="module vista-avanzada">
+                <div class="form-row">
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Sexo</label>
+                        <p-dropdown class="select-form" [options]="select"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Estado Civil</label>
+                        <p-dropdown class="select-form" [options]="select"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Fecha Nacimiento</label>
+                        <p-calendar [formControl]="formBusqueda.controls['fechaNacimiento'] " [keepInvalid]="true" selectionMode="range" [locale]="es"
+                            icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                        <small class="input-error" *ngIf="!formBusqueda.controls['fechaNacimiento'].pristine && formBusqueda.controls['fechaNacimiento'].value==null ">
+                            El formato correcto es d/m/y - d/m/y</small>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Categoría Curricular</label>
+                        <p-dropdown class="select-form" [options]="select"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Subtipo Curriculares</label>
+                        <p-dropdown class="select-form" [options]="select"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+            <p class="title-module">Dirección
+                <i (click)="abrirFicha('direccion')" *ngIf="!esFichaActiva('direccion')" class="fa fa-angle-down float-right"></i>
+                <i (click)="cerrarFicha('direccion')" *ngIf="esFichaActiva('direccion')" class="fa fa-angle-up float-right"></i>
+            </p>
+            <div *ngIf="esFichaActiva('direccion')" class="module vista-avanzada">
+                <div class="form-row">
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Código Postal</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Provincia</label>
+                        <p-dropdown class="select-form" [options]="select"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Población</label>
+                        <p-dropdown class="select-form" [options]="select"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Tipo Dirección</label>
+                        <p-dropdown class="select-form" [options]="select"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Correo Electrónico</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>Teléfono/Móvil</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="text-right main-button ">
+                <button pButton type="button " icon="fa fa-eraser " iconPos="left" label="Limpiar"></button>
+                <button (click)="isBuscar()" pButton type="button " icon="fa fa-search " iconPos="left" label="Buscar"></button>
+            </div>
+        </div>
+    </div>
