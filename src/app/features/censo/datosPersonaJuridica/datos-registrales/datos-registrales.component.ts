@@ -267,8 +267,7 @@ export class DatosRegistralesComponent implements OnInit {
             this.fechaRegistro = this.body.fechaRegistro;
           }
           if (this.body.sociedadProfesional == "1") {
-            // this.sociedadProfesional = true;
-            this.sociedadProfesional = false;
+            this.sociedadProfesional = true;
           } else if (this.body.sociedadProfesional == "0") {
             this.sociedadProfesional = false;
           }
