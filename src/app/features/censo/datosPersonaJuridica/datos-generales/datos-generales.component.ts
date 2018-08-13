@@ -90,6 +90,8 @@ export class DatosGenerales implements OnInit {
 
   contadorNoCorrecto: boolean = false;
 
+  isValidate: boolean;
+
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
 
@@ -143,8 +145,12 @@ export class DatosGenerales implements OnInit {
   ngOnInit() {
     // dentro de este metodo se llama a continueOnInit()
     this.checkAcceso();
+
+
+
   }
   continueOnInit() {
+
     this.busquedaIdioma();
 
     if (sessionStorage.getItem("historicoSociedad") != null) {
@@ -242,6 +248,7 @@ export class DatosGenerales implements OnInit {
         this.continueOnInit();
       }
     );
+
   }
 
   obtenerEtiquetasPersonaJuridicaConcreta() {
@@ -293,9 +300,11 @@ export class DatosGenerales implements OnInit {
           if (this.personaSearch.personaJuridicaItems.length != 0) {
             this.body = this.personaSearch.personaJuridicaItems[0];
             this.selectedTipo = this.body.tipo;
+
           } else {
             this.body = new DatosGeneralesItem();
           }
+          this.comprobarValidacion();
         },
         error => {
           this.personaSearch = JSON.parse(error["error"]);
@@ -572,6 +581,7 @@ export class DatosGenerales implements OnInit {
         this.selectedTipo = this.comboIdentificacion[0];
         this.identificacionValida = false;
       }
+
     }
 
     if (
@@ -598,6 +608,7 @@ export class DatosGenerales implements OnInit {
       ) {
         if (this.body.nif.length == 9 && this.isValidCIF(this.body.nif)) {
           this.showGuardar = true;
+
         }
       } else {
         this.showGuardar = true;
@@ -605,6 +616,9 @@ export class DatosGenerales implements OnInit {
     } else {
       this.showGuardar = false;
     }
+
+    this.comprobarValidacion();
+
   }
 
   comprobarAuditoria() {
@@ -730,5 +744,22 @@ export class DatosGenerales implements OnInit {
       this.contadorNoCorrecto = true;
       return false;
     }
+  }
+
+  comprobarValidacion() {
+    if (this.body.nif.length == 9 && this.isValidCIF(this.body.nif) && !this.onlySpaces(this.body.denominacion)
+      && (this.body.fechaConstitucion != undefined || this.body.fechaConstitucion != null)
+      && this.body.denominacion != "" && this.body.denominacion != undefined && !this.onlySpaces(this.body.denominacion)) {
+      this.isValidate = true;
+    } else {
+      this.isValidate = false;
+    }
+    this.cardService.newCardValidator$.subscribe(data => {
+      data.map(result => {
+        result.cardGeneral = this.isValidate;
+      })
+      console.log(data)
+    });
+
   }
 }

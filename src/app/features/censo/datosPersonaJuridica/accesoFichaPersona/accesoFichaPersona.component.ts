@@ -35,12 +35,13 @@ export class AccesoFichaPersonaComponent implements OnInit {
   activacionEditar: boolean;
   camposDesactivados: boolean;
   file: File = undefined;
+  isValidate: boolean;
   constructor(
     private router: Router,
     private location: Location,
     private sigaServices: SigaServices,
     private cardService: cardService
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (sessionStorage.getItem("historicoSociedad") != null) {
@@ -116,6 +117,9 @@ export class AccesoFichaPersonaComponent implements OnInit {
     } else {
       this.search();
     }
+
+
+    console.log(this.editar)
   }
 
   search() {
@@ -140,6 +144,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
                 this.desasociar = true;
               }
               this.obtenerTiposIdentificacion();
+              this.comprobarValidacion();
             } else {
               this.guardarNotario = false;
               this.desasociar = false;
@@ -310,7 +315,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
     );
   }
   filtrarItemsComboEsquema(comboEsquema, buscarElemento) {
-    return comboEsquema.filter(function(obj) {
+    return comboEsquema.filter(function (obj) {
       return obj.value == buscarElemento;
     });
   }
@@ -371,7 +376,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
     });
   }
 
-  seleccionarFecha(event) {}
+  seleccionarFecha(event) { }
 
   showFail(mensaje: string) {
     this.msgs = [];
@@ -385,5 +390,25 @@ export class AccesoFichaPersonaComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+
+  comprobarValidacion() {
+    console.log(this.body.tipoIdentificacion)
+    if ((this.body.tipoIdentificacion != undefined || this.body.tipoIdentificacion != null) && this.body.nif != undefined && this.body.nombre != undefined &&
+      this.body.nombre.trim() != "" &&
+      this.body.apellido1 != undefined &&
+      this.body.apellido1 != "") {
+      this.isValidate = true;
+    } else {
+      this.isValidate = false;
+    }
+
+    this.cardService.newCardValidator$.subscribe(data => {
+      data.map(result => {
+        result.cardNotario = this.isValidate;
+      })
+      console.log(data)
+    });
   }
 }
