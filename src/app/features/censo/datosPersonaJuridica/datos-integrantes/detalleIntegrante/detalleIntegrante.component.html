@@ -116,6 +116,12 @@
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.busquedaClientesAvanzada.literal.tipoColegio" | translate}}</label>
           <p-dropdown [(ngModel)]="body.idTipoColegio" class="select-form" [options]="colegiosArray" [(disabled)]="isDisabledTipoColegio"></p-dropdown>
+
+        </div>
+        <div class="form-group col-lg-3 col-md-6">
+          <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
+          <input type="text" class="form-control" [disabled]="body.idTipoColegio == null || body.idTipoColegio == undefined || body.idTipoColegio == '' "
+            pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.datosDireccion.literal.provincia" | translate}}</label>

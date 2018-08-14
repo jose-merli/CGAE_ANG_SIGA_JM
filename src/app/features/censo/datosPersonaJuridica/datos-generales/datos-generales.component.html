@@ -151,17 +151,17 @@
         </div>
       </div>
       <br>
-      <div *ngIf="openFicha" class="card-footer ">
-        <div class="text-right main-button ">
-          <button (click)="restablecer()" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-undo" iconPos="left"
-            label="{{ 'general.boton.restablecer' | translate}}"></button>
-          <button (click)="comprobarAuditoria()" [(disabled)]="!showGuardar" pButton type="button" icon="far fa-save" iconPos="left"
-            label="{{ 'general.boton.guardar' | translate}}"></button>
-        </div>
-      </div>
+
     </div>
     <!--END DATOS GENERALES-->
-
+    <div *ngIf="openFicha" class="card-footer ">
+      <div class="text-right main-button ">
+        <button (click)="restablecer()" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="comprobarAuditoria()" [(disabled)]="!showGuardar" pButton type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
   </div>
 
 

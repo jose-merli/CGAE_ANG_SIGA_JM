@@ -118,8 +118,9 @@ export class AccesoFichaPersonaComponent implements OnInit {
       this.search();
     }
 
+    this.comprobarValidacion();
 
-    console.log(this.editar)
+
   }
 
   search() {
@@ -144,7 +145,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
                 this.desasociar = true;
               }
               this.obtenerTiposIdentificacion();
-              this.comprobarValidacion();
+
             } else {
               this.guardarNotario = false;
               this.desasociar = false;
@@ -296,6 +297,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
       n => {
         this.comboTipoIdentificacion = n.combooItems;
 
+
         // obtener la identificacion a seleccionar
         if (this.body.tipoIdentificacion != undefined) {
           let ident = this.comboTipoIdentificacion.find(
@@ -308,6 +310,9 @@ export class AccesoFichaPersonaComponent implements OnInit {
           ident.value = "";
           this.selectedTipoIdentificacion = ident;
         }
+
+        this.comprobarValidacion();
+
       },
       err => {
         console.log(err);
@@ -394,7 +399,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
 
 
   comprobarValidacion() {
-    console.log(this.body.tipoIdentificacion)
+
     if ((this.body.tipoIdentificacion != undefined || this.body.tipoIdentificacion != null) && this.body.nif != undefined && this.body.nombre != undefined &&
       this.body.nombre.trim() != "" &&
       this.body.apellido1 != undefined &&

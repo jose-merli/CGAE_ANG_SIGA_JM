@@ -53,12 +53,13 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   displayAuditoria: boolean = false;
   showGuardarAuditoria: boolean = false;
   ocultarMotivo: boolean = undefined;
+  resultadosPoblaciones: any;
 
   constructor(
     private location: Location,
     private sigaServices: SigaServices,
     public datepipe: DatePipe
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (sessionStorage.getItem("historicoDir") != null) {
@@ -138,6 +139,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
           console.log(err);
         }
       );
+
+
   }
 
   getDatosContactos() {
@@ -159,11 +162,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       n => {
         this.comboProvincia = n.combooItems;
       },
-      error => {},
+      error => { },
       () => {
-        if (this.body.idProvincia != null) {
-          this.getComboPoblacion();
-        }
+
       }
     );
   }
@@ -178,7 +179,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         n => {
           this.comboPoblacion = n.combooItems;
         },
-        error => {},
+        error => { },
         () => {
           // this.isDisabledPoblacion = false;
           this.progressSpinner = false;
@@ -190,7 +191,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       n => {
         this.comboPais = n.combooItems;
       },
-      error => {},
+      error => { },
       () => {
         this.paisSeleccionado = this.comboPais.find(
           item => item.value == this.body.idPais
@@ -203,7 +204,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       n => {
         this.comboTipoDireccion = n.combooItems;
       },
-      error => {}
+      error => { }
     );
   }
 
@@ -266,7 +267,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
           } else {
             this.isDisabledPoblacion = false;
           }
-          this.getComboPoblacion();
+          // this.getComboPoblacion();
         }
         this.codigoPostalValido = true;
       } else {
@@ -276,7 +277,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   }
   onChangeProvincia() {
     if (this.checkOtraProvincia == false) {
-      this.getComboPoblacion();
+      // this.getComboPoblacion();
     }
   }
   onChangeOtherProvincia(event) {
@@ -518,4 +519,22 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   backTo() {
     this.location.back();
   }
+
+  buscarPoblacion(e) {
+    console.log(e)
+
+    if (e.target.value && e.target.value !== null) {
+      if (e.target.value.length >= 3) {
+        this.getComboPoblacion();
+        this.resultadosPoblaciones = "No hay resultados";
+      } else {
+        this.comboPoblacion = [];
+        this.resultadosPoblaciones = "Debe introducir al menos 3 caracteres";
+      }
+    } else {
+      this.comboPoblacion = [];
+      this.resultadosPoblaciones = "No hay resultados";
+    }
+  }
+
 }

@@ -241,6 +241,7 @@ export class DatosIntegrantesComponent implements OnInit {
             this.progressSpinner = false;
             this.searchIntegrantes = JSON.parse(data["body"]);
             this.datos = this.searchIntegrantes.datosIntegrantesItem;
+            console.log(this.datos)
             this.comprobarValidacion();
             if (this.datos.length == 1) {
               this.body = this.datos[0];
@@ -375,13 +376,11 @@ export class DatosIntegrantesComponent implements OnInit {
 
 
   comprobarValidacion() {
-
+    //Falta añadir condiciones de profesión (tipo colegio), cargo y socio
     for (let dato of this.datos) {
       if (dato.personaJuridica == "0") {
         if ((dato.nifCif != null || dato.nifCif != undefined)
-          && (dato.nombre != null || dato.nombre != undefined) && (dato.apellidos1 != null || dato.apellidos1 != undefined)
-          && dato.sociedad == 'SI' && (dato.colegio != null || dato.colegio != undefined)
-          && (dato.descripcionProfesion != null || dato.descripcionProfesion != undefined) && (dato.numColegiado != null || dato.numColegiado != undefined)) {
+          && (dato.nombre != null || dato.nombre != undefined) && (dato.apellidos1 != null || dato.apellidos1 != undefined)) {
           if ((dato.cargo != null || dato.cargo != undefined)) {
             this.isValidate = true;
             if ((dato.descripcionCargo != null || dato.descripcionCargo != undefined) && (dato.fechaCargo != null || dato.fechaCargo != undefined)) {
@@ -389,14 +388,18 @@ export class DatosIntegrantesComponent implements OnInit {
             } else {
               this.isValidate = false;
             }
+          } else {
+            this.isValidate = true;
           }
         } else {
           this.isValidate = false;
         }
       } else {
         if ((dato.nifCif != null || dato.nifCif != undefined)
-          && (dato.nombre != null || dato.nombre != undefined) && (dato.cargo != null || dato.cargo != undefined)
-          && (dato.descripcionCargo != null || dato.descripcionCargo != undefined) && (dato.fechaCargo != null || dato.fechaCargo != undefined)) {
+          && (dato.nombre != null || dato.nombre != undefined)
+          // && (dato.cargo != null || dato.cargo != undefined)
+          // && (dato.descripcionCargo != null || dato.descripcionCargo != undefined) && (dato.fechaCargo != null || dato.fechaCargo != undefined)
+        ) {
           this.isValidate = true;
         } else {
           this.isValidate = false;

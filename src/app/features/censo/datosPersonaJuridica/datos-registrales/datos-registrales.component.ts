@@ -257,6 +257,7 @@ export class DatosRegistralesComponent implements OnInit {
         data => {
           this.personaSearch = JSON.parse(data["body"]);
           this.body = this.personaSearch.datosRegistralesItems[0];
+
           if (this.body == undefined) {
             this.body = new DatosRegistralesItem();
           } else {
@@ -272,7 +273,6 @@ export class DatosRegistralesComponent implements OnInit {
             this.sociedadProfesional = false;
           }
 
-          console.log(this.sociedadProfesional)
         },
         err => {
           console.log(err);
@@ -544,4 +544,19 @@ export class DatosRegistralesComponent implements OnInit {
     }
 
   }
+
+  // isSociedadDisabled() {
+  //   this.comprobarValidacion();
+  //   if (this.sociedadProfesional == true) {
+  //     for (let campo of this.camposObligatorios) {
+  //       if (campo.cardGeneral == true && campo.cardRegistral == true && campo.cardNotario == true && campo.cardDirecciones == true && campo.cardIntegrantes == true) {
+  //         this.sociedadProfesional = true;
+  //       } else {
+  //         setTimeout(() => {
+  //           this.sociedadProfesional = false;
+  //         }, 50);
+  //       }
+  //     }
+  //   }
+  // }
 }
