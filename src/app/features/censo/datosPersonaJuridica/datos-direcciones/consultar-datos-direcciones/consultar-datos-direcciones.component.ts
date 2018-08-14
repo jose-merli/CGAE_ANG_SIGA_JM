@@ -524,12 +524,12 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     console.log(e)
 
     if (e.target.value && e.target.value !== null) {
-      if (e.target.value.length >= 3) {
+      if (e.target.value.length >= 5) {
         this.getComboPoblacion();
         this.resultadosPoblaciones = "No hay resultados";
       } else {
         this.comboPoblacion = [];
-        this.resultadosPoblaciones = "Debe introducir al menos 3 caracteres";
+        this.resultadosPoblaciones = "Debe introducir al menos 5 caracteres";
       }
     } else {
       this.comboPoblacion = [];
