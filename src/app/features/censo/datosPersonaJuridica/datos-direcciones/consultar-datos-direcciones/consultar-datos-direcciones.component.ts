@@ -521,7 +521,6 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   }
 
   buscarPoblacion(e) {
-    console.log(e)
 
     if (e.target.value && e.target.value !== null) {
       if (e.target.value.length >= 5) {

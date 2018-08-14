@@ -35,9 +35,8 @@ export class DatosRegistralesComponent implements OnInit {
   personaSearch: DatosRegistralesObject = new DatosRegistralesObject();
   prefijoBlock: boolean = false;
   fechaConstitucion: Date;
-  fechaFin: Date;
   fechaCancelacion: Date;
-  fechaRegistro: Date;
+  fechaInscripcion: Date;
   requiredContador: boolean = false;
   sociedadProfesional: Boolean;
   fichasActivas: Array<any> = [];
@@ -204,8 +203,8 @@ export class DatosRegistralesComponent implements OnInit {
 
   compruebaFechaBaja() {
     let fecha = this.transformaFecha(this.fechaConstitucion);
-    if (this.fechaFin != undefined) {
-      if (fecha > this.fechaFin) {
+    if (this.fechaCancelacion != undefined) {
+      if (fecha > this.fechaCancelacion) {
         this.fechaBajaCorrecta = false;
       } else {
         this.fechaBajaCorrecta = true;
@@ -257,15 +256,15 @@ export class DatosRegistralesComponent implements OnInit {
         data => {
           this.personaSearch = JSON.parse(data["body"]);
           this.body = this.personaSearch.datosRegistralesItems[0];
-
+          console.log(this.body)
           if (this.body == undefined) {
             this.body = new DatosRegistralesItem();
           } else {
             this.body.idPersona = this.idPersonaEditar;
             this.fechaConstitucion = this.body.fechaConstitucion;
-            this.fechaFin = this.body.fechaFin;
+            this.fechaCancelacion = this.body.fechaCancelacion;
             this.fechaBaja = this.body.fechaBaja;
-            this.fechaRegistro = this.body.fechaRegistro;
+            this.fechaInscripcion = this.body.fechaInscripcion;
           }
           if (this.body.sociedadProfesional == "1") {
             this.sociedadProfesional = true;
@@ -378,11 +377,11 @@ export class DatosRegistralesComponent implements OnInit {
         this.fechaConstitucion
       );
     }
-    if (this.fechaFin != undefined) {
-      this.body.fechaFin = this.transformaFecha(this.fechaFin);
+    if (this.fechaCancelacion != undefined) {
+      this.body.fechaCancelacion = this.transformaFecha(this.fechaCancelacion);
     }
-    if (this.fechaRegistro != undefined) {
-      this.body.fechaRegistro = this.transformaFecha(this.fechaRegistro);
+    if (this.fechaInscripcion != undefined) {
+      this.body.fechaInscripcion = this.transformaFecha(this.fechaInscripcion);
     }
     if (this.fechaBaja != undefined) {
       this.body.fechaBaja = this.transformaFecha(this.fechaBaja);
@@ -504,9 +503,9 @@ export class DatosRegistralesComponent implements OnInit {
 
 
   comprobarValidacion() {
-    if (!this.desactivadoGuardar() && this.body.identificadorRegistroProvincial != undefined &&
-      !this.onlySpaces(this.body.identificadorRegistroProvincial)
-      //  && this.body.fechaRegistro != undefined
+    if (!this.desactivadoGuardar() && this.body.identificacionReg != undefined &&
+      !this.onlySpaces(this.body.identificacionReg)
+      //  && this.body.fechaInscripcion != undefined
     ) {
       this.isValidate = true;
     } else {
