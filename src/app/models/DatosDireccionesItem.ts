@@ -27,5 +27,5 @@ export class DatosDireccionesItem {
   otraProvincia: String;
   motivo: String;
   poblacionExtranjera: String;
-  constructor() {}
+  constructor() { }
 }
