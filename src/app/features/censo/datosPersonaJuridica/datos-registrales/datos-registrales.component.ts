@@ -262,9 +262,9 @@ export class DatosRegistralesComponent implements OnInit {
           } else {
             this.body.idPersona = this.idPersonaEditar;
             this.fechaConstitucion = this.body.fechaConstitucion;
-            this.fechaCancelacion = this.body.fechaCancelacion;
-            this.fechaBaja = this.body.fechaBaja;
-            this.fechaInscripcion = this.body.fechaInscripcion;
+            this.fechaCancelacion = new Date(this.body.fechaCancelacion);
+            this.fechaBaja = this.body.fechaCancelacion;
+            this.fechaInscripcion = new Date(this.body.fechaInscripcion);
           }
           if (this.body.sociedadProfesional == "1") {
             this.sociedadProfesional = true;
@@ -349,6 +349,7 @@ export class DatosRegistralesComponent implements OnInit {
         !this.onlySpaces(this.body.contadorNumsspp)) ||
       !this.requiredContador
     ) {
+      debugger;
       this.sigaServices.post("datosRegistrales_update", this.body).subscribe(
         data => {
           this.showSuccess();
@@ -422,8 +423,8 @@ export class DatosRegistralesComponent implements OnInit {
       !this.onlySpaces(this.body.resena) &&
       this.fechaConstitucion != undefined &&
       this.compruebaFechaConstitucion() &&
-      this.compruebaFechaBaja() && this.body.numeroRegistro != undefined &&
-      !this.onlySpaces(this.body.numeroRegistro)
+      this.compruebaFechaBaja() && this.body.numRegistro != undefined &&
+      !this.onlySpaces(this.body.numRegistro)
     ) {
       if (this.camposDesactivados == true) {
         return true;
