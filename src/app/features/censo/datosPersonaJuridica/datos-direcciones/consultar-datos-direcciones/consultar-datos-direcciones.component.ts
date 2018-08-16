@@ -112,6 +112,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         let dateSplit2 = dateSplit[2].split(" ");
         let d = dateSplit2[0];
         this.fechaModificacion = d + "/" + m + "/" + a;
+        this.showInfo('Fecha de modificación:' + this.fechaModificacion);
       }
       this.onChangePais();
 
@@ -547,6 +548,12 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({ severity: "success", summary: "", detail: mensaje });
   }
+
+  showInfo(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+  }
+
 
   backTo() {
     this.location.back();

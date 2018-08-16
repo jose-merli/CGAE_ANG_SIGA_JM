@@ -1,4 +1,4 @@
-<p-growl [(value)]="msgs"></p-growl>
+<p-growl [(value)]="msgs" life="30000"></p-growl>
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -45,14 +45,13 @@
               <div class="form-group col-lg-12 col-md-12">
                 <label style="font-weight: bold;">Datos Dirección</label>
               </div>
-
-              <div class="form-group col-lg-6 col-md-6">
+              <!-- <div class="form-group col-lg-6 col-md-6">
                 <label>Fecha Modificación</label>
                 <br>
-                <!-- <input [(ngModel)]="fechaModificacion" dateFormat="dd/mm/yy" [disabled]="!isEditable" [style]="{ 'position': 'relative', 'z-index': '1000' }"
-                  type="text" class="form-control" pInputText> -->
+                <input [(ngModel)]="fechaModificacion" dateFormat="dd/mm/yy" [disabled]="!isEditable" [style]="{ 'position': 'relative', 'z-index': '1000' }"
+                  type="text" class="form-control" pInputText>
                 <label>{{fechaModificacion}}</label>
-              </div>
+              </div> -->
               <div class="form-group col-lg-12 col-md-12">
                 <label>Dirección</label>
                 <input [(ngModel)]="body.domicilio" type="text" class="form-control" [(disabled)]="historyDisable" [maxLength]="99" pInputText>
