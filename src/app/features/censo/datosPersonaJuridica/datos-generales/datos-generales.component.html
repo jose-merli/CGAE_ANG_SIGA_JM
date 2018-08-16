@@ -51,19 +51,29 @@
 
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div class="row">
-        <div class="bloque col-lg-3 col-md-3">
-          <div class="form-row">
-            <div class="form-group col-lg-8 col-md-8">
-              <div class="img-colegiado my-2">
-                <i *ngIf="!existeImagen" class="fa fa-user" style="font-size:130px;color:grey"></i>
-                <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="imagenCentrada">
-              </div>
-            </div>
-            <p-fileUpload [(disabled)]="camposDesactivados" #fubauto name="file" mode="basic" (change)="uploadImage($event)" auto="true"
-              styleClass="pi pi-pencil" chooseLabel="Selecciona una fotografía"></p-fileUpload>
+        <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
+          <div class="img-colegiado text-center my-0 mx-auto">
+            <i *ngIf="!existeImagen" class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
+            <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="imagenCentrada">
+            <p-fileUpload #fubauto chooseLabel="" class="edit my-0 mx-auto main-button" mode="basic" name="file" auto="true" accept="image/*"
+              (change)="uploadImage($event)" auto="true">
+            </p-fileUpload>
           </div>
         </div>
-        <div class="bloque col-lg-5 col-md-5">
+        <!-- <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
+          <div class="form-row">
+            <div class="form-group col-lg-8 col-md-8 my-0 mx-auto">
+              <div class="text-center img-colegiado my-0 mx-auto">
+                <i *ngIf="!existeImagen" class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
+                <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="imagenCentrada">
+                <p-fileUpload [(disabled)]="camposDesactivados" #fubauto name="file" mode="basic" (change)="uploadImage($event)" auto="true"
+                  styleClass="pi pi-pencil" class="main-button my-0 mx-auto edit" chooseLabel=""></p-fileUpload>
+              </div>
+            </div>
+
+          </div>
+        </div> -->
+        <div class="bloque col-lg-6 col-md-5 col-sm-5">
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.fichaCliente.literal.identificacion" | translate}} (*)</label>
@@ -108,22 +118,22 @@
         <!-- INFORMACIÓN ADICIONAL -->
         <div class="bloque col-lg-4 col-md-4">
           <div class="form-row">
-            <div class="form-group col-lg-8 col-md-8">
+            <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.fichaCliente.situacion.idiomaPref" | translate}} (*)</label>
               <p-dropdown class="select-form" [options]="idiomas" [(disabled)]="camposDesactivados" [(ngModel)]="idiomaPreferenciaSociedad"
                 [filter]="true" (ngModelChange)="onChangeForm()" filterBy="label"></p-dropdown>
             </div>
-            <div class="form-group col-lg-8 col-md-8">
+            <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
               <input type="text " class="form-control " [(disabled)]="camposDesactivados" [(ngModel)]="body.cuentaContable" [maxLength]="20"
                 (ngModelChange)="onChangeForm()" pInputText>
             </div>
-            <div class="form-group col-lg-8 col-md-8">
+            <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.general.literal.anotaciones" | translate}}: </label>
               <textarea pInputTextarea [(ngModel)]="body.anotaciones" [(disabled)]="camposDesactivados" (ngModelChange)="onChangeForm()"
                 [maxLength]="2000"></textarea>
             </div>
-            <div class="form-group col-lg-8 col-md-8">
+            <div class="form-group col-lg-12 col-md-12">
               <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}}</label>
               <br>
               <p-multiSelect [defaultLabel]="textFilter" [(disabled)]="camposDesactivados" styleClass="widthAll" [(ngModel)]='etiquetasPersonaJuridicaSelecionados'

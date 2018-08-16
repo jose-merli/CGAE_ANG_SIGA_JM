@@ -186,7 +186,7 @@ export class DatosGenerales implements OnInit {
       n => {
         this.comboIdentificacion = n.combooItems;
       },
-      error => {}
+      error => { }
     );
 
     this.comboTipo.push(this.tipoPersonaJuridica);
@@ -357,6 +357,7 @@ export class DatosGenerales implements OnInit {
         this.body.idioma = this.idiomaPreferenciaSociedad;
         this.body.tipo = this.selectedTipo.value;
         this.body.motivo = "registro creado";
+
         this.sigaServices
           .post("busquedaPerJuridica_create", this.body)
           .subscribe(
@@ -405,7 +406,6 @@ export class DatosGenerales implements OnInit {
       if (this.file != undefined) {
         this.guardarImagen(this.body.idPersona);
       }
-
       this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
         data => {
           this.cerrarAuditoria();
