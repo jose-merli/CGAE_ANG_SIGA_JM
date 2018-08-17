@@ -201,6 +201,8 @@ export class DatosRegistralesComponent implements OnInit {
     }
   }
 
+
+
   compruebaFechaBaja() {
     let fecha = this.transformaFecha(this.fechaConstitucion);
     if (this.fechaCancelacion != undefined) {
@@ -422,6 +424,9 @@ export class DatosRegistralesComponent implements OnInit {
       !this.onlySpaces(this.body.resena) &&
       this.fechaConstitucion != undefined &&
       this.compruebaFechaConstitucion() &&
+      this.fechaInscripcion != undefined &&
+      this.body.identificacionReg != undefined &&
+      !this.onlySpaces(this.body.identificacionReg) &&
       this.compruebaFechaBaja() && this.body.numeroRegistro != undefined &&
       !this.onlySpaces(this.body.numeroRegistro)
     ) {
@@ -515,6 +520,7 @@ export class DatosRegistralesComponent implements OnInit {
     this.cardService.newCardValidator$.subscribe(data => {
       this.camposObligatorios = data.map(result => {
         result.cardRegistral = this.isValidate;
+
         return result;
 
       })
