@@ -48,7 +48,7 @@
                         <label>Fecha Nacimiento</label>
                         <p-calendar [formControl]="formBusqueda.controls['fechaNacimiento'] " [keepInvalid]="true" selectionMode="range" [locale]="es"
                             icon="far fa-calendar-alt" showIcon="true"></p-calendar>
-                        <small class="input-error" *ngIf="!formBusqueda.controls['fechaNacimiento'].pristine && formBusqueda.controls['fechaNacimiento'].value==null ">
+                            <small class="input-error" *ngIf="!formBusqueda.controls['fechaNacimiento'].pristine && formBusqueda.controls['fechaNacimiento'].value==null ">
                             El formato correcto es d/m/y - d/m/y</small>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
@@ -97,7 +97,7 @@
         <div class="card-footer">
             <div class="text-right main-button ">
                 <button pButton type="button " icon="fa fa-eraser " iconPos="left" label="Limpiar"></button>
-                <button (click)="isBuscar()" pButton type="button " icon="fa fa-search " iconPos="left" label="Buscar"></button>
+                <!--<button (click)="isBuscar()" pButton type="button " icon="fa fa-search " iconPos="left" label="Buscar"></button>-->
             </div>
         </div>
     </div>
