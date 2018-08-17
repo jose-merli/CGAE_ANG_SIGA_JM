@@ -231,7 +231,8 @@ const appRoutes: Routes = [
 
   {
     path: "busquedaNoColegiados",
-    component: BusquedaNoColegiadosComponent,
+    //component: BusquedaNoColegiadosComponent,
+    component: SearchNoColegiadosComponent,
     canActivate: [AuthGuard]
   },
   {
