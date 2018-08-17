@@ -67,9 +67,9 @@ export class DatosRegistralesComponent implements OnInit {
   actividadesDisponibles: any[];
   fecha;
   fechaCorrecta: boolean;
-  fechaBajaCorrecta: boolean;
+  fechaFinCorrecta: boolean;
   fechaConst: Date;
-  fechaBaja: Date;
+  fechaFin: Date;
   fechaReg: Date;
   fechaCanc: Date;
   contadorNoCorrecto: boolean;
@@ -201,15 +201,13 @@ export class DatosRegistralesComponent implements OnInit {
     }
   }
 
-
-
-  compruebaFechaBaja() {
+  compruebaFechaFin() {
     let fecha = this.transformaFecha(this.fechaConstitucion);
-    if (this.fechaCancelacion != undefined) {
-      if (fecha > this.fechaCancelacion) {
-        this.fechaBajaCorrecta = false;
+    if (this.fechaFin != undefined) {
+      if (fecha > this.fechaFin) {
+        this.fechaFinCorrecta = false;
       } else {
-        this.fechaBajaCorrecta = true;
+        this.fechaFinCorrecta = true;
       }
     }
     if (this.compruebaFechaConstitucion()) {
@@ -265,7 +263,7 @@ export class DatosRegistralesComponent implements OnInit {
             this.body.idPersona = this.idPersonaEditar;
             this.fechaConstitucion = this.body.fechaConstitucion;
             this.fechaCancelacion = new Date(this.body.fechaCancelacion);
-            this.fechaBaja = this.body.fechaCancelacion;
+            this.fechaFin = this.body.fechaFin;
             this.fechaInscripcion = new Date(this.body.fechaInscripcion);
           }
           if (this.body.sociedadProfesional == "1") {
@@ -386,8 +384,8 @@ export class DatosRegistralesComponent implements OnInit {
     if (this.fechaInscripcion != undefined) {
       this.body.fechaInscripcion = this.transformaFecha(this.fechaInscripcion);
     }
-    if (this.fechaBaja != undefined) {
-      this.body.fechaBaja = this.transformaFecha(this.fechaBaja);
+    if (this.fechaFin != undefined) {
+      this.body.fechaFin = this.transformaFecha(this.fechaFin);
     }
   }
 
@@ -425,11 +423,7 @@ export class DatosRegistralesComponent implements OnInit {
       !this.onlySpaces(this.body.resena) &&
       this.fechaConstitucion != undefined &&
       this.compruebaFechaConstitucion() &&
-      this.fechaInscripcion != undefined &&
-      this.body.identificacionReg != undefined &&
-      !this.onlySpaces(this.body.identificacionReg) &&
-      this.compruebaFechaBaja() &&
-      this.body.numRegistro != undefined &&
+      this.compruebaFechaFin() && this.body.numRegistro != undefined &&
       !this.onlySpaces(this.body.numRegistro)
     ) {
       if (this.camposDesactivados == true) {
@@ -522,7 +516,6 @@ export class DatosRegistralesComponent implements OnInit {
     this.cardService.newCardValidator$.subscribe(data => {
       this.camposObligatorios = data.map(result => {
         result.cardRegistral = this.isValidate;
-
         return result;
 
       })
