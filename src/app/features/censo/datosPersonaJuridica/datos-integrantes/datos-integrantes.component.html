@@ -40,7 +40,7 @@
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}" class="pull-right"></i>
           </div>
           <div *ngIf="!only && searchIntegrantes.datosIntegrantesItem.length == 0" class="d-flex justify-content-between">
-            <label>{{"censo.datosDireccion.literal.numero.integrantes" | translate}}:
+            <label>{{"censo.datosDireccion.literal.numero.integrantes" | translate}}
               <span>{{ searchIntegrantes.datosIntegrantesItem.length }}</span>
             </label>
 
