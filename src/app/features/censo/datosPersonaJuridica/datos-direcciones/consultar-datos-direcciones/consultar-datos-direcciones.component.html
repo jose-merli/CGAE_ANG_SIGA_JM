@@ -42,16 +42,18 @@
 
             <div class="form-row">
 
-              <div class="form-group col-lg-12 col-md-12">
+              <div class="form-group col-lg-12 col-md-1 input-ayuda">
                 <label style="font-weight: bold;">Datos Dirección</label>
+                <span class="ml-2 ayuda-btn" [pTooltip]="tooltipFechaMod" tooltipPosition="top">
+                  <i class="fa fa-info"></i>
+                </span>
               </div>
-              <div class="form-group col-lg-12 col-md-12">
-                <label>Fecha Modificación: {{fechaModificacion}}</label>
-                <!-- <br>
-                <input [(ngModel)]="fechaModificacion" dateFormat="dd/mm/yy" [disabled]="!isEditable" [style]="{ 'position': 'relative', 'z-index': '1000' }"
-                  type="text" class="form-control" pInputText>
-                <label>{{fechaModificacion}}</label> -->
-              </div>
+              <!-- <div class="form-group col-lg-4 col-md-4 ">
+                <br>
+                  <input [(ngModel)]="fechaModificacion" dateFormat="dd/mm/yy" [disabled]="!isEditable" [style]="{ 'position': 'relative', 'z-index': '1000' }"
+                    type="text" class="form-control" pInputText>
+                  <label>{{fechaModificacion}}</label>
+              </div> -->
               <div class="form-group col-lg-12 col-md-12">
                 <label>Dirección</label>
                 <input [(ngModel)]="body.domicilio" type="text" class="form-control" [(disabled)]="historyDisable" [maxLength]="99" pInputText>

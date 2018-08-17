@@ -11,6 +11,7 @@ import { DatosDireccionesObject } from "./../../../../../../app/models/DatosDire
 import { DatosDireccionesCodigoPostalItem } from "./../../../../../../app/models/DatosDireccionesCodigoPostalItem";
 import { DatosDireccionesCodigoPostalObject } from "./../../../../../../app/models/DatosDireccionesCodigoPostalObject";
 
+
 @Component({
   selector: "app-consultar-datos-direcciones",
   templateUrl: "./consultar-datos-direcciones.component.html",
@@ -55,6 +56,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   showGuardarAuditoria: boolean = false;
   ocultarMotivo: boolean = undefined;
   resultadosPoblaciones: any;
+  tooltipFechaMod: any;
 
   constructor(
     private location: Location,
@@ -112,6 +114,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         let dateSplit2 = dateSplit[2].split(" ");
         let d = dateSplit2[0];
         this.fechaModificacion = d + "/" + m + "/" + a;
+        this.tooltipFechaMod = "Fecha Modificación" + this.fechaModificacion;
         // this.showInfo('Fecha de modificación:' + this.fechaModificacion);
       }
       this.onChangePais();

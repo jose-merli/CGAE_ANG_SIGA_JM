@@ -70,7 +70,7 @@ export class DetalleIntegranteComponent implements OnInit {
   @ViewChild("table") table;
   selectedDatos;
 
-  constructor(private sigaServices: SigaServices, private router: Router) {}
+  constructor(private sigaServices: SigaServices, private router: Router) { }
 
   ngOnInit() {
     if (sessionStorage.getItem("historicoInt") != null) {
@@ -81,6 +81,8 @@ export class DetalleIntegranteComponent implements OnInit {
 
     sessionStorage.setItem("editarIntegrante", "true");
     this.body = JSON.parse(sessionStorage.getItem("integrante"));
+
+    console.log(this.body)
     if (
       sessionStorage.getItem("nIntegrante") != null ||
       sessionStorage.getItem("nIntegrante") != undefined
@@ -148,6 +150,7 @@ export class DetalleIntegranteComponent implements OnInit {
     this.sigaServices.get("integrantes_tipoColegio").subscribe(
       n => {
         this.colegiosArray = n.combooItems;
+        console.log(this.colegiosArray)
       },
       err => {
         console.log(err);
@@ -219,6 +222,7 @@ export class DetalleIntegranteComponent implements OnInit {
 
     ir = JSON.parse(sessionStorage.getItem("nIntegrante"));
     this.body.completo = ir[0].completo;
+
     if (ir[0].completo) {
       this.todoDisable();
       this.ajustarPantallaParaAsignar();
@@ -305,7 +309,12 @@ export class DetalleIntegranteComponent implements OnInit {
     this.isDisabledApellidos2 = false;
     this.isDisabledTipoColegio = false;
     this.isDisabledProvincia = false;
-    this.isDisabledNumColegio = true;
+
+    if (this.body.idTipoColegio == '41' || this.body.idTipoColegio == '1') {
+      this.isDisabledNumColegio = true;
+    } else {
+      this.isDisabledNumColegio = false;
+    }
   }
 
   ajustarPantallaParaAsignar() {
@@ -315,7 +324,12 @@ export class DetalleIntegranteComponent implements OnInit {
     this.isDisabledApellidos2 = true;
     this.isDisabledTipoColegio = false;
     this.isDisabledProvincia = false;
-    this.isDisabledNumColegio = true;
+
+    if (this.body.idTipoColegio == '41' || this.body.idTipoColegio == '1') {
+      this.isDisabledNumColegio = true;
+    } else {
+      this.isDisabledNumColegio = false;
+    }
   }
 
   todoDisable() {
@@ -325,7 +339,11 @@ export class DetalleIntegranteComponent implements OnInit {
     this.isDisabledApellidos2 = true;
     this.isDisabledTipoColegio = true;
     this.isDisabledProvincia = true;
-    this.isDisabledNumColegio = true;
+    if (this.body.idTipoColegio == '41' || this.body.idTipoColegio == '1') {
+      this.isDisabledNumColegio = true;
+    } else {
+      this.isDisabledNumColegio = false;
+    }
   }
 
   abrirFicha(key) {
@@ -358,6 +376,7 @@ export class DetalleIntegranteComponent implements OnInit {
       .postPaginado("busquedaPerJuridica_history", "?numPagina=1", this.body)
       .subscribe(
         data => {
+
           this.progressSpinner = false;
           this.searchIntegrantes = JSON.parse(data["body"]);
           this.datos = this.searchIntegrantes.datosIntegrantesItem;
@@ -367,7 +386,7 @@ export class DetalleIntegranteComponent implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {}
+        () => { }
       );
   }
 
@@ -713,6 +732,7 @@ export class DetalleIntegranteComponent implements OnInit {
         this.body.idTipoColegio != undefined &&
         this.body.idTipoColegio != null
       ) {
+
         newIntegrante.idTipoColegio = this.body.idTipoColegio;
       } else {
         newIntegrante.idTipoColegio = "";

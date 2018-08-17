@@ -665,6 +665,22 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   border-left-color: $blue3;
 }
 
+.ui-tooltip .ui-tooltip-text {
+  white-space: pre-line !important;
+}
+
+.ui-tooltip-text.ui-shadow.ui-corner-all {
+  background-color: white;
+}
+
+.ui-tooltip {
+  max-width: 80%;
+  box-shadow: none;
+  .ui-tooltip-text {
+    font-size: 0.8rem;
+  }
+}
+
 .far {
   font-weight: 400 !important;
 }
