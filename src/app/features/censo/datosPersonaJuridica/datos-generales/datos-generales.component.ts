@@ -249,6 +249,7 @@ export class DatosGenerales implements OnInit {
         n => {
           // coger etiquetas de una persona juridica
           this.etiquetasPersonaJuridica = JSON.parse(n["body"]).combooItems;
+          console.log(this.etiquetasPersonaJuridica)
           // en cada busqueda vaciamos el vector para añadir las nuevas etiquetas
           this.etiquetasPersonaJuridicaSelecionados = [];
           this.etiquetasPersonaJuridica.forEach((value: any, index: number) => {

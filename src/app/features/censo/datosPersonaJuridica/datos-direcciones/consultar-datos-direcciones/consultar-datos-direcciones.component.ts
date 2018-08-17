@@ -112,7 +112,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         let dateSplit2 = dateSplit[2].split(" ");
         let d = dateSplit2[0];
         this.fechaModificacion = d + "/" + m + "/" + a;
-        this.showInfo('Fecha de modificación:' + this.fechaModificacion);
+        // this.showInfo('Fecha de modificación:' + this.fechaModificacion);
       }
       this.onChangePais();
 
