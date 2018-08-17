@@ -15,7 +15,7 @@ export class DatosRegistralesItem {
   fechaInscripcion: Date;
   fechaBaja: Date;
   identificacionReg: String;
-  numeroRegistro: String;
+  numRegistro: String;
   combooItems: ComboItem[];
   sociedadProfesional: String;
   constructor() { }
