@@ -29,5 +29,6 @@ export class DatosIntegrantesItem {
   idInstitucionIntegrante: String;
   tipo: String;
   completo: boolean = false;
-  constructor() {}
+  socio: boolean = false;
+  constructor() { }
 }
