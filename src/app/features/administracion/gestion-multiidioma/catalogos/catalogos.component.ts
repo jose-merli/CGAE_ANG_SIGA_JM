@@ -16,7 +16,7 @@ import { MultiidiomaCatalogoSearchDto } from "../../../../models/MultiidiomaCata
 import { MultiidiomaCatalogoUpdateDto } from "../../../../models/MultiidiomaCatalogoUpdateDto";
 import { MultiidiomaCatalogoItem } from "../../../../models/MultiidiomaCatalogoItem";
 import { ControlAccesoDto } from "../../../../../app/models/ControlAccesoDto";
-
+import { Router } from "@angular/router";
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -62,7 +62,8 @@ export class Catalogos extends SigaWrapper implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private router: Router
   ) {
     super(USER_VALIDATIONS);
   }
@@ -135,12 +136,12 @@ export class Catalogos extends SigaWrapper implements OnInit {
       {
         field: "descripcionBusqueda",
         header:
-          "administracion.multidioma.etiquetas.literal.descripcionInstitucion"
+        "administracion.multidioma.etiquetas.literal.descripcionInstitucion"
       },
       {
         field: "descripcionTraduccion",
         header:
-          "administracion.multidioma.etiquetas.literal.descripcionIdiomaSeleccionado"
+        "administracion.multidioma.etiquetas.literal.descripcionIdiomaSeleccionado"
       }
     ];
 
@@ -177,17 +178,17 @@ export class Catalogos extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("catalogos_search", "?numPagina=1", this.bodySearch)
       .subscribe(
-        data => {
-          console.log(data);
-          this.searchParametros = JSON.parse(data["body"]);
-          this.datosTraduccion = this.searchParametros.multiidiomaCatalogoItem;
-          this.progressSpinner = false;
-          this.buscarSeleccionado = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        }
+      data => {
+        console.log(data);
+        this.searchParametros = JSON.parse(data["body"]);
+        this.datosTraduccion = this.searchParametros.multiidiomaCatalogoItem;
+        this.progressSpinner = false;
+        this.buscarSeleccionado = true;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      }
       );
   }
   datos(event) {
@@ -218,8 +219,12 @@ export class Catalogos extends SigaWrapper implements OnInit {
       () => {
         if (this.derechoAcceso == 3) {
           this.editar = true;
-        } else {
+        } else if (this.derechoAcceso == 2) {
           this.editar = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
         }
       }
     );

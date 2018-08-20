@@ -23,6 +23,7 @@ import { CatalogoDeleteRequestDto } from "./../../../../app/models/CatalogoDelet
 import { CatalogoMaestroItem } from "./../../../../app/models/CatalogoMaestroItem";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { ComboItem } from "./../../../../app/models/ComboItem";
+import { Router } from "@angular/router";
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -111,7 +112,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private router: Router
   ) {
     super(USER_VALIDATIONS);
     this.formBusqueda = this.formBuilder.group({});
@@ -375,8 +377,12 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       () => {
         if (this.derechoAcceso == 3) {
           this.activacionEditar = true;
-        } else {
+        } else if (this.derechoAcceso == 2) {
           this.activacionEditar = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
         }
       }
     );
@@ -591,21 +597,21 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("maestros_search", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          console.log(data);
+      data => {
+        console.log(data);
 
-          this.searchCatalogo = JSON.parse(data["body"]);
-          this.datosEdit = this.searchCatalogo.catalogoMaestroItem;
-          this.datosHist = this.searchCatalogo.catalogoMaestroItem;
-        },
-        err => {
-          console.log(err);
-        },
-        () => {
-          this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
-            value.editar = false;
-          });
-        }
+        this.searchCatalogo = JSON.parse(data["body"]);
+        this.datosEdit = this.searchCatalogo.catalogoMaestroItem;
+        this.datosHist = this.searchCatalogo.catalogoMaestroItem;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
+          value.editar = false;
+        });
+      }
       );
     this.numSelected = 0;
   }
@@ -726,9 +732,9 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
             severity: "success",
             summary: "Correcto",
             detail:
-              selectedDatos.length +
-              " " +
-              this.translateService.instant("messages.deleted.selected.success")
+            selectedDatos.length +
+            " " +
+            this.translateService.instant("messages.deleted.selected.success")
           });
         }
       },

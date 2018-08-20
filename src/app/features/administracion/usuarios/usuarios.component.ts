@@ -224,37 +224,37 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices
       .postPaginado("usuarios_search", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          console.log(data);
-          this.searchUser = JSON.parse(data["body"]);
-          this.datosActivos = this.searchUser.usuarioItem;
-          this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-        },
-        () => {
-          this.body.activo = "S";
-          this.sigaServices
-            .postPaginado("usuarios_search", "?numPagina=1", this.body)
-            .subscribe(
-              data => {
-                console.log(data);
-                this.progressSpinner = false;
-                this.searchUser = JSON.parse(data["body"]);
-                for (let i in this.searchUser.usuarioItem) {
-                  this.datosActivos.push(this.searchUser.usuarioItem[i]);
-                }
-                this.datos = this.datosActivos;
-                this.table.paginator = true;
-                this.table.reset();
-              },
-              err => {
-                console.log(err);
-                this.progressSpinner = false;
-              }
-            );
-        }
+      data => {
+        console.log(data);
+        this.searchUser = JSON.parse(data["body"]);
+        this.datosActivos = this.searchUser.usuarioItem;
+        this.table.paginator = true;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.body.activo = "S";
+        this.sigaServices
+          .postPaginado("usuarios_search", "?numPagina=1", this.body)
+          .subscribe(
+          data => {
+            console.log(data);
+            this.progressSpinner = false;
+            this.searchUser = JSON.parse(data["body"]);
+            for (let i in this.searchUser.usuarioItem) {
+              this.datosActivos.push(this.searchUser.usuarioItem[i]);
+            }
+            this.datos = this.datosActivos;
+            this.table.paginator = true;
+            this.table.reset();
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          }
+          );
+      }
       );
 
     this.historico = true;
@@ -280,8 +280,12 @@ para poder filtrar el dato con o sin estos caracteres*/
       () => {
         if (this.derechoAcceso == 3) {
           this.activacionEditar = true;
-        } else {
+        } else if (this.derechoAcceso == 2) {
           this.activacionEditar = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
         }
       }
     );
@@ -388,24 +392,24 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices
       .postPaginado("usuarios_search", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-          this.searchUser = JSON.parse(data["body"]);
-          this.datos = this.searchUser.usuarioItem;
-          this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          if (sessionStorage.getItem("first") != null) {
-            let first = JSON.parse(sessionStorage.getItem("first")) as number;
-            this.table.first = first;
-            sessionStorage.removeItem("first");
-          }
+      data => {
+        console.log(data);
+        this.progressSpinner = false;
+        this.searchUser = JSON.parse(data["body"]);
+        this.datos = this.searchUser.usuarioItem;
+        this.table.paginator = true;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {
+        if (sessionStorage.getItem("first") != null) {
+          let first = JSON.parse(sessionStorage.getItem("first")) as number;
+          this.table.first = first;
+          sessionStorage.removeItem("first");
         }
+      }
       );
   }
   paginate(event) {

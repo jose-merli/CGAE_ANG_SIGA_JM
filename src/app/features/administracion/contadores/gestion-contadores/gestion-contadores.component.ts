@@ -83,8 +83,12 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
       () => {
         if (this.derechoAcceso == 3) {
           this.editar = true;
-        } else {
+        } else if (this.derechoAcceso == 2) {
           this.editar = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
         }
       }
     );

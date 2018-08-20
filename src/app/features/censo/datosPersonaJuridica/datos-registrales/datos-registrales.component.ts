@@ -15,6 +15,7 @@ import { DatosPersonaJuridicaComponent } from "../../datosPersonaJuridica/datosP
 import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
 import { ComboItem } from "../../../../models/ComboItem";
 import { debug } from "util";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-datos-registrales",
@@ -102,7 +103,8 @@ export class DatosRegistralesComponent implements OnInit {
     private translateService: TranslateService,
     private sigaServices: SigaServices,
     private cardService: cardService,
-    private fichasPosibles: DatosPersonaJuridicaComponent
+    private fichasPosibles: DatosPersonaJuridicaComponent,
+    private router: Router
   ) {
     this.formBusqueda = this.formBuilder.group({
       cif: null
@@ -186,7 +188,9 @@ export class DatosRegistralesComponent implements OnInit {
             this.camposDesactivados = true;
           }
         } else {
-          this.activacionEditar = false;
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
         }
       }
     );
@@ -233,15 +237,15 @@ export class DatosRegistralesComponent implements OnInit {
     this.sigaServices
       .post("datosRegistrales_actividadesPersona", this.body)
       .subscribe(
-        data => {
-          this.selectActividad = JSON.parse(data["body"]).combooItems;
-          // seleccionadas.forEach((value: any, index: number) => {
-          //   this.selectActividad.push(value.value);
-          // });
-        },
-        err => {
-          console.log(err);
-        }
+      data => {
+        this.selectActividad = JSON.parse(data["body"]).combooItems;
+        // seleccionadas.forEach((value: any, index: number) => {
+        //   this.selectActividad.push(value.value);
+        // });
+      },
+      err => {
+        console.log(err);
+      }
       );
   }
 
@@ -253,29 +257,29 @@ export class DatosRegistralesComponent implements OnInit {
     this.sigaServices
       .postPaginado("datosRegistrales_search", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          this.personaSearch = JSON.parse(data["body"]);
-          this.body = this.personaSearch.datosRegistralesItems[0];
-          console.log(this.body)
-          if (this.body == undefined) {
-            this.body = new DatosRegistralesItem();
-          } else {
-            this.body.idPersona = this.idPersonaEditar;
-            this.fechaConstitucion = this.body.fechaConstitucion;
-            this.fechaCancelacion = new Date(this.body.fechaCancelacion);
-            this.fechaFin = this.body.fechaFin;
-            this.fechaInscripcion = new Date(this.body.fechaInscripcion);
-          }
-          if (this.body.sociedadProfesional == "1") {
-            this.sociedadProfesional = true;
-          } else if (this.body.sociedadProfesional == "0") {
-            this.sociedadProfesional = false;
-          }
-
-        },
-        err => {
-          console.log(err);
+      data => {
+        this.personaSearch = JSON.parse(data["body"]);
+        this.body = this.personaSearch.datosRegistralesItems[0];
+        console.log(this.body)
+        if (this.body == undefined) {
+          this.body = new DatosRegistralesItem();
+        } else {
+          this.body.idPersona = this.idPersonaEditar;
+          this.fechaConstitucion = this.body.fechaConstitucion;
+          this.fechaCancelacion = new Date(this.body.fechaCancelacion);
+          this.fechaFin = this.body.fechaFin;
+          this.fechaInscripcion = new Date(this.body.fechaInscripcion);
         }
+        if (this.body.sociedadProfesional == "1") {
+          this.sociedadProfesional = true;
+        } else if (this.body.sociedadProfesional == "0") {
+          this.sociedadProfesional = false;
+        }
+
+      },
+      err => {
+        console.log(err);
+      }
       );
   }
 

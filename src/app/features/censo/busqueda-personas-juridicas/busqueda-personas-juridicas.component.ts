@@ -183,8 +183,12 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       () => {
         if (this.derechoAcceso == 3) {
           this.activacionEditar = true;
-        } else {
+        } else if (this.derechoAcceso == 2) {
           this.activacionEditar = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
         }
       }
     );
@@ -308,18 +312,18 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("busquedaPerJuridica_history", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.personaSearch = JSON.parse(data["body"]);
-          this.datos = this.personaSearch.busquedaJuridicaItems;
-          this.convertirStringADate(this.datos);
-          this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {}
+      data => {
+        this.progressSpinner = false;
+        this.personaSearch = JSON.parse(data["body"]);
+        this.datos = this.personaSearch.busquedaJuridicaItems;
+        this.convertirStringADate(this.datos);
+        this.table.paginator = true;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => { }
       );
   }
 
@@ -360,17 +364,17 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("busquedaPerJuridica_search", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.personaSearch = JSON.parse(data["body"]);
-          this.datos = this.personaSearch.busquedaJuridicaItems;
-          this.convertirStringADate(this.datos);
-          this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        }
+      data => {
+        this.progressSpinner = false;
+        this.personaSearch = JSON.parse(data["body"]);
+        this.datos = this.personaSearch.busquedaJuridicaItems;
+        this.convertirStringADate(this.datos);
+        this.table.paginator = true;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      }
       );
   }
 

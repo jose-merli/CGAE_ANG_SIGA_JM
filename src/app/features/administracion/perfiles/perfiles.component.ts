@@ -231,8 +231,12 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       () => {
         if (this.derechoAcceso == 3) {
           this.activacionEditar = true;
-        } else {
+        } else if (this.derechoAcceso == 2) {
           this.activacionEditar = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
         }
       }
     );

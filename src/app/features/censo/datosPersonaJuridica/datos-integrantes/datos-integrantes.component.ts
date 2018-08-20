@@ -5,6 +5,7 @@ import { Message } from "primeng/components/common/api";
 import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
 import { DatosIntegrantesItem } from "../../../../models/DatosIntegrantesItem";
 import { DatosIntegrantesObject } from "../../../../models/DatosIntegrantesObject";
+import { TranslateService } from "../../../../commons/translate/translation.service";
 import { DatosPersonaJuridicaComponent } from "../../datosPersonaJuridica/datosPersonaJuridica.component";
 import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
@@ -71,7 +72,8 @@ export class DatosIntegrantesComponent implements OnInit {
     private sigaServices: SigaServices,
     private router: Router,
     private fichasPosibles: DatosPersonaJuridicaComponent,
-    private cardService: cardService
+    private cardService: cardService,
+    private translateService: TranslateService,
   ) { }
 
   ngOnInit() {
@@ -217,7 +219,9 @@ export class DatosIntegrantesComponent implements OnInit {
             this.camposDesactivados = true;
           }
         } else {
-          this.activacionEditar = false;
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
         }
       }
     );
@@ -237,24 +241,24 @@ export class DatosIntegrantesComponent implements OnInit {
       this.sigaServices
         .postPaginado("integrantes_search", "?numPagina=1", searchObject)
         .subscribe(
-          data => {
-            this.progressSpinner = false;
-            this.searchIntegrantes = JSON.parse(data["body"]);
-            this.datos = this.searchIntegrantes.datosIntegrantesItem;
-            console.log(this.datos)
-            this.comprobarValidacion();
-            if (this.datos.length == 1) {
-              this.body = this.datos[0];
-              this.only = true;
-            } else {
-              this.only = false;
-            }
-          },
-          err => {
-            console.log(err);
-            this.progressSpinner = false;
-          },
-          () => { }
+        data => {
+          this.progressSpinner = false;
+          this.searchIntegrantes = JSON.parse(data["body"]);
+          this.datos = this.searchIntegrantes.datosIntegrantesItem;
+          console.log(this.datos)
+          this.comprobarValidacion();
+          if (this.datos.length == 1) {
+            this.body = this.datos[0];
+            this.only = true;
+          } else {
+            this.only = false;
+          }
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => { }
         );
     }
   }
@@ -322,17 +326,17 @@ export class DatosIntegrantesComponent implements OnInit {
     this.sigaServices
       .postPaginado("integrantes_search", "?numPagina=1", searchObject)
       .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.searchIntegrantes = JSON.parse(data["body"]);
-          this.datos = this.searchIntegrantes.datosIntegrantesItem;
-          this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => { }
+      data => {
+        this.progressSpinner = false;
+        this.searchIntegrantes = JSON.parse(data["body"]);
+        this.datos = this.searchIntegrantes.datosIntegrantesItem;
+        this.table.paginator = true;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => { }
       );
   }
 
@@ -346,16 +350,16 @@ export class DatosIntegrantesComponent implements OnInit {
     this.sigaServices
       .post("integrantes_delete", deleteIntegrantes.datosIntegrantesItem)
       .subscribe(
-        data => { },
-        err => {
-          console.log(err);
-        },
-        () => {
-          this.editar = false;
-          this.dniCorrecto = null;
-          this.disabledRadio = false;
-          this.search();
-        }
+      data => { },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.editar = false;
+        this.dniCorrecto = null;
+        this.disabledRadio = false;
+        this.search();
+      }
       );
   }
   goToDetails(selectedDatos) {
