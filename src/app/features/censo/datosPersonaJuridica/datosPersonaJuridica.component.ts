@@ -26,7 +26,7 @@ export class DatosPersonaJuridicaComponent implements OnInit {
     public sigaServices: OldSigaServices,
     private cardService: cardService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fichasPosibles = [

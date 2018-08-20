@@ -88,6 +88,10 @@ export class DatosGenerales implements OnInit {
 
   ocultarMotivo: boolean = undefined;
 
+  contadorNoCorrecto: boolean = false;
+
+  isValidate: boolean;
+
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
 
@@ -141,8 +145,12 @@ export class DatosGenerales implements OnInit {
   ngOnInit() {
     // dentro de este metodo se llama a continueOnInit()
     this.checkAcceso();
+
+
+
   }
   continueOnInit() {
+
     this.busquedaIdioma();
 
     if (sessionStorage.getItem("historicoSociedad") != null) {
@@ -240,6 +248,7 @@ export class DatosGenerales implements OnInit {
         this.continueOnInit();
       }
     );
+
   }
 
   obtenerEtiquetasPersonaJuridicaConcreta() {
@@ -292,9 +301,11 @@ export class DatosGenerales implements OnInit {
           if (this.personaSearch.personaJuridicaItems.length != 0) {
             this.body = this.personaSearch.personaJuridicaItems[0];
             this.selectedTipo = this.body.tipo;
+
           } else {
             this.body = new DatosGeneralesItem();
           }
+          this.comprobarValidacion();
         },
         error => {
           this.personaSearch = JSON.parse(error["error"]);
@@ -407,26 +418,37 @@ export class DatosGenerales implements OnInit {
       if (this.file != undefined) {
         this.guardarImagen(this.body.idPersona);
       }
-      this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
-        data => {
-          this.cerrarAuditoria();
-          this.cargarImagen(this.body.idPersona);
-          this.showSuccess();
-          this.progressSpinner = false;
-        },
-        error => {
-          this.personaSearch = JSON.parse(error["error"]);
-          this.showFail(JSON.stringify(this.personaSearch.error.description));
-          console.log(error);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.datosGeneralesSearch();
-          this.obtenerEtiquetasPersonaJuridicaConcreta();
-          this.progressSpinner = false;
-        }
-      );
+
+
+      if ((this.body.contadorNumsspp != undefined &&
+        !this.onlySpaces(this.body.contadorNumsspp))) {
+
+
+        this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
+          data => {
+            this.cerrarAuditoria();
+            this.cargarImagen(this.body.idPersona);
+            this.showSuccess();
+            this.progressSpinner = false;
+          },
+          error => {
+            this.personaSearch = JSON.parse(error["error"]);
+            this.showFail(JSON.stringify(this.personaSearch.error.description));
+            console.log(error);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.datosGeneralesSearch();
+            this.obtenerEtiquetasPersonaJuridicaConcreta();
+            this.progressSpinner = false;
+          }
+        );
+      }
+
+
     }
+
+
   }
 
   restablecer() {
@@ -563,6 +585,7 @@ export class DatosGenerales implements OnInit {
         this.selectedTipo = this.comboIdentificacion[0];
         this.identificacionValida = false;
       }
+
     }
 
     if (
@@ -589,6 +612,7 @@ export class DatosGenerales implements OnInit {
       ) {
         if (this.body.nif.length == 9 && this.isValidCIF(this.body.nif)) {
           this.showGuardar = true;
+
         }
       } else {
         this.showGuardar = true;
@@ -596,6 +620,9 @@ export class DatosGenerales implements OnInit {
     } else {
       this.showGuardar = false;
     }
+
+    this.comprobarValidacion();
+
   }
 
   comprobarAuditoria() {
@@ -706,5 +733,37 @@ export class DatosGenerales implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+
+  compruebaRegistro() {
+    var a = this.body.contadorNumsspp;
+    if (
+      Number(this.body.contadorNumsspp) ||
+      this.onlySpaces(this.body.contadorNumsspp)
+    ) {
+      this.contadorNoCorrecto = false;
+      return true;
+    } else {
+      this.contadorNoCorrecto = true;
+      return false;
+    }
+  }
+
+  comprobarValidacion() {
+    if (this.body.nif.length == 9 && this.isValidCIF(this.body.nif) && !this.onlySpaces(this.body.denominacion)
+      && (this.body.fechaConstitucion != undefined || this.body.fechaConstitucion != null)
+      && this.body.denominacion != "" && this.body.denominacion != undefined && !this.onlySpaces(this.body.denominacion)) {
+      this.isValidate = true;
+    } else {
+      this.isValidate = false;
+    }
+    this.cardService.newCardValidator$.subscribe(data => {
+      data.map(result => {
+        result.cardGeneral = this.isValidate;
+      })
+      console.log(data)
+    });
+
   }
 }

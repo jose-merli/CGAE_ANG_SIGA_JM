@@ -65,12 +65,14 @@ export class DatosIntegrantesComponent implements OnInit {
   @ViewChild("table") table;
   selectedDatos;
 
+  isValidate: boolean;
+
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
     private fichasPosibles: DatosPersonaJuridicaComponent,
     private cardService: cardService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.checkAcceso();
@@ -239,6 +241,8 @@ export class DatosIntegrantesComponent implements OnInit {
             this.progressSpinner = false;
             this.searchIntegrantes = JSON.parse(data["body"]);
             this.datos = this.searchIntegrantes.datosIntegrantesItem;
+            console.log(this.datos)
+            this.comprobarValidacion();
             if (this.datos.length == 1) {
               this.body = this.datos[0];
               this.only = true;
@@ -250,7 +254,7 @@ export class DatosIntegrantesComponent implements OnInit {
             console.log(err);
             this.progressSpinner = false;
           },
-          () => {}
+          () => { }
         );
     }
   }
@@ -328,7 +332,7 @@ export class DatosIntegrantesComponent implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {}
+        () => { }
       );
   }
 
@@ -342,7 +346,7 @@ export class DatosIntegrantesComponent implements OnInit {
     this.sigaServices
       .post("integrantes_delete", deleteIntegrantes.datosIntegrantesItem)
       .subscribe(
-        data => {},
+        data => { },
         err => {
           console.log(err);
         },
@@ -368,5 +372,47 @@ export class DatosIntegrantesComponent implements OnInit {
       this.numSelected = this.selectedDatos.length;
       this.dniCorrecto = null;
     }
+  }
+
+
+  comprobarValidacion() {
+    //Falta añadir condiciones de profesión (tipo colegio), cargo y socio
+    for (let dato of this.datos) {
+      if (dato.personaJuridica == "0") {
+        if ((dato.nifCif != null || dato.nifCif != undefined)
+          && (dato.nombre != null || dato.nombre != undefined) && (dato.apellidos1 != null || dato.apellidos1 != undefined)) {
+          if ((dato.cargo != null || dato.cargo != undefined)) {
+            this.isValidate = true;
+            if ((dato.descripcionCargo != null || dato.descripcionCargo != undefined) && (dato.fechaCargo != null || dato.fechaCargo != undefined)) {
+              this.isValidate = true;
+            } else {
+              this.isValidate = false;
+            }
+          } else {
+            this.isValidate = true;
+          }
+        } else {
+          this.isValidate = false;
+        }
+      } else {
+        if ((dato.nifCif != null || dato.nifCif != undefined)
+          && (dato.nombre != null || dato.nombre != undefined)
+          // && (dato.cargo != null || dato.cargo != undefined)
+          // && (dato.descripcionCargo != null || dato.descripcionCargo != undefined) && (dato.fechaCargo != null || dato.fechaCargo != undefined)
+        ) {
+          this.isValidate = true;
+        } else {
+          this.isValidate = false;
+        }
+      }
+    }
+
+    this.cardService.newCardValidator$.subscribe(data => {
+      data.map(result => {
+        result.cardIntegrantes = this.isValidate;
+      })
+      console.log(data)
+    });
+
   }
 }

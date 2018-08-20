@@ -19,5 +19,8 @@ export class DatosGeneralesItem {
   idLenguajeSociedad: String;
   motivo: String;
   error: Error;
-  constructor() {}
+  prefijoNumsspp: String;
+  sufijoNumsspp: String;
+  contadorNumsspp: String;
+  constructor() { }
 }

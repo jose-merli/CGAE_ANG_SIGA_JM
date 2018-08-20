@@ -387,6 +387,7 @@ export class DetalleIntegranteComponent implements OnInit {
           this.progressSpinner = false;
         },
         () => { }
+
       );
   }
 
@@ -465,7 +466,7 @@ export class DetalleIntegranteComponent implements OnInit {
       updateIntegrante.idComponente = this.body.idComponente;
     }
 
-    if (isParticipacionNumerico) {
+    if (isParticipacionNumerico && this.body.capitalSocial <= '100') {
       this.sigaServices
         .postPaginado("integrantes_update", "?numPagina=1", updateIntegrante)
         .subscribe(
@@ -481,7 +482,8 @@ export class DetalleIntegranteComponent implements OnInit {
           }
         );
     } else {
-      this.showFail("El campo participación debe ser numérico");
+      this.showFail("el campo Participación debe ser numérico y menor o igual que 100");
+
     }
   }
 

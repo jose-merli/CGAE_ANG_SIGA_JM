@@ -64,12 +64,14 @@ export class DatosDireccionesComponent implements OnInit {
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
+  isValidate: boolean;
+
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
     private fichasPosibles: DatosPersonaJuridicaComponent,
     private cardService: cardService
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (sessionStorage.getItem("editarDirecciones") == "true") {
@@ -82,7 +84,7 @@ export class DatosDireccionesComponent implements OnInit {
     this.cols = [
       {
         field: "tipoDireccion",
-        header: "censo.datosDireccion.literal.tipo.direccion"
+        header: "censo.datosDireccion.literal.direccion"
       },
       {
         field: "domicilioLista",
@@ -256,12 +258,14 @@ export class DatosDireccionesComponent implements OnInit {
             } else {
               this.only = false;
             }
+
+            this.comprobarValidacion();
           },
           err => {
             console.log(err);
             this.progressSpinner = false;
           },
-          () => {}
+          () => { }
         );
     } else {
       // Sociedad no existente,
@@ -330,7 +334,7 @@ export class DatosDireccionesComponent implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {}
+        () => { }
       );
   }
 
@@ -345,7 +349,7 @@ export class DatosDireccionesComponent implements OnInit {
     });
 
     this.sigaServices.post("direcciones_remove", datosDelete).subscribe(
-      data => {},
+      data => { },
       err => {
         console.log(err);
       },
@@ -377,5 +381,30 @@ export class DatosDireccionesComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  comprobarValidacion() {
+    let tipoDireccion = this.datos.map(dato => {
+      return dato.idTipoDireccionList;
+    })
+
+    if (tipoDireccion.indexOf('3') != -1) {
+      for (let dato of this.datos) {
+        if (dato.idTipoDireccionList == "3" && (dato.codigoPostal != null || dato.codigoPostal != undefined)
+          && (dato.nombreProvincia != null || dato.nombreProvincia != undefined) && (dato.nombrePoblacion != null || dato.nombrePoblacion != undefined)) {
+          this.isValidate = true;
+        }
+      }
+    } else {
+      this.isValidate = false;
+    }
+
+    this.cardService.newCardValidator$.subscribe(data => {
+      data.map(result => {
+        result.cardDirecciones = this.isValidate;
+      })
+      console.log(data)
+    });
+
   }
 }

@@ -56,6 +56,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   showGuardarAuditoria: boolean = false;
   ocultarMotivo: boolean = undefined;
   resultadosPoblaciones: any;
+
   tooltipFechaMod: any;
 
   constructor(
@@ -149,6 +150,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
           console.log(err);
         }
       );
+
+
   }
 
   getDatosContactos() {
@@ -172,9 +175,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       },
       error => { },
       () => {
-        if (this.body.idProvincia != null) {
-          // this.getComboPoblacion();
-        }
+
       }
     );
   }
@@ -566,6 +567,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
 
     if (e.target.value && e.target.value !== null) {
       if (e.target.value.length >= 3) {
+
         this.getComboPoblacion();
         this.resultadosPoblaciones = "No hay resultados";
       } else {
@@ -577,4 +579,5 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.resultadosPoblaciones = "No hay resultados";
     }
   }
+
 }

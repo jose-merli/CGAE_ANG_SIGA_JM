@@ -43,11 +43,13 @@
     <div *ngIf="esFichaActiva('registrales')" class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque col-lg-6 col-md-6">
+          <label class="title-ficha mb-2 ml-1">
+            <strong>Datos Registro Civil</strong>
+          </label>
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.objSocial" | translate}} (*)</label>
-              <input [(disabled)]="camposDesactivados" [(ngModel)]="body.objetoSocial" type="text" class="form-control" onchange="desactivadoGuardar()"
-                pInputText>
+              <input [(disabled)]="camposDesactivados" [(ngModel)]="body.objetoSocial" type="text" class="form-control" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.Resenia" | translate}} (*)</label>
@@ -90,8 +92,17 @@
         </div>
 
         <div class="bloque col-lg-6 col-md-6">
+          <label class="title-ficha mb-2 ml-1">
+            <strong>Datos Registro Mercantil</strong>
+          </label>
+          <!-- nuevo nº registro -->
+
           <div class="form-row">
-            <div class="form-row col-lg-6 col-md-6">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{"censo.consultaDatosRegistrales.literal.numRegistro" | translate}} (*)</label>
+              <input [(ngModel)]="body.numRegistro" type="text" class="form-control" pInputText>
+            </div>
+            <!-- <div class="form-row p-1 col-lg-6 col-md-6">
               <div class="col-lg-12 col-md-12">
                 <label>{{"censo.consultaDatosRegistrales.literal.numRegistro" | translate}} (*)</label>
               </div>
@@ -107,27 +118,27 @@
               <div class="form-group col-lg-4 col-md-4">
                 <input [(disabled)]="camposDesactivados" [(ngModel)]="body.sufijoNumsspp" type="text" class="form-control" pInputText>
               </div>
-            </div>
+            </div> -->
 
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.consultaDatosRegistrales.literal.idRegProv" | translate}}</label>
-              <input [(disabled)]="camposDesactivados" [(ngModel)]="body.identificadorRegistroProvincial" type="text" class="form-control"
-                pInputText>
+              <label>{{"censo.consultaDatosRegistrales.literal.idRegProv" | translate}}*</label>
+              <input [(disabled)]="camposDesactivados" [(ngModel)]="body.identificacionReg" type="text" class="form-control" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
-              <label>{{"censo.consultaDatosRegistrales.literal.fechaRegistro" | translate}}</label>
-              <p-calendar [(disabled)]="camposDesactivados" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaRegistro"
+              <label>{{"censo.consultaDatosRegistrales.literal.fechaRegistro" | translate}}*</label>
+              <p-calendar [(disabled)]="camposDesactivados" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaInscripcion"
                 [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatosRegistrales.literal.fechaCancelacion" | translate}}</label>
-              <p-calendar [(disabled)]="camposDesactivados" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaFin"
+              <p-calendar [(disabled)]="camposDesactivados" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaCancelacion"
                 [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
             </div>
+
             <div class="form-check col-lg-6 col-md-6">
               <br>
               <label class="form-group-label">{{"censo.busquedaClientes.noColegiados.sociedadesProfesionales" | translate}}</label> &nbsp;&nbsp;
-              <p-checkbox [(disabled)]="camposDesactivados" [(ngModel)]='sociedadProfesional' binary="true" (ngModelChange)="onChangeSociedad()"></p-checkbox>
+              <p-checkbox [(ngModel)]='sociedadProfesional' binary="true" (onChange)="onChangeSociedadProfesional()"></p-checkbox>
 
             </div>
           </div>

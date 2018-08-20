@@ -168,6 +168,7 @@ export class DatosRetencionesComponent implements OnInit {
     this.sortF = "fechaFin";
     this.sortO = 1;
     this.table.sortField = this.sortF;
+
     // this.table.sortMultiple();
   }
 
@@ -229,7 +230,7 @@ export class DatosRetencionesComponent implements OnInit {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
   isValidIBAN(iban: String): boolean {
@@ -438,7 +439,7 @@ export class DatosRetencionesComponent implements OnInit {
         datosDelete
       )
       .subscribe(
-        data => {},
+        data => { },
         err => {
           console.log(err);
         },
