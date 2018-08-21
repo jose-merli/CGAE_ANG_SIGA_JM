@@ -435,8 +435,8 @@ export class DatosGenerales implements OnInit {
       }
 
 
-      if ((this.body.contadorNumsspp != undefined &&
-        !this.onlySpaces(this.body.contadorNumsspp))) {
+      // if ((this.body.contadorNumsspp != undefined &&
+      //   !this.onlySpaces(this.body.contadorNumsspp))) {
 
 
         this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
@@ -458,7 +458,7 @@ export class DatosGenerales implements OnInit {
             this.progressSpinner = false;
           }
         );
-      }
+      //}
 
 
     }
