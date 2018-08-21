@@ -72,7 +72,8 @@ export class PermisosComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private sigaServices: SigaServices,
-    private router: Router
+    private router: Router,
+    private translateService: TranslateService
   ) {
     this.formPermisos = this.formBuilder.group({
       grupo: null
@@ -146,7 +147,8 @@ para poder filtrar el dato con o sin estos caracteres*/
         } else if (this.derechoAcceso == 2) {
           this.activacionEditar = false;
         } else {
-          sessionStorage.setItem("descError", "El usuario no tiene acceso a esta parte de la aplicación");
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
           this.router.navigate(["/errorAcceso"]);
         }
       }

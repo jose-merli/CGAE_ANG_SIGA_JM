@@ -34,7 +34,7 @@ export class JwtInterceptor implements HttpInterceptor {
                     let codError = error.status;
 
                     sessionStorage.setItem("codError", codError);
-
+                    sessionStorage.setItem("descError", "Imposible validar el certificado");
                     this.router.navigate(["/errorAcceso"]);
                 }
             }

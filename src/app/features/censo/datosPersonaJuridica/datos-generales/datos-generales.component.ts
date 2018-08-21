@@ -14,7 +14,7 @@ import { DatosGeneralesObject } from "./../../../../../app/models/DatosGenerales
 import { Subscription } from "rxjs/Subscription";
 import { cardService } from "./../../../../_services/cardSearch.service";
 import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
-
+import { Router } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
@@ -126,7 +126,8 @@ export class DatosGenerales implements OnInit {
     private location: Location,
     private cardService: cardService,
     private sigaServices: SigaServices,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private router: Router
   ) {
     this.formBusqueda = this.formBuilder.group({
       cif: null
@@ -243,7 +244,9 @@ export class DatosGenerales implements OnInit {
             this.camposDesactivados = true;
           }
         } else {
-          this.activacionEditar = false;
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
         }
         this.continueOnInit();
       }

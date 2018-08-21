@@ -12,6 +12,7 @@ import { DatosPersonaJuridicaComponent } from "../../datosPersonaJuridica/datosP
 import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
 
+import { TranslateService } from "../../../../commons/translate/translation.service";
 @Component({
   selector: "app-datos-direcciones",
   templateUrl: "./datos-direcciones.component.html",
@@ -69,6 +70,7 @@ export class DatosDireccionesComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
+    private translateService: TranslateService,
     private fichasPosibles: DatosPersonaJuridicaComponent,
     private cardService: cardService
   ) { }
@@ -193,7 +195,9 @@ export class DatosDireccionesComponent implements OnInit {
             this.camposDesactivados = true;
           }
         } else {
-          this.activacionEditar = false;
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
         }
       }
     );
@@ -248,24 +252,24 @@ export class DatosDireccionesComponent implements OnInit {
       this.sigaServices
         .postPaginado("direcciones_search", "?numPagina=1", searchObject)
         .subscribe(
-          data => {
-            this.progressSpinner = false;
-            this.searchDirecciones = JSON.parse(data["body"]);
-            this.datos = this.searchDirecciones.datosDireccionesItem;
-            if (this.datos.length == 1) {
-              this.body = this.datos[0];
-              this.only = true;
-            } else {
-              this.only = false;
-            }
+        data => {
+          this.progressSpinner = false;
+          this.searchDirecciones = JSON.parse(data["body"]);
+          this.datos = this.searchDirecciones.datosDireccionesItem;
+          if (this.datos.length == 1) {
+            this.body = this.datos[0];
+            this.only = true;
+          } else {
+            this.only = false;
+          }
 
-            this.comprobarValidacion();
-          },
-          err => {
-            console.log(err);
-            this.progressSpinner = false;
-          },
-          () => { }
+          this.comprobarValidacion();
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => { }
         );
     } else {
       // Sociedad no existente,
@@ -324,17 +328,17 @@ export class DatosDireccionesComponent implements OnInit {
     this.sigaServices
       .postPaginado("direcciones_search", "?numPagina=1", searchObject)
       .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.searchDirecciones = JSON.parse(data["body"]);
-          this.datos = this.searchDirecciones.datosDireccionesItem;
-          this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => { }
+      data => {
+        this.progressSpinner = false;
+        this.searchDirecciones = JSON.parse(data["body"]);
+        this.datos = this.searchDirecciones.datosDireccionesItem;
+        this.table.paginator = true;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => { }
       );
   }
 
