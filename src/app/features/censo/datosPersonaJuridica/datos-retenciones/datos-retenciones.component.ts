@@ -82,6 +82,9 @@ export class DatosRetencionesComponent implements OnInit {
 
   suscripcionBusquedaNuevo: Subscription;
   activacionEditar: boolean;
+  ultimaFechaInicio: any;
+  dateParts: any;
+
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
   constructor(
     private formBuilder: FormBuilder,
@@ -184,7 +187,7 @@ export class DatosRetencionesComponent implements OnInit {
           value.fechaInicio == this.retencionActiveAnt.fechaInicio
         ) {
           this.datos[key].fechaFin = this.datepipe.transform(
-            new Date(event - 86400000),
+            new Date(event + 86400000),
             "dd/MM/yyyy"
           );
 
@@ -317,7 +320,7 @@ export class DatosRetencionesComponent implements OnInit {
         if (value.fechaFin == null || value.fechaFin == undefined) {
           this.retencionActiveAnt = this.datos[key];
           this.datos[key].fechaFin = this.datepipe.transform(
-            new Date(valur2 - 86400000),
+            new Date(valur2 + 86400000),
             "dd/MM/yyyy"
           );
         }
@@ -362,6 +365,8 @@ export class DatosRetencionesComponent implements OnInit {
         );
       }
     });
+
+
 
     this.sigaServices
       .postPaginado(
@@ -489,9 +494,9 @@ export class DatosRetencionesComponent implements OnInit {
                 (value: any, key: number) => {
                   if (
                     this.searchRetenciones.retencionesItemList[key].fechaFin ==
-                      null ||
+                    null ||
                     this.searchRetenciones.retencionesItemList[key].fechaFin ==
-                      undefined
+                    undefined
                   ) {
                     unorderedDate = JSON.stringify(
                       this.searchRetenciones.retencionesItemList[key]
@@ -548,6 +553,8 @@ export class DatosRetencionesComponent implements OnInit {
             } else {
               this.datos = [];
             }
+
+            this.getUltimaFechaInicio()
           },
           err => {
             console.log(err);
@@ -659,4 +666,14 @@ export class DatosRetencionesComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+
+
+  getUltimaFechaInicio() {
+    if (this.datos.length > 0) {
+      this.dateParts = this.datos[0].fechaInicio.split("/");
+      let dia = parseInt(this.dateParts[0]) + 1;
+      this.ultimaFechaInicio = new Date(this.dateParts[2], this.dateParts[1] - 1, dia);
+    }
+  }
+
 }
