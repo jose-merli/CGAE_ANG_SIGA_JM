@@ -86,7 +86,7 @@ export class DatosDireccionesComponent implements OnInit {
     this.cols = [
       {
         field: "tipoDireccion",
-        header: "censo.datosDireccion.literal.direccion"
+        header: "censo.datosDireccion.literal.tipo.direccion"
       },
       {
         field: "domicilioLista",
@@ -252,24 +252,24 @@ export class DatosDireccionesComponent implements OnInit {
       this.sigaServices
         .postPaginado("direcciones_search", "?numPagina=1", searchObject)
         .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.searchDirecciones = JSON.parse(data["body"]);
-          this.datos = this.searchDirecciones.datosDireccionesItem;
-          if (this.datos.length == 1) {
-            this.body = this.datos[0];
-            this.only = true;
-          } else {
-            this.only = false;
-          }
+          data => {
+            this.progressSpinner = false;
+            this.searchDirecciones = JSON.parse(data["body"]);
+            this.datos = this.searchDirecciones.datosDireccionesItem;
+            if (this.datos.length == 1) {
+              this.body = this.datos[0];
+              this.only = true;
+            } else {
+              this.only = false;
+            }
 
-          this.comprobarValidacion();
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => { }
+            this.comprobarValidacion();
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => { }
         );
     } else {
       // Sociedad no existente,
@@ -328,17 +328,17 @@ export class DatosDireccionesComponent implements OnInit {
     this.sigaServices
       .postPaginado("direcciones_search", "?numPagina=1", searchObject)
       .subscribe(
-      data => {
-        this.progressSpinner = false;
-        this.searchDirecciones = JSON.parse(data["body"]);
-        this.datos = this.searchDirecciones.datosDireccionesItem;
-        this.table.paginator = true;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      },
-      () => { }
+        data => {
+          this.progressSpinner = false;
+          this.searchDirecciones = JSON.parse(data["body"]);
+          this.datos = this.searchDirecciones.datosDireccionesItem;
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => { }
       );
   }
 

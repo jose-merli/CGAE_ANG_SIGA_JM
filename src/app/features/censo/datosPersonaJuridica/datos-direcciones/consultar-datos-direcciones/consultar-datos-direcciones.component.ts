@@ -10,6 +10,7 @@ import { DatosDireccionesObject } from "./../../../../../../app/models/DatosDire
 
 import { DatosDireccionesCodigoPostalItem } from "./../../../../../../app/models/DatosDireccionesCodigoPostalItem";
 import { DatosDireccionesCodigoPostalObject } from "./../../../../../../app/models/DatosDireccionesCodigoPostalObject";
+import { TranslateService } from "../../../../../commons/translate";
 
 
 @Component({
@@ -62,7 +63,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   constructor(
     private location: Location,
     private sigaServices: SigaServices,
-    public datepipe: DatePipe
+    public datepipe: DatePipe,
+    private translateService: TranslateService
   ) { }
 
   ngOnInit() {
@@ -115,7 +117,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         let dateSplit2 = dateSplit[2].split(" ");
         let d = dateSplit2[0];
         this.fechaModificacion = d + "/" + m + "/" + a;
-        this.tooltipFechaMod = "Fecha Modificación" + this.fechaModificacion;
+        this.tooltipFechaMod = this.translateService.instant("censo.datosDireccion.literal.fechaModificacion") + ': ' + this.fechaModificacion;
         // this.showInfo('Fecha de modificación:' + this.fechaModificacion);
       }
       this.onChangePais();
