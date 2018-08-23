@@ -961,6 +961,19 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
    }
 
 
+  .info-limit{
+    background:$secondary-color;
+    color: white;
+    padding: .5em .75em;
+    margin-bottom: 2px;
+    text-align: center;
+    i{
+      font-size: 1.5rem;
+    }    
+}
+
+
+
 /**RESPONSIVE**/
 
 @media (max-width: 55em) {

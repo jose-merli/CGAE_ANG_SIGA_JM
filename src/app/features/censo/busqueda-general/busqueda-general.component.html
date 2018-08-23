@@ -6,6 +6,17 @@
             <i class="fa fa-angle-right"> </i> {{ 'menu.censo.buscarSociedades' | translate}}
             <i class="pl-1 fa fa-angle-right"></i>{{"censo.busquedaClientes.Colegiados.titulo" | translate}}</p>
     </div>
+    <div class="info-limit d-flex justify-content-center align-items-center mb-1">
+        <i class="fa fa-info-circle pr-2"></i>
+        <div class="d-inline-block">
+            <div>
+                <span class="pr-2 text-left">Busque la
+                    <span *ngIf="persona=='f'">persona</span>
+                    <span *ngIf="persona=='j'">sociedad</span> que quiere añadir. En caso de no existir en el sistema, podrá editar los datos introducidos
+                    en la siguiente pantalla de creación de no colegiado.</span>
+            </div>
+        </div>
+    </div>
     <div class="card">
         <div class="card-body">
             <div class="form-row">

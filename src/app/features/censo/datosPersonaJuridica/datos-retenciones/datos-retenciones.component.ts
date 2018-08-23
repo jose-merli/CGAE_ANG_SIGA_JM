@@ -319,10 +319,13 @@ export class DatosRetencionesComponent implements OnInit {
       this.datos.forEach((value: any, key: number) => {
         if (value.fechaFin == null || value.fechaFin == undefined) {
           this.retencionActiveAnt = this.datos[key];
-          this.datos[key].fechaFin = this.datepipe.transform(
-            new Date(valur2 - 86400000),
-            "dd/MM/yyyy"
-          );
+          console.log(this.datos[0].fechaInicio)
+          this.datos[key].fechaFin = this.datos[0].fechaInicio;
+
+          // this.datepipe.transform(
+          //   new Date(valur2 - 86400000),
+          //   "dd/MM/yyyy"
+          // );
         }
       });
     }
@@ -554,6 +557,7 @@ export class DatosRetencionesComponent implements OnInit {
               this.datos = [];
             }
 
+
             // this.getUltimaFechaInicio()
           },
           err => {
@@ -582,6 +586,7 @@ export class DatosRetencionesComponent implements OnInit {
     this.tiposRetenciones.forEach((value: any, key: number) => {
       if (value.value == event.value) {
         dat = value;
+        console.log(dat)
       }
     });
 
@@ -607,6 +612,9 @@ export class DatosRetencionesComponent implements OnInit {
   }
 
   irFichaColegial(id) {
+    // if (this.selectedDatos[0] == this.datos[0]) {
+    console.log(this.selectedDatos)
+    console.log(this.datos[0])
     console.log(id[0].fechaInicio);
     if (id[0].fechaFin == null && id[0].fechaInicio != "") {
       this.isVolver = false;
@@ -619,6 +627,14 @@ export class DatosRetencionesComponent implements OnInit {
     } else {
       this.isVolver = true;
     }
+    // } else {
+    //   console.log('no')
+    //   setTimeout(() => {
+    //     this.selectedDatos = [];
+    //     this.selectedDatos = [... this.selectedDatos];
+    //   }, 100);
+
+    // }
   }
 
   isSelectMultiple() {

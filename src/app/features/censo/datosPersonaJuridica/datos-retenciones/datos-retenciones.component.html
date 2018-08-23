@@ -42,11 +42,11 @@
         <div *ngIf="openFicha" class="card-body card-body-ficha">
             <div class="row">
                 <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" (onRowSelect)="irFichaColegial(selectedDatos)"
-                    dataKey="idRetencion" selectionMode="multiple" [responsive]="true" #table class="tabla-listado" [value]="datos"
-                    [sortOrder]="1" sortField="fechaFin" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" pageLinks="4"
-                    [editable]="true" [sortField]="sortF" [sortOrder]="sortO" (onSort)="changeSort($event)">
+                    selectionMode="multiple" [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1"
+                    sortField="fechaFin" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" pageLinks="4" [editable]="true"
+                    [sortField]="sortF" [sortOrder]="sortO" (onSort)="changeSort($event)">
 
-                    <p-column [sortable]="true" field="fechaInicio" filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[0].header | translate"
+                    <p-column field="fechaInicio" filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[0].header | translate"
                         [filter]="true" filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span>{{car[col.field]}} </span>
@@ -54,11 +54,10 @@
                                 (onSelect)="onChangeCalendar($event)" [minDate]="fechaMinima">
                             </p-calendar>
 
-
                         </ng-template>
 
                     </p-column>
-                    <p-column [sortable]="true" field="fechaFin" [header]="cols[1].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    <p-column field="fechaFin" [header]="cols[1].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                         filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
 
@@ -66,14 +65,14 @@
 
                         </ng-template>
                     </p-column>
-                    <p-column [sortable]="true" field="descripcionRetencion" [header]="cols[2].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    <p-column field="descripcionRetencion" [header]="cols[2].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                         filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span>{{car[col.field]}}</span>
                             <p-dropdown *ngIf="car[col.field] == '' " [(ngModel)]="newRetencion.descripcionRetencion" [options]="tiposRetenciones" (onChange)="onChangeDrop($event)"></p-dropdown>
                         </ng-template>
                     </p-column>
-                    <p-column [sortable]="true" field="porcentajeRetencion" [header]="cols[3].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    <p-column field="porcentajeRetencion" [header]="cols[3].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                         filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span>{{car[col.field]}}</span>
