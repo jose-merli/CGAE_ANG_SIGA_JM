@@ -272,6 +272,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.body.idPoblacion = "";
       this.isDisabledCodigoPostal = this.historyDisable;
       this.isDisabledPoblacion = true;
+      this.body.idPoblacion = '';
+      this.comboPoblacion = [];
     } else {
       this.disableCheck = this.historyDisable;
       this.poblacionExtranjera = false;
@@ -287,6 +289,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         this.isDisabledPoblacion = false;
       } else {
         this.isDisabledPoblacion = true;
+        this.body.idPoblacion = '';
+        this.comboPoblacion = [];
       }
     }
   }
@@ -305,6 +309,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
           } else {
             this.isDisabledPoblacion = false;
           }
+          this.body.idPoblacion = '';
+          this.comboPoblacion = [];
           // this.getComboPoblacion();
         }
         this.codigoPostalValido = true;
@@ -315,6 +321,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   }
   onChangeProvincia() {
     if (this.checkOtraProvincia == false) {
+      this.body.idPoblacion = '';
+      this.comboPoblacion = [];
       // this.getComboPoblacion();
     }
   }
@@ -590,11 +598,6 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     }
 
 
-  }
-
-  onChangePoblacion(e) {
-    console.log(e)
-    e.target.innerText = this.body.nombrePoblacion;
   }
 
 

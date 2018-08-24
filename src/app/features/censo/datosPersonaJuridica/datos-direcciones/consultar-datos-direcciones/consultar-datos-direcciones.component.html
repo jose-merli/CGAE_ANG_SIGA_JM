@@ -93,8 +93,7 @@
               <div *ngIf="!poblacionExtranjera" class="form-group col-lg-6 col-md-6">
                 <label>Población</label>
                 <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true" filterMatchMode="contains" [(disabled)]="isDisabledPoblacion"
-                  [options]="comboPoblacion" (input)="buscarPoblacion($event)" [emptyFilterMessage]="resultadosPoblaciones"
-                  (click)="onChangePoblacion($event)">
+                  [options]="comboPoblacion" (input)="buscarPoblacion($event)" [emptyFilterMessage]="resultadosPoblaciones">
                 </p-dropdown>
               </div>
 

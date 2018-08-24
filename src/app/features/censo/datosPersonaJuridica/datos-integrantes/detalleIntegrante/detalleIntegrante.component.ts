@@ -466,8 +466,9 @@ export class DetalleIntegranteComponent implements OnInit {
       updateIntegrante.idComponente = this.body.idComponente;
     }
 
+    let numParticipacion = parseInt(this.body.capitalSocial);
 
-    if (isParticipacionNumerico && this.body.capitalSocial <= '100') {
+    if (isParticipacionNumerico && numParticipacion <= 100) {
       this.sigaServices
         .postPaginado("integrantes_update", "?numPagina=1", updateIntegrante)
         .subscribe(
@@ -483,7 +484,7 @@ export class DetalleIntegranteComponent implements OnInit {
           }
         );
     } else {
-      this.showFail("el campo Participación debe ser numérico y menor o igual que 100");
+      this.showFail("El campo Participación debe ser numérico y menor o igual que 100");
 
     }
   }
@@ -615,8 +616,8 @@ export class DetalleIntegranteComponent implements OnInit {
       } else {
         newIntegrante.tipo = "";
       }
-
-      if (isParticipacionNumerico && this.body.capitalSocial <= '100') {
+      let numParticipacion = parseInt(this.body.capitalSocial);
+      if (isParticipacionNumerico && numParticipacion <= 100) {
         this.sigaServices
           .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
           .subscribe(
@@ -632,7 +633,7 @@ export class DetalleIntegranteComponent implements OnInit {
             }
           );
       } else {
-        this.showFail("el campo Participación debe ser numérico");
+        this.showFail("El campo Participación debe ser numérico y menor o igual que 100");
       }
     } else {
       if (this.body.nombre != undefined && this.body.nombre != null) {
@@ -758,8 +759,8 @@ export class DetalleIntegranteComponent implements OnInit {
       } else {
         newIntegrante.tipo = "";
       }
-
-      if (isParticipacionNumerico && this.body.capitalSocial <= '100') {
+      let numParticipacion = parseInt(this.body.capitalSocial);
+      if (isParticipacionNumerico && numParticipacion <= 100) {
         this.sigaServices
           .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
           .subscribe(
@@ -775,7 +776,7 @@ export class DetalleIntegranteComponent implements OnInit {
             }
           );
       } else {
-        this.showFail("el campo Participación debe ser numérico");
+        this.showFail("El campo Participación debe ser numérico");
       }
     }
   }
