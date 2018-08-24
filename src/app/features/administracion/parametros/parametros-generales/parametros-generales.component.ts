@@ -72,7 +72,8 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   ) {
     super(USER_VALIDATIONS);
   }
-  @ViewChild("table") table;
+  @ViewChild("table")
+  table;
   ngOnInit() {
     this.checkAcceso();
     this.sigaServices.get("parametros_modulo").subscribe(
@@ -149,7 +150,10 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
           this.activacionEditar = false;
         } else {
           sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
           this.router.navigate(["/errorAcceso"]);
         }
       }
@@ -167,21 +171,21 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("parametros_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
-        this.progressSpinner = false;
-        this.searchParametros = JSON.parse(data["body"]);
-        this.datosBuscar = this.searchParametros.parametrosItems;
-      },
-      err => {
-        this.progressSpinner = false;
-        console.log(err);
-      },
-      () => {
-        this.buscar = true;
-        this.eliminar = true;
-        this.historico = false;
-      }
+        data => {
+          console.log(data);
+          this.progressSpinner = false;
+          this.searchParametros = JSON.parse(data["body"]);
+          this.datosBuscar = this.searchParametros.parametrosItems;
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        },
+        () => {
+          this.buscar = true;
+          this.eliminar = true;
+          this.historico = false;
+        }
       );
   }
 
@@ -230,20 +234,20 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
       this.sigaServices
         .post("parametros_update", this.elementosAGuardar[i])
         .subscribe(
-        data => {
-          console.log(data);
-        },
-        err => {
-          console.log(err);
-          this.showFail();
-        },
-        () => {
-          this.elementosAGuardar = [];
-          this.isBuscar(this.selectedModulo);
-          this.table.reset();
-          this.eliminar = true;
-          this.isHabilitadoSave = false;
-        }
+          data => {
+            console.log(data);
+          },
+          err => {
+            console.log(err);
+            this.showFail();
+          },
+          () => {
+            this.elementosAGuardar = [];
+            this.isBuscar(this.selectedModulo);
+            this.table.reset();
+            this.eliminar = true;
+            this.isHabilitadoSave = false;
+          }
         );
     }
 
@@ -271,24 +275,24 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("parametros_historico", "?numPagina=1", this.bodyHistorico)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.historicoParametros = JSON.parse(data["body"]);
-        this.datosHistorico = this.historicoParametros.parametrosItems;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.buscar = false;
-        this.historico = true;
-        this.eliminar = true;
-        this.filaSelecionadaTabla = null;
-        // se eliminan los objetos que se iban a guardar
-        this.elementosAGuardar = [];
-        this.isHabilitadoSave = false;
-      }
+          this.historicoParametros = JSON.parse(data["body"]);
+          this.datosHistorico = this.historicoParametros.parametrosItems;
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.buscar = false;
+          this.historico = true;
+          this.eliminar = true;
+          this.filaSelecionadaTabla = null;
+          // se eliminan los objetos que se iban a guardar
+          this.elementosAGuardar = [];
+          this.isHabilitadoSave = false;
+        }
       );
   }
 
@@ -299,7 +303,11 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   }
 
   onRowSelect(event) {
-    if (event.data.idInstitucion != 0) {
+    console.log(event);
+    if (
+      event.idInstitucion == event.idinstitucionActual &&
+      event.posibleEliminar == "S"
+    ) {
       this.eliminar = false;
     } else this.eliminar = true;
   }
@@ -412,5 +420,5 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
 export class ComboItem {
   label: String;
   value: String;
-  constructor() { }
+  constructor() {}
 }
