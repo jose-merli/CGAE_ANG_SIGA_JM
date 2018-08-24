@@ -198,6 +198,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       .subscribe(
         n => {
           this.comboPoblacion = n.combooItems;
+
         },
         error => { },
         () => {
@@ -573,7 +574,6 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   }
 
   buscarPoblacion(e) {
-    e.target.value = this.body.nombrePoblacion;
 
     if (e.target.value && e.target.value !== null) {
       if (e.target.value.length >= 3) {
@@ -594,7 +594,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
 
   onChangePoblacion(e) {
     console.log(e)
-    e.target.value = this.body.nombrePoblacion;
+    e.target.innerText = this.body.nombrePoblacion;
   }
 
 
