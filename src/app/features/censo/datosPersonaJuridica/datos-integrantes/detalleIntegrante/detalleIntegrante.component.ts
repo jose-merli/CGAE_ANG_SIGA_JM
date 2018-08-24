@@ -466,7 +466,6 @@ export class DetalleIntegranteComponent implements OnInit {
       updateIntegrante.idComponente = this.body.idComponente;
     }
 
-    let numParticipacion = /^0*(?:[1-9][0-9]?|100)$/;
 
     if (isParticipacionNumerico && this.body.capitalSocial <= '100') {
       this.sigaServices
