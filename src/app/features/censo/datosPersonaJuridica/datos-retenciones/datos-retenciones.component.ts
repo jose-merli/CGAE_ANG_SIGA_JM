@@ -602,7 +602,7 @@ export class DatosRetencionesComponent implements OnInit {
 
     this.datos.forEach((value: any, key: number) => {
       if (
-        // value.idRetencion == this.selectedDatos[0].idRetencion 
+        value.idRetencion == this.datos[0].idRetencion &&
         event.value != ""
       ) {
         this.newRetencion.porcentajeRetencion = dat.porcentajeRetencion;
