@@ -24,7 +24,7 @@
         <div class="card-body p-0">
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" selectionMode="single" [value]="datosBuscar"
                 [editable]="true" [(selection)]="filaSelecionadaTabla" [responsive]="true" #table class="tabla-listado" [sortOrder]="1"
-                [paginator]="activarPaginacionBuscar()" paginatorPosition="both" [rows]="selectedItem" [editable]="true" (onRowSelect)="onRowSelect($event)">
+                [paginator]="activarPaginacionBuscar()" paginatorPosition="both" [rows]="selectedItem" [editable]="true" (onRowSelect)="onRowSelect(filaSelecionadaTabla)">
                 <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true"
                     filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
                     <ng-template *ngIf="col.field == 'valor'" let-dato="rowData" pTemplate="body">
