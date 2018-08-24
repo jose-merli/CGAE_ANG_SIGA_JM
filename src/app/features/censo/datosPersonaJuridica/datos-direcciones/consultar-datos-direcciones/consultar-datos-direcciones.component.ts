@@ -78,6 +78,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     this.getComboProvincia();
     this.getComboPais();
     this.getComboTipoDireccion();
+
+
+
     this.registroEditable = JSON.parse(
       sessionStorage.getItem("editarDireccion")
     );
@@ -90,6 +93,10 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("direccion"));
       this.body.idPersona = this.usuarioBody[0].idPersona;
       this.provinciaSelecionada = this.body.idProvincia;
+      console.log(this.body)
+      if (this.body.idPoblacion !== null || this.body.idPoblacion !== undefined) {
+        this.getComboPoblacion();
+      }
       this.getDatosContactos();
       if (
         this.body.idPoblacion == null ||
@@ -566,6 +573,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   }
 
   buscarPoblacion(e) {
+    e.target.value = this.body.nombrePoblacion;
 
     if (e.target.value && e.target.value !== null) {
       if (e.target.value.length >= 3) {
@@ -580,6 +588,15 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.comboPoblacion = [];
       this.resultadosPoblaciones = "No hay resultados";
     }
+
+
   }
+
+  onChangePoblacion(e) {
+    console.log(e)
+    e.target.value = this.body.nombrePoblacion;
+  }
+
+
 
 }

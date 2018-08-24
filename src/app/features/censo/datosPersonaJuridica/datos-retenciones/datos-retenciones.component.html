@@ -41,17 +41,17 @@
         <!--cuerpo datos generales-->
         <div *ngIf="openFicha" class="card-body card-body-ficha">
             <div class="row">
-                <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" (onRowSelect)="irFichaColegial(selectedDatos)"
-                    selectionMode="multiple" [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1"
-                    sortField="fechaFin" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" pageLinks="4" [editable]="true"
-                    [sortField]="sortF" [sortOrder]="sortO" (onSort)="changeSort($event)">
+                <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [responsive]="true" #table class="tabla-listado"
+                    [value]="datos" [sortOrder]="1" sortField="fechaFin" [paginator]="true" paginatorPosition="both" [rows]="selectedItem"
+                    rowHover="true" pageLinks="4" [editable]="true" [sortField]="sortF" [sortOrder]="sortO" (onSort)="changeSort($event)">
 
                     <p-column field="fechaInicio" filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[0].header | translate"
                         [filter]="true" filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span>{{car[col.field]}} </span>
                             <p-calendar *ngIf="car[col.field] == ''" [(ngModel)]="nuevafecha" dateFormat="dd/mm/yy" [utc]="true" [locale]="es" [showIcon]="true"
-                                (onSelect)="onChangeCalendar($event)" [minDate]="fechaMinima">
+                                [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" (onSelect)="onChangeCalendar($event)"
+                                [minDate]="fechaMinima">
                             </p-calendar>
 
                         </ng-template>
@@ -98,8 +98,8 @@
 
         <div *ngIf="openFicha" class="card-footer">
             <div class="text-right main-button">
-                <button (click)="volver();" [(disabled)]="isVolver" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-                <button (click)="confirmEdit();" [(disabled)]="isEditar" pButton type="button" icon="	far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                <button (click)="volver()" [(disabled)]="isVolver" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+                <button (click)="confirmEdit()" [(disabled)]="isEditar" pButton type="button" icon="	far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
                 <button (click)="confirmarBorrar()" [(disabled)]="isEliminar" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
                     label="{{'general.boton.eliminar'  | translate}}"></button>
                 <button (click)="crear()" [(disabled)]="isCrear" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>

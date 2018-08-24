@@ -53,7 +53,7 @@ export class DatosRetencionesComponent implements OnInit {
   retencionNow: DatosRetencionesItem = new DatosRetencionesItem();
   retencionActiveAnt: DatosRetencionesItem = new DatosRetencionesItem();
   newRetencion: DatosRetencionesItem = new DatosRetencionesItem();
-  nuevafecha: Date;
+  nuevafecha: any;
   searchRetenciones: DatosRetencionesObject = new DatosRetencionesObject();
   showDatosGenerales: boolean = true;
   showDatosColegiales: boolean = false;
@@ -176,9 +176,6 @@ export class DatosRetencionesComponent implements OnInit {
   }
 
   onChangeCalendar(event) {
-    console.log(new Date(event - 86400000));
-    console.log(this.datos);
-    console.log(this.table);
     this.isVolver = false;
     if (this.datos.length > 1) {
       this.datos.forEach((value: any, key: number) => {
@@ -201,15 +198,16 @@ export class DatosRetencionesComponent implements OnInit {
           //   }
           // });
 
-          if (
-            this.newRetencion.descripcionRetencion != "" &&
-            this.newRetencion.descripcionRetencion != undefined
-          ) {
-            this.isEditar = false;
-            this.isCrear = true;
-          }
         }
       });
+    }
+
+    if (
+      this.newRetencion.descripcionRetencion != "" &&
+      this.newRetencion.descripcionRetencion != undefined
+    ) {
+      this.isEditar = false;
+      this.isCrear = true;
     }
 
     let evento = { field: "fechaFin", order: 1, multisortmeta: undefined };
@@ -319,7 +317,7 @@ export class DatosRetencionesComponent implements OnInit {
       this.datos.forEach((value: any, key: number) => {
         if (value.fechaFin == null || value.fechaFin == undefined) {
           this.retencionActiveAnt = this.datos[key];
-          console.log(this.datos[0].fechaInicio)
+
           this.datos[key].fechaFin = this.datos[0].fechaInicio;
 
           // this.datepipe.transform(
@@ -345,6 +343,7 @@ export class DatosRetencionesComponent implements OnInit {
       descripcionRetencion: "",
       porcentajeRetencion: ""
     };
+
     this.datos = [dummy, ...this.datos];
 
     // this.table.reset();
@@ -362,6 +361,7 @@ export class DatosRetencionesComponent implements OnInit {
     this.isCrear = false;
     this.datos.forEach((value: any, key: number) => {
       if (value.fechaFin == null || value.fechaFin == undefined) {
+
         this.datos[key].fechaInicio = this.datepipe.transform(
           new Date(this.nuevafecha),
           "dd/MM/yyyy"
@@ -455,6 +455,9 @@ export class DatosRetencionesComponent implements OnInit {
           this.volver();
         }
       );
+
+
+
   }
 
   confirmarBorrar() {
@@ -526,7 +529,16 @@ export class DatosRetencionesComponent implements OnInit {
               this.fechaMinima = new Date(
                 this.fechaMinima.getTime() + 1000 * 60 * 60 * 24
               );
-              // this.nuevafecha = this.fechaMinima;
+              // console.log(this.nuevafecha)
+              // this.nuevafecha = this.datepipe.transform(
+              //   new Date(),
+              //   "dd/MM/yyyy"
+              // )
+            }
+            if (this.datos.length == 1) {
+              this.fechaMinima = undefined;
+              this.nuevafecha = new Date();
+              console.log(this.nuevafecha)
             }
           },
           err => {
@@ -580,19 +592,17 @@ export class DatosRetencionesComponent implements OnInit {
     }
   }
   onChangeDrop(event) {
-    console.log(event.value);
     let dat: any;
     this.newRetencion.descripcionRetencion = "";
     this.tiposRetenciones.forEach((value: any, key: number) => {
       if (value.value == event.value) {
         dat = value;
-        console.log(dat)
       }
     });
 
     this.datos.forEach((value: any, key: number) => {
       if (
-        value.idRetencion == this.selectedDatos[0].idRetencion &&
+        // value.idRetencion == this.selectedDatos[0].idRetencion 
         event.value != ""
       ) {
         this.newRetencion.porcentajeRetencion = dat.porcentajeRetencion;
@@ -612,21 +622,21 @@ export class DatosRetencionesComponent implements OnInit {
   }
 
   irFichaColegial(id) {
-    // if (this.selectedDatos[0] == this.datos[0]) {
-    console.log(this.selectedDatos)
-    console.log(this.datos[0])
-    console.log(id[0].fechaInicio);
-    if (id[0].fechaFin == null && id[0].fechaInicio != "") {
-      this.isVolver = false;
-      this.isCrear = true;
-      this.nuevafecha = id[0].fechaInicio;
-      id[0].fechaInicio = "";
-      this.newRetencion.descripcionRetencion = id[0].idRetencion;
-      // this.onChangeDrop(this.newRetencion.descripcionRetencion);
-      id[0].descripcionRetencion = "";
-    } else {
-      this.isVolver = true;
-    }
+    // // if (this.selectedDatos[0] == this.datos[0]) {
+    // console.log(this.selectedDatos)
+    // console.log(this.datos[0])
+    // console.log(id[0].fechaInicio);
+    // if (id[0].fechaFin == null && id[0].fechaInicio != "") {
+    //   this.isVolver = false;
+    //   this.isCrear = true;
+    //   this.nuevafecha = id[0].fechaInicio;
+    //   id[0].fechaInicio = "";
+    //   this.newRetencion.descripcionRetencion = id[0].idRetencion;
+    //   // this.onChangeDrop(this.newRetencion.descripcionRetencion);
+    //   id[0].descripcionRetencion = "";
+    // } else {
+    //   this.isVolver = true;
+    // }
     // } else {
     //   console.log('no')
     //   setTimeout(() => {
