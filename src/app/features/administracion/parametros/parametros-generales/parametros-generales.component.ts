@@ -51,11 +51,16 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   valorActualFila: any;
   bodyDelete: ParametroDeleteDto = new ParametroDeleteDto();
   bodyUpdate: ParametroUpdateDto = new ParametroUpdateDto();
+  mapUpdate: Map<String, ParametroUpdateDto> = new Map<
+    String,
+    ParametroUpdateDto
+  >();
   historico: boolean = false;
   msgs: Message[] = [];
   progressSpinner: boolean = false;
   isHabilitadoSave: boolean = false;
-  elementosAGuardar: ParametroUpdateDto[] = [];
+  valorParametroVacio: boolean = false;
+  parametroVacio: String;
 
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   permisos: any;
@@ -205,7 +210,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
         this.showFail();
       },
       () => {
-        this.elementosAGuardar = [];
+        this.mapUpdate.clear();
         this.isBuscar(this.selectedModulo);
         this.table.reset();
         this.eliminar = true;
@@ -230,10 +235,24 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   }
 
   isGuardar() {
-    for (let i in this.elementosAGuardar) {
-      this.sigaServices
-        .post("parametros_update", this.elementosAGuardar[i])
-        .subscribe(
+    let parametroVacio;
+    let cerrojo = false;
+
+    this.mapUpdate.forEach((value: ParametroUpdateDto, key: String) => {
+      if ((value.valor == "" || value.valor == undefined) && !cerrojo) {
+        parametroVacio = value.parametro;
+        cerrojo = true;
+      }
+    });
+
+    // si el cerrojo esta habilitado, quiere decir que hay valores vacios
+    if (cerrojo) {
+      this.showWarning(parametroVacio);
+    }
+    // si ningun valor es vacio, se actualizan
+    else {
+      this.mapUpdate.forEach((value: ParametroUpdateDto, key: String) => {
+        this.sigaServices.post("parametros_update", value).subscribe(
           data => {
             console.log(data);
           },
@@ -242,16 +261,17 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
             this.showFail();
           },
           () => {
-            this.elementosAGuardar = [];
+            this.mapUpdate.clear();
             this.isBuscar(this.selectedModulo);
             this.table.reset();
             this.eliminar = true;
             this.isHabilitadoSave = false;
           }
         );
-    }
+      });
 
-    this.showSuccessEdit();
+      this.showSuccessEdit();
+    }
   }
 
   guardar(event, dato) {
@@ -261,8 +281,10 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     this.bodyUpdate.parametro = dato.parametro;
     this.bodyUpdate.valor = event.target.value.trim();
     this.bodyUpdate.idRecurso = dato.idRecurso;
-    this.elementosAGuardar.push(this.bodyUpdate);
-    this.isHabilitadoSave = true;
+    this.mapUpdate.set(dato.parametro, this.bodyUpdate);
+
+    if (this.mapUpdate.size > 0) this.isHabilitadoSave = true;
+    else this.isHabilitadoSave = false;
   }
 
   isHistorico() {
@@ -289,8 +311,8 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
           this.historico = true;
           this.eliminar = true;
           this.filaSelecionadaTabla = null;
-          // se eliminan los objetos que se iban a guardar
-          this.elementosAGuardar = [];
+          // se borra el contenedor de objetos a actualizar
+          this.mapUpdate.clear();
           this.isHabilitadoSave = false;
         }
       );
@@ -303,7 +325,6 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   }
 
   onRowSelect(event) {
-    console.log(event);
     if (
       event.idInstitucion == event.idinstitucionActual &&
       event.posibleEliminar == "S"
@@ -394,8 +415,23 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
     });
   }
 
+  showWarning(parametro) {
+    let mensajeCompleto =
+      this.translateService.instant(
+        "administracion.parametrosGenerales.literal.faltaValor"
+      ) +
+      " " +
+      parametro;
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Error",
+      detail: mensajeCompleto
+    });
+  }
+
   isRestablecer() {
-    this.elementosAGuardar = [];
+    this.mapUpdate.clear();
     this.body = this.bodySave;
     this.isBuscar(this.selectedModulo);
     this.isHabilitadoSave = false;

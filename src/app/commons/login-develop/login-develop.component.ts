@@ -35,38 +35,41 @@ export class LoginDevelopComponent implements OnInit {
     private service: AuthenticationService,
     private sigaServices: SigaServices,
     private router: Router
-  ) { }
+  ) {}
 
-  onSubmit() { }
+  onSubmit() {}
 
   ngOnInit() {
     this.ocultar = false;
     this.progressSpinner = true;
-    this.sigaServices.getBackend("validaInstitucion").subscribe(
-      response => {
-        this.progressSpinner = false;
-        this.ocultar = true;
-      },
-      error => {
-        console.log("ERROR", error);
-        if (error.status == 403) {
-          let codError = error.status;
+    // this.sigaServices.getBackend("validaInstitucion").subscribe(
+    //   response => {
+    //     this.progressSpinner = false;
+    //     this.ocultar = true;
+    //   },
+    //   error => {
+    //     console.log("ERROR", error);
+    //     if (error.status == 403) {
+    //       let codError = error.status;
 
-          sessionStorage.setItem("codError", codError);
-          sessionStorage.setItem("descError", "Imposible validar el certificado");
-          this.router.navigate(["/errorAcceso"]);
-          this.progressSpinner = false;
-        }
-      }
-    );
+    //       sessionStorage.setItem("codError", codError);
+    //       sessionStorage.setItem("descError", "Imposible validar el certificado");
+    //       this.router.navigate(["/errorAcceso"]);
+    //       this.progressSpinner = false;
+    //     }
+    //   }
+    // );
+    this.progressSpinner = false;
     this.sigaServices.getBackend("instituciones").subscribe(n => {
       this.instituciones = n.combooItems;
 
       /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
       this.instituciones.map(e => {
-        let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-        let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+        let accents =
+          "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+        let accentsOut =
+          "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
         let i;
         let x;
         for (i = 0; i < e.label.length; i++) {
@@ -79,7 +82,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
       this.isLetrado = "N";
     });
-    this.ocultar = false;
+    this.ocultar = true;
     this.form = this.fb.group({
       tmpLoginInstitucion: new FormControl(""),
       tmpLoginPerfil: new FormControl("ADG"),
@@ -125,7 +128,10 @@ para poder filtrar el dato con o sin estos caracteres*/
           let codError = error.status;
 
           sessionStorage.setItem("codError", codError);
-          sessionStorage.setItem("descError", "Imposible validar el certificado");
+          sessionStorage.setItem(
+            "descError",
+            "Imposible validar el certificado"
+          );
           this.router.navigate(["/errorAcceso"]);
         }
       }
