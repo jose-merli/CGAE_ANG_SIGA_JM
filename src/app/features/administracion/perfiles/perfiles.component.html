@@ -38,7 +38,7 @@
                     pInputText>
                 </ng-template>
               </p-column>
-              <p-column [sortable]="true" field="rolesAsignados" [header]="'menu.administracion.perfilrol' | translate" [filter]="true"
+              <p-column [sortable]="true" field="rolesAsignados" [header]="'administracion.usuarios.literal.rol' | translate" [filter]="true"
                 filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
 
 
@@ -55,13 +55,15 @@
                 </ng-template>
 
               </p-column>
-              <p-column [sortable]="true" field="asignarRolDefecto" [header]="'administracion.usuarios.literal.roles' | translate" [filter]="true"
+
+
+              <!-- <p-column [sortable]="true" field="asignarRolDefecto" [header]="'administracion.usuarios.literal.roles' | translate" [filter]="true"
                 filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
                 <ng-template pTemplate="body" let-datoo="rowData"  >
                   <p-dropdown [options]="datoo['asignarRolDefecto']" styleClass="ui-column-filter" [style]="{'width':'100%'}" appendTo="body"
                     (onChange)="confirmarRolDefecto($event, datoo )" [placeholder]="datoo['descripcionRol'] "></p-dropdown>
                 </ng-template>
-              </p-column>
+              </p-column> -->
               <!-- 
               <p-column [style]="{'width': col.width}" *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate"
               filterPlaceholder="{{'general.boton.search' | translate}}" [filter]="true" filterMatchMode="contains">

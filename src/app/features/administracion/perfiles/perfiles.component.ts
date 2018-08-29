@@ -74,8 +74,10 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   ) {
     super(USER_VALIDATIONS);
   }
-  @ViewChild("input2") inputEl: ElementRef;
-  @ViewChild("table") table: DataTable;
+  @ViewChild("input2")
+  inputEl: ElementRef;
+  @ViewChild("table")
+  table: DataTable;
   selectedDatos;
 
   ngOnInit() {
@@ -157,32 +159,32 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("perfiles_search", "?numPagina=1", null)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.searchPerfiles = JSON.parse(data["body"]);
-        this.datos = this.searchPerfiles.usuarioGrupoItems;
-        this.buscar = true;
+          this.searchPerfiles = JSON.parse(data["body"]);
+          this.datos = this.searchPerfiles.usuarioGrupoItems;
+          this.buscar = true;
 
-        this.table.paginator = true;
-        this.sigaServices.get("usuarios_rol").subscribe(
-          n => { },
-          err => {
-            console.log(err);
+          this.table.paginator = true;
+          this.sigaServices.get("usuarios_rol").subscribe(
+            n => {},
+            err => {
+              console.log(err);
+            }
+          );
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          if (sessionStorage.getItem("first") != null) {
+            let first = JSON.parse(sessionStorage.getItem("first")) as number;
+            this.table.first = first;
+            sessionStorage.removeItem("first");
           }
-        );
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        if (sessionStorage.getItem("first") != null) {
-          let first = JSON.parse(sessionStorage.getItem("first")) as number;
-          this.table.first = first;
-          sessionStorage.removeItem("first");
+          this.progressSpinner = false;
         }
-        this.progressSpinner = false;
-      }
       );
   }
   terminarEditar() {
@@ -197,6 +199,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         this.elementosAGuardar.push(value);
       }
     });
+
     this.sigaServices.post("perfiles_update", this.elementosAGuardar).subscribe(
       data => {
         this.showSuccess();
@@ -235,7 +238,10 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
           this.activacionEditar = false;
         } else {
           sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
           this.router.navigate(["/errorAcceso"]);
         }
       }
@@ -269,6 +275,8 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     if (this.datos[0].new) {
       this.datos[0].idGrupo = this.newPerfil.idGrupo;
       this.datos[0].descripcionGrupo = this.newPerfil.descripcionGrupo;
+      this.newPerfil.rolesAsignados = this.datos[0].rolesAsignados;
+
       if (
         this.datos[0].idGrupo != null &&
         this.datos[0].idGrupo != undefined &&
@@ -387,7 +395,6 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         // this.newPerfil.descripcionGrupo = newPerfil.descripcionGrupo;
         this.datos[0].idGrupo = "";
         this.datos[0].descripcionGrupo = "";
-
         console.log(error);
       }
     );
@@ -545,9 +552,9 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
             severity: "success",
             summary: "Correcto",
             detail:
-            selectedDatos.length +
-            " " +
-            this.translateService.instant("messages.deleted.selected.success")
+              selectedDatos.length +
+              " " +
+              this.translateService.instant("messages.deleted.selected.success")
           });
         }
       },
@@ -610,20 +617,20 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("perfiles_historico", "?numPagina=1", null)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.searchPerfiles = JSON.parse(data["body"]);
-        this.datos = this.searchPerfiles.usuarioGrupoItems;
-        this.buscar = false;
-        this.progressSpinner = false;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.table.reset();
-      }
+          this.searchPerfiles = JSON.parse(data["body"]);
+          this.datos = this.searchPerfiles.usuarioGrupoItems;
+          this.buscar = false;
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.table.reset();
+        }
       );
   }
   confirmarBorrar(selectedDatos) {
