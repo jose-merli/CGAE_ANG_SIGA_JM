@@ -172,6 +172,7 @@ export class DatosRetencionesComponent implements OnInit {
     this.sortO = 1;
     if (this.table != undefined) {
       this.table.sortField = this.sortF;
+      //this.table.sortOrder = this.sortO;
     }
 
     // this.table.sortMultiple();
@@ -383,11 +384,15 @@ export class DatosRetencionesComponent implements OnInit {
       data => {
         this.showSuccess();
         this.progressSpinner = false;
+        let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
+        this.changeSort(event);
       },
       err => {
         console.log(err);
         this.progressSpinner = false;
         this.showFail();
+        let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
+        this.changeSort(event);
       },
       () => {
         this.volver();
