@@ -63,7 +63,8 @@ export class DatosIntegrantesComponent implements OnInit {
   body1: DatosIntegrantesItem = new DatosIntegrantesItem();
   body2: DatosIntegrantesItem = new DatosIntegrantesItem();
 
-  @ViewChild("table") table;
+  @ViewChild("table")
+  table;
   selectedDatos;
 
   isValidate: boolean;
@@ -73,8 +74,8 @@ export class DatosIntegrantesComponent implements OnInit {
     private router: Router,
     private fichasPosibles: DatosPersonaJuridicaComponent,
     private cardService: cardService,
-    private translateService: TranslateService,
-  ) { }
+    private translateService: TranslateService
+  ) {}
 
   ngOnInit() {
     this.checkAcceso();
@@ -118,12 +119,8 @@ export class DatosIntegrantesComponent implements OnInit {
       },
       { field: "cargo", header: "censo.busquedaComisiones.literal.cargos" },
       {
-        field: "liquidacionComoSociedad",
-        header: "censo.busquedaClientes.literal.liquidacion"
-      },
-      {
         field: "ejerciente",
-        header: "censo.consultaDatosGenerales.literal.ejerciente"
+        header: "censo.fichaIntegrantes.literal.estado"
       },
       {
         field: "capitalSocial",
@@ -220,7 +217,10 @@ export class DatosIntegrantesComponent implements OnInit {
           }
         } else {
           sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
           this.router.navigate(["/errorAcceso"]);
         }
       }
@@ -241,24 +241,24 @@ export class DatosIntegrantesComponent implements OnInit {
       this.sigaServices
         .postPaginado("integrantes_search", "?numPagina=1", searchObject)
         .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.searchIntegrantes = JSON.parse(data["body"]);
-          this.datos = this.searchIntegrantes.datosIntegrantesItem;
-          console.log(this.datos)
-          this.comprobarValidacion();
-          if (this.datos.length == 1) {
-            this.body = this.datos[0];
-            this.only = true;
-          } else {
-            this.only = false;
-          }
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => { }
+          data => {
+            this.progressSpinner = false;
+            this.searchIntegrantes = JSON.parse(data["body"]);
+            this.datos = this.searchIntegrantes.datosIntegrantesItem;
+            console.log(this.datos);
+            this.comprobarValidacion();
+            if (this.datos.length == 1) {
+              this.body = this.datos[0];
+              this.only = true;
+            } else {
+              this.only = false;
+            }
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {}
         );
     }
   }
@@ -326,17 +326,17 @@ export class DatosIntegrantesComponent implements OnInit {
     this.sigaServices
       .postPaginado("integrantes_search", "?numPagina=1", searchObject)
       .subscribe(
-      data => {
-        this.progressSpinner = false;
-        this.searchIntegrantes = JSON.parse(data["body"]);
-        this.datos = this.searchIntegrantes.datosIntegrantesItem;
-        this.table.paginator = true;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      },
-      () => { }
+        data => {
+          this.progressSpinner = false;
+          this.searchIntegrantes = JSON.parse(data["body"]);
+          this.datos = this.searchIntegrantes.datosIntegrantesItem;
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {}
       );
   }
 
@@ -350,16 +350,16 @@ export class DatosIntegrantesComponent implements OnInit {
     this.sigaServices
       .post("integrantes_delete", deleteIntegrantes.datosIntegrantesItem)
       .subscribe(
-      data => { },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.editar = false;
-        this.dniCorrecto = null;
-        this.disabledRadio = false;
-        this.search();
-      }
+        data => {},
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.editar = false;
+          this.dniCorrecto = null;
+          this.disabledRadio = false;
+          this.search();
+        }
       );
   }
   goToDetails(selectedDatos) {
@@ -378,16 +378,22 @@ export class DatosIntegrantesComponent implements OnInit {
     }
   }
 
-
   comprobarValidacion() {
     //Falta añadir condiciones de profesión (tipo colegio), cargo y socio
     for (let dato of this.datos) {
       if (dato.personaJuridica == "0") {
-        if ((dato.nifCif != null || dato.nifCif != undefined)
-          && (dato.nombre != null || dato.nombre != undefined) && (dato.apellidos1 != null || dato.apellidos1 != undefined)) {
-          if ((dato.cargo != null || dato.cargo != undefined)) {
+        if (
+          (dato.nifCif != null || dato.nifCif != undefined) &&
+          (dato.nombre != null || dato.nombre != undefined) &&
+          (dato.apellidos1 != null || dato.apellidos1 != undefined)
+        ) {
+          if (dato.cargo != null || dato.cargo != undefined) {
             this.isValidate = true;
-            if ((dato.descripcionCargo != null || dato.descripcionCargo != undefined) && (dato.fechaCargo != null || dato.fechaCargo != undefined)) {
+            if (
+              (dato.descripcionCargo != null ||
+                dato.descripcionCargo != undefined) &&
+              (dato.fechaCargo != null || dato.fechaCargo != undefined)
+            ) {
               this.isValidate = true;
             } else {
               this.isValidate = false;
@@ -399,8 +405,9 @@ export class DatosIntegrantesComponent implements OnInit {
           this.isValidate = false;
         }
       } else {
-        if ((dato.nifCif != null || dato.nifCif != undefined)
-          && (dato.nombre != null || dato.nombre != undefined)
+        if (
+          (dato.nifCif != null || dato.nifCif != undefined) &&
+          (dato.nombre != null || dato.nombre != undefined)
           // && (dato.cargo != null || dato.cargo != undefined)
           // && (dato.descripcionCargo != null || dato.descripcionCargo != undefined) && (dato.fechaCargo != null || dato.fechaCargo != undefined)
         ) {
@@ -414,9 +421,8 @@ export class DatosIntegrantesComponent implements OnInit {
     this.cardService.newCardValidator$.subscribe(data => {
       data.map(result => {
         result.cardIntegrantes = this.isValidate;
-      })
-      console.log(data)
+      });
+      console.log(data);
     });
-
   }
 }
