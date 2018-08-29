@@ -44,6 +44,9 @@ export class DetalleIntegranteComponent implements OnInit {
   dniCorrecto: boolean;
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   permisosTree: any;
+  descripcionCargo: any;
+  descripcionProvincia: any;
+  descripcionTipoColegio: any;
   permisosArray: any[];
   usuarioBody: any[];
   cargosArray: any[];
@@ -151,6 +154,7 @@ export class DetalleIntegranteComponent implements OnInit {
       n => {
         this.colegiosArray = n.combooItems;
         console.log(this.colegiosArray)
+        this.actualizarDescripcionTipoColegio();
       },
       err => {
         console.log(err);
@@ -159,6 +163,7 @@ export class DetalleIntegranteComponent implements OnInit {
     this.sigaServices.get("integrantes_provincias").subscribe(
       n => {
         this.provinciasArray = n.combooItems;
+        this.actualizarDescripcionProvincia();
       },
       err => {
         console.log(err);
@@ -167,6 +172,7 @@ export class DetalleIntegranteComponent implements OnInit {
     this.sigaServices.get("integrantes_cargos").subscribe(
       n => {
         this.cargosArray = n.combooItems;
+        this.actualizarDescripcionCargo();
       },
       err => {
         console.log(err);
@@ -779,5 +785,29 @@ export class DetalleIntegranteComponent implements OnInit {
         this.showFail("El campo Participación debe ser numérico");
       }
     }
+  }
+  actualizarDescripcionCargo() {
+
+    this.descripcionCargo =  this.cargosArray.find(
+      item  =>  item.value  ===  this.body.idCargo
+    );
+
+
+  }
+  actualizarDescripcionTipoColegio() {
+
+    this.descripcionTipoColegio =  this.colegiosArray.find(
+      item  =>  item.value  ===  this.body.idTipoColegio
+    );
+
+
+  }
+  actualizarDescripcionProvincia() {
+
+    this.descripcionProvincia =  this.provinciasArray.find(
+      item  =>  item.value  ===  this.body.idProvincia
+    );
+
+
   }
 }

@@ -88,10 +88,10 @@
           </div>
           <div class="d-flex justify-content-between">
             <label>{{"censo.busquedaClientesAvanzada.literal.tipoColegio" | translate}}
-              <span>{{ body.idTipoColegio }}</span>
+              <span>{{ descripcionTipoColegio.label }}</span>
             </label>
             <label>{{"censo.datosDireccion.literal.provincia" | translate}}
-              <span>{{ body.idProvincia }}</span>
+              <span>{{ descripcionProvincia.label }}</span>
             </label>
             <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}
               <span>{{ body.numColegiado }}</span>
@@ -115,7 +115,8 @@
       <div class="row">
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.busquedaClientesAvanzada.literal.tipoColegio" | translate}}</label>
-          <p-dropdown [(ngModel)]="body.idTipoColegio" class="select-form" [options]="colegiosArray" [(disabled)]="isDisabledTipoColegio"></p-dropdown>
+          <p-dropdown [(ngModel)]="body.idTipoColegio" (ngModelChange)="actualizarDescripcionTipoColegio()" class="select-form" [options]="colegiosArray"
+            [(disabled)]="isDisabledTipoColegio"></p-dropdown>
 
         </div>
         <div class="form-group col-lg-3 col-md-6">
@@ -125,7 +126,8 @@
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.datosDireccion.literal.provincia" | translate}}</label>
-          <p-dropdown [(ngModel)]="body.idProvincia" class="select-form" [options]="provinciasArray" [(disabled)]="isDisabledProvincia"></p-dropdown>
+          <p-dropdown [(ngModel)]="body.idProvincia" (ngModelChange)="actualizarDescripcionProvincia()" class="select-form" [options]="provinciasArray"
+            [(disabled)]="isDisabledProvincia"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
@@ -159,7 +161,7 @@
               <span>{{ body.fechaBajaCargo }}</span>
             </label>
             <label>{{"censo.consultaComponentesJuridicos.literal.cargo" | translate}}
-              <span>{{ body.idCargo }}</span>
+              <span>{{ descripcionCargo.label }}</span>
             </label>
             <label> {{"censo.consultaComponentesJuridicos.literal.descripcioncargo" | translate}}
               <span>{{ body.cargo }}</span>
@@ -203,7 +205,8 @@
         </div>
         <div class="form-group col-lg-2 col-md-4">
           <label>{{"censo.consultaComponentesJuridicos.literal.cargo" | translate}}</label>
-          <p-dropdown [(ngModel)]="body.idCargo" [(disabled)]="historico" class="select-form" [options]="cargosArray"></p-dropdown>
+          <p-dropdown [(ngModel)]="body.idCargo" (ngModelChange)="actualizarDescripcionCargo()" [(disabled)]="historico" class="select-form"
+            [options]="cargosArray"></p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-8">
           <label>{{"censo.consultaComponentesJuridicos.literal.descripcioncargo" | translate}}</label>
