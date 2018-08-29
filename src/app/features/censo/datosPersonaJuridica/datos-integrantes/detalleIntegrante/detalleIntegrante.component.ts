@@ -375,18 +375,18 @@ export class DetalleIntegranteComponent implements OnInit {
     this.sigaServices
       .postPaginado("busquedaPerJuridica_history", "?numPagina=1", this.body)
       .subscribe(
-        data => {
+      data => {
 
-          this.progressSpinner = false;
-          this.searchIntegrantes = JSON.parse(data["body"]);
-          this.datos = this.searchIntegrantes.datosIntegrantesItem;
-          this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => { }
+        this.progressSpinner = false;
+        this.searchIntegrantes = JSON.parse(data["body"]);
+        this.datos = this.searchIntegrantes.datosIntegrantesItem;
+        this.table.paginator = true;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => { }
 
       );
   }
@@ -468,20 +468,20 @@ export class DetalleIntegranteComponent implements OnInit {
 
     let numParticipacion = parseInt(this.body.capitalSocial);
 
-    if (isParticipacionNumerico && numParticipacion <= 100) {
+    if ((isParticipacionNumerico && numParticipacion <= 100) || updateIntegrante.capitalSocial == "") {
       this.sigaServices
         .postPaginado("integrantes_update", "?numPagina=1", updateIntegrante)
         .subscribe(
-          data => {
-            this.progressSpinner = false;
-          },
-          err => {
-            console.log(err);
-            this.progressSpinner = false;
-          },
-          () => {
-            this.backTo();
-          }
+        data => {
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.backTo();
+        }
         );
     } else {
       this.showFail("El campo Participación debe ser numérico y menor o igual que 100");
@@ -617,20 +617,20 @@ export class DetalleIntegranteComponent implements OnInit {
         newIntegrante.tipo = "";
       }
       let numParticipacion = parseInt(this.body.capitalSocial);
-      if (isParticipacionNumerico && numParticipacion <= 100) {
+      if ((isParticipacionNumerico && numParticipacion <= 100) || newIntegrante.capitalSocial == "") {
         this.sigaServices
           .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
           .subscribe(
-            data => {
-              this.progressSpinner = false;
-            },
-            err => {
-              console.log(err);
-              this.progressSpinner = false;
-            },
-            () => {
-              this.backTo();
-            }
+          data => {
+            this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.backTo();
+          }
           );
       } else {
         this.showFail("El campo Participación debe ser numérico y menor o igual que 100");
@@ -760,20 +760,20 @@ export class DetalleIntegranteComponent implements OnInit {
         newIntegrante.tipo = "";
       }
       let numParticipacion = parseInt(this.body.capitalSocial);
-      if (isParticipacionNumerico && numParticipacion <= 100) {
+      if ((isParticipacionNumerico && numParticipacion <= 100) || newIntegrante.capitalSocial == "") {
         this.sigaServices
           .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
           .subscribe(
-            data => {
-              this.progressSpinner = false;
-            },
-            err => {
-              console.log(err);
-              this.progressSpinner = false;
-            },
-            () => {
-              this.backTo();
-            }
+          data => {
+            this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.backTo();
+          }
           );
       } else {
         this.showFail("El campo Participación debe ser numérico");
