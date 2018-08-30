@@ -69,17 +69,17 @@
               <label>{{"censo.general.literal.FechaConstitucion" | translate}} (*)</label>
               <p-calendar [(disabled)]="camposDesactivados" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaConstitucion"
                 [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
-                <div *ngIf="fechaCorrecta == false">
-                  <label class="labelError">La fecha no puede ser superior a la actual</label>
-                </div>
+              <div *ngIf="fechaCorrecta == false">
+                <label class="labelError">La fecha no puede ser superior a la actual</label>
+              </div>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}</label>
               <p-calendar [(disabled)]="camposDesactivados" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaBaja"
                 [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
-                <div *ngIf="fechaBajaCorrecta == false">
-                  <label class="labelError">La fecha de baja no puede ser anterior a la fecha de constitución</label>
-                </div>
+              <div *ngIf="fechaBajaCorrecta == false">
+                <label class="labelError">La fecha de baja no puede ser anterior a la fecha de constitución</label>
+              </div>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.fichaCliente.literal.actprofesional" | translate}} </label>
@@ -110,7 +110,7 @@
                 <input [(ngModel)]="body.prefijoNumsspp" type="text" class="form-control" [(disabled)]="prefijoBlock" pInputText>
               </div>
               <div class="form-group col-lg-4 col-md-4">
-                <input [(disabled)]="camposDesactivados" [(ngModel)]="body.contadorNumsspp" type="text" class="form-control" pInputText>
+                <input [(disabled)]="noEditable" [(ngModel)]="body.contadorNumsspp" type="text" class="form-control" pInputText>
                 <div *ngIf="contadorNoCorrecto == true">
                   <label class="labelError">Solo números</label>
                 </div>
@@ -137,7 +137,7 @@
 
             <div class="form-check col-lg-6 col-md-6">
               <br>
-              <label class="form-group-label">{{"censo.busquedaClientes.noColegiados.sociedadProfesional" | translate}}</label>              &nbsp;&nbsp;
+              <label class="form-group-label">{{"censo.busquedaClientes.noColegiados.sociedadProfesional" | translate}}</label> &nbsp;&nbsp;
               <p-checkbox [(ngModel)]='sociedadProfesional' binary="true" (onChange)="onChangeSociedadProfesional()"></p-checkbox>
 
             </div>
