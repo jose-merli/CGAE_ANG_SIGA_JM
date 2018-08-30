@@ -57,7 +57,7 @@
             <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="imagenCentrada">
             <p-fileUpload #fubauto chooseLabel="" class="edit my-0 mx-auto main-button" mode="basic" name="file" auto="true" accept="image/*"
               (change)="uploadImage($event)" auto="true">
-            </p-fileUpload>
+              </p-fileUpload>
           </div>
         </div>
         <!-- <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
@@ -113,7 +113,7 @@
               <input [(ngModel)]="body.abreviatura" type="text" class="form-control" (ngModelChange)="onChangeForm()" [(disabled)]="camposDesactivados"
                 [maxLength]="100" pInputText>
             </div>
-            <div class="form-row p-1 col-lg-6 col-md-6">
+            <!--<div class="form-row p-1 col-lg-6 col-md-6">
               <div class="col-lg-12 col-md-12">
                 <label>{{"censo.consultaDatosRegistrales.literal.numRegistro" | translate}} (*)</label>
               </div>
@@ -129,7 +129,7 @@
               <div class="form-group col-lg-4 col-md-4 pr-0">
                 <input [(disabled)]="camposDesactivados" [(ngModel)]="body.sufijoNumsspp" type="text" class="form-control" pInputText>
               </div>
-            </div>
+          </div>-->
           </div>
         </div>
         <!-- INFORMACIÓN ADICIONAL -->
@@ -168,8 +168,8 @@
       <div class="text-right main-button ">
         <button (click)="restablecer()" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="comprobarAuditoria()" [(disabled)]="!showGuardar" pButton type="button" icon="far fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}"></button>
+          <button (click)="comprobarAuditoria()" [(disabled)]="!showGuardar" pButton type="button" icon="far fa-save" iconPos="left"
+            label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -198,8 +198,8 @@
         <button (click)="guardar()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
       </div>
     </p-footer>
-  </p-dialog>
+    </p-dialog>
 
-  <div *ngIf="progressSpinner" class="overlay-spinner">
-    <div class="loader"></div>
-  </div>
+    <div *ngIf="progressSpinner" class="overlay-spinner">
+      <div class="loader"></div>
+    </div>

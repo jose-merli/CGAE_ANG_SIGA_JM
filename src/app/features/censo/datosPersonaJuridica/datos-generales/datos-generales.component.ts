@@ -439,25 +439,25 @@ export class DatosGenerales implements OnInit {
       //   !this.onlySpaces(this.body.contadorNumsspp))) {
 
 
-        this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
-          data => {
-            this.cerrarAuditoria();
-            this.cargarImagen(this.body.idPersona);
-            this.showSuccess();
-            this.progressSpinner = false;
-          },
-          error => {
-            this.personaSearch = JSON.parse(error["error"]);
-            this.showFail(JSON.stringify(this.personaSearch.error.description));
-            console.log(error);
-            this.progressSpinner = false;
-          },
-          () => {
-            this.datosGeneralesSearch();
-            this.obtenerEtiquetasPersonaJuridicaConcreta();
-            this.progressSpinner = false;
-          }
-        );
+      this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
+        data => {
+          this.cerrarAuditoria();
+          this.cargarImagen(this.body.idPersona);
+          this.showSuccess();
+          this.progressSpinner = false;
+        },
+        error => {
+          this.personaSearch = JSON.parse(error["error"]);
+          this.showFail(JSON.stringify(this.personaSearch.error.description));
+          console.log(error);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.datosGeneralesSearch();
+          this.obtenerEtiquetasPersonaJuridicaConcreta();
+          this.progressSpinner = false;
+        }
+      );
       //}
 
 
@@ -751,19 +751,19 @@ export class DatosGenerales implements OnInit {
   }
 
 
-  compruebaRegistro() {
-    var a = this.body.contadorNumsspp;
-    if (
-      Number(this.body.contadorNumsspp) ||
-      this.onlySpaces(this.body.contadorNumsspp)
-    ) {
-      this.contadorNoCorrecto = false;
-      return true;
-    } else {
-      this.contadorNoCorrecto = true;
-      return false;
-    }
-  }
+  // compruebaRegistro() {
+  //   var a = this.body.contadorNumsspp;
+  //   if (
+  //     Number(this.body.contadorNumsspp) ||
+  //     this.onlySpaces(this.body.contadorNumsspp)
+  //   ) {
+  //     this.contadorNoCorrecto = false;
+  //     return true;
+  //   } else {
+  //     this.contadorNoCorrecto = true;
+  //     return false;
+  //   }
+  // }
 
   comprobarValidacion() {
     if (this.body.nif.length == 9 && this.isValidCIF(this.body.nif) && !this.onlySpaces(this.body.denominacion)
