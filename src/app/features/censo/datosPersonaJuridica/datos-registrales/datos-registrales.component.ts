@@ -365,6 +365,16 @@ export class DatosRegistralesComponent implements OnInit {
       )
     });
   }
+  showFailGenerico(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        mensaje
+      )
+    });
+  }
 
   showCustomFail(mensaje) {
     this.msgs = [];
@@ -408,9 +418,9 @@ export class DatosRegistralesComponent implements OnInit {
           this.showSuccess();
           this.progressSpinner = false;
         },
-        err => {
-          this.showFail();
-          console.log(err);
+        error => {
+          let mess = JSON.parse(error["error"]);
+          this.showFailGenerico(mess.error.message.toString());
           this.progressSpinner = false;
         },
         () => {
