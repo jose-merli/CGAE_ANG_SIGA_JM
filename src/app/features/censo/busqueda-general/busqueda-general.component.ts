@@ -254,6 +254,23 @@ export class BusquedaGeneralComponent {
       this.progressSpinner = false;
       return false;
     } else {
+      // quita espacios vacios antes de buscar
+      if (this.bodyFisica.nombre != undefined) {
+        this.bodyFisica.nombre = this.bodyFisica.nombre.trim();
+      }
+      if (this.bodyFisica.primerApellido != undefined) {
+        this.bodyFisica.primerApellido = this.bodyFisica.primerApellido.trim();
+      }
+      if (this.bodyFisica.segundoApellido != undefined) {
+        this.bodyFisica.segundoApellido = this.bodyFisica.segundoApellido.trim();
+      }
+      if (this.bodyFisica.numeroColegiado != undefined) {
+        this.bodyFisica.numeroColegiado = this.bodyFisica.numeroColegiado.trim();
+      }
+      if (this.bodyFisica.nif != undefined) {
+        this.bodyFisica.nif = this.bodyFisica.nif.trim();
+      }
+
       return true;
     }
   }
@@ -280,6 +297,19 @@ export class BusquedaGeneralComponent {
       this.progressSpinner = false;
       return false;
     } else {
+      // quita espacios vacios antes de buscar
+      if (this.bodyJuridica.tipo != undefined) {
+        this.bodyJuridica.tipo = this.bodyJuridica.tipo.trim();
+      }
+      if (this.bodyJuridica.abreviatura != undefined) {
+        this.bodyJuridica.abreviatura = this.bodyJuridica.abreviatura.trim();
+      }
+      if (this.bodyJuridica.denominacion != undefined) {
+        this.bodyJuridica.denominacion = this.bodyJuridica.denominacion.trim();
+      }
+      if (this.bodyJuridica.nif != undefined) {
+        this.bodyJuridica.nif = this.bodyJuridica.nif.trim();
+      }
       return true;
     }
   }
@@ -350,16 +380,26 @@ export class BusquedaGeneralComponent {
                   this.bodyFisica.nif != "" &&
                   this.bodyFisica.nif != undefined
                 ) {
-                  if (
-                    this.bodyFisica.nombre.trim() == "" &&
-                    this.bodyFisica.primerApellido.trim() == "" &&
-                    this.bodyFisica.segundoApellido.trim() == "" &&
-                    this.bodyFisica.numeroColegiado.trim() == ""
-                  ) {
-                    if (this.tipoIdentificacionPermitido(this.bodyFisica.nif)) {
-                      this.noDataFoundWithDNI();
-                    }
+                  if (this.tipoIdentificacionPermitido(this.bodyFisica.nif)) {
+                    this.noDataFoundWithDNI();
                   }
+                }
+              }
+              // encuentra datos, muestra mensaje informativo si tiene nif + {nombre || primer apellido || segundo apellido informado}
+              else {
+                if (
+                  this.bodyFisica.nif != undefined &&
+                  this.bodyFisica.nif.trim() != "" &&
+                  ((this.bodyFisica.nombre != undefined &&
+                    this.bodyFisica.nombre.trim() != "") ||
+                    (this.bodyFisica.primerApellido != undefined &&
+                      this.bodyFisica.primerApellido.trim() != "") ||
+                    (this.bodyFisica.segundoApellido != undefined &&
+                      this.bodyFisica.segundoApellido.trim() != ""))
+                ) {
+                  this.showWarning(
+                    "se ha encontrado una persona con el Núm. de identificación indicado. Revise el resto de los datos, porque al seleccionar este registro se usarán los datos existentes anteriormente y no podrá modificar sus datos generales"
+                  );
                 }
               }
             }
@@ -413,16 +453,8 @@ export class BusquedaGeneralComponent {
                 this.datos == null ||
                 this.datos == undefined
               ) {
-                if (
-                  this.bodyJuridica.nif != null &&
-                  this.bodyJuridica.nif != undefined &&
-                  this.bodyJuridica.denominacion.trim() == "" &&
-                  this.bodyJuridica.abreviatura.trim() == "" &&
-                  this.bodyJuridica.tipo.trim() == ""
-                ) {
-                  if (this.tipoIdentificacionPermitido(this.bodyJuridica.nif)) {
-                    this.noDataFoundWithDNI();
-                  }
+                if (this.tipoIdentificacionPermitido(this.bodyJuridica.nif)) {
+                  this.noDataFoundWithDNI();
                 }
               }
             }
@@ -452,6 +484,7 @@ export class BusquedaGeneralComponent {
   }
 
   irFichaColegial(id) {
+    // ir a ficha de notario
     if (!this.newIntegrante) {
       if (!this.selectMultiple && !this.selectAll) {
         if (
@@ -465,7 +498,9 @@ export class BusquedaGeneralComponent {
         sessionStorage.setItem("notario", JSON.stringify(id));
         this.location.back();
       }
-    } else {
+    }
+    // ir a ficha de integrante
+    else {
       sessionStorage.removeItem("notario");
       this.checkTypeCIF(id[0].nif);
       id[0].tipoIdentificacion = this.tipoCIF;
@@ -538,7 +573,18 @@ export class BusquedaGeneralComponent {
           // sirve tanto para ambas busquedas (fisica, juridica)
           integranteNew.tipoIdentificacion = this.tipoCIF;
 
-          integranteNew.nombre = "";
+          // datos de persona fisica para pasar a pantalla integrante
+          if (this.persona == "f") {
+            integranteNew.nombre = this.bodyFisica.nombre;
+            integranteNew.apellidos1 = this.bodyFisica.primerApellido;
+            integranteNew.apellidos2 = this.bodyFisica.segundoApellido;
+          }
+          // datos de persona fisica para pasar a pantalla integrante
+          else {
+            integranteNew.nombre = this.bodyJuridica.denominacion;
+            integranteNew.apellidos1 = this.bodyJuridica.abreviatura;
+          }
+
           integranteNew.completo = false;
           let integrantesNEW = [];
           integrantesNEW.push(integranteNew);
@@ -570,6 +616,16 @@ export class BusquedaGeneralComponent {
       detail: mensaje
     });
   }
+
+  showWarning(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "warn",
+      summary: "Atención",
+      detail: mensaje
+    });
+  }
+
   showSearchIncorrect() {
     this.msgs = [];
     this.msgs.push({
