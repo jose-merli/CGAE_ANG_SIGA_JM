@@ -33,6 +33,7 @@ export class SigaServices {
     usuario: "usuario",
     usuario_logeado: "usuario/logeado",
     instituciones: "instituciones",
+    institucionActual:"getInstitucionActual",
     perfiles: "perfiles",
     diccionarios: "diccionarios",
     usuarios_rol: "usuarios/rol",
