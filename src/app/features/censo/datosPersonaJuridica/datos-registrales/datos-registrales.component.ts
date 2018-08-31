@@ -98,6 +98,7 @@ export class DatosRegistralesComponent implements OnInit {
   camposDesactivados: boolean = false;
   camposObligatorios: any = [];
   isValidate: boolean;
+  isNuevo: boolean;
 
   @ViewChild(DatosRegistralesComponent)
   datosRegistralesComponent: DatosRegistralesComponent;
@@ -132,7 +133,7 @@ export class DatosRegistralesComponent implements OnInit {
         this.sufijo = data.sufijo;
         this.longitudcontador = data.longitudcontador;
         // this.desactivadoSociedad();
-        // this.onChangeSociedad();
+        //   this.onChangeSociedad();
         if (sessionStorage.getItem("historicoSociedad") != null) {
           this.camposDesactivados = true;
           this.prefijoBlock = true;
@@ -159,12 +160,12 @@ export class DatosRegistralesComponent implements OnInit {
         this.sigaServices
           .get("datosRegistrales_actividadesDisponible")
           .subscribe(
-          n => {
-            this.actividadesDisponibles = n.combooItems;
-          },
-          err => {
-            console.log(err);
-          }
+            n => {
+              this.actividadesDisponibles = n.combooItems;
+            },
+            err => {
+              console.log(err);
+            }
           );
 
         this.select = [
@@ -226,6 +227,15 @@ export class DatosRegistralesComponent implements OnInit {
     }
   }
 
+  compruebaFechaRegistro() {
+    if (this.fechaInscripcion > new Date()) {
+      this.fechaCorrecta = false;
+    } else {
+      this.fechaCorrecta = true;
+      return true;
+    }
+  }
+
   compruebaFechaFin() {
     let fecha = this.transformaFecha(this.fechaConstitucion);
     if (this.fechaFin != undefined) {
@@ -258,15 +268,15 @@ export class DatosRegistralesComponent implements OnInit {
     this.sigaServices
       .post("datosRegistrales_actividadesPersona", this.body)
       .subscribe(
-      data => {
-        this.selectActividad = JSON.parse(data["body"]).combooItems;
-        // seleccionadas.forEach((value: any, index: number) => {
-        //   this.selectActividad.push(value.value);
-        // });
-      },
-      err => {
-        console.log(err);
-      }
+        data => {
+          this.selectActividad = JSON.parse(data["body"]).combooItems;
+          // seleccionadas.forEach((value: any, index: number) => {
+          //   this.selectActividad.push(value.value);
+          // });
+        },
+        err => {
+          console.log(err);
+        }
       );
   }
 
@@ -278,60 +288,45 @@ export class DatosRegistralesComponent implements OnInit {
     this.sigaServices
       .postPaginado("datosRegistrales_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        this.personaSearch = JSON.parse(data["body"]);
-        this.body = this.personaSearch.datosRegistralesItems[0];
-        console.log(this.body);
-        if (this.body == undefined) {
-          this.body = new DatosRegistralesItem();
+        data => {
+          this.personaSearch = JSON.parse(data["body"]);
+          this.body = this.personaSearch.datosRegistralesItems[0];
+          console.log(this.body);
+          if (this.body == undefined) {
+            this.body = new DatosRegistralesItem();
+            this.isNuevo = true;
+          } else {
+            this.isNuevo = false;
+            this.body.idPersona = this.idPersonaEditar;
+            this.fechaConstitucion = this.body.fechaConstitucion;
+            this.fechaCancelacion = new Date(this.body.fechaCancelacion);
+            this.fechaFin = this.body.fechaFin;
+            this.fechaInscripcion = new Date(this.body.fechaInscripcion);
 
-          if (this.modo == "0") {
-            this.body.contadorNumsspp = String(
-              this.fillWithCeros(
-                String(Number(this.contador) + 1),
-                Number(this.longitudcontador)
-              )
+            if (this.modificablecontador == "0") {
+              this.noEditable = true;
+            } else {
+              this.noEditable = false;
+            }
+
+            this.body.contadorNumsspp = this.fillWithCeros(
+              this.body.contadorNumsspp,
+              Number(this.longitudcontador)
             );
-
-            this.body.prefijoNumsspp = this.prefijo;
-            this.body.sufijoNumsspp = this.sufijo;
-            this.noEditable = true;
-          } else {
-            this.body.prefijoNumsspp = this.prefijo;
-            this.body.sufijoNumsspp = this.sufijo;
-            this.noEditable = false;
           }
-        } else {
-          this.body.idPersona = this.idPersonaEditar;
-          this.fechaConstitucion = this.body.fechaConstitucion;
-          this.fechaCancelacion = new Date(this.body.fechaCancelacion);
-          this.fechaFin = this.body.fechaFin;
-          this.fechaInscripcion = new Date(this.body.fechaInscripcion);
-
-          if (this.modificablecontador == "0") {
-            this.noEditable = true;
-          } else {
-            this.noEditable = false;
+          if (this.body.sociedadProfesional == "1") {
+            this.sociedadProfesional = true;
+          } else if (this.body.sociedadProfesional == "0") {
+            this.sociedadProfesional = false;
           }
-
-          this.body.contadorNumsspp = this.fillWithCeros(
-            this.body.contadorNumsspp,
-            Number(this.longitudcontador)
-          );
+        },
+        err => {
+          console.log(err);
         }
-        if (this.body.sociedadProfesional == "1") {
-          this.sociedadProfesional = true;
-        } else if (this.body.sociedadProfesional == "0") {
-          this.sociedadProfesional = false;
-        }
-      },
-      err => {
-        console.log(err);
-      }
       );
   }
 
-  // Esto es para cuando sepamos como tratar al número de registro
+  // Tratamos al número de registro
   fillWithCeros(cadena: String, lengthCadena: number): String {
     var cadenaWithCeros: string = "";
 
@@ -395,6 +390,9 @@ export class DatosRegistralesComponent implements OnInit {
       this.body.sociedadProfesional = "1";
     } else {
       this.body.sociedadProfesional = "0";
+      this.body.prefijoNumsspp = null;
+      this.body.contadorNumsspp = null;
+      this.body.sufijoNumsspp = null;
     }
     if (
       (this.body.contadorNumsspp != undefined &&
@@ -455,45 +453,70 @@ export class DatosRegistralesComponent implements OnInit {
     return fecha;
   }
 
-  // onChangeSociedad() {
-  //   if (this.sociedadProfesional == true) {
-  //     this.prefijoBlock = true;
-  //     this.body.prefijoNumsspp = "SP/";
-  //     this.requiredContador = true;
-  //   } else {
-  //     if (this.camposDesactivados == true) {
-  //       this.prefijoBlock = false;
-  //     }
-  //     this.requiredContador = false;
-  //   }
-  // }
+  onChangeSociedad() {
+    if (this.sociedadProfesional == true) {
+      this.prefijoBlock = true;
+      this.body.prefijoNumsspp = "SP/";
+      this.requiredContador = true;
+    } else {
+      if (this.camposDesactivados == true) {
+        this.prefijoBlock = false;
+      }
+      this.requiredContador = false;
+    }
+  }
+
+  habilitarCheck() {
+    if (
+      (this.body.objetoSocial != undefined &&
+        this.body.objetoSocial != "" &&
+        !this.onlySpaces(this.body.objetoSocial)) ||
+      (this.body.resena != undefined &&
+        this.body.resena != "" &&
+        !this.onlySpaces(this.body.resena)) ||
+      (this.fechaConstitucion != undefined &&
+        this.compruebaFechaConstitucion()) ||
+      (this.fechaInscripcion != undefined && this.compruebaFechaRegistro()) ||
+      (this.body.numRegistro != undefined &&
+        this.body.numRegistro != "" &&
+        !this.onlySpaces(this.body.numRegistro)) ||
+      (this.body.identificacionReg != undefined &&
+        this.body.identificacionReg != "" &&
+        !this.onlySpaces(this.body.identificacionReg))
+    ) {
+      this.sociedadProfesional = true;
+    } else {
+      this.sociedadProfesional = false;
+    }
+  }
 
   desactivadoGuardar() {
-    //if (this.sociedadProfesional == true) {
-    if (
-      this.body.objetoSocial != undefined &&
-      !this.onlySpaces(this.body.objetoSocial) &&
-      this.body.resena != undefined &&
-      !this.onlySpaces(this.body.resena) &&
-      this.fechaConstitucion != undefined &&
-      this.compruebaFechaConstitucion() &&
-      this.compruebaFechaFin() &&
-      this.body.numRegistro != undefined &&
-      !this.onlySpaces(this.body.numRegistro) &&
-      this.body.identificacionReg != undefined &&
-      !this.onlySpaces(this.body.identificacionReg)
-    ) {
-      if (this.camposDesactivados == true && this.noEditable == false) {
-        return true;
+    if (this.sociedadProfesional == true) {
+      if (
+        this.body.objetoSocial != undefined &&
+        !this.onlySpaces(this.body.objetoSocial) &&
+        this.body.resena != undefined &&
+        !this.onlySpaces(this.body.resena) &&
+        this.fechaConstitucion != undefined &&
+        this.compruebaFechaConstitucion() &&
+        this.fechaInscripcion != undefined &&
+        this.compruebaFechaRegistro() &&
+        this.body.numRegistro != undefined &&
+        !this.onlySpaces(this.body.numRegistro) &&
+        this.body.identificacionReg != undefined &&
+        !this.onlySpaces(this.body.identificacionReg)
+      ) {
+        if (this.camposDesactivados == true && this.noEditable == false) {
+          return true;
+        } else {
+          return false;
+        }
       } else {
-        return false;
+        return true;
       }
     } else {
-      return true;
+      return false;
     }
-    // } else {
-    //   return false;
-    // }
   }
 
   onlySpaces(str) {
@@ -585,25 +608,47 @@ export class DatosRegistralesComponent implements OnInit {
 
   onChangeSociedadProfesional() {
     this.comprobarValidacion();
-    if (this.sociedadProfesional == true) {
-      for (let campo of this.camposObligatorios) {
-        if (
-          campo.cardGeneral == true &&
-          campo.cardRegistral == true &&
-          campo.cardNotario == true &&
-          campo.cardDirecciones == true &&
-          campo.cardIntegrantes == true
-        ) {
-          this.sociedadProfesional = true;
-        } else {
-          this.showCustomFail(
-            "Debe rellenar todos los campos obligatorios para poder activar la opción de sociedad profesional"
-          );
-          setTimeout(() => {
-            this.sociedadProfesional = false;
-          }, 50);
-        }
+    // if (this.sociedadProfesional == true) {
+    //   for (let campo of this.camposObligatorios) {
+    //     if (
+    //       campo.cardGeneral == true &&
+    //       campo.cardRegistral == true &&
+    //       campo.cardNotario == true &&
+    //       campo.cardDirecciones == true &&
+    //       campo.cardIntegrantes == true
+    //     ) {
+    //       this.sociedadProfesional = true;
+    //     } else {
+    //       this.showCustomFail(
+    //         "Debe rellenar todos los campos obligatorios para poder activar la opción de sociedad profesional"
+    //       );
+    //       setTimeout(() => {
+    //         this.sociedadProfesional = false;
+    //       }, 50);
+    //     }
+    //   }
+    // }
+    if (this.isNuevo && this.sociedadProfesional == true) {
+      if (this.modo == "0") {
+        this.body.contadorNumsspp = String(
+          this.fillWithCeros(
+            String(Number(this.contador) + 1),
+            Number(this.longitudcontador)
+          )
+        );
+
+        this.body.prefijoNumsspp = this.prefijo;
+        this.body.sufijoNumsspp = this.sufijo;
+        this.noEditable = true;
+      } else {
+        this.body.prefijoNumsspp = this.prefijo;
+        this.body.sufijoNumsspp = this.sufijo;
+        this.noEditable = false;
       }
+    } else {
+      this.body.prefijoNumsspp = null;
+      this.body.contadorNumsspp = null;
+      this.body.sufijoNumsspp = null;
     }
   }
 
@@ -621,20 +666,4 @@ export class DatosRegistralesComponent implements OnInit {
   //     }
   //   }
   // }
-
-  getDatosContador() {
-    this.sigaServices.get("datosRegistrales_datosContador").subscribe(
-      data => {
-        this.modificablecontador = data.modificablecontador;
-        this.modo = data.modo;
-        this.contador = data.contador;
-        this.prefijo = data.prefijo;
-        this.sufijo = data.sufijo;
-        this.longitudcontador = data.longitudcontador;
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
 }
