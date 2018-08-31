@@ -114,6 +114,7 @@ export class SigaServices {
       "perJuridicaDatosRegistrales/actividadProfesional",
     datosRegistrales_search: "perJuridicaDatosRegistrales/search",
     datosRegistrales_update: "perJuridicaDatosRegistrales/update",
+    datosRegistrales_datosContador: "perJuridicaDatosRegistrales/datosContador",
     datosBancarios_search: "busquedaPerJuridica/datosBancariosSearch",
     datosBancarios_delete: "busquedaPerJuridica/datosBancariosDelete",
     datosCuentaBancaria_search:
