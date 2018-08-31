@@ -38,12 +38,12 @@ export class BusquedaGeneralComponent {
   colsFisicas: any = [];
   colsJuridicas: any = [];
   colegios_rol: any[];
-  colegios_seleccionados: any[];
+  colegios_seleccionados: any[] = [];
   datos: any[];
   select: any[];
   es: any = esCalendar;
   selectedValue: string = "simple";
-  textSelected: String = "{0} perfiles seleccionados";
+  textSelected: String = "{0} opciones seleccionadas";
   persona: String;
   bodyFisica: BusquedaFisicaItem = new BusquedaFisicaItem();
   bodyJuridica: BusquedaJuridicaItem = new BusquedaJuridicaItem();
@@ -60,7 +60,8 @@ export class BusquedaGeneralComponent {
   selectAll: boolean = false;
   msgs: any[];
   selectedItem: number = 10;
-  @ViewChild("table") table;
+  @ViewChild("table")
+  table;
   selectedDatos;
   tipoCIF: String;
   newIntegrante: boolean = false;
@@ -106,7 +107,6 @@ export class BusquedaGeneralComponent {
     ) {
       this.newIntegrante = JSON.parse(sessionStorage.getItem("newIntegrante"));
       sessionStorage.removeItem("newIntegrante");
-
     }
     this.colsFisicas = [
       { field: "nif", header: "NIF/CIF" },
@@ -150,8 +150,14 @@ export class BusquedaGeneralComponent {
       },
       err => {
         console.log(err);
+      },
+      () => {
+        // this.sigaServices.get("institucionActual").subscribe(n => {
+        //   this.colegios_seleccionados.push(n);
+        // });
       }
     );
+
     this.checkStatusInit();
   }
 
@@ -161,7 +167,7 @@ export class BusquedaGeneralComponent {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
   checkTypeCIF(value: String): boolean {
@@ -422,7 +428,6 @@ export class BusquedaGeneralComponent {
             }
           );
       }
-
     }
   }
   onHideDatosGenerales() {
