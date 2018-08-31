@@ -268,10 +268,10 @@ export class DetalleIntegranteComponent implements OnInit {
       }
       if (ir[0].colegio != null) {
         this.body.idInstitucion = ir[0].colegio;
-        this.body.idInstitucionIntegrante = ir[0].colegio;
+        this.body.idInstitucionIntegrante = ir[0].numeroInstitucion;
       } else {
         this.body.idInstitucion = ir[0].idInstitucion;
-        this.body.idInstitucionIntegrante = ir[0].idInstitucion;
+        this.body.idInstitucionIntegrante = ir[0].numeroInstitucion;
       }
       if (ir[0].fechaAlta != null) {
         this.body.fechaCargo = ir[0].fechaAlta;
@@ -408,6 +408,7 @@ export class DetalleIntegranteComponent implements OnInit {
     this.isDisabledApellidos2 = true;
     this.isDisabledTipoColegio = true;
     this.isDisabledProvincia = true;
+
     if (this.body.idTipoColegio == "41" || this.body.idTipoColegio == "1") {
       this.isDisabledNumColegio = true;
     } else {
