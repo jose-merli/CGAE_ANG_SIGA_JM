@@ -200,7 +200,7 @@
           </div>
         </div>
         <div class="form-check col-lg-1 col-md-2 mb-4">
-          <p-checkbox [(ngModel)]='body.socio' binary="true" label="Socio"></p-checkbox>
+          <p-checkbox [(ngModel)]='body.socio' binary="true" [(disabled)]="historico" label="Socio"></p-checkbox>
         </div>
         <div class="form-group col-lg-2 col-md-4">
           <label>{{"censo.consultaComponentesJuridicos.literal.cargo" | translate}}</label>
