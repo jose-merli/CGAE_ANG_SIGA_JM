@@ -59,7 +59,8 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.numPoliza" | translate}} </label>
-              <input [(disabled)]="camposDesactivados" [(ngModel)]="body.numeroPoliza" type="text" class="form-control" pInputText>
+              <input [(disabled)]="camposDesactivados" [(ngModel)]="body.numeroPoliza" type="text" [maxLength]="20" class="form-control"
+                pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.Compania" | translate}}</label>
@@ -71,17 +72,17 @@
               <label>{{"censo.general.literal.FechaConstitucion" | translate}} (*)</label>
               <p-calendar [(disabled)]="camposDesactivados" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaConstitucion"
                 [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="habilitarCheck()"></p-calendar>
-                <div *ngIf="fechaCorrecta == false">
-                  <label class="labelError">La fecha no puede ser superior a la actual</label>
-                </div>
+              <div *ngIf="fechaCorrecta == false">
+                <label class="labelError">La fecha no puede ser superior a la actual</label>
+              </div>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}</label>
               <p-calendar [(disabled)]="camposDesactivados" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaBaja"
                 [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
-                <div *ngIf="fechaBajaCorrecta == false">
-                  <label class="labelError">La fecha de baja no puede ser anterior a la fecha de constitución</label>
-                </div>
+              <div *ngIf="fechaBajaCorrecta == false">
+                <label class="labelError">La fecha de baja no puede ser anterior a la fecha de constitución</label>
+              </div>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.fichaCliente.literal.actprofesional" | translate}} </label>
@@ -124,12 +125,12 @@
             </div>
 
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.consultaDatosRegistrales.literal.idRegProv" | translate}}*</label>
-              <input [(disabled)]="camposDesactivados" [(ngModel)]="body.identificacionReg" type="text" class="form-control" (input)="habilitarCheck()"
+              <label>{{"censo.consultaDatosRegistrales.literal.idRegProv" | translate}} (*)</label>
+              <input [(disabled)]="camposDesactivados" [(ngModel)]="body.identificacionReg" type="text" class="form-control" (ngModelChange)="habilitarCheck()"
                 [maxLength]="10" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
-              <label>{{"censo.consultaDatosRegistrales.literal.fechaRegistro" | translate}}*</label>
+              <label>{{"censo.consultaDatosRegistrales.literal.fechaRegistro" | translate}} (*)</label>
               <p-calendar [(disabled)]="camposDesactivados" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaInscripcion"
                 [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="habilitarCheck()"></p-calendar>
             </div>
@@ -141,7 +142,7 @@
 
             <div class="form-check col-lg-6 col-md-6">
               <br>
-              <label class="form-group-label">{{"censo.busquedaClientes.noColegiados.sociedadProfesional" | translate}}</label>              &nbsp;&nbsp;
+              <label class="form-group-label">{{"censo.busquedaClientes.noColegiados.sociedadProfesional" | translate}}</label> &nbsp;&nbsp;
               <p-checkbox [(ngModel)]='sociedadProfesional' binary="true" (onChange)="onChangeSociedadProfesional()"></p-checkbox>
             </div>
           </div>
