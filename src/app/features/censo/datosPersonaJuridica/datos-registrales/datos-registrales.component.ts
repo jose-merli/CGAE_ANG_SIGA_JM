@@ -292,8 +292,9 @@ export class DatosRegistralesComponent implements OnInit {
         this.personaSearch = JSON.parse(data["body"]);
         this.body = this.personaSearch.datosRegistralesItems[0];
         console.log(this.body);
-        if (this.body == undefined) {
-          this.body = new DatosRegistralesItem();
+        if (this.body.identificacionReg == undefined) {
+          this.body.fechaConstitucion = null;
+          //this.body = new DatosRegistralesItem();
           this.isNuevo = true;
           if (this.modo == "0") {
             this.noEditable = true;
@@ -407,9 +408,9 @@ export class DatosRegistralesComponent implements OnInit {
       this.body.sociedadProfesional = "1";
     } else {
       this.body.sociedadProfesional = "0";
-      this.body.prefijoNumsspp = null;
-      this.body.contadorNumsspp = null;
-      this.body.sufijoNumsspp = null;
+      this.body.prefijoNumsspp = undefined;
+      this.body.contadorNumsspp = undefined;
+      this.body.sufijoNumsspp = undefined;
     }
     if (
       (this.body.contadorNumsspp != undefined &&
@@ -417,14 +418,12 @@ export class DatosRegistralesComponent implements OnInit {
       !this.requiredContador
     ) {
       if (
-        (this.body.contadorNumsspp != undefined &&
-          !this.onlySpaces(this.body.contadorNumsspp)) &&
-        Number(this.body.contadorNumsspp)
+        !((this.requiredContador) &&
+          Number(this.body.contadorNumsspp))
       ) {
         if (
-          (this.body.contadorNumsspp != undefined &&
-            !this.onlySpaces(this.body.contadorNumsspp)) &&
-          this.body.contadorNumsspp.length <= Number(this.longitudcontador)
+          !((this.requiredContador) &&
+            this.body.contadorNumsspp.length <= Number(this.longitudcontador))
         ) {
           debugger;
           console.log("contador", this.body.contadorNumsspp);
@@ -527,7 +526,7 @@ export class DatosRegistralesComponent implements OnInit {
         this.body.identificacionReg != "") &&
       !this.onlySpaces(this.body.identificacionReg) &&
       (this.body.contadorNumsspp != undefined &&
-        this.body.identificacionReg != "") &&
+        this.body.contadorNumsspp != "") &&
       !this.onlySpaces(this.body.contadorNumsspp)
     ) {
       this.sociedadProfesional = true;
@@ -702,9 +701,9 @@ export class DatosRegistralesComponent implements OnInit {
       }
     } else {
       if (this.sociedadProfesional == false) {
-        this.body.prefijoNumsspp = null;
-        this.body.contadorNumsspp = null;
-        this.body.sufijoNumsspp = null;
+        this.body.prefijoNumsspp = undefined;
+        this.body.contadorNumsspp = undefined;
+        this.body.sufijoNumsspp = undefined;
       }
     }
   }
