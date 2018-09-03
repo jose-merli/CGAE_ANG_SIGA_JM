@@ -56,7 +56,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   categoriaCurricular: any[];
   subtipoCV: any[];
   provincias: any[];
-  poblaciones: any[];
+  comboPoblacion: any[];
   tiposDireccion: any[];
 
   textSelected: String = "{0} etiquetas seleccionadas";
@@ -70,6 +70,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   selectedProvincia: any;
   selectedPoblacion: any;
   selectedTipoDireccion: any;
+  resultadosPoblaciones: any;
 
   etiquetasPersonaJuridicaSelecionados: any = [];
 
@@ -158,7 +159,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       .subscribe(
         n => {
           this.isDisabledPoblacion = false;
-          this.poblaciones = n.combooItems;
+          this.comboPoblacion = n.combooItems;
         },
         error => {},
         () => {
@@ -175,9 +176,24 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         this.body.idProvincia == undefined
       ) {
         this.body.idProvincia = value;
-        this.poblaciones = [];
-        this.getComboPoblacion();
+        this.comboPoblacion = [];
+        this.isDisabledPoblacion = false;
       }
+    }
+  }
+
+  buscarPoblacion(e) {
+    if (e.target.value && e.target.value !== null) {
+      if (e.target.value.length >= 3) {
+        this.getComboPoblacion();
+        this.resultadosPoblaciones = "No hay resultados";
+      } else {
+        this.comboPoblacion = [];
+        this.resultadosPoblaciones = "Debe introducir al menos 3 caracteres";
+      }
+    } else {
+      this.comboPoblacion = [];
+      this.resultadosPoblaciones = "No hay resultados";
     }
   }
 

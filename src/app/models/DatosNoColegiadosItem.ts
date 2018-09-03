@@ -3,7 +3,6 @@ export class DatosNoColegiadosItem {
   idPoblacion: string;
   codigoPostal: string;
   tlf: string;
-  movil: string;
   mail: string;
   tipoDireccion: string;
   id: string;

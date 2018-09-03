@@ -28,12 +28,14 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   comboCategoriaCurricular: any;
   comboSexo: any;
   progressSpinner: boolean = false;
+  resultadosPoblaciones: any;
 
   editar: boolean = true;
-  textFilter: String = "Elegir";
+  textFilter: String = "Selección Múltiple";
   body: DatosNoColegiadosItem = new DatosNoColegiadosItem();
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
+  isEditable: boolean = false;
   buscar: boolean = false;
   es: any;
 
@@ -41,6 +43,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   datos: any;
   rowsPerPage: any;
   selectMultiple: boolean = false;
+  isMultiple: string = "single";
   selectedItem: number = 10;
   selectAll: boolean = false;
   numSelected: number = 0;
@@ -110,17 +113,23 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   }
 
   getCombos() {
-    //Etiquetas
-    this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
-      n => {
-        this.comboEtiquetas = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    this.getComboProvincias();
+    this.getComboEstadoCivil();
+    this.getComboCategoriaCurricular();
+    this.getComboSexo();
+    this.getComboTipoDireccion();
+    this.getComboEtiquetas();
+  }
 
-    //Estado Civil
+  getComboSexo() {
+    this.comboSexo = [
+      { label: "", value: null },
+      { label: "Hombre", value: "H" },
+      { label: "Mujer", value: "M" }
+    ];
+  }
+
+  getComboEstadoCivil() {
     this.sigaServices.get("busquedaNoColegiados_estadoCivil").subscribe(
       n => {
         this.comboEstadoCivil = n.combooItems;
@@ -129,18 +138,20 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         console.log(err);
       }
     );
+  }
 
-    //Provincias
-    this.sigaServices.get("busquedaNoColegiados_provincias").subscribe(
+  getComboEtiquetas() {
+    this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
       n => {
-        this.comboProvincias = n.combooItems;
+        this.comboEtiquetas = n.combooItems;
       },
       err => {
         console.log(err);
       }
     );
+  }
 
-    //TipoDireccion
+  getComboTipoDireccion() {
     this.sigaServices.get("busquedaNoColegiados_tipoDireccion").subscribe(
       n => {
         this.comboTipoDireccion = n.combooItems;
@@ -149,8 +160,9 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         console.log(err);
       }
     );
+  }
 
-    //CategoriaCurricular
+  getComboCategoriaCurricular() {
     this.sigaServices.get("busquedaNoColegiados_categoriaCurricular").subscribe(
       n => {
         this.comboCategoriaCurricular = n.combooItems;
@@ -159,13 +171,17 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         console.log(err);
       }
     );
+  }
 
-    //Sexo
-    this.comboSexo = [
-      { label: "Elegir", value: null },
-      { label: "Hombre", value: "H" },
-      { label: "Mujer", value: "M" }
-    ];
+  getComboProvincias() {
+    this.sigaServices.get("busquedaNoColegiados_provincias").subscribe(
+      n => {
+        this.comboProvincias = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   getComboPoblacion() {
@@ -195,8 +211,8 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         this.body.idProvincia == undefined
       ) {
         this.body.idProvincia = value;
+        this.isDisabledPoblacion = false;
         this.comboPoblacion = [];
-        this.getComboPoblacion();
       }
     }
   }
@@ -209,15 +225,30 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     );
   }
 
+  buscarPoblacion(e) {
+    if (e.target.value && e.target.value !== null) {
+      if (e.target.value.length >= 3) {
+        this.getComboPoblacion();
+        this.resultadosPoblaciones = "No hay resultados";
+      } else {
+        this.comboPoblacion = [];
+        this.resultadosPoblaciones = "Debe introducir al menos 3 caracteres";
+      }
+    } else {
+      this.comboPoblacion = [];
+      this.resultadosPoblaciones = "No hay resultados";
+    }
+  }
+
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
+    if (this.selectMultiple) {
       this.selectedDatos = [];
-      this.numSelected = 0;
+      this.isMultiple = "multiple";
     } else {
       this.selectAll = false;
-      this.selectedDatos = [];
       this.numSelected = 0;
+      this.isMultiple = "single";
     }
   }
 
@@ -262,10 +293,20 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       nombre: "",
       fechaNacimiento: "",
       mail: "",
-      telefono: "",
-      movil: ""
+      telefono: ""
     };
+
+    this.isEditable = true;
     this.datos = [noColegiado, ...this.datos];
+    this.table.reset();
+  }
+
+  deleteSeleccion() {
+    this.selectedDatos = [];
+  }
+
+  isCancelar() {
+    this.isEditable = false;
   }
 
   getInfo() {
@@ -275,8 +316,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       { field: "nombre", header: "Nombre" },
       { field: "fechaNacimiento", header: "Fecha de nacimiento" },
       { field: "mail", header: "Correo Electrónico" },
-      { field: "telefono", header: "Teléfono" },
-      { field: "movil", header: "Móvil" }
+      { field: "telefono", header: "Teléfono" }
     ];
 
     this.datos = [
@@ -286,8 +326,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         nombre: "Javier",
         fechaNacimiento: "22/02/2000",
         mail: "ejerci@ente.es",
-        telefono: "99999999",
-        movil: "99999999"
+        telefono: "99999999"
       },
       {
         id: "8772",
@@ -295,8 +334,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         nombre: "Javier",
         fechaNacimiento: "22/02/2000",
         mail: "ejerci@ente.es",
-        telefono: "99999999",
-        movil: "99999999"
+        telefono: "99999999"
       },
       {
         id: "8773",
@@ -304,8 +342,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         nombre: "Javier",
         fechaNacimiento: "22/02/2000",
         mail: "ejerci@ente.es",
-        telefono: "99999999",
-        movil: "99999999"
+        telefono: "99999999"
       },
       {
         id: "8774",
@@ -313,8 +350,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         nombre: "Javier",
         fechaNacimiento: "22/02/2000",
         mail: "ejerci@ente.es",
-        telefono: "99999999",
-        movil: "99999999"
+        telefono: "99999999"
       },
       {
         id: "8775",
@@ -322,8 +358,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         nombre: "Javier",
         fechaNacimiento: "22/02/2000",
         mail: "ejerci@ente.es",
-        telefono: "99999999",
-        movil: "99999999"
+        telefono: "99999999"
       },
       {
         id: "8776",
@@ -331,8 +366,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         nombre: "Javier",
         fechaNacimiento: "22/02/2000",
         mail: "ejerci@ente.es",
-        telefono: "99999999",
-        movil: "99999999"
+        telefono: "99999999"
       },
       {
         id: "8777",
@@ -340,8 +374,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         nombre: "Javier",
         fechaNacimiento: "22/02/2000",
         mail: "ejerci@ente.es",
-        telefono: "99999999",
-        movil: "99999999"
+        telefono: "99999999"
       },
       {
         id: "8778",
@@ -349,8 +382,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         nombre: "Javier",
         fechaNacimiento: "22/02/2000",
         mail: "ejerci@ente.es",
-        telefono: "99999999",
-        movil: "99999999"
+        telefono: "99999999"
       },
       {
         id: "8779",
@@ -358,8 +390,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         nombre: "Javier",
         fechaNacimiento: "22/02/2000",
         mail: "ejerci@ente.es",
-        telefono: "99999999",
-        movil: "99999999"
+        telefono: "99999999"
       },
       {
         id: "87710",
@@ -367,8 +398,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         nombre: "Javier",
         fechaNacimiento: "22/02/2000",
         mail: "ejerci@ente.es",
-        telefono: "99999999",
-        movil: "99999999"
+        telefono: "99999999"
       },
       {
         id: "87711",
@@ -376,8 +406,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         nombre: "Javier",
         fechaNacimiento: "22/02/2000",
         mail: "ejerci@ente.es",
-        telefono: "99999999",
-        movil: "99999999"
+        telefono: "99999999"
       },
       {
         id: "87712",
@@ -385,8 +414,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         nombre: "Javier",
         fechaNacimiento: "22/02/2000",
         mail: "ejerci@ente.es",
-        telefono: "99999999",
-        movil: "99999999"
+        telefono: "99999999"
       },
       {
         id: "87713",
@@ -394,8 +422,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         nombre: "Javier",
         fechaNacimiento: "22/02/2000",
         mail: "ejerci@ente.es",
-        telefono: "99999999",
-        movil: "99999999"
+        telefono: "99999999"
       },
       {
         id: "87714",
@@ -403,8 +430,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         nombre: "Javier",
         fechaNacimiento: "22/02/2000",
         mail: "ejerci@ente.es",
-        telefono: "99999999",
-        movil: "99999999"
+        telefono: "99999999"
       },
       {
         id: "87715",
@@ -412,8 +438,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         nombre: "Javier",
         fechaNacimiento: "22/02/2000",
         mail: "ejerci@ente.es",
-        telefono: "99999999",
-        movil: "99999999"
+        telefono: "99999999"
       }
     ];
 
