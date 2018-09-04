@@ -95,7 +95,6 @@ export class DetalleIntegranteComponent implements OnInit {
     ) {
       this.beanNewIntegrante();
     } else {
-
       var a = JSON.parse(sessionStorage.getItem("integrante"));
       // caso de que la persona integrante colegiada
       if (a.ejerciente != null && a.ejerciente != "NO COLEGIADO") {
@@ -112,13 +111,11 @@ export class DetalleIntegranteComponent implements OnInit {
         this.fechaBajaCargo = a.fechaBajaCargo;
       }
 
-      if(this.historico){
+      if (this.historico) {
         this.todoDisable();
-      }
-      else{
+      } else {
         this.ajustarPantallaParaAsignar();
       }
-      
     }
 
     this.editar = this.body.editar;
@@ -423,7 +420,6 @@ export class DetalleIntegranteComponent implements OnInit {
     this.isDisabledColegio = true;
     this.isDisabledProvincia = true;
     this.isDisabledNumColegio = true;
-    
   }
 
   abrirFicha(key) {
@@ -630,7 +626,11 @@ export class DetalleIntegranteComponent implements OnInit {
         this.body.capitalSocial != undefined &&
         this.body.capitalSocial != null
       ) {
-        if (Number(this.body.capitalSocial)) {
+        if (
+          Number(this.body.capitalSocial) ||
+          this.body.capitalSocial == "" ||
+          this.body.capitalSocial == "0"
+        ) {
           isParticipacionNumerico = true;
           newIntegrante.capitalSocial = this.body.capitalSocial;
         } else {
@@ -777,7 +777,11 @@ export class DetalleIntegranteComponent implements OnInit {
         this.body.capitalSocial != undefined &&
         this.body.capitalSocial != null
       ) {
-        if (Number(this.body.capitalSocial)) {
+        if (
+          Number(this.body.capitalSocial) ||
+          this.body.capitalSocial == "" ||
+          this.body.capitalSocial == "0"
+        ) {
           isParticipacionNumerico = true;
           newIntegrante.capitalSocial = this.body.capitalSocial;
         } else {
