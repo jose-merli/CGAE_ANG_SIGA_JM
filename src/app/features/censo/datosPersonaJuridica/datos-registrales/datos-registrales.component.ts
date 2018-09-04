@@ -256,14 +256,22 @@ export class DatosRegistralesComponent implements OnInit {
   compruebaRegistro() {
     var a = this.body.contadorNumsspp;
     if (
-      Number(this.body.contadorNumsspp) ||
-      this.onlySpaces(this.body.contadorNumsspp)
+      Number(this.body.contadorNumsspp) &&
+      !this.onlySpaces(this.body.contadorNumsspp)
     ) {
       this.contadorNoCorrecto = false;
       return true;
     } else {
-      this.contadorNoCorrecto = true;
-      return false;
+      if (
+        this.body.contadorNumsspp == "" ||
+        this.onlySpaces(this.body.contadorNumsspp)
+      ) {
+        this.contadorNoCorrecto = null;
+        return false;
+      } else {
+        this.contadorNoCorrecto = true;
+        return false;
+      }
     }
   }
 
@@ -583,7 +591,9 @@ export class DatosRegistralesComponent implements OnInit {
         this.body.identificacionReg != undefined &&
         !this.onlySpaces(this.body.identificacionReg) &&
         this.body.contadorNumsspp != undefined &&
-        !this.onlySpaces(this.body.contadorNumsspp)
+        !this.onlySpaces(this.body.contadorNumsspp) &&
+        this.contadorNoCorrecto == false &&
+        this.fechaFinCorrecta == true
       ) {
         if (this.camposDesactivados == true && this.noEditable == false) {
           return true;
