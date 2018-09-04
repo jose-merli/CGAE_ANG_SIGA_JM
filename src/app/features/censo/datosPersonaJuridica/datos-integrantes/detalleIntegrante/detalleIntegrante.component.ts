@@ -95,13 +95,26 @@ export class DetalleIntegranteComponent implements OnInit {
     ) {
       this.beanNewIntegrante();
     } else {
-      this.todoDisable();
       var a = JSON.parse(sessionStorage.getItem("integrante"));
+      // caso de que la persona integrante colegiada
+      if (a.ejerciente != null && a.ejerciente != "NO COLEGIADO") {
+        this.esColegiado = true;
+      } else {
+        // caso de que la persona integrante sea no colegiada
+        this.esColegiado = false;
+      }
+
       if (a.fechaCargo != null || a.fechaCargo != undefined) {
         this.fechaCarga = a.fechaCargo;
       }
       if (a.fechaBajaCargo != null || a.fechaBajaCargo != undefined) {
         this.fechaBajaCargo = a.fechaBajaCargo;
+      }
+
+      if (this.historico) {
+        this.todoDisable();
+      } else {
+        this.ajustarPantallaParaAsignar();
       }
     }
 
@@ -260,8 +273,6 @@ export class DetalleIntegranteComponent implements OnInit {
 
     // creacion de un nuevo integrante ya existente
     if (ir[0].completo) {
-      this.todoDisable();
-
       if (ir[0].idPersona != null) {
         this.body.idPersona = ir[0].idPersona;
         this.body.idPersonaIntegrante = ir[0].idPersona;
@@ -344,7 +355,6 @@ export class DetalleIntegranteComponent implements OnInit {
       this.body.apellidos1 = ir[0].apellidos1;
       this.body.apellidos2 = ir[0].apellidos2;
 
-      this.todoDisable();
       this.ajustarPantallaParaCrear();
     }
   }
@@ -407,13 +417,9 @@ export class DetalleIntegranteComponent implements OnInit {
     this.isDisabledApellidos1 = true;
     this.isDisabledApellidos2 = true;
     this.isDisabledTipoColegio = true;
+    this.isDisabledColegio = true;
     this.isDisabledProvincia = true;
-
-    if (this.body.idTipoColegio == "41" || this.body.idTipoColegio == "1") {
-      this.isDisabledNumColegio = true;
-    } else {
-      this.isDisabledNumColegio = false;
-    }
+    this.isDisabledNumColegio = true;
   }
 
   abrirFicha(key) {
@@ -620,7 +626,11 @@ export class DetalleIntegranteComponent implements OnInit {
         this.body.capitalSocial != undefined &&
         this.body.capitalSocial != null
       ) {
-        if (Number(this.body.capitalSocial)) {
+        if (
+          Number(this.body.capitalSocial) ||
+          this.body.capitalSocial == "" ||
+          this.body.capitalSocial == "0"
+        ) {
           isParticipacionNumerico = true;
           newIntegrante.capitalSocial = this.body.capitalSocial;
         } else {
@@ -767,7 +777,11 @@ export class DetalleIntegranteComponent implements OnInit {
         this.body.capitalSocial != undefined &&
         this.body.capitalSocial != null
       ) {
-        if (Number(this.body.capitalSocial)) {
+        if (
+          Number(this.body.capitalSocial) ||
+          this.body.capitalSocial == "" ||
+          this.body.capitalSocial == "0"
+        ) {
           isParticipacionNumerico = true;
           newIntegrante.capitalSocial = this.body.capitalSocial;
         } else {
