@@ -48,7 +48,8 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   selectAll: boolean = false;
   numSelected: number = 0;
 
-  @ViewChild("table") table: DataTable;
+  @ViewChild("table")
+  table: DataTable;
   selectedDatos;
 
   fichasPosibles = [
@@ -184,12 +185,11 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     );
   }
 
-  getComboPoblacion() {
-    this.progressSpinner = true;
+  getComboPoblacion(dataFilter) {
     this.sigaServices
       .getParam(
-        "direcciones_comboPoblacion",
-        "?idProvincia=" + this.body.idProvincia
+        "busquedaNoColegiados_poblacion",
+        "?idProvincia=" + this.body.idProvincia + "&dataFilter=" + dataFilter
       )
       .subscribe(
         n => {
@@ -197,9 +197,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           this.comboPoblacion = n.combooItems;
         },
         error => {},
-        () => {
-          this.progressSpinner = false;
-        }
+        () => {}
       );
   }
 
@@ -226,9 +224,9 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   }
 
   buscarPoblacion(e) {
-    if (e.target.value && e.target.value !== null) {
+    if (e.target.value && e.target.value !== null && e.target.value !== "") {
       if (e.target.value.length >= 3) {
-        this.getComboPoblacion();
+        this.getComboPoblacion(e.target.value);
         this.resultadosPoblaciones = "No hay resultados";
       } else {
         this.comboPoblacion = [];
