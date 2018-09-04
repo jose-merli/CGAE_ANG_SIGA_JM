@@ -6,6 +6,7 @@ export class DatosGeneralesItem {
   denominacion: String;
   abreviatura: String;
   fechaConstitucion: Date;
+  fechaAlta: Date;
   tipo: String;
   numeroIntegrantes: String;
   nombresIntegrantes: String;
@@ -22,5 +23,5 @@ export class DatosGeneralesItem {
   prefijoNumsspp: String;
   sufijoNumsspp: String;
   contadorNumsspp: String;
-  constructor() { }
+  constructor() {}
 }

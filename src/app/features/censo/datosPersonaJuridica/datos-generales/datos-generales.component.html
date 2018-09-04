@@ -23,7 +23,7 @@
               <span>{{body.tipo}}</span>
             </label>
             <label>{{"administracion.usuarios.literal.fechaAlta" | translate}}
-              <span>{{body.fechaConstitucion}}</span>
+              <span>{{body.fechaAlta}}</span>
             </label>
             <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}
               <span>{{body.fechaBaja}}</span>
@@ -57,7 +57,7 @@
             <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="imagenCentrada">
             <p-fileUpload #fubauto chooseLabel="" class="edit my-0 mx-auto main-button" mode="basic" name="file" auto="true" accept="image/*"
               (change)="uploadImage($event)" auto="true">
-              </p-fileUpload>
+            </p-fileUpload>
           </div>
         </div>
         <!-- <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
@@ -93,7 +93,7 @@
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"administracion.usuarios.literal.fechaAlta" | translate}} (*)</label>
-              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="body.fechaConstitucion"
+              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="body.fechaAlta"
                 (ngModelChange)="onChangeForm()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(disabled)]="!editar"></p-calendar>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
@@ -168,8 +168,8 @@
       <div class="text-right main-button ">
         <button (click)="restablecer()" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button>
-          <button (click)="comprobarAuditoria()" [(disabled)]="!showGuardar" pButton type="button" icon="far fa-save" iconPos="left"
-            label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="comprobarAuditoria()" [(disabled)]="!showGuardar" pButton type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -198,8 +198,8 @@
         <button (click)="guardar()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
       </div>
     </p-footer>
-    </p-dialog>
+  </p-dialog>
 
-    <div *ngIf="progressSpinner" class="overlay-spinner">
-      <div class="loader"></div>
-    </div>
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>
