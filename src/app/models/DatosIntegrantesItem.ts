@@ -30,5 +30,6 @@ export class DatosIntegrantesItem {
   tipo: String;
   completo: boolean = false;
   socio: boolean = false;
-  constructor() { }
+  valor: String;
+  constructor() {}
 }

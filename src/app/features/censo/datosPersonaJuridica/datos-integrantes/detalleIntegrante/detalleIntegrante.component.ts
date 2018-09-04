@@ -88,13 +88,15 @@ export class DetalleIntegranteComponent implements OnInit {
     sessionStorage.setItem("editarIntegrante", "true");
     this.body = JSON.parse(sessionStorage.getItem("integrante"));
 
-    console.log(this.body);
+    // creacion
     if (
       sessionStorage.getItem("nIntegrante") != null ||
       sessionStorage.getItem("nIntegrante") != undefined
     ) {
       this.beanNewIntegrante();
-    } else {
+    }
+    // modificacion
+    else {
       var a = JSON.parse(sessionStorage.getItem("integrante"));
       // caso de que la persona integrante colegiada
       if (a.ejerciente != null && a.ejerciente != "NO COLEGIADO") {
@@ -176,6 +178,23 @@ export class DetalleIntegranteComponent implements OnInit {
     this.sigaServices.get("integrantes_provincias").subscribe(
       n => {
         this.provinciasArray = n.combooItems;
+
+        // si estamos en la creacion, busca provincia del colegio asociado
+        if (
+          sessionStorage.getItem("nIntegrante") != null ||
+          sessionStorage.getItem("nIntegrante") != undefined
+        ) {
+          this.body.valor = this.body.idInstitucionIntegrante;
+          this.sigaServices
+            .post("integrantes_provinciaColegio", this.body)
+            .subscribe(
+              data => {
+                this.body.idProvincia = JSON.parse(data["body"]).valor;
+              },
+              err => {},
+              () => {}
+            );
+        }
         this.actualizarDescripcionProvincia();
       },
       err => {
@@ -402,13 +421,6 @@ export class DetalleIntegranteComponent implements OnInit {
     }
 
     this.isDisabledColegio = true;
-    // pone a disabled el campo colegio
-
-    // if (this.body.idTipoColegio == "41" || this.body.idTipoColegio == "1") {
-    //   this.isDisabledNumColegio = true;
-    // } else {
-    //   this.isDisabledNumColegio = false;
-    // }
   }
 
   todoDisable() {
