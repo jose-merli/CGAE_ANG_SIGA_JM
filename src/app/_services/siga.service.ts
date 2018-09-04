@@ -138,6 +138,7 @@ export class SigaServices {
     integrantes_search: "busquedaPerJuridica/datosIntegrantesSearch",
     integrantes_tipoColegio: "tarjetaIntegrantes/tipoColegio",
     integrantes_provincias: "tarjetaIntegrantes/provincias",
+    integrantes_provinciaColegio:"tarjetaIntegrantes/provinciaColegio",
     integrantes_cargos: "tarjetaIntegrantes/cargos",
     direcciones_search: "busquedaPerJuridica/datosDireccionesSearch",
     direcciones_update: "tarjetaDirecciones/update",
