@@ -297,6 +297,9 @@ export class DatosRegistralesComponent implements OnInit {
           console.log(this.body);
           if (this.body.identificacionReg == undefined) {
             this.body.fechaConstitucion = null;
+
+            this.body.objetoSocial = "";
+            this.body.resena = "";
             //this.body = new DatosRegistralesItem();
             this.isNuevo = true;
             if (this.modo == "0") {
@@ -310,6 +313,11 @@ export class DatosRegistralesComponent implements OnInit {
             this.isNuevo = false;
             this.body.idPersona = this.idPersonaEditar;
             this.fechaConstitucion = this.body.fechaConstitucion;
+            if (this.body.fechaCancelacion != null) {
+              this.fechaCancelacion = new Date(this.body.fechaCancelacion);
+            } else {
+              this.fechaCancelacion = this.body.fechaCancelacion;
+            }
             this.fechaCancelacion = new Date(this.body.fechaCancelacion);
             this.fechaFin = this.body.fechaFin;
             this.fechaInscripcion = new Date(this.body.fechaInscripcion);
@@ -345,14 +353,22 @@ export class DatosRegistralesComponent implements OnInit {
   fillWithCeros(cadena: String, lengthCadena: number): String {
     var cadenaWithCeros: string = "";
 
-    var length: number = lengthCadena - cadena.length;
+    if (cadena != null) {
+      if (cadena != "") {
+        var length: number = lengthCadena - cadena.length;
 
-    if (length >= 1) {
-      for (let i = 0; i < length; i++) {
-        cadenaWithCeros += "0";
+        if (length == 0) {
+          return cadena;
+        } else if (length >= 1) {
+          for (let i = 0; i < length; i++) {
+            cadenaWithCeros += "0";
+          }
+
+          return cadenaWithCeros + cadena;
+        }
+      } else {
+        return cadena;
       }
-
-      return cadenaWithCeros + cadena;
     } else return cadena;
   }
 
@@ -430,7 +446,7 @@ export class DatosRegistralesComponent implements OnInit {
           )
         ) {
           debugger;
-          console.log("contador", this.body.contadorNumsspp);
+
           this.sigaServices
             .post("datosRegistrales_update", this.body)
             .subscribe(
@@ -469,19 +485,27 @@ export class DatosRegistralesComponent implements OnInit {
   }
 
   arreglarFechas() {
-    if (this.fechaConstitucion != undefined) {
+    if (this.fechaConstitucion != undefined && this.fechaConstitucion != null) {
       this.body.fechaConstitucion = this.transformaFecha(
         this.fechaConstitucion
       );
+    } else {
+      this.body.fechaConstitucion = this.fechaConstitucion;
     }
-    if (this.fechaCancelacion != undefined) {
+    if (this.fechaCancelacion != undefined && this.fechaCancelacion != null) {
       this.body.fechaCancelacion = this.transformaFecha(this.fechaCancelacion);
+    } else {
+      this.body.fechaCancelacion = this.fechaCancelacion;
     }
-    if (this.fechaInscripcion != undefined) {
+    if (this.fechaInscripcion != undefined && this.fechaInscripcion != null) {
       this.body.fechaInscripcion = this.transformaFecha(this.fechaInscripcion);
+    } else {
+      this.body.fechaInscripcion = this.fechaInscripcion;
     }
-    if (this.fechaFin != undefined) {
+    if (this.fechaFin != undefined && this.fechaFin != null) {
       this.body.fechaFin = this.transformaFecha(this.fechaFin);
+    } else {
+      this.body.fechaFin = this.fechaFin;
     }
   }
 

@@ -78,7 +78,7 @@
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}</label>
-              <p-calendar [(disabled)]="camposDesactivados" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaBaja"
+              <p-calendar [(disabled)]="camposDesactivados" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaFin"
                 [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
               <div *ngIf="fechaBajaCorrecta == false">
                 <label class="labelError">La fecha de baja no puede ser anterior a la fecha de constitución</label>
@@ -137,7 +137,7 @@
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatosRegistrales.literal.fechaCancelacion" | translate}}</label>
               <p-calendar [(disabled)]="camposDesactivados" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaCancelacion"
-                [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
+                [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="habilitarCheck()"></p-calendar>
             </div>
 
             <div class="form-check col-lg-6 col-md-6">
