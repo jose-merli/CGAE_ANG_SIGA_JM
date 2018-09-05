@@ -95,7 +95,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.provinciaSelecionada = this.body.idProvincia;
       console.log(this.body)
       if (this.body.idPoblacion !== null || this.body.idPoblacion !== undefined) {
-        this.getComboPoblacion();
+        //this.getComboPoblacion("");
       }
       this.getDatosContactos();
       if (
@@ -188,17 +188,16 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       }
     );
   }
-  getComboPoblacion() {
+  getComboPoblacion(filtro: string) {
     this.progressSpinner = true;
     this.sigaServices
       .getParam(
         "direcciones_comboPoblacion",
-        "?idProvincia=" + this.body.idProvincia
+        "?idProvincia=" + this.body.idProvincia + "&filtro=" + filtro
       )
       .subscribe(
         n => {
           this.comboPoblacion = n.combooItems;
-
         },
         error => { },
         () => {
@@ -221,7 +220,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
           );
           // modo creacion => pais España por defecto
         } else {
-          this.body.idPais = this.comboPais[1].value;
+          this.body.idPais = this.comboPais[0].value;
           this.onChangePais();
         }
       }
@@ -586,7 +585,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     if (e.target.value && e.target.value !== null) {
       if (e.target.value.length >= 3) {
 
-        this.getComboPoblacion();
+        this.getComboPoblacion(e.target.value);
         this.resultadosPoblaciones = "No hay resultados";
       } else {
         this.comboPoblacion = [];

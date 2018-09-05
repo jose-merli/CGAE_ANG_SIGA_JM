@@ -68,7 +68,7 @@
                 <label>País</label>
                 <p-dropdown class="select-form" [(ngModel)]="body.idPais" [filter]="true" filterMatchMode="contains" [options]="comboPais"
                   [(disabled)]="historyDisable" (onChange)="onChangePais()">
-                  </p-dropdown>
+                </p-dropdown>
               </div>
 
               <div class="form-group col-lg-6 col-md-6">
@@ -82,7 +82,7 @@
                 <label>Provincia</label>
                 <p-dropdown class="select-form" [(ngModel)]='provinciaSelecionada' [filter]="true" filterMatchMode="contains" [(disabled)]="isDisabledProvincia"
                   [options]="comboProvincia" (onChange)="onChangeProvincia()">
-                  </p-dropdown>
+                </p-dropdown>
               </div>
 
               <!-- <div *ngIf="poblacionExtranjera" class="form-group col-lg-6 col-md-6">
@@ -100,7 +100,7 @@
                 <label>Población</label>
                 <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true" filterMatchMode="contains" [(disabled)]="isDisabledPoblacion"
                   [options]="comboPoblacion" (input)="buscarPoblacion($event)" [emptyFilterMessage]="resultadosPoblaciones">
-                  </p-dropdown>
+                </p-dropdown>
               </div>
 
               <div *ngIf="poblacionExtranjera" class="form-group col-lg-6 col-md-6">
@@ -139,7 +139,7 @@
                       <label>{{dato.tipo}}</label>
                     </ng-template>
                   </p-column>
-                  </p-dataTable>
+                </p-dataTable>
 
               </div>
             </div>
@@ -187,12 +187,12 @@
 
     </div>
   </p-footer>
-  </p-dialog>
+</p-dialog>
 
 
 
 
-  <div *ngIf="progressSpinner" class="overlay-spinner">
-    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
-    <div class="loader"></div>
-  </div>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+  <div class="loader"></div>
+</div>
