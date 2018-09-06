@@ -94,8 +94,16 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.body.idPersona = this.usuarioBody[0].idPersona;
       this.provinciaSelecionada = this.body.idProvincia;
       console.log(this.body)
-      if (this.body.idPoblacion !== null || this.body.idPoblacion !== undefined) {
-        //this.getComboPoblacion("");
+      if (this.body.idPoblacion !== null && this.body.idPoblacion !== undefined) {
+        if (this.body.nombrePoblacion !== null && this.body.nombrePoblacion !== undefined) {
+
+          this.getComboPoblacion(this.body.nombrePoblacion.substring(0, 3));
+        }
+        //else {
+
+        //   this.getComboPoblacion("");
+        // }
+
       }
       this.getDatosContactos();
       if (
@@ -145,19 +153,19 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     this.sigaServices
       .post("busquedaPerJuridica_parametroColegio", parametro)
       .subscribe(
-        data => {
-          let parametroOcultarMotivo = JSON.parse(data.body);
-          if (parametroOcultarMotivo.parametro == "S") {
-            this.ocultarMotivo = true;
-          } else if (parametroOcultarMotivo.parametro == "N") {
-            this.ocultarMotivo = false;
-          } else {
-            this.ocultarMotivo = undefined;
-          }
-        },
-        err => {
-          console.log(err);
+      data => {
+        let parametroOcultarMotivo = JSON.parse(data.body);
+        if (parametroOcultarMotivo.parametro == "S") {
+          this.ocultarMotivo = true;
+        } else if (parametroOcultarMotivo.parametro == "N") {
+          this.ocultarMotivo = false;
+        } else {
+          this.ocultarMotivo = undefined;
         }
+      },
+      err => {
+        console.log(err);
+      }
       );
 
 
@@ -192,18 +200,36 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices
       .getParam(
-        "direcciones_comboPoblacion",
-        "?idProvincia=" + this.body.idProvincia + "&filtro=" + filtro
+      "direcciones_comboPoblacion",
+      "?idProvincia=" + this.body.idProvincia + "&filtro=" + filtro
       )
       .subscribe(
-        n => {
-          this.comboPoblacion = n.combooItems;
-        },
-        error => { },
-        () => {
-          // this.isDisabledPoblacion = false;
-          this.progressSpinner = false;
-        }
+      n => {
+        this.comboPoblacion = n.combooItems;
+      },
+      error => { },
+      () => {
+        // this.isDisabledPoblacion = false;
+        this.progressSpinner = false;
+      }
+      );
+  }
+  getComboPoblacionInicial() {
+    this.progressSpinner = true;
+    this.sigaServices
+      .getParam(
+      "direcciones_comboPoblacion",
+      "?idProvincia=" + this.body.idProvincia
+      )
+      .subscribe(
+      n => {
+        this.comboPoblacion = n.combooItems;
+      },
+      error => { },
+      () => {
+        // this.isDisabledPoblacion = false;
+        this.progressSpinner = false;
+      }
       );
   }
   getComboPais() {
@@ -285,7 +311,11 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         this.isDisabledCodigoPostal = false;
       }
       if (this.provinciaSelecionada != "") {
-        this.isDisabledPoblacion = false;
+        if (this.historyDisable == true) {
+          this.isDisabledPoblacion = true;
+        } else {
+          this.isDisabledPoblacion = false;
+        }
       } else {
         this.isDisabledPoblacion = true;
         this.body.idPoblacion = '';
