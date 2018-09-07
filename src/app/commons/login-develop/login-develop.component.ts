@@ -41,7 +41,7 @@ export class LoginDevelopComponent implements OnInit {
 
   ngOnInit() {
     this.ocultar = false;
-    this.progressSpinner = true;
+    this.progressSpinner = false;
     this.sigaServices.getBackend("validaInstitucion").subscribe(
       response => {
         this.progressSpinner = false;

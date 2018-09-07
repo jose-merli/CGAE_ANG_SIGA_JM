@@ -1,0 +1,458 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="busqueda-container">
+    <!--DATOS COLEGIACIÓN-->
+    <div class="card">
+        <div class="card-header header-ficha" (click)="abreCierraFichaColegiacion()">
+            <div *ngIf="!fichaColegiacion" class="form-row">
+                <div class="col-lg-1 col-md-2">
+                    <div class="img-colegiado">
+                        <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                        <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                    </div>
+                </div>
+                <div class="col-lg-11 col-md-10">
+                    <div class="d-flex justify-content-start mb-1">
+                        <label class="mr-auto title-ficha">Datos de colegiación
+                            <!--{{ "general.message.datos.generales" | translate}}--></label>
+                        <!--<label class="registros-ficha">(0 registros)</label>-->
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <label>Estado
+                            <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
+                            <span>Estado</span>
+                        </label>
+                        <label>Fecha de Estado
+                            <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
+                            <span>Fecha de Estado </span>
+                        </label>
+                        <label>Fecha de solicitud
+                            <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
+                            <span>Fecha de solicitud </span>
+                        </label>
+                        <i *ngIf="!fichaColegiacion" class="fa fa-angle-down float-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="fichaColegiacion" class=" header-ficha-open d-flex justify-content-start align-items-center">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                </div>
+                <label class="title-ficha">Datos de colegiación
+                    <!--{{ "general.message.datos.generales" | translate}}--></label>
+                <i class="fa fa-angle-up ml-auto"></i>
+            </div>
+        </div>
+        <!--cuerpo datos colegiación-->
+        <div *ngIf="fichaColegiacion" class="card-body card-body-ficha">
+            <div class="row">
+                <div class="col-lg-5 col-md-5">
+                    <div class="form-group col-lg-5 col-md-5">
+                        <label>Estado
+                            <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                        <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion" optionLabel="label"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-5 col-md-5">
+                        <label>Fecha estado
+                            <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                        <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true" icon="far fa-calendar-alt"
+                            dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
+                    </div>
+                    <div class="form-group col-lg-5 col-md-5">
+                        <label>Fecha solicitud
+                            <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                        <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true" icon="far fa-calendar-alt"
+                            dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
+                    </div>
+                </div>
+                <div class="bloque col-lg-7 col-md-7">
+                    <div class="form-group col-lg-12 col-md-12">
+                        <label>Observaciones
+                            <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                        <textarea [rows]="10" [cols]="10" pInputTextarea></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--FICHA DATOS COLEGIACION-->
+    <div class="card">
+        <div class="card-header header-ficha" (click)="abreCierraFichaSolicitud()">
+            <div *ngIf="!fichaSolicitud" class="form-row">
+                <div class="col-lg-1 col-md-2">
+                    <div class="img-colegiado">
+                        <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                        <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                    </div>
+                </div>
+                <div class="col-lg-11 col-md-10">
+                    <div class="d-flex justify-content-start mb-1">
+                        <label class="mr-auto title-ficha">Datos de solicitud
+                            <!--{{ "general.message.datos.generales" | translate}}--></label>
+                        <!--<label class="registros-ficha">(0 registros)</label>-->
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <label>Tipo
+                            <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
+                            <span>Tipo</span>
+                        </label>
+                        <label>Modalidad
+                            <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
+                            <span>Modalidad</span>
+                        </label>
+                        <i *ngIf="!fichaSolicitud" class="fa fa-angle-down float-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="fichaSolicitud" class=" header-ficha-open d-flex justify-content-start align-items-center">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                </div>
+                <label class="title-ficha">Datos de solicitud
+                    <!--{{ "general.message.datos.generales" | translate}}--></label>
+                <i class="fa fa-angle-up ml-auto"></i>
+            </div>
+        </div>
+        <!--cuerpo datos modalidad-->
+        <div *ngIf="fichaSolicitud" class="card-body card-body-ficha">
+            <div class="form-row">
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Solicitud de
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion" optionLabel="label"></p-dropdown>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Tipo de colegiación
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion" optionLabel="label"></p-dropdown>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Modalidad de documentación
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion" optionLabel="label"></p-dropdown>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Fecha de incorporación
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true" icon="far fa-calendar-alt"
+                        dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Nº colegiado
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <input type="text" class="form-control" pInputText disabled="true">
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <br>
+                    <p-checkbox binary="true" label="Residente"></p-checkbox>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--FICHA DATOS PERSONALES-->
+    <div class="card">
+        <div class="card-header header-ficha" (click)="abreCierraFichaPersonal()">
+            <div *ngIf="!fichaPersonal" class="form-row">
+                <div class="col-lg-1 col-md-2">
+                    <div class="img-colegiado">
+                        <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                        <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                    </div>
+                </div>
+                <div class="col-lg-11 col-md-10">
+                    <div class="d-flex justify-content-start mb-1">
+                        <label class="mr-auto title-ficha">Datos personales
+                            <!--{{ "general.message.datos.generales" | translate}}--></label>
+                        <!--<label class="registros-ficha">(0 registros)</label>-->
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <label>Tipo identificación
+                            <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
+                            <span>Tipo identificación</span>
+                        </label>
+                        <label>Nombre
+                            <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
+                            <span>Nombre</span>
+                        </label>
+                        <label>Apellidos
+                            <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
+                            <span>Apellidos</span>
+                        </label>
+                        <i *ngIf="!fichaPersonal" class="fa fa-angle-down float-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="fichaPersonal" class=" header-ficha-open d-flex justify-content-start align-items-center">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                </div>
+                <label class="title-ficha">Datos personales
+                    <!--{{ "general.message.datos.generales" | translate}}--></label>
+                <i class="fa fa-angle-up ml-auto"></i>
+            </div>
+        </div>
+        <!--cuerpo datos personales-->
+        <div *ngIf="fichaPersonal" class="card-body card-body-ficha">
+            <div class="row">
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Tipo identificación
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion" optionLabel="label"></p-dropdown>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Nº de identificación
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <input type="text" class="form-control" pInputText>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Sexo
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion" optionLabel="label"></p-dropdown>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Tratamiento
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion" optionLabel="label"></p-dropdown>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Nombre
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <input type="text" class="form-control" pInputText>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Apellido 1
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <input type="text" class="form-control" pInputText>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Apellido 2
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <input type="text" class="form-control" pInputText>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Estado civil
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion" optionLabel="label"></p-dropdown>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Fecha solicitud
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true" icon="far fa-calendar-alt"
+                        dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Natural de
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <input type="text" class="form-control" pInputText>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!--FICHA DATOS DIRECCIÓN-->
+    <div class="card">
+        <div class="card-header header-ficha" (click)="abreCierraFichaDireccion()">
+            <div *ngIf="!fichaDireccion" class="form-row">
+                <div class="col-lg-1 col-md-2">
+                    <div class="img-colegiado">
+                        <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                        <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                    </div>
+                </div>
+                <div class="col-lg-11 col-md-10">
+                    <div class="d-flex justify-content-start mb-1">
+                        <label class="mr-auto title-ficha">Datos de dirección
+                            <!--{{ "general.message.datos.generales" | translate}}--></label>
+                        <!--<label class="registros-ficha">(0 registros)</label>-->
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <label>País
+                            <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
+                            <span>País</span>
+                        </label>
+                        <label>Dirección
+                            <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
+                            <span>Dirección</span>
+                        </label>
+                        <label>Población
+                            <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
+                            <span>Población</span>
+                        </label>
+                        <i *ngIf="!fichaDireccion" class="fa fa-angle-down float-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="fichaDireccion" class=" header-ficha-open d-flex justify-content-start align-items-center">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                </div>
+                <label class="title-ficha">Datos de dirección
+                    <!--{{ "general.message.datos.generales" | translate}}--></label>
+                <i class="fa fa-angle-up ml-auto"></i>
+            </div>
+        </div>
+        <!--cuerpo datos dirección-->
+        <div *ngIf="fichaDireccion" class="card-body card-body-ficha">
+            <div class="row">
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>País
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion" optionLabel="label"></p-dropdown>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Dirección
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <input type="text" class="form-control" pInputText>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>CP
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <input type="text" class="form-control" pInputText>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Población
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <input type="text" class="form-control" pInputText>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Provincia
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <input type="text" class="form-control" pInputText>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Telefono 1
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <input type="text" class="form-control" pInputText>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Telefono 2
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <input type="text" class="form-control" pInputText>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Fax 1
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <input type="text" class="form-control" pInputText>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Fax 2
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <input type="text" class="form-control" pInputText>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Movil
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <input type="text" class="form-control" pInputText>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Correo electrónico
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <input type="text" class="form-control" pInputText>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--FICHA DATOS ALTER MUTUA-->
+    <div class="card">
+        <div class="card-header header-ficha" (click)="abreCierraFichaMutua()">
+            <div *ngIf="!fichaMutua" class="form-row">
+                <div class="col-lg-1 col-md-2">
+                    <div class="img-colegiado">
+                        <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                        <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                    </div>
+                </div>
+                <div class="col-lg-11 col-md-10">
+                    <div class="d-flex justify-content-start mb-1">
+                        <label class="mr-auto title-ficha">Alter Mutua
+                            <!--{{ "general.message.datos.generales" | translate}}--></label>
+                        <!--<label class="registros-ficha">(0 registros)</label>-->
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <label>País {{"censo.fichaCliente.literal.identificacion" | translate}}
+                            <span>País</span>
+                        </label>
+                        <i *ngIf="!fichaMutua" class="fa fa-angle-down float-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="fichaMutua" class=" header-ficha-open d-flex justify-content-start align-items-center">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                </div>
+                <label class="title-ficha">Alter Mutua
+                    <!--{{ "general.message.datos.generales" | translate}}--></label>
+                <i class="fa fa-angle-up ml-auto"></i>
+            </div>
+        </div>
+        <!--cuerpo datos alter mutúa-->
+        <div *ngIf="fichaMutua" class="card-body card-body-ficha">
+            <div class="row">
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>País
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion" optionLabel="label"></p-dropdown>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--FICHA MUTUALIDAD DE LA ABOGACÍA-->
+    <div class="card">
+        <div class="card-header header-ficha" (click)="abreCierraFichaAbogacia()">
+            <div *ngIf="!fichaAbogacia" class="form-row">
+                <div class="col-lg-1 col-md-2">
+                    <div class="img-colegiado">
+                        <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                        <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                    </div>
+                </div>
+                <div class="col-lg-11 col-md-10">
+                    <div class="d-flex justify-content-start mb-1">
+                        <label class="mr-auto title-ficha">Mutualidad de la abogacía
+                            <!--{{ "general.message.datos.generales" | translate}}--></label>
+                        <!--<label class="registros-ficha">(0 registros)</label>-->
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <label>País {{"censo.fichaCliente.literal.identificacion" | translate}}
+                            <span>País</span>
+                        </label>
+                        <i *ngIf="!fichaAbogacia" class="fa fa-angle-down float-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="fichaAbogacia" class=" header-ficha-open d-flex justify-content-start align-items-center">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                </div>
+                <label class="title-ficha">Mutualidad de la abogacía
+                    <!--{{ "general.message.datos.generales" | translate}}--></label>
+                <i class="fa fa-angle-up ml-auto"></i>
+            </div>
+        </div>
+        <!--cuerpo datos abogacía-->
+        <div *ngIf="fichaAbogacia" class="card-body card-body-ficha">
+            <div class="row">
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>País
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion" optionLabel="label"></p-dropdown>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
