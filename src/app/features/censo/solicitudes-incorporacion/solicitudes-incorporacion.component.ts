@@ -39,14 +39,13 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   constructor(private translateService: TranslateService, private formBuilder: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef, private router: Router) {
     this.formBusqueda = this.formBuilder.group({
-      tipoSolicitud: new FormControl(null),
       estadoSolicitud: new FormControl(null, Validators.minLength(3)),
       fechaDesde: new FormControl(null, Validators.required),
       fechaHasta: new FormControl(null, Validators.required),
-      identificacion: new FormControl(null, Validators.minLength(3)),
       nombre: new FormControl(null, Validators.minLength(3)),
       apellidos: new FormControl(null, Validators.minLength(3))
     });
+
   }
 
   ngOnInit() {
@@ -80,9 +79,11 @@ export class SolicitudesIncorporacionComponent implements OnInit {
 
   isBuscar() {
     this.buscar = true;
-    if (this.checkFilters()) {
+    if (!this.formBusqueda.invalid && this.checkIdentificacion(this.body.identificacion)) {
       this.getInfo();
     } else {
+      console.log("mal filtros");
+      this.table.reset();
       //TODO : MOSTRAR MENSAJE DE FALLO EN FILTROS ?
     }
   }
@@ -126,14 +127,6 @@ export class SolicitudesIncorporacionComponent implements OnInit {
 
 
   }
-  checkFilters(): boolean {
-    //TODO: COMPROBAR FILTROS CON FORMCONTROL ??
-    if (this.body.apellidos) {
-      return true;
-    } else {
-      return false;
-    }
-  }
   irNuevaSolicitud() {
     sessionStorage.setItem("editar", "false");
     this.router.navigate(["/nuevaIncorporacion"]);
@@ -150,11 +143,8 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     this.router.navigate(["/nuevaIncorporacion"]);
   }
 
-  abrirFicha() {
-    this.fichaAbierta = true;
-  }
-  cerrarFicha() {
-    this.fichaAbierta = false;
+  abrirCerrarFicha() {
+    this.fichaAbierta = !this.fichaAbierta;
   }
 
 
@@ -172,6 +162,8 @@ export class SolicitudesIncorporacionComponent implements OnInit {
           return this.isValidNIE(doc);
         }
       }
+    } else {
+      return true;
     }
   }
 
