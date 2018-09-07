@@ -1,14 +1,159 @@
-<app-my-iframe url="{{ url }}"></app-my-iframe>
-<!-- <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
-<div class="busqueda-container">
-    <div class="header-title">
-        <i class="fa fa-square"></i>
-        <p> Maqueta </p>
+<div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{ "menu.censo" | translate}}
+        <i class="fa fa-angle-right"></i> Solicitudes de incorporación
+        <!--{{ 'censo.busquedaClientes.busquedaNoColegiados.titulo' | translate}}-->
+    </p>
+</div>
+<div class="card">
+    <div class="card-body">
+        <p class="title-module">Solicitudes de incorporación
+            <!--{{ 'censo.busquedaClientes.busquedaNoColegiados.titulo' | translate}}-->
+            <i (click)="abrirCerrarFicha()" *ngIf="!fichaAbierta" class="fa fa-angle-up float-right"></i>
+            <i (click)="abrirCerrarFicha()" *ngIf="fichaAbierta" class="fa fa-angle-down float-right"></i>
+        </p>
+        <div *ngIf="fichaAbierta" class="module vista-simple">
+            <div class="form-row">
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Tipo de solicitud
+                        <!--{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}--></label>
+                    <p-dropdown class="select-form" [(ngModel)]="tipoSolicitud"></p-dropdown>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Estado solicitud
+                        <!--{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}--></label>
+                    <input type="text" class="form-control" pInputText [(ngModel)]="body.estadoSolicitud" [formControl]="formBusqueda.controls['estadoSolicitud']">
+                    <small class="input-error" *ngIf="!formBusqueda.controls['estadoSolicitud'].pristine && formBusqueda.controls['estadoSolicitud'].status == 'INVALID'">
+                        Debe tener como mínimo tres carácteres</small>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Fecha desde
+                        <!--{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}--></label>
+                    <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true" icon="far fa-calendar-alt"
+                        dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="body.fechaDesde" [formControl]="formBusqueda.controls['fechaDesde']"></p-calendar>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Fecha hasta
+                        <!--{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}--></label>
+                    <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true" icon="far fa-calendar-alt"
+                        dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="body.fechaHasta" [formControl]="formBusqueda.controls['fechaHasta']"></p-calendar>
+
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Nº identificación
+                        <!--{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}--></label>
+                    <input type="text" class="form-control" pInputText [(ngModel)]="body.identificacion">
+                    <small class="input-error" *ngIf="!checkIdentificacion(body.identificacion) && body.identificacion && body.identificacion.length > 0">
+                        Documento no válido</small>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Apellidos
+                        <!--{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}--></label>
+                    <input type="text" class="form-control" pInputText [(ngModel)]="body.apellidos" [formControl]="formBusqueda.controls['apellidos']">
+                    <small class="input-error" *ngIf="!formBusqueda.controls['apellidos'].pristine && formBusqueda.controls['apellidos'].status == 'INVALID'">
+                        Debe tener como mínimo tres carácteres</small>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Nombre
+                        <!--{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}--></label>
+                    <input type="text" class="form-control" pInputText [(ngModel)]="body.nombre" [formControl]="formBusqueda.controls['nombre']">
+                    <small class="input-error" *ngIf="!formBusqueda.controls['nombre'].pristine && formBusqueda.controls['nombre'].status == 'INVALID'">
+                        Debe tener como mínimo tres carácteres</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="card-footer">
+        <div class="text-right main-button ">
+            <button (click)="restablecerCampos()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="Restablecer"></button>
+            <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="Buscar"></button>
+        </div>
+    </div>
+</div>
+<div *ngIf="buscar == true" class="card mt-3">
+    <div class="card-body p-0">
+        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+            [(selection)]="selectedDatos" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos"
+            [sortOrder]="1" [paginator]="activarPaginacion()" (onRowSelect)="irDetalleSolicitud(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+            paginatorPosition="both" [rows]="selectedItem" pageLinks="4">
+            <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="{{'general.boton.search' | translate}}"
+                [filter]="true" filterMatchMode="contains">
+                <ng-template let-datoH="rowData" pTemplate="body">
+                    <div>
+                        <span>{{datoH[col.field]}}</span>
+                    </div>
+                </ng-template>
+            </p-column>
+            <ng-template pTemplate="paginatorLeft">
+                <div class="mostrar d-flex text-right justify-content-end">
+                    <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first +
+                        table.rows}} de un total de {{table.totalRecords}}</label>
+                    <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+                    <label>{{ "general.message.mostrar" | translate}}</label>
+                    <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                    <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                </div>
+            </ng-template>
+            <p-footer>
+                <div class="text-right main-button">
+                    <button (click)="irNuevaSolicitud()" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-plus" iconPos="left"
+                        label="{{ 'general.boton.new' | translate}}"></button>
+                </div>
+            </p-footer>
+        </p-dataTable>
+        <!--<p-table [value]="datos" class="tabla-listado">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th *ngFor="let col of cols">
+                        {{col.header}}
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData>
+                <tr [pSelectableRow]="rowData">
+                    <td>
+                        <p>{{rowData.id}}</p>
+                    </td>
+                    <td>
+                        <p>{{rowData.apellidos}}</p>
+                    </td>
+                    <td>
+                        <p>{{rowData.nombre}}</p>
+                    </td>
+                    <td>
+                        <p>{{rowData.id}}</p>
+                    </td>
+                    <td>
+                        <p>{{rowData.mail}}</p>
+                    </td>
+                    <td>
+                        <p>{{rowData.fechaNacimiento}}</p>
+                    </td>
+                    <td>
+                        <p>{{rowData.telefono}}</p>
+                    </td>
+                    <td>
+                        <p>{{rowData.fechaNacimiento}}</p>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="paginatorleft">
+                <div class="mostrar">
+                    <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first
+                        + table.rows}} de un total de {{table.totalRecords}}</label>
+                    <label>{{'tabla.mensaje.mostrar' | translate}}</label>
+                    <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                    <label>{{'tabla.mensaje.registros' | translate}}</label>
+                </div>
+            </ng-template>
+        </p-table>-->
     </div>
 </div>
 
-<div class="card">
+<!--<div class="card">
     <div class="card-body">
 
         <p class="title-module">Etiquetas
