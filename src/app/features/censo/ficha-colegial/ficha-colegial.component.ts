@@ -42,6 +42,7 @@ export class FichaColegialComponent implements OnInit {
   colsColegiaciones: any = [];
   colsCertificados: any = [];
   colsSociedades: any = [];
+  colsCurriculares: any = [];
 
   rowsPerPage: any = [];
   tipoCuenta: any[] = [];
@@ -206,6 +207,29 @@ export class FichaColegialComponent implements OnInit {
       {
         field: "numeroIntegrantes",
         header: "censo.general.literal.numeroIntegrantes"
+      }
+    ];
+
+    this.colsCurriculares = [
+      {
+        field: "fechaInicio",
+        header: "facturacion.seriesFacturacion.literal.fInicio"
+      },
+      {
+        field: "fechaFin",
+        header: "censo.consultaDatos.literal.fechaFin"
+      },
+      {
+        field: "categoriaCurricular",
+        header: "censo.busquedaClientesAvanzada.literal.categoriaCV"
+      },
+      {
+        field: "subtipoCurricular",
+        header: "censo.busquedaClientesAvanzada.literal.subtiposCV"
+      },
+      {
+        field: "descripcion",
+        header: "general.description"
       }
     ];
 
