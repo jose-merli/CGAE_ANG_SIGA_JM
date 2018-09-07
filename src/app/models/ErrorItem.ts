@@ -3,5 +3,6 @@ export class ErrorItem {
   description: String;
   infoURL: String;
   message: String;
-  constructor() { }
+  errorDetail: string;
+  constructor() {}
 }

@@ -16,6 +16,12 @@ import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { DataTable } from "primeng/datatable";
 import { esCalendar } from "./../../../utils/calendar";
 import { DatosColegiadosItem } from "../../../models/DatosColegiadosItem";
+import {
+  FormBuilder,
+  FormGroup,
+  FormControl,
+  Validators
+} from "../../../../../node_modules/@angular/forms";
 
 @Component({
   selector: "app-busqueda-colegiados",
@@ -32,6 +38,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
 
+  formBusqueda: FormGroup;
   numSelected: number = 0;
   datos: any[];
   sortO: number = 1;
@@ -47,17 +54,17 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   editar: boolean = true;
 
-  etiquetas: any[];
-  situacion: any[];
-  residencia: any[] = [];
-  inscrito: any[] = [];
-  sexo: any[] = [];
-  estadoCivil: any[];
-  categoriaCurricular: any[];
-  subtipoCV: any[];
-  provincias: any[];
+  comboEtiquetas: any[];
+  comboSituacion: any[];
+  comboResidencia: any[] = [];
+  comboInscrito: any[] = [];
+  comboSexo: any[] = [];
+  comboEstadoCivil: any[];
+  comboCategoriaCurricular: any[];
+  comboSubtipoCV: any[];
+  comboProvincias: any[];
   comboPoblacion: any[];
-  tiposDireccion: any[];
+  comboTiposDireccion: any[];
 
   textSelected: String = "{0} etiquetas seleccionadas";
   body: DatosColegiadosItem = new DatosColegiadosItem();
@@ -77,14 +84,23 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
+    private formBuilder: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
   ) {
     super(USER_VALIDATIONS);
+    this.formBusqueda = this.formBuilder.group({
+      id: new FormControl(null, Validators.minLength(3)),
+      nombre: new FormControl(null, Validators.minLength(3)),
+      apellido1: new FormControl(null, Validators.minLength(3)),
+      apellido2: new FormControl(null, Validators.minLength(3)),
+      numeroColegiado: new FormControl(null, Validators.minLength(3))
+    });
   }
 
-  @ViewChild("table") table: DataTable;
+  @ViewChild("table")
+  table: DataTable;
   selectedDatos;
 
   ngOnInit() {
@@ -149,12 +165,11 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     }
   }
 
-  getComboPoblacion() {
-    this.progressSpinner = true;
+  getComboPoblacion(dataFilter) {
     this.sigaServices
       .getParam(
-        "direcciones_comboPoblacion",
-        "?idProvincia=" + this.body.idProvincia
+        "busquedaColegiados_poblacion",
+        "?idProvincia=" + this.body.idProvincia + "&dataFilter=" + dataFilter
       )
       .subscribe(
         n => {
@@ -162,9 +177,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           this.comboPoblacion = n.combooItems;
         },
         error => {},
-        () => {
-          this.progressSpinner = false;
-        }
+        () => {}
       );
   }
 
@@ -183,9 +196,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   buscarPoblacion(e) {
-    if (e.target.value && e.target.value !== null) {
+    if (e.target.value && e.target.value !== null && e.target.value !== "") {
       if (e.target.value.length >= 3) {
-        this.getComboPoblacion();
+        this.getComboPoblacion(e.target.value);
         this.resultadosPoblaciones = "No hay resultados";
       } else {
         this.comboPoblacion = [];
@@ -205,80 +218,106 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     );
   }
 
+  isBuscar() {
+    this.getInfo();
+    this.buscar = true;
+  }
+
   getCombos() {
+    this.getComboEtiquetas();
+    this.getComboSituacion();
+    this.getComboResidencia();
+    this.getComboInscrito();
+    this.getComboSexo();
+    this.getComboEstadoCivil();
+    this.getComboCategoriaCurricular();
+    this.getComboProvincias();
+    this.getComboTiposDireccion();
+  }
+
+  getComboEtiquetas() {
     // obtener etiquetas
     this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
       n => {
-        this.etiquetas = n.combooItems;
+        this.comboEtiquetas = n.combooItems;
       },
       err => {
         console.log(err);
       }
     );
+  }
 
-    // obtener situación
+  getComboSituacion() {
     this.sigaServices.get("busquedaColegiados_situacion").subscribe(
       n => {
-        this.situacion = n.combooItems;
+        this.comboSituacion = n.combooItems;
       },
       err => {
         console.log(err);
       }
     );
+  }
 
-    // residencia
-    this.residencia = [
+  getComboResidencia() {
+    this.comboResidencia = [
       { label: "", value: 0 },
       { label: "Sí", value: 1 },
       { label: "No", value: 2 }
     ];
-    // inscrito
-    this.inscrito = [
+  }
+
+  getComboInscrito() {
+    this.comboInscrito = [
       { label: "", value: 0 },
       { label: "Sí", value: 1 },
       { label: "No", value: 2 }
     ];
-    // sexo
-    this.sexo = [
+  }
+  getComboSexo() {
+    this.comboSexo = [
       { label: "", value: 0 },
       { label: "Hombre", value: 1 },
       { label: "Mujer", value: 2 }
     ];
+  }
 
-    // estado civil
+  getComboEstadoCivil() {
     this.sigaServices.get("busquedaColegiados_estadoCivil").subscribe(
       n => {
-        this.estadoCivil = n.combooItems;
+        this.comboEstadoCivil = n.combooItems;
       },
       err => {
         console.log(err);
       }
     );
+  }
 
-    // categoria curricular
+  getComboCategoriaCurricular() {
     this.sigaServices.get("busquedaColegiados_categoriaCurricular").subscribe(
       n => {
-        this.categoriaCurricular = n.combooItems;
+        this.comboCategoriaCurricular = n.combooItems;
       },
       err => {
         console.log(err);
       }
     );
+  }
 
-    // provincias
+  getComboProvincias() {
     this.sigaServices.get("busquedaColegiados_provincias").subscribe(
       n => {
-        this.provincias = n.combooItems;
+        this.comboProvincias = n.combooItems;
       },
       err => {
         console.log(err);
       }
     );
+  }
 
-    // tipos direccion
+  getComboTiposDireccion() {
     this.sigaServices.get("busquedaColegiados_tipoDireccion").subscribe(
       n => {
-        this.tiposDireccion = n.combooItems;
+        this.comboTiposDireccion = n.combooItems;
       },
       err => {
         console.log(err);
@@ -306,16 +345,16 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         header: "censo.busquedaClientesAvanzada.literal.nColegiado"
       },
       {
+        field: "estadoColegial",
+        header: "censo.colegiarNoColegiados.literal.estado"
+      },
+      {
         field: "residente",
         header: "censo.ws.literal.residente"
       },
       {
         field: "inscrito",
         header: "censo.fusionDuplicados.colegiaciones.inscrito"
-      },
-      {
-        field: "fechaNacimiento",
-        header: "censo.consultaDatosColegiacion.literal.fechaNac"
       },
       {
         field: "correoElectronico",
@@ -328,6 +367,192 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       {
         field: "telefonoMovil",
         header: "censo.datosDireccion.literal.movil"
+      }
+    ];
+
+    this.datos = [
+      {
+        identificacion: "8771",
+        apellidos: "Abellan sirvent",
+        nombre: "Javier",
+        numeroColegiado: "1213213",
+        residente: "si",
+        inscrito: "no",
+        estadoColegial: "12/12/1992",
+        correoElectronico: "ejerci@ente.es",
+        telefonoFijo: "4234234234",
+        telefonoMovil: "234234234"
+      },
+      {
+        identificacion: "8772",
+        apellidos: "Abellan sirvent",
+        nombre: "Javier",
+        numeroColegiado: "1213213",
+        residente: "si",
+        inscrito: "no",
+        estadoColegial: "12/12/1992",
+        correoElectronico: "ejerci@ente.es",
+        telefonoFijo: "4234234234",
+        telefonoMovil: "234234234"
+      },
+      {
+        identificacion: "8773",
+        apellidos: "Abellan sirvent",
+        nombre: "Javier",
+        numeroColegiado: "1213213",
+        residente: "si",
+        inscrito: "no",
+        estadoColegial: "12/12/1992",
+        correoElectronico: "ejerci@ente.es",
+        telefonoFijo: "4234234234",
+        telefonoMovil: "234234234"
+      },
+      {
+        identificacion: "8774",
+        apellidos: "Abellan sirvent",
+        nombre: "Javier",
+        numeroColegiado: "1213213",
+        residente: "si",
+        inscrito: "no",
+        estadoColegial: "12/12/1992",
+        correoElectronico: "ejerci@ente.es",
+        telefonoFijo: "4234234234",
+        telefonoMovil: "234234234"
+      },
+      {
+        identificacion: "8775",
+        apellidos: "Abellan sirvent",
+        nombre: "Javier",
+        numeroColegiado: "1213213",
+        residente: "si",
+        inscrito: "no",
+        estadoColegial: "12/12/1992",
+        correoElectronico: "ejerci@ente.es",
+        telefonoFijo: "4234234234",
+        telefonoMovil: "234234234"
+      },
+      {
+        identificacion: "8776",
+        apellidos: "Abellan sirvent",
+        nombre: "Javier",
+        numeroColegiado: "1213213",
+        residente: "si",
+        inscrito: "no",
+        estadoColegial: "12/12/1992",
+        correoElectronico: "ejerci@ente.es",
+        telefonoFijo: "4234234234",
+        telefonoMovil: "234234234"
+      },
+      {
+        identificacion: "8777",
+        apellidos: "Abellan sirvent",
+        nombre: "Javier",
+        numeroColegiado: "1213213",
+        residente: "si",
+        inscrito: "no",
+        estadoColegial: "12/12/1992",
+        correoElectronico: "ejerci@ente.es",
+        telefonoFijo: "4234234234",
+        telefonoMovil: "234234234"
+      },
+      {
+        identificacion: "8778",
+        apellidos: "Abellan sirvent",
+        nombre: "Javier",
+        numeroColegiado: "1213213",
+        residente: "si",
+        inscrito: "no",
+        estadoColegial: "12/12/1992",
+        correoElectronico: "ejerci@ente.es",
+        telefonoFijo: "4234234234",
+        telefonoMovil: "234234234"
+      },
+      {
+        identificacion: "8779",
+        apellidos: "Abellan sirvent",
+        nombre: "Javier",
+        numeroColegiado: "1213213",
+        residente: "si",
+        inscrito: "no",
+        estadoColegial: "12/12/1992",
+        correoElectronico: "ejerci@ente.es",
+        telefonoFijo: "4234234234",
+        telefonoMovil: "234234234"
+      },
+      {
+        identificacion: "87710",
+        apellidos: "Abellan sirvent",
+        nombre: "Javier",
+        numeroColegiado: "1213213",
+        residente: "si",
+        inscrito: "no",
+        estadoColegial: "12/12/1992",
+        correoElectronico: "ejerci@ente.es",
+        telefonoFijo: "4234234234",
+        telefonoMovil: "234234234"
+      },
+      {
+        identificacion: "87711",
+        apellidos: "Abellan sirvent",
+        nombre: "Javier",
+        numeroColegiado: "1213213",
+        residente: "si",
+        inscrito: "no",
+        estadoColegial: "12/12/1992",
+        correoElectronico: "ejerci@ente.es",
+        telefonoFijo: "4234234234",
+        telefonoMovil: "234234234"
+      },
+      {
+        identificacion: "87712",
+        apellidos: "Abellan sirvent",
+        nombre: "Javier",
+        numeroColegiado: "1213213",
+        residente: "si",
+        inscrito: "no",
+        estadoColegial: "12/12/1992",
+        correoElectronico: "ejerci@ente.es",
+        telefonoFijo: "4234234234",
+        telefonoMovil: "234234234"
+      },
+      {
+        identificacion: "87713",
+        apellidos: "Abellan sirvent",
+        nombre: "Javier",
+        numeroColegiado: "1213213",
+        residente: "si",
+        inscrito: "no",
+        estadoColegial: "12/12/1992",
+        correoElectronico: "ejerci@ente.es",
+        telefonoFijo: "4234234234",
+        telefonoMovil: "234234234"
+      },
+      {
+        identificacion: "87714",
+        apellidos: "Abellan sirvent",
+        nombre: "Javier",
+        numeroColegiado: "1213213",
+        residente: "si",
+        inscrito: "no",
+        estadoColegial: "12/12/1992",
+        correoElectronico: "ejerci@ente.es",
+        telefonoFijo: "4234234234",
+        telefonoMovil: "234234234"
+      }
+    ];
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: "Todo",
+        value: this.datos.length
       }
     ];
   }

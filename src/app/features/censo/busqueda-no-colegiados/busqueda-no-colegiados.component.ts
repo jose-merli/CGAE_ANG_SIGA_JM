@@ -9,8 +9,10 @@ import { esCalendar } from "../../../utils/calendar";
 import { Router } from "../../../../../node_modules/@angular/router";
 import { SigaServices } from "../../../_services/siga.service";
 import { TranslateService } from "../../../commons/translate";
-import { DatosNoColegiadosItem } from "../../../models/DatosNoColegiadosItem";
 import { DataTable } from "../../../../../node_modules/primeng/primeng";
+import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
+import { DatosNoColegiadosObject } from "../../../models/DatosNoColegiadosObject";
+import { DatePipe } from "../../../../../node_modules/@angular/common";
 
 @Component({
   selector: "app-busqueda-no-colegiados",
@@ -31,8 +33,8 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   resultadosPoblaciones: any;
 
   editar: boolean = true;
-  textFilter: String = "Selección Múltiple";
-  body: DatosNoColegiadosItem = new DatosNoColegiadosItem();
+  textFilter: String = "Elegir";
+  body: NoColegiadoItem = new NoColegiadoItem();
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
   isEditable: boolean = false;
@@ -47,6 +49,11 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   selectedItem: number = 10;
   selectAll: boolean = false;
   numSelected: number = 0;
+  fechaNacimientoSelect: Date;
+  fechaNacimientoSelectOld: Date;
+
+  noColegiadoSearch = new DatosNoColegiadosObject();
+  showMensajeObligatorio = false;
 
   @ViewChild("table")
   table: DataTable;
@@ -72,11 +79,11 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     private router: Router,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private datePipe: DatePipe
   ) {
     this.formBusqueda = this.formBuilder.group({
-      fechaNacimiento: new FormControl(null, Validators.required),
-      id: new FormControl(null, Validators.minLength(3)),
+      nif: new FormControl(null, Validators.minLength(3)),
       nombre: new FormControl(null, Validators.minLength(3)),
       apellidos: new FormControl(null, Validators.minLength(3))
     });
@@ -113,6 +120,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     return fichaPosible.activa;
   }
 
+  //Funcion que carga todos los combos de los filtros de la pantalla
   getCombos() {
     this.getComboProvincias();
     this.getComboEstadoCivil();
@@ -122,6 +130,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     this.getComboEtiquetas();
   }
 
+  //Funcion que carga combo del campo sexo
   getComboSexo() {
     this.comboSexo = [
       { label: "", value: null },
@@ -130,6 +139,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     ];
   }
 
+  //Funcion que carga combo del campo estado civil
   getComboEstadoCivil() {
     this.sigaServices.get("busquedaNoColegiados_estadoCivil").subscribe(
       n => {
@@ -141,6 +151,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     );
   }
 
+  //Funcion que carga combo del campo etiquetas
   getComboEtiquetas() {
     this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
       n => {
@@ -152,6 +163,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     );
   }
 
+  //Funcion que carga combo del campo tipo direccion
   getComboTipoDireccion() {
     this.sigaServices.get("busquedaNoColegiados_tipoDireccion").subscribe(
       n => {
@@ -163,6 +175,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     );
   }
 
+  //Funcion que carga combo del campo curricular
   getComboCategoriaCurricular() {
     this.sigaServices.get("busquedaNoColegiados_categoriaCurricular").subscribe(
       n => {
@@ -174,6 +187,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     );
   }
 
+  //Funcion que carga combo del campo provincias
   getComboProvincias() {
     this.sigaServices.get("busquedaNoColegiados_provincias").subscribe(
       n => {
@@ -185,6 +199,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     );
   }
 
+  //Funcion que carga combo del campo poblacion
   getComboPoblacion(dataFilter) {
     this.sigaServices
       .getParam(
@@ -201,6 +216,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       );
   }
 
+  //Funcion que carga la provincia al cambiar el campo codigo postal
   onChangeCodigoPostal(event) {
     if (this.isValidCodigoPostal() && this.body.codigoPostal.length == 5) {
       let value = this.body.codigoPostal.substring(0, 2);
@@ -215,6 +231,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     }
   }
 
+  //Funcion que valida el codido postal
   isValidCodigoPostal(): boolean {
     return (
       this.body.codigoPostal &&
@@ -223,8 +240,9 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     );
   }
 
+  //Funcion que busca poblacion según la provincia seleccionada
   buscarPoblacion(e) {
-    if (e.target.value && e.target.value !== null && e.target.value !== "") {
+    if (e.target.value && e.target.value !== null) {
       if (e.target.value.length >= 3) {
         this.getComboPoblacion(e.target.value);
         this.resultadosPoblaciones = "No hay resultados";
@@ -238,6 +256,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     }
   }
 
+  //Opción tabla de seleccionar varias filas
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
     if (this.selectMultiple) {
@@ -250,6 +269,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     }
   }
 
+  //Opción tabla de seleccionar todas las filas
   onChangeSelectAll() {
     if (this.selectAll === true) {
       this.selectMultiple = false;
@@ -275,13 +295,56 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     }
   }
 
-  isBuscar() {
-    this.getInfo();
+  //Busca No colegiados según los filtros
+  search() {
+    this.selectAll = false;
+    this.selectMultiple = false;
+    this.selectedDatos = "";
+    this.getColsResults();
+
+    if (
+      this.fechaNacimientoSelect != undefined ||
+      this.fechaNacimientoSelect != null
+    ) {
+      this.body.fechaNacimiento = this.datePipe.transform(
+        this.fechaNacimientoSelect,
+        "dd/MM/yyyy"
+      );
+    } else {
+      this.body.fechaNacimiento = null;
+    }
+
+    this.progressSpinner = true;
+    this.showMensajeObligatorio = false;
     this.buscar = true;
+
+    this.sigaServices
+      .postPaginado(
+        "busquedaNoColegiados_searchNoColegiado",
+        "?numPagina=1",
+        this.body
+      )
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.noColegiadoSearch = JSON.parse(data["body"]);
+          this.datos = this.noColegiadoSearch.noColegiadoItem;
+          this.convertirStringADate(this.datos);
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
   }
 
   isLimpiar() {
-    this.body = new DatosNoColegiadosItem();
+    this.body = new NoColegiadoItem();
+    this.fechaNacimientoSelect = null;
   }
 
   isCrear() {
@@ -307,152 +370,37 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     this.isEditable = false;
   }
 
-  getInfo() {
+  getColsResults() {
     this.cols = [
-      { field: "id", header: "Nº Identificación" },
-      { field: "apellidos", header: "Apellidos" },
-      { field: "nombre", header: "Nombre" },
-      { field: "fechaNacimiento", header: "Fecha de nacimiento" },
-      { field: "mail", header: "Correo Electrónico" },
-      { field: "telefono", header: "Teléfono" }
+      {
+        field: "nif",
+        header: "censo.consultaDatosColegiacion.literal.numIden"
+      },
+      {
+        field: "nombre",
+        header: "administracion.parametrosGenerales.literal.nombre"
+      },
+      {
+        field: "fechaNacimiento",
+        header: "censo.consultaDatosColegiacion.literal.fechaNac"
+      },
+      { field: "correo", header: "censo.datosDireccion.literal.correo" },
+      { field: "telefono", header: "censo.ws.literal.telefono" },
+      { field: "movil", header: "censo.datosDireccion.literal.movil" }
     ];
+  }
 
-    this.datos = [
-      {
-        id: "8771",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      },
-      {
-        id: "8772",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      },
-      {
-        id: "8773",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      },
-      {
-        id: "8774",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      },
-      {
-        id: "8775",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      },
-      {
-        id: "8776",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      },
-      {
-        id: "8777",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      },
-      {
-        id: "8778",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      },
-      {
-        id: "8779",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      },
-      {
-        id: "87710",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      },
-      {
-        id: "87711",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      },
-      {
-        id: "87712",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      },
-      {
-        id: "87713",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      },
-      {
-        id: "87714",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      },
-      {
-        id: "87715",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
+  convertirStringADate(datos) {
+    datos.forEach(element => {
+      if (element.fechaNacimiento == "" || element.fechaNacimiento == null) {
+        element.fechaNacimiento = null;
+      } else {
+        var year = element.fechaNacimiento.substring(0, 4);
+        var month = element.fechaNacimiento.substring(5, 7);
+        var day = element.fechaNacimiento.substring(8, 10);
+        element.fechaNacimiento = "";
+        element.fechaNacimiento = day + "/" + month + "/" + year;
       }
-    ];
-
-    this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
-      },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: "Todo",
-        value: this.datos.length
-      }
-    ];
+    });
   }
 }

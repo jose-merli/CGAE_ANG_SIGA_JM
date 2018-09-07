@@ -1,7 +1,7 @@
 import { ErrorItem } from "./ErrorItem";
-import { DatosNoColegiadosItem } from "./DatosNoColegiadosItem";
+import { NoColegiadoItem } from "./NoColegiadoItem";
 export class DatosNoColegiadosObject {
   error: ErrorItem;
-  mandatosItem: DatosNoColegiadosItem[] = [];
+  noColegiadoItem: NoColegiadoItem[] = [];
   constructor() {}
 }
