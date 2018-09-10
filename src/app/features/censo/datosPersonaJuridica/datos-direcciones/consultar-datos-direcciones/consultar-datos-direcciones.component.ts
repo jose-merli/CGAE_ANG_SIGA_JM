@@ -56,7 +56,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   showGuardarAuditoria: boolean = false;
   ocultarMotivo: boolean = undefined;
   resultadosPoblaciones: any;
-
+  instituciones: any;
   tooltipFechaMod: any;
 
   constructor(
@@ -71,6 +71,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.historyDisable = true;
       this.disableCheck = true;
     }
+
     sessionStorage.setItem("editarDirecciones", "true");
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.textFilter = "Elegir";
@@ -205,6 +206,25 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       () => {}
     );
   }
+
+  getLabelbyFilter(array) {
+    /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+para poder filtrar el dato con o sin estos caracteres*/
+    array.map(e => {
+      let accents =
+        "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+      let accentsOut =
+        "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+      let i;
+      let x;
+      for (i = 0; i < e.label.length; i++) {
+        if ((x = accents.indexOf(e.label[i])) != -1) {
+          e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+          return e.labelSinTilde;
+        }
+      }
+    });
+  }
   getComboPoblacion(filtro: string) {
     this.progressSpinner = true;
     this.sigaServices
@@ -215,6 +235,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       .subscribe(
         n => {
           this.comboPoblacion = n.combooItems;
+          this.getLabelbyFilter(this.comboPoblacion);
         },
         error => {},
         () => {

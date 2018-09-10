@@ -68,7 +68,7 @@
                 <label>País</label>
                 <p-dropdown class="select-form" [(ngModel)]="body.idPais" [filter]="true" filterMatchMode="contains" [options]="comboPais"
                   [(disabled)]="historyDisable" (onChange)="onChangePais()">
-                  </p-dropdown>
+                </p-dropdown>
               </div>
 
               <div class="form-group col-lg-6 col-md-6">
@@ -80,9 +80,9 @@
 
               <div class="form-group col-lg-6 col-md-6">
                 <label>Provincia</label>
-                <p-dropdown class="select-form" [(ngModel)]='provinciaSelecionada' [filter]="true" filterMatchMode="contains" [(disabled)]="isDisabledProvincia"
-                  [options]="comboProvincia" (onChange)="onChangeProvincia()">
-                  </p-dropdown>
+                <p-dropdown class="select-form" [(ngModel)]='provinciaSelecionada' [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"
+                  [(disabled)]="isDisabledProvincia" [options]="comboProvincia" (onChange)="onChangeProvincia()">
+                </p-dropdown>
               </div>
 
               <!-- <div *ngIf="poblacionExtranjera" class="form-group col-lg-6 col-md-6">
@@ -98,9 +98,9 @@
               <!-- *ngIf="!poblacionExtranjera" -->
               <div *ngIf="!poblacionExtranjera" class="form-group col-lg-6 col-md-6">
                 <label>Población</label>
-                <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true" filterMatchMode="contains" [(disabled)]="isDisabledPoblacion"
-                  [options]="comboPoblacion" (input)="buscarPoblacion($event)" [emptyFilterMessage]="resultadosPoblaciones">
-                  </p-dropdown>
+                <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"
+                  [(disabled)]="isDisabledPoblacion" [options]="comboPoblacion" (input)="buscarPoblacion($event)" [emptyFilterMessage]="resultadosPoblaciones">
+                </p-dropdown>
               </div>
 
               <div *ngIf="poblacionExtranjera" class="form-group col-lg-6 col-md-6">
@@ -139,7 +139,7 @@
                       <label>{{dato.tipo}}</label>
                     </ng-template>
                   </p-column>
-                  </p-dataTable>
+                </p-dataTable>
 
               </div>
             </div>
@@ -150,9 +150,9 @@
           <div class="text-right main-button ">
             <button *ngIf="nuevo == false" (click)="duplicarRegistro()" pButton type="button" [(disabled)]="historyDisable" icon="fa fa-reply-all"
               iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
-              <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [(disabled)]="historyDisable" label="{{ 'general.boton.restablecer' | translate}}"></button>
-              <button (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [(disabled)]="historyDisable"
-                label="{{ 'general.boton.guardar' | translate}}"></button>
+            <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [(disabled)]="historyDisable" label="{{ 'general.boton.restablecer' | translate}}"></button>
+            <button (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [(disabled)]="historyDisable"
+              label="{{ 'general.boton.guardar' | translate}}"></button>
           </div>
         </div>
       </div>
@@ -189,12 +189,12 @@
 
     </div>
   </p-footer>
-  </p-dialog>
+</p-dialog>
 
 
 
 
-  <div *ngIf="progressSpinner" class="overlay-spinner">
-    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
-    <div class="loader"></div>
-  </div>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+  <div class="loader"></div>
+</div>
