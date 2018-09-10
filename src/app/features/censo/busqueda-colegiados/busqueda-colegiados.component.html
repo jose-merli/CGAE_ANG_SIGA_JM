@@ -39,9 +39,8 @@
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"menu.administracion.gestionMultiidioma.etiquetas" | translate}}</label>
-                        <p-multiSelect [disabled]="!editar" [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='etiquetasPersonaJuridicaSelecionados'
-                            [options]="comboEtiquetas" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" styleClass="widthAll"
-                            defaultLabel=""></p-multiSelect>
+                        <p-multiSelect [disabled]="!editar" [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='body.etiquetas' [options]="comboEtiquetas"
+                            [selectedItemsLabel]="textSelected" maxSelectedLabels="1" styleClass="widthAll" defaultLabel=""></p-multiSelect>
                     </div>
                 </div>
             </div>
@@ -56,7 +55,7 @@
                 <div class="form-row">
                     <div class="form-group col-lg-2 col-md-2">
                         <label>{{"censo.busquedaClientesAvanzada.literal.nColegiado" | translate}}</label>
-                        <input type="text" name="numeroColegiado" [formControl]="formBusqueda.controls['numeroColegiado']" class="form-control" [(ngModel)]='body.numeroColegiado'
+                        <input type="text" name="numeroColegiado" [formControl]="formBusqueda.controls['numeroColegiado']" class="form-control" [(ngModel)]='body.nColegiado'
                             pInputText>
                         <small class="input-error" *ngIf="!formBusqueda.controls['numeroColegiado'].pristine && formBusqueda.controls['numeroColegiado'].status == 'INVALID'">
                             Debe tener como mínimo tres carácteres</small>
@@ -81,11 +80,11 @@
 
                     <div class="form-group col-lg-2 col-md-2">
                         <label>{{"censo.busquedaClientes.noResidente" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='siNoResidencia' [options]="comboResidencia" [filter]="true" filterBy="label"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.residencia' [options]="comboResidencia" [filter]="true" filterBy="label"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-2 col-md-2">
                         <label>{{"censo.fusionDuplicados.colegiaciones.inscrito" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='siNoInscrito' [options]="comboInscrito" [filter]="true" filterBy="label"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.inscrito' [options]="comboInscrito" [filter]="true" filterBy="label"></p-dropdown>
                     </div>
                 </div>
             </div>
@@ -100,23 +99,21 @@
 
                     <div class="form-group col-lg-2 col-md-2">
                         <label>{{"censo.busquedaClientesAvanzada.literal.sexo" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='selectedSexo' [options]="comboSexo" [filter]="true" filterBy="label"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.sexo' [options]="comboSexo" [filter]="true" filterBy="label"></p-dropdown>
                     </div>
 
                     <div class="form-group col-lg-2 col-md-2">
                         <label>{{"censo.consultaDatosGenerales.literal.estadoCivil" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='selectedEstadoCivil' [options]="comboEstadoCivil" [filter]="true" filterBy="label"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.estadoCivil' [options]="comboEstadoCivil" [filter]="true" filterBy="label"></p-dropdown>
                     </div>
-                    <div class="form-group col-lg-2 col-md-2">
-                        <label>{{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}}</label>
-
-                        <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true" dateFormat="dd/mm/yy"
-                            icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                    <div class=" form-group col-lg-3 col-md-3">
+                        <label>{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate}}</label>
+                        <p-calendar [keepInvalid]="true" selectionMode="range" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy"
+                            [(ngModel)]="fechaNacimientoSelect"></p-calendar>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.busquedaClientesAvanzada.literal.categoriaCV" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='selectedCategoriaCurricular' [options]="comboCategoriaCurricular" [filter]="true"
-                            filterBy="label"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.tipoCV' [options]="comboCategoriaCurricular" [filter]="true" filterBy="label"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.busquedaClientesAvanzada.literal.subtiposCV" | translate}}</label>
@@ -156,7 +153,7 @@
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.datosDireccion.literal.correo" | translate}}</label>
-                        <input type="text" name="correo" class="form-control" [(ngModel)]='body.mail' pInputText>
+                        <input type="text" name="correo" class="form-control" [(ngModel)]='body.correo' pInputText>
                     </div>
                     <div class="form-group col-lg-2 col-md-2">
                         <label>{{"censo.datosDireccion.literal.telefonoOMovil" | translate}}</label>

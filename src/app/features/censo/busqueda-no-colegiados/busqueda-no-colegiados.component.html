@@ -118,11 +118,7 @@
                 [(selection)]="selectedDatos" (onRowSelect)="irEditarPersona(selectedDatos)" pageLinks="4" dataKey="nif" [responsive]="true"
                 selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both"
                 [rows]="selectedItem">
-                <p-column *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate">
-                    <ng-template *ngIf="col.field == 'fechaNacimiento'" let-dato="rowData" pTemplate="body">
-                        <label>{{ dato.fechaNacimiento | date:'dd/MM/yyyy' }}</label>
-                    </ng-template>
-                </p-column>
+                <p-column *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate"></p-column>
                 <ng-template pTemplate="paginatorLeft">
                     <div class="mostrar d-flex text-right justify-content-end">
                         <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
@@ -170,14 +166,7 @@
                         </div>
 
                     </ng-template>
-                    <ng-template *ngIf="col.field == 'fechaNacimiento'" let-datoH="rowData" pTemplate="body">
-                        <div *ngIf="setItalic(datoH)">
-                            <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ datoH[col.field] | date:'dd/MM/yyyy' }}</span>
-                        </div>
-                        <div *ngIf="!setItalic(datoH)">
-                            <span>{{datoH[col.field] | date:'dd/MM/yyyy'}}</span>
-                        </div>
-                    </ng-template>
+
                 </p-column>
 
                 <ng-template pTemplate="paginatorLeft">
