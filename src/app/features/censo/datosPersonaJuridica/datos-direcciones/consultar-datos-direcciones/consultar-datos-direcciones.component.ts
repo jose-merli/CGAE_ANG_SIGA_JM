@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 
 import { Location, DatePipe } from "@angular/common";
 
@@ -7,6 +7,7 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 
 import { DatosDireccionesItem } from "./../../../../../../app/models/DatosDireccionesItem";
 import { DatosDireccionesObject } from "./../../../../../../app/models/DatosDireccionesObject";
+import { DropdownModule, Dropdown } from "primeng/dropdown";
 
 import { DatosDireccionesCodigoPostalItem } from "./../../../../../../app/models/DatosDireccionesCodigoPostalItem";
 import { DatosDireccionesCodigoPostalObject } from "./../../../../../../app/models/DatosDireccionesCodigoPostalObject";
@@ -58,6 +59,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   resultadosPoblaciones: any;
   instituciones: any;
   tooltipFechaMod: any;
+  poblacionBuscada: any;
 
   constructor(
     private location: Location,
@@ -65,6 +67,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     public datepipe: DatePipe,
     private translateService: TranslateService
   ) {}
+
+  @ViewChild("input2")
+  dropdown: Dropdown;
 
   ngOnInit() {
     if (sessionStorage.getItem("historicoDir") != null) {
@@ -227,6 +232,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
   getComboPoblacion(filtro: string) {
     this.progressSpinner = true;
+    this.poblacionBuscada = filtro;
     this.sigaServices
       .getParam(
         "direcciones_comboPoblacion",
@@ -236,6 +242,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         n => {
           this.comboPoblacion = n.combooItems;
           this.getLabelbyFilter(this.comboPoblacion);
+          this.dropdown.filterViewChild.nativeElement.value = this.poblacionBuscada;
         },
         error => {},
         () => {
