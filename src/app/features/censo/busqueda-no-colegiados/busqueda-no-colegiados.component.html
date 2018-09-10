@@ -58,7 +58,7 @@
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaClientesAvanzada.literal.categoriaCV" | translate}}</label>
-                        <p-dropdown class="select-form" [options]="comboCategoriaCurricular" [(ngModel)]="body.categoria"></p-dropdown>
+                        <p-dropdown class="select-form" [options]="comboCategoriaCurricular" [(ngModel)]="body.idcv"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaClientesAvanzada.literal.subtiposCV" | translate}}</label>
@@ -108,16 +108,21 @@
         <div class="card-footer ">
             <div class="text-right main-button">
                 <button (click)="isLimpiar()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}"></button>
-                <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+                <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
             </div>
         </div>
     </div>
-    <div *ngIf="buscar==true" class="card mt-3">
+    <div *ngIf="buscar == true" class="card mt-3">
         <div class="card-body p-0">
-            <p-dataTable [ngClass]="{ 'customCursor': selectMultiple}" [(selection)]="selectedDatos" dataKey="id" [selectionMode]="isMultiple"
-                [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both"
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+                [(selection)]="selectedDatos" (onRowSelect)="irEditarPersona(selectedDatos)" pageLinks="4" dataKey="nif" [responsive]="true"
+                selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both"
                 [rows]="selectedItem">
-                <p-column *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate"></p-column>
+                <p-column *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate">
+                    <ng-template *ngIf="col.field == 'fechaNacimiento'" let-dato="rowData" pTemplate="body">
+                        <label>{{ dato.fechaNacimiento | date:'dd/MM/yyyy' }}</label>
+                    </ng-template>
+                </p-column>
                 <ng-template pTemplate="paginatorLeft">
                     <div class="mostrar d-flex text-right justify-content-end">
                         <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
@@ -136,13 +141,73 @@
                     <div class="text-right main-button">
                         <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-send" iconPos="left" label="{{ 'general.boton.comunicar' | translate }}"
                             disabled></button>
-                        <button (click)="historico(); selectedDatos=[]" pButton type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+                        <button (click)="toHistorico()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
                         <button (click)="deleteSeleccion()" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"
                             [disabled]="!selectMultiple"></button>
                         <button (click)="isCrear()" [disabled]="isEditable" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
                     </div>
                 </p-footer>
             </p-dataTable>
+        </div>
+    </div>
+
+    <!--HISTORICO-->
+    <div *ngIf="historico == true" class="card mt-3">
+        <div class="card-body p-0">
+
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+                [(selection)]="selectedDatos" (onRowSelect)="irEditarPersona(selectedDatos)" pageLinks="4" dataKey="nif" [responsive]="true"
+                selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both"
+                [rows]="selectedItem">
+                <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    [filter]="true" filterMatchMode="contains">
+                    <ng-template let-datoH="rowData" pTemplate="body">
+                        <div *ngIf="setItalic(datoH)">
+                            <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
+                        </div>
+                        <div *ngIf="!setItalic(datoH)">
+                            <span>{{datoH[col.field]}}</span>
+                        </div>
+
+                    </ng-template>
+                    <ng-template *ngIf="col.field == 'fechaNacimiento'" let-datoH="rowData" pTemplate="body">
+                        <div *ngIf="setItalic(datoH)">
+                            <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ datoH[col.field] | date:'dd/MM/yyyy' }}</span>
+                        </div>
+                        <div *ngIf="!setItalic(datoH)">
+                            <span>{{datoH[col.field] | date:'dd/MM/yyyy'}}</span>
+                        </div>
+                    </ng-template>
+                </p-column>
+
+                <ng-template pTemplate="paginatorLeft">
+                    <div class="mostrar d-flex text-right justify-content-end">
+                        <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                        <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+                        <label>{{ "general.message.mostrar" | translate}}</label>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                        <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                        <div class="ml-3 selectAll">
+                            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
+                        </div>
+                        <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+                            <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+                    </div>
+                </ng-template>
+
+                <p-footer>
+                    <div class="text-right main-button">
+                        <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-send" iconPos="left" label="{{ 'general.boton.comunicar' | translate }}"
+                            disabled></button>
+                        <button (click)="isBuscar()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+                        <button (click)="deleteSeleccion()" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"
+                            [disabled]="!selectMultiple"></button>
+                        <button (click)="isCrear()" [disabled]="isEditable" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+
+                    </div>
+                </p-footer>
+            </p-dataTable>
+
         </div>
     </div>
 </div>

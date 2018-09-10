@@ -41,6 +41,8 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   buscar: boolean = false;
   es: any;
 
+  historico: boolean = false;
+
   cols: any;
   datos: any;
   rowsPerPage: any;
@@ -249,9 +251,11 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       } else {
         this.comboPoblacion = [];
         this.resultadosPoblaciones = "Debe introducir al menos 3 caracteres";
+        this.body.idPoblacion = null;
       }
     } else {
       this.comboPoblacion = [];
+      this.body.idPoblacion = null;
       this.resultadosPoblaciones = "No hay resultados";
     }
   }
@@ -259,13 +263,13 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   //Opción tabla de seleccionar varias filas
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
-    if (this.selectMultiple) {
+    if (!this.selectMultiple) {
       this.selectedDatos = [];
-      this.isMultiple = "multiple";
+      this.numSelected = 0;
     } else {
       this.selectAll = false;
+      this.selectedDatos = [];
       this.numSelected = 0;
-      this.isMultiple = "single";
     }
   }
 
@@ -281,6 +285,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     }
   }
 
+  //Paginator
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
@@ -296,8 +301,10 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   }
 
   //Busca No colegiados según los filtros
-  search() {
+  isBuscar() {
     this.selectAll = false;
+    this.historico = false;
+    this.buscar = true;
     this.selectMultiple = false;
     this.selectedDatos = "";
     this.getColsResults();
@@ -329,7 +336,6 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           this.progressSpinner = false;
           this.noColegiadoSearch = JSON.parse(data["body"]);
           this.datos = this.noColegiadoSearch.noColegiadoItem;
-          this.convertirStringADate(this.datos);
           this.table.paginator = true;
         },
         err => {
@@ -339,6 +345,34 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         () => {
           this.progressSpinner = false;
         }
+      );
+  }
+
+  toHistorico() {
+    this.historico = true;
+    this.buscar = false;
+    this.selectMultiple = false;
+    this.selectedDatos = "";
+    this.progressSpinner = true;
+    this.selectAll = false;
+    this.sigaServices
+      .postPaginado(
+        "busquedaNoColegiados_searchHistoric",
+        "?numPagina=1",
+        this.body
+      )
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.noColegiadoSearch = JSON.parse(data["body"]);
+          this.datos = this.noColegiadoSearch.noColegiadoItem;
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {}
       );
   }
 
@@ -388,19 +422,33 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       { field: "telefono", header: "censo.ws.literal.telefono" },
       { field: "movil", header: "censo.datosDireccion.literal.movil" }
     ];
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
   }
 
-  convertirStringADate(datos) {
-    datos.forEach(element => {
-      if (element.fechaNacimiento == "" || element.fechaNacimiento == null) {
-        element.fechaNacimiento = null;
-      } else {
-        var year = element.fechaNacimiento.substring(0, 4);
-        var month = element.fechaNacimiento.substring(5, 7);
-        var day = element.fechaNacimiento.substring(8, 10);
-        element.fechaNacimiento = "";
-        element.fechaNacimiento = day + "/" + month + "/" + year;
-      }
-    });
+  setItalic(datoH) {
+    if (datoH.fechaBaja == null) return false;
+    else return true;
+  }
+
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
   }
 }
