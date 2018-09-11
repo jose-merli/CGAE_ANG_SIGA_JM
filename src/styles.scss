@@ -976,6 +976,16 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
 // height: 259px !important;
 // }
 
+.content iframe{
+  max-width: 1300px;
+}
+
+iframe .box, iframe .button, iframe .boxCombo{
+  border-radius: 0 !important;
+}
+
+
+
 /**RESPONSIVE**/
 
 @media (max-width: 55em) {
@@ -1063,6 +1073,31 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
     }
   }
 }
+@media (max-width: 1000px) {
+  .content-accesos{
+    padding-right: 2rem !important;
+    text-align: left !important;
+    display: inline-block !important;
+    .btn-acceso{
+      display: inline-block !important;
+      p{
+        padding-top: 12px;
+      }
+    }
+    .main-button{
+      margin-top: 1rem;
+    }
+  }
+}
+
+
+@media (max-width: 525px) {
+  .main-button {
+    button{
+      padding:  .2em 0em !important;
+    }
+  }
+}
 
 .ui-datepicker .ui-datepicker-year-prev,
 .ui-datepicker .ui-datepicker-year-next {
@@ -1122,4 +1157,8 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
 
 .item-disabled {
   padding: 0px;
+}
+#mainWorkArea input{
+  border-radius: 0 !important;
+  -webkit-border-radius: 0px !important;
 }

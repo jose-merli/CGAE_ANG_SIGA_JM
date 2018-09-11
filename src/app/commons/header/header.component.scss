@@ -175,3 +175,10 @@ header {
     }
   }
 }
+
+
+@media screen and (max-width: 525px) {
+  header {
+    height: 8rem;
+  }
+}
