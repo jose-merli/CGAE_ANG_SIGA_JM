@@ -165,7 +165,11 @@ export class SigaServices {
     busquedaNoColegiados_categoriaCurricular:
       "/busquedaNoColegiados/categoriaCurricular",
     busquedaNoColegiados_searchNoColegiado:
-      "/busquedaNocolegiado/searchNoColegiado"
+      "/busquedaNocolegiado/searchNoColegiado",
+    solicitudInciporporacion_tipoSolicitud:
+      "/solicitudIncorporacion/tipoSolicitud",
+    solicitudInciporporacion_estadoSolicitud:
+      "/solicitudIncorporacion/estadoSolicitud"
   };
 
   private menuToggled = new Subject<any>();
