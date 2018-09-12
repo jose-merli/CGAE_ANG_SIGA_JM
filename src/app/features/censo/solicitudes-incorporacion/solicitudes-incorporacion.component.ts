@@ -61,14 +61,14 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     this.es = this.translateService.getCalendarLocale();
     this.cargarCombos();
     this.cols = [
-      { field: "id", header: "Nº Identificación" },
+      { field: "numeroIdentificacion", header: "Nº Identificación" },
       { field: "apellidos", header: "Apellidos" },
       { field: "nombre", header: "Nombre" },
-      { field: "fechaNacimiento", header: "Nº colegiado previsto" },
-      { field: "mail", header: "Tipo Solicitud" },
-      { field: "telefono", header: "Fecha Solicitud" },
-      { field: "telefono", header: "Estado" },
-      { field: "telefono", header: "Fecha Estado" }
+      { field: "numColegiado", header: "Nº colegiado previsto" },
+      { field: "correoElectronico", header: "Tipo Solicitud" },
+      { field: "fechaSolicitud", header: "Fecha Solicitud" },
+      { field: "estadoSolicitud", header: "Estado" },
+      { field: "fechaEstado", header: "Fecha Estado" }
     ];
     this.rowsPerPage = [
       {
@@ -90,60 +90,40 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     this.sigaServices
       .get("solicitudInciporporacion_tipoSolicitud").subscribe(result => {
         this.tiposSolicitud = result.combooItems;
-      });
+      },
+        error => {
+          console.log(error);
+        });
 
     this.sigaServices
       .get("solicitudInciporporacion_estadoSolicitud").subscribe(result => {
         this.estadosSolicitud = result.combooItems;
-      });
+      },
+        error => {
+          console.log(error);
+        });
   }
   isBuscar() {
-    this.buscar = true;
-    if (!this.formBusqueda.invalid && this.checkIdentificacion(this.body.identificacion)) {
-      this.getInfo();
+    if (!this.formBusqueda.invalid && this.checkIdentificacion(this.body.numeroIdentificacion)) {
+      this.buscar = true;
+      this.progressSpinner = true;
+      this.sigaServices.postPaginado("solicitudInciporporacion_searchSolicitud", "?numPagina=1", this.body).subscribe(result => {
+        this.bodySearch = JSON.parse(result["body"]);
+        this.datos = [];
+        this.datos = this.bodySearch.solIncorporacionItems;
+        this.progressSpinner = false;
+        console.log(result);
+      },
+        error => {
+          console.log(error);
+        });
     } else {
       console.log("mal filtros");
-      this.table.reset();
       //TODO : MOSTRAR MENSAJE DE FALLO EN FILTROS ?
     }
   }
 
-  getInfo() {
-    this.datos = [
-      {
-        id: "8771",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      },
-      {
-        id: "8772",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      },
-      {
-        id: "8773",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      },
-      {
-        id: "8774",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      }
-    ];
-  }
+
   irNuevaSolicitud() {
     sessionStorage.setItem("editar", "false");
     this.router.navigate(["/nuevaIncorporacion"]);
@@ -217,9 +197,9 @@ export class SolicitudesIncorporacionComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.selectAll === true) {
-      this.numSelected = this.bodySearch.solicitudIncorporacionItem.length;
+      this.numSelected = this.bodySearch.solIncorporacionItems.length;
       this.selectMultiple = false;
-      this.selectedDatos = this.bodySearch.solicitudIncorporacionItem;
+      this.selectedDatos = this.bodySearch.solIncorporacionItems;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -228,8 +208,8 @@ export class SolicitudesIncorporacionComponent implements OnInit {
 
   activarPaginacion() {
     if (
-      !this.bodySearch.solicitudIncorporacionItem ||
-      this.bodySearch.solicitudIncorporacionItem.length == 0
+      !this.bodySearch.solIncorporacionItems ||
+      this.bodySearch.solIncorporacionItems.length == 0
     )
       return false;
     else return true;
