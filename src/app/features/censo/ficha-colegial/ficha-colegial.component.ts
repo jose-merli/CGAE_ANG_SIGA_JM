@@ -21,6 +21,16 @@ import { FichaColegialColegiacionesItem } from "./../../../../app/models/FichaCo
 import { FichaColegialColegiacionesObject } from "./../../../../app/models/FichaColegialColegiacionesObject";
 import { FichaColegialCertificadosItem } from "./../../../../app/models/FichaColegialCertificadosItem";
 import { FichaColegialCertificadosObject } from "./../../../../app/models/FichaColegialCertificadosObject";
+import { FichaColegialSociedadesItem } from "./../../../../app/models/FichaColegialSociedadesItem";
+import { FichaColegialSociedadesObject } from "./../../../../app/models/FichaColegialSociedadesObject";
+import { FichaColegialEdicionCurricularesItem } from "./../../../models/FichaColegialEdicionCurricularesItem";
+import { FichaColegialEdicionCurricularesObject } from "./../../../models/FichaColegialEdicionCurricularesObject";
+
+import { DatosDireccionesItem } from "./../../../models/DatosDireccionesItem";
+import { DatosDireccionesObject } from "./../../../models/DatosDireccionesObject";
+
+import { DatosBancariosItem } from "./../../../models/DatosBancariosItem";
+import { DatosBancariosObject } from "./../../../models/DatosBancariosObject";
 
 @Component({
   selector: "app-ficha-colegial",

@@ -156,10 +156,7 @@ export class EdicionCurricularesComponent implements OnInit {
     else return true;
   }
   backTo() {
-    sessionStorage.removeItem("nIntegrante");
-    sessionStorage.removeItem("integrante");
-    sessionStorage.setItem("editarIntegrante", "true");
-    this.router.navigate(["fichaPersonaJuridica"]);
+    this.router.navigate(["fichaColegial"]);
   }
   pInputText;
   transformaFecha(fecha) {
