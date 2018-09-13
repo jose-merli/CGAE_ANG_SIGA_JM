@@ -22,6 +22,7 @@ import {
   FormControl,
   Validators
 } from "../../../../../node_modules/@angular/forms";
+import { DatosColegiadosObject } from "../../../models/DatosColegiadosObject";
 
 @Component({
   selector: "app-busqueda-colegiados",
@@ -68,6 +69,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   textSelected: String = "{0} etiquetas seleccionadas";
   body: DatosColegiadosItem = new DatosColegiadosItem();
+  colegiadoSearch = new DatosColegiadosObject();
 
   siNoResidencia: any;
   siNoInscrito: any;
@@ -78,6 +80,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   selectedPoblacion: any;
   selectedTipoDireccion: any;
   resultadosPoblaciones: any;
+  historico: boolean;
 
   etiquetasPersonaJuridicaSelecionados: any = [];
 
@@ -218,7 +221,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     );
   }
 
-  isBuscar() {
+  search() {
     this.getInfo();
     this.buscar = true;
   }
@@ -323,6 +326,104 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  //Busca No colegiados según los filtros
+  isBuscar() {
+    this.selectAll = false;
+    this.historico = false;
+    this.buscar = true;
+    this.selectMultiple = false;
+    this.selectedDatos = "";
+    this.getColsResults();
+    this.progressSpinner = true;
+    this.buscar = true;
+
+    this.sigaServices
+      .postPaginado(
+        "busquedaNoColegiados_searchNoColegiado",
+        "?numPagina=1",
+        this.body
+      )
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.colegiadoSearch = JSON.parse(data["body"]);
+          this.datos = this.colegiadoSearch.colegiadosItem;
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  getColsResults() {
+    this.cols = [
+      {
+        field: "identificacion",
+        header: "censo.consultaDatosColegiacion.literal.numIden"
+      },
+      {
+        field: "apellidos",
+        header: "gratuita.mantenimientoTablasMaestra.literal.apellidos"
+      },
+      {
+        field: "nombre",
+        header: "administracion.parametrosGenerales.literal.nombre"
+      },
+      {
+        field: "numeroColegiado",
+        header: "censo.busquedaClientesAvanzada.literal.nColegiado"
+      },
+      {
+        field: "estadoColegial",
+        header: "censo.colegiarNoColegiados.literal.estado"
+      },
+      {
+        field: "residente",
+        header: "censo.ws.literal.residente"
+      },
+      {
+        field: "inscrito",
+        header: "censo.fusionDuplicados.colegiaciones.inscrito"
+      },
+      {
+        field: "correoElectronico",
+        header: "censo.datosDireccion.literal.correo"
+      },
+      {
+        field: "telefonoFijo",
+        header: "censo.ws.literal.telefono"
+      },
+      {
+        field: "telefonoMovil",
+        header: "censo.datosDireccion.literal.movil"
+      }
+    ];
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
   }
 
   getInfo() {

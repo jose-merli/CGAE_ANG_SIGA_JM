@@ -1,5 +1,10 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
-import { FormGroup, FormBuilder, FormControl, Validators } from "../../../../../node_modules/@angular/forms";
+import {
+  FormGroup,
+  FormBuilder,
+  FormControl,
+  Validators
+} from "../../../../../node_modules/@angular/forms";
 import { esCalendar } from "../../../utils/calendar";
 import { Router } from "../../../../../node_modules/@angular/router";
 import { SigaServices } from "../../../_services/siga.service";
@@ -14,7 +19,6 @@ import { SolicitudIncorporacionItem } from "../../../models/SolicitudIncorporaci
   styleUrls: ["./solicitudes-incorporacion.component.scss"]
 })
 export class SolicitudesIncorporacionComponent implements OnInit {
-
   es: any;
   fichaAbierta: boolean = true;
   formBusqueda: FormGroup;
@@ -24,9 +28,11 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   buscar: boolean = false;
   progressSpinner: boolean = false;
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
+  tiposSolicitud: any;
+  estadosSolicitud: any;
 
-
-  @ViewChild("table") table;
+  @ViewChild("table")
+  table;
   selectedDatos;
   cols: any = [];
   rowsPerPage: any = [];
@@ -36,30 +42,33 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   selectMultiple: boolean = false;
   selectAll: boolean = false;
 
-  constructor(private translateService: TranslateService, private formBuilder: FormBuilder,
-    private changeDetectorRef: ChangeDetectorRef, private router: Router) {
+  constructor(
+    private translateService: TranslateService,
+    private sigaServices: SigaServices,
+    private formBuilder: FormBuilder,
+    private changeDetectorRef: ChangeDetectorRef,
+    private router: Router
+  ) {
     this.formBusqueda = this.formBuilder.group({
-      estadoSolicitud: new FormControl(null, Validators.minLength(3)),
       fechaDesde: new FormControl(null, Validators.required),
       fechaHasta: new FormControl(null, Validators.required),
       nombre: new FormControl(null, Validators.minLength(3)),
       apellidos: new FormControl(null, Validators.minLength(3))
     });
-
   }
 
   ngOnInit() {
     this.es = this.translateService.getCalendarLocale();
-    //this.onChangeForm();  
+    this.cargarCombos();
     this.cols = [
-      { field: "id", header: "Nº Identificación" },
+      { field: "numeroIdentificacion", header: "Nº Identificación" },
       { field: "apellidos", header: "Apellidos" },
       { field: "nombre", header: "Nombre" },
-      { field: "fechaNacimiento", header: "Nº colegiado previsto" },
-      { field: "mail", header: "Tipo Solicitud" },
-      { field: "telefono", header: "Fecha Solicitud" },
-      { field: "telefono", header: "Estado" },
-      { field: "telefono", header: "Fecha Estado" }
+      { field: "numColegiado", header: "Nº colegiado previsto" },
+      { field: "correoElectronico", header: "Tipo Solicitud" },
+      { field: "fechaSolicitud", header: "Fecha Solicitud" },
+      { field: "estadoSolicitud", header: "Estado" },
+      { field: "fechaEstado", header: "Fecha Estado" }
     ];
     this.rowsPerPage = [
       {
@@ -77,56 +86,44 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     ];
   }
 
+  cargarCombos() {
+    this.sigaServices
+      .get("solicitudInciporporacion_tipoSolicitud").subscribe(result => {
+        this.tiposSolicitud = result.combooItems;
+      },
+        error => {
+          console.log(error);
+        });
+
+    this.sigaServices
+      .get("solicitudInciporporacion_estadoSolicitud").subscribe(result => {
+        this.estadosSolicitud = result.combooItems;
+      },
+        error => {
+          console.log(error);
+        });
+  }
   isBuscar() {
-    this.buscar = true;
-    if (!this.formBusqueda.invalid && this.checkIdentificacion(this.body.identificacion)) {
-      this.getInfo();
+    if (!this.formBusqueda.invalid && this.checkIdentificacion(this.body.numeroIdentificacion)) {
+      this.buscar = true;
+      this.progressSpinner = true;
+      this.sigaServices.postPaginado("solicitudInciporporacion_searchSolicitud", "?numPagina=1", this.body).subscribe(result => {
+        this.bodySearch = JSON.parse(result["body"]);
+        this.datos = [];
+        this.datos = this.bodySearch.solIncorporacionItems;
+        this.progressSpinner = false;
+        console.log(result);
+      },
+        error => {
+          console.log(error);
+        });
     } else {
       console.log("mal filtros");
-      this.table.reset();
       //TODO : MOSTRAR MENSAJE DE FALLO EN FILTROS ?
     }
   }
 
-  getInfo() {
 
-    this.datos = [
-      {
-        id: "8771",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      },
-      {
-        id: "8772",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      },
-      {
-        id: "8773",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      },
-      {
-        id: "8774",
-        apellidos: "Abellan sirvent",
-        nombre: "Javier",
-        fechaNacimiento: "22/02/2000",
-        mail: "ejerci@ente.es",
-        telefono: "99999999"
-      }
-    ];
-
-
-  }
   irNuevaSolicitud() {
     sessionStorage.setItem("editar", "false");
     this.router.navigate(["/nuevaIncorporacion"]);
@@ -147,16 +144,13 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     this.fichaAbierta = !this.fichaAbierta;
   }
 
-
   checkIdentificacion(doc: String) {
-
     if (doc && doc.length > 0) {
       if (doc.length == 10) {
         return this.isValidPassport(doc);
       } else {
-        if (doc.substring(0, 1) == "1" || doc.substring(0, 1) == "2" || doc.substring(0, 1) == "3" || doc.substring(0, 1) == "4" || doc.substring(0, 1) == "5" || doc.substring(0, 1) == "6" || doc.substring(0, 1) == "7"
-          || doc.substring(0, 1) == "8" || doc.substring(0, 1) == "9" || doc.substring(0, 1) == "0") {
-
+        if (doc.substring(0, 1) == "1" || doc.substring(0, 1) == "2" || doc.substring(0, 1) == "3" || doc.substring(0, 1) == "4" || doc.substring(0, 1) == "5" || doc.substring(0, 1) == "6"
+          || doc.substring(0, 1) == "7" || doc.substring(0, 1) == "8" || doc.substring(0, 1) == "9" || doc.substring(0, 1) == "0") {
           return this.isValidDNI(doc);
         } else {
           return this.isValidNIE(doc);
@@ -195,7 +189,6 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     this.body = new SolicitudIncorporacionItem();
   }
 
-
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
@@ -204,9 +197,9 @@ export class SolicitudesIncorporacionComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.selectAll === true) {
-      this.numSelected = this.bodySearch.solicitudIncorporacionItem.length;
+      this.numSelected = this.bodySearch.solIncorporacionItems.length;
       this.selectMultiple = false;
-      this.selectedDatos = this.bodySearch.solicitudIncorporacionItem;
+      this.selectedDatos = this.bodySearch.solIncorporacionItems;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -215,8 +208,8 @@ export class SolicitudesIncorporacionComponent implements OnInit {
 
   activarPaginacion() {
     if (
-      !this.bodySearch.solicitudIncorporacionItem ||
-      this.bodySearch.solicitudIncorporacionItem.length == 0
+      !this.bodySearch.solIncorporacionItems ||
+      this.bodySearch.solIncorporacionItems.length == 0
     )
       return false;
     else return true;
@@ -232,10 +225,4 @@ export class SolicitudesIncorporacionComponent implements OnInit {
       this.numSelected = 0;
     }
   }
-
-
-
-
-
-
 }

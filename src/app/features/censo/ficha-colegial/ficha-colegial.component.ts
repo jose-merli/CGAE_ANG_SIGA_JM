@@ -10,11 +10,27 @@ import { Router } from "@angular/router";
 import { saveAs } from "file-saver/FileSaver";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { DatosGeneralesComponent } from "./../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
+// IMPORT PANTALLA EDICION
+import { EdicionCurricularesComponent } from "./edicionDatosCurriculares/edicionCurriculares.component";
 // BODYS IMPORT
 import { FichaColegialGeneralesItem } from "./../../../../app/models/FichaColegialGeneralesItem";
 import { FichaColegialGeneralesObject } from "./../../../../app/models/FichaColegialGeneralesObject";
 import { FichaColegialColegialesItem } from "./../../../../app/models/FichaColegialColegialesItem";
 import { FichaColegialColegialesObject } from "./../../../../app/models/FichaColegialColegialesObject";
+import { FichaColegialColegiacionesItem } from "./../../../../app/models/FichaColegialColegiacionesItem";
+import { FichaColegialColegiacionesObject } from "./../../../../app/models/FichaColegialColegiacionesObject";
+import { FichaColegialCertificadosItem } from "./../../../../app/models/FichaColegialCertificadosItem";
+import { FichaColegialCertificadosObject } from "./../../../../app/models/FichaColegialCertificadosObject";
+import { FichaColegialSociedadesItem } from "./../../../../app/models/FichaColegialSociedadesItem";
+import { FichaColegialSociedadesObject } from "./../../../../app/models/FichaColegialSociedadesObject";
+import { FichaColegialEdicionCurricularesItem } from "./../../../models/FichaColegialEdicionCurricularesItem";
+import { FichaColegialEdicionCurricularesObject } from "./../../../models/FichaColegialEdicionCurricularesObject";
+
+import { DatosDireccionesItem } from "./../../../models/DatosDireccionesItem";
+import { DatosDireccionesObject } from "./../../../models/DatosDireccionesObject";
+
+import { DatosBancariosItem } from "./../../../models/DatosBancariosItem";
+import { DatosBancariosObject } from "./../../../models/DatosBancariosObject";
 
 @Component({
   selector: "app-ficha-colegial",
@@ -27,6 +43,7 @@ export class FichaColegialComponent implements OnInit {
   // Bodys
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
+
   openFicha: boolean = false;
   es: any = esCalendar;
   progressSpinner: boolean = false;
@@ -43,6 +60,8 @@ export class FichaColegialComponent implements OnInit {
   colsCertificados: any = [];
   colsSociedades: any = [];
   colsCurriculares: any = [];
+  colsDirecciones: any = [];
+  colsBancarios: any = [];
 
   rowsPerPage: any = [];
   tipoCuenta: any[] = [];
@@ -117,6 +136,7 @@ export class FichaColegialComponent implements OnInit {
   ngOnInit() {
     this.checkAcceso();
 
+    // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
     this.colsColegiales = [
       {
         field: "fecha",
@@ -150,11 +170,11 @@ export class FichaColegialComponent implements OnInit {
         header: "censo.busquedaClientesAvanzada.literal.nColegiado"
       },
       {
-        field: "Estado",
+        field: "estado",
         header: "censo.fichaIntegrantes.literal.estado"
       },
       {
-        field: "Residente",
+        field: "residente",
         header: "censo.ws.literal.residente"
       },
       {
@@ -183,6 +203,45 @@ export class FichaColegialComponent implements OnInit {
       {
         field: "descripcion",
         header: "general.description"
+      }
+    ];
+
+    this.colsDirecciones = [
+      {
+        field: "tipoDireccion",
+        header: "censo.datosDireccion.literal.tipo.direccion"
+      },
+      {
+        field: "domicilioLista",
+        header: "censo.consultaDirecciones.literal.direccion"
+      },
+      {
+        field: "codigoPostal",
+        header: "censo.ws.literal.codigopostal"
+      },
+      {
+        field: "nombrePoblacion",
+        header: "censo.consultaDirecciones.literal.poblacion"
+      },
+      {
+        field: "nombreProvincia",
+        header: "censo.datosDireccion.literal.provincia"
+      },
+      {
+        field: "telefono",
+        header: "censo.ws.literal.telefono"
+      },
+      {
+        field: "fax",
+        header: "censo.ws.literal.fax"
+      },
+      {
+        field: "movil",
+        header: "censo.datosDireccion.literal.movil"
+      },
+      {
+        field: "correoElectronico",
+        header: "censo.datosDireccion.literal.correo"
       }
     ];
 
@@ -233,6 +292,33 @@ export class FichaColegialComponent implements OnInit {
       }
     ];
 
+    this.colsBancarios = [
+      {
+        field: "titular",
+        header: "Titular"
+      },
+      {
+        field: "iban",
+        header: "Código de cuenta (IBAN)"
+      },
+      {
+        field: "bic",
+        header: "Banco (BIC)"
+      },
+      {
+        field: "uso",
+        header: "Uso"
+      },
+      {
+        field: "fechaFirmaServicios",
+        header: "Fecha firma del mandato de servicios"
+      },
+      {
+        field: "fechaFirmaProductos",
+        header: "Fecha firma del mandato de productos"
+      }
+    ];
+
     this.rowsPerPage = [
       {
         label: 10,
@@ -252,6 +338,8 @@ export class FichaColegialComponent implements OnInit {
       }
     ];
   }
+
+  // CONTROL DE PESTAÑAS ABRIR Y CERRAR
 
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
@@ -313,9 +401,8 @@ export class FichaColegialComponent implements OnInit {
   }
 
   continueOnInit() {}
-  // abrirFichaDatosMandatos() {
-  //   this.openFichaDatosMandatos = !this.openFichaDatosMandatos;
-  // }
+
+  // MÉTODOS GENÉRICOS PARA TABLAS Y USOS VARIOS
 
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
@@ -341,8 +428,6 @@ export class FichaColegialComponent implements OnInit {
     }
     return ret;
   }
-
-  // Métodos comunes
 
   showFail(mensaje: string) {
     this.msgs = [];
@@ -401,4 +486,44 @@ export class FichaColegialComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+
+  // FIN MÉTODOS GENÉRICOS
+
+  // MÉTODOS PARA DATOS GENERALES
+
+  // MÉTODOS PARA DATOS COLEGIALES
+
+  // MÉTODOS PARA OTRAS COLEGIACIONES
+
+  // MÉTODOS PARA CERTIFICADOS
+
+  // MÉTODOS PARA SOCIEDADES
+
+  // MÉTODOS PARA DATOS CURRICULARES
+  irNuevoCurriculares() {
+    //       {
+    //   path: "edicionCurriculares",
+    //   component: EdicionCurricularesComponent,
+    //   canActivate: [AuthGuard]
+    // },
+    this.router.navigate(["/edicionCurriculares"]);
+  }
+  // MÉTODOS PARA DIRECCIONES
+
+  // MÉTODOS PARA DATOS BANCARIOS
+
+  // MÉTODOS PARA SERVICIOS DE INTERÉS
+
+  irFacturacion() {
+    this.router.navigate(["/facturas"]);
+  }
+  irAuditoria() {
+    this.router.navigate(["/auditoriaUsuarios"]);
+    sessionStorage.setItem("tarjeta", "/fichaPersonaJuridica");
+  }
+  irComunicaciones() {
+    this.router.navigate(["/informesGenericos"]);
+  }
+
+  // FIN MÉTODOS PARA SERVICIOS DE INTERÉS
 }

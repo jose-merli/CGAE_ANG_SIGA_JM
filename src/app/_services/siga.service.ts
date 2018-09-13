@@ -151,7 +151,31 @@ export class SigaServices {
     direcciones_comboTipoDireccion: "tarjetaDirecciones/tipoDireccion",
     integrantes_update: "tarjetaIntegrantes/update",
     integrantes_insert: "tarjetaIntegrantes/create",
-    integrantes_delete: "tarjetaIntegrantes/delete"
+    integrantes_delete: "tarjetaIntegrantes/delete",
+
+    // censoII
+    busquedaColegiados_situacion: "busquedaColegiados/situacion",
+    busquedaColegiados_estadoCivil: "busquedaColegiados/estadoCivil",
+    busquedaColegiados_categoriaCurricular:
+      "busquedaColegiados/categoriaCurricular",
+    busquedaColegiados_poblacion: "/busquedaColegiados/poblacion",
+    busquedaColegiados_provincias: "busquedaColegiados/provincias",
+    busquedaColegiados_tipoDireccion: "busquedaColegiados/tipoDireccion",
+
+    busquedaNoColegiados_estadoCivil: "/busquedaNoColegiados/estadoCivil",
+    busquedaNoColegiados_provincias: "/busquedaNoColegiados/provincias",
+    busquedaNoColegiados_poblacion: "/busquedaNoColegiados/poblacion",
+    busquedaNoColegiados_tipoDireccion: "/busquedaNoColegiados/tipoDireccion",
+    busquedaNoColegiados_categoriaCurricular:
+      "/busquedaNoColegiados/categoriaCurricular",
+    busquedaNoColegiados_searchNoColegiado:
+      "/busquedaNocolegiado/searchNoColegiado",
+    solicitudInciporporacion_tipoSolicitud:
+      "/solicitudIncorporacion/tipoSolicitud",
+    solicitudInciporporacion_estadoSolicitud:
+      "/solicitudIncorporacion/estadoSolicitud",
+    solicitudInciporporacion_searchSolicitud:
+      "/solicitudIncorporacion/searchSolicitud"
   };
 
   private menuToggled = new Subject<any>();
@@ -201,9 +225,9 @@ export class SigaServices {
     return this.httpbackend
       .get(
         environment.newSigaUrl +
-          this.endpoints[service] +
-          "?institucion=" +
-          institucion
+        this.endpoints[service] +
+        "?institucion=" +
+        institucion
       )
       .map(response => {
         return response;

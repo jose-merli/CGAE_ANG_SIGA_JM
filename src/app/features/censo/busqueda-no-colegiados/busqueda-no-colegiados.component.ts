@@ -55,7 +55,6 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   fechaNacimientoSelectOld: Date;
 
   noColegiadoSearch = new DatosNoColegiadosObject();
-  showMensajeObligatorio = false;
 
   @ViewChild("table")
   table: DataTable;
@@ -322,7 +321,6 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     }
 
     this.progressSpinner = true;
-    this.showMensajeObligatorio = false;
     this.buscar = true;
 
     this.sigaServices
@@ -336,6 +334,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           this.progressSpinner = false;
           this.noColegiadoSearch = JSON.parse(data["body"]);
           this.datos = this.noColegiadoSearch.noColegiadoItem;
+          this.convertirStringADate(this.datos);
           this.table.paginator = true;
         },
         err => {
@@ -366,6 +365,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           this.progressSpinner = false;
           this.noColegiadoSearch = JSON.parse(data["body"]);
           this.datos = this.noColegiadoSearch.noColegiadoItem;
+          this.convertirStringADate(this.datos);
           this.table.paginator = true;
         },
         err => {
@@ -402,6 +402,20 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   isCancelar() {
     this.isEditable = false;
+  }
+
+  convertirStringADate(datos) {
+    datos.forEach(element => {
+      if (element.fechaNacimiento == "" || element.fechaNacimiento == null) {
+        element.fechaNacimiento = null;
+      } else {
+        var year = element.fechaNacimiento.substring(0, 4);
+        var month = element.fechaNacimiento.substring(5, 7);
+        var day = element.fechaNacimiento.substring(8, 10);
+        element.fechaNacimiento = "";
+        element.fechaNacimiento = day + "/" + month + "/" + year;
+      }
+    });
   }
 
   getColsResults() {
@@ -446,9 +460,5 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;
     else return true;
-  }
-
-  actualizaSeleccionados(selectedDatos) {
-    this.numSelected = selectedDatos.length;
   }
 }
