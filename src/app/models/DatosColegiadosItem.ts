@@ -1,0 +1,30 @@
+export class DatosColegiadosItem {
+  idProvincia: string;
+  idPoblacion: string;
+  codigoPostal: string;
+  telefono: string;
+  movil: string;
+  tipoDireccion: string;
+  id: string;
+  apellido1: string;
+  apellido2: string;
+  nombre: string;
+  nif: string;
+  nColegiado: string;
+  etiquetas: string;
+  sexo: string;
+  estadoCivil: string;
+  fechaIncorporacionDesde: Date;
+  fechaIncorporacionHasta: Date;
+  categoria: string;
+  situacion: boolean;
+  residencia: boolean;
+  inscrito: boolean;
+  correo: string;
+  fechaNacimiento: string;
+  idgrupo: string[];
+  tipoCV: string;
+  denominacion: string;
+  subCategoria: string;
+  constructor() {}
+}

@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { esCalendar } from "../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
 import { Location } from "@angular/common";
+import { AutoComplete } from "primeng/primeng";
 
 import { SigaServices } from "./../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate/translation.service";
@@ -11,6 +12,8 @@ import { PersonaJuridicaItem } from "./../../../../../app/models/PersonaJuridica
 import { DatosGeneralesComponent } from "./../../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
 import { DatosGeneralesItem } from "./../../../../../app/models/DatosGeneralesItem";
 import { DatosGeneralesObject } from "./../../../../../app/models/DatosGeneralesObject";
+import { ComboItem } from "../../../../models/ComboItem";
+
 import { Subscription } from "rxjs/Subscription";
 import { cardService } from "./../../../../_services/cardSearch.service";
 import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
@@ -92,6 +95,16 @@ export class DatosGenerales implements OnInit {
 
   isValidate: boolean;
 
+  items: ComboItem = new ComboItem();
+
+  control: boolean = false;
+  checked: boolean = false;
+  etiqueta: String;
+  arrayInicial: String[] = [];
+
+  @ViewChild("auto")
+  autoComplete: AutoComplete;
+
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
 
@@ -128,7 +141,8 @@ export class DatosGenerales implements OnInit {
     private cardService: cardService,
     private sigaServices: SigaServices,
     private sanitizer: DomSanitizer,
-    private router: Router
+    private router: Router,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.formBusqueda = this.formBuilder.group({
       cif: null
@@ -172,27 +186,27 @@ export class DatosGenerales implements OnInit {
     }
     this.textFilter = "Elegir";
 
-    this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
-      n => {
-        // coger todas las etiquetas
-        this.comboEtiquetas = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        if (this.body.idPersona != undefined || this.body.idPersona != null) {
-          this.obtenerEtiquetasPersonaJuridicaConcreta();
-        }
-      }
-    );
+    // this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
+    //   n => {
+    //     // coger todas las etiquetas
+    //     this.comboEtiquetas = n.combooItems;
+    //   },
+    //   err => {
+    //     console.log(err);
+    //   },
+    //   () => {
+    if (this.body.idPersona != undefined || this.body.idPersona != null) {
+      this.obtenerEtiquetasPersonaJuridicaConcreta();
+    }
+    //   }
+    // );
 
     // Combo de identificación
     this.sigaServices.get("busquedaPerJuridica_tipo").subscribe(
       n => {
         this.comboIdentificacion = n.combooItems;
       },
-      error => { }
+      error => {}
     );
 
     this.comboTipo.push(this.tipoPersonaJuridica);
@@ -205,19 +219,19 @@ export class DatosGenerales implements OnInit {
     this.sigaServices
       .post("busquedaPerJuridica_parametroColegio", parametro)
       .subscribe(
-      data => {
-        let parametroOcultarMotivo = JSON.parse(data.body);
-        if (parametroOcultarMotivo.parametro == "S") {
-          this.ocultarMotivo = true;
-        } else if (parametroOcultarMotivo.parametro == "N") {
-          this.ocultarMotivo = false;
-        } else {
-          this.ocultarMotivo = undefined;
+        data => {
+          let parametroOcultarMotivo = JSON.parse(data.body);
+          if (parametroOcultarMotivo.parametro == "S") {
+            this.ocultarMotivo = true;
+          } else if (parametroOcultarMotivo.parametro == "N") {
+            this.ocultarMotivo = false;
+          } else {
+            this.ocultarMotivo = undefined;
+          }
+        },
+        err => {
+          console.log(err);
         }
-      },
-      err => {
-        console.log(err);
-      }
       );
   }
 
@@ -257,19 +271,19 @@ export class DatosGenerales implements OnInit {
     this.sigaServices
       .post("busquedaPerJuridica_etiquetasPersona", this.body)
       .subscribe(
-      n => {
-        // coger etiquetas de una persona juridica
-        this.etiquetasPersonaJuridica = JSON.parse(n["body"]).combooItems;
-        console.log(this.etiquetasPersonaJuridica);
-        // en cada busqueda vaciamos el vector para añadir las nuevas etiquetas
-        this.etiquetasPersonaJuridicaSelecionados = [];
-        this.etiquetasPersonaJuridica.forEach((value: any, index: number) => {
-          this.etiquetasPersonaJuridicaSelecionados.push(value.value);
-        });
-      },
-      err => {
-        console.log(err);
-      }
+        n => {
+          // coger etiquetas de una persona juridica
+          this.etiquetasPersonaJuridica = JSON.parse(n["body"]).combooItems;
+          console.log(this.etiquetasPersonaJuridica);
+          // en cada busqueda vaciamos el vector para añadir las nuevas etiquetas
+          this.etiquetasPersonaJuridicaSelecionados = [];
+          this.etiquetasPersonaJuridica.forEach((value: any, index: number) => {
+            this.etiquetasPersonaJuridicaSelecionados.push(value);
+          });
+        },
+        err => {
+          console.log(err);
+        }
       );
   }
 
@@ -292,44 +306,44 @@ export class DatosGenerales implements OnInit {
     this.body.idInstitucion = "";
     this.sigaServices
       .postPaginado(
-      "busquedaPerJuridica_datosGeneralesSearch",
-      "?numPagina=1",
-      this.body
+        "busquedaPerJuridica_datosGeneralesSearch",
+        "?numPagina=1",
+        this.body
       )
       .subscribe(
-      data => {
-        this.progressSpinner = false;
-        this.personaSearch = JSON.parse(data["body"]);
-        if (this.personaSearch.personaJuridicaItems.length != 0) {
-          this.body = this.personaSearch.personaJuridicaItems[0];
-          this.selectedTipo = this.body.tipo;
-        } else {
-          this.body = new DatosGeneralesItem();
+        data => {
+          this.progressSpinner = false;
+          this.personaSearch = JSON.parse(data["body"]);
+          if (this.personaSearch.personaJuridicaItems.length != 0) {
+            this.body = this.personaSearch.personaJuridicaItems[0];
+            this.selectedTipo = this.body.tipo;
+          } else {
+            this.body = new DatosGeneralesItem();
+          }
+          this.comprobarValidacion();
+        },
+        error => {
+          this.personaSearch = JSON.parse(error["error"]);
+          this.showFail(JSON.stringify(this.personaSearch.error.description));
+          console.log(error);
+          this.progressSpinner = false;
+        },
+        () => {
+          // obtengo los idiomas y establecer el del la persona jurídica
+          this.idiomaPreferenciaSociedad = this.body.idLenguajeSociedad;
+          // si esta en modo edicion y guarda => rellenar tipo
+          if (this.editar) {
+            this.comboTipo = [];
+            let newTipo = this.comboIdentificacion.find(
+              item => item.value == this.body.tipo
+            );
+            this.comboTipo.push(newTipo.label);
+          }
+          this.showGuardar = false;
+          this.editar = false;
+          // restablece motivo de auditoria
+          this.body.motivo = undefined;
         }
-        this.comprobarValidacion();
-      },
-      error => {
-        this.personaSearch = JSON.parse(error["error"]);
-        this.showFail(JSON.stringify(this.personaSearch.error.description));
-        console.log(error);
-        this.progressSpinner = false;
-      },
-      () => {
-        // obtengo los idiomas y establecer el del la persona jurídica
-        this.idiomaPreferenciaSociedad = this.body.idLenguajeSociedad;
-        // si esta en modo edicion y guarda => rellenar tipo
-        if (this.editar) {
-          this.comboTipo = [];
-          let newTipo = this.comboIdentificacion.find(
-            item => item.value == this.body.tipo
-          );
-          this.comboTipo.push(newTipo.label);
-        }
-        this.showGuardar = false;
-        this.editar = false;
-        // restablece motivo de auditoria
-        this.body.motivo = undefined;
-      }
       );
   }
 
@@ -362,8 +376,8 @@ export class DatosGenerales implements OnInit {
         if (this.etiquetasPersonaJuridicaSelecionados != undefined) {
           this.body.grupos = [];
           this.etiquetasPersonaJuridicaSelecionados.forEach(
-            (value: String, key: number) => {
-              this.body.grupos.push(value);
+            (value: any, key: number) => {
+              this.body.grupos.push(value.value);
             }
           );
         }
@@ -374,46 +388,51 @@ export class DatosGenerales implements OnInit {
         this.sigaServices
           .post("busquedaPerJuridica_create", this.body)
           .subscribe(
-          data => {
-            this.cerrarAuditoria();
-            this.showSuccess();
-            let respuesta = JSON.parse(data["body"]);
-            this.idPersona = respuesta.id;
-            sessionStorage.removeItem("crearnuevo");
+            data => {
+              this.cerrarAuditoria();
 
-            let arrayPersonaJuridica = new Array<PersonaJuridicaItem>();
-            this.bodyPersonaJuridica = new PersonaJuridicaItem();
-            this.bodyPersonaJuridica.idPersona = this.idPersona;
-            this.bodyPersonaJuridica.nif = this.body.nif;
-            let selectedComboTipo = this.comboIdentificacion.find(
-              item => item.value == this.body.tipo
-            );
-            this.bodyPersonaJuridica.tipo = selectedComboTipo.label;
-            arrayPersonaJuridica.push(this.bodyPersonaJuridica);
-            // arrayPersonaJuridica[0] = this.bodyPersonaJuridica;
-            sessionStorage.setItem(
-              "usuarioBody",
-              JSON.stringify(arrayPersonaJuridica)
-            );
-            // pasamos el idPersona creado para la nueva sociedad
-            if (this.file != undefined) {
-              this.guardarImagen(this.idPersona);
+              let respuesta = JSON.parse(data["body"]);
+              this.idPersona = respuesta.id;
+              sessionStorage.removeItem("crearnuevo");
+
+              let arrayPersonaJuridica = new Array<PersonaJuridicaItem>();
+              this.bodyPersonaJuridica = new PersonaJuridicaItem();
+              this.bodyPersonaJuridica.idPersona = this.idPersona;
+              this.bodyPersonaJuridica.nif = this.body.nif;
+              let selectedComboTipo = this.comboIdentificacion.find(
+                item => item.value == this.body.tipo
+              );
+              this.bodyPersonaJuridica.tipo = selectedComboTipo.label;
+              arrayPersonaJuridica.push(this.bodyPersonaJuridica);
+              // arrayPersonaJuridica[0] = this.bodyPersonaJuridica;
+              sessionStorage.setItem(
+                "usuarioBody",
+                JSON.stringify(arrayPersonaJuridica)
+              );
+              // pasamos el idPersona creado para la nueva sociedad
+              if (this.file != undefined) {
+                this.guardarImagen(this.idPersona);
+              }
+              this.cargarImagen(this.idPersona);
+              this.datosGeneralesSearch();
+              this.comboTipo = [];
+              this.comboTipo.push(selectedComboTipo.label);
+              this.obtenerEtiquetasPersonaJuridicaConcreta();
+              this.editar = false;
+              this.showSuccess();
+              this.progressSpinner = false;
+              this.cardService.searchNewAnnounce.next(this.idPersona);
+              console.log("DAtos generales", this.progressSpinner);
+            },
+            error => {
+              console.log(error);
+              this.bodyviejo = JSON.parse(error["error"]);
+              this.showCustomFail(this.bodyviejo.error.message);
+              this.progressSpinner = false;
+            },
+            () => {
+              this.progressSpinner = false;
             }
-            this.cargarImagen(this.idPersona);
-            this.datosGeneralesSearch();
-            this.comboTipo = [];
-            this.comboTipo.push(selectedComboTipo.label);
-            this.obtenerEtiquetasPersonaJuridicaConcreta();
-            this.editar = false;
-            this.progressSpinner = false;
-            this.cardService.searchNewAnnounce.next(this.idPersona);
-          },
-          error => {
-            console.log(error);
-            this.bodyviejo = JSON.parse(error["error"]);
-            this.showCustomFail(this.bodyviejo.error.message);
-            this.progressSpinner = false;
-          }
           );
       } else {
         this.showFail("el cif introducido no es correcto");
@@ -427,8 +446,8 @@ export class DatosGenerales implements OnInit {
       if (this.etiquetasPersonaJuridicaSelecionados != undefined) {
         this.body.grupos = [];
         this.etiquetasPersonaJuridicaSelecionados.forEach(
-          (value: String, key: number) => {
-            this.body.grupos.push(value);
+          (value: any, key: number) => {
+            this.body.grupos.push(value.value);
           }
         );
       }
@@ -440,6 +459,7 @@ export class DatosGenerales implements OnInit {
       // if ((this.body.contadorNumsspp != undefined &&
       //   !this.onlySpaces(this.body.contadorNumsspp))) {
 
+      console.log("grupos", this.body);
       this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
         data => {
           this.cerrarAuditoria();
@@ -470,6 +490,19 @@ export class DatosGenerales implements OnInit {
       this.obtenerEtiquetasPersonaJuridicaConcreta();
       this.cargarImagen(this.body.idPersona);
       this.file = undefined;
+    } else {
+      this.body.nif = "";
+      this.selectedTipo = [];
+      this.body.fechaConstitucion = null;
+      this.body.fechaBaja = null;
+      this.body.denominacion = "";
+      this.body.abreviatura = "";
+      this.idiomaPreferenciaSociedad = "";
+      this.body.cuentaContable = "";
+      this.body.anotaciones = "";
+      this.etiquetasPersonaJuridicaSelecionados = [];
+
+      this.showGuardar = false;
     }
   }
 
@@ -479,8 +512,8 @@ export class DatosGenerales implements OnInit {
 
     this.sigaServices
       .postDownloadFiles(
-      "personaJuridica_cargarFotografia",
-      datosParaImagenJuridica
+        "personaJuridica_cargarFotografia",
+        datosParaImagenJuridica
       )
       .subscribe(data => {
         const blob = new Blob([data], { type: "text/csv" });
@@ -499,17 +532,17 @@ export class DatosGenerales implements OnInit {
   guardarImagen(idPersona: String) {
     this.sigaServices
       .postSendFileAndParameters(
-      "personaJuridica_uploadFotografia",
-      this.file,
-      idPersona
+        "personaJuridica_uploadFotografia",
+        this.file,
+        idPersona
       )
       .subscribe(
-      data => {
-        this.file = undefined;
-      },
-      error => {
-        console.log(error);
-      }
+        data => {
+          this.file = undefined;
+        },
+        error => {
+          console.log(error);
+        }
       );
   }
 
@@ -609,15 +642,17 @@ export class DatosGenerales implements OnInit {
       this.body.denominacion != "" &&
       this.body.denominacion != undefined &&
       !this.onlySpaces(this.body.denominacion) &&
-      this.body.fechaAlta != undefined &&
+      this.body.fechaConstitucion != undefined &&
       !this.onlySpaces(this.body.nif) &&
       this.idiomaPreferenciaSociedad != "" &&
-      this.idiomaPreferenciaSociedad != undefined
+      this.idiomaPreferenciaSociedad != undefined &&
+      this.etiquetasPersonaJuridicaSelecionados != undefined
       //this.file != undefined
     ) {
       if (
         this.editar &&
-        (this.body.fechaAlta != undefined || this.body.fechaAlta != null)
+        (this.body.fechaConstitucion != undefined ||
+          this.body.fechaConstitucion != null)
       ) {
         if (this.body.nif.length == 9 && this.isValidCIF(this.body.nif)) {
           this.showGuardar = true;
@@ -671,12 +706,15 @@ export class DatosGenerales implements OnInit {
     let i = 0;
     var ret;
     ret = true;
-    while (i < str.length) {
-      if (str[i] != " ") {
-        ret = false;
+    if (str != null) {
+      while (i < str.length) {
+        if (str[i] != " ") {
+          ret = false;
+        }
+        i++;
       }
-      i++;
     }
+
     return ret;
   }
 
@@ -765,7 +803,8 @@ export class DatosGenerales implements OnInit {
         this.body.fechaConstitucion != null) &&
       this.body.denominacion != "" &&
       this.body.denominacion != undefined &&
-      !this.onlySpaces(this.body.denominacion)
+      !this.onlySpaces(this.body.denominacion) &&
+      this.etiquetasPersonaJuridicaSelecionados != undefined
     ) {
       this.isValidate = true;
     } else {
@@ -776,6 +815,108 @@ export class DatosGenerales implements OnInit {
         result.cardGeneral = this.isValidate;
       });
       console.log(data);
+      console.log("DAtos generales", this.progressSpinner);
     });
+  }
+
+  filterLabelsMultiple(event) {
+    this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
+      n => {
+        // coger todas las etiquetas
+        this.comboEtiquetas = this.filterLabel(event.query, n.combooItems);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  filterLabel(query, etiquetas: any[]): any[] {
+    let filtered: any[] = [];
+    for (let i = 0; i < etiquetas.length; i++) {
+      let country = etiquetas[i];
+      if (country.label.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(country);
+      }
+    }
+
+    if (filtered.length == 0) {
+      this.control = true;
+    } else {
+      this.control = false;
+    }
+
+    return filtered;
+  }
+
+  onKeyUp(event) {
+    if (event.keyCode == 13) {
+      if (this.control) {
+        this.checked = true;
+        this.etiqueta = event.srcElement.value;
+      }
+    }
+  }
+
+  closeDialogConfirmacion() {
+    this.checked = false;
+    this.autoComplete.multiInputEL.nativeElement.value = null;
+  }
+
+  guardarNuevaEtiqueta() {
+    this.checked = false;
+    console.log("antes", this.etiquetasPersonaJuridicaSelecionados);
+
+    if (
+      this.etiquetasPersonaJuridicaSelecionados == undefined &&
+      this.etiqueta != null
+    ) {
+      this.etiquetasPersonaJuridicaSelecionados = [];
+    }
+
+    // if (sessionStorage.getItem("crearnuevo") == null) {
+    //   this.etiquetasPersonaJuridicaSelecionados.push({
+    //     label: this.etiqueta,
+    //     value: ""
+    //   });
+    // }
+
+    //this.autoComplete.multiInputEL.nativeElement.value = null;
+
+    this.items.value = this.idPersona;
+    this.items.label = this.etiqueta;
+    this.sigaServices.post("datosGenerales_createLabel", this.items).subscribe(
+      data => {
+        let result = JSON.parse(data.body);
+        if (result.id != null) {
+          this.etiquetasPersonaJuridicaSelecionados.push({
+            label: this.etiqueta,
+            value: result.id
+          });
+
+          this.autoComplete.multiInputEL.nativeElement.value = null;
+        } else {
+          this.showSuccess();
+        }
+
+        this.progressSpinner = false;
+      },
+      error => {
+        this.bodyviejo = JSON.parse(error["error"]);
+
+        this.showCustomFail("La etiqueta no ha sido creada");
+
+        this.progressSpinner = false;
+      },
+      () => {
+        // if (sessionStorage.getItem("crearnuevo") == null) {
+        //   this.obtenerEtiquetasPersonaJuridicaConcreta();
+        // }
+      }
+    );
+  }
+
+  ngAfterViewChecked() {
+    this.changeDetectorRef.detectChanges();
   }
 }

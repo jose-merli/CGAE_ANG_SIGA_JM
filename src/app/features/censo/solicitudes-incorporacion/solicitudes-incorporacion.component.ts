@@ -1,20 +1,250 @@
-import { Component, OnInit } from '@angular/core';
-import { OldSigaServices } from '../../../_services/oldSiga.service';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import {
+  FormGroup,
+  FormBuilder,
+  FormControl,
+  Validators
+} from "../../../../../node_modules/@angular/forms";
+import { esCalendar } from "../../../utils/calendar";
+import { Router } from "../../../../../node_modules/@angular/router";
+import { SigaServices } from "../../../_services/siga.service";
+import { TranslateService } from "../../../commons/translate";
+import { DataTable } from "../../../../../node_modules/primeng/primeng";
+import { SolicitudIncorporacionObject } from "../../../models/SolicitudIncorporacionObject";
+import { SolicitudIncorporacionItem } from "../../../models/SolicitudIncorporacionItem";
 
 @Component({
-  selector: 'app-solicitudes-incorporacion',
-  templateUrl: './solicitudes-incorporacion.component.html',
-  styleUrls: ['./solicitudes-incorporacion.component.scss']
+  selector: "app-solicitudes-incorporacion",
+  templateUrl: "./solicitudes-incorporacion.component.html",
+  styleUrls: ["./solicitudes-incorporacion.component.scss"]
 })
-export class SolicitudesIncorporacionComponent {
+export class SolicitudesIncorporacionComponent implements OnInit {
+  es: any;
+  fichaAbierta: boolean = true;
+  formBusqueda: FormGroup;
+  body: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
+  bodySearch: SolicitudIncorporacionObject = new SolicitudIncorporacionObject();
+  identificacionValida: boolean;
+  buscar: boolean = false;
+  progressSpinner: boolean = false;
+  private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
+  tiposSolicitud: any;
+  estadosSolicitud: any;
 
-  url;
+  @ViewChild("table")
+  table;
+  selectedDatos;
+  cols: any = [];
+  rowsPerPage: any = [];
+  datos: any;
+  numSelected: number = 0;
+  selectedItem: number = 10;
+  selectMultiple: boolean = false;
+  selectAll: boolean = false;
 
-  constructor(public sigaServices: OldSigaServices) {
-    this.url = sigaServices.getOldSigaUrl("solicitudesIncorporacion");
+  constructor(
+    private translateService: TranslateService,
+    private sigaServices: SigaServices,
+    private formBuilder: FormBuilder,
+    private changeDetectorRef: ChangeDetectorRef,
+    private router: Router
+  ) {
+    this.formBusqueda = this.formBuilder.group({
+      fechaDesde: new FormControl(null, Validators.required),
+      fechaHasta: new FormControl(null, Validators.required),
+      nombre: new FormControl(null, Validators.minLength(3)),
+      apellidos: new FormControl(null, Validators.minLength(3))
+    });
   }
 
   ngOnInit() {
+    this.es = this.translateService.getCalendarLocale();
+    this.cargarCombos();
+    this.cols = [
+      { field: "numeroIdentificacion", header: "Nº Identificación" },
+      { field: "apellidos", header: "Apellidos" },
+      { field: "nombre", header: "Nombre" },
+      { field: "numColegiado", header: "Nº colegiado previsto" },
+      { field: "correoElectronico", header: "Tipo Solicitud" },
+      { field: "fechaSolicitud", header: "Fecha Solicitud" },
+      { field: "estadoSolicitud", header: "Estado" },
+      { field: "fechaEstado", header: "Fecha Estado" }
+    ];
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: "Todo",
+        value: 10
+      }
+    ];
   }
 
+  cargarCombos() {
+    this.sigaServices.get("solicitudInciporporacion_tipoSolicitud").subscribe(
+      result => {
+        this.tiposSolicitud = result.combooItems;
+      },
+      error => {
+        console.log(error);
+      }
+    );
+
+    this.sigaServices.get("solicitudInciporporacion_estadoSolicitud").subscribe(
+      result => {
+        this.estadosSolicitud = result.combooItems;
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+  isBuscar() {
+    if (
+      !this.formBusqueda.invalid &&
+      this.checkIdentificacion(this.body.numeroIdentificacion)
+    ) {
+      this.buscar = true;
+      this.progressSpinner = true;
+      this.sigaServices
+        .postPaginado(
+          "solicitudInciporporacion_searchSolicitud",
+          "?numPagina=1",
+          this.body
+        )
+        .subscribe(
+          result => {
+            this.bodySearch = JSON.parse(result["body"]);
+            this.datos = [];
+            this.datos = this.bodySearch.solIncorporacionItems;
+            this.progressSpinner = false;
+            console.log(result);
+          },
+          error => {
+            console.log(error);
+          }
+        );
+    } else {
+      console.log("mal filtros");
+      //TODO : MOSTRAR MENSAJE DE FALLO EN FILTROS ?
+    }
+  }
+
+  irNuevaSolicitud() {
+    sessionStorage.setItem("editar", "false");
+    this.router.navigate(["/nuevaIncorporacion"]);
+  }
+  irDetalleSolicitud(item) {
+    if (item && item.length > 0) {
+      var enviarDatos = null;
+      enviarDatos = item[0];
+      sessionStorage.setItem("idSolicitud", enviarDatos.idSolicitud);
+      sessionStorage.setItem("editar", "true");
+    } else {
+      sessionStorage.setItem("editar", "false");
+    }
+    this.router.navigate(["/nuevaIncorporacion"]);
+  }
+
+  abrirCerrarFicha() {
+    this.fichaAbierta = !this.fichaAbierta;
+  }
+
+  checkIdentificacion(doc: String) {
+    if (doc && doc.length > 0) {
+      if (doc.length == 10) {
+        return this.isValidPassport(doc);
+      } else {
+        if (
+          doc.substring(0, 1) == "1" ||
+          doc.substring(0, 1) == "2" ||
+          doc.substring(0, 1) == "3" ||
+          doc.substring(0, 1) == "4" ||
+          doc.substring(0, 1) == "5" ||
+          doc.substring(0, 1) == "6" ||
+          doc.substring(0, 1) == "7" ||
+          doc.substring(0, 1) == "8" ||
+          doc.substring(0, 1) == "9" ||
+          doc.substring(0, 1) == "0"
+        ) {
+          return this.isValidDNI(doc);
+        } else {
+          return this.isValidNIE(doc);
+        }
+      }
+    } else {
+      return true;
+    }
+  }
+
+  isValidPassport(dni: String): boolean {
+    return (
+      dni && typeof dni === "string" && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni)
+    );
+  }
+
+  isValidNIE(nie: String): boolean {
+    return (
+      nie &&
+      typeof nie === "string" &&
+      /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie)
+    );
+  }
+
+  isValidDNI(dni: String): boolean {
+    return (
+      dni &&
+      typeof dni === "string" &&
+      /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
+      dni.substr(8, 9).toUpperCase() ===
+        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+    );
+  }
+
+  restablecerCampos() {
+    this.body = new SolicitudIncorporacionItem();
+  }
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
+
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.numSelected = this.bodySearch.solIncorporacionItems.length;
+      this.selectMultiple = false;
+      this.selectedDatos = this.bodySearch.solIncorporacionItems;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
+  activarPaginacion() {
+    if (
+      !this.bodySearch.solIncorporacionItems ||
+      this.bodySearch.solIncorporacionItems.length == 0
+    )
+      return false;
+    else return true;
+  }
+  isSelectMultiple() {
+    this.selectMultiple = !this.selectMultiple;
+    if (!this.selectMultiple) {
+      this.numSelected = 0;
+      this.selectedDatos = [];
+    } else {
+      this.selectAll = false;
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
 }

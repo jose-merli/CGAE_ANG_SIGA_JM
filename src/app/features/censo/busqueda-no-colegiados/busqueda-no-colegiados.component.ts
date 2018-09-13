@@ -8,6 +8,12 @@ import {
 } from "../../../../../node_modules/@angular/forms";
 import { esCalendar } from "../../../utils/calendar";
 import { Router } from "../../../../../node_modules/@angular/router";
+import { SigaServices } from "../../../_services/siga.service";
+import { TranslateService } from "../../../commons/translate";
+import { DataTable } from "../../../../../node_modules/primeng/primeng";
+import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
+import { DatosNoColegiadosObject } from "../../../models/DatosNoColegiadosObject";
+import { DatePipe } from "../../../../../node_modules/@angular/common";
 
 @Component({
   selector: "app-busqueda-no-colegiados",
@@ -16,29 +22,45 @@ import { Router } from "../../../../../node_modules/@angular/router";
 })
 export class BusquedaNoColegiadosComponent implements OnInit {
   formBusqueda: FormGroup;
-  cols: any = [];
-  datos: any[];
-  select: any[];
-  es: any = esCalendar;
-  selectedValue: string = "simple";
+  comboEtiquetas: any;
+  textSelected: String = "{0} etiquetas seleccionadas";
+  comboEstadoCivil: any;
+  comboProvincias: any;
+  comboPoblacion: any;
+  comboTipoDireccion: any;
+  comboCategoriaCurricular: any;
+  comboSexo: any;
+  progressSpinner: boolean = false;
+  resultadosPoblaciones: any;
 
-  // selectedDatos: any = []
-
-  showDatosGenerales: boolean = true;
-  showDatosColegiales: boolean = true;
-  showDatosAvanzadosGenerales: boolean = false;
-  rowsPerPage: any = [];
-  selectMultiple: boolean = false;
-
+  editar: boolean = true;
+  textFilter: String = "Elegir";
+  body: NoColegiadoItem = new NoColegiadoItem();
+  isDisabledPoblacion: boolean = true;
+  isDisabledProvincia: boolean = true;
+  isEditable: boolean = false;
   buscar: boolean = false;
-  selectAll: boolean = false;
+  es: any;
 
+  historico: boolean = false;
+
+  cols: any;
+  datos: any;
+  rowsPerPage: any;
+  selectMultiple: boolean = false;
+  isMultiple: string = "single";
   selectedItem: number = 10;
-  @ViewChild("table") table;
+  selectAll: boolean = false;
+  numSelected: number = 0;
+  fechaNacimientoSelect: Date;
+  fechaNacimientoSelectOld: Date;
+
+  noColegiadoSearch = new DatosNoColegiadosObject();
+
+  @ViewChild("table")
+  table: DataTable;
   selectedDatos;
 
-  masFiltros: boolean = false;
-  labelFiltros: string;
   fichasPosibles = [
     {
       key: "generales",
@@ -57,15 +79,23 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private changeDetectorRef: ChangeDetectorRef
+    private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private sigaServices: SigaServices,
+    private datePipe: DatePipe
   ) {
     this.formBusqueda = this.formBuilder.group({
-      fechaNacimiento: new FormControl(null, Validators.required),
-      fechaIncorporacion: new FormControl(null)
+      nif: new FormControl(null, Validators.minLength(3)),
+      nombre: new FormControl(null, Validators.minLength(3)),
+      apellidos: new FormControl(null, Validators.minLength(3))
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    // Obtener Combos
+    this.getCombos();
+    this.es = this.translateService.getCalendarLocale();
+  }
 
   abrirFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
@@ -90,5 +120,346 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
+  }
+
+  //Funcion que carga todos los combos de los filtros de la pantalla
+  getCombos() {
+    this.getComboProvincias();
+    this.getComboEstadoCivil();
+    this.getComboCategoriaCurricular();
+    this.getComboSexo();
+    this.getComboTipoDireccion();
+    this.getComboEtiquetas();
+  }
+
+  //Funcion que carga combo del campo sexo
+  getComboSexo() {
+    this.comboSexo = [
+      { label: "", value: null },
+      { label: "Hombre", value: "H" },
+      { label: "Mujer", value: "M" }
+    ];
+  }
+
+  //Funcion que carga combo del campo estado civil
+  getComboEstadoCivil() {
+    this.sigaServices.get("busquedaNoColegiados_estadoCivil").subscribe(
+      n => {
+        this.comboEstadoCivil = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  //Funcion que carga combo del campo etiquetas
+  getComboEtiquetas() {
+    this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
+      n => {
+        this.comboEtiquetas = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  //Funcion que carga combo del campo tipo direccion
+  getComboTipoDireccion() {
+    this.sigaServices.get("busquedaNoColegiados_tipoDireccion").subscribe(
+      n => {
+        this.comboTipoDireccion = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  //Funcion que carga combo del campo curricular
+  getComboCategoriaCurricular() {
+    this.sigaServices.get("busquedaNoColegiados_categoriaCurricular").subscribe(
+      n => {
+        this.comboCategoriaCurricular = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  //Funcion que carga combo del campo provincias
+  getComboProvincias() {
+    this.sigaServices.get("busquedaNoColegiados_provincias").subscribe(
+      n => {
+        this.comboProvincias = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  //Funcion que carga combo del campo poblacion
+  getComboPoblacion(dataFilter) {
+    this.sigaServices
+      .getParam(
+        "busquedaNoColegiados_poblacion",
+        "?idProvincia=" + this.body.idProvincia + "&dataFilter=" + dataFilter
+      )
+      .subscribe(
+        n => {
+          this.isDisabledPoblacion = false;
+          this.comboPoblacion = n.combooItems;
+        },
+        error => {},
+        () => {}
+      );
+  }
+
+  //Funcion que carga la provincia al cambiar el campo codigo postal
+  onChangeCodigoPostal(event) {
+    if (this.isValidCodigoPostal() && this.body.codigoPostal.length == 5) {
+      let value = this.body.codigoPostal.substring(0, 2);
+      if (
+        value != this.body.idProvincia ||
+        this.body.idProvincia == undefined
+      ) {
+        this.body.idProvincia = value;
+        this.isDisabledPoblacion = false;
+        this.comboPoblacion = [];
+      }
+    }
+  }
+
+  //Funcion que valida el codido postal
+  isValidCodigoPostal(): boolean {
+    return (
+      this.body.codigoPostal &&
+      typeof this.body.codigoPostal === "string" &&
+      /^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(this.body.codigoPostal)
+    );
+  }
+
+  //Funcion que busca poblacion según la provincia seleccionada
+  buscarPoblacion(e) {
+    if (e.target.value && e.target.value !== null) {
+      if (e.target.value.length >= 3) {
+        this.getComboPoblacion(e.target.value);
+        this.resultadosPoblaciones = "No hay resultados";
+      } else {
+        this.comboPoblacion = [];
+        this.resultadosPoblaciones = "Debe introducir al menos 3 caracteres";
+        this.body.idPoblacion = null;
+      }
+    } else {
+      this.comboPoblacion = [];
+      this.body.idPoblacion = null;
+      this.resultadosPoblaciones = "No hay resultados";
+    }
+  }
+
+  //Opción tabla de seleccionar varias filas
+  isSelectMultiple() {
+    this.selectMultiple = !this.selectMultiple;
+    if (!this.selectMultiple) {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    } else {
+      this.selectAll = false;
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
+  //Opción tabla de seleccionar todas las filas
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.selectMultiple = false;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
+  //Paginator
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
+
+  isSelect(event) {
+    if (this.selectMultiple == false) {
+      this.selectedDatos = this.selectedItem;
+    } else {
+      this.isSelectMultiple();
+    }
+  }
+
+  //Busca No colegiados según los filtros
+  isBuscar() {
+    this.selectAll = false;
+    this.historico = false;
+    this.buscar = true;
+    this.selectMultiple = false;
+    this.selectedDatos = "";
+    this.getColsResults();
+
+    if (
+      this.fechaNacimientoSelect != undefined ||
+      this.fechaNacimientoSelect != null
+    ) {
+      this.body.fechaNacimiento = this.datePipe.transform(
+        this.fechaNacimientoSelect,
+        "dd/MM/yyyy"
+      );
+    } else {
+      this.body.fechaNacimiento = null;
+    }
+
+    this.progressSpinner = true;
+    this.buscar = true;
+
+    this.sigaServices
+      .postPaginado(
+        "busquedaNoColegiados_searchNoColegiado",
+        "?numPagina=1",
+        this.body
+      )
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.noColegiadoSearch = JSON.parse(data["body"]);
+          this.datos = this.noColegiadoSearch.noColegiadoItem;
+          this.convertirStringADate(this.datos);
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  toHistorico() {
+    this.historico = true;
+    this.buscar = false;
+    this.selectMultiple = false;
+    this.selectedDatos = "";
+    this.progressSpinner = true;
+    this.selectAll = false;
+    this.sigaServices
+      .postPaginado(
+        "busquedaNoColegiados_searchHistoric",
+        "?numPagina=1",
+        this.body
+      )
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.noColegiadoSearch = JSON.parse(data["body"]);
+          this.datos = this.noColegiadoSearch.noColegiadoItem;
+          this.convertirStringADate(this.datos);
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {}
+      );
+  }
+
+  isLimpiar() {
+    this.body = new NoColegiadoItem();
+    this.fechaNacimientoSelect = null;
+  }
+
+  isCrear() {
+    let noColegiado = {
+      id: "",
+      apellidos: "",
+      nombre: "",
+      fechaNacimiento: "",
+      mail: "",
+      telefono: ""
+    };
+
+    this.isEditable = true;
+    this.datos = [noColegiado, ...this.datos];
+    this.table.reset();
+  }
+
+  deleteSeleccion() {
+    this.selectedDatos = [];
+  }
+
+  isCancelar() {
+    this.isEditable = false;
+  }
+
+  convertirStringADate(datos) {
+    datos.forEach(element => {
+      if (element.fechaNacimiento == "" || element.fechaNacimiento == null) {
+        element.fechaNacimiento = null;
+      } else {
+        var year = element.fechaNacimiento.substring(0, 4);
+        var month = element.fechaNacimiento.substring(5, 7);
+        var day = element.fechaNacimiento.substring(8, 10);
+        element.fechaNacimiento = "";
+        element.fechaNacimiento = day + "/" + month + "/" + year;
+      }
+    });
+  }
+
+  getColsResults() {
+    this.cols = [
+      {
+        field: "nif",
+        header: "censo.consultaDatosColegiacion.literal.numIden"
+      },
+      {
+        field: "nombre",
+        header: "administracion.parametrosGenerales.literal.nombre"
+      },
+      {
+        field: "fechaNacimiento",
+        header: "censo.consultaDatosColegiacion.literal.fechaNac"
+      },
+      { field: "correo", header: "censo.datosDireccion.literal.correo" },
+      { field: "telefono", header: "censo.ws.literal.telefono" },
+      { field: "movil", header: "censo.datosDireccion.literal.movil" }
+    ];
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
+  }
+
+  setItalic(datoH) {
+    if (datoH.fechaBaja == null) return false;
+    else return true;
   }
 }

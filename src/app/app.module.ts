@@ -67,7 +67,7 @@ import { ComisionesCargosComponent } from "./features/censo/comisiones-cargos/co
 import { SolicitudesGenericasComponent } from "./features/censo/solicitudes-genericas/solicitudes-genericas.component";
 import { SolicitudesEspecificasComponent } from "./features/censo/solicitudes-especificas/solicitudes-especificas.component";
 import { SolicitudesIncorporacionComponent } from "./features/censo/solicitudes-incorporacion/solicitudes-incorporacion.component";
-import { NuevaIncorporacionComponent } from "./features/censo/nueva-incorporacion/nueva-incorporacion.component";
+import { NuevaIncorporacionComponent } from "./features/censo/solicitudes-incorporacion/nueva-incorporacion/nueva-incorporacion.component";
 import { DocumentacionSolicitudesComponent } from "./features/censo/documentacion-solicitudes/documentacion-solicitudes.component";
 import { MantenimientoGruposFijosComponent } from "./features/censo/mantenimiento-grupos-fijos/mantenimiento-grupos-fijos.component";
 import { MantenimientoMandatosComponent } from "./features/censo/mantenimiento-mandatos/mantenimiento-mandatos.component";
@@ -75,6 +75,7 @@ import { BusquedaSancionesComponent } from "./features/censo/busqueda-sanciones/
 import { BusquedaColegiadosComponent } from "./features/censo/busqueda-colegiados/busqueda-colegiados.component";
 import { BusquedaColegiadosComponentI } from "./features/censo/busqueda-colegiados-censoI/busqueda-colegiados.component";
 import { FichaColegialComponent } from "./features/censo/ficha-colegial/ficha-colegial.component";
+import { EdicionCurricularesComponent } from "./features/censo/ficha-colegial/edicionDatosCurriculares/edicionCurriculares.component";
 import { BusquedaLetradosComponent } from "./features/censo/busqueda-letrados/busqueda-letrados.component";
 import { MantenimientoDuplicadosComponent } from "./features/censo/mantenimiento-duplicados/mantenimiento-duplicados.component";
 import { ModificacionDatosComponent } from "./features/censo/modificacion-datos/modificacion-datos.component";
@@ -246,7 +247,7 @@ import { ServiciosInteresComponent } from "./features/censo/datosPersonaJuridica
 
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
-import { ErrorAccesoComponent } from './commons/error/error-acceso/error-acceso.component';
+import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.component";
 
 @NgModule({
   declarations: [
@@ -280,6 +281,7 @@ import { ErrorAccesoComponent } from './commons/error/error-acceso/error-acceso.
     BusquedaColegiadosComponent,
     BusquedaColegiadosComponentI,
     FichaColegialComponent,
+    EdicionCurricularesComponent,
     BusquedaLetradosComponent,
     MantenimientoDuplicadosComponent,
     ModificacionDatosComponent,

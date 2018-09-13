@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { FichaColegialComponent } from "./ficha-colegial.component";
+import { FichaColegialComponent } from "./../ficha-colegial.component";
 
-describe("ConsultarDatosBancariosComponent", () => {
+describe("FichaColegialComponent", () => {
   let component: FichaColegialComponent;
   let fixture: ComponentFixture<FichaColegialComponent>;
 

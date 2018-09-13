@@ -15,7 +15,7 @@ import { ComisionesCargosComponent } from "./features/censo/comisiones-cargos/co
 import { SolicitudesGenericasComponent } from "./features/censo/solicitudes-genericas/solicitudes-genericas.component";
 import { SolicitudesEspecificasComponent } from "./features/censo/solicitudes-especificas/solicitudes-especificas.component";
 import { SolicitudesIncorporacionComponent } from "./features/censo/solicitudes-incorporacion/solicitudes-incorporacion.component";
-import { NuevaIncorporacionComponent } from "./features/censo/nueva-incorporacion/nueva-incorporacion.component";
+import { NuevaIncorporacionComponent } from "./features/censo/solicitudes-incorporacion/nueva-incorporacion/nueva-incorporacion.component";
 import { DocumentacionSolicitudesComponent } from "./features/censo/documentacion-solicitudes/documentacion-solicitudes.component";
 import { MantenimientoGruposFijosComponent } from "./features/censo/mantenimiento-grupos-fijos/mantenimiento-grupos-fijos.component";
 import { MantenimientoMandatosComponent } from "./features/censo/mantenimiento-mandatos/mantenimiento-mandatos.component";
@@ -179,6 +179,10 @@ import { GestionEntidad } from "./features/administracion/gestion-entidad/gestio
 import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component";
 import { DatosGenerales } from "./features/censo/datosPersonaJuridica/datos-generales/datos-generales.component";
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
+
+// CENSO II
+import { EdicionCurricularesComponent } from "./features/censo/ficha-colegial/edicionDatosCurriculares/edicionCurriculares.component";
+
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
 //ERROR
@@ -215,6 +219,11 @@ const appRoutes: Routes = [
   {
     path: "fichaColegial",
     component: FichaColegialComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "edicionCurriculares",
+    component: EdicionCurricularesComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -978,6 +987,5 @@ const appRoutes: Routes = [
     component: ErrorAccesoComponent
   },
   { path: " ", redirectTo: "home" }
-
 ];
 export const routing = RouterModule.forRoot(appRoutes);

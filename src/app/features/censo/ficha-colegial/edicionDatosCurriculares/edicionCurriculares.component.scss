@@ -1,21 +1,3 @@
-.labelError {
-  color: red;
-  font-weight: bold;
-}
-
-.labelOK {
-  color: green;
-  font-weight: bold;
-}
-
-.card-header * {
-  cursor: pointer;
-}
-
-.widthAll {
-  width: 100%;
-}
-
 .ui-growl-message-info .ui-growl-item {
   color: white !important;
   background-color: #33a1ff !important;
@@ -36,6 +18,6 @@
   background-color: #dc3545 !important;
 }
 
-.ui-multiselect .ui-multiselect-label {
-  padding: 0.112em !important;
+.card-header * {
+  cursor: pointer;
 }

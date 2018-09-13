@@ -134,7 +134,8 @@ export class BusquedaColegiadosComponentI implements OnInit {
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
 
-  @ViewChild("table") table;
+  @ViewChild("table")
+  table;
 
   fichasPosibles = [
     {

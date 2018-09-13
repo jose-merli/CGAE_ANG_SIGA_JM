@@ -87,38 +87,39 @@ export class SigaServices {
     busquedaPerJuridica_delete: "busquedaPerJuridica/delete",
     busquedaPerJuridica_history: "busquedaPerJuridica/searchHistoric",
     busquedaPerJuridica_parametroColegio:
-    "busquedaPerJuridica/parametroColegio",
+      "busquedaPerJuridica/parametroColegio",
     datosGenerales_update: "personaJuridica/update",
     datosGenerales_insert: "personaJuridica/create",
     datosGenerales_identificacion: "DatosGenerales/identificacion",
+    datosGenerales_createLabel: "busquedaPerJuridica/createLabel",
     busquedaPer_colegio: "busquedaPer/colegio",
     busquedaPer_searchJuridica: "busquedaPerJuridica/searchJuridica",
     busquedaPer_searchFisica: "busquedaPerJuridica/searchFisica",
     busquedaPerJuridica_etiquetasPersona:
-    "busquedaPerJuridica/etiquetasPersona",
+      "busquedaPerJuridica/etiquetasPersona",
     personaJuridica_uploadFotografia: "personaJuridica/uploadFotografia",
     personaJuridica_cargarFotografia: "personaJuridica/cargarFotografia",
     busquedaPerJuridica_datosGeneralesSearch:
-    "busquedaPerJuridica/datosGeneralesSearch",
+      "busquedaPerJuridica/datosGeneralesSearch",
     busquedaPerJuridica_create: "busquedaPerJuridica/create",
     accesoFichaPersona_search: "fichaPersona/search",
     accesoFichaPersona_desasociarPersona: "fichaPersona/desasociarPersona",
     accesoFichaPersona_guardar: "fichaPersona/guardar",
     fichaPersona_crearNotario: "fichaPersona/crearNotario",
     fichaPersona_tipoIdentificacionCombo:
-    "fichaPersona/tipoIdentificacionCombo",
+      "fichaPersona/tipoIdentificacionCombo",
     busquedaPerJuridica_update: "busquedaPerJuridica/update",
     datosRegistrales_actividadesPersona:
-    "perJuridicaDatosRegistrales/actividadProfesionalPer",
+      "perJuridicaDatosRegistrales/actividadProfesionalPer",
     datosRegistrales_actividadesDisponible:
-    "perJuridicaDatosRegistrales/actividadProfesional",
+      "perJuridicaDatosRegistrales/actividadProfesional",
     datosRegistrales_search: "perJuridicaDatosRegistrales/search",
     datosRegistrales_update: "perJuridicaDatosRegistrales/update",
     datosRegistrales_datosContador: "perJuridicaDatosRegistrales/datosContador",
     datosBancarios_search: "busquedaPerJuridica/datosBancariosSearch",
     datosBancarios_delete: "busquedaPerJuridica/datosBancariosDelete",
     datosCuentaBancaria_search:
-    "busquedaPerJuridica/datosBancariosGeneralSearch",
+      "busquedaPerJuridica/datosBancariosGeneralSearch",
     datosCuentaBancaria_update: "busquedaPerJuridica/datosBancariosUpdate",
     datosCuentaBancaria_insert: "busquedaPerJuridica/datosBancariosInsert",
     datosCuentaBancaria_BIC_BANCO: "busquedaPerJuridica/BanksSearch",
@@ -130,7 +131,7 @@ export class SigaServices {
     anexos_insert: "busquedaPerJuridica/insertAnexos",
     busquedaPerJuridica_uploadFile: "busquedaPerJuridica/uploadFile",
     busquedaPerJuridica_fileDownloadInformation:
-    "busquedaPerJuridica/fileDownloadInformation",
+      "busquedaPerJuridica/fileDownloadInformation",
     busquedaPerJuridica_downloadFile: "busquedaPerJuridica/downloadFile",
     retenciones_tipoRetencion: "retenciones/tipoRetencion",
     retenciones_search: "retenciones/search",
@@ -150,14 +151,37 @@ export class SigaServices {
     direcciones_comboTipoDireccion: "tarjetaDirecciones/tipoDireccion",
     integrantes_update: "tarjetaIntegrantes/update",
     integrantes_insert: "tarjetaIntegrantes/create",
-    integrantes_delete: "tarjetaIntegrantes/delete"
+    integrantes_delete: "tarjetaIntegrantes/delete",
+
+    // censoII
+    busquedaColegiados_situacion: "busquedaColegiados/situacion",
+    busquedaColegiados_estadoCivil: "busquedaColegiados/estadoCivil",
+    busquedaColegiados_categoriaCurricular:
+      "busquedaColegiados/categoriaCurricular",
+    busquedaColegiados_poblacion: "/busquedaColegiados/poblacion",
+    busquedaColegiados_provincias: "busquedaColegiados/provincias",
+    busquedaColegiados_tipoDireccion: "busquedaColegiados/tipoDireccion",
+
+    busquedaNoColegiados_estadoCivil: "/busquedaNoColegiados/estadoCivil",
+    busquedaNoColegiados_provincias: "/busquedaNoColegiados/provincias",
+    busquedaNoColegiados_poblacion: "/busquedaNoColegiados/poblacion",
+    busquedaNoColegiados_tipoDireccion: "/busquedaNoColegiados/tipoDireccion",
+    busquedaNoColegiados_categoriaCurricular:
+      "/busquedaNoColegiados/categoriaCurricular",
+    busquedaNoColegiados_searchNoColegiado:
+      "/busquedaNocolegiado/searchNoColegiado",
+    solicitudInciporporacion_tipoSolicitud:
+      "/solicitudIncorporacion/tipoSolicitud",
+    solicitudInciporporacion_estadoSolicitud:
+      "/solicitudIncorporacion/estadoSolicitud",
+    solicitudInciporporacion_searchSolicitud:
+      "/solicitudIncorporacion/searchSolicitud"
   };
 
-
-  private  menuToggled  =  new  Subject<any>();
-  private  iframeRemove  =  new  Subject<any>();
-  menuToggled$  =  this.menuToggled.asObservable();
-  iframeRemove$  =  this.iframeRemove.asObservable();
+  private menuToggled = new Subject<any>();
+  private iframeRemove = new Subject<any>();
+  menuToggled$ = this.menuToggled.asObservable();
+  iframeRemove$ = this.iframeRemove.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -202,10 +226,10 @@ export class SigaServices {
   getPerfil(service: string, institucion: string): Observable<any> {
     return this.httpbackend
       .get(
-      environment.newSigaUrl +
-      this.endpoints[service] +
-      "?institucion=" +
-      institucion
+        environment.newSigaUrl +
+          this.endpoints[service] +
+          "?institucion=" +
+          institucion
       )
       .map(response => {
         return response;
