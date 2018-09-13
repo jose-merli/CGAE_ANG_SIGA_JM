@@ -175,7 +175,8 @@ export class SigaServices {
     solicitudInciporporacion_estadoSolicitud:
       "/solicitudIncorporacion/estadoSolicitud",
     solicitudInciporporacion_searchSolicitud:
-      "/solicitudIncorporacion/searchSolicitud"
+      "/solicitudIncorporacion/searchSolicitud",
+    fichaColegialGenerales_tratamiento: "fichaDatosColegiales/tratamiento"
   };
 
   private menuToggled = new Subject<any>();
@@ -225,9 +226,9 @@ export class SigaServices {
     return this.httpbackend
       .get(
         environment.newSigaUrl +
-        this.endpoints[service] +
-        "?institucion=" +
-        institucion
+          this.endpoints[service] +
+          "?institucion=" +
+          institucion
       )
       .map(response => {
         return response;
