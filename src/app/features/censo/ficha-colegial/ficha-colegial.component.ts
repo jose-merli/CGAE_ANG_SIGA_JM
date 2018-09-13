@@ -25,10 +25,8 @@ import { FichaColegialSociedadesItem } from "./../../../../app/models/FichaColeg
 import { FichaColegialSociedadesObject } from "./../../../../app/models/FichaColegialSociedadesObject";
 import { FichaColegialEdicionCurricularesItem } from "./../../../models/FichaColegialEdicionCurricularesItem";
 import { FichaColegialEdicionCurricularesObject } from "./../../../models/FichaColegialEdicionCurricularesObject";
-
 import { DatosDireccionesItem } from "./../../../models/DatosDireccionesItem";
 import { DatosDireccionesObject } from "./../../../models/DatosDireccionesObject";
-
 import { DatosBancariosItem } from "./../../../models/DatosBancariosItem";
 import { DatosBancariosObject } from "./../../../models/DatosBancariosObject";
 
@@ -74,7 +72,9 @@ export class FichaColegialComponent implements OnInit {
   datos: any[];
 
   file: File = undefined;
-  ocultarMotivo: boolean = undefined;
+
+  // Datos Generales
+  generalTratamiento: any[];
 
   @ViewChild("table")
   table: DataTable;
@@ -136,6 +136,7 @@ export class FichaColegialComponent implements OnInit {
   ngOnInit() {
     this.checkAcceso();
 
+    this.onInitGenerales();
     // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
     this.colsColegiales = [
       {
@@ -490,7 +491,17 @@ export class FichaColegialComponent implements OnInit {
   // FIN MÉTODOS GENÉRICOS
 
   // MÉTODOS PARA DATOS GENERALES
-
+  onInitGenerales() {
+    // fichaColegialGenerales_tratamiento
+    this.sigaServices.get("fichaColegialGenerales_tratamiento").subscribe(
+      n => {
+        this.generalTratamiento = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
   // MÉTODOS PARA DATOS COLEGIALES
 
   // MÉTODOS PARA OTRAS COLEGIACIONES

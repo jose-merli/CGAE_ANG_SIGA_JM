@@ -175,7 +175,8 @@ export class SigaServices {
     solicitudInciporporacion_estadoSolicitud:
       "/solicitudIncorporacion/estadoSolicitud",
     solicitudInciporporacion_searchSolicitud:
-      "/solicitudIncorporacion/searchSolicitud"
+      "/solicitudIncorporacion/searchSolicitud",
+    fichaColegialGenerales_tratamiento: "fichaDatosColegiales/tratamiento"
   };
 
   private menuToggled = new Subject<any>();

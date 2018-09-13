@@ -51,7 +51,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   ) {
     this.formBusqueda = this.formBuilder.group({
       fechaDesde: new FormControl(null, Validators.required),
-      fechaHasta: new FormControl(null, Validators.required),
+      //fechaHasta: new FormControl(null, Validators.required),
       nombre: new FormControl(null, Validators.minLength(3)),
       apellidos: new FormControl(null, Validators.minLength(3))
     });
@@ -123,6 +123,10 @@ export class SolicitudesIncorporacionComponent implements OnInit {
             this.bodySearch = JSON.parse(result["body"]);
             this.datos = [];
             this.datos = this.bodySearch.solIncorporacionItems;
+            this.datos.forEach(element => {
+              element.fechaSolicitud = new Date(element.fechaSolicitud);
+              element.fechaEstado = new Date(element.fechaEstado);
+            });
             this.progressSpinner = false;
             console.log(result);
           },
@@ -144,7 +148,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     if (item && item.length > 0) {
       var enviarDatos = null;
       enviarDatos = item[0];
-      sessionStorage.setItem("idSolicitud", enviarDatos.idSolicitud);
+      sessionStorage.setItem("editedSolicitud", JSON.stringify(enviarDatos));
       sessionStorage.setItem("editar", "true");
     } else {
       sessionStorage.setItem("editar", "false");

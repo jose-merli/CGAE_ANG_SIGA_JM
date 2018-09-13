@@ -95,7 +95,7 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.tratamiento" | translate}} (*)</label>
-              <p-dropdown class="select-form" [(ngModel)]="generalBody.tratamiento" [options]="comboIdentificacion" optionLabel="label"
+              <p-dropdown class="select-form" [(ngModel)]="generalBody.tratamiento" [options]="generalTratamiento" optionLabel="label"
                 (ngModelChange)="getTipo($event)"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
@@ -186,6 +186,20 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <!-- FICHA DATOS COLEGIALES -->
   <div class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha('colegiales')">
@@ -231,44 +245,44 @@
       <div class="row">
         <div class="bloque col-lg-12 col-md-12 col-sm-12">
           <div class="form-row">
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.busquedaClientesAvanzada.literal.nColegiado" | translate}} (*)</label>
               <input [(ngModel)]="colegialesBody.numColegiado" type="text" class="form-control" (ngModelChange)="onChangeForm()" pInputText>
               <div *ngIf="identificacionValida == false">
                 <label class="labelError">{{"El documento es inválido"}}</label>
               </div>
             </div>
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosGenerales.literal.seguro" | translate}} (*)</label>
               <p-dropdown class="select-form" [(ngModel)]="colegialesBody.seguro" [options]="comboIdentificacion" optionLabel="label" (ngModelChange)="getTipo($event)"></p-dropdown>
             </div>
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.fusionDuplicados.colegiaciones.inscrito" | translate}} (*)</label>
               <input [(ngModel)]="colegialesBody.inscrito" type="text" class="form-control" (ngModelChange)="onChangeForm()" [maxLength]="100"
                 pInputText>
             </div>
-            <div class="form-group col-lg-6 col-md-6 form-group-date">
+            <div class="form-group col-lg-3 col-md-3 form-group-date">
               <label>{{"censo.consultaDatosColegiales.literal.nMutualista" | translate}} (*)</label>
               <input [(ngModel)]="colegialesBody.numMutualista" type="text" class="form-control" (ngModelChange)="onChangeForm()" [maxLength]="100"
                 pInputText>
             </div>
 
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosGenerales.literal.fechaIncorporacion" | translate}} (*)</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="colegialesBody.fechaIncorporacion"
                 (ngModelChange)="onChangeForm()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
             </div>
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosGenerales.literal.fechaPresentacion" | translate}} (*)</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="colegialesBody.fechaPresentacion"
                 (ngModelChange)="onChangeForm()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
             </div>
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosGenerales.literal.fechaJura" | translate}} (*)</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="colegialesBody.fechaJura"
                 (ngModelChange)="onChangeForm()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
             </div>
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosColegiales.literal.fechaTitulacion" | translate}} (*)</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="colegialesBody.fechaTitulacion"
                 (ngModelChange)="onChangeForm()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
@@ -317,6 +331,28 @@
     </div>
   </div>
   <!-- END DATOS COLEGIALES -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -399,6 +435,31 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <!-- FICHA CERTIFICADOS -->
   <div class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha('certificados')">
@@ -464,18 +525,43 @@
             </div>
           </ng-template>
         </p-dataTable>
-
       </div>
       <br>
-
     </div>
-
     <div *ngIf="esFichaActiva('certificados')" class="card-footer ">
-
     </div>
   </div>
 
   <!-- END FICHA CERTIFICADOS -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -498,9 +584,7 @@
             <div class="d-flex justify-content-between">
               <label>Número total de Sociedades:
                 <!-- <span>{{ searchDirecciones.datosDireccionesItem.length }}</span> -->
-
               </label>
-
             </div>
             <i *ngIf="!esFichaActiva('sociedades')" class="fa fa-angle-down float-right"></i>
           </div>
@@ -514,8 +598,6 @@
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
-    <!--cuerpo-->
-
     <div *ngIf="esFichaActiva('sociedades')" class="card-body card-body-ficha">
       <div class="row">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="4" dataKey="idDireccion"
@@ -545,12 +627,9 @@
             </div>
           </ng-template>
         </p-dataTable>
-
       </div>
       <br>
-
     </div>
-
     <div *ngIf="esFichaActiva('sociedades')" class="card-footer ">
       <div class="text-right main-button ">
         <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="Solicitar modificación"></button>
@@ -561,6 +640,29 @@
   </div>
 
   <!-- END FICHA SOCIEDADES -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -653,6 +755,31 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <!-- INICIO FICHA DATOS DIRECCIONES -->
   <div class="busqueda-container">
     <div class="card">
@@ -738,6 +865,32 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <!-- INICIO FICHA DATOS BANCARIOS -->
   <div class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha('bancarios')">
@@ -815,6 +968,34 @@
     </div>
   </div>
   <!-- END FICHA DATOS BANCARIOS -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   <!--SERVICIOS INTERES-->
