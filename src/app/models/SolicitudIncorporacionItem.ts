@@ -5,6 +5,8 @@ export class SolicitudIncorporacionItem {
   apellidos: String;
   apellido1: String;
   apellido2: String;
+  sexo: String;
+  fechaNacimiento: Date;
   numColegiado: String;
   fechaSolicitud: Date;
   fechaEstado: Date;

@@ -81,7 +81,10 @@
                 [filter]="true" filterMatchMode="contains">
                 <ng-template let-datoH="rowData" pTemplate="body">
                     <div>
-                        <span>{{datoH[col.field]}}</span>
+                        <span *ngIf="col.field !== 'fechaEstado' && col.field !== 'fechaSolicitud' ">{{datoH[col.field]}}</span>
+                        <span *ngIf="(col.field == 'fechaEstado' && col.field.fechaEstado !==null) || (col.field == 'fechaSolicitud' && col.field.fechaSolicitud !==null)">{{datoH[col.field]
+                            | date: 'dd/MM/yyyy'}}
+                        </span>
                     </div>
                 </ng-template>
             </p-column>
