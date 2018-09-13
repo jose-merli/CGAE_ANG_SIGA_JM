@@ -33,6 +33,7 @@ export class SigaServices {
     usuario: "usuario",
     usuario_logeado: "usuario/logeado",
     instituciones: "instituciones",
+    institucionActual: "getInstitucionActual",
     perfiles: "perfiles",
     diccionarios: "diccionarios",
     usuarios_rol: "usuarios/rol",
@@ -90,6 +91,7 @@ export class SigaServices {
     datosGenerales_update: "personaJuridica/update",
     datosGenerales_insert: "personaJuridica/create",
     datosGenerales_identificacion: "DatosGenerales/identificacion",
+    datosGenerales_createLabel: "busquedaPerJuridica/createLabel",
     busquedaPer_colegio: "busquedaPer/colegio",
     busquedaPer_searchJuridica: "busquedaPerJuridica/searchJuridica",
     busquedaPer_searchFisica: "busquedaPerJuridica/searchFisica",
@@ -113,6 +115,7 @@ export class SigaServices {
       "perJuridicaDatosRegistrales/actividadProfesional",
     datosRegistrales_search: "perJuridicaDatosRegistrales/search",
     datosRegistrales_update: "perJuridicaDatosRegistrales/update",
+    datosRegistrales_datosContador: "perJuridicaDatosRegistrales/datosContador",
     datosBancarios_search: "busquedaPerJuridica/datosBancariosSearch",
     datosBancarios_delete: "busquedaPerJuridica/datosBancariosDelete",
     datosCuentaBancaria_search:
@@ -136,6 +139,7 @@ export class SigaServices {
     integrantes_search: "busquedaPerJuridica/datosIntegrantesSearch",
     integrantes_tipoColegio: "tarjetaIntegrantes/tipoColegio",
     integrantes_provincias: "tarjetaIntegrantes/provincias",
+    integrantes_provinciaColegio: "tarjetaIntegrantes/provinciaColegio",
     integrantes_cargos: "tarjetaIntegrantes/cargos",
     direcciones_search: "busquedaPerJuridica/datosDireccionesSearch",
     direcciones_update: "tarjetaDirecciones/update",
@@ -147,25 +151,7 @@ export class SigaServices {
     direcciones_comboTipoDireccion: "tarjetaDirecciones/tipoDireccion",
     integrantes_update: "tarjetaIntegrantes/update",
     integrantes_insert: "tarjetaIntegrantes/create",
-    integrantes_delete: "tarjetaIntegrantes/delete",
-
-    // censoII
-    busquedaColegiados_situacion: "busquedaColegiados/situacion",
-    busquedaColegiados_estadoCivil: "busquedaColegiados/estadoCivil",
-    busquedaColegiados_categoriaCurricular:
-      "busquedaColegiados/categoriaCurricular",
-    busquedaColegiados_poblacion: "/busquedaColegiados/poblacion",
-    busquedaColegiados_provincias: "busquedaColegiados/provincias",
-    busquedaColegiados_tipoDireccion: "busquedaColegiados/tipoDireccion",
-
-    busquedaNoColegiados_estadoCivil: "/busquedaNoColegiados/estadoCivil",
-    busquedaNoColegiados_provincias: "/busquedaNoColegiados/provincias",
-    busquedaNoColegiados_poblacion: "/busquedaNoColegiados/poblacion",
-    busquedaNoColegiados_tipoDireccion: "/busquedaNoColegiados/tipoDireccion",
-    busquedaNoColegiados_categoriaCurricular:
-      "/busquedaNoColegiados/categoriaCurricular",
-    busquedaNoColegiados_searchNoColegiado:
-      "/busquedaNocolegiado/searchNoColegiado"
+    integrantes_delete: "tarjetaIntegrantes/delete"
   };
 
   private menuToggled = new Subject<any>();
