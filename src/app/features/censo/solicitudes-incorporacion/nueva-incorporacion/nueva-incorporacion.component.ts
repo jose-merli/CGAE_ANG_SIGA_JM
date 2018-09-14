@@ -26,6 +26,13 @@ export class NuevaIncorporacionComponent implements OnInit {
   comboSexo: any;
   tiposSolicitud: any;
   estadosSolicitud: any;
+  paises: any;
+  tratamientos: any;
+  estadoCivil: any;
+  residente: boolean = false;
+  abonoJCS: boolean = false;
+  abono: boolean = false;
+  cargo: boolean = false;
 
   constructor(private translateService: TranslateService, private sigaServices: SigaServices) {
 
@@ -37,7 +44,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     if (sessionStorage.getItem("editar") == "true") {
       this.solictudEditar = JSON.parse(sessionStorage.getItem("editedSolicitud"));
       this.cargarCombos();
-      this.tratarDatos(); this.solictudEditar.idTipo
+      this.tratarDatos(); this.solictudEditar.abonoJCS
     }
     this.progressSpinner = false;
   }
@@ -59,20 +66,60 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.sigaServices
       .get("solicitudInciporporacion_estadoSolicitud").subscribe(result => {
         this.estadosSolicitud = result.combooItems;
-        console.log("combo", this.estadosSolicitud);
+      },
+        error => {
+          console.log(error);
+        });
+
+    this.sigaServices
+      .get("fichaColegialGenerales_tratamiento").subscribe(result => {
+        this.tratamientos = result.combooItems;
+        console.log("combo", this.tratamientos);
+      },
+        error => {
+          console.log(error);
+        });
+
+    this.sigaServices
+      .get("fichaColegialGenerales_estadoCivil").subscribe(result => {
+        this.estadoCivil = result.combooItems;
+        console.log("combo", this.estadoCivil);
+      },
+        error => {
+          console.log(error);
+        });
+
+    this.sigaServices
+      .get("fichaColegialGenerales_pais").subscribe(result => {
+        this.paises = result.combooItems;
+        console.log("combo", this.paises);
       },
         error => {
           console.log(error);
         });
   }
   tratarDatos() {
+
     if (this.solictudEditar.residente == "1") {
-      this.solictudEditar.residente = "true";
+      this.residente = true;
     } else {
-      this.solictudEditar.residente = "false";
+      this.residente = false;
     }
-    console.log("idEstado", this.solictudEditar.idEstado);
-    console.log("idtipo", this.solictudEditar.idTipo);
+
+    if (this.solictudEditar.abonoJCS == "1") {
+      this.abonoJCS = true;
+    } else {
+      this.abonoJCS = false;
+    }
+
+    if (this.solictudEditar.abonoCargo != null) {
+      this.cargo = true;
+    } else {
+      this.cargo = false;
+    }
+    console.log("solictud", this.solictudEditar);
+    //console.log("idEstado", this.solictudEditar.idEstado);
+    //console.log("idtipo", this.solictudEditar.idTipo);
     this.solictudEditar.fechaSolicitud = new Date(this.solictudEditar.fechaSolicitud);
     this.solictudEditar.fechaIncorporacion = new Date(this.solictudEditar.fechaIncorporacion);
     this.solictudEditar.fechaEstado = new Date(this.solictudEditar.fechaEstado);
