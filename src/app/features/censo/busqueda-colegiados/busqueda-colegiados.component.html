@@ -23,18 +23,16 @@
                             Debe tener como mínimo tres carácteres</small>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
-                        <label>{{"censo.busquedaClientes.literal.apellido1" | translate}}</label>
-                        <input type="text" name="apellido1" [formControl]="formBusqueda.controls['apellido1']" class="form-control" [(ngModel)]='body.apellido1'
+                        <label>{{ 'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate}}</label>
+                        <input type="text" name="apellidos" [formControl]="formBusqueda.controls['apellidos']" class="form-control" [(ngModel)]='body.apellidos'
                             pInputText>
-                        <small class="input-error" *ngIf="!formBusqueda.controls['apellido1'].pristine && formBusqueda.controls['apellido1'].status == 'INVALID'">
+                        <small class="input-error" *ngIf="!formBusqueda.controls['apellidos'].pristine && formBusqueda.controls['apellidos'].status == 'INVALID'">
                             Debe tener como mínimo tres carácteres</small>
-
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
-                        <label>{{"censo.busquedaClientes.literal.apellido2" | translate}}</label>
-                        <input type="text" name="apellido2" [formControl]="formBusqueda.controls['apellido2']" class="form-control" [(ngModel)]='body.apellido2'
-                            pInputText>
-                        <small class="input-error" *ngIf="!formBusqueda.controls['apellido2'].pristine && formBusqueda.controls['apellido2'].status == 'INVALID'">
+                        <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}}</label>
+                        <input [formControl]="formBusqueda.controls['nombre']" type="text" class="form-control" pInputText [(ngModel)]="body.nombre">
+                        <small class="input-error" *ngIf="!formBusqueda.controls['nombre'].pristine && formBusqueda.controls['nombre'].status == 'INVALID'">
                             Debe tener como mínimo tres carácteres</small>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
@@ -55,7 +53,7 @@
                 <div class="form-row">
                     <div class="form-group col-lg-2 col-md-2">
                         <label>{{"censo.busquedaClientesAvanzada.literal.nColegiado" | translate}}</label>
-                        <input type="text" name="numeroColegiado" [formControl]="formBusqueda.controls['numeroColegiado']" class="form-control" [(ngModel)]='body.nColegiado'
+                        <input type="text" name="numeroColegiado" [formControl]="formBusqueda.controls['numeroColegiado']" class="form-control" [(ngModel)]='body.numColegiado'
                             pInputText>
                         <small class="input-error" *ngIf="!formBusqueda.controls['numeroColegiado'].pristine && formBusqueda.controls['numeroColegiado'].status == 'INVALID'">
                             Debe tener como mínimo tres carácteres</small>
@@ -155,9 +153,13 @@
                         <label>{{"censo.datosDireccion.literal.correo" | translate}}</label>
                         <input type="text" name="correo" class="form-control" [(ngModel)]='body.correo' pInputText>
                     </div>
-                    <div class="form-group col-lg-2 col-md-2">
-                        <label>{{"censo.datosDireccion.literal.telefonoOMovil" | translate}}</label>
-                        <input type="text" name="telefonoOMovil" class="form-control" [(ngModel)]='body.movil' pInputText>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{ "censo.ws.literal.telefono" | translate}}</label>
+                        <input type="text" class="form-control" pInputText [(ngModel)]='body.telefono'>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{ "censo.datosDireccion.literal.movil" | translate}}</label>
+                        <input type="text" class="form-control" pInputText [(ngModel)]='body.movil'>
                     </div>
 
                 </div>
@@ -179,8 +181,8 @@
         <div class="card-body p-0">
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
                 [(selection)]="selectedDatos" (onRowSelect)="irEditarColegiado(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-                pageLinks="4" dataKey="identificacion" [responsive]="true" selectionMode="multiple" #table class="tabla-listado"
-                [value]="datos" [sortOrder]="sortO" [paginator]="activarPaginacion()" paginatorPosition="both" [rows]="selectedItem">
+                pageLinks="4" dataKey="idPersona" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos"
+                [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
                 <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
                     [filter]="true" filterMatchMode="contains">
                 </p-column>

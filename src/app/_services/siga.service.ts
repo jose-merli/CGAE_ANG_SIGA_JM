@@ -157,6 +157,7 @@ export class SigaServices {
     busquedaColegiados_poblacion: "/busquedaColegiados/poblacion",
     busquedaColegiados_provincias: "busquedaColegiados/provincias",
     busquedaColegiados_tipoDireccion: "busquedaColegiados/tipoDireccion",
+    busquedaColegiados_searchColegiado: "/busquedaColegiado/searchColegiado",
 
     busquedaNoColegiados_estadoCivil: "/busquedaNoColegiados/estadoCivil",
     busquedaNoColegiados_provincias: "/busquedaNoColegiados/provincias",
@@ -165,7 +166,8 @@ export class SigaServices {
     busquedaNoColegiados_categoriaCurricular:
       "/busquedaNoColegiados/categoriaCurricular",
     busquedaNoColegiados_searchNoColegiado:
-      "/busquedaNocolegiado/searchNoColegiado"
+      "/busquedaNocolegiado/searchNoColegiado",
+    busquedaNoColegiados_searchHistoric: "busquedaNocolegiado/searchHistoric"
   };
 
   private menuToggled = new Subject<any>();
