@@ -62,24 +62,24 @@
         <div class="bloque col-lg-6 col-md-5 col-sm-5">
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.fichaCliente.literal.identificacion" | translate}} (*)</label>
+              <label>{{"censo.fichaCliente.literal.identificacion" | translate}}</label>
               <input [(ngModel)]="generalBody.nif" type="text" class="form-control" (ngModelChange)="onChangeForm()" pInputText>
               <div *ngIf="identificacionValida == false">
                 <label class="labelError">{{"El documento es inválido"}}</label>
               </div>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
+              <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}</label>
               <p-dropdown class="select-form" [(ngModel)]="generalBody.tipoDocumento" [options]="comboIdentificacion" optionLabel="label"
                 (ngModelChange)="getTipo($event)"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}} (*)</label>
+              <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
               <input [(ngModel)]="generalBody.nombre" type="text" class="form-control" (ngModelChange)="onChangeForm()" [maxLength]="100"
                 pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
-              <label>{{"censo.busquedaClientes.literal.apellido1" | translate}} (*)</label>
+              <label>{{"censo.busquedaClientes.literal.apellido1" | translate}}</label>
               <input [(ngModel)]="generalBody.apellido1" type="text" class="form-control" (ngModelChange)="onChangeForm()" [maxLength]="100"
                 pInputText>
             </div>
@@ -89,32 +89,32 @@
                 type="text" class="form-control" (ngModelChange)="onChangeForm()" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.busquedaClientesAvanzada.literal.sexo" | translate}} (*)</label>
+              <label>{{"censo.busquedaClientesAvanzada.literal.sexo" | translate}}</label>
               <input [(ngModel)]="generalBody.sexo" type="text" class="form-control" (ngModelChange)="onChangeForm()" [maxLength]="99"
                 pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.consultaDatosGenerales.literal.tratamiento" | translate}} (*)</label>
+              <label>{{"censo.consultaDatosGenerales.literal.tratamiento" | translate}}</label>
               <p-dropdown class="select-form" [(ngModel)]="generalBody.tratamiento" [options]="generalTratamiento" optionLabel="label"
                 (ngModelChange)="getTipo($event)"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}} (*)</label>
+              <label>{{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}}</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="generalBody.fechaNacimiento"
                 (ngModelChange)="onChangeForm()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.consultaDatosGenerales.literal.edad" | translate}} (*)</label>
+              <label>{{"censo.consultaDatosGenerales.literal.edad" | translate}}</label>
               <input [(ngModel)]="edadCalculada" type="text" class="form-control" disabled pInputText>
             </div>
 
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.consultaDatosGenerales.literal.nacido" | translate}} (*)</label>
+              <label>{{"censo.consultaDatosGenerales.literal.nacido" | translate}}</label>
               <input [(ngModel)]="generalBody.lugarNacimiento" type="text" class="form-control" (ngModelChange)="onChangeForm()" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.consultaDatosGenerales.literal.estadoCivil" | translate}} (*)</label>
-              <p-dropdown class="select-form" [(ngModel)]="generalBody.estadoCivil" [options]="comboIdentificacion" optionLabel="label"
+              <label>{{"censo.consultaDatosGenerales.literal.estadoCivil" | translate}} </label>
+              <p-dropdown class="select-form" [(ngModel)]="generalBody.estadoCivil" [options]="generalEstadoCivil" optionLabel="label"
                 (ngModelChange)="getTipo($event)"></p-dropdown>
             </div>
 
@@ -131,7 +131,7 @@
               <p-checkbox [(disabled)]="camposDesactivados" [(ngModel)]='generalBody.comisiones' binary="true" (ngModelChange)="onChangeSociedad()"></p-checkbox>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}} (*)</label>
+              <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}}</label>
               <p-dropdown class="select-form" [(ngModel)]="generalBody.etiquetas" [options]="comboIdentificacion" optionLabel="label" (ngModelChange)="getTipo($event)"></p-dropdown>
             </div>
 
@@ -141,17 +141,17 @@
         <div class="bloque col-lg-4 col-md-4">
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
-              <label>{{"censo.fichaCliente.situacion.cabecera" | translate}} (*)</label>
+              <label>{{"censo.fichaCliente.situacion.cabecera" | translate}}</label>
               <p-dropdown class="select-form" [options]="idiomas" [(ngModel)]="generalBody.situacion" [filter]="true" (ngModelChange)="onChangeForm()"
                 filterBy="label"></p-dropdown>
             </div>
             <div class="form-group col-lg-12 col-md-12">
-              <label>{{"administracion.usuarios.literal.fechaAlta" | translate}} (*)</label>
+              <label>{{"administracion.usuarios.literal.fechaAlta" | translate}}</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="generalBody.fechaAlta"
                 (ngModelChange)="onChangeForm()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-12 col-md-12">
-              <label>{{"censo.fichaCliente.situacion.idiomaPref" | translate}} (*)</label>
+              <label>{{"censo.fichaCliente.situacion.idiomaPref" | translate}}</label>
               <p-dropdown class="select-form" [options]="idiomas" [(ngModel)]="generalBody.idioma" [filter]="true" (ngModelChange)="onChangeForm()"
                 filterBy="label"></p-dropdown>
             </div>

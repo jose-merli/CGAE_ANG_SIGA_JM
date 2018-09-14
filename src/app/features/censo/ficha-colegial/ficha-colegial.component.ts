@@ -75,6 +75,7 @@ export class FichaColegialComponent implements OnInit {
 
   // Datos Generales
   generalTratamiento: any[];
+  generalEstadoCivil: any[];
 
   @ViewChild("table")
   table: DataTable;
@@ -496,6 +497,15 @@ export class FichaColegialComponent implements OnInit {
     this.sigaServices.get("fichaColegialGenerales_tratamiento").subscribe(
       n => {
         this.generalTratamiento = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
+    this.sigaServices.get("fichaColegialGenerales_estadoCivil").subscribe(
+      n => {
+        this.generalEstadoCivil = n.combooItems;
       },
       err => {
         console.log(err);
