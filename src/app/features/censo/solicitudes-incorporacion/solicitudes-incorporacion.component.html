@@ -19,14 +19,12 @@
                 <div class="form-group col-lg-3 col-md-3">
                     <label>Tipo de solicitud
                         <!--{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}--></label>
-                    <p-dropdown class="select-form" [(ngModel)]="tipoSolicitud"></p-dropdown>
+                    <p-dropdown class="select-form" [options]="tiposSolicitud" [(ngModel)]="body.tipoSolicitud"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>Estado solicitud
                         <!--{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="body.estadoSolicitud" [formControl]="formBusqueda.controls['estadoSolicitud']">
-                    <small class="input-error" *ngIf="!formBusqueda.controls['estadoSolicitud'].pristine && formBusqueda.controls['estadoSolicitud'].status == 'INVALID'">
-                        Debe tener como mínimo tres carácteres</small>
+                    <p-dropdown class="select-form" [options]="estadosSolicitud" [(ngModel)]="body.estadoSolicitud"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>Fecha desde
@@ -44,8 +42,8 @@
                 <div class="form-group col-lg-3 col-md-3">
                     <label>Nº identificación
                         <!--{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="body.identificacion">
-                    <small class="input-error" *ngIf="!checkIdentificacion(body.identificacion) && body.identificacion && body.identificacion.length > 0">
+                    <input type="text" class="form-control" pInputText [(ngModel)]="body.numeroIdentificacion">
+                    <small class="input-error" *ngIf="!checkIdentificacion(body.numeroIdentificacion) && body.numeroIdentificacion && body.numeroIdentificacion.length > 0">
                         Documento no válido</small>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
@@ -83,7 +81,10 @@
                 [filter]="true" filterMatchMode="contains">
                 <ng-template let-datoH="rowData" pTemplate="body">
                     <div>
-                        <span>{{datoH[col.field]}}</span>
+                        <span *ngIf="col.field !== 'fechaEstado' && col.field !== 'fechaSolicitud' ">{{datoH[col.field]}}</span>
+                        <span *ngIf="(col.field == 'fechaEstado' && col.field.fechaEstado !==null) || (col.field == 'fechaSolicitud' && col.field.fechaSolicitud !==null)">{{datoH[col.field]
+                            | date: 'dd/MM/yyyy'}}
+                        </span>
                     </div>
                 </ng-template>
             </p-column>
@@ -104,168 +105,9 @@
                 </div>
             </p-footer>
         </p-dataTable>
-        <!--<p-table [value]="datos" class="tabla-listado">
-            <ng-template pTemplate="header">
-                <tr>
-                    <th *ngFor="let col of cols">
-                        {{col.header}}
-                    </th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-rowData>
-                <tr [pSelectableRow]="rowData">
-                    <td>
-                        <p>{{rowData.id}}</p>
-                    </td>
-                    <td>
-                        <p>{{rowData.apellidos}}</p>
-                    </td>
-                    <td>
-                        <p>{{rowData.nombre}}</p>
-                    </td>
-                    <td>
-                        <p>{{rowData.id}}</p>
-                    </td>
-                    <td>
-                        <p>{{rowData.mail}}</p>
-                    </td>
-                    <td>
-                        <p>{{rowData.fechaNacimiento}}</p>
-                    </td>
-                    <td>
-                        <p>{{rowData.telefono}}</p>
-                    </td>
-                    <td>
-                        <p>{{rowData.fechaNacimiento}}</p>
-                    </td>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="paginatorleft">
-                <div class="mostrar">
-                    <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first
-                        + table.rows}} de un total de {{table.totalRecords}}</label>
-                    <label>{{'tabla.mensaje.mostrar' | translate}}</label>
-                    <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                    <label>{{'tabla.mensaje.registros' | translate}}</label>
-                </div>
-            </ng-template>
-        </p-table>-->
     </div>
 </div>
-
-<!--<div class="card">
-    <div class="card-body">
-
-        <p class="title-module">Etiquetas
-            <i (click)="onHideDatos()" *ngIf="showDatos" class="fa fa-angle-up float-right"></i>
-            <i (click)="onHideDatos()" *ngIf="!showDatos" class="fa fa-angle-down float-right"></i>
-        </p>
-
-        <div *ngIf="showDatos" class="module vista-avanzada">
-            <div class="form-row">
-                <div class="form-group col-lg-6 col-md-6">
-                    <p-chips [(ngModel)]="comboEtiquetas">
-                        <ng-template let-item pTemplate="item">
-                            <div [ngClass]="condicionItemChips(item)">
-                                <label>{{item.label}} </label>
-                                <i style="margin-right:2em">
-                                </i>
-                            </div>
-
-
-                        </ng-template>
-                    </p-chips>
-                </div>
-
-                <div class="form-group col-lg-6 col-md-6">
-                    <button (click)="mostrarChips($event)" [disabled]="condicionDisabledButton()" pButton type="button" icon="fa fa-plus  " iconPos="left"
-                        label="{{ 'general.boton.new' | translate}}" [style]="{'margin-top':'20%'}"></button>
-                </div>
-            </div>
-
-
-
-            <div *ngIf="listar">
-                <div class="form-row">
-                    <div class="form-group col-lg-6 col-md-6">
-                        <p-multiSelect #ms [options]="mostrarComboEtiquetas" [(ngModel)]="etiquetasSeleccionadas" [selectedItemsLabel]="textSelected"
-                            maxSelectedLabels="1" [defaultLabel]="textFilter" (input)="onFilter($event)">
-                            <!-- PROBABLEMENTE TE HARÁ FALTA PARA DARLE COLOR A LAS ETIQUETAS EN BASE A LAS CONDICIONES QUE TE DIGAN -->
-<!-- <ng-template let-item pTemplate="item">
-                                <div [ngClass]="condicionItemChips(item)">
-                                    <label>{{item.label}} </label>
-                                </div>
-                            </ng-template> -->
-<!-- PROBABLEMENTE TE HARÁ FALTA PARA INTRODUCIR EL BOTÓN DENTRO DEL MULTISELECT -->
-<!-- <ng-template let-item pTemplate="item">
-                                <div *ngIf="condicion">
-                                   <button pButton type="button" icon="pi pi-check" iconPos="left"></button>
-                                </div>
-                            </ng-template> 
-                        </p-multiSelect>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div *ngIf="listar" class="card-footer">
-        <div class="text-right main-button">
-            <button (click)="abrirDialogo()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-        </div>
-    </div>
-</div>
-
-
-<!-- DIALOGO GUARDAR ETIQUETAS >
-<p-dialog [(visible)]="display" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500" [minWidth]="500">
-    <p-header class="title">
-        <label>Guardar etiqueta</label>
-    </p-header>
-
-    <div class="bloque col-lg-12 col-md-12">
-        <div class="row">
-            <div class="form-group col-lg-6 col-md-6">
-                <label>Fecha inicio (*)</label>
-                <p-calendar [(ngModel)]="initialDate" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [required]="true"></p-calendar>
-            </div>
-            <div class="form-group col-lg-6 col-md-6">
-                <label>Fecha fin (*)</label>
-                <p-calendar [(ngModel)]="finalDate" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [required]="true"></p-calendar>
-            </div>
-        </div>
-    </div>
-    <p-footer>
-        <button (click)="guardarEtiquetas()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button (click)="display=false" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
-    </p-footer>
-</p-dialog>
-
-<!-- CREAR ETIQUETA  >
-<p-dialog [(visible)]="checked" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="350" [minWidth]="400"
-    (closable)="closeDialogConfirmacion()">
-    <p-header class="title">
-        <label>La etiqueta buscada no existe..</label>
-        <span>¿Desea crearla?</span>
-    </p-header>
-
-    <button (click)="guardarNuevaEtiqueta()" pButton type="button" icon="pi pi-check" iconPos="left" label="{{ 'general.boton.submit' | translate}}"></button>
-    <button (click)="closeDialogConfirmacion()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
-</p-dialog>
-
-<p-dialog [(visible)]="crear" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="350" [minWidth]="400">
-    <p-header class="title">
-        <label>Crear etiqueta</label>
-    </p-header>
-
-    <label>Nombre (*) </label>
-    <input type="text" pInputText [(ngModel)]="nuevaEtiqueta" />
-
-    <p-footer>
-        <button (click)="guardarNuevaEtiqueta()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button (click)="closeDialogoCreacionEtiqueta()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
-    </p-footer>
-</p-dialog>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
     <div class="loader"></div>
-</div> -->
+</div>

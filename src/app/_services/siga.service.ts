@@ -33,6 +33,7 @@ export class SigaServices {
     usuario: "usuario",
     usuario_logeado: "usuario/logeado",
     instituciones: "instituciones",
+    institucionActual: "getInstitucionActual",
     perfiles: "perfiles",
     diccionarios: "diccionarios",
     usuarios_rol: "usuarios/rol",
@@ -90,6 +91,7 @@ export class SigaServices {
     datosGenerales_update: "personaJuridica/update",
     datosGenerales_insert: "personaJuridica/create",
     datosGenerales_identificacion: "DatosGenerales/identificacion",
+    datosGenerales_createLabel: "busquedaPerJuridica/createLabel",
     busquedaPer_colegio: "busquedaPer/colegio",
     busquedaPer_searchJuridica: "busquedaPerJuridica/searchJuridica",
     busquedaPer_searchFisica: "busquedaPerJuridica/searchFisica",
@@ -113,6 +115,7 @@ export class SigaServices {
       "perJuridicaDatosRegistrales/actividadProfesional",
     datosRegistrales_search: "perJuridicaDatosRegistrales/search",
     datosRegistrales_update: "perJuridicaDatosRegistrales/update",
+    datosRegistrales_datosContador: "perJuridicaDatosRegistrales/datosContador",
     datosBancarios_search: "busquedaPerJuridica/datosBancariosSearch",
     datosBancarios_delete: "busquedaPerJuridica/datosBancariosDelete",
     datosCuentaBancaria_search:
@@ -136,6 +139,7 @@ export class SigaServices {
     integrantes_search: "busquedaPerJuridica/datosIntegrantesSearch",
     integrantes_tipoColegio: "tarjetaIntegrantes/tipoColegio",
     integrantes_provincias: "tarjetaIntegrantes/provincias",
+    integrantes_provinciaColegio: "tarjetaIntegrantes/provinciaColegio",
     integrantes_cargos: "tarjetaIntegrantes/cargos",
     direcciones_search: "busquedaPerJuridica/datosDireccionesSearch",
     direcciones_update: "tarjetaDirecciones/update",
@@ -167,7 +171,16 @@ export class SigaServices {
       "/busquedaNoColegiados/categoriaCurricular",
     busquedaNoColegiados_searchNoColegiado:
       "/busquedaNocolegiado/searchNoColegiado",
-    busquedaNoColegiados_searchHistoric: "busquedaNocolegiado/searchHistoric"
+    busquedaNoColegiados_searchHistoric: "busquedaNocolegiado/searchHistoric",
+    solicitudInciporporacion_tipoSolicitud:
+      "/solicitudIncorporacion/tipoSolicitud",
+    solicitudInciporporacion_estadoSolicitud:
+      "/solicitudIncorporacion/estadoSolicitud",
+    solicitudInciporporacion_searchSolicitud:
+      "/solicitudIncorporacion/searchSolicitud",
+    fichaColegialGenerales_tratamiento: "fichaDatosGenerales/tratamiento",
+    fichaColegialGenerales_estadoCivil: "fichaDatosGenerales/estadoCivil",
+    fichaColegialGenerales_pais: "fichaDatosColegiales/pais"
   };
 
   private menuToggled = new Subject<any>();
