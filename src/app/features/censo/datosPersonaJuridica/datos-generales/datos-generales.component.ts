@@ -99,6 +99,8 @@ export class DatosGenerales implements OnInit {
 
   control: boolean = false;
   checked: boolean = false;
+  autocompletar: boolean = false;
+
   etiqueta: String;
   arrayInicial: String[] = [];
 
@@ -817,6 +819,14 @@ export class DatosGenerales implements OnInit {
       console.log(data);
       console.log("DAtos generales", this.progressSpinner);
     });
+  }
+
+  habilitarAutocompletar($event) {
+    if (event) {
+      this.autocompletar = true;
+    } else {
+      this.autocompletar = true;
+    }
   }
 
   filterLabelsMultiple(event) {

@@ -151,14 +151,18 @@
                 [maxLength]="2000"></textarea>
             </div>
             <div class="form-group col-lg-12 col-md-12">
-              <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}}</label>
+              <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}}
+                <i class="fa fa-plus" style="color:grey" (click)="habilitarAutocompletar($event)"></i>
+              </label>
+
               <br>
               <!-- <p-multiSelect [defaultLabel]="textFilter" [(disabled)]="camposDesactivados" styleClass="widthAll" [(ngModel)]='etiquetasPersonaJuridicaSelecionados'
                 [options]="comboEtiquetas" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" autoWidth="false" defaultLabel=""
                 maxSelectedLabels="1" (ngModelChange)="onChangeForm()"></p-multiSelect> -->
 
               <p-autoComplete #auto [(ngModel)]="etiquetasPersonaJuridicaSelecionados" [suggestions]="comboEtiquetas" (completeMethod)="filterLabelsMultiple($event)"
-                styleClass="widthAll" [minLength]="1" field="label" [multiple]="true" (onKeyUp)="onKeyUp($event)" (ngModelChange)="onChangeForm()">
+                styleClass="widthAll" [minLength]="1" field="label" [multiple]="true" (onKeyUp)="onKeyUp($event)" (ngModelChange)="onChangeForm()"
+                [disabled]="!autocompletar">
               </p-autoComplete>
             </div>
           </div>

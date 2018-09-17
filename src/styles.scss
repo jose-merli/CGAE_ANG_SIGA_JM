@@ -935,56 +935,50 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   border-radius: 0;
 }
 
-
-.ui-growl-message-info
-   .ui-growl-item{
+.ui-growl-message-info .ui-growl-item {
   color: white !important;
-  background-color:	#33a1ff   !important;
-   }
+  background-color: #33a1ff !important;
+}
 
- .ui-growl-message-success
-   .ui-growl-item{
+.ui-growl-message-success .ui-growl-item {
   color: white !important;
-  background-color: #28a745   !important;
-   }
+  background-color: #28a745 !important;
+}
 
- .ui-growl-message-warn
-   .ui-growl-item{
+.ui-growl-message-warn .ui-growl-item {
   color: white !important;
-  background-color:	#ffc107   !important;
-   }
+  background-color: #ffc107 !important;
+}
 
- .ui-growl-message-error
-   .ui-growl-item{
+.ui-growl-message-error .ui-growl-item {
   color: white !important;
-  background-color: #dc3545   !important;
-   }
+  background-color: #dc3545 !important;
+}
 
-
-  .info-limit{
-    background:$secondary-color;
-    color: white;
-    padding: .5em .75em;
-    margin-bottom: 2px;
-    text-align: center;
-    i{
-      font-size: 1.5rem;
-    }    
+.info-limit {
+  background: $secondary-color;
+  color: white;
+  padding: 0.5em 0.75em;
+  margin-bottom: 2px;
+  text-align: center;
+  i {
+    font-size: 1.5rem;
+  }
 }
 
 // #listadoInformeJustificacionDiv{
 // height: 259px !important;
 // }
 
-.content iframe{
+.content iframe {
   max-width: 1300px;
 }
 
-iframe .box, iframe .button, iframe .boxCombo{
+iframe .box,
+iframe .button,
+iframe .boxCombo {
   border-radius: 0 !important;
 }
-
-
 
 /**RESPONSIVE**/
 
@@ -1074,27 +1068,26 @@ iframe .box, iframe .button, iframe .boxCombo{
   }
 }
 @media (max-width: 1000px) {
-  .content-accesos{
+  .content-accesos {
     padding-right: 2rem !important;
     text-align: left !important;
     display: inline-block !important;
-    .btn-acceso{
+    .btn-acceso {
       display: inline-block !important;
-      p{
+      p {
         padding-top: 12px;
       }
     }
-    .main-button{
+    .main-button {
       margin-top: 1rem;
     }
   }
 }
 
-
 @media (max-width: 525px) {
   .main-button {
-    button{
-      padding:  .2em 0em !important;
+    button {
+      padding: 0.2em 0em !important;
     }
   }
 }
@@ -1115,6 +1108,10 @@ iframe .box, iframe .button, iframe .boxCombo{
 .ui-dropdown.ui-state-disabled .ui-dropdown-trigger,
 .ui-dropdown.ui-state-disabled .ui-dropdown-label,
 .ui-widget:disabled {
+  background-color: #e9ecef;
+}
+
+.ui-autocomplete-multiple-container.ui-inputtext.ui-state-disabled {
   background-color: #e9ecef;
 }
 
@@ -1158,7 +1155,7 @@ iframe .box, iframe .button, iframe .boxCombo{
 .item-disabled {
   padding: 0px;
 }
-#mainWorkArea input{
+#mainWorkArea input {
   border-radius: 0 !important;
   -webkit-border-radius: 0px !important;
 }
