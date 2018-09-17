@@ -70,6 +70,7 @@ export class FichaColegialComponent implements OnInit {
   selectedItem: number = 10;
   camposDesactivados: boolean = false;
   datos: any[];
+  datosCurriculares: any[];
 
   file: File = undefined;
 
@@ -139,6 +140,8 @@ export class FichaColegialComponent implements OnInit {
     this.checkAcceso();
 
     this.onInitGenerales();
+
+    this.onInitCurriculares();
     // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
     this.colsColegiales = [
       {
@@ -286,7 +289,7 @@ export class FichaColegialComponent implements OnInit {
         header: "censo.busquedaClientesAvanzada.literal.categoriaCV"
       },
       {
-        field: "subtipoCurricular",
+        field: "tipoSubtipo",
         header: "censo.busquedaClientesAvanzada.literal.subtiposCV"
       },
       {
@@ -531,13 +534,36 @@ export class FichaColegialComponent implements OnInit {
   // MÉTODOS PARA SOCIEDADES
 
   // MÉTODOS PARA DATOS CURRICULARES
+
+  onInitCurriculares() {
+    this.searchDatosCurriculares();
+  }
   irNuevoCurriculares() {
-    //       {
-    //   path: "edicionCurriculares",
-    //   component: EdicionCurricularesComponent,
-    //   canActivate: [AuthGuard]
-    // },
     this.router.navigate(["/edicionCurriculares"]);
+  }
+  searchDatosCurriculares() {
+    let bodyCurricular = {
+      idPersona: "2000010550"
+    };
+
+    this.sigaServices
+      .postPaginado(
+        "fichaDatosCurriculares_search",
+        "?numPagina=1",
+        bodyCurricular
+      )
+      .subscribe(
+        data => {
+          console.log(data);
+
+          let search = JSON.parse(data["body"]);
+          this.datosCurriculares = search.fichaDatosCurricularesItem;
+          // this.table.reset();
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
   // MÉTODOS PARA DIRECCIONES
 
