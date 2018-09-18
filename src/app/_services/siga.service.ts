@@ -180,7 +180,8 @@ export class SigaServices {
       "/solicitudIncorporacion/searchSolicitud",
     fichaColegialGenerales_tratamiento: "fichaDatosGenerales/tratamiento",
     fichaColegialGenerales_estadoCivil: "fichaDatosGenerales/estadoCivil",
-    fichaColegialGenerales_pais: "fichaDatosColegiales/pais"
+    fichaColegialGenerales_pais: "fichaDatosColegiales/pais",
+    fichaDatosCurriculares_search: "fichaDatosCurriculares/search"
   };
 
   private menuToggled = new Subject<any>();

@@ -706,15 +706,15 @@
     <div *ngIf="esFichaActiva('curriculares')" class="card-body card-body-ficha">
       <div class="row">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="4" dataKey="idDireccion"
-          [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datosColegiaciones" [sortOrder]="1"
+          [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datosCurriculares" [sortOrder]="1"
           [paginator]="activarPaginacion()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionar(selectedDatos)"
           (onRowUnselect)="actualizaSeleccionados(selectedDatos)">
           <p-column *ngFor="let col of colsCurriculares" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
-            <ng-template let-datoH="rowData" pTemplate="body">
+            <!-- <ng-template let-datoH="rowData" pTemplate="body">
               <span *ngIf="setItalic(datoH)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
               <span *ngIf="!setItalic(datoH)">{{datoH[col.field]}}</span>
-            </ng-template>
+            </ng-template> -->
           </p-column>
 
           <ng-template pTemplate="paginatorLeft">

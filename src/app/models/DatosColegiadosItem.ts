@@ -26,5 +26,8 @@ export class DatosColegiadosItem {
   idgrupo: string[];
   tipoCV: string;
   denominacion: string;
+
+  idLenguaje: string;
+
   constructor() {}
 }
