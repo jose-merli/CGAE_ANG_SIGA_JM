@@ -42,6 +42,7 @@ export class FichaColegialComponent implements OnInit {
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
 
+  idPersona: any;
   openFicha: boolean = false;
   es: any = esCalendar;
   progressSpinner: boolean = false;
@@ -137,6 +138,10 @@ export class FichaColegialComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // Cogemos los datos de la busqueda de Colegiados
+    this.generalBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
+    this.generalBody = this.generalBody[0];
+    this.idPersona = this.generalBody.idPersona;
     this.checkAcceso();
 
     this.onInitGenerales();
@@ -455,7 +460,10 @@ export class FichaColegialComponent implements OnInit {
   }
 
   backTo() {
-    this.location.back();
+    sessionStorage.removeItem("colegiadoBody");
+    // this.cardService.searchNewAnnounce.next(null);
+    //this.location.back();
+    this.router.navigate(["/busquedaColegiados"]);
   }
 
   uploadFile(event: any) {
@@ -543,9 +551,8 @@ export class FichaColegialComponent implements OnInit {
   }
   searchDatosCurriculares() {
     let bodyCurricular = {
-      idPersona: "2000010550"
+      idPersona: this.idPersona
     };
-
     this.sigaServices
       .postPaginado(
         "fichaDatosCurriculares_search",

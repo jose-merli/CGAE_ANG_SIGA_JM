@@ -1,4 +1,5 @@
 export class FichaColegialGeneralesItem {
+  idPersona: String;
   nif: String;
   tipoDocumento: String;
   nombre: String;
