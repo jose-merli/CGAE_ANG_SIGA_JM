@@ -161,8 +161,7 @@
                 maxSelectedLabels="1" (ngModelChange)="onChangeForm()"></p-multiSelect> -->
 
               <p-autoComplete #auto [(ngModel)]="etiquetasPersonaJuridicaSelecionados" [suggestions]="comboEtiquetas" (completeMethod)="filterLabelsMultiple($event)"
-                styleClass="widthAll" [minLength]="1" field="label" [multiple]="true" (onKeyUp)="onKeyUp($event)" (ngModelChange)="onChangeForm()"
-                [disabled]="!autocompletar">
+                styleClass="widthAll" [minLength]="1" field="label" [multiple]="true" (onKeyUp)="onKeyUp($event)" [disabled]="!autocompletar">
               </p-autoComplete>
             </div>
           </div>
@@ -184,15 +183,34 @@
 
   <!-- CREAR ETIQUETA -->
   <p-dialog [(visible)]="checked" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="350" [minWidth]="400"
-    (closable)="closeDialogConfirmacion()">
+    (onHide)="closeDialogConfirmacion()">
     <p-header class="title">
       <label>La etiqueta
         <b>{{ etiqueta }}</b> no existe, </label>
       <span>¿Desea crearla?</span>
     </p-header>
 
-    <button (click)="guardarNuevaEtiqueta()" pButton type="button" icon="pi pi-check" iconPos="left" label="{{ 'general.boton.submit' | translate}}"></button>
-    <button (click)="closeDialogConfirmacion()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+    <div class="bloque col-lg-12 col-md-12">
+      <div class="row">
+
+        <div class="form-group col-lg-6 col-md-6">
+          <label>{{"administracion.auditoriaUsuarios.fechaDesde" | translate}} (*)</label>
+          <p-calendar [(ngModel)]="body.fechaInicio" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [style]="{ 'position': 'relative', 'z-index': '1000' }"></p-calendar>
+        </div>
+
+        <div class="form-group col-lg-6 col-md-6">
+          <label>{{"administracion.auditoriaUsuarios.fechaHasta" | translate}} (*)</label>
+          <p-calendar [(ngModel)]="body.fechaFin" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [style]="{ 'position': 'relative', 'z-index': '1000' }"></p-calendar>
+        </div>
+      </div>
+    </div>
+
+    <p-footer>
+      <div class="text-right main-button">
+        <button (click)="guardarNuevaEtiqueta()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate}}"></button>
+        <button (click)="closeDialogConfirmacion()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+      </div>
+    </p-footer>
   </p-dialog>
 
   <!-- AUDITORIA -->

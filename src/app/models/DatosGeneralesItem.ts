@@ -11,6 +11,7 @@ export class DatosGeneralesItem {
   numeroIntegrantes: String;
   nombresIntegrantes: String;
   fechaBaja: Date;
+  fechaInicio: Date;
   anotaciones: String;
   IDGrupos: String;
   sociedadProfesional: String;

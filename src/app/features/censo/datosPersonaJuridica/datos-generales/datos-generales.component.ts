@@ -19,6 +19,7 @@ import { cardService } from "./../../../../_services/cardSearch.service";
 import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
 import { Router } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
+import { NullAstVisitor } from "../../../../../../node_modules/@angular/compiler";
 
 @Component({
   selector: "app-datos-generales",
@@ -71,6 +72,8 @@ export class DatosGenerales implements OnInit {
   comboEtiquetas: any[];
   etiquetasPersonaJuridica: any[];
   etiquetasPersonaJuridicaSelecionados: any[] = [];
+  etiquetasPersonaJuridicaNuevas: any[] = [];
+  etiquetasAuditoria: any[] = [];
   comboIdentificacion: any[];
   comboTipo: any[] = [];
   idiomas: any[];
@@ -95,7 +98,7 @@ export class DatosGenerales implements OnInit {
 
   isValidate: boolean;
 
-  items: ComboItem = new ComboItem();
+  items: Array<ComboItem> = new Array<ComboItem>();
 
   control: boolean = false;
   checked: boolean = false;
@@ -276,11 +279,13 @@ export class DatosGenerales implements OnInit {
         n => {
           // coger etiquetas de una persona juridica
           this.etiquetasPersonaJuridica = JSON.parse(n["body"]).combooItems;
-          console.log(this.etiquetasPersonaJuridica);
           // en cada busqueda vaciamos el vector para añadir las nuevas etiquetas
           this.etiquetasPersonaJuridicaSelecionados = [];
           this.etiquetasPersonaJuridica.forEach((value: any, index: number) => {
             this.etiquetasPersonaJuridicaSelecionados.push(value);
+            if (this.etiquetasAuditoria != undefined) {
+              this.etiquetasAuditoria.push(value);
+            }
           });
         },
         err => {
@@ -374,66 +379,76 @@ export class DatosGenerales implements OnInit {
       // comprobacion de cif
       if (this.isValidCIF(this.body.nif)) {
         this.body.idPersona = this.idPersona;
-
-        if (this.etiquetasPersonaJuridicaSelecionados != undefined) {
-          this.body.grupos = [];
-          this.etiquetasPersonaJuridicaSelecionados.forEach(
-            (value: any, key: number) => {
-              this.body.grupos.push(value.value);
-            }
-          );
-        }
         this.body.idioma = this.idiomaPreferenciaSociedad;
         this.body.tipo = this.selectedTipo.value;
         this.body.motivo = "registro creado";
 
+        // GENERAMOS EL IDPERSONA DE UN REGISTRO NUEVO
         this.sigaServices
           .post("busquedaPerJuridica_create", this.body)
           .subscribe(
             data => {
-              this.cerrarAuditoria();
-
               let respuesta = JSON.parse(data["body"]);
               this.idPersona = respuesta.id;
+
               sessionStorage.removeItem("crearnuevo");
 
-              let arrayPersonaJuridica = new Array<PersonaJuridicaItem>();
-              this.bodyPersonaJuridica = new PersonaJuridicaItem();
-              this.bodyPersonaJuridica.idPersona = this.idPersona;
-              this.bodyPersonaJuridica.nif = this.body.nif;
-              let selectedComboTipo = this.comboIdentificacion.find(
-                item => item.value == this.body.tipo
-              );
-              this.bodyPersonaJuridica.tipo = selectedComboTipo.label;
-              arrayPersonaJuridica.push(this.bodyPersonaJuridica);
-              // arrayPersonaJuridica[0] = this.bodyPersonaJuridica;
-              sessionStorage.setItem(
-                "usuarioBody",
-                JSON.stringify(arrayPersonaJuridica)
-              );
-              // pasamos el idPersona creado para la nueva sociedad
-              if (this.file != undefined) {
-                this.guardarImagen(this.idPersona);
+              if (
+                this.etiquetasPersonaJuridicaSelecionados != undefined &&
+                this.etiquetasPersonaJuridicaSelecionados.length > 0
+              ) {
+                this.body.grupos = [];
+                this.etiquetasPersonaJuridicaSelecionados.forEach(
+                  (value: any, key: number) => {
+                    if (value.value != "") {
+                      this.body.grupos.push(value.value);
+                    }
+                  }
+                );
+
+                // ASOCIAMOS LAS ETIQUETAS PREEXISTENTES EN BD
+                this.body.idPersona = this.idPersona;
+                this.sigaServices
+                  .post("datosGenerales_createLabels", this.body)
+                  .subscribe(
+                    data => {
+                      if (
+                        this.etiquetasPersonaJuridicaNuevas != undefined &&
+                        this.etiquetasPersonaJuridicaNuevas.length > 0
+                      ) {
+                        this.etiquetasPersonaJuridicaNuevas.forEach(
+                          (value: any, key: number) => {
+                            value.value = this.idPersona;
+                            this.items.push(value);
+                          }
+                        );
+
+                        // CREAMOS Y ASOCIAMOS NUEVAS ETIQUETAS
+                        this.sigaServices
+                          .post("datosGenerales_createLabel", this.items)
+                          .subscribe(
+                            data => {},
+                            error => {
+                              console.log(error);
+                            },
+                            () => {
+                              this.controlador();
+                            }
+                          );
+                      } else {
+                        this.controlador();
+                      }
+                    },
+                    error => {
+                      console.log("modo nuevo -> error create labels", error);
+                    }
+                  );
+              } else {
+                this.controlador();
               }
-              this.cargarImagen(this.idPersona);
-              this.datosGeneralesSearch();
-              this.comboTipo = [];
-              this.comboTipo.push(selectedComboTipo.label);
-              this.obtenerEtiquetasPersonaJuridicaConcreta();
-              this.editar = false;
-              this.showSuccess();
-              this.progressSpinner = false;
-              this.cardService.searchNewAnnounce.next(this.idPersona);
-              console.log("DAtos generales", this.progressSpinner);
             },
             error => {
-              console.log(error);
-              this.bodyviejo = JSON.parse(error["error"]);
-              this.showCustomFail(this.bodyviejo.error.message);
-              this.progressSpinner = false;
-            },
-            () => {
-              this.progressSpinner = false;
+              console.log("modo nuevo -> error create persona", error);
             }
           );
       } else {
@@ -441,15 +456,15 @@ export class DatosGenerales implements OnInit {
         this.progressSpinner = false;
       }
     } else {
-      this.body.idPersona = this.idPersona; //"2005005356";
+      this.body.idPersona = this.idPersona;
 
-      // guardar imagen en bd y refresca header.component
-      // datosGenerales_update o busquedaPerJuridica_update
       if (this.etiquetasPersonaJuridicaSelecionados != undefined) {
         this.body.grupos = [];
         this.etiquetasPersonaJuridicaSelecionados.forEach(
           (value: any, key: number) => {
-            this.body.grupos.push(value.value);
+            if (value.value != "") {
+              this.body.grupos.push(value.value);
+            }
           }
         );
       }
@@ -458,12 +473,34 @@ export class DatosGenerales implements OnInit {
         this.guardarImagen(this.body.idPersona);
       }
 
-      // if ((this.body.contadorNumsspp != undefined &&
-      //   !this.onlySpaces(this.body.contadorNumsspp))) {
-
-      console.log("grupos", this.body);
+      // ACTUALIZAMOS LAS RELACIONES
       this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
         data => {
+          if (
+            this.etiquetasPersonaJuridicaNuevas != undefined &&
+            this.etiquetasPersonaJuridicaNuevas.length > 0
+          ) {
+            this.etiquetasPersonaJuridicaNuevas.forEach(
+              (value: any, key: number) => {
+                value.value = this.body.idPersona;
+                this.items.push(value);
+              }
+            );
+
+            // ESTABLECEMOS LAS NUEVAS RELACIONES CON LAS ETIQUETAS CREADAS
+            this.sigaServices
+              .post("datosGenerales_createLabel", this.items)
+              .subscribe(
+                data => {},
+                error => {
+                  console.log(error);
+                },
+                () => {
+                  // this.obtenerEtiquetasPersonaJuridicaConcreta();
+                  // this.progressSpinner = false;
+                }
+              );
+          }
           this.cerrarAuditoria();
           this.cargarImagen(this.body.idPersona);
           this.showSuccess();
@@ -481,8 +518,78 @@ export class DatosGenerales implements OnInit {
           this.progressSpinner = false;
         }
       );
-      //}
     }
+  }
+
+  controlador() {
+    this.cerrarAuditoria();
+    let arrayPersonaJuridica = new Array<PersonaJuridicaItem>();
+    this.bodyPersonaJuridica = new PersonaJuridicaItem();
+    this.bodyPersonaJuridica.idPersona = this.idPersona;
+    this.bodyPersonaJuridica.nif = this.body.nif;
+    let selectedComboTipo = this.comboIdentificacion.find(
+      item => item.value == this.body.tipo
+    );
+    this.bodyPersonaJuridica.tipo = selectedComboTipo.label;
+    arrayPersonaJuridica.push(this.bodyPersonaJuridica);
+
+    sessionStorage.setItem("usuarioBody", JSON.stringify(arrayPersonaJuridica));
+
+    // pasamos el idPersona creado para la nueva sociedad
+    if (this.file != undefined) {
+      this.guardarImagen(this.idPersona);
+    }
+    this.cargarImagen(this.idPersona);
+
+    this.body.idPersona = this.idPersona;
+    this.sigaServices
+      .post("busquedaPerJuridica_etiquetasPersona", this.body)
+      .subscribe(
+        n => {
+          // coger etiquetas de una persona juridica
+          this.etiquetasPersonaJuridica = JSON.parse(n["body"]).combooItems;
+          // en cada busqueda vaciamos el vector para añadir las nuevas etiquetas
+          this.etiquetasPersonaJuridicaSelecionados = [];
+          this.etiquetasPersonaJuridica.forEach((value: any, index: number) => {
+            this.etiquetasPersonaJuridicaSelecionados.push(value);
+          });
+
+          this.body = new DatosGeneralesItem();
+          this.body.idPersona = this.idPersona;
+          this.body.motivo = "registro creado";
+          this.body.grupos = [];
+          this.etiquetasPersonaJuridicaSelecionados.forEach(
+            (value: any, key: number) => {
+              this.body.grupos.push(value.value);
+            }
+          );
+
+          console.log("etiquetas", this.etiquetasPersonaJuridicaSelecionados);
+          console.log("BODYAUDIT", this.body);
+
+          this.sigaServices
+            .post("datosGenerales_auditoria", this.body)
+            .subscribe(
+              data => {},
+              error => {
+                console.log("modo nuevo -> error auditoria", error);
+              }
+            );
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.datosGeneralesSearch();
+          this.comboTipo = [];
+          this.comboTipo.push(selectedComboTipo.label);
+          this.editar = false;
+          this.showSuccess();
+          this.progressSpinner = false;
+          this.cardService.searchNewAnnounce.next(this.idPersona);
+          this.progressSpinner = false;
+        }
+      );
   }
 
   restablecer() {
@@ -647,8 +754,7 @@ export class DatosGenerales implements OnInit {
       this.body.fechaConstitucion != undefined &&
       !this.onlySpaces(this.body.nif) &&
       this.idiomaPreferenciaSociedad != "" &&
-      this.idiomaPreferenciaSociedad != undefined &&
-      this.etiquetasPersonaJuridicaSelecionados != undefined
+      this.idiomaPreferenciaSociedad != undefined
       //this.file != undefined
     ) {
       if (
@@ -805,8 +911,7 @@ export class DatosGenerales implements OnInit {
         this.body.fechaConstitucion != null) &&
       this.body.denominacion != "" &&
       this.body.denominacion != undefined &&
-      !this.onlySpaces(this.body.denominacion) &&
-      this.etiquetasPersonaJuridicaSelecionados != undefined
+      !this.onlySpaces(this.body.denominacion)
     ) {
       this.isValidate = true;
     } else {
@@ -821,7 +926,7 @@ export class DatosGenerales implements OnInit {
     });
   }
 
-  habilitarAutocompletar($event) {
+  habilitarAutocompletar(event) {
     if (event) {
       this.autocompletar = true;
     } else {
@@ -875,56 +980,22 @@ export class DatosGenerales implements OnInit {
 
   guardarNuevaEtiqueta() {
     this.checked = false;
-    console.log("antes", this.etiquetasPersonaJuridicaSelecionados);
 
-    if (
-      this.etiquetasPersonaJuridicaSelecionados == undefined &&
-      this.etiqueta != null
-    ) {
-      this.etiquetasPersonaJuridicaSelecionados = [];
-    }
+    // Guardo las nuevas etiquetas
+    this.etiquetasPersonaJuridicaNuevas.push({
+      label: this.etiqueta,
+      value: ""
+    });
 
-    // if (sessionStorage.getItem("crearnuevo") == null) {
-    //   this.etiquetasPersonaJuridicaSelecionados.push({
-    //     label: this.etiqueta,
-    //     value: ""
-    //   });
-    // }
+    console.log("NUEVAs", this.etiquetasPersonaJuridicaNuevas);
 
-    //this.autoComplete.multiInputEL.nativeElement.value = null;
+    // Guardo las etiquetas en el array visible
+    this.etiquetasPersonaJuridicaSelecionados.push({
+      label: this.etiqueta,
+      value: ""
+    });
 
-    this.items.value = this.idPersona;
-    this.items.label = this.etiqueta;
-    this.sigaServices.post("datosGenerales_createLabel", this.items).subscribe(
-      data => {
-        let result = JSON.parse(data.body);
-        if (result.id != null) {
-          this.etiquetasPersonaJuridicaSelecionados.push({
-            label: this.etiqueta,
-            value: result.id
-          });
-
-          this.autoComplete.multiInputEL.nativeElement.value = null;
-        } else {
-          this.showSuccess();
-        }
-
-        this.progressSpinner = false;
-      },
-      error => {
-        this.bodyviejo = JSON.parse(error["error"]);
-
-        this.showCustomFail("La etiqueta no ha sido creada");
-
-        this.progressSpinner = false;
-      },
-      () => {
-        // if (sessionStorage.getItem("crearnuevo") == null) {
-        //   this.obtenerEtiquetasPersonaJuridicaConcreta();
-        // }
-        this.showGuardar = true;
-      }
-    );
+    console.log("VISIBLES", this.etiquetasPersonaJuridicaSelecionados);
   }
 
   ngAfterViewChecked() {
