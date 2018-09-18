@@ -51,7 +51,7 @@
 
             <div *ngIf="showDatosColegiales" class="module vista-avanzada">
                 <div class="form-row">
-                    <div class="form-group col-lg-2 col-md-2">
+                    <div class="form-group col-lg-3 col-md-2">
                         <label>{{"censo.busquedaClientesAvanzada.literal.nColegiado" | translate}}</label>
                         <input type="text" name="numeroColegiado" [formControl]="formBusqueda.controls['numeroColegiado']" class="form-control" [(ngModel)]='body.numColegiado'
                             pInputText>
@@ -59,28 +59,23 @@
                             Debe tener como mínimo tres carácteres</small>
 
                     </div>
-                    <div class="form-group col-lg-2 col-md-2">
-                        <label>{{"censo.consultaDatosGenerales.literal.fechaIncorporacionDesde" | translate}}</label>
+                    <div class="form-group col-lg-3 col-md-2">
+                        <label>{{"censo.consultaDatosGenerales.literal.fechaIncorporacion" | translate}}</label>
 
                         <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true" dateFormat="dd/mm/yy"
-                            icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="body.fechaIncorporacionDesde"></p-calendar>
+                            icon="far fa-calendar-alt" selectionMode="range" showIcon="true" [(ngModel)]="body.fechaIncorporacion"></p-calendar>
                     </div>
 
-                    <div class="form-group col-lg-2 col-md-2">
-                        <label>{{"censo.consultaDatosGenerales.literal.fechaIncorporacionHasta" | translate}}</label>
-                        <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true" dateFormat="dd/mm/yy"
-                            icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="body.fechaIncorporacionHasta"></p-calendar>
-                    </div>
-                    <div class="form-group col-lg-2 col-md-2">
+                    <div class="form-group col-lg-3 col-md-2">
                         <label>{{"censo.fichaCliente.situacion.cabecera" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='body.situacion' [options]="comboSituacion" [filter]="true" filterBy="label"></p-dropdown>
                     </div>
 
-                    <div class="form-group col-lg-2 col-md-2">
+                    <div class="form-group col-lg-3 col-md-2">
                         <label>{{"censo.busquedaClientes.noResidente" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='body.residencia' [options]="comboResidencia" [filter]="true" filterBy="label"></p-dropdown>
                     </div>
-                    <div class="form-group col-lg-2 col-md-2">
+                    <div class="form-group col-lg-3 col-md-2">
                         <label>{{"censo.fusionDuplicados.colegiaciones.inscrito" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='body.inscrito' [options]="comboInscrito" [filter]="true" filterBy="label"></p-dropdown>
                     </div>
@@ -104,10 +99,9 @@
                         <label>{{"censo.consultaDatosGenerales.literal.estadoCivil" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='body.estadoCivil' [options]="comboEstadoCivil" [filter]="true" filterBy="label"></p-dropdown>
                     </div>
-                    <div class=" form-group col-lg-3 col-md-3">
+                    <div class=" form-group col-lg-2 col-md-3">
                         <label>{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate}}</label>
-                        <p-calendar [keepInvalid]="true" selectionMode="range" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy"
-                            [(ngModel)]="fechaNacimientoSelect"></p-calendar>
+                        <p-calendar [keepInvalid]="true" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy" [(ngModel)]="fechaNacimientoSelect"></p-calendar>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.busquedaClientesAvanzada.literal.categoriaCV" | translate}}</label>
