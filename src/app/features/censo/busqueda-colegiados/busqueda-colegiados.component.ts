@@ -82,7 +82,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   resultadosPoblaciones: any;
   historico: boolean;
 
-  etiquetasPersonaJuridicaSelecionados: any = [];
+  fechaNacimientoSelect: Date;
+  fechaNacimientoSelectOld: Date;
+  fechaIncorporacionHastaSelect: Date;
+  fechaIncorporacionDesdeSelect: Date;
 
   constructor(
     private sigaServices: SigaServices,
@@ -94,7 +97,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   ) {
     super(USER_VALIDATIONS);
     this.formBusqueda = this.formBuilder.group({
-      id: new FormControl(null, Validators.minLength(3)),
+      nif: new FormControl(null, Validators.minLength(3)),
       nombre: new FormControl(null, Validators.minLength(3)),
       apellidos: new FormControl(null, Validators.minLength(3)),
       numeroColegiado: new FormControl(null, Validators.minLength(3))
@@ -106,7 +109,6 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   selectedDatos;
 
   ngOnInit() {
-    this.etiquetasPersonaJuridicaSelecionados = "";
     this.getCombos();
   }
 
@@ -126,7 +128,14 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.showDatosDireccion = !this.showDatosDireccion;
   }
 
-  irEditarColegiado(id) {}
+  irEditarColegiado(id) {
+    if (id.length >= 1 && this.selectMultiple == false) {
+      sessionStorage.removeItem("colegiadoBody");
+      sessionStorage.setItem("colegiadoBody", JSON.stringify(id));
+      console.log(id);
+      this.router.navigate(["/fichaColegial"]);
+    }
+  }
 
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
@@ -233,7 +242,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   getComboEtiquetas() {
     // obtener etiquetas
-    this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
+    this.sigaServices.get("busquedaColegiado_etiquetas").subscribe(
       n => {
         this.comboEtiquetas = n.combooItems;
       },
@@ -333,6 +342,19 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.progressSpinner = true;
     this.buscar = true;
 
+    this.body.fechaIncorporacion = [];
+    this.body.fechaIncorporacion[1] = this.fechaIncorporacionHastaSelect;
+    this.body.fechaIncorporacion[0] = this.fechaIncorporacionDesdeSelect;
+
+    if (
+      this.fechaNacimientoSelect != undefined ||
+      this.fechaNacimientoSelect != null
+    ) {
+      this.body.fechaNacimiento = this.fechaNacimientoSelect;
+    } else {
+      this.body.fechaNacimiento = null;
+    }
+
     this.sigaServices
       .postPaginado(
         "busquedaColegiados_searchColegiado",
@@ -345,6 +367,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           this.colegiadoSearch = JSON.parse(data["body"]);
           this.datos = this.colegiadoSearch.colegiadoItem;
           this.table.paginator = true;
+          this.body.fechaIncorporacion = [];
         },
         err => {
           console.log(err);
@@ -363,7 +386,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   getColsResults() {
     this.cols = [
       {
-        field: "idPersona",
+        field: "nif",
         header: "censo.consultaDatosColegiacion.literal.numIden"
       },
       {

@@ -15,19 +15,29 @@ export class DatosColegiadosItem {
   sexo: string;
   estadoCivil: string;
   estadoColegial: string;
-  fechaIncorporacionDesde: Date;
-  fechaIncorporacionHasta: Date;
+  fechaIncorporacion: Date[];
   categoria: string;
   residencia: string;
   inscrito: string;
   residenteInscrito: string;
   correo: string;
-  fechaNacimiento: string;
+  fechaNacimiento: Date;
   idgrupo: string[];
   tipoCV: string;
   denominacion: string;
 
   idLenguaje: string;
+  soloNombre: string;
+  apellidos1: string;
+  apellidos2: string;
+  idTipoIdentificacion: string;
+  naturalDe: string;
+  asientoContable: string;
+  nMutualista: string;
+  idTiposSeguro: string;
+  incorporacion: Date;
+  fechaJura: Date;
+  fechaTitulacion: Date;
 
   constructor() {}
 }

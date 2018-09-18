@@ -18,8 +18,8 @@
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.consultaDatosColegiacion.literal.numIden" | translate}}</label>
-                        <input type="text" name="id" [formControl]="formBusqueda.controls['id']" class="form-control" [(ngModel)]='body.id' pInputText>
-                        <small class="input-error" *ngIf="!formBusqueda.controls['id'].pristine && formBusqueda.controls['id'].status == 'INVALID'">
+                        <input type="text" name="nif" [formControl]="formBusqueda.controls['nif']" class="form-control" [(ngModel)]='body.nif' pInputText>
+                        <small class="input-error" *ngIf="!formBusqueda.controls['nif'].pristine && formBusqueda.controls['nif'].status == 'INVALID'">
                             Debe tener como mínimo tres carácteres</small>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
@@ -60,10 +60,17 @@
 
                     </div>
                     <div class="form-group col-lg-3 col-md-2">
-                        <label>{{"censo.consultaDatosGenerales.literal.fechaIncorporacion" | translate}}</label>
+                        <label>{{"censo.consultaDatosGenerales.literal.fechaIncorporacionDesde" | translate}}</label>
 
                         <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true" dateFormat="dd/mm/yy"
-                            icon="far fa-calendar-alt" selectionMode="range" showIcon="true" [(ngModel)]="body.fechaIncorporacion"></p-calendar>
+                            icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="fechaIncorporacionDesdeSelect"></p-calendar>
+                    </div>
+
+                    <div class="form-group col-lg-3 col-md-2">
+                        <label>{{"censo.consultaDatosGenerales.literal.fechaIncorporacionHasta" | translate}}</label>
+
+                        <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true" dateFormat="dd/mm/yy"
+                            icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="fechaIncorporacionHastaSelect"></p-calendar>
                     </div>
 
                     <div class="form-group col-lg-3 col-md-2">
@@ -90,16 +97,16 @@
             <div *ngIf="showDatosGeneneralesAvanzado" class="module vista-avanzada">
                 <div class="form-row">
 
-                    <div class="form-group col-lg-2 col-md-2">
+                    <div class="form-group col-lg-3 col-md-2">
                         <label>{{"censo.busquedaClientesAvanzada.literal.sexo" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='body.sexo' [options]="comboSexo" [filter]="true" filterBy="label"></p-dropdown>
                     </div>
 
-                    <div class="form-group col-lg-2 col-md-2">
+                    <div class="form-group col-lg-3 col-md-2">
                         <label>{{"censo.consultaDatosGenerales.literal.estadoCivil" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='body.estadoCivil' [options]="comboEstadoCivil" [filter]="true" filterBy="label"></p-dropdown>
                     </div>
-                    <div class=" form-group col-lg-2 col-md-3">
+                    <div class=" form-group col-lg-3 col-md-3">
                         <label>{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate}}</label>
                         <p-calendar [keepInvalid]="true" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy" [(ngModel)]="fechaNacimientoSelect"></p-calendar>
                     </div>
@@ -123,17 +130,17 @@
             <div *ngIf="showDatosDireccion" class="module vista-avanzada">
                 <div class="form-row">
 
-                    <div class="form-group col-lg-2 col-md-2">
+                    <div class="form-group col-lg-3 col-md-2">
                         <label>{{"censo.busquedaClientesAvanzada.literal.cp" | translate}}</label>
                         <input type="text" name="codigoPostal" class="form-control" [maxLength]="5" [(ngModel)]='body.codigoPostal' pInputText (input)="onChangeCodigoPostal($event)">
                     </div>
-                    <div class="form-group col-lg-2 col-md-2">
+                    <div class="form-group col-lg-3 col-md-2">
                         <label>{{"censo.datosDireccion.literal.provincia" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' [options]="comboProvincias" [filter]="true" filterBy="label"
                             [(disabled)]="isDisabledProvincia"></p-dropdown>
                     </div>
 
-                    <div class="form-group col-lg-2 col-md-2">
+                    <div class="form-group col-lg-3 col-md-2">
                         <label>{{"gratuita.partidosJudiciales.literal.poblaciones" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true" filterMatchMode="contains" [(disabled)]="isDisabledPoblacion"
                             [options]="comboPoblacion" (input)="buscarPoblacion($event)" [emptyFilterMessage]="resultadosPoblaciones">
