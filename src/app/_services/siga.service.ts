@@ -181,7 +181,10 @@ export class SigaServices {
     fichaColegialGenerales_tratamiento: "fichaDatosGenerales/tratamiento",
     fichaColegialGenerales_estadoCivil: "fichaDatosGenerales/estadoCivil",
     fichaColegialGenerales_pais: "fichaDatosColegiales/pais",
-    fichaDatosCurriculares_search: "fichaDatosCurriculares/search"
+    fichaDatosCurriculares_search: "fichaDatosCurriculares/search",
+    solicitudInciporporacion_tratamiento: "solicitudIncorporacion/tratamiento",
+    solicitudInciporporacion_estadoCivil: "solicitudIncorporacion/estadoCivil",
+    solicitudInciporporacion_pais: "solicitudIncorporacion/pais"
   };
 
   private menuToggled = new Subject<any>();
@@ -231,9 +234,9 @@ export class SigaServices {
     return this.httpbackend
       .get(
         environment.newSigaUrl +
-          this.endpoints[service] +
-          "?institucion=" +
-          institucion
+        this.endpoints[service] +
+        "?institucion=" +
+        institucion
       )
       .map(response => {
         return response;
