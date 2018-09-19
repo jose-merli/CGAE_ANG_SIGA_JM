@@ -247,6 +247,7 @@ import { ServiciosInteresComponent } from "./features/censo/datosPersonaJuridica
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
 import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.component";
+import { TrimPipePipe } from "./commons/trim-pipe/trim-pipe.pipe";
 
 @NgModule({
   declarations: [
@@ -445,7 +446,8 @@ import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.
     // ListadoFicherosAnexosComponent,
     DatosDireccionesComponent,
     ConsultarDatosDireccionesComponent,
-    ErrorAccesoComponent
+    ErrorAccesoComponent,
+    TrimPipePipe
   ],
   imports: [
     BrowserModule,
@@ -489,6 +491,7 @@ import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.
     TranslateService,
     ImagePipe,
     DatePipe,
+    TrimPipePipe,
     OldSigaServices,
     SigaServices,
     cardService,

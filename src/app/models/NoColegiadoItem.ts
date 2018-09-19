@@ -1,7 +1,7 @@
 export class NoColegiadoItem {
   idPersona: string;
   idInstitucion: string;
-  nifcif: string;
+  nif: string;
   nombre: string;
   fechaNacimiento: string;
   correo: string;

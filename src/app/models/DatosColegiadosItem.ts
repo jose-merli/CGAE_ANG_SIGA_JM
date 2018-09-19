@@ -11,7 +11,6 @@ export class DatosColegiadosItem {
   movil: string;
   tipoDireccion: string;
 
-  etiquetas: string;
   sexo: string;
   estadoCivil: string;
   estadoColegial: string;
@@ -38,6 +37,8 @@ export class DatosColegiadosItem {
   incorporacion: Date;
   fechaJura: Date;
   fechaTitulacion: Date;
+  comisiones: string;
+  partidoJudicial: string;
 
   constructor() {}
 }

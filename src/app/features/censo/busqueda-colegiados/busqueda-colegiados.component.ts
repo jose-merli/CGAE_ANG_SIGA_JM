@@ -23,6 +23,7 @@ import {
   Validators
 } from "../../../../../node_modules/@angular/forms";
 import { DatosColegiadosObject } from "../../../models/DatosColegiadosObject";
+import { TrimPipePipe } from "../../../commons/trim-pipe/trim-pipe.pipe";
 
 @Component({
   selector: "app-busqueda-colegiados",
@@ -339,6 +340,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
     this.selectedDatos = "";
     this.getColsResults();
+    this.filtrosTrim();
     this.progressSpinner = true;
     this.buscar = true;
 
@@ -381,6 +383,41 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   isLimpiar() {
     this.body = new DatosColegiadosItem();
+  }
+
+  //Elimina los espacios en blancos finales e iniciales de los inputs de los filtros
+  filtrosTrim() {
+    if (this.body.nif != null) {
+      this.body.nif = this.body.nif.trim();
+    }
+
+    if (this.body.apellidos != null) {
+      this.body.apellidos = this.body.apellidos.trim();
+    }
+
+    if (this.body.nombre != null) {
+      this.body.nombre = this.body.nombre.trim();
+    }
+
+    if (this.body.numColegiado != null) {
+      this.body.numColegiado = this.body.numColegiado.trim();
+    }
+
+    if (this.body.codigoPostal != null) {
+      this.body.codigoPostal = this.body.codigoPostal.trim();
+    }
+
+    if (this.body.correo != null) {
+      this.body.correo = this.body.correo.trim();
+    }
+
+    if (this.body.movil != null) {
+      this.body.movil = this.body.movil.trim();
+    }
+
+    if (this.body.telefono != null) {
+      this.body.telefono = this.body.telefono.trim();
+    }
   }
 
   getColsResults() {
