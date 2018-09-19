@@ -247,7 +247,7 @@
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Estado civil
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <p-dropdown class="select-form" [(ngModel)]="solictudEditar.estadoCivil" [options]="tratamientos"
+                    <p-dropdown class="select-form" [(ngModel)]="solictudEditar.estadoCivil" [options]="estadoCivil"
                         optionLabel="label"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
@@ -313,57 +313,58 @@
         <!--cuerpo datos dirección-->
         <div *ngIf="fichaDireccion" class="card-body card-body-ficha">
             <div class="row">
-                <div class="form-group col-lg-3 col-md-3">
+                <div class="form-group col-lg-2 col-md-2">
                     <label>País
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <p-dropdown class="select-form" [(ngModel)]="solictudEditar.pais" [options]="paises" optionLabel="label"></p-dropdown>
+                    <p-dropdown class="select-form" [(ngModel)]="solictudEditar.idPais" [options]="paises" optionLabel="label"
+                        dataKey="idPais"></p-dropdown>
                 </div>
-                <div class="form-group col-lg-3 col-md-3">
+                <div class="form-group col-lg-2 col-md-2">
                     <label>Dirección
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.domicilio">
                 </div>
-                <div class="form-group col-lg-3 col-md-3">
+                <div class="form-group col-lg-2 col-md-2">
                     <label>CP
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.codigoPostal">
                 </div>
-                <div class="form-group col-lg-3 col-md-3">
+                <div class="form-group col-lg-2 col-md-2">
                     <label>Población
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.nombrePoblacion">
                 </div>
-                <div class="form-group col-lg-3 col-md-3">
+                <div class="form-group col-lg-2 col-md-2">
                     <label>Provincia
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.nombreProvincia">
                 </div>
-                <div class="form-group col-lg-3 col-md-3">
+                <div class="form-group col-lg-2 col-md-2">
                     <label>Telefono 1
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.telefono1">
                 </div>
-                <div class="form-group col-lg-3 col-md-3">
+                <div class="form-group col-lg-2 col-md-2">
                     <label>Telefono 2
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.telefono2">
                 </div>
-                <div class="form-group col-lg-3 col-md-3">
+                <div class="form-group col-lg-2 col-md-2">
                     <label>Fax 1
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.fax1">
                 </div>
-                <div class="form-group col-lg-3 col-md-3">
+                <div class="form-group col-lg-2 col-md-2">
                     <label>Fax 2
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.fax2">
                 </div>
-                <div class="form-group col-lg-3 col-md-3">
+                <div class="form-group col-lg-2 col-md-2">
                     <label>Movil
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.movil">
                 </div>
-                <div class="form-group col-lg-3 col-md-3">
+                <div class="form-group col-lg-2 col-md-2">
                     <label>Correo electrónico
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.correoElectronico">
@@ -428,15 +429,15 @@
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.titular">
                 </div>
-                <div class="form-group col-lg-2 col-md-2">
+                <div class="form-group col-lg-3 col-md-2">
                     <br>
                     <p-checkbox binary="true" label="Cargo" [(ngModel)]="cargo"></p-checkbox>
                 </div>
-                <div class="form-group col-lg-2 col-md-2">
+                <div class="form-group col-lg-3 col-md-2">
                     <br>
                     <p-checkbox binary="true" label="Abono" [(ngModel)]="abono"></p-checkbox>
                 </div>
-                <div class="form-group col-lg-2 col-md-2">
+                <div class="form-group col-lg-3 col-md-2">
                     <br>
                     <p-checkbox binary="true" label="Cuenta SJCS" [(ngModel)]="abonoJCS"></p-checkbox>
                 </div>

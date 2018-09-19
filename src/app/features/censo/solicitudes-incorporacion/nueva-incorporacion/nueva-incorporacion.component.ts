@@ -24,11 +24,11 @@ export class NuevaIncorporacionComponent implements OnInit {
   solictudEditar: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
   progressSpinner: boolean = false;
   comboSexo: any;
-  tiposSolicitud: any;
-  estadosSolicitud: any;
-  paises: any;
-  tratamientos: any;
-  estadoCivil: any;
+  tiposSolicitud: any[];
+  estadosSolicitud: any[];
+  paises: any[];
+  tratamientos: any[];
+  estadoCivil: any[];
   residente: boolean = false;
   abonoJCS: boolean = false;
   abono: boolean = false;
@@ -39,21 +39,29 @@ export class NuevaIncorporacionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.es = this.translateService.getCalendarLocale();
     this.progressSpinner = true;
+    this.es = this.translateService.getCalendarLocale();
     if (sessionStorage.getItem("editar") == "true") {
       this.solictudEditar = JSON.parse(sessionStorage.getItem("editedSolicitud"));
       this.cargarCombos();
-      this.tratarDatos(); this.solictudEditar.abonoJCS
+      this.tratarDatos();
     }
+
+
     this.progressSpinner = false;
   }
 
   cargarCombos() {
+
     this.comboSexo = [
       { value: "H", label: "Hombre" },
       { value: "M", label: "Mujer" }
     ]
+
+    /*this.paises = [
+      { value: "191", label: "ESPAÑA" },
+      { value: "200", label: "TEST" }
+    ]*/
 
     this.sigaServices
       .get("solicitudInciporporacion_tipoSolicitud").subscribe(result => {
@@ -72,27 +80,25 @@ export class NuevaIncorporacionComponent implements OnInit {
         });
 
     this.sigaServices
-      .get("fichaColegialGenerales_tratamiento").subscribe(result => {
+      .get("solicitudInciporporacion_tratamiento").subscribe(result => {
         this.tratamientos = result.combooItems;
-        console.log("combo", this.tratamientos);
       },
         error => {
           console.log(error);
         });
 
     this.sigaServices
-      .get("fichaColegialGenerales_estadoCivil").subscribe(result => {
+      .get("solicitudInciporporacion_estadoCivil").subscribe(result => {
         this.estadoCivil = result.combooItems;
-        console.log("combo", this.estadoCivil);
       },
         error => {
           console.log(error);
         });
 
     this.sigaServices
-      .get("fichaColegialGenerales_pais").subscribe(result => {
+      .get("solicitudInciporporacion_pais").subscribe(result => {
         this.paises = result.combooItems;
-        console.log("combo", this.paises);
+        console.log(this.paises)
       },
         error => {
           console.log(error);
@@ -118,8 +124,7 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.cargo = false;
     }
     console.log("solictud", this.solictudEditar);
-    //console.log("idEstado", this.solictudEditar.idEstado);
-    //console.log("idtipo", this.solictudEditar.idTipo);
+
     this.solictudEditar.fechaSolicitud = new Date(this.solictudEditar.fechaSolicitud);
     this.solictudEditar.fechaIncorporacion = new Date(this.solictudEditar.fechaIncorporacion);
     this.solictudEditar.fechaEstado = new Date(this.solictudEditar.fechaEstado);
