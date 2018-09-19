@@ -1,17 +1,20 @@
 export class FichaColegialGeneralesItem {
   idPersona: String;
   nif: String;
-  tipoDocumento: String;
+  idTipoIdentificacion: String;
   nombre: String;
-  apellido1: String;
-  apellido2: String;
+  apellidos1: String;
+  apellidos2: String;
   sexo: String;
   tratamiento: String;
-  lugarNacimiento: String;
+  naturalDe: String;
   estadoCivil: String;
+  estadoColegial: String;
+  idLenguaje: String;
   situacion: String;
   fechaAlta: String;
   idioma: String;
+  fechaNacimiento: String;
   cuentaContable: String;
   partidoJudicial: any;
   publicarDatosContacto: boolean;

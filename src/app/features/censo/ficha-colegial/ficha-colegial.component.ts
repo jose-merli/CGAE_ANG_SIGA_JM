@@ -79,7 +79,8 @@ export class FichaColegialComponent implements OnInit {
   generalTratamiento: any[];
   generalEstadoCivil: any[];
   generalIdiomas: any[];
-
+  comboSituacion: any[];
+  tipoIdentificacion: any[];
   @ViewChild("table")
   table: DataTable;
   selectedDatos;
@@ -141,6 +142,8 @@ export class FichaColegialComponent implements OnInit {
     // Cogemos los datos de la busqueda de Colegiados
     this.generalBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
     this.generalBody = this.generalBody[0];
+    this.colegialesBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
+    this.colegialesBody = this.colegialesBody[0];
     this.idPersona = this.generalBody.idPersona;
     this.checkAcceso();
 
@@ -488,6 +491,17 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.numSelected = this.datos.length;
+      this.selectMultiple = false;
+      this.selectedDatos = this.datos;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
   showFailUploadedImage() {
     this.msgs = [];
     this.msgs.push({
@@ -532,6 +546,24 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       }
     );
+
+    this.sigaServices.get("busquedaColegiados_situacion").subscribe(
+      n => {
+        this.comboSituacion = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
+    this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
+      n => {
+        this.tipoIdentificacion = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
   // MÉTODOS PARA DATOS COLEGIALES
 
@@ -546,6 +578,7 @@ export class FichaColegialComponent implements OnInit {
   onInitCurriculares() {
     this.searchDatosCurriculares();
   }
+
   irNuevoCurriculares() {
     this.router.navigate(["/edicionCurriculares"]);
   }
@@ -574,6 +607,33 @@ export class FichaColegialComponent implements OnInit {
   }
   // MÉTODOS PARA DIRECCIONES
 
+  redireccionarDireccion(dato) {
+    if (this.camposDesactivados != true) {
+      if (!this.selectMultiple) {
+        if (dato[0].fechaBaja != null) {
+          sessionStorage.setItem("historicoDir", "true");
+        }
+        var enviarDatos = null;
+        if (dato && dato.length > 0) {
+          enviarDatos = dato[0];
+          sessionStorage.setItem("idDireccion", enviarDatos.idDireccion);
+          sessionStorage.setItem("direccion", JSON.stringify(enviarDatos));
+          sessionStorage.removeItem("editarDireccion");
+          sessionStorage.setItem("editarDireccion", "true");
+        } else {
+          sessionStorage.setItem("editar", "false");
+        }
+
+        this.router.navigate(["/consultarDatosDirecciones"]);
+      } else {
+        this.numSelected = this.selectedDatos.length;
+      }
+    }
+  }
+
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
   // MÉTODOS PARA DATOS BANCARIOS
 
   // MÉTODOS PARA SERVICIOS DE INTERÉS
