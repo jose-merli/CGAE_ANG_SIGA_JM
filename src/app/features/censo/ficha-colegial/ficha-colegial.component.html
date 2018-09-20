@@ -63,44 +63,40 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.fichaCliente.literal.identificacion" | translate}}</label>
-              <input [(ngModel)]="generalBody.nif" type="text" class="form-control" (ngModelChange)="onChangeForm()" pInputText>
+              <input [(ngModel)]="generalBody.nif" type="text" class="form-control" pInputText>
               <div *ngIf="identificacionValida == false">
                 <label class="labelError">{{"El documento es inválido"}}</label>
               </div>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}</label>
-              <p-dropdown class="select-form" [(ngModel)]="generalBody.idTipoIdentificacion" [options]="tipoIdentificacion" optionLabel="label"></p-dropdown>
+              <p-dropdown class="select-form" [options]="tipoIdentificacion" [(ngModel)]="generalBody.idTipoIdentificacion"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
-              <input [(ngModel)]="generalBody.soloNombre" type="text" class="form-control" (ngModelChange)="onChangeForm()" [maxLength]="100"
-                pInputText>
+              <input [(ngModel)]="generalBody.soloNombre" type="text" class="form-control" [maxLength]="100" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.busquedaClientes.literal.apellido1" | translate}}</label>
-              <input [(ngModel)]="generalBody.apellidos1" type="text" class="form-control" (ngModelChange)="onChangeForm()" [maxLength]="100"
-                pInputText>
+              <input [(ngModel)]="generalBody.apellidos1" type="text" class="form-control" [maxLength]="100" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.busquedaClientes.literal.apellido2" | translate}}</label>
               <input [(ngModel)]="generalBody.apellidos2" dateFormat="dd/mm/yy" [style]="{ 'position': 'relative', 'z-index': '1000' }"
-                type="text" class="form-control" (ngModelChange)="onChangeForm()" pInputText>
+                type="text" class="form-control" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.busquedaClientesAvanzada.literal.sexo" | translate}}</label>
-              <input [(ngModel)]="generalBody.sexo" type="text" class="form-control" (ngModelChange)="onChangeForm()" [maxLength]="99"
-                pInputText>
+              <input [(ngModel)]="generalBody.sexo" type="text" class="form-control" [maxLength]="99" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.tratamiento" | translate}}</label>
-              <p-dropdown class="select-form" [(ngModel)]="generalBody.tratamiento" [options]="generalTratamiento" optionLabel="label"
-                (ngModelChange)="getTipo($event)"></p-dropdown>
+              <p-dropdown class="select-form" [(ngModel)]="generalBody.tratamiento" [options]="generalTratamiento" optionLabel="label"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}}</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="generalBody.fechaNacimiento"
-                (ngModelChange)="onChangeForm()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.edad" | translate}}</label>
@@ -109,12 +105,11 @@
 
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.nacido" | translate}}</label>
-              <input [(ngModel)]="generalBody.naturalDe" type="text" class="form-control" (ngModelChange)="onChangeForm()" pInputText>
+              <input [(ngModel)]="generalBody.naturalDe" type="text" class="form-control" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.estadoCivil" | translate}} </label>
-              <p-dropdown class="select-form" [(ngModel)]="generalBody.estadoCivil" [options]="generalEstadoCivil" optionLabel="label"
-                (ngModelChange)="getTipo($event)"></p-dropdown>
+              <p-dropdown class="select-form" [(ngModel)]="generalBody.estadoCivil" [options]="generalEstadoCivil" optionLabel="label"></p-dropdown>
             </div>
 
 
@@ -122,16 +117,16 @@
             <div class="form-check col-lg-6 col-md-6">
               <br>
               <label class="form-group-label">No publicar datos de contacto (antiguo LOPD)</label> &nbsp;&nbsp;
-              <p-checkbox [(disabled)]="camposDesactivados" [(ngModel)]='generalBody.publicarDatosContacto' binary="true" (ngModelChange)="onChangeSociedad()"></p-checkbox>
+              <p-checkbox [(disabled)]="camposDesactivados" [(ngModel)]='generalBody.publicarDatosContacto' binary="true"></p-checkbox>
             </div>
             <div class="form-check col-lg-6 col-md-6">
               <br>
               <label class="form-group-label">Comisiones</label> &nbsp;&nbsp;
-              <p-checkbox [(disabled)]="camposDesactivados" [(ngModel)]='generalBody.comisiones' binary="true" (ngModelChange)="onChangeSociedad()"></p-checkbox>
+              <p-checkbox [(disabled)]="camposDesactivados" [(ngModel)]='generalBody.comisiones' binary="true"></p-checkbox>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}}</label>
-              <p-dropdown class="select-form" [(ngModel)]="generalBody.etiquetas" [options]="comboIdentificacion" optionLabel="label" (ngModelChange)="getTipo($event)"></p-dropdown>
+              <p-dropdown class="select-form" [(ngModel)]="generalBody.etiquetas" [options]="comboIdentificacion" optionLabel="label"></p-dropdown>
             </div>
 
           </div>
@@ -141,28 +136,24 @@
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.fichaCliente.situacion.cabecera" | translate}}</label>
-              <p-dropdown class="select-form" [options]="comboSituacion" [(ngModel)]="generalBody.situacion" [filter]="true" (ngModelChange)="onChangeForm()"
-                filterBy="label"></p-dropdown>
+              <p-dropdown class="select-form" [options]="comboSituacion" [(ngModel)]="generalBody.situacion" [filter]="true" filterBy="label"></p-dropdown>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"administracion.usuarios.literal.fechaAlta" | translate}}</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="generalBody.fechaAlta"
-                (ngModelChange)="onChangeForm()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.fichaCliente.situacion.idiomaPref" | translate}}</label>
-              <p-dropdown class="select-form" [options]="generalIdiomas" [(ngModel)]="generalBody.idLenguaje" [filter]="true" (ngModelChange)="onChangeForm()"
-                filterBy="label"></p-dropdown>
+              <p-dropdown class="select-form" [options]="generalIdiomas" [(ngModel)]="generalBody.idLenguaje" [filter]="true" filterBy="label"></p-dropdown>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
-              <input type="text " class="form-control " [(ngModel)]="generalBody.cuentaContable" [maxLength]="20" (ngModelChange)="onChangeForm()"
-                pInputText>
+              <input type="text " class="form-control " [(ngModel)]="generalBody.cuentaContable" [maxLength]="20" pInputText>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>Partido Judicial </label>
-              <p-dropdown class="select-form" [options]="idiomas" [(ngModel)]="generalBody.partidoJudicial" [filter]="true" (ngModelChange)="onChangeForm()"
-                filterBy="label"></p-dropdown>
+              <p-dropdown class="select-form" [options]="idiomas" [(ngModel)]="generalBody.partidoJudicial" [filter]="true" filterBy="label"></p-dropdown>
             </div>
           </div>
         </div>
@@ -173,8 +164,8 @@
 
     <div *ngIf="esFichaActiva('generales')" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="Solicitar modificación"></button>
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="solicitarModificacionGenerales()" pButton type="button" icon="fa fa-undo" iconPos="left" label="Solicitar modificación"></button>
+        <button (click)="restablecerGenerales()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
@@ -246,46 +237,43 @@
           <div class="form-row">
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.busquedaClientesAvanzada.literal.nColegiado" | translate}}</label>
-              <input [(ngModel)]="colegialesBody.numColegiado" type="text" class="form-control" (ngModelChange)="onChangeForm()" pInputText>
+              <input [(ngModel)]="colegialesBody.numColegiado" type="text" class="form-control" pInputText>
               <div *ngIf="identificacionValida == false">
                 <label class="labelError">{{"El documento es inválido"}}</label>
               </div>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosGenerales.literal.seguro" | translate}}</label>
-              <p-dropdown class="select-form" [(ngModel)]="colegialesBody.idTiposSeguro" [options]="comboIdentificacion" optionLabel="label"
-                (ngModelChange)="getTipo($event)"></p-dropdown>
+              <p-dropdown class="select-form" [(ngModel)]="colegialesBody.idTiposSeguro" [options]="comboIdentificacion" optionLabel="label"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.fusionDuplicados.colegiaciones.inscrito" | translate}}</label>
-              <input [(ngModel)]="colegialesBody.inscrito" type="text" class="form-control" (ngModelChange)="onChangeForm()" [maxLength]="100"
-                pInputText>
+              <input [(ngModel)]="colegialesBody.inscrito" type="text" class="form-control" [maxLength]="100" pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-3 form-group-date">
               <label>{{"censo.consultaDatosColegiales.literal.nMutualista" | translate}}</label>
-              <input [(ngModel)]="colegialesBody.nMutualista" type="text" class="form-control" (ngModelChange)="onChangeForm()" [maxLength]="100"
-                pInputText>
+              <input [(ngModel)]="colegialesBody.nMutualista" type="text" class="form-control" [maxLength]="100" pInputText>
             </div>
 
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosGenerales.literal.fechaIncorporacion" | translate}}</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="colegialesBody.incorporacion"
-                (ngModelChange)="onChangeForm()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosGenerales.literal.fechaPresentacion" | translate}}</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="colegialesBody.fechaPresentacion"
-                (ngModelChange)="onChangeForm()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosGenerales.literal.fechaJura" | translate}}</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="colegialesBody.fechaJura"
-                (ngModelChange)="onChangeForm()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosColegiales.literal.fechaTitulacion" | translate}}</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="colegialesBody.fechaTitulacion"
-                (ngModelChange)="onChangeForm()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
             </div>
           </div>
         </div>

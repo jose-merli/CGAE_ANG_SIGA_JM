@@ -140,16 +140,24 @@ export class FichaColegialComponent implements OnInit {
 
   ngOnInit() {
     // Cogemos los datos de la busqueda de Colegiados
-    this.generalBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
-    this.generalBody = this.generalBody[0];
-    this.colegialesBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
-    this.colegialesBody = this.colegialesBody[0];
-    this.idPersona = this.generalBody.idPersona;
-    this.checkAcceso();
+    if (
+      sessionStorage.getItem("colegiadoBody") != null &&
+      sessionStorage.getItem("colegiadoBody") != undefined
+    ) {
+      this.generalBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
+      this.generalBody = this.generalBody[0];
+      this.colegialesBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
+      this.colegialesBody = this.colegialesBody[0];
+      this.idPersona = this.generalBody.idPersona;
 
-    this.onInitGenerales();
+      this.checkAcceso();
+      this.onInitGenerales();
+      this.onInitCurriculares();
+    } else {
+      this.generalBody = new FichaColegialGeneralesItem();
+      this.colegialesBody = new FichaColegialColegialesItem();
+    }
 
-    this.onInitCurriculares();
     // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
     this.colsColegiales = [
       {
@@ -409,12 +417,9 @@ export class FichaColegialComponent implements OnInit {
           );
           this.router.navigate(["/errorAcceso"]);
         }
-        this.continueOnInit();
       }
     );
   }
-
-  continueOnInit() {}
 
   // MÉTODOS GENÉRICOS PARA TABLAS Y USOS VARIOS
 
@@ -519,7 +524,15 @@ export class FichaColegialComponent implements OnInit {
 
   // MÉTODOS PARA DATOS GENERALES
   onInitGenerales() {
-    // fichaColegialGenerales_tratamiento
+    this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
+      n => {
+        this.tipoIdentificacion = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
     this.sigaServices.get("fichaColegialGenerales_tratamiento").subscribe(
       n => {
         this.generalTratamiento = n.combooItems;
@@ -555,15 +568,11 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       }
     );
+  }
 
-    this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
-      n => {
-        this.tipoIdentificacion = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-    );
+  restablecerGenerales() {
+    this.generalBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
+    this.generalBody = this.generalBody[0];
   }
   // MÉTODOS PARA DATOS COLEGIALES
 
