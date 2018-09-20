@@ -72,7 +72,10 @@ export class FichaColegialComponent implements OnInit {
   camposDesactivados: boolean = false;
   datos: any[];
   datosCurriculares: any[];
-
+  datosColegiales: any[];
+  datosColegiaciones: any[];
+  datosCertificados: any[];
+  datosSociedades: any[];
   file: File = undefined;
 
   // Datos Generales
@@ -81,6 +84,8 @@ export class FichaColegialComponent implements OnInit {
   generalIdiomas: any[];
   comboSituacion: any[];
   tipoIdentificacion: any[];
+  comboTipoSeguro: any[];
+
   @ViewChild("table")
   table: DataTable;
   selectedDatos;
@@ -153,6 +158,7 @@ export class FichaColegialComponent implements OnInit {
       this.checkAcceso();
       this.onInitGenerales();
       this.onInitCurriculares();
+      this.onInitColegiales();
     } else {
       this.generalBody = new FichaColegialGeneralesItem();
       this.colegialesBody = new FichaColegialColegialesItem();
@@ -370,10 +376,7 @@ export class FichaColegialComponent implements OnInit {
       this.openFicha = !this.openFicha;
     }
   }
-  activarPaginacion() {
-    if (!this.datos || this.datos.length == 0) return false;
-    else return true;
-  }
+
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
@@ -516,6 +519,11 @@ export class FichaColegialComponent implements OnInit {
     });
   }
 
+  activarPaginacion() {
+    // TEMPORAL HASTA INTEGRAR CAMBIOS
+    return true;
+  }
+
   clear() {
     this.msgs = [];
   }
@@ -575,15 +583,47 @@ export class FichaColegialComponent implements OnInit {
     this.generalBody = this.generalBody[0];
   }
   // MÉTODOS PARA DATOS COLEGIALES
-
+  activarPaginacionColegial() {
+    if (!this.datosColegiales || this.datosColegiales.length == 0) return false;
+    else return true;
+  }
+  onInitColegiales() {
+    this.sigaServices.get("fichaDatosColegiales_tipoSeguro").subscribe(
+      n => {
+        this.comboTipoSeguro = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+  restablecerColegiales() {
+    this.colegialesBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
+    this.colegialesBody = this.colegialesBody[0];
+  }
   // MÉTODOS PARA OTRAS COLEGIACIONES
-
+  activarPaginacionOtrasColegiaciones() {
+    if (!this.datosColegiaciones || this.datosColegiaciones.length == 0)
+      return false;
+    else return true;
+  }
   // MÉTODOS PARA CERTIFICADOS
-
+  activarPaginacionCertificados() {
+    if (!this.datosCertificados || this.datosCertificados.length == 0)
+      return false;
+    else return true;
+  }
   // MÉTODOS PARA SOCIEDADES
-
+  activarPaginacionSociedades() {
+    if (!this.datosSociedades || this.datosSociedades.length == 0) return false;
+    else return true;
+  }
   // MÉTODOS PARA DATOS CURRICULARES
-
+  activarPaginacionCurriculares() {
+    if (!this.datosCurriculares || this.datosCurriculares.length == 0)
+      return false;
+    else return true;
+  }
   onInitCurriculares() {
     this.searchDatosCurriculares();
   }
