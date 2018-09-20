@@ -499,11 +499,11 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
-  onChangeSelectAll() {
+  onChangeSelectAll(datos) {
     if (this.selectAll === true) {
-      this.numSelected = this.datos.length;
+      this.numSelected = datos.length;
       this.selectMultiple = false;
-      this.selectedDatos = this.datos;
+      this.selectedDatos = datos;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -576,7 +576,22 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       }
     );
+
+    // this.calcularEdad(this.generalBody.fechaNacimiento);
   }
+
+  // calcularEdad(fecha) {
+  //   var hoy = new Date();
+  //   var cumpleanos = JSON.parse(fecha);
+  //   var edad = hoy.getFullYear() - cumpleanos.getFullYear();
+  //   var m = hoy.getMonth() - cumpleanos.getMonth();
+
+  //   if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+  //     edad--;
+  //   }
+
+  //   return edad;
+  // }
 
   restablecerGenerales() {
     this.generalBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
@@ -601,6 +616,7 @@ export class FichaColegialComponent implements OnInit {
     this.colegialesBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
     this.colegialesBody = this.colegialesBody[0];
   }
+
   // MÉTODOS PARA OTRAS COLEGIACIONES
   activarPaginacionOtrasColegiaciones() {
     if (!this.datosColegiaciones || this.datosColegiaciones.length == 0)
