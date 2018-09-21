@@ -154,6 +154,9 @@ export class SigaServices {
     integrantes_delete: "tarjetaIntegrantes/delete",
 
     // censoII
+
+    fichaDatosDirecciones_datosDireccionesSearch:
+      "fichaDatosDirecciones/datosDireccionesSearch",
     busquedaColegiados_situacion: "busquedaColegiados/situacion",
     busquedaColegiados_estadoCivil: "busquedaColegiados/estadoCivil",
     busquedaColegiados_categoriaCurricular:
@@ -184,7 +187,9 @@ export class SigaServices {
     fichaDatosCurriculares_search: "fichaDatosCurriculares/search",
     solicitudInciporporacion_tratamiento: "solicitudIncorporacion/tratamiento",
     solicitudInciporporacion_estadoCivil: "solicitudIncorporacion/estadoCivil",
-    solicitudInciporporacion_pais: "solicitudIncorporacion/pais"
+    solicitudInciporporacion_pais: "solicitudIncorporacion/pais",
+    fichaDatosBancarios_datosBancariosSearch:
+      "fichaDatosBancarios/datosBancariosSearch"
   };
 
   private menuToggled = new Subject<any>();
@@ -234,9 +239,9 @@ export class SigaServices {
     return this.httpbackend
       .get(
         environment.newSigaUrl +
-        this.endpoints[service] +
-        "?institucion=" +
-        institucion
+          this.endpoints[service] +
+          "?institucion=" +
+          institucion
       )
       .map(response => {
         return response;

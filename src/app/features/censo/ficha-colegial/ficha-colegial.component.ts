@@ -73,6 +73,13 @@ export class FichaColegialComponent implements OnInit {
   datos: any[];
   datosCurriculares: any[];
 
+  bodyDirecciones: DatosDireccionesItem;
+  bodyDatosBancarios: DatosBancariosItem;
+  datosDirecciones: DatosDireccionesItem[];
+  datosBancarios: DatosBancariosItem[];
+  searchDireccionIdPersona = new DatosDireccionesObject();
+  searchDatosBancariosIdPersona = new DatosBancariosObject();
+
   file: File = undefined;
 
   // Datos Generales
@@ -147,6 +154,11 @@ export class FichaColegialComponent implements OnInit {
     this.onInitGenerales();
 
     this.onInitCurriculares();
+
+    this.onInitDirecciones();
+
+    // this.onInitDatosBancarios();
+
     // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
     this.colsColegiales = [
       {
@@ -501,6 +513,11 @@ export class FichaColegialComponent implements OnInit {
     this.msgs = [];
   }
 
+  setItalic(datoH) {
+    if (datoH.fechaBaja == null) return false;
+    else return true;
+  }
+
   // FIN MÉTODOS GENÉRICOS
 
   // MÉTODOS PARA DATOS GENERALES
@@ -572,9 +589,113 @@ export class FichaColegialComponent implements OnInit {
         }
       );
   }
+
   // MÉTODOS PARA DIRECCIONES
 
+  onInitDirecciones() {
+    this.bodyDirecciones = new DatosDireccionesItem();
+    this.bodyDirecciones.idPersona = this.idPersona;
+    this.bodyDirecciones.historico = false;
+    this.searchDirecciones();
+  }
+
+  searchDirecciones() {
+    this.selectMultiple = false;
+    this.selectedDatos = "";
+    this.progressSpinner = true;
+    this.selectAll = false;
+    if (this.idPersona != undefined && this.idPersona != null) {
+      this.sigaServices
+        .postPaginado(
+          "fichaDatosDirecciones_datosDireccionesSearch",
+          "?numPagina=1",
+          this.bodyDirecciones
+        )
+        .subscribe(
+          data => {
+            this.searchDireccionIdPersona = JSON.parse(data["body"]);
+            this.datosDirecciones = this.searchDireccionIdPersona.datosDireccionesItem;
+          },
+          err => {
+            console.log(err);
+          },
+          () => {}
+        );
+    }
+  }
+
+  searchDireccionesHistoric() {
+    this.bodyDirecciones.historico = true;
+    this.searchDirecciones();
+  }
+
+  nuevaDireccion() {
+    let newDireccion = new DatosDireccionesItem();
+    sessionStorage.removeItem("direccion");
+    sessionStorage.removeItem("editarDireccion");
+    sessionStorage.setItem("editarDireccion", "false");
+    this.router.navigate(["/consultarDatosDirecciones"]);
+  }
+
+  redireccionar(dato) {
+    if (this.camposDesactivados != true) {
+      if (!this.selectMultiple) {
+        if (dato[0].fechaBaja != null) {
+          sessionStorage.setItem("historicoDir", "true");
+        }
+        var enviarDatos = null;
+        if (dato && dato.length > 0) {
+          enviarDatos = dato[0];
+          sessionStorage.setItem("idDireccion", enviarDatos.idDireccion);
+          sessionStorage.setItem("direccion", JSON.stringify(enviarDatos));
+          sessionStorage.removeItem("editarDireccion");
+          sessionStorage.setItem("editarDireccion", "true");
+          sessionStorage.setItem("usuarioBody", JSON.stringify(this.idPersona));
+          sessionStorage.setItem("esColegiado", "true");
+        } else {
+          sessionStorage.setItem("editar", "false");
+        }
+
+        this.router.navigate(["/consultarDatosDirecciones"]);
+      } else {
+        this.numSelected = this.selectedDatos.length;
+        sessionStorage.removeItem("esColegiado");
+      }
+    }
+  }
+
   // MÉTODOS PARA DATOS BANCARIOS
+
+  onInitDatosBancarios() {
+    this.bodyDatosBancarios = new DatosBancariosItem();
+    this.bodyDatosBancarios.idPersona = this.idPersona;
+    this.bodyDatosBancarios.historico = false;
+    this.searchDatosBancarios();
+  }
+
+  searchDatosBancarios() {
+    this.sigaServices
+      .postPaginado(
+        "fichaDatosBancarios_datosBancariosSearch",
+        "?numPagina=1",
+        this.bodyDatosBancarios
+      )
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.searchDatosBancariosIdPersona = JSON.parse(data["body"]);
+          this.datosBancarios = this.searchDatosBancariosIdPersona.datosBancariosItem;
+        },
+        error => {
+          this.searchDatosBancariosIdPersona = JSON.parse(error["error"]);
+          this.showFail(
+            JSON.stringify(this.searchDatosBancariosIdPersona.error.description)
+          );
+          console.log(error);
+          this.progressSpinner = false;
+        }
+      );
+  }
 
   // MÉTODOS PARA SERVICIOS DE INTERÉS
 

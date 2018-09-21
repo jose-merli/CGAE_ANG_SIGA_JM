@@ -301,6 +301,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.body.otraProvincia = "0";
     }
   }
+
   guardar() {
     if (
       this.body.idTipoDireccion != null &&
@@ -312,6 +313,10 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       if (this.registroEditable) {
         this.comprobarTablaDatosContactos();
         this.comprobarCheckProvincia();
+        this.body.esColegiado = JSON.parse(
+          sessionStorage.getItem("esColegiado")
+        );
+        this.body.idPersona = JSON.parse(sessionStorage.getItem("usuarioBody"));
         this.body.idProvincia = this.provinciaSelecionada;
         this.sigaServices.post("direcciones_update", this.body).subscribe(
           data => {
@@ -332,6 +337,10 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         this.comprobarTablaDatosContactos();
         this.comprobarCheckProvincia();
         this.body.idProvincia = this.provinciaSelecionada;
+        this.body.esColegiado = JSON.parse(
+          sessionStorage.getItem("esColegiado")
+        );
+        this.body.idPersona = JSON.parse(sessionStorage.getItem("usuarioBody"));
         this.body.motivo = "registro creado";
         this.sigaServices.post("direcciones_insert", this.body).subscribe(
           data => {
@@ -348,6 +357,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
           () => {
             // auditoria
             this.body.motivo = undefined;
+            this.progressSpinner = false;
           }
         );
       }
@@ -355,12 +365,15 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.showFail("Debe de haber un tipo de Contacto seleccionado.");
     }
   }
+
   duplicarRegistro() {
     this.body.idDireccion = null;
     this.nuevo = true;
     this.progressSpinner = true;
     this.comprobarTablaDatosContactos();
     this.comprobarCheckProvincia();
+    this.body.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
+    this.body.idPersona = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.sigaServices.post("direcciones_insert", this.body).subscribe(
       data => {
         this.body.idDireccion = JSON.parse(data["body"]).id;
