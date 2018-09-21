@@ -77,6 +77,7 @@ export class FichaColegialComponent implements OnInit {
   datosCertificados: any[];
   datosSociedades: any[];
   file: File = undefined;
+  edadCalculada: any;
 
   // Datos Generales
   generalTratamiento: any[];
@@ -577,21 +578,42 @@ export class FichaColegialComponent implements OnInit {
       }
     );
 
-    // this.calcularEdad(this.generalBody.fechaNacimiento);
+    if (this.generalBody.fechaNacimiento) {
+      this.calcularEdad(this.generalBody.fechaNacimiento);
+    }
   }
 
-  // calcularEdad(fecha) {
-  //   var hoy = new Date();
-  //   var cumpleanos = JSON.parse(fecha);
-  //   var edad = hoy.getFullYear() - cumpleanos.getFullYear();
-  //   var m = hoy.getMonth() - cumpleanos.getMonth();
+  onChangeCalendar(event) {
+    // console.log(new Date(event));
+    var hoy = new Date();
+    var cumpleanos = new Date(event); //
 
-  //   if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
-  //     edad--;
-  //   }
+    // var cumpleanos = new Date(fecha);
+    var edad = hoy.getFullYear() - cumpleanos.getFullYear();
+    var m = hoy.getMonth() - cumpleanos.getMonth();
 
-  //   return edad;
-  // }
+    if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+      edad--;
+    }
+
+    this.edadCalculada = edad;
+  }
+
+  calcularEdad(fecha) {
+    var hoy = new Date();
+    var dateParts = fecha.split("/");
+    var cumpleanos = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]); //
+
+    // var cumpleanos = new Date(fecha);
+    var edad = hoy.getFullYear() - cumpleanos.getFullYear();
+    var m = hoy.getMonth() - cumpleanos.getMonth();
+
+    if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+      edad--;
+    }
+
+    this.edadCalculada = edad;
+  }
 
   restablecerGenerales() {
     this.generalBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
