@@ -638,6 +638,8 @@ export class FichaColegialComponent implements OnInit {
     this.generalBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
     this.generalBody = this.generalBody[0];
   }
+  // FIN DATOS GENERALES
+
   // MÉTODOS PARA DATOS COLEGIALES
   activarPaginacionColegial() {
     if (!this.datosColegiales || this.datosColegiales.length == 0) return false;
@@ -657,6 +659,7 @@ export class FichaColegialComponent implements OnInit {
     this.colegialesBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
     this.colegialesBody = this.colegialesBody[0];
   }
+  // FIN DATOS COLEGIALES
 
   // MÉTODOS PARA OTRAS COLEGIACIONES
   activarPaginacionOtrasColegiaciones() {
@@ -664,17 +667,23 @@ export class FichaColegialComponent implements OnInit {
       return false;
     else return true;
   }
+  // FIN OTRAS COLEGIACIONES
+
   // MÉTODOS PARA CERTIFICADOS
   activarPaginacionCertificados() {
     if (!this.datosCertificados || this.datosCertificados.length == 0)
       return false;
     else return true;
   }
+  // FIN CERTIFICADOS
+
   // MÉTODOS PARA SOCIEDADES
   activarPaginacionSociedades() {
     if (!this.datosSociedades || this.datosSociedades.length == 0) return false;
     else return true;
   }
+  // FIN SOCIEDADES
+
   // MÉTODOS PARA DATOS CURRICULARES
   activarPaginacionCurriculares() {
     if (!this.datosCurriculares || this.datosCurriculares.length == 0)
@@ -711,8 +720,14 @@ export class FichaColegialComponent implements OnInit {
         }
       );
   }
+  // FIN CURRICULARES
 
   // MÉTODOS PARA DIRECCIONES
+  activarPaginacionDireciones() {
+    if (!this.datosDirecciones || this.datosDirecciones.length == 0)
+      return false;
+    else return true;
+  }
 
   onInitDirecciones() {
     this.bodyDirecciones = new DatosDireccionesItem();
@@ -785,8 +800,14 @@ export class FichaColegialComponent implements OnInit {
       }
     }
   }
+  // FIN DIRECCIONES
 
   // MÉTODOS PARA DATOS BANCARIOS
+
+  activarPaginacionBancarios() {
+    if (!this.datosBancarios || this.datosBancarios.length == 0) return false;
+    else return true;
+  }
 
   onInitDatosBancarios() {
     this.bodyDatosBancarios = new DatosBancariosItem();
@@ -818,6 +839,7 @@ export class FichaColegialComponent implements OnInit {
         }
       );
   }
+  // FIN DATOS BANCARIOS
 
   // MÉTODOS PARA SERVICIOS DE INTERÉS
 

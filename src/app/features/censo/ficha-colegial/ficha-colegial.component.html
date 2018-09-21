@@ -800,7 +800,7 @@
             <div class="d-flex justify-content-between">
               <div class="d-flex justify-content-between">
                 <label>Número total de Direcciones:
-                  <span>{{ datosDirecciones.length }}</span>
+                  <span>{{ searchDireccionIdPersona.datosDireccionesItem.length }}</span>
                 </label>
 
               </div>
@@ -822,7 +822,7 @@
       <div *ngIf="esFichaActiva('direcciones')" class="card-body card-body-ficha">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="4" dataKey="idDireccion"
           [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datosDirecciones" [sortOrder]="1"
-          [paginator]="activarPaginacion()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionar(selectedDatos)"
+          [paginator]="activarPaginacionDireciones()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionar(selectedDatos)"
           (onRowUnselect)="actualizaSeleccionados(selectedDatos)">
           <p-column *ngFor="let col of colsDirecciones" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
@@ -936,7 +936,7 @@
     <div *ngIf="esFichaActiva('bancarios')" class="card-body card-body-ficha">
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
         [(selection)]="selectedDatos" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]=""
-        [sortOrder]="1" [paginator]="activarPaginacion()" (onRowSelect)="redireccionar(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+        [sortOrder]="1" [paginator]="activarPaginacionBancarios()" (onRowSelect)="redireccionar(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
         paginatorPosition="both" [rows]="selectedItem" pageLinks="4">
         <p-column *ngFor="let col of colsBancarios" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true" filterMatchMode="contains">
