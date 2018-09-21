@@ -80,12 +80,20 @@ export class FichaColegialComponent implements OnInit {
   searchDireccionIdPersona = new DatosDireccionesObject();
   searchDatosBancariosIdPersona = new DatosBancariosObject();
 
+  datosColegiales: any[];
+  datosColegiaciones: any[];
+  datosCertificados: any[];
+  datosSociedades: any[];
   file: File = undefined;
+  edadCalculada: any;
 
   // Datos Generales
   generalTratamiento: any[];
   generalEstadoCivil: any[];
   generalIdiomas: any[];
+  comboSituacion: any[];
+  tipoIdentificacion: any[];
+  comboTipoSeguro: any[];
 
   @ViewChild("table")
   table: DataTable;
@@ -146,12 +154,24 @@ export class FichaColegialComponent implements OnInit {
 
   ngOnInit() {
     // Cogemos los datos de la busqueda de Colegiados
-    this.generalBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
-    this.generalBody = this.generalBody[0];
-    this.idPersona = this.generalBody.idPersona;
-    this.checkAcceso();
+    if (
+      sessionStorage.getItem("colegiadoBody") != null &&
+      sessionStorage.getItem("colegiadoBody") != undefined
+    ) {
+      this.generalBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
+      this.generalBody = this.generalBody[0];
+      this.colegialesBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
+      this.colegialesBody = this.colegialesBody[0];
+      this.idPersona = this.generalBody.idPersona;
 
-    this.onInitGenerales();
+      this.checkAcceso();
+      this.onInitGenerales();
+      this.onInitCurriculares();
+      this.onInitColegiales();
+    } else {
+      this.generalBody = new FichaColegialGeneralesItem();
+      this.colegialesBody = new FichaColegialColegialesItem();
+    }
 
     this.onInitCurriculares();
 
@@ -371,10 +391,7 @@ export class FichaColegialComponent implements OnInit {
       this.openFicha = !this.openFicha;
     }
   }
-  activarPaginacion() {
-    if (!this.datos || this.datos.length == 0) return false;
-    else return true;
-  }
+
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
@@ -418,12 +435,9 @@ export class FichaColegialComponent implements OnInit {
           );
           this.router.navigate(["/errorAcceso"]);
         }
-        this.continueOnInit();
       }
     );
   }
-
-  continueOnInit() {}
 
   // MÉTODOS GENÉRICOS PARA TABLAS Y USOS VARIOS
 
@@ -500,6 +514,17 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
+  onChangeSelectAll(datos) {
+    if (this.selectAll === true) {
+      this.numSelected = datos.length;
+      this.selectMultiple = false;
+      this.selectedDatos = datos;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
   showFailUploadedImage() {
     this.msgs = [];
     this.msgs.push({
@@ -507,6 +532,11 @@ export class FichaColegialComponent implements OnInit {
       summary: "Error",
       detail: "Error al adjuntar la imagen"
     });
+  }
+
+  activarPaginacion() {
+    // TEMPORAL HASTA INTEGRAR CAMBIOS
+    return true;
   }
 
   clear() {
@@ -522,7 +552,15 @@ export class FichaColegialComponent implements OnInit {
 
   // MÉTODOS PARA DATOS GENERALES
   onInitGenerales() {
-    // fichaColegialGenerales_tratamiento
+    this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
+      n => {
+        this.tipoIdentificacion = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
     this.sigaServices.get("fichaColegialGenerales_tratamiento").subscribe(
       n => {
         this.generalTratamiento = n.combooItems;
@@ -549,20 +587,104 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       }
     );
+
+    this.sigaServices.get("busquedaColegiados_situacion").subscribe(
+      n => {
+        this.comboSituacion = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
+    if (this.generalBody.fechaNacimiento) {
+      this.calcularEdad(this.generalBody.fechaNacimiento);
+    }
+  }
+
+  onChangeCalendar(event) {
+    // console.log(new Date(event));
+    var hoy = new Date();
+    var cumpleanos = new Date(event); //
+
+    // var cumpleanos = new Date(fecha);
+    var edad = hoy.getFullYear() - cumpleanos.getFullYear();
+    var m = hoy.getMonth() - cumpleanos.getMonth();
+
+    if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+      edad--;
+    }
+
+    this.edadCalculada = edad;
+  }
+
+  calcularEdad(fecha) {
+    var hoy = new Date();
+    var dateParts = fecha.split("/");
+    var cumpleanos = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]); //
+
+    // var cumpleanos = new Date(fecha);
+    var edad = hoy.getFullYear() - cumpleanos.getFullYear();
+    var m = hoy.getMonth() - cumpleanos.getMonth();
+
+    if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+      edad--;
+    }
+
+    this.edadCalculada = edad;
+  }
+
+  restablecerGenerales() {
+    this.generalBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
+    this.generalBody = this.generalBody[0];
   }
   // MÉTODOS PARA DATOS COLEGIALES
+  activarPaginacionColegial() {
+    if (!this.datosColegiales || this.datosColegiales.length == 0) return false;
+    else return true;
+  }
+  onInitColegiales() {
+    this.sigaServices.get("fichaDatosColegiales_tipoSeguro").subscribe(
+      n => {
+        this.comboTipoSeguro = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+  restablecerColegiales() {
+    this.colegialesBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
+    this.colegialesBody = this.colegialesBody[0];
+  }
 
   // MÉTODOS PARA OTRAS COLEGIACIONES
-
+  activarPaginacionOtrasColegiaciones() {
+    if (!this.datosColegiaciones || this.datosColegiaciones.length == 0)
+      return false;
+    else return true;
+  }
   // MÉTODOS PARA CERTIFICADOS
-
+  activarPaginacionCertificados() {
+    if (!this.datosCertificados || this.datosCertificados.length == 0)
+      return false;
+    else return true;
+  }
   // MÉTODOS PARA SOCIEDADES
-
+  activarPaginacionSociedades() {
+    if (!this.datosSociedades || this.datosSociedades.length == 0) return false;
+    else return true;
+  }
   // MÉTODOS PARA DATOS CURRICULARES
-
+  activarPaginacionCurriculares() {
+    if (!this.datosCurriculares || this.datosCurriculares.length == 0)
+      return false;
+    else return true;
+  }
   onInitCurriculares() {
     this.searchDatosCurriculares();
   }
+
   irNuevoCurriculares() {
     this.router.navigate(["/edicionCurriculares"]);
   }

@@ -189,7 +189,8 @@ export class SigaServices {
     solicitudInciporporacion_estadoCivil: "solicitudIncorporacion/estadoCivil",
     solicitudInciporporacion_pais: "solicitudIncorporacion/pais",
     fichaDatosBancarios_datosBancariosSearch:
-      "fichaDatosBancarios/datosBancariosSearch"
+      "fichaDatosBancarios/datosBancariosSearch",
+    fichaDatosColegiales_tipoSeguro: "fichaDatosColegiales/tipoSeguro"
   };
 
   private menuToggled = new Subject<any>();
