@@ -1,3 +1,5 @@
+import { ComboEtiquetasItem } from "./ComboEtiquetasItem";
+
 export class DatosGeneralesItem {
   idInstitucion: String;
   idPersona: String;
@@ -18,6 +20,7 @@ export class DatosGeneralesItem {
   idioma: String;
   cuentaContable: String;
   grupos: String[];
+  etiquetas: ComboEtiquetasItem[];
   idLenguajeSociedad: String;
   motivo: String;
   error: Error;

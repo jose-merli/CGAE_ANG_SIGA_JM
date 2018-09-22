@@ -83,6 +83,8 @@ export class SigaServices {
     header_logo: "/header/logo",
     busquedaPerJuridica_tipo: "busquedaPerJuridica/tipoSociedad",
     busquedaPerJuridica_etiquetas: "busquedaPerJuridica/etiquetas",
+    busquedaPerJuridica_informacionEtiqueta:
+      "/busquedaPerJuridica/informacionEtiqueta",
     busquedaPerJuridica_search: "busquedaPerJuridica/search",
     busquedaPerJuridica_delete: "busquedaPerJuridica/delete",
     busquedaPerJuridica_history: "busquedaPerJuridica/searchHistoric",
@@ -92,6 +94,8 @@ export class SigaServices {
     datosGenerales_insert: "personaJuridica/create",
     datosGenerales_identificacion: "DatosGenerales/identificacion",
     datosGenerales_createLabel: "busquedaPerJuridica/createLabel",
+    datosGenerales_createLabels: "busquedaPerJuridica/createLabels",
+    datosGenerales_auditoria: "busquedaPerJuridica/auditoria",
     busquedaPer_colegio: "busquedaPer/colegio",
     busquedaPer_searchJuridica: "busquedaPerJuridica/searchJuridica",
     busquedaPer_searchFisica: "busquedaPerJuridica/searchFisica",
@@ -176,7 +180,8 @@ export class SigaServices {
       "/solicitudIncorporacion/estadoSolicitud",
     solicitudInciporporacion_searchSolicitud:
       "/solicitudIncorporacion/searchSolicitud",
-    fichaColegialGenerales_tratamiento: "fichaDatosColegiales/tratamiento"
+    fichaColegialGenerales_tratamiento: "fichaDatosColegiales/tratamiento",
+    fichaColegialColegiales_search: "fichaDatosColegiales/searchDatosColegiales"
   };
 
   private menuToggled = new Subject<any>();
