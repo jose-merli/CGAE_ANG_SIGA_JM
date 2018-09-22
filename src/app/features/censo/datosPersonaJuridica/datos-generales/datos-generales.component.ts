@@ -101,13 +101,13 @@ export class DatosGenerales implements OnInit {
   items: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   newItems: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   item: ComboEtiquetasItem = new ComboEtiquetasItem();
-  updateItems: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
+  createItems: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
 
   control: boolean = false;
   checked: boolean = false;
   autocompletar: boolean = false;
   isCrear: boolean = false;
-  habilitarGuardar: boolean = false;
+  closable: boolean = false;
 
   etiqueta: String;
   arrayInicial: String[] = [];
@@ -117,7 +117,7 @@ export class DatosGenerales implements OnInit {
 
   mensaje: String = "";
 
-  etiquetasFinales: Map<String, ComboEtiquetasItem> = new Map<
+  updateItems: Map<String, ComboEtiquetasItem> = new Map<
     String,
     ComboEtiquetasItem
   >();
@@ -298,13 +298,13 @@ export class DatosGenerales implements OnInit {
             (value: any, index: number) => {
               let pruebaComboE: ComboEtiquetasItem = new ComboEtiquetasItem();
               pruebaComboE = value;
-              this.etiquetasFinales.set(value.idGrupo, pruebaComboE);
+              this.updateItems.set(value.idGrupo, pruebaComboE);
             }
           );
 
           // FIN PRUEBA
 
-          this.updateItems = this.etiquetasPersonaJuridicaSelecionados;
+          this.createItems = this.etiquetasPersonaJuridicaSelecionados;
         },
         err => {
           console.log(err);
@@ -398,7 +398,7 @@ export class DatosGenerales implements OnInit {
         this.body.idPersona = this.idPersona;
         this.body.idioma = this.idiomaPreferenciaSociedad;
         this.body.tipo = this.selectedTipo.value;
-        this.body.etiquetas = this.updateItems;
+        this.body.etiquetas = this.createItems;
         this.body.motivo = "registro creado";
 
         console.log("BODY", this.body);
@@ -447,28 +447,25 @@ export class DatosGenerales implements OnInit {
             }
           );
       }
-      
     } else {
       this.body.idioma = this.idiomaPreferenciaSociedad;
 
-      console.log("GURAR", this.updateItems);
+      console.log("GURAR", this.createItems);
       console.log("GURAR", this.etiquetasPersonaJuridicaSelecionados);
 
       let probandooo: any[] = [];
-      this.etiquetasFinales.forEach(
-        (valorMap: ComboEtiquetasItem, key: string) => {
-          this.etiquetasPersonaJuridicaSelecionados.forEach(
-            (valorSeleccionados: any, index: number) => {
-              if (
-                valorSeleccionados.idGrupo == valorMap.idGrupo ||
-                valorSeleccionados.value == valorMap.idGrupo
-              ) {
-                probandooo.push(valorMap);
-              }
+      this.updateItems.forEach((valorMap: ComboEtiquetasItem, key: string) => {
+        this.etiquetasPersonaJuridicaSelecionados.forEach(
+          (valorSeleccionados: any, index: number) => {
+            if (
+              valorSeleccionados.idGrupo == valorMap.idGrupo ||
+              valorSeleccionados.value == valorMap.idGrupo
+            ) {
+              probandooo.push(valorMap);
             }
-          );
-        }
-      );
+          }
+        );
+      });
 
       this.body.etiquetas = probandooo;
 
@@ -481,7 +478,7 @@ export class DatosGenerales implements OnInit {
           this.progressSpinner = false;
         },
         () => {
-          this.etiquetasFinales.clear();
+          this.updateItems.clear();
           this.cerrarAuditoria();
           this.cargarImagen(this.body.idPersona);
           this.datosGeneralesSearch();
@@ -836,9 +833,9 @@ export class DatosGenerales implements OnInit {
   filterLabel(query, etiquetas: any[]): any[] {
     let filtered: any[] = [];
     for (let i = 0; i < etiquetas.length; i++) {
-      let country = etiquetas[i];
-      if (country.label.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-        filtered.push(country);
+      let etiqueta = etiquetas[i];
+      if (etiqueta.label.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(etiqueta);
       }
     }
 
@@ -869,35 +866,63 @@ export class DatosGenerales implements OnInit {
           event.srcElement.value +
           " no existe, ¿Desea crearla?";
       }
-      this.habilitarGuardar = true;
-    } else {
-      this.habilitarGuardar = false;
     }
+  }
+
+  isNotContains(event): boolean {
+    var keepGoing = true;
+    this.updateItems.forEach(element => {
+      if (keepGoing) {
+        if (element.idGrupo == event.value) {
+          keepGoing = false;
+        }
+      }
+    });
+
+    return keepGoing;
   }
 
   onSelect(event) {
     if (event) {
-      this.checked = true;
+      if (this.isNotContains(event)) {
+        this.checked = true;
 
-      // Variable controladora
-      this.isCrear = false;
+        // Variable controladora
+        this.isCrear = false;
 
-      this.item = new ComboEtiquetasItem();
-      this.item.idGrupo = event.value;
-      this.item.label = event.label;
+        // Rellenamos los valores de la etiqueta
+        this.item = new ComboEtiquetasItem();
+        this.item.idGrupo = event.value;
+        this.item.label = event.label;
 
-      this.mensaje = "Asignación de fechas";
-      this.habilitarGuardar = true;
-    } else {
-      this.habilitarGuardar = false;
+        this.mensaje = "Asignación de fechas";
+      } else {
+        // Si existe en el array, lo borramos para que no queden registros duplicados
+        this.etiquetasPersonaJuridicaSelecionados.splice(
+          this.etiquetasPersonaJuridicaSelecionados.indexOf(event),
+          1
+        );
+      }
     }
   }
 
-  closeDialogConfirmacion() {
+  deleteLabel(item) {
+    this.etiquetasPersonaJuridicaSelecionados.splice(
+      this.etiquetasPersonaJuridicaSelecionados.indexOf(item),
+      1
+    );
+  }
+
+  closeDialogConfirmation(item) {
     this.checked = false;
 
-    // Borramos el residuo de la etiqueta
-    this.autoComplete.multiInputEL.nativeElement.value = null;
+    if (this.isCrear) {
+      // Borramos el residuo de la etiqueta
+      this.autoComplete.multiInputEL.nativeElement.value = null;
+    } else {
+      // Borramos el residuo de la etiqueta vieja
+      this.deleteLabel(item);
+    }
 
     // Borramos las fechas
     this.item = new ComboEtiquetasItem();
@@ -905,13 +930,13 @@ export class DatosGenerales implements OnInit {
     this.item.fechaBaja = null;
   }
 
-  guardarNuevaEtiqueta(item) {
+  aceptDialogConfirmation(item) {
     this.checked = false;
 
     if (this.isCrear) {
       let newItem = new ComboEtiquetasItem();
       newItem = item;
-      //this.newItems.push(newItem);
+
       newItem.fechaInicio = this.datepipe.transform(
         newItem.fechaInicio,
         "dd/MM/yyyy"
@@ -921,13 +946,12 @@ export class DatosGenerales implements OnInit {
         "dd/MM/yyyy"
       );
 
-      this.updateItems.push(newItem);
-      // PRUEBA
-      this.etiquetasFinales.set(newItem.idGrupo, newItem);
-      // FIN PRUEBA
+      this.createItems.push(newItem);
+
+      this.updateItems.set(newItem.idGrupo, newItem);
 
       this.etiquetasPersonaJuridicaSelecionados.push(newItem);
-      this.autoComplete.multiInputEL.nativeElement.value = null;
+      //this.autoComplete.multiInputEL.nativeElement.value = null;
     } else {
       let oldItem = new ComboEtiquetasItem();
       oldItem = item;
@@ -940,14 +964,21 @@ export class DatosGenerales implements OnInit {
         "dd/MM/yyyy"
       );
 
-      this.updateItems.push(oldItem);
+      this.createItems.push(oldItem);
 
-      // PRUEBA
-      this.etiquetasFinales.set(oldItem.idGrupo, oldItem);
-      // FIN PRUEBA
+      this.updateItems.set(oldItem.idGrupo, oldItem);
     }
 
-    console.log("aceptar", this.updateItems);
+    // Habilitamos el botón guardar, dado que se ha detectado un cambio
+    this.showGuardar = true;
+  }
+
+  getColorLabel(item) {
+    let fechaActual = this.datepipe.transform(new Date(), "dd/MM/yyyy");
+
+    //if (item.fechaInicio < fechaActual && fechaActual < item.fechaBaja) {
+    return "colorAzul";
+    //}
   }
 
   ngAfterViewChecked() {

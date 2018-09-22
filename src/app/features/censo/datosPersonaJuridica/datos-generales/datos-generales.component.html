@@ -156,13 +156,15 @@
               </label>
 
               <br>
-              <!-- <p-multiSelect [defaultLabel]="textFilter" [(disabled)]="camposDesactivados" styleClass="widthAll" [(ngModel)]='etiquetasPersonaJuridicaSelecionados'
-                [options]="comboEtiquetas" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" autoWidth="false" defaultLabel=""
-                maxSelectedLabels="1" (ngModelChange)="onChangeForm()"></p-multiSelect> -->
 
               <p-autoComplete #auto [(ngModel)]="etiquetasPersonaJuridicaSelecionados" [suggestions]="comboEtiquetas" (completeMethod)="filterLabelsMultiple($event)"
-                styleClass="widthAll" [minLength]="1" field="label" [multiple]="true" (onKeyUp)="onKeyUp($event)" (onSelect)="onSelect($event)"
+                styleClass="wid100" [minLength]="1" field="label" [multiple]="true" (onKeyUp)="onKeyUp($event)" (onSelect)="onSelect($event)"
                 [disabled]="!autocompletar">
+                <ng-template let-etiquetasPersonaJuridicaSelecionados pTemplate="item">
+                  <div class="ui-helper-clearfix" [ngClass]="getColorLabel(item)">
+                    {{item.label}}
+                  </div>
+                </ng-template>
               </p-autoComplete>
             </div>
           </div>
@@ -184,7 +186,7 @@
 
   <!-- CREAR ETIQUETA -->
   <p-dialog [(visible)]="checked" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="350" [minWidth]="400"
-    (onHide)="closeDialogConfirmacion()">
+    [closable]="false">
     <p-header class="title">
       <label>{{ mensaje }}</label>
     </p-header>
@@ -216,8 +218,8 @@
 
     <p-footer>
       <div class="text-right main-button">
-        <button (click)="guardarNuevaEtiqueta(item)" pButton type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate}}"></button>
-        <button (click)="closeDialogConfirmacion()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+        <button (click)="aceptDialogConfirmation(item)" pButton type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate}}"></button>
+        <button (click)="closeDialogConfirmation(item)" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
       </div>
     </p-footer>
   </p-dialog>
