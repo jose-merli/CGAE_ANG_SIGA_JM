@@ -3,5 +3,6 @@ export class ComboEtiquetasItem {
   fechaInicio: String;
   fechaBaja: String;
   label: String;
+  backgroundColor: String;
   constructor() {}
 }

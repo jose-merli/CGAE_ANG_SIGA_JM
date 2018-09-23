@@ -157,14 +157,15 @@
 
               <br>
 
+              <!-- styleClass="wid100"  styleClass="clase" -->
               <p-autoComplete #auto [(ngModel)]="etiquetasPersonaJuridicaSelecionados" [suggestions]="comboEtiquetas" (completeMethod)="filterLabelsMultiple($event)"
-                styleClass="wid100" [minLength]="1" field="label" [multiple]="true" (onKeyUp)="onKeyUp($event)" (onSelect)="onSelect($event)"
+                [minLength]="1" field="label" [multiple]="true" (onKeyUp)="onKeyUp($event)" (onSelect)="onSelect($event)" (onUnselect)="onUnselect($event)"
                 [disabled]="!autocompletar">
-                <ng-template let-etiquetasPersonaJuridicaSelecionados pTemplate="item">
-                  <div class="ui-helper-clearfix" [ngClass]="getColorLabel(item)">
+                <!-- <ng-template let-etiquetasPersonaJuridicaSelecionados pTemplate="item">
+                  <div class="ui-helper-clearfix" [ngStyle]="{'background-color': blue}">
                     {{item.label}}
                   </div>
-                </ng-template>
+                </ng-template> -->
               </p-autoComplete>
             </div>
           </div>
@@ -196,29 +197,35 @@
 
         <div class="form-group col-lg-6 col-md-6">
           <label>{{"administracion.auditoriaUsuarios.fechaDesde" | translate}} (*)</label>
-          <p-calendar [(ngModel)]="item.fechaInicio" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+          <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="item.fechaInicio" [locale]="es"
+            [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
         </div>
 
-        <!-- <div *ngIf="!isCrear" class="form-group col-lg-6 col-md-6">
+        <div class="form-group col-lg-6 col-md-6 form-group-date">
+          <label>{{"administracion.auditoriaUsuarios.fechaHasta" | translate}} (*)</label>
+          <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="item.fechaBaja" [locale]="es"
+            [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="validateFields()"></p-calendar>
+          <div *ngIf="item.fechaBaja != null && !isFechaBajaCorrect">
+            <label class="labelError">La fecha de baja no puede ser anterior a la fecha de inicio</label>
+          </div>
+        </div>
+        <!-- <div class="form-group col-lg-6 col-md-6">
           <label>{{"administracion.auditoriaUsuarios.fechaDesde" | translate}} (*)</label>
-          <p-calendar [(ngModel)]="body.fechaInicio" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
-        </div> -->
+          <p-calendar [(ngModel)]="item.fechaInicio" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+        </div>
 
         <div class="form-group col-lg-6 col-md-6">
           <label>{{"administracion.auditoriaUsuarios.fechaHasta" | translate}} (*)</label>
           <p-calendar [(ngModel)]="item.fechaBaja" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
-        </div>
-
-        <!-- <div *ngIf="!isCrear" class="form-group col-lg-6 col-md-6">
-          <label>{{"administracion.auditoriaUsuarios.fechaHasta" | translate}} (*)</label>
-          <p-calendar [(ngModel)]="body.fechaBaja" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
         </div> -->
+
       </div>
     </div>
 
     <p-footer>
       <div class="text-right main-button">
-        <button (click)="aceptDialogConfirmation(item)" pButton type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate}}"></button>
+        <button (click)="aceptDialogConfirmation(item)" pButton type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate}}"
+          [disabled]="!isTrue"></button>
         <button (click)="closeDialogConfirmation(item)" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
       </div>
     </p-footer>
