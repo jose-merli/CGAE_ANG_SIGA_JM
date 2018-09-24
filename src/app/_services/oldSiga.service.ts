@@ -154,6 +154,7 @@ export class OldSigaServices {
 
         loginDevelop: "developmentLogin.do",
         login: "sigainit.do"
+        //login: "login.do"
 
     }
 
