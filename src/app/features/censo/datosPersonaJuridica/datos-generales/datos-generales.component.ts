@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { esCalendar } from "../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
 import { Location } from "@angular/common";
-import { AutoComplete } from "primeng/primeng";
+import { AutoComplete, Dialog } from "primeng/primeng";
 
 import { SigaServices } from "./../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate/translation.service";
@@ -117,6 +117,7 @@ export class DatosGenerales implements OnInit {
 
   fechaDesde: Date;
   fechaHasta: Date;
+  index: any = 0;
 
   mensaje: String = "";
 
@@ -296,9 +297,6 @@ export class DatosGenerales implements OnInit {
             this.etiquetasPersonaJuridicaSelecionados.push(value);
           });
 
-          console.log("etieueure", this.etiquetasPersonaJuridicaSelecionados);
-
-          // PRUEBA
           this.etiquetasPersonaJuridicaSelecionados.forEach(
             (value: any, index: number) => {
               let pruebaComboE: ComboEtiquetasItem = new ComboEtiquetasItem();
@@ -306,8 +304,6 @@ export class DatosGenerales implements OnInit {
               this.updateItems.set(value.idGrupo, pruebaComboE);
             }
           );
-
-          // FIN PRUEBA
 
           this.createItems = this.etiquetasPersonaJuridicaSelecionados;
         },
@@ -456,7 +452,7 @@ export class DatosGenerales implements OnInit {
     } else {
       this.body.idioma = this.idiomaPreferenciaSociedad;
 
-      let probandooo: any[] = [];
+      let finalUpdateItems: any[] = [];
       this.updateItems.forEach((valorMap: ComboEtiquetasItem, key: string) => {
         this.etiquetasPersonaJuridicaSelecionados.forEach(
           (valorSeleccionados: any, index: number) => {
@@ -464,13 +460,15 @@ export class DatosGenerales implements OnInit {
               valorSeleccionados.idGrupo == valorMap.idGrupo ||
               valorSeleccionados.value == valorMap.idGrupo
             ) {
-              probandooo.push(valorMap);
+              finalUpdateItems.push(valorMap);
             }
           }
         );
       });
 
-      this.body.etiquetas = probandooo;
+      this.body.etiquetas = finalUpdateItems;
+      // Hay que poner algún motivo
+      this.body.motivo = "registro actualizado";
 
       this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
         data => {},
@@ -500,6 +498,7 @@ export class DatosGenerales implements OnInit {
       this.obtenerEtiquetasPersonaJuridicaConcreta();
       this.cargarImagen(this.body.idPersona);
       this.file = undefined;
+      // Para las etiquetas
       this.autocompletar = false;
     } else {
       this.body.nif = "";
@@ -514,6 +513,7 @@ export class DatosGenerales implements OnInit {
       this.etiquetasPersonaJuridicaSelecionados = [];
 
       this.showGuardar = false;
+      // Para las etiquetas
       this.autocompletar = false;
     }
   }
@@ -823,6 +823,8 @@ export class DatosGenerales implements OnInit {
     }
   }
 
+  // ETIQUETAS
+
   filterLabelsMultiple(event) {
     this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
       n => {
@@ -839,6 +841,7 @@ export class DatosGenerales implements OnInit {
     let filtered: any[] = [];
     for (let i = 0; i < etiquetas.length; i++) {
       let etiqueta = etiquetas[i];
+
       if (etiqueta.label.toLowerCase().indexOf(query.toLowerCase()) == 0) {
         filtered.push(etiqueta);
       }
@@ -853,6 +856,7 @@ export class DatosGenerales implements OnInit {
     return filtered;
   }
 
+  // Evento para detectar la etiqueta de nueva creación
   onKeyUp(event) {
     if (event.keyCode == 13) {
       if (this.control) {
@@ -887,6 +891,7 @@ export class DatosGenerales implements OnInit {
     return keepGoing;
   }
 
+  // Evento para detectar una etiqueta existente
   onSelect(event) {
     if (event) {
       if (this.isNotContains(event)) {
@@ -995,16 +1000,28 @@ export class DatosGenerales implements OnInit {
     }
 
     // Habilitamos el botón guardar, dado que se ha detectado un cambio
-    this.showGuardar = true;
-  }
-
-  ngAfterViewChecked() {
-    this.changeDetectorRef.detectChanges();
+    if (
+      this.body.abreviatura != "" &&
+      this.body.abreviatura != undefined &&
+      !this.onlySpaces(this.body.abreviatura) &&
+      this.body.nif != "" &&
+      this.body.nif != undefined &&
+      !this.onlySpaces(this.body.nif) &&
+      this.body.denominacion != "" &&
+      this.body.denominacion != undefined &&
+      !this.onlySpaces(this.body.denominacion) &&
+      this.body.fechaConstitucion != undefined &&
+      !this.onlySpaces(this.body.nif) &&
+      this.idiomaPreferenciaSociedad != "" &&
+      this.idiomaPreferenciaSociedad != undefined
+    ) {
+      this.showGuardar = true;
+    }
   }
 
   validateFinalDate(): boolean {
     if (this.item.fechaBaja != undefined && this.item.fechaBaja != null) {
-      if (this.item.fechaInicio > this.item.fechaBaja) {
+      if (this.item.fechaInicio >= this.item.fechaBaja) {
         this.isFechaBajaCorrect = false;
       } else {
         this.isFechaBajaCorrect = true;
@@ -1012,5 +1029,9 @@ export class DatosGenerales implements OnInit {
     }
 
     return this.isFechaBajaCorrect;
+  }
+
+  ngAfterViewChecked() {
+    this.changeDetectorRef.detectChanges();
   }
 }

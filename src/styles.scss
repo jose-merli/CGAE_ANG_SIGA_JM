@@ -1111,8 +1111,19 @@ iframe .boxCombo {
   background-color: #e9ecef;
 }
 
+// ETIQUETAS
+
 .ui-autocomplete-multiple-container.ui-inputtext.ui-state-disabled {
   background-color: #e9ecef;
+  width: 100%;
+}
+
+.ui-autocomplete-multiple-container.ui-inputtext {
+  width: 100%;
+}
+
+.ui-autocomplete-token-icon {
+  color: black;
 }
 
 .ui-datepicker.ui-widget .ui-datepicker-calendar td a.ui-state-active {
