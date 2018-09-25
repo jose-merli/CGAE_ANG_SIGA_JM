@@ -1,17 +1,16 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef, HostListener } from "@angular/core";
 import {
   FormGroup,
   FormBuilder,
   FormControl,
   Validators
 } from "../../../../../node_modules/@angular/forms";
-import { esCalendar } from "../../../utils/calendar";
 import { Router } from "../../../../../node_modules/@angular/router";
 import { SigaServices } from "../../../_services/siga.service";
 import { TranslateService } from "../../../commons/translate";
-import { DataTable } from "../../../../../node_modules/primeng/primeng";
 import { SolicitudIncorporacionObject } from "../../../models/SolicitudIncorporacionObject";
 import { SolicitudIncorporacionItem } from "../../../models/SolicitudIncorporacionItem";
+export enum KEY_CODE { ENTER = 13 }
 
 @Component({
   selector: "app-solicitudes-incorporacion",
@@ -19,6 +18,7 @@ import { SolicitudIncorporacionItem } from "../../../models/SolicitudIncorporaci
   styleUrls: ["./solicitudes-incorporacion.component.scss"]
 })
 export class SolicitudesIncorporacionComponent implements OnInit {
+
   es: any;
   fichaAbierta: boolean = true;
   formBusqueda: FormGroup;
@@ -51,7 +51,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   ) {
     this.formBusqueda = this.formBuilder.group({
       fechaDesde: new FormControl(null, Validators.required),
-      //fechaHasta: new FormControl(null, Validators.required),
+      fechaHasta: new FormControl(null, Validators.required),
       nombre: new FormControl(null, Validators.minLength(3)),
       apellidos: new FormControl(null, Validators.minLength(3))
     });
@@ -80,12 +80,26 @@ export class SolicitudesIncorporacionComponent implements OnInit {
         value: 20
       },
       {
-        label: "Todo",
-        value: 10
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
       }
     ];
+    this.filtrosSession();
   }
+  filtrosSession() {
+    if (sessionStorage.getItem("filtros") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("filtros"));
+      this.body.fechaDesde = new Date(this.body.fechaDesde);
+      this.body.fechaHasta = new Date(this.body.fechaHasta);
+      this.isBuscar();
 
+      sessionStorage.removeItem("filtros");
+    }
+  }
   cargarCombos() {
     this.sigaServices
       .get("solicitudInciporporacion_tipoSolicitud").subscribe(result => {
@@ -104,7 +118,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
         });
   }
   isBuscar() {
-    if (!this.formBusqueda.invalid && this.checkIdentificacion(this.body.numeroIdentificacion)) {
+    if ((!this.formBusqueda.invalid && this.checkIdentificacion(this.body.numeroIdentificacion)) || sessionStorage.getItem("filtros") != null) {
       this.buscar = true;
       this.progressSpinner = true;
       this.sigaServices.postPaginado("solicitudInciporporacion_searchSolicitud", "?numPagina=1", this.body).subscribe(result => {
@@ -121,6 +135,8 @@ export class SolicitudesIncorporacionComponent implements OnInit {
         error => {
           console.log(error);
         });
+
+      sessionStorage.setItem("filtros", JSON.stringify(this.body));
     } else {
       console.log("mal filtros");
       //TODO : MOSTRAR MENSAJE DE FALLO EN FILTROS ?
@@ -149,7 +165,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   }
 
   checkIdentificacion(doc: String) {
-    if (doc && doc.length > 0) {
+    if (doc && doc.length > 0 && doc != undefined) {
       if (doc.length == 10) {
         return this.isValidPassport(doc);
       } else {
@@ -227,6 +243,14 @@ export class SolicitudesIncorporacionComponent implements OnInit {
       this.selectAll = false;
       this.selectedDatos = [];
       this.numSelected = 0;
+    }
+  }
+
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.isBuscar();
     }
   }
 }

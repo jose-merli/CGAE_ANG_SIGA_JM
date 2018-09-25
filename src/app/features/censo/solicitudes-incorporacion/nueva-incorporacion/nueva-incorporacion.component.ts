@@ -4,6 +4,7 @@ import { Router } from "../../../../../../node_modules/@angular/router";
 import { SigaServices } from "../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate";
 import { SolicitudIncorporacionItem } from "../../../../models/SolicitudIncorporacionItem";
+import { Location } from "@angular/common";
 
 
 @Component({
@@ -26,6 +27,9 @@ export class NuevaIncorporacionComponent implements OnInit {
   comboSexo: any;
   tiposSolicitud: any[];
   estadosSolicitud: any[];
+  tipoColegiacion: any[];
+  tipoIdentificacion: any[];
+  modalidadDocumentacion: any[];
   paises: any[];
   tratamientos: any[];
   estadoCivil: any[];
@@ -34,16 +38,16 @@ export class NuevaIncorporacionComponent implements OnInit {
   abono: boolean = false;
   cargo: boolean = false;
 
-  constructor(private translateService: TranslateService, private sigaServices: SigaServices) {
+  constructor(private translateService: TranslateService, private sigaServices: SigaServices, private location: Location) {
 
   }
 
   ngOnInit() {
     this.progressSpinner = true;
     this.es = this.translateService.getCalendarLocale();
+    this.cargarCombos();
     if (sessionStorage.getItem("editar") == "true") {
       this.solictudEditar = JSON.parse(sessionStorage.getItem("editedSolicitud"));
-      this.cargarCombos();
       this.tratarDatos();
     }
 
@@ -57,11 +61,6 @@ export class NuevaIncorporacionComponent implements OnInit {
       { value: "H", label: "Hombre" },
       { value: "M", label: "Mujer" }
     ]
-
-    /*this.paises = [
-      { value: "191", label: "ESPAÑA" },
-      { value: "200", label: "TEST" }
-    ]*/
 
     this.sigaServices
       .get("solicitudInciporporacion_tipoSolicitud").subscribe(result => {
@@ -98,11 +97,36 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.sigaServices
       .get("solicitudInciporporacion_pais").subscribe(result => {
         this.paises = result.combooItems;
-        console.log(this.paises)
       },
         error => {
           console.log(error);
         });
+
+    this.sigaServices
+      .get("solicitudInciporporacion_tipoIdentificacion").subscribe(result => {
+        this.tipoIdentificacion = result.combooItems;
+        console.log("testtttttt", this.tipoIdentificacion);
+      },
+        error => {
+          console.log(error);
+        });
+
+    this.sigaServices
+      .get("solicitudInciporporacion_tipoColegiacion").subscribe(result => {
+        this.tipoColegiacion = result.combooItems;
+      },
+        error => {
+          console.log(error);
+        });
+    this.sigaServices
+      .get("solicitudInciporporacion_modalidadDocumentacion").subscribe(result => {
+        this.modalidadDocumentacion = result.combooItems;
+      },
+        error => {
+          console.log(error);
+        });
+
+
   }
   tratarDatos() {
 
@@ -123,13 +147,18 @@ export class NuevaIncorporacionComponent implements OnInit {
     } else {
       this.cargo = false;
     }
-    console.log("solictud", this.solictudEditar);
 
     this.solictudEditar.fechaSolicitud = new Date(this.solictudEditar.fechaSolicitud);
     this.solictudEditar.fechaIncorporacion = new Date(this.solictudEditar.fechaIncorporacion);
     this.solictudEditar.fechaEstado = new Date(this.solictudEditar.fechaEstado);
     this.solictudEditar.fechaNacimiento = new Date(this.solictudEditar.fechaNacimiento);
   }
+
+
+  guardar() {
+
+  }
+
   abreCierraFichaColegiacion() {
     this.fichaColegiacion = !this.fichaColegiacion;
   }
@@ -150,5 +179,9 @@ export class NuevaIncorporacionComponent implements OnInit {
   }
   abreCierraFichaAbogacia() {
     this.fichaAbogacia = !this.fichaAbogacia;
+  }
+
+  backTo() {
+    this.location.back();
   }
 }
