@@ -568,7 +568,24 @@ export class FichaColegialComponent implements OnInit {
   }
 
   // FIN MÉTODOS GENÉRICOS
-
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   // MÉTODOS PARA DATOS GENERALES
   generalesGuardar() {
     this.progressSpinner = true;
@@ -676,12 +693,110 @@ export class FichaColegialComponent implements OnInit {
   }
 
   restablecerGenerales() {
+    this.cargarImagen(this.idPersona);
     console.log(this.generalBody.idTratamiento);
     this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
     this.generalBody = this.generalBody[0];
   }
-  // FIN DATOS GENERALES
 
+  //FOTOGRAFIA
+  uploadImage(event: any) {
+    // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
+    let fileList: FileList = event.target.files;
+
+    let nombreCompletoArchivo = fileList[0].name;
+    let extensionArchivo = nombreCompletoArchivo.substring(
+      nombreCompletoArchivo.lastIndexOf("."),
+      nombreCompletoArchivo.length
+    );
+
+    if (
+      extensionArchivo == null ||
+      extensionArchivo.trim() == "" ||
+      !/\.(gif|jpg|jpeg|tiff|png)$/i.test(extensionArchivo.trim().toUpperCase())
+    ) {
+      // Mensaje de error de formato de imagen y deshabilitar boton guardar
+      this.file = undefined;
+      this.archivoDisponible = false;
+      this.existeImagen = false;
+      this.showFailUploadedImage();
+    } else {
+      // se almacena el archivo para habilitar boton guardar
+      this.file = fileList[0];
+      this.archivoDisponible = true;
+      this.existeImagen = true;
+      let urlCreator = window.URL;
+      this.imagenPersona = this.sanitizer.bypassSecurityTrustUrl(
+        urlCreator.createObjectURL(this.file)
+      );
+    }
+  }
+
+  // guardar() {
+  //   // pasamos el idPersona creado para la nueva sociedad
+  //   if (this.file != undefined) {
+  //     this.guardarImagen(this.idPersona);
+  //   }
+  // }
+
+  guardarImagen(idPersona: String) {
+    this.sigaServices
+      .postSendFileAndParameters(
+        "personaJuridica_uploadFotografia",
+        this.file,
+        idPersona
+      )
+      .subscribe(
+        data => {
+          this.file = undefined;
+          this.cargarImagen(this.idPersona);
+          this.progressSpinner = false;
+        },
+        error => {
+          console.log(error);
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  cargarImagen(idPersona: String) {
+    let datosParaImagen: DatosGeneralesItem = new DatosGeneralesItem();
+    datosParaImagen.idPersona = idPersona;
+
+    this.sigaServices
+      .postDownloadFiles("personaJuridica_cargarFotografia", datosParaImagen)
+      .subscribe(data => {
+        const blob = new Blob([data], { type: "text/csv" });
+        if (blob.size == 0) {
+          this.existeImagen = false;
+        } else {
+          let urlCreator = window.URL;
+          this.imagenPersona = this.sanitizer.bypassSecurityTrustUrl(
+            urlCreator.createObjectURL(blob)
+          );
+          this.existeImagen = true;
+        }
+      });
+  }
+  // FIN DATOS GENERALES
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   // MÉTODOS PARA DATOS COLEGIALES
   activarPaginacionColegial() {
     if (!this.datosColegiales || this.datosColegiales.length == 0) return false;
@@ -702,7 +817,24 @@ export class FichaColegialComponent implements OnInit {
     this.colegialesBody = this.colegialesBody[0];
   }
   // FIN DATOS COLEGIALES
-
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   // MÉTODOS PARA OTRAS COLEGIACIONES
   activarPaginacionOtrasColegiaciones() {
     if (!this.datosColegiaciones || this.datosColegiaciones.length == 0)
@@ -710,7 +842,24 @@ export class FichaColegialComponent implements OnInit {
     else return true;
   }
   // FIN OTRAS COLEGIACIONES
-
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   // MÉTODOS PARA CERTIFICADOS
   activarPaginacionCertificados() {
     if (!this.datosCertificados || this.datosCertificados.length == 0)
@@ -718,14 +867,48 @@ export class FichaColegialComponent implements OnInit {
     else return true;
   }
   // FIN CERTIFICADOS
-
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   // MÉTODOS PARA SOCIEDADES
   activarPaginacionSociedades() {
     if (!this.datosSociedades || this.datosSociedades.length == 0) return false;
     else return true;
   }
   // FIN SOCIEDADES
-
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   // MÉTODOS PARA DATOS CURRICULARES
   activarPaginacionCurriculares() {
     if (!this.datosCurriculares || this.datosCurriculares.length == 0)
@@ -763,7 +946,24 @@ export class FichaColegialComponent implements OnInit {
       );
   }
   // FIN CURRICULARES
-
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   // MÉTODOS PARA DIRECCIONES
   activarPaginacionDireciones() {
     if (!this.datosDirecciones || this.datosDirecciones.length == 0)
@@ -846,7 +1046,24 @@ export class FichaColegialComponent implements OnInit {
     }
   }
   // FIN DIRECCIONES
-
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   // MÉTODOS PARA DATOS BANCARIOS
 
   activarPaginacionBancarios() {
@@ -924,7 +1141,24 @@ export class FichaColegialComponent implements OnInit {
   }
 
   // FIN DATOS BANCARIOS
-
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   // MÉTODOS PARA SERVICIOS DE INTERÉS
 
   irFacturacion() {
@@ -939,84 +1173,4 @@ export class FichaColegialComponent implements OnInit {
   }
 
   // FIN MÉTODOS PARA SERVICIOS DE INTERÉS
-
-  //FOTOGRAFIA
-  uploadImage(event: any) {
-    // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
-    let fileList: FileList = event.target.files;
-
-    let nombreCompletoArchivo = fileList[0].name;
-    let extensionArchivo = nombreCompletoArchivo.substring(
-      nombreCompletoArchivo.lastIndexOf("."),
-      nombreCompletoArchivo.length
-    );
-
-    if (
-      extensionArchivo == null ||
-      extensionArchivo.trim() == "" ||
-      !/\.(gif|jpg|jpeg|tiff|png)$/i.test(extensionArchivo.trim().toUpperCase())
-    ) {
-      // Mensaje de error de formato de imagen y deshabilitar boton guardar
-      this.file = undefined;
-      this.archivoDisponible = false;
-      this.existeImagen = false;
-      this.showFailUploadedImage();
-    } else {
-      // se almacena el archivo para habilitar boton guardar
-      this.file = fileList[0];
-      this.archivoDisponible = true;
-      this.existeImagen = true;
-      let urlCreator = window.URL;
-      this.imagenPersona = this.sanitizer.bypassSecurityTrustUrl(
-        urlCreator.createObjectURL(this.file)
-      );
-    }
-  }
-
-  guardar() {
-    // pasamos el idPersona creado para la nueva sociedad
-    if (this.file != undefined) {
-      this.guardarImagen(this.idPersona);
-    }
-  }
-
-  guardarImagen(idPersona: String) {
-    this.sigaServices
-      .postSendFileAndParameters(
-        "personaJuridica_uploadFotografia",
-        this.file,
-        idPersona
-      )
-      .subscribe(
-        data => {
-          this.file = undefined;
-          this.cargarImagen(this.idPersona);
-          this.progressSpinner = false;
-        },
-        error => {
-          console.log(error);
-          this.progressSpinner = false;
-        }
-      );
-  }
-
-  cargarImagen(idPersona: String) {
-    let datosParaImagen: DatosGeneralesItem = new DatosGeneralesItem();
-    datosParaImagen.idPersona = idPersona;
-
-    this.sigaServices
-      .postDownloadFiles("personaJuridica_cargarFotografia", datosParaImagen)
-      .subscribe(data => {
-        const blob = new Blob([data], { type: "text/csv" });
-        if (blob.size == 0) {
-          this.existeImagen = false;
-        } else {
-          let urlCreator = window.URL;
-          this.imagenPersona = this.sanitizer.bypassSecurityTrustUrl(
-            urlCreator.createObjectURL(blob)
-          );
-          this.existeImagen = true;
-        }
-      });
-  }
 }
