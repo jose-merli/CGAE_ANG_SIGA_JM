@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { esCalendar } from "../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
 import { Location } from "@angular/common";
-import { AutoComplete, Dialog } from "primeng/primeng";
+import { AutoComplete, Dialog, Calendar } from "primeng/primeng";
 
 import { SigaServices } from "./../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate/translation.service";
@@ -111,6 +111,8 @@ export class DatosGenerales implements OnInit {
   isFechaInicioCorrect: boolean = false;
   isFechaBajaCorrect: boolean = false;
   isTrue: boolean = false;
+  historico: boolean = false;
+  isClose: boolean = false;
 
   etiqueta: String;
   arrayInicial: String[] = [];
@@ -128,6 +130,12 @@ export class DatosGenerales implements OnInit {
 
   @ViewChild("auto")
   autoComplete: AutoComplete;
+
+  @ViewChild("dialog")
+  dialog: Dialog;
+
+  @ViewChild("calendar")
+  calendar: Calendar;
 
   @ViewChild(DatosGeneralesComponent)
   datosGeneralesComponent: DatosGeneralesComponent;
@@ -467,7 +475,7 @@ export class DatosGenerales implements OnInit {
       });
 
       this.body.etiquetas = finalUpdateItems;
-      // Hay que poner algún motivo
+
       this.body.motivo = "registro actualizado";
 
       this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
@@ -861,19 +869,23 @@ export class DatosGenerales implements OnInit {
     if (event.keyCode == 13) {
       if (this.control) {
         this.checked = true;
+        this.dialog.closable = false;
 
         // Variable controladora
         this.isCrear = true;
+
+        // Variable controlador del deshabilitar fechas
+        //  this.calendar.readonlyInput = false;
+        this.historico = false;
 
         // Rellenamos el objeto nuevo
         this.item = new ComboEtiquetasItem();
         this.item.idGrupo = "";
         this.item.label = event.srcElement.value;
 
-        this.mensaje =
-          "La etiqueta " +
-          event.srcElement.value +
-          " no existe, ¿Desea crearla?";
+        this.mensaje = this.translateService.instant(
+          "censo.datosGenerales.literal.crearEtiqueta"
+        );
       }
     }
   }
@@ -896,16 +908,22 @@ export class DatosGenerales implements OnInit {
     if (event) {
       if (this.isNotContains(event)) {
         this.checked = true;
+        this.dialog.closable = false;
 
         // Variable controladora
         this.isCrear = false;
+
+        // Variable controlador del deshabilitar fechas
+        this.historico = false;
 
         // Rellenamos los valores de la etiqueta
         this.item = new ComboEtiquetasItem();
         this.item.idGrupo = event.value;
         this.item.label = event.label;
 
-        this.mensaje = "Asignación de fechas";
+        this.mensaje = this.translateService.instant(
+          "censo.datosGenerales.literal.asociarEtiqueta"
+        );
       } else {
         // Si existe en el array, lo borramos para que no queden registros duplicados
         this.etiquetasPersonaJuridicaSelecionados.splice(
@@ -919,6 +937,23 @@ export class DatosGenerales implements OnInit {
   onUnselect(event) {
     if (event) {
       this.showGuardar = true;
+    }
+  }
+
+  onClick(event, value) {
+    if (event) {
+      this.checked = true;
+      this.dialog.closable = true;
+
+      this.item = new ComboEtiquetasItem();
+      this.item.fechaInicio = value.fechaInicio;
+      this.item.fechaBaja = value.fechaBaja;
+
+      this.mensaje = "Histórico de fechas";
+
+      this.historico = true;
+
+      this.calendar.readonlyInput = true;
     }
   }
 
@@ -998,6 +1033,9 @@ export class DatosGenerales implements OnInit {
 
       this.updateItems.set(oldItem.idGrupo, oldItem);
     }
+
+    // Dehabilitamos el guardar para los próximos
+    this.isTrue = false;
 
     // Habilitamos el botón guardar, dado que se ha detectado un cambio
     if (
