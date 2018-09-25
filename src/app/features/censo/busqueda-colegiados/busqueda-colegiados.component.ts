@@ -112,6 +112,13 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   ngOnInit() {
     this.getCombos();
     sessionStorage.removeItem("esColegiado");
+    if (sessionStorage.getItem("filtrosBusquedaColegiados") != null) {
+      this.body = JSON.parse(
+        sessionStorage.getItem("filtrosBusquedaColegiados")
+      );
+      sessionStorage.removeItem("filtrosBusquedaColegiados");
+      this.isBuscar();
+    }
   }
 
   onHideDatosGenerales() {
@@ -359,7 +366,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     );
   }
 
-  //Busca No colegiados según los filtros
+  //Busca colegiados según los filtros
   isBuscar() {
     this.selectAll = false;
     this.historico = false;
@@ -384,6 +391,11 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     } else {
       this.body.fechaNacimiento = null;
     }
+
+    sessionStorage.setItem(
+      "filtrosBusquedaColegiados",
+      JSON.stringify(this.body)
+    );
 
     this.sigaServices
       .postPaginado(

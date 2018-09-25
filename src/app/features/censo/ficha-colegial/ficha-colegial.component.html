@@ -14,7 +14,7 @@
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
             <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
-            <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+            <img *ngIf="existeImagen" [src]="imagenPersona" class="icon-ficha">
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -42,7 +42,7 @@
       <div *ngIf="esFichaActiva('generales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
           <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
-          <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+          <img *ngIf="existeImagen" [src]="imagenPersona" class="icon-ficha">
         </div>
         <label class="title-ficha">{{ "general.message.datos.generales" | translate}}</label>
         <i class="fa fa-angle-up ml-auto"></i>
@@ -53,7 +53,7 @@
         <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
           <div class="img-colegiado text-center my-0 mx-auto">
             <i *ngIf="!existeImagen" class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
-            <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="imagenCentrada">
+            <img *ngIf="existeImagen" [src]="imagenPersona" class="imagenCentrada">
             <p-fileUpload #fubauto chooseLabel="" class="edit my-0 mx-auto main-button" mode="basic" name="file" auto="true" accept="image/*"
               (change)="uploadImage($event)" auto="true">
             </p-fileUpload>
@@ -92,8 +92,8 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.tratamiento" | translate}}</label>
-              <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="generalBody.tratamiento"
-                [options]="generalTratamiento" optionLabel="label"></p-dropdown>
+              <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="generalTratamiento"
+                [(ngModel)]="generalBody.tratamiento"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}}</label>
@@ -111,8 +111,8 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.estadoCivil" | translate}} </label>
-              <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="generalBody.estadoCivil"
-                [options]="generalEstadoCivil" optionLabel="label"></p-dropdown>
+              <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="generalEstadoCivil"
+                [(ngModel)]="generalBody.estadoCivil"></p-dropdown>
             </div>
 
 
@@ -173,7 +173,7 @@
       <div class="text-right main-button ">
         <button (click)="solicitarModificacionGenerales()" pButton type="button" icon="fa fa-undo" iconPos="left" label="Solicitar modificación"></button>
         <button (click)="restablecerGenerales()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="generalesGuardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

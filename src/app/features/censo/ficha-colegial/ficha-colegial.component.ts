@@ -35,6 +35,8 @@ import { DatosDireccionesItem } from "./../../../models/DatosDireccionesItem";
 import { DatosDireccionesObject } from "./../../../models/DatosDireccionesObject";
 import { DatosBancariosItem } from "./../../../models/DatosBancariosItem";
 import { DatosBancariosObject } from "./../../../models/DatosBancariosObject";
+import { DomSanitizer } from "../../../../../node_modules/@angular/platform-browser";
+import { DatosGeneralesItem } from "../../../models/DatosGeneralesItem";
 
 @Component({
   selector: "app-ficha-colegial",
@@ -102,6 +104,9 @@ export class FichaColegialComponent implements OnInit {
   comboTipoSeguro: any[];
 
   esColegiado: boolean;
+  archivoDisponible: boolean = false;
+  existeImagen: boolean = false;
+  imagenPersona: any;
 
   @ViewChild("table")
   table: DataTable;
@@ -157,6 +162,7 @@ export class FichaColegialComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
+    private sanitizer: DomSanitizer,
     private router: Router
   ) {}
 
@@ -569,17 +575,20 @@ export class FichaColegialComponent implements OnInit {
       .post("fichaDatosGenerales_Update", this.generalBody)
       .subscribe(
         data => {
-          this.progressSpinner = false;
+          if (this.file != undefined) {
+            this.guardarImagen(this.idPersona);
+          }
           // this.body = JSON.parse(data["body"]);
         },
         error => {
-          +console.log(error);
+          console.log(error);
           this.progressSpinner = false;
         }
       );
   }
 
   onInitGenerales() {
+    this.cargarImagen(this.idPersona);
     this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
       n => {
         this.tipoIdentificacion = n.combooItems;
@@ -925,4 +934,84 @@ export class FichaColegialComponent implements OnInit {
   }
 
   // FIN MÉTODOS PARA SERVICIOS DE INTERÉS
+
+  //FOTOGRAFIA
+  uploadImage(event: any) {
+    // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
+    let fileList: FileList = event.target.files;
+
+    let nombreCompletoArchivo = fileList[0].name;
+    let extensionArchivo = nombreCompletoArchivo.substring(
+      nombreCompletoArchivo.lastIndexOf("."),
+      nombreCompletoArchivo.length
+    );
+
+    if (
+      extensionArchivo == null ||
+      extensionArchivo.trim() == "" ||
+      !/\.(gif|jpg|jpeg|tiff|png)$/i.test(extensionArchivo.trim().toUpperCase())
+    ) {
+      // Mensaje de error de formato de imagen y deshabilitar boton guardar
+      this.file = undefined;
+      this.archivoDisponible = false;
+      this.existeImagen = false;
+      this.showFailUploadedImage();
+    } else {
+      // se almacena el archivo para habilitar boton guardar
+      this.file = fileList[0];
+      this.archivoDisponible = true;
+      this.existeImagen = true;
+      let urlCreator = window.URL;
+      this.imagenPersona = this.sanitizer.bypassSecurityTrustUrl(
+        urlCreator.createObjectURL(this.file)
+      );
+    }
+  }
+
+  guardar() {
+    // pasamos el idPersona creado para la nueva sociedad
+    if (this.file != undefined) {
+      this.guardarImagen(this.idPersona);
+    }
+  }
+
+  guardarImagen(idPersona: String) {
+    this.sigaServices
+      .postSendFileAndParameters(
+        "personaJuridica_uploadFotografia",
+        this.file,
+        idPersona
+      )
+      .subscribe(
+        data => {
+          this.file = undefined;
+          this.cargarImagen(this.idPersona);
+          this.progressSpinner = false;
+        },
+        error => {
+          console.log(error);
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  cargarImagen(idPersona: String) {
+    let datosParaImagen: DatosGeneralesItem = new DatosGeneralesItem();
+    datosParaImagen.idPersona = idPersona;
+
+    this.sigaServices
+      .postDownloadFiles("personaJuridica_cargarFotografia", datosParaImagen)
+      .subscribe(data => {
+        const blob = new Blob([data], { type: "text/csv" });
+        if (blob.size == 0) {
+          this.existeImagen = false;
+        } else {
+          let urlCreator = window.URL;
+          this.imagenPersona = this.sanitizer.bypassSecurityTrustUrl(
+            urlCreator.createObjectURL(blob)
+          );
+          this.existeImagen = true;
+        }
+      });
+  }
 }

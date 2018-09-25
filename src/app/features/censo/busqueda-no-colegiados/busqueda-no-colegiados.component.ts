@@ -95,6 +95,13 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     this.getCombos();
     this.es = this.translateService.getCalendarLocale();
     sessionStorage.removeItem("esColegiado");
+    if (sessionStorage.getItem("filtrosBusquedaNoColegiados") != null) {
+      this.body = JSON.parse(
+        sessionStorage.getItem("filtrosBusquedaNoColegiados")
+      );
+      sessionStorage.removeItem("filtrosBusquedaNoColegiados");
+      this.isBuscar();
+    }
   }
 
   abrirFicha(key) {
@@ -324,6 +331,11 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
     this.progressSpinner = true;
     this.buscar = true;
+
+    sessionStorage.setItem(
+      "filtrosBusquedaNoColegiados",
+      JSON.stringify(this.body)
+    );
 
     this.sigaServices
       .postPaginado(

@@ -23,5 +23,14 @@ export class NoColegiadoItem {
   domicilio: string;
   idcv: string;
   historico: boolean;
+
+  idLenguaje: string;
+  soloNombre: string;
+  apellidos1: string;
+  apellidos2: string;
+  idTipoIdentificacion: string;
+  naturalDe: string;
+  asientoContable: string;
+  tratamiento: string;
   constructor() {}
 }
