@@ -38,7 +38,8 @@
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.colegiarColegiados.literal.etiquetas" | translate}}</label>
                         <p-multiSelect [disabled]="!editar" [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='body.idgrupo' [options]="comboEtiquetas"
-                            [selectedItemsLabel]="textSelected" maxSelectedLabels="1" styleClass="widthAll" defaultLabel=""></p-multiSelect>
+                            [selectedItemsLabel]="textSelected" maxSelectedLabels="1" styleClass="widthAll" defaultLabel="" optionLabel="label"
+                            [filter]="true"></p-multiSelect>
                     </div>
                 </div>
             </div>
@@ -75,16 +76,16 @@
 
                     <div class="form-group col-lg-3 col-md-2">
                         <label>{{"censo.fichaCliente.situacion.cabecera" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='body.situacion' [options]="comboSituacion" [filter]="true" filterBy="label"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.situacion' [options]="comboSituacion" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
                     </div>
 
                     <div class="form-group col-lg-3 col-md-2">
                         <label>{{"censo.busquedaClientes.noResidente" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='body.residencia' [options]="comboResidencia" [filter]="true" filterBy="label"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.residencia' [options]="comboResidencia" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-2">
                         <label>{{"censo.fusionDuplicados.colegiaciones.inscrito" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='body.inscrito' [options]="comboInscrito" [filter]="true" filterBy="label"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.inscrito' [options]="comboInscrito" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
                     </div>
                 </div>
             </div>
@@ -99,12 +100,12 @@
 
                     <div class="form-group col-lg-3 col-md-2">
                         <label>{{"censo.busquedaClientesAvanzada.literal.sexo" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='body.sexo' [options]="comboSexo" [filter]="true" filterBy="label"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.sexo' [options]="comboSexo" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
                     </div>
 
                     <div class="form-group col-lg-3 col-md-2">
                         <label>{{"censo.consultaDatosGenerales.literal.estadoCivil" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='body.estadoCivil' [options]="comboEstadoCivil" [filter]="true" filterBy="label"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.estadoCivil' [options]="comboEstadoCivil" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
                     </div>
                     <div class=" form-group col-lg-3 col-md-3">
                         <label>{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate}}</label>
@@ -112,7 +113,7 @@
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.busquedaClientesAvanzada.literal.categoriaCV" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='body.tipoCV' [options]="comboCategoriaCurricular" [filter]="true" filterBy="label"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.tipoCV' [options]="comboCategoriaCurricular" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.busquedaClientesAvanzada.literal.subtiposCV" | translate}}</label>
@@ -136,7 +137,7 @@
                     </div>
                     <div class="form-group col-lg-3 col-md-2">
                         <label>{{"censo.datosDireccion.literal.provincia" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' [options]="comboProvincias" [filter]="true" filterBy="label"
+                        <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' [options]="comboProvincias" [filter]="true" filterBy="label,labelSinTilde"
                             [(disabled)]="isDisabledProvincia"></p-dropdown>
                     </div>
 
@@ -148,7 +149,7 @@
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.datosDireccion.literal.tipo.direccion" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='body.tipoDireccion' [options]="comboTiposDireccion" [filter]="true" filterBy="label"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.tipoDireccion' [options]="comboTiposDireccion" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.datosDireccion.literal.correo" | translate}}</label>

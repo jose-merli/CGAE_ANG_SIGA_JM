@@ -111,6 +111,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   ngOnInit() {
     this.getCombos();
+    sessionStorage.removeItem("esColegiado");
   }
 
   onHideDatosGenerales() {
@@ -131,8 +132,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   irEditarColegiado(id) {
     if (id.length >= 1 && this.selectMultiple == false) {
-      sessionStorage.removeItem("colegiadoBody");
-      sessionStorage.setItem("colegiadoBody", JSON.stringify(id));
+      sessionStorage.removeItem("personaBody");
+      sessionStorage.setItem("esColegiado", "true");
+      sessionStorage.setItem("personaBody", JSON.stringify(id));
       console.log(id);
       this.router.navigate(["/fichaColegial"]);
     }
@@ -229,6 +231,23 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     );
   }
 
+  arregloTildesCombo(combo) {
+    combo.map(e => {
+      let accents =
+        "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+      let accentsOut =
+        "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+      let i;
+      let x;
+      for (i = 0; i < e.label.length; i++) {
+        if ((x = accents.indexOf(e.label[i])) != -1) {
+          e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+          return e.labelSinTilde;
+        }
+      }
+    });
+  }
+
   getCombos() {
     this.getComboEtiquetas();
     this.getComboSituacion();
@@ -246,6 +265,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.sigaServices.get("busquedaColegiado_etiquetas").subscribe(
       n => {
         this.comboEtiquetas = n.combooItems;
+        this.arregloTildesCombo(this.comboEtiquetas);
       },
       err => {
         console.log(err);
@@ -257,6 +277,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.sigaServices.get("busquedaColegiados_situacion").subscribe(
       n => {
         this.comboSituacion = n.combooItems;
+        this.arregloTildesCombo(this.comboSituacion);
       },
       err => {
         console.log(err);
@@ -270,6 +291,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       { label: "Sí", value: 1 },
       { label: "No", value: 0 }
     ];
+
+    this.arregloTildesCombo(this.comboResidencia);
   }
 
   getComboInscrito() {
@@ -278,6 +301,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       { label: "Sí", value: 1 },
       { label: "No", value: 0 }
     ];
+
+    this.arregloTildesCombo(this.comboInscrito);
   }
   getComboSexo() {
     this.comboSexo = [
@@ -291,6 +316,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.sigaServices.get("busquedaColegiados_estadoCivil").subscribe(
       n => {
         this.comboEstadoCivil = n.combooItems;
+        this.arregloTildesCombo(this.comboEstadoCivil);
       },
       err => {
         console.log(err);
@@ -313,6 +339,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.sigaServices.get("busquedaColegiados_provincias").subscribe(
       n => {
         this.comboProvincias = n.combooItems;
+        this.arregloTildesCombo(this.comboProvincias);
       },
       err => {
         console.log(err);
@@ -324,6 +351,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.sigaServices.get("busquedaColegiados_tipoDireccion").subscribe(
       n => {
         this.comboTiposDireccion = n.combooItems;
+        this.arregloTildesCombo(this.comboTiposDireccion);
       },
       err => {
         console.log(err);

@@ -14,6 +14,7 @@ import { DatosBancariosAnexoObject } from "./../../../../../../app/models/DatosB
 import { SigaServices } from "./../../../../../_services/siga.service";
 //import "rxjs/Rx";
 import { saveAs } from "file-saver/FileSaver";
+import { IfObservable } from "../../../../../../../node_modules/rxjs/observable/IfObservable";
 
 @Component({
   selector: "app-consultar-datos-bancarios",
@@ -113,7 +114,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   file: File = undefined;
   ocultarMotivo: boolean = undefined;
 
-  @ViewChild("table") table: DataTable;
+  @ViewChild("table")
+  table: DataTable;
   selectedDatos;
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
@@ -202,6 +204,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       { field: "firmaFecha", header: "Fecha de firma" },
       { field: "firmaLugar", header: "Lugar de la firma" }
     ];
+
+    this.editar = JSON.parse(sessionStorage.getItem("editar"));
   }
 
   downloadAnexo(dato) {
@@ -258,12 +262,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
     this.cargarDatosMandatos();
     this.nuevo = false;
+    this.editar = true;
 
     this.cargarDatosAnexos();
   }
 
   cargarModoNuevoRegistro() {
-    this.body.titular = this.usuarioBody[0].denominacion;
+    this.body.titular = this.usuarioBody[0].nombre;
     this.body.nifTitular = this.usuarioBody[0].nif;
 
     this.nuevo = true;
@@ -272,8 +277,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   // Funciones datos cuenta bancaria
   cargarDatosCuentaBancaria() {
-    this.editar = false;
-
     this.body.idPersona = this.idPersona;
     this.body.idCuenta = this.idCuenta;
 
@@ -302,6 +305,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   rellenarComboTipoCuenta(body) {
+    this.selectedTipo = [];
     var salir = false;
     this.tipoCuenta.forEach(element1 => {
       body.forEach(element2 => {
@@ -348,13 +352,16 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       () => {
         this.idCuenta = this.body.id;
         this.selectedTipo = [];
-        this.body.motivo = undefined;
+        this.body.motivo = null;
         this.cargarModoEdicion();
       }
     );
   }
 
   editarRegistro() {
+    if (!this.editar) {
+      this.guardarRegistro();
+    }
     this.progressSpinner = true;
 
     this.body.revisionCuentas = this.revisionCuentas;
@@ -385,7 +392,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       () => {
         // auditoria
         this.cerrarAuditoria();
-        this.body.motivo = undefined;
+        this.body.motivo = null;
 
         this.idCuenta = this.body.idCuenta;
         this.cargarDatosMandatos();
@@ -416,7 +423,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       message: "¿Desea restablecer los datos?",
       icon: "fa fa-info",
       accept: () => {
-        this.selectedTipo = [];
         this.cargarDatosCuentaBancaria();
 
         //this.activarRestablecer = true;
@@ -595,7 +601,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.guardarRegistro();
         } else {
           // dependiendo de esta variable, se muestra o no la auditoria
-          this.body.motivo = undefined;
+          this.body.motivo = null;
           if (this.ocultarMotivo) {
             this.editarRegistro();
           } else {
@@ -651,7 +657,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         } else {
           this.displayAuditoria = true;
           this.showGuardarAuditoria = false;
-          this.body.motivo = undefined;
+          this.body.motivo = null;
         }
       }
     } else {
@@ -1114,7 +1120,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   comprobarCampoMotivo() {
     if (
-      this.body.motivo != undefined &&
+      this.body.motivo != null &&
       this.body.motivo != "" &&
       this.body.motivo.trim() != ""
     ) {

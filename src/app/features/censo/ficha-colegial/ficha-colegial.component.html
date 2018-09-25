@@ -138,7 +138,7 @@
         <!-- info adicional -->
         <div class="bloque col-lg-4 col-md-4">
           <div class="form-row">
-            <div class="form-group col-lg-12 col-md-12">
+            <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
               <label>{{"censo.fichaCliente.situacion.cabecera" | translate}}</label>
               <p-dropdown class="select-form" [options]="comboSituacion" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="generalBody.situacion"
                 [filter]="true" filterBy="label"></p-dropdown>
@@ -157,7 +157,7 @@
               <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
               <input type="text " class="form-control " [(ngModel)]="generalBody.cuentaContable" [maxLength]="20" pInputText>
             </div>
-            <div class="form-group col-lg-12 col-md-12">
+            <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
               <label>Partido Judicial </label>
               <p-dropdown class="select-form" [options]="idiomas" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="generalBody.partidoJudicial"
                 [filter]="true" filterBy="label"></p-dropdown>
@@ -173,7 +173,7 @@
       <div class="text-right main-button ">
         <button (click)="solicitarModificacionGenerales()" pButton type="button" icon="fa fa-undo" iconPos="left" label="Solicitar modificación"></button>
         <button (click)="restablecerGenerales()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="generalesGuardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -198,7 +198,7 @@
 
 
   <!-- FICHA DATOS COLEGIALES -->
-  <div class="card">
+  <div class="card" [hidden]="!esColegiado">
     <div class="card-header header-ficha" (click)="abreCierraFicha('colegiales')">
       <div *ngIf="!esFichaActiva('colegiales')" class="form-row">
         <div class="col-lg-1 col-md-2">
@@ -355,7 +355,7 @@
 
 
   <!-- FICHA OTRAS COLEGIACIONES -->
-  <div class="card">
+  <div class="card" [hidden]="!esColegiado">
     <div class="card-header header-ficha" (click)="abreCierraFicha('colegiaciones')">
       <div *ngIf="!esFichaActiva('colegiaciones')" class="form-row">
         <div class="col-lg-1 col-md-2">
@@ -822,7 +822,7 @@
       <div *ngIf="esFichaActiva('direcciones')" class="card-body card-body-ficha">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="4" dataKey="idDireccion"
           [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datosDirecciones" [sortOrder]="1"
-          [paginator]="activarPaginacionDireciones()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionar(selectedDatos)"
+          [paginator]="activarPaginacionDireciones()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionarDireccion(selectedDatos)"
           (onRowUnselect)="actualizaSeleccionados(selectedDatos)">
           <p-column *ngFor="let col of colsDirecciones" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
@@ -917,8 +917,8 @@
             <label class="mr-auto title-ficha">{{"censo.consultaDatosBancarios.cabecera" | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>{{"censo.datosDireccion.literal.numero.cuentas" | translate}}:
-              <!-- <span>{{ bodySearch.datosBancariosItem.length }}</span> -->
+            <label>{{"censo.datosDireccion.literal.numero.cuentas" | translate}}
+              <span>{{ searchDatosBancariosIdPersona.datosBancariosItem.length }}</span>
             </label>
             <i [ngClass]="{ 'fa fa-angle-up': esFichaActiva('bancarios'), 'fa fa-angle-down': ! esFichaActiva('bancarios')} "></i>
           </div>
@@ -935,12 +935,11 @@
 
     <div *ngIf="esFichaActiva('bancarios')" class="card-body card-body-ficha">
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-        [(selection)]="selectedDatos" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]=""
-        [sortOrder]="1" [paginator]="activarPaginacionBancarios()" (onRowSelect)="redireccionar(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-        paginatorPosition="both" [rows]="selectedItem" pageLinks="4">
+        [(selection)]="selectedDatos" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datosBancarios"
+        [sortOrder]="1" [paginator]="activarPaginacionBancarios()" (onRowSelect)="redireccionarDatosBancarios(selectedDatos)"
+        (onRowUnselect)="actualizaSeleccionados(selectedDatos)" paginatorPosition="both" [rows]="selectedItem" pageLinks="4">
         <p-column *ngFor="let col of colsBancarios" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true" filterMatchMode="contains">
-
           <ng-template let-datoH="rowData" pTemplate="body">
             <div *ngIf="setItalic(datoH)">
               <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
@@ -967,12 +966,14 @@
         </ng-template>
         <p-footer>
           <div class="text-right main-button">
-            <button (click)="cargarDatosBancarios()" *ngIf="historico" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
-            <button (click)="cargarHistorico()" *ngIf="!historico" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
+            <button *ngIf="bodyDatosBancarios.historico" (click)="onInitDatosBancarios()" pButton type="button" icon="fa fa-undo" iconPos="left"
+              label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
+            <button *ngIf="!bodyDatosBancarios.historico" (click)="searchHistoricoDatosBancarios()" pButton type="button" icon="fa fa-history"
+              iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
             <button *ngIf="selectedDatos && selectedDatos != '' && !historico" (click)="confirmarEliminar(selectedDatos)" pButton type="button"
               icon="fa fa-trash-alt" iconPos="left" [(disabled)]="camposDesactivados" label="{{'general.boton.eliminar'  | translate}}"></button>
-            <button (click)="redireccionar(selectedDatos)" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-plus"
-              iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+            <button (click)="nuevaCuentaBancaria()" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-plus" iconPos="left"
+              label="{{ 'general.boton.new' | translate}}"></button>
           </div>
 
         </p-footer>

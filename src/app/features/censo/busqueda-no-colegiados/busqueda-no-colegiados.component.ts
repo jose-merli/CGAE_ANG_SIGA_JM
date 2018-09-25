@@ -94,6 +94,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     // Obtener Combos
     this.getCombos();
     this.es = this.translateService.getCalendarLocale();
+    sessionStorage.removeItem("esColegiado");
   }
 
   abrirFicha(key) {
@@ -493,5 +494,15 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;
     else return true;
+  }
+
+  irEditarNoColegiado(id) {
+    if (id.length >= 1 && this.selectMultiple == false) {
+      sessionStorage.removeItem("personaBody");
+      sessionStorage.setItem("esColegiado", "false");
+      sessionStorage.setItem("personaBody", JSON.stringify(id));
+      console.log(id);
+      this.router.navigate(["/fichaColegial"]);
+    }
   }
 }

@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+  AfterViewInit
+} from "@angular/core";
 import { esCalendar } from "../../../utils/calendar";
 import { Location } from "@angular/common";
 import { ConfirmationService, Message } from "primeng/components/common/api";
@@ -95,6 +101,8 @@ export class FichaColegialComponent implements OnInit {
   tipoIdentificacion: any[];
   comboTipoSeguro: any[];
 
+  esColegiado: boolean;
+
   @ViewChild("table")
   table: DataTable;
   selectedDatos;
@@ -155,14 +163,15 @@ export class FichaColegialComponent implements OnInit {
   ngOnInit() {
     // Cogemos los datos de la busqueda de Colegiados
     if (
-      sessionStorage.getItem("colegiadoBody") != null &&
-      sessionStorage.getItem("colegiadoBody") != undefined
+      sessionStorage.getItem("personaBody") != null &&
+      sessionStorage.getItem("personaBody") != undefined
     ) {
-      this.generalBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
+      this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.generalBody = this.generalBody[0];
-      this.colegialesBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
+      this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.colegialesBody = this.colegialesBody[0];
       this.idPersona = this.generalBody.idPersona;
+      this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
 
       this.checkAcceso();
       this.onInitGenerales();
@@ -177,7 +186,7 @@ export class FichaColegialComponent implements OnInit {
 
     this.onInitDirecciones();
 
-    // this.onInitDatosBancarios();
+    this.onInitDatosBancarios();
 
     // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
     this.colsColegiales = [
@@ -486,10 +495,14 @@ export class FichaColegialComponent implements OnInit {
   }
 
   backTo() {
-    sessionStorage.removeItem("colegiadoBody");
+    sessionStorage.removeItem("personaBody");
     // this.cardService.searchNewAnnounce.next(null);
     //this.location.back();
-    this.router.navigate(["/busquedaColegiados"]);
+    if (sessionStorage.getItem("esColegiado") == "true") {
+      this.router.navigate(["/busquedaColegiados"]);
+    } else if (sessionStorage.getItem("esColegiado") == "false") {
+      this.router.navigate(["/busquedaNoColegiados"]);
+    }
   }
 
   uploadFile(event: any) {
@@ -551,6 +564,21 @@ export class FichaColegialComponent implements OnInit {
   // FIN MÉTODOS GENÉRICOS
 
   // MÉTODOS PARA DATOS GENERALES
+  generalesGuardar() {
+    this.sigaServices
+      .post("fichaDatosGenerales_Update", this.generalBody)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          // this.body = JSON.parse(data["body"]);
+        },
+        error => {
+          +console.log(error);
+          this.progressSpinner = false;
+        }
+      );
+  }
+
   onInitGenerales() {
     this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
       n => {
@@ -635,7 +663,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   restablecerGenerales() {
-    this.generalBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
+    this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
     this.generalBody = this.generalBody[0];
   }
   // FIN DATOS GENERALES
@@ -656,7 +684,7 @@ export class FichaColegialComponent implements OnInit {
     );
   }
   restablecerColegiales() {
-    this.colegialesBody = JSON.parse(sessionStorage.getItem("colegiadoBody"));
+    this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
     this.colegialesBody = this.colegialesBody[0];
   }
   // FIN DATOS COLEGIALES
@@ -774,7 +802,7 @@ export class FichaColegialComponent implements OnInit {
     this.router.navigate(["/consultarDatosDirecciones"]);
   }
 
-  redireccionar(dato) {
+  redireccionarDireccion(dato) {
     if (this.camposDesactivados != true) {
       if (!this.selectMultiple) {
         if (dato[0].fechaBaja != null) {
@@ -788,7 +816,10 @@ export class FichaColegialComponent implements OnInit {
           sessionStorage.removeItem("editarDireccion");
           sessionStorage.setItem("editarDireccion", "true");
           sessionStorage.setItem("usuarioBody", JSON.stringify(this.idPersona));
-          sessionStorage.setItem("esColegiado", "true");
+          sessionStorage.setItem(
+            "esColegiado",
+            sessionStorage.getItem("esColegiado")
+          );
         } else {
           sessionStorage.setItem("editar", "false");
         }
@@ -839,6 +870,45 @@ export class FichaColegialComponent implements OnInit {
         }
       );
   }
+
+  redireccionarDatosBancarios(dato) {
+    if (this.camposDesactivados != true) {
+      if (!this.selectMultiple) {
+        var enviarDatos = null;
+        if (dato && dato.length > 0) {
+          enviarDatos = dato[0];
+          sessionStorage.setItem("idCuenta", enviarDatos.idCuenta);
+          sessionStorage.setItem("editar", "true");
+          sessionStorage.setItem("datosCuenta", JSON.stringify(enviarDatos));
+          sessionStorage.setItem(
+            "usuarioBody",
+            sessionStorage.getItem("personaBody")
+          );
+        } else {
+          sessionStorage.setItem("editar", "false");
+        }
+
+        this.router.navigate(["/consultarDatosBancarios"]);
+      } else {
+        this.numSelected = this.selectedDatos.length;
+      }
+    }
+  }
+
+  nuevaCuentaBancaria() {
+    sessionStorage.setItem(
+      "usuarioBody",
+      sessionStorage.getItem("personaBody")
+    );
+    sessionStorage.setItem("editar", "false");
+    this.router.navigate(["/consultarDatosBancarios"]);
+  }
+
+  searchHistoricoDatosBancarios() {
+    this.bodyDatosBancarios.historico = true;
+    this.searchDatosBancarios();
+  }
+
   // FIN DATOS BANCARIOS
 
   // MÉTODOS PARA SERVICIOS DE INTERÉS
