@@ -6,9 +6,9 @@ export class FichaColegialGeneralesItem {
   apellidos1: String;
   apellidos2: String;
   sexo: String;
-  tratamiento: String;
+  idTratamiento: String;
   naturalDe: String;
-  estadoCivil: String;
+  idEstadoCivil: String;
   estadoColegial: String;
   idLenguaje: String;
   situacion: String;

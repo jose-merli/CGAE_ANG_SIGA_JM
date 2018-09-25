@@ -565,16 +565,18 @@ export class FichaColegialComponent implements OnInit {
 
   // MÉTODOS PARA DATOS GENERALES
   generalesGuardar() {
+    this.progressSpinner = true;
     this.sigaServices
       .post("fichaDatosGenerales_Update", this.generalBody)
       .subscribe(
         data => {
           this.progressSpinner = false;
-          // this.body = JSON.parse(data["body"]);
+          this.showSuccess("funciona");
         },
         error => {
-          +console.log(error);
+          console.log(error);
           this.progressSpinner = false;
+          this.showFail("no funciona");
         }
       );
   }
@@ -663,6 +665,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   restablecerGenerales() {
+    console.log(this.generalBody.idTratamiento);
     this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
     this.generalBody = this.generalBody[0];
   }

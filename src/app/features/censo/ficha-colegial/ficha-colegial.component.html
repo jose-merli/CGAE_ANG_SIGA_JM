@@ -92,8 +92,13 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.tratamiento" | translate}}</label>
-              <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="generalBody.tratamiento"
-                [options]="generalTratamiento" optionLabel="label"></p-dropdown>
+
+              <p-dropdown class="select-form" [options]="generalTratamiento" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [(ngModel)]="generalBody.idTratamiento"></p-dropdown>
+
+              <!-- 
+              <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="generalBody.idTratamiento"
+                [options]="generalTratamiento"></p-dropdown> -->
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}}</label>
@@ -111,8 +116,8 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.estadoCivil" | translate}} </label>
-              <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="generalBody.estadoCivil"
-                [options]="generalEstadoCivil" optionLabel="label"></p-dropdown>
+              <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="generalBody.idEstadoCivil"
+                [options]="generalEstadoCivil"></p-dropdown>
             </div>
 
 
@@ -130,7 +135,7 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}}</label>
               <p-dropdown class="select-form" [(ngModel)]="generalBody.etiquetas" placeholder="{{'general.boton.seleccionar' | translate}}"
-                [options]="comboIdentificacion" optionLabel="label"></p-dropdown>
+                [options]="comboIdentificacion"></p-dropdown>
             </div>
 
           </div>
@@ -140,8 +145,7 @@
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
               <label>{{"censo.fichaCliente.situacion.cabecera" | translate}}</label>
-              <p-dropdown class="select-form" [options]="comboSituacion" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="generalBody.situacion"
-                [filter]="true" filterBy="label"></p-dropdown>
+              <p-dropdown class="select-form" [options]="comboSituacion" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="generalBody.situacion"></p-dropdown>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"administracion.usuarios.literal.fechaAlta" | translate}}</label>
@@ -150,8 +154,7 @@
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.fichaCliente.situacion.idiomaPref" | translate}}</label>
-              <p-dropdown class="select-form" [options]="generalIdiomas" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="generalBody.idLenguaje"
-                [filter]="true" filterBy="label"></p-dropdown>
+              <p-dropdown class="select-form" [options]="generalIdiomas" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="generalBody.idLenguaje"></p-dropdown>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
@@ -252,7 +255,7 @@
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosGenerales.literal.seguro" | translate}}</label>
               <p-dropdown class="select-form" [(ngModel)]="colegialesBody.idTiposSeguro" placeholder="{{'general.boton.seleccionar' | translate}}"
-                [options]="comboTipoSeguro" optionLabel="label"></p-dropdown>
+                [options]="comboTipoSeguro"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.fusionDuplicados.colegiaciones.inscrito" | translate}}</label>
@@ -1067,4 +1070,10 @@
 
   <div class="mt-3 text-right main-button ">
     <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+  </div>
+
+
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+    <div class="loader"></div>
   </div>
