@@ -22,6 +22,7 @@ export class DatosColegiadosItem {
   correo: string;
   fechaNacimiento: Date;
   idgrupo: string[];
+  idTratamiento: String;
   tipoCV: string;
   denominacion: string;
 

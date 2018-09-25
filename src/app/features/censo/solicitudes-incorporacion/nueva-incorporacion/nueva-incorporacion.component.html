@@ -127,19 +127,19 @@
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Solicitud de
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion"
+                    <p-dropdown class="select-form" [(ngModel)]="solictudEditar.tipoSolicitud" [options]="tiposSolicitud"
                         optionLabel="label"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Tipo de colegiación
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <p-dropdown class="select-form" [(ngModel)]="solictudEditar.idTipo" [options]="tiposSolicitud"
+                    <p-dropdown class="select-form" [(ngModel)]="solictudEditar.idTipo" [options]="tipoColegiacion"
                         optionLabel="label"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Modalidad de documentación
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion"
+                    <p-dropdown class="select-form" [(ngModel)]="solictudEditar.idModalidadDocumentacion" [options]="modalidadDocumentacion"
                         optionLabel="label"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
@@ -210,7 +210,7 @@
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Tipo identificación
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion"
+                    <p-dropdown class="select-form" [(ngModel)]="solictudEditar.idTipoIdentificacion" [options]="tipoIdentificacion"
                         optionLabel="label"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
@@ -551,6 +551,10 @@
         </div>
     </div>
 
+    <div class="mt-3 text-right main-button ">
+        <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+        <button (click)="guardar()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="Guardar"></button>
+    </div>
 </div>
 <div *ngIf="progressSpinner" class="overlay-spinner">
     <div class="loader"></div>
