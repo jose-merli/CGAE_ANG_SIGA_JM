@@ -186,6 +186,7 @@ import { EdicionCurricularesComponent } from "./features/censo/ficha-colegial/ed
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
 //ERROR
 import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.component";
+import { CargaEtiquetasComponent } from "./features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -392,6 +393,11 @@ const appRoutes: Routes = [
   {
     path: "mantenimientoCertificados",
     component: MantenimientoCertificadosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "cargaEtiquetas",
+    component: CargaEtiquetasComponent,
     canActivate: [AuthGuard]
   },
 
