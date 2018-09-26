@@ -141,6 +141,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     if (id.length >= 1 && this.selectMultiple == false) {
       sessionStorage.removeItem("personaBody");
       sessionStorage.setItem("esColegiado", "true");
+      sessionStorage.setItem(
+        "filtrosBusquedaColegiados",
+        JSON.stringify(this.body)
+      );
       sessionStorage.setItem("personaBody", JSON.stringify(id));
       console.log(id);
       this.router.navigate(["/fichaColegial"]);
@@ -391,11 +395,6 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     } else {
       this.body.fechaNacimiento = null;
     }
-
-    sessionStorage.setItem(
-      "filtrosBusquedaColegiados",
-      JSON.stringify(this.body)
-    );
 
     this.sigaServices
       .postPaginado(
