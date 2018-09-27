@@ -1,17 +1,9 @@
 import { TranslateService } from "../translate/translation.service";
-import { Inject, Injectable } from "@angular/core";
-import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  ElementRef
-} from "@angular/core";
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { Router } from "@angular/router";
 import { MenuItem } from "primeng/api";
 import { PanelMenuModule } from "primeng/panelmenu";
 import { SigaServices } from "../../_services/siga.service";
-import { element } from "../../../../node_modules/protractor";
-import { DOCUMENT } from "@angular/platform-browser";
 
 @Component({
   selector: "app-menu",
@@ -33,9 +25,7 @@ export class MenuComponent implements OnInit {
   constructor(
     private router: Router,
     private sigaServices: SigaServices,
-    private translateService: TranslateService,
-    private ref: ElementRef,
-    @Inject(DOCUMENT) private document: any
+    private translateService: TranslateService
   ) { }
 
   // TODO: Revisar si tiene sentido que las rutas las devuelva el back
@@ -67,13 +57,6 @@ export class MenuComponent implements OnInit {
     if (ruta !== " ") {
       if (ruta !== "opcionMenu" && ruta !== "permisos") {
         this.closeMenu = !this.closeMenu;
-        if (document.querySelector("#mainWorkArea")) {
-          // var element = document.getElementById("mainWorkArea");
-          // element.classList.remove("test");
-          // this.sigaServices.menuToggled$
-          this.sigaServices.borrarIframe();
-          // document.querySelector("#mainWorkArea").classList.remove("test");
-        }
         this.router.navigate([ruta]);
       }
 
@@ -81,14 +64,6 @@ export class MenuComponent implements OnInit {
         setTimeout(() => {
           this.onCloseMenu();
         }, 100);
-
-        //("#mainWorkArea").remove()
-        // comprobar si existe iframe y eliminarlo
-        if (document.querySelector("#mainWorkArea")) {
-          // var element = document.getElementById("mainWorkArea");
-          // element.classList.remove("test");
-          this.sigaServices.borrarIframe();
-        }
 
         this.router.navigate([ruta]);
       }
@@ -118,5 +93,6 @@ export class MenuComponent implements OnInit {
   backMenuChild() {
     this.showChildOfChild = false;
   }
-}
 
+
+}

@@ -40,6 +40,7 @@ export class LoginDevelopComponent implements OnInit {
   onSubmit() { }
 
   ngOnInit() {
+    sessionStorage.removeItem("authenticated");
     this.ocultar = false;
     this.progressSpinner = true;
     this.sigaServices.getBackend("validaInstitucion").subscribe(

@@ -35,11 +35,21 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-
     // this.activatedRoute.data.subscribe((result: any) => {
     //   this.isScrollReseteable = result.scrollReset;
     //   console.log(result)
-    // })  
+    // })
+
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+    };
+
+    this.router.events.subscribe(evt => {
+      if (evt instanceof NavigationEnd) {
+        this.router.navigated = false;
+        window.scrollTo(0, 0);
+      }
+    });
 
     this.subscribeNavigationEnd();
     this.getDateExpire();
