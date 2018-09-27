@@ -197,7 +197,11 @@ export class SigaServices {
     fichaDatosBancarios_datosBancariosSearch:
       "fichaDatosBancarios/datosBancariosSearch",
     fichaDatosColegiales_tipoSeguro: "fichaDatosColegiales/tipoSeguro",
-    fichaDatosGenerales_Update: "fichaDatosGenerales/datosGeneralesUpdate"
+    fichaDatosGenerales_Update: "fichaDatosGenerales/datosGeneralesUpdate",
+    cargaMasivaDatosCurriculares_downloadFile:
+      "cargaMasivaDatosCurriculares/downloadFile",
+      cargaMasivaDatosCurriculares_uploadFile:
+      "cargaMasivaDatosCurriculares/uploadFile"
   };
 
   private menuToggled = new Subject<any>();
