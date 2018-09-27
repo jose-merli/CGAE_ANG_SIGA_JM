@@ -187,6 +187,7 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
 //ERROR
 import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.component";
 import { CargaEtiquetasComponent } from "./features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component";
+import { DatosCvComponent } from "./features/censo/cargas-masivas/datos-cv/datos-cv.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -366,6 +367,11 @@ const appRoutes: Routes = [
   {
     path: "consultarDatosDirecciones",
     component: ConsultarDatosDireccionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "datosCv",
+    component: DatosCvComponent,
     canActivate: [AuthGuard]
   },
 
