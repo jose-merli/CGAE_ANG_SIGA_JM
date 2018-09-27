@@ -9,16 +9,16 @@
 <div class="card">
   <div class="card-body">
     <p class="title-module" (click)="onHideDatosCv()">{{ 'menu.cen.cargaMasivaGruposFijos' | translate }}
-      <i *ngIf="!showDatosCv" class="fa fa-angle-up float-right"></i>
-      <i (click)="showDatosCv()" *ngIf="showDatosCv" class="fa fa-angle-down float-right"></i>
+      <i *ngIf="!showDatos" class="fa fa-angle-up float-right"></i>
+      <i (click)="showDatos()" *ngIf="showDatos" class="fa fa-angle-down float-right"></i>
     </p>
-    <div *ngIf="showDatosCv" class="module vista-simple">
+    <div *ngIf="showDatos" class="module vista-simple">
       <div class="row">
 
         <div class="form-group col-lg-3 col-md-3">
           <label>{{"censo.datosCv.literal.fechaCarga" | translate}}</label>
-          <p-calendar [keepInvalid]="true" selectionMode="range" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy"
-            [(ngModel)]="fechaCarga"></p-calendar>
+          <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true" dateFormat="dd/mm/yy"
+            icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="fechaCargaSelect"></p-calendar>
         </div>
 
         <div class="form-group col-lg-3 col-md-3">

@@ -1,6 +1,11 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 import { TranslateService } from "../../../../commons/translate";
 import { SigaServices } from "../../../../_services/siga.service";
+import { saveAs } from "file-saver/FileSaver";
+import { CargaMasivaItem } from "../../../../models/CargaMasivaItem";
+import { CargaMasivaObject } from "../../../../models/CargaMasivaObject";
+import { DatePipe } from "../../../../../../node_modules/@angular/common";
+import { esCalendar } from "../../../../utils/calendar";
 
 @Component({
   selector: "app-carga-etiquetas",
@@ -8,11 +13,12 @@ import { SigaServices } from "../../../../_services/siga.service";
   styleUrls: ["./carga-etiquetas.component.scss"]
 })
 export class CargaEtiquetasComponent implements OnInit {
-  showDatosCv: boolean = true;
+  showDatos: boolean = true;
   buscar: boolean = false;
-  fechaCarga: Date;
+  fechaCargaSelect: Date;
 
   file: File = undefined;
+  es: any = esCalendar;
 
   @ViewChild("table")
   table;
@@ -22,13 +28,16 @@ export class CargaEtiquetasComponent implements OnInit {
   datos: any[];
   numSelected: number = 0;
   selectedItem: number = 10;
-  selectMultiple: boolean = false;
-  selectAll: boolean = false;
+
+  progressSpinner: boolean = false;
+  body: CargaMasivaItem = new CargaMasivaItem();
+  etiquetasSearch = new CargaMasivaObject();
 
   constructor(
     private translateService: TranslateService,
     private sigaServices: SigaServices,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private datePipe: DatePipe
   ) {}
 
   ngOnInit() {
@@ -36,21 +45,6 @@ export class CargaEtiquetasComponent implements OnInit {
   }
 
   getInfo() {
-    this.datos = [
-      {
-        fechaCarga: "25/09/18",
-        usuario: "FEDE",
-        nombreFichero: "inventado.pdf",
-        registros: "1"
-      },
-      {
-        fechaCarga: "25/09/18",
-        usuario: "PEPE",
-        nombreFichero: "inventado.pdf",
-        registros: "1"
-      }
-    ];
-
     this.cols = [
       { field: "fechaCarga", header: "censo.datosCv.literal.fechaCarga" },
       {
@@ -88,7 +82,7 @@ export class CargaEtiquetasComponent implements OnInit {
   }
 
   onHideDatosCv() {
-    this.showDatosCv = !this.showDatosCv;
+    this.showDatos = !this.showDatos;
   }
 
   uploadFile(event: any) {
@@ -115,14 +109,60 @@ export class CargaEtiquetasComponent implements OnInit {
 
   showFailUploadedImage() {}
 
+  //Busca colegiados según los filtros
   isBuscar() {
     this.buscar = true;
+    this.progressSpinner = true;
+    this.buscar = true;
+
+    this.body.tipoCarga = "GF";
+
+    if (this.fechaCargaSelect != undefined || this.fechaCargaSelect != null) {
+      this.body.fechaCarga = this.datePipe.transform(
+        this.fechaCargaSelect,
+        "dd/MM/yyyy"
+      );
+    } else {
+      this.body.fechaCarga = null;
+    }
+
+    this.sigaServices
+      .postPaginado("cargasMasivas_searchEtiquetas", "?numPagina=1", this.body)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.etiquetasSearch = JSON.parse(data["body"]);
+          this.datos = this.etiquetasSearch.cargaMasivaItem;
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
   }
 
   downloadFile(data: Response) {
-    var blob = new Blob([data], { type: "text/csv" });
-    var url = window.URL.createObjectURL(blob);
-    window.open(url);
+    this.progressSpinner = true;
+    this.sigaServices
+      .postDownloadFiles("cargasMasivas_descargarEtiquetas", this.body)
+      .subscribe(
+        data => {
+          const blob = new Blob([data], { type: "text/csv" });
+          saveAs(blob, "PlantillaMasivaDatosGF.xls");
+          this.progressSpinner = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
   }
 
   activarPaginacion() {
