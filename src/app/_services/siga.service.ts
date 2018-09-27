@@ -17,7 +17,7 @@ import { InputTextModule } from "primeng/inputtext";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ConfirmationService } from "primeng/api";
-import { RequestOptions, Headers } from "@angular/http";
+import { RequestOptions, Headers, ResponseContentType } from "@angular/http";
 import { Subject } from "rxjs/Subject";
 
 @Injectable()
@@ -200,8 +200,10 @@ export class SigaServices {
     fichaDatosGenerales_Update: "fichaDatosGenerales/datosGeneralesUpdate",
     cargaMasivaDatosCurriculares_downloadFile:
       "cargaMasivaDatosCurriculares/downloadFile",
-      cargaMasivaDatosCurriculares_uploadFile:
-      "cargaMasivaDatosCurriculares/uploadFile"
+    cargaMasivaDatosCurriculares_uploadFile:
+      "cargaMasivaDatosCurriculares/uploadFile",
+    cargasMasivas_descargarEtiquetas: "cargasMasivas/descargarEtiquetas",
+    cargasMasivas_searchEtiquetas: "cargasMasivas/searchEtiquetas"
   };
 
   private menuToggled = new Subject<any>();

@@ -51,7 +51,7 @@
                         <div class="form-group col-lg-5 col-md-5">
                             <label>Estado
                                 <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                            <p-dropdown class="select-form" [(ngModel)]="solictudEditar.idEstado" [options]="estadosSolicitud"
+                            <p-dropdown class="select-form" [(ngModel)]="estadoSolicitudSelected" [options]="estadosSolicitud"
                                 optionLabel="label"></p-dropdown>
                         </div>
                         <div class="form-group col-lg-5 col-md-5">
@@ -127,26 +127,26 @@
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Solicitud de
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <p-dropdown class="select-form" [(ngModel)]="solictudEditar.tipoSolicitud" [options]="tiposSolicitud"
+                    <p-dropdown class="select-form" [(ngModel)]="tipoSolicitudSelected" [options]="tiposSolicitud"
                         optionLabel="label"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Tipo de colegiación
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <p-dropdown class="select-form" [(ngModel)]="solictudEditar.idTipo" [options]="tipoColegiacion"
+                    <p-dropdown class="select-form" [(ngModel)]="tipoColegiacionSelected" [options]="tipoColegiacion"
                         optionLabel="label"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Modalidad de documentación
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <p-dropdown class="select-form" [(ngModel)]="solictudEditar.idModalidadDocumentacion" [options]="modalidadDocumentacion"
+                    <p-dropdown class="select-form" [(ngModel)]="modalidadDocumentacionSelected" [options]="modalidadDocumentacion"
                         optionLabel="label"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Fecha de incorporación
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"
-                        [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="solictudEditar.fechaSolicitud"></p-calendar>
+                        [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="solictudEditar.fechaIncorporacion"></p-calendar>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Nº colegiado
@@ -210,7 +210,7 @@
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Tipo identificación
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <p-dropdown class="select-form" [(ngModel)]="solictudEditar.idTipoIdentificacion" [options]="tipoIdentificacion"
+                    <p-dropdown class="select-form" [(ngModel)]="tipoIdentificacionSelected" [options]="tipoIdentificacion"
                         optionLabel="label"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
@@ -221,7 +221,7 @@
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Tratamiento
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <p-dropdown class="select-form" [(ngModel)]="solictudEditar.tratamiento" [options]="tratamientos"
+                    <p-dropdown class="select-form" [(ngModel)]="tratamientoSelected" [options]="tratamientos"
                         optionLabel="label"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
@@ -247,7 +247,7 @@
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Estado civil
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <p-dropdown class="select-form" [(ngModel)]="solictudEditar.estadoCivil" [options]="estadoCivil"
+                    <p-dropdown class="select-form" [(ngModel)]="estadoCivilSelected" [options]="estadoCivil"
                         optionLabel="label"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
@@ -316,7 +316,7 @@
                 <div class="form-group col-lg-2 col-md-2">
                     <label>País
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <p-dropdown class="select-form" [(ngModel)]="solictudEditar.idPais" [options]="paises" optionLabel="label"
+                    <p-dropdown class="select-form" [(ngModel)]="paisSelected" [options]="paises" optionLabel="label"
                         dataKey="idPais"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
@@ -332,12 +332,16 @@
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Población
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.nombrePoblacion">
+                    <p-dropdown class="select-form" [(ngModel)]="poblacionSelected" [options]="poblaciones" optionLabel="label"
+                        dataKey="idPais"></p-dropdown>
+                    <!-- <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.nombrePoblacion">-->
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Provincia
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.nombreProvincia">
+                    <p-dropdown class="select-form" [(ngModel)]="provinciaSelected" [options]="provincias" optionLabel="label"
+                        dataKey="idPais"></p-dropdown>
+                    <!--<input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.nombreProvincia">-->
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Telefono 1

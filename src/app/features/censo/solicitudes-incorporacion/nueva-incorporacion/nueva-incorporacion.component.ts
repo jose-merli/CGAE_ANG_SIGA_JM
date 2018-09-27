@@ -37,8 +37,18 @@ export class NuevaIncorporacionComponent implements OnInit {
   abonoJCS: boolean = false;
   abono: boolean = false;
   cargo: boolean = false;
-
-  constructor(private translateService: TranslateService, private sigaServices: SigaServices, private location: Location) {
+  formSolicitud: FormGroup;
+  estadoSolicitudSelected: any;
+  tipoSolicitudSelected: any;
+  tipoColegiacionSelected: any;
+  modalidadDocumentacionSelected: any;
+  tipoIdentificacionSelected: any;
+  tratamientoSelected: any;
+  estadoCivilSelected: any;
+  paisSelected: any;
+  provinciaSelected: any;
+  poblacionSelected: any;
+  constructor(private translateService: TranslateService, private sigaServices: SigaServices, private location: Location, private formBuilder: FormBuilder, ) {
 
   }
 
@@ -46,6 +56,11 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.progressSpinner = true;
     this.es = this.translateService.getCalendarLocale();
     this.cargarCombos();
+    /*this.formSolicitud = this.formBuilder.group({
+      fechaDesde: new FormControl(null, Validators.required),
+    })*/
+
+
     if (sessionStorage.getItem("editar") == "true") {
       this.solictudEditar = JSON.parse(sessionStorage.getItem("editedSolicitud"));
       this.tratarDatos();
@@ -156,6 +171,22 @@ export class NuevaIncorporacionComponent implements OnInit {
 
 
   guardar() {
+
+    this.solictudEditar.idEstado = this.estadoSolicitudSelected.value;
+    this.solictudEditar.idTipo = this.tipoSolicitudSelected.value;
+    this.solictudEditar.tipoColegiacion = this.tipoColegiacionSelected.value;
+    this.solictudEditar.idModalidadDocumentacion = this.modalidadDocumentacionSelected.value;
+    this.solictudEditar.idTipoIdentificacion = this.tipoIdentificacionSelected.value;
+    this.solictudEditar.tratamiento = this.tratamientoSelected.value;
+    this.solictudEditar.idEstadoCivil = this.estadoCivilSelected.value;
+    this.solictudEditar.idPais = this.paisSelected.value;
+    debugger;
+    this.sigaServices.post("solicitudInciporporacion_nuevaSolicitud", this.solictudEditar).subscribe(result => {
+      this.solictudEditar = null;
+      console.log("guardado", result);
+    }, error => {
+      //error
+    })
 
   }
 

@@ -316,7 +316,6 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     this.selectedDatos = "";
     this.getColsResults();
     this.filtrosTrim();
-
     if (
       this.fechaNacimientoSelect != undefined ||
       this.fechaNacimientoSelect != null
@@ -331,11 +330,6 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
     this.progressSpinner = true;
     this.buscar = true;
-
-    sessionStorage.setItem(
-      "filtrosBusquedaNoColegiados",
-      JSON.stringify(this.body)
-    );
 
     this.sigaServices
       .postPaginado(
@@ -511,6 +505,10 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   irEditarNoColegiado(id) {
     if (id.length >= 1 && this.selectMultiple == false) {
       sessionStorage.removeItem("personaBody");
+      sessionStorage.setItem(
+        "filtrosBusquedaNoColegiados",
+        JSON.stringify(this.body)
+      );
       sessionStorage.setItem("esColegiado", "false");
       sessionStorage.setItem("personaBody", JSON.stringify(id));
       console.log(id);
