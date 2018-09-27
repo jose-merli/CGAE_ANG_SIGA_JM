@@ -198,6 +198,10 @@ export class SigaServices {
       "fichaDatosBancarios/datosBancariosSearch",
     fichaDatosColegiales_tipoSeguro: "fichaDatosColegiales/tipoSeguro",
     fichaDatosGenerales_Update: "fichaDatosGenerales/datosGeneralesUpdate",
+    cargaMasivaDatosCurriculares_downloadFile:
+      "cargaMasivaDatosCurriculares/downloadFile",
+    cargaMasivaDatosCurriculares_uploadFile:
+      "cargaMasivaDatosCurriculares/uploadFile",
     cargasMasivas_descargarEtiquetas: "cargasMasivas/descargarEtiquetas",
     cargasMasivas_searchEtiquetas: "cargasMasivas/searchEtiquetas"
   };

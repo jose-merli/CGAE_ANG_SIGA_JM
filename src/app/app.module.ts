@@ -249,6 +249,7 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
 import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.component";
 import { TrimPipePipe } from "./commons/trim-pipe/trim-pipe.pipe";
 import { CargaEtiquetasComponent } from './features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component';
+import { DatosCvComponent } from './features/censo/cargas-masivas/datos-cv/datos-cv.component';
 
 @NgModule({
   declarations: [
@@ -449,7 +450,8 @@ import { CargaEtiquetasComponent } from './features/censo/cargas-masivas/carga-e
     ConsultarDatosDireccionesComponent,
     ErrorAccesoComponent,
     TrimPipePipe,
-    CargaEtiquetasComponent
+    CargaEtiquetasComponent,
+    DatosCvComponent
   ],
   imports: [
     BrowserModule,
