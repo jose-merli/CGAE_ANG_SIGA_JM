@@ -45,6 +45,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     tipoSolicitudSelected: any;
     tipoColegiacionSelected: any;
     msgs: Message[] = [];
+    editar: boolean = false;
 
     modalidadDocumentacionSelected: any;
     tipoIdentificacionSelected: any;
@@ -106,9 +107,10 @@ export class NuevaIncorporacionComponent implements OnInit {
 
         if (sessionStorage.getItem("editar") == "true") {
             this.solicitudEditar = JSON.parse(sessionStorage.getItem("editedSolicitud"));
+            this.editar = true;
             this.tratarDatos();
         }
-
+        console.log(this.editar);
 
     }
 
@@ -240,7 +242,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         });
     }
     guardar() {
-        debugger;
+
         if (!this.formSolicitud.invalid && this.checkIdentificacion(this.solicitudEditar.numeroIdentificacion)) {
             this.progressSpinner = true;
 
