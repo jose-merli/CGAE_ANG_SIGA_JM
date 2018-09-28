@@ -19,15 +19,15 @@
                     <div class="d-flex justify-content-between">
                         <label>Estado
                             <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
-                            <span>{{solictudEditar.estadoSolicitud}}</span>
+                            <span>{{solicitudEditar.estadoSolicitud}}</span>
                         </label>
                         <label>Fecha de Estado
                             <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
-                            <span>{{solictudEditar.fechaEstado | date: 'dd/MM/yyyy'}}</span>
+                            <span>{{solicitudEditar.fechaEstado | date: 'dd/MM/yyyy'}}</span>
                         </label>
                         <label>Fecha de solicitud
                             <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
-                            <span>{{solictudEditar.fechaSolicitud | date: 'dd/MM/yyyy'}}</span>
+                            <span>{{solicitudEditar.fechaSolicitud | date: 'dd/MM/yyyy'}}</span>
                         </label>
                         <i *ngIf="!fichaColegiacion" class="fa fa-angle-down float-right"></i>
                     </div>
@@ -52,21 +52,21 @@
                             <label>Estado
                                 <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                             <p-dropdown class="select-form" [(ngModel)]="estadoSolicitudSelected" [options]="estadosSolicitud"
-                                optionLabel="label"></p-dropdown>
+                                optionLabel="label" dataKey="value"></p-dropdown>
                         </div>
                         <div class="form-group col-lg-5 col-md-5">
                             <label>Fecha estado
                                 <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                             <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"
                                 [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"
-                                [(ngModel)]="solictudEditar.fechaEstado"></p-calendar>
+                                [(ngModel)]="solicitudEditar.fechaEstado"></p-calendar>
                         </div>
                         <div class="form-group col-lg-5 col-md-5" style="float:right">
                             <label>Fecha solicitud
                                 <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                             <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"
                                 [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"
-                                [(ngModel)]="solictudEditar.fechaSolicitud"></p-calendar>
+                                [(ngModel)]="solicitudEditar.fechaSolicitud"></p-calendar>
                         </div>
                     </div>
                 </div>
@@ -74,7 +74,7 @@
                     <div class="form-group col-lg-12 col-md-12">
                         <label>Observaciones
                             <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                        <textarea [rows]="10" [cols]="10" pInputTextarea [(ngModel)]="solictudEditar.observaciones"></textarea>
+                        <textarea [rows]="10" [cols]="10" pInputTextarea [(ngModel)]="solicitudEditar.observaciones"></textarea>
                     </div>
                 </div>
             </div>
@@ -101,11 +101,11 @@
                     <div class="d-flex justify-content-between">
                         <label>Tipo
                             <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
-                            <span>{{solictudEditar.tipoSolicitud}}</span>
+                            <span>{{solicitudEditar.tipoSolicitud}}</span>
                         </label>
                         <label>Modalidad
                             <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
-                            <span>{{solictudEditar.modalidad}}</span>
+                            <span>{{solicitudEditar.modalidad}}</span>
                         </label>
                         <i *ngIf="!fichaSolicitud" class="fa fa-angle-down float-right"></i>
                     </div>
@@ -128,30 +128,30 @@
                     <label>Solicitud de
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <p-dropdown class="select-form" [(ngModel)]="tipoSolicitudSelected" [options]="tiposSolicitud"
-                        optionLabel="label"></p-dropdown>
+                        optionLabel="label" dataKey="value"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Tipo de colegiación
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <p-dropdown class="select-form" [(ngModel)]="tipoColegiacionSelected" [options]="tipoColegiacion"
-                        optionLabel="label"></p-dropdown>
+                        optionLabel="label" dataKey="value"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Modalidad de documentación
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <p-dropdown class="select-form" [(ngModel)]="modalidadDocumentacionSelected" [options]="modalidadDocumentacion"
-                        optionLabel="label"></p-dropdown>
+                        optionLabel="label" dataKey="value"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Fecha de incorporación
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"
-                        [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="solictudEditar.fechaIncorporacion"></p-calendar>
+                        [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="solicitudEditar.fechaIncorporacion"></p-calendar>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Nº colegiado
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText disabled="true" [(ngModel)]="solictudEditar.numColegiado">
+                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.numColegiado">
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <br>
@@ -180,15 +180,15 @@
                     <div class="d-flex justify-content-between">
                         <label>Tipo identificación
                             <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
-                            <span>{{solictudEditar.tipoIdentificacion}}</span>
+                            <span>{{solicitudEditar.tipoIdentificacion}}</span>
                         </label>
                         <label>Nombre
                             <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
-                            <span>{{solictudEditar.nombre}}</span>
+                            <span>{{solicitudEditar.nombre}}</span>
                         </label>
                         <label>Apellidos
                             <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
-                            <span>{{solictudEditar.apellidos}}</span>
+                            <span>{{solicitudEditar.apellidos}}</span>
                         </label>
                         <i *ngIf="!fichaPersonal" class="fa fa-angle-down float-right"></i>
                     </div>
@@ -211,55 +211,59 @@
                     <label>Tipo identificación
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <p-dropdown class="select-form" [(ngModel)]="tipoIdentificacionSelected" [options]="tipoIdentificacion"
-                        optionLabel="label"></p-dropdown>
+                        optionLabel="label" dataKey="value"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Nº de identificación
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.numeroIdentificacion">
+                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.numeroIdentificacion">
+                    <small class="input-error" *ngIf="!checkIdentificacion(solicitudEditar.numeroIdentificacion) && solicitudEditar.numeroIdentificacion 
+                     && solicitudEditar.numeroIdentificacion.length > 0">Documento
+                        no válido</small>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Tratamiento
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <p-dropdown class="select-form" [(ngModel)]="tratamientoSelected" [options]="tratamientos"
-                        optionLabel="label"></p-dropdown>
+                        optionLabel="label" dataKey="value"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Nombre
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.nombre">
+                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.nombre">
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Primer Apellido
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.apellido1">
+                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.apellido1">
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Segundo Apellido
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.apellido2">
+                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.apellido2">
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Sexo
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <p-dropdown class="select-form" [(ngModel)]="solictudEditar.sexo" [options]="comboSexo" optionLabel="label"></p-dropdown>
+                    <p-dropdown class="select-form" [(ngModel)]="sexoSelected" [options]="comboSexo" optionLabel="label"
+                        dataKey="value"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Estado civil
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <p-dropdown class="select-form" [(ngModel)]="estadoCivilSelected" [options]="estadoCivil"
-                        optionLabel="label"></p-dropdown>
+                        optionLabel="label" dataKey="value"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Natural de
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.naturalDe">
+                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.naturalDe">
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Fecha nacimiento
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"
-                        [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="solictudEditar.fechaNacimiento"></p-calendar>
+                        [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="solicitudEditar.fechaNacimiento"></p-calendar>
                 </div>
             </div>
         </div>
@@ -286,15 +290,15 @@
                     <div class="d-flex justify-content-between">
                         <label>País
                             <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
-                            <span>{{solictudEditar.pais}}</span>
+                            <span>{{solicitudEditar.pais}}</span>
                         </label>
                         <label>Dirección
                             <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
-                            <span>{{solictudEditar.domicilio}}</span>
+                            <span>{{solicitudEditar.domicilio}}</span>
                         </label>
                         <label>Población
                             <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
-                            <span>{{solictudEditar.nombrePoblacion}}</span>
+                            <span>{{solicitudEditar.nombrePoblacion}}</span>
                         </label>
                         <i *ngIf="!fichaDireccion" class="fa fa-angle-down float-right"></i>
                     </div>
@@ -317,61 +321,61 @@
                     <label>País
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <p-dropdown class="select-form" [(ngModel)]="paisSelected" [options]="paises" optionLabel="label"
-                        dataKey="idPais"></p-dropdown>
+                        dataKey="value"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Dirección
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.domicilio">
+                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.domicilio">
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>CP
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.codigoPostal">
-                </div>
-                <div class="form-group col-lg-2 col-md-2">
-                    <label>Población
-                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <p-dropdown class="select-form" [(ngModel)]="poblacionSelected" [options]="poblaciones" optionLabel="label"
-                        dataKey="idPais"></p-dropdown>
-                    <!-- <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.nombrePoblacion">-->
+                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.codigoPostal">
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Provincia
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <p-dropdown class="select-form" [(ngModel)]="provinciaSelected" [options]="provincias" optionLabel="label"
-                        dataKey="idPais"></p-dropdown>
-                    <!--<input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.nombreProvincia">-->
+                        dataKey="value" (onChange)="onChangeProvincia($event)"></p-dropdown>
+                    <!--<input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.nombreProvincia">-->
+                </div>
+                <div class="form-group col-lg-2 col-md-2">
+                    <label>Población
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <p-dropdown class="select-form" [(ngModel)]="poblacionSelected" [options]="poblaciones" optionLabel="label"
+                        dataKey="value"></p-dropdown>
+                    <!-- <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.nombrePoblacion">-->
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Telefono 1
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.telefono1">
+                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.telefono1">
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Telefono 2
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.telefono2">
+                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.telefono2">
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Fax 1
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.fax1">
+                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.fax1">
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Fax 2
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.fax2">
+                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.fax2">
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Movil
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.movil">
+                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.movil">
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Correo electrónico
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.correoElectronico">
+                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.correoElectronico">
                 </div>
             </div>
         </div>
@@ -397,15 +401,15 @@
                     <div class="d-flex justify-content-between">
                         <label>Titular
                             <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
-                            <span>{{solictudEditar.titular}}</span>
+                            <span>{{solicitudEditar.titular}}</span>
                         </label>
                         <label>Cuenta
                             <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
-                            <span>{{solictudEditar.iban}}</span>
+                            <span>{{solicitudEditar.iban}}</span>
                         </label>
                         <label>Uso
                             <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
-                            <span>{{solictudEditar.abonoCargo}}</span>
+                            <span>{{solicitudEditar.abonoCargo}}</span>
                         </label>
                         <label>Verficado
                             <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
@@ -431,7 +435,7 @@
                 <div class="form-group col-lg-3 col-md-3">
                     <label>Titular
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.titular">
+                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.titular">
                 </div>
                 <div class="form-group col-lg-3 col-md-2">
                     <br>
@@ -448,12 +452,12 @@
                 <div class="form-group col-lg-3 col-md-3">
                     <label>IBAN
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.iban">
+                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.iban">
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>Banco
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solictudEditar.banco">
+                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.banco">
                 </div>
             </div>
         </div>
@@ -560,6 +564,8 @@
         <button (click)="guardar()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="Guardar"></button>
     </div>
 </div>
+
 <div *ngIf="progressSpinner" class="overlay-spinner">
+    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
     <div class="loader"></div>
 </div>
