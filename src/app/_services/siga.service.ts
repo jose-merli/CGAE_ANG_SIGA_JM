@@ -195,6 +195,7 @@ export class SigaServices {
     solicitudInciporporacion_modalidadDocumentacion:
       "solicitudIncorporacion/modalidadDocumentacion",
     solicitudInciporporacion_nuevaSolicitud: "solicitudIncorporacion/nuevaSolicitud",
+    solicitudInciporporacion_aprobarSolicitud: "solicitudIncorporacion/aprobarSolicitud",
     fichaDatosBancarios_datosBancariosSearch:
       "fichaDatosBancarios/datosBancariosSearch",
     fichaDatosColegiales_tipoSeguro: "fichaDatosColegiales/tipoSeguro",

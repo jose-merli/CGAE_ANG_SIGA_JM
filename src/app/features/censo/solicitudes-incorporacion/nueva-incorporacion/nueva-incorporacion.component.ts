@@ -33,6 +33,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     provincias: any[];
     poblaciones: any[];
     modalidadDocumentacion: any[];
+    tipoCuenta: any[];
     paises: any[];
     tratamientos: any[];
     estadoCivil: any[];
@@ -55,6 +56,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     provinciaSelected: any;
     poblacionSelected: any;
     sexoSelected: any;
+    selectedTipoCuenta: any[] = [];
 
     private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
@@ -120,6 +122,12 @@ export class NuevaIncorporacionComponent implements OnInit {
             { value: "H", label: "Hombre" },
             { value: "M", label: "Mujer" }
         ]
+
+        this.tipoCuenta = [
+            { name: "Abono", code: "A" },
+            { name: "Cargo", code: "C" },
+            { name: "Cuenta SCJS", code: "S" }
+        ];
 
         this.sigaServices.get("solicitudInciporporacion_tipoSolicitud").subscribe(result => {
             this.tiposSolicitud = result.combooItems;
@@ -207,6 +215,8 @@ export class NuevaIncorporacionComponent implements OnInit {
             this.cargo = false;
         }
 
+
+
         this.solicitudEditar.fechaSolicitud = new Date(this.solicitudEditar.fechaSolicitud);
         this.solicitudEditar.fechaIncorporacion = new Date(this.solicitudEditar.fechaIncorporacion);
         this.solicitudEditar.fechaEstado = new Date(this.solicitudEditar.fechaEstado);
@@ -241,58 +251,98 @@ export class NuevaIncorporacionComponent implements OnInit {
             console.log(error);
         });
     }
+
+    rellenarComboTipoCuenta(body) {
+        this.selectedTipoCuenta = [];
+        var salir = false;
+        this.tipoCuenta.forEach(element1 => {
+            body.forEach(element2 => {
+                if (!salir && element1.code == element2) {
+                    this.selectedTipoCuenta.push(element1);
+                    salir = true;
+                } else {
+                    salir = false;
+                }
+            });
+        });
+    }
+
+
+    aprobarSolicitud() {
+        this.progressSpinner = true;
+        this.sigaServices.postSendContent("solicitudInciporporacion_aprobarSolicitud", this.solicitudEditar.idSolicitud).subscribe(result => {
+            this.progressSpinner = false;
+            this.msgs = [{ severity: "success", summary: "Éxito", detail: "Solicitud aprobada." }];
+        }, error => {
+            console.log(error);
+            this.msgs = [{ severity: "error", summary: "Error", detail: "Error al aprobar la solicitud." }];
+        })
+    }
+    denegarSolicitud() {
+        //TODO
+    }
+
+    SolicitarCertificado() {
+        //TODO
+    }
+
     guardar() {
 
-        if (!this.formSolicitud.invalid && this.checkIdentificacion(this.solicitudEditar.numeroIdentificacion)) {
-            this.progressSpinner = true;
+        this.progressSpinner = true;
 
-            this.solicitudEditar.idEstado = this.estadoSolicitudSelected.value;
-            this.solicitudEditar.idTipo = this.tipoSolicitudSelected.value;
-            this.solicitudEditar.tipoColegiacion = this.tipoColegiacionSelected.value;
-            this.solicitudEditar.idModalidadDocumentacion = this.modalidadDocumentacionSelected.value;
-            this.solicitudEditar.idTipoIdentificacion = this.tipoIdentificacionSelected.value;
-            this.solicitudEditar.tratamiento = this.tratamientoSelected.value;
-            this.solicitudEditar.idEstadoCivil = this.estadoCivilSelected.value;
-            this.solicitudEditar.idPais = this.paisSelected.value;
-            this.solicitudEditar.idProvincia = this.provinciaSelected.value;
-            this.solicitudEditar.idPoblacion = this.poblacionSelected.value;
+        this.solicitudEditar.idEstado = this.estadoSolicitudSelected.value;
+        this.solicitudEditar.idTipo = this.tipoSolicitudSelected.value;
+        this.solicitudEditar.tipoColegiacion = this.tipoColegiacionSelected.value;
+        this.solicitudEditar.idModalidadDocumentacion = this.modalidadDocumentacionSelected.value;
+        this.solicitudEditar.idTipoIdentificacion = this.tipoIdentificacionSelected.value;
+        this.solicitudEditar.tratamiento = this.tratamientoSelected.value;
+        this.solicitudEditar.idEstadoCivil = this.estadoCivilSelected.value;
+        this.solicitudEditar.idPais = this.paisSelected.value;
+        this.solicitudEditar.idProvincia = this.provinciaSelected.value;
+        this.solicitudEditar.idPoblacion = this.poblacionSelected.value;
 
-            if (this.residente == true) {
-                this.solicitudEditar.residente = "1"
-            } else {
-                this.solicitudEditar.residente = "0"
-            }
-
-            if (this.cargo == true) {
-                this.solicitudEditar.abonoCargo = "1"
-            } else {
-                this.solicitudEditar.abonoCargo = "0"
-            }
-
-            if (this.abonoJCS == true) {
-                this.solicitudEditar.abonoJCS = "1"
-            } else {
-                this.solicitudEditar.abonoJCS = "0"
-            }
-
-            /*if(this.abono == true){
-                this.solicitudEditar. = "1"
-            }else{
-                this.solicitudEditar.residente = "0"
-            }*/
-
-            this.sigaServices.post("solicitudInciporporacion_nuevaSolicitud", this.solicitudEditar).subscribe(result => {
-                //this.solicitudEditar = new SolicitudIncorporacionItem();
-                console.log("guardado", result);
-                this.progressSpinner = false;
-                this.msgs = [{ severity: "success", summary: "Éxito", detail: "Solicitud guardada correctamente." }];
-            }, error => {
-                this.msgs = [{ severity: "error", summary: "Error", detail: "Error al guardar la solicitud." }];
-            })
+        if (this.residente == true) {
+            this.solicitudEditar.residente = "1"
         } else {
-            this.msgs = [{ severity: "error", summary: "Incompleto", detail: "Todos los campos deben estar rellenos." }];
+            this.solicitudEditar.residente = "0"
         }
 
+        if (this.cargo == true) {
+            this.solicitudEditar.abonoCargo = "1"
+        } else {
+            this.solicitudEditar.abonoCargo = "0"
+        }
+
+        if (this.abonoJCS == true) {
+            this.solicitudEditar.abonoJCS = "1"
+        } else {
+            this.solicitudEditar.abonoJCS = "0"
+        }
+
+        /*if(this.abono == true){
+            this.solicitudEditar. = "1"
+        }else{
+            this.solicitudEditar.residente = "0"
+        }*/
+
+        this.sigaServices.post("solicitudInciporporacion_nuevaSolicitud", this.solicitudEditar).subscribe(result => {
+            //this.solicitudEditar = new SolicitudIncorporacionItem();
+            console.log("guardado", result);
+            this.progressSpinner = false;
+            this.msgs = [{ severity: "success", summary: "Éxito", detail: "Solicitud guardada correctamente." }];
+        }, error => {
+            this.msgs = [{ severity: "error", summary: "Error", detail: "Error al guardar la solicitud." }];
+        })
+
+    }
+
+    isGuardar(): boolean {
+
+        if (!this.formSolicitud.invalid && this.checkIdentificacion(this.solicitudEditar.numeroIdentificacion)) {
+            return false;
+        } else {
+            return true;
+        }
 
     }
 
