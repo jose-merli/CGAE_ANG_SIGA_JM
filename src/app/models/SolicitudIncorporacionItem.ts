@@ -22,6 +22,8 @@ export class SolicitudIncorporacionItem {
   tipoColegiacion: String;
   tipoIdentificacion: String;
   idTipoIdentificacion: String;
+  idTipoColegiacion: String;
+  idTratamiento: String;
   observaciones: String;
   fechaIncorporacion: Date;
   residente: String;

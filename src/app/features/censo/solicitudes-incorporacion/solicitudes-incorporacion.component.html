@@ -68,8 +68,10 @@
     </div>
     <div class="card-footer">
         <div class="text-right main-button ">
-            <button (click)="restablecerCampos()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="Restablecer"></button>
-            <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="Buscar"></button>
+            <button (click)="restablecerCampos()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="Limpiar"></button>
+            <button (click)="buscarSolicitudes()" [disabled]="isBuscar()" pButton type="button" icon="fa fa-search"
+                iconPos="left" label="Buscar"></button>
+            <button (click)="irNuevaSolicitud()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
         </div>
     </div>
 </div>
@@ -102,12 +104,6 @@
                     <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
                 </div>
             </ng-template>
-            <p-footer>
-                <div class="text-right main-button">
-                    <button (click)="irNuevaSolicitud()" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-plus"
-                        iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-                </div>
-            </p-footer>
         </p-dataTable>
     </div>
 </div>
