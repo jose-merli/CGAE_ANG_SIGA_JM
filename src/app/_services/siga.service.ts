@@ -203,7 +203,8 @@ export class SigaServices {
     cargaMasivaDatosCurriculares_uploadFile:
       "cargaMasivaDatosCurriculares/uploadFile",
     cargasMasivas_descargarEtiquetas: "cargasMasivas/descargarEtiquetas",
-    cargasMasivas_searchEtiquetas: "cargasMasivas/searchEtiquetas"
+    cargasMasivas_searchEtiquetas: "cargasMasivas/searchEtiquetas",
+    cargasMasivasEtiquetas_uploadFile: "cargasMasivasEtiquetas/uploadFile"
   };
 
   private menuToggled = new Subject<any>();
