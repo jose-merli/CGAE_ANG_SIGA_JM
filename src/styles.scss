@@ -1066,3 +1066,13 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
 .item-disabled {
   padding: 0px;
 }
+
+.fa-warning:before,
+.fa-exclamation-triangle:before {
+  color: red;
+}
+
+.header {
+  margin-right: 12px;
+  margin-top: 3px;
+}

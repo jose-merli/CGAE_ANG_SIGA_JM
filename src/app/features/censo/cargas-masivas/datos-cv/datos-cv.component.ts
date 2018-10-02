@@ -3,6 +3,19 @@ import { TranslateService } from "../../../../commons/translate";
 import { SigaServices } from "../../../../_services/siga.service";
 import { saveAs } from "file-saver/FileSaver";
 import { DomSanitizer } from "@angular/platform-browser";
+import { CargaMasivaItem } from "../../../../models/CargaMasivaItem";
+import { CargaMasivaObject } from "../../../../models/CargaMasivaObject";
+import { DatePipe } from "../../../../../../node_modules/@angular/common";
+import { ErrorItem } from "../../../../models/ErrorItem";
+import { ConfirmationService } from "primeng/api";
+import { esCalendar } from "../../../../utils/calendar";
+import { Pipe, PipeTransform } from "@angular/core";
+@Pipe({ name: "replaceLineBreaks" })
+export class ReplaceLineBreaks implements PipeTransform {
+  transform(value: string): string {
+    return value.replace(/\n/g, "<br/>");
+  }
+}
 
 @Component({
   selector: "app-datos-cv",
@@ -14,8 +27,8 @@ export class DatosCvComponent implements OnInit {
   buscar: boolean = false;
   archivoDisponible: boolean = false;
   existeArchivo: boolean = false;
-
-  fechaCarga: Date;
+  fechaCargaSelect: Date;
+  es: any = esCalendar;
 
   file: File = undefined;
 
@@ -32,10 +45,23 @@ export class DatosCvComponent implements OnInit {
   selectMultiple: boolean = false;
   selectAll: boolean = false;
 
+  @ViewChild("fileUpload")
+  fileUpload;
+
+  display: boolean = false;
+  clear: boolean = false;
+  progressSpinner: boolean = false;
+
+  body: CargaMasivaItem = new CargaMasivaItem();
+  etiquetasSearch = new CargaMasivaObject();
+  errores = new ErrorItem();
+
+  mensaje: String;
+
   constructor(
-    private translateService: TranslateService,
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
+    private datePipe: DatePipe,
     private domSanitizer: DomSanitizer
   ) {}
 
@@ -44,21 +70,6 @@ export class DatosCvComponent implements OnInit {
   }
 
   getInfo() {
-    this.datos = [
-      {
-        fechaCarga: "25/09/18",
-        usuario: "FEDE",
-        nombreFichero: "inventado.pdf",
-        registros: "1"
-      },
-      {
-        fechaCarga: "25/09/18",
-        usuario: "PEPE",
-        nombreFichero: "inventado.pdf",
-        registros: "1"
-      }
-    ];
-
     this.cols = [
       { field: "fechaCarga", header: "censo.datosCv.literal.fechaCarga" },
       {
@@ -100,6 +111,7 @@ export class DatosCvComponent implements OnInit {
   }
 
   getFile(event: any) {
+    this.clear = false;
     // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
     let fileList: FileList = event.target.files;
 
@@ -135,16 +147,16 @@ export class DatosCvComponent implements OnInit {
   uploadFile() {
     if (this.file != undefined) {
       console.log("Este es el archivo que enviaremos", this.file);
+      this.progressSpinner = true;
       this.sigaServices
         .postSendContent("cargaMasivaDatosCurriculares_uploadFile", this.file)
-        .subscribe(
-          data => {
-            this.file = undefined;
-          },
-          error => {
-            console.log(error);
-          }
-        );
+        .subscribe(data => {
+          this.progressSpinner = false;
+
+          this.body.errores = data["error"];
+          this.mensaje = this.body.errores.description.toString();
+          this.display = true;
+        });
     }
   }
 
@@ -152,26 +164,62 @@ export class DatosCvComponent implements OnInit {
 
   isBuscar() {
     this.buscar = true;
-  }
+    this.progressSpinner = true;
+    this.buscar = true;
 
-  downloadFile() {
+    this.body.tipoCarga = "CV";
+
+    if (this.fechaCargaSelect != undefined || this.fechaCargaSelect != null) {
+      this.body.fechaCarga = this.datePipe.transform(
+        this.fechaCargaSelect,
+        "dd/MM/yyyy"
+      );
+    } else {
+      this.body.fechaCarga = null;
+    }
+
     this.sigaServices
-      .get("cargaMasivaDatosCurriculares_downloadFile")
+      .postPaginado(
+        "cargaMasivaDatosCurriculares_searchCV",
+        "?numPagina=1",
+        this.body
+      )
       .subscribe(
-        response => {
-          // const blob = new Blob([response.blob()], { type: "text/xls" });
-          // let filename = response.headers.get("Content-Disposition");
-          // saveAs(blob, filename);
-
-          var blob = new Blob([response], { type: "application/octet-stream" });
-          var fileName = "myFileName.myExtension";
-          saveAs(blob, fileName);
-
-          console.log("blob", blob);
-          console.log("hola");
+        data => {
+          this.progressSpinner = false;
+          this.etiquetasSearch = JSON.parse(data["body"]);
+          this.datos = this.etiquetasSearch.cargaMasivaItem;
+          this.table.reset();
         },
         err => {
-          console.log("adios");
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  downloadFile(data: Response) {
+    this.progressSpinner = true;
+    this.sigaServices
+      .postDownloadFiles(
+        "cargaMasivaDatosCurriculares_generateExcelCV",
+        this.body
+      )
+      .subscribe(
+        data => {
+          const blob = new Blob([data], { type: "text/csv" });
+          saveAs(blob, "PlantillaMasivaDatosCV.xls");
+          this.progressSpinner = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
         }
       );
   }
@@ -179,5 +227,10 @@ export class DatosCvComponent implements OnInit {
   activarPaginacion() {
     if (!this.datos || this.datos.length == 0) return false;
     else return true;
+  }
+
+  confirmationErrors() {
+    this.display = false;
+    this.fileUpload.clear();
   }
 }

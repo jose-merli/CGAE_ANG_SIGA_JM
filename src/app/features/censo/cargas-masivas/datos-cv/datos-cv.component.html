@@ -18,17 +18,14 @@
         <div class="form-group col-lg-3 col-md-3">
           <label>{{"censo.datosCv.literal.fechaCarga" | translate}}</label>
           <p-calendar [keepInvalid]="true" selectionMode="range" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy"
-            [(ngModel)]="fechaCarga"></p-calendar>
+            [(ngModel)]="fechaCargaSelect"></p-calendar>
         </div>
 
         <div class="form-group col-lg-3 col-md-3">
           <label>{{"censo.sociedades.datosBancarios.adjuntar" | translate}}</label>
           <br>
-          <!-- <p-fileUpload #fubauto chooseLabel="{{ 'censo.sociedades.datosBancarios.seleccionarArchivo' | translate}}" class="edit my-0 mx-auto main-button"
-            mode="basic" name="file" auto="true" (change)="uploadImage($event)" accept="application/msexcel" (onUpload)="onUpload($event)"
-            auto="true">
-          </p-fileUpload> -->
-          <p-fileUpload mode="basic" name="file" accept="application/vnd.ms-excel" (change)="getFile($event)"></p-fileUpload>
+          <p-fileUpload #fileUpload mode="basic" chooseLabel="{{ 'censo.sociedades.datosBancarios.seleccionarArchivo' | translate}}"
+            class="edit my-0 mx-auto main-button" name="file" accept="application/vnd.ms-excel" (change)="getFile($event)"></p-fileUpload>
         </div>
 
       </div>
@@ -38,7 +35,7 @@
   <div class="card-footer">
     <div class="text-right main-button ">
       <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
-      <button pButton type="button" (click)="uploadFile()" icon="fa fa-upload" iconPos="left" label="{{ 'general.boton.cargarFichero' | translate}}"></button>
+      <button pButton type="button" (click)="clear=false; uploadFile()" icon="fa fa-upload" iconPos="left" label="{{ 'general.boton.cargarFichero' | translate}}"></button>
       <button pButton type="button" (click)="downloadFile()" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.descargaFicheroModelo' | translate}}"></button>
     </div>
   </div>
@@ -49,13 +46,6 @@
       [value]="datos" [sortOrder]="sortO" [paginator]="activarPaginacion()" paginatorPosition="both" [rows]="selectedItem">
       <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
         [filter]="true" filterMatchMode="contains">
-        <!-- <ng-template *ngIf="col.field == 'numeroIntegrantes'" let-dato="rowData" pTemplate="body">
-          <div class="input-group">
-            <span class="input-group">
-              <button pButton type="button" [pTooltip]="obtenerNombreIntegrantes(dato)" [label]="obtenerIntegrantes(dato)" tooltipPosition="top"></button> &nbsp;&nbsp;
-            </span>
-          </div>
-        </ng-template> -->
       </p-column>
 
       <ng-template pTemplate="paginatorLeft">
@@ -65,11 +55,6 @@
           <label>{{ "general.message.mostrar" | translate}}</label>
           <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
           <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-          <!-- <div class="ml-3 selectAll">
-            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
-          </div> -->
-          <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
-            <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label> -->
         </div>
       </ng-template>
     </p-dataTable>
@@ -79,3 +64,25 @@
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
+
+<!-- MOSTRAR ERRORES -->
+<p-confirmDialog header="ERRORES" icon="fa fa-warning" width="500" #cd>
+  <p-footer>
+    <button type="button" pButton icon="fa fa-check" label="{{'general.boton.submit' | translate}}" (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+
+<p-dialog [(visible)]="display" [modal]="true" [responsive]="true" [width]="500" [minWidth]="500">
+  <p-header>
+    <p>
+      <i class="fa fa-warning float-left header"></i>
+      <b> ERRORES </b>
+    </p>
+
+  </p-header>
+  <span [innerHTML]="mensaje"></span>
+  <p-footer>
+    <button type="button" pButton icon="fa fa-check" (click)="confirmationErrors()" label="{{'general.boton.submit' | translate}}"></button>
+  </p-footer>
+</p-dialog>
