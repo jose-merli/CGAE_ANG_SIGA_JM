@@ -10,6 +10,7 @@ import { SigaServices } from "../../../_services/siga.service";
 import { TranslateService } from "../../../commons/translate";
 import { SolicitudIncorporacionObject } from "../../../models/SolicitudIncorporacionObject";
 import { SolicitudIncorporacionItem } from "../../../models/SolicitudIncorporacionItem";
+import { Message } from "primeng/components/common/api";
 export enum KEY_CODE { ENTER = 13 }
 
 @Component({
@@ -30,6 +31,8 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
   tiposSolicitud: any;
   estadosSolicitud: any;
+  msgs: Message[] = [];
+  busqueda: boolean = false;
 
   @ViewChild("table")
   table;
@@ -95,7 +98,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("filtros"));
       this.body.fechaDesde = new Date(this.body.fechaDesde);
       this.body.fechaHasta = new Date(this.body.fechaHasta);
-      this.isBuscar();
+      this.buscarSolicitudes();
 
       sessionStorage.removeItem("filtros");
     }
@@ -117,38 +120,39 @@ export class SolicitudesIncorporacionComponent implements OnInit {
           console.log(error);
         });
   }
-  isBuscar() {
-    if ((!this.formBusqueda.invalid && this.checkIdentificacion(this.body.numeroIdentificacion)) || sessionStorage.getItem("filtros") != null) {
-      this.buscar = true;
-      this.progressSpinner = true;
-      this.sigaServices.postPaginado("solicitudInciporporacion_searchSolicitud", "?numPagina=1", this.body).subscribe(result => {
-        this.bodySearch = JSON.parse(result["body"]);
-        this.datos = [];
-        this.datos = this.bodySearch.solIncorporacionItems;
-        this.datos.forEach(element => {
-          element.fechaSolicitud = new Date(element.fechaSolicitud);
-          element.fechaEstado = new Date(element.fechaEstado);
-        });
-        this.progressSpinner = false;
-        console.log(result);
-      },
-        error => {
-          console.log(error);
-        });
-
-      sessionStorage.setItem("filtros", JSON.stringify(this.body));
-    } else {
-      console.log("mal filtros");
-      //TODO : MOSTRAR MENSAJE DE FALLO EN FILTROS ?
-    }
+  buscarSolicitudes() {
+    this.buscar = true;
+    this.progressSpinner = true;
+    this.sigaServices.postPaginado("solicitudInciporporacion_searchSolicitud", "?numPagina=1", this.body).subscribe(result => {
+      this.bodySearch = JSON.parse(result["body"]);
+      this.datos = [];
+      this.datos = this.bodySearch.solIncorporacionItems;
+      this.datos.forEach(element => {
+        element.fechaSolicitud = new Date(element.fechaSolicitud);
+        element.fechaEstado = new Date(element.fechaEstado);
+      });
+      this.progressSpinner = false;
+    },
+      error => {
+        console.log(error);
+      });
+    sessionStorage.setItem("filtros", JSON.stringify(this.body));
   }
 
+  isBuscar(): boolean {
+    if (!this.formBusqueda.invalid && this.checkIdentificacion(this.body.numeroIdentificacion)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 
   irNuevaSolicitud() {
     sessionStorage.setItem("editar", "false");
     this.router.navigate(["/nuevaIncorporacion"]);
   }
   irDetalleSolicitud(item) {
+
     if (item && item.length > 0) {
       var enviarDatos = null;
       enviarDatos = item[0];

@@ -36,6 +36,10 @@ export class DatosCvComponent implements OnInit {
 
   @ViewChild("table")
   table;
+
+  @ViewChild("pUploadFile")
+  pUploadFile;
+
   selectedDatos;
   cols: any = [];
   rowsPerPage: any = [];
