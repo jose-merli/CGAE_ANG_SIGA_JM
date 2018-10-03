@@ -54,6 +54,8 @@ export class DatosCvComponent implements OnInit {
 
   display: boolean = false;
   clear: boolean = false;
+  uploadFileDisable: boolean = false;
+  enableButtons: boolean = false;
   progressSpinner: boolean = false;
 
   body: CargaMasivaItem = new CargaMasivaItem();
@@ -116,6 +118,7 @@ export class DatosCvComponent implements OnInit {
 
   getFile(event: any) {
     this.clear = false;
+    this.uploadFileDisable = true;
     // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
     let fileList: FileList = event.target.files;
 
@@ -154,13 +157,18 @@ export class DatosCvComponent implements OnInit {
       this.progressSpinner = true;
       this.sigaServices
         .postSendContent("cargaMasivaDatosCurriculares_uploadFile", this.file)
-        .subscribe(data => {
-          this.progressSpinner = false;
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
 
-          this.body.errores = data["error"];
-          this.mensaje = this.body.errores.description.toString();
-          this.display = true;
-        });
+            // this.body.errores = data["error"];
+            // this.mensaje = this.body.errores.description.toString();
+            // this.display = true;
+          },
+          () => {
+            this.uploadFileDisable = false;
+          }
+        );
     }
   }
 
@@ -193,6 +201,7 @@ export class DatosCvComponent implements OnInit {
           this.progressSpinner = false;
           this.etiquetasSearch = JSON.parse(data["body"]);
           this.datos = this.etiquetasSearch.cargaMasivaItem;
+          this.numSelected = this.datos.length;
           this.table.reset();
         },
         err => {
@@ -234,7 +243,68 @@ export class DatosCvComponent implements OnInit {
   }
 
   confirmationErrors() {
-    this.display = false;
+    //this.display = false;
     this.fileUpload.clear();
+  }
+
+  onRowSelect(selectedDatos) {
+    console.log("Items", selectedDatos);
+    this.enableButtons = true;
+  }
+
+  downloadOriginalFile(selectedDatos) {
+    this.progressSpinner = true;
+    this.body = selectedDatos;
+    this.sigaServices
+      .postDownloadFiles(
+        "cargaMasivaDatosCurriculares_downloadOriginalFile",
+        this.body
+      )
+      .subscribe(
+        data => {
+          const blob = new Blob([data], { type: "text/csv" });
+          saveAs(blob, "PlantillaMasivaDatosCV_Original.xls");
+          this.progressSpinner = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  downloadLogFile(selectedDatos) {
+    this.progressSpinner = true;
+    this.body = selectedDatos;
+    this.sigaServices
+      .postDownloadFiles(
+        "cargaMasivaDatosCurriculares_downloadOriginalFile",
+        this.body
+      )
+      .subscribe(
+        data => {
+          const blob = new Blob([data], { type: "text/csv" });
+          saveAs(blob, "PlantillaMasivaDatosCV_Log.xls");
+          this.progressSpinner = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  changeDisabledButton() {
+    if (this.uploadFileDisable) {
+      this.uploadFileDisable = false;
+    } else {
+      this.uploadFileDisable = true;
+    }
   }
 }

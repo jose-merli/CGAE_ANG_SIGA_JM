@@ -24,8 +24,9 @@
         <div class="form-group col-lg-3 col-md-3">
           <label>{{"censo.sociedades.datosBancarios.adjuntar" | translate}}</label>
           <br>
-          <p-fileUpload #fileUpload mode="basic" chooseLabel="{{ 'censo.sociedades.datosBancarios.seleccionarArchivo' | translate}}"
-            class="edit my-0 mx-auto main-button" name="file" accept="application/vnd.ms-excel" (change)="getFile($event)"></p-fileUpload>
+          <p-fileUpload mode="basic"  #pUploadFile  chooseLabel="{{ 'censo.sociedades.datosBancarios.seleccionarArchivo' | translate}}"
+             class="edit my-0 mx-auto main-button"  name="file"  accept="application/vnd.ms-excel"  (change)="getFile($event)"
+            (click)="changeDisabledButton()" (onClear)="changeDisabledButton()"></p-fileUpload>
         </div>
 
       </div>
@@ -35,7 +36,8 @@
   <div class="card-footer">
     <div class="text-right main-button ">
       <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
-      <button pButton type="button" (click)="clear=false; uploadFile()" icon="fa fa-upload" iconPos="left" label="{{ 'general.boton.cargarFichero' | translate}}"></button>
+      <button pButton type="button" [(disabled)]="!uploadFileDisable" (click)="clear=false; uploadFile()" icon="fa fa-upload" iconPos="left"
+        label="{{ 'general.boton.cargarFichero' | translate}}"></button>
       <button pButton type="button" (click)="downloadFile()" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.descargaFicheroModelo' | translate}}"></button>
     </div>
   </div>
@@ -43,7 +45,8 @@
 <div *ngIf="buscar" class="card mt-3">
   <div class="card-body p-0">
     <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" pageLinks="4" [responsive]="true" #table class="tabla-listado"
-      [value]="datos" [sortOrder]="sortO" [paginator]="activarPaginacion()" paginatorPosition="both" [rows]="selectedItem">
+      [value]="datos" [sortOrder]="sortO" [paginator]="activarPaginacion()" paginatorPosition="both" [rows]="selectedItem"
+      [(selection)]="selectedDatos" (onRowSelect)="onRowSelect(selectedDatos)" selectionMode="single">
       <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
         [filter]="true" filterMatchMode="contains">
       </p-column>
@@ -57,6 +60,13 @@
           <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
         </div>
       </ng-template>
+
+      <p-footer>
+        <div *ngIf="enableButtons" class="text-right main-button">
+          <button (click)="downloadOriginalFile(selectedDatos)" pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate}}"></button>
+          <button (click)="downloadLogFile(selectedDatos)" pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate}}"></button>
+        </div>
+      </p-footer>
     </p-dataTable>
   </div>
 </div>

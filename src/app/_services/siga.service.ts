@@ -194,8 +194,10 @@ export class SigaServices {
       "solicitudIncorporacion/tipoColegiacion",
     solicitudInciporporacion_modalidadDocumentacion:
       "solicitudIncorporacion/modalidadDocumentacion",
-    solicitudInciporporacion_nuevaSolicitud: "solicitudIncorporacion/nuevaSolicitud",
-    solicitudInciporporacion_aprobarSolicitud: "solicitudIncorporacion/aprobarSolicitud",
+    solicitudInciporporacion_nuevaSolicitud:
+      "solicitudIncorporacion/nuevaSolicitud",
+    solicitudInciporporacion_aprobarSolicitud:
+      "solicitudIncorporacion/aprobarSolicitud",
     fichaDatosBancarios_datosBancariosSearch:
       "fichaDatosBancarios/datosBancariosSearch",
     fichaDatosColegiales_tipoSeguro: "fichaDatosColegiales/tipoSeguro",
@@ -206,6 +208,10 @@ export class SigaServices {
       "cargaMasivaDatosCurriculares/uploadFile",
     cargaMasivaDatosCurriculares_searchCV:
       "cargaMasivaDatosCurriculares/searchCV",
+    cargaMasivaDatosCurriculares_downloadOriginalFile:
+      "cargaMasivaDatosCurriculares/downloadOriginalFile",
+    cargaMasivaDatosCurriculares_downloadLogFile:
+      "cargaMasivaDatosCurriculares/downloadLogFile",
     cargasMasivas_descargarEtiquetas: "cargasMasivas/descargarEtiquetas",
     cargasMasivas_searchEtiquetas: "cargasMasivas/searchEtiquetas",
     cargasMasivasEtiquetas_uploadFile: "cargasMasivasEtiquetas/uploadFile"
@@ -258,9 +264,9 @@ export class SigaServices {
     return this.httpbackend
       .get(
         environment.newSigaUrl +
-        this.endpoints[service] +
-        "?institucion=" +
-        institucion
+          this.endpoints[service] +
+          "?institucion=" +
+          institucion
       )
       .map(response => {
         return response;
