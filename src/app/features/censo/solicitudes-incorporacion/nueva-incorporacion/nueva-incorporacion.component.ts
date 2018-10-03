@@ -92,9 +92,9 @@ export class NuevaIncorporacionComponent implements OnInit {
             fechaNac: new FormControl(null, Validators.required),
             pais: new FormControl(null, Validators.required),
             direccion: new FormControl(null, Validators.required),
-            cp: new FormControl(null, Validators.required),
-            provincia: new FormControl(null, Validators.required),
-            poblacion: new FormControl(null, Validators.required),
+            cp: new FormControl(null),
+            provincia: new FormControl(null),
+            poblacion: new FormControl(null),
             telefono1: new FormControl(null, Validators.required),
             telefono2: new FormControl(null, Validators.required),
             fax1: new FormControl(null, Validators.required),
@@ -210,9 +210,16 @@ export class NuevaIncorporacionComponent implements OnInit {
         }
 
         if (this.solicitudEditar.abonoCargo != null) {
-            this.cargo = true;
-        } else {
-            this.cargo = false;
+            if (this.solicitudEditar.abonoCargo.indexOf("T") > 0) {
+                this.cargo = true;
+                this.abono = true;
+            } else {
+                if (this.solicitudEditar.abonoCargo.indexOf("C") > 0) {
+                    this.cargo = true;
+                } else {
+                    this.abono = true;
+                }
+            }
         }
 
 
@@ -252,6 +259,35 @@ export class NuevaIncorporacionComponent implements OnInit {
         });
     }
 
+    onChangePais(event) {
+        this.solicitudEditar.idPais = event.value.value;
+    }
+
+    isValidIBAN(): boolean {
+        if (
+            (this.solicitudEditar.iban != null || this.solicitudEditar.iban != undefined)) {
+            this.solicitudEditar.iban = this.solicitudEditar.iban.replace(/\s/g, "");
+            return (
+                this.solicitudEditar.iban &&
+                typeof this.solicitudEditar.iban === "string" &&
+                // /ES\d{2}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}|ES\d{22}/.test(
+                ///[A-Z]{2}\d{22}?[\d]{0,2}/.test(this.body.iban)
+                /^ES\d{22}$/.test(this.solicitudEditar.iban)
+            );
+        }
+
+    }
+
+    deshabilitarDireccion(): boolean {
+
+        if (this.solicitudEditar.idPais != "191") {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
     rellenarComboTipoCuenta(body) {
         this.selectedTipoCuenta = [];
         var salir = false;
@@ -270,7 +306,7 @@ export class NuevaIncorporacionComponent implements OnInit {
 
     aprobarSolicitud() {
         this.progressSpinner = true;
-        this.sigaServices.postSendContent("solicitudInciporporacion_aprobarSolicitud", this.solicitudEditar.idSolicitud).subscribe(result => {
+        this.sigaServices.post("solicitudInciporporacion_aprobarSolicitud", this.solicitudEditar.idSolicitud).subscribe(result => {
             this.progressSpinner = false;
             this.msgs = [{ severity: "success", summary: "Éxito", detail: "Solicitud aprobada." }];
         }, error => {
@@ -307,10 +343,14 @@ export class NuevaIncorporacionComponent implements OnInit {
             this.solicitudEditar.residente = "0"
         }
 
-        if (this.cargo == true) {
-            this.solicitudEditar.abonoCargo = "1"
+        if (this.cargo == true && this.abono == true) {
+            this.solicitudEditar.abonoCargo = "T"
         } else {
-            this.solicitudEditar.abonoCargo = "0"
+            if (this.cargo == true) {
+                this.solicitudEditar.abonoCargo = "C";
+            } else {
+                this.solicitudEditar.abonoCargo = "A";
+            }
         }
 
         if (this.abonoJCS == true) {
@@ -319,11 +359,6 @@ export class NuevaIncorporacionComponent implements OnInit {
             this.solicitudEditar.abonoJCS = "0"
         }
 
-        /*if(this.abono == true){
-            this.solicitudEditar. = "1"
-        }else{
-            this.solicitudEditar.residente = "0"
-        }*/
 
         this.sigaServices.post("solicitudInciporporacion_nuevaSolicitud", this.solicitudEditar).subscribe(result => {
             //this.solicitudEditar = new SolicitudIncorporacionItem();
@@ -338,7 +373,7 @@ export class NuevaIncorporacionComponent implements OnInit {
 
     isGuardar(): boolean {
 
-        if (!this.formSolicitud.invalid && this.checkIdentificacion(this.solicitudEditar.numeroIdentificacion)) {
+        if (!this.formSolicitud.invalid && this.checkIdentificacion(this.solicitudEditar.numeroIdentificacion) && this.isValidIBAN()) {
             return false;
         } else {
             return true;

@@ -214,7 +214,9 @@ export class SigaServices {
       "cargaMasivaDatosCurriculares/downloadLogFile",
     cargasMasivas_descargarEtiquetas: "cargasMasivas/descargarEtiquetas",
     cargasMasivas_searchEtiquetas: "cargasMasivas/searchEtiquetas",
-    cargasMasivasEtiquetas_uploadFile: "cargasMasivasEtiquetas/uploadFile"
+    cargasMasivasEtiquetas_uploadFile: "cargasMasivasEtiquetas/uploadFile",
+    cargasMasivas_downloadOriginalFile: "cargasMasivas/downloadOriginalFile",
+    cargasMasivas_downloadLogFile: "cargasMasivas/downloadLogFile"
   };
 
   private menuToggled = new Subject<any>();

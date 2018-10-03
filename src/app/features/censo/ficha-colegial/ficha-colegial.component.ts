@@ -56,7 +56,7 @@ export class FichaColegialComponent implements OnInit {
   progressSpinner: boolean = false;
   editar: boolean = false;
   blockCrear: boolean = true;
-
+  activarGuardarGenerales: boolean = false;
   selectAll: boolean = false;
   selectMultiple: boolean = false;
 
@@ -102,6 +102,9 @@ export class FichaColegialComponent implements OnInit {
   comboSituacion: any[];
   tipoIdentificacion: any[];
   comboTipoSeguro: any[];
+  fechaNacimiento: Date;
+  fechaAlta: Date;
+  comisiones: boolean;
 
   esColegiado: boolean;
   archivoDisponible: boolean = false;
@@ -178,7 +181,7 @@ export class FichaColegialComponent implements OnInit {
       this.colegialesBody = this.colegialesBody[0];
       this.idPersona = this.generalBody.idPersona;
       this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
-
+      this.generalBody.colegiado = this.esColegiado;
       this.checkAcceso();
       this.onInitGenerales();
       this.onInitCurriculares();
@@ -481,7 +484,7 @@ export class FichaColegialComponent implements OnInit {
     return ret;
   }
 
-  showFail(mensaje: string) {
+  showFailDetalle(mensaje: string) {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
@@ -490,9 +493,29 @@ export class FichaColegialComponent implements OnInit {
     });
   }
 
-  showSuccess(mensaje: string) {
+  showSuccessDetalle(mensaje: string) {
     this.msgs = [];
     this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant("general.message.accion.realizada")
+    });
+  }
+
+  showFail() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "general.message.error.realiza.accion"
+      )
+    });
   }
 
   showInfo(mensaje: string) {
@@ -567,6 +590,16 @@ export class FichaColegialComponent implements OnInit {
     else return true;
   }
 
+  isValidDNI(dni: String): boolean {
+    return (
+      dni &&
+      typeof dni === "string" &&
+      /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
+      dni.substr(8, 9).toUpperCase() ===
+        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+    );
+  }
+
   // FIN MÉTODOS GENÉRICOS
   //
   //
@@ -587,29 +620,13 @@ export class FichaColegialComponent implements OnInit {
   //
   //
   // MÉTODOS PARA DATOS GENERALES
-  generalesGuardar() {
-    this.progressSpinner = true;
-    this.sigaServices
-      .post("fichaDatosGenerales_Update", this.generalBody)
-      .subscribe(
-        data => {
-          if (this.file != undefined) {
-            this.guardarImagen(this.idPersona);
-          }
-          // this.body = JSON.parse(data["body"]);
-          this.progressSpinner = false;
-          this.showSuccess("funciona");
-        },
-        error => {
-          console.log(error);
-          this.progressSpinner = false;
-          this.showFail("no funciona");
-        }
-      );
-  }
 
   onInitGenerales() {
+    this.activacionGuardarGenerales();
     this.cargarImagen(this.idPersona);
+    this.stringAComisiones();
+    this.fechaNacimiento = this.generalBody.fechaNacimiento;
+    this.fechaAlta = this.generalBody.incorporacion;
     this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
       n => {
         this.tipoIdentificacion = n.combooItems;
@@ -659,6 +676,103 @@ export class FichaColegialComponent implements OnInit {
       this.calcularEdad(this.generalBody.fechaNacimiento);
     }
   }
+
+  generalesGuardar() {
+    this.progressSpinner = true;
+    this.generalBody.nombre = this.generalBody.soloNombre;
+    this.arreglarFechas();
+    this.comisionesAString();
+    this.sigaServices
+      .post("fichaDatosGenerales_Update", this.generalBody)
+      .subscribe(
+        data => {
+          // sessionStorage.removeItem("personaBody");
+          // sessionStorage.setItem(
+          //   "personaBody",
+          //   JSON.stringify(this.generalBody)
+          // );
+
+          if (this.file != undefined) {
+            this.guardarImagen(this.idPersona);
+          }
+
+          // this.body = JSON.parse(data["body"]);
+          this.progressSpinner = false;
+          this.showSuccess();
+        },
+        error => {
+          console.log(error);
+          this.progressSpinner = false;
+          this.showFail();
+        }
+      );
+  }
+
+  comisionesAString() {
+    if (this.comisiones == true) {
+      this.generalBody.comisiones = "1";
+    } else {
+      this.generalBody.comisiones = "0";
+    }
+  }
+
+  stringAComisiones() {
+    if (this.generalBody.comisiones == "1") {
+      this.comisiones = true;
+    } else {
+      this.comisiones = false;
+    }
+  }
+
+  arreglarFechas() {
+    if (this.fechaNacimiento != undefined) {
+      this.generalBody.fechaNacimientoDate = this.transformaFecha(
+        this.fechaNacimiento
+      );
+    }
+    if (this.fechaAlta != undefined) {
+      this.generalBody.incorporacionDate = this.transformaFecha(this.fechaAlta);
+    }
+  }
+
+  transformaFecha(fecha) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -1);
+    if (rawDate.length < 14) {
+      let splitDate = rawDate.split("/");
+      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+      fecha = new Date((arrayDate += "T00:00:00.001Z"));
+    } else {
+      fecha = new Date(fecha);
+    }
+    return fecha;
+  }
+
+  activacionGuardarGenerales() {
+    if (
+      (this.isValidDNI(this.generalBody.nif) &&
+        this.generalBody.nif != undefined &&
+        this.generalBody.idTipoIdentificacion != undefined &&
+        this.generalBody.soloNombre != undefined &&
+        this.generalBody.apellidos1 != undefined &&
+        this.generalBody.idTratamiento != null &&
+        // this.generalBody.fechaAlta != undefined &&
+        this.generalBody.idLenguaje != "") ||
+      this.generalBody.idLenguaje == null
+    ) {
+      this.activarGuardarGenerales = true;
+    } else {
+      this.activarGuardarGenerales = false;
+    }
+  }
+  // arreglarFecha() {
+  //   let returnDesde = JSON.stringify(this.generalBody.fechaNacimiento);
+  //   returnDesde = returnDesde.substring(1, 11);
+  //   let arrayDesde = returnDesde.split("-");
+  //   arrayDesde[2] = "" + parseInt(arrayDesde[2] + 1);
+  //   returnDesde = arrayDesde[1] + "/" + arrayDesde[2] + "/" + arrayDesde[0];
+  //   this.generalBody.fechaNacimiento = new Date(returnDesde);
+  // }
 
   onChangeCalendar(event) {
     // console.log(new Date(event));
@@ -1093,7 +1207,7 @@ export class FichaColegialComponent implements OnInit {
         },
         error => {
           this.searchDatosBancariosIdPersona = JSON.parse(error["error"]);
-          this.showFail(
+          this.showFailDetalle(
             JSON.stringify(this.searchDatosBancariosIdPersona.error.description)
           );
           console.log(error);
