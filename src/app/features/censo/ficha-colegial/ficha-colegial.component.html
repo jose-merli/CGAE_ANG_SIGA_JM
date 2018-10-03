@@ -62,24 +62,26 @@
         <div class="bloque col-lg-6 col-md-5 col-sm-5">
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.fichaCliente.literal.identificacion" | translate}}</label>
-              <input [(ngModel)]="generalBody.nif" type="text" class="form-control" pInputText>
+              <label>{{"censo.fichaCliente.literal.identificacion" | translate}} (*)</label>
+              <input [(ngModel)]="generalBody.nif" type="text" class="form-control" (ngModelChange)="activacionGuardarGenerales()" pInputText>
               <div *ngIf="identificacionValida == false">
                 <label class="labelError">{{"El documento es inválido"}}</label>
               </div>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}</label>
+              <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
               <p-dropdown class="select-form" [options]="tipoIdentificacion" placeholder="{{'general.boton.seleccionar' | translate}}"
-                [(ngModel)]="generalBody.idTipoIdentificacion"></p-dropdown>
+                [(ngModel)]="generalBody.idTipoIdentificacion" (ngModelChange)="activacionGuardarGenerales()"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
-              <input [(ngModel)]="generalBody.soloNombre" type="text" class="form-control" [maxLength]="100" pInputText>
+              <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}} (*)</label>
+              <input [(ngModel)]="generalBody.soloNombre" type="text" class="form-control" (ngModelChange)="activacionGuardarGenerales()"
+                [maxLength]="100" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
-              <label>{{"censo.busquedaClientes.literal.apellido1" | translate}}</label>
-              <input [(ngModel)]="generalBody.apellidos1" type="text" class="form-control" [maxLength]="100" pInputText>
+              <label>{{"censo.busquedaClientes.literal.apellido1" | translate}} (*)</label>
+              <input [(ngModel)]="generalBody.apellidos1" type="text" class="form-control" [maxLength]="100" (ngModelChange)="activacionGuardarGenerales()"
+                pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.busquedaClientes.literal.apellido2" | translate}}</label>
@@ -91,14 +93,14 @@
               <input [(ngModel)]="generalBody.sexo" type="text" class="form-control" [maxLength]="99" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.consultaDatosGenerales.literal.tratamiento" | translate}}</label>
+              <label>{{"censo.consultaDatosGenerales.literal.tratamiento" | translate}} (*)</label>
               <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="generalTratamiento"
-                [(ngModel)]="generalBody.tratamiento"></p-dropdown>
+                [(ngModel)]="generalBody.idTratamiento" (ngModelChange)="activacionGuardarGenerales()"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}}</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" (onSelect)="onChangeCalendar($event)" yearRange="1930:2050" [locale]="es"
-                [(ngModel)]="generalBody.fechaNacimiento" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                [(ngModel)]="fechaNacimiento" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" [utc]="true" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.edad" | translate}}</label>
@@ -125,7 +127,7 @@
             <div class="form-check col-lg-6 col-md-6">
               <br>
               <label class="form-group-label">Comisiones</label> &nbsp;&nbsp;
-              <p-checkbox [(disabled)]="camposDesactivados" [(ngModel)]='generalBody.comisiones' binary="true"></p-checkbox>
+              <p-checkbox [(disabled)]="camposDesactivados" [(ngModel)]='comisiones' binary="true"></p-checkbox>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}}</label>
@@ -143,13 +145,14 @@
               <p-dropdown class="select-form" [options]="comboSituacion" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="generalBody.situacion"></p-dropdown>
             </div>
             <div class="form-group col-lg-12 col-md-12">
-              <label>{{"administracion.usuarios.literal.fechaAlta" | translate}}</label>
-              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="generalBody.fechaAlta"
-                dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+              <label>{{"administracion.usuarios.literal.fechaAlta" | translate}} (*)</label>
+              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="fechaAlta" dateFormat="dd/mm/yy"
+                icon="far fa-calendar-alt" showIcon="true" [utc]="true" (ngModelChange)="activacionGuardarGenerales()"></p-calendar>
             </div>
             <div class="form-group col-lg-12 col-md-12">
-              <label>{{"censo.fichaCliente.situacion.idiomaPref" | translate}}</label>
-              <p-dropdown class="select-form" [options]="generalIdiomas" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="generalBody.idLenguaje"></p-dropdown>
+              <label>{{"censo.fichaCliente.situacion.idiomaPref" | translate}} (*)</label>
+              <p-dropdown class="select-form" [options]="generalIdiomas" (ngModelChange)="activacionGuardarGenerales()" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [(ngModel)]="generalBody.idLenguaje"></p-dropdown>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
@@ -164,14 +167,14 @@
         </div>
       </div>
       <br>
-
     </div>
 
     <div *ngIf="esFichaActiva('generales')" class="card-footer ">
       <div class="text-right main-button ">
         <button (click)="solicitarModificacionGenerales()" pButton type="button" icon="fa fa-undo" iconPos="left" label="Solicitar modificación"></button>
         <button (click)="restablecerGenerales()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="generalesGuardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="generalesGuardar()" [(disabled)]="!activarGuardarGenerales" pButton type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -264,22 +267,22 @@
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosGenerales.literal.fechaIncorporacion" | translate}}</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="colegialesBody.incorporacion"
-                dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true"></p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosGenerales.literal.fechaPresentacion" | translate}}</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="colegialesBody.fechaPresentacion"
-                dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true"></p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosGenerales.literal.fechaJura" | translate}}</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="colegialesBody.fechaJura"
-                dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true"></p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosColegiales.literal.fechaTitulacion" | translate}}</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="colegialesBody.fechaTitulacion"
-                dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true"></p-calendar>
             </div>
           </div>
         </div>
@@ -636,7 +639,7 @@
       <div class="text-right main-button ">
         <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="Solicitar modificación"></button>
         <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <!-- <button (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button> -->
       </div>
     </div>
   </div>

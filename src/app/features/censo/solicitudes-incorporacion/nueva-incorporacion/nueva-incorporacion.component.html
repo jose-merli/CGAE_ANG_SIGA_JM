@@ -334,7 +334,7 @@
                     <label>País
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <p-dropdown class="select-form" [(ngModel)]="paisSelected" [options]="paises" optionLabel="label"
-                        dataKey="value" [formControl]="formSolicitud.controls['pais']"></p-dropdown>
+                        dataKey="value" [formControl]="formSolicitud.controls['pais']" (onChange)="onChangePais($event)"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>Dirección
@@ -345,21 +345,25 @@
                 <div class="form-group col-lg-3 col-md-3">
                     <label>CP
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.codigoPostal"
-                        [formControl]="formSolicitud.controls['cp']">
+                    <input *ngIf="solicitudEditar.idPais !== '191'" type="text" class="form-control" pInputText
+                        [(ngModel)]="solicitudEditar.codigoPostal" [formControl]="formSolicitud.controls['cp']"
+                        disabled="true">
+                    <input *ngIf="solicitudEditar.idPais == '191'" type="text" class="form-control" pInputText
+                        [(ngModel)]="solicitudEditar.codigoPostal" [formControl]="formSolicitud.controls['cp']">
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>Provincia
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <p-dropdown class="select-form" [(ngModel)]="provinciaSelected" [options]="provincias" optionLabel="label"
-                        dataKey="value" (onChange)="onChangeProvincia($event)" [formControl]="formSolicitud.controls['provincia']"></p-dropdown>
+                        dataKey="value" (onChange)="onChangeProvincia($event)" [disabled]="deshabilitarDireccion()"
+                        [formControl]="formSolicitud.controls['provincia']"></p-dropdown>
                     <!--<input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.nombreProvincia">-->
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>Población
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
                     <p-dropdown class="select-form" [(ngModel)]="poblacionSelected" [options]="poblaciones" optionLabel="label"
-                        dataKey="value" [formControl]="formSolicitud.controls['poblacion']"></p-dropdown>
+                        dataKey="value" [formControl]="formSolicitud.controls['poblacion']" [disabled]="deshabilitarDireccion()"></p-dropdown>
                     <!-- <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.nombrePoblacion">-->
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
@@ -457,7 +461,28 @@
                     <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.titular"
                         [formControl]="formSolicitud.controls['titular']">
                 </div>
-                <!--<div class="form-group col-lg-3 col-md-2">
+                <!--<div class="form-group col-lg-3 col-md-3">
+                    <label>Tipo de cuenta</label>
+                    <p-multiSelect styleClass="widthAll" [filter]="false" [(ngModel)]="selectedTipoCuenta" [options]="tipoCuenta"
+                        selectedItemsLabel="{0} grupos seleccionados" maxSelectedLabels="1" autoWidth="false"
+                        defaultLabel="Elegir" maxSelectedLabels="1" optionLabel="name"></p-multiSelect>
+                </div>-->
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>IBAN
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.iban" [formControl]="formSolicitud.controls['iban']">
+                    <div *ngIf="isValidIBAN() == false">
+                        <small class="input-error" *ngIf="!isValidIBAN()">{{"IBAN incorrecto"}}</small>
+                    </div>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>Banco
+                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
+                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.banco"
+                        [formControl]="formSolicitud.controls['banco']">
+                </div>
+
+                <div class="form-group col-lg-3 col-md-2">
                     <br>
                     <p-checkbox binary="true" label="Cargo" [(ngModel)]="cargo"></p-checkbox>
                 </div>
@@ -468,23 +493,6 @@
                 <div class="form-group col-lg-3 col-md-2">
                     <br>
                     <p-checkbox binary="true" label="Cuenta SJCS" [(ngModel)]="abonoJCS"></p-checkbox>
-                </div>-->
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>Tipo de cuenta</label>
-                    <p-multiSelect styleClass="widthAll" [filter]="false" [(ngModel)]="selectedTipoCuenta" [options]="tipoCuenta"
-                        selectedItemsLabel="{0} grupos seleccionados" maxSelectedLabels="1" autoWidth="false"
-                        defaultLabel="Elegir" maxSelectedLabels="1" optionLabel="name"></p-multiSelect>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>IBAN
-                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.iban" [formControl]="formSolicitud.controls['iban']">
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>Banco
-                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.banco"
-                        [formControl]="formSolicitud.controls['banco']">
                 </div>
             </div>
         </div>
@@ -588,13 +596,13 @@
 
     <div class="mt-3 text-right main-button ">
         <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
-        <button (click)="guardar()" [disabled]="isGuardar()" *ngIf="editar == true" pButton type="button " icon="fa fa-save"
-            iconPos="left" label="Guardar"></button>
-        <button (click)="aprobarSolicitud()" *ngIf="editar == false" pButton type="button " icon="fas fa-check" iconPos="left"
+        <button (click)="guardar()" [disabled]="isGuardar()" pButton type="button " icon="fa fa-save" iconPos="left"
+            label="Guardar"></button>
+        <button (click)="aprobarSolicitud()" *ngIf="editar == true" pButton type="button " icon="fas fa-check" iconPos="left"
             label="Aprobar"></button>
-        <button (click)="denegarSolicitud()" *ngIf="editar == false" pButton type="button " icon="fas fa-times" iconPos="left"
+        <button (click)="denegarSolicitud()" *ngIf="editar == true" pButton type="button " icon="fas fa-times" iconPos="left"
             label="Denegar"></button>
-        <button (click)="SolicitarCertificado()" *ngIf="editar == false" pButton type="button " icon="fas fa-certificate"
+        <button (click)="SolicitarCertificado()" *ngIf="editar == true" pButton type="button " icon="fas fa-certificate"
             iconPos="left" label="Solicitar certificado"></button>
     </div>
 </div>
