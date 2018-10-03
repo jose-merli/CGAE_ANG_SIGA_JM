@@ -1,6 +1,8 @@
 export class FichaColegialGeneralesItem {
   idPersona: String;
   nif: String;
+  soloNombre: String;
+  colegiado: Boolean;
   idTipoIdentificacion: String;
   nombre: String;
   apellidos1: String;
@@ -12,13 +14,17 @@ export class FichaColegialGeneralesItem {
   estadoColegial: String;
   idLenguaje: String;
   situacion: String;
-  fechaAlta: String;
+  fechaIncorporacionDate: Date;
+  incorporacionDate: Date;
+  fechaNacimientoDate: Date;
+  fechaIncorporacion: Date;
+  incorporacion: Date;
+  fechaNacimiento: Date;
   idioma: String;
-  fechaNacimiento: String;
   cuentaContable: String;
   partidoJudicial: any;
   publicarDatosContacto: boolean;
-  comisiones: boolean;
+  comisiones: String;
   etiquetas: any[];
   constructor() {}
 }

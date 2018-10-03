@@ -391,18 +391,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   }
 
   isCrear() {
-    let noColegiado = {
-      id: "",
-      apellidos: "",
-      nombre: "",
-      fechaNacimiento: "",
-      mail: "",
-      telefono: ""
-    };
 
-    this.isEditable = true;
-    this.datos = [noColegiado, ...this.datos];
-    this.table.reset();
   }
 
   deleteSeleccion() {
