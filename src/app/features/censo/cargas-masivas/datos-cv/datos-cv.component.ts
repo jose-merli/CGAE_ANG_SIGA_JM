@@ -29,6 +29,7 @@ export class DatosCvComponent implements OnInit {
   existeArchivo: boolean = false;
   fechaCargaSelect: Date;
   es: any = esCalendar;
+  msgs: any;
 
   file: File = undefined;
 
@@ -54,8 +55,9 @@ export class DatosCvComponent implements OnInit {
 
   display: boolean = false;
   clear: boolean = false;
-  uploadFileDisable: boolean = false;
-  enableButtons: boolean = false;
+  uploadFileDisable: boolean = true;
+  downloadFileDisable: boolean = true;
+  downloadFileLogDisable: boolean = true;
   progressSpinner: boolean = false;
 
   body: CargaMasivaItem = new CargaMasivaItem();
@@ -66,7 +68,6 @@ export class DatosCvComponent implements OnInit {
 
   constructor(
     private sigaServices: SigaServices,
-    private changeDetectorRef: ChangeDetectorRef,
     private datePipe: DatePipe,
     private domSanitizer: DomSanitizer
   ) {}
@@ -87,7 +88,11 @@ export class DatosCvComponent implements OnInit {
         header: "censo.cargaMasivaDatosCurriculares.literal.nombreFichero"
       },
       {
-        field: "registros",
+        field: "registrosCorrectos",
+        header: "cargaMasivaDatosCurriculares.numRegistros.literal"
+      },
+      {
+        field: "registrosErroneos",
         header: "cargaMasivaDatosCurriculares.numRegistros.literal"
       }
     ];
@@ -117,10 +122,9 @@ export class DatosCvComponent implements OnInit {
   }
 
   getFile(event: any) {
-    this.clear = false;
-    this.uploadFileDisable = true;
     // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
     let fileList: FileList = event.target.files;
+    this.uploadFileDisable = false;
 
     let nombreCompletoArchivo = fileList[0].name;
     let extensionArchivo = nombreCompletoArchivo.substring(
@@ -151,22 +155,29 @@ export class DatosCvComponent implements OnInit {
     }
   }
 
-  uploadFile() {
+  uploadFile(event: any) {
+    this.progressSpinner = true;
     if (this.file != undefined) {
       console.log("Este es el archivo que enviaremos", this.file);
-      this.progressSpinner = true;
       this.sigaServices
         .postSendContent("cargaMasivaDatosCurriculares_uploadFile", this.file)
         .subscribe(
           data => {
+            this.file = null;
             this.progressSpinner = false;
+            this.uploadFileDisable = true;
+            this.body.errores = data["error"];
+            let mensaje = this.body.errores.message.toString();
 
-            // this.body.errores = data["error"];
-            // this.mensaje = this.body.errores.description.toString();
-            // this.display = true;
+            this.showSuccess(mensaje);
+          },
+          error => {
+            console.log(error);
+            this.progressSpinner = false;
           },
           () => {
-            this.uploadFileDisable = false;
+            this.pUploadFile.clear();
+            this.progressSpinner = false;
           }
         );
     }
@@ -247,14 +258,10 @@ export class DatosCvComponent implements OnInit {
     this.fileUpload.clear();
   }
 
-  onRowSelect(selectedDatos) {
-    console.log("Items", selectedDatos);
-    this.enableButtons = true;
-  }
-
   downloadOriginalFile(selectedDatos) {
-    this.progressSpinner = true;
     this.body = selectedDatos;
+    this.progressSpinner = true;
+
     this.sigaServices
       .postDownloadFiles(
         "cargaMasivaDatosCurriculares_downloadOriginalFile",
@@ -264,7 +271,7 @@ export class DatosCvComponent implements OnInit {
         data => {
           const blob = new Blob([data], { type: "text/csv" });
           saveAs(blob, "PlantillaMasivaDatosCV_Original.xls");
-          this.progressSpinner = true;
+          this.progressSpinner = false;
         },
         err => {
           console.log(err);
@@ -277,18 +284,19 @@ export class DatosCvComponent implements OnInit {
   }
 
   downloadLogFile(selectedDatos) {
-    this.progressSpinner = true;
     this.body = selectedDatos;
+    this.progressSpinner = true;
+
     this.sigaServices
       .postDownloadFiles(
-        "cargaMasivaDatosCurriculares_downloadOriginalFile",
+        "cargaMasivaDatosCurriculares_downloadLogFile",
         this.body
       )
       .subscribe(
         data => {
           const blob = new Blob([data], { type: "text/csv" });
-          saveAs(blob, "PlantillaMasivaDatosCV_Log.xls");
-          this.progressSpinner = true;
+          saveAs(blob, "PlantillaMasivaDatosCV_Errores.xls");
+          this.progressSpinner = false;
         },
         err => {
           console.log(err);
@@ -301,10 +309,25 @@ export class DatosCvComponent implements OnInit {
   }
 
   changeDisabledButton() {
-    if (this.uploadFileDisable) {
-      this.uploadFileDisable = false;
-    } else {
+    if (this.pUploadFile.files.length == 0) {
       this.uploadFileDisable = true;
+    } else {
+      this.uploadFileDisable = false;
     }
+  }
+
+  disabledButtons(selectedDatos) {
+    this.downloadFileDisable = false;
+    this.numSelected = 1;
+    if (selectedDatos.registrosErroneos == 0) {
+      this.downloadFileLogDisable = true;
+    } else {
+      this.downloadFileLogDisable = false;
+    }
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
   }
 }
