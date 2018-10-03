@@ -15,13 +15,13 @@ import { Message } from "primeng/components/common/api";
 })
 export class NuevaIncorporacionComponent implements OnInit {
 
-    fichaColegiacion: boolean = false;
-    fichaSolicitud: boolean = false;
-    fichaPersonal: boolean = false;
-    fichaDireccion: boolean = false;
+    fichaColegiacion: boolean = true;
+    fichaSolicitud: boolean = true;
+    fichaPersonal: boolean = true;
+    fichaDireccion: boolean = true;
     fichaMutua: boolean = false;
     fichaAbogacia: boolean = false;
-    fichaBancaria: boolean = false;
+    fichaBancaria: boolean = true;
     es: any;
     solicitudEditar: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
     progressSpinner: boolean = false;
@@ -92,11 +92,11 @@ export class NuevaIncorporacionComponent implements OnInit {
             fechaNac: new FormControl(null, Validators.required),
             pais: new FormControl(null, Validators.required),
             direccion: new FormControl(null, Validators.required),
-            cp: new FormControl(null),
+            cp: new FormControl(null, Validators.required),
             provincia: new FormControl(null),
             poblacion: new FormControl(null),
             telefono1: new FormControl(null, Validators.required),
-            telefono2: new FormControl(null, Validators.required),
+            telefono2: new FormControl(null),
             fax1: new FormControl(null, Validators.required),
             fax2: new FormControl(null, Validators.required),
             movil: new FormControl(null, Validators.required),
@@ -111,6 +111,8 @@ export class NuevaIncorporacionComponent implements OnInit {
             this.solicitudEditar = JSON.parse(sessionStorage.getItem("editedSolicitud"));
             this.editar = true;
             this.tratarDatos();
+        } else {
+            this.estadoSolicitudSelected = { value: "20" };
         }
         console.log(this.editar);
 
@@ -261,6 +263,11 @@ export class NuevaIncorporacionComponent implements OnInit {
 
     onChangePais(event) {
         this.solicitudEditar.idPais = event.value.value;
+        if (event.value.value != '191') {
+            this.provinciaSelected = null;
+            this.poblacionSelected = null;
+            this.solicitudEditar.codigoPostal = null;
+        }
     }
 
     isValidIBAN(): boolean {
@@ -312,10 +319,19 @@ export class NuevaIncorporacionComponent implements OnInit {
         }, error => {
             console.log(error);
             this.msgs = [{ severity: "error", summary: "Error", detail: "Error al aprobar la solicitud." }];
+            this.progressSpinner = false;
         })
     }
     denegarSolicitud() {
-        //TODO
+        this.progressSpinner = true;
+        this.sigaServices.post("solicitudInciporporacion_aprobarSolicitud", this.solicitudEditar.idSolicitud).subscribe(result => {
+            this.progressSpinner = false;
+            this.msgs = [{ severity: "success", summary: "Éxito", detail: "Solicitud denegada." }];
+        }, error => {
+            console.log(error);
+            this.msgs = [{ severity: "error", summary: "Error", detail: "Error al denegar la solicitud." }];
+            this.progressSpinner = false;
+        })
     }
 
     SolicitarCertificado() {
@@ -334,8 +350,12 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.solicitudEditar.tratamiento = this.tratamientoSelected.value;
         this.solicitudEditar.idEstadoCivil = this.estadoCivilSelected.value;
         this.solicitudEditar.idPais = this.paisSelected.value;
-        this.solicitudEditar.idProvincia = this.provinciaSelected.value;
-        this.solicitudEditar.idPoblacion = this.poblacionSelected.value;
+        if (this.paisSelected.value == '191') {
+            this.solicitudEditar.idProvincia = this.provinciaSelected.value;
+            this.solicitudEditar.idPoblacion = this.poblacionSelected.value;
+        }
+
+
 
         if (this.residente == true) {
             this.solicitudEditar.residente = "1"
@@ -365,6 +385,7 @@ export class NuevaIncorporacionComponent implements OnInit {
             console.log("guardado", result);
             this.progressSpinner = false;
             this.msgs = [{ severity: "success", summary: "Éxito", detail: "Solicitud guardada correctamente." }];
+
         }, error => {
             this.msgs = [{ severity: "error", summary: "Error", detail: "Error al guardar la solicitud." }];
         })

@@ -345,11 +345,8 @@
                 <div class="form-group col-lg-3 col-md-3">
                     <label>CP
                         <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <input *ngIf="solicitudEditar.idPais !== '191'" type="text" class="form-control" pInputText
-                        [(ngModel)]="solicitudEditar.codigoPostal" [formControl]="formSolicitud.controls['cp']"
-                        disabled="true">
-                    <input *ngIf="solicitudEditar.idPais == '191'" type="text" class="form-control" pInputText
-                        [(ngModel)]="solicitudEditar.codigoPostal" [formControl]="formSolicitud.controls['cp']">
+                    <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.codigoPostal"
+                        [formControl]="formSolicitud.controls['cp']">
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>Provincia
@@ -536,10 +533,7 @@
         <div *ngIf="fichaMutua" class="card-body card-body-ficha">
             <div class="row">
                 <div class="form-group col-lg-3 col-md-3">
-                    <label>País
-                        <!--{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}--></label>
-                    <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion"
-                        optionLabel="label"></p-dropdown>
+                    <label>País</label>
                 </div>
 
             </div>
