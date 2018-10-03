@@ -25,7 +25,8 @@
           <label>{{"censo.sociedades.datosBancarios.adjuntar" | translate}}</label>
           <br>
           <p-fileUpload mode="basic" #pUploadFile  chooseLabel="{{ 'censo.sociedades.datosBancarios.seleccionarArchivo' | translate}}"
-             class="edit my-0 mx-auto main-button" name="file"  accept="application/vnd.ms-excel"  (change)="getFile($event, form)"></p-fileUpload>
+             class="edit my-0 mx-auto main-button" name="file"  accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+             (change)="getFile($event, form)" (click)="changeDisabledButton()" (onClear)="changeDisabledButton()"></p-fileUpload>
         </div>
 
       </div>
@@ -35,7 +36,7 @@
   <div class="card-footer">
     <div class="text-right main-button ">
       <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
-      <button pButton type="button" (click)="uploadFile()" icon="fa fa-upload" iconPos="left" label="{{ 'general.boton.cargarFichero' | translate}}"></button>
+      <button pButton type="button" [disabled]="uploadFileDisable" (click)="uploadFile()" icon="fa fa-upload" iconPos="left" label="{{ 'general.boton.cargarFichero' | translate}}"></button>
       <button pButton type="button" (click)="downloadFile()" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.descargaFicheroModelo' | translate}}"></button>
     </div>
   </div>
@@ -43,7 +44,8 @@
 <div *ngIf="buscar" class="card mt-3">
   <div class="card-body p-0">
     <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" pageLinks="4" [responsive]="true" #table class="tabla-listado"
-      [value]="datos" [sortOrder]="sortO" [paginator]="activarPaginacion()" paginatorPosition="both" [rows]="selectedItem">
+      [value]="datos" [sortOrder]="sortO" (onRowSelect)="disabledButtons(selectedDatos)" selectionMode="single" [paginator]="activarPaginacion()"
+      [(selection)]="selectedDatos" paginatorPosition="both" [rows]="selectedItem">
       <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
         [filter]="true" filterMatchMode="contains">
       </p-column>
@@ -55,13 +57,17 @@
           <label>{{ "general.message.mostrar" | translate}}</label>
           <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
           <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-          <!-- <div class="ml-3 selectAll">
-            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
-          </div> -->
-          <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
-            <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label> -->
         </div>
       </ng-template>
+
+      <p-footer>
+        <div class="text-right main-button">
+          <button [disabled]="downloadFileDisable" (click)="downloadOriginalFile(selectedDatos)" pButton type="button" icon="fa fa-close"
+            iconPos="left" label="{{ 'general.boton.download' | translate}}"></button>
+          <button [disabled]="downloadFileLogDisable" (click)="downloadLogFile(selectedDatos)" pButton type="button" icon="fa fa-plus"
+            iconPos="left" label="{{'general.boton.new' | translate}}"></button>
+        </div>
+      </p-footer>
     </p-dataTable>
   </div>
 </div>

@@ -26,6 +26,7 @@ export class CargaEtiquetasComponent implements OnInit {
   archivoDisponible: boolean = false;
   existeArchivo: boolean = false;
   save_file: any;
+  msgs: any;
 
   file: File = undefined;
   es: any = esCalendar;
@@ -46,6 +47,9 @@ export class CargaEtiquetasComponent implements OnInit {
   progressSpinner: boolean = false;
   body: CargaMasivaItem = new CargaMasivaItem();
   etiquetasSearch = new CargaMasivaObject();
+  uploadFileDisable: boolean = true;
+  downloadFileDisable: boolean = true;
+  downloadFileLogDisable: boolean = true;
 
   constructor(
     private translateService: TranslateService,
@@ -71,7 +75,11 @@ export class CargaEtiquetasComponent implements OnInit {
         header: "censo.cargaMasivaDatosCurriculares.literal.nombreFichero"
       },
       {
-        field: "registros",
+        field: "registrosCorrectos",
+        header: "cargaMasivaDatosCurriculares.numRegistros.literal"
+      },
+      {
+        field: "registrosErroneos",
         header: "cargaMasivaDatosCurriculares.numRegistros.literal"
       }
     ];
@@ -110,6 +118,11 @@ export class CargaEtiquetasComponent implements OnInit {
           data => {
             this.file = null;
             this.progressSpinner = false;
+            this.uploadFileDisable = true;
+            this.body.errores = data["error"];
+            let mensaje = this.body.errores.message.toString();
+
+            this.showSuccess(mensaje);
           },
           error => {
             console.log(error);
@@ -123,9 +136,10 @@ export class CargaEtiquetasComponent implements OnInit {
     }
   }
 
-  getFile(event: any, form: any) {
+  getFile(event: any) {
     // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
     let fileList: FileList = event.target.files;
+    this.uploadFileDisable = false;
 
     let nombreCompletoArchivo = fileList[0].name;
     let extensionArchivo = nombreCompletoArchivo.substring(
@@ -158,6 +172,14 @@ export class CargaEtiquetasComponent implements OnInit {
 
   showFailUploadedImage() {}
 
+  changeDisabledButton() {
+    if (this.pUploadFile.files.length == 0) {
+      this.uploadFileDisable = true;
+    } else {
+      this.uploadFileDisable = false;
+    }
+  }
+
   //Busca colegiados según los filtros
   isBuscar() {
     this.buscar = true;
@@ -183,6 +205,7 @@ export class CargaEtiquetasComponent implements OnInit {
           this.etiquetasSearch = JSON.parse(data["body"]);
           this.datos = this.etiquetasSearch.cargaMasivaItem;
           this.table.reset();
+          this.numSelected = this.selectedDatos.length;
         },
         err => {
           console.log(err);
@@ -202,7 +225,7 @@ export class CargaEtiquetasComponent implements OnInit {
         data => {
           const blob = new Blob([data], { type: "text/csv" });
           saveAs(blob, "PlantillaMasivaDatosGF.xls");
-          this.progressSpinner = true;
+          this.progressSpinner = false;
         },
         err => {
           console.log(err);
@@ -217,5 +240,62 @@ export class CargaEtiquetasComponent implements OnInit {
   activarPaginacion() {
     if (!this.datos || this.datos.length == 0) return false;
     else return true;
+  }
+
+  downloadOriginalFile(selectedDatos) {
+    this.body = selectedDatos;
+    this.progressSpinner = true;
+    this.sigaServices
+      .postDownloadFiles("cargasMasivas_downloadOriginalFile", this.body)
+      .subscribe(
+        data => {
+          const blob = new Blob([data], { type: "text/csv" });
+          saveAs(blob, "PlantillaMasivaDatosGF_Original.xls");
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  downloadLogFile(selectedDatos) {
+    this.body = selectedDatos;
+    this.progressSpinner = true;
+    this.sigaServices
+      .postDownloadFiles("cargasMasivas_downloadLogFile", this.body)
+      .subscribe(
+        data => {
+          const blob = new Blob([data], { type: "text/csv" });
+          saveAs(blob, "PlantillaMasivaDatosGF_Errores.xls");
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  disabledButtons(selectedDatos) {
+    this.downloadFileDisable = false;
+    this.numSelected = 1;
+    if (selectedDatos.registrosErroneos == 0) {
+      this.downloadFileLogDisable = true;
+    } else {
+      this.downloadFileLogDisable = false;
+    }
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
   }
 }
