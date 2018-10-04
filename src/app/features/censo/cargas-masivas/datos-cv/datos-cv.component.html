@@ -61,11 +61,11 @@
       </ng-template>
 
       <p-footer>
-        <div class="text-right main-button">
-          <button [disabled]="downloadFileDisable" (click)="downloadOriginalFile(selectedDatos)" pButton type="button" icon="fa fa-close"
-            iconPos="left" label="{{ 'general.boton.download' | translate}}"></button>
-          <button [disabled]="downloadFileLogDisable" (click)="downloadLogFile(selectedDatos)" pButton type="button" icon="fa fa-plus"
-            iconPos="left" label="{{'general.boton.new' | translate}}"></button>
+        <div *ngIf="selectedDatos != ''" class="text-right main-button">
+          <button [disabled]="downloadFileDisable" (click)="downloadOriginalFile(selectedDatos)" pButton type="button" icon="fa fa-download"
+            iconPos="left" label="{{ 'general.boton.descargar.plantilla' | translate}}"></button>
+          <button [disabled]="downloadFileLogDisable" (click)="downloadLogFile(selectedDatos)" pButton type="button" icon="fa fa-download"
+            iconPos="left" label="{{'general.boton.descargar.informe' | translate}}"></button>
         </div>
       </p-footer>
     </p-dataTable>
@@ -75,25 +75,3 @@
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
-
-<!-- MOSTRAR ERRORES -->
-<p-confirmDialog header="ERRORES" icon="fa fa-warning" width="500" #cd>
-  <p-footer>
-    <button type="button" pButton icon="fa fa-check" label="{{'general.boton.submit' | translate}}" (click)="cd.accept()"></button>
-  </p-footer>
-</p-confirmDialog>
-
-
-<p-dialog [(visible)]="display" [modal]="true" [responsive]="true" [width]="500" [minWidth]="500">
-  <p-header>
-    <p>
-      <i class="fa fa-warning float-left header"></i>
-      <b> ERRORES </b>
-    </p>
-
-  </p-header>
-  <span [innerHTML]="mensaje"></span>
-  <p-footer>
-    <button type="button" pButton icon="fa fa-check" (click)="confirmationErrors()" label="{{'general.boton.submit' | translate}}"></button>
-  </p-footer>
-</p-dialog>

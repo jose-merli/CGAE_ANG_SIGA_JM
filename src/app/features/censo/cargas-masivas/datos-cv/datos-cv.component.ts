@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
-import { TranslateService } from "../../../../commons/translate";
 import { SigaServices } from "../../../../_services/siga.service";
 import { saveAs } from "file-saver/FileSaver";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -37,23 +36,16 @@ export class DatosCvComponent implements OnInit {
 
   @ViewChild("table")
   table;
-
-  @ViewChild("pUploadFile")
-  pUploadFile;
-
   selectedDatos;
   cols: any = [];
   rowsPerPage: any = [];
   datos: any[];
   numSelected: number = 0;
   selectedItem: number = 10;
-  selectMultiple: boolean = false;
-  selectAll: boolean = false;
 
-  @ViewChild("fileUpload")
-  fileUpload;
+  @ViewChild("pUploadFile")
+  pUploadFile;
 
-  display: boolean = false;
   clear: boolean = false;
   uploadFileDisable: boolean = true;
   downloadFileDisable: boolean = true;
@@ -69,7 +61,8 @@ export class DatosCvComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private datePipe: DatePipe,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -89,11 +82,11 @@ export class DatosCvComponent implements OnInit {
       },
       {
         field: "registrosCorrectos",
-        header: "cargaMasivaDatosCurriculares.numRegistros.literal"
+        header: "cargaMasivaDatosCurriculares.numRegistrosCorrectos.literal"
       },
       {
         field: "registrosErroneos",
-        header: "cargaMasivaDatosCurriculares.numRegistros.literal"
+        header: "cargaMasivaDatosCurriculares.numRegistrosErroneos.literal"
       }
     ];
 
@@ -190,6 +183,9 @@ export class DatosCvComponent implements OnInit {
     this.progressSpinner = true;
     this.buscar = true;
 
+    // Deshabilitar
+    this.selectedDatos = [];
+
     this.body.tipoCarga = "CV";
 
     if (this.fechaCargaSelect != undefined || this.fechaCargaSelect != null) {
@@ -212,8 +208,8 @@ export class DatosCvComponent implements OnInit {
           this.progressSpinner = false;
           this.etiquetasSearch = JSON.parse(data["body"]);
           this.datos = this.etiquetasSearch.cargaMasivaItem;
-          this.numSelected = this.datos.length;
           this.table.reset();
+          this.numSelected = this.selectedDatos.length;
         },
         err => {
           console.log(err);
@@ -246,16 +242,6 @@ export class DatosCvComponent implements OnInit {
           this.progressSpinner = false;
         }
       );
-  }
-
-  activarPaginacion() {
-    if (!this.datos || this.datos.length == 0) return false;
-    else return true;
-  }
-
-  confirmationErrors() {
-    //this.display = false;
-    this.fileUpload.clear();
   }
 
   downloadOriginalFile(selectedDatos) {
@@ -329,5 +315,17 @@ export class DatosCvComponent implements OnInit {
   showSuccess(mensaje: string) {
     this.msgs = [];
     this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  // PARA LA TABLA
+  activarPaginacion() {
+    if (!this.datos || this.datos.length == 0) return false;
+    else return true;
+  }
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
   }
 }

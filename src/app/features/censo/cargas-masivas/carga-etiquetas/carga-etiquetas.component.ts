@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ChangeDetectorRef,
-  ElementRef
-} from "@angular/core";
-import { TranslateService } from "../../../../commons/translate";
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 import { SigaServices } from "../../../../_services/siga.service";
 import { saveAs } from "file-saver/FileSaver";
 import { CargaMasivaItem } from "../../../../models/CargaMasivaItem";
@@ -33,10 +26,6 @@ export class CargaEtiquetasComponent implements OnInit {
 
   @ViewChild("table")
   table;
-
-  @ViewChild("pUploadFile")
-  pUploadFile;
-
   selectedDatos;
   cols: any = [];
   rowsPerPage: any = [];
@@ -44,15 +33,18 @@ export class CargaEtiquetasComponent implements OnInit {
   numSelected: number = 0;
   selectedItem: number = 10;
 
+  @ViewChild("pUploadFile")
+  pUploadFile;
+
   progressSpinner: boolean = false;
   body: CargaMasivaItem = new CargaMasivaItem();
   etiquetasSearch = new CargaMasivaObject();
   uploadFileDisable: boolean = true;
   downloadFileDisable: boolean = true;
   downloadFileLogDisable: boolean = true;
+  history: boolean = false;
 
   constructor(
-    private translateService: TranslateService,
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
     private datePipe: DatePipe,
@@ -76,11 +68,11 @@ export class CargaEtiquetasComponent implements OnInit {
       },
       {
         field: "registrosCorrectos",
-        header: "cargaMasivaDatosCurriculares.numRegistros.literal"
+        header: "cargaMasivaDatosCurriculares.numRegistrosCorrectos.literal"
       },
       {
         field: "registrosErroneos",
-        header: "cargaMasivaDatosCurriculares.numRegistros.literal"
+        header: "cargaMasivaDatosCurriculares.numRegistrosErroneos.literal"
       }
     ];
 
@@ -184,7 +176,10 @@ export class CargaEtiquetasComponent implements OnInit {
   isBuscar() {
     this.buscar = true;
     this.progressSpinner = true;
-    this.buscar = true;
+
+    // Deshabilitamos
+    this.history = false;
+    this.selectedDatos = [];
 
     this.body.tipoCarga = "GF";
 
@@ -235,11 +230,6 @@ export class CargaEtiquetasComponent implements OnInit {
           this.progressSpinner = false;
         }
       );
-  }
-
-  activarPaginacion() {
-    if (!this.datos || this.datos.length == 0) return false;
-    else return true;
   }
 
   downloadOriginalFile(selectedDatos) {
@@ -297,5 +287,28 @@ export class CargaEtiquetasComponent implements OnInit {
   showSuccess(mensaje: string) {
     this.msgs = [];
     this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  // PARA LA TABLA
+  activarPaginacion() {
+    if (!this.datos || this.datos.length == 0) return false;
+    else return true;
+  }
+
+  setItalic(datoH) {
+    if (datoH.fechaCarga > new Date()) return false;
+    else return true;
+  }
+
+  loadHistory() {
+    this.history = true;
+    this.buscar = false;
+    this.selectedDatos = [];
+  }
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
   }
 }
