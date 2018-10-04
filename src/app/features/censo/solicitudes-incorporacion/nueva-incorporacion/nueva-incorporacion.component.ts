@@ -15,11 +15,11 @@ import { Message } from "primeng/components/common/api";
 })
 export class NuevaIncorporacionComponent implements OnInit {
 
-    fichaColegiacion: boolean = true;
-    fichaSolicitud: boolean = true;
-    fichaPersonal: boolean = true;
-    fichaDireccion: boolean = true;
-    fichaBancaria: boolean = true;
+    fichaColegiacion: boolean = false;
+    fichaSolicitud: boolean = false;
+    fichaPersonal: boolean = false;
+    fichaDireccion: boolean = false;
+    fichaBancaria: boolean = false;
     es: any;
     solicitudEditar: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
     progressSpinner: boolean = false;
@@ -45,6 +45,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     tipoColegiacionSelected: any;
     msgs: Message[] = [];
     editar: boolean = false;
+    nuevo: boolean = false;
 
     modalidadDocumentacionSelected: any;
     tipoIdentificacionSelected: any;
@@ -105,16 +106,14 @@ export class NuevaIncorporacionComponent implements OnInit {
             banco: new FormControl(null, Validators.required),
         })
 
-
         if (sessionStorage.getItem("editar") == "true") {
             this.solicitudEditar = JSON.parse(sessionStorage.getItem("editedSolicitud"));
             this.editar = true;
             this.tratarDatos();
         } else {
+            this.nuevo = true;
             this.estadoSolicitudSelected = { value: "20" };
         }
-        console.log(this.editar);
-
     }
 
     cargarCombos() {
@@ -313,6 +312,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     aprobarSolicitud() {
         this.progressSpinner = true;
         this.sigaServices.post("solicitudInciporporacion_aprobarSolicitud", this.solicitudEditar.idSolicitud).subscribe(result => {
+            console.log(result);
             this.progressSpinner = false;
             this.msgs = [{ severity: "success", summary: "Éxito", detail: "Solicitud aprobada." }];
         }, error => {
@@ -324,7 +324,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     denegarSolicitud() {
         this.progressSpinner = true;
 
-        this.sigaServices.post("solicitudInciporporacion_aprobarSolicitud", this.solicitudEditar.idSolicitud).subscribe(result => {
+        this.sigaServices.post("solicitudInciporporacion_denegarSolicitud", this.solicitudEditar.idSolicitud).subscribe(result => {
             this.progressSpinner = false;
             this.msgs = [{ severity: "success", summary: "Éxito", detail: "Solicitud denegada." }];
         }, error => {
@@ -381,8 +381,9 @@ export class NuevaIncorporacionComponent implements OnInit {
 
 
         this.sigaServices.post("solicitudInciporporacion_nuevaSolicitud", this.solicitudEditar).subscribe(result => {
-            //this.solicitudEditar = new SolicitudIncorporacionItem();
-            console.log("guardado", result);
+            sessionStorage.removeItem("editedSolicitud");
+            sessionStorage.setItem("editedSolicitud", JSON.stringify(this.solicitudEditar));
+            this.tratarDatos();
             this.progressSpinner = false;
             this.msgs = [{ severity: "success", summary: "Éxito", detail: "Solicitud guardada correctamente." }];
 
@@ -460,6 +461,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     }
 
     backTo() {
+        sessionStorage.removeItem("editedSolicitud");
         this.location.back();
     }
 

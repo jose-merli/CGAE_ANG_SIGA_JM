@@ -148,6 +148,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   }
 
   irNuevaSolicitud() {
+    sessionStorage.removeItem("editedSolicitud");
     sessionStorage.setItem("editar", "false");
     this.router.navigate(["/nuevaIncorporacion"]);
   }
@@ -158,6 +159,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
       enviarDatos = item[0];
       sessionStorage.setItem("editedSolicitud", JSON.stringify(enviarDatos));
       sessionStorage.setItem("editar", "true");
+      sessionStorage.setItem("filtros", JSON.stringify(this.body));
     } else {
       sessionStorage.setItem("editar", "false");
     }
