@@ -198,6 +198,8 @@ export class SigaServices {
       "solicitudIncorporacion/nuevaSolicitud",
     solicitudInciporporacion_aprobarSolicitud:
       "solicitudIncorporacion/aprobarSolicitud",
+    solicitudInciporporacion_denegarSolicitud:
+      "solicitudIncorporacion/denegarSolicitud",
     fichaDatosBancarios_datosBancariosSearch:
       "fichaDatosBancarios/datosBancariosSearch",
     fichaDatosColegiales_tipoSeguro: "fichaDatosColegiales/tipoSeguro",
@@ -266,9 +268,9 @@ export class SigaServices {
     return this.httpbackend
       .get(
         environment.newSigaUrl +
-          this.endpoints[service] +
-          "?institucion=" +
-          institucion
+        this.endpoints[service] +
+        "?institucion=" +
+        institucion
       )
       .map(response => {
         return response;

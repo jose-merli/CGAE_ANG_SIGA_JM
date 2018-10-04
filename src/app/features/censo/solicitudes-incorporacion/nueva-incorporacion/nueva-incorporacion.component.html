@@ -3,7 +3,7 @@
     <!--DATOS COLEGIACIÓN-->
     <div class="card">
         <div class="card-header header-ficha" (click)="abreCierraFichaColegiacion()">
-            <div *ngIf="!fichaColegiacion" class="form-row">
+            <div [hidden]="fichaColegiacion" class="form-row">
                 <div class="col-lg-1 col-md-2">
                     <div class="img-colegiado">
                         <i *ngIf="!existeImagen" class="far fa-address-book icon-ficha"></i>
@@ -29,7 +29,7 @@
                             <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
                             <span>{{solicitudEditar.fechaSolicitud | date: 'dd/MM/yyyy'}}</span>
                         </label>
-                        <i *ngIf="!fichaColegiacion" class="fa fa-angle-down float-right"></i>
+                        <i [hidden]="fichaColegiacion" class="fa fa-angle-down float-right"></i>
                     </div>
                 </div>
             </div>
@@ -44,7 +44,7 @@
             </div>
         </div>
         <!--cuerpo datos colegiación-->
-        <div *ngIf="fichaColegiacion" class="card-body card-body-ficha">
+        <div [hidden]="!fichaColegiacion" class="card-body card-body-ficha">
             <div class="row">
                 <div class="col-lg-5 col-md-5">
                     <div class="row">
@@ -86,7 +86,7 @@
     <!--FICHA DATOS SOLICITUD-->
     <div class="card">
         <div class="card-header header-ficha" (click)="abreCierraFichaSolicitud()">
-            <div *ngIf="!fichaSolicitud" class="form-row">
+            <div [hidden]="fichaSolicitud" class="form-row">
                 <div class="col-lg-1 col-md-2">
                     <div class="img-colegiado">
                         <i *ngIf="!existeImagen" class="fas fa-file-alt icon-ficha"></i>
@@ -123,7 +123,7 @@
             </div>
         </div>
         <!--cuerpo datos modalidad-->
-        <div *ngIf="fichaSolicitud" class="card-body card-body-ficha">
+        <div [hidden]="!fichaSolicitud" class="card-body card-body-ficha">
             <!--<div class="d-flex justify-content-end align-items-center mb-4">
                 <br>
                 <p-checkbox label="Residente" [(ngModel)]="ubicacionChecked" binary="true"></p-checkbox>
@@ -171,7 +171,7 @@
     <!--FICHA DATOS PERSONALES-->
     <div class="card">
         <div class="card-header header-ficha" (click)="abreCierraFichaPersonal()">
-            <div *ngIf="!fichaPersonal" class="form-row">
+            <div [hidden]="fichaPersonal" class="form-row">
                 <div class="col-lg-1 col-md-2">
                     <div class="img-colegiado">
                         <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
@@ -212,7 +212,7 @@
             </div>
         </div>
         <!--cuerpo datos personales-->
-        <div *ngIf="fichaPersonal" class="card-body card-body-ficha">
+        <div [hidden]="!fichaPersonal" class="card-body card-body-ficha">
             <div class="row">
                 <div class="form-group col-lg-3 col-md-3">
                     <label>Tipo identificación
@@ -287,7 +287,7 @@
     <!--FICHA DATOS DIRECCIÓN-->
     <div class="card">
         <div class="card-header header-ficha" (click)="abreCierraFichaDireccion()">
-            <div *ngIf="!fichaDireccion" class="form-row">
+            <div [hidden]="fichaDireccion" class="form-row">
                 <div class="col-lg-1 col-md-2">
                     <div class="img-colegiado">
                         <i *ngIf="!existeImagen" class="fa fa-map-marker icon-ficha"></i>
@@ -328,7 +328,7 @@
             </div>
         </div>
         <!--cuerpo datos dirección-->
-        <div *ngIf="fichaDireccion" class="card-body card-body-ficha">
+        <div [hidden]="!fichaDireccion" class="card-body card-body-ficha">
             <div class="row">
                 <div class="form-group col-lg-3 col-md-3">
                     <label>País
@@ -405,7 +405,7 @@
     <!--FICHA DATOS BANCARIOS-->
     <div class="card">
         <div class="card-header header-ficha" (click)="abreCierraFichaBancaria()">
-            <div *ngIf="!fichaBancaria" class="form-row">
+            <div [hidden]="fichaBancaria" class="form-row">
                 <div class="col-lg-1 col-md-2">
                     <div class="img-colegiado">
                         <i *ngIf="!existeImagen" class="fa fa-credit-card icon-ficha"></i>
@@ -429,7 +429,9 @@
                         </label>
                         <label>Uso
                             <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
-                            <span>{{solicitudEditar.abonoCargo}}</span>
+                            <span *ngIf="solicitudEditar.abonoCargo =='C'">Cargo</span>
+                            <span *ngIf="solicitudEditar.abonoCargo =='A'">Abono</span>
+                            <span *ngIf="solicitudEditar.abonoCargo =='T'">Todas</span>
                         </label>
                         <label>Verficado
                             <!--{{"censo.fichaCliente.literal.identificacion" | translate}}-->
@@ -450,7 +452,7 @@
             </div>
         </div>
         <!--cuerpo datos bancarios-->
-        <div *ngIf="fichaBancaria" class="card-body card-body-ficha">
+        <div [hidden]="!fichaBancaria" class="card-body card-body-ficha">
             <div class="row">
                 <div class="form-group col-lg-3 col-md-3">
                     <label>Titular
@@ -496,7 +498,7 @@
     </div>
 
     <!--FICHA DATOS ALTER MUTUA-->
-    <div class="card">
+    <div *ngIf="!nuevo" class="card">
         <div class="card-header header-ficha" style="cursor: pointer" (click)="irAlterMutua()">
             <div *ngIf="!fichaMutua" class="form-row">
                 <div class="col-lg-1 col-md-2">
@@ -520,7 +522,7 @@
     </div>
 
     <!--FICHA MUTUALIDAD DE LA ABOGACÍA-->
-    <div class="card">
+    <div *ngIf="!nuevo" class="card">
         <div class="card-header header-ficha" (click)="abreCierraFichaAbogacia()">
             <div *ngIf="!fichaAbogacia" class="form-row">
                 <div class="col-lg-1 col-md-2">
