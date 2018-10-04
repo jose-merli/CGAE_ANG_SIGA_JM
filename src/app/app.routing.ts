@@ -15,6 +15,7 @@ import { ComisionesCargosComponent } from "./features/censo/comisiones-cargos/co
 import { SolicitudesGenericasComponent } from "./features/censo/solicitudes-genericas/solicitudes-genericas.component";
 import { SolicitudesEspecificasComponent } from "./features/censo/solicitudes-especificas/solicitudes-especificas.component";
 import { SolicitudesIncorporacionComponent } from "./features/censo/solicitudes-incorporacion/solicitudes-incorporacion.component";
+import { AlterMutuaComponent } from "./features/censo/solicitudes-incorporacion/alter-mutua/alter-mutua.component";
 import { NuevaIncorporacionComponent } from "./features/censo/solicitudes-incorporacion/nueva-incorporacion/nueva-incorporacion.component";
 import { DocumentacionSolicitudesComponent } from "./features/censo/documentacion-solicitudes/documentacion-solicitudes.component";
 import { MantenimientoGruposFijosComponent } from "./features/censo/mantenimiento-grupos-fijos/mantenimiento-grupos-fijos.component";
@@ -271,7 +272,11 @@ const appRoutes: Routes = [
     component: SolicitudesIncorporacionComponent,
     canActivate: [AuthGuard]
   },
-
+  {
+    path: "alterMutua",
+    component: AlterMutuaComponent,
+    canActivate: [AuthGuard]
+  },
   {
     path: "nuevaIncorporacion",
     component: NuevaIncorporacionComponent,

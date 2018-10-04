@@ -19,8 +19,6 @@ export class NuevaIncorporacionComponent implements OnInit {
     fichaSolicitud: boolean = true;
     fichaPersonal: boolean = true;
     fichaDireccion: boolean = true;
-    fichaMutua: boolean = false;
-    fichaAbogacia: boolean = false;
     fichaBancaria: boolean = true;
     es: any;
     solicitudEditar: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
@@ -61,7 +59,8 @@ export class NuevaIncorporacionComponent implements OnInit {
     private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
 
-    constructor(private translateService: TranslateService, private sigaServices: SigaServices, private location: Location, private formBuilder: FormBuilder, ) {
+    constructor(private translateService: TranslateService, private sigaServices: SigaServices, private location: Location,
+        private formBuilder: FormBuilder, private router: Router) {
 
     }
 
@@ -324,6 +323,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     }
     denegarSolicitud() {
         this.progressSpinner = true;
+
         this.sigaServices.post("solicitudInciporporacion_aprobarSolicitud", this.solicitudEditar.idSolicitud).subscribe(result => {
             this.progressSpinner = false;
             this.msgs = [{ severity: "success", summary: "Éxito", detail: "Solicitud denegada." }];
@@ -417,12 +417,6 @@ export class NuevaIncorporacionComponent implements OnInit {
     abreCierraFichaBancaria() {
         this.fichaBancaria = !this.fichaBancaria;
     }
-    abreCierraFichaMutua() {
-        this.fichaMutua = !this.fichaMutua;
-    }
-    abreCierraFichaAbogacia() {
-        this.fichaAbogacia = !this.fichaAbogacia;
-    }
 
     checkIdentificacion(doc: String) {
         if (doc && doc.length > 0 && doc != undefined) {
@@ -467,5 +461,9 @@ export class NuevaIncorporacionComponent implements OnInit {
 
     backTo() {
         this.location.back();
+    }
+
+    irAlterMutua() {
+        this.router.navigate(["/alterMutua"]);
     }
 }
