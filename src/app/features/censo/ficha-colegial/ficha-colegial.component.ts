@@ -48,6 +48,7 @@ export class FichaColegialComponent implements OnInit {
 
   // Bodys
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
+  checkGeneralBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
 
   idPersona: any;
@@ -106,14 +107,23 @@ export class FichaColegialComponent implements OnInit {
   fechaAlta: Date;
   comisiones: boolean;
 
+  esNewColegiado: boolean = false;
   esColegiado: boolean;
   archivoDisponible: boolean = false;
   existeImagen: boolean = false;
   imagenPersona: any;
 
+  // comboSexo: any[];
+
   @ViewChild("table")
   table: DataTable;
   selectedDatos;
+
+  comboSexo = [
+    { label: "", value: null },
+    { label: "Hombre", value: "H" },
+    { label: "Mujer", value: "M" }
+  ];
 
   fichasPosibles = [
     {
@@ -173,10 +183,15 @@ export class FichaColegialComponent implements OnInit {
     // Cogemos los datos de la busqueda de Colegiados
     if (
       sessionStorage.getItem("personaBody") != null &&
-      sessionStorage.getItem("personaBody") != undefined
+      sessionStorage.getItem("personaBody") != undefined &&
+      JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
     ) {
+      this.generalBody = new FichaColegialGeneralesItem();
       this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.generalBody = this.generalBody[0];
+      this.checkGeneralBody = new FichaColegialGeneralesItem();
+      this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      this.checkGeneralBody = this.checkGeneralBody[0];
       this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.colegialesBody = this.colegialesBody[0];
       this.idPersona = this.generalBody.idPersona;
@@ -187,10 +202,16 @@ export class FichaColegialComponent implements OnInit {
       this.onInitCurriculares();
       this.onInitColegiales();
     } else {
+      sessionStorage.removeItem("esNuevoNoColegiado");
       this.generalBody = new FichaColegialGeneralesItem();
       this.colegialesBody = new FichaColegialColegialesItem();
+      // this.searchDatosBancariosIdPersona.datosBancariosItem[0] = new DatosBancariosItem();
     }
-
+    if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
+      this.esNewColegiado = true;
+    } else {
+      this.esNewColegiado = false;
+    }
     this.onInitCurriculares();
 
     this.onInitDirecciones();
@@ -622,7 +643,7 @@ export class FichaColegialComponent implements OnInit {
   // MÉTODOS PARA DATOS GENERALES
 
   onInitGenerales() {
-    this.activacionGuardarGenerales();
+    // this.activacionGuardarGenerales();
     this.cargarImagen(this.idPersona);
     this.stringAComisiones();
     this.fechaNacimiento = this.generalBody.fechaNacimiento;
@@ -677,9 +698,19 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
+  // getComboSexo() {
+  //   this.comboSexo = [
+  //     { label: "", value: null },
+  //     { label: "Hombre", value: "H" },
+  //     { label: "Mujer", value: "M" }
+  //   ];
+  // }
+
   generalesGuardar() {
     this.progressSpinner = true;
     this.generalBody.nombre = this.generalBody.soloNombre;
+    this.generalBody.colegiado = this.esColegiado;
+    this.checkGeneralBody.colegiado = this.esColegiado;
     this.arreglarFechas();
     this.comisionesAString();
     this.sigaServices
@@ -687,15 +718,18 @@ export class FichaColegialComponent implements OnInit {
       .subscribe(
         data => {
           // sessionStorage.removeItem("personaBody");
-          // sessionStorage.setItem(
-          //   "personaBody",
-          //   JSON.stringify(this.generalBody)
-          // );
+          sessionStorage.setItem(
+            "personaBody",
+            JSON.stringify(this.generalBody)
+          );
+          this.checkGeneralBody = new FichaColegialGeneralesItem();
+
+          this.checkGeneralBody = JSON.parse(JSON.stringify(this.generalBody));
 
           if (this.file != undefined) {
             this.guardarImagen(this.idPersona);
           }
-
+          this.activacionGuardarGenerales();
           // this.body = JSON.parse(data["body"]);
           this.progressSpinner = false;
           this.showSuccess();
@@ -703,6 +737,7 @@ export class FichaColegialComponent implements OnInit {
         error => {
           console.log(error);
           this.progressSpinner = false;
+          this.activacionGuardarGenerales();
           this.showFail();
         }
       );
@@ -750,29 +785,27 @@ export class FichaColegialComponent implements OnInit {
 
   activacionGuardarGenerales() {
     if (
-      (this.isValidDNI(this.generalBody.nif) &&
-        this.generalBody.nif != undefined &&
-        this.generalBody.idTipoIdentificacion != undefined &&
-        this.generalBody.soloNombre != undefined &&
-        this.generalBody.apellidos1 != undefined &&
-        this.generalBody.idTratamiento != null &&
-        // this.generalBody.fechaAlta != undefined &&
-        this.generalBody.idLenguaje != "") ||
-      this.generalBody.idLenguaje == null
+      JSON.stringify(this.checkGeneralBody) != JSON.stringify(this.generalBody)
     ) {
-      this.activarGuardarGenerales = true;
+      if (
+        ((this.isValidDNI(this.generalBody.nif) || this.esColegiado == false) &&
+          this.generalBody.nif != undefined &&
+          this.generalBody.idTipoIdentificacion != undefined &&
+          this.generalBody.soloNombre != undefined &&
+          this.generalBody.apellidos1 != undefined &&
+          this.generalBody.idTratamiento != null &&
+          this.generalBody.asientoContable != null &&
+          this.generalBody.idLenguaje != "") ||
+        this.generalBody.idLenguaje == null
+      ) {
+        this.activarGuardarGenerales = true;
+      } else {
+        this.activarGuardarGenerales = false;
+      }
     } else {
       this.activarGuardarGenerales = false;
     }
   }
-  // arreglarFecha() {
-  //   let returnDesde = JSON.stringify(this.generalBody.fechaNacimiento);
-  //   returnDesde = returnDesde.substring(1, 11);
-  //   let arrayDesde = returnDesde.split("-");
-  //   arrayDesde[2] = "" + parseInt(arrayDesde[2] + 1);
-  //   returnDesde = arrayDesde[1] + "/" + arrayDesde[2] + "/" + arrayDesde[0];
-  //   this.generalBody.fechaNacimiento = new Date(returnDesde);
-  // }
 
   onChangeCalendar(event) {
     // console.log(new Date(event));
@@ -808,9 +841,8 @@ export class FichaColegialComponent implements OnInit {
 
   restablecerGenerales() {
     this.cargarImagen(this.idPersona);
-    console.log(this.generalBody.idTratamiento);
-    this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
-    this.generalBody = this.generalBody[0];
+    // this.generalBody = this.checkGeneralBody;
+    this.activacionGuardarGenerales();
   }
 
   //FOTOGRAFIA
