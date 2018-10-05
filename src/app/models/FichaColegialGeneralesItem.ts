@@ -21,7 +21,7 @@ export class FichaColegialGeneralesItem {
   incorporacion: Date;
   fechaNacimiento: Date;
   idioma: String;
-  cuentaContable: String;
+  asientoContable: String;
   partidoJudicial: any;
   publicarDatosContacto: boolean;
   comisiones: String;

@@ -391,7 +391,14 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   }
 
   isCrear() {
-
+    sessionStorage.removeItem("personaBody");
+    sessionStorage.setItem(
+      "filtrosBusquedaNoColegiados",
+      JSON.stringify(this.body)
+    );
+    sessionStorage.setItem("esColegiado", "false");
+    sessionStorage.setItem("esNuevoNoColegiado", "true");
+    this.router.navigate(["/fichaColegial"]);
   }
 
   deleteSeleccion() {

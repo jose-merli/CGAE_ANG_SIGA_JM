@@ -117,9 +117,9 @@
     <div *ngIf="buscar == true" class="card mt-3">
         <div class="card-body p-0">
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-                [(selection)]="selectedDatos" (onRowSelect)="irEditarNoColegiado(selectedDatos)(selectedDatos)" pageLinks="4"
-                dataKey="nif" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1"
-                [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+                [(selection)]="selectedDatos" (onRowSelect)="irEditarNoColegiado(selectedDatos)" pageLinks="4" dataKey="nif"
+                [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true"
+                paginatorPosition="both" [rows]="selectedItem">
                 <p-column *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate"></p-column>
                 <ng-template pTemplate="paginatorLeft">
                     <div class="mostrar d-flex text-right justify-content-end">
