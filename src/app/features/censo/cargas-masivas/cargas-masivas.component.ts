@@ -23,7 +23,10 @@ export class CargasMasivasComponent implements OnInit, AfterContentInit {
 
   constructor(private translateService: TranslateService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    // Abrir tarjeta
+    this.showCargasMasivas = true;
+  }
 
   ngAfterContentInit() {
     this.cargasMasivas = [
