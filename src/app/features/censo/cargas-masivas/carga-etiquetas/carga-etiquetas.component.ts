@@ -118,6 +118,7 @@ export class CargaEtiquetasComponent implements OnInit {
           },
           error => {
             console.log(error);
+            this.showFail("Error en la subida del fichero.");
             this.progressSpinner = false;
           },
           () => {
@@ -289,6 +290,15 @@ export class CargaEtiquetasComponent implements OnInit {
     this.msgs.push({ severity: "success", summary: "", detail: mensaje });
   }
 
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: mensaje
+    });
+  }
+
   // PARA LA TABLA
   activarPaginacion() {
     if (!this.datos || this.datos.length == 0) return false;
@@ -296,7 +306,7 @@ export class CargaEtiquetasComponent implements OnInit {
   }
 
   setItalic(datoH) {
-    if (datoH.fechaCarga > new Date()) return false;
+    if (datoH.fechaCarga < new Date()) return false;
     else return true;
   }
 

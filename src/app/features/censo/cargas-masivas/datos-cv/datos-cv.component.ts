@@ -6,9 +6,9 @@ import { CargaMasivaItem } from "../../../../models/CargaMasivaItem";
 import { CargaMasivaObject } from "../../../../models/CargaMasivaObject";
 import { DatePipe } from "../../../../../../node_modules/@angular/common";
 import { ErrorItem } from "../../../../models/ErrorItem";
-import { ConfirmationService } from "primeng/api";
 import { esCalendar } from "../../../../utils/calendar";
 import { Pipe, PipeTransform } from "@angular/core";
+
 @Pipe({ name: "replaceLineBreaks" })
 export class ReplaceLineBreaks implements PipeTransform {
   transform(value: string): string {
@@ -166,6 +166,7 @@ export class DatosCvComponent implements OnInit {
           },
           error => {
             console.log(error);
+            this.showFail("Error en la subida del fichero.");
             this.progressSpinner = false;
           },
           () => {
@@ -315,6 +316,15 @@ export class DatosCvComponent implements OnInit {
   showSuccess(mensaje: string) {
     this.msgs = [];
     this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: mensaje
+    });
   }
 
   // PARA LA TABLA
