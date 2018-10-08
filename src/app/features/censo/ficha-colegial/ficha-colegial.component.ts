@@ -76,7 +76,7 @@ export class FichaColegialComponent implements OnInit {
   selectedTipo: any[] = [];
   uploadedFiles: any[] = [];
   numSelected: number = 0;
-  activacionEditar: boolean = false;
+  activacionEditar: boolean = true;
   selectedItem: number = 10;
   camposDesactivados: boolean = false;
   datos: any[];
@@ -197,26 +197,26 @@ export class FichaColegialComponent implements OnInit {
       this.idPersona = this.generalBody.idPersona;
       this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
       this.generalBody.colegiado = this.esColegiado;
-      this.checkAcceso();
+      // this.checkAcceso();
       this.onInitGenerales();
       this.onInitCurriculares();
       this.onInitColegiales();
     } else {
-      sessionStorage.removeItem("esNuevoNoColegiado");
       this.generalBody = new FichaColegialGeneralesItem();
       this.colegialesBody = new FichaColegialColegialesItem();
       // this.searchDatosBancariosIdPersona.datosBancariosItem[0] = new DatosBancariosItem();
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
+      this.onInitGenerales();
     } else {
       this.esNewColegiado = false;
     }
-    this.onInitCurriculares();
-
-    this.onInitDirecciones();
-
-    this.onInitDatosBancarios();
+    if (!this.esNewColegiado) {
+      this.onInitCurriculares();
+      this.onInitDirecciones();
+      this.onInitDatosBancarios();
+    }
 
     // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
     this.colsColegiales = [
@@ -447,36 +447,36 @@ export class FichaColegialComponent implements OnInit {
   }
 
   // PENDIENTE AÑADIR IDPROCESO PROPIO DE FICHA COLEGIAL
-  checkAcceso() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "120";
-    let derechoAcceso;
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisosTree = JSON.parse(data.body);
-        let permisosArray = permisosTree.permisoItems;
-        derechoAcceso = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        if (derechoAcceso >= 2) {
-          this.activacionEditar = true;
-          if (derechoAcceso == 2) {
-            this.camposDesactivados = true;
-          }
-        } else {
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
-          this.router.navigate(["/errorAcceso"]);
-        }
-      }
-    );
-  }
+  // checkAcceso() {
+  //   let controlAcceso = new ControlAccesoDto();
+  //   controlAcceso.idProceso = "120";
+  //   let derechoAcceso;
+  //   this.sigaServices.post("acces_control", controlAcceso).subscribe(
+  //     data => {
+  //       let permisosTree = JSON.parse(data.body);
+  //       let permisosArray = permisosTree.permisoItems;
+  //       derechoAcceso = permisosArray[0].derechoacceso;
+  //     },
+  //     err => {
+  //       console.log(err);
+  //     },
+  //     () => {
+  //       if (derechoAcceso >= 2) {
+  //         this.activacionEditar = true;
+  //         if (derechoAcceso == 2) {
+  //           this.camposDesactivados = true;
+  //         }
+  //       } else {
+  //         sessionStorage.setItem("codError", "403");
+  //         sessionStorage.setItem(
+  //           "descError",
+  //           this.translateService.instant("generico.error.permiso.denegado")
+  //         );
+  //         this.router.navigate(["/errorAcceso"]);
+  //       }
+  //     }
+  //   );
+  // }
 
   // MÉTODOS GENÉRICOS PARA TABLAS Y USOS VARIOS
 
@@ -546,6 +546,8 @@ export class FichaColegialComponent implements OnInit {
 
   backTo() {
     sessionStorage.removeItem("personaBody");
+    sessionStorage.removeItem("esNuevoNoColegiado");
+
     // this.cardService.searchNewAnnounce.next(null);
     //this.location.back();
     if (sessionStorage.getItem("esColegiado") == "true") {
@@ -644,10 +646,12 @@ export class FichaColegialComponent implements OnInit {
 
   onInitGenerales() {
     // this.activacionGuardarGenerales();
-    this.cargarImagen(this.idPersona);
-    this.stringAComisiones();
-    this.fechaNacimiento = this.generalBody.fechaNacimiento;
-    this.fechaAlta = this.generalBody.incorporacion;
+    if (!this.esNewColegiado) {
+      this.cargarImagen(this.idPersona);
+      this.stringAComisiones();
+      this.fechaNacimiento = this.generalBody.fechaNacimiento;
+      this.fechaAlta = this.generalBody.incorporacion;
+    }
     this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
       n => {
         this.tipoIdentificacion = n.combooItems;
@@ -696,6 +700,10 @@ export class FichaColegialComponent implements OnInit {
     if (this.generalBody.fechaNacimiento) {
       this.calcularEdad(this.generalBody.fechaNacimiento);
     }
+
+    if (this.esNewColegiado) {
+      this.abreCierraFicha("generales");
+    }
   }
 
   // getComboSexo() {
@@ -713,34 +721,70 @@ export class FichaColegialComponent implements OnInit {
     this.checkGeneralBody.colegiado = this.esColegiado;
     this.arreglarFechas();
     this.comisionesAString();
-    this.sigaServices
-      .post("fichaDatosGenerales_Update", this.generalBody)
-      .subscribe(
-        data => {
-          // sessionStorage.removeItem("personaBody");
-          sessionStorage.setItem(
-            "personaBody",
-            JSON.stringify(this.generalBody)
-          );
-          this.checkGeneralBody = new FichaColegialGeneralesItem();
+    // fichaDatosGenerales_CreateNoColegiado
+    if (this.esColegiado) {
+      this.sigaServices
+        .post("fichaDatosGenerales_Update", this.generalBody)
+        .subscribe(
+          data => {
+            // sessionStorage.removeItem("personaBody");
+            sessionStorage.setItem(
+              "personaBody",
+              JSON.stringify(this.generalBody)
+            );
+            this.checkGeneralBody = new FichaColegialGeneralesItem();
 
-          this.checkGeneralBody = JSON.parse(JSON.stringify(this.generalBody));
+            this.checkGeneralBody = JSON.parse(
+              JSON.stringify(this.generalBody)
+            );
 
-          if (this.file != undefined) {
-            this.guardarImagen(this.idPersona);
+            if (this.file != undefined) {
+              this.guardarImagen(this.idPersona);
+            }
+            this.activacionGuardarGenerales();
+            // this.body = JSON.parse(data["body"]);
+            this.progressSpinner = false;
+            this.showSuccess();
+          },
+          error => {
+            console.log(error);
+            this.progressSpinner = false;
+            this.activacionGuardarGenerales();
+            this.showFail();
           }
-          this.activacionGuardarGenerales();
-          // this.body = JSON.parse(data["body"]);
-          this.progressSpinner = false;
-          this.showSuccess();
-        },
-        error => {
-          console.log(error);
-          this.progressSpinner = false;
-          this.activacionGuardarGenerales();
-          this.showFail();
-        }
-      );
+        );
+    } else {
+      this.sigaServices
+        .post("fichaDatosGenerales_CreateNoColegiado", this.generalBody)
+        .subscribe(
+          data => {
+            // sessionStorage.removeItem("personaBody");
+            sessionStorage.setItem(
+              "personaBody",
+              JSON.stringify(this.generalBody)
+            );
+            this.checkGeneralBody = new FichaColegialGeneralesItem();
+
+            this.checkGeneralBody = JSON.parse(
+              JSON.stringify(this.generalBody)
+            );
+
+            if (this.file != undefined) {
+              this.guardarImagen(this.idPersona);
+            }
+            this.activacionGuardarGenerales();
+            // this.body = JSON.parse(data["body"]);
+            this.progressSpinner = false;
+            this.showSuccess();
+          },
+          error => {
+            console.log(error);
+            this.progressSpinner = false;
+            this.activacionGuardarGenerales();
+            this.showFail();
+          }
+        );
+    }
   }
 
   comisionesAString() {

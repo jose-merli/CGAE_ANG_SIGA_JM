@@ -204,6 +204,8 @@ export class SigaServices {
       "fichaDatosBancarios/datosBancariosSearch",
     fichaDatosColegiales_tipoSeguro: "fichaDatosColegiales/tipoSeguro",
     fichaDatosGenerales_Update: "fichaDatosGenerales/datosGeneralesUpdate",
+    fichaDatosGenerales_CreateNoColegiado:
+      "fichaDatosGenerales/datosGeneralesCreateNoColegiado",
     cargaMasivaDatosCurriculares_generateExcelCV:
       "cargaMasivaDatosCurriculares/generateExcelCV",
     cargaMasivaDatosCurriculares_uploadFile:
@@ -268,9 +270,9 @@ export class SigaServices {
     return this.httpbackend
       .get(
         environment.newSigaUrl +
-        this.endpoints[service] +
-        "?institucion=" +
-        institucion
+          this.endpoints[service] +
+          "?institucion=" +
+          institucion
       )
       .map(response => {
         return response;
