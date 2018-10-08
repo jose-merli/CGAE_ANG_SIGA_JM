@@ -39,7 +39,7 @@
                     <label>{{ "censo.solicitudincorporacion.nIdentificacion" | translate }}</label>
                     <input type="text" class="form-control" pInputText [(ngModel)]="body.numeroIdentificacion">
                     <small class="input-error" *ngIf="!checkIdentificacion(body.numeroIdentificacion) && body.numeroIdentificacion && body.numeroIdentificacion.length > 0">
-                        Documento no válido</small>
+                        {{ "censo.solicitudincorporacion.error.documento" | translate }}</small>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}</label>
