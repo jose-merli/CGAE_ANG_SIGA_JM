@@ -942,7 +942,11 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   color: white !important;
   background-color: #dc3545   !important;
    }
-
+   .alterMutuaInfo{
+     overflow-y: auto;
+     height: 500px;
+     margin: 0 0 2.5rem 0;
+   }
 
 /**RESPONSIVE**/
 

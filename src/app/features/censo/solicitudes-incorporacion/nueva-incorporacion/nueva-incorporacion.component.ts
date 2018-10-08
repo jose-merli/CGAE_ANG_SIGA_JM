@@ -44,8 +44,8 @@ export class NuevaIncorporacionComponent implements OnInit {
     tipoSolicitudSelected: any;
     tipoColegiacionSelected: any;
     msgs: Message[] = [];
-    editar: boolean = false;
-    nuevo: boolean = false;
+    consulta: boolean = false;
+
 
     modalidadDocumentacionSelected: any;
     tipoIdentificacionSelected: any;
@@ -71,7 +71,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.es = this.translateService.getCalendarLocale();
         this.cargarCombos();
 
-        this.formSolicitud = this.formBuilder.group({
+        /*this.formSolicitud = this.formBuilder.group({
             estado: new FormControl(null, Validators.required),
             fechaEstado: new FormControl(null, Validators.required),
             fechaSolicitud: new FormControl(null, Validators.required),
@@ -104,14 +104,15 @@ export class NuevaIncorporacionComponent implements OnInit {
             titular: new FormControl(null, Validators.required),
             iban: new FormControl(null, Validators.required),
             banco: new FormControl(null, Validators.required),
-        })
+        })*/
 
-        if (sessionStorage.getItem("editar") == "true") {
+        if (sessionStorage.getItem("consulta") == "true") {
             this.solicitudEditar = JSON.parse(sessionStorage.getItem("editedSolicitud"));
-            this.editar = true;
+
+            this.consulta = true;
             this.tratarDatos();
         } else {
-            this.nuevo = true;
+            this.consulta = false;
             this.estadoSolicitudSelected = { value: "20" };
         }
     }
@@ -119,15 +120,10 @@ export class NuevaIncorporacionComponent implements OnInit {
     cargarCombos() {
 
         this.comboSexo = [
+            { value: "", label: null },
             { value: "H", label: "Hombre" },
             { value: "M", label: "Mujer" }
         ]
-
-        this.tipoCuenta = [
-            { name: "Abono", code: "A" },
-            { name: "Cargo", code: "C" },
-            { name: "Cuenta SCJS", code: "S" }
-        ];
 
         this.sigaServices.get("solicitudInciporporacion_tipoSolicitud").subscribe(result => {
             this.tiposSolicitud = result.combooItems;
@@ -395,10 +391,26 @@ export class NuevaIncorporacionComponent implements OnInit {
 
     isGuardar(): boolean {
 
-        if (!this.formSolicitud.invalid && this.checkIdentificacion(this.solicitudEditar.numeroIdentificacion) && this.isValidIBAN()) {
-            return false;
-        } else {
+        if (this.checkIdentificacion(this.solicitudEditar.numeroIdentificacion) && this.isValidIBAN() && this.estadoSolicitudSelected.label != ""
+            && this.estadoSolicitudSelected != undefined && this.solicitudEditar.fechaEstado != null && this.solicitudEditar.fechaEstado != undefined &&
+            this.solicitudEditar.fechaSolicitud != null && this.solicitudEditar.fechaSolicitud != undefined && this.tipoSolicitudSelected.label != "" &&
+            this.tipoSolicitudSelected != undefined && this.tipoColegiacionSelected.label != "" && this.tipoColegiacionSelected != undefined &&
+            this.modalidadDocumentacionSelected.label != "" && this.modalidadDocumentacionSelected != undefined &&
+            this.solicitudEditar.fechaIncorporacion != null && this.solicitudEditar.fechaIncorporacion != undefined && this.solicitudEditar.numColegiado != null &&
+            this.solicitudEditar.numColegiado != undefined && this.tipoIdentificacionSelected.label != "" && this.tipoIdentificacionSelected != undefined
+            && this.solicitudEditar.numeroIdentificacion != null && this.solicitudEditar.numeroIdentificacion != undefined && this.tratamientoSelected.label != "" &&
+            this.tratamientoSelected != undefined && this.solicitudEditar.nombre != null && this.solicitudEditar.nombre != undefined &&
+            this.solicitudEditar.apellido1 != null && this.solicitudEditar.apellido1 != undefined && this.solicitudEditar.apellido2 != null && this.solicitudEditar.apellido2 != undefined
+            && this.sexoSelected.label != "" && this.sexoSelected != undefined && this.estadoCivilSelected.label != "" && this.estadoCivilSelected != undefined
+            && this.solicitudEditar.naturalDe != null && this.solicitudEditar.naturalDe != undefined && this.solicitudEditar.fechaNacimiento != null &&
+            this.solicitudEditar.fechaNacimiento != undefined && this.paisSelected.label != "" && this.paisSelected != undefined && this.solicitudEditar.domicilio != null &&
+            this.solicitudEditar.domicilio != undefined && this.solicitudEditar.codigoPostal != null && this.solicitudEditar.codigoPostal != undefined &&
+            this.solicitudEditar.telefono1 != null && this.solicitudEditar.telefono1 != undefined && this.solicitudEditar.movil != null && this.solicitudEditar.correoElectronico != null
+            && this.solicitudEditar.correoElectronico != undefined && this.solicitudEditar.titular != null && this.solicitudEditar.titular != undefined &&
+            this.solicitudEditar.iban != null && this.solicitudEditar.iban != undefined && this.solicitudEditar.banco != null && this.solicitudEditar.banco != undefined) {
             return true;
+        } else {
+            return false;
         }
 
     }
