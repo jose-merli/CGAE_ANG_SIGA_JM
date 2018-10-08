@@ -306,8 +306,23 @@ export class CargaEtiquetasComponent implements OnInit {
   }
 
   setItalic(datoH) {
-    if (datoH.fechaCarga < new Date()) return false;
+    let fecha = this.arreglarFecha(datoH.fechaCarga);
+    if (fecha > new Date()) return false;
     else return true;
+  }
+
+  arreglarFecha(fecha) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -1);
+    if (rawDate.length < 14) {
+      let splitDate = rawDate.split("/");
+      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+      fecha = new Date((arrayDate += "T00:00:00.001Z"));
+    } else {
+      fecha = new Date(rawDate);
+    }
+
+    return fecha;
   }
 
   loadHistory() {
