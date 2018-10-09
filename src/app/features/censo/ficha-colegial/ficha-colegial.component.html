@@ -71,7 +71,7 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
               <p-dropdown class="select-form" [options]="tipoIdentificacion" placeholder="{{'general.boton.seleccionar' | translate}}"
-                [(ngModel)]="generalBody.idTipoIdentificacion" (ngModelChange)="activacionGuardarGenerales()"></p-dropdown>
+                [(ngModel)]="generalBody.idTipoIdentificacion" (onChange)="activacionGuardarGenerales()"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}} (*)</label>
@@ -91,7 +91,7 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.busquedaClientesAvanzada.literal.sexo" | translate}}</label>
               <!-- <input [(ngModel)]="generalBody.sexo" type="text" class="form-control" [maxLength]="99" pInputText> -->
-              <p-dropdown class="select-form" [(ngModel)]='generalBody.sexo' [options]="comboSexo" (ngModelChange)="activacionGuardarGenerales()"
+              <p-dropdown class="select-form" [(ngModel)]='generalBody.sexo' [options]="comboSexo" (onChange)="activacionGuardarGenerales()"
                 [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
 
             </div>
@@ -99,7 +99,7 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.tratamiento" | translate}} (*)</label>
               <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="generalTratamiento"
-                [(ngModel)]="generalBody.idTratamiento" (ngModelChange)="activacionGuardarGenerales()"></p-dropdown>
+                [(ngModel)]="generalBody.idTratamiento" (onChange)="activacionGuardarGenerales()"></p-dropdown>
             </div>
             <!-- 
             <div class="form-group col-lg-6 col-md-6" [hidden]="esColegiado">
@@ -112,7 +112,7 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}}</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" (onSelect)="onChangeCalendar($event)" yearRange="1930:2050" [locale]="es"
-                [(ngModel)]="fechaNacimiento" (ngModelChange)="activacionGuardarGenerales()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
+                [(ngModel)]="fechaNacimiento" (onChange)="activacionGuardarGenerales()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
                 [utc]="true" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-6 col-md-6">
@@ -128,7 +128,7 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.estadoCivil" | translate}} </label>
-              <p-dropdown class="select-form" (ngModelChange)="activacionGuardarGenerales()" placeholder="{{'general.boton.seleccionar' | translate}}"
+              <p-dropdown class="select-form" (onChange)="activacionGuardarGenerales()" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [(ngModel)]="generalBody.idEstadoCivil" [options]="generalEstadoCivil"></p-dropdown>
             </div>
 
@@ -137,17 +137,17 @@
             <div class="form-check col-lg-6 col-md-6">
               <br>
               <label class="form-group-label">No publicar datos de contacto (antiguo LOPD)</label> &nbsp;&nbsp;
-              <p-checkbox [(disabled)]="camposDesactivados" (ngModelChange)="activacionGuardarGenerales()" [(ngModel)]='generalBody.publicarDatosContacto'
+              <p-checkbox [(disabled)]="camposDesactivados" (onChange)="activacionGuardarGenerales()" [(ngModel)]='generalBody.publicarDatosContacto'
                 binary="true"></p-checkbox>
             </div>
             <div class="form-check col-lg-6 col-md-6">
               <br>
               <label class="form-group-label">Comisiones</label> &nbsp;&nbsp;
-              <p-checkbox [(disabled)]="camposDesactivados" (ngModelChange)="activacionGuardarGenerales()" [(ngModel)]='comisiones' binary="true"></p-checkbox>
+              <p-checkbox [(disabled)]="camposDesactivados" (onChange)="activacionGuardarGenerales()" [(ngModel)]='comisiones' binary="true"></p-checkbox>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}}</label>
-              <p-dropdown class="select-form" [(ngModel)]="generalBody.etiquetas" (ngModelChange)="activacionGuardarGenerales()" placeholder="{{'general.boton.seleccionar' | translate}}"
+              <p-dropdown class="select-form" [(ngModel)]="generalBody.etiquetas" (onChange)="activacionGuardarGenerales()" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [options]="comboIdentificacion"></p-dropdown>
             </div>
           </div>
@@ -157,17 +157,17 @@
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
               <label>{{"censo.fichaCliente.situacion.cabecera" | translate}}</label>
-              <p-dropdown class="select-form" [options]="comboSituacion" (ngModelChange)="activacionGuardarGenerales()" placeholder="{{'general.boton.seleccionar' | translate}}"
+              <p-dropdown class="select-form" [options]="comboSituacion" (onChange)="activacionGuardarGenerales()" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [(ngModel)]="generalBody.situacion"></p-dropdown>
             </div>
             <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
               <label>{{"administracion.usuarios.literal.fechaAlta" | translate}} (*)</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(disabled)]="!esNewColegiado"
-                [(ngModel)]="fechaAlta" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true" (ngModelChange)="activacionGuardarGenerales()"></p-calendar>
+                [(ngModel)]="fechaAlta" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true" (onChange)="activacionGuardarGenerales()"></p-calendar>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.fichaCliente.situacion.idiomaPref" | translate}} (*)</label>
-              <p-dropdown class="select-form" [options]="generalIdiomas" (ngModelChange)="activacionGuardarGenerales()" placeholder="{{'general.boton.seleccionar' | translate}}"
+              <p-dropdown class="select-form" [options]="generalIdiomas" (onChange)="activacionGuardarGenerales()" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [(ngModel)]="generalBody.idLenguaje"></p-dropdown>
             </div>
             <div class="form-group col-lg-12 col-md-12">
@@ -177,7 +177,7 @@
             </div>
             <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
               <label>Partido Judicial </label>
-              <p-dropdown class="select-form" [options]="idiomas" (ngModelChange)="activacionGuardarGenerales()" placeholder="{{'general.boton.seleccionar' | translate}}"
+              <p-dropdown class="select-form" [options]="idiomas" (onChange)="activacionGuardarGenerales()" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [(ngModel)]="generalBody.partidoJudicial" [filter]="true" filterBy="label"></p-dropdown>
             </div>
           </div>

@@ -623,6 +623,7 @@ export class FichaColegialComponent implements OnInit {
     );
   }
 
+  ngOnDestroy() {}
   // FIN MÉTODOS GENÉRICOS
   //
   //
@@ -722,7 +723,7 @@ export class FichaColegialComponent implements OnInit {
     this.arreglarFechas();
     this.comisionesAString();
     // fichaDatosGenerales_CreateNoColegiado
-    if (this.esColegiado) {
+    if (!this.esNewColegiado) {
       this.sigaServices
         .post("fichaDatosGenerales_Update", this.generalBody)
         .subscribe(
@@ -761,7 +762,7 @@ export class FichaColegialComponent implements OnInit {
             // sessionStorage.removeItem("personaBody");
             sessionStorage.setItem(
               "personaBody",
-              JSON.stringify(this.generalBody)
+              JSON.stringify([this.generalBody])
             );
             this.checkGeneralBody = new FichaColegialGeneralesItem();
 
@@ -772,8 +773,15 @@ export class FichaColegialComponent implements OnInit {
             if (this.file != undefined) {
               this.guardarImagen(this.idPersona);
             }
+            // Activamos modo guardar para poder editar al momento
+            this.esNewColegiado = false;
+            this.generalBody.idPersona = JSON.parse(data.body).id;
+            this.generalBody.colegiado = false;
+            this.esColegiado = false;
+            this.checkGeneralBody = JSON.parse(
+              JSON.stringify(this.generalBody)
+            );
             this.activacionGuardarGenerales();
-            // this.body = JSON.parse(data["body"]);
             this.progressSpinner = false;
             this.showSuccess();
           },
@@ -832,15 +840,17 @@ export class FichaColegialComponent implements OnInit {
       JSON.stringify(this.checkGeneralBody) != JSON.stringify(this.generalBody)
     ) {
       if (
-        ((this.isValidDNI(this.generalBody.nif) || this.esColegiado == false) &&
-          this.generalBody.nif != undefined &&
-          this.generalBody.idTipoIdentificacion != undefined &&
-          this.generalBody.soloNombre != undefined &&
-          this.generalBody.apellidos1 != undefined &&
-          this.generalBody.idTratamiento != null &&
-          this.generalBody.asientoContable != null &&
-          this.generalBody.idLenguaje != "") ||
-        this.generalBody.idLenguaje == null
+        this.isValidDNI(this.generalBody.nif) &&
+        this.generalBody.nif != undefined &&
+        this.generalBody.idTipoIdentificacion != "" &&
+        this.generalBody.idTipoIdentificacion != undefined &&
+        this.generalBody.soloNombre != undefined &&
+        this.generalBody.apellidos1 != undefined &&
+        this.generalBody.soloNombre != "" &&
+        this.generalBody.apellidos1 != "" &&
+        this.generalBody.idTratamiento != null &&
+        this.generalBody.idLenguaje != "" &&
+        this.generalBody.idLenguaje != undefined
       ) {
         this.activarGuardarGenerales = true;
       } else {
@@ -884,9 +894,18 @@ export class FichaColegialComponent implements OnInit {
   }
 
   restablecerGenerales() {
-    this.cargarImagen(this.idPersona);
-    // this.generalBody = this.checkGeneralBody;
-    this.activacionGuardarGenerales();
+    if (this.esNewColegiado) {
+      this.generalBody = new FichaColegialGeneralesItem();
+      this.stringAComisiones();
+      this.activacionGuardarGenerales();
+    } else {
+      this.cargarImagen(this.idPersona);
+      this.generalBody = new FichaColegialGeneralesItem();
+      this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      this.generalBody = this.generalBody[0];
+      this.activacionGuardarGenerales();
+      this.stringAComisiones();
+    }
   }
 
   //FOTOGRAFIA
