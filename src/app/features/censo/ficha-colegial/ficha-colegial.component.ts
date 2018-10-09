@@ -770,18 +770,19 @@ export class FichaColegialComponent implements OnInit {
               JSON.stringify(this.generalBody)
             );
 
-            if (this.file != undefined) {
-              this.guardarImagen(this.idPersona);
-            }
             // Activamos modo guardar para poder editar al momento
             this.esNewColegiado = false;
             this.generalBody.idPersona = JSON.parse(data.body).id;
+            this.idPersona = this.generalBody.idPersona;
             this.generalBody.colegiado = false;
             this.esColegiado = false;
             this.checkGeneralBody = JSON.parse(
               JSON.stringify(this.generalBody)
             );
             this.activacionGuardarGenerales();
+            if (this.file != undefined) {
+              this.guardarImagen(this.idPersona);
+            }
             this.progressSpinner = false;
             this.showSuccess();
           },
