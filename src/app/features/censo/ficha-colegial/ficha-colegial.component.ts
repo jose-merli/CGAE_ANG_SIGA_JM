@@ -900,9 +900,7 @@ export class FichaColegialComponent implements OnInit {
       this.activacionGuardarGenerales();
     } else {
       this.cargarImagen(this.idPersona);
-      this.generalBody = new FichaColegialGeneralesItem();
-      this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
-      this.generalBody = this.generalBody[0];
+      this.generalBody = JSON.parse(JSON.stringify(this.checkGeneralBody));
       this.activacionGuardarGenerales();
       this.stringAComisiones();
     }
