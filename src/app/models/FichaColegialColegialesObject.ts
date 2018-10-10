@@ -2,6 +2,6 @@ import { FichaColegialColegialesItem } from "./FichaColegialColegialesItem";
 import { ErrorItem } from "./ErrorItem";
 export class FichaColegialColegialesObject {
   error: ErrorItem;
-  FichaColegialColegialesItem: FichaColegialColegialesItem[] = [];
+  fichaDatosColegialesItems: FichaColegialColegialesItem[] = [];
   constructor() {}
 }

@@ -37,6 +37,9 @@ import { DatosBancariosItem } from "./../../../models/DatosBancariosItem";
 import { DatosBancariosObject } from "./../../../models/DatosBancariosObject";
 import { DomSanitizer } from "../../../../../node_modules/@angular/platform-browser";
 import { DatosGeneralesItem } from "../../../models/DatosGeneralesItem";
+import { DatosColegiadosObject } from "../../../models/DatosColegiadosObject";
+import { PersonaJuridicaItem } from "../../../models/PersonaJuridicaItem";
+import { PersonaJuridicaObject } from "../../../models/PersonaJuridicaObject";
 
 @Component({
   selector: "app-ficha-colegial",
@@ -50,6 +53,10 @@ export class FichaColegialComponent implements OnInit {
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   checkGeneralBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
+  //sociedadesBody: FichaColegialColegialesObject = new FichaColegialColegialesObject();
+  sociedadesBody: PersonaJuridicaObject = new PersonaJuridicaObject();
+  otrasColegiacionesBody: DatosColegiadosObject = new DatosColegiadosObject();
+ 
 
   idPersona: any;
   openFicha: boolean = false;
@@ -201,6 +208,8 @@ export class FichaColegialComponent implements OnInit {
       this.onInitGenerales();
       this.onInitCurriculares();
       this.onInitColegiales();
+      this.onInitSociedades();
+      this.onInitOtrasColegiaciones();
     } else {
       sessionStorage.removeItem("esNuevoNoColegiado");
       this.generalBody = new FichaColegialGeneralesItem();
@@ -217,6 +226,10 @@ export class FichaColegialComponent implements OnInit {
     this.onInitDirecciones();
 
     this.onInitDatosBancarios();
+
+    this.onInitSociedades();
+
+    this.onInitOtrasColegiaciones();
 
     // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
     this.colsColegiales = [
@@ -982,10 +995,35 @@ export class FichaColegialComponent implements OnInit {
   //
   //
   // MÉTODOS PARA OTRAS COLEGIACIONES
+  onInitOtrasColegiaciones() {
+    this.searchOtherCollegues();
+  }
+
   activarPaginacionOtrasColegiaciones() {
     if (!this.datosColegiaciones || this.datosColegiaciones.length == 0)
       return false;
     else return true;
+  }
+
+  searchOtherCollegues() {
+    this.sigaServices
+      .postPaginado(
+        "fichaColegialOtrasColegiaciones_searchOtherCollegues",
+        "?numPagina=1",
+        this.idPersona
+      )
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.otrasColegiacionesBody = JSON.parse(data["body"]);
+          this.datosColegiales = this.otrasColegiacionesBody.colegiadoItem;
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        }
+      );
   }
   // FIN OTRAS COLEGIACIONES
   //
@@ -1032,9 +1070,40 @@ export class FichaColegialComponent implements OnInit {
   //
   //
   // MÉTODOS PARA SOCIEDADES
+
+  onInitSociedades() {
+    this.searchSocieties();
+  }
+
   activarPaginacionSociedades() {
     if (!this.datosSociedades || this.datosSociedades.length == 0) return false;
     else return true;
+  }
+
+  searchSocieties() {
+    this.sigaServices
+      .postPaginado(
+        "fichaColegialSociedades_searchSocieties",
+        "?numPagina=1",
+        this.idPersona
+      )
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.sociedadesBody = JSON.parse(data["body"]);
+          this.datosSociedades = this.sociedadesBody.busquedaJuridicaItems;
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  redireccionar(datos) {
+    sessionStorage.setItem("busqueda", JSON.stringify(datos));
+    this.router.navigate(["/fichaPersonaJuridica"]);
   }
   // FIN SOCIEDADES
   //

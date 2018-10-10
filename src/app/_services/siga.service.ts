@@ -218,7 +218,11 @@ export class SigaServices {
     cargasMasivas_searchEtiquetas: "cargasMasivas/searchEtiquetas",
     cargasMasivasEtiquetas_uploadFile: "cargasMasivasEtiquetas/uploadFile",
     cargasMasivas_downloadOriginalFile: "cargasMasivas/downloadOriginalFile",
-    cargasMasivas_downloadLogFile: "cargasMasivas/downloadLogFile"
+    cargasMasivas_downloadLogFile: "cargasMasivas/downloadLogFile",
+    fichaColegialSociedades_searchSocieties:
+      "fichaColegialSociedades/searchSocieties",
+    fichaColegialOtrasColegiaciones_searchOtherCollegues:
+      "fichaColegialOtrasColegiaciones/searchOtherCollegues"
   };
 
   private menuToggled = new Subject<any>();
@@ -268,9 +272,9 @@ export class SigaServices {
     return this.httpbackend
       .get(
         environment.newSigaUrl +
-        this.endpoints[service] +
-        "?institucion=" +
-        institucion
+          this.endpoints[service] +
+          "?institucion=" +
+          institucion
       )
       .map(response => {
         return response;
