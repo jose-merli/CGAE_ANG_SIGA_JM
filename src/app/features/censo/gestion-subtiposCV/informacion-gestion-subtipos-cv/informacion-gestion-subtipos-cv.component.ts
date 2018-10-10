@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 import { SigaServices } from "../../../../_services/siga.service";
 import { GestionSubtipoCVItem } from "../../../../models/GestionSubtipoCVItem";
+import { Location } from "@angular/common";
 
 @Component({
   selector: "app-informacion-gestion-subtipos-cv",
@@ -29,7 +30,8 @@ export class InformacionGestionSubtiposCvComponent implements OnInit {
 
   constructor(
     private sigaServices: SigaServices,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private location: Location
   ) {}
 
   ngOnInit() {
@@ -37,7 +39,6 @@ export class InformacionGestionSubtiposCvComponent implements OnInit {
 
     if (sessionStorage.getItem("datos") != null) {
       this.body = JSON.parse(sessionStorage.getItem("datos"));
-      this.body = this.body[0];
       this.body.subtipo2 = "";
     }
 
@@ -156,6 +157,10 @@ export class InformacionGestionSubtiposCvComponent implements OnInit {
     this.selectAll = false;
     this.selectMultiple = false;
     this.numSelected = 0;
+  }
+
+  volver() {
+    this.location.back();
   }
 
   // PARA LA TABLA

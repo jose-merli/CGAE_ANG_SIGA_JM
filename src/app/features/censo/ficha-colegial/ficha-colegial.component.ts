@@ -56,7 +56,6 @@ export class FichaColegialComponent implements OnInit {
   //sociedadesBody: FichaColegialColegialesObject = new FichaColegialColegialesObject();
   sociedadesBody: PersonaJuridicaObject = new PersonaJuridicaObject();
   otrasColegiacionesBody: DatosColegiadosObject = new DatosColegiadosObject();
- 
 
   idPersona: any;
   openFicha: boolean = false;
@@ -1163,7 +1162,7 @@ export class FichaColegialComponent implements OnInit {
       );
   }
 
-  redireccionar(datos) {
+  redireccionarSociedades(datos) {
     sessionStorage.setItem("busqueda", JSON.stringify(datos));
     this.router.navigate(["/fichaPersonaJuridica"]);
   }

@@ -622,7 +622,7 @@
       <div class="row">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="4" dataKey="idDireccion"
           [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datosSociedades" [sortOrder]="1"
-          [paginator]="activarPaginacionSociedades()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionar(selectedDatos)"
+          [paginator]="activarPaginacionSociedades()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionarSociedades(selectedDatos)"
           (onRowUnselect)="actualizaSeleccionados(selectedDatos)">
           <p-column *ngFor="let col of colsSociedades" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
