@@ -189,6 +189,8 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
 import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.component";
 import { CargaEtiquetasComponent } from "./features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component";
 import { DatosCvComponent } from "./features/censo/cargas-masivas/datos-cv/datos-cv.component";
+import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
+import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-subtiposCV/informacion-gestion-subtipos-cv/informacion-gestion-subtipos-cv.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -340,8 +342,9 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    //CensoDocumentacionComponent
     path: "censoDocumentacion",
-    component: CensoDocumentacionComponent,
+    component: CargasMasivasComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -377,6 +380,11 @@ const appRoutes: Routes = [
   {
     path: "datosCv",
     component: DatosCvComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "informacionGestionSubtipoCV",
+    component: InformacionGestionSubtiposCvComponent,
     canActivate: [AuthGuard]
   },
 

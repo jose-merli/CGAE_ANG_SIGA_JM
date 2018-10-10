@@ -249,8 +249,10 @@ import { ServiciosInteresComponent } from "./features/censo/datosPersonaJuridica
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
 import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.component";
 import { TrimPipePipe } from "./commons/trim-pipe/trim-pipe.pipe";
-import { CargaEtiquetasComponent } from './features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component';
-import { DatosCvComponent } from './features/censo/cargas-masivas/datos-cv/datos-cv.component';
+import { CargaEtiquetasComponent } from "./features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component";
+import { DatosCvComponent } from "./features/censo/cargas-masivas/datos-cv/datos-cv.component";
+import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
+import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-subtiposCV/informacion-gestion-subtipos-cv/informacion-gestion-subtipos-cv.component";
 
 @NgModule({
   declarations: [
@@ -453,7 +455,9 @@ import { DatosCvComponent } from './features/censo/cargas-masivas/datos-cv/datos
     ErrorAccesoComponent,
     TrimPipePipe,
     CargaEtiquetasComponent,
-    DatosCvComponent
+    DatosCvComponent,
+    CargasMasivasComponent,
+    InformacionGestionSubtiposCvComponent
   ],
   imports: [
     BrowserModule,
@@ -519,4 +523,4 @@ import { DatosCvComponent } from './features/censo/cargas-masivas/datos-cv/datos
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
