@@ -22,6 +22,22 @@
   padding: 0.112em !important;
 }
 
+.ui-tooltip .ui-tooltip-text {
+  white-space: pre-line !important;
+}
+
+.ui-tooltip-text.ui-shadow.ui-corner-all {
+  background-color: white;
+}
+
+.ui-tooltip {
+  max-width: 80%;
+  box-shadow: none;
+  .ui-tooltip-text {
+    font-size: 0.8rem;
+  }
+}
+
 .labelError {
   color: red;
   font-weight: bold;

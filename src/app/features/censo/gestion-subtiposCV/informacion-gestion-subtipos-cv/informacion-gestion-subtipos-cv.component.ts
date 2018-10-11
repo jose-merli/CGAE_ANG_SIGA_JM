@@ -49,7 +49,7 @@ export class InformacionGestionSubtiposCvComponent implements OnInit {
     this.cols = [
       {
         field: "cdgoExt",
-        header: "CdgoExt"
+        header: "Códgo Externo"
       },
       {
         field: "subtipo2",

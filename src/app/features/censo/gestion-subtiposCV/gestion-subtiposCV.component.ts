@@ -48,11 +48,11 @@ export class GestionSubtiposCVComponent {
       { field: "cdgoext", header: "Cdgo ext" },
       {
         field: "tipoCV",
-        header: "Tipo CV"
+        header: "Categoría curricular"
       },
       {
         field: "cdgoExt",
-        header: "CdgoExt"
+        header: "Código externo"
       },
       {
         field: "subtipo1",

@@ -86,19 +86,18 @@ export class FichaColegialComponent implements OnInit {
   selectedItem: number = 10;
   camposDesactivados: boolean = false;
   datos: any[];
-  datosCurriculares: any[];
+  datosCurriculares: any[] = [];
 
   bodyDirecciones: DatosDireccionesItem;
   bodyDatosBancarios: DatosBancariosItem;
-  datosDirecciones: DatosDireccionesItem[];
-  datosBancarios: DatosBancariosItem[];
+  datosDirecciones: DatosDireccionesItem[] = [];
+  datosBancarios: DatosBancariosItem[] = [];
   searchDireccionIdPersona = new DatosDireccionesObject();
   searchDatosBancariosIdPersona = new DatosBancariosObject();
-
-  datosColegiales: any[];
-  datosColegiaciones: any[];
-  datosCertificados: any[];
-  datosSociedades: any[];
+  datosColegiales: any[] = [];
+  datosColegiaciones: any[] = [];
+  datosCertificados: any[] = [];
+  datosSociedades: any[] = [];
   file: File = undefined;
   edadCalculada: any;
 
@@ -252,11 +251,11 @@ export class FichaColegialComponent implements OnInit {
 
     this.colsColegiaciones = [
       {
-        field: "numIdentificacion",
+        field: "nif",
         header: "censo.consultaDatosColegiacion.literal.numIden"
       },
       {
-        field: "nombreApellidos",
+        field: "nombre",
         header: "administracion.usuarios.literal.nombre"
       },
       {
@@ -264,27 +263,27 @@ export class FichaColegialComponent implements OnInit {
         header: "censo.busquedaClientesAvanzada.literal.nColegiado"
       },
       {
-        field: "estado",
+        field: "estadoColegial",
         header: "censo.fichaIntegrantes.literal.estado"
       },
       {
-        field: "residente",
+        field: "residenteInscrito",
         header: "censo.ws.literal.residente"
       },
       {
-        field: "fNacimiento",
+        field: "fechaNacimiento",
         header: "censo.consultaDatosColegiacion.literal.fechaNac"
       },
       {
-        field: "correoElectronico",
+        field: "correo",
         header: "censo.datosDireccion.literal.correo"
       },
       {
-        field: "telFijo",
+        field: "telefono",
         header: "censo.datosDireccion.literal.telefonoFijo"
       },
       {
-        field: "telMovil",
+        field: "movil",
         header: "censo.datosDireccion.literal.telefonoMovil"
       }
     ];
@@ -1077,8 +1076,7 @@ export class FichaColegialComponent implements OnInit {
         data => {
           this.progressSpinner = false;
           this.otrasColegiacionesBody = JSON.parse(data["body"]);
-          this.datosColegiales = this.otrasColegiacionesBody.colegiadoItem;
-          this.table.paginator = true;
+          this.datosColegiaciones = this.otrasColegiacionesBody.colegiadoItem;
         },
         err => {
           console.log(err);
@@ -1111,6 +1109,11 @@ export class FichaColegialComponent implements OnInit {
       return false;
     else return true;
   }
+
+  redireccionarCerts() {
+    this.router.navigate(["/mantenimientoCertificados"]);
+  }
+
   // FIN CERTIFICADOS
   //
   //
@@ -1153,7 +1156,6 @@ export class FichaColegialComponent implements OnInit {
           this.progressSpinner = false;
           this.sociedadesBody = JSON.parse(data["body"]);
           this.datosSociedades = this.sociedadesBody.busquedaJuridicaItems;
-          this.table.paginator = true;
         },
         err => {
           console.log(err);
@@ -1163,7 +1165,8 @@ export class FichaColegialComponent implements OnInit {
   }
 
   redireccionarSociedades(datos) {
-    sessionStorage.setItem("busqueda", JSON.stringify(datos));
+    // this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    sessionStorage.setItem("usuarioBody", JSON.stringify(datos));
     this.router.navigate(["/fichaPersonaJuridica"]);
   }
   // FIN SOCIEDADES
