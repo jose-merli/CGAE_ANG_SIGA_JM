@@ -153,8 +153,8 @@ export class OldSigaServices {
         catalogosMaestros: "Dispatcher.do?proceso=78",
 
         loginDevelop: "developmentLogin.do",
-        login: "sigainit.do"
-        //login: "login.do"
+        //login: "sigainit.do"
+        login: "login.do"
 
     }
 
