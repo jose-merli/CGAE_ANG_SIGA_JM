@@ -8,15 +8,15 @@ export class DatosRegistralesItem {
   actividades: String[];
   objetoSocial: String;
   fechaConstitucion: Date;
-  fechaFin: Date;
+  fechaCancelacion: Date;
   resena: String;
   numeroPoliza: String;
   companiaAseg: String;
-  fechaRegistro: Date;
-  fechaBaja: Date;
-  identificadorRegistroProvincial: String;
-  numeroRegistro: String;
+  fechaInscripcion: Date;
+  fechaFin: Date;
+  identificacionReg: String;
+  numRegistro: String;
   combooItems: ComboItem[];
   sociedadProfesional: String;
-  constructor() {}
+  constructor() { }
 }

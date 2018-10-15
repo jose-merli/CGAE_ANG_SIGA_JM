@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 
 import { Location, DatePipe } from "@angular/common";
 
@@ -7,9 +7,11 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 
 import { DatosDireccionesItem } from "./../../../../../../app/models/DatosDireccionesItem";
 import { DatosDireccionesObject } from "./../../../../../../app/models/DatosDireccionesObject";
+import { DropdownModule, Dropdown } from "primeng/dropdown";
 
 import { DatosDireccionesCodigoPostalItem } from "./../../../../../../app/models/DatosDireccionesCodigoPostalItem";
 import { DatosDireccionesCodigoPostalObject } from "./../../../../../../app/models/DatosDireccionesCodigoPostalObject";
+import { TranslateService } from "../../../../../commons/translate";
 
 @Component({
   selector: "app-consultar-datos-direcciones",
@@ -22,7 +24,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   codigoPostalValido: boolean = true;
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
-  isDisabledCodigoPostal: boolean = false;
+  isDisabledCodigoPostal: boolean = true;
   formValido: boolean = false;
   textFilter: String;
   fechaModificacion: String;
@@ -46,31 +48,42 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   textSelected: String = "{0} etiquetas seleccionadas";
   body: DatosDireccionesItem = new DatosDireccionesItem();
   bodySearch: DatosDireccionesObject = new DatosDireccionesObject();
-  historyDisable: Boolean = false;
+  historyDisable: boolean = false;
   bodyCodigoPostal: DatosDireccionesCodigoPostalItem = new DatosDireccionesCodigoPostalItem();
   bodyCodigoPostalSearch: DatosDireccionesCodigoPostalObject = new DatosDireccionesCodigoPostalObject();
-
+  disableCheck: boolean;
+  poblacionExtranjera: boolean;
   displayAuditoria: boolean = false;
   showGuardarAuditoria: boolean = false;
   ocultarMotivo: boolean = undefined;
+  resultadosPoblaciones: any;
+  instituciones: any;
+  tooltipFechaMod: any;
+  poblacionBuscada: any;
 
   constructor(
     private location: Location,
     private sigaServices: SigaServices,
-    public datepipe: DatePipe
+    public datepipe: DatePipe,
+    private translateService: TranslateService
   ) {}
+
+  @ViewChild("input2")
+  dropdown: Dropdown;
 
   ngOnInit() {
     if (sessionStorage.getItem("historicoDir") != null) {
       this.historyDisable = true;
+      this.disableCheck = true;
     }
-    sessionStorage.removeItem("historicoDir");
+
     sessionStorage.setItem("editarDirecciones", "true");
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.textFilter = "Elegir";
     this.getComboProvincia();
     this.getComboPais();
     this.getComboTipoDireccion();
+
     this.registroEditable = JSON.parse(
       sessionStorage.getItem("editarDireccion")
     );
@@ -83,6 +96,29 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("direccion"));
       this.body.idPersona = this.usuarioBody[0].idPersona;
       this.provinciaSelecionada = this.body.idProvincia;
+      if (this.body.otraProvincia == "1") {
+        this.checkOtraProvincia = true;
+        this.isDisabledProvincia = false;
+        this.isDisabledPoblacion = true;
+      } else {
+        this.checkOtraProvincia = false;
+      }
+      console.log(this.body);
+      if (
+        this.body.idPoblacion !== null &&
+        this.body.idPoblacion !== undefined
+      ) {
+        if (
+          this.body.nombrePoblacion !== null &&
+          this.body.nombrePoblacion !== undefined
+        ) {
+          this.getComboPoblacion(this.body.nombrePoblacion.substring(0, 3));
+        }
+        //else {
+
+        //   this.getComboPoblacion("");
+        // }
+      }
       this.getDatosContactos();
       if (
         this.body.idPoblacion == null ||
@@ -93,27 +129,39 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       } else {
         if (this.historyDisable == true) {
           this.isDisabledPoblacion = true;
+          this.disableCheck = true;
+          this.isDisabledCodigoPostal = true;
         } else {
-          this.isDisabledPoblacion = false;
+          // this.isDisabledPoblacion = false;
+          // this.isDisabledCodigoPostal = false;
         }
       }
       if (
         this.body.fechaModificacion != null ||
         this.body.fechaModificacion != undefined
       ) {
-        this.fechaModificacion = this.datepipe.transform(
-          new Date(this.body.fechaModificacion),
-          "dd/MM/yyyy"
-        );
+        let dateSplit = this.body.fechaModificacion.toString().split("-");
+        let a = dateSplit[0];
+        let m = dateSplit[1];
+        let dateSplit2 = dateSplit[2].split(" ");
+        let d = dateSplit2[0];
+        this.fechaModificacion = d + "/" + m + "/" + a;
+        this.tooltipFechaMod =
+          this.translateService.instant(
+            "censo.datosDireccion.literal.fechaModificacion"
+          ) +
+          ": " +
+          this.fechaModificacion;
+        // this.showInfo('Fecha de modificación:' + this.fechaModificacion);
       }
       this.onChangePais();
 
-      this.isDisabledProvincia = true;
+      // this.isDisabledProvincia = true;
     } else {
       this.getDatosContactos();
     }
     if (this.body.idPais == "") {
-      this.isDisabledCodigoPostal = false;
+      this.isDisabledCodigoPostal = this.historyDisable;
     }
 
     // obtener parametro para saber si se oculta la auditoria
@@ -160,14 +208,50 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         this.comboProvincia = n.combooItems;
       },
       error => {},
-      () => {
-        if (this.body.idProvincia != null) {
-          this.getComboPoblacion();
-        }
-      }
+      () => {}
     );
   }
-  getComboPoblacion() {
+
+  getLabelbyFilter(array) {
+    /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+para poder filtrar el dato con o sin estos caracteres*/
+    array.map(e => {
+      let accents =
+        "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+      let accentsOut =
+        "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+      let i;
+      let x;
+      for (i = 0; i < e.label.length; i++) {
+        if ((x = accents.indexOf(e.label[i])) != -1) {
+          e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+          return e.labelSinTilde;
+        }
+      }
+    });
+  }
+  getComboPoblacion(filtro: string) {
+    this.progressSpinner = true;
+    this.poblacionBuscada = filtro;
+    this.sigaServices
+      .getParam(
+        "direcciones_comboPoblacion",
+        "?idProvincia=" + this.body.idProvincia + "&filtro=" + filtro
+      )
+      .subscribe(
+        n => {
+          this.comboPoblacion = n.combooItems;
+          this.getLabelbyFilter(this.comboPoblacion);
+          this.dropdown.filterViewChild.nativeElement.value = this.poblacionBuscada;
+        },
+        error => {},
+        () => {
+          // this.isDisabledPoblacion = false;
+          this.progressSpinner = false;
+        }
+      );
+  }
+  getComboPoblacionInicial() {
     this.progressSpinner = true;
     this.sigaServices
       .getParam(
@@ -192,9 +276,16 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       },
       error => {},
       () => {
-        this.paisSeleccionado = this.comboPais.find(
-          item => item.value == this.body.idPais
-        );
+        // modo edicion
+        if (this.body.idPais != undefined) {
+          this.paisSeleccionado = this.comboPais.find(
+            item => item.value == this.body.idPais
+          );
+          // modo creacion => pais España por defecto
+        } else {
+          this.body.idPais = this.comboPais[0].value;
+          this.onChangePais();
+        }
       }
     );
   }
@@ -237,46 +328,76 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.provinciaSelecionada = "";
       this.body.idProvincia = "";
       this.body.idPoblacion = "";
-
-      this.isDisabledCodigoPostal = false;
+      this.disableCheck = true;
+      //si al final se pone un campo de texto, solo habrá que usar un ngIf con esta variable para controlar cuando sale cada input distinto.
+      this.poblacionExtranjera = true;
+      this.body.idPoblacion = "";
+      this.isDisabledCodigoPostal = this.historyDisable;
+      this.isDisabledPoblacion = true;
+      this.body.idPoblacion = "";
+      this.comboPoblacion = [];
     } else {
+      this.disableCheck = this.historyDisable;
+      this.poblacionExtranjera = false;
       this.onChangeCodigoPostal();
       if (this.historyDisable == true) {
         this.isDisabledCodigoPostal = true;
         this.isDisabledProvincia = true;
+        this.disableCheck = true;
       } else {
         this.isDisabledCodigoPostal = false;
       }
       if (this.provinciaSelecionada != "") {
-        this.isDisabledPoblacion = false;
+        if (this.historyDisable == true) {
+          this.isDisabledPoblacion = true;
+        } else {
+          // this.isDisabledPoblacion = false;
+        }
+      } else {
+        this.isDisabledPoblacion = true;
+        this.body.idPoblacion = "";
+        this.comboPoblacion = [];
       }
     }
   }
 
   onChangeCodigoPostal() {
     if (this.body.idPais == "191") {
-      if (this.isValidCodigoPostal() && this.body.codigoPostal.length == 5) {
+      if (
+        this.isValidCodigoPostal() &&
+        this.body.codigoPostal.length == 5 &&
+        this.checkOtraProvincia != true
+      ) {
         let value = this.body.codigoPostal.substring(0, 2);
         this.provinciaSelecionada = value;
+        this.isDisabledPoblacion = false;
         if (value != this.body.idProvincia) {
           this.body.idProvincia = this.provinciaSelecionada;
           this.isDisabledProvincia = true;
           if (this.historyDisable == true) {
             this.isDisabledPoblacion = true;
+            this.disableCheck = true;
           } else {
             this.isDisabledPoblacion = false;
           }
-          this.getComboPoblacion();
+          this.body.idPoblacion = "";
+          this.comboPoblacion = [];
+          // this.getComboPoblacion();
         }
         this.codigoPostalValido = true;
       } else {
         this.codigoPostalValido = false;
+        this.isDisabledPoblacion = true;
       }
     }
   }
   onChangeProvincia() {
     if (this.checkOtraProvincia == false) {
-      this.getComboPoblacion();
+      this.body.idPoblacion = "";
+      this.comboPoblacion = [];
+      // this.getComboPoblacion();
+    } else {
+      this.body.idPoblacion = "";
     }
   }
   onChangeOtherProvincia(event) {
@@ -289,8 +410,13 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     } else {
       if (this.historyDisable == true) {
         this.isDisabledPoblacion = true;
+        this.disableCheck = true;
       } else {
-        if (this.body.idPais == "191") {
+        if (
+          this.body.idPais == "191" &&
+          !this.historyDisable &&
+          this.body.otraProvincia != "1"
+        ) {
           this.isDisabledPoblacion = false;
         }
       }
@@ -303,6 +429,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   }
 
   guardar() {
+<<<<<<< HEAD
     if (
       this.body.idTipoDireccion != null &&
       this.body.idTipoDireccion != undefined &&
@@ -358,11 +485,72 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
             // auditoria
             this.body.motivo = undefined;
             this.progressSpinner = false;
-          }
-        );
-      }
+=======
+    if (this.body.codigoPostal == null || this.body.codigoPostal == undefined) {
+      this.showFail("Debe especificar el Código Postal");
     } else {
-      this.showFail("Debe de haber un tipo de Contacto seleccionado.");
+      if (
+        this.body.idTipoDireccion != null &&
+        this.body.idTipoDireccion != undefined &&
+        this.body.idTipoDireccion.length > 0
+      ) {
+        this.progressSpinner = true;
+        // modo edicion
+        if (this.registroEditable) {
+          this.comprobarTablaDatosContactos();
+          this.comprobarCheckProvincia();
+          this.body.idProvincia = this.provinciaSelecionada;
+
+          if (this.body.idPais == "191") {
+            this.body.poblacionExtranjera = "";
+          }
+          if (this.checkOtraProvincia == true) {
+            this.body.otraProvincia = "1";
+          } else {
+            this.body.otraProvincia = "0";
+>>>>>>> origin/CensoII_v1.1
+          }
+          this.sigaServices.post("direcciones_update", this.body).subscribe(
+            data => {
+              this.progressSpinner = false;
+              this.body = JSON.parse(data["body"]);
+              this.backTo();
+            },
+            error => {
+              this.bodySearch = JSON.parse(error["error"]);
+              this.showFail(this.bodySearch.error.message.toString());
+              console.log(error);
+              this.progressSpinner = false;
+            }
+          );
+        }
+        // modo creacion
+        else {
+          this.comprobarTablaDatosContactos();
+          this.comprobarCheckProvincia();
+          this.body.idProvincia = this.provinciaSelecionada;
+          this.body.motivo = "registro creado";
+          this.sigaServices.post("direcciones_insert", this.body).subscribe(
+            data => {
+              this.progressSpinner = false;
+              this.body = JSON.parse(data["body"]);
+              this.backTo();
+            },
+            error => {
+              this.bodySearch = JSON.parse(error["error"]);
+              this.showFail(this.bodySearch.error.message.toString());
+              console.log(error);
+              this.progressSpinner = false;
+            },
+            () => {
+              // auditoria
+              this.body.motivo = undefined;
+            }
+          );
+        }
+      } else {
+        this.showFail("Debe de haber un tipo de Contacto seleccionado.");
+      }
     }
   }
 
@@ -528,7 +716,27 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     this.msgs.push({ severity: "success", summary: "", detail: mensaje });
   }
 
+  showInfo(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+  }
+
   backTo() {
     this.location.back();
+  }
+
+  buscarPoblacion(e) {
+    if (e.target.value && e.target.value !== null) {
+      if (e.target.value.length >= 3) {
+        this.getComboPoblacion(e.target.value);
+        this.resultadosPoblaciones = "No hay resultados";
+      } else {
+        this.comboPoblacion = [];
+        this.resultadosPoblaciones = "Debe introducir al menos 3 caracteres";
+      }
+    } else {
+      this.comboPoblacion = [];
+      this.resultadosPoblaciones = "No hay resultados";
+    }
   }
 }

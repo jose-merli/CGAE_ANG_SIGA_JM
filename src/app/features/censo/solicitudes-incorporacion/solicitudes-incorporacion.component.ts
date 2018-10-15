@@ -129,6 +129,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
       }
     );
   }
+
   buscarSolicitudes() {
     this.buscar = true;
     this.progressSpinner = true;
@@ -156,7 +157,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     sessionStorage.setItem("filtros", JSON.stringify(this.body));
   }
 
-  isBuscar(): boolean {
+  isBuscar() {
     if (
       !this.formBusqueda.invalid &&
       this.checkIdentificacion(this.body.numeroIdentificacion)

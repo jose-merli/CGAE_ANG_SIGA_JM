@@ -22,7 +22,7 @@ header {
   width: 100%;
   overflow: hidden;
   position: fixed;
-  z-index: 100;
+  z-index: 201;
   height: 6rem;
 
   .header-principal {
@@ -173,5 +173,12 @@ header {
         float: right;
       }
     }
+  }
+}
+
+
+@media screen and (max-width: 525px) {
+  header {
+    height: 8rem;
   }
 }

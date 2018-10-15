@@ -101,6 +101,7 @@ import { ConsultarDatosDireccionesComponent } from "./features/censo/datosPerson
 
 // Modulo de administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
+import { CatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros-classique/catalogos-maestros-classique.component";
 import { EditarCatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros/editarCatalogosMaestros/editarCatalogosMaestros.component";
 import { GestionContadoresComponent } from "./features/administracion/contadores/gestion-contadores/gestion-contadores.component";
 import { ContadoresComponent } from "./features/administracion/contadores/contadores.component";
@@ -426,6 +427,7 @@ import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-
 
     // Administracion
     CatalogosMaestros,
+    CatalogosMaestrosComponent,
     GruposUsuarios,
     Etiquetas,
     AuditoriaUsuarios,
@@ -523,4 +525,4 @@ import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

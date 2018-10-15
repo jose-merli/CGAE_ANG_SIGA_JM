@@ -7,7 +7,7 @@ export class DatosIntegrantesItem {
   fechaBajaCargo: String;
   idPersonaComponente: String;
   sociedad: String;
-  capitalSocial: String;
+  capitalSocial: string;
   fechaCargoInforme: String;
   ejerciente: String;
   fechaHistorico: String;
@@ -29,5 +29,7 @@ export class DatosIntegrantesItem {
   idInstitucionIntegrante: String;
   tipo: String;
   completo: boolean = false;
+  socio: boolean = false;
+  valor: String;
   constructor() {}
 }

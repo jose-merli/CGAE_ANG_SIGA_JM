@@ -55,7 +55,7 @@ export class DatosBancariosComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private cardService: cardService
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (sessionStorage.getItem("editarDatosBancarios") == "true") {
@@ -175,7 +175,9 @@ export class DatosBancariosComponent implements OnInit {
             this.camposDesactivados = true;
           }
         } else {
-          this.activacionEditar = false;
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
         }
       }
     );
@@ -198,17 +200,17 @@ export class DatosBancariosComponent implements OnInit {
     this.sigaServices
       .postPaginado("datosBancarios_search", "?numPagina=1", this.body)
       .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.bodySearch = JSON.parse(data["body"]);
-          this.body = this.bodySearch.datosBancariosItem[0];
-        },
-        error => {
-          this.bodySearch = JSON.parse(error["error"]);
-          this.showFail(JSON.stringify(this.bodySearch.error.description));
-          console.log(error);
-          this.progressSpinner = false;
-        }
+      data => {
+        this.progressSpinner = false;
+        this.bodySearch = JSON.parse(data["body"]);
+        this.body = this.bodySearch.datosBancariosItem[0];
+      },
+      error => {
+        this.bodySearch = JSON.parse(error["error"]);
+        this.showFail(JSON.stringify(this.bodySearch.error.description));
+        console.log(error);
+        this.progressSpinner = false;
+      }
       );
   }
 
@@ -318,8 +320,8 @@ export class DatosBancariosComponent implements OnInit {
         } else {
           this.showSuccess(
             selectedDatos.length +
-              " " +
-              this.translateService.instant("messages.deleted.selected.success")
+            " " +
+            this.translateService.instant("messages.deleted.selected.success")
           );
         }
       },

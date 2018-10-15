@@ -230,7 +230,7 @@ label {
 
       .img-colegiado {
         border-radius: 0%;
-        width: 10rem;
+        width: 100%;
         position: relative;
         .ui-button,
         .ui-widget.ui-button,
@@ -665,6 +665,22 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   border-left-color: $blue3;
 }
 
+.ui-tooltip .ui-tooltip-text {
+  white-space: pre-line !important;
+}
+
+.ui-tooltip-text.ui-shadow.ui-corner-all {
+  background-color: white;
+}
+
+.ui-tooltip {
+  max-width: 80%;
+  box-shadow: none;
+  .ui-tooltip-text {
+    font-size: 0.8rem;
+  }
+}
+
 .far {
   font-weight: 400 !important;
 }
@@ -919,34 +935,75 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   border-radius: 0;
 }
 
-.ui-growl-message-info
-   .ui-growl-item{
+<<<<<<< head .ui-growl-message-info .ui-growl-item {
   color: white !important;
-  background-color:	#33a1ff   !important;
-   }
+  background-color: #33a1ff !important;
+}
 
- .ui-growl-message-success
-   .ui-growl-item{
+.ui-growl-message-success .ui-growl-item {
   color: white !important;
-  background-color: #28a745   !important;
-   }
+  background-color: #28a745 !important;
+}
 
- .ui-growl-message-warn
-   .ui-growl-item{
+.ui-growl-message-warn .ui-growl-item {
   color: white !important;
-  background-color:	#ffc107   !important;
-   }
+  background-color: #ffc107 !important;
+}
 
- .ui-growl-message-error
-   .ui-growl-item{
+.ui-growl-message-error .ui-growl-item {
   color: white !important;
-  background-color: #dc3545   !important;
-   }
-   .alterMutuaInfo{
-     overflow-y: auto;
-     height: 600px;
-     margin: 0 0 2.5rem 0;
-   }
+  background-color: #dc3545 !important;
+}
+.alterMutuaInfo {
+  overflow-y: auto;
+  height: 600px;
+  margin: 0 0 2.5rem 0;
+}
+======= .ui-growl-message-info .ui-growl-item {
+  color: white !important;
+  background-color: #33a1ff !important;
+}
+
+.ui-growl-message-success .ui-growl-item {
+  color: white !important;
+  background-color: #28a745 !important;
+}
+
+.ui-growl-message-warn .ui-growl-item {
+  color: white !important;
+  background-color: #ffc107 !important;
+}
+
+.ui-growl-message-error .ui-growl-item {
+  color: white !important;
+  background-color: #dc3545 !important;
+}
+
+.info-limit {
+  background: $secondary-color;
+  color: white;
+  padding: 0.5em 0.75em;
+  margin-bottom: 2px;
+  text-align: center;
+  i {
+    font-size: 1.5rem;
+  }
+}
+
+// #listadoInformeJustificacionDiv{
+// height: 259px !important;
+// }
+
+.content iframe {
+  max-width: 1300px;
+}
+
+iframe .box,
+iframe .button,
+iframe .boxCombo {
+  border-radius: 0 !important;
+}
+>>>>>>> origin/CensoII_v1.1
 
 /**RESPONSIVE**/
 
@@ -1035,6 +1092,30 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
     }
   }
 }
+@media (max-width: 1000px) {
+  .content-accesos {
+    padding-right: 2rem !important;
+    text-align: left !important;
+    display: inline-block !important;
+    .btn-acceso {
+      display: inline-block !important;
+      p {
+        padding-top: 12px;
+      }
+    }
+    .main-button {
+      margin-top: 1rem;
+    }
+  }
+}
+
+@media (max-width: 525px) {
+  .main-button {
+    button {
+      padding: 0.2em 0em !important;
+    }
+  }
+}
 
 .ui-datepicker .ui-datepicker-year-prev,
 .ui-datepicker .ui-datepicker-year-next {
@@ -1053,6 +1134,21 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
 .ui-dropdown.ui-state-disabled .ui-dropdown-label,
 .ui-widget:disabled {
   background-color: #e9ecef;
+}
+
+// ETIQUETAS
+
+.ui-autocomplete-multiple-container.ui-inputtext.ui-state-disabled {
+  background-color: #e9ecef;
+  width: 100%;
+}
+
+.ui-autocomplete-multiple-container.ui-inputtext {
+  width: 100%;
+}
+
+.ui-autocomplete-token-icon {
+  color: black;
 }
 
 .ui-datepicker.ui-widget .ui-datepicker-calendar td a.ui-state-active {
@@ -1104,4 +1200,9 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
 .header {
   margin-right: 12px;
   margin-top: 3px;
+
+  #mainWorkArea input {
+    border-radius: 0 !important;
+    -webkit-border-radius: 0px !important;
+  }
 }

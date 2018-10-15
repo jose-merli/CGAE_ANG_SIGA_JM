@@ -5,5 +5,7 @@ export class ParametroItem {
   idInstitucion: String;
   fechaBaja: Date;
   idRecurso: String;
+  posibleEliminar: String
+	idinstitucionActual: String;
   constructor() {}
 }

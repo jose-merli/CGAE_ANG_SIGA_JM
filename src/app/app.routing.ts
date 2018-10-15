@@ -157,6 +157,7 @@ import { BandejaEntradaComponent } from "./features/comunicaciones/bandeja-entra
 
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
+import { CatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros-classique/catalogos-maestros-classique.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
 import { Etiquetas } from "./features/administracion/gestion-multiidioma/etiquetas/etiquetas.component";
 import { SeleccionarIdioma } from "./features/administracion/seleccionar-idioma/seleccionar-idioma.component";
@@ -245,7 +246,8 @@ const appRoutes: Routes = [
 
   {
     path: "busquedaNoColegiados",
-    component: BusquedaNoColegiadosComponent,
+    //component: BusquedaNoColegiadosComponent,
+    component: SearchNoColegiadosComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -930,7 +932,8 @@ const appRoutes: Routes = [
   // Administracion
   {
     path: "catalogosMaestros",
-    component: CatalogosMaestros,
+    //component: CatalogosMaestros,
+    component: CatalogosMaestrosComponent,
     canActivate: [AuthGuard]
   },
   {
