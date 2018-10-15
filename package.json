@@ -9,6 +9,7 @@
     "deploy": "ng build --prod --env=deloitte --base-href=/siga-ang/",
     "deployDebugger": "ng build  --env=deloitte --base-href=/siga-ang/",
     "cgaeBuild": "ng build --prod --env=cgae --base-href=/htdocs/",
+    "cgaeBuildDebugger": "ng build  --env=cgae --base-href=/htdocs/",
     "test": "karma start ./karma.conf.js",
     "lint": "ng lint",
     "e2e": "protractor ./protractor.conf.js",

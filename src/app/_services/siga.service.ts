@@ -182,7 +182,7 @@ export class SigaServices {
       "/solicitudIncorporacion/estadoSolicitud",
     solicitudInciporporacion_searchSolicitud:
       "/solicitudIncorporacion/searchSolicitud",
- 
+
     fichaColegialGenerales_tratamiento: "fichaDatosGenerales/tratamiento",
     fichaColegialGenerales_estadoCivil: "fichaDatosGenerales/estadoCivil",
     fichaColegialGenerales_pais: "fichaDatosColegiales/pais",
@@ -227,9 +227,8 @@ export class SigaServices {
       "fichaColegialSociedades/searchSocieties",
     fichaColegialOtrasColegiaciones_searchOtherCollegues:
       "fichaColegialOtrasColegiaciones/searchOtherCollegues",
- 
+
     fichaColegialColegiales_search: "fichaDatosColegiales/searchDatosColegiales"
- 
   };
 
   private menuToggled = new Subject<any>();
@@ -418,9 +417,5 @@ export class SigaServices {
 
   notifyMenuToggled() {
     this.menuToggled.next();
-  }
-
-  borrarIframe() {
-    this.iframeRemove.next();
   }
 }
