@@ -54,7 +54,6 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   ) {
     this.formBusqueda = this.formBuilder.group({
       fechaDesde: new FormControl(null, Validators.required),
-      fechaHasta: new FormControl(null, Validators.required),
       nombre: new FormControl(null, Validators.minLength(3)),
       apellidos: new FormControl(null, Validators.minLength(3))
     });
