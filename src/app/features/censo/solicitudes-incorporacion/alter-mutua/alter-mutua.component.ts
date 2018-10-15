@@ -35,17 +35,23 @@ export class AlterMutuaComponent implements OnInit {
   table;
   selectedDatos;
   cols: any = [];
+ 
   msgs: any = [];
   s: any;
   residente: any;
   progressSpinner: boolean = false;
+ 
+  colsFisicas: any = [];
+ 
   rowsPerPage: any = [];
   datos: any;
   numSelected: number = 0;
   selectedItem: number = 10;
   selectMultiple: boolean = false;
   selectAll: boolean = false;
-  colsFisicas: any[];
+  sortO: number = 1;
+  sortF: string = "";
+  idFamiliar: String;
 
   comboSexo: any[];
   comboColegios: any[];
@@ -68,7 +74,7 @@ export class AlterMutuaComponent implements OnInit {
   modContratacionSelected: any;
   provinciaSelected: any;
   tipoDirSelected: any;
-  BeneficiarioSelected: any;
+  beneficiarioSelected: any;
 
   constructor(
     private translateService: TranslateService,
@@ -83,22 +89,36 @@ export class AlterMutuaComponent implements OnInit {
 
     this.colsFisicas = [
       {
-        field: "fechaInicio",
-        header: "administracion.auditoriaUsuarios.fechaDesde"
+        field: "ponerdto",
+        header: "Parentesco"
       },
       {
-        field: "fechaFin",
-        header: "administracion.auditoriaUsuarios.fechaHasta"
+        field: "Sexo",
+        header: "Sexo"
       },
       {
         field: "descripcionRetencion",
-        header: "factSJCS.datosPagos.literal.tipoRetencion"
+        header: "Nombre"
       },
       {
         field: "porcentajeRetencion",
-        header: "factSJCS.datosPagos.literal.porcentajeRetencion"
+        header: "Apellidos"
+      },
+      {
+        field: "porcentajeRetencion",
+        header: "Tipo identificación"
+      },
+      {
+        field: "porcentajeRetencion",
+        header: "Número identificación"
+      },
+      {
+        field: "porcentajeRetencion",
+        header: "Fecha Nacimiento"
       }
     ];
+
+    this.checkStatusInit();
   }
 
   cargarCombos() {
@@ -193,6 +213,79 @@ export class AlterMutuaComponent implements OnInit {
     }
   }*/
 
+  irDatosFamiliar(id) {
+
+    //console.log(id[0].fechaInicio);
+    if (id[0].fechaFin == null && id[0].fechaInicio != "") {
+      //this.nuevafecha = id[0].fechaInicio;
+      //id[0].fechaInicio = "";
+      //this.newRetencion.descripcionRetencion = id[0].idRetencion;
+      // this.onChangeDrop(this.newRetencion.descripcionRetencion);
+      //id[0].descripcionRetencion = "";
+    }
+  }
+
+  crear() {
+    /*this.isVolver = false;
+    this.isCrear = true;
+    this.isEliminar = true;*/
+
+    let valur2 = new Date().setMilliseconds(new Date().getMilliseconds());
+    if (this.datos == null || this.datos == undefined || this.datos.length == 0) {
+      this.datos = [];
+    } else {
+      let value = this.table.first;
+      // this.createArrayEdit(dummy, value);
+      this.datos.forEach((value: any, key: number) => {
+
+        if (value.fechaFin == null || value.fechaFin == undefined) {
+          // if (
+          //   this.datos[key].fechaInicio ==
+          //   this.datepipe.transform(new Date(valur2), "dd/MM/yyyy")
+          // ) {
+          //   this.datos[key].fechaFin = this.datepipe.transform(
+          //     new Date(valur2),
+          //     "dd/MM/yyyy"
+          //   );
+          // } else {
+          //   this.datos[key].fechaFin = this.datepipe.transform(
+          //     new Date(valur2 - 86400000),
+          //     "dd/MM/yyyy"
+          //   );
+          /* this.nuevafecha = new Date();
+           this.retencionActiveAnt = this.datos[key];
+           this.datos[key].fechaFin = this.datepipe.transform(
+             new Date(valur2 - 86400000),
+             "dd/MM/yyyy"
+           );*/
+        }
+      });
+    }
+
+    let dummy = {
+      idFamiliar: this.idFamiliar,
+      idParentesco: "",
+      idSexo: undefined,
+      Nombre: "",
+      idTipoIdentificacion: "",
+      fechaNacimiento: undefined
+    };
+    this.datos = [dummy, ...this.datos];
+
+    // this.table.reset();
+    let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
+    this.changeSort(event);
+  }
+
+  changeSort(event) {
+    this.sortF = "fechaFin";
+    this.sortO = 1;
+    this.table.sortMultiple();
+  }
+  checkStatusInit() {
+    this.cols = this.colsFisicas;
+  }
+
   mostarDatosPropuesta() {
     this.datosPropuesta = !this.datosPropuesta;
   }
@@ -220,7 +313,9 @@ export class AlterMutuaComponent implements OnInit {
     this.mostrarInfo = true;
   }
 
+ 
   clear() {
     this.msgs = [];
   }
+ 
 }
