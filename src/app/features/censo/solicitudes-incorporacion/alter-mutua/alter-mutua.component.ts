@@ -35,14 +35,14 @@ export class AlterMutuaComponent implements OnInit {
   table;
   selectedDatos;
   cols: any = [];
- 
   msgs: any = [];
   s: any;
   residente: any;
   progressSpinner: boolean = false;
- 
+  censo: any;
+  irFichaColegial: any;
   colsFisicas: any = [];
- 
+
   rowsPerPage: any = [];
   datos: any;
   numSelected: number = 0;
@@ -214,7 +214,6 @@ export class AlterMutuaComponent implements OnInit {
   }*/
 
   irDatosFamiliar(id) {
-
     //console.log(id[0].fechaInicio);
     if (id[0].fechaFin == null && id[0].fechaInicio != "") {
       //this.nuevafecha = id[0].fechaInicio;
@@ -231,13 +230,16 @@ export class AlterMutuaComponent implements OnInit {
     this.isEliminar = true;*/
 
     let valur2 = new Date().setMilliseconds(new Date().getMilliseconds());
-    if (this.datos == null || this.datos == undefined || this.datos.length == 0) {
+    if (
+      this.datos == null ||
+      this.datos == undefined ||
+      this.datos.length == 0
+    ) {
       this.datos = [];
     } else {
       let value = this.table.first;
       // this.createArrayEdit(dummy, value);
       this.datos.forEach((value: any, key: number) => {
-
         if (value.fechaFin == null || value.fechaFin == undefined) {
           // if (
           //   this.datos[key].fechaInicio ==
@@ -313,9 +315,7 @@ export class AlterMutuaComponent implements OnInit {
     this.mostrarInfo = true;
   }
 
- 
   clear() {
     this.msgs = [];
   }
- 
 }

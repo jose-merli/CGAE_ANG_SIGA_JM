@@ -429,7 +429,6 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   guardar() {
-<<<<<<< HEAD
     if (
       this.body.idTipoDireccion != null &&
       this.body.idTipoDireccion != undefined &&
@@ -485,75 +484,11 @@ para poder filtrar el dato con o sin estos caracteres*/
             // auditoria
             this.body.motivo = undefined;
             this.progressSpinner = false;
-=======
-    if (this.body.codigoPostal == null || this.body.codigoPostal == undefined) {
-      this.showFail("Debe especificar el Código Postal");
-    } else {
-      if (
-        this.body.idTipoDireccion != null &&
-        this.body.idTipoDireccion != undefined &&
-        this.body.idTipoDireccion.length > 0
-      ) {
-        this.progressSpinner = true;
-        // modo edicion
-        if (this.registroEditable) {
-          this.comprobarTablaDatosContactos();
-          this.comprobarCheckProvincia();
-          this.body.idProvincia = this.provinciaSelecionada;
-
-          if (this.body.idPais == "191") {
-            this.body.poblacionExtranjera = "";
           }
-          if (this.checkOtraProvincia == true) {
-            this.body.otraProvincia = "1";
-          } else {
-            this.body.otraProvincia = "0";
->>>>>>> origin/CensoII_v1.1
-          }
-          this.sigaServices.post("direcciones_update", this.body).subscribe(
-            data => {
-              this.progressSpinner = false;
-              this.body = JSON.parse(data["body"]);
-              this.backTo();
-            },
-            error => {
-              this.bodySearch = JSON.parse(error["error"]);
-              this.showFail(this.bodySearch.error.message.toString());
-              console.log(error);
-              this.progressSpinner = false;
-            }
-          );
-        }
-        // modo creacion
-        else {
-          this.comprobarTablaDatosContactos();
-          this.comprobarCheckProvincia();
-          this.body.idProvincia = this.provinciaSelecionada;
-          this.body.motivo = "registro creado";
-          this.sigaServices.post("direcciones_insert", this.body).subscribe(
-            data => {
-              this.progressSpinner = false;
-              this.body = JSON.parse(data["body"]);
-              this.backTo();
-            },
-            error => {
-              this.bodySearch = JSON.parse(error["error"]);
-              this.showFail(this.bodySearch.error.message.toString());
-              console.log(error);
-              this.progressSpinner = false;
-            },
-            () => {
-              // auditoria
-              this.body.motivo = undefined;
-            }
-          );
-        }
-      } else {
-        this.showFail("Debe de haber un tipo de Contacto seleccionado.");
+        );
       }
     }
   }
-
   duplicarRegistro() {
     this.body.idDireccion = null;
     this.nuevo = true;
