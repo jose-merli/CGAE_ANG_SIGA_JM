@@ -39,6 +39,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   progressSpinner: boolean = false;
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
+  msgs: any;
 
   formBusqueda: FormGroup;
   numSelected: number = 0;
@@ -507,5 +508,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         value: 40
       }
     ];
+  }
+  clear() {
+    this.msgs = [];
   }
 }

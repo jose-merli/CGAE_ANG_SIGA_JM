@@ -14,11 +14,11 @@ import { TranslateService } from "../../../commons/translate/translation.service
 })
 export class CargasMasivasComponent implements OnInit, AfterContentInit {
   cargasMasivas: SelectItem[];
-
+  msgs: any[];
   showCargasMasivas: boolean = false;
   enableGF: boolean = false;
   enableCV: boolean = false;
-
+  progressSpinner: boolean = false;
   selectedTipoCarga: string;
 
   constructor(private translateService: TranslateService) {}
@@ -59,5 +59,8 @@ export class CargasMasivasComponent implements OnInit, AfterContentInit {
     } else {
       this.enableCV = false;
     }
+  }
+  clear() {
+    this.msgs = [];
   }
 }

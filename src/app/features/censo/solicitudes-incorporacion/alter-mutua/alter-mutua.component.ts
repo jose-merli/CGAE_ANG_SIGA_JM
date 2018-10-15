@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, HostListener } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+  HostListener
+} from "@angular/core";
 import {
   FormGroup,
   FormBuilder,
@@ -9,14 +15,12 @@ import { Router } from "@angular/router";
 import { SigaServices } from "../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate";
 
-
 @Component({
   selector: "app-alter-mutua",
   templateUrl: "./alter-mutua.component.html",
   styleUrls: ["./alter-mutua.component.scss"]
 })
 export class AlterMutuaComponent implements OnInit {
-
   es: any;
   datosPropuesta: boolean = false;
   datosPersonales: boolean = false;
@@ -31,6 +35,10 @@ export class AlterMutuaComponent implements OnInit {
   table;
   selectedDatos;
   cols: any = [];
+  msgs: any = [];
+  s: any;
+  residente: any;
+  progressSpinner: boolean = false;
   rowsPerPage: any = [];
   datos: any;
   numSelected: number = 0;
@@ -67,9 +75,7 @@ export class AlterMutuaComponent implements OnInit {
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router
-  ) {
-
-  }
+  ) {}
 
   ngOnInit() {
     this.es = this.translateService.getCalendarLocale();
@@ -96,52 +102,51 @@ export class AlterMutuaComponent implements OnInit {
   }
 
   cargarCombos() {
-
     this.comboModContratacion = [
-      { label: '', value: null },
-      { label: 'Alter profesional joven', value: '1' },
-      { label: 'Alter profesional', value: '2' },
-      { label: 'Alter profesional plus', value: '3' }
+      { label: "", value: null },
+      { label: "Alter profesional joven", value: "1" },
+      { label: "Alter profesional", value: "2" },
+      { label: "Alter profesional plus", value: "3" }
     ];
 
     this.comboSexo = [
-      { label: '', value: null },
+      { label: "", value: null },
       { value: "H", label: "Hombre" },
       { value: "M", label: "Mujer" }
-    ]
+    ];
 
     this.comboEstadoCivil = [
-      { label: '', value: null },
-      { label: 'Casado', value: '1' },
-      { label: 'Soltero', value: '2' },
-      { label: 'Separado', value: '3' },
-      { label: 'Viudo', value: '4' }
+      { label: "", value: null },
+      { label: "Casado", value: "1" },
+      { label: "Soltero", value: "2" },
+      { label: "Separado", value: "3" },
+      { label: "Viudo", value: "4" }
     ];
 
     this.comboIdioma = [
-      { label: '', value: null },
-      { label: 'Español', value: '1' },
-      { label: 'Catalán', value: '2' }
+      { label: "", value: null },
+      { label: "Español", value: "1" },
+      { label: "Catalán", value: "2" }
     ];
 
     this.comboComunicacion = [
-      { label: '', value: null },
-      { label: 'Correo Electrónico', value: '1' },
-      { label: 'Teléfono', value: '2' },
-      { label: 'Carta', value: '3' }
+      { label: "", value: null },
+      { label: "Correo Electrónico", value: "1" },
+      { label: "Teléfono", value: "2" },
+      { label: "Carta", value: "3" }
     ];
 
     this.TipoDireccion = [
-      { label: '', value: null },
-      { label: 'Residencia', value: '1' },
-      { label: 'Despacho', value: '2' }
+      { label: "", value: null },
+      { label: "Residencia", value: "1" },
+      { label: "Despacho", value: "2" }
     ];
 
     this.comboBeneficiario = [
-      { label: '', value: null },
-      { label: 'Herederos Legales', value: '1' },
-      { label: 'Familiares', value: '2' },
-      { label: 'Otros', value: '3' }
+      { label: "", value: null },
+      { label: "Herederos Legales", value: "1" },
+      { label: "Familiares", value: "2" },
+      { label: "Otros", value: "3" }
     ];
 
     this.sigaServices.get("busquedaPer_colegio").subscribe(
@@ -153,23 +158,26 @@ export class AlterMutuaComponent implements OnInit {
       }
     );
 
-    this.sigaServices.get("solicitudInciporporacion_pais").subscribe(result => {
-      this.paises = result.combooItems;
-    }, error => {
-      console.log(error);
-    });
+    this.sigaServices.get("solicitudInciporporacion_pais").subscribe(
+      result => {
+        this.paises = result.combooItems;
+      },
+      error => {
+        console.log(error);
+      }
+    );
 
-    this.sigaServices.get("integrantes_provincias").subscribe(result => {
-      this.provincias = result.combooItems;
-    }, error => {
-      console.log(error);
-    });
-
+    this.sigaServices.get("integrantes_provincias").subscribe(
+      result => {
+        this.provincias = result.combooItems;
+      },
+      error => {
+        console.log(error);
+      }
+    );
   }
 
-  onChangePais(event) {
-
-  }
+  onChangePais(event) {}
 
   /*isValidIBAN(): boolean {
     if (
@@ -210,5 +218,9 @@ export class AlterMutuaComponent implements OnInit {
 
   mostarPopUp() {
     this.mostrarInfo = true;
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }

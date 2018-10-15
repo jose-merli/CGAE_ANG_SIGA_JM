@@ -9,12 +9,12 @@ import { ErrorItem } from "../../../../models/ErrorItem";
 import { esCalendar } from "../../../../utils/calendar";
 import { Pipe, PipeTransform } from "@angular/core";
 
-@Pipe({ name: "replaceLineBreaks" })
-export class ReplaceLineBreaks implements PipeTransform {
-  transform(value: string): string {
-    return value.replace(/\n/g, "<br/>");
-  }
-}
+// @Pipe({ name: "replaceLineBreaks" })
+// export class ReplaceLineBreaks implements PipeTransform {
+//   transform(value: string): string {
+//     return value.replace(/\n/g, "<br/>");
+//   }
+// }
 
 @Component({
   selector: "app-datos-cv",
@@ -46,7 +46,6 @@ export class DatosCvComponent implements OnInit {
   @ViewChild("pUploadFile")
   pUploadFile;
 
-  clear: boolean = false;
   uploadFileDisable: boolean = true;
   downloadFileDisable: boolean = true;
   downloadFileLogDisable: boolean = true;
@@ -337,5 +336,8 @@ export class DatosCvComponent implements OnInit {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
+  }
+  clear() {
+    this.msgs = [];
   }
 }

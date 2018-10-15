@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, HostListener } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+  HostListener
+} from "@angular/core";
 import {
   FormGroup,
   FormBuilder,
@@ -11,7 +17,9 @@ import { TranslateService } from "../../../commons/translate";
 import { SolicitudIncorporacionObject } from "../../../models/SolicitudIncorporacionObject";
 import { SolicitudIncorporacionItem } from "../../../models/SolicitudIncorporacionItem";
 import { Message } from "primeng/components/common/api";
-export enum KEY_CODE { ENTER = 13 }
+export enum KEY_CODE {
+  ENTER = 13
+}
 
 @Component({
   selector: "app-solicitudes-incorporacion",
@@ -19,7 +27,6 @@ export enum KEY_CODE { ENTER = 13 }
   styleUrls: ["./solicitudes-incorporacion.component.scss"]
 })
 export class SolicitudesIncorporacionComponent implements OnInit {
-
   es: any;
   fichaAbierta: boolean = true;
   formBusqueda: FormGroup;
@@ -40,6 +47,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   cols: any = [];
   rowsPerPage: any = [];
   datos: any;
+
   numSelected: number = 0;
   selectedItem: number = 10;
   selectMultiple: boolean = false;
@@ -104,43 +112,56 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     }
   }
   cargarCombos() {
-    this.sigaServices
-      .get("solicitudInciporporacion_tipoSolicitud").subscribe(result => {
+    this.sigaServices.get("solicitudInciporporacion_tipoSolicitud").subscribe(
+      result => {
         this.tiposSolicitud = result.combooItems;
       },
-        error => {
-          console.log(error);
-        });
+      error => {
+        console.log(error);
+      }
+    );
 
-    this.sigaServices
-      .get("solicitudInciporporacion_estadoSolicitud").subscribe(result => {
+    this.sigaServices.get("solicitudInciporporacion_estadoSolicitud").subscribe(
+      result => {
         this.estadosSolicitud = result.combooItems;
       },
-        error => {
-          console.log(error);
-        });
+      error => {
+        console.log(error);
+      }
+    );
   }
   buscarSolicitudes() {
     this.buscar = true;
     this.progressSpinner = true;
-    this.sigaServices.postPaginado("solicitudInciporporacion_searchSolicitud", "?numPagina=1", this.body).subscribe(result => {
-      this.bodySearch = JSON.parse(result["body"]);
-      this.datos = [];
-      this.datos = this.bodySearch.solIncorporacionItems;
-      this.datos.forEach(element => {
-        element.fechaSolicitud = new Date(element.fechaSolicitud);
-        element.fechaEstado = new Date(element.fechaEstado);
-      });
-      this.progressSpinner = false;
-    },
-      error => {
-        console.log(error);
-      });
+    this.sigaServices
+      .postPaginado(
+        "solicitudInciporporacion_searchSolicitud",
+        "?numPagina=1",
+        this.body
+      )
+      .subscribe(
+        result => {
+          this.bodySearch = JSON.parse(result["body"]);
+          this.datos = [];
+          this.datos = this.bodySearch.solIncorporacionItems;
+          this.datos.forEach(element => {
+            element.fechaSolicitud = new Date(element.fechaSolicitud);
+            element.fechaEstado = new Date(element.fechaEstado);
+          });
+          this.progressSpinner = false;
+        },
+        error => {
+          console.log(error);
+        }
+      );
     sessionStorage.setItem("filtros", JSON.stringify(this.body));
   }
 
   isBuscar(): boolean {
-    if (!this.formBusqueda.invalid && this.checkIdentificacion(this.body.numeroIdentificacion)) {
+    if (
+      !this.formBusqueda.invalid &&
+      this.checkIdentificacion(this.body.numeroIdentificacion)
+    ) {
       return false;
     } else {
       return true;
@@ -153,7 +174,6 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     this.router.navigate(["/nuevaIncorporacion"]);
   }
   irDetalleSolicitud(item) {
-
     if (item && item.length > 0) {
       var enviarDatos = null;
       enviarDatos = item[0];
@@ -175,8 +195,18 @@ export class SolicitudesIncorporacionComponent implements OnInit {
       if (doc.length == 10) {
         return this.isValidPassport(doc);
       } else {
-        if (doc.substring(0, 1) == "1" || doc.substring(0, 1) == "2" || doc.substring(0, 1) == "3" || doc.substring(0, 1) == "4" || doc.substring(0, 1) == "5" || doc.substring(0, 1) == "6"
-          || doc.substring(0, 1) == "7" || doc.substring(0, 1) == "8" || doc.substring(0, 1) == "9" || doc.substring(0, 1) == "0") {
+        if (
+          doc.substring(0, 1) == "1" ||
+          doc.substring(0, 1) == "2" ||
+          doc.substring(0, 1) == "3" ||
+          doc.substring(0, 1) == "4" ||
+          doc.substring(0, 1) == "5" ||
+          doc.substring(0, 1) == "6" ||
+          doc.substring(0, 1) == "7" ||
+          doc.substring(0, 1) == "8" ||
+          doc.substring(0, 1) == "9" ||
+          doc.substring(0, 1) == "0"
+        ) {
           return this.isValidDNI(doc);
         } else {
           return this.isValidNIE(doc);
@@ -207,7 +237,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
 
@@ -258,5 +288,8 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     if (event.keyCode === KEY_CODE.ENTER) {
       this.isBuscar();
     }
+  }
+  clear() {
+    this.msgs = [];
   }
 }

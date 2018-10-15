@@ -23,6 +23,8 @@ export class GestionSubtiposCVComponent {
   numSelected: number = 0;
   selectMultiple: boolean = false;
   selectAll: boolean = false;
+  msgs: any = [];
+  showDatosCv: any;
 
   showSubtipoCV: boolean = false;
   progressSpinner: boolean = false;
@@ -249,5 +251,8 @@ export class GestionSubtiposCVComponent {
     }
 
     this.numSelected = this.selectedDatos.length;
+  }
+  clear() {
+    this.msgs = [];
   }
 }
