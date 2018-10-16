@@ -224,7 +224,11 @@ export class SigaServices {
     fichaColegialSociedades_searchSocieties:
       "fichaColegialSociedades/searchSocieties",
     fichaColegialOtrasColegiaciones_searchOtherCollegues:
-      "fichaColegialOtrasColegiaciones/searchOtherCollegues"
+      "fichaColegialOtrasColegiaciones/searchOtherCollegues",
+    fichaDatosGenerales_partidoJudicialSearch:
+      "/fichaDatosGenerales/partidoJudicialSearch",
+    fichaDatosColegiales_datosColegialesSearch:
+      "/fichaDatosColegiales/datosColegialesSearch"
   };
 
   private menuToggled = new Subject<any>();
