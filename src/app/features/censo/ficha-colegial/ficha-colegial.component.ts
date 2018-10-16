@@ -66,7 +66,9 @@ export class FichaColegialComponent implements OnInit {
   activarGuardarGenerales: boolean = false;
   selectAll: boolean = false;
   selectMultiple: boolean = false;
-
+  irTurnoOficio: any;
+  irExpedientes: any;
+  irRegTel: any;
   msgs: Message[];
 
   colsColegiales: any = [];

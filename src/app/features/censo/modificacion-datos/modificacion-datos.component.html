@@ -1,1 +1,93 @@
-<app-my-iframe url="{{ url }}"></app-my-iframe>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="busqueda-container">
+    <div class="header-title">
+        <i class="fa fa-square"></i>
+        <p>{{ "menu.censo" | translate}}
+            <i class="fa fa-angle-right"></i> {{ "censo.solicitudModificacion.literal.titulo" | translate}}</p>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <p class="title-module">{{ "censo.solicitudModificacion.literal.titulo" | translate}}
+                <i (click)="onHideCard()" *ngIf="showCard" class="fa fa-angle-up float-right"></i>
+                <i (click)="onHideCard()" *ngIf="!showCard" class="fa fa-angle-down float-right"></i>
+            </p>
+
+            <div *ngIf="showCard" class="module vista-avanzada">
+                <div class="form-row">
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{ "censo.solicitudTextoLibre.literal.tipoModificacion" | translate}}</label>
+                        <br>
+                        <p-dropdown class="select-form" [options]="tipo" [(ngModel)]="selectedTipo" placeholder="{{'general.boton.seleccionar' | translate}}"
+                            (onChange)="onChangeTipo($event.value)"></p-dropdown>
+                    </div>
+
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{ "censo.busquedaSolicitudesModificacion.literal.estado" | translate}}</label>
+                        <br>
+                        <p-dropdown class="select-form" [options]="estado" [(ngModel)]="selectedEstado" placeholder="{{'general.boton.seleccionar' | translate}}"
+                            (onChange)="onChangeEstado($event.value)"></p-dropdown>
+                    </div>
+
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate}}</label>
+                        <p-calendar [keepInvalid]="true" selectionMode="range" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy"
+                            [(ngModel)]="body.fechaDesde"></p-calendar>
+                    </div>
+
+
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate}}</label>
+                        <p-calendar [keepInvalid]="true" selectionMode="range" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy"
+                            [(ngModel)]="body.fechaHasta"></p-calendar>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="text-right main-button ">
+                <button (click)="restore()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+                <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
+                <button *ngIf="esColegiado" (click)="newElement()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+            </div>
+        </div>
+    </div>
+
+    <!--cuerpo datos-->
+    <div *ngIf="isSearch" class="card mt-3">
+        <div class="card-body p-0">
+
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+                [paginator]="enablePagination()" (onRowSelect)="redirectTo(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+                selectionMode="multiple" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado" [value]="data"
+                [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" [editable]="true">
+                <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    [filter]="true" filterMatchMode="contains">
+                </p-column>
+                <ng-template pTemplate="paginatorLeft">
+                    <div class="mostrar d-flex text-right justify-content-end">
+                        <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}
+                        </label>
+                        <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+                        <label>{{ "general.message.mostrar" | translate}}</label>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                        <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                        <label *ngIf="!esColegiado" class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+                            <i *ngIf="!esColegiado" class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+                    </div>
+                </ng-template>
+                <p-footer>
+                    <div *ngIf="!esColegiado" class="text-right main-button">
+                        <button (click)="processRequest()" pButton type="button" icon="fa fa-gears" iconPos="left" label="{{'modificacionDatos.boton.procesarSolicitud' | translate}}"></button>
+                        <button *ngIf="selectMultiple && selectedDatos && selectedDatos != ''" (click)="refuseRequest()" pButton type="button" icon="fa fa-times"
+                            iconPos="left" label="{{ 'general.boton.denegarSolicitud' | translate}}"></button>
+                    </div>
+                </p-footer>
+            </p-dataTable>
+        </div>
+    </div>
+    <app-dialog></app-dialog>
+    <div *ngIf="progressSpinner " class="overlay-spinner ">
+        <div class="loader "></div>
+    </div>

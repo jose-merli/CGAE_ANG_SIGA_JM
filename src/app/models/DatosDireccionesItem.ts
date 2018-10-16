@@ -28,5 +28,6 @@ export class DatosDireccionesItem {
   motivo: String;
   esColegiado: boolean;
   nombrepartido: String;
+  poblacionExtranjera: String;
   constructor() {}
 }

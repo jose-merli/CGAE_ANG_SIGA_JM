@@ -12,6 +12,7 @@ import { DatosPersonaJuridicaComponent } from "../../datosPersonaJuridica/datosP
 import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
 
+import { TranslateService } from "../../../../commons/translate/translation.service";
 @Component({
   selector: "app-datos-direcciones",
   templateUrl: "./datos-direcciones.component.html",
@@ -64,18 +65,22 @@ export class DatosDireccionesComponent implements OnInit {
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
+  isValidate: boolean;
+
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
+    private translateService: TranslateService,
     private fichasPosibles: DatosPersonaJuridicaComponent,
     private cardService: cardService
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (sessionStorage.getItem("editarDirecciones") == "true") {
       let fichaPosible = this.getFichaPosibleByKey("direcciones");
       fichaPosible.activa = true;
       sessionStorage.removeItem("editarDirecciones");
+      sessionStorage.removeItem("historicoDir");
     }
     this.checkAcceso();
     this.cols = [
@@ -143,6 +148,7 @@ export class DatosDireccionesComponent implements OnInit {
       id => {
         if (id !== null) {
           this.body.idPersona = id;
+          this.idPersona = id;
           this.search();
         }
       }
@@ -189,7 +195,9 @@ export class DatosDireccionesComponent implements OnInit {
             this.camposDesactivados = true;
           }
         } else {
-          this.activacionEditar = false;
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
         }
       }
     );
@@ -239,6 +247,7 @@ export class DatosDireccionesComponent implements OnInit {
     this.selectedDatos = "";
     this.progressSpinner = true;
     this.selectAll = false;
+    // Se comprueba si hay idpersona para cuando se crea una sociedad (sociedad ya existente)
     if (this.idPersona != undefined && this.idPersona != null) {
       this.sigaServices
         .postPaginado("direcciones_search", "?numPagina=1", searchObject)
@@ -253,13 +262,18 @@ export class DatosDireccionesComponent implements OnInit {
             } else {
               this.only = false;
             }
+
+            this.comprobarValidacion();
           },
           err => {
             console.log(err);
             this.progressSpinner = false;
           },
-          () => {}
+          () => { }
         );
+    } else {
+      // Sociedad no existente,
+      this.progressSpinner = false;
     }
   }
   setItalic(datoH) {
@@ -324,7 +338,7 @@ export class DatosDireccionesComponent implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {}
+        () => { }
       );
   }
 
@@ -339,7 +353,7 @@ export class DatosDireccionesComponent implements OnInit {
     });
 
     this.sigaServices.post("direcciones_remove", datosDelete).subscribe(
-      data => {},
+      data => { },
       err => {
         console.log(err);
       },
@@ -352,6 +366,7 @@ export class DatosDireccionesComponent implements OnInit {
       }
     );
   }
+
   goToDetails(selectedDatos) {
     if (!this.selectMultiple) {
       var ir = null;
@@ -370,5 +385,30 @@ export class DatosDireccionesComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  comprobarValidacion() {
+    let tipoDireccion = this.datos.map(dato => {
+      return dato.idTipoDireccionList;
+    })
+
+    if (tipoDireccion.indexOf('3') != -1) {
+      for (let dato of this.datos) {
+        if (dato.idTipoDireccionList == "3" && (dato.codigoPostal != null || dato.codigoPostal != undefined)
+          && (dato.nombreProvincia != null || dato.nombreProvincia != undefined) && (dato.nombrePoblacion != null || dato.nombrePoblacion != undefined)) {
+          this.isValidate = true;
+        }
+      }
+    } else {
+      this.isValidate = false;
+    }
+
+    this.cardService.newCardValidator$.subscribe(data => {
+      data.map(result => {
+        result.cardDirecciones = this.isValidate;
+      })
+      console.log(data)
+    });
+
   }
 }

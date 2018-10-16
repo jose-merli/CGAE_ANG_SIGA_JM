@@ -1,4 +1,4 @@
-<p-growl [(value)]="msgs" life="3000"></p-growl>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
 <div class="busqueda-container">
   <div class="header-title">
@@ -88,10 +88,10 @@
           </div>
           <div class="d-flex justify-content-between">
             <label>{{"censo.busquedaClientesAvanzada.literal.tipoColegio" | translate}}
-              <span>{{ body.idTipoColegio }}</span>
+              <span>{{ descripcionTipoColegio.label }}</span>
             </label>
             <label>{{"censo.datosDireccion.literal.provincia" | translate}}
-              <span>{{ body.idProvincia }}</span>
+              <span>{{ descripcionProvincia.label }}</span>
             </label>
             <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}
               <span>{{ body.numColegiado }}</span>
@@ -114,12 +114,19 @@
     <div *ngIf="esFichaActiva('colegiacion')" class="card-body card-body-ficha">
       <div class="row">
         <div class="form-group col-lg-3 col-md-6">
-          <label>{{"censo.busquedaClientesAvanzada.literal.tipoColegio" | translate}}</label>
-          <p-dropdown [(ngModel)]="body.idTipoColegio" class="select-form" [options]="colegiosArray" [(disabled)]="isDisabledTipoColegio"></p-dropdown>
+          <label>{{"censo.busquedaClientesAvanzada.literal.tipoColegio" | translate}} (*)</label>
+          <p-dropdown [(ngModel)]="body.idTipoColegio" (ngModelChange)="actualizarDescripcionTipoColegio()" class="select-form" [options]="colegiosArray"
+            [(disabled)]="isDisabledTipoColegio"></p-dropdown>
+
+        </div>
+        <div class="form-group col-lg-3 col-md-6">
+          <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
+          <input type="text" class="form-control" [(disabled)]="isDisabledColegio" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.datosDireccion.literal.provincia" | translate}}</label>
-          <p-dropdown [(ngModel)]="body.idProvincia" class="select-form" [options]="provinciasArray" [(disabled)]="isDisabledProvincia"></p-dropdown>
+          <p-dropdown [(ngModel)]="body.idProvincia" (ngModelChange)="actualizarDescripcionProvincia()" class="select-form" [options]="provinciasArray"
+            [(disabled)]="isDisabledProvincia"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
@@ -153,7 +160,7 @@
               <span>{{ body.fechaBajaCargo }}</span>
             </label>
             <label>{{"censo.consultaComponentesJuridicos.literal.cargo" | translate}}
-              <span>{{ body.idCargo }}</span>
+              <span>{{ descripcionCargo.label }}</span>
             </label>
             <label> {{"censo.consultaComponentesJuridicos.literal.descripcioncargo" | translate}}
               <span>{{ body.cargo }}</span>
@@ -177,29 +184,39 @@
     <!--cuerpo datos vinculacion-->
 
     <div *ngIf="esFichaActiva('vinculacion')" class="card-body card-body-ficha">
-      <div class="row">
-        <div class="form-group col-lg-3 col-md-6">
-          <label>{{"censo.consultaComponentesJuridicos.literal.fechaCargo" | translate}}</label>
-          <p-calendar [(ngModel)]="fechaCarga" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [monthNavigator]="true"
-            [yearNavigator]="true" yearRange="1930:2050" [(disabled)]="historico" [locale]="es" [utc]="true"></p-calendar>
+      <div class="d-flex align-items-end row">
+        <div class="col-lg-3 col-md-6">
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{"censo.consultaComponentesJuridicos.literal.fechaCargo" | translate}}</label>
+              <p-calendar [(ngModel)]="fechaCarga" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [monthNavigator]="true"
+                [yearNavigator]="true" yearRange="1930:2050" [(disabled)]="historico" [locale]="es" [utc]="true"></p-calendar>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{"censo.consultaDatos.literal.fechaFin" | translate}}</label>
+              <p-calendar [(ngModel)]="fechaBajaCargo" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [monthNavigator]="true"
+                [yearNavigator]="true" yearRange="1930:2050" [(disabled)]="historico" [locale]="es" [utc]="true"></p-calendar>
+            </div>
+          </div>
         </div>
-        <div class="form-group col-lg-3 col-md-6">
-          <label>{{"censo.consultaComponentesJuridicos.literal.fechaFinCargo" | translate}}</label>
-          <p-calendar [(ngModel)]="fechaBajaCargo" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [monthNavigator]="true"
-            [yearNavigator]="true" yearRange="1930:2050" [(disabled)]="historico" [locale]="es" [utc]="true"></p-calendar>
+        <div class="form-check col-lg-1 col-md-2 mb-4">
+          <p-checkbox [(ngModel)]='body.socio' binary="true" [(disabled)]="historico" label="Socio"></p-checkbox>
         </div>
-        <div class="form-group col-lg-3 col-md-6">
+        <div class="form-group col-lg-2 col-md-4">
           <label>{{"censo.consultaComponentesJuridicos.literal.cargo" | translate}}</label>
-          <p-dropdown [(ngModel)]="body.idCargo" [(disabled)]="historico" class="select-form" [options]="cargosArray"></p-dropdown>
+          <p-dropdown [(ngModel)]="body.idCargo" (ngModelChange)="actualizarDescripcionCargo()" [(disabled)]="historico" class="select-form"
+            [options]="cargosArray"></p-dropdown>
         </div>
-        <div class="form-group col-lg-3 col-md-6">
+        <div class="form-group col-lg-4 col-md-8">
           <label>{{"censo.consultaComponentesJuridicos.literal.descripcioncargo" | translate}}</label>
           <input type="text" class="form-control" [(disabled)]="historico" [(ngModel)]="body.cargo" pInputText>
         </div>
-        <div class="form-group col-lg-3 col-md-6">
-          <label>{{"censo.consultaComponentesJuridicos.literal.Participacion" | translate}} (*)</label>
+        <div class="form-group col-lg-2 col-md-4">
+          <label>{{"censo.consultaComponentesJuridicos.literal.Participacion" | translate}}</label>
           <input type="text" class="form-control" [(disabled)]="historico" [(ngModel)]="body.capitalSocial" pInputText>
         </div>
+
+
       </div>
       <br>
 

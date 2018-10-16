@@ -91,8 +91,10 @@
                             padding-left: 2.2rem;
                         }
                         .itemChildOfChild{
-                            padding-left: 3.6rem;
+                            padding: 1rem .5rem;
+                            padding-left: 3.45rem;                            
                         }
+
 
                     }
                 }
@@ -184,15 +186,18 @@
          }
     }
 
-    @media screen and (max-width: 400px){
+    @media screen and (max-width: 525px){
          .menu-censo{    
-             padding-top: 7rem;
+             padding-top: 9rem;
             .container-fluid{
                 .col-items{
                     padding:0;
                     width: 18em;
                 }
             }
+        }
+        .closedMenu{
+            margin-left: -18em;
         }
 
         // .openedMenu{

@@ -5,6 +5,7 @@ import { Message } from "primeng/components/common/api";
 import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
 import { DatosIntegrantesItem } from "../../../../models/DatosIntegrantesItem";
 import { DatosIntegrantesObject } from "../../../../models/DatosIntegrantesObject";
+import { TranslateService } from "../../../../commons/translate/translation.service";
 import { DatosPersonaJuridicaComponent } from "../../datosPersonaJuridica/datosPersonaJuridica.component";
 import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
@@ -62,14 +63,18 @@ export class DatosIntegrantesComponent implements OnInit {
   body1: DatosIntegrantesItem = new DatosIntegrantesItem();
   body2: DatosIntegrantesItem = new DatosIntegrantesItem();
 
-  @ViewChild("table") table;
+  @ViewChild("table")
+  table;
   selectedDatos;
+
+  isValidate: boolean;
 
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
     private fichasPosibles: DatosPersonaJuridicaComponent,
-    private cardService: cardService
+    private cardService: cardService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit() {
@@ -114,12 +119,8 @@ export class DatosIntegrantesComponent implements OnInit {
       },
       { field: "cargo", header: "censo.busquedaComisiones.literal.cargos" },
       {
-        field: "liquidacionComoSociedad",
-        header: "censo.busquedaClientes.literal.liquidacion"
-      },
-      {
         field: "ejerciente",
-        header: "censo.consultaDatosGenerales.literal.ejerciente"
+        header: "censo.fichaIntegrantes.literal.estado"
       },
       {
         field: "capitalSocial",
@@ -215,7 +216,12 @@ export class DatosIntegrantesComponent implements OnInit {
             this.camposDesactivados = true;
           }
         } else {
-          this.activacionEditar = false;
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
         }
       }
     );
@@ -239,6 +245,8 @@ export class DatosIntegrantesComponent implements OnInit {
             this.progressSpinner = false;
             this.searchIntegrantes = JSON.parse(data["body"]);
             this.datos = this.searchIntegrantes.datosIntegrantesItem;
+            console.log(this.datos);
+            this.comprobarValidacion();
             if (this.datos.length == 1) {
               this.body = this.datos[0];
               this.only = true;
@@ -368,5 +376,53 @@ export class DatosIntegrantesComponent implements OnInit {
       this.numSelected = this.selectedDatos.length;
       this.dniCorrecto = null;
     }
+  }
+
+  comprobarValidacion() {
+    //Falta añadir condiciones de profesión (tipo colegio), cargo y socio
+    for (let dato of this.datos) {
+      if (dato.personaJuridica == "0") {
+        if (
+          (dato.nifCif != null || dato.nifCif != undefined) &&
+          (dato.nombre != null || dato.nombre != undefined) &&
+          (dato.apellidos1 != null || dato.apellidos1 != undefined)
+        ) {
+          if (dato.cargo != null || dato.cargo != undefined) {
+            this.isValidate = true;
+            if (
+              (dato.descripcionCargo != null ||
+                dato.descripcionCargo != undefined) &&
+              (dato.fechaCargo != null || dato.fechaCargo != undefined)
+            ) {
+              this.isValidate = true;
+            } else {
+              this.isValidate = false;
+            }
+          } else {
+            this.isValidate = true;
+          }
+        } else {
+          this.isValidate = false;
+        }
+      } else {
+        if (
+          (dato.nifCif != null || dato.nifCif != undefined) &&
+          (dato.nombre != null || dato.nombre != undefined)
+          // && (dato.cargo != null || dato.cargo != undefined)
+          // && (dato.descripcionCargo != null || dato.descripcionCargo != undefined) && (dato.fechaCargo != null || dato.fechaCargo != undefined)
+        ) {
+          this.isValidate = true;
+        } else {
+          this.isValidate = false;
+        }
+      }
+    }
+
+    this.cardService.newCardValidator$.subscribe(data => {
+      data.map(result => {
+        result.cardIntegrantes = this.isValidate;
+      });
+      console.log(data);
+    });
   }
 }

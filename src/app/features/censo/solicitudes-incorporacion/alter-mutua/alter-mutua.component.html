@@ -2,306 +2,559 @@
 
 <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{ "menu.censo" | translate}}
-        <i class="fa fa-angle-right"></i>TEST ALTER MUTUA
+    <p>{{ 'menu.censo' | translate}}
+        <i class="fa fa-angle-right"></i>{{'censo.alterMutua.titulo' | translate}}
     </p>
 </div>
+
 <div class="card">
-    <!-- Datos propuesta -->
-    <div class="card-body">
-        <p class="title-module">Selección de Propuesta
-            <i (click)="mostarDatosPropuesta()" *ngIf="datosPropuesta" class="fa fa-angle-up float-right"></i>
-            <i (click)="mostarDatosPropuesta()" *ngIf="!datosPropuesta" class="fa fa-angle-down float-right"></i>
-        </p>
-
-        <div [hidden]="!datosPropuesta" class="module vista-avanzada">
-            <div class="form-row">
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>Modalidad de contratación</label>
-                    <p-dropdown class="select-form" [(ngModel)]='modContratacionSelected' [options]="comboModContratacion">
-
-                    </p-dropdown>
+    <!--datos propuesta-->
+    <div class="card-header header-ficha" (click)="mostarDatosPropuesta()">
+        <div [hidden]="datosPropuesta" class="form-row">
+            <div class="col-lg-1 col-md-2">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                 </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>Tarífa(€)</label>
-                    <input type="text" disabled="true" class="form-control" pInputText>
+            </div>
+            <div class="col-lg-11 col-md-10">
+                <div class="d-flex justify-content-start mb-1">
+                    <label class="mr-auto title-ficha">Datos de colegiación</label>
                 </div>
-                <div class="form-group col-lg-2 col-md-2">
-                    <br>
-                    <i *ngIf="modContratacionSelected != undefined && modContratacionSelected.value != ''" (click)="mostarPopUp()"
-                        class="fas fa-info-circle" style="cursor:pointer"></i>
+                <div class="d-flex justify-content-between">
+                    <label>Tarífa
+                        <span>dto
+                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                    </label>
+                    <i [hidden]="fichaColegiacion" class="fa fa-angle-down float-right"></i>
                 </div>
             </div>
         </div>
-
-
-        <!-- Datos personales -->
-        <p class="title-module">Datos Personales
-            <i (click)="mostarDatosPersonales()" *ngIf="datosPersonales" class="fa fa-angle-up float-right"></i>
-            <i (click)="mostarDatosPersonales()" *ngIf="!datosPersonales" class="fa fa-angle-down float-right"></i>
-        </p>
-
-        <div [hidden]="!datosPersonales" class="module vista-avanzada">
-            <div class="form-row">
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>Identificador</label>
-                    <input type="text" class="form-control" pInputText>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>Nombre</label>
-                    <input type="text" class="form-control" pInputText>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>Apellidos</label>
-                    <input type="text" class="form-control" pInputText>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>fecha de nacimiento</label>
-                    <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"
-                        [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="s"></p-calendar>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>Sexo</label>
-                    <p-dropdown class="select-form" [(ngModel)]="sexoSelected" [options]="comboSexo" optionLabel="label"
-                        dataKey="value"></p-dropdown>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>Estado civil</label>
-                    <p-dropdown class="select-form" [(ngModel)]="estadoCivilSelected" [options]="comboEstadoCivil"
-                        optionLabel="label" dataKey="value"></p-dropdown>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>Colegio</label>
-                    <p-dropdown class="select-form" [(ngModel)]="ColegioSelected" [options]="comboColegios" optionLabel="label"
-                        dataKey="value"></p-dropdown>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>Situación del ejercicio</label>
-                    <input type="text" class="form-control" pInputText>
-                </div>
+        <div *ngIf="datosPropuesta" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado">
+                <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+            </div>
+            <label class="title-ficha">Datos de colegiación</label>
+            <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+    </div>
+    <!--cuerpo datos propuesta-->
+    <div [hidden]="!datosPropuesta" class="card-body card-body-ficha">
+        <div class="form-row">
+            <div class="form-group col-lg-3 col-md-3">
+                <label>Modalidad de contratación</label>
+                <p-dropdown class="select-form" [(ngModel)]='modContratacionSelected' [options]="comboModContratacion">
+                </p-dropdown>
+            </div>
+            <div class="form-group col-lg-2 col-md-2">
+                <br>
+                <i *ngIf="modContratacionSelected != undefined && modContratacionSelected != ''" (click)="mostarPopUp()"
+                    class="fas fa-info-circle" style="cursor:pointer"></i>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <label>Tarífa(€)</label>
+                <input type="text" disabled="true" class="form-control" pInputText>
             </div>
         </div>
-
-
-        <!-- Datos contacto -->
-        <p class="title-module">Datos de Contacto
-            <i (click)="mostrarDatosContacto()" *ngIf="datosContacto" class="fa fa-angle-up float-right"></i>
-            <i (click)="mostrarDatosContacto()" *ngIf="!datosContacto" class="fa fa-angle-down float-right"></i>
-        </p>
-
-        <div [hidden]="!datosContacto" class="card-body card-body-ficha">
-            <div class="row">
-                <div class="bloque col-lg-6 col-md-6">
-                    <div class="form-row">
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Medio de Comunicación</label>
-                            <p-dropdown class="select-form" [(ngModel)]='comunicacionSelected' [options]="comboComunicacion"></p-dropdown>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Idioma</label>
-                            <p-dropdown class="select-form" [(ngModel)]='idiomaSelected' [options]="comboIdioma"></p-dropdown>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Teléfono</label>
-                            <input type="text" class="form-control" pInputText>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Teléfono 2</label>
-                            <input type="text" class="form-control" pInputText>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Móvil</label>
-                            <input type="text" class="form-control" pInputText>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Fax</label>
-                            <input type="text" class="form-control" pInputText>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Correo Electrónico</label>
-                            <input type="text" class="form-control" pInputText>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <br>
-                            <p-checkbox binary="true" label="Acepta publicidad" [(ngModel)]="residente"></p-checkbox>
-                        </div>
-                    </div>
-                </div>
-                <div class="bloque col-lg-6 col-md-6">
-                    <div class="form-row">
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Domicilio</label>
-                            <input type="text" class="form-control" pInputText>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>CP</label>
-                            <input type="text" class="form-control" pInputText>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>País</label>
-                            <p-dropdown class="select-form" [(ngModel)]="paisSelected" [options]="paises" optionLabel="label"
-                                dataKey="value" (onChange)="onChangePais($event)"></p-dropdown>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Provincia</label>
-                            <p-dropdown class="select-form" [(ngModel)]="provinciaSelected" [options]="provincias"
-                                optionLabel="label" dataKey="value"></p-dropdown>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Población</label>
-                            <input type="text" class="form-control" pInputText>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Población</label>
-                            <p-dropdown class="select-form" [(ngModel)]="tipoDirSelected" [options]="TipoDireccion"
-                                optionLabel="label" dataKey="value"></p-dropdown>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Datos bancarios -->
-        <p class="title-module">Datos bancarios
-            <i (click)="mostrarDatosBancarios()" *ngIf="datosCuentaBancaria" class="fa fa-angle-up float-right"></i>
-            <i (click)="mostrarDatosBancarios()" *ngIf="!datosCuentaBancaria" class="fa fa-angle-down float-right"></i>
-        </p>
-        <div [hidden]="!datosCuentaBancaria" class="module vista-avanzada">
-            <div class="form-row">
-                <div class="bloque col-lg-6 col-md-6">
-                    <label>IBAN</label>
-                    <input type="text" class="form-control" pInputText>
-                    <!--<div *ngIf="isValidIBAN() == false">
-                        <small class="input-error" *ngIf="!isValidIBAN()">{{"IBAN incorrecto"}}</small>
-                    </div>-->
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Datos Familiares -->
-        <p class="title-module">Familiares
-            <i (click)="mostrarFamiliares()" *ngIf="datosFamiliares" class="fa fa-angle-up float-right"></i>
-            <i (click)="mostrarFamiliares()" *ngIf="!datosFamiliares" class="fa fa-angle-down float-right"></i>
-        </p>
-        <div [hidden]="!datosFamiliares" class="module vista-avanzada">
-            <div class="form-row">
-                <!--
-                <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos"
-                    (onRowSelect)="irFichaColegial(selectedDatos)" dataKey="idRetencion" selectionMode="multiple"
-                    [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1" sortField="fechaFin"
-                    [paginator]="true" paginatorPosition="both" [rows]="selectedItem" pageLinks="4" [editable]="true"
-                    [sortField]="sortF" [sortOrder]="sortO" (onSort)="changeSort($event)">
-
-                    <p-column [sortable]="true" field="fechaInicio" filterPlaceholder="{{'general.boton.search' | translate}}"
-                        [header]="cols[0].header | translate" [filter]="true" filterMatchMode="contains">
-                        <ng-template let-col let-car="rowData" pTemplate="body">
-                            <span>{{car[col.field]}} </span>
-                            <p-calendar *ngIf="car[col.field] == ''" [(ngModel)]="nuevafecha" dateFormat="dd/mm/yy"
-                                [utc]="true" [locale]="es" [showIcon]="true" (onSelect)="onChangeCalendar($event)">
-                            </p-calendar>
-
-
-                        </ng-template>
-
-                    </p-column>
-                    <p-column [sortable]="true" field="fechaFin" [header]="cols[1].header | translate" [filter]="true"
-                        filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                        <ng-template let-col let-car="rowData" pTemplate="body">
-
-                            <span>{{car[col.field]}}</span>
-
-                        </ng-template>
-                    </p-column>
-                    <p-column [sortable]="true" field="descripcionRetencion" [header]="cols[2].header | translate"
-                        [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                        <ng-template let-col let-car="rowData" pTemplate="body">
-                            <span>{{car[col.field]}}</span>
-                            <p-dropdown *ngIf="car[col.field] == '' " [(ngModel)]="newRetencion.descripcionRetencion"
-                                [options]="tiposRetenciones" (onChange)="onChangeDrop($event)"></p-dropdown>
-                        </ng-template>
-                    </p-column>
-                    <p-column [sortable]="true" field="porcentajeRetencion" [header]="cols[3].header | translate"
-                        [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                        <ng-template let-col let-car="rowData" pTemplate="body">
-                            <span>{{car[col.field]}}</span>
-
-                        </ng-template>
-                    </p-column>
-
-                    <ng-template pTemplate="paginatorLeft">
-                        <div class="mostrar">
-                            <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al
-                                {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                            <label>{{ "general.message.mostrar" | translate}}</label>
-                            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-                        </div>
-                    </ng-template>
-                    <p-footer>
-                        <div class="text-right main-button">
-                            <button (click)="volver();" [(disabled)]="isVolver" pButton type="button" icon="fa fa-undo"
-                                iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-                            <button (click)="confirmEdit();" [(disabled)]="isEditar" pButton type="button" icon="	far fa-save "
-                                iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-                            <button (click)="confirmarBorrar()" [(disabled)]="isEliminar" pButton type="button" icon="fa fa-trash-alt"
-                                iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
-                            <button (click)="crear()" [(disabled)]="isCrear" pButton type="button" icon="fa fa-plus"
-                                iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-                        </div>
-                    </p-footer>
-                </p-dataTable>-->
-            </div>
-        </div>
-
-        <!-- Datos Beneficiario -->
-        <p class="title-module">Beneficiarios
-            <i (click)="mostrarDatosBeneficiarios()" *ngIf="datosBeneficiarios" class="fa fa-angle-up float-right"></i>
-            <i (click)="mostrarDatosBeneficiarios()" *ngIf="!datosBeneficiarios" class="fa fa-angle-down float-right"></i>
-        </p>
-        <div [hidden]="!datosBeneficiarios" class="module vista-avanzada">
-            <div class="form-row">
-                <div class="bloque col-lg-3 col-md-3">
-                    <label>Tipo beneficiario</label>
-                    <p-dropdown class="select-form" [(ngModel)]="BeneficiarioSelected" [options]="comboBeneficiario"
-                        optionLabel="label" dataKey="value"></p-dropdown>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Observaciones -->
-        <p class="title-module">Observaciones
-            <i (click)="mostrarObservaciones()" *ngIf="observaciones" class="fa fa-angle-up float-right"></i>
-            <i (click)="mostrarObservaciones()" *ngIf="!observaciones" class="fa fa-angle-down float-right"></i>
-        </p>
-        <div [hidden]="!observaciones" class="module vista-avanzada">
-            <div class="form-group col-lg-7 col-md-7">
-                <label>Observaciones</label>
-                <textarea [rows]="10" pInputTextarea></textarea>
-            </div>
-        </div>
-
     </div>
 </div>
 
-<p-dialog [(visible)]="mostrarInfo" responsive="true" [draggable]="false" modal="modal" resizable="false" [width]="500">
+
+<!-- Datos personales -->
+<div class="card">
+    <div class="card-header header-ficha" (click)="mostarDatosPersonales()">
+        <div [hidden]="datosPersonales" class="form-row">
+            <div class="col-lg-1 col-md-2">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                </div>
+            </div>
+            <div class="col-lg-11 col-md-10">
+                <div class="d-flex justify-content-start mb-1">
+                    <label class="mr-auto title-ficha">Datos personales</label>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <label>Identificación
+                        <span>dto
+                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                    </label>
+                    <label>Nombre
+                        <span>dto
+                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                    </label>
+                    <label>Apellidos
+                        <span>dto
+                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                    </label>
+                    <i [hidden]="fichaColegiacion" class="fa fa-angle-down float-right"></i>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="datosPersonales" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado">
+                <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+            </div>
+            <label class="title-ficha">Datos personales</label>
+            <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+    </div>
+
+    <!--cuerpo datos personales-->
+    <div [hidden]="!datosPersonales" class="card-body card-body-ficha">
+        <div class="form-row">
+            <div class="form-group col-lg-3 col-md-3">
+                <label>Identificador</label>
+                <input type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <label>Nombre</label>
+                <input type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <label>Apellidos</label>
+                <input type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <label>fecha de nacimiento</label>
+                <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true"
+                    icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="s"></p-calendar>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <label>Sexo</label>
+                <p-dropdown class="select-form" [(ngModel)]="sexoSelected" [options]="comboSexo" optionLabel="label"
+                    dataKey="value"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <label>Estado civil</label>
+                <p-dropdown class="select-form" [(ngModel)]="estadoCivilSelected" [options]="comboEstadoCivil"
+                    optionLabel="label" dataKey="value"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <label>Colegio</label>
+                <p-dropdown class="select-form" [(ngModel)]="ColegioSelected" [options]="comboColegios" optionLabel="label"
+                    dataKey="value"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <label>Situación del ejercicio</label>
+                <input type="text" class="form-control" pInputText>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Datos contacto -->
+<div class="card">
+    <div class="card-header header-ficha" (click)="mostrarDatosContacto()">
+        <div [hidden]="datosContacto" class="form-row">
+            <div class="col-lg-1 col-md-2">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="far fa-address-book icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                </div>
+            </div>
+            <div class="col-lg-11 col-md-10">
+                <div class="d-flex justify-content-start mb-1">
+                    <label class="mr-auto title-ficha">Datos de Contacto</label>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <label>Móvil
+                        <span>dto
+                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                    </label>
+                    <label>Correo electrónico
+                        <span>dto
+                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                    </label>
+                    <i [hidden]="datosContacto" class="fa fa-angle-down float-right"></i>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="datosContacto" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado">
+                <i *ngIf="!existeImagen" class="far fa-address-book icon-ficha"></i>
+                <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+            </div>
+            <label class="title-ficha">Datos de Contacto</label>
+            <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+    </div>
+    <!-- cuerpo datos contacto -->
+    <div [hidden]="!datosContacto" class="card-body card-body-ficha">
+        <div class="row">
+            <div class="bloque col-lg-6 col-md-6">
+                <div class="form-row">
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Medio de Comunicación</label>
+                        <p-dropdown class="select-form" [(ngModel)]='comunicacionSelected' [options]="comboComunicacion"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Idioma</label>
+                        <p-dropdown class="select-form" [(ngModel)]='idiomaSelected' [options]="comboIdioma"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Teléfono</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Teléfono 2</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Móvil</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Fax</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Correo Electrónico</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <br>
+                        <p-checkbox binary="true" label="Acepta publicidad" [(ngModel)]="residente"></p-checkbox>
+                    </div>
+                </div>
+            </div>
+            <div class="bloque col-lg-6 col-md-6">
+                <div class="form-row">
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Domicilio</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>CP</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>País</label>
+                        <p-dropdown class="select-form" [(ngModel)]="paisSelected" [options]="paises" optionLabel="label"
+                            dataKey="value" (onChange)="onChangePais($event)"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Provincia</label>
+                        <p-dropdown class="select-form" [(ngModel)]="provinciaSelected" [options]="provincias"
+                            optionLabel="label" dataKey="value"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Población</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Población</label>
+                        <p-dropdown class="select-form" [(ngModel)]="tipoDirSelected" [options]="TipoDireccion"
+                            optionLabel="label" dataKey="value"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--datos bancarios-->
+<div class="card">
+    <div class="card-header header-ficha" (click)="mostrarDatosBancarios()">
+        <div [hidden]="datosCuentaBancaria" class="form-row">
+            <div class="col-lg-1 col-md-2">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="fa fa-credit-card icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                </div>
+            </div>
+            <div class="col-lg-11 col-md-10">
+                <div class="d-flex justify-content-start mb-1">
+                    <label class="mr-auto title-ficha">Datos bancarios</label>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <label>IBAN
+                        <span>dto
+                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                    </label>
+                    <i [hidden]="datosCuentaBancaria" class="fa fa-angle-down float-right"></i>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="datosCuentaBancaria" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado">
+                <i *ngIf="!existeImagen" class="fa fa-credit-card icon-ficha"></i>
+                <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+            </div>
+            <label class="title-ficha">Datos bancarios
+                <!--{{ "general.message.datos.generales" | translate}}--></label>
+            <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+    </div>
+
+    <!--cuerpo datos bancarios-->
+    <div [hidden]="!datosCuentaBancaria" class="card-body card-body-ficha">
+        <div class="form-row">
+            <div class="bloque col-lg-6 col-md-6">
+                <label>IBAN</label>
+                <input type="text" class="form-control" pInputText>
+                <!--<div *ngIf="isValidIBAN() == false">
+                                    <small class="input-error" *ngIf="!isValidIBAN()">{{"IBAN incorrecto"}}</small>
+                                </div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="card">
+
+    <div class="card-header header-ficha" (click)="mostrarFamiliares()">
+        <div [hidden]="datosFamiliares" class="form-row">
+            <div class="col-lg-1 col-md-2">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="fas fa-users icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                </div>
+            </div>
+            <div class="col-lg-11 col-md-10">
+                <div class="d-flex justify-content-start mb-1">
+                    <label class="mr-auto title-ficha">Familiares</label>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <label>Numero de familiares
+                        <span>dto
+                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                    </label>
+                    <i [hidden]="datosFamiliares" class="fa fa-angle-down float-right"></i>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="datosFamiliares" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado">
+                <i *ngIf="!existeImagen" class="fas fa-users icon-ficha"></i>
+                <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+            </div>
+            <label class="title-ficha">Familiares
+                <!--{{ "general.message.datos.generales" | translate}}--></label>
+            <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+    </div>
+    <div [hidden]="!datosFamiliares" class="card-body card-body-ficha">
+        <div class="form-row">
+
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos"
+                (onRowSelect)="irDatosFamiliar(selectedDatos)" dataKey="idFamiliar" selectionMode="multiple"
+                [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1" sortField="nombre"
+                [paginator]="true" paginatorPosition="both" [rows]="selectedItem" pageLinks="4" [editable]="true"
+                [sortField]="sortF" [sortOrder]="sortO" (onSort)="changeSort($event)">
+
+                <p-column field="idParentesco" filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[0].header"
+                    [filter]="true" filterMatchMode="contains">
+                    <ng-template let-col let-car="rowData" pTemplate="body">
+                        <span>{{car[col.field]}}</span>
+                        <p-dropdown *ngIf="car[col.field] == ''" class="select-form" [(ngModel)]="datosFamiliar.idParentesco"
+                            [options]="comboParentesco">
+                        </p-dropdown>
+                    </ng-template>
+
+                </p-column>
+                <p-column field="idSexo" [header]="cols[1].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    filterMatchMode="contains">
+                    <ng-template let-col let-car="rowData" pTemplate="body">
+                        <span>{{car[col.field]}}</span>
+                        <p-dropdown *ngIf="car[col.field] == ''" class="select-form" [(ngModel)]="datosFamiliar.idSexo"
+                            [options]="comboSexo" optionLabel="label" dataKey="value"></p-dropdown>
+                    </ng-template>
+                </p-column>
+
+                <p-column [sortable]="true" field="nombre" [header]="cols[2].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    filterMatchMode="contains">
+                    <ng-template let-col let-car="rowData" pTemplate="body">
+                        <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
+                        <input *ngIf="car[col.field] == ''" type="text" class="form-control" [(ngModel)]="datosFamiliar.nombre"
+                            pInputText>
+                    </ng-template>
+
+                </p-column>
+
+                <p-column [sortable]="true" field="apellidos" [header]="cols[3].header" [filter]="true"
+                    filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+                    <ng-template let-col let-car="rowData" pTemplate="body">
+                        <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
+                        <input *ngIf="car[col.field] == ''" type="text" class="form-control" [(ngModel)]="datosFamiliar.apellidos"
+                            pInputText>
+                    </ng-template>
+
+                </p-column>
+
+                <p-column field="idTipoIdentificacion" [header]="cols[4].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    filterMatchMode="contains">
+                    <ng-template let-col let-car="rowData" pTemplate="body">
+                        <span>{{car[col.field]}}</span>
+                        <p-dropdown *ngIf="car[col.field] == ''" class="select-form" [(ngModel)]="datosFamiliar.idTipoIdentificacion"
+                            [options]="comboTipoIdentificacion" optionLabel="label" dataKey="value"></p-dropdown>
+                    </ng-template>
+
+                </p-column>
+
+                <p-column [sortable]="true" field="nIdentificacion" [header]="cols[5].header" [filter]="true"
+                    filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+                    <ng-template let-col let-car="rowData" pTemplate="body">
+                        <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
+                        <input *ngIf="car[col.field] == ''" type="text" class="form-control" [(ngModel)]="datosFamiliar.nIdentificacion"
+                            pInputText>
+                    </ng-template>
+                </p-column>
+
+                <p-column [sortable]="true" field="fechaNacimiento" [header]="cols[6].header" [filter]="true"
+                    filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+                    <ng-template let-col let-car="rowData" pTemplate="body">
+                        <span>{{car[col.field]}}</span>
+                        <p-calendar [(ngModel)]="datosFamiliar.fechaNacimiento" dateFormat="dd/mm/yy" [utc]="true"
+                            [locale]="es" [showIcon]="true">
+                        </p-calendar>
+                    </ng-template>
+
+                </p-column>
+
+                <ng-template pTemplate="paginatorLeft">
+                    <div class="mostrar">
+                        <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al
+                            {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                        <label>{{ "general.message.mostrar" | translate}}</label>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                        <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                    </div>
+                </ng-template>
+                <p-footer>
+                    <div class="text-right main-button">
+                        <!--<button (click)="volver();" [(disabled)]="isVolver" pButton type="button" icon="fa fa-undo"
+                                                    iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>-->
+                        <button (click)="confirmEdit()" [(disabled)]="isEditar" pButton type="button" icon="far fa-save "
+                            iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                        <!--<button (click)="confirmarBorrar()" [(disabled)]="isEliminar" pButton type="button" icon="fa fa-trash-alt"
+                                                    iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>-->
+                        <button (click)="crear()" [(disabled)]="isCrear" pButton type="button" icon="fa fa-plus"
+                            iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+                    </div>
+                </p-footer>
+            </p-dataTable>
+        </div>
+    </div>
+
+</div>
+
+
+
+<div class="card">
+    <div class="card-header header-ficha" (click)="mostrarDatosBeneficiarios()">
+        <div [hidden]="datosBeneficiarios" class="form-row">
+            <div class="col-lg-1 col-md-2">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="fas fa-users icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                </div>
+            </div>
+            <div class="col-lg-11 col-md-10">
+                <div class="d-flex justify-content-start mb-1">
+                    <label class="mr-auto title-ficha">Beneficiarios</label>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <label>Beneficiarios
+                        <span>dto
+                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                    </label>
+                    <i [hidden]="datosBeneficiarios" class="fa fa-angle-down float-right"></i>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="datosBeneficiarios" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado">
+                <i *ngIf="!existeImagen" class="fas fa-users icon-ficha"></i>
+                <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+            </div>
+            <label class="title-ficha">Beneficiarios
+                <!--{{ "general.message.datos.generales" | translate}}--></label>
+            <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+    </div>
+    <div [hidden]="!datosBeneficiarios" class="card-body card-body-ficha">
+        <div class="form-row">
+            <div class="col-lg-3 col-md-3">
+                <label>Tipo beneficiario</label>
+                <p-dropdown class="select-form" [(ngModel)]="beneficiarioSelected" [options]="comboBeneficiario"
+                    optionLabel="label" dataKey="value" (onChange)="onChangeTipoBenef($event)"></p-dropdown>
+            </div>
+            <div *ngIf="beneficiarioSelected != undefined && beneficiarioSelected.value == '3'" class="col-lg-12 col-md-12">
+                TABLA
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="card">
+    <div class="card-header header-ficha" (click)="mostrarObservaciones()">
+        <div [hidden]="observaciones" class="form-row">
+            <div class="col-lg-1 col-md-2">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="fas fa-align-left icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                </div>
+            </div>
+            <div class="col-lg-11 col-md-10">
+                <div class="d-flex justify-content-start mb-1">
+                    <label class="mr-auto title-ficha">Observaciones</label>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <label>Observaciones
+                        <span>dto
+                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                    </label>
+                    <i [hidden]="observaciones" class="fa fa-angle-down float-right"></i>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="observaciones" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado">
+                <i *ngIf="!existeImagen" class="fas fa-align-left icon-ficha"></i>
+                <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+            </div>
+            <label class="title-ficha">Observaciones
+                <!--{{ "general.message.datos.generales" | translate}}--></label>
+            <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+    </div>
+    <div [hidden]="!observaciones" class="card-body card-body-ficha">
+        <div class="form-group col-lg-7 col-md-7">
+            <label>Observaciones</label>
+            <textarea [rows]="10" pInputTextarea></textarea>
+        </div>
+    </div>
+
+</div>
+<div class="mt-3 text-right main-button ">
+    <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+</div>
+
+
+
+<p-dialog [(visible)]="mostrarInfo" responsive="true" [draggable]="false" modal="modal" resizable="false" [width]="680">
     <p-header class="title">
-        <label *ngIf="modContratacionSelected != undefined && modContratacionSelected.value == '1'">Alter Profesional
-            Jóven</label>
-        <label *ngIf="modContratacionSelected != undefined && modContratacionSelected.value == '2'">Alter Profesional
-        </label>
-        <label *ngIf="modContratacionSelected != undefined && modContratacionSelected.value == '3'">Alter Profesional
-            Plus</label>
+        <label *ngIf="modContratacionSelected != undefined && modContratacionSelected == '1'"><strong>ALTER
+                PROFESIONAL JÓVEN</strong></label>
+        <label *ngIf="modContratacionSelected != undefined && modContratacionSelected == '2'"><strong>ALTER
+                PROFESIONAL</strong></label>
+        <label *ngIf="modContratacionSelected != undefined && modContratacionSelected == '3'"><strong>ALTER
+                PROFESIONAL PLUS</strong></label>
     </p-header>
-    <div class="col-lg-12 col-md-12" class="alterMutuaInfo">
-        <label> <strong>ALTER PROFESIONAL JOVEN</strong></label>
-        <label>
-            ALTER PROFESIONAL JOVEN es el conjunto de coberturas óptimo de los abogados Jóvenes, para poder ejercer por
-            cuenta propia y estar en Alter Mutua de los Abogados
-            como opción alternativa al Régimen Especial de Trabajadores Autónomos (RETA).
-        </label>
-        <table width="500px">
+    <div *ngIf="modContratacionSelected != undefined && modContratacionSelected == '1'" class="col-lg-12 col-md-12"
+        class="alterMutuaInfo">
+        <label>ALTER PROFESIONAL JÓVEN es el <strong>conjunto de coberturas óptimo de los abogados Jóvenes,</strong></label><br>
+        <label> para poder ejercer por cuenta propia y estar en Alter Mutua de los Abogados como opción </label><br>
+        <label style="padding-bottom: 1rem;"><strong>alternativa al Régimen Especial de Trabajadores Autónomos (RETA).</strong></label><br>
+        <table width="600px">
             <tbody>
                 <tr>
                     <td width="350px" style="padding: 3px"><b>PRESTACIONES POR INCAPACIDAD</b></td>
@@ -401,6 +654,277 @@
                 </tr>
             </tbody>
         </table>
+        <i>* Entrará en vigor a los 3 años. Capital estimado en base a una
+            rentabilidad del
+            3,17%.</i>
+        <label><strong>[+] Información 902 512 777</strong> - <ins><a href="mailto:asesores@altermutua.com">asesores@altermutua.com</a></ins>
+            - <ins><a href="http://www.altermutua.com/es/alter30.aspx" target="_blank">web</a></ins></label>
+    </div>
+    <div *ngIf="modContratacionSelected != undefined && modContratacionSelected == '2'" class="col-lg-12 col-md-12"
+        class="alterMutuaInfo">
+        <label>ALTER PROFESIONAL es el<strong>conjunto de coberturas óptimo</strong> para poder ejercer por cuenta
+            propia</label><br>
+        <label>y estar en Alter Mutua de los Abogados como opción<strong>alternativa al Régimen </strong></label><br>
+        <label style="padding-bottom: 1rem;"><strong>Especial de Trabajadores Autónomos (RETA).</strong></label><br>
+        <table width="600px">
+            <tbody>
+                <tr>
+                    <td width="350px" style="padding: 3px"><b>PRESTACIONES POR INCAPACIDAD</b></td>
+                    <td align="center" width="150px" style="padding: 3px"><b>Cobertura</b></td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Incapacidad por enfermedad o accidente</td>
+                    <td align="right" style="padding: 3px">Primeros 90días 30 €/día<br> resto 46 €/día</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Incapacidad parcial</td>
+                    <td align="right" style="padding: 3px">15 €/día</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Pensión por incapacidad permanente absoluta</td>
+                    <td align="right" style="padding: 3px">900 €/mes</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Subsidio por maternidad o adopción</td>
+                    <td align="right" style="padding: 3px">2.250 €</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Subsidio por paternidad</td>
+                    <td align="right" style="padding: 3px">450 €</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Lactancia natural o artificial</td>
+                    <td align="right" style="padding: 3px">675 €</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Cobertura por peligro vital de la madre o el feto</td>
+                    <td align="right" style="padding: 3px">30 €/día, 46 €/día</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Hospitalización por enfermedad o accidente</td>
+                    <td align="right" style="padding: 3px">72 €/día (UCI 216 €/día)</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Hospitalización por patologías del embarazo y parto</td>
+                    <td align="right" style="padding: 3px">72 €/día (UCI 216 €/día)</td>
+                </tr>
+                <tr>
+                    <td style="padding: 3px"><b>PRESTACIONES POR FALLECIMIENTO</b></td>
+                    <td align="right" style="padding: 3px">&nbsp;</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Pensión de Viudedad</td>
+                    <td align="right" style="padding: 3px">400 €/mes</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Pensión de Orfandad</td>
+                    <td align="right" style="padding: 3px">200 €/mes hijo</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Fallecimiento por cualquier causa</td>
+                    <td align="right" style="padding: 3px">Prov. matemática</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Servicio de Entierro</td>
+                    <td align="right" style="padding: 3px">3.500 €</td>
+                </tr>
+                <tr>
+                    <td style="padding: 3px"><b>PRESTACIÓN DE JUBILACIÓN</b></td>
+                    <td align="right" style="padding: 3px">&nbsp;</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Jubilación en forma de capital, transformable a renta</td>
+                    <td align="right" style="padding: 3px">194.785,69 €*</td>
+                </tr>
+                <tr>
+                    <td style="padding: 3px"><b>SERVICIOS SOCIALES</b></td>
+                    <td align="right" style="padding: 3px">&nbsp;</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Prestaciones sociales</td>
+                    <td align="right" style="padding: 3px">Incluido</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Servicio de orientación social</td>
+                    <td align="right" style="padding: 3px">Incluido</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Servicio de orientación nutricional</td>
+                    <td align="right" style="padding: 3px">Incluido</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Servicios Residenciales (residencias, centros de día)</td>
+                    <td align="right" style="padding: 3px">Acceso con descuentos</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Servicio de Conservación de Células Madre</td>
+                    <td align="right" style="padding: 3px">Acceso con descuentos</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Servicio de Atención al Duelo</td>
+                    <td align="right" style="padding: 3px">Gratuito (3 sesiones)</td>
+                </tr>
+            </tbody>
+        </table>
+        <i>* Entrará en vigor a los 3 años. Capital estimado en base a una
+            rentabilidad del
+            3,17%.</i>
+        <label><strong>[+] Información 902 512 777</strong> - <ins><a href="mailto:asesores@altermutua.com">asesores@altermutua.com</a></ins>
+            - <ins><a href="http://www.altermutua.com/es/alter30.aspx" target="_blank">web</a></ins></label>
+    </div>
+
+    <div *ngIf="modContratacionSelected != undefined && modContratacionSelected == '3'" class="col-lg-12 col-md-12"
+        class="alterMutuaInfo">
+
+        <label>ALTER PROFESIONAL PLUS es el <strong>conjunto de coberturas más completo</strong> para poder ejercer por
+        </label><br>
+        <label>y estar en Alter Mutua de los Abogados como opción <strong>alternativa al Régimen </strong></label><br>
+        <label style="padding-bottom: 1rem;"><strong>Especial de Trabajadores Autónomos (RETA).</strong></label><br>
+        <table width="600px">
+            <tbody>
+                <tr>
+                    <td width="350px" style="padding: 3px"><b>PRESTACIONES POR INCAPACIDAD</b></td>
+                    <td align="center" width="150px" style="padding: 3px"><b>Cobertura</b></td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Incapacidad por enfermedad o accidente</td>
+                    <td align="right" style="padding: 3px">Primeros 90días 30 €/día<br> resto 46 €/día</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Incapacidad parcial</td>
+                    <td align="right" style="padding: 3px">15 €/día</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Pensión por incapacidad permanente absoluta</td>
+                    <td align="right" style="padding: 3px">900 €/mes</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Pensión vitalicia en caso de dependencia severa</td>
+                    <td align="right" style="padding: 3px">500 €/mes</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Pensión vitalicia en caso de gran dependencia</td>
+                    <td align="right" style="padding: 3px">1.000 €/mes</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Subsidio por maternidad o adopción</td>
+                    <td align="right" style="padding: 3px">2.250 €</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Subsidio por paternidad</td>
+                    <td align="right" style="padding: 3px">450 €</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Lactancia natural o artificial</td>
+                    <td align="right" style="padding: 3px">675 €</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Cobertura por peligro vital de la madre o el feto</td>
+                    <td align="right" style="padding: 3px">30 €/día, 46 €/día</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Hospitalización por enfermedad o accidente</td>
+                    <td align="right" style="padding: 3px">72 €/día (UCI 216 €/día)</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Hospitalización por patologías del embarazo y parto</td>
+                    <td align="right" style="padding: 3px">72 €/día (UCI 216 €/día)</td>
+                </tr>
+                <tr>
+                    <td style="padding: 3px"><b>PRESTACIONES POR FALLECIMIENTO</b></td>
+                    <td align="right" style="padding: 3px">&nbsp;</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Pensión de Viudedad</td>
+                    <td align="right" style="padding: 3px">400 €/mes</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Pensión de Orfandad</td>
+                    <td align="right" style="padding: 3px">200 €/mes hijo</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Fallecimiento por cualquier causa</td>
+                    <td align="right" style="padding: 3px">Prov. matemática</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Servicio de Entierro</td>
+                    <td align="right" style="padding: 3px">3.500 €</td>
+                </tr>
+                <tr>
+                    <td style="padding: 3px"><b>PRESTACIÓN DE JUBILACIÓN</b></td>
+                    <td align="right" style="padding: 3px">&nbsp;</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Jubilación en forma de capital, transformable a renta</td>
+                    <td align="right" style="padding: 3px">194.785,69 €*</td>
+                </tr>
+                <tr>
+                    <td style="padding: 3px"><b>SEGURO MÉDICO</b></td>
+                    <td align="right" style="padding: 3px">&nbsp;</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Seguro de salud</td>
+                    <td align="right" style="padding: 3px">Completo</td>
+                </tr>
+                <tr>
+                    <td style="padding: 3px"><b>SUBSIDIOS MÉDICOS ECONÓMICOS</b></td>
+                    <td align="right" style="padding: 3px">&nbsp;</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Intervenciones quirúrgicas y pruebas de diagnóstico</td>
+                    <td align="right" style="padding: 3px">Indemnización baremo</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Indemnización por odontología</td>
+                    <td align="right" style="padding: 3px">Indemnización baremo</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Subsidio por gastos médicos</td>
+                    <td align="right" style="padding: 3px">Indemnización baremo</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Subsidio por ortopedia y prótesis</td>
+                    <td align="right" style="padding: 3px">Indemnización baremo</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Subsidio por óptica: gafas y lentes de contacto</td>
+                    <td align="right" style="padding: 3px">Indemnización baremo</td>
+                </tr>
+                <tr>
+                    <td style="padding: 3px"><b>SERVICIOS SOCIALES</b></td>
+                    <td align="right" style="padding: 3px">&nbsp;</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Prestaciones sociales</td>
+                    <td align="right" style="padding: 3px">Incluido</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Servicio de orientación social</td>
+                    <td align="right" style="padding: 3px">Incluido</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Servicio de orientación nutricional</td>
+                    <td align="right" style="padding: 3px">Incluido</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Servicios Residenciales (residencias, centros de día)</td>
+                    <td align="right" style="padding: 3px">Acceso con descuentos</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Servicio de Conservación de Células Madre</td>
+                    <td align="right" style="padding: 3px">Acceso con descuentos</td>
+                </tr>
+                <tr style="background-color: #F2F2F2">
+                    <td style="padding: 3px">Servicio de Atención al Duelo</td>
+                    <td align="right" style="padding: 3px">Gratuito (3 sesiones)</td>
+                </tr>
+            </tbody>
+        </table>
+        <i>* Entrará en vigor a los 3 años. Capital estimado en base a una
+            rentabilidad del
+            3,17%.</i>
+        <label><strong>[+] Información 902 512 777</strong> - <ins><a href="mailto:asesores@altermutua.com">asesores@altermutua.com</a></ins>
+            - <ins><a href="http://www.altermutua.com/es/alter30.aspx" target="_blank">web</a></ins></label>
     </div>
 </p-dialog>
 

@@ -21,7 +21,7 @@ export class InformacionGestionSubtiposCvComponent implements OnInit {
   selectedItem: number = 10;
   selectMultiple: boolean = false;
   selectAll: boolean = false;
-
+  msgs: any = [];
   showInfoSubtipoCV: boolean = false;
   progressSpinner: boolean = false;
   buscar: boolean = false;
@@ -44,7 +44,7 @@ export class InformacionGestionSubtiposCvComponent implements OnInit {
 
     this.getInfo();
   }
-
+  showDatosCv() {}
   getInfo() {
     this.cols = [
       {
@@ -200,5 +200,8 @@ export class InformacionGestionSubtiposCvComponent implements OnInit {
 
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
+  }
+  clear() {
+    this.msgs = [];
   }
 }

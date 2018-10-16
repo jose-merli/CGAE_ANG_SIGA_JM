@@ -101,6 +101,7 @@ import { ConsultarDatosDireccionesComponent } from "./features/censo/datosPerson
 
 // Modulo de administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
+import { CatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros-classique/catalogos-maestros-classique.component";
 import { EditarCatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros/editarCatalogosMaestros/editarCatalogosMaestros.component";
 import { GestionContadoresComponent } from "./features/administracion/contadores/gestion-contadores/gestion-contadores.component";
 import { ContadoresComponent } from "./features/administracion/contadores/contadores.component";
@@ -253,6 +254,7 @@ import { CargaEtiquetasComponent } from "./features/censo/cargas-masivas/carga-e
 import { DatosCvComponent } from "./features/censo/cargas-masivas/datos-cv/datos-cv.component";
 import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
 import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-subtiposCV/informacion-gestion-subtipos-cv/informacion-gestion-subtipos-cv.component";
+import { NuevaSolicitudesModificacionComponent } from './features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component';
 
 @NgModule({
   declarations: [
@@ -426,6 +428,7 @@ import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-
 
     // Administracion
     CatalogosMaestros,
+    CatalogosMaestrosComponent,
     GruposUsuarios,
     Etiquetas,
     AuditoriaUsuarios,
@@ -457,7 +460,8 @@ import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-
     CargaEtiquetasComponent,
     DatosCvComponent,
     CargasMasivasComponent,
-    InformacionGestionSubtiposCvComponent
+    InformacionGestionSubtiposCvComponent,
+    NuevaSolicitudesModificacionComponent
   ],
   imports: [
     BrowserModule,
@@ -523,4 +527,4 @@ import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

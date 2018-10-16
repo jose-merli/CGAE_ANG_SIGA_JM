@@ -10,7 +10,10 @@ export class BusquedaFisicaItem {
   numeroColegiado: String;
   residente: String;
   situacion: String;
-  fechaAlta: Date;
+  fechaNacimiento: Date;
   tipoIdentificacion: String;
+  numeroInstitucion: String;
+  idProvincia: String;
+  idActividadProfesional: String;
   constructor() {}
 }
