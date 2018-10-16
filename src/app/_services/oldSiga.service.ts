@@ -149,8 +149,12 @@ export class OldSigaServices {
         bandejaSalida: "Dispatcher.do?proceso=73",
         bandejaEntrada: "Dispatcher.do?proceso=75",
 
+        //Administracion
+        catalogosMaestros: "Dispatcher.do?proceso=78",
+
         loginDevelop: "developmentLogin.do",
-        login: "sigainit.do"
+        //login: "sigainit.do"
+        login: "login.do"
 
     }
 

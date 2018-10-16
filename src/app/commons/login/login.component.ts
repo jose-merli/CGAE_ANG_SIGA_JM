@@ -35,9 +35,9 @@ export class LoginComponent implements OnInit {
     private service: AuthenticationService,
     private sigaServices: SigaServices,
     private router: Router
-  ) {}
+  ) { }
 
-  onSubmit() {}
+  onSubmit() { }
 
   ngOnInit() {
     this.progressSpinner = true;
@@ -73,7 +73,7 @@ export class LoginComponent implements OnInit {
           let codError = error.status;
 
           sessionStorage.setItem("codError", codError);
-
+          sessionStorage.setItem("descError", "Imposible validar el certificado");
           this.router.navigate(["/errorAcceso"]);
         }
       }

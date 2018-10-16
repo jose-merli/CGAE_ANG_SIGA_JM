@@ -18,23 +18,23 @@ export class JwtInterceptor implements HttpInterceptor {
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-        console.log("intercepted request ... ");
+        // console.log("intercepted request ... ");
 
         // Clone the request to add the new header.
         const authReq = req.clone({ headers: req.headers.set("Authorization", sessionStorage.getItem('Authorization')) });
         //const authReq = req.clone();
-        console.log("Sending request with new header now ...");
+        // console.log("Sending request with new header now ...");
         //Llamamos al SigaClassique para mantener la sesión
         this.oldSigaMantener().subscribe(
             response => {
-                console.log("salida del servicio para mantener la sesion de siga Classique");
+                // console.log("salida del servicio para mantener la sesion de siga Classique");
             },
             error => {
                 if (error.status == 403) {
                     let codError = error.status;
 
                     sessionStorage.setItem("codError", codError);
-
+                    sessionStorage.setItem("descError", "Imposible validar el certificado");
                     this.router.navigate(["/errorAcceso"]);
                 }
             }

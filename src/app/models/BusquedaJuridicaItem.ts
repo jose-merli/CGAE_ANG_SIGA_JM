@@ -10,5 +10,6 @@ export class BusquedaJuridicaItem {
   numeroIntegrantes: number;
   nombresIntegrantes: String;
   fechaBaja: Date;
+  situacion: String;
   constructor() {}
 }

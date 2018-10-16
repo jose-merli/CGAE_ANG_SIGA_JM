@@ -83,6 +83,8 @@ export class SigaServices {
     header_logo: "/header/logo",
     busquedaPerJuridica_tipo: "busquedaPerJuridica/tipoSociedad",
     busquedaPerJuridica_etiquetas: "busquedaPerJuridica/etiquetas",
+    busquedaPerJuridica_informacionEtiqueta:
+      "/busquedaPerJuridica/informacionEtiqueta",
     busquedaPerJuridica_search: "busquedaPerJuridica/search",
     busquedaPerJuridica_delete: "busquedaPerJuridica/delete",
     busquedaPerJuridica_history: "busquedaPerJuridica/searchHistoric",
@@ -91,7 +93,6 @@ export class SigaServices {
     datosGenerales_update: "personaJuridica/update",
     datosGenerales_insert: "personaJuridica/create",
     datosGenerales_identificacion: "DatosGenerales/identificacion",
-    datosGenerales_createLabel: "busquedaPerJuridica/createLabel",
     busquedaPer_colegio: "busquedaPer/colegio",
     busquedaPer_searchJuridica: "busquedaPerJuridica/searchJuridica",
     busquedaPer_searchFisica: "busquedaPerJuridica/searchFisica",
@@ -181,6 +182,7 @@ export class SigaServices {
       "/solicitudIncorporacion/estadoSolicitud",
     solicitudInciporporacion_searchSolicitud:
       "/solicitudIncorporacion/searchSolicitud",
+
     fichaColegialGenerales_tratamiento: "fichaDatosGenerales/tratamiento",
     fichaColegialGenerales_estadoCivil: "fichaDatosGenerales/estadoCivil",
     fichaColegialGenerales_pais: "fichaDatosColegiales/pais",
@@ -224,11 +226,20 @@ export class SigaServices {
     fichaColegialSociedades_searchSocieties:
       "fichaColegialSociedades/searchSocieties",
     fichaColegialOtrasColegiaciones_searchOtherCollegues:
-      "fichaColegialOtrasColegiaciones/searchOtherCollegues"
+      "fichaColegialOtrasColegiaciones/searchOtherCollegues",
+
+    fichaColegialColegiales_search: "fichaDatosColegiales/searchDatosColegiales",
+    alterMutua_estadoSolicitud: "alterMutua/estadoSolicitud",
+    alterMutua_estadoColegiado: "alterMutua/estadoColegiado",
+    alterMutua_propuestas: "alterMutua/propuestas",
+    alterMutua_tarifaSolicitud: "alterMutua/tarifaSolicitud",
+    alterMutua_solicitudAlter: "alterMutua/solicitudAlter"
   };
 
   private menuToggled = new Subject<any>();
+  private iframeRemove = new Subject<any>();
   menuToggled$ = this.menuToggled.asObservable();
+  iframeRemove$ = this.iframeRemove.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -274,9 +285,9 @@ export class SigaServices {
     return this.httpbackend
       .get(
         environment.newSigaUrl +
-          this.endpoints[service] +
-          "?institucion=" +
-          institucion
+        this.endpoints[service] +
+        "?institucion=" +
+        institucion
       )
       .map(response => {
         return response;

@@ -23,6 +23,12 @@ export class EdicionCurricularesComponent implements OnInit {
   select: any[];
   msgs: Message[] = [];
   es: any = esCalendar;
+  displayAuditoria: any;
+  motivo: any;
+  showGuardarAuditoria: any;
+  comprobarCampoMotivo: any;
+  cerrarAuditoria: any;
+  guardar: any;
   rowsPerPage: any = [];
   showDatosGenerales: boolean = true;
   pButton;

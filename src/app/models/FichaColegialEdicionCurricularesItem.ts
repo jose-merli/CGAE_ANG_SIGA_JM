@@ -7,6 +7,6 @@ export class FichaColegialEdicionCurricularesItem {
   verificado: Boolean;
   fechaVerificacion: Date;
   descripcion: String;
-
+  motivo: String;
   constructor() {}
 }

@@ -12,5 +12,6 @@ export class UsuarioItem {
   idInstitucion: String;
   idLenguaje: String;
   descLenguaje: String;
+  nifRol: String;
   constructor() { }
 }
