@@ -191,6 +191,7 @@ import { CargaEtiquetasComponent } from "./features/censo/cargas-masivas/carga-e
 import { DatosCvComponent } from "./features/censo/cargas-masivas/datos-cv/datos-cv.component";
 import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
 import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-subtiposCV/informacion-gestion-subtipos-cv/informacion-gestion-subtipos-cv.component";
+import { NuevaSolicitudesModificacionComponent } from "./features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -324,6 +325,11 @@ const appRoutes: Routes = [
   {
     path: "modificacionDatos",
     component: ModificacionDatosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "nuevaSolicitudesModificacion",
+    component: NuevaSolicitudesModificacionComponent,
     canActivate: [AuthGuard]
   },
   {
