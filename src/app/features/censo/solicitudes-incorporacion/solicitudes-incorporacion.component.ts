@@ -104,7 +104,6 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     if (sessionStorage.getItem("filtros") != null) {
       this.body = JSON.parse(sessionStorage.getItem("filtros"));
       this.body.fechaDesde = new Date(this.body.fechaDesde);
-      this.body.fechaHasta = new Date(this.body.fechaHasta);
       this.buscarSolicitudes();
 
       sessionStorage.removeItem("filtros");

@@ -2,359 +2,543 @@
 
 <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{ "menu.censo" | translate}}
-        <i class="fa fa-angle-right"></i>{{censo.alterMutua.titulo | translate}}
+    <p>{{ 'menu.censo' | translate}}
+        <i class="fa fa-angle-right"></i>{{'censo.alterMutua.titulo' | translate}}
     </p>
 </div>
+
 <div class="card">
-    <!-- Datos propuesta -->
-    <div class="card-body">
-        <p class="title-module">{{censo.alterMutua.SelPropuesta | translate}}
-            <i (click)="mostarDatosPropuesta()" *ngIf="datosPropuesta" class="fa fa-angle-up float-right"></i>
-            <i (click)="mostarDatosPropuesta()" *ngIf="!datosPropuesta" class="fa fa-angle-down float-right"></i>
-        </p>
-
-        <div [hidden]="!datosPropuesta" class="module vista-avanzada">
-            <div class="form-row">
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>Modalidad de contratación</label>
-                    <p-dropdown class="select-form" [(ngModel)]='modContratacionSelected' [options]="comboModContratacion">
-                    </p-dropdown>
+    <!--datos propuesta-->
+    <div class="card-header header-ficha" (click)="mostarDatosPropuesta()">
+        <div [hidden]="datosPropuesta" class="form-row">
+            <div class="col-lg-1 col-md-2">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                 </div>
-                <div class="form-group col-lg-2 col-md-2">
-                    <br>
-                    <i *ngIf="modContratacionSelected != undefined && modContratacionSelected != ''" (click)="mostarPopUp()"
-                        class="fas fa-info-circle" style="cursor:pointer"></i>
+            </div>
+            <div class="col-lg-11 col-md-10">
+                <div class="d-flex justify-content-start mb-1">
+                    <label class="mr-auto title-ficha">Datos de colegiación</label>
                 </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>Tarífa(€)</label>
-                    <input type="text" disabled="true" class="form-control" pInputText>
+                <div class="d-flex justify-content-between">
+                    <label>Tarífa
+                        <span>dto
+                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                    </label>
+                    <i [hidden]="fichaColegiacion" class="fa fa-angle-down float-right"></i>
                 </div>
             </div>
         </div>
-
-
-        <!-- Datos personales -->
-        <p class="title-module">Datos Personales
-            <i (click)="mostarDatosPersonales()" *ngIf="datosPersonales" class="fa fa-angle-up float-right"></i>
-            <i (click)="mostarDatosPersonales()" *ngIf="!datosPersonales" class="fa fa-angle-down float-right"></i>
-        </p>
-
-        <div [hidden]="!datosPersonales" class="module vista-avanzada">
-            <div class="form-row">
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>Identificador</label>
-                    <input type="text" class="form-control" pInputText>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>Nombre</label>
-                    <input type="text" class="form-control" pInputText>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>Apellidos</label>
-                    <input type="text" class="form-control" pInputText>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>fecha de nacimiento</label>
-                    <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"
-                        [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="s"></p-calendar>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>Sexo</label>
-                    <p-dropdown class="select-form" [(ngModel)]="sexoSelected" [options]="comboSexo" optionLabel="label"
-                        dataKey="value"></p-dropdown>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>Estado civil</label>
-                    <p-dropdown class="select-form" [(ngModel)]="estadoCivilSelected" [options]="comboEstadoCivil"
-                        optionLabel="label" dataKey="value"></p-dropdown>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>Colegio</label>
-                    <p-dropdown class="select-form" [(ngModel)]="ColegioSelected" [options]="comboColegios" optionLabel="label"
-                        dataKey="value"></p-dropdown>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>Situación del ejercicio</label>
-                    <input type="text" class="form-control" pInputText>
-                </div>
+        <div *ngIf="datosPropuesta" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado">
+                <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+            </div>
+            <label class="title-ficha">Datos de colegiación</label>
+            <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+    </div>
+    <!--cuerpo datos propuesta-->
+    <div [hidden]="!datosPropuesta" class="card-body card-body-ficha">
+        <div class="form-row">
+            <div class="form-group col-lg-3 col-md-3">
+                <label>Modalidad de contratación</label>
+                <p-dropdown class="select-form" [(ngModel)]='modContratacionSelected' [options]="comboModContratacion">
+                </p-dropdown>
+            </div>
+            <div class="form-group col-lg-2 col-md-2">
+                <br>
+                <i *ngIf="modContratacionSelected != undefined && modContratacionSelected != ''" (click)="mostarPopUp()"
+                    class="fas fa-info-circle" style="cursor:pointer"></i>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <label>Tarífa(€)</label>
+                <input type="text" disabled="true" class="form-control" pInputText>
             </div>
         </div>
-
-
-        <!-- Datos contacto -->
-        <p class="title-module">Datos de Contacto
-            <i (click)="mostrarDatosContacto()" *ngIf="datosContacto" class="fa fa-angle-up float-right"></i>
-            <i (click)="mostrarDatosContacto()" *ngIf="!datosContacto" class="fa fa-angle-down float-right"></i>
-        </p>
-
-        <div [hidden]="!datosContacto" class="card-body card-body-ficha">
-            <div class="row">
-                <div class="bloque col-lg-6 col-md-6">
-                    <div class="form-row">
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Medio de Comunicación</label>
-                            <p-dropdown class="select-form" [(ngModel)]='comunicacionSelected' [options]="comboComunicacion"></p-dropdown>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Idioma</label>
-                            <p-dropdown class="select-form" [(ngModel)]='idiomaSelected' [options]="comboIdioma"></p-dropdown>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Teléfono</label>
-                            <input type="text" class="form-control" pInputText>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Teléfono 2</label>
-                            <input type="text" class="form-control" pInputText>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Móvil</label>
-                            <input type="text" class="form-control" pInputText>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Fax</label>
-                            <input type="text" class="form-control" pInputText>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Correo Electrónico</label>
-                            <input type="text" class="form-control" pInputText>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <br>
-                            <p-checkbox binary="true" label="Acepta publicidad" [(ngModel)]="residente"></p-checkbox>
-                        </div>
-                    </div>
-                </div>
-                <div class="bloque col-lg-6 col-md-6">
-                    <div class="form-row">
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Domicilio</label>
-                            <input type="text" class="form-control" pInputText>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>CP</label>
-                            <input type="text" class="form-control" pInputText>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>País</label>
-                            <p-dropdown class="select-form" [(ngModel)]="paisSelected" [options]="paises" optionLabel="label"
-                                dataKey="value" (onChange)="onChangePais($event)"></p-dropdown>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Provincia</label>
-                            <p-dropdown class="select-form" [(ngModel)]="provinciaSelected" [options]="provincias"
-                                optionLabel="label" dataKey="value"></p-dropdown>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Población</label>
-                            <input type="text" class="form-control" pInputText>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-4">
-                            <label>Población</label>
-                            <p-dropdown class="select-form" [(ngModel)]="tipoDirSelected" [options]="TipoDireccion"
-                                optionLabel="label" dataKey="value"></p-dropdown>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Datos bancarios -->
-        <p class="title-module">Datos bancarios
-            <i (click)="mostrarDatosBancarios()" *ngIf="datosCuentaBancaria" class="fa fa-angle-up float-right"></i>
-            <i (click)="mostrarDatosBancarios()" *ngIf="!datosCuentaBancaria" class="fa fa-angle-down float-right"></i>
-        </p>
-        <div [hidden]="!datosCuentaBancaria" class="module vista-avanzada">
-            <div class="form-row">
-                <div class="bloque col-lg-6 col-md-6">
-                    <label>IBAN</label>
-                    <input type="text" class="form-control" pInputText>
-                    <!--<div *ngIf="isValidIBAN() == false">
-                        <small class="input-error" *ngIf="!isValidIBAN()">{{"IBAN incorrecto"}}</small>
-                    </div>-->
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Datos Familiares -->
-        <p class="title-module">Familiares
-            <i (click)="mostrarFamiliares()" *ngIf="datosFamiliares" class="fa fa-angle-up float-right"></i>
-            <i (click)="mostrarFamiliares()" *ngIf="!datosFamiliares" class="fa fa-angle-down float-right"></i>
-        </p>
-        <div [hidden]="!datosFamiliares" class="module vista-avanzada">
-            <div class="form-row">
-
-                <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos"
-                    (onRowSelect)="irFichaColegial(selectedDatos)" dataKey="idFamiliar" selectionMode="multiple"
-                    [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1" sortField="fechaFin"
-                    [paginator]="true" paginatorPosition="both" [rows]="selectedItem" pageLinks="4" [editable]="true"
-                    [sortField]="sortF" [sortOrder]="sortO" (onSort)="changeSort($event)">
-
-                    <p-column [sortable]="true" field="Parentesco" filterPlaceholder="{{'general.boton.search' | translate}}"
-                        [header]="cols[0].header" [filter]="true" filterMatchMode="contains">
-
-                        <ng-template let-col let-car="rowData" pTemplate="body">
-                            <span>{{car[col.field]}} </span>
-                            <input *ngIf="car[col.field] == ''" type="text" disabled="true" class="form-control"
-                                pInputText>
-                        </ng-template>
-
-                    </p-column>
-                    <p-column [sortable]="true" field="fechaFin" [header]="cols[1].header" [filter]="true"
-                        filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                        <ng-template let-col let-car="rowData" pTemplate="body">
-
-                            <span>{{car[col.field]}}</span>
-
-                        </ng-template>
-                    </p-column>
-                    <p-column [sortable]="true" field="descripcionRetencion" [header]="cols[2].header" [filter]="true"
-                        filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                        <ng-template let-col let-car="rowData" pTemplate="body">
-
-                            <span>{{car[col.field]}}</span>
-                            <p-dropdown *ngIf="car[col.field] == '' " [(ngModel)]="newRetencion.descripcionRetencion"
-                                [options]="tiposRetenciones" (onChange)="onChangeDrop($event)"></p-dropdown>
-
-                        </ng-template>
-
-                    </p-column>
-                    <p-column [sortable]="true" field="porcentajeRetencion" [header]="cols[3].header" [filter]="true"
-                        filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-
-                        <ng-template let-col let-car="rowData" pTemplate="body">
-                            <span>{{car[col.field]}}</span>
-                        </ng-template>
-
-                    </p-column>
-
-                    <ng-template pTemplate="paginatorLeft">
-                        <div class="mostrar">
-                            <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al
-                                {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                            <label>{{ "general.message.mostrar" | translate}}</label>
-                            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-                        </div>
-                    </ng-template>
-                    <p-footer>
-                        <div class="text-right main-button">
-                            <!--<button (click)="volver();" [(disabled)]="isVolver" pButton type="button" icon="fa fa-undo"
-                                iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-                            <button (click)="confirmEdit();" [(disabled)]="isEditar" pButton type="button" icon="	far fa-save "
-                                iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-                            <button (click)="confirmarBorrar()" [(disabled)]="isEliminar" pButton type="button" icon="fa fa-trash-alt"
-                                iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
-                            <button (click)="crear()" [(disabled)]="isCrear" pButton type="button" icon="fa fa-plus"
-                                iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>-->
-                        </div>
-                    </p-footer>
-                </p-dataTable>
-            </div>
-        </div>
-
-        <!-- Datos Beneficiario -->
-        <p class="title-module">Beneficiarios
-            <i (click)="mostrarDatosBeneficiarios()" *ngIf="datosBeneficiarios" class="fa fa-angle-up float-right"></i>
-            <i (click)="mostrarDatosBeneficiarios()" *ngIf="!datosBeneficiarios" class="fa fa-angle-down float-right"></i>
-        </p>
-        <div [hidden]="!datosBeneficiarios" class="module vista-avanzada">
-            <div class="form-row">
-                <div class="col-lg-3 col-md-3">
-                    <label>Tipo beneficiario</label>
-                    <p-dropdown class="select-form" [(ngModel)]="beneficiarioSelected" [options]="comboBeneficiario"
-                        optionLabel="label" dataKey="value"></p-dropdown>
-                </div>
-                <div *ngIf="beneficiarioSelected != undefined && beneficiarioSelected == '3'" class="col-lg-12 col-md-12">
-                    <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos"
-                        (onRowSelect)="irDatosFamiliar(selectedDatos)" dataKey="idFamiliar" selectionMode="multiple"
-                        [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1" sortField="fechaFin"
-                        [paginator]="true" paginatorPosition="both" [rows]="selectedItem" pageLinks="4" [editable]="true"
-                        [sortField]="sortF" [sortOrder]="sortO" (onSort)="changeSort($event)">
-
-                        <p-column [sortable]="true" field="Parentesco" filterPlaceholder="{{'general.boton.search' | translate}}"
-                            [header]="cols[0].header" [filter]="true" filterMatchMode="contains">
-
-                            <ng-template let-col let-car="rowData" pTemplate="body">
-                                <span>{{car[col.field]}} </span>
-                                <input *ngIf="car[col.field] == ''" type="text" disabled="true" class="form-control"
-                                    pInputText>
-                            </ng-template>
-
-                        </p-column>
-                        <p-column [sortable]="true" field="fechaFin" [header]="cols[1].header" [filter]="true"
-                            filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                            <ng-template let-col let-car="rowData" pTemplate="body">
-
-                                <span>{{car[col.field]}}</span>
-
-                            </ng-template>
-                        </p-column>
-                        <p-column [sortable]="true" field="descripcionRetencion" [header]="cols[2].header" [filter]="true"
-                            filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                            <ng-template let-col let-car="rowData" pTemplate="body">
-
-                                <span>{{car[col.field]}}</span>
-                                <p-dropdown *ngIf="car[col.field] == '' " [(ngModel)]="newRetencion.descripcionRetencion"
-                                    [options]="tiposRetenciones" (onChange)="onChangeDrop($event)"></p-dropdown>
-
-                            </ng-template>
-
-                        </p-column>
-                        <p-column [sortable]="true" field="porcentajeRetencion" [header]="cols[3].header" [filter]="true"
-                            filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-
-                            <ng-template let-col let-car="rowData" pTemplate="body">
-                                <span>{{car[col.field]}}</span>
-                            </ng-template>
-
-                        </p-column>
-
-                        <ng-template pTemplate="paginatorLeft">
-                            <div class="mostrar">
-                                <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}}
-                                    al
-                                    {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                                <label>{{ "general.message.mostrar" | translate}}</label>
-                                <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                                <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" |
-                                    translate}}</label>
-                            </div>
-                        </ng-template>
-                        <p-footer>
-                            <div class="text-right main-button">
-                                <!--<button (click)="volver();" [(disabled)]="isVolver" pButton type="button" icon="fa fa-undo"
-                                    iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-                                <button (click)="confirmEdit();" [(disabled)]="isEditar" pButton type="button" icon="	far fa-save "
-                                    iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-                                <button (click)="confirmarBorrar()" [(disabled)]="isEliminar" pButton type="button" icon="fa fa-trash-alt"
-                                    iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
-                                <button (click)="crear()" [(disabled)]="isCrear" pButton type="button" icon="fa fa-plus"
-                                    iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>-->
-                            </div>
-                        </p-footer>
-                    </p-dataTable>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Observaciones -->
-        <p class="title-module">Observaciones
-            <i (click)="mostrarObservaciones()" *ngIf="observaciones" class="fa fa-angle-up float-right"></i>
-            <i (click)="mostrarObservaciones()" *ngIf="!observaciones" class="fa fa-angle-down float-right"></i>
-        </p>
-        <div [hidden]="!observaciones" class="module vista-avanzada">
-            <div class="form-group col-lg-7 col-md-7">
-                <label>Observaciones</label>
-                <textarea [rows]="10" pInputTextarea></textarea>
-            </div>
-        </div>
-
     </div>
 </div>
+
+
+<!-- Datos personales -->
+<div class="card">
+    <div class="card-header header-ficha" (click)="mostarDatosPersonales()">
+        <div [hidden]="datosPersonales" class="form-row">
+            <div class="col-lg-1 col-md-2">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                </div>
+            </div>
+            <div class="col-lg-11 col-md-10">
+                <div class="d-flex justify-content-start mb-1">
+                    <label class="mr-auto title-ficha">Datos personales</label>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <label>Identificación
+                        <span>dto
+                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                    </label>
+                    <label>Nombre
+                        <span>dto
+                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                    </label>
+                    <label>Apellidos
+                        <span>dto
+                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                    </label>
+                    <i [hidden]="fichaColegiacion" class="fa fa-angle-down float-right"></i>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="datosPersonales" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado">
+                <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+            </div>
+            <label class="title-ficha">Datos personales</label>
+            <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+    </div>
+
+    <!--cuerpo datos personales-->
+    <div [hidden]="!datosPersonales" class="card-body card-body-ficha">
+        <div class="form-row">
+            <div class="form-group col-lg-3 col-md-3">
+                <label>Identificador</label>
+                <input type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <label>Nombre</label>
+                <input type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <label>Apellidos</label>
+                <input type="text" class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <label>fecha de nacimiento</label>
+                <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true"
+                    icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="s"></p-calendar>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <label>Sexo</label>
+                <p-dropdown class="select-form" [(ngModel)]="sexoSelected" [options]="comboSexo" optionLabel="label"
+                    dataKey="value"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <label>Estado civil</label>
+                <p-dropdown class="select-form" [(ngModel)]="estadoCivilSelected" [options]="comboEstadoCivil"
+                    optionLabel="label" dataKey="value"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <label>Colegio</label>
+                <p-dropdown class="select-form" [(ngModel)]="ColegioSelected" [options]="comboColegios" optionLabel="label"
+                    dataKey="value"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <label>Situación del ejercicio</label>
+                <input type="text" class="form-control" pInputText>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Datos contacto -->
+<div class="card">
+    <div class="card-header header-ficha" (click)="mostrarDatosContacto()">
+        <div [hidden]="datosContacto" class="form-row">
+            <div class="col-lg-1 col-md-2">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="far fa-address-book icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                </div>
+            </div>
+            <div class="col-lg-11 col-md-10">
+                <div class="d-flex justify-content-start mb-1">
+                    <label class="mr-auto title-ficha">Datos de Contacto</label>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <label>Móvil
+                        <span>dto
+                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                    </label>
+                    <label>Correo electrónico
+                        <span>dto
+                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                    </label>
+                    <i [hidden]="datosContacto" class="fa fa-angle-down float-right"></i>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="datosContacto" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado">
+                <i *ngIf="!existeImagen" class="far fa-address-book icon-ficha"></i>
+                <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+            </div>
+            <label class="title-ficha">Datos de Contacto</label>
+            <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+    </div>
+    <!-- cuerpo datos contacto -->
+    <div [hidden]="!datosContacto" class="card-body card-body-ficha">
+        <div class="row">
+            <div class="bloque col-lg-6 col-md-6">
+                <div class="form-row">
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Medio de Comunicación</label>
+                        <p-dropdown class="select-form" [(ngModel)]='comunicacionSelected' [options]="comboComunicacion"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Idioma</label>
+                        <p-dropdown class="select-form" [(ngModel)]='idiomaSelected' [options]="comboIdioma"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Teléfono</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Teléfono 2</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Móvil</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Fax</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Correo Electrónico</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <br>
+                        <p-checkbox binary="true" label="Acepta publicidad" [(ngModel)]="residente"></p-checkbox>
+                    </div>
+                </div>
+            </div>
+            <div class="bloque col-lg-6 col-md-6">
+                <div class="form-row">
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Domicilio</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>CP</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>País</label>
+                        <p-dropdown class="select-form" [(ngModel)]="paisSelected" [options]="paises" optionLabel="label"
+                            dataKey="value" (onChange)="onChangePais($event)"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Provincia</label>
+                        <p-dropdown class="select-form" [(ngModel)]="provinciaSelected" [options]="provincias"
+                            optionLabel="label" dataKey="value"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Población</label>
+                        <input type="text" class="form-control" pInputText>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
+                        <label>Población</label>
+                        <p-dropdown class="select-form" [(ngModel)]="tipoDirSelected" [options]="TipoDireccion"
+                            optionLabel="label" dataKey="value"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--datos bancarios-->
+<div class="card">
+    <div class="card-header header-ficha" (click)="mostrarDatosBancarios()">
+        <div [hidden]="datosCuentaBancaria" class="form-row">
+            <div class="col-lg-1 col-md-2">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="fa fa-credit-card icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                </div>
+            </div>
+            <div class="col-lg-11 col-md-10">
+                <div class="d-flex justify-content-start mb-1">
+                    <label class="mr-auto title-ficha">Datos bancarios</label>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <label>IBAN
+                        <span>dto
+                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                    </label>
+                    <i [hidden]="datosCuentaBancaria" class="fa fa-angle-down float-right"></i>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="datosCuentaBancaria" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado">
+                <i *ngIf="!existeImagen" class="fa fa-credit-card icon-ficha"></i>
+                <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+            </div>
+            <label class="title-ficha">Datos bancarios
+                <!--{{ "general.message.datos.generales" | translate}}--></label>
+            <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+    </div>
+
+    <!--cuerpo datos bancarios-->
+    <div [hidden]="!datosCuentaBancaria" class="card-body card-body-ficha">
+        <div class="form-row">
+            <div class="bloque col-lg-6 col-md-6">
+                <label>IBAN</label>
+                <input type="text" class="form-control" pInputText>
+                <!--<div *ngIf="isValidIBAN() == false">
+                                    <small class="input-error" *ngIf="!isValidIBAN()">{{"IBAN incorrecto"}}</small>
+                                </div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="card">
+
+    <div class="card-header header-ficha" (click)="mostrarFamiliares()">
+        <div [hidden]="datosFamiliares" class="form-row">
+            <div class="col-lg-1 col-md-2">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="fas fa-users icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                </div>
+            </div>
+            <div class="col-lg-11 col-md-10">
+                <div class="d-flex justify-content-start mb-1">
+                    <label class="mr-auto title-ficha">Familiares</label>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <label>Numero de familiares
+                        <span>dto
+                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                    </label>
+                    <i [hidden]="datosFamiliares" class="fa fa-angle-down float-right"></i>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="datosFamiliares" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado">
+                <i *ngIf="!existeImagen" class="fas fa-users icon-ficha"></i>
+                <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+            </div>
+            <label class="title-ficha">Familiares
+                <!--{{ "general.message.datos.generales" | translate}}--></label>
+            <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+    </div>
+    <div [hidden]="!datosFamiliares" class="card-body card-body-ficha">
+        <div class="form-row">
+
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos"
+                (onRowSelect)="irDatosFamiliar(selectedDatos)" dataKey="idFamiliar" selectionMode="multiple"
+                [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1" sortField="nombre"
+                [paginator]="true" paginatorPosition="both" [rows]="selectedItem" pageLinks="4" [editable]="true"
+                [sortField]="sortF" [sortOrder]="sortO" (onSort)="changeSort($event)">
+
+                <p-column field="idParentesco" filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[0].header"
+                    [filter]="true" filterMatchMode="contains">
+                    <ng-template let-col let-car="rowData" pTemplate="body">
+                        <span>{{car[col.field]}}</span>
+                        <p-dropdown *ngIf="car[col.field] == ''" class="select-form" [(ngModel)]="datosFamiliar.idParentesco"
+                            [options]="comboParentesco">
+                        </p-dropdown>
+                    </ng-template>
+
+                </p-column>
+                <p-column field="idSexo" [header]="cols[1].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    filterMatchMode="contains">
+                    <ng-template let-col let-car="rowData" pTemplate="body">
+                        <span>{{car[col.field]}}</span>
+                        <p-dropdown *ngIf="car[col.field] == ''" class="select-form" [(ngModel)]="datosFamiliar.idSexo"
+                            [options]="comboSexo" optionLabel="label" dataKey="value"></p-dropdown>
+                    </ng-template>
+                </p-column>
+
+                <p-column [sortable]="true" field="nombre" [header]="cols[2].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    filterMatchMode="contains">
+                    <ng-template let-col let-car="rowData" pTemplate="body">
+                        <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
+                        <input *ngIf="car[col.field] == ''" type="text" class="form-control" [(ngModel)]="datosFamiliar.nombre"
+                            pInputText>
+                    </ng-template>
+
+                </p-column>
+
+                <p-column [sortable]="true" field="apellidos" [header]="cols[3].header" [filter]="true"
+                    filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+                    <ng-template let-col let-car="rowData" pTemplate="body">
+                        <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
+                        <input *ngIf="car[col.field] == ''" type="text" class="form-control" [(ngModel)]="datosFamiliar.apellidos"
+                            pInputText>
+                    </ng-template>
+
+                </p-column>
+
+                <p-column field="idTipoIdentificacion" [header]="cols[4].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    filterMatchMode="contains">
+                    <ng-template let-col let-car="rowData" pTemplate="body">
+                        <span>{{car[col.field]}}</span>
+                        <p-dropdown *ngIf="car[col.field] == ''" class="select-form" [(ngModel)]="datosFamiliar.idTipoIdentificacion"
+                            [options]="comboTipoIdentificacion" optionLabel="label" dataKey="value"></p-dropdown>
+                    </ng-template>
+
+                </p-column>
+
+                <p-column [sortable]="true" field="nIdentificacion" [header]="cols[5].header" [filter]="true"
+                    filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+                    <ng-template let-col let-car="rowData" pTemplate="body">
+                        <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
+                        <input *ngIf="car[col.field] == ''" type="text" class="form-control" [(ngModel)]="datosFamiliar.nIdentificacion"
+                            pInputText>
+                    </ng-template>
+                </p-column>
+
+                <p-column [sortable]="true" field="fechaNacimiento" [header]="cols[6].header" [filter]="true"
+                    filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+                    <ng-template let-col let-car="rowData" pTemplate="body">
+                        <span>{{car[col.field]}}</span>
+                        <p-calendar [(ngModel)]="datosFamiliar.fechaNacimiento" dateFormat="dd/mm/yy" [utc]="true"
+                            [locale]="es" [showIcon]="true">
+                        </p-calendar>
+                    </ng-template>
+
+                </p-column>
+
+                <ng-template pTemplate="paginatorLeft">
+                    <div class="mostrar">
+                        <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al
+                            {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                        <label>{{ "general.message.mostrar" | translate}}</label>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                        <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                    </div>
+                </ng-template>
+                <p-footer>
+                    <div class="text-right main-button">
+                        <!--<button (click)="volver();" [(disabled)]="isVolver" pButton type="button" icon="fa fa-undo"
+                                                    iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>-->
+                        <button (click)="confirmEdit()" [(disabled)]="isEditar" pButton type="button" icon="far fa-save "
+                            iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                        <!--<button (click)="confirmarBorrar()" [(disabled)]="isEliminar" pButton type="button" icon="fa fa-trash-alt"
+                                                    iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>-->
+                        <button (click)="crear()" [(disabled)]="isCrear" pButton type="button" icon="fa fa-plus"
+                            iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+                    </div>
+                </p-footer>
+            </p-dataTable>
+        </div>
+    </div>
+
+</div>
+
+
+
+<div class="card">
+    <div class="card-header header-ficha" (click)="mostrarDatosBeneficiarios()">
+        <div [hidden]="datosBeneficiarios" class="form-row">
+            <div class="col-lg-1 col-md-2">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="fas fa-users icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                </div>
+            </div>
+            <div class="col-lg-11 col-md-10">
+                <div class="d-flex justify-content-start mb-1">
+                    <label class="mr-auto title-ficha">Beneficiarios</label>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <label>Beneficiarios
+                        <span>dto
+                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                    </label>
+                    <i [hidden]="datosBeneficiarios" class="fa fa-angle-down float-right"></i>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="datosBeneficiarios" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado">
+                <i *ngIf="!existeImagen" class="fas fa-users icon-ficha"></i>
+                <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+            </div>
+            <label class="title-ficha">Beneficiarios
+                <!--{{ "general.message.datos.generales" | translate}}--></label>
+            <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+    </div>
+    <div [hidden]="!datosBeneficiarios" class="card-body card-body-ficha">
+        <div class="form-row">
+            <div class="col-lg-3 col-md-3">
+                <label>Tipo beneficiario</label>
+                <p-dropdown class="select-form" [(ngModel)]="beneficiarioSelected" [options]="comboBeneficiario"
+                    optionLabel="label" dataKey="value" (onChange)="onChangeTipoBenef($event)"></p-dropdown>
+            </div>
+            <div *ngIf="beneficiarioSelected != undefined && beneficiarioSelected.value == '3'" class="col-lg-12 col-md-12">
+                TABLA
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="card">
+    <div class="card-header header-ficha" (click)="mostrarObservaciones()">
+        <div [hidden]="observaciones" class="form-row">
+            <div class="col-lg-1 col-md-2">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="fas fa-align-left icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                </div>
+            </div>
+            <div class="col-lg-11 col-md-10">
+                <div class="d-flex justify-content-start mb-1">
+                    <label class="mr-auto title-ficha">Observaciones</label>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <label>Observaciones
+                        <span>dto
+                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                    </label>
+                    <i [hidden]="observaciones" class="fa fa-angle-down float-right"></i>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="observaciones" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado">
+                <i *ngIf="!existeImagen" class="fas fa-align-left icon-ficha"></i>
+                <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+            </div>
+            <label class="title-ficha">Observaciones
+                <!--{{ "general.message.datos.generales" | translate}}--></label>
+            <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+    </div>
+    <div [hidden]="!observaciones" class="card-body card-body-ficha">
+        <div class="form-group col-lg-7 col-md-7">
+            <label>Observaciones</label>
+            <textarea [rows]="10" pInputTextarea></textarea>
+        </div>
+    </div>
+
+</div>
+<div class="mt-3 text-right main-button ">
+    <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+</div>
+
+
 
 <p-dialog [(visible)]="mostrarInfo" responsive="true" [draggable]="false" modal="modal" resizable="false" [width]="680">
     <p-header class="title">

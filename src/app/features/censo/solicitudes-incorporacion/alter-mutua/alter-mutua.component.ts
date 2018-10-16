@@ -14,6 +14,8 @@ import {
 import { Router } from "@angular/router";
 import { SigaServices } from "../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate";
+import { DatosFamiliaresItem } from "../../../../models/DatosFamiliaresItem";
+import { DatePipe, Location } from "@angular/common";
 
 @Component({
   selector: "app-alter-mutua",
@@ -52,6 +54,11 @@ export class AlterMutuaComponent implements OnInit {
   sortO: number = 1;
   sortF: string = "";
   idFamiliar: String;
+  datosFamiliar: DatosFamiliaresItem = new DatosFamiliaresItem();
+  nuevaFecha = Date;
+  isVolver: boolean = false;
+  isCrear: boolean = false;
+  isEliminar: boolean = false;
 
   comboSexo: any[];
   comboColegios: any[];
@@ -60,6 +67,8 @@ export class AlterMutuaComponent implements OnInit {
   comboComunicacion: any[];
   comboIdioma: any[];
   comboBeneficiario: any[];
+  comboParentesco: any[];
+  comboTipoIdentificacion: any[];
 
   paises: any[];
   provincias: any[];
@@ -75,46 +84,73 @@ export class AlterMutuaComponent implements OnInit {
   provinciaSelected: any;
   tipoDirSelected: any;
   beneficiarioSelected: any;
+  parentescoSelected: any;
+  tipoIdentificacionSelected: any;
 
   constructor(
     private translateService: TranslateService,
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
-    private router: Router
-  ) {}
+    private router: Router,
+    public datepipe: DatePipe,
+    private location: Location
+  ) {
+
+  }
 
   ngOnInit() {
     this.es = this.translateService.getCalendarLocale();
     this.cargarCombos();
 
+
+
     this.colsFisicas = [
       {
-        field: "ponerdto",
+        field: "idParentesco",
         header: "Parentesco"
       },
       {
-        field: "Sexo",
+        field: "idSexo",
         header: "Sexo"
       },
       {
-        field: "descripcionRetencion",
+        field: "nombre",
         header: "Nombre"
       },
       {
-        field: "porcentajeRetencion",
+        field: "apellidos",
         header: "Apellidos"
       },
       {
-        field: "porcentajeRetencion",
+        field: "idTipoIdentificacion",
         header: "Tipo identificación"
       },
       {
-        field: "porcentajeRetencion",
+        field: "nIdentificacion",
         header: "Número identificación"
       },
       {
-        field: "porcentajeRetencion",
+        field: "fechaNacimiento",
         header: "Fecha Nacimiento"
+      }
+    ];
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
       }
     ];
 
@@ -169,6 +205,23 @@ export class AlterMutuaComponent implements OnInit {
       { label: "Otros", value: "3" }
     ];
 
+    this.comboParentesco = [
+      { label: '', value: null },
+      { label: 'Hij@', value: '1' },
+      { label: 'Suegr@', value: '2' },
+      { label: 'Otra Relacion', value: '3' },
+      { label: 'Pareja', value: '4' },
+      { label: 'No Familiar', value: '5' },
+      { label: 'Conyuje', value: '6' },
+      { label: 'Padre', value: '7' },
+    ];
+
+    this.sigaServices.get("solicitudInciporporacion_tipoIdentificacion").subscribe(result => {
+      this.comboTipoIdentificacion = result.combooItems;
+    }, error => {
+      console.log(error);
+    });
+
     this.sigaServices.get("busquedaPer_colegio").subscribe(
       result => {
         this.comboColegios = result.combooItems;
@@ -197,7 +250,7 @@ export class AlterMutuaComponent implements OnInit {
     );
   }
 
-  onChangePais(event) {}
+  onChangePais(event) { }
 
   /*isValidIBAN(): boolean {
     if (
@@ -215,7 +268,9 @@ export class AlterMutuaComponent implements OnInit {
 
   irDatosFamiliar(id) {
     //console.log(id[0].fechaInicio);
-    if (id[0].fechaFin == null && id[0].fechaInicio != "") {
+    this.datosFamiliar = new DatosFamiliaresItem();
+    if (id[0].idFamiliar == null && id[0].idFamiliar != "") {
+      this.datosFamiliar.idFamiliar = id[0].idFamiliar;
       //this.nuevafecha = id[0].fechaInicio;
       //id[0].fechaInicio = "";
       //this.newRetencion.descripcionRetencion = id[0].idRetencion;
@@ -225,62 +280,59 @@ export class AlterMutuaComponent implements OnInit {
   }
 
   crear() {
-    /*this.isVolver = false;
+    this.isVolver = false;
     this.isCrear = true;
-    this.isEliminar = true;*/
-
-    let valur2 = new Date().setMilliseconds(new Date().getMilliseconds());
-    if (
-      this.datos == null ||
-      this.datos == undefined ||
-      this.datos.length == 0
-    ) {
+    this.isEliminar = true;
+    this.datosFamiliar = new DatosFamiliaresItem();
+    if (this.datos == null || this.datos == undefined || this.datos.length == 0) {
       this.datos = [];
     } else {
       let value = this.table.first;
-      // this.createArrayEdit(dummy, value);
-      this.datos.forEach((value: any, key: number) => {
-        if (value.fechaFin == null || value.fechaFin == undefined) {
-          // if (
-          //   this.datos[key].fechaInicio ==
-          //   this.datepipe.transform(new Date(valur2), "dd/MM/yyyy")
-          // ) {
-          //   this.datos[key].fechaFin = this.datepipe.transform(
-          //     new Date(valur2),
-          //     "dd/MM/yyyy"
-          //   );
-          // } else {
-          //   this.datos[key].fechaFin = this.datepipe.transform(
-          //     new Date(valur2 - 86400000),
-          //     "dd/MM/yyyy"
-          //   );
-          /* this.nuevafecha = new Date();
-           this.retencionActiveAnt = this.datos[key];
-           this.datos[key].fechaFin = this.datepipe.transform(
-             new Date(valur2 - 86400000),
-             "dd/MM/yyyy"
-           );*/
-        }
-      });
     }
 
     let dummy = {
-      idFamiliar: this.idFamiliar,
+      idFamiliar: this.table.first,
       idParentesco: "",
-      idSexo: undefined,
-      Nombre: "",
+      idSexo: "",
+      nombre: "",
+      apellidos: "",
       idTipoIdentificacion: "",
+      nIdentificacion: "",
       fechaNacimiento: undefined
     };
     this.datos = [dummy, ...this.datos];
 
     // this.table.reset();
-    let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
+    let event = { field: "nombre", order: 1, multisortmeta: undefined };
     this.changeSort(event);
   }
 
+  confirmEdit() {
+    this.datosFamiliar.idFamiliar = this.idFamiliar;
+    this.datosFamiliar.idParentesco = this.parentescoSelected;
+    this.datosFamiliar.idSexo = this.sexoSelected;
+    this.datosFamiliar.idTipoIdentificacion = this.tipoIdentificacionSelected;
+
+    this.datos.forEach((value: any, key: number) => {
+      if (key == value.idFamiliar) {
+        this.datos[key].idParentesco = this.parentescoSelected;
+        this.datos[key].idSexo = this.parentescoSelected;
+        this.datos[key].nombre = this.datosFamiliar.nombre;
+        this.datos[key].apellidos = this.datosFamiliar.apellidos;
+        this.datos[key].idTipoIdentificacion = this.tipoIdentificacionSelected;
+        this.datos[key].nIdentificacion = this.datosFamiliar.nIdentificacion;
+        this.datos[key].fechaNacimiento = this.datosFamiliar.fechaNacimiento;
+        this.datos[key].fechaNacimiento = this.datepipe.transform(
+          new Date(this.datos[key].fechaNacimiento),
+          "dd/MM/yyyy"
+        );
+      }
+    });
+    this.isCrear = false;
+  }
+
   changeSort(event) {
-    this.sortF = "fechaFin";
+    this.sortF = "nombre";
     this.sortO = 1;
     this.table.sortMultiple();
   }
@@ -318,4 +370,12 @@ export class AlterMutuaComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+  backTo() {
+    this.location.back();
+  }
+
+  onChangeTipoBenef(event) {
+    console.log(this.beneficiarioSelected);
+  }
+
 }
