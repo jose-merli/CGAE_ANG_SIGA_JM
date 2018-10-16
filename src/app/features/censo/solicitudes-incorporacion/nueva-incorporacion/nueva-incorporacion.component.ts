@@ -645,7 +645,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   }
 
   irPlanUniversal() {
-    //TODO: this.router.navigate(["/alterMutua"]);
+    this.router.navigate(["/MutualidadAbogaciaPlanUniversal"]);
   }
   irSegAccidentes() {
     //TODO: this.router.navigate(["/alterMutua"]);

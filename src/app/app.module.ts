@@ -98,6 +98,7 @@ import { DatosIntegrantesComponent } from "./features/censo/datosPersonaJuridica
 import { DetalleIntegranteComponent } from "./features/censo/datosPersonaJuridica/datos-integrantes/detalleIntegrante/detalleIntegrante.component";
 import { DatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/datos-direcciones.component";
 import { ConsultarDatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/consultar-datos-direcciones/consultar-datos-direcciones.component";
+import { MutualidadAbogaciaPlanUniversal } from "./features/censo/solicitudes-incorporacion/mutualidadDeLaAbogaciaPlanUniversal/mutualidad-abogacia-plan-universal.component";
 
 // Modulo de administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
@@ -271,6 +272,7 @@ import { NuevaSolicitudesModificacionComponent } from './features/censo/modifica
     ConfirmDialogComponent,
     // Censo
     AccesoFichaPersonaComponent,
+    MutualidadAbogaciaPlanUniversal,
     SearchColegiadosComponent,
     BusquedaGeneralComponent,
     SearchNoColegiadosComponent,
