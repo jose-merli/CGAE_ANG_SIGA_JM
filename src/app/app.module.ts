@@ -249,8 +249,14 @@ import { ServiciosInteresComponent } from "./features/censo/datosPersonaJuridica
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
 import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.component";
 import { TrimPipePipe } from "./commons/trim-pipe/trim-pipe.pipe";
-import { CargaEtiquetasComponent } from './features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component';
-import { DatosCvComponent } from './features/censo/cargas-masivas/datos-cv/datos-cv.component';
+import { CargaEtiquetasComponent } from "./features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component";
+import { DatosCvComponent } from "./features/censo/cargas-masivas/datos-cv/datos-cv.component";
+import { AgendaComponent } from "./features/agenda/agenda.component";
+import {
+  SelectButtonModule,
+  ColorPickerModule
+} from "../../node_modules/primeng/primeng";
+import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/ficha-calendario.component";
 
 @NgModule({
   declarations: [
@@ -453,7 +459,9 @@ import { DatosCvComponent } from './features/censo/cargas-masivas/datos-cv/datos
     ErrorAccesoComponent,
     TrimPipePipe,
     CargaEtiquetasComponent,
-    DatosCvComponent
+    DatosCvComponent,
+    AgendaComponent,
+    FichaCalendarioComponent
   ],
   imports: [
     BrowserModule,
@@ -490,7 +498,10 @@ import { DatosCvComponent } from './features/censo/cargas-masivas/datos-cv/datos
     ListboxModule,
     ProgressSpinnerModule,
     FileUploadModule,
-    DialogModule
+    DialogModule,
+    SelectButtonModule,
+    ColorPickerModule,
+    EditorModule
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
@@ -519,4 +530,4 @@ import { DatosCvComponent } from './features/censo/cargas-masivas/datos-cv/datos
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

@@ -220,7 +220,13 @@ export class SigaServices {
     cargasMasivas_searchEtiquetas: "cargasMasivas/searchEtiquetas",
     cargasMasivasEtiquetas_uploadFile: "cargasMasivasEtiquetas/uploadFile",
     cargasMasivas_downloadOriginalFile: "cargasMasivas/downloadOriginalFile",
-    cargasMasivas_downloadLogFile: "cargasMasivas/downloadLogFile"
+    cargasMasivas_downloadLogFile: "cargasMasivas/downloadLogFile",
+    fichaCalendario_getCalendarType: "fichaCalendario/getCalendarType",
+    fichaCalendario_profiles: "fichaCalendario/profiles",
+    fichaCalendario_updatePermissions: "fichaCalendario/updatePermissions",
+    fichaCalendario_saveCalendar: "fichaCalendario/saveCalendar",
+    fichaCalendario_getProfilesPermissions:
+      "fichaCalendario/getProfilesPermissions"
   };
 
   private menuToggled = new Subject<any>();

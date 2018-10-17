@@ -189,6 +189,7 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
 import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.component";
 import { CargaEtiquetasComponent } from "./features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component";
 import { DatosCvComponent } from "./features/censo/cargas-masivas/datos-cv/datos-cv.component";
+import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/ficha-calendario.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -916,6 +917,14 @@ const appRoutes: Routes = [
   {
     path: "bandejaEntrada",
     component: BandejaEntradaComponent,
+    canActivate: [AuthGuard]
+  },
+
+  //Agenda
+
+  {
+    path: "fichaCalendario",
+    component: FichaCalendarioComponent,
     canActivate: [AuthGuard]
   },
 
