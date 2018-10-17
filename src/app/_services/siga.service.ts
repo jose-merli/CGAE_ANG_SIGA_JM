@@ -227,7 +227,10 @@ export class SigaServices {
       "fichaColegialSociedades/searchSocieties",
     fichaColegialOtrasColegiaciones_searchOtherCollegues:
       "fichaColegialOtrasColegiaciones/searchOtherCollegues",
-
+    fichaDatosGenerales_partidoJudicialSearch:
+      "/fichaDatosGenerales/partidoJudicialSearch",
+    fichaDatosColegiales_datosColegialesSearch:
+      "/fichaDatosColegiales/datosColegialesSearch",
     fichaColegialColegiales_search:
       "fichaDatosColegiales/searchDatosColegiales",
     alterMutua_estadoSolicitud: "alterMutua/estadoSolicitud",

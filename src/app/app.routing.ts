@@ -36,6 +36,7 @@ import { DatosBancariosComponent } from "./features/censo/datosPersonaJuridica/d
 import { ConsultarDatosBancariosComponent } from "./features/censo/datosPersonaJuridica/datos-bancarios/consultar-datos-bancarios/consultar-datos-bancarios.component";
 import { DatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/datos-direcciones.component";
 import { ConsultarDatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/consultar-datos-direcciones/consultar-datos-direcciones.component";
+import { MutualidadAbogaciaPlanUniversal } from "./features/censo/solicitudes-incorporacion/mutualidadDeLaAbogaciaPlanUniversal/mutualidad-abogacia-plan-universal.component";
 
 //Certificados
 import { ComunicacionInterprofesionalComponent } from "./features/certificados/comunicacion-interprofesional/comunicacion-interprofesional.component";
@@ -237,7 +238,11 @@ const appRoutes: Routes = [
     component: EditarUsuarioComponent,
     canActivate: [AuthGuard]
   },
-
+  {
+    path: "MutualidadAbogaciaPlanUniversal",
+    component: MutualidadAbogaciaPlanUniversal,
+    canActivate: [AuthGuard]
+  },
   {
     path: "searchNoColegiados",
     component: BusquedaPersonasJuridicas,

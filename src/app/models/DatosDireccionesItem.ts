@@ -26,9 +26,8 @@ export class DatosDireccionesItem {
   historico: boolean = false;
   otraProvincia: String;
   motivo: String;
-
   esColegiado: boolean;
-
+  nombrepartido: String;
   poblacionExtranjera: String;
   constructor() {}
 }
