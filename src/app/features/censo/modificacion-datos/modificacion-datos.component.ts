@@ -64,56 +64,23 @@ export class ModificacionDatosComponent implements OnInit {
     this.body.fechaDesde = null;
     this.body.fechaHasta = null;
     // Llamada al rest de tipo modificación
-    this.tipo = [
-      {
-        label: "Datos Bancarios",
-        value: "Datos Bancarios"
+    this.sigaServices.get("solicitudModificacion_tipoModificacion").subscribe(
+      n => {
+        this.tipo = n.combooItems;
       },
-      {
-        label: "Datos Curriculares",
-        value: "Datos Curriculares"
-      },
-      {
-        label: "Datos Direcciones",
-        value: "Datos Direcciones"
-      },
-      {
-        label: "Datos Facturación",
-        value: "Datos Facturación"
-      },
-      {
-        label: "Datos Turnos",
-        value: "Datos Turnos"
-      },
-      {
-        label: "Datos Generales",
-        value: "Datos Generales"
-      },
-      {
-        label: "Otros Datos",
-        value: "Otros Datos"
-      },
-      {
-        label: "Solicitud uso foto",
-        value: "Solicitud uso foto"
-      },
-      {
-        label: "Cambio de Foto",
-        value: "Cambio de Foto"
+      err => {
+        console.log(err);
       }
-    ];
-
+    );
     // Llamada al rest de estado
-    this.estado = [
-      {
-        label: "Cargos",
-        value: "Cargos"
+    this.sigaServices.get("solicitudModificacion_estado").subscribe(
+      n => {
+        this.estado = n.combooItems;
       },
-      {
-        label: "Colegiados de honor",
-        value: "Colegiados de honor"
+      err => {
+        console.log(err);
       }
-    ];
+    );
 
     // Datos dummy
     this.data = [

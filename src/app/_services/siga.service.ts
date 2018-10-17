@@ -228,12 +228,16 @@ export class SigaServices {
     fichaColegialOtrasColegiaciones_searchOtherCollegues:
       "fichaColegialOtrasColegiaciones/searchOtherCollegues",
 
-    fichaColegialColegiales_search: "fichaDatosColegiales/searchDatosColegiales",
+    fichaColegialColegiales_search:
+      "fichaDatosColegiales/searchDatosColegiales",
     alterMutua_estadoSolicitud: "alterMutua/estadoSolicitud",
     alterMutua_estadoColegiado: "alterMutua/estadoColegiado",
     alterMutua_propuestas: "alterMutua/propuestas",
     alterMutua_tarifaSolicitud: "alterMutua/tarifaSolicitud",
-    alterMutua_solicitudAlter: "alterMutua/solicitudAlter"
+    alterMutua_solicitudAlter: "alterMutua/solicitudAlter",
+    solicitudModificacion_tipoModificacion:
+      "solicitudModificacion/tipoModificacion",
+    solicitudModificacion_estado: "solicitudModificacion/estado"
   };
 
   private menuToggled = new Subject<any>();
@@ -285,9 +289,9 @@ export class SigaServices {
     return this.httpbackend
       .get(
         environment.newSigaUrl +
-        this.endpoints[service] +
-        "?institucion=" +
-        institucion
+          this.endpoints[service] +
+          "?institucion=" +
+          institucion
       )
       .map(response => {
         return response;
