@@ -225,6 +225,7 @@ import { ComunicaInfoEconomicaComponent } from "./features/sjcs/comunicaciones/c
 import { ComunicaCargaComponent } from "./features/sjcs/comunicaciones/comunica-carga/comunica-carga.component";
 import { ComunicaResolucionesComponent } from "./features/sjcs/comunicaciones/comunica-resoluciones/comunica-resoluciones.component";
 import { ComunicaDesignacionesComponent } from "./features/sjcs/comunicaciones/comunica-designaciones/comunica-designaciones.component";
+import { MutualidadAbogaciaSeguroAccidentes } from "./features/censo/solicitudes-incorporacion/mutualidadAbogaciaSeguroAccidentes/mutualidad-abogacia-seguro-accidentes.component";
 
 //Consultas
 import { RecuperarConsultasComponent } from "./features/consultas/recuperar-consultas/recuperar-consultas.component";
@@ -288,6 +289,7 @@ import { NuevaSolicitudesModificacionComponent } from "./features/censo/modifica
     SolicitudesGenericasComponent,
     SolicitudesEspecificasComponent,
     SolicitudesIncorporacionComponent,
+    MutualidadAbogaciaSeguroAccidentes,
     AlterMutuaComponent,
     NuevaIncorporacionComponent,
     DocumentacionSolicitudesComponent,
