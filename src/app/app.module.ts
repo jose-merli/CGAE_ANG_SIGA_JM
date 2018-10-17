@@ -98,9 +98,11 @@ import { DatosIntegrantesComponent } from "./features/censo/datosPersonaJuridica
 import { DetalleIntegranteComponent } from "./features/censo/datosPersonaJuridica/datos-integrantes/detalleIntegrante/detalleIntegrante.component";
 import { DatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/datos-direcciones.component";
 import { ConsultarDatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/consultar-datos-direcciones/consultar-datos-direcciones.component";
+import { MutualidadAbogaciaPlanUniversal } from "./features/censo/solicitudes-incorporacion/mutualidadDeLaAbogaciaPlanUniversal/mutualidad-abogacia-plan-universal.component";
 
 // Modulo de administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
+import { CatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros-classique/catalogos-maestros-classique.component";
 import { EditarCatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros/editarCatalogosMaestros/editarCatalogosMaestros.component";
 import { GestionContadoresComponent } from "./features/administracion/contadores/gestion-contadores/gestion-contadores.component";
 import { ContadoresComponent } from "./features/administracion/contadores/contadores.component";
@@ -257,6 +259,9 @@ import {
   ColorPickerModule
 } from "../../node_modules/primeng/primeng";
 import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/ficha-calendario.component";
+import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
+import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-subtiposCV/informacion-gestion-subtipos-cv/informacion-gestion-subtipos-cv.component";
+import { NuevaSolicitudesModificacionComponent } from "./features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
 
 @NgModule({
   declarations: [
@@ -273,6 +278,7 @@ import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/fic
     ConfirmDialogComponent,
     // Censo
     AccesoFichaPersonaComponent,
+    MutualidadAbogaciaPlanUniversal,
     SearchColegiadosComponent,
     BusquedaGeneralComponent,
     SearchNoColegiadosComponent,
@@ -430,6 +436,7 @@ import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/fic
 
     // Administracion
     CatalogosMaestros,
+    CatalogosMaestrosComponent,
     GruposUsuarios,
     Etiquetas,
     AuditoriaUsuarios,
@@ -461,7 +468,10 @@ import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/fic
     CargaEtiquetasComponent,
     DatosCvComponent,
     AgendaComponent,
-    FichaCalendarioComponent
+    FichaCalendarioComponent,
+    CargasMasivasComponent,
+    InformacionGestionSubtiposCvComponent,
+    NuevaSolicitudesModificacionComponent
   ],
   imports: [
     BrowserModule,

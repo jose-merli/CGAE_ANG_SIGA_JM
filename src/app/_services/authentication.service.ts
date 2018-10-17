@@ -87,6 +87,7 @@ export class AuthenticationService {
 
 
     autenticate(): Observable<any> {
+        sessionStorage.removeItem("authenticated");
         let newSigaRquest = this.newSigaLogin();
         let oldSigaRquest = this.oldSigaLogin();
 
@@ -109,6 +110,7 @@ export class AuthenticationService {
     }
 
     autenticateDevelop(formValues): Observable<any> {
+        sessionStorage.removeItem("authenticated");
         let newSigaRquest = this.newSigaDevelopLogin(formValues);
         let oldSigaRquest = this.oldSigaDevelopLogin(formValues);
 

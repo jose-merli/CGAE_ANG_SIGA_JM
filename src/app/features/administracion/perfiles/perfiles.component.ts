@@ -33,7 +33,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   cols: any = [];
   textFilter: String;
   datos: any[];
-  textSelected: String = "{0} grupos seleccionados";
+  textSelected: String = "{0} roles seleccionados";
   rolesNoAsignados: any[];
   msgs: Message[] = [];
   searchPerfiles: PerfilesResponseDto = new PerfilesResponseDto();
@@ -74,8 +74,10 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   ) {
     super(USER_VALIDATIONS);
   }
-  @ViewChild("input2") inputEl: ElementRef;
-  @ViewChild("table") table: DataTable;
+  @ViewChild("input2")
+  inputEl: ElementRef;
+  @ViewChild("table")
+  table: DataTable;
   selectedDatos;
 
   ngOnInit() {
@@ -197,6 +199,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         this.elementosAGuardar.push(value);
       }
     });
+
     this.sigaServices.post("perfiles_update", this.elementosAGuardar).subscribe(
       data => {
         this.showSuccess();
@@ -231,8 +234,15 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       () => {
         if (this.derechoAcceso == 3) {
           this.activacionEditar = true;
-        } else {
+        } else if (this.derechoAcceso == 2) {
           this.activacionEditar = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
         }
       }
     );
@@ -265,6 +275,8 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     if (this.datos[0].new) {
       this.datos[0].idGrupo = this.newPerfil.idGrupo;
       this.datos[0].descripcionGrupo = this.newPerfil.descripcionGrupo;
+      this.newPerfil.rolesAsignados = this.datos[0].rolesAsignados;
+
       if (
         this.datos[0].idGrupo != null &&
         this.datos[0].idGrupo != undefined &&
@@ -383,7 +395,6 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         // this.newPerfil.descripcionGrupo = newPerfil.descripcionGrupo;
         this.datos[0].idGrupo = "";
         this.datos[0].descripcionGrupo = "";
-
         console.log(error);
       }
     );

@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { OldSigaServices } from "../../../_services/oldSiga.service";
 import {
   FormGroup,
   FormBuilder,

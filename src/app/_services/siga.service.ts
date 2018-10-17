@@ -83,6 +83,8 @@ export class SigaServices {
     header_logo: "/header/logo",
     busquedaPerJuridica_tipo: "busquedaPerJuridica/tipoSociedad",
     busquedaPerJuridica_etiquetas: "busquedaPerJuridica/etiquetas",
+    busquedaPerJuridica_informacionEtiqueta:
+      "/busquedaPerJuridica/informacionEtiqueta",
     busquedaPerJuridica_search: "busquedaPerJuridica/search",
     busquedaPerJuridica_delete: "busquedaPerJuridica/delete",
     busquedaPerJuridica_history: "busquedaPerJuridica/searchHistoric",
@@ -91,7 +93,6 @@ export class SigaServices {
     datosGenerales_update: "personaJuridica/update",
     datosGenerales_insert: "personaJuridica/create",
     datosGenerales_identificacion: "DatosGenerales/identificacion",
-    datosGenerales_createLabel: "busquedaPerJuridica/createLabel",
     busquedaPer_colegio: "busquedaPer/colegio",
     busquedaPer_searchJuridica: "busquedaPerJuridica/searchJuridica",
     busquedaPer_searchFisica: "busquedaPerJuridica/searchFisica",
@@ -181,6 +182,7 @@ export class SigaServices {
       "/solicitudIncorporacion/estadoSolicitud",
     solicitudInciporporacion_searchSolicitud:
       "/solicitudIncorporacion/searchSolicitud",
+
     fichaColegialGenerales_tratamiento: "fichaDatosGenerales/tratamiento",
     fichaColegialGenerales_estadoCivil: "fichaDatosGenerales/estadoCivil",
     fichaColegialGenerales_pais: "fichaDatosColegiales/pais",
@@ -226,11 +228,31 @@ export class SigaServices {
     fichaCalendario_updatePermissions: "fichaCalendario/updatePermissions",
     fichaCalendario_saveCalendar: "fichaCalendario/saveCalendar",
     fichaCalendario_getProfilesPermissions:
-      "fichaCalendario/getProfilesPermissions"
+      "fichaCalendario/getProfilesPermissions",
+    fichaColegialSociedades_searchSocieties:
+      "fichaColegialSociedades/searchSocieties",
+    fichaColegialOtrasColegiaciones_searchOtherCollegues:
+      "fichaColegialOtrasColegiaciones/searchOtherCollegues",
+    fichaDatosGenerales_partidoJudicialSearch:
+      "/fichaDatosGenerales/partidoJudicialSearch",
+    fichaDatosColegiales_datosColegialesSearch:
+      "/fichaDatosColegiales/datosColegialesSearch",
+    fichaColegialColegiales_search:
+      "fichaDatosColegiales/searchDatosColegiales",
+    alterMutua_estadoSolicitud: "alterMutua/estadoSolicitud",
+    alterMutua_estadoColegiado: "alterMutua/estadoColegiado",
+    alterMutua_propuestas: "alterMutua/propuestas",
+    alterMutua_tarifaSolicitud: "alterMutua/tarifaSolicitud",
+    alterMutua_solicitudAlter: "alterMutua/solicitudAlter",
+    solicitudModificacion_tipoModificacion:
+      "solicitudModificacion/tipoModificacion",
+    solicitudModificacion_estado: "solicitudModificacion/estado"
   };
 
   private menuToggled = new Subject<any>();
+  private iframeRemove = new Subject<any>();
   menuToggled$ = this.menuToggled.asObservable();
+  iframeRemove$ = this.iframeRemove.asObservable();
 
   constructor(
     private http: HttpClient,

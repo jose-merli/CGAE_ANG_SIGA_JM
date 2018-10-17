@@ -26,7 +26,7 @@ export class MenuComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   // TODO: Revisar si tiene sentido que las rutas las devuelva el back
   //o revisar si se pude instanciar el router de forma dinámica al arrancar el angular
@@ -93,4 +93,6 @@ export class MenuComponent implements OnInit {
   backMenuChild() {
     this.showChildOfChild = false;
   }
+
+
 }

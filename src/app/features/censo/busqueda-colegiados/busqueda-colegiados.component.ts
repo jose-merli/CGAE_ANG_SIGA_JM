@@ -39,6 +39,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   progressSpinner: boolean = false;
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
+  msgs: any;
 
   formBusqueda: FormGroup;
   numSelected: number = 0;
@@ -298,7 +299,6 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   getComboResidencia() {
     this.comboResidencia = [
-      { label: "", value: null },
       { label: "Sí", value: 1 },
       { label: "No", value: 0 }
     ];
@@ -307,17 +307,12 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   getComboInscrito() {
-    this.comboInscrito = [
-      { label: "", value: null },
-      { label: "Sí", value: 1 },
-      { label: "No", value: 0 }
-    ];
+    this.comboInscrito = [{ label: "Sí", value: 1 }, { label: "No", value: 0 }];
 
     this.arregloTildesCombo(this.comboInscrito);
   }
   getComboSexo() {
     this.comboSexo = [
-      { label: "", value: null },
       { label: "Hombre", value: "H" },
       { label: "Mujer", value: "M" }
     ];
@@ -513,5 +508,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         value: 40
       }
     ];
+  }
+  clear() {
+    this.msgs = [];
   }
 }

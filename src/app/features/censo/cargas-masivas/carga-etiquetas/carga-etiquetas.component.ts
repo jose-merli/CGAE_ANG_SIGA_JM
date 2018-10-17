@@ -32,7 +32,7 @@ export class CargaEtiquetasComponent implements OnInit {
   datos: any[];
   numSelected: number = 0;
   selectedItem: number = 10;
-
+  clear: any;
   @ViewChild("pUploadFile")
   pUploadFile;
 

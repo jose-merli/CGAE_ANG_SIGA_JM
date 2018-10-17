@@ -1,0 +1,61 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{ "menu.censo" | translate}}
+        <i class="fa fa-angle-right"></i>{{'censo.solicitudincorporacion' | translate}}
+    </p>
+</div>
+
+<!--Tarjeta estado solicitud-->
+<div class="card">
+    <div class="card-header header-ficha" (click)="abreCierraEstadoSolicitud()">
+        <div [hidden]="mostrarEstadoSolicitud" class="form-row">
+            <div class="col-lg-1 col-md-2">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="fas fa-info icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                </div>
+            </div>
+            <div class="col-lg-11 col-md-10">
+                <div class="d-flex justify-content-start mb-1">
+                    <label class="mr-auto title-ficha">Datos de solicitud</label>>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <label>Estado
+                        <span>dto
+                            <!--{{solicitudEditar.tipoSolicitud}}--></span>
+                    </label>
+                    <i *ngIf="!mostrarEstadoSolicitud" class="fa fa-angle-down float-right"></i>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="mostrarEstadoSolicitud" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado">
+                <i *ngIf="!existeImagen" class="fas fa-info icon-ficha"></i>
+                <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+            </div>
+            <label class="title-ficha">Estado Solicitud
+                <!--{{ "general.message.datos.generales" | translate}}--></label>
+            <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+    </div>
+
+    <div [hidden]="!mostrarEstadoSolicitud " class="card-body card-body-ficha">
+        <div class="form-row">
+            <div class="col-lg-3 col-md-3">
+                <label>Estado solicitud</label>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <label>Estado solicitud</label>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>

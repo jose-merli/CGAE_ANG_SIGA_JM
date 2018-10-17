@@ -21,10 +21,12 @@
               <span>{{body.resena}}</span>
             </label>
             <label>{{"censo.consultaDatosRegistrales.literal.objSocial" | translate}}
-              <span>{{body.objSocial}}</span>
+              <span>{{body.objetoSocial}}</span>
             </label>
-            <label>{{"censo.consultaDatosRegistrales.literal.numRegistro" | translate}}
-              <span>{{body.numeroRegistro}}</span>
+
+            <label>{{"censo.consultaDatosRegistrales.literal.numRegistro.siga" | translate}}
+              <!--<span>{{body.numRegistro}}</span>-->
+                <span>{{body.prefijoNumsspp}} {{body.contadorNumsspp}} {{body.sufijoNumsspp}}</span>
             </label>
             <i *ngIf="!esFichaActiva('registrales')" class="fa fa-angle-down float-right"></i>
           </div>
@@ -43,19 +45,24 @@
     <div *ngIf="esFichaActiva('registrales')" class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque col-lg-6 col-md-6">
+          <label class="title-ficha mb-2 ml-1">
+            <strong>Datos Registro Civil</strong>
+          </label>
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.objSocial" | translate}} (*)</label>
-              <input [(disabled)]="camposDesactivados" [(ngModel)]="body.objetoSocial" type="text" class="form-control" onchange="desactivadoGuardar()"
+              <input [(disabled)]="camposDesactivados" [(ngModel)]="body.objetoSocial" type="text" class="form-control" (input)="habilitarCheck()"
                 pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.Resenia" | translate}} (*)</label>
-              <input [(disabled)]="camposDesactivados" [(ngModel)]="body.resena" type="text" class="form-control" pInputText>
+              <input [(disabled)]="camposDesactivados" [(ngModel)]="body.resena" (input)="habilitarCheck()" type="text" class="form-control"
+                pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.numPoliza" | translate}} </label>
-              <input [(disabled)]="camposDesactivados" [(ngModel)]="body.numeroPoliza" type="text" class="form-control" pInputText>
+              <input [(disabled)]="camposDesactivados" [(ngModel)]="body.numeroPoliza" type="text" [maxLength]="20" class="form-control"
+                pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.Compania" | translate}}</label>
@@ -66,18 +73,18 @@
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.general.literal.FechaConstitucion" | translate}} (*)</label>
               <p-calendar [(disabled)]="camposDesactivados" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaConstitucion"
-                [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
-              <div *ngIf="fechaCorrecta == false">
-                <label class="labelError">La fecha no puede ser superior a la actual</label>
-              </div>
+                [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="habilitarCheck(); compruebaFechaConstitucion()"></p-calendar>
+                <div *ngIf="fechaCorrecta == false">
+                  <label class="labelError">La fecha no puede ser superior a la actual</label>
+                </div>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
-              <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}</label>
-              <p-calendar [(disabled)]="camposDesactivados" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaBaja"
-                [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
-              <div *ngIf="fechaBajaCorrecta == false">
-                <label class="labelError">La fecha de baja no puede ser anterior a la fecha de constitución</label>
-              </div>
+              <label>{{"censo.consultaDatos.literal.fechaFin" | translate}}</label>
+              <p-calendar [(disabled)]="camposDesactivados" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaFin"
+                [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="compruebaFechaFin()"></p-calendar>
+                <div *ngIf="fechaFinCorrecta == false">
+                  <label class="labelError">La fecha de fin no puede ser anterior a la fecha de constitución</label>
+                </div>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.fichaCliente.literal.actprofesional" | translate}} </label>
@@ -90,45 +97,58 @@
         </div>
 
         <div class="bloque col-lg-6 col-md-6">
+          <label class="title-ficha mb-2 ml-1">
+            <strong>Datos Registro Mercantil</strong>
+          </label>
+          <!-- nuevo nº registro -->
+
           <div class="form-row">
-            <div class="form-row col-lg-6 col-md-6">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{"censo.consultaDatosRegistrales.literal.numRegistro.mercantil" | translate}} (*)</label>
+              <input [(ngModel)]="body.numRegistro" [(disabled)]="camposDesactivados" type="text" class="form-control" (input)="habilitarCheck()"
+                [maxLength]="20" pInputText>
+            </div>
+            <div class="form-row p-1 col-lg-6 col-md-6">
               <div class="col-lg-12 col-md-12">
-                <label>{{"censo.consultaDatosRegistrales.literal.numRegistro" | translate}} (*)</label>
+                <label>{{"censo.consultaDatosRegistrales.literal.numRegistro.siga" | translate}} (*)</label>
               </div>
               <div class="form-group col-lg-4 col-md-4">
-                <input [(ngModel)]="body.prefijoNumsspp" type="text" class="form-control" [(disabled)]="prefijoBlock" pInputText>
+                <input [(disabled)]="noEditable || camposDesactivados" [(ngModel)]="body.prefijoNumsspp" type="text" class="form-control"
+                  [(disabled)]="prefijoBlock" pInputText>
               </div>
               <div class="form-group col-lg-4 col-md-4">
-                <input [(disabled)]="camposDesactivados" [(ngModel)]="body.contadorNumsspp" type="text" class="form-control" pInputText>
-                <div *ngIf="contadorNoCorrecto == true">
-                  <label class="labelError">Solo números</label>
-                </div>
+                <input [(disabled)]="noEditable || camposDesactivados" [(ngModel)]="body.contadorNumsspp" type="text" class="form-control"
+                  (ngModelChange)="compruebaRegistro()" pInputText>
+                  <div *ngIf="contadorNoCorrecto == true">
+                    <label class="labelError">Solo números</label>
+                  </div>
               </div>
               <div class="form-group col-lg-4 col-md-4">
-                <input [(disabled)]="camposDesactivados" [(ngModel)]="body.sufijoNumsspp" type="text" class="form-control" pInputText>
+                <input [(disabled)]="noEditable || camposDesactivados" [(ngModel)]="body.sufijoNumsspp" type="text" class="form-control"
+                  pInputText>
               </div>
             </div>
 
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.consultaDatosRegistrales.literal.idRegProv" | translate}}</label>
-              <input [(disabled)]="camposDesactivados" [(ngModel)]="body.identificadorRegistroProvincial" type="text" class="form-control"
-                pInputText>
+              <label>{{"censo.consultaDatosRegistrales.literal.idRegProv" | translate}} (*)</label>
+              <input [(disabled)]="camposDesactivados" [(ngModel)]="body.identificacionReg" type="text" class="form-control" (ngModelChange)="habilitarCheck()"
+                [maxLength]="10" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
-              <label>{{"censo.consultaDatosRegistrales.literal.fechaRegistro" | translate}}</label>
-              <p-calendar [(disabled)]="camposDesactivados" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaRegistro"
-                [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
+              <label>{{"censo.consultaDatosRegistrales.literal.fechaRegistro" | translate}} (*)</label>
+              <p-calendar [(disabled)]="camposDesactivados" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaInscripcion"
+                [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="habilitarCheck()"></p-calendar>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatosRegistrales.literal.fechaCancelacion" | translate}}</label>
-              <p-calendar [(disabled)]="camposDesactivados" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaFin"
-                [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"></p-calendar>
+              <p-calendar [(disabled)]="camposDesactivados" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaCancelacion"
+                [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="habilitarCheck()"></p-calendar>
             </div>
+
             <div class="form-check col-lg-6 col-md-6">
               <br>
-              <label class="form-group-label">{{"censo.busquedaClientes.noColegiados.sociedadesProfesionales" | translate}}</label> &nbsp;&nbsp;
-              <p-checkbox [(disabled)]="camposDesactivados" [(ngModel)]='sociedadProfesional' binary="true" (ngModelChange)="onChangeSociedad()"></p-checkbox>
-
+              <label class="form-group-label">{{"censo.busquedaClientes.noColegiados.sociedadProfesional" | translate}}</label>              &nbsp;&nbsp;
+              <p-checkbox [(ngModel)]='sociedadProfesional' binary="true" (onChange)="onChangeSociedadProfesional()"></p-checkbox>
             </div>
           </div>
         </div>
@@ -137,9 +157,8 @@
     <div *ngIf="esFichaActiva('registrales')" class="card-footer">
       <div class="text-right main-button ">
 
-        <button (click)="guardar()" [disabled]="desactivadoGuardar()" pButton type="button " icon="far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
         <button (click)="search()" [(disabled)]="camposDesactivados" pButton type="button " icon="fa fa-undo " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-
+        <button [disabled]="desactivadoGuardar()" (click)="guardar()" pButton type="button " icon="far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

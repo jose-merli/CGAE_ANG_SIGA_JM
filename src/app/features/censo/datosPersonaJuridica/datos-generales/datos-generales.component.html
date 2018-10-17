@@ -151,14 +151,21 @@
                 [maxLength]="2000"></textarea>
             </div>
             <div class="form-group col-lg-12 col-md-12">
-              <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}}</label>
+              <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}}
+                <i class="fa fa-plus" style="color:grey" (click)="habilitarAutocompletar($event)"></i>
+              </label>
+
               <br>
-              <!-- <p-multiSelect [defaultLabel]="textFilter" [(disabled)]="camposDesactivados" styleClass="widthAll" [(ngModel)]='etiquetasPersonaJuridicaSelecionados'
-                [options]="comboEtiquetas" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" autoWidth="false" defaultLabel=""
-                maxSelectedLabels="1" (ngModelChange)="onChangeForm()"></p-multiSelect> -->
 
               <p-autoComplete #auto [(ngModel)]="etiquetasPersonaJuridicaSelecionados" [suggestions]="comboEtiquetas" (completeMethod)="filterLabelsMultiple($event)"
-                styleClass="widthAll" [minLength]="1" field="label" [multiple]="true" (onKeyUp)="onKeyUp($event)" (ngModelChange)="onChangeForm()">
+                [minLength]="1" field="label" [multiple]="true" (onKeyUp)="onKeyUp($event)" (onSelect)="onSelect($event)" (onUnselect)="onUnselect($event)"
+                [disabled]="!autocompletar" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}">
+                <ng-template let-etiquetasPersonaJuridicaSelecionados pTemplate="selectedItem">
+                  <div *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor != ''" class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li"
+                    [ngStyle]="{'background': etiquetasPersonaJuridicaSelecionados.backgroundColor}" (click)="onClick($event, etiquetasPersonaJuridicaSelecionados)">
+                    {{ etiquetasPersonaJuridicaSelecionados.label }}
+                  </div>
+                </ng-template>
               </p-autoComplete>
             </div>
           </div>
@@ -179,16 +186,48 @@
   </div>
 
   <!-- CREAR ETIQUETA -->
-  <p-dialog [(visible)]="checked" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="350" [minWidth]="400"
-    (closable)="closeDialogConfirmacion()">
+  <p-dialog #dialog [(visible)]="checked" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500"
+    [minWidth]="500">
     <p-header class="title">
-      <label>La etiqueta
-        <b>{{ etiqueta }}</b> no existe, </label>
-      <span>¿Desea crearla?</span>
+      <label>{{ mensaje }}</label>
     </p-header>
 
-    <button (click)="guardarNuevaEtiqueta()" pButton type="button" icon="pi pi-check" iconPos="left" label="{{ 'general.boton.submit' | translate}}"></button>
-    <button (click)="closeDialogConfirmacion()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+    <div class="bloque col-lg-12 col-md-12">
+      <div class="row">
+
+        <!-- DESHABILITA EL FOCO  -->
+        <span class="ui-helper-hidden-accessible">
+          <input type="text" />
+        </span>
+
+        <div class="form-group col-lg-6 col-md-6">
+          <label *ngIf="historico">{{"administracion.auditoriaUsuarios.fechaDesde" | translate}}</label>
+          <label *ngIf="!historico">{{"administracion.auditoriaUsuarios.fechaDesde" | translate}} (*)</label>
+          <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="item.fechaInicio" [locale]="es"
+            [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="validateFields()"
+            [(disabled)]="historico"></p-calendar>
+        </div>
+
+        <div class="form-group col-lg-6 col-md-6 form-group-date">
+          <label *ngIf="historico">{{"administracion.auditoriaUsuarios.fechaHasta" | translate}}</label>
+          <label *ngIf="!historico">{{"administracion.auditoriaUsuarios.fechaHasta" | translate}} (*)</label>
+          <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="item.fechaBaja" [locale]="es"
+            [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="validateFields()"
+            [(disabled)]="historico"></p-calendar>
+          <div *ngIf="item.fechaBaja != null && !isFechaBajaCorrect && !historico">
+            <label class="labelError">La fecha de baja no puede ser anterior a la fecha de inicio</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p-footer *ngIf="!historico">
+      <div class="text-right main-button">
+        <button (click)="aceptDialogConfirmation(item)" pButton type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate}}"
+          [disabled]="!isTrue"></button>
+        <button (click)="closeDialogConfirmation(item)" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+      </div>
+    </p-footer>
   </p-dialog>
 
   <!-- AUDITORIA -->

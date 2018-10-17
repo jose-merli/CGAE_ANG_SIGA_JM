@@ -3,6 +3,7 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 import { SigaWrapper } from "./../../../../../wrapper/wrapper.class";
 import { esCalendar } from "./../../../../../utils/calendar";
 import { TranslateService } from "./../../../../../commons/translate/translation.service";
+import { Router } from "@angular/router";
 import { USER_VALIDATIONS } from "./../../../../../properties/val-properties";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
@@ -41,6 +42,7 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
+    private router: Router,
     private location: Location
   ) {
     super(USER_VALIDATIONS);
@@ -74,8 +76,12 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
       () => {
         if (this.derechoAcceso == 3) {
           this.activacionEditar = true;
-        } else {
+        } else if (this.derechoAcceso == 2) {
           this.activacionEditar = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
         }
       }
     );

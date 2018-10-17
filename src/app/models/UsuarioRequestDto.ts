@@ -8,5 +8,6 @@ export class UsuarioRequestDto {
   idInstitucion: "2000";
   codigoExterno: String;
   idUsuario: String;
-  constructor() {}
+  nifRol: String;
+  constructor() { }
 }

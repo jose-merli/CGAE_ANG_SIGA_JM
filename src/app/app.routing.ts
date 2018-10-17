@@ -36,6 +36,7 @@ import { DatosBancariosComponent } from "./features/censo/datosPersonaJuridica/d
 import { ConsultarDatosBancariosComponent } from "./features/censo/datosPersonaJuridica/datos-bancarios/consultar-datos-bancarios/consultar-datos-bancarios.component";
 import { DatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/datos-direcciones.component";
 import { ConsultarDatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/consultar-datos-direcciones/consultar-datos-direcciones.component";
+import { MutualidadAbogaciaPlanUniversal } from "./features/censo/solicitudes-incorporacion/mutualidadDeLaAbogaciaPlanUniversal/mutualidad-abogacia-plan-universal.component";
 
 //Certificados
 import { ComunicacionInterprofesionalComponent } from "./features/certificados/comunicacion-interprofesional/comunicacion-interprofesional.component";
@@ -157,6 +158,7 @@ import { BandejaEntradaComponent } from "./features/comunicaciones/bandeja-entra
 
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
+import { CatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros-classique/catalogos-maestros-classique.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
 import { Etiquetas } from "./features/administracion/gestion-multiidioma/etiquetas/etiquetas.component";
 import { SeleccionarIdioma } from "./features/administracion/seleccionar-idioma/seleccionar-idioma.component";
@@ -190,6 +192,9 @@ import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.
 import { CargaEtiquetasComponent } from "./features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component";
 import { DatosCvComponent } from "./features/censo/cargas-masivas/datos-cv/datos-cv.component";
 import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/ficha-calendario.component";
+import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
+import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-subtiposCV/informacion-gestion-subtipos-cv/informacion-gestion-subtipos-cv.component";
+import { NuevaSolicitudesModificacionComponent } from "./features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -234,7 +239,11 @@ const appRoutes: Routes = [
     component: EditarUsuarioComponent,
     canActivate: [AuthGuard]
   },
-
+  {
+    path: "MutualidadAbogaciaPlanUniversal",
+    component: MutualidadAbogaciaPlanUniversal,
+    canActivate: [AuthGuard]
+  },
   {
     path: "searchNoColegiados",
     component: BusquedaPersonasJuridicas,
@@ -244,7 +253,8 @@ const appRoutes: Routes = [
 
   {
     path: "busquedaNoColegiados",
-    component: BusquedaNoColegiadosComponent,
+    //component: BusquedaNoColegiadosComponent,
+    component: SearchNoColegiadosComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -326,6 +336,11 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: "nuevaSolicitudesModificacion",
+    component: NuevaSolicitudesModificacionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: "mediadores",
     component: MediadoresComponent,
     canActivate: [AuthGuard]
@@ -341,8 +356,9 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    //CensoDocumentacionComponent
     path: "censoDocumentacion",
-    component: CensoDocumentacionComponent,
+    component: CargasMasivasComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -378,6 +394,11 @@ const appRoutes: Routes = [
   {
     path: "datosCv",
     component: DatosCvComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "informacionGestionSubtipoCV",
+    component: InformacionGestionSubtiposCvComponent,
     canActivate: [AuthGuard]
   },
 
@@ -931,7 +952,8 @@ const appRoutes: Routes = [
   // Administracion
   {
     path: "catalogosMaestros",
-    component: CatalogosMaestros,
+    //component: CatalogosMaestros,
+    component: CatalogosMaestrosComponent,
     canActivate: [AuthGuard]
   },
   {

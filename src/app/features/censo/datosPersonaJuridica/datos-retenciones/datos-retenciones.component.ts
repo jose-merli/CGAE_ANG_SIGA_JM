@@ -49,10 +49,11 @@ export class DatosRetencionesComponent implements OnInit {
   persona: String;
   // selectedDatos: any = []
   body: DatosRetencionesItem = new DatosRetencionesItem();
+  bodyFecha: DatosRetencionesItem = new DatosRetencionesItem();
   retencionNow: DatosRetencionesItem = new DatosRetencionesItem();
   retencionActiveAnt: DatosRetencionesItem = new DatosRetencionesItem();
   newRetencion: DatosRetencionesItem = new DatosRetencionesItem();
-  nuevafecha: Date;
+  nuevafecha: any;
   searchRetenciones: DatosRetencionesObject = new DatosRetencionesObject();
   showDatosGenerales: boolean = true;
   showDatosColegiales: boolean = false;
@@ -70,16 +71,20 @@ export class DatosRetencionesComponent implements OnInit {
   usuarioBody: any[];
   selectedItem: number = 10;
   idPersona: String;
-
+  fechaMinima: Date;
   @ViewChild("table") table: DataTable;
   selectedDatos;
   tipoCIF: String;
   openFicha: boolean = false;
   masFiltros: boolean = false;
   labelFiltros: string;
+  progressSpinner: boolean = false;
 
   suscripcionBusquedaNuevo: Subscription;
   activacionEditar: boolean;
+  ultimaFechaInicio: any;
+  dateParts: any;
+
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
   constructor(
     private formBuilder: FormBuilder,
@@ -157,7 +162,7 @@ export class DatosRetencionesComponent implements OnInit {
       this.camposDesactivados = true;
       this.isCrear = true;
     }
-    this.nuevafecha = new Date();
+    // this.nuevafecha = new Date();
     let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
     this.changeSort(event);
   }
@@ -165,27 +170,53 @@ export class DatosRetencionesComponent implements OnInit {
   changeSort(event) {
     this.sortF = "fechaFin";
     this.sortO = 1;
-    this.table.sortMultiple();
+    if (this.table != undefined) {
+      this.table.sortField = this.sortF;
+      //this.table.sortOrder = this.sortO;
+    }
+
+    // this.table.sortMultiple();
   }
+
   onChangeCalendar(event) {
-    console.log(new Date(event - 86400000));
-    console.log(this.datos);
-    console.log(this.table);
+    this.isVolver = false;
     if (this.datos.length > 1) {
       this.datos.forEach((value: any, key: number) => {
-        if (value.idRetencion == this.retencionActiveAnt.idRetencion) {
+        if (
+          value.recursoRetencion == this.retencionActiveAnt.recursoRetencion &&
+          value.fechaInicio == this.retencionActiveAnt.fechaInicio
+        ) {
           this.datos[key].fechaFin = this.datepipe.transform(
             new Date(event - 86400000),
             "dd/MM/yyyy"
           );
-          this.isEditar = false;
+
+          // this.datos.forEach((value: any, key: number) => {
+          //   if (value.fechaFin == null || value.fechaFin == undefined) {
+          //     this.retencionActiveAnt = this.datos[key];
+          //     this.datos[key].fechaFin = this.datepipe.transform(
+          //       new Date(valur2 - 86400000),
+          //       "dd/MM/yyyy"
+          //     );
+          //   }
+          // });
+
         }
       });
+    }
+
+    if (
+      this.newRetencion.descripcionRetencion != "" &&
+      this.newRetencion.descripcionRetencion != undefined
+    ) {
+      this.isEditar = false;
+      this.isCrear = true;
     }
 
     let evento = { field: "fechaFin", order: 1, multisortmeta: undefined };
     this.changeSort(evento);
   }
+
   getTiposRetenciones() {
     this.sigaServices.get("retenciones_tipoRetencion").subscribe(
       n => {
@@ -203,7 +234,7 @@ export class DatosRetencionesComponent implements OnInit {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
   isValidIBAN(iban: String): boolean {
@@ -266,10 +297,17 @@ export class DatosRetencionesComponent implements OnInit {
     }
   }
   crear() {
+    this.fechaNoPermitida();
     this.isVolver = false;
     this.isCrear = true;
     this.isEliminar = true;
-    let valur2 = new Date().setMilliseconds(new Date().getMilliseconds());
+    // let valur2 = new Date().setMilliseconds(new Date().getMilliseconds());
+    let valur2;
+    if (this.fechaMinima == undefined || this.fechaMinima == null) {
+      valur2 = new Date().setMilliseconds(new Date().getMilliseconds());
+    } else {
+      valur2 = this.fechaMinima;
+    }
     if (
       this.datos == null ||
       this.datos == undefined ||
@@ -277,29 +315,18 @@ export class DatosRetencionesComponent implements OnInit {
     ) {
       this.datos = [];
     } else {
-      let value = this.table.first;
+      // let value = this.table.first;
       // this.createArrayEdit(dummy, value);
       this.datos.forEach((value: any, key: number) => {
         if (value.fechaFin == null || value.fechaFin == undefined) {
-          // if (
-          //   this.datos[key].fechaInicio ==
-          //   this.datepipe.transform(new Date(valur2), "dd/MM/yyyy")
-          // ) {
-          //   this.datos[key].fechaFin = this.datepipe.transform(
-          //     new Date(valur2),
-          //     "dd/MM/yyyy"
-          //   );
-          // } else {
-          //   this.datos[key].fechaFin = this.datepipe.transform(
-          //     new Date(valur2 - 86400000),
-          //     "dd/MM/yyyy"
-          //   );
-          this.nuevafecha = new Date();
           this.retencionActiveAnt = this.datos[key];
-          this.datos[key].fechaFin = this.datepipe.transform(
-            new Date(valur2 - 86400000),
-            "dd/MM/yyyy"
-          );
+
+          this.datos[key].fechaFin = this.datos[0].fechaInicio;
+
+          // this.datepipe.transform(
+          //   new Date(valur2 - 86400000),
+          //   "dd/MM/yyyy"
+          // );
         }
       });
     }
@@ -311,6 +338,7 @@ export class DatosRetencionesComponent implements OnInit {
     //   descripcionRetencion: "",
     //   porcentajeRetencion: ""
     // };
+
     let dummy = {
       idPersona: this.idPersona,
       fechaInicio: "",
@@ -318,6 +346,7 @@ export class DatosRetencionesComponent implements OnInit {
       descripcionRetencion: "",
       porcentajeRetencion: ""
     };
+
     this.datos = [dummy, ...this.datos];
 
     // this.table.reset();
@@ -325,11 +354,17 @@ export class DatosRetencionesComponent implements OnInit {
     this.changeSort(event);
   }
   confirmEdit() {
+    // this.fechaNoPermitida();
+    this.progressSpinner = true;
+    this.newRetencion.descripcionRetencion = "";
+    this.newRetencion.idRetencion = "";
     this.body.idPersona = this.idPersona;
     this.body.idInstitucion = "";
     this.body.idLenguaje = "";
+    this.isCrear = false;
     this.datos.forEach((value: any, key: number) => {
       if (value.fechaFin == null || value.fechaFin == undefined) {
+
         this.datos[key].fechaInicio = this.datepipe.transform(
           new Date(this.nuevafecha),
           "dd/MM/yyyy"
@@ -337,33 +372,43 @@ export class DatosRetencionesComponent implements OnInit {
       }
     });
 
+
+
     this.sigaServices
       .postPaginado(
-        "retenciones_update",
-        "?idPersona=" + this.idPersona,
-        this.datos
+      "retenciones_update",
+      "?idPersona=" + this.idPersona,
+      this.datos
       )
       .subscribe(
-        data => {
-          this.showSuccess();
-        },
-        err => {
-          console.log(err);
-          this.showFail();
-        },
-        () => {
-          this.volver();
+      data => {
+        this.showSuccess();
+        this.progressSpinner = false;
+        let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
+        this.changeSort(event);
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+        this.showFail();
+        let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
+        this.changeSort(event);
+      },
+      () => {
+        this.volver();
+        this.progressSpinner = false;
+        this.isBuscar();
 
-          //Al haber añadido uno nuevo, actualizamos la cabecera de la tarjeta con la nueva retención activa (lo que se verá con la tarjeta colapsada)
-          if (this.datos.length > 0) {
-            this.datos.forEach((value: any, key: number) => {
-              //Si la fecha fin no viene informada, es la que está activa, es la que mostramos con la tarjeta colapsada
-              if (value.fechaFin == undefined) {
-                this.retencionNow = this.datos[key];
-              }
-            });
-          }
+        //Al haber añadido uno nuevo, actualizamos la cabecera de la tarjeta con la nueva retención activa (lo que se verá con la tarjeta colapsada)
+        if (this.datos.length > 0) {
+          this.datos.forEach((value: any, key: number) => {
+            //Si la fecha fin no viene informada, es la que está activa, es la que mostramos con la tarjeta colapsada
+            if (value.fechaFin == undefined) {
+              this.retencionNow = this.datos[key];
+            }
+          });
         }
+      }
       );
   }
 
@@ -404,19 +449,22 @@ export class DatosRetencionesComponent implements OnInit {
 
     this.sigaServices
       .postPaginado(
-        "retenciones_update",
-        "?idPersona=" + this.idPersona,
-        datosDelete
+      "retenciones_update",
+      "?idPersona=" + this.idPersona,
+      datosDelete
       )
       .subscribe(
-        data => {},
-        err => {
-          console.log(err);
-        },
-        () => {
-          this.volver();
-        }
+      data => { },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.volver();
+      }
       );
+
+
+
   }
 
   confirmarBorrar() {
@@ -443,6 +491,70 @@ export class DatosRetencionesComponent implements OnInit {
     });
   }
 
+  fechaNoPermitida() {
+    this.bodyFecha.idPersona = this.idPersona;
+    this.bodyFecha.idInstitucion = "";
+    this.bodyFecha.idLenguaje = "";
+    if (this.idPersona != undefined && this.idPersona != null) {
+      this.sigaServices
+        .postPaginado("retenciones_search", "?numPagina=1", this.bodyFecha)
+        .subscribe(
+        data => {
+          let unorderedDate;
+          this.searchRetenciones = JSON.parse(data["body"]);
+          if (this.searchRetenciones.retencionesItemList != null) {
+            this.searchRetenciones.retencionesItemList.forEach(
+              (value: any, key: number) => {
+                if (
+                  this.searchRetenciones.retencionesItemList[key].fechaFin ==
+                  null ||
+                  this.searchRetenciones.retencionesItemList[key].fechaFin ==
+                  undefined
+                ) {
+                  unorderedDate = JSON.stringify(
+                    this.searchRetenciones.retencionesItemList[key]
+                      .fechaInicio
+                  );
+                }
+              }
+            );
+
+            let unorderedArray = unorderedDate
+              .substring(1, unorderedDate.length - 1)
+              .split("/");
+            let orderedDate =
+              unorderedArray[1] +
+              "-" +
+              unorderedArray[0] +
+              "-" +
+              unorderedArray[2];
+            this.fechaMinima = new Date(orderedDate);
+            this.nuevafecha = new Date(
+              this.fechaMinima.getTime() + 1000 * 60 * 60 * 24
+            );
+            this.nuevafecha.setHours(this.nuevafecha.getHours() + 4);
+            this.fechaMinima = new Date(
+              this.fechaMinima.getTime() + 1000 * 60 * 60 * 24
+            );
+            // console.log(this.nuevafecha)
+            // this.nuevafecha = this.datepipe.transform(
+            //   new Date(),
+            //   "dd/MM/yyyy"
+            // )
+          }
+          if (this.datos.length == 1) {
+            this.fechaMinima = undefined;
+            this.nuevafecha = new Date();
+            console.log(this.nuevafecha)
+          }
+        },
+        err => {
+          console.log(err);
+        }
+        );
+    }
+  }
+
   search() {
     this.body.idPersona = this.idPersona;
     this.body.idInstitucion = "";
@@ -451,40 +563,42 @@ export class DatosRetencionesComponent implements OnInit {
       this.sigaServices
         .postPaginado("retenciones_search", "?numPagina=1", this.body)
         .subscribe(
-          data => {
-            this.searchRetenciones = JSON.parse(data["body"]);
-            if (this.searchRetenciones.retencionesItemList != null) {
-              this.datos = this.searchRetenciones.retencionesItemList;
-              if (this.datos.length > 1) {
-                this.retencionActiveAnt = this.datos[1];
-              } else {
-                this.retencionActiveAnt = this.datos[0];
-              }
+        data => {
+          this.searchRetenciones = JSON.parse(data["body"]);
+          if (this.searchRetenciones.retencionesItemList != null) {
+            this.datos = this.searchRetenciones.retencionesItemList;
+            if (this.datos.length > 1) {
+              this.retencionActiveAnt = this.datos[1];
             } else {
-              this.datos = [];
+              this.retencionActiveAnt = this.datos[0];
             }
-          },
-          err => {
-            console.log(err);
-          },
-          () => {
-            if (this.datos.length > 0) {
-              if (this.camposDesactivados != true) {
-                this.isEliminar = false;
-              }
-              this.datos.forEach((value: any, key: number) => {
-                //Si la fecha fin no viene informada, es la que está activa, es la que mostramos con la tarjeta colapsada
-                if (value.fechaFin == undefined) {
-                  this.retencionNow = this.datos[key];
-                }
-              });
-            }
+          } else {
+            this.datos = [];
           }
+
+
+          // this.getUltimaFechaInicio()
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          if (this.datos.length > 0) {
+            if (this.camposDesactivados != true) {
+              this.isEliminar = false;
+            }
+            this.datos.forEach((value: any, key: number) => {
+              //Si la fecha fin no viene informada, es la que está activa, es la que mostramos con la tarjeta colapsada
+              if (value.fechaFin == undefined) {
+                this.retencionNow = this.datos[key];
+              }
+            });
+          }
+        }
         );
     }
   }
   onChangeDrop(event) {
-    console.log(event.value);
     let dat: any;
     this.newRetencion.descripcionRetencion = "";
     this.tiposRetenciones.forEach((value: any, key: number) => {
@@ -492,14 +606,19 @@ export class DatosRetencionesComponent implements OnInit {
         dat = value;
       }
     });
+
     this.datos.forEach((value: any, key: number) => {
-      if (value.idRetencion == this.selectedDatos[0].idRetencion) {
+      if (
+        value.idRetencion == this.datos[0].idRetencion &&
+        event.value != ""
+      ) {
         this.newRetencion.porcentajeRetencion = dat.porcentajeRetencion;
         this.newRetencion.descripcionRetencion = dat.value;
         value.porcentajeRetencion = dat.porcentajeRetencion;
         value.idRetencion = dat.value;
         value.descripcionRetencion = dat.label;
         this.isEditar = false;
+        this.isCrear = true;
         this.table.reset();
       }
     });
@@ -510,14 +629,29 @@ export class DatosRetencionesComponent implements OnInit {
   }
 
   irFichaColegial(id) {
-    console.log(id[0].fechaInicio);
-    if (id[0].fechaFin == null && id[0].fechaInicio != "") {
-      this.nuevafecha = id[0].fechaInicio;
-      id[0].fechaInicio = "";
-      this.newRetencion.descripcionRetencion = id[0].idRetencion;
-      // this.onChangeDrop(this.newRetencion.descripcionRetencion);
-      id[0].descripcionRetencion = "";
-    }
+    // // if (this.selectedDatos[0] == this.datos[0]) {
+    // console.log(this.selectedDatos)
+    // console.log(this.datos[0])
+    // console.log(id[0].fechaInicio);
+    // if (id[0].fechaFin == null && id[0].fechaInicio != "") {
+    //   this.isVolver = false;
+    //   this.isCrear = true;
+    //   this.nuevafecha = id[0].fechaInicio;
+    //   id[0].fechaInicio = "";
+    //   this.newRetencion.descripcionRetencion = id[0].idRetencion;
+    //   // this.onChangeDrop(this.newRetencion.descripcionRetencion);
+    //   id[0].descripcionRetencion = "";
+    // } else {
+    //   this.isVolver = true;
+    // }
+    // } else {
+    //   console.log('no')
+    //   setTimeout(() => {
+    //     this.selectedDatos = [];
+    //     this.selectedDatos = [... this.selectedDatos];
+    //   }, 100);
+
+    // }
   }
 
   isSelectMultiple() {
@@ -565,4 +699,14 @@ export class DatosRetencionesComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+
+
+  // getUltimaFechaInicio() {
+  //   if (this.datos.length > 0) {
+  //     this.dateParts = this.datos[0].fechaInicio.split("/");
+  //     let dia = parseInt(this.dateParts[0]) + 1;
+  //     this.ultimaFechaInicio = new Date(this.dateParts[2], this.dateParts[1] - 1, dia);
+  //   }
+  // }
+
 }
