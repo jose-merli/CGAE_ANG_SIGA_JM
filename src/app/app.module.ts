@@ -225,6 +225,7 @@ import { ComunicaInfoEconomicaComponent } from "./features/sjcs/comunicaciones/c
 import { ComunicaCargaComponent } from "./features/sjcs/comunicaciones/comunica-carga/comunica-carga.component";
 import { ComunicaResolucionesComponent } from "./features/sjcs/comunicaciones/comunica-resoluciones/comunica-resoluciones.component";
 import { ComunicaDesignacionesComponent } from "./features/sjcs/comunicaciones/comunica-designaciones/comunica-designaciones.component";
+import { MutualidadAbogaciaSeguroAccidentes } from "./features/censo/solicitudes-incorporacion/mutualidadAbogaciaSeguroAccidentes/mutualidad-abogacia-seguro-accidentes.component";
 
 //Consultas
 import { RecuperarConsultasComponent } from "./features/consultas/recuperar-consultas/recuperar-consultas.component";
@@ -253,6 +254,12 @@ import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.
 import { TrimPipePipe } from "./commons/trim-pipe/trim-pipe.pipe";
 import { CargaEtiquetasComponent } from "./features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component";
 import { DatosCvComponent } from "./features/censo/cargas-masivas/datos-cv/datos-cv.component";
+import { AgendaComponent } from "./features/agenda/agenda.component";
+import {
+  SelectButtonModule,
+  ColorPickerModule
+} from "../../node_modules/primeng/primeng";
+import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/ficha-calendario.component";
 import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
 import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-subtiposCV/informacion-gestion-subtipos-cv/informacion-gestion-subtipos-cv.component";
 import { NuevaSolicitudesModificacionComponent } from "./features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
@@ -282,6 +289,7 @@ import { NuevaSolicitudesModificacionComponent } from "./features/censo/modifica
     SolicitudesGenericasComponent,
     SolicitudesEspecificasComponent,
     SolicitudesIncorporacionComponent,
+    MutualidadAbogaciaSeguroAccidentes,
     AlterMutuaComponent,
     NuevaIncorporacionComponent,
     DocumentacionSolicitudesComponent,
@@ -461,6 +469,8 @@ import { NuevaSolicitudesModificacionComponent } from "./features/censo/modifica
     TrimPipePipe,
     CargaEtiquetasComponent,
     DatosCvComponent,
+    AgendaComponent,
+    FichaCalendarioComponent,
     CargasMasivasComponent,
     InformacionGestionSubtiposCvComponent,
     NuevaSolicitudesModificacionComponent
@@ -500,7 +510,10 @@ import { NuevaSolicitudesModificacionComponent } from "./features/censo/modifica
     ListboxModule,
     ProgressSpinnerModule,
     FileUploadModule,
-    DialogModule
+    DialogModule,
+    SelectButtonModule,
+    ColorPickerModule,
+    EditorModule
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

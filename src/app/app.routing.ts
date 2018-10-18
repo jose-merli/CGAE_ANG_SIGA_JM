@@ -181,6 +181,7 @@ import { GestionEntidad } from "./features/administracion/gestion-entidad/gestio
 import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component";
 import { DatosGenerales } from "./features/censo/datosPersonaJuridica/datos-generales/datos-generales.component";
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
+import { MutualidadAbogaciaSeguroAccidentes } from "./features/censo/solicitudes-incorporacion/mutualidadAbogaciaSeguroAccidentes/mutualidad-abogacia-seguro-accidentes.component";
 
 // CENSO II
 import { EdicionCurricularesComponent } from "./features/censo/ficha-colegial/edicionDatosCurriculares/edicionCurriculares.component";
@@ -191,6 +192,7 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
 import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.component";
 import { CargaEtiquetasComponent } from "./features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component";
 import { DatosCvComponent } from "./features/censo/cargas-masivas/datos-cv/datos-cv.component";
+import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/ficha-calendario.component";
 import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
 import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-subtiposCV/informacion-gestion-subtipos-cv/informacion-gestion-subtipos-cv.component";
 import { NuevaSolicitudesModificacionComponent } from "./features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
@@ -226,6 +228,11 @@ const appRoutes: Routes = [
   {
     path: "fichaColegial",
     component: FichaColegialComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "mutualidadSeguroAccidentes",
+    component: MutualidadAbogaciaSeguroAccidentes,
     canActivate: [AuthGuard]
   },
   {
@@ -937,6 +944,14 @@ const appRoutes: Routes = [
   {
     path: "bandejaEntrada",
     component: BandejaEntradaComponent,
+    canActivate: [AuthGuard]
+  },
+
+  //Agenda
+
+  {
+    path: "fichaCalendario",
+    component: FichaCalendarioComponent,
     canActivate: [AuthGuard]
   },
 
