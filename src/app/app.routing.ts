@@ -28,7 +28,7 @@ import { MediadoresComponent } from "./features/censo/mediadores/mediadores.comp
 import { CargasPeriodicasComponent } from "./features/censo/cargas-periodicas/cargas-periodicas.component";
 import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/configurar-perfil.component";
 import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
-import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/gestion-subtiposCV.component";
+import { TipoCurricularComponent } from "./features/censo/gestion-subtiposCV/tipo-curricular.component";
 import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
 import { DetalleIntegranteComponent } from "./features/censo/datosPersonaJuridica/datos-integrantes/detalleIntegrante/detalleIntegrante.component";
 import { AccesoFichaPersonaComponent } from "./features/censo/datosPersonaJuridica/accesoFichaPersona/accesoFichaPersona.component";
@@ -362,7 +362,7 @@ const appRoutes: Routes = [
   },
   {
     path: "gestionSubtiposCV",
-    component: GestionSubtiposCVComponent,
+    component: TipoCurricularComponent,
     canActivate: [AuthGuard]
   },
   {

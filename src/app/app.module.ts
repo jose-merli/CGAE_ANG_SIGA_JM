@@ -84,7 +84,7 @@ import { MediadoresComponent } from "./features/censo/mediadores/mediadores.comp
 import { CargasPeriodicasComponent } from "./features/censo/cargas-periodicas/cargas-periodicas.component";
 import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/configurar-perfil.component";
 import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
-import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/gestion-subtiposCV.component";
+import { TipoCurricularComponent } from "./features/censo/gestion-subtiposCV/tipo-curricular.component";
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
 import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
 import { CommonModule } from "@angular/common";
@@ -255,7 +255,7 @@ import { CargaEtiquetasComponent } from "./features/censo/cargas-masivas/carga-e
 import { DatosCvComponent } from "./features/censo/cargas-masivas/datos-cv/datos-cv.component";
 import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
 import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-subtiposCV/informacion-gestion-subtipos-cv/informacion-gestion-subtipos-cv.component";
-import { NuevaSolicitudesModificacionComponent } from './features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component';
+import { NuevaSolicitudesModificacionComponent } from "./features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
 
 @NgModule({
   declarations: [
@@ -299,7 +299,7 @@ import { NuevaSolicitudesModificacionComponent } from './features/censo/modifica
     CargasPeriodicasComponent,
     ConfigurarPerfilComponent,
     CensoDocumentacionComponent,
-    GestionSubtiposCVComponent,
+    TipoCurricularComponent,
     BusquedaColegiadosComponentNew,
     BusquedaPersonasJuridicas,
     DatosGenerales,
@@ -529,4 +529,4 @@ import { NuevaSolicitudesModificacionComponent } from './features/censo/modifica
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

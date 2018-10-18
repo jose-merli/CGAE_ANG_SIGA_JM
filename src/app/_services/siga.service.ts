@@ -240,7 +240,10 @@ export class SigaServices {
     alterMutua_solicitudAlter: "alterMutua/solicitudAlter",
     solicitudModificacion_tipoModificacion:
       "solicitudModificacion/tipoModificacion",
-    solicitudModificacion_estado: "solicitudModificacion/estado"
+    solicitudModificacion_estado: "solicitudModificacion/estado",
+    tipoCurricular_categoriaCurricular: "tipoCurricular/categoriaCurricular",
+    tipoCurricular_search: "tipoCurricular/search",
+    tipoCurricular_createTipoCurricular: "tipoCurricular/createTipoCurricular"
   };
 
   private menuToggled = new Subject<any>();
