@@ -79,9 +79,9 @@
           [filter]="true" filterMatchMode="contains">
 
           <ng-template *ngIf="col.field == 'numeroIntegrantes'" let-dato="rowData" pTemplate="body">
-            <div class="input-group">
+            <div [pTooltip]="obtenerNombreIntegrantes(dato)" tooltipPosition="top" class="input-group">
               <span class="input-group">
-                <button pButton type="button" [pTooltip]="obtenerNombreIntegrantes(dato)" [label]="obtenerIntegrantes(dato)" tooltipPosition="top"></button> &nbsp;&nbsp;
+                <button pButton type="button" [label]="obtenerIntegrantes(dato)"></button> &nbsp;&nbsp;
               </span>
             </div>
           </ng-template>
@@ -130,9 +130,9 @@
           [filter]="true" filterMatchMode="contains">
 
           <ng-template *ngIf="col.field == 'numeroIntegrantes'" let-dato="rowData" pTemplate="body">
-            <div class="input-group">
+            <div class="input-group" style="display:inline-block;">
               <span class="input-group">
-                <button pButton type="button" [pTooltip]="obtenerNombreIntegrantes(dato)" [label]="obtenerIntegrantes(dato)" tooltipPosition="top"></button> &nbsp;&nbsp;
+                <button pButton type="button" [pTooltip]="obtenerNombreIntegrantes(dato)" tooltipPosition="top" [label]="obtenerIntegrantes(dato)"></button> &nbsp;&nbsp;
               </span>
             </div>
           </ng-template>
