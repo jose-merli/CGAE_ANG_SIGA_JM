@@ -90,7 +90,6 @@
               <button pButton type="button" [label]="obtenerIntegrantes(dato)"></button> &nbsp;&nbsp;
             </div>
           </ng-template>
-
           <ng-template *ngIf="col.field == 'fechaConstitucion'" let-dato="rowData" pTemplate="body">
             <label>{{ dato.fechaConstitucion | date: 'dd/MM/yyyy'}}</label>
           </ng-template>
