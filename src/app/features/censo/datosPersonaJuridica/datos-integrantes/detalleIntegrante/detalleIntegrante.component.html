@@ -213,7 +213,8 @@
         </div>
         <div class="form-group col-lg-2 col-md-4">
           <label>{{"censo.consultaComponentesJuridicos.literal.Participacion" | translate}}</label>
-          <input type="text" class="form-control" [(disabled)]="historico" [(ngModel)]="body.capitalSocial" pInputText>
+          <input type="text" class="form-control" [(disabled)]="historico" [(ngModel)]="body.capitalSocial" ui-number-mask="3" (ngModelChange)="onChange($event)"
+            pInputText>
         </div>
 
 
@@ -228,4 +229,9 @@
     <button *ngIf="editar" (click)="guardar();" pButton type="button" icon="	fa fa-edit " [(disabled)]="historico" iconPos="left"
       label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
   </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+  <div class="loader"></div>
 </div>
