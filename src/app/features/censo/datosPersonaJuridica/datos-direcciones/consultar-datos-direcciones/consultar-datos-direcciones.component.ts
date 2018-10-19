@@ -112,7 +112,15 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
           this.body.nombrePoblacion !== null &&
           this.body.nombrePoblacion !== undefined
         ) {
-          this.getComboPoblacion(this.body.nombrePoblacion.substring(0, 3));
+          if (this.checkOtraProvincia) {
+            this.comboPoblacion = [];
+            this.comboPoblacion.push({
+              label: this.body.nombrePoblacion,
+              value: this.body.idPoblacion
+            });
+          } else {
+            this.getComboPoblacion(this.body.nombrePoblacion.substring(0, 3));
+          }
         }
         //else {
 
@@ -241,6 +249,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       .subscribe(
         n => {
           this.comboPoblacion = n.combooItems;
+
           this.getLabelbyFilter(this.comboPoblacion);
           this.dropdown.filterViewChild.nativeElement.value = this.poblacionBuscada;
         },
@@ -420,8 +429,10 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.isDisabledPoblacion = false;
         }
       }
-      this.body.idPoblacion = "";
-      this.provinciaSelecionada = "";
+
+      //this.body.idPoblacion = "";
+
+      //this.provinciaSelecionada = "";
       this.isDisabledProvincia = true;
       this.onChangeCodigoPostal();
       this.body.otraProvincia = "0";

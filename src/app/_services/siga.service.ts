@@ -33,7 +33,7 @@ export class SigaServices {
     usuario: "usuario",
     usuario_logeado: "usuario/logeado",
     instituciones: "instituciones",
-    institucionActual:"getInstitucionActual",
+    institucionActual: "getInstitucionActual",
     perfiles: "perfiles",
     diccionarios: "diccionarios",
     usuarios_rol: "usuarios/rol",
@@ -54,6 +54,7 @@ export class SigaServices {
     parametros_update: "parametros/update",
     parametros_historico: "parametros/historico",
     etiquetas_lenguaje: "etiquetas/lenguaje",
+    etiquetas_lenguajeFiltrado: "etiquetas/lenguajeFiltrado",
     etiquetas_search: "etiquetas/search",
     etiquetas_update: "etiquetas/update",
     contadores_search: "contadores/search",
@@ -138,7 +139,7 @@ export class SigaServices {
     integrantes_search: "busquedaPerJuridica/datosIntegrantesSearch",
     integrantes_tipoColegio: "tarjetaIntegrantes/tipoColegio",
     integrantes_provincias: "tarjetaIntegrantes/provincias",
-    integrantes_provinciaColegio:"tarjetaIntegrantes/provinciaColegio",
+    integrantes_provinciaColegio: "tarjetaIntegrantes/provinciaColegio",
     integrantes_cargos: "tarjetaIntegrantes/cargos",
     direcciones_search: "busquedaPerJuridica/datosDireccionesSearch",
     direcciones_update: "tarjetaDirecciones/update",
@@ -150,7 +151,8 @@ export class SigaServices {
     direcciones_comboTipoDireccion: "tarjetaDirecciones/tipoDireccion",
     integrantes_update: "tarjetaIntegrantes/update",
     integrantes_insert: "tarjetaIntegrantes/create",
-    integrantes_delete: "tarjetaIntegrantes/delete"
+    integrantes_delete: "tarjetaIntegrantes/delete",
+    usuario_cambioIdioma: "usuario/cambioIdioma"
   };
 
   private menuToggled = new Subject<any>();
@@ -200,9 +202,9 @@ export class SigaServices {
     return this.httpbackend
       .get(
         environment.newSigaUrl +
-          this.endpoints[service] +
-          "?institucion=" +
-          institucion
+        this.endpoints[service] +
+        "?institucion=" +
+        institucion
       )
       .map(response => {
         return response;

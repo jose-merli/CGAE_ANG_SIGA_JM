@@ -80,8 +80,9 @@
 
               <div class="form-group col-lg-6 col-md-6">
                 <label>Provincia</label>
+                <!-- (onChange)="onChangeProvincia()" -->
                 <p-dropdown class="select-form" [(ngModel)]='provinciaSelecionada' [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"
-                  [(disabled)]="isDisabledProvincia" [options]="comboProvincia" (onChange)="onChangeProvincia()">
+                  [(disabled)]="isDisabledProvincia" [options]="comboProvincia">
                 </p-dropdown>
               </div>
 
