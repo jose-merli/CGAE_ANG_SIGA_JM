@@ -6,6 +6,8 @@ import { Message } from "primeng/components/common/api";
 import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
 import { DatosIntegrantesItem } from "../../../../../models/DatosIntegrantesItem";
 import { DatosIntegrantesObject } from "../../../../../models/DatosIntegrantesObject";
+import { TranslateService } from "./../../../../../commons/translate/translation.service";
+
 /*** COMPONENTES ***/
 
 @Component({
@@ -76,7 +78,7 @@ export class DetalleIntegranteComponent implements OnInit {
   table;
   selectedDatos;
 
-  constructor(private sigaServices: SigaServices, private router: Router) {}
+  constructor(private sigaServices: SigaServices, private router: Router, private translateService: TranslateService) {}
 
   ngOnInit() {
     if (sessionStorage.getItem("historicoInt") != null) {
@@ -478,6 +480,7 @@ export class DetalleIntegranteComponent implements OnInit {
   }
 
   guardar() {
+    //this.progressSpinner = true;
     if (
       sessionStorage.getItem("nIntegrante") != null ||
       sessionStorage.getItem("nIntegrante") != undefined
@@ -486,6 +489,15 @@ export class DetalleIntegranteComponent implements OnInit {
     } else {
       this.updateIntegrante();
     }
+  }
+
+  showSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant("general.message.accion.realizada")
+    });
   }
 
   showFail(message: string) {
@@ -532,7 +544,7 @@ export class DetalleIntegranteComponent implements OnInit {
     ) {
       // comprueba si es numérico + permite el 0 como valor y que este vacio el campo
       if (
-        Number(this.body.capitalSocial) ||
+        this.body.capitalSocial ||
         this.body.capitalSocial == "" ||
         this.body.capitalSocial == "0"
       ) {
@@ -563,12 +575,14 @@ export class DetalleIntegranteComponent implements OnInit {
         .subscribe(
           data => {
             this.progressSpinner = false;
+            this.showSuccess();
           },
           err => {
             console.log(err);
             this.progressSpinner = false;
           },
           () => {
+            this.progressSpinner = false;
             this.backTo();
           }
         );
@@ -576,6 +590,8 @@ export class DetalleIntegranteComponent implements OnInit {
       this.showFail(
         "El campo Participación debe ser numérico y menor o igual que 100"
       );
+
+      this.progressSpinner = false;
     }
   }
 
@@ -639,7 +655,7 @@ export class DetalleIntegranteComponent implements OnInit {
         this.body.capitalSocial != null
       ) {
         if (
-          Number(this.body.capitalSocial) ||
+          this.body.capitalSocial ||
           this.body.capitalSocial == "" ||
           this.body.capitalSocial == "0"
         ) {
@@ -790,7 +806,7 @@ export class DetalleIntegranteComponent implements OnInit {
         this.body.capitalSocial != null
       ) {
         if (
-          Number(this.body.capitalSocial) ||
+          this.body.capitalSocial ||
           this.body.capitalSocial == "" ||
           this.body.capitalSocial == "0"
         ) {
@@ -899,5 +915,10 @@ export class DetalleIntegranteComponent implements OnInit {
     this.descripcionProvincia = this.provinciasArray.find(
       item => item.value === this.body.idProvincia
     );
+  }
+
+  onChange(event) {
+    console.log("fo", event.replace(".", ","));
+    this.body.capitalSocial = event.replace(".", ",");
   }
 }
