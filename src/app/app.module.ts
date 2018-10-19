@@ -251,6 +251,8 @@ import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.
 import { TrimPipePipe } from "./commons/trim-pipe/trim-pipe.pipe";
 import { CargaEtiquetasComponent } from './features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component';
 import { DatosCvComponent } from './features/censo/cargas-masivas/datos-cv/datos-cv.component';
+import { FormacionComponent } from './features/formacion/formacion.component';
+import { BusquedaCursosComponent } from './features/formacion/busqueda-cursos/busqueda-cursos.component';
 
 @NgModule({
   declarations: [
@@ -453,7 +455,9 @@ import { DatosCvComponent } from './features/censo/cargas-masivas/datos-cv/datos
     ErrorAccesoComponent,
     TrimPipePipe,
     CargaEtiquetasComponent,
-    DatosCvComponent
+    DatosCvComponent,
+    FormacionComponent,
+    BusquedaCursosComponent
   ],
   imports: [
     BrowserModule,

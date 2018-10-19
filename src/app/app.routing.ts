@@ -189,6 +189,7 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
 import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.component";
 import { CargaEtiquetasComponent } from "./features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component";
 import { DatosCvComponent } from "./features/censo/cargas-masivas/datos-cv/datos-cv.component";
+import { BusquedaCursosComponent } from "./features/formacion/busqueda-cursos/busqueda-cursos.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -999,6 +1000,11 @@ const appRoutes: Routes = [
   {
     path: "errorAcceso",
     component: ErrorAccesoComponent
+  },
+  {
+    path: "busquedaCursos",
+    component: BusquedaCursosComponent,
+    canActivate : [AuthGuard]
   },
   { path: " ", redirectTo: "home" }
 ];

@@ -220,7 +220,13 @@ export class SigaServices {
     cargasMasivas_searchEtiquetas: "cargasMasivas/searchEtiquetas",
     cargasMasivasEtiquetas_uploadFile: "cargasMasivasEtiquetas/uploadFile",
     cargasMasivas_downloadOriginalFile: "cargasMasivas/downloadOriginalFile",
-    cargasMasivas_downloadLogFile: "cargasMasivas/downloadLogFile"
+    cargasMasivas_downloadLogFile: "cargasMasivas/downloadLogFile",
+
+    //Formación
+    busquedaCursos_visibilidadCursos: "busquedaCursos/visibilidadCursos",
+    busquedaCursos_estadosCursos: "busquedaCursos/estadosCursos",
+    busquedaCursos_temasCursos: "busquedaCursos/temasCursos",
+    busquedaCursos_search: "busquedaCursos/search"
   };
 
   private menuToggled = new Subject<any>();
