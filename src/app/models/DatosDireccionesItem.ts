@@ -27,5 +27,7 @@ export class DatosDireccionesItem {
   otraProvincia: String;
   motivo: String;
   esColegiado: boolean;
+  nombrepartido: String;
+  poblacionExtranjera: String;
   constructor() {}
 }

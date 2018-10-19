@@ -24,7 +24,7 @@
         <div class="card-body p-0">
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" selectionMode="single" [value]="datosBuscar"
                 [editable]="true" [(selection)]="filaSelecionadaTabla" [responsive]="true" #table class="tabla-listado" [sortOrder]="1"
-                [paginator]="activarPaginacionBuscar()" paginatorPosition="both" [rows]="selectedItem" [editable]="true" (onRowSelect)="onRowSelect($event)">
+                [paginator]="activarPaginacionBuscar()" paginatorPosition="both" [rows]="selectedItem" [editable]="true" (onRowSelect)="onRowSelect(filaSelecionadaTabla)">
                 <p-column *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true"
                     filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
                     <ng-template *ngIf="col.field == 'valor'" let-dato="rowData" pTemplate="body">
@@ -53,8 +53,6 @@
                 <p-footer>
                     <div *ngIf="activarPaginacionBuscar() == true" class="text-right main-button">
                         <!-- misma funcion de disabled para botones de restablecer  y guardar-->
-                        <button (click)="isRestablecer()" pButton type="button" [(disabled)]="!isHabilitadoSave" icon="fa fa-undo " iconPos="left"
-                            label="{{'general.message.ocultarHistorico' | translate}}"></button>
                         <button (click)="isGuardar()" pButton type="button" [(disabled)]="!isHabilitadoSave" icon="fa fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
                         <button (click)="isHistorico()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
                         <button (click)="confirmarEliminar(filaSelecionadaTabla)" pButton type="button" [disabled]="isHabilitadoEliminar()" icon="fa fa-trash-alt "

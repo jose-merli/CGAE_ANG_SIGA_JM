@@ -28,10 +28,7 @@
             <label>{{"censo.busquedaComisiones.literal.cargos" | translate}}
               <span>{{ body.cargo }}</span>
             </label>
-            <label>{{"censo.busquedaClientes.literal.liquidacion" | translate}}
-              <span> {{ body.liquidacionComoSociedad }} </span>
-            </label>
-            <label>{{"censo.consultaDatosGenerales.literal.ejerciente" | translate}}
+            <label>{{"censo.fichaIntegrantes.literal.estado" | translate}}
               <span> {{ body.ejerciente }} </span>
             </label>
             <label>{{"censo.consultaComponentesJuridicos.literal.Participacion" | translate}}
@@ -40,14 +37,14 @@
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}" class="pull-right"></i>
           </div>
           <div *ngIf="!only && searchIntegrantes.datosIntegrantesItem.length == 0" class="d-flex justify-content-between">
-            <label>{{"censo.datosDireccion.literal.numero.integrantes" | translate}}:
+            <label>{{"censo.datosDireccion.literal.numero.integrantes" | translate}}
               <span>{{ searchIntegrantes.datosIntegrantesItem.length }}</span>
             </label>
 
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}" class="pull-right"></i>
           </div>
           <div *ngIf="!only && searchIntegrantes.datosIntegrantesItem.length >3" class="d-flex justify-content-between">
-            <label>{{"censo.datosDireccion.literal.numero.integrantes" | translate}}:
+            <label>{{"censo.datosDireccion.literal.numero.integrantes" | translate}}
               <span>{{ searchIntegrantes.datosIntegrantesItem.length }}</span>
             </label>
 
@@ -105,7 +102,7 @@
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionartodo" name="groupname"></p-checkbox>
+              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
             </div>
             <label class="ml-3 seleccionMultiple" [ngClass]="{ ' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple();
             selectedDatos=false">
@@ -118,19 +115,20 @@
       </p-dataTable>
 
       <br>
-      <div class="card-footer">
-        <div class="text-right main-button">
 
-
-          <button *ngIf="historico" (click)="search()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
-          <button *ngIf="!historico" (click)="searchHistorico()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-          <button *ngIf="selectedDatos && selectedDatos !='' && historico==false" [(disabled)]="camposDesactivados" (click)="borrar(selectedDatos); selectedDatos=false"
-            pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-          <button (click)="anadirIntegrante()" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-plus" iconPos="left"
-            label="{{ 'general.boton.new' | translate}}"></button>
-        </div>
-      </div>
       <!--END DATOS GENERALES-->
+    </div>
+    <div *ngIf="esFichaActiva('integrantes')" class="card-footer">
+      <div class="text-right main-button">
+
+
+        <button *ngIf="historico" (click)="search()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
+        <button *ngIf="!historico" (click)="searchHistorico()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
+        <button *ngIf="selectedDatos && selectedDatos !='' && historico==false" [(disabled)]="camposDesactivados" (click)="borrar(selectedDatos); selectedDatos=false"
+          pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+        <button (click)="anadirIntegrante()" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-plus" iconPos="left"
+          label="{{ 'general.boton.new' | translate}}"></button>
+      </div>
     </div>
   </div>
 </div>

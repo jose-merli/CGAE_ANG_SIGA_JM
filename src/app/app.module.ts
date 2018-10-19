@@ -84,7 +84,7 @@ import { MediadoresComponent } from "./features/censo/mediadores/mediadores.comp
 import { CargasPeriodicasComponent } from "./features/censo/cargas-periodicas/cargas-periodicas.component";
 import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/configurar-perfil.component";
 import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
-import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/gestion-subtiposCV.component";
+import { TipoCurricularComponent } from "./features/censo/gestion-subtiposCV/tipo-curricular.component";
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
 import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
 import { CommonModule } from "@angular/common";
@@ -98,9 +98,11 @@ import { DatosIntegrantesComponent } from "./features/censo/datosPersonaJuridica
 import { DetalleIntegranteComponent } from "./features/censo/datosPersonaJuridica/datos-integrantes/detalleIntegrante/detalleIntegrante.component";
 import { DatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/datos-direcciones.component";
 import { ConsultarDatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/consultar-datos-direcciones/consultar-datos-direcciones.component";
+import { MutualidadAbogaciaPlanUniversal } from "./features/censo/solicitudes-incorporacion/mutualidadDeLaAbogaciaPlanUniversal/mutualidad-abogacia-plan-universal.component";
 
 // Modulo de administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
+import { CatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros-classique/catalogos-maestros-classique.component";
 import { EditarCatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros/editarCatalogosMaestros/editarCatalogosMaestros.component";
 import { GestionContadoresComponent } from "./features/administracion/contadores/gestion-contadores/gestion-contadores.component";
 import { ContadoresComponent } from "./features/administracion/contadores/contadores.component";
@@ -223,6 +225,7 @@ import { ComunicaInfoEconomicaComponent } from "./features/sjcs/comunicaciones/c
 import { ComunicaCargaComponent } from "./features/sjcs/comunicaciones/comunica-carga/comunica-carga.component";
 import { ComunicaResolucionesComponent } from "./features/sjcs/comunicaciones/comunica-resoluciones/comunica-resoluciones.component";
 import { ComunicaDesignacionesComponent } from "./features/sjcs/comunicaciones/comunica-designaciones/comunica-designaciones.component";
+import { MutualidadAbogaciaSeguroAccidentes } from "./features/censo/solicitudes-incorporacion/mutualidadAbogaciaSeguroAccidentes/mutualidad-abogacia-seguro-accidentes.component";
 
 //Consultas
 import { RecuperarConsultasComponent } from "./features/consultas/recuperar-consultas/recuperar-consultas.component";
@@ -249,10 +252,19 @@ import { ServiciosInteresComponent } from "./features/censo/datosPersonaJuridica
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
 import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.component";
 import { TrimPipePipe } from "./commons/trim-pipe/trim-pipe.pipe";
-import { CargaEtiquetasComponent } from './features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component';
-import { DatosCvComponent } from './features/censo/cargas-masivas/datos-cv/datos-cv.component';
-import { FormacionComponent } from './features/formacion/formacion.component';
-import { BusquedaCursosComponent } from './features/formacion/busqueda-cursos/busqueda-cursos.component';
+import { FormacionComponent } from "./features/formacion/formacion.component";
+import { BusquedaCursosComponent } from "./features/formacion/busqueda-cursos/busqueda-cursos.component";
+import { CargaEtiquetasComponent } from "./features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component";
+import { DatosCvComponent } from "./features/censo/cargas-masivas/datos-cv/datos-cv.component";
+import { AgendaComponent } from "./features/agenda/agenda.component";
+import {
+  SelectButtonModule,
+  ColorPickerModule
+} from "../../node_modules/primeng/primeng";
+import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/ficha-calendario.component";
+import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
+import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-subtiposCV/informacion-gestion-subtipos-cv/informacion-gestion-subtipos-cv.component";
+import { NuevaSolicitudesModificacionComponent } from "./features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
 
 @NgModule({
   declarations: [
@@ -269,6 +281,7 @@ import { BusquedaCursosComponent } from './features/formacion/busqueda-cursos/bu
     ConfirmDialogComponent,
     // Censo
     AccesoFichaPersonaComponent,
+    MutualidadAbogaciaPlanUniversal,
     SearchColegiadosComponent,
     BusquedaGeneralComponent,
     SearchNoColegiadosComponent,
@@ -278,6 +291,7 @@ import { BusquedaCursosComponent } from './features/formacion/busqueda-cursos/bu
     SolicitudesGenericasComponent,
     SolicitudesEspecificasComponent,
     SolicitudesIncorporacionComponent,
+    MutualidadAbogaciaSeguroAccidentes,
     AlterMutuaComponent,
     NuevaIncorporacionComponent,
     DocumentacionSolicitudesComponent,
@@ -295,7 +309,7 @@ import { BusquedaCursosComponent } from './features/formacion/busqueda-cursos/bu
     CargasPeriodicasComponent,
     ConfigurarPerfilComponent,
     CensoDocumentacionComponent,
-    GestionSubtiposCVComponent,
+    TipoCurricularComponent,
     BusquedaColegiadosComponentNew,
     BusquedaPersonasJuridicas,
     DatosGenerales,
@@ -426,6 +440,7 @@ import { BusquedaCursosComponent } from './features/formacion/busqueda-cursos/bu
 
     // Administracion
     CatalogosMaestros,
+    CatalogosMaestrosComponent,
     GruposUsuarios,
     Etiquetas,
     AuditoriaUsuarios,
@@ -456,8 +471,15 @@ import { BusquedaCursosComponent } from './features/formacion/busqueda-cursos/bu
     TrimPipePipe,
     CargaEtiquetasComponent,
     DatosCvComponent,
+
     FormacionComponent,
-    BusquedaCursosComponent
+    BusquedaCursosComponent,
+
+    AgendaComponent,
+    FichaCalendarioComponent,
+    CargasMasivasComponent,
+    InformacionGestionSubtiposCvComponent,
+    NuevaSolicitudesModificacionComponent
   ],
   imports: [
     BrowserModule,
@@ -494,7 +516,10 @@ import { BusquedaCursosComponent } from './features/formacion/busqueda-cursos/bu
     ListboxModule,
     ProgressSpinnerModule,
     FileUploadModule,
-    DialogModule
+    DialogModule,
+    SelectButtonModule,
+    ColorPickerModule,
+    EditorModule
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
@@ -523,4 +548,4 @@ import { BusquedaCursosComponent } from './features/formacion/busqueda-cursos/bu
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

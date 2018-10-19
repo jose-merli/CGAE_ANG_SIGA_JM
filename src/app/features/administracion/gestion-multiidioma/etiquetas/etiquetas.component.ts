@@ -15,7 +15,7 @@ import { EtiquetaUpdateDto } from "../../../../models/EtiquetaUpdateDto";
 import { EtiquetaSearchDto } from "../../../../models/EtiquetaSearchDto";
 import { EtiquetaDto } from "../../../../models/EtiquetaDto";
 import { ControlAccesoDto } from "../../../../../app/models/ControlAccesoDto";
-
+import { Router } from "@angular/router";
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -58,7 +58,8 @@ export class Etiquetas extends SigaWrapper implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private router: Router
   ) {
     super(USER_VALIDATIONS);
   }
@@ -122,12 +123,12 @@ para poder filtrar el dato con o sin estos caracteres*/
       {
         field: "descripcionBusqueda",
         header:
-          "administracion.multidioma.etiquetas.literal.descripcionInstitucion"
+        "administracion.multidioma.etiquetas.literal.descripcionInstitucion"
       },
       {
         field: "descripcionTraduccion",
         header:
-          "administracion.multidioma.etiquetas.literal.descripcionIdiomaSeleccionado"
+        "administracion.multidioma.etiquetas.literal.descripcionIdiomaSeleccionado"
       }
     ];
 
@@ -170,8 +171,12 @@ para poder filtrar el dato con o sin estos caracteres*/
       () => {
         if (this.derechoAcceso == 3) {
           this.editar = true;
-        } else {
+        } else if (this.derechoAcceso == 2) {
           this.editar = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
         }
       }
     );
@@ -185,18 +190,18 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices
       .postPaginado("etiquetas_search", "?numPagina=1", this.bodySearch)
       .subscribe(
-        data => {
-          console.log(data);
-          this.searchParametros = JSON.parse(data["body"]);
-          this.datosTraduccion = this.searchParametros.etiquetaItem;
-          this.buscarSeleccionado = true;
+      data => {
+        console.log(data);
+        this.searchParametros = JSON.parse(data["body"]);
+        this.datosTraduccion = this.searchParametros.etiquetaItem;
+        this.buscarSeleccionado = true;
 
-          if (this.datosTraduccion.length == 0) this.paginacion = false;
-          else this.paginacion = true;
-        },
-        err => {
-          console.log(err);
-        }
+        if (this.datosTraduccion.length == 0) this.paginacion = false;
+        else this.paginacion = true;
+      },
+      err => {
+        console.log(err);
+      }
       );
   }
 
@@ -258,18 +263,18 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.sigaServices
         .post("etiquetas_update", this.elementosAGuardar[i])
         .subscribe(
-          data => {
-            console.log(data);
-          },
-          err => {
-            console.log(err);
-            this.showFail();
-          },
-          () => {
-            this.elementosAGuardar = [];
-            this.isBuscar();
-            this.table.reset();
-          }
+        data => {
+          console.log(data);
+        },
+        err => {
+          console.log(err);
+          this.showFail();
+        },
+        () => {
+          this.elementosAGuardar = [];
+          this.isBuscar();
+          this.table.reset();
+        }
         );
     }
     this.showSuccessEdit();

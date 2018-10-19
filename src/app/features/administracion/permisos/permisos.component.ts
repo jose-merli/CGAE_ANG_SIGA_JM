@@ -14,6 +14,7 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { SigaServices } from "./../../../_services/siga.service";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { PermisosAplicacionesDto } from "./../../../../app/models/PermisosAplicacionesDto";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-permisos",
@@ -70,7 +71,9 @@ export class PermisosComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private router: Router,
+    private translateService: TranslateService
   ) {
     this.formPermisos = this.formBuilder.group({
       grupo: null
@@ -141,8 +144,12 @@ para poder filtrar el dato con o sin estos caracteres*/
       () => {
         if (this.derechoAcceso == 3) {
           this.activacionEditar = true;
-        } else {
+        } else if (this.derechoAcceso == 2) {
           this.activacionEditar = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
         }
       }
     );
@@ -164,25 +171,25 @@ para poder filtrar el dato con o sin estos caracteres*/
         idGrupo: this.idGrupo
       })
       .subscribe(
-        data => {
-          let permisosTree = JSON.parse(data.body);
-          this.permisosTree = permisosTree.permisoItems;
-          this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
-          this.permisosTree.forEach(node => {
-            this.totalRecursive(node);
-          });
-          this.accesoTotal = 0;
-          this.accesoLectura = 0;
-          this.accesoDenegado = 0;
-          this.sinAsignar = 0;
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        this.permisosTree = permisosTree.permisoItems;
+        this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
+        this.permisosTree.forEach(node => {
+          this.totalRecursive(node);
+        });
+        this.accesoTotal = 0;
+        this.accesoLectura = 0;
+        this.accesoDenegado = 0;
+        this.sinAsignar = 0;
 
-          this.permisosTree.forEach(node => {
-            this.totalAccesosRecursive(node);
-          });
-        },
-        err => {
-          console.log(err);
-        }
+        this.permisosTree.forEach(node => {
+          this.totalAccesosRecursive(node);
+        });
+      },
+      err => {
+        console.log(err);
+      }
       );
 
     // this.permisosTree =

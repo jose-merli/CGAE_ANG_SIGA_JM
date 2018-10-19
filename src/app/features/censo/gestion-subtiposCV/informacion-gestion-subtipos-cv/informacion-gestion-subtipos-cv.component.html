@@ -1,0 +1,97 @@
+<!-- <app-my-iframe url="{{ url }}"></app-my-iframe> -->
+
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<!-- <div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>{{ "menu.censo" | translate}}
+    <i class="fa fa-angle-right"></i> {{ 'menu.cen.cargaMasivaDatosCurriculares' | translate }}
+  </p>
+</div> -->
+<div class="card">
+  <div class="card-body">
+    <p class="title-module" (click)="onHideInformacionSubtipoCV()">Criterios de búsqueda
+      <i *ngIf="!showInfoSubtipoCV" class="fa fa-angle-up float-right"></i>
+      <i (click)="showInfoSubtipoCV()" *ngIf="showDatosCv" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <div *ngIf="showInfoSubtipoCV" class="module vista-simple">
+
+      <div class="row">
+
+        <div class="form-group col-lg-3 col-md-3">
+          <label>Categoría curricular</label>
+          <input type="text" [disabled]="true" class="form-control" [(ngModel)]='body.tipoCV' pInputText>
+        </div>
+
+        <div class="form-group col-lg-3 col-md-3">
+          <label>Tipos curriculares</label>
+          <input type="text" [disabled]="true" class="form-control" [(ngModel)]='body.subtipo1' pInputText>
+        </div>
+
+        <div class="form-group col-lg-3 col-md-3">
+          <label>Nombre Subtipo Curriculares</label>
+          <input type="text" class="form-control" [(ngModel)]='body.subtipo2' pInputText>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="card-footer">
+    <div class="text-right main-button ">
+      <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
+      <button (click)="restore()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+    </div>
+  </div>
+</div>
+<div *ngIf="buscar" class="card mt-3">
+  <div class="card-body p-0">
+    <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+      [(selection)]="selectedDatos" (onRowSelect)="redirect(selectedDatos)" (onRowUnselect)="actualizarSeleccionados(selectedDatos)"
+      pageLinks="4" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="sortO"
+      [paginator]="activarPaginacion()" paginatorPosition="both" [rows]="selectedItem">
+      <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="{{'general.boton.search' | translate}}"
+        [filter]="true" filterMatchMode="contains">
+        <ng-template *ngIf="col.field == ''" let-dato="rowData" pTemplate="body">
+          <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]">
+        </ng-template>
+      </p-column>
+
+      <ng-template pTemplate="paginatorLeft">
+        <div class="mostrar d-flex text-right justify-content-end">
+          <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+          <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+          <label>{{ "general.message.mostrar" | translate}}</label>
+          <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+          <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+          <div class="ml-3 selectAll">
+            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
+          </div>
+          <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+            <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+
+        </div>
+      </ng-template>
+
+      <p-footer>
+        <div *ngIf="selectedDatos != ''" class="text-right main-button">
+          <button (click)="newElement()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+          <button (click)="removeElement(selectedDatos); selectedDatos=false" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
+            label="{{'general.boton.eliminar' | translate}}"></button>
+        </div>
+        <div *ngIf="selectedDatos == ''" class="text-right main-button">
+          <button (click)="newElement()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        </div>
+      </p-footer>
+    </p-dataTable>
+  </div>
+</div>
+
+
+<div class="mt-3 text-right main-button ">
+  <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="Volver"></button>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

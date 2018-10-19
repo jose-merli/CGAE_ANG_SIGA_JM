@@ -28,7 +28,7 @@ import { MediadoresComponent } from "./features/censo/mediadores/mediadores.comp
 import { CargasPeriodicasComponent } from "./features/censo/cargas-periodicas/cargas-periodicas.component";
 import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/configurar-perfil.component";
 import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
-import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/gestion-subtiposCV.component";
+import { TipoCurricularComponent } from "./features/censo/gestion-subtiposCV/tipo-curricular.component";
 import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
 import { DetalleIntegranteComponent } from "./features/censo/datosPersonaJuridica/datos-integrantes/detalleIntegrante/detalleIntegrante.component";
 import { AccesoFichaPersonaComponent } from "./features/censo/datosPersonaJuridica/accesoFichaPersona/accesoFichaPersona.component";
@@ -36,6 +36,7 @@ import { DatosBancariosComponent } from "./features/censo/datosPersonaJuridica/d
 import { ConsultarDatosBancariosComponent } from "./features/censo/datosPersonaJuridica/datos-bancarios/consultar-datos-bancarios/consultar-datos-bancarios.component";
 import { DatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/datos-direcciones.component";
 import { ConsultarDatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/consultar-datos-direcciones/consultar-datos-direcciones.component";
+import { MutualidadAbogaciaPlanUniversal } from "./features/censo/solicitudes-incorporacion/mutualidadDeLaAbogaciaPlanUniversal/mutualidad-abogacia-plan-universal.component";
 
 //Certificados
 import { ComunicacionInterprofesionalComponent } from "./features/certificados/comunicacion-interprofesional/comunicacion-interprofesional.component";
@@ -157,6 +158,7 @@ import { BandejaEntradaComponent } from "./features/comunicaciones/bandeja-entra
 
 // Administracion
 import { CatalogosMaestros } from "./features/administracion/catalogos-maestros/catalogos-maestros.component";
+import { CatalogosMaestrosComponent } from "./features/administracion/catalogos-maestros-classique/catalogos-maestros-classique.component";
 import { GruposUsuarios } from "./features/administracion/grupos-usuarios/grupos-usuarios.component";
 import { Etiquetas } from "./features/administracion/gestion-multiidioma/etiquetas/etiquetas.component";
 import { SeleccionarIdioma } from "./features/administracion/seleccionar-idioma/seleccionar-idioma.component";
@@ -179,6 +181,7 @@ import { GestionEntidad } from "./features/administracion/gestion-entidad/gestio
 import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component";
 import { DatosGenerales } from "./features/censo/datosPersonaJuridica/datos-generales/datos-generales.component";
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
+import { MutualidadAbogaciaSeguroAccidentes } from "./features/censo/solicitudes-incorporacion/mutualidadAbogaciaSeguroAccidentes/mutualidad-abogacia-seguro-accidentes.component";
 
 // CENSO II
 import { EdicionCurricularesComponent } from "./features/censo/ficha-colegial/edicionDatosCurriculares/edicionCurriculares.component";
@@ -190,6 +193,10 @@ import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.
 import { CargaEtiquetasComponent } from "./features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component";
 import { DatosCvComponent } from "./features/censo/cargas-masivas/datos-cv/datos-cv.component";
 import { BusquedaCursosComponent } from "./features/formacion/busqueda-cursos/busqueda-cursos.component";
+import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/ficha-calendario.component";
+import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
+import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-subtiposCV/informacion-gestion-subtipos-cv/informacion-gestion-subtipos-cv.component";
+import { NuevaSolicitudesModificacionComponent } from "./features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -225,6 +232,11 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: "mutualidadSeguroAccidentes",
+    component: MutualidadAbogaciaSeguroAccidentes,
+    canActivate: [AuthGuard]
+  },
+  {
     path: "edicionCurriculares",
     component: EdicionCurricularesComponent,
     canActivate: [AuthGuard]
@@ -234,7 +246,11 @@ const appRoutes: Routes = [
     component: EditarUsuarioComponent,
     canActivate: [AuthGuard]
   },
-
+  {
+    path: "MutualidadAbogaciaPlanUniversal",
+    component: MutualidadAbogaciaPlanUniversal,
+    canActivate: [AuthGuard]
+  },
   {
     path: "searchNoColegiados",
     component: BusquedaPersonasJuridicas,
@@ -244,7 +260,8 @@ const appRoutes: Routes = [
 
   {
     path: "busquedaNoColegiados",
-    component: BusquedaNoColegiadosComponent,
+    //component: BusquedaNoColegiadosComponent,
+    component: SearchNoColegiadosComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -326,6 +343,11 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: "nuevaSolicitudesModificacion",
+    component: NuevaSolicitudesModificacionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: "mediadores",
     component: MediadoresComponent,
     canActivate: [AuthGuard]
@@ -341,13 +363,14 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    //CensoDocumentacionComponent
     path: "censoDocumentacion",
-    component: CensoDocumentacionComponent,
+    component: CargasMasivasComponent,
     canActivate: [AuthGuard]
   },
   {
     path: "gestionSubtiposCV",
-    component: GestionSubtiposCVComponent,
+    component: TipoCurricularComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -378,6 +401,11 @@ const appRoutes: Routes = [
   {
     path: "datosCv",
     component: DatosCvComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "informacionGestionSubtipoCV",
+    component: InformacionGestionSubtiposCvComponent,
     canActivate: [AuthGuard]
   },
 
@@ -920,10 +948,19 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
 
+  //Agenda
+
+  {
+    path: "fichaCalendario",
+    component: FichaCalendarioComponent,
+    canActivate: [AuthGuard]
+  },
+
   // Administracion
   {
     path: "catalogosMaestros",
-    component: CatalogosMaestros,
+    //component: CatalogosMaestros,
+    component: CatalogosMaestrosComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -1004,7 +1041,7 @@ const appRoutes: Routes = [
   {
     path: "busquedaCursos",
     component: BusquedaCursosComponent,
-    canActivate : [AuthGuard]
+    canActivate: [AuthGuard]
   },
   { path: " ", redirectTo: "home" }
 ];

@@ -37,6 +37,9 @@ import { DatosBancariosItem } from "./../../../models/DatosBancariosItem";
 import { DatosBancariosObject } from "./../../../models/DatosBancariosObject";
 import { DomSanitizer } from "../../../../../node_modules/@angular/platform-browser";
 import { DatosGeneralesItem } from "../../../models/DatosGeneralesItem";
+import { DatosColegiadosObject } from "../../../models/DatosColegiadosObject";
+import { PersonaJuridicaItem } from "../../../models/PersonaJuridicaItem";
+import { PersonaJuridicaObject } from "../../../models/PersonaJuridicaObject";
 
 @Component({
   selector: "app-ficha-colegial",
@@ -50,6 +53,9 @@ export class FichaColegialComponent implements OnInit {
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   checkGeneralBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
+  colegialesObject: FichaColegialColegialesObject = new FichaColegialColegialesObject();
+  sociedadesBody: PersonaJuridicaObject = new PersonaJuridicaObject();
+  otrasColegiacionesBody: DatosColegiadosObject = new DatosColegiadosObject();
 
   idPersona: any;
   openFicha: boolean = false;
@@ -60,7 +66,9 @@ export class FichaColegialComponent implements OnInit {
   activarGuardarGenerales: boolean = false;
   selectAll: boolean = false;
   selectMultiple: boolean = false;
-
+  irTurnoOficio: any;
+  irExpedientes: any;
+  irRegTel: any;
   msgs: Message[];
 
   colsColegiales: any = [];
@@ -80,19 +88,18 @@ export class FichaColegialComponent implements OnInit {
   selectedItem: number = 10;
   camposDesactivados: boolean = false;
   datos: any[];
-  datosCurriculares: any[];
+  datosCurriculares: any[] = [];
 
   bodyDirecciones: DatosDireccionesItem;
   bodyDatosBancarios: DatosBancariosItem;
-  datosDirecciones: DatosDireccionesItem[];
-  datosBancarios: DatosBancariosItem[];
+  datosDirecciones: DatosDireccionesItem[] = [];
+  datosBancarios: DatosBancariosItem[] = [];
   searchDireccionIdPersona = new DatosDireccionesObject();
   searchDatosBancariosIdPersona = new DatosBancariosObject();
-
-  datosColegiales: any[];
-  datosColegiaciones: any[];
-  datosCertificados: any[];
-  datosSociedades: any[];
+  datosColegiales: FichaColegialColegialesItem[] = [];
+  datosColegiaciones: any[] = [];
+  datosCertificados: any[] = [];
+  datosSociedades: any[] = [];
   file: File = undefined;
   edadCalculada: any;
 
@@ -106,13 +113,14 @@ export class FichaColegialComponent implements OnInit {
   fechaNacimiento: Date;
   fechaAlta: Date;
   comisiones: boolean;
-
+  partidoJudicial: any;
   esNewColegiado: boolean = false;
   esColegiado: boolean;
   archivoDisponible: boolean = false;
   existeImagen: boolean = false;
   imagenPersona: any;
-
+  partidoJudicialObject: DatosDireccionesObject = new DatosDireccionesObject();
+  partidoJudicialItem: DatosDireccionesItem = new DatosDireccionesItem();
   // comboSexo: any[];
 
   @ViewChild("table")
@@ -201,6 +209,8 @@ export class FichaColegialComponent implements OnInit {
       this.onInitGenerales();
       this.onInitCurriculares();
       this.onInitColegiales();
+      this.onInitSociedades();
+      this.onInitOtrasColegiaciones();
     } else {
       this.generalBody = new FichaColegialGeneralesItem();
       this.colegialesBody = new FichaColegialColegialesItem();
@@ -218,33 +228,37 @@ export class FichaColegialComponent implements OnInit {
       this.onInitDatosBancarios();
     }
 
+    this.onInitSociedades();
+
+    this.onInitOtrasColegiaciones();
+
     // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
     this.colsColegiales = [
       {
-        field: "fecha",
+        field: "incorporacion",
         header: "censo.consultaDatosGenerales.literal.fechaIncorporacion"
       },
       {
-        field: "Estado",
+        field: "estadoColegial",
         header: "censo.fichaIntegrantes.literal.estado"
       },
       {
-        field: "Residente",
+        field: "residenteInscrito",
         header: "censo.ws.literal.residente"
       },
       {
-        field: "Observaciones",
+        field: "observaciones",
         header: "gratuita.mantenimientoLG.literal.observaciones"
       }
     ];
 
     this.colsColegiaciones = [
       {
-        field: "numIdentificacion",
+        field: "nif",
         header: "censo.consultaDatosColegiacion.literal.numIden"
       },
       {
-        field: "nombreApellidos",
+        field: "nombre",
         header: "administracion.usuarios.literal.nombre"
       },
       {
@@ -252,27 +266,27 @@ export class FichaColegialComponent implements OnInit {
         header: "censo.busquedaClientesAvanzada.literal.nColegiado"
       },
       {
-        field: "estado",
+        field: "estadoColegial",
         header: "censo.fichaIntegrantes.literal.estado"
       },
       {
-        field: "residente",
+        field: "residenteInscrito",
         header: "censo.ws.literal.residente"
       },
       {
-        field: "fNacimiento",
+        field: "fechaNacimiento",
         header: "censo.consultaDatosColegiacion.literal.fechaNac"
       },
       {
-        field: "correoElectronico",
+        field: "correo",
         header: "censo.datosDireccion.literal.correo"
       },
       {
-        field: "telFijo",
+        field: "telefono",
         header: "censo.datosDireccion.literal.telefonoFijo"
       },
       {
-        field: "telMovil",
+        field: "movil",
         header: "censo.datosDireccion.literal.telefonoMovil"
       }
     ];
@@ -705,8 +719,12 @@ export class FichaColegialComponent implements OnInit {
     if (this.esNewColegiado) {
       this.abreCierraFicha("generales");
     }
+    this.obtenerPartidoJudicial();
   }
 
+  getPartidoJudicial() {
+    return this.partidoJudicial;
+  }
   // getComboSexo() {
   //   this.comboSexo = [
   //     { label: "", value: null },
@@ -715,6 +733,40 @@ export class FichaColegialComponent implements OnInit {
   //   ];
   // }
 
+  // fichaDatosGenerales_partidoJudicialSearch LLAMAR AQUI PARA CONSEGUIR PARTIDO JUDICIAL PARA PONER EN TOOLTIP
+  obtenerPartidoJudicial() {
+    this.sigaServices
+      // .get("fichaDatosGenerales_partidoJudicialSearch")
+      .postPaginado(
+        "fichaDatosGenerales_partidoJudicialSearch",
+        "?numPagina=1",
+        this.generalBody
+      )
+      .subscribe(
+        data => {
+          this.partidoJudicialObject = JSON.parse(data["body"]);
+          // this.partidoJudicialItem = this.partidoJudicialObject.datosDireccionesItem[0];
+          // this.partidoJudicial = this.partidoJudicialItem.nombrepartido;
+          this.partidoJudicial = "";
+          for (let i in this.partidoJudicialObject.datosDireccionesItem) {
+            this.partidoJudicialItem = this.partidoJudicialObject.datosDireccionesItem[
+              i
+            ];
+            this.partidoJudicial =
+              this.partidoJudicial +
+              ",  " +
+              this.partidoJudicialItem.nombrepartido;
+          }
+          this.partidoJudicial = this.partidoJudicial.substring(
+            2,
+            this.partidoJudicial.length
+          );
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
   generalesGuardar() {
     this.progressSpinner = true;
     this.generalBody.nombre = this.generalBody.soloNombre;
@@ -1019,10 +1071,34 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       }
     );
+    this.searchColegiales();
   }
   restablecerColegiales() {
     this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
     this.colegialesBody = this.colegialesBody[0];
+  }
+
+  searchColegiales() {
+    // fichaDatosColegiales_datosColegialesSearch
+    this.sigaServices
+      .postPaginado(
+        "fichaDatosColegiales_datosColegialesSearch",
+        "?numPagina=1",
+        this.generalBody
+      )
+      .subscribe(
+        data => {
+          // this.datosColegiales = JSON.parse(data["body"]);
+          // this.datosColegiales = this.datosColegiales.colegiadoItem;
+
+          // this.datosColegiales = JSON.parse(data["body"]);
+          this.colegialesObject = JSON.parse(data["body"]);
+          this.datosColegiales = this.colegialesObject.colegiadoItem;
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
   // FIN DATOS COLEGIALES
   //
@@ -1044,10 +1120,34 @@ export class FichaColegialComponent implements OnInit {
   //
   //
   // MÉTODOS PARA OTRAS COLEGIACIONES
+  onInitOtrasColegiaciones() {
+    this.searchOtherCollegues();
+  }
+
   activarPaginacionOtrasColegiaciones() {
     if (!this.datosColegiaciones || this.datosColegiaciones.length == 0)
       return false;
     else return true;
+  }
+
+  searchOtherCollegues() {
+    this.sigaServices
+      .postPaginado(
+        "fichaColegialOtrasColegiaciones_searchOtherCollegues",
+        "?numPagina=1",
+        this.idPersona
+      )
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.otrasColegiacionesBody = JSON.parse(data["body"]);
+          this.datosColegiaciones = this.otrasColegiacionesBody.colegiadoItem;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        }
+      );
   }
   // FIN OTRAS COLEGIACIONES
   //
@@ -1074,6 +1174,11 @@ export class FichaColegialComponent implements OnInit {
       return false;
     else return true;
   }
+
+  redireccionarCerts() {
+    this.router.navigate(["/mantenimientoCertificados"]);
+  }
+
   // FIN CERTIFICADOS
   //
   //
@@ -1094,9 +1199,40 @@ export class FichaColegialComponent implements OnInit {
   //
   //
   // MÉTODOS PARA SOCIEDADES
+
+  onInitSociedades() {
+    this.searchSocieties();
+  }
+
   activarPaginacionSociedades() {
     if (!this.datosSociedades || this.datosSociedades.length == 0) return false;
     else return true;
+  }
+
+  searchSocieties() {
+    this.sigaServices
+      .postPaginado(
+        "fichaColegialSociedades_searchSocieties",
+        "?numPagina=1",
+        this.idPersona
+      )
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.sociedadesBody = JSON.parse(data["body"]);
+          this.datosSociedades = this.sociedadesBody.busquedaJuridicaItems;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  redireccionarSociedades(datos) {
+    // this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    sessionStorage.setItem("usuarioBody", JSON.stringify(datos));
+    this.router.navigate(["/fichaPersonaJuridica"]);
   }
   // FIN SOCIEDADES
   //
@@ -1220,6 +1356,10 @@ export class FichaColegialComponent implements OnInit {
     let newDireccion = new DatosDireccionesItem();
     sessionStorage.removeItem("direccion");
     sessionStorage.removeItem("editarDireccion");
+    sessionStorage.setItem(
+      "usuarioBody",
+      JSON.stringify(this.bodyDirecciones.idPersona)
+    );
     sessionStorage.setItem("editarDireccion", "false");
     this.router.navigate(["/consultarDatosDirecciones"]);
   }

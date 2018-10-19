@@ -12,6 +12,7 @@ import {
 } from "@angular/forms";
 import { Router } from "@angular/router";
 import { cardService } from "./../../../_services/cardSearch.service";
+import { Location } from "@angular/common";
 
 // import
 @Component({
@@ -25,7 +26,8 @@ export class DatosPersonaJuridicaComponent implements OnInit {
   constructor(
     public sigaServices: OldSigaServices,
     private cardService: cardService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {}
 
   ngOnInit() {
@@ -68,8 +70,8 @@ export class DatosPersonaJuridicaComponent implements OnInit {
     sessionStorage.removeItem("usuarioBody");
     this.cardService.searchNewAnnounce.next(null);
 
-    //this.location.back();
-    this.router.navigate(["searchNoColegiados"]);
+    this.location.back();
+    // this.router.navigate(["searchNoColegiados"]);
   }
 
   getFichasPosibles() {
