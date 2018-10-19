@@ -78,7 +78,11 @@ export class DetalleIntegranteComponent implements OnInit {
   table;
   selectedDatos;
 
-  constructor(private sigaServices: SigaServices, private router: Router, private translateService: TranslateService) {}
+  constructor(
+    private sigaServices: SigaServices,
+    private router: Router,
+    private translateService: TranslateService
+  ) {}
 
   ngOnInit() {
     if (sessionStorage.getItem("historicoInt") != null) {
@@ -413,16 +417,19 @@ export class DetalleIntegranteComponent implements OnInit {
     this.isDisabledApellidos2 = true;
     if (this.esColegiado) {
       this.isDisabledTipoColegio = true;
+      // El cole se puede modificar
+      this.isDisabledColegio = false;
       this.isDisabledProvincia = true;
-      this.isDisabledNumColegio = true;
-      this.isDisabledNumColegio = true;
+      this.isDisabledNumColegio = false;
     } else {
       this.isDisabledTipoColegio = false;
-      this.isDisabledProvincia = false;
+      // El cole se puede modificar
+      this.isDisabledColegio = false;
+      this.isDisabledProvincia = true;
       this.isDisabledNumColegio = false;
     }
 
-    this.isDisabledColegio = true;
+    // this.isDisabledColegio = true;
   }
 
   todoDisable() {
@@ -897,7 +904,9 @@ export class DetalleIntegranteComponent implements OnInit {
             }
           );
       } else {
-        this.showFail("El campo Participación debe ser numérico");
+        this.showFail(
+          "El campo Participación debe ser numérico y menor o igual que 100"
+        );
       }
     }
   }
