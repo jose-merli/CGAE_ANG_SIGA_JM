@@ -48,12 +48,12 @@
 <p-dialog [(visible)]="showIdioma" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500"
   [minWidth]="500">
   <p-header>
-    <label>censo.usuario.cambioidioma </label>
+    <label>{{'censo.usuario.cambioidioma' | translate}}</label>
   </p-header>
   <div class="row">
     <div class="form-group col-lg-8 col-md-8">
-      <label>censo.usuario.idioma </label>
-      <p-dropdown class="select-form" [options]="comboIdiomas" optionLabel="label" placeholder="Seleccione un idioma..."
+      <label>{{'censo.usuario.idioma' | translate}}</label>
+      <p-dropdown class="select-form" [options]="comboIdiomas" optionLabel="label" placeholder="{{'censo.placeHolder.idioma' | translate}}"
         [(ngModel)]="IdiomaSelected" (onChange)="idiomaChange($event)"></p-dropdown>
     </div>
   </div>
