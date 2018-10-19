@@ -35,7 +35,8 @@
       <span>{{item.institucion}}</span>
     </li>
     <li>Idioma:
-      <span>{{item.idioma}}</span>
+      <span>{{item.idioma}} <i class="fa fa-edit" (click)="mostrarPopUpIdioma()" style="cursor: pointer"></i>
+      </span>
     </li>
     <li>Última conexión:
       <span>{{item.ultimaConex}}</span>
@@ -43,3 +44,24 @@
     <li (click)="logout()" class="cerrar-sesion">Cerrar sesión</li>
   </ul>
 </div>
+
+<p-dialog [(visible)]="showIdioma" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500"
+  [minWidth]="500">
+  <p-header>
+    <label>censo.usuario.cambioidioma </label>
+  </p-header>
+  <div class="row">
+    <div class="form-group col-lg-8 col-md-8">
+      <label>censo.usuario.idioma </label>
+      <p-dropdown class="select-form" [options]="comboIdiomas" optionLabel="label" placeholder="Seleccione un idioma..."
+        [(ngModel)]="IdiomaSelected" (onChange)="idiomaChange($event)"></p-dropdown>
+    </div>
+  </div>
+  <p-footer>
+    <div class="text-right main-button ">
+      <button (click)="cancelar()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+      <button (click)="cambiarIdioma()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.submit' | translate}}"
+        [disabled]="disableGuardar()" pButton></button>
+    </div>
+  </p-footer>
+</p-dialog>
