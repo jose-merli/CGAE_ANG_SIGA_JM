@@ -604,7 +604,23 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           }
         }
       },
-      reject: () => {}
+      reject: () => {
+        this.revisionCuentas = false;
+
+        this.registroEditable = sessionStorage.getItem("editar");
+        if (this.registroEditable == "false") {
+          this.guardarRegistro();
+        } else {
+          // dependiendo de esta variable, se muestra o no la auditoria
+          this.body.motivo = undefined;
+          if (this.ocultarMotivo) {
+            this.editarRegistro();
+          } else {
+            this.displayAuditoria = true;
+            this.showGuardarAuditoria = false;
+          }
+        }
+      }
     });
   }
 

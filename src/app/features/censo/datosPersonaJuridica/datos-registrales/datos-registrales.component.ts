@@ -368,7 +368,7 @@ export class DatosRegistralesComponent implements OnInit {
       if (cadena != "") {
         var length: number = lengthCadena - cadena.length;
 
-        if (length == 0) {
+        if (length == 0 || length < 0) {
           return cadena;
         } else if (length >= 1) {
           for (let i = 0; i < length; i++) {
