@@ -35,8 +35,8 @@ import { DatosBancariosComponent } from "./features/censo/datosPersonaJuridica/d
 import { ConsultarDatosBancariosComponent } from "./features/censo/datosPersonaJuridica/datos-bancarios/consultar-datos-bancarios/consultar-datos-bancarios.component";
 import { DatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/datos-direcciones.component";
 import { ConsultarDatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/consultar-datos-direcciones/consultar-datos-direcciones.component";
-import { DatosCVComponent } from "./features/censo/datosCV/datosCV.component";
-import { CargaEtiquetasComponent } from "./features/censo/carga-etiquetas/carga-etiquetas.component";
+import { DatosCVComponent } from "./features/censo/datosCv/datosCv.component";
+import { CargaEtiquetasComponent } from "./features/censo/cargaEtiquetas/cargaEtiquetas.component";
 
 //Certificados
 import { ComunicacionInterprofesionalComponent } from "./features/certificados/comunicacion-interprofesional/comunicacion-interprofesional.component";
@@ -363,12 +363,12 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: "datosCV",
+    path: "datosCv",
     component: DatosCVComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: "carga-etiquetas",
+    path: "cargaEtiquetas",
     component: CargaEtiquetasComponent,
     canActivate: [AuthGuard]
   },

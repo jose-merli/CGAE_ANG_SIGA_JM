@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { OldSigaServices } from '../../../_services/oldSiga.service'
 
 @Component({
-  selector: 'app-datosCV',
-  templateUrl: './datosCV.component.html',
-  styleUrls: ['./datosCV.component.scss']
+  selector: 'app-datosCv',
+  templateUrl: './datosCv.component.html',
+  styleUrls: ['./datosCv.component.scss']
 })
 export class DatosCVComponent {
 
   url;
 
   constructor(public sigaServices: OldSigaServices) {
-    this.url = sigaServices.getOldSigaUrl("datosCV");
+    this.url = sigaServices.getOldSigaUrl("datosCv");
   }
 
   ngOnInit() {
