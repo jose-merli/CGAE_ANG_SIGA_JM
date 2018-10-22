@@ -594,8 +594,8 @@ export class DetalleIntegranteComponent implements OnInit {
       // comprueba si es numérico + permite el 0 como valor y que este vacio el campo
       if (
         this.body.capitalSocial ||
-        this.body.capitalSocial == "" ||
-        this.body.capitalSocial == "0"
+        this.body.capitalSocial == undefined ||
+        this.body.capitalSocial == 0
       ) {
         isParticipacionNumerico = true;
         updateIntegrante.capitalSocial = this.body.capitalSocial;
@@ -604,7 +604,7 @@ export class DetalleIntegranteComponent implements OnInit {
       }
     } else {
       isParticipacionNumerico = true;
-      updateIntegrante.capitalSocial = "";
+      updateIntegrante.capitalSocial = undefined;
     }
     if (this.body.idPersona != undefined && this.body.idPersona != null) {
       updateIntegrante.idPersona = this.body.idPersona;
@@ -613,11 +613,11 @@ export class DetalleIntegranteComponent implements OnInit {
       updateIntegrante.idComponente = this.body.idComponente;
     }
 
-    let numParticipacion = parseInt(this.body.capitalSocial);
+    let numParticipacion = this.body.capitalSocial;
 
     if (
       (isParticipacionNumerico && numParticipacion <= 100) ||
-      updateIntegrante.capitalSocial == ""
+      updateIntegrante.capitalSocial == undefined
     ) {
       this.sigaServices
         .postPaginado("integrantes_update", "?numPagina=1", updateIntegrante)
@@ -705,8 +705,8 @@ export class DetalleIntegranteComponent implements OnInit {
       ) {
         if (
           this.body.capitalSocial ||
-          this.body.capitalSocial == "" ||
-          this.body.capitalSocial == "0"
+          this.body.capitalSocial == undefined ||
+          this.body.capitalSocial == 0
         ) {
           isParticipacionNumerico = true;
           newIntegrante.capitalSocial = this.body.capitalSocial;
@@ -715,7 +715,7 @@ export class DetalleIntegranteComponent implements OnInit {
         }
       } else {
         isParticipacionNumerico = true;
-        newIntegrante.capitalSocial = "";
+        newIntegrante.capitalSocial = undefined;
       }
       if (
         this.body.idComponente != undefined &&
@@ -775,10 +775,10 @@ export class DetalleIntegranteComponent implements OnInit {
       } else {
         newIntegrante.tipo = "";
       }
-      let numParticipacion = parseInt(this.body.capitalSocial);
+      let numParticipacion = this.body.capitalSocial;
       if (
         (isParticipacionNumerico && numParticipacion <= 100) ||
-        newIntegrante.capitalSocial == ""
+        newIntegrante.capitalSocial == undefined
       ) {
         this.sigaServices
           .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
@@ -856,8 +856,8 @@ export class DetalleIntegranteComponent implements OnInit {
       ) {
         if (
           this.body.capitalSocial ||
-          this.body.capitalSocial == "" ||
-          this.body.capitalSocial == "0"
+          this.body.capitalSocial == undefined ||
+          this.body.capitalSocial == 0
         ) {
           isParticipacionNumerico = true;
           newIntegrante.capitalSocial = this.body.capitalSocial;
@@ -866,7 +866,7 @@ export class DetalleIntegranteComponent implements OnInit {
         }
       } else {
         isParticipacionNumerico = true;
-        newIntegrante.capitalSocial = "";
+        newIntegrante.capitalSocial = undefined;
       }
       if (
         this.body.idComponente != undefined &&
@@ -926,10 +926,10 @@ export class DetalleIntegranteComponent implements OnInit {
       } else {
         newIntegrante.tipo = "";
       }
-      let numParticipacion = parseInt(this.body.capitalSocial);
+      let numParticipacion = this.body.capitalSocial;
       if (
         (isParticipacionNumerico && numParticipacion <= 100) ||
-        newIntegrante.capitalSocial == ""
+        newIntegrante.capitalSocial == undefined
       ) {
         this.sigaServices
           .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
@@ -970,6 +970,6 @@ export class DetalleIntegranteComponent implements OnInit {
 
   onChange(event) {
     console.log("fo", event.replace(".", ","));
-    this.body.capitalSocial = event.replace(".", ",");
+    this.body.capitalSocial = event.replace(",", ".");
   }
 }

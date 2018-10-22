@@ -7,7 +7,7 @@ export class DatosIntegrantesItem {
   fechaBajaCargo: String;
   idPersonaComponente: String;
   sociedad: String;
-  capitalSocial: string;
+  capitalSocial: Number;
   fechaCargoInforme: String;
   ejerciente: String;
   fechaHistorico: String;
