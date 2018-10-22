@@ -412,12 +412,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   obtenerNombreIntegrantes(dato) {
-    console.log("e" + dato.nombresIntegrantes);
-    if (dato.numeroIntegrantes > 9) {
-      return "Número de integrantes mayor que 10.";
-    } else {
       return dato.nombresIntegrantes;
-    }
   }
 
   paginate(event) {
