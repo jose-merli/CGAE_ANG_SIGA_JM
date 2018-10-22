@@ -34,7 +34,7 @@
                 <ng-template let-col let-dato="rowData" pTemplate="body">
                   <input *ngIf="dato.idGrupo == '' " [(ngModel)]='newPerfil.descripcionGrupo' type="text" class="form-control"
                     (ngModelChange)="onChangeForm()" pInputText>
-                  <input *ngIf="dato.idGrupo != '' " (ngModelChange)="onChangeEdit(dato)" [(ngModel)]='dato.descripcionGrupo'
+                  <input *ngIf="dato.idGrupo != '' " (input)="onChangeEdit(dato)" [(ngModel)]='dato.descripcionGrupo'
                     type="text" class="form-control" pInputText>
                 </ng-template>
               </p-column>
@@ -43,7 +43,7 @@
 
 
 
-                <ng-template pTemplate="body" let-dato="rowData"  >
+                <ng-template pTemplate="body" let-dato="rowData">
                   <p-multiSelect *ngIf="dato.idGrupo == '' " [defaultLabel]="textFilter" styleClass="widthAll"
                     (onChange)="editRol($event, dato )" [(ngModel)]="dato.rolesAsignados" [options]="usuarios_rol"
                     optionLabel="label" [selectedItemsLabel]="textSelected" [panelStyle]="{width:'100%'}"></p-multiSelect>

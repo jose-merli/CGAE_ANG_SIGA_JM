@@ -199,7 +199,6 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         this.elementosAGuardar.push(value);
       }
     });
-    debugger
     this.sigaServices.post("perfiles_update", this.elementosAGuardar).subscribe(
       data => {
         this.showSuccess();
@@ -386,7 +385,10 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     if (dato.descripcionGrupo != null && dato.descripcionGrupo != undefined && dato.descripcionGrupo.trim() != "") {
       this.isForSave = false;
       this.save = true;
+    } else {
+      this.save = false;
     }
+
   }
 
   isNew() {
