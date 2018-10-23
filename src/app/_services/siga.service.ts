@@ -234,8 +234,22 @@ export class SigaServices {
     fichaCalendario_profiles: "fichaCalendario/profiles",
     fichaCalendario_updatePermissions: "fichaCalendario/updatePermissions",
     fichaCalendario_saveCalendar: "fichaCalendario/saveCalendar",
+    fichaCalendario_updateCalendar: "fichaCalendario/updateCalendar",
+    fichaCalendario_getCalendar: "fichaCalendario/getCalendar",
     fichaCalendario_getProfilesPermissions:
       "fichaCalendario/getProfilesPermissions",
+    fichaCalendario_getEventNotifications:
+      "fichaCalendario/getEventNotifications",
+    datosNotificaciones_getTypeNotifications:
+      "datosNotificaciones/getTypeNotifications",
+    datosNotificaciones_getMeasuredUnit: "datosNotificaciones/getMeasuredUnit",
+    datosNotificaciones_saveNotification:
+      "datosNotificaciones/saveNotification",
+    datosNotificaciones_updateNotification:
+      "datosNotificaciones/updateNotification",
+    datosNotificaciones_getTypeWhere: "datosNotificaciones/getTypeWhere",
+    datosNotificaciones_getTemplates: "datosNotificaciones/getTemplates",
+    datosNotificaciones_getTypeSend: "datosNotificaciones/getTypeSend",
     fichaColegialSociedades_searchSocieties:
       "fichaColegialSociedades/searchSocieties",
     fichaColegialOtrasColegiaciones_searchOtherCollegues:

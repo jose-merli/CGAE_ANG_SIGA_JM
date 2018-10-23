@@ -16,10 +16,14 @@
   padding-right: 12px;
   border: 0px solid #e3e9f6;
   box-shadow: 0 -5px 5px -5px gray;
-  padding-left: 24rem;
+  padding-left: 3rem;
 }
 
 .scroll-perfil {
   overflow: auto;
   height: 320px;
+}
+
+.ui-datatable .ui-datatable-footer {
+  border: 0 none !important;
 }

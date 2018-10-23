@@ -258,13 +258,11 @@ import { BusquedaCursosComponent } from "./features/formacion/busqueda-cursos/bu
 import { CargaEtiquetasComponent } from "./features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component";
 import { DatosCvComponent } from "./features/censo/cargas-masivas/datos-cv/datos-cv.component";
 import { AgendaComponent } from "./features/agenda/agenda.component";
-import {
-  SelectButtonModule,
-  ColorPickerModule
-} from "../../node_modules/primeng/primeng";
+import { SelectButtonModule, ColorPickerModule } from "primeng/primeng";
 import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/ficha-calendario.component";
 import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
 import { NuevaSolicitudesModificacionComponent } from "./features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
+import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaciones/datos-notificaciones.component";
 
 @NgModule({
   declarations: [
@@ -479,7 +477,8 @@ import { NuevaSolicitudesModificacionComponent } from "./features/censo/modifica
     AgendaComponent,
     FichaCalendarioComponent,
     CargasMasivasComponent,
-    NuevaSolicitudesModificacionComponent
+    NuevaSolicitudesModificacionComponent,
+    DatosNotificacionesComponent
   ],
   imports: [
     BrowserModule,
