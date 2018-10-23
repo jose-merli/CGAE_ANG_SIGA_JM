@@ -19,12 +19,12 @@ export class TipoCurricularComponent {
   body: TipoCurricularItem = new TipoCurricularItem();
   bodySearch: TipoCurricularObject = new TipoCurricularObject();
 
-  nuevoElemento: TipoCurricularItem = new TipoCurricularItem();
-  history: TipoCurricularItem = new TipoCurricularItem();
-
   bodyUpdate: TipoCurricularObject = new TipoCurricularObject();
   bodyRemove: TipoCurricularObject = new TipoCurricularObject();
   bodyHistory: TipoCurricularObject = new TipoCurricularObject();
+
+  nuevoElemento: TipoCurricularItem = new TipoCurricularItem();
+  history: TipoCurricularItem = new TipoCurricularItem();
 
   datosEditar: TipoCurricularItem[] = [];
 
@@ -149,6 +149,7 @@ export class TipoCurricularComponent {
     this.body.tipoCategoriaCurricular = "";
   }
 
+  // Para la creación de un nuevo elemento
   newElement() {
     this.selectAll = false;
     this.selectMultiple = false;
@@ -177,14 +178,18 @@ export class TipoCurricularComponent {
       this.table.reset();
     }
 
+    this.editar = false;
     this.nuevo = false;
 
-    this.search();
+    if (this.historico == false) {
+      this.search();
+    }
+
+    this.blockCrear = true;
   }
 
   confirmAction() {
     if (this.body.descripcion) {
-      console.log("GOL", this.body);
       this.nuevoElemento = this.body;
 
       this.sigaServices
@@ -203,7 +208,6 @@ export class TipoCurricularComponent {
             this.bodySearch = JSON.parse(error["error"]);
             let mensaje = JSON.stringify(this.bodySearch.error.message);
             this.showFail(mensaje);
-            console.log(error);
           }
         );
     } else {
@@ -211,6 +215,7 @@ export class TipoCurricularComponent {
     }
   }
 
+  // Métodos gestión de inputs
   onChangeFormCdgoExt() {
     this.body.codigoExterno = this.body.codigoExterno.replace(/^\s+|\s+$/g, "");
 
@@ -280,6 +285,7 @@ export class TipoCurricularComponent {
     }
   }
 
+  // Métodos creados para eliminar 1 o más registros
   confirmToRemove(selectedDatos) {
     let mess = this.translateService.instant("messages.deleteConfirmation");
     let icon = "fa fa-trash-alt";
@@ -318,12 +324,9 @@ export class TipoCurricularComponent {
 
   removeElement(selectedDatos) {
     selectedDatos.forEach((value: TipoCurricularItem, key: number) => {
-      // value.idTipoCvSubtipo1 = this.body.idTipoCvSubtipo1;
-      // value.tipoCategoriaCurricular = this.body.tipoCategoriaCurricular;
       this.bodyRemove.tipoCurricularItems.push(value);
     });
 
-    console.log("Eliminamos", this.bodyRemove.tipoCurricularItems);
     this.sigaServices
       .post("tipoCurricular_deleteTipoCurricular", this.bodyRemove)
       .subscribe(
@@ -403,7 +406,8 @@ export class TipoCurricularComponent {
     if (this.selectMultiple) {
       this.numSelected = this.selectedDatos.length;
     } else {
-      this.numSelected = 0;
+      this.editar = false;
+      this.numSelected = this.selectedDatos.length;
     }
   }
 
@@ -412,42 +416,8 @@ export class TipoCurricularComponent {
     else return true;
   }
 
-  clear() {
-    this.msgs = [];
-  }
-
-  showSuccess() {
-    this.msgs = [];
-    this.msgs.push({
-      severity: "success",
-      summary: "Correcto",
-      detail: this.translateService.instant("general.message.accion.realizada")
-    });
-  }
-
-  showFail(message: string) {
-    this.msgs = [];
-    this.msgs.push({
-      severity: "error",
-      summary: "Error",
-      detail: message
-    });
-  }
-
+  //Métodos creados para editar un registro de la tabla
   editarCompleto(event) {
-    // this.editar = true;
-    // console.log(event);
-    // let data = event.data;
-
-    // this.datos.forEach((value: TipoCurricularItem, key: number) => {
-    //   if (
-    //     value.idTipoCV == data.idTipoCV &&
-    //     value.idTipoCvSubtipo1 == data.idTipoCvSubtipo1
-    //   ) {
-    //     value.editar = true;
-    //   }
-    // });
-
     let data = event.data;
 
     if (data.codigoExterno != null && data.codigoExterno != undefined) {
@@ -512,8 +482,6 @@ export class TipoCurricularComponent {
     });
 
     this.bodyUpdate.tipoCurricularItems = this.datosEditar;
-    // Sólo le pasamos los datos que han modificado
-    console.log("EDITAR", this.datosEditar);
 
     this.sigaServices
       .post("tipoCurricular_updateTipoCurricular", this.bodyUpdate)
@@ -537,6 +505,7 @@ export class TipoCurricularComponent {
     this.search();
   }
 
+  // Métodos creados para gestionar el historial
   getHistory() {
     this.buscar = false;
     this.selectMultiple = false;
@@ -551,8 +520,8 @@ export class TipoCurricularComponent {
       .subscribe(
         data => {
           console.log(data);
-          this.bodyHistory = JSON.parse(data["body"]);
-          this.datosHist = this.bodyHistory.tipoCurricularItems;
+          this.bodySearch = JSON.parse(data["body"]);
+          this.datos = this.bodySearch.tipoCurricularItems;
         },
         err => {
           console.log(err);
@@ -562,8 +531,31 @@ export class TipoCurricularComponent {
     this.numSelected = 0;
   }
 
-  volver() {
+  return() {
     this.editar = false;
     this.search();
+  }
+
+  // Métodos creados para mostrar mensajes al usuario
+  clear() {
+    this.msgs = [];
+  }
+
+  showSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: "Correcto",
+      detail: this.translateService.instant("general.message.accion.realizada")
+    });
+  }
+
+  showFail(message: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Error",
+      detail: message
+    });
   }
 }
