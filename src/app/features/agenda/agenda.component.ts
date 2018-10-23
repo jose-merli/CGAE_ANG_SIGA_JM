@@ -1,4 +1,6 @@
 import { Component, OnInit } from "@angular/core";
+import { Router } from "../../../../node_modules/@angular/router";
+import { CalendarItem } from "../../models/CalendarItem";
 
 @Component({
   selector: "app-agenda",
@@ -16,7 +18,7 @@ export class AgendaComponent implements OnInit {
   lectura: boolean = true;
   acceso: boolean = true;
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit() {
     this.getColsResults();
@@ -83,5 +85,22 @@ export class AgendaComponent implements OnInit {
   activateAcceso() {
     this.acceso = false;
     this.lectura = true;
+  }
+
+  isNuevo() {
+    sessionStorage.setItem("modoEdicion", "false");
+    this.router.navigate(["/editarCalendario"]);
+  }
+
+  isEditar() {
+    sessionStorage.setItem("modoEdicion", "true");
+    sessionStorage.setItem("idCalendario", "44");
+    let calendar = new CalendarItem();
+    calendar.idTipoCalendario = "1";
+    calendar.descripcion = "Prueba";
+    calendar.color = "#43453";
+    sessionStorage.setItem("calendarEdit", JSON.stringify(calendar));
+
+    this.router.navigate(["/editarCalendario"]);
   }
 }
