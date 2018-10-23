@@ -84,7 +84,7 @@ import { MediadoresComponent } from "./features/censo/mediadores/mediadores.comp
 import { CargasPeriodicasComponent } from "./features/censo/cargas-periodicas/cargas-periodicas.component";
 import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/configurar-perfil.component";
 import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
-import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/gestion-subtiposCV.component";
+import { TipoCurricularComponent } from "./features/censo/gestion-subtiposCV/tipo-curricular.component";
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
 import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
 import { CommonModule } from "@angular/common";
@@ -225,6 +225,7 @@ import { ComunicaInfoEconomicaComponent } from "./features/sjcs/comunicaciones/c
 import { ComunicaCargaComponent } from "./features/sjcs/comunicaciones/comunica-carga/comunica-carga.component";
 import { ComunicaResolucionesComponent } from "./features/sjcs/comunicaciones/comunica-resoluciones/comunica-resoluciones.component";
 import { ComunicaDesignacionesComponent } from "./features/sjcs/comunicaciones/comunica-designaciones/comunica-designaciones.component";
+import { MutualidadAbogaciaSeguroAccidentes } from "./features/censo/solicitudes-incorporacion/mutualidadAbogaciaSeguroAccidentes/mutualidad-abogacia-seguro-accidentes.component";
 
 //Consultas
 import { RecuperarConsultasComponent } from "./features/consultas/recuperar-consultas/recuperar-consultas.component";
@@ -251,6 +252,8 @@ import { ServiciosInteresComponent } from "./features/censo/datosPersonaJuridica
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
 import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.component";
 import { TrimPipePipe } from "./commons/trim-pipe/trim-pipe.pipe";
+import { FormacionComponent } from "./features/formacion/formacion.component";
+import { BusquedaCursosComponent } from "./features/formacion/busqueda-cursos/busqueda-cursos.component";
 import { CargaEtiquetasComponent } from "./features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component";
 import { DatosCvComponent } from "./features/censo/cargas-masivas/datos-cv/datos-cv.component";
 import { AgendaComponent } from "./features/agenda/agenda.component";
@@ -286,6 +289,7 @@ import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaci
     SolicitudesGenericasComponent,
     SolicitudesEspecificasComponent,
     SolicitudesIncorporacionComponent,
+    MutualidadAbogaciaSeguroAccidentes,
     AlterMutuaComponent,
     NuevaIncorporacionComponent,
     DocumentacionSolicitudesComponent,
@@ -303,7 +307,7 @@ import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaci
     CargasPeriodicasComponent,
     ConfigurarPerfilComponent,
     CensoDocumentacionComponent,
-    GestionSubtiposCVComponent,
+    TipoCurricularComponent,
     BusquedaColegiadosComponentNew,
     BusquedaPersonasJuridicas,
     DatosGenerales,
@@ -465,6 +469,10 @@ import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaci
     TrimPipePipe,
     CargaEtiquetasComponent,
     DatosCvComponent,
+
+    FormacionComponent,
+    BusquedaCursosComponent,
+
     AgendaComponent,
     FichaCalendarioComponent,
     CargasMasivasComponent,

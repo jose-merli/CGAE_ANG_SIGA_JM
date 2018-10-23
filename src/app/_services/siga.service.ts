@@ -223,6 +223,13 @@ export class SigaServices {
     cargasMasivasEtiquetas_uploadFile: "cargasMasivasEtiquetas/uploadFile",
     cargasMasivas_downloadOriginalFile: "cargasMasivas/downloadOriginalFile",
     cargasMasivas_downloadLogFile: "cargasMasivas/downloadLogFile",
+
+    //Formación
+    busquedaCursos_visibilidadCursos: "busquedaCursos/visibilidadCursos",
+    busquedaCursos_estadosCursos: "busquedaCursos/estadosCursos",
+    busquedaCursos_temasCursos: "busquedaCursos/temasCursos",
+    busquedaCursos_search: "busquedaCursos/search",
+
     fichaCalendario_getCalendarType: "fichaCalendario/getCalendarType",
     fichaCalendario_profiles: "fichaCalendario/profiles",
     fichaCalendario_updatePermissions: "fichaCalendario/updatePermissions",
@@ -260,7 +267,10 @@ export class SigaServices {
     alterMutua_solicitudAlter: "alterMutua/solicitudAlter",
     solicitudModificacion_tipoModificacion:
       "solicitudModificacion/tipoModificacion",
-    solicitudModificacion_estado: "solicitudModificacion/estado"
+    solicitudModificacion_estado: "solicitudModificacion/estado",
+    tipoCurricular_categoriaCurricular: "tipoCurricular/categoriaCurricular",
+    tipoCurricular_search: "tipoCurricular/search",
+    tipoCurricular_createTipoCurricular: "tipoCurricular/createTipoCurricular"
   };
 
   private menuToggled = new Subject<any>();

@@ -1,30 +1,26 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, HostListener } from "@angular/core";
-import { FormGroup, FormBuilder, FormControl, Validators } from "../../../../../../node_modules/@angular/forms";
-import { Router } from "../../../../../../node_modules/@angular/router";
+import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
 import { SigaServices } from "../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate";
 
 
 @Component({
-  selector: "app-mutualidad-abogacia-plan-universal",
-  templateUrl: "./mutualidad-abogacia-plan-universal.component.html",
-  styleUrls: ["./mutualidad-abogacia-plan-universal.component.scss"]
+  selector: "app-mutualidad-abogacia-seguro-accidentes",
+  templateUrl: "./mutualidad-abogacia-seguro-accidentes.component.html",
+  styleUrls: ["./mutualidad-abogacia-seguro-accidentes.component.scss"]
 })
-export class MutualidadAbogaciaPlanUniversal implements OnInit {
+export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
 
   mostrarEstadoSolicitud: boolean = false;
   progressSpinner: boolean = false;
   datosDireccion: boolean = false;
-  datosBancarios: boolean = false;
-  datosPoliza: boolean = false;
   paisSelected: any;
   provinciaSelected: any;
   poblacionSelected: any;
-  pagoSelected: any;
   provincias: any[];
   poblaciones: any[];
   paises: any[];
-  comboPago: any[];
 
 
   constructor(
@@ -83,13 +79,5 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
   }
   abreCierraDatosDireccion() {
     this.datosDireccion = !this.datosDireccion;
-  }
-
-  abreCierraDatosBancarios() {
-    this.datosBancarios = !this.datosBancarios;
-  }
-
-  abreCierraDatosPoliza() {
-    this.datosPoliza = !this.datosPoliza;
   }
 }
