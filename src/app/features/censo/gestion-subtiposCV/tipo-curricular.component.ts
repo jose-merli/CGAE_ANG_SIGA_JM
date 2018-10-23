@@ -1,5 +1,4 @@
-import { OldSigaServices } from "../../../_services/oldSiga.service";
-import { SelectItem } from "../../../../../node_modules/primeng/primeng";
+import { SelectItem, ConfirmationService } from "primeng/api";
 import {
   Component,
   ViewChild,
@@ -7,7 +6,6 @@ import {
   ElementRef
 } from "@angular/core";
 import { SigaServices } from "../../../_services/siga.service";
-import { Router } from "../../../../../node_modules/@angular/router";
 import { TipoCurricularItem } from "../../../models/TipoCurricularItem";
 import { TipoCurricularObject } from "../../../models/TipoCurricularObject";
 import { TranslateService } from "../../../commons/translate/translation.service";
@@ -19,13 +17,22 @@ import { TranslateService } from "../../../commons/translate/translation.service
 })
 export class TipoCurricularComponent {
   body: TipoCurricularItem = new TipoCurricularItem();
-  nuevoElemento: TipoCurricularItem = new TipoCurricularItem();
-
   bodySearch: TipoCurricularObject = new TipoCurricularObject();
+
+  nuevoElemento: TipoCurricularItem = new TipoCurricularItem();
+  history: TipoCurricularItem = new TipoCurricularItem();
+
+  bodyUpdate: TipoCurricularObject = new TipoCurricularObject();
+  bodyRemove: TipoCurricularObject = new TipoCurricularObject();
+  bodyHistory: TipoCurricularObject = new TipoCurricularObject();
+
+  datosEditar: TipoCurricularItem[] = [];
 
   categoriaCurricular: SelectItem[];
   selectedCategoriaCurricular: any;
 
+  @ViewChild("input1")
+  inputEl: ElementRef;
   @ViewChild("inputDesc")
   inputDesc: ElementRef;
   @ViewChild("inputCdgoExt")
@@ -37,13 +44,13 @@ export class TipoCurricularComponent {
   cols: any = [];
   rowsPerPage: any = [];
   datos: any[];
+  datosHist: any[];
   datosNuevos: any[];
   selectedItem: number = 10;
   numSelected: number = 0;
   selectMultiple: boolean = false;
   selectAll: boolean = false;
   msgs: any = [];
-  showDatosCv: any;
 
   showTipoCurricular: boolean = true;
   progressSpinner: boolean = false;
@@ -51,14 +58,17 @@ export class TipoCurricularComponent {
   nuevo: boolean = false;
   crear: boolean = false;
   editar: boolean = false;
+  historico: boolean = false;
+  blockCrear: boolean = true;
+
   enableCargo: boolean;
   enableColegiado: boolean;
 
   constructor(
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
-    private router: Router,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit() {
@@ -72,18 +82,10 @@ export class TipoCurricularComponent {
       }
     );
 
-    this.getInfo();
+    this.getRowPerPage();
   }
 
-  getInfo() {
-    // this.cols = [
-    //   { field: "codigoExterno", header: "general.codeext" },
-    //   {
-    //     field: "descripcion",
-    //     header: "general.description"
-    //   }
-    // ];
-
+  getRowPerPage() {
     this.rowsPerPage = [
       {
         label: 10,
@@ -104,7 +106,7 @@ export class TipoCurricularComponent {
     ];
   }
 
-  onHideSubtipoCV() {
+  onHideTipoCV() {
     this.showTipoCurricular = !this.showTipoCurricular;
   }
 
@@ -113,13 +115,21 @@ export class TipoCurricularComponent {
     this.buscar = true;
     this.nuevo = false;
     this.editar = false;
+    this.historico = false;
+
+    this.selectAll = false;
+    this.selectMultiple = false;
 
     if (this.body.tipoCategoriaCurricular == undefined) {
       this.body.tipoCategoriaCurricular = "";
     }
 
     this.sigaServices
-      .postPaginado("tipoCurricular_search", "?numPagina=1", this.body)
+      .postPaginado(
+        "tipoCurricular_searchTipoCurricular",
+        "?numPagina=1",
+        this.body
+      )
       .subscribe(
         data => {
           this.progressSpinner = false;
@@ -140,6 +150,9 @@ export class TipoCurricularComponent {
   }
 
   newElement() {
+    this.selectAll = false;
+    this.selectMultiple = false;
+
     let nuevoDato = {
       codigoExterno: "",
       descripcion: ""
@@ -241,6 +254,10 @@ export class TipoCurricularComponent {
     }
   }
 
+  onChangeTipoCategoriaCurricular(event) {
+    this.body.tipoCategoriaCurricular = event.value;
+  }
+
   onlySpaces(str) {
     let i = 0;
     var ret;
@@ -263,20 +280,83 @@ export class TipoCurricularComponent {
     }
   }
 
-  removeElement(selectedDatos) {
-    this.getInfo();
+  confirmToRemove(selectedDatos) {
+    let mess = this.translateService.instant("messages.deleteConfirmation");
+    let icon = "fa fa-trash-alt";
 
-    let data = [];
-    this.datos.forEach(element => {
-      if (element.id != selectedDatos[0].id) {
-        data.push(element);
+    if (selectedDatos.length > 1) {
+      mess =
+        this.translateService.instant("messages.deleteConfirmation.much") +
+        selectedDatos.length +
+        " " +
+        this.translateService.instant("messages.deleteConfirmation.register") +
+        "?";
+    }
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.removeElement(selectedDatos);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+
+        this.selectMultiple = false;
+        this.selectedDatos = [];
+        this.numSelected = 0;
       }
     });
-    this.datos = [...data];
+  }
 
-    this.selectAll = false;
-    this.selectMultiple = false;
-    this.numSelected = 0;
+  removeElement(selectedDatos) {
+    selectedDatos.forEach((value: TipoCurricularItem, key: number) => {
+      // value.idTipoCvSubtipo1 = this.body.idTipoCvSubtipo1;
+      // value.tipoCategoriaCurricular = this.body.tipoCategoriaCurricular;
+      this.bodyRemove.tipoCurricularItems.push(value);
+    });
+
+    console.log("Eliminamos", this.bodyRemove.tipoCurricularItems);
+    this.sigaServices
+      .post("tipoCurricular_deleteTipoCurricular", this.bodyRemove)
+      .subscribe(
+        data => {
+          if (selectedDatos == 1) {
+            this.msgs = [];
+            this.msgs.push({
+              severity: "success",
+              summary: "Correcto",
+              detail: this.translateService.instant("messages.deleted.success")
+            });
+          } else {
+            this.msgs = [];
+            this.msgs.push({
+              severity: "success",
+              summary: "Correcto",
+              detail:
+                selectedDatos.length +
+                " " +
+                this.translateService.instant(
+                  "messages.deleted.selected.success"
+                )
+            });
+          }
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.search();
+          this.editar = false;
+        }
+      );
   }
 
   // PARA LA TABLA
@@ -292,7 +372,7 @@ export class TipoCurricularComponent {
   }
 
   onChangeSelectAll() {
-    if (this.selectAll === true) {
+    if (this.selectAll) {
       this.selectMultiple = false;
       this.selectedDatos = this.datos;
       this.numSelected = this.datos.length;
@@ -308,24 +388,30 @@ export class TipoCurricularComponent {
       this.selectedDatos = [];
       this.numSelected = 0;
     } else {
+      this.nuevo = false;
       this.selectAll = false;
       this.selectedDatos = [];
       this.numSelected = 0;
     }
   }
 
-  actualizaSeleccionados(selectedDatos) {
+  onRowUnselect(selectedDatos) {
     this.numSelected = selectedDatos.length;
   }
 
-  redirect(selectedDatos) {
-    if (!this.selectMultiple) {
-      sessionStorage.setItem("datos", JSON.stringify(selectedDatos));
-      this.router.navigate(["/informacionGestionSubtipoCV"]);
+  onRowSelect(selectedDatos) {
+    if (this.selectMultiple) {
+      this.numSelected = this.selectedDatos.length;
+    } else {
+      this.numSelected = 0;
     }
-
-    this.numSelected = this.selectedDatos.length;
   }
+
+  setItalic(datoH) {
+    if (datoH.fechaBaja == null) return false;
+    else return true;
+  }
+
   clear() {
     this.msgs = [];
   }
@@ -349,28 +435,135 @@ export class TipoCurricularComponent {
   }
 
   editarCompleto(event) {
-    this.editar = true;
-    console.log(event);
+    // this.editar = true;
+    // console.log(event);
+    // let data = event.data;
+
+    // this.datos.forEach((value: TipoCurricularItem, key: number) => {
+    //   if (
+    //     value.idTipoCV == data.idTipoCV &&
+    //     value.idTipoCvSubtipo1 == data.idTipoCvSubtipo1
+    //   ) {
+    //     value.editar = true;
+    //   }
+    // });
+
     let data = event.data;
 
-    this.datos.forEach((value: TipoCurricularItem, key: number) => {
+    if (data.codigoExterno != null && data.codigoExterno != undefined) {
       if (
-        value.idTipoCV == data.idTipoCV &&
-        value.idTipoCvSubtipo1 == data.idTipoCvSubtipo1
+        data.descripcion.length > 2000 ||
+        (data.codigoExterno.length > 10 &&
+          data.codigoExterno != null &&
+          data.codigoExterno != undefined)
       ) {
-        value.editar = true;
+        this.datos.forEach((value: TipoCurricularItem, key: number) => {
+          if (
+            value.idTipoCV == data.idTipoCV &&
+            value.idTipoCvSubtipo1 == data.idTipoCvSubtipo1
+          ) {
+            value.descripcion = data.descripcion.substring(0, 1950);
+            value.codigoExterno = data.codigoExterno.substring(0, 10);
+          }
+        });
+        this.inputEl.nativeElement.focus();
+      } else {
+        //compruebo si la edicion es correcta con la basedatos
+        if (this.onlySpaces(data.descripcion)) {
+          this.blockCrear = true;
+        } else {
+          this.editar = true;
+          this.blockCrear = false;
+          this.datos.forEach((value: TipoCurricularItem, key: number) => {
+            if (
+              value.idTipoCV == data.idTipoCV &&
+              value.idTipoCvSubtipo1 == data.idTipoCvSubtipo1
+            ) {
+              value.editar = true;
+            }
+          });
+        }
       }
-    });
+    } else {
+      //compruebo si la edicion es correcta con la basedatos
+      if (this.onlySpaces(data.descripcion)) {
+        this.blockCrear = true;
+      } else {
+        this.editar = true;
+        this.blockCrear = false;
+        this.datosHist.forEach((value: TipoCurricularItem, key: number) => {
+          if (
+            value.idTipoCV == data.idTipoCV &&
+            value.idTipoCvSubtipo1 == data.idTipoCvSubtipo1
+          ) {
+            value.editar = true;
+          }
+        });
+        console.log(this.datosHist);
+      }
+    }
   }
 
   confirmEditAction() {
-    let datosEditar = [];
     this.datos.forEach((value: TipoCurricularItem, key: number) => {
       if (value.editar) {
-        datosEditar.push(value);
+        this.datosEditar.push(value);
       }
     });
 
-    console.log("EDITAR", datosEditar);
+    this.bodyUpdate.tipoCurricularItems = this.datosEditar;
+    // Sólo le pasamos los datos que han modificado
+    console.log("EDITAR", this.datosEditar);
+
+    this.sigaServices
+      .post("tipoCurricular_updateTipoCurricular", this.bodyUpdate)
+      .subscribe(
+        data => {
+          this.showSuccess();
+        },
+        err => {
+          this.showFail("Error al actualizar");
+        },
+        () => {
+          this.search();
+        }
+      );
+  }
+
+  cancelEditAction() {
+    this.nuevo = false;
+    this.editar = false;
+
+    this.search();
+  }
+
+  getHistory() {
+    this.buscar = false;
+    this.selectMultiple = false;
+    this.selectAll = false;
+
+    this.historico = true;
+
+    this.history.tipoCategoriaCurricular = this.body.tipoCategoriaCurricular;
+
+    this.sigaServices
+      .post("tipoCurricular_historyTipoCurricular", this.history)
+      .subscribe(
+        data => {
+          console.log(data);
+          this.bodyHistory = JSON.parse(data["body"]);
+          this.datosHist = this.bodyHistory.tipoCurricularItems;
+        },
+        err => {
+          console.log(err);
+        }
+      );
+
+    this.numSelected = 0;
+  }
+
+  volver() {
+    this.editar = false;
+    this.search();
   }
 }

@@ -195,7 +195,7 @@ import { DatosCvComponent } from "./features/censo/cargas-masivas/datos-cv/datos
 import { BusquedaCursosComponent } from "./features/formacion/busqueda-cursos/busqueda-cursos.component";
 import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/ficha-calendario.component";
 import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
-import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-subtiposCV/informacion-gestion-subtipos-cv/informacion-gestion-subtipos-cv.component";
+import { SubtipoCurricularComponent } from "./features/censo/gestion-subtiposCV/subtipo-curricular/subtipo-curricular.component";
 import { NuevaSolicitudesModificacionComponent } from "./features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
 
 const appRoutes: Routes = [
@@ -405,7 +405,7 @@ const appRoutes: Routes = [
   },
   {
     path: "informacionGestionSubtipoCV",
-    component: InformacionGestionSubtiposCvComponent,
+    component: SubtipoCurricularComponent,
     canActivate: [AuthGuard]
   },
 
@@ -959,8 +959,8 @@ const appRoutes: Routes = [
   // Administracion
   {
     path: "catalogosMaestros",
-    //component: CatalogosMaestros,
-    component: CatalogosMaestrosComponent,
+    component: CatalogosMaestros,
+    //component: CatalogosMaestrosComponent,
     canActivate: [AuthGuard]
   },
   {

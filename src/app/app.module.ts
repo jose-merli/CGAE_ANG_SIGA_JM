@@ -85,6 +85,7 @@ import { CargasPeriodicasComponent } from "./features/censo/cargas-periodicas/ca
 import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/configurar-perfil.component";
 import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
 import { TipoCurricularComponent } from "./features/censo/gestion-subtiposCV/tipo-curricular.component";
+import { SubtipoCurricularComponent } from "./features/censo/gestion-subtiposCV/subtipo-curricular/subtipo-curricular.component";
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
 import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
 import { CommonModule } from "@angular/common";
@@ -263,7 +264,6 @@ import {
 } from "../../node_modules/primeng/primeng";
 import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/ficha-calendario.component";
 import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
-import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-subtiposCV/informacion-gestion-subtipos-cv/informacion-gestion-subtipos-cv.component";
 import { NuevaSolicitudesModificacionComponent } from "./features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
 
 @NgModule({
@@ -310,6 +310,7 @@ import { NuevaSolicitudesModificacionComponent } from "./features/censo/modifica
     ConfigurarPerfilComponent,
     CensoDocumentacionComponent,
     TipoCurricularComponent,
+    SubtipoCurricularComponent,
     BusquedaColegiadosComponentNew,
     BusquedaPersonasJuridicas,
     DatosGenerales,
@@ -478,7 +479,6 @@ import { NuevaSolicitudesModificacionComponent } from "./features/censo/modifica
     AgendaComponent,
     FichaCalendarioComponent,
     CargasMasivasComponent,
-    InformacionGestionSubtiposCvComponent,
     NuevaSolicitudesModificacionComponent
   ],
   imports: [
