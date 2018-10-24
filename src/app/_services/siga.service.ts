@@ -229,6 +229,8 @@ export class SigaServices {
     busquedaCursos_estadosCursos: "busquedaCursos/estadosCursos",
     busquedaCursos_temasCursos: "busquedaCursos/temasCursos",
     busquedaCursos_search: "busquedaCursos/search",
+    busquedaCursos_archivar: "busquedaCursos/archivar",
+    busquedaCursos_desarchivar: "busquedaCursos/desarchivar",
 
     fichaCalendario_getCalendarType: "fichaCalendario/getCalendarType",
     fichaCalendario_profiles: "fichaCalendario/profiles",
