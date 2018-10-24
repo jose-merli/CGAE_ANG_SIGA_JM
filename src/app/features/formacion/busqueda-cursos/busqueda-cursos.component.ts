@@ -3,15 +3,12 @@ import {
   OnInit,
   ViewEncapsulation,
   ViewChild,
-  ChangeDetectorRef,
-  HostListener
+  ChangeDetectorRef
 } from "@angular/core";
 
 import { SigaServices } from "../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
-import { Router } from "@angular/router";
 import { TranslateService } from "../../../commons/translate/translation.service";
-import { ConfirmationService, Message } from "primeng/api";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { DataTable } from "primeng/datatable";
 import { esCalendar } from "../../../utils/calendar";
@@ -20,12 +17,9 @@ import {
   FormBuilder,
   FormGroup,
   FormControl,
-  Validators,
-  AbstractControl
+  Validators
 } from "@angular/forms";
-import { DatosColegiadosObject } from "../../../models/DatosColegiadosObject";
-import { TrimPipePipe } from "../../../commons/trim-pipe/trim-pipe.pipe";
-import { MultiSelect } from "primeng/primeng";
+import { MultiSelect, Message } from "primeng/primeng";
 import { DatosCursosObject } from "../../../models/DatosCursosObject";
 import { AuthenticationService } from "../../../_services/authentication.service";
 
@@ -118,7 +112,6 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
 
   ngOnInit() {
     this.getCombos();
-    sessionStorage.removeItem("esColegiado");
     if (sessionStorage.getItem("filtrosBusquedaCursos") != null) {
       this.body = JSON.parse(sessionStorage.getItem("filtrosBusquedaCursos"));
       sessionStorage.removeItem("filtrosBusquedaCursos");
@@ -174,8 +167,9 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
       event.value != "" &&
       event.value != this.authenticationService.getInstitucionSession()
     ) {
+      //Si elige un colegio que no es el propio, se deshabilita el combo de visibilidad y se selecciona 'Público' por defecto ya que los privados no deben mostrarse
       this.deshabilitarCombVis = true;
-      this.body.idVisibilidad = null;
+      this.body.idVisibilidad = "0"; //Visibilidad pública
     } else {
       this.deshabilitarCombVis = false;
     }
@@ -287,6 +281,16 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
 
   //Busca cursos según los filtros
   isBuscar(flagArchivado: boolean) {
+    this.progressSpinner = true;
+    this.buscar = true;
+
+    this.selectAll = false;
+    this.selectMultiple = false;
+
+    this.selectedDatos = "";
+    this.getColsResults();
+    this.filtrosTrim();
+
     if (flagArchivado) {
       this.body.flagArchivado = null; // Para que los traiga todos, archivados y no archivados
       this.modoHistorico = false;
@@ -294,21 +298,12 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
       this.body.flagArchivado = 0; // Para que traiga solamente los NO archivados
       this.modoHistorico = true;
     }
-    this.selectAll = false;
-    this.buscar = true;
-    this.selectMultiple = false;
 
-    this.selectedDatos = "";
-    this.getColsResults();
-    this.filtrosTrim();
     //Rellenamos el array de temas a partir de la estructura del p-multiselect
     this.body.temas = [];
     this.selectedTemas.forEach(element => {
       this.body.temas.push(element.value);
     });
-
-    this.progressSpinner = true;
-    this.buscar = true;
 
     this.sigaServices
       .postPaginado("busquedaCursos_search", "?numPagina=1", this.body)
