@@ -29,7 +29,16 @@ export class AuthenticationService {
 
     logout() {
         sessionStorage.removeItem('authenticated')
-        this.router.navigate(['/login']);
+            if (sessionStorage.getItem('loginDevelop') === 'true' ) {
+                this.router.navigate(["/loginDevelop"])
+            }else{
+                if (sessionStorage.getItem('loginDevelop') === '0' ) {
+                    sessionStorage.clear();
+                    this.router.navigate(["/loginDevelop"])
+                }else{
+                this.router.navigate(['/login']);
+                }
+        }
     }
 
     isAutenticated() {
@@ -101,7 +110,7 @@ export class AuthenticationService {
 
                     sessionStorage.setItem('authenticated', 'true');
                     sessionStorage.setItem('Authorization', newSigaResponse);
-
+                    
                     return true;
                 }
 
@@ -110,11 +119,22 @@ export class AuthenticationService {
     }
 
     autenticateDevelop(formValues): Observable<any> {
-        sessionStorage.removeItem("authenticated");
         let newSigaRquest = this.newSigaDevelopLogin(formValues);
+        
+        // return forkJoin([newSigaRquest]).map(
+        //     (response) => {
+        //         let newSigaResponse = response[0].headers.get("Authorization");
+        //         let newSigaResponseStatus = response[0].status;
+        //         if (newSigaResponseStatus == 200) {
+        //             sessionStorage.setItem('osAutenticated', 'true');
+        //             sessionStorage.setItem('authenticated', 'true');
+        //             sessionStorage.setItem('Authorization', newSigaResponse);
+        //             return true;
+        //         }
+        //     }
+        // )
+
         let oldSigaRquest = this.oldSigaDevelopLogin(formValues);
-
-
         return forkJoin([oldSigaRquest, newSigaRquest]).map(
             (response) => {
                 let newSigaResponse = response[1].headers.get("Authorization");
@@ -132,4 +152,5 @@ export class AuthenticationService {
         )
 
     }
+
 }
