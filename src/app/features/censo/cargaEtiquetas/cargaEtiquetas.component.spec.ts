@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CargaEtiquetasComponent } from './carga-etiquetas.component';
+import { CargaEtiquetasComponent } from './cargaEtiquetas.component';
 
 describe('CargaEtiquetasComponent', () => {
   let component: CargaEtiquetasComponent;

@@ -121,12 +121,12 @@
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
-          <input type="text" class="form-control" [(disabled)]="isDisabledColegio" pInputText>
+          <input type="text" [(ngModel)]="body.colegio" class="form-control" [(disabled)]="isDisabledColegio" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.datosDireccion.literal.provincia" | translate}}</label>
-          <p-dropdown [(ngModel)]="body.idProvincia" (ngModelChange)="actualizarDescripcionProvincia()" class="select-form" [options]="provinciasArray"
-            [(disabled)]="isDisabledProvincia"></p-dropdown>
+          <p-dropdown [(ngModel)]="body.idProvincia" [(disabled)]="isDisabledProvincia" (ngModelChange)="actualizarDescripcionProvincia()"
+            class="select-form" [options]="provinciasArray"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>

@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { OldSigaServices } from '../../../_services/oldSiga.service'
 
 @Component({
-  selector: 'app-carga-etiquetas',
-  templateUrl: './carga-etiquetas.component.html',
-  styleUrls: ['./carga-etiquetas.component.scss']
+  selector: 'app-cargaEtiquetas',
+  templateUrl: './cargaEtiquetas.component.html',
+  styleUrls: ['./cargaEtiquetas.component.scss']
 })
 export class CargaEtiquetasComponent {
 

@@ -578,11 +578,14 @@ export class BusquedaGeneralComponent {
             integranteNew.nombre = this.bodyFisica.nombre;
             integranteNew.apellidos1 = this.bodyFisica.primerApellido;
             integranteNew.apellidos2 = this.bodyFisica.segundoApellido;
+            integranteNew.ejerciente = "NO COLEGIADO";
           }
           // datos de persona fisica para pasar a pantalla integrante
           else {
             integranteNew.nombre = this.bodyJuridica.denominacion;
             integranteNew.apellidos1 = this.bodyJuridica.abreviatura;
+            integranteNew.ejerciente = "SOCIEDAD";
+            integranteNew.colegio = this.colegios_seleccionados[0];
           }
 
           integranteNew.completo = false;

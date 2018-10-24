@@ -159,32 +159,32 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("perfiles_search", "?numPagina=1", null)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.searchPerfiles = JSON.parse(data["body"]);
-        this.datos = this.searchPerfiles.usuarioGrupoItems;
-        this.buscar = true;
+          this.searchPerfiles = JSON.parse(data["body"]);
+          this.datos = this.searchPerfiles.usuarioGrupoItems;
+          this.buscar = true;
 
-        this.table.paginator = true;
-        this.sigaServices.get("usuarios_rol").subscribe(
-          n => { },
-          err => {
-            console.log(err);
+          this.table.paginator = true;
+          this.sigaServices.get("usuarios_rol").subscribe(
+            n => { },
+            err => {
+              console.log(err);
+            }
+          );
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          if (sessionStorage.getItem("first") != null) {
+            let first = JSON.parse(sessionStorage.getItem("first")) as number;
+            this.table.first = first;
+            sessionStorage.removeItem("first");
           }
-        );
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        if (sessionStorage.getItem("first") != null) {
-          let first = JSON.parse(sessionStorage.getItem("first")) as number;
-          this.table.first = first;
-          sessionStorage.removeItem("first");
+          this.progressSpinner = false;
         }
-        this.progressSpinner = false;
-      }
       );
   }
   terminarEditar() {
@@ -199,7 +199,6 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         this.elementosAGuardar.push(value);
       }
     });
-
     this.sigaServices.post("perfiles_update", this.elementosAGuardar).subscribe(
       data => {
         this.showSuccess();
@@ -304,6 +303,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     this.isForSave = false;
     this.save = true;
   }
+
   reestablecer() {
     this.isforNew = true;
     this.save = false;
@@ -366,19 +366,31 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     }
   }
   onChangeForm() {
-    if (
-      this.newPerfil.idGrupo != null &&
-      this.newPerfil.idGrupo != undefined &&
-      this.newPerfil.idGrupo.trim() != "" &&
-      this.newPerfil.descripcionGrupo != null &&
-      this.newPerfil.descripcionGrupo != undefined &&
-      this.newPerfil.descripcionGrupo.trim() != ""
+    if (this.newPerfil.idGrupo != null && this.newPerfil.idGrupo != undefined && this.newPerfil.idGrupo.trim() != "" &&
+      this.newPerfil.descripcionGrupo != null && this.newPerfil.descripcionGrupo != undefined && this.newPerfil.descripcionGrupo.trim() != ""
     ) {
       this.isForSave = false;
     } else {
       this.isForSave = true;
     }
   }
+
+  onChangeEdit(dato) {
+
+    this.datos.forEach((value: PerfilItem, key: number) => {
+      if (value.idGrupo == dato.idGrupo) {
+        value.editar = true;
+      }
+    });
+    if (dato.descripcionGrupo != null && dato.descripcionGrupo != undefined && dato.descripcionGrupo.trim() != "") {
+      this.isForSave = false;
+      this.save = true;
+    } else {
+      this.save = false;
+    }
+
+  }
+
   isNew() {
     this.progressSpinner = true;
     this.sigaServices.post("perfiles_insert", this.newPerfil).subscribe(
@@ -552,9 +564,9 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
             severity: "success",
             summary: "Correcto",
             detail:
-            selectedDatos.length +
-            " " +
-            this.translateService.instant("messages.deleted.selected.success")
+              selectedDatos.length +
+              " " +
+              this.translateService.instant("messages.deleted.selected.success")
           });
         }
       },
@@ -617,20 +629,20 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("perfiles_historico", "?numPagina=1", null)
       .subscribe(
-      data => {
-        console.log(data);
+        data => {
+          console.log(data);
 
-        this.searchPerfiles = JSON.parse(data["body"]);
-        this.datos = this.searchPerfiles.usuarioGrupoItems;
-        this.buscar = false;
-        this.progressSpinner = false;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.table.reset();
-      }
+          this.searchPerfiles = JSON.parse(data["body"]);
+          this.datos = this.searchPerfiles.usuarioGrupoItems;
+          this.buscar = false;
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.table.reset();
+        }
       );
   }
   confirmarBorrar(selectedDatos) {
