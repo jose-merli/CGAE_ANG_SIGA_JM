@@ -389,9 +389,6 @@ para poder filtrar el dato con o sin estos caracteres*/
           } else {
             this.isDisabledPoblacion = false;
           }
-          this.body.idPoblacion = "";
-          this.comboPoblacion = [];
-          // this.getComboPoblacion();
         }
         this.codigoPostalValido = true;
       } else {
@@ -404,7 +401,6 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (this.checkOtraProvincia == false) {
       this.body.idPoblacion = "";
       this.comboPoblacion = [];
-      // this.getComboPoblacion();
     } else {
       this.body.idPoblacion = "";
     }
