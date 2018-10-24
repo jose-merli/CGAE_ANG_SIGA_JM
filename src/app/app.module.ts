@@ -85,6 +85,7 @@ import { CargasPeriodicasComponent } from "./features/censo/cargas-periodicas/ca
 import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/configurar-perfil.component";
 import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
 import { TipoCurricularComponent } from "./features/censo/gestion-subtiposCV/tipo-curricular.component";
+import { SubtipoCurricularComponent } from "./features/censo/gestion-subtiposCV/subtipo-curricular/subtipo-curricular.component";
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
 import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
 import { CommonModule } from "@angular/common";
@@ -257,14 +258,11 @@ import { BusquedaCursosComponent } from "./features/formacion/busqueda-cursos/bu
 import { CargaEtiquetasComponent } from "./features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component";
 import { DatosCvComponent } from "./features/censo/cargas-masivas/datos-cv/datos-cv.component";
 import { AgendaComponent } from "./features/agenda/agenda.component";
-import {
-  SelectButtonModule,
-  ColorPickerModule
-} from "../../node_modules/primeng/primeng";
+import { SelectButtonModule, ColorPickerModule } from "primeng/primeng";
 import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/ficha-calendario.component";
 import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
-import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-subtiposCV/informacion-gestion-subtipos-cv/informacion-gestion-subtipos-cv.component";
 import { NuevaSolicitudesModificacionComponent } from "./features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
+import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaciones/datos-notificaciones.component";
 
 @NgModule({
   declarations: [
@@ -310,6 +308,7 @@ import { NuevaSolicitudesModificacionComponent } from "./features/censo/modifica
     ConfigurarPerfilComponent,
     CensoDocumentacionComponent,
     TipoCurricularComponent,
+    SubtipoCurricularComponent,
     BusquedaColegiadosComponentNew,
     BusquedaPersonasJuridicas,
     DatosGenerales,
@@ -478,8 +477,8 @@ import { NuevaSolicitudesModificacionComponent } from "./features/censo/modifica
     AgendaComponent,
     FichaCalendarioComponent,
     CargasMasivasComponent,
-    InformacionGestionSubtiposCvComponent,
-    NuevaSolicitudesModificacionComponent
+    NuevaSolicitudesModificacionComponent,
+    DatosNotificacionesComponent
   ],
   imports: [
     BrowserModule,

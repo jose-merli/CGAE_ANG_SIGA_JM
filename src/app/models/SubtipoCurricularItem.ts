@@ -1,6 +1,6 @@
-export class TipoCurricularItem {
+export class SubtipoCurricularItem {
   idTipoCV: String;
-  idTipoCvSubtipo1: String;
+  idTipoCvSubtipo2: String;
   tipoCategoriaCurricular: String;
   codigoExterno: String;
   descripcion: String;

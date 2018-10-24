@@ -1,32 +1,33 @@
 import { SelectItem, ConfirmationService } from "primeng/api";
 import {
   Component,
+  OnInit,
   ViewChild,
   ChangeDetectorRef,
   ElementRef
 } from "@angular/core";
-import { SigaServices } from "../../../_services/siga.service";
-import { TipoCurricularItem } from "../../../models/TipoCurricularItem";
-import { TipoCurricularObject } from "../../../models/TipoCurricularObject";
-import { TranslateService } from "../../../commons/translate/translation.service";
+import { SigaServices } from "../../../../_services/siga.service";
+import { TranslateService } from "../../../../commons/translate/translation.service";
+import { SubtipoCurricularItem } from "../../../../models/SubtipoCurricularItem";
+import { SubtipoCurricularObject } from "../../../../models/SubtipoCurricularObject";
 
 @Component({
-  selector: "app-tipo-curricular",
-  templateUrl: "./tipo-curricular.component.html",
-  styleUrls: ["./tipo-curricular.component.scss"]
+  selector: "app-subtipo-curricular",
+  templateUrl: "./subtipo-curricular.component.html",
+  styleUrls: ["./subtipo-curricular.component.scss"]
 })
-export class TipoCurricularComponent {
-  body: TipoCurricularItem = new TipoCurricularItem();
-  bodySearch: TipoCurricularObject = new TipoCurricularObject();
+export class SubtipoCurricularComponent implements OnInit {
+  body: SubtipoCurricularItem = new SubtipoCurricularItem();
+  bodySearch: SubtipoCurricularObject = new SubtipoCurricularObject();
 
-  bodyUpdate: TipoCurricularObject = new TipoCurricularObject();
-  bodyRemove: TipoCurricularObject = new TipoCurricularObject();
-  bodyHistory: TipoCurricularObject = new TipoCurricularObject();
+  bodyUpdate: SubtipoCurricularObject = new SubtipoCurricularObject();
+  bodyRemove: SubtipoCurricularObject = new SubtipoCurricularObject();
+  bodyHistory: SubtipoCurricularObject = new SubtipoCurricularObject();
 
-  nuevoElemento: TipoCurricularItem = new TipoCurricularItem();
-  history: TipoCurricularItem = new TipoCurricularItem();
+  nuevoElemento: SubtipoCurricularItem = new SubtipoCurricularItem();
+  history: SubtipoCurricularItem = new SubtipoCurricularItem();
 
-  datosEditar: TipoCurricularItem[] = [];
+  datosEditar: SubtipoCurricularItem[] = [];
 
   categoriaCurricular: SelectItem[];
   selectedCategoriaCurricular: any;
@@ -50,9 +51,10 @@ export class TipoCurricularComponent {
   numSelected: number = 0;
   selectMultiple: boolean = false;
   selectAll: boolean = false;
+
   msgs: any = [];
 
-  showTipoCurricular: boolean = true;
+  showSubtipoCurricular: boolean = true;
   progressSpinner: boolean = false;
   buscar: boolean = false;
   nuevo: boolean = false;
@@ -61,9 +63,6 @@ export class TipoCurricularComponent {
   historico: boolean = false;
   blockCrear: boolean = true;
   blockBuscar: boolean = true;
-
-  enableCargo: boolean;
-  enableColegiado: boolean;
 
   constructor(
     private sigaServices: SigaServices,
@@ -107,10 +106,11 @@ export class TipoCurricularComponent {
     ];
   }
 
-  onHideTipoCV() {
-    this.showTipoCurricular = !this.showTipoCurricular;
+  onHideSubtipoCV() {
+    this.showSubtipoCurricular = !this.showSubtipoCurricular;
   }
 
+  // Métodos
   search() {
     this.progressSpinner = true;
     this.buscar = true;
@@ -127,7 +127,7 @@ export class TipoCurricularComponent {
 
     this.sigaServices
       .postPaginado(
-        "tipoCurricular_searchTipoCurricular",
+        "subtipoCurricular_searchSubtipoCurricular",
         "?numPagina=1",
         this.body
       )
@@ -135,7 +135,7 @@ export class TipoCurricularComponent {
         data => {
           this.progressSpinner = false;
           this.bodySearch = JSON.parse(data["body"]);
-          this.datos = this.bodySearch.tipoCurricularItems;
+          this.datos = this.bodySearch.subtipoCurricularItems;
 
           this.table.paginator = true;
         },
@@ -195,7 +195,7 @@ export class TipoCurricularComponent {
       this.nuevoElemento = this.body;
 
       this.sigaServices
-        .post("tipoCurricular_createTipoCurricular", this.nuevoElemento)
+        .post("subtipoCurricular_createSubtipoCurricular", this.nuevoElemento)
         .subscribe(
           data => {
             this.showSuccess();
@@ -289,7 +289,6 @@ export class TipoCurricularComponent {
       this.body.descripcion = e.srcElement.value.trim();
       this.body.descripcion = this.body.descripcion.trim();
       this.inputDesc.nativeElement.value = e.srcElement.value.trim();
-      console.log(this.inputDesc);
     }
   }
 
@@ -333,12 +332,13 @@ export class TipoCurricularComponent {
   }
 
   removeElement(selectedDatos) {
-    selectedDatos.forEach((value: TipoCurricularItem, key: number) => {
-      this.bodyRemove.tipoCurricularItems.push(value);
+    selectedDatos.forEach((value: SubtipoCurricularItem, key: number) => {
+      this.bodyRemove.subtipoCurricularItems.push(value);
     });
 
+    console.log("Eliminamos", this.bodyRemove.subtipoCurricularItems);
     this.sigaServices
-      .post("tipoCurricular_deleteTipoCurricular", this.bodyRemove)
+      .post("subtipoCurricular_deleteSubtipoCurricular", this.bodyRemove)
       .subscribe(
         data => {
           if (selectedDatos == 1) {
@@ -441,10 +441,10 @@ export class TipoCurricularComponent {
           data.codigoExterno != null &&
           data.codigoExterno != undefined)
       ) {
-        this.datos.forEach((value: TipoCurricularItem, key: number) => {
+        this.datos.forEach((value: SubtipoCurricularItem, key: number) => {
           if (
             value.idTipoCV == data.idTipoCV &&
-            value.idTipoCvSubtipo1 == data.idTipoCvSubtipo1
+            value.idTipoCvSubtipo2 == data.idTipoCvSubtipo2
           ) {
             value.descripcion = data.descripcion.substring(0, 1950);
             value.codigoExterno = data.codigoExterno.substring(0, 10);
@@ -458,10 +458,10 @@ export class TipoCurricularComponent {
         } else {
           this.editar = true;
           this.blockCrear = false;
-          this.datos.forEach((value: TipoCurricularItem, key: number) => {
+          this.datos.forEach((value: SubtipoCurricularItem, key: number) => {
             if (
               value.idTipoCV == data.idTipoCV &&
-              value.idTipoCvSubtipo1 == data.idTipoCvSubtipo1
+              value.idTipoCvSubtipo2 == data.idTipoCvSubtipo2
             ) {
               value.editar = true;
             }
@@ -475,10 +475,10 @@ export class TipoCurricularComponent {
       } else {
         this.editar = true;
         this.blockCrear = false;
-        this.datosHist.forEach((value: TipoCurricularItem, key: number) => {
+        this.datosHist.forEach((value: SubtipoCurricularItem, key: number) => {
           if (
             value.idTipoCV == data.idTipoCV &&
-            value.idTipoCvSubtipo1 == data.idTipoCvSubtipo1
+            value.idTipoCvSubtipo2 == data.idTipoCvSubtipo2
           ) {
             value.editar = true;
           }
@@ -489,16 +489,16 @@ export class TipoCurricularComponent {
   }
 
   confirmEditAction() {
-    this.datos.forEach((value: TipoCurricularItem, key: number) => {
+    this.datos.forEach((value: SubtipoCurricularItem, key: number) => {
       if (value.editar) {
         this.datosEditar.push(value);
       }
     });
 
-    this.bodyUpdate.tipoCurricularItems = this.datosEditar;
+    this.bodyUpdate.subtipoCurricularItems = this.datosEditar;
 
     this.sigaServices
-      .post("tipoCurricular_updateTipoCurricular", this.bodyUpdate)
+      .post("subtipoCurricular_updateSubtipoCurricular", this.bodyUpdate)
       .subscribe(
         data => {
           this.showSuccess();
@@ -508,6 +508,7 @@ export class TipoCurricularComponent {
         },
         () => {
           this.search();
+          this.datosEditar = [];
         }
       );
   }
@@ -530,12 +531,12 @@ export class TipoCurricularComponent {
     this.history.tipoCategoriaCurricular = this.body.tipoCategoriaCurricular;
 
     this.sigaServices
-      .post("tipoCurricular_historyTipoCurricular", this.history)
+      .post("subtipoCurricular_historySubtipoCurricular", this.history)
       .subscribe(
         data => {
           console.log(data);
           this.bodySearch = JSON.parse(data["body"]);
-          this.datos = this.bodySearch.tipoCurricularItems;
+          this.datos = this.bodySearch.subtipoCurricularItems;
         },
         err => {
           console.log(err);

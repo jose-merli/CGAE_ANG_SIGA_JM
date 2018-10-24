@@ -236,8 +236,22 @@ export class SigaServices {
     fichaCalendario_profiles: "fichaCalendario/profiles",
     fichaCalendario_updatePermissions: "fichaCalendario/updatePermissions",
     fichaCalendario_saveCalendar: "fichaCalendario/saveCalendar",
+    fichaCalendario_updateCalendar: "fichaCalendario/updateCalendar",
+    fichaCalendario_getCalendar: "fichaCalendario/getCalendar",
     fichaCalendario_getProfilesPermissions:
       "fichaCalendario/getProfilesPermissions",
+    fichaCalendario_getEventNotifications:
+      "fichaCalendario/getEventNotifications",
+    datosNotificaciones_getTypeNotifications:
+      "datosNotificaciones/getTypeNotifications",
+    datosNotificaciones_getMeasuredUnit: "datosNotificaciones/getMeasuredUnit",
+    datosNotificaciones_saveNotification:
+      "datosNotificaciones/saveNotification",
+    datosNotificaciones_updateNotification:
+      "datosNotificaciones/updateNotification",
+    datosNotificaciones_getTypeWhere: "datosNotificaciones/getTypeWhere",
+    datosNotificaciones_getTemplates: "datosNotificaciones/getTemplates",
+    datosNotificaciones_getTypeSend: "datosNotificaciones/getTypeSend",
     fichaColegialSociedades_searchSocieties:
       "fichaColegialSociedades/searchSocieties",
     fichaColegialOtrasColegiaciones_searchOtherCollegues:
@@ -257,8 +271,22 @@ export class SigaServices {
       "solicitudModificacion/tipoModificacion",
     solicitudModificacion_estado: "solicitudModificacion/estado",
     tipoCurricular_categoriaCurricular: "tipoCurricular/categoriaCurricular",
-    tipoCurricular_search: "tipoCurricular/search",
-    tipoCurricular_createTipoCurricular: "tipoCurricular/createTipoCurricular"
+    tipoCurricular_searchTipoCurricular: "tipoCurricular/searchTipoCurricular",
+    tipoCurricular_createTipoCurricular: "tipoCurricular/createTipoCurricular",
+    tipoCurricular_updateTipoCurricular: "tipoCurricular/updateTipoCurricular",
+    tipoCurricular_deleteTipoCurricular: "tipoCurricular/deleteTipoCurricular",
+    tipoCurricular_historyTipoCurricular:
+      "tipoCurricular/historyTipoCurricular",
+    subtipoCurricular_searchSubtipoCurricular:
+      "subtipoCurricular/searchSubtipoCurricular",
+    subtipoCurricular_createSubtipoCurricular:
+      "subtipoCurricular/createSubtipoCurricular",
+    subtipoCurricular_updateSubtipoCurricular:
+      "subtipoCurricular/updateSubtipoCurricular",
+    subtipoCurricular_deleteSubtipoCurricular:
+      "subtipoCurricular/deleteSubtipoCurricular",
+    subtipoCurricular_historySubtipoCurricular:
+      "subtipoCurricular/historySubtipoCurricular"
   };
 
   private menuToggled = new Subject<any>();
