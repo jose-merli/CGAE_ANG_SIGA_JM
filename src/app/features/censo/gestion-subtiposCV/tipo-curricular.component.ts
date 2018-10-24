@@ -60,6 +60,7 @@ export class TipoCurricularComponent {
   editar: boolean = false;
   historico: boolean = false;
   blockCrear: boolean = true;
+  blockBuscar: boolean = true;
 
   enableCargo: boolean;
   enableColegiado: boolean;
@@ -147,6 +148,7 @@ export class TipoCurricularComponent {
 
   restore() {
     this.body.tipoCategoriaCurricular = "";
+    this.blockBuscar = true;
   }
 
   // Para la creación de un nuevo elemento
@@ -260,6 +262,12 @@ export class TipoCurricularComponent {
   }
 
   onChangeTipoCategoriaCurricular(event) {
+    if (this.body.tipoCategoriaCurricular == "") {
+      this.blockBuscar = true;
+      this.blockCrear = true;
+    } else {
+      this.blockBuscar = false;
+    }
     this.body.tipoCategoriaCurricular = event.value;
   }
 
@@ -315,7 +323,9 @@ export class TipoCurricularComponent {
           }
         ];
 
+        this.editar = false;
         this.selectMultiple = false;
+        this.selectAll = false;
         this.selectedDatos = [];
         this.numSelected = 0;
       }
@@ -356,8 +366,12 @@ export class TipoCurricularComponent {
           console.log(err);
         },
         () => {
-          this.search();
           this.editar = false;
+          this.selectMultiple = false;
+          this.selectAll = false;
+          this.selectedDatos = [];
+          this.numSelected = 0;
+          this.search();
         }
       );
   }

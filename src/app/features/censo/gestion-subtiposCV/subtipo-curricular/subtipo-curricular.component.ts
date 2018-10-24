@@ -62,6 +62,7 @@ export class SubtipoCurricularComponent implements OnInit {
   editar: boolean = false;
   historico: boolean = false;
   blockCrear: boolean = true;
+  blockBuscar: boolean = true;
 
   constructor(
     private sigaServices: SigaServices,
@@ -147,6 +148,7 @@ export class SubtipoCurricularComponent implements OnInit {
 
   restore() {
     this.body.tipoCategoriaCurricular = "";
+    this.blockBuscar = true;
   }
 
   // Para la creación de un nuevo elemento
@@ -260,6 +262,12 @@ export class SubtipoCurricularComponent implements OnInit {
   }
 
   onChangeTipoCategoriaCurricular(event) {
+    if (this.body.tipoCategoriaCurricular == "") {
+      this.blockBuscar = true;
+      this.blockCrear = true;
+    } else {
+      this.blockBuscar = false;
+    }
     this.body.tipoCategoriaCurricular = event.value;
   }
 
@@ -314,7 +322,9 @@ export class SubtipoCurricularComponent implements OnInit {
           }
         ];
 
+        this.editar = false;
         this.selectMultiple = false;
+        this.selectAll = false;
         this.selectedDatos = [];
         this.numSelected = 0;
       }
@@ -323,8 +333,6 @@ export class SubtipoCurricularComponent implements OnInit {
 
   removeElement(selectedDatos) {
     selectedDatos.forEach((value: SubtipoCurricularItem, key: number) => {
-      // value.idTipoCvSubtipo1 = this.body.idTipoCvSubtipo1;
-      // value.tipoCategoriaCurricular = this.body.tipoCategoriaCurricular;
       this.bodyRemove.subtipoCurricularItems.push(value);
     });
 
@@ -358,8 +366,12 @@ export class SubtipoCurricularComponent implements OnInit {
           console.log(err);
         },
         () => {
-          this.search();
           this.editar = false;
+          this.selectMultiple = false;
+          this.selectAll = false;
+          this.selectedDatos = [];
+          this.numSelected = 0;
+          this.search();
         }
       );
   }

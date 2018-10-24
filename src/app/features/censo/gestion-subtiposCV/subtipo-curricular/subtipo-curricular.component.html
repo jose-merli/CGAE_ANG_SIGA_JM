@@ -18,7 +18,7 @@
         <div class="row">
 
           <div class="form-group col-lg-3 col-md-3">
-            <label>{{'censo.busquedaClientesAvanzada.literal.categoriaCV' | translate}}</label>
+            <label>{{'censo.busquedaClientesAvanzada.literal.categoriaCV' | translate}} (*)</label>
             <br>
             <p-dropdown class="select-form" [(ngModel)]="body.tipoCategoriaCurricular" [options]="categoriaCurricular" [filter]="true"
               filterBy="label" (onChange)="onChangeTipoCategoriaCurricular($event)"></p-dropdown>
@@ -30,7 +30,8 @@
     </div>
     <div class="card-footer">
       <div class="text-right main-button ">
-        <button (click)="search(); selectedDatos=[]; nuevo = false" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
+        <button (click)="search(); selectedDatos=[]; nuevo = false" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"
+          [(disabled)]="blockBuscar"></button>
         <button (click)="restore()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
       </div>
     </div>
