@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -17,18 +18,18 @@
             <div class="bloque col-lg-5 col-md-3 col-sm-3">
               <div class="row pb-3">
                 <div class="col-lg-6 col-md-6">
-                  <label>{{'censo.consultaDatosGenerales.literal.tipoCliente' | translate}}</label>
+                  <label>{{'censo.consultaDatosGenerales.literal.tipoCliente' | translate}}(*)</label>
                   <p-dropdown class="select-form" [options]="comboCalendarType" [filter]="true" filterBy="label,labelSinTilde" placeholder="Seleccionar"
                     [(ngModel)]='calendar.idTipoCalendario' name="type" [disabled]="modoEdicion"></p-dropdown>
                 </div>
                 <div class="col-lg-6 col-md-6 pt-3">
-                  <label class="pr-1">Color:</label>
+                  <label class="pr-1">{{'formacion.fichaCalendario.color.cabecera' | translate}}:</label>
                   <p-colorPicker [(ngModel)]="colorSelect" name="color"></p-colorPicker>
                 </div>
               </div>
               <div class="row">
                 <div class="col-lg-12 col-md-12">
-                  <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
+                  <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}(*)</label>
                   <input type="text" class="form-control" [(ngModel)]='calendar.descripcion' pInputText name="descripcion">
                 </div>
               </div>
@@ -50,16 +51,17 @@
   <!-- CONFIGURACION DE PERFILES-->
   <div class="card">
     <div class="card-body">
-      <p class="title-module"> Configuración de perfiles
-        <i (click)="abrirFicha('confi')" *ngIf="!esFichaActiva('confi')" class="fa fa-angle-up float-right"></i>
-        <i (click)="cerrarFicha('confi')" *ngIf="esFichaActiva('confi')" class="fa fa-angle-down float-right"></i>
-      </p>
+      <div class="cabecera" (click)="abrirFicha('confi')">
+        <p class="title-module"> {{ 'formacion.fichaCalendario.configuracion.perfiles.cabecera' | translate }}
+          <i class="float-right fa" [ngClass]="{'fa-angle-down': openFicha, 'fa-angle-up': !openFicha}"></i>
+        </p>
+      </div>
       <div *ngIf="esFichaActiva('confi')" class="module vista-simple scroll-perfil">
         <div class="card-body card-body-ficha">
           <div class="text-right ml-auto form-group col-lg-6 col-md-6">
             <label class="proceso-generico">Permisos Calendario SIGA ({{numSeleccionados}}/árbol)</label>
             <div class="mt-2">
-              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" class="d-inline-block mr-2" binary="true" label="Seleccionar todo"></p-checkbox>
+              <p-checkbox (onChange)="onChangeSelectAllProfiles()" [(ngModel)]="selectAll" class="d-inline-block mr-2" binary="true" label="Seleccionar todo"></p-checkbox>
             </div>
           </div>
           <div class="row">
@@ -107,16 +109,17 @@
   <!-- NOTIFICACIONES -->
   <div class="card">
     <div class="card-body">
-      <p class="title-module"> Notificaciones
-        <i (click)="abrirFicha('notify')" *ngIf="!esFichaActiva('notify')" class="fa fa-angle-up float-right"></i>
-        <i (click)="cerrarFicha('notify')" *ngIf="esFichaActiva('notify')" class="fa fa-angle-down float-right"></i>
-      </p>
+      <div class="cabecera" (click)="abrirFicha('notify')">
+        <p class="title-module"> {{'formacion.fichaCalendario.notificaciones.cabecera' | translate}}
+          <i class="float-right fa" [ngClass]="{'fa-angle-down': esFichaActiva('notify'), 'fa-angle-up': !esFichaActiva('notify')}"></i>
+        </p>
+      </div>
       <div *ngIf="esFichaActiva('notify')" class="card-body card-body-ficha">
-        <div class="row">
+        <div *ngIf="!historico" class="row">
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
             [(selection)]="selectedDatos" (onRowSelect)="irEditarNotificacion(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-            pageLinks="4" dataKey="idPersona" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos"
-            [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+            pageLinks="4" dataKey="idNotificacion" [responsive]="true" selectionMode="multiple" #table class="tabla-listado"
+            [value]="datos" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
             <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
               [filter]="true" filterMatchMode="contains">
             </p-column>
@@ -129,7 +132,7 @@
                 <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                 <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
                 <div class="ml-3 selectAllNotification">
-                  <p-checkbox (onChange)="onChangeSelectAllNotifications()" [(ngModel)]="selectAllNotification" binary="true" label="Seleccionar todo"
+                  <p-checkbox (onChange)="onChangeSelectAllNotifications()" [(ngModel)]="selectAllNotifications" binary="true" label="Seleccionar todo"
                     name="groupname"></p-checkbox>
                 </div>
                 <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
@@ -140,21 +143,65 @@
 
           </p-dataTable>
         </div>
+        <!--HISTORICO-->
+        <div *ngIf="historico" class="card mt-3">
+          <div class="card-body p-0">
 
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+              [(selection)]="selectedDatos" (onRowSelect)="irEditarNotificacion(selectedDatos)" pageLinks="4" dataKey="idNotificacion"
+              [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true"
+              paginatorPosition="both" [rows]="selectedItem">
+              <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+                [filter]="true" filterMatchMode="contains">
+                <ng-template let-datoH="rowData" pTemplate="body">
+                  <div *ngIf="setItalic(datoH)">
+                    <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
+                  </div>
+                  <div *ngIf="!setItalic(datoH)">
+                    <span>{{datoH[col.field]}}</span>
+                  </div>
+
+                </ng-template>
+
+              </p-column>
+
+              <ng-template pTemplate="paginatorLeft">
+                <div class="mostrar d-flex text-right justify-content-end">
+                  <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                  <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+                  <label>{{ "general.message.mostrar" | translate}}</label>
+                  <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                  <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                  <div class="ml-3 selectAll">
+                    <p-checkbox (onChange)="onChangeSelectAllNotifications()" [(ngModel)]="selectAllNotifications" binary="true" label="Seleccionar todo"
+                      name="groupname"></p-checkbox>
+                  </div>
+                  <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+                    <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+                </div>
+              </ng-template>
+            </p-dataTable>
+          </div>
+        </div>
       </div>
       <div *ngIf="esFichaActiva('notify')" class="card-footer">
-        <div class="text-right main-button">
-          <!-- <button *ngIf="selectedDatos && selectedDatos != '' && !activacionEditar" disabled pButton type="button" icon="fa fa-trash-alt "
-            iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button> -->
-          <!-- <button (click)="historico(); selectedDatos=[]" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button> -->
-          <button pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-          <button pButton (click)="newNotification()" type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.new' | translate }}"></button>
+        <div *ngIf="!historico" class="text-right main-button">
+          <button (click)="getHistoricEventNotifications(); selectedDatos=[]" pButton type="button" icon="fa fa-history" iconPos="left"
+            label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+          <button [disabled]="!(selectedDatos && selectedDatos != '')" (click)="deleteNotification(selectedDatos)" pButton type="button"
+            icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+          <button pButton (click)="newNotification()" type="button" icon="fa fa-send" iconPos="left" label="{{
+            'general.boton.new' | translate }}"></button>
+        </div>
+        <div *ngIf="historico" class="text-right main-button">
+          <button (click)="getEventNotifications()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+          <button (click)="deleteSeleccion()" [disabled]="historico" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div *ngIf="progressSpinner" class="overlay-spinner">
-  <div class="loader"></div>
+<div *ngIf="progressSpinner " class="overlay-spinner ">
+  <div class="loader "></div>
 </div>

@@ -240,6 +240,9 @@ export class SigaServices {
       "fichaCalendario/getProfilesPermissions",
     fichaCalendario_getEventNotifications:
       "fichaCalendario/getEventNotifications",
+    fichaCalendario_deleteNotification: "fichaCalendario/deleteNotification",
+    fichaCalendario_getHistoricEventNotifications:
+      "fichaCalendario/getHistoricEventNotifications",
     datosNotificaciones_getTypeNotifications:
       "datosNotificaciones/getTypeNotifications",
     datosNotificaciones_getMeasuredUnit: "datosNotificaciones/getMeasuredUnit",

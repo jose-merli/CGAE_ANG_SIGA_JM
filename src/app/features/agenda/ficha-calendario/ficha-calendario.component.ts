@@ -6,6 +6,8 @@ import { PermisosCalendarioItem } from "../../../models/PermisosCalendarioItem";
 import { PermisosCalendarioObject } from "../../../models/PermisosCalendarioObject";
 import { DataTable } from "../../../../../node_modules/primeng/primeng";
 import { Router } from "../../../../../node_modules/@angular/router";
+import { NotificacionEventoObject } from "../../../models/NotificacionEventoObject";
+import { NotificacionEventoItem } from "../../../models/NotificacionEventoItem";
 
 @Component({
   selector: "app-ficha-calendario",
@@ -30,6 +32,8 @@ export class FichaCalendarioComponent implements OnInit {
   numCambios: number;
   totalProfiles: number;
 
+  fichasPosibles = [];
+
   //accesos totales
   accesoTotal: number;
   accesoLectura: number;
@@ -43,21 +47,6 @@ export class FichaCalendarioComponent implements OnInit {
 
   saveCalendarFlag: boolean = false;
   calendar: CalendarItem = new CalendarItem();
-
-  fichasPosibles = [
-    {
-      key: "generales",
-      activa: true
-    },
-    {
-      key: "confi",
-      activa: false
-    },
-    {
-      key: "notify",
-      activa: false
-    }
-  ];
 
   comboCalendarType;
   // map con los permisos {data, ObjectoPermisosBack}
@@ -74,7 +63,9 @@ export class FichaCalendarioComponent implements OnInit {
   sortO: number = 1;
   numSelected: number = 0;
 
-  datosHist: any[];
+  historico: boolean = false;
+  openFicha: boolean = false;
+  closeFicha: boolean = true;
 
   constructor(
     private sigaServices: SigaServices,
@@ -93,8 +84,13 @@ export class FichaCalendarioComponent implements OnInit {
 
   ngOnInit() {
     this.progressSpinner = true;
-    this.getComboCalendarType();
+    if (sessionStorage.getItem("fichaAbierta") == "true") {
+      this.getFichasEdit();
+    } else {
+      this.getFichas();
+    }
 
+    this.getComboCalendarType();
     this.getColsResults();
 
     //Comprobamos si estamos en modoEdición o en modo Nuevo
@@ -103,6 +99,7 @@ export class FichaCalendarioComponent implements OnInit {
       this.getCalendar(sessionStorage.getItem("idCalendario"));
       this.saveCalendarFlag = true;
       this.getProfiles();
+      this.getEventNotifications();
     } else {
       this.modoEdicion = false;
       sessionStorage.removeItem("idCalendario");
@@ -149,6 +146,7 @@ export class FichaCalendarioComponent implements OnInit {
           }
           sessionStorage.setItem("idCalendario", body.id);
           this.getProfiles();
+          this.getEventNotifications();
         }
       },
       err => {
@@ -392,11 +390,11 @@ export class FichaCalendarioComponent implements OnInit {
     this.cols = [
       {
         field: "nombreTipoNotificacion",
-        header: "censo.consultaDatosGenerales.literal.tipoCliente"
+        header: "formacion.datosNotificaciones.tipoNotificacion.cabecera"
       },
       {
         field: "descripcionCuando",
-        header: "censo.consultaDatos.literal.fechaFin"
+        header: "formacion.datosNotificaciones.cuando.cabecera"
       },
       {
         field: "nombrePlantilla",
@@ -404,7 +402,7 @@ export class FichaCalendarioComponent implements OnInit {
       },
       {
         field: "tipoEnvio",
-        header: "censo.datosDireccion.literal.correo"
+        header: "envios.plantillas.literal.tipoenvio"
       }
     ];
 
@@ -431,6 +429,7 @@ export class FichaCalendarioComponent implements OnInit {
 
   getEventNotifications() {
     this.progressSpinner = true;
+    this.historico = false;
     let idCalendario = sessionStorage.getItem("idCalendario");
     this.sigaServices
       .getParam(
@@ -451,12 +450,18 @@ export class FichaCalendarioComponent implements OnInit {
       );
   }
 
+  setItalic(datoH) {
+    if (datoH.fechaBaja == null) return false;
+    else return true;
+  }
+
   irEditarNotificacion(id) {
     if (id.length >= 1 && this.selectMultiple == false) {
       sessionStorage.setItem("modoEdicionNotify", "true");
       sessionStorage.removeItem("notifySelected");
       sessionStorage.setItem("notifySelected", JSON.stringify(id));
       this.router.navigate(["/editarNotificacion"]);
+      sessionStorage.setItem("fichaAbierta", "true");
     }
   }
 
@@ -472,14 +477,15 @@ export class FichaCalendarioComponent implements OnInit {
 
   newNotification() {
     sessionStorage.setItem("modoEdicionNotify", "false");
+    sessionStorage.setItem("fichaAbierta", "true");
     this.router.navigate(["/editarNotificacion"]);
   }
 
   onChangeSelectAllNotifications() {
     if (this.selectAllNotifications === true) {
       this.selectMultiple = false;
-      this.selectedDatos = this.datosHist;
-      this.numSelected = this.datosHist.length;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -496,7 +502,57 @@ export class FichaCalendarioComponent implements OnInit {
       this.selectedDatos = [];
       this.numSelected = 0;
     }
-    // this.volver();
+  }
+
+  deleteNotification(selectedDatos) {
+    this.progressSpinner = true;
+    let deleteNotifications = new NotificacionEventoObject();
+
+    selectedDatos.forEach(e => {
+      let noti = new NotificacionEventoItem();
+      noti = e;
+      deleteNotifications.eventNotificationItems.push(noti);
+    });
+
+    this.sigaServices
+      .post("fichaCalendario_deleteNotification", deleteNotifications)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.showSuccessDelete();
+          this.getEventNotifications();
+          this.selectMultiple = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  getHistoricEventNotifications() {
+    this.progressSpinner = true;
+    this.historico = true;
+    let idCalendario = sessionStorage.getItem("idCalendario");
+    this.sigaServices
+      .getParam(
+        "fichaCalendario_getHistoricEventNotifications",
+        "?idCalendario=" + idCalendario
+      )
+      .subscribe(
+        n => {
+          this.datos = n.eventNotificationItems;
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
   }
 
   //FUNCIONES GENERALES DE LA PANTALLA
@@ -510,6 +566,14 @@ export class FichaCalendarioComponent implements OnInit {
     let fichaPosible = this.getFichaPosibleByKey(key);
     if (this.saveCalendarFlag) {
       fichaPosible.activa = !fichaPosible.activa;
+    }
+
+    if (key == "confi" && this.openFicha) {
+      this.openFicha = false;
+      this.closeFicha = true;
+    } else if (key == "confi" && !this.openFicha) {
+      this.openFicha = true;
+      this.closeFicha = false;
     }
   }
 
@@ -536,5 +600,48 @@ export class FichaCalendarioComponent implements OnInit {
       summary: "Correcto",
       detail: "Árbol de permisos actualizado correctamente"
     });
+  }
+
+  showSuccessDelete() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: "Correcto",
+      detail: "Se ha eliminado la notificacion correctamente"
+    });
+  }
+
+  getFichas() {
+    this.fichasPosibles = [
+      {
+        key: "generales",
+        activa: true
+      },
+      {
+        key: "confi",
+        activa: false
+      },
+      {
+        key: "notify",
+        activa: false
+      }
+    ];
+  }
+
+  getFichasEdit() {
+    this.fichasPosibles = [
+      {
+        key: "generales",
+        activa: true
+      },
+      {
+        key: "confi",
+        activa: false
+      },
+      {
+        key: "notify",
+        activa: true
+      }
+    ];
   }
 }

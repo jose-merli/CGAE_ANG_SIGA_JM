@@ -20,15 +20,18 @@ export class DatosNotificacionesComponent implements OnInit {
   comboAfterBefore;
   comboMeasureUnit;
   comboTemplates;
+  selectedTemplate: NotificacionEventoItem;
   notification: NotificacionEventoItem;
 
   modoEdicion: boolean;
   progressSpinner: boolean = false;
   disabledTypeSend: boolean = false;
+  disabledSave: boolean = true;
 
   constructor(private sigaServices: SigaServices, private location: Location) {}
 
   ngOnInit() {
+    this.progressSpinner = true;
     this.getCombos();
 
     //Comprobamos si estamos en modoEdición o en modo Nuevo
@@ -39,7 +42,10 @@ export class DatosNotificacionesComponent implements OnInit {
       )[0];
 
       if (this.notification.idPlantilla != null) {
-        this.getTypeSend(this.notification.idPlantilla);
+        this.getTypeSend(
+          this.notification.idPlantilla,
+          this.notification.idTipoEnvio
+        );
       }
     } else {
       this.modoEdicion = false;
@@ -90,12 +96,27 @@ export class DatosNotificacionesComponent implements OnInit {
   }
 
   getComboTemplate() {
+    this.progressSpinner = true;
     this.sigaServices.get("datosNotificaciones_getTemplates").subscribe(
       n => {
-        this.comboTemplates = n.combooItems;
+        this.comboTemplates = n.comboItems;
+        if (sessionStorage.getItem("modoEdicionNotify") == "true") {
+          this.comboTemplates.forEach(e => {
+            if (
+              e.value.idPlantilla === this.notification.idPlantilla &&
+              e.value.idTipoEnvio === this.notification.idTipoEnvio
+            ) {
+              this.selectedTemplate = e.value;
+            }
+          });
+        }
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
       }
     );
   }
@@ -126,20 +147,24 @@ export class DatosNotificacionesComponent implements OnInit {
 
   backTo() {
     this.location.back();
+    sessionStorage.setItem("modoEdicion", "true");
   }
 
   onChangeTemplates(event) {
-    let idPlantillaEnvio = event.value;
-    this.getTypeSend(idPlantillaEnvio);
+    let idPlantillaEnvio = event.value.idPlantilla;
+    let idTipoEnvio = event.value.idTipoEnvio;
+    this.getTypeSend(idPlantillaEnvio, idTipoEnvio);
+    this.notification.idPlantilla = idPlantillaEnvio;
+    this.notification.idTipoEnvio = idTipoEnvio;
   }
 
-  getTypeSend(idPlantillaEnvio) {
+  getTypeSend(idPlantillaEnvio, idTipoEnvio) {
     let typeSend = [];
     this.disabledTypeSend = true;
     this.sigaServices
       .getParam(
         "datosNotificaciones_getTypeSend",
-        "?idPlantillaEnvio=" + idPlantillaEnvio
+        "?idPlantillaEnvio=" + idPlantillaEnvio + "&idTipoEnvio=" + idTipoEnvio
       )
       .subscribe(
         n => {
@@ -148,7 +173,53 @@ export class DatosNotificacionesComponent implements OnInit {
         },
         err => {
           console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
         }
       );
+  }
+
+  restNotification() {
+    if (sessionStorage.getItem("modoEdicionNotify") == "true") {
+      this.notification = JSON.parse(
+        sessionStorage.getItem("notifySelected")
+      )[0];
+
+      if (this.notification.idPlantilla != null) {
+        this.getTypeSend(
+          this.notification.idPlantilla,
+          this.notification.idTipoEnvio
+        );
+      }
+
+      this.comboTemplates.forEach(e => {
+        if (
+          e.value.idPlantilla === this.notification.idPlantilla &&
+          e.value.idTipoEnvio === this.notification.idTipoEnvio
+        ) {
+          this.selectedTemplate = e.value;
+        }
+      });
+    } else {
+      this.modoEdicion = false;
+      this.notification = new NotificacionEventoItem();
+      this.notification.idCalendario = sessionStorage.getItem("idCalendario");
+      this.selectedTemplate = null;
+    }
+  }
+
+  validateForm() {
+    if (
+      this.notification.idTipoNotificacion == null ||
+      this.notification.idPlantilla == null ||
+      this.notification.idUnidadMedida == null ||
+      this.notification.cuando == null
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
