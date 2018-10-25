@@ -152,7 +152,9 @@ export class SigaServices {
     integrantes_update: "tarjetaIntegrantes/update",
     integrantes_insert: "tarjetaIntegrantes/create",
     integrantes_delete: "tarjetaIntegrantes/delete",
-    usuario_cambioIdioma: "usuario/cambioIdioma"
+    usuario_cambioIdioma: "usuario/cambioIdioma",
+    fichaColegialOtrasColegiaciones_searchOtherCollegues:
+      "fichaColegialOtrasColegiaciones/searchOtherCollegues"
   };
 
   private menuToggled = new Subject<any>();
@@ -202,9 +204,9 @@ export class SigaServices {
     return this.httpbackend
       .get(
         environment.newSigaUrl +
-        this.endpoints[service] +
-        "?institucion=" +
-        institucion
+          this.endpoints[service] +
+          "?institucion=" +
+          institucion
       )
       .map(response => {
         return response;

@@ -7,6 +7,8 @@ import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDt
 import { DatosIntegrantesItem } from "../../../../../models/DatosIntegrantesItem";
 import { DatosIntegrantesObject } from "../../../../../models/DatosIntegrantesObject";
 import { TranslateService } from "./../../../../../commons/translate/translation.service";
+import { ColegiadoItem } from "../../../../../models/ColegiadoItem";
+import { ColegiadoObject } from "../../../../../models/ColegiadoObject";
 
 /*** COMPONENTES ***/
 
@@ -50,6 +52,7 @@ export class DetalleIntegranteComponent implements OnInit {
   descripcionCargo: any;
   descripcionProvincia: any;
   descripcionTipoColegio: any;
+  descripcionColegio: any;
   permisosArray: any[];
   usuarioBody: any[];
   cargosArray: any[];
@@ -74,6 +77,11 @@ export class DetalleIntegranteComponent implements OnInit {
   body2: DatosIntegrantesItem = new DatosIntegrantesItem();
   esColegiado: boolean = false;
   colegio: String;
+  colegios: any[] = [];
+  idInstitucion: any;
+
+  colegiadoSearch: ColegiadoObject = new ColegiadoObject();
+  datosColegiados: any[] = [];
 
   @ViewChild("table")
   table;
@@ -106,9 +114,12 @@ export class DetalleIntegranteComponent implements OnInit {
     else {
       var a = JSON.parse(sessionStorage.getItem("integrante"));
       // caso de que la persona integrante colegiada
-      if (a.ejerciente != null && a.ejerciente != "NO COLEGIADO") {
+      if (
+        a.ejerciente != null &&
+        a.ejerciente != "NO COLEGIADO" &&
+        a.ejerciente != "SOCIEDAD"
+      ) {
         this.esColegiado = true;
-        this.colegio = a.nombrecolegio;
       } else {
         // caso de que la persona integrante sea no colegiada
         this.esColegiado = false;
@@ -126,6 +137,47 @@ export class DetalleIntegranteComponent implements OnInit {
       } else {
         this.ajustarPantallaParaAsignar();
       }
+    }
+
+    if (this.body.idPersona != null) {
+      this.sigaServices
+        .postPaginado(
+          "fichaColegialOtrasColegiaciones_searchOtherCollegues",
+          "?numPagina=1",
+          this.body.idPersona
+        )
+        .subscribe(
+          data => {
+            this.colegiadoSearch = JSON.parse(data["body"]);
+            this.datosColegiados = this.colegiadoSearch.colegiadoItem;
+
+            let array = [];
+
+            if (this.datosColegiados != null) {
+              this.datosColegiados.forEach(element => {
+                this.body.idTipoColegio = "1";
+                this.body.idInstitucion = element.idInstitucion;
+                this.body.numColegiado = element.numColegiado;
+                this.body.valor = this.body.idInstitucion;
+                this.sigaServices
+                  .post("integrantes_provinciaColegio", this.body)
+                  .subscribe(
+                    data => {
+                      this.body.idProvincia = JSON.parse(data["body"]).valor;
+                    },
+                    err => {},
+                    () => {}
+                  );
+
+                array.push(this.body);
+                console.log("ARRAY ", array);
+              });
+            }
+          },
+          err => {
+            console.log(err);
+          }
+        );
     }
 
     this.editar = this.body.editar;
@@ -177,9 +229,22 @@ export class DetalleIntegranteComponent implements OnInit {
       }
     ];
 
+    //Combos
+    this.getComboColegios();
     this.getComboProvincias();
     this.getComboTipoColegio();
     this.getComboTiposCargos();
+  }
+
+  getComboColegios() {
+    this.sigaServices.get("busquedaPer_colegio").subscribe(
+      n => {
+        this.colegios = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   getComboProvincias() {
@@ -304,13 +369,7 @@ export class DetalleIntegranteComponent implements OnInit {
         this.body.idPersona = ir[0].idPersona;
         this.body.idPersonaIntegrante = ir[0].idPersona;
       }
-      if (ir[0].colegio != null) {
-        this.body.idInstitucion = ir[0].colegio;
-        this.body.idInstitucionIntegrante = ir[0].numeroInstitucion;
-      } else {
-        this.body.idInstitucion = ir[0].idInstitucion;
-        this.body.idInstitucionIntegrante = ir[0].numeroInstitucion;
-      }
+
       if (ir[0].fechaAlta != null) {
         this.body.fechaCargo = ir[0].fechaAlta;
         this.fechaCarga = ir[0].fechaAlta;
@@ -355,13 +414,26 @@ export class DetalleIntegranteComponent implements OnInit {
       } else if (ir[0].numColegiado != null) {
         this.body.numColegiado = ir[0].numColegiado;
       }
-      if (ir[0].idProvincia != null) {
-        this.body.idProvincia = ir[0].idProvincia;
-      }
 
       // caso de que la persona integrante colegiada
-      if (ir[0].situacion != null && ir[0].situacion != "NO COLEGIADO") {
+      if (
+        ir[0].situacion != null &&
+        ir[0].situacion != "NO COLEGIADO" &&
+        ir[0].situacion != "SOCIEDAD"
+      ) {
         this.esColegiado = true;
+
+        if (ir[0].colegio != null) {
+          this.body.idInstitucion = ir[0].colegio.value;
+          this.body.idInstitucionIntegrante = ir[0].numeroInstitucion;
+        } else {
+          this.body.idInstitucion = ir[0].idInstitucion;
+          this.body.idInstitucionIntegrante = ir[0].numeroInstitucion;
+        }
+
+        if (ir[0].idProvincia != null) {
+          this.body.idProvincia = ir[0].idProvincia;
+        }
       } else {
         // caso de que la persona integrante sea no colegiada
         this.esColegiado = false;
@@ -381,31 +453,6 @@ export class DetalleIntegranteComponent implements OnInit {
       this.body.nombre = ir[0].nombre;
       this.body.apellidos1 = ir[0].apellidos1;
       this.body.apellidos2 = ir[0].apellidos2;
-      this.body.ejerciente = ir[0].ejerciente;
-
-      if (
-        this.body.ejerciente != null &&
-        this.body.ejerciente != "NO COLEGIADO"
-      ) {
-        this.esColegiado = true;
-        this.body.colegio = ir[0].colegio.label;
-        this.body.valor = ir[0].colegio.value;
-        let valore = {
-          valor: ir[0].colegio.value
-        };
-        this.sigaServices
-          .post("integrantes_provinciaColegio", valore)
-          .subscribe(
-            data => {
-              this.body.idProvincia = JSON.parse(data["body"]).valor;
-            },
-            err => {},
-            () => {}
-          );
-      } else {
-        // caso de que la persona integrante sea no colegiada
-        this.esColegiado = false;
-      }
 
       this.ajustarPantallaParaCrear();
     }
@@ -437,11 +484,19 @@ export class DetalleIntegranteComponent implements OnInit {
     //this.isDisabledColegio = true;
 
     if (this.esColegiado) {
+      // this.isDisabledColegio = true;
+      // this.isDisabledProvincia = true;
+      this.isDisabledTipoColegio = true;
       this.isDisabledColegio = true;
       this.isDisabledProvincia = true;
+      this.isDisabledNumColegio = true;
     } else {
+      // this.isDisabledColegio = false;
+      // this.isDisabledProvincia = false;
+      this.isDisabledTipoColegio = false;
       this.isDisabledColegio = false;
       this.isDisabledProvincia = false;
+      this.isDisabledNumColegio = false;
     }
   }
 
@@ -452,25 +507,15 @@ export class DetalleIntegranteComponent implements OnInit {
     this.isDisabledApellidos2 = true;
     if (this.esColegiado) {
       this.isDisabledTipoColegio = true;
-
-      // this.isDisabledColegio = true;
-      // this.isDisabledProvincia = true;
-
-      // El cole se puede modificar
-      this.isDisabledColegio = false;
+      this.isDisabledColegio = true;
       this.isDisabledProvincia = true;
-      this.isDisabledNumColegio = false;
+      this.isDisabledNumColegio = true;
     } else {
       this.isDisabledTipoColegio = false;
-      // this.isDisabledColegio = false;
-      // this.isDisabledProvincia = false;
-      // El cole se puede modificar
       this.isDisabledColegio = false;
-      this.isDisabledProvincia = true;
+      this.isDisabledProvincia = false;
       this.isDisabledNumColegio = false;
     }
-
-    // this.isDisabledColegio = true;
   }
 
   todoDisable() {
@@ -966,6 +1011,8 @@ export class DetalleIntegranteComponent implements OnInit {
     this.descripcionProvincia = this.provinciasArray.find(
       item => item.value === this.body.idProvincia
     );
+
+    console.log("dde", this.descripcionProvincia);
   }
 
   onChange(event) {

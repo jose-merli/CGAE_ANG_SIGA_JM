@@ -495,6 +495,7 @@ export class BusquedaGeneralComponent {
         }
         this.checkTypeCIF(id[0].nif);
         id[0].tipoIdentificacion = this.tipoCIF;
+
         sessionStorage.setItem("notario", JSON.stringify(id));
         this.location.back();
       }
@@ -504,6 +505,7 @@ export class BusquedaGeneralComponent {
       sessionStorage.removeItem("notario");
       this.checkTypeCIF(id[0].nif);
       id[0].tipoIdentificacion = this.tipoCIF;
+      id[0].colegio = this.colegios_seleccionados[0];
       id[0].completo = true;
       sessionStorage.removeItem("nIntegrante");
       sessionStorage.setItem("nIntegrante", JSON.stringify(id));
