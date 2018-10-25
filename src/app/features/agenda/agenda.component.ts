@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { Router } from "../../../../node_modules/@angular/router";
+import { Router } from "@angular/router";
 import { CalendarItem } from "../../models/CalendarItem";
 
 @Component({
@@ -24,6 +24,7 @@ export class AgendaComponent implements OnInit {
     this.getColsResults();
     this.listLecturaSelect = [];
     this.listAccesoSelect = [];
+    sessionStorage.removeItem("fichaAbierta");
   }
 
   getColsResults() {

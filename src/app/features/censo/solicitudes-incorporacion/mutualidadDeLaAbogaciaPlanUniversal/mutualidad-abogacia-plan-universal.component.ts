@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, FormControl, Validators } from "../../../../../
 import { Router } from "../../../../../../node_modules/@angular/router";
 import { SigaServices } from "../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate";
+import { Location } from "@angular/common";
 
 
 @Component({
@@ -27,13 +28,8 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
   comboPago: any[];
 
 
-  constructor(
-    private translateService: TranslateService,
-    private sigaServices: SigaServices,
-    private formBuilder: FormBuilder,
-    private changeDetectorRef: ChangeDetectorRef,
-    private router: Router
-  ) { }
+  constructor(private translateService: TranslateService, private sigaServices: SigaServices, private formBuilder: FormBuilder, private changeDetectorRef: ChangeDetectorRef,
+    private router: Router, private location: Location) { }
 
   ngOnInit() {
 
@@ -66,6 +62,13 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
     );
   }
 
+  deshabilitarDireccion(): boolean {
+    if (this.paisSelected != "191") {
+      return true;
+    } else {
+      return false;
+    }
+  }
   onChangeProvincia(event) {
     this.sigaServices.getParam("direcciones_comboPoblacion", "?idProvincia=" + event.value.value).subscribe(result => {
       this.poblaciones = result.combooItems;
@@ -91,5 +94,9 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
 
   abreCierraDatosPoliza() {
     this.datosPoliza = !this.datosPoliza;
+  }
+
+  backTo() {
+    this.location.back();
   }
 }

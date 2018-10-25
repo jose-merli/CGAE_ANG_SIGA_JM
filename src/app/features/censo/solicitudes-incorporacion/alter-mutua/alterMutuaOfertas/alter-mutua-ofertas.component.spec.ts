@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AlterMutua } from './alter-mutua.component';
+import { AlterMutuaOfertasComponent } from './alter-mutua-ofertas.component';
 
 describe('SolicitudesIncorporacionComponent', () => {
-  let component: AlterMutua;
-  let fixture: ComponentFixture<AlterMutua>;
+  let component: AlterMutuaOfertasComponent;
+  let fixture: ComponentFixture<AlterMutuaOfertasComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AlterMutua]
+      declarations: [AlterMutuaOfertasComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AlterMutua);
+    fixture = TestBed.createComponent(AlterMutuaOfertasComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
