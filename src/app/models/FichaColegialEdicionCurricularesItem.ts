@@ -10,6 +10,7 @@ export class FichaColegialEdicionCurricularesItem {
   descripcion: String;
   motivo: String;
   idInstitucion: String;
+  idCv: String;
   idTipoCv: String;
   idTipoCvSubtipo1: String;
   idTipoCvSubtipo2: String;

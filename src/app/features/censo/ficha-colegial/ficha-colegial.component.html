@@ -484,7 +484,7 @@
           <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-between">
               <label>Número total de Certificados:
-                <!-- <span>{{ searchDirecciones.datosDireccionesItem.length }}</span> -->
+                <span>{{ datosCertificados.length }}</span>
               </label>
 
             </div>
@@ -504,9 +504,9 @@
 
     <div *ngIf="esFichaActiva('certificados')" class="card-body card-body-ficha">
       <div class="row">
-        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="4" dataKey="idDireccion"
+        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="4" dataKey="idSolicitud"
           [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datosCertificados" [sortOrder]="1"
-          [paginator]="activarPaginacionCertificados()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionar(selectedDatos)"
+          [paginator]="activarPaginacionCertificados()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionarCerts(selectedDatos)"
           (onRowUnselect)="actualizaSeleccionados(selectedDatos)">
           <p-column *ngFor="let col of colsCertificados" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
@@ -731,7 +731,7 @@
     <div *ngIf="esFichaActiva('curriculares')" class="card-footer ">
       <div class="text-right main-button ">
         <!-- <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button> -->
-        <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+        <button (click)="deleteCurriculares(W)" pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
         <button (click)="irNuevoCurriculares()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
 
       </div>
