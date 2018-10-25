@@ -351,7 +351,7 @@ export class DatosRetencionesComponent implements OnInit {
 
     // this.table.reset();
     let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
-    this.changeSort(event);
+    // this.changeSort(event);
   }
   confirmEdit() {
     // this.fechaNoPermitida();
@@ -382,14 +382,14 @@ export class DatosRetencionesComponent implements OnInit {
           this.showSuccess();
           this.progressSpinner = false;
           let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
-          this.changeSort(event);
+          // this.changeSort(event);
         },
         err => {
           console.log(err);
           this.progressSpinner = false;
           this.showFail();
           let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
-          this.changeSort(event);
+          // this.changeSort(event);
         },
         () => {
           this.volver();

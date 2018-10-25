@@ -14,6 +14,9 @@ import { CookieService } from 'ngx-cookie-service';
 
 export class AppComponent implements OnInit {
 
+
+ 
+
   @ViewChild('content')
   content: any;
 
@@ -35,11 +38,9 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.activatedRoute.data.subscribe((result: any) => {
-    //   this.isScrollReseteable = result.scrollReset;
-    //   console.log(result)
-    // })
-    sessionStorage.clear();
+    
+
+    sessionStorage.removeItem("authenticated");
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false;
     };
@@ -68,10 +69,8 @@ export class AppComponent implements OnInit {
     this.cookieService.set('Test', 'Utilizamos cookies propias y de analítica para mejorar tu experiencia de usuario. Si continúas navegando, consideramos que aceptas su uso.');
     this.cookieValue = this.cookieService.get('Test');
 
-
-
-
   }
+
 
   subscribeNavigationEnd() {
     this.router

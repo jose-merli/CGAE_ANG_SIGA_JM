@@ -70,7 +70,10 @@ export class HeaderComponent implements OnInit {
 
   logout() {
     sessionStorage.removeItem("authenticated");
-
+    
+     if (sessionStorage.getItem('loginDevelop') === 'true' ) {
+              sessionStorage.setItem('loginDevelop', '0');
+     }
     window.location.href =
       "http://demo.redabogacia.org/pra/accesoSeleccionaColegio/";
     // this.router.navigate(["/"]).then(result => {
