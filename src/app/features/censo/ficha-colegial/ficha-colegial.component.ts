@@ -1259,6 +1259,42 @@ export class FichaColegialComponent implements OnInit {
       return false;
     else return true;
   }
+
+  deleteCurriculares(selectedItem) {
+    this.progressSpinner = true;
+    let deleteCurriculares = new FichaColegialEdicionCurricularesObject();
+    deleteCurriculares.FichaColegialEdicionCurricularesItem = selectedItem;
+    let datosDelete = [];
+    selectedItem.forEach(
+      (value: FichaColegialEdicionCurricularesItem, key: number) => {
+        value.idPersona = this.idPersona;
+        datosDelete.push(value);
+      }
+    );
+    this.sigaServices
+      .post("fichaDatosCurriculares_delete", datosDelete)
+      .subscribe(
+        data => {},
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.progressSpinner = false;
+          this.editar = false;
+        }
+      );
+  }
+  redireccionarCurriculares(dato) {
+    if (dato && dato.length < 2 && !this.selectMultiple) {
+      // enviarDatos = dato[0];
+      sessionStorage.setItem("curriculo", JSON.stringify(dato));
+      sessionStorage.setItem("crearCurriculo", "false");
+      this.router.navigate(["/edicionCurriculares"]);
+    } else {
+      sessionStorage.setItem("crearCurriculo", "true");
+    }
+  }
+
   onInitCurriculares() {
     this.searchDatosCurriculares();
   }

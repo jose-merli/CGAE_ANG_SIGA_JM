@@ -35,7 +35,6 @@ export class EdicionCurricularesComponent implements OnInit {
   historico: boolean = false;
   editar: boolean = false;
   buscar: boolean = false;
-  disabledRadio: boolean = false;
   disabled: boolean = false;
   selectMultiple: boolean = false;
   blockCrear: boolean = true;
@@ -44,19 +43,14 @@ export class EdicionCurricularesComponent implements OnInit {
   activo: boolean = false;
   dniCorrecto: boolean;
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
-  permisosTree: any;
-  permisosArray: any[];
+  categoriaCurricular: any[];
   usuarioBody: any[];
-  cargosArray: any[];
-  colegiosArray: any[];
-  provinciasArray: any[];
   derechoAcceso: any;
   activacionEditar: boolean;
   selectAll: boolean = false;
   update: boolean = true;
   progressSpinner: boolean = false;
   numSelected: number = 0;
-  masFiltros: boolean = false;
   openFicha: boolean = true;
   fichasPosibles: any[];
   body: FichaColegialEdicionCurricularesItem = new FichaColegialEdicionCurricularesItem();
@@ -76,6 +70,8 @@ export class EdicionCurricularesComponent implements OnInit {
 
   ngOnInit() {
     // this.editar = this.body.editar;
+    this.body = JSON.parse(sessionStorage.getItem("curriculo"));
+    this.body = this.body[0];
     this.editar = true;
     this.fichasPosibles = [
       {
@@ -123,35 +119,13 @@ export class EdicionCurricularesComponent implements OnInit {
         value: 40
       }
     ];
-    this.sigaServices.get("integrantes_tipoColegio").subscribe(
+    this.sigaServices.get("tipoCurricular_categoriaCurricular").subscribe(
       n => {
-        this.colegiosArray = n.combooItems;
+        this.categoriaCurricular = n.combooItems;
       },
       err => {
         console.log(err);
       }
-    );
-    this.sigaServices.get("integrantes_provincias").subscribe(
-      n => {
-        this.provinciasArray = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-    );
-    this.sigaServices.get("integrantes_cargos").subscribe(
-      n => {
-        this.cargosArray = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-      //   ,
-      //   () => {
-      //     this.cargosArray.forEach((value:ComboItem, key:number)){
-
-      //   }
-      // }
     );
   }
   abrirFicha() {
