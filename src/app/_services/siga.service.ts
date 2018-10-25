@@ -289,7 +289,8 @@ export class SigaServices {
     subtipoCurricular_deleteSubtipoCurricular:
       "subtipoCurricular/deleteSubtipoCurricular",
     subtipoCurricular_historySubtipoCurricular:
-      "subtipoCurricular/historySubtipoCurricular"
+      "subtipoCurricular/historySubtipoCurricular",
+    fichaDatosCurriculares_delete: "fichaDatosCurriculares/delete"
   };
 
   private menuToggled = new Subject<any>();
