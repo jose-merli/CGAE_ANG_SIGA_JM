@@ -75,45 +75,11 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.es = this.translateService.getCalendarLocale();
     this.cargarCombos();
 
-    /*this.formSolicitud = this.formBuilder.group({
-            estado: new FormControl(null, Validators.required),
-            fechaEstado: new FormControl(null, Validators.required),
-            fechaSolicitud: new FormControl(null, Validators.required),
-            observaciones: new FormControl(null, Validators.required),
-            tipoSolicitud: new FormControl(null, Validators.required),
-            tipoColegiacion: new FormControl(null, Validators.required),
-            modDocumentacion: new FormControl(null, Validators.required),
-            fechaIncorporacion: new FormControl(null, Validators.required),
-            numColegiado: new FormControl(null, Validators.required),
-            tipoIdentificacion: new FormControl(null, Validators.required),
-            numIdentificacion: new FormControl(null, Validators.required),
-            tratamiento: new FormControl(null, Validators.required),
-            nombre: new FormControl(null, Validators.required),
-            apellido1: new FormControl(null, Validators.required),
-            apellido2: new FormControl(null, Validators.required),
-            estadoCivil: new FormControl(null, Validators.required),
-            NaturalDe: new FormControl(null, Validators.required),
-            fechaNac: new FormControl(null, Validators.required),
-            pais: new FormControl(null, Validators.required),
-            direccion: new FormControl(null, Validators.required),
-            cp: new FormControl(null, Validators.required),
-            provincia: new FormControl(null),
-            poblacion: new FormControl(null),
-            telefono1: new FormControl(null, Validators.required),
-            telefono2: new FormControl(null),
-            fax1: new FormControl(null, Validators.required),
-            fax2: new FormControl(null, Validators.required),
-            movil: new FormControl(null, Validators.required),
-            mail: new FormControl(null, Validators.required),
-            titular: new FormControl(null, Validators.required),
-            iban: new FormControl(null, Validators.required),
-            banco: new FormControl(null, Validators.required),
-        })*/
-
     if (sessionStorage.getItem("consulta") == "true") {
       this.solicitudEditar = JSON.parse(
         sessionStorage.getItem("editedSolicitud")
       );
+      console.log(this.solicitudEditar);
 
       this.consulta = true;
       this.tratarDatos();
@@ -638,6 +604,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   }
 
   irAlterMutua() {
+    sessionStorage.setItem("datosSolicitud", JSON.stringify(this.solicitudEditar));
     this.router.navigate(["/alterMutua"]);
   }
   clear() {

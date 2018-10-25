@@ -19,5 +19,7 @@ export class DatosCursosItem {
   fechaImparticionHasta: Date;
   temas: string[];
 
+  flagArchivado: number;
+
   constructor() {}
 }

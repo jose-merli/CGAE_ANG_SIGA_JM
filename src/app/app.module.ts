@@ -67,7 +67,6 @@ import { ComisionesCargosComponent } from "./features/censo/comisiones-cargos/co
 import { SolicitudesGenericasComponent } from "./features/censo/solicitudes-genericas/solicitudes-genericas.component";
 import { SolicitudesEspecificasComponent } from "./features/censo/solicitudes-especificas/solicitudes-especificas.component";
 import { SolicitudesIncorporacionComponent } from "./features/censo/solicitudes-incorporacion/solicitudes-incorporacion.component";
-import { AlterMutuaComponent } from "./features/censo/solicitudes-incorporacion/alter-mutua/alter-mutua.component";
 import { NuevaIncorporacionComponent } from "./features/censo/solicitudes-incorporacion/nueva-incorporacion/nueva-incorporacion.component";
 import { DocumentacionSolicitudesComponent } from "./features/censo/documentacion-solicitudes/documentacion-solicitudes.component";
 import { MantenimientoGruposFijosComponent } from "./features/censo/mantenimiento-grupos-fijos/mantenimiento-grupos-fijos.component";
@@ -85,6 +84,7 @@ import { CargasPeriodicasComponent } from "./features/censo/cargas-periodicas/ca
 import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/configurar-perfil.component";
 import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
 import { TipoCurricularComponent } from "./features/censo/gestion-subtiposCV/tipo-curricular.component";
+import { SubtipoCurricularComponent } from "./features/censo/gestion-subtiposCV/subtipo-curricular/subtipo-curricular.component";
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
 import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
 import { CommonModule } from "@angular/common";
@@ -226,6 +226,9 @@ import { ComunicaCargaComponent } from "./features/sjcs/comunicaciones/comunica-
 import { ComunicaResolucionesComponent } from "./features/sjcs/comunicaciones/comunica-resoluciones/comunica-resoluciones.component";
 import { ComunicaDesignacionesComponent } from "./features/sjcs/comunicaciones/comunica-designaciones/comunica-designaciones.component";
 import { MutualidadAbogaciaSeguroAccidentes } from "./features/censo/solicitudes-incorporacion/mutualidadAbogaciaSeguroAccidentes/mutualidad-abogacia-seguro-accidentes.component";
+import { AlterMutuaRetaComponent } from "./features/censo/solicitudes-incorporacion/alter-mutua/alterMutuaReta/alter-mutua-reta.component";
+import { AlterMutuaComponent } from "./features/censo/solicitudes-incorporacion/alter-mutua/alter-mutua.component";
+import { AlterMutuaOfertasComponent } from "./features/censo/solicitudes-incorporacion/alter-mutua/alterMutuaOfertas/alter-mutua-ofertas.component";
 
 //Consultas
 import { RecuperarConsultasComponent } from "./features/consultas/recuperar-consultas/recuperar-consultas.component";
@@ -260,7 +263,6 @@ import { AgendaComponent } from "./features/agenda/agenda.component";
 import { SelectButtonModule, ColorPickerModule } from "primeng/primeng";
 import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/ficha-calendario.component";
 import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
-import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-subtiposCV/informacion-gestion-subtipos-cv/informacion-gestion-subtipos-cv.component";
 import { NuevaSolicitudesModificacionComponent } from "./features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
 import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaciones/datos-notificaciones.component";
 
@@ -291,6 +293,8 @@ import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaci
     SolicitudesIncorporacionComponent,
     MutualidadAbogaciaSeguroAccidentes,
     AlterMutuaComponent,
+    AlterMutuaRetaComponent,
+    AlterMutuaOfertasComponent,
     NuevaIncorporacionComponent,
     DocumentacionSolicitudesComponent,
     MantenimientoGruposFijosComponent,
@@ -308,6 +312,7 @@ import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaci
     ConfigurarPerfilComponent,
     CensoDocumentacionComponent,
     TipoCurricularComponent,
+    SubtipoCurricularComponent,
     BusquedaColegiadosComponentNew,
     BusquedaPersonasJuridicas,
     DatosGenerales,
@@ -476,7 +481,6 @@ import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaci
     AgendaComponent,
     FichaCalendarioComponent,
     CargasMasivasComponent,
-    InformacionGestionSubtiposCvComponent,
     NuevaSolicitudesModificacionComponent,
     DatosNotificacionesComponent
   ],
@@ -547,4 +551,4 @@ import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaci
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

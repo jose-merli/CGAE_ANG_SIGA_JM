@@ -229,6 +229,8 @@ export class SigaServices {
     busquedaCursos_estadosCursos: "busquedaCursos/estadosCursos",
     busquedaCursos_temasCursos: "busquedaCursos/temasCursos",
     busquedaCursos_search: "busquedaCursos/search",
+    busquedaCursos_archivar: "busquedaCursos/archivar",
+    busquedaCursos_desarchivar: "busquedaCursos/desarchivar",
 
     fichaCalendario_getCalendarType: "fichaCalendario/getCalendarType",
     fichaCalendario_profiles: "fichaCalendario/profiles",
@@ -272,8 +274,22 @@ export class SigaServices {
       "solicitudModificacion/tipoModificacion",
     solicitudModificacion_estado: "solicitudModificacion/estado",
     tipoCurricular_categoriaCurricular: "tipoCurricular/categoriaCurricular",
-    tipoCurricular_search: "tipoCurricular/search",
-    tipoCurricular_createTipoCurricular: "tipoCurricular/createTipoCurricular"
+    tipoCurricular_searchTipoCurricular: "tipoCurricular/searchTipoCurricular",
+    tipoCurricular_createTipoCurricular: "tipoCurricular/createTipoCurricular",
+    tipoCurricular_updateTipoCurricular: "tipoCurricular/updateTipoCurricular",
+    tipoCurricular_deleteTipoCurricular: "tipoCurricular/deleteTipoCurricular",
+    tipoCurricular_historyTipoCurricular:
+      "tipoCurricular/historyTipoCurricular",
+    subtipoCurricular_searchSubtipoCurricular:
+      "subtipoCurricular/searchSubtipoCurricular",
+    subtipoCurricular_createSubtipoCurricular:
+      "subtipoCurricular/createSubtipoCurricular",
+    subtipoCurricular_updateSubtipoCurricular:
+      "subtipoCurricular/updateSubtipoCurricular",
+    subtipoCurricular_deleteSubtipoCurricular:
+      "subtipoCurricular/deleteSubtipoCurricular",
+    subtipoCurricular_historySubtipoCurricular:
+      "subtipoCurricular/historySubtipoCurricular"
   };
 
   private menuToggled = new Subject<any>();

@@ -16,6 +16,8 @@ import { SolicitudesGenericasComponent } from "./features/censo/solicitudes-gene
 import { SolicitudesEspecificasComponent } from "./features/censo/solicitudes-especificas/solicitudes-especificas.component";
 import { SolicitudesIncorporacionComponent } from "./features/censo/solicitudes-incorporacion/solicitudes-incorporacion.component";
 import { AlterMutuaComponent } from "./features/censo/solicitudes-incorporacion/alter-mutua/alter-mutua.component";
+import { AlterMutuaRetaComponent } from "./features/censo/solicitudes-incorporacion/alter-mutua/alterMutuaReta/alter-mutua-reta.component";
+import { AlterMutuaOfertasComponent } from "./features/censo/solicitudes-incorporacion/alter-mutua/alterMutuaOfertas/alter-mutua-ofertas.component";
 import { NuevaIncorporacionComponent } from "./features/censo/solicitudes-incorporacion/nueva-incorporacion/nueva-incorporacion.component";
 import { DocumentacionSolicitudesComponent } from "./features/censo/documentacion-solicitudes/documentacion-solicitudes.component";
 import { MantenimientoGruposFijosComponent } from "./features/censo/mantenimiento-grupos-fijos/mantenimiento-grupos-fijos.component";
@@ -195,7 +197,7 @@ import { DatosCvComponent } from "./features/censo/cargas-masivas/datos-cv/datos
 import { BusquedaCursosComponent } from "./features/formacion/busqueda-cursos/busqueda-cursos.component";
 import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/ficha-calendario.component";
 import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
-import { InformacionGestionSubtiposCvComponent } from "./features/censo/gestion-subtiposCV/informacion-gestion-subtipos-cv/informacion-gestion-subtipos-cv.component";
+import { SubtipoCurricularComponent } from "./features/censo/gestion-subtiposCV/subtipo-curricular/subtipo-curricular.component";
 import { NuevaSolicitudesModificacionComponent } from "./features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
 import { AgendaComponent } from "./features/agenda/agenda.component";
 import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaciones/datos-notificaciones.component";
@@ -295,6 +297,16 @@ const appRoutes: Routes = [
   {
     path: "alterMutua",
     component: AlterMutuaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "alterMutuaReta",
+    component: AlterMutuaRetaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "alterMutuaOfertas",
+    component: AlterMutuaOfertasComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -407,7 +419,7 @@ const appRoutes: Routes = [
   },
   {
     path: "informacionGestionSubtipoCV",
-    component: InformacionGestionSubtiposCvComponent,
+    component: SubtipoCurricularComponent,
     canActivate: [AuthGuard]
   },
 
@@ -971,8 +983,8 @@ const appRoutes: Routes = [
   // Administracion
   {
     path: "catalogosMaestros",
-    //component: CatalogosMaestros,
-    component: CatalogosMaestrosComponent,
+    component: CatalogosMaestros,
+    //component: CatalogosMaestrosComponent,
     canActivate: [AuthGuard]
   },
   {

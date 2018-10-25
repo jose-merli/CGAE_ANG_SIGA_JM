@@ -3,15 +3,12 @@ import {
   OnInit,
   ViewEncapsulation,
   ViewChild,
-  ChangeDetectorRef,
-  HostListener
+  ChangeDetectorRef
 } from "@angular/core";
 
 import { SigaServices } from "../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
-import { Router } from "@angular/router";
 import { TranslateService } from "../../../commons/translate/translation.service";
-import { ConfirmationService } from "primeng/api";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { DataTable } from "primeng/datatable";
 import { esCalendar } from "../../../utils/calendar";
@@ -20,12 +17,9 @@ import {
   FormBuilder,
   FormGroup,
   FormControl,
-  Validators,
-  AbstractControl
+  Validators
 } from "@angular/forms";
-import { DatosColegiadosObject } from "../../../models/DatosColegiadosObject";
-import { TrimPipePipe } from "../../../commons/trim-pipe/trim-pipe.pipe";
-import { MultiSelect } from "primeng/primeng";
+import { MultiSelect, Message } from "primeng/primeng";
 import { DatosCursosObject } from "../../../models/DatosCursosObject";
 import { AuthenticationService } from "../../../_services/authentication.service";
 
@@ -49,6 +43,8 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   selectAll: boolean = false;
   selectMultiple: boolean = false;
   buscar: boolean = false;
+
+  modoHistorico: boolean = true;
 
   es: any = esCalendar;
 
@@ -78,13 +74,15 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   body: DatosCursosItem = new DatosCursosItem();
   cursoEncontrado = new DatosCursosObject();
 
-  historico: boolean;
+  //Para los mensajes de info
+  msgs: Message[] = [];
 
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private translateService: TranslateService
   ) {
     super(USER_VALIDATIONS);
     this.formBusqueda = this.formBuilder.group({
@@ -114,11 +112,10 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
 
   ngOnInit() {
     this.getCombos();
-    sessionStorage.removeItem("esColegiado");
     if (sessionStorage.getItem("filtrosBusquedaCursos") != null) {
       this.body = JSON.parse(sessionStorage.getItem("filtrosBusquedaCursos"));
       sessionStorage.removeItem("filtrosBusquedaCursos");
-      this.isBuscar();
+      this.isBuscar(false);
     }
   }
 
@@ -170,8 +167,9 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
       event.value != "" &&
       event.value != this.authenticationService.getInstitucionSession()
     ) {
+      //Si elige un colegio que no es el propio, se deshabilita el combo de visibilidad y se selecciona 'Público' por defecto ya que los privados no deben mostrarse
       this.deshabilitarCombVis = true;
-      this.body.idVisibilidad = null;
+      this.body.idVisibilidad = "0"; //Visibilidad pública
     } else {
       this.deshabilitarCombVis = false;
     }
@@ -215,7 +213,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
 
   /* INICIO IMPLEMENTACIÓN NUEVOS COMBOS */
   getComboVisibilidad() {
-    // obtener colegios
+    // obtener visibilidad
     this.sigaServices.get("busquedaCursos_visibilidadCursos").subscribe(
       n => {
         this.comboVisibilidad = n.combooItems;
@@ -282,23 +280,30 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   /* FIN IMPLEMENTACIÓN NUEVOS COMBOS */
 
   //Busca cursos según los filtros
-  isBuscar() {
-    this.selectAll = false;
-    this.historico = false;
+  isBuscar(flagArchivado: boolean) {
+    this.progressSpinner = true;
     this.buscar = true;
+
+    this.selectAll = false;
     this.selectMultiple = false;
 
     this.selectedDatos = "";
     this.getColsResults();
     this.filtrosTrim();
+
+    if (flagArchivado) {
+      this.body.flagArchivado = null; // Para que los traiga todos, archivados y no archivados
+      this.modoHistorico = false;
+    } else {
+      this.body.flagArchivado = 0; // Para que traiga solamente los NO archivados
+      this.modoHistorico = true;
+    }
+
     //Rellenamos el array de temas a partir de la estructura del p-multiselect
     this.body.temas = [];
     this.selectedTemas.forEach(element => {
       this.body.temas.push(element.value);
     });
-
-    this.progressSpinner = true;
-    this.buscar = true;
 
     this.sigaServices
       .postPaginado("busquedaCursos_search", "?numPagina=1", this.body)
@@ -392,10 +397,140 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   }
 
   /*
-*
-* Los siguientes métodos son necesarios para obligar a que el rango de fechas introducido sea correcto
-*
-*/
+  * DIFERENTES ACCIONES SOBRE CURSOS
+  */
+
+  duplicarCursos() {
+    this.progressSpinner = true;
+
+    //Llamar al rest de duplicar curso
+    this.progressSpinner = false;
+  }
+
+  archivarCursos() {
+    this.progressSpinner = true;
+
+    this.sigaServices
+      .post("busquedaCursos_archivar", this.selectedDatos)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+
+          if (data != null) {
+            let mensaje: string = "";
+
+            if (data.body == 1) {
+              mensaje = "form.busquedaCursos.mensaje.curso.archivado";
+            } else {
+              mensaje = "form.busquedaCursos.mensaje.cursos.archivados";
+            }
+
+            this.mostrarInfoAccionSobreCursos(data.body, mensaje);
+            this.isBuscar(!this.modoHistorico);
+          }
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  desarchivarCursos(selectedDatos) {
+    this.progressSpinner = true;
+
+    this.sigaServices
+      .post("busquedaCursos_desarchivar", this.selectedDatos)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+
+          if (data != null) {
+            let mensaje: string = "";
+
+            if (data.body == 1) {
+              mensaje = "form.busquedaCursos.mensaje.curso.desarchivado";
+            } else {
+              mensaje = "form.busquedaCursos.mensaje.cursos.desarchivados";
+            }
+
+            this.mostrarInfoAccionSobreCursos(data.body, mensaje);
+            this.isBuscar(!this.modoHistorico);
+          }
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  anunciarCursos() {
+    this.progressSpinner = true;
+
+    //Llamar al rest de anunciar curso/s
+    this.progressSpinner = false;
+  }
+
+  desanunciarCursos() {
+    this.progressSpinner = true;
+
+    //Llamar al rest de desanunciar curso/s
+    this.progressSpinner = false;
+  }
+
+  finalizarCursos() {
+    this.progressSpinner = true;
+
+    //Llamar al rest de finalizar curso/s
+    this.progressSpinner = false;
+  }
+
+  cancelarCursos() {
+    this.progressSpinner = true;
+
+    //Llamar al rest de cancelar curso/s
+    this.progressSpinner = false;
+  }
+
+  /*
+  * FIN DIFERENTES ACCIONES SOBRE CURSOS
+  */
+
+  /*
+  * Para mostrar notificaciones con respecto a las acciones sobre cursos
+  */
+
+  mostrarInfoAccionSobreCursos(numCursos, mensaje) {
+    //Por si ha habido error y ha resultado un número negativo
+    if (numCursos < 0) {
+      numCursos = 0;
+    }
+
+    this.msgs = [];
+    this.msgs.push({
+      severity: "info",
+      summary: "Info",
+      detail: numCursos + " " + this.translateService.instant(mensaje)
+    });
+  }
+
+  //Para limpiar la variable de notificaciones
+  clear() {
+    this.msgs = [];
+  }
+
+  /*
+  *
+  * Los siguientes métodos son necesarios para obligar a que el rango de fechas introducido sea correcto
+  *
+  */
 
   getFechaInscripcionDesde() {
     if (

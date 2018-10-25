@@ -119,10 +119,9 @@
     </div>
     <div class="card-footer">
       <div class="text-right main-button">
-        <button (click)="isLimpiar()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate}}"></button>
-        <button (click)="isBuscar()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-        <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
-
+        <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        <button [disabled]="!formBusqueda.valid || !formGroupPrecios.valid" (click)="isBuscar(false)" pButton type="button" icon="fa fa-search"
+          iconPos="left" label="{{'general.boton.search' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -130,11 +129,16 @@
   <div *ngIf="buscar == true" class="card mt-3">
     <div class="card-body p-0">
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-        [(selection)]="selectedDatos" (onRowSelect)="irEditarColegiado(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-        pageLinks="4" dataKey="idCurso" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos"
-        [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+        [(selection)]="selectedDatos" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" pageLinks="4" dataKey="idCurso"
+        [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="sortO" [paginator]="true"
+        paginatorPosition="both" [rows]="selectedItem">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true" filterMatchMode="contains">
+
+          <ng-template let-dato="rowData" pTemplate="body">
+            <label [ngClass]="{'estiloHistorico': dato.flagArchivado == 1}">{{dato[col.field]}}</label>
+          </ng-template>
+
         </p-column>
 
         <ng-template pTemplate="paginatorLeft">
@@ -155,10 +159,40 @@
 
         <p-footer>
           <div class="text-right main-button">
-            <button (click)="isCancelar()" [disabled]="!isEditable" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
-            <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.comunicar' | translate }}"
-              disabled></button>
-            <!-- <button (click)="isCrear()" [disabled]="isEditable" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button> -->
+            <!-- Botón cancelar -->
+            <button (click)="cancelarCursos()" pButton type="button" icon="fa fa-ban" iconPos="left" label="{{'general.boton.cancel' | translate}}"
+              [disabled]="selectedDatos == ''"></button>
+
+            <!-- Botón finalizar -->
+            <button (click)="finalizarCursos()" pButton type="button" icon="fa fa-stop" iconPos="left" label="{{'general.boton.finalizar' | translate}}"
+              [disabled]="selectedDatos == ''"></button>
+
+            <!-- Botón desanunciar -->
+            <button (click)="desanunciarCursos()" pButton type="button" icon="fa fa-bell-slash" iconPos="left" label="{{'form.busquedaCursos.literal.boton.desanunciar' | translate}}"
+              [disabled]="selectedDatos == ''"></button>
+
+            <!-- Botón anunciar -->
+            <button (click)="anunciarCursos()" pButton type="button" icon="fa fa-bell" iconPos="left" label="{{'form.busquedaCursos.literal.boton.anunciar' | translate}}"
+              [disabled]="selectedDatos == ''"></button>
+
+            <!-- Botón desarchivar -->
+            <button *ngIf="!modoHistorico" (click)="desarchivarCursos()" pButton type="button" icon="fa fa-caret-square-o-up" iconPos="left"
+              label="{{'form.busquedaCursos.literal.boton.desarchivar' | translate}}" [disabled]="selectedDatos == ''"></button>
+
+            <!-- Botón archivar -->
+            <button (click)="archivarCursos()" pButton type="button" icon="fa fa-caret-square-o-down" iconPos="left" label="{{'general.boton.archivar' | translate}}"
+              [disabled]="selectedDatos == ''"></button>
+
+            <!-- Botón ocultar histórico -->
+            <button *ngIf="!modoHistorico" (click)="isBuscar(false)" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+
+            <!-- Botón mostrar histórico -->
+            <button *ngIf="modoHistorico" (click)="isBuscar(true)" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
+
+            <!-- Botón duplicar -->
+            <button (click)="duplicarCursos()" pButton type="button" icon="fa fa-files-o" iconPos="left" label="{{'general.boton.duplicar' | translate}}"
+              [disabled]="selectedDatos == ''"></button>
+
           </div>
         </p-footer>
       </p-dataTable>
