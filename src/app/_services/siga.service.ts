@@ -154,7 +154,9 @@ export class SigaServices {
     integrantes_delete: "tarjetaIntegrantes/delete",
     usuario_cambioIdioma: "usuario/cambioIdioma",
     fichaColegialOtrasColegiaciones_searchOtherCollegues:
-      "fichaColegialOtrasColegiaciones/searchOtherCollegues"
+      "fichaColegialOtrasColegiaciones/searchOtherCollegues",
+    fichaColegialOtrasColegiaciones_getLabelColegios:
+      "fichaColegialOtrasColegiaciones/getLabelColegios"
   };
 
   private menuToggled = new Subject<any>();

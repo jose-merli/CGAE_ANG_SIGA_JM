@@ -112,59 +112,32 @@
     <!--COMIENZO COLEGIACION-->
 
     <div *ngIf="esFichaActiva('colegiacion')" class="card-body card-body-ficha">
-      <div *ngIf="datosColegiados.length > 0">
-        <div *ngFor="let elem of array">
-          <div class="row">
-            <div class="form-group col-lg-3 col-md-6">
-              <label>{{"censo.busquedaClientesAvanzada.literal.tipoColegio" | translate}} (*)</label>
-              <p-dropdown [(ngModel)]="elem.idTipoColegio" (ngModelChange)="actualizarDescripcionTipoColegio()" class="select-form" [options]="colegiosArray"
-                [(disabled)]="isDisabledTipoColegio"></p-dropdown>
 
-            </div>
-            <div class="form-group col-lg-3 col-md-6">
-              <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
-              <!-- <input type="text" [(ngModel)]="body.colegio" class="form-control" [(disabled)]="isDisabledColegio" pInputText> -->
-              <p-dropdown [options]="colegios" [(ngModel)]="elem.idInstitucion" [(disabled)]="isDisabledColegio" class="select-form"></p-dropdown>
-            </div>
-            <div class="form-group col-lg-3 col-md-6">
-              <label>{{"censo.datosDireccion.literal.provincia" | translate}}</label>
-              <p-dropdown [(ngModel)]="elem.idProvincia" [(disabled)]="isDisabledProvincia" (ngModelChange)="actualizarDescripcionProvincia()"
-                class="select-form" [options]="provinciasArray"></p-dropdown>
-            </div>
-            <div class="form-group col-lg-3 col-md-6">
-              <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
-              <input type="text" class="form-control" [(ngModel)]="elem.numColegiado" [(disabled)]="isDisabledNumColegio" pInputText>
-            </div>
-          </div>
-          <br>
+
+      <div class="row">
+        <div class="form-group col-lg-3 col-md-6">
+          <label>{{"censo.busquedaClientesAvanzada.literal.tipoColegio" | translate}} (*)</label>
+          <p-dropdown [(ngModel)]="body.idTipoColegio" (ngModelChange)="actualizarDescripcionTipoColegio()" class="select-form" [options]="colegiosArray"
+            [(disabled)]="isDisabledTipoColegio"></p-dropdown>
+
+        </div>
+        <div class="form-group col-lg-3 col-md-6">
+          <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
+          <!-- <input type="text" [(ngModel)]="body.colegio" class="form-control" [(disabled)]="isDisabledColegio" pInputText> -->
+          <p-dropdown [options]="colegios" [(ngModel)]="body.colegio" [(disabled)]="isDisabledColegio" class="select-form" (onChange)="onChangeColegio($event.value)"></p-dropdown>
+        </div>
+        <div class="form-group col-lg-3 col-md-6">
+          <label>{{"censo.datosDireccion.literal.provincia" | translate}}</label>
+          <p-dropdown [(ngModel)]="body.idProvincia" [(disabled)]="isDisabledProvincia" (ngModelChange)="actualizarDescripcionProvincia()"
+            class="select-form" [options]="provinciasArray"></p-dropdown>
+        </div>
+        <div class="form-group col-lg-3 col-md-6">
+          <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
+          <input type="text" class="form-control" [(ngModel)]="body.numColegiado" [(disabled)]="isDisabledNumColegio" pInputText>
         </div>
       </div>
+      <br>
 
-      <div *ngIf="datosColegiados.length == 0">
-        <div class="row">
-          <div class="form-group col-lg-3 col-md-6">
-            <label>{{"censo.busquedaClientesAvanzada.literal.tipoColegio" | translate}} (*)</label>
-            <p-dropdown [(ngModel)]="body.idTipoColegio" (ngModelChange)="actualizarDescripcionTipoColegio()" class="select-form" [options]="colegiosArray"
-              [(disabled)]="isDisabledTipoColegio"></p-dropdown>
-
-          </div>
-          <div class="form-group col-lg-3 col-md-6">
-            <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
-            <!-- <input type="text" [(ngModel)]="body.colegio" class="form-control" [(disabled)]="isDisabledColegio" pInputText> -->
-            <p-dropdown [options]="colegios" [(ngModel)]="body.idInstitucion" [(disabled)]="isDisabledColegio" class="select-form"></p-dropdown>
-          </div>
-          <div class="form-group col-lg-3 col-md-6">
-            <label>{{"censo.datosDireccion.literal.provincia" | translate}}</label>
-            <p-dropdown [(ngModel)]="body.idProvincia" [(disabled)]="isDisabledProvincia" (ngModelChange)="actualizarDescripcionProvincia()"
-              class="select-form" [options]="provinciasArray"></p-dropdown>
-          </div>
-          <div class="form-group col-lg-3 col-md-6">
-            <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
-            <input type="text" class="form-control" [(ngModel)]="body.numColegiado" [(disabled)]="isDisabledNumColegio" pInputText>
-          </div>
-        </div>
-        <br>
-      </div>
       <!--END DATOS GENERALES-->
     </div>
   </div>

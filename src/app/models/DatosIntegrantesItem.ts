@@ -32,5 +32,6 @@ export class DatosIntegrantesItem {
   socio: boolean = false;
   valor: String;
   colegio: String;
+  numeroInstitucion: String;
   constructor() {}
 }
