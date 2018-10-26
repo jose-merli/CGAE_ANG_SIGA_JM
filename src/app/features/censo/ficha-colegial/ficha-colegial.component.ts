@@ -1284,24 +1284,23 @@ export class FichaColegialComponent implements OnInit {
   }
 
   deleteCurriculares() {
-
-    for (let i in this.datosCurriculares){
-      if(this.datosCurriculares[i].fechaFin == null){
+    for (let i in this.datosCurriculares) {
+      if (this.datosCurriculares[i].fechaFin == null) {
         this.sigaServices
-        .post("fichaDatosCurriculares_delete", this.datosCurriculares[i])
-        .subscribe(
-          data => {
-            this.progressSpinner = false;
-            this.searchDatosCurriculares();
-          },
-          err => {
-            console.log(err);
-          },
-          () => {
-            this.progressSpinner = false;
-            this.editar = false;
-          }
-        );
+          .post("fichaDatosCurriculares_delete", this.datosCurriculares[i])
+          .subscribe(
+            data => {
+              this.progressSpinner = false;
+              this.searchDatosCurriculares();
+            },
+            err => {
+              console.log(err);
+            },
+            () => {
+              this.progressSpinner = false;
+              this.editar = false;
+            }
+          );
       }
     }
     // this.progressSpinner = true;
@@ -1313,7 +1312,6 @@ export class FichaColegialComponent implements OnInit {
     //     value.idPersona = this.idPersona;
     //     datosDelete.push(value);
     //   }
-
   }
   redireccionarCurriculares(dato) {
     if (dato && dato.length < 2 && !this.selectMultiple) {
@@ -1330,7 +1328,7 @@ export class FichaColegialComponent implements OnInit {
     this.searchDatosCurriculares();
   }
 
-  irNuevoCurriculares() {
+  irNuevoCurriculares() {    
     this.router.navigate(["/edicionCurriculares"]);
   }
   searchDatosCurriculares() {
@@ -1357,6 +1355,7 @@ export class FichaColegialComponent implements OnInit {
       );
   }
   // FIN CURRICULARES
+  //
   //
   //
   //
@@ -1423,6 +1422,7 @@ export class FichaColegialComponent implements OnInit {
     let newDireccion = new DatosDireccionesItem();
     sessionStorage.removeItem("direccion");
     sessionStorage.removeItem("editarDireccion");
+    sessionStorage.setItem("fichaColegial", "true");
     sessionStorage.setItem(
       "usuarioBody",
       JSON.stringify(this.bodyDirecciones.idPersona)
@@ -1442,6 +1442,7 @@ export class FichaColegialComponent implements OnInit {
           enviarDatos = dato[0];
           sessionStorage.setItem("idDireccion", enviarDatos.idDireccion);
           sessionStorage.setItem("direccion", JSON.stringify(enviarDatos));
+          sessionStorage.setItem("fichaColegial", "true");
           sessionStorage.removeItem("editarDireccion");
           sessionStorage.setItem("editarDireccion", "true");
           sessionStorage.setItem("usuarioBody", JSON.stringify(this.idPersona));
@@ -1525,6 +1526,7 @@ export class FichaColegialComponent implements OnInit {
           enviarDatos = dato[0];
           sessionStorage.setItem("idCuenta", enviarDatos.idCuenta);
           sessionStorage.setItem("editar", "true");
+          sessionStorage.setItem("fichaColegial", "true");
           sessionStorage.setItem("datosCuenta", JSON.stringify(enviarDatos));
           sessionStorage.setItem(
             "usuarioBody",
@@ -1542,6 +1544,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   nuevaCuentaBancaria() {
+    sessionStorage.setItem("fichaColegial", "true");
     sessionStorage.setItem(
       "usuarioBody",
       sessionStorage.getItem("personaBody")
