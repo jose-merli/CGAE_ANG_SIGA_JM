@@ -264,6 +264,9 @@ import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-m
 import { NuevaSolicitudesModificacionComponent } from "./features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
 import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaciones/datos-notificaciones.component";
 
+//Calendario
+import { ScheduleModule } from "primeng/schedule";
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -503,6 +506,7 @@ import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaci
     GrowlModule,
     CommonModule,
     CalendarModule,
+    ScheduleModule,
     AutoCompleteModule,
     TooltipModule,
     ListboxModule,
