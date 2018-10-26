@@ -242,6 +242,9 @@ export class SigaServices {
       "fichaCalendario/getProfilesPermissions",
     fichaCalendario_getEventNotifications:
       "fichaCalendario/getEventNotifications",
+    fichaCalendario_deleteNotification: "fichaCalendario/deleteNotification",
+    fichaCalendario_getHistoricEventNotifications:
+      "fichaCalendario/getHistoricEventNotifications",
     datosNotificaciones_getTypeNotifications:
       "datosNotificaciones/getTypeNotifications",
     datosNotificaciones_getMeasuredUnit: "datosNotificaciones/getMeasuredUnit",
@@ -286,7 +289,10 @@ export class SigaServices {
     subtipoCurricular_deleteSubtipoCurricular:
       "subtipoCurricular/deleteSubtipoCurricular",
     subtipoCurricular_historySubtipoCurricular:
-      "subtipoCurricular/historySubtipoCurricular"
+      "subtipoCurricular/historySubtipoCurricular",
+    fichaDatosCurriculares_delete: "fichaDatosCurriculares/delete",
+    fichaDatosCertificados_datosCertificadosSearch:
+      "fichaDatosCertificados/datosCertificadosSearch"
   };
 
   private menuToggled = new Subject<any>();

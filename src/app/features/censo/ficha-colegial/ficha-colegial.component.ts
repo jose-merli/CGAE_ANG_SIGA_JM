@@ -56,6 +56,7 @@ export class FichaColegialComponent implements OnInit {
   colegialesObject: FichaColegialColegialesObject = new FichaColegialColegialesObject();
   sociedadesBody: PersonaJuridicaObject = new PersonaJuridicaObject();
   otrasColegiacionesBody: DatosColegiadosObject = new DatosColegiadosObject();
+  certificadosBody: FichaColegialCertificadosObject = new FichaColegialCertificadosObject();
 
   idPersona: any;
   openFicha: boolean = false;
@@ -99,6 +100,7 @@ export class FichaColegialComponent implements OnInit {
   datosColegiales: FichaColegialColegialesItem[] = [];
   datosColegiaciones: any[] = [];
   datosCertificados: any[] = [];
+
   datosSociedades: any[] = [];
   file: File = undefined;
   edadCalculada: any;
@@ -211,6 +213,7 @@ export class FichaColegialComponent implements OnInit {
       this.onInitColegiales();
       this.onInitSociedades();
       this.onInitOtrasColegiaciones();
+      this.searchCertificados();
     } else {
       this.generalBody = new FichaColegialGeneralesItem();
       this.colegialesBody = new FichaColegialColegialesItem();
@@ -293,12 +296,12 @@ export class FichaColegialComponent implements OnInit {
 
     this.colsCertificados = [
       {
-        field: "numCertificado",
-        header: "menu.certificados"
-      },
-      {
         field: "descripcion",
         header: "general.description"
+      },
+      {
+        field: "fechaEmision",
+        header: "facturacion.busquedaAbonos.literal.fecha2"
       }
     ];
 
@@ -1175,7 +1178,27 @@ export class FichaColegialComponent implements OnInit {
     else return true;
   }
 
-  redireccionarCerts() {
+  searchCertificados() {
+    this.sigaServices
+      .postPaginado(
+        "fichaDatosCertificados_datosCertificadosSearch",
+        "?numPagina=1",
+        this.idPersona
+      )
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.certificadosBody = JSON.parse(data["body"]);
+          this.datosCertificados = this.certificadosBody.certificadoItem;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  redireccionarCerts(selectedDatos) {
     this.router.navigate(["/mantenimientoCertificados"]);
   }
 
@@ -1259,6 +1282,50 @@ export class FichaColegialComponent implements OnInit {
       return false;
     else return true;
   }
+
+  deleteCurriculares() {
+
+    for (let i in this.datosCurriculares){
+      if(this.datosCurriculares[i].fechaFin == null){
+        this.sigaServices
+        .post("fichaDatosCurriculares_delete", this.datosCurriculares[i])
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.searchDatosCurriculares();
+          },
+          err => {
+            console.log(err);
+          },
+          () => {
+            this.progressSpinner = false;
+            this.editar = false;
+          }
+        );
+      }
+    }
+    // this.progressSpinner = true;
+    // let deleteCurriculares = new FichaColegialEdicionCurricularesObject();
+    // deleteCurriculares.FichaColegialEdicionCurricularesItem = selectedItem;
+    // let datosDelete = [];
+    // selectedItem.forEach(
+    //   (value: FichaColegialEdicionCurricularesItem, key: number) => {
+    //     value.idPersona = this.idPersona;
+    //     datosDelete.push(value);
+    //   }
+
+  }
+  redireccionarCurriculares(dato) {
+    if (dato && dato.length < 2 && !this.selectMultiple) {
+      // enviarDatos = dato[0];
+      sessionStorage.setItem("curriculo", JSON.stringify(dato));
+      sessionStorage.setItem("crearCurriculo", "false");
+      this.router.navigate(["/edicionCurriculares"]);
+    } else {
+      sessionStorage.setItem("crearCurriculo", "true");
+    }
+  }
+
   onInitCurriculares() {
     this.searchDatosCurriculares();
   }

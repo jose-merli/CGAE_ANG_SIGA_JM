@@ -1,12 +1,11 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild } from "@angular/core";
-import { Router } from "../../../../node_modules/@angular/router";
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 import { CalendarItem } from "../../models/CalendarItem";
-import { Checkbox } from "../../../../node_modules/primeng/primeng";
+
 @Component({
   selector: "app-agenda",
   templateUrl: "./agenda.component.html",
-  styleUrls: ["./agenda.component.scss"],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ["./agenda.component.scss"]
 })
 export class AgendaComponent implements OnInit {
   cols;
@@ -19,175 +18,64 @@ export class AgendaComponent implements OnInit {
   lectura: boolean = true;
   acceso: boolean = true;
 
-  //Para el calendario
-  events: any[];
-  header: any;
-  calendarios: any[];
-  selectedCalendario: any;
-  color: any;
-  selectedCalendarios: any[];
-
-  checked: boolean = true;
-
-  fechaActual: Date = new Date();
   constructor(private router: Router) {}
 
   ngOnInit() {
+    this.getColsResults();
     this.listLecturaSelect = [];
     this.listAccesoSelect = [];
-    this.header = {
-      left: "prev,next",
-      center: "title",
-      right: "month,agendaWeek,agendaDay"
-    };
+    sessionStorage.removeItem("fichaAbierta");
+  }
 
-    this.calendarios = [
+  getColsResults() {
+    this.cols = [
       {
-        idCalendario: "1",
-        descripcion: "Calendario exámenes",
-        color: "#ff9f89",
-        checked: false
-      },
-      {
-        idCalendario: "2",
-        descripcion: "Calendario seminario",
-        color: "#009414",
-        checked: false
-      },
-      {
-        idCalendario: "3",
-        descripcion: "Calendario extraordinario",
-        color: "#0de7e9",
-        checked: false
+        field: "perfil",
+        header: "Perfil"
       }
     ];
 
-    this.events = [];
-  }
-
-  onClickCheckBox(calendario) {
-    calendario.checked = !calendario.checked;
-    this.getEventos(calendario);
-  }
-
-  onClickLabelCheckbox() {
-    alert("Esta acción llevará a la ficha del calendario. Por desarrollar.");
-  }
-
-  showCalendar1() {
-    return [
+    this.datos = [
       {
-        idCalendario: "1",
-        title: "Reuniones iniciales",
-        start: "2018-10-07",
-        end: "2018-10-10",
-        color: "#ff9f89"
+        perfil: "Abogado"
       },
       {
-        idCalendario: "1",
-        title: "Evento repetido",
-        start: "2018-10-15",
-        color: "#ff9f89"
+        perfil: "Camarero"
       },
       {
-        idCalendario: "1",
-        title: "Evento repetido",
-        start: "2018-10-20",
-        color: "#ff9f89"
-      },
-      {
-        idCalendario: "1",
-        title: "Conferencia",
-        start: "2018-10-22",
-        end: "2018-10-26",
-        color: "#ff9f89"
+        perfil: "Torero"
       }
     ];
-  }
 
-  showCalendar2() {
-    return [
+    this.listLectura = [
       {
-        idCalendario: "2",
-        title: "Conferencia inicial",
-        start: "2018-10-12",
-        end: "2018-10-15",
-        color: "#009414"
+        perfil: "Abogado"
       },
       {
-        idCalendario: "2",
-        title: "Evento importante",
-        start: "2018-10-16",
-        color: "#009414"
+        perfil: "Camarero"
       },
       {
-        idCalendario: "2",
-        title: "Examen",
-        start: "2018-10-20",
-        color: "#009414"
+        perfil: "Torero"
       },
       {
-        idCalendario: "2",
-        title: "Reuniones",
-        start: "2018-10-25",
-        end: "2018-10-26",
-        color: "#009414"
+        perfil: "Panadero"
+      },
+      {
+        perfil: "Barrendero"
+      },
+      {
+        perfil: "Informatico"
       }
     ];
-  }
 
-  showCalendar3() {
-    return [
+    this.types = [
       {
-        idCalendario: "3",
-        title: "Exámenes extrordinarios",
-        start: "2018-10-02",
-        end: "2018-10-03",
-        color: "#0de7e9"
+        label: "Solo Lectura"
       },
       {
-        idCalendario: "3",
-        title: "Prácticas extraordinarias",
-        start: "2018-10-05",
-        color: "#0de7e9"
+        label: "Acceso Total"
       }
     ];
-  }
-
-  getEventsByIdCalendario(id: string) {
-    switch (id) {
-      case "1":
-        return this.showCalendar1();
-
-      case "2":
-        return this.showCalendar2();
-
-      case "3":
-        return this.showCalendar3();
-    }
-  }
-
-  clearEventsByIdCalendario(id: string) {
-    let auxArray: any[] = [];
-
-    this.events.forEach(element => {
-      if (element.idCalendario !== id) {
-        auxArray.push(element);
-      }
-    });
-
-    this.events = auxArray;
-  }
-
-  getEventos(calendario) {
-    if (calendario.checked) {
-      let auxArray: any[] = this.getEventsByIdCalendario(
-        calendario.idCalendario
-      );
-      this.events = this.events.concat(auxArray);
-    } else {
-      this.clearEventsByIdCalendario(calendario.idCalendario);
-    }
   }
 
   activateLectura() {

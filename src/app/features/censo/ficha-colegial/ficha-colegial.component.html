@@ -321,6 +321,8 @@
           </ng-template>
         </p-column>
 
+
+
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
@@ -466,7 +468,7 @@
 
   <!-- FICHA CERTIFICADOS -->
   <div class="card">
-    <div class="card-header header-ficha" (click)="redireccionarCerts()">
+    <div class="card-header header-ficha" (click)="abreCierraFicha('certificados')">
       <div *ngIf="!esFichaActiva('certificados')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -481,12 +483,12 @@
           </div>
           <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-between">
-              <!-- <label>Número total de Certificados: -->
-              <!-- <span>{{ searchDirecciones.datosDireccionesItem.length }}</span> -->
-              <!-- </label> -->
+              <label>Número total de Certificados:
+                <span>{{ datosCertificados.length }}</span>
+              </label>
 
             </div>
-            <!-- <i *ngIf="!esFichaActiva('certificados')" class="fa fa-angle-down float-right"></i> -->
+            <i *ngIf="!esFichaActiva('certificados')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -502,9 +504,9 @@
 
     <div *ngIf="esFichaActiva('certificados')" class="card-body card-body-ficha">
       <div class="row">
-        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="4" dataKey="idDireccion"
+        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="4" dataKey="idSolicitud"
           [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datosCertificados" [sortOrder]="1"
-          [paginator]="activarPaginacionCertificados()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionar(selectedDatos)"
+          [paginator]="activarPaginacionCertificados()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionarCerts(selectedDatos)"
           (onRowUnselect)="actualizaSeleccionados(selectedDatos)">
           <p-column *ngFor="let col of colsCertificados" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
@@ -695,7 +697,7 @@
       <div class="row">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="4" dataKey="descripcion"
           [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datosCurriculares" [sortOrder]="1"
-          [paginator]="activarPaginacionCurriculares()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionar(selectedDatos)"
+          [paginator]="activarPaginacionCurriculares()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionarCurriculares(selectedDatos)"
           (onRowUnselect)="actualizaSeleccionados(selectedDatos)">
           <p-column *ngFor="let col of colsCurriculares" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
@@ -728,8 +730,8 @@
 
     <div *ngIf="esFichaActiva('curriculares')" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+        <!-- <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button> -->
+        <button (click)="deleteCurriculares(W)" pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
         <button (click)="irNuevoCurriculares()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
 
       </div>
