@@ -416,7 +416,7 @@
           <ng-template pTemplate="paginatorLeft">
             <div class="mostrar d-flex text-right justify-content-end">
               <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-              <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+              <!-- <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label> -->
               <label>{{ "general.message.mostrar" | translate}}</label>
               <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
               <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
@@ -506,8 +506,7 @@
       <div class="row">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="4" dataKey="idSolicitud"
           [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datosCertificados" [sortOrder]="1"
-          [paginator]="activarPaginacionCertificados()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionarCerts(selectedDatos)"
-          (onRowUnselect)="actualizaSeleccionados(selectedDatos)">
+          [paginator]="activarPaginacionCertificados()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionarCerts(selectedDatos)">
           <p-column *ngFor="let col of colsCertificados" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
             <ng-template let-datoH="rowData" pTemplate="body">
@@ -519,7 +518,7 @@
           <ng-template pTemplate="paginatorLeft">
             <div class="mostrar d-flex text-right justify-content-end">
               <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-              <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+              <!-- <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label> -->
               <label>{{ "general.message.mostrar" | translate}}</label>
               <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
               <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
@@ -604,8 +603,7 @@
       <div class="row">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="4" dataKey="idDireccion"
           [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datosSociedades" [sortOrder]="1"
-          [paginator]="activarPaginacionSociedades()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionarSociedades(selectedDatos)"
-          (onRowUnselect)="actualizaSeleccionados(selectedDatos)">
+          [paginator]="activarPaginacionSociedades()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionarSociedades(selectedDatos)">
           <p-column *ngFor="let col of colsSociedades" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
           </p-column>
@@ -692,8 +690,7 @@
       <div class="row">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="4" dataKey="descripcion"
           [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datosCurriculares" [sortOrder]="1"
-          [paginator]="activarPaginacionCurriculares()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionarCurriculares(selectedDatos)"
-          (onRowUnselect)="actualizaSeleccionados(selectedDatos)">
+          [paginator]="activarPaginacionCurriculares()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionarCurriculares(selectedDatos)">
           <p-column *ngFor="let col of colsCurriculares" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
             aaa
@@ -706,16 +703,16 @@
           <ng-template pTemplate="paginatorLeft">
             <div class="mostrar d-flex text-right justify-content-end">
               <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-              <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+              <!-- <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label> -->
               <label>{{ "general.message.mostrar" | translate}}</label>
               <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
               <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-              <div class="ml-3 selectAll">
+              <!-- <div class="ml-3 selectAll">
                 <p-checkbox (onChange)="onChangeSelectAll(this.datosCurriculares)" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo"
                   name="groupname"></p-checkbox>
               </div>
               <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
-                <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+                <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label> -->
             </div>
           </ng-template>
         </p-dataTable>
@@ -801,10 +798,10 @@
       </div>
 
       <div *ngIf="esFichaActiva('direcciones')" class="card-body card-body-ficha">
-        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="4" dataKey="idDireccion"
-          [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datosDirecciones" [sortOrder]="1"
-          [paginator]="activarPaginacionDireciones()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionarDireccion(selectedDatos)"
-          (onRowUnselect)="actualizaSeleccionados(selectedDatos)">
+        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosDirecciones" pageLinks="4"
+          dataKey="idDireccion" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datosDirecciones"
+          [sortOrder]="1" [paginator]="activarPaginacionDireciones()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionarDireccion(selectedDatosDirecciones)"
+          (onRowUnselect)="actualizaSeleccionadosDirecciones(selectedDatosDirecciones)">
           <p-column *ngFor="let col of colsDirecciones" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
             <ng-template let-datoH="rowData" pTemplate="body">
@@ -821,15 +818,15 @@
           <ng-template pTemplate="paginatorLeft">
             <div class="mostrar d-flex text-right justify-content-end">
               <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-              <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+              <label class="pr-3 numSeleccionados">Seleccionados: {{numSelectedDirecciones}}</label>
               <label>{{ "general.message.mostrar" | translate}}</label>
               <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
               <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
               <div class="ml-3 selectAll">
-                <p-checkbox (onChange)="onChangeSelectAll(this.datosDirecciones)" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo"
+                <p-checkbox (onChange)="onChangeSelectAllDirecciones(this.datosDirecciones)" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo"
                   name="groupname"></p-checkbox>
               </div>
-              <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+              <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultipleDirecciones}" (click)="isSelectMultipleDirecciones(); selectedDatosDirecciones=false">
                 <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
             </div>
           </ng-template>
@@ -839,10 +836,11 @@
           <div class="text-right main-button ">
             <button *ngIf="bodyDirecciones.historico" (click)="onInitDirecciones()" pButton type="button" icon="fa fa-undo" iconPos="left"
               label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
-            <button *ngIf="!bodyDirecciones.historico" (click)="searchDireccionesHistoric()" pButton type="button" icon="fa fa-history"
+            <button *ngIf="!bodyDirecciones.historico" (click)="searchHistoricoDatosDirecciones()" pButton type="button" icon="fa fa-history"
               iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-            <button *ngIf="selectedDatos && selectedDatos != '' && historico==false" [(disabled)]="camposDesactivados" (click)="borrar(selectedDatos); selectedDatos=false"
-              pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+            <button *ngIf="selectedDatosDirecciones && selectedDatosDirecciones != '' && bodyDirecciones.historico==false" [(disabled)]="camposDesactivados"
+              (click)="borrarSelectedDatos(selectedDatosDirecciones); selectedDatosDirecciones=false" pButton type="button"
+              icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
             <button (click)="nuevaDireccion()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
 
           </div>
@@ -915,10 +913,11 @@
     </div>
 
     <div *ngIf="esFichaActiva('bancarios')" class="card-body card-body-ficha">
-      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-        [(selection)]="selectedDatos" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datosBancarios"
-        [sortOrder]="1" [paginator]="activarPaginacionBancarios()" (onRowSelect)="redireccionarDatosBancarios(selectedDatos)"
-        (onRowUnselect)="actualizaSeleccionados(selectedDatos)" paginatorPosition="both" [rows]="selectedItem" pageLinks="4">
+      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultipleBancarios}"
+        [(selection)]="selectedDatosBancarios" [responsive]="true" selectionMode="multiple" dataKey="idPersona" #table class="tabla-listado"
+        [value]="datosBancarios" [sortOrder]="1" [paginator]="activarPaginacionBancarios()" (onRowSelect)="redireccionarDatosBancarios(selectedDatos)"
+        (onRowUnselect)="actualizaSeleccionadosBancarios(this.selectedDatosBancarios)" paginatorPosition="both" [rows]="selectedItem"
+        pageLinks="4">
         <p-column *ngFor="let col of colsBancarios" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true" filterMatchMode="contains">
           <ng-template let-datoH="rowData" pTemplate="body">
@@ -933,15 +932,15 @@
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+            <label class="pr-3 numSeleccionados">Seleccionados: {{numSelectedBancarios}}</label>
             <label>{{ "general.message.mostrar" | translate}}</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll(this.datosBancariosItem)" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo"
+              <p-checkbox (onChange)="onChangeSelectAllBancarios(this.datosBancarios)" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo"
                 name="groupname"></p-checkbox>
             </div>
-            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultipleBancarios}" (click)="isSelectMultipleBancarios(); selectedDatosBancarios=false">
               <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
           </div>
         </ng-template>
@@ -1049,6 +1048,7 @@
   <div class="mt-3 text-right main-button ">
     <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
   </div>
+  <app-dialog></app-dialog>
 
 
   <div *ngIf="progressSpinner" class="overlay-spinner">
