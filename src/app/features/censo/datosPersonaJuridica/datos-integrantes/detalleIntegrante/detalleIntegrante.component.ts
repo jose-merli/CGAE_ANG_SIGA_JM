@@ -83,6 +83,8 @@ export class DetalleIntegranteComponent implements OnInit {
   colegiadoSearch: ColegiadoObject = new ColegiadoObject();
   datosColegiados: any[] = [];
 
+  nColegiado: any[] = [];
+
   @ViewChild("table")
   table;
   selectedDatos;
@@ -146,6 +148,13 @@ export class DetalleIntegranteComponent implements OnInit {
                 this.colegios = JSON.parse(n["body"]).comboColegiadoItems;
                 console.log("colegiaciones", this.colegios);
 
+                this.colegios.forEach(element => {
+                  this.nColegiado.push({
+                    idInstitucion: element.value,
+                    nColegiado: element.nColegiado
+                  });
+                });
+
                 if (this.colegios.length == 1) {
                   this.isDisabledTipoColegio = true;
                   this.isDisabledColegio = true;
@@ -159,9 +168,6 @@ export class DetalleIntegranteComponent implements OnInit {
                   this.isDisabledColegio = false;
                   this.isDisabledProvincia = true;
                   this.isDisabledNumColegio = true;
-                  this.progressSpinner = true;
-                  this.getProvinciaByIdColegio(this.colegios[0].value);
-                  this.body.numColegiado = this.colegios[0].nColegiado;
                 }
               },
               err => {
@@ -269,6 +275,14 @@ export class DetalleIntegranteComponent implements OnInit {
   onChangeColegio(event) {
     this.progressSpinner = true;
     this.getProvinciaByIdColegio(event);
+
+    if (this.nColegiado.length > 1) {
+      this.nColegiado.forEach(element => {
+        if (element.idInstitucion == event) {
+          this.body.numColegiado = element.nColegiado;
+        }
+      });
+    }
   }
 
   getComboProvincias() {
@@ -447,7 +461,7 @@ export class DetalleIntegranteComponent implements OnInit {
       ) {
         this.esColegiado = true;
 
-        if (ir[0].colegio != null) {
+        if (ir[0].colegio != null && ir[0].colegio != undefined) {
           this.body.idInstitucion = ir[0].colegio.value;
           this.body.idInstitucionIntegrante = ir[0].numeroInstitucion;
 
@@ -456,7 +470,7 @@ export class DetalleIntegranteComponent implements OnInit {
           this.body.idInstitucion = ir[0].idInstitucion;
           this.body.idInstitucionIntegrante = ir[0].numeroInstitucion;
 
-          this.body.colegio = ir[0].idInstitucion;
+          this.body.colegio = ir[0].numeroInstitucion;
         }
 
         if (ir[0].idProvincia != null) {
@@ -473,7 +487,10 @@ export class DetalleIntegranteComponent implements OnInit {
 
       this.body.idPersonaPadre = this.usuarioBody[0].idPersona;
       this.body.tipoIdentificacion = ir[0].tipoIdentificacion;
-      this.idInstColegio = ir[0].colegio.value;
+
+      if (ir[0].colegio != null && ir[0].colegio != undefined) {
+        this.idInstColegio = ir[0].colegio.value;
+      }
 
       this.ajustarPantallaParaAsignar();
     }
@@ -665,6 +682,9 @@ export class DetalleIntegranteComponent implements OnInit {
     } else {
       updateIntegrante.idCargo = "";
     }
+    if (this.body.numColegiado != undefined && this.body.numColegiado != null) {
+      updateIntegrante.numColegiado = this.body.numColegiado;
+    }
     if (
       this.body.capitalSocial != undefined &&
       this.body.capitalSocial != null
@@ -833,7 +853,7 @@ export class DetalleIntegranteComponent implements OnInit {
       ) {
         newIntegrante.idInstitucionIntegrante = this.body.idInstitucionIntegrante;
       } else {
-        newIntegrante.idInstitucionIntegrante = this.idInstColegio;
+        newIntegrante.idInstitucionIntegrante = this.body.colegio;
       }
       if (
         this.body.idTipoColegio != undefined &&
@@ -860,6 +880,9 @@ export class DetalleIntegranteComponent implements OnInit {
         newIntegrante.tipo = this.body.tipo;
       } else {
         newIntegrante.tipo = "";
+      }
+      if (this.body.colegio != undefined && this.body.colegio != null) {
+        newIntegrante.colegio = this.body.colegio;
       }
       let numParticipacion = this.body.capitalSocial;
       if (
@@ -984,7 +1007,7 @@ export class DetalleIntegranteComponent implements OnInit {
       ) {
         newIntegrante.idInstitucionIntegrante = this.body.idInstitucionIntegrante;
       } else {
-        newIntegrante.idInstitucionIntegrante = this.idInstColegio;
+        newIntegrante.idInstitucionIntegrante = this.body.colegio;
       }
       if (
         this.body.idTipoColegio != undefined &&
