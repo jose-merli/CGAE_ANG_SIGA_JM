@@ -212,7 +212,7 @@ export class DetalleIntegranteComponent implements OnInit {
       },
       { field: "apellidos", header: "Apellidos" },
       { field: "fechaInicioCargo", header: "Fecha de alta - fecha de baja" },
-      { field: "cargos", header: "Cargos del integrante" },
+      { field: "cargo", header: "Cargos del integrante" },
       { field: "liquidacionComoSociedad", header: "Liquidación como sociedad" },
       { field: "ejerciente", header: "Ejerciente" },
       { field: "participacion", header: "Participación en la sociedad" }
@@ -489,7 +489,9 @@ export class DetalleIntegranteComponent implements OnInit {
       this.body.tipoIdentificacion = ir[0].tipoIdentificacion;
 
       if (ir[0].colegio != null && ir[0].colegio != undefined) {
-        this.idInstColegio = ir[0].colegio.value;
+        this.body.colegio = ir[0].colegio.value;
+
+        this.getProvinciaByIdColegio(this.body.colegio);
       }
 
       this.ajustarPantallaParaAsignar();
@@ -709,6 +711,12 @@ export class DetalleIntegranteComponent implements OnInit {
     }
     if (this.body.idComponente != undefined && this.body.idComponente != null) {
       updateIntegrante.idComponente = this.body.idComponente;
+    }
+    if (
+      this.body.idPersonaComponente != undefined &&
+      this.body.idPersonaComponente != null
+    ) {
+      updateIntegrante.idPersonaComponente = this.body.idPersonaComponente;
     }
 
     if (this.body.idProvincia != undefined && this.body.idProvincia != null) {
