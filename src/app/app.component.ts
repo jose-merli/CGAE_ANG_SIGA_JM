@@ -15,7 +15,7 @@ import { CookieService } from 'ngx-cookie-service';
 export class AppComponent implements OnInit {
 
 
- 
+
 
   @ViewChild('content')
   content: any;
@@ -38,9 +38,10 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    
 
-    sessionStorage.removeItem("authenticated");
+
+    //sessionStorage.removeItem("authenticated");
+    sessionStorage.clear();
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false;
     };

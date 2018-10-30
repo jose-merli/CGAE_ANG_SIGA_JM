@@ -28,17 +28,19 @@ export class AuthenticationService {
     // urlNewSiga = this.globals.getBaseUrl() + "/siga-web/login";
 
     logout() {
-        sessionStorage.removeItem('authenticated')
-            if (sessionStorage.getItem('loginDevelop') === 'true' ) {
-                this.router.navigate(["/loginDevelop"])
-            }else{
-                if (sessionStorage.getItem('loginDevelop') === '0' ) {
-                    sessionStorage.clear();
-                    this.router.navigate(["/loginDevelop"])
-                }else{
-                this.router.navigate(['/login']);
-                }
-        }
+        sessionStorage.removeItem('authenticated');
+        this.router.navigate(['/login']);
+
+        //     if (sessionStorage.getItem('loginDevelop') === 'true' ) {
+        //         this.router.navigate(["/loginDevelop"])
+        //     }else{
+        //         if (sessionStorage.getItem('loginDevelop') === '0' ) {
+        //             sessionStorage.clear();
+        //             this.router.navigate(["/loginDevelop"])
+        //         }else{
+        //         this.router.navigate(['/login']);
+        //         }
+        // }
     }
 
     isAutenticated() {
@@ -110,7 +112,7 @@ export class AuthenticationService {
 
                     sessionStorage.setItem('authenticated', 'true');
                     sessionStorage.setItem('Authorization', newSigaResponse);
-                    
+
                     return true;
                 }
 
@@ -120,7 +122,7 @@ export class AuthenticationService {
 
     autenticateDevelop(formValues): Observable<any> {
         let newSigaRquest = this.newSigaDevelopLogin(formValues);
-        
+
         // return forkJoin([newSigaRquest]).map(
         //     (response) => {
         //         let newSigaResponse = response[0].headers.get("Authorization");
