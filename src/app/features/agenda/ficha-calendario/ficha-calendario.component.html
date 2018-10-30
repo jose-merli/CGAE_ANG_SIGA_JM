@@ -2,41 +2,43 @@
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{'menu.agenda' | translate}}
+    <p>{{'menu.agenda' | translate}}</p>
   </div>
 
   <!-- FICHA DATOS GENERALES -->
   <div class="card">
-    <div class="card-body">
-      <p class="title-module"> {{ 'general.message.datos.generales' | translate }}
-        <i (click)="abrirFicha('generales')" *ngIf="!esFichaActiva('generales')" class="fa fa-angle-up float-right"></i>
-        <i (click)="cerrarFicha('generales')" *ngIf="esFichaActiva('generales')" class="fa fa-angle-down float-right"></i>
-      </p>
-      <div *ngIf="esFichaActiva('generales')" class="module vista-simple">
-        <div class="card-body card-body-ficha">
-          <div class="row">
-            <div class="bloque col-lg-5 col-md-3 col-sm-3">
-              <div class="row pb-3">
-                <div class="col-lg-6 col-md-6">
-                  <label>{{'censo.consultaDatosGenerales.literal.tipoCliente' | translate}}(*)</label>
-                  <p-dropdown class="select-form" [options]="comboCalendarType" [filter]="true" filterBy="label,labelSinTilde" placeholder="Seleccionar"
-                    [(ngModel)]='calendar.idTipoCalendario' name="type" [disabled]="modoEdicion"></p-dropdown>
-                </div>
-                <div class="col-lg-6 col-md-6 pt-3">
-                  <label class="pr-1">{{'formacion.fichaCalendario.color.cabecera' | translate}}:</label>
-                  <p-colorPicker [(ngModel)]="colorSelect" name="color"></p-colorPicker>
-                </div>
+    <div class="card-header header-ficha">
+      <div class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-file-pdf icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ "general.message.datos.generales" | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <div class="card-body card-body-ficha">
+      <div class="module vista-simple">
+        <div class="row">
+          <div class="bloque col-lg-5 col-md-3 col-sm-3">
+            <div class="row pb-3">
+              <div class="col-lg-6 col-md-6">
+                <label>{{'censo.consultaDatosGenerales.literal.tipoCliente' | translate}}(*)</label>
+                <p-dropdown class="select-form" [options]="comboCalendarType" [filter]="true" filterBy="label,labelSinTilde" placeholder="Seleccionar"
+                  [(ngModel)]='calendar.idTipoCalendario' name="type" [disabled]="modoEdicion"></p-dropdown>
               </div>
-              <div class="row">
-                <div class="col-lg-12 col-md-12">
-                  <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}(*)</label>
-                  <input type="text" class="form-control" [(ngModel)]='calendar.descripcion' pInputText name="descripcion">
-                </div>
+              <div class="col-lg-6 col-md-6 pt-3">
+                <label class="pr-1">{{'formacion.fichaCalendario.color.cabecera' | translate}}:</label>
+                <p-colorPicker [(ngModel)]="colorSelect" name="color"></p-colorPicker>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12 col-md-12">
+                <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}(*)</label>
+                <input type="text" class="form-control" [(ngModel)]='calendar.descripcion' pInputText name="descripcion">
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
     <div class="card-footer ">
@@ -50,54 +52,72 @@
 
   <!-- CONFIGURACION DE PERFILES-->
   <div class="card">
-    <div class="card-body">
-      <div class="cabecera" (click)="abrirFicha('confi')">
-        <p class="title-module"> {{ 'formacion.fichaCalendario.configuracion.perfiles.cabecera' | translate }}
-          <i class="float-right fa" [ngClass]="{'fa-angle-down': openFicha, 'fa-angle-up': !openFicha}"></i>
-        </p>
+
+    <!-- Cabecera -->
+    <div class="card-header header-ficha" (click)="abreCierraFicha('confi')">
+      <div *ngIf="!esFichaActiva('confi')" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-users icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mt-2">
+            <label class="mr-auto title-ficha">{{ 'formacion.fichaCalendario.configuracion.perfiles.cabecera' | translate }}</label>
+          </div>
+        </div>
       </div>
-      <div *ngIf="esFichaActiva('confi')" class="module vista-simple scroll-perfil">
-        <div class="card-body card-body-ficha">
-          <div class="text-right ml-auto form-group col-lg-6 col-md-6">
-            <label class="proceso-generico">Permisos Calendario SIGA ({{numSeleccionados}}/árbol)</label>
-            <div class="mt-2">
-              <p-checkbox (onChange)="onChangeSelectAllProfiles()" [(ngModel)]="selectAll" class="d-inline-block mr-2" binary="true" label="Seleccionar todo"></p-checkbox>
+      <div *ngIf="esFichaActiva('confi')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-users icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ 'formacion.fichaCalendario.configuracion.perfiles.cabecera' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo -->
+    <div class="card-body card-body-ficha" *ngIf="esFichaActiva('confi')">
+      <div class="module vista-simple scroll-perfil mt-2">
+        <div class="text-right ml-auto form-group col-lg-6 col-md-6">
+          <label class="proceso-generico">Permisos Calendario SIGA ({{numSeleccionados}}/árbol)</label>
+          <div class="mt-2">
+            <p-checkbox (onChange)="onChangeSelectAllProfiles()" [(ngModel)]="selectAll" class="d-inline-block mr-2" binary="true" label="Seleccionar todo"></p-checkbox>
+          </div>
+        </div>
+        <div class="row">
+          <div expandedIcon="fa fa-angle-down" class="permisos-tree col-lg-12 col-md-12">
+            <p-tree (onNodeSelect)="onNodeSelect()" (onNodeUnselect)="onNodeUnselect()" [(selection)]="selectedProfiles" #expandingTree
+              [value]="profilesTree" selectionMode="checkbox" [propagateSelectionDown]="propagateDown">
+              <ng-template let-node pTemplate="default">
+                <i class="fa fa-circle icon-acceso" [ngClass]="{ 'color-sinAsignar':node.derechoacceso == 0 , 'color-denegado':node.derechoacceso == 1 ,'color-lectura':node.derechoacceso == 2,  'color-total':node.derechoacceso == 3}"></i>
+                <label (click)="onChangePropagate(node)">{{node.nombrePerfil}}</label>
+              </ng-template>
+            </p-tree>
+          </div>
+        </div>
+        <div *ngIf="selectProfile" [ngClass]="{'widthChange':isWidthChange,'widthNotChange':!isWidthChange}" class="menu-accesos">
+          <div class="texto">
+            <label class="title">Administrar permisos de calendario</label>
+            <div>
+              <label class="mr-2">Seleccionados {{numSeleccionados}}/{{totalProfiles}}</label>
+              <label class="mr-2">Cambios {{numCambios}}/{{totalProfiles}}</label>
             </div>
           </div>
-          <div class="row">
-            <div expandedIcon="fa fa-angle-down" class="permisos-tree col-lg-12 col-md-12">
-              <p-tree (onNodeSelect)="onNodeSelect()" (onNodeUnselect)="onNodeUnselect()" [(selection)]="selectedProfiles" #expandingTree
-                [value]="profilesTree" selectionMode="checkbox" [propagateSelectionDown]="propagateDown">
-                <ng-template let-node pTemplate="default">
-                  <i class="fa fa-circle icon-acceso" [ngClass]="{ 'color-sinAsignar':node.derechoacceso == 0 , 'color-denegado':node.derechoacceso == 1 ,'color-lectura':node.derechoacceso == 2,  'color-total':node.derechoacceso == 3}"></i>
-                  <label (click)="onChangePropagate(node)">{{node.nombrePerfil}}</label>
-                </ng-template>
-              </p-tree>
-            </div>
-          </div>
-          <div *ngIf="selectProfile" [ngClass]="{'widthChange':isWidthChange,'widthNotChange':!isWidthChange}" class="menu-accesos">
-            <div class="texto">
-              <label class="title">Administrar permisos de calendario</label>
-              <div>
-                <label class="mr-2">Seleccionados {{numSeleccionados}}/{{totalProfiles}}</label>
-                <label class="mr-2">Cambios {{numCambios}}/{{totalProfiles}}</label>
+          <div class="ml-auto">
+            <div class="text-right d-flex align-items-center justify-content-start">
+              <div (click)="onChangeAcceso('total')" class="btn-acceso acceso-total d-flex align-items-center">
+                <p>Acceso total ({{accesoTotal}})</p>
               </div>
-            </div>
-            <div class="ml-auto">
-              <div class="text-right d-flex align-items-center justify-content-start">
-                <div (click)="onChangeAcceso('total')" class="btn-acceso acceso-total d-flex align-items-center">
-                  <p>Acceso total ({{accesoTotal}})</p>
-                </div>
-                <div (click)="onChangeAcceso('lectura')" class="mr-3 btn-acceso solo-lectura d-flex align-items-center">
-                  <p>Solo lectura ({{accesoLectura}})</p>
-                </div>
-                <div (click)="onChangeAcceso('sinAsignar')" class="mr-3 btn-acceso sin-asignar d-flex align-items-center">
-                  <p>Sin asignar ({{sinAsignar}})</p>
-                </div>
-                <div class="ml-auto main-button d-flex">
-                  <button pButton type="button" icon="fa fa-redo" iconPos="left" (click)="restablecerPermisos()" label="{{'general.boton.restablecer' | translate}}"></button>
-                  <button class="mr-2" pButton type="button" icon="far fa-save" iconPos="left" (click)="savePermisos()" label="{{ 'general.boton.guardar' | translate}}"></button>
-                </div>
+              <div (click)="onChangeAcceso('lectura')" class="mr-3 btn-acceso solo-lectura d-flex align-items-center">
+                <p>Solo lectura ({{accesoLectura}})</p>
+              </div>
+              <div (click)="onChangeAcceso('sinAsignar')" class="mr-3 btn-acceso sin-asignar d-flex align-items-center">
+                <p>Sin asignar ({{sinAsignar}})</p>
+              </div>
+              <div class="ml-auto main-button d-flex">
+                <button pButton type="button" icon="fa fa-redo" iconPos="left" (click)="restablecerPermisos()" label="{{'general.boton.restablecer' | translate}}"></button>
+                <button class="mr-2" pButton type="button" icon="far fa-save" iconPos="left" (click)="savePermisos()" label="{{ 'general.boton.guardar' | translate}}"></button>
               </div>
             </div>
           </div>
@@ -108,12 +128,31 @@
 
   <!-- NOTIFICACIONES -->
   <div class="card">
-    <div class="card-body">
-      <div class="cabecera" (click)="abrirFicha('notify')">
-        <p class="title-module"> {{'formacion.fichaCalendario.notificaciones.cabecera' | translate}}
-          <i class="float-right fa" [ngClass]="{'fa-angle-down': esFichaActiva('notify'), 'fa-angle-up': !esFichaActiva('notify')}"></i>
-        </p>
+    <!-- Cabecera -->
+    <div class="card-header header-ficha" (click)="abreCierraFicha('notify')">
+      <div *ngIf="!esFichaActiva('notify')" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-bell icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mt-2">
+            <label class="mr-auto title-ficha">{{'formacion.fichaCalendario.notificaciones.cabecera' | translate}}</label>
+          </div>
+        </div>
       </div>
+      <div *ngIf="esFichaActiva('notify')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-bell icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{'formacion.fichaCalendario.notificaciones.cabecera' | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo-->
+    <div class="card-body card-body-ficha" *ngIf="esFichaActiva('notify')">
       <div *ngIf="esFichaActiva('notify')" class="card-body card-body-ficha">
         <div *ngIf="!historico" class="row">
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
