@@ -217,6 +217,18 @@ export class DatosRetencionesComponent implements OnInit {
     this.changeSort(evento);
   }
 
+  activaGuardar() {
+    if (
+      this.nuevafecha > this.fechaMinima ||
+      this.fechaMinima == null ||
+      this.fechaMinima == undefined
+    ) {
+      return this.isEditar;
+    } else {
+      return true;
+    }
+  }
+
   getTiposRetenciones() {
     this.sigaServices.get("retenciones_tipoRetencion").subscribe(
       n => {

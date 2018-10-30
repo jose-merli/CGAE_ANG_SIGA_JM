@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 import { SigaServices } from "./../../../../_services/siga.service";
 import { Router } from "@angular/router";
 import { Message } from "primeng/components/common/api";
@@ -74,7 +74,8 @@ export class DatosIntegrantesComponent implements OnInit {
     private router: Router,
     private fichasPosibles: DatosPersonaJuridicaComponent,
     private cardService: cardService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -424,5 +425,11 @@ export class DatosIntegrantesComponent implements OnInit {
       });
       console.log(data);
     });
+  }
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
   }
 }
