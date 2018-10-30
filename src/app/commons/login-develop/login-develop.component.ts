@@ -20,7 +20,6 @@ export class LoginDevelopComponent implements OnInit {
   isLetrado: String;
   isEntrar: boolean = true;
   tmpLoginPerfil: String[];
-  tmpLoginInstitucion: String;
   entorno: String;
   ocultar: boolean = false;
   progressSpinner: boolean = false;
@@ -42,130 +41,96 @@ export class LoginDevelopComponent implements OnInit {
 
   ngOnInit() {
     sessionStorage.removeItem("authenticated");
-    this.form = this.fb.group({
-        tmpLoginInstitucion: new FormControl(""),
-        tmpLoginPerfil: new FormControl("ADG"),
-        sLetrado: new FormControl("N"),
-        user: new FormControl(),
-        letrado: new FormControl("N"),
-        location: new FormControl("2000"),
-        profile: new FormControl("ADG"),
+    this.ocultar = false;
+    this.progressSpinner = true;
+    this.sigaServices.getBackend("validaInstitucion").subscribe(
+      response => {
+        this.progressSpinner = false;
+        this.ocultar = true;
+      },
+      error => {
+        console.log("ERROR", error);
+        if (error.status == 403) {
+          let codError = error.status;
 
-        posMenu: new FormControl(0)
-      });
-        //this.onChange(this.form.controls['tmpLoginInstitucion'].value);
-      this.form.controls["tmpLoginInstitucion"].valueChanges.subscribe(
-        newValue => {
-          this.form.controls["location"].setValue(newValue);
-        }
-      );
-
-      this.form.controls["tmpLoginPerfil"].valueChanges.subscribe(n => {
-        this.form.controls["profile"].setValue(n);
-      });
-      this.form.controls["sLetrado"].valueChanges.subscribe(n => {
-        this.form.controls["letrado"].setValue(n);
-      });
-    
-      this.ocultar = false;
-      this.progressSpinner = true;
-      this.sigaServices.getBackend("validaInstitucion").subscribe(
-        response => {
+          sessionStorage.setItem("codError", codError);
+          sessionStorage.setItem("descError", "Imposible validar el certificado");
+          this.router.navigate(["/errorAcceso"]);
           this.progressSpinner = false;
-          this.ocultar = true;
-        },
-        error => {
-          console.log("ERROR", error);
-          if (error.status == 403) {
-            let codError = error.status;
+        }
+      }
+    );
+    this.sigaServices.getBackend("instituciones").subscribe(n => {
+      this.instituciones = n.combooItems;
 
-            sessionStorage.setItem("codError", codError);
-            sessionStorage.setItem("descError", "Imposible validar el certificado");
-            this.router.navigate(["/errorAcceso"]);
-            this.progressSpinner = false;
+      /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+para poder filtrar el dato con o sin estos caracteres*/
+      this.instituciones.map(e => {
+        let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+        let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+        let i;
+        let x;
+        for (i = 0; i < e.label.length; i++) {
+          if ((x = accents.indexOf(e.label[i])) != -1) {
+            e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+            return e.labelSinTilde;
           }
         }
-      );
-      this.sigaServices.getBackend("instituciones").subscribe(n => {
-        this.instituciones = n.combooItems;
-
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-  para poder filtrar el dato con o sin estos caracteres*/
-        this.instituciones.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
-        if (sessionStorage.getItem('loginDevelop') === 'true' ) {
-          //this.form.controls["tmpLoginInstitucion"].setValue(sessionStorage.getItem('institucion'));
-          this.tmpLoginInstitucion = sessionStorage.getItem('institucion');
-          this.cargaInstitucionsesion(this.tmpLoginInstitucion);
-        }
-        this.isLetrado = "N";
-        
-        
       });
-      this.ocultar = false;
-      
-    
 
-      // this.form.setValue({'location': this.form.value.tmpLoginInstitucion});
-  
-}
-  // OnViewInit(){
-  //   if (sessionStorage.getItem('loginDevelop') === 'true' ) {
-  //          this.form = this.fb.group({
-  //       tmpLoginInstitucion: new FormControl(sessionStorage.getItem('institucion')),
-  //       tmpLoginPerfil: new FormControl(sessionStorage.getItem('perfiles')),
-  //       sLetrado: new FormControl("N"),
-  //       user: new FormControl(),
-  //       letrado: new FormControl("N"),
-  //       location: new FormControl("2000"),
-  //       profile: new FormControl("ADG"),
-  //       posMenu: new FormControl(0)
-  //     });
+      this.isLetrado = "N";
+    });
+    this.ocultar = false;
+    this.form = this.fb.group({
+      tmpLoginInstitucion: new FormControl(""),
+      tmpLoginPerfil: new FormControl("ADG"),
+      sLetrado: new FormControl("N"),
+      user: new FormControl(),
+      letrado: new FormControl("N"),
+      location: new FormControl("2000"),
+      profile: new FormControl("ADG"),
 
-      
-  //   }
-  // }
+      posMenu: new FormControl(0)
+    });
+    //this.onChange(this.form.controls['tmpLoginInstitucion'].value);
+    this.form.controls["tmpLoginInstitucion"].valueChanges.subscribe(
+      newValue => {
+        this.form.controls["location"].setValue(newValue);
+      }
+    );
+
+    this.form.controls["tmpLoginPerfil"].valueChanges.subscribe(n => {
+      this.form.controls["profile"].setValue(n);
+    });
+    this.form.controls["sLetrado"].valueChanges.subscribe(n => {
+      this.form.controls["letrado"].setValue(n);
+    });
+
+    // this.form.setValue({'location': this.form.value.tmpLoginInstitucion});
+  }
+
   submit() {
     var ir = null;
     this.progressSpinner = true;
-    
-        sessionStorage.setItem('institucion',this.form.get('tmpLoginInstitucion').value);
-        sessionStorage.setItem('perfiles',JSON.stringify(this.tmpLoginPerfil));
-
-          this.service.autenticateDevelop(this.form.value).subscribe(
-        response => {
-          if (response) {
-            sessionStorage.setItem('loginDevelop', 'true');
-            this.router.navigate(["/home"]);
-          } else {
-            this.router.navigate(["/landpage"]);
-          }
-        },
-        error => {
-          console.log("ERROR", error);
-          if (error.status == 403) {
-            let codError = error.status;
-
-            sessionStorage.setItem("codError", codError);
-            sessionStorage.setItem("descError", "Imposible validar el certificado");
-            this.router.navigate(["/errorAcceso"]);
-          }
+    this.service.autenticateDevelop(this.form.value).subscribe(
+      response => {
+        if (response) {
+          this.router.navigate(["/home"]);
+        } else {
+          this.router.navigate(["/landpage"]);
         }
-      );
-        
-       
+      },
+      error => {
+        console.log("ERROR", error);
+        if (error.status == 403) {
+          let codError = error.status;
 
-    
+          sessionStorage.setItem("codError", codError);
+          sessionStorage.setItem("descError", "Imposible validar el certificado");
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+    );
   }
 
   onChange(newValue) {
@@ -187,18 +152,6 @@ export class LoginDevelopComponent implements OnInit {
     //});
   }
 
-
-cargaInstitucionsesion(newValue) {
-    this.form.controls["location"].setValue(newValue);
-    // this.form.controls["tmpLoginInstitucion"].setValue(newValue.value);
-    this.sigaServices.getPerfil("perfiles", newValue).subscribe(n => {
-      this.perfiles = n.combooItems;
-         if (sessionStorage.getItem('loginDevelop') === 'true' ) {
-          this.tmpLoginPerfil = JSON.parse(sessionStorage.getItem('perfiles'));
-        }
-    });
-   
-  }
   isHabilitadoEntrar() {
     if (
       this.form.controls["tmpLoginPerfil"].value == "" ||

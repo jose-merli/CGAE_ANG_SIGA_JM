@@ -40,24 +40,22 @@ export class LoginComponent implements OnInit {
   onSubmit() { }
 
   ngOnInit() {
-      this.progressSpinner = true;
-      sessionStorage.setItem('loginDevelop', 'false');
-      this.service.autenticate().subscribe(
-        response => {
-          if (response) {
-            this.progressSpinner = false;
-            this.router.navigate(["/home"]);
-          } else {
-            this.progressSpinner = false;
-            this.router.navigate(["/landpage"]);
-          }
-      },
-        err => {
-          console.log(err);
+    this.progressSpinner = true;
+    this.service.autenticate().subscribe(
+      response => {
+        if (response) {
           this.progressSpinner = false;
+          this.router.navigate(["/home"]);
+        } else {
+          this.progressSpinner = false;
+          this.router.navigate(["/landpage"]);
         }
-      );
-    
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      }
+    );
   }
 
   submit() {
