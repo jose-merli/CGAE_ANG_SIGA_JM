@@ -1,4 +1,5 @@
 export class SolicitudesModificacionItem {
+  idPersona: String;
   estado: String;
   idSolicitud: String;
   tipoModificacion: String;

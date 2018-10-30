@@ -1,0 +1,14 @@
+.ui-chkbox-box.ui-state-active,
+.ui-radiobutton-box.ui-state-active {
+  color: white !important;
+  background-color: red !important;
+}
+
+.customCheckbox .ui-chkbox .ui-chkbox-box {
+  border-color: #db1b1b !important;
+}
+
+.customLabel {
+  margin-top: 0.2em;
+  padding-left: 0px;
+}

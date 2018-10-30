@@ -267,6 +267,9 @@ import { NuevaSolicitudesModificacionComponent } from "./features/censo/modifica
 import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaciones/datos-notificaciones.component";
 import { FichaEventosComponent } from './features/agenda/ficha-eventos/ficha-eventos.component';
 
+//Calendario
+import { ScheduleModule } from "primeng/schedule";
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -509,6 +512,7 @@ import { FichaEventosComponent } from './features/agenda/ficha-eventos/ficha-eve
     GrowlModule,
     CommonModule,
     CalendarModule,
+    ScheduleModule,
     AutoCompleteModule,
     TooltipModule,
     ListboxModule,

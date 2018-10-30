@@ -3,5 +3,46 @@
   <p>Agenda
 </div>
 
-<button (click)="isNuevo()" pButton type="button" icon="fa fa-search" iconPos="left" label="Nuevo"></button>
-<button (click)="isEditar()" pButton type="button" icon="fa fa-search" iconPos="left" label="Editar"></button>
+
+<div class="card">
+  <div class="card-body">
+
+    <div class="row">
+
+      <div class="col-2">
+        <!-- <button (click)="isNuevo()" pButton type="button" icon="fa fa-search" iconPos="left" label="Nuevo"></button>
+        <button (click)="isEditar()" pButton type="button" icon="fa fa-search" iconPos="left" label="Editar"></button>
+
+        <hr> -->
+
+        <div class="ui-g" style="width:250px;margin-bottom:10px">
+
+
+          <div *ngFor="let calendario of calendarios" class="ui-g-12">
+
+
+            <div class="ui-chkbox ui-widget">
+              <div class="ui-helper-hidden-accessible">
+                <input type="checkbox" attr.id={calendario.idCalendario}} value={{calendario.idCalendario}} [(ngModel)]="calendario.checked">
+              </div>
+
+              <div class="ui-chkbox-box ui-widget ui-corner-all ui-state-default" (click)="onClickCheckBox(calendario)" [style.background-color]="calendario.checked ? calendario.color : 'white'"
+                [style.border-color]="calendario.color">
+                <span class="ui-chkbox-icon ui-clickable" [style.color]=" 'white'" [ngClass]="{ 'fa fa-check':calendario.checked}"></span>
+              </div>
+            </div>
+
+            <label (click)="onClickLabelCheckbox()" class="ui-chkbox-label">{{calendario.descripcion}}</label>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="col-10">
+        <p-schedule [locale]="es" [height]="600" [events]="events" [header]="header" [eventLimit]="4" [editable]="true"></p-schedule>
+      </div>
+
+    </div>
+
+  </div>
+</div>

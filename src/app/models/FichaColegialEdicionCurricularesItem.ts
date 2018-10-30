@@ -1,4 +1,5 @@
 export class FichaColegialEdicionCurricularesItem {
+  idPersona: String;
   categoriaCurricular: String;
   subtipoCurricular: String;
   fechaDesde: Date;
@@ -8,5 +9,11 @@ export class FichaColegialEdicionCurricularesItem {
   fechaVerificacion: Date;
   descripcion: String;
   motivo: String;
+  idInstitucion: String;
+  idCv: String;
+  idTipoCv: String;
+  idTipoCvSubtipo1: String;
+  idTipoCvSubtipo2: String;
+  tipoSubtipo: String;
   constructor() {}
 }

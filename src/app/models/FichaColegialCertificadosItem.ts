@@ -1,6 +1,8 @@
 export class FichaColegialCertificadosItem {
-  numCertificado: String;
+  idSolicitud: String;
   descripcion: String;
+  idPersona: String;
+  fechaEmision: String;
 
   constructor() {}
 }

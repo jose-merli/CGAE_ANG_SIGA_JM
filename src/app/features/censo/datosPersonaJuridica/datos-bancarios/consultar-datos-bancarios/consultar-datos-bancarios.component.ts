@@ -58,7 +58,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   activarMsgErrorProd: boolean;
   activarMsgErrorServ: boolean;
   //activarRestablecer: boolean = false;
-
+  fichaMisDatos: boolean = false;
   idCuenta: String;
   idPersona: String;
 
@@ -129,6 +129,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    if (sessionStorage.getItem("fichaColegial")) {
+      this.fichaMisDatos = true;
+      sessionStorage.removeItem("fichaColegial");
+    }
     sessionStorage.setItem("editarDatosBancarios", "true");
     this.textFilter = "Elegir";
 

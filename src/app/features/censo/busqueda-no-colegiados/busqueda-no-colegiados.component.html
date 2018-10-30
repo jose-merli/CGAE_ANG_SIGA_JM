@@ -14,21 +14,21 @@
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}</label>
-                        <input [formControl]="formBusqueda.controls['nif']" type="text" class="form-control" pInputText [(ngModel)]="body.nif">
-                        <small class="input-error" *ngIf="!formBusqueda.controls['nif'].pristine && formBusqueda.controls['nif'].status == 'INVALID'">
-                            Debe tener como mínimo tres carácteres</small>
+                        <input type="text" class="form-control" pInputText [(ngModel)]="body.nif">
+                        <!-- <small class="input-error" *ngIf="!formBusqueda.controls['nif'].pristine && formBusqueda.controls['nif'].status == 'INVALID'">
+                            Debe tener como mínimo tres carácteres</small> -->
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ 'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate }}</label>
-                        <input [formControl]="formBusqueda.controls['apellidos']" type="text" class="form-control" pInputText [(ngModel)]="body.apellidos">
-                        <small class="input-error" *ngIf="!formBusqueda.controls['apellidos'].pristine && formBusqueda.controls['apellidos'].status == 'INVALID'">
-                            Debe tener como mínimo tres carácteres</small>
+                        <input type="text" class="form-control" pInputText [(ngModel)]="body.apellidos">
+                        <!-- <small class="input-error" *ngIf="!formBusqueda.controls['apellidos'].pristine && formBusqueda.controls['apellidos'].status == 'INVALID'">
+                            Debe tener como mínimo tres carácteres</small> -->
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}}</label>
-                        <input [formControl]="formBusqueda.controls['nombre']" type="text" class="form-control" pInputText [(ngModel)]="body.nombre">
-                        <small class="input-error" *ngIf="!formBusqueda.controls['nombre'].pristine && formBusqueda.controls['nombre'].status == 'INVALID'">
-                            Debe tener como mínimo tres carácteres</small>
+                        <input type="text" class="form-control" pInputText [(ngModel)]="body.nombre">
+                        <!-- <small class="input-error" *ngIf="!formBusqueda.controls['nombre'].pristine && formBusqueda.controls['nombre'].status == 'INVALID'">
+                            Debe tener como mínimo tres carácteres</small> -->
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ 'menu.administracion.gestionMultiidioma.etiquetas' | translate}}</label>

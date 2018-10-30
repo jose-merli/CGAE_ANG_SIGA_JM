@@ -18,22 +18,21 @@
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.consultaDatosColegiacion.literal.numIden" | translate}}</label>
-                        <input type="text" name="nif" [formControl]="formBusqueda.controls['nif']" class="form-control" [(ngModel)]='body.nif' pInputText>
-                        <small class="input-error" *ngIf="!formBusqueda.controls['nif'].pristine && formBusqueda.controls['nif'].status == 'INVALID'">
-                            Debe tener como mínimo tres carácteres</small>
+                        <input type="text" name="nif" class="form-control" [(ngModel)]='body.nif' pInputText>
+                        <!-- <small class="input-error" *ngIf="!formBusqueda.controls['nif'].pristine && formBusqueda.controls['nif'].status == 'INVALID'">
+                            Debe tener como mínimo tres carácteres</small> -->
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ 'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate}}</label>
-                        <input type="text" name="apellidos" [formControl]="formBusqueda.controls['apellidos']" class="form-control" [(ngModel)]='body.apellidos'
-                            pInputText>
-                        <small class="input-error" *ngIf="!formBusqueda.controls['apellidos'].pristine && formBusqueda.controls['apellidos'].status == 'INVALID'">
-                            Debe tener como mínimo tres carácteres</small>
+                        <input type="text" name="apellidos" class="form-control" [(ngModel)]='body.apellidos' pInputText>
+                        <!-- <small class="input-error" *ngIf="!formBusqueda.controls['apellidos'].pristine && formBusqueda.controls['apellidos'].status == 'INVALID'">
+                            Debe tener como mínimo tres carácteres</small> -->
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}}</label>
-                        <input [formControl]="formBusqueda.controls['nombre']" type="text" class="form-control" pInputText [(ngModel)]="body.nombre">
-                        <small class="input-error" *ngIf="!formBusqueda.controls['nombre'].pristine && formBusqueda.controls['nombre'].status == 'INVALID'">
-                            Debe tener como mínimo tres carácteres</small>
+                        <input type="text" class="form-control" pInputText [(ngModel)]="body.nombre">
+                        <!-- <small class="input-error" *ngIf="!formBusqueda.controls['nombre'].pristine && formBusqueda.controls['nombre'].status == 'INVALID'">
+                            Debe tener como mínimo tres carácteres</small> -->
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.colegiarColegiados.literal.etiquetas" | translate}}</label>
@@ -54,10 +53,9 @@
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-2">
                         <label>{{"censo.busquedaClientesAvanzada.literal.nColegiado" | translate}}</label>
-                        <input type="text" name="numeroColegiado" [formControl]="formBusqueda.controls['numeroColegiado']" class="form-control" [(ngModel)]='body.numColegiado'
-                            pInputText>
-                        <small class="input-error" *ngIf="!formBusqueda.controls['numeroColegiado'].pristine && formBusqueda.controls['numeroColegiado'].status == 'INVALID'">
-                            Debe tener como mínimo tres carácteres</small>
+                        <input type="text" name="numeroColegiado" class="form-control" [(ngModel)]='body.numColegiado' pInputText>
+                        <!-- <small class="input-error" *ngIf="!formBusqueda.controls['numeroColegiado'].pristine && formBusqueda.controls['numeroColegiado'].status == 'INVALID'">
+                            Debe tener como mínimo tres carácteres</small> -->
 
                     </div>
                     <div class="form-group col-lg-3 col-md-2">

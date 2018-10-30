@@ -273,6 +273,8 @@ export class SigaServices {
     solicitudModificacion_tipoModificacion:
       "solicitudModificacion/tipoModificacion",
     solicitudModificacion_estado: "solicitudModificacion/estado",
+    solicitudModificacion_searchModificationRequest:
+      "solicitudModificacion/searchModificationRequest",
     tipoCurricular_categoriaCurricular: "tipoCurricular/categoriaCurricular",
     tipoCurricular_searchTipoCurricular: "tipoCurricular/searchTipoCurricular",
     tipoCurricular_createTipoCurricular: "tipoCurricular/createTipoCurricular",
@@ -289,7 +291,10 @@ export class SigaServices {
     subtipoCurricular_deleteSubtipoCurricular:
       "subtipoCurricular/deleteSubtipoCurricular",
     subtipoCurricular_historySubtipoCurricular:
-      "subtipoCurricular/historySubtipoCurricular"
+      "subtipoCurricular/historySubtipoCurricular",
+    fichaDatosCurriculares_delete: "fichaDatosCurriculares/delete",
+    fichaDatosCertificados_datosCertificadosSearch:
+      "fichaDatosCertificados/datosCertificadosSearch"
   };
 
   private menuToggled = new Subject<any>();
