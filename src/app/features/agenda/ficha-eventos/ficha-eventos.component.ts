@@ -10,11 +10,8 @@ import {
 } from "@angular/core";
 import { CalendarItem } from "../../../models/CalendarItem";
 import { PermisosCalendarioItem } from "../../../models/PermisosCalendarioItem";
-import {
-  DataTable,
-  AutoComplete
-} from "../../../../../node_modules/primeng/primeng";
-import { Router } from "../../../../../node_modules/@angular/router";
+import { DataTable, AutoComplete } from "primeng/primeng";
+import { Router } from "@angular/router";
 import { SigaServices } from "../../../_services/siga.service";
 import { NotificacionEventoObject } from "../../../models/NotificacionEventoObject";
 import { NotificacionEventoItem } from "../../../models/NotificacionEventoItem";
@@ -29,11 +26,10 @@ import { ViewEncapsulation } from "@angular/core";
 export class FichaEventosComponent implements OnInit {
   comboEstados: any[];
   saveCalendarFlag: boolean = false;
-  calendar: CalendarItem = new CalendarItem();
+  msgs;
 
-  comboCalendarType;
-  // map con los permisos {data, ObjectoPermisosBack}
-  permisosChange: PermisosCalendarioItem[] = [];
+  @ViewChild("tableAsistencia")
+  tableAsistencia: DataTable;
 
   @ViewChild("table")
   table: DataTable;
@@ -41,6 +37,7 @@ export class FichaEventosComponent implements OnInit {
   @ViewChild("autocomplete")
   autoComplete: AutoComplete;
 
+  //Notificaciones
   selectedDatos;
   selectMultiple: boolean = false;
   rowsPerPage: any = [];
@@ -56,56 +53,43 @@ export class FichaEventosComponent implements OnInit {
   closeFicha: boolean = true;
   selectAllNotifications: any;
 
+  //Formadores
   datosFormadores: any[] = [];
   formadoresSuggest: any[] = [];
   formadores: any[] = [];
   results: any[] = [];
   backgroundColor: string;
+  marginPx = "4px";
+  bw = "white";
+  idCurso = "2";
 
+  //Asistencia
   colsAsistencia;
   fichasPosibles;
+  selectedItemAsistencia;
   datosAsistencia = [];
   selectedDatosAsistencia;
   selectAllAsistencias: any;
-
-  marginPx = "4px";
-  bw = "white";
-
-  idCurso = "1";
+  selectedAsistencia: number = 10;
+  selectMultipleAsistencia: boolean = false;
+  numSelectedAsistencia: number = 0;
+  comboAsistencia;
+  checkAsistencias: boolean = false;
 
   constructor(
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
-    private router: Router,
-    private renderer: Renderer2
+    private router: Router
   ) {}
 
   ngOnInit() {
     this.getComboEstado();
     this.getColsResults();
-    this.getEventNotifications();
+    // this.getEventNotifications();
     this.getFichasPosibles();
     this.getColsResultsAsistencia();
     this.getResultsFormadores();
-    this.formadores = [
-      {
-        id: "1",
-        nombre: "JOSE FRANCISCO LOPEZ GARCIA",
-        color: ""
-      },
-      {
-        id: "2",
-        nombre: "CARLOS PEREZ LOPEZ",
-        color: ""
-      },
-      {
-        id: "3",
-        nombre: "MARTA GARCIA FORTE",
-        color: ""
-      }
-    ];
-
-    this.formadoresSuggest = this.formadores;
+    this.getTrainers();
   }
 
   //FUNCIONES FICHA DATOS GENERALES
@@ -115,6 +99,11 @@ export class FichaEventosComponent implements OnInit {
       { label: "Planificado", value: "1" },
       { label: "Cumplido", value: "2" },
       { label: "Cancelado", value: "3" }
+    ];
+
+    this.comboAsistencia = [
+      { label: "Sí", value: "S" },
+      { label: "No", value: "N" }
     ];
   }
 
@@ -158,7 +147,7 @@ export class FichaEventosComponent implements OnInit {
         value: 40
       }
     ];
-    this.getEventNotifications();
+    // this.getEventNotifications();
   }
 
   getEventNotifications() {
@@ -290,6 +279,24 @@ export class FichaEventosComponent implements OnInit {
 
   //FUNCIONES FICHA FORMADORES
 
+  getTrainers() {
+    this.sigaServices
+      .getParam("fichaEventos_getTrainers", "?idCurso=" + this.idCurso)
+      .subscribe(
+        n => {
+          this.formadores = n.formadorCursoItem;
+          this.formadoresSuggest = this.formadores;
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
   getResultsFormadores() {
     this.datosFormadores = [
       {
@@ -357,25 +364,14 @@ export class FichaEventosComponent implements OnInit {
 
       this.autoComplete.focusInput();
     } else {
-      this.autoComplete.panelVisible = true;
-      this.formadoresSuggest = [];
-      this.formadoresSuggest.push({
-        id: "0",
-        nombre: "No hay más formadores"
-      });
+      this.autoComplete.panelVisible = false;
+      this.showInfoTrainers();
       this.autoComplete.focusInput();
     }
   }
 
   resetSuggestTrainers() {
     this.autoComplete.panelVisible = false;
-    this.formadores.forEach(element => {
-      let findFormador = this.results.find(x => x.id === element.id);
-      console.log(findFormador);
-      if (findFormador == undefined) {
-        this.formadoresSuggest.push(element);
-      }
-    });
   }
 
   visiblePanelBlur(event) {
@@ -401,7 +397,19 @@ export class FichaEventosComponent implements OnInit {
     return "#" + ("000000" + color).slice(-6);
   }
 
-  restTrainers() {}
+  showInfoTrainers() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: "Información",
+      detail: "No hay formadores para este curso."
+    });
+  }
+
+  restTrainers() {
+    this.results = [];
+    this.formadoresSuggest = this.formadores;
+  }
 
   //FUNCIONES FICHA ASISTENCIA
 
@@ -453,6 +461,55 @@ export class FichaEventosComponent implements OnInit {
         value: 40
       }
     ];
+  }
+
+  isSelectMultipleAsistencia() {
+    this.selectMultipleAsistencia = !this.selectMultipleAsistencia;
+    if (!this.selectMultipleAsistencia) {
+      this.selectedDatosAsistencia = [];
+      this.numSelectedAsistencia = 0;
+      this.checkAsistencias = false;
+    } else {
+      this.selectAllAsistencias = false;
+      this.selectedDatosAsistencia = [];
+      this.numSelectedAsistencia = 0;
+      this.checkAsistencias = true;
+    }
+  }
+
+  checkAsist() {
+    this.selectedDatosAsistencia.forEach(element => {
+      let idFindAsistencia = this.datosAsistencia.findIndex(
+        x => x.idAsistencia === element.idAsistencia
+      );
+      if (idFindAsistencia != undefined) {
+        this.datosAsistencia[idFindAsistencia].asistencia = "S";
+      }
+    });
+  }
+
+  unCheckAsist() {
+    this.selectedDatosAsistencia.forEach(element => {
+      let idFindAsistencia = this.datosAsistencia.findIndex(
+        x => x.idAsistencia === element.idAsistencia
+      );
+      if (idFindAsistencia != undefined) {
+        this.datosAsistencia[idFindAsistencia].asistencia = "N";
+      }
+    });
+  }
+
+  onChangeSelectAllAsistencias() {
+    if (this.selectAllAsistencias === true) {
+      this.selectMultipleAsistencia = false;
+      this.selectedDatosAsistencia = this.datosAsistencia;
+      this.numSelectedAsistencia = this.datosAsistencia.length;
+      this.checkAsistencias = true;
+    } else {
+      this.selectedDatosAsistencia = [];
+      this.numSelectedAsistencia = 0;
+      this.checkAsistencias = false;
+    }
   }
 
   //FUNCIONES GENERALES
@@ -512,5 +569,9 @@ export class FichaEventosComponent implements OnInit {
       return fichaPosible[0];
     }
     return {};
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }

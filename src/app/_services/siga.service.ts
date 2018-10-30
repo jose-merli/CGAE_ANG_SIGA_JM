@@ -245,6 +245,7 @@ export class SigaServices {
     fichaCalendario_deleteNotification: "fichaCalendario/deleteNotification",
     fichaCalendario_getHistoricEventNotifications:
       "fichaCalendario/getHistoricEventNotifications",
+    fichaEventos_getTrainers: "fichaEventos/getTrainers",
     datosNotificaciones_getTypeNotifications:
       "datosNotificaciones/getTypeNotifications",
     datosNotificaciones_getMeasuredUnit: "datosNotificaciones/getMeasuredUnit",

@@ -99,7 +99,7 @@ export class FichaCalendarioComponent implements OnInit {
       this.getCalendar(sessionStorage.getItem("idCalendario"));
       this.saveCalendarFlag = true;
       this.getProfiles();
-      this.getEventNotifications();
+      // this.getEventNotifications();
     } else {
       this.modoEdicion = false;
       sessionStorage.removeItem("idCalendario");
@@ -146,7 +146,7 @@ export class FichaCalendarioComponent implements OnInit {
           }
           sessionStorage.setItem("idCalendario", body.id);
           this.getProfiles();
-          this.getEventNotifications();
+          // this.getEventNotifications();
         }
       },
       err => {
@@ -424,7 +424,7 @@ export class FichaCalendarioComponent implements OnInit {
         value: 40
       }
     ];
-    this.getEventNotifications();
+    // this.getEventNotifications();
   }
 
   getEventNotifications() {
@@ -519,8 +519,8 @@ export class FichaCalendarioComponent implements OnInit {
       .subscribe(
         data => {
           this.progressSpinner = false;
-          this.showSuccessDelete();
-          this.getEventNotifications();
+          // this.showSuccessDelete();
+          // this.getEventNotifications();
           this.selectMultiple = false;
         },
         err => {
@@ -589,7 +589,6 @@ export class FichaCalendarioComponent implements OnInit {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-
   }
 
   getFichaPosibleByKey(key): any {
