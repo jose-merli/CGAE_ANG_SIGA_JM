@@ -1,0 +1,410 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="busqueda-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>Ficha Eventos</p>
+  </div>
+
+  <!-- FICHA DATOS GENERALES -->
+  <div class="card">
+    <!-- Cabecera -->
+    <div class="card-header header-ficha" (click)="abreCierraFicha('generales')">
+      <div *ngIf="!esFichaActiva('generales')" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-file-pdf icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mt-2">
+            <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate}}</label>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="esFichaActiva('generales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-file-pdf icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ "general.message.datos.generales" | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo-->
+    <div class="card-body card-body-ficha" *ngIf="esFichaActiva('generales')">
+      <div class="form-row mb-3">
+        <div class="bloque col-lg-4 col-md-4">
+          <div class="row mb-3">
+            <label class="ml-2">
+              <strong>Datos Evento</strong>
+            </label>
+          </div>
+          <div class="row mb-3">
+            <div class="col-lg-12 col-md-12">
+              <label>Calendario</label>
+              <p-dropdown class="select-form" [filter]="true" filterBy="label,labelSinTilde" placeholder="Seleccionar" name="type"></p-dropdown>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-lg-12 col-md-12">
+              <label>Tipo Evento</label>
+              <input type="text" class="form-control" pInputText name="cuando">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-lg-12 col-md-12">
+              <label>Título</label>
+              <input type="text" class="form-control" pInputText name="cuando">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-lg-12 col-md-12">
+              <label class="pb-2">Fecha Inicio</label>
+              <div class="row">
+                <div class="col-lg-12 col-md-12">
+                  <div class="row">
+                    <div class="col-lg-1 col-md-1 pt-1">
+                      <label class="small-letter">
+                        Día:
+                      </label>
+                    </div>
+                    <div class="col-lg-5 col-md-5">
+                      <p-calendar></p-calendar>
+                    </div>
+                    <div class="col-lg-1 col-md-1 pt-1 pl-0">
+                      <label class="small-letter">
+                        Hora:
+                      </label>
+                    </div>
+                    <div class="col-lg-5 col-md-5">
+                      <p-calendar [timeOnly]="true"></p-calendar>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-lg-12 col-md-12">
+              <label class="mb-2">Fecha Fin</label>
+              <div class="row">
+                <div class="col-lg-12 col-md-12">
+                  <div class="row">
+                    <div class="col-lg-1 col-md-1 pt-1">
+                      <label class="small-letter">
+                        Día:
+                      </label>
+                    </div>
+                    <div class="col-lg-5 col-md-5">
+                      <p-calendar></p-calendar>
+                    </div>
+                    <div class="col-lg-1 col-md-1 pt-1 pl-0">
+                      <label class="small-letter">
+                        Hora:
+                      </label>
+                    </div>
+                    <div class="col-lg-5 col-md-5">
+                      <p-calendar [timeOnly]="true"></p-calendar>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-lg-12 col-md-12">
+              <label>Lugar</label>
+              <input type="text" class="form-control" pInputText name="cuando">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-lg-12 col-md-12">
+              <label>Descripción</label>
+              <input type="text" class="form-control" pInputText name="cuando">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-lg-12 col-md-12">
+              <label>Recursos</label>
+              <input type="text" class="form-control" pInputText name="cuando">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-lg-12 col-md-12">
+              <label>Estado</label>
+              <p-dropdown class="select-form" [options]="comboEstados" name="estado"></p-dropdown>
+            </div>
+          </div>
+        </div>
+        <div class="bloque col-lg-8 col-md-8">
+          <div class="row mb-3">
+            <label>
+              <strong> Datos de repetición</strong>
+            </label>
+          </div>
+          <div class="row mb-3">
+            <div class="col-lg-6 col-md-6">
+              <label>{{'certificados.mantenimiento.literal.valor' | translate}}(*)</label>
+              <input type="text" class="form-control" pInputText name="cuando">
+            </div>
+            <div class="col-lg-6 col-md-6">
+              <label>{{'formacion.datosNotificaciones.unidadMedida.literal' | translate}}(*)</label>
+              <p-dropdown class="select-form" [filter]="true" filterBy="label,labelSinTilde" placeholder="Seleccionar" name="idUnidadMedida"></p-dropdown>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-6 col-md-6">
+              <label>{{'formacion.datosNotificaciones.antesDespues.literal' | translate}}</label>
+              <p-dropdown class="select-form" [filter]="false" name="idTipoCuando"></p-dropdown>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer" *ngIf="esFichaActiva('generales')">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}"></button>
+        <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFICACIONES-->
+  <div class="card">
+    <!-- Cabecera -->
+    <div class="card-header header-ficha" (click)="abreCierraFicha('notify')">
+      <div *ngIf="!esFichaActiva('notify')" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-bell icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mt-2">
+            <label class="mr-auto title-ficha">{{'formacion.fichaCalendario.notificaciones.cabecera' | translate}}</label>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="esFichaActiva('notify')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-bell icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{'formacion.fichaCalendario.notificaciones.cabecera' | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo-->
+    <div class="card-body card-body-ficha" *ngIf="esFichaActiva('notify')">
+      <div *ngIf="esFichaActiva('notify')" class="card-body card-body-ficha">
+        <div *ngIf="!historico" class="row">
+          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+            [(selection)]="selectedDatos" (onRowSelect)="irEditarNotificacion(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+            pageLinks="4" dataKey="idNotificacion" [responsive]="true" selectionMode="multiple" #table class="tabla-listado"
+            [value]="datos" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+            <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+              [filter]="true" filterMatchMode="contains">
+            </p-column>
+
+            <ng-template pTemplate="paginatorLeft">
+              <div class="mostrar d-flex text-right justify-content-end">
+                <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+                <label>{{ "general.message.mostrar" | translate}}</label>
+                <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                <div class="ml-3 selectAllNotification">
+                  <p-checkbox (onChange)="onChangeSelectAllNotifications()" [(ngModel)]="selectAllNotifications" binary="true" label="Seleccionar todo"
+                    name="groupname"></p-checkbox>
+                </div>
+                <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+                  <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+              </div>
+            </ng-template>
+
+
+          </p-dataTable>
+        </div>
+        <!--HISTORICO-->
+        <div *ngIf="historico" class="card mt-3">
+          <div class="card-body p-0">
+
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+              [(selection)]="selectedDatos" (onRowSelect)="irEditarNotificacion(selectedDatos)" pageLinks="4" dataKey="idNotificacion"
+              [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true"
+              paginatorPosition="both" [rows]="selectedItem">
+              <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+                [filter]="true" filterMatchMode="contains">
+                <ng-template let-datoH="rowData" pTemplate="body">
+                  <div *ngIf="setItalic(datoH)">
+                    <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
+                  </div>
+                  <div *ngIf="!setItalic(datoH)">
+                    <span>{{datoH[col.field]}}</span>
+                  </div>
+
+                </ng-template>
+
+              </p-column>
+
+              <ng-template pTemplate="paginatorLeft">
+                <div class="mostrar d-flex text-right justify-content-end">
+                  <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                  <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+                  <label>{{ "general.message.mostrar" | translate}}</label>
+                  <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                  <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                  <div class="ml-3 selectAll">
+                    <p-checkbox (onChange)="onChangeSelectAllNotifications()" [(ngModel)]="selectAllNotifications" binary="true" label="Seleccionar todo"
+                      name="groupname"></p-checkbox>
+                  </div>
+                  <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+                    <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+                </div>
+              </ng-template>
+            </p-dataTable>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="esFichaActiva('notify')" class="card-footer">
+        <div *ngIf="!historico" class="text-right main-button">
+          <button (click)="getHistoricEventNotifications(); selectedDatos=[]" pButton type="button" icon="fa fa-history" iconPos="left"
+            label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+          <button [disabled]="!(selectedDatos && selectedDatos != '')" (click)="deleteNotification(selectedDatos)" pButton type="button"
+            icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+          <button pButton (click)="newNotification()" type="button" icon="fa fa-send" iconPos="left" label="{{
+                'general.boton.new' | translate }}"></button>
+        </div>
+        <div *ngIf="historico" class="text-right main-button">
+          <button (click)="getEventNotifications()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+          <button (click)="deleteSeleccion()" [disabled]="historico" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- TERJETAS FORMADORES-->
+  <div class="card">
+    <!-- Cabecera -->
+    <div class="card-header header-ficha" (click)="abreCierraFicha('formadores')">
+      <div *ngIf="!esFichaActiva('formadores')" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-users icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mt-2">
+            <label class="mr-auto title-ficha">Formadores</label>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="esFichaActiva('formadores')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-users icon-ficha"></i>
+        </div>
+        <label class="title-ficha">Formadores</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo-->
+    <div class="card-body card-body-ficha" *ngIf="esFichaActiva('formadores')">
+      <div class="row">
+        <div class="col-lg-11 col-md-11">
+          <p-autoComplete #autocomplete [(ngModel)]="results" [suggestions]="formadoresSuggest" [minLength]="1" field="nombre" [multiple]="true"
+            (onSelect)="visiblePanelOnSelect()" (onUnselect)="resetSuggestTrainers()" (onBlur)="visiblePanelBlur($event)" [style]="{'width':'100%'}">
+            <ng-template let-formadoresSelecionados pTemplate="selectedItem">
+              <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
+                [ngStyle]="{'background': formadoresSelecionados.color, 'margin': marginPx, 'border': bw }">
+                {{ formadoresSelecionados.nombre }}
+              </div>
+            </ng-template>
+          </p-autoComplete>
+        </div>
+        <div class="col-lg-1 col-md-1">
+          <div class="text-left main-button">
+            <button pButton (click)="filterTrainersMultiple()" type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate }}"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer" *ngIf="esFichaActiva('formadores')">
+      <div class="text-right main-button">
+        <button pButton (click)="restTrainers()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}"></button>
+        <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERJETAS ASISTENCIA-->
+  <div class="card">
+    <!-- Cabecera -->
+    <div class="card-header header-ficha" (click)="abreCierraFicha('asistencia')">
+      <div *ngIf="!esFichaActiva('asistencia')" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-list icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mt-2">
+            <label class="mr-auto title-ficha">Asistencia</label>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="esFichaActiva('asistencia')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-list icon-ficha"></i>
+        </div>
+        <label class="title-ficha">Asistencia</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo-->
+    <div class="card-body card-body-ficha" *ngIf="esFichaActiva('asistencia')">
+      <div *ngIf="esFichaActiva('asistencia')" class="card-body card-body-ficha">
+        <div *ngIf="!historico" class="row">
+          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+            [(selection)]="selectedDatos" (onRowSelect)="irEditarNotificacion(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+            pageLinks="4" dataKey="idNotificacion" [responsive]="true" selectionMode="multiple" #table class="tabla-listado"
+            [value]="datos" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+            <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+              [filter]="true" filterMatchMode="contains">
+            </p-column>
+
+            <ng-template pTemplate="paginatorLeft">
+              <div class="mostrar d-flex text-right justify-content-end">
+                <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+                <label>{{ "general.message.mostrar" | translate}}</label>
+                <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                <div class="ml-3 selectAllNotification">
+                  <p-checkbox (onChange)="onChangeSelectAllNotifications()" [(ngModel)]="selectAllNotifications" binary="true" label="Seleccionar todo"
+                    name="groupname"></p-checkbox>
+                </div>
+                <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+                  <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+              </div>
+            </ng-template>
+
+
+          </p-dataTable>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer" *ngIf="esFichaActiva('asistencia')">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}"></button>
+        <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+
+
+  <div *ngIf="progressSpinner " class="overlay-spinner ">
+    <div class="loader "></div>
+  </div>

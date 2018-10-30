@@ -70,8 +70,12 @@ export class EdicionCurricularesComponent implements OnInit {
 
   ngOnInit() {
     // this.editar = this.body.editar;
-    this.body = JSON.parse(sessionStorage.getItem("curriculo"));
-    this.body = this.body[0];
+    if (sessionStorage.getItem("nuevoCurriculo")) {
+      this.body = new FichaColegialEdicionCurricularesItem();
+    } else {
+      this.body = JSON.parse(sessionStorage.getItem("curriculo"));
+      this.body = this.body[0];
+    }
     this.editar = true;
     this.fichasPosibles = [
       {

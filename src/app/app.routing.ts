@@ -201,6 +201,7 @@ import { SubtipoCurricularComponent } from "./features/censo/gestion-subtiposCV/
 import { NuevaSolicitudesModificacionComponent } from "./features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
 import { AgendaComponent } from "./features/agenda/agenda.component";
 import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaciones/datos-notificaciones.component";
+import { FichaEventosComponent } from "./features/agenda/ficha-eventos/ficha-eventos.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -977,6 +978,11 @@ const appRoutes: Routes = [
   {
     path: "editarNotificacion",
     component: DatosNotificacionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fichaEventos",
+    component: FichaEventosComponent,
     canActivate: [AuthGuard]
   },
 

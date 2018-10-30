@@ -265,6 +265,7 @@ import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/fic
 import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
 import { NuevaSolicitudesModificacionComponent } from "./features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
 import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaciones/datos-notificaciones.component";
+import { FichaEventosComponent } from './features/agenda/ficha-eventos/ficha-eventos.component';
 
 //Calendario
 import { ScheduleModule } from "primeng/schedule";
@@ -485,7 +486,8 @@ import { ScheduleModule } from "primeng/schedule";
     FichaCalendarioComponent,
     CargasMasivasComponent,
     NuevaSolicitudesModificacionComponent,
-    DatosNotificacionesComponent
+    DatosNotificacionesComponent,
+    FichaEventosComponent
   ],
   imports: [
     BrowserModule,

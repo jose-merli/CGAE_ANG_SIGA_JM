@@ -583,6 +583,15 @@ export class FichaCalendarioComponent implements OnInit {
     this.selectProfile = false;
   }
 
+  abreCierraFicha(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    if (this.saveCalendarFlag) {
+      fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+
+  }
+
   getFichaPosibleByKey(key): any {
     let fichaPosible = this.fichasPosibles.filter(elto => {
       return elto.key === key;

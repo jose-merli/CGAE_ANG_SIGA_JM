@@ -32,6 +32,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   nuevo: boolean = false;
   datosContacto: any[];
   msgs: Message[];
+  fichaMisDatos: boolean = false;
   columnasDirecciones: any = [];
   usuarioBody: any[];
   comboPais: any[];
@@ -76,7 +77,10 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.historyDisable = true;
       this.disableCheck = true;
     }
-
+    if (sessionStorage.getItem("fichaColegial")) {
+      this.fichaMisDatos = true;
+      sessionStorage.removeItem("fichaColegial");
+    }
     sessionStorage.setItem("editarDirecciones", "true");
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.textFilter = "Elegir";

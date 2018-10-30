@@ -9,6 +9,7 @@ import { SigaServices } from "../../../_services/siga.service";
 import { SolicitudesModificacionItem } from "../../../models/SolicitudesModificacionItem";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { Router } from "@angular/router";
+import { SolicitudesModificacionObject } from "../../../models/SolicitudesModificacionObject";
 
 @Component({
   selector: "app-modificacion-datos",
@@ -46,6 +47,7 @@ export class ModificacionDatosComponent implements OnInit {
   numSelected: number = 0;
   selectedItem: number = 10;
 
+  bodySearch: SolicitudesModificacionObject = new SolicitudesModificacionObject();
   body: SolicitudesModificacionItem = new SolicitudesModificacionItem();
   newBody: SolicitudesModificacionItem;
 
@@ -83,26 +85,26 @@ export class ModificacionDatosComponent implements OnInit {
     );
 
     // Datos dummy
-    this.data = [
-      {
-        estado: "Activo",
-        idSolicitud: "1",
-        tipoModificacion: "Datos Bancarios",
-        numColegiado: "049545",
-        nombre: "Juanma",
-        fecha: new Date(),
-        motivo: "reasignación"
-      },
-      {
-        estado: "No activo",
-        idSolicitud: "2",
-        tipoModificacion: "Datos Curriculares",
-        numColegiado: "049904",
-        nombre: "Mercedes",
-        fecha: new Date(),
-        motivo: "baja"
-      }
-    ];
+    // this.data = [
+    //   {
+    //     estado: "Activo",
+    //     idSolicitud: "1",
+    //     tipoModificacion: "Datos Bancarios",
+    //     numColegiado: "049545",
+    //     nombre: "Juanma",
+    //     fecha: new Date(),
+    //     motivo: "reasignación"
+    //   },
+    //   {
+    //     estado: "No activo",
+    //     idSolicitud: "2",
+    //     tipoModificacion: "Datos Curriculares",
+    //     numColegiado: "049904",
+    //     nombre: "Mercedes",
+    //     fecha: new Date(),
+    //     motivo: "baja"
+    //   }
+    // ];
 
     this.getDataTable();
   }
@@ -174,21 +176,29 @@ export class ModificacionDatosComponent implements OnInit {
 
   search() {
     // Llamada al rest
-    // this.progressSpinner = true;
+    this.progressSpinner = true;
     this.isSearch = true;
     this.selectAll = false;
     this.selectMultiple = false;
     this.selectedDatos = "";
 
-    // this.sigaServices.postPaginado("", "?numPagina=1", this.body).subscribe(
-    //   data => {
-    //     this.progressSpinner = false;
-    //   },
-    //   err => {
-    //     console.log(err);
-    //     this.progressSpinner = false;
-    //   }
-    // );
+    this.sigaServices
+      .postPaginado(
+        "solicitudModificacion_searchModificationRequest",
+        "?numPagina=1",
+        this.body
+      )
+      .subscribe(
+        data => {
+          this.bodySearch = JSON.parse(data["body"]);
+          this.data = this.bodySearch.solModificacionItems;
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        }
+      );
   }
 
   restore() {

@@ -29,7 +29,7 @@ export class AseguradoItem {
     iban: String;
     tipoEjercicio: String;
     familiares: FamiliarItem[];
-    beneficiarios: String;
+    beneficiarios: FamiliarItem[];
 
     constructor() { }
 }

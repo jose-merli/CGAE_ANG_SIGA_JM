@@ -12,6 +12,7 @@ import { TranslateService } from "./../../../commons/translate/translation.servi
 import { DataTable } from "primeng/datatable";
 import { SigaServices } from "./../../../_services/siga.service";
 import { Router } from "@angular/router";
+
 //import "rxjs/Rx";
 import { saveAs } from "file-saver/FileSaver";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
@@ -66,9 +67,13 @@ export class FichaColegialComponent implements OnInit {
   blockCrear: boolean = true;
   activarGuardarGenerales: boolean = false;
   selectAll: boolean = false;
+  selectAllDirecciones: boolean = false;
+  selectAllBancarios: boolean = false;
   selectMultiple: boolean = false;
-  irTurnoOficio: any;
-  irExpedientes: any;
+  selectMultipleDirecciones: boolean = false;
+  selectMultipleBancarios: boolean = false;
+  // irTurnoOficio: any;
+  // irExpedientes: any;
   irRegTel: any;
   msgs: Message[];
 
@@ -85,6 +90,8 @@ export class FichaColegialComponent implements OnInit {
   selectedTipo: any[] = [];
   uploadedFiles: any[] = [];
   numSelected: number = 0;
+  numSelectedDirecciones: number = 0;
+  numSelectedBancarios: number = 0;
   activacionEditar: boolean = true;
   selectedItem: number = 10;
   camposDesactivados: boolean = false;
@@ -94,6 +101,7 @@ export class FichaColegialComponent implements OnInit {
   bodyDirecciones: DatosDireccionesItem;
   bodyDatosBancarios: DatosBancariosItem;
   datosDirecciones: DatosDireccionesItem[] = [];
+  datosDireccionesHist = new DatosDireccionesObject();
   datosBancarios: DatosBancariosItem[] = [];
   searchDireccionIdPersona = new DatosDireccionesObject();
   searchDatosBancariosIdPersona = new DatosBancariosObject();
@@ -128,6 +136,8 @@ export class FichaColegialComponent implements OnInit {
   @ViewChild("table")
   table: DataTable;
   selectedDatos;
+  selectedDatosDirecciones;
+  selectedDatosBancarios;
 
   comboSexo = [
     { label: "", value: null },
@@ -1284,24 +1294,23 @@ export class FichaColegialComponent implements OnInit {
   }
 
   deleteCurriculares() {
-
-    for (let i in this.datosCurriculares){
-      if(this.datosCurriculares[i].fechaFin == null){
+    for (let i in this.datosCurriculares) {
+      if (this.datosCurriculares[i].fechaFin == null) {
         this.sigaServices
-        .post("fichaDatosCurriculares_delete", this.datosCurriculares[i])
-        .subscribe(
-          data => {
-            this.progressSpinner = false;
-            this.searchDatosCurriculares();
-          },
-          err => {
-            console.log(err);
-          },
-          () => {
-            this.progressSpinner = false;
-            this.editar = false;
-          }
-        );
+          .post("fichaDatosCurriculares_delete", this.datosCurriculares[i])
+          .subscribe(
+            data => {
+              this.progressSpinner = false;
+              this.searchDatosCurriculares();
+            },
+            err => {
+              console.log(err);
+            },
+            () => {
+              this.progressSpinner = false;
+              this.editar = false;
+            }
+          );
       }
     }
     // this.progressSpinner = true;
@@ -1313,7 +1322,6 @@ export class FichaColegialComponent implements OnInit {
     //     value.idPersona = this.idPersona;
     //     datosDelete.push(value);
     //   }
-
   }
   redireccionarCurriculares(dato) {
     if (dato && dato.length < 2 && !this.selectMultiple) {
@@ -1331,6 +1339,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   irNuevoCurriculares() {
+    sessionStorage.setItem("nuevoCurriculo", "true");
     this.router.navigate(["/edicionCurriculares"]);
   }
   searchDatosCurriculares() {
@@ -1375,11 +1384,41 @@ export class FichaColegialComponent implements OnInit {
   //
   //
   //
+  //
   // MÉTODOS PARA DIRECCIONES
   activarPaginacionDireciones() {
     if (!this.datosDirecciones || this.datosDirecciones.length == 0)
       return false;
     else return true;
+  }
+  // HACIENDO HISTÓRICO DIRECCIONES
+  // searchHistoricoDatosDirecciones() {
+  searchHistoricoDatosDirecciones() {
+    this.bodyDirecciones.historico = true;
+    this.progressSpinner = true;
+    // this.historico = true;
+    let searchObject = new DatosDireccionesItem();
+    searchObject.idPersona = this.idPersona;
+    searchObject.historico = true;
+    // this.buscar = false;
+    this.selectMultiple = false;
+    this.selectedDatos = "";
+    this.selectAll = false;
+    this.sigaServices
+      .postPaginado("direcciones_search", "?numPagina=1", searchObject)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.datosDireccionesHist = JSON.parse(data["body"]);
+          this.datosDirecciones = this.datosDireccionesHist.datosDireccionesItem;
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {}
+      );
   }
 
   onInitDirecciones() {
@@ -1389,9 +1428,65 @@ export class FichaColegialComponent implements OnInit {
     this.searchDirecciones();
   }
 
+  isSelectMultipleDirecciones() {
+    this.selectMultipleDirecciones = !this.selectMultipleDirecciones;
+    if (!this.selectMultipleDirecciones) {
+      this.numSelected = 0;
+      this.selectedDatosDirecciones = [];
+    } else {
+      this.selectAllDirecciones = false;
+      this.selectedDatosDirecciones = [];
+      this.numSelected = 0;
+    }
+  }
+
+  onChangeSelectAllDirecciones(datos) {
+    if (this.selectAll === true) {
+      this.numSelected = datos.length;
+      this.selectMultipleDirecciones = false;
+      this.selectedDatosDirecciones = datos;
+    } else {
+      this.selectedDatosDirecciones = [];
+      this.numSelected = 0;
+    }
+  }
+
+  borrarSelectedDatos(selectedItem) {
+    this.progressSpinner = true;
+    let deleteDirecciones = new DatosDireccionesObject();
+    deleteDirecciones.datosDireccionesItem = selectedItem;
+    let datosDelete = [];
+    selectedItem.forEach((value: DatosDireccionesItem, key: number) => {
+      value.idPersona = this.idPersona;
+      datosDelete.push(value);
+    });
+
+    this.sigaServices.post("direcciones_remove", datosDelete).subscribe(
+      data => {
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      },
+      () => {
+        this.progressSpinner = false;
+        this.editar = false;
+        // this.dniCorrecto = null;
+        // this.disabledRadio = false;
+        this.selectMultipleDirecciones = false;
+        this.searchDirecciones();
+      }
+    );
+  }
+
+  actualizaSeleccionadosDirecciones(selectedDatos) {
+    this.numSelectedDirecciones = selectedDatos.length;
+  }
+
   searchDirecciones() {
-    this.selectMultiple = false;
-    this.selectedDatos = "";
+    this.selectMultipleDirecciones = false;
+    this.selectedDatosDirecciones = "";
     this.progressSpinner = true;
     this.selectAll = false;
     if (this.idPersona != undefined && this.idPersona != null) {
@@ -1405,6 +1500,7 @@ export class FichaColegialComponent implements OnInit {
           data => {
             this.searchDireccionIdPersona = JSON.parse(data["body"]);
             this.datosDirecciones = this.searchDireccionIdPersona.datosDireccionesItem;
+            this.progressSpinner = false;
           },
           err => {
             console.log(err);
@@ -1423,6 +1519,7 @@ export class FichaColegialComponent implements OnInit {
     let newDireccion = new DatosDireccionesItem();
     sessionStorage.removeItem("direccion");
     sessionStorage.removeItem("editarDireccion");
+    sessionStorage.setItem("fichaColegial", "true");
     sessionStorage.setItem(
       "usuarioBody",
       JSON.stringify(this.bodyDirecciones.idPersona)
@@ -1433,7 +1530,7 @@ export class FichaColegialComponent implements OnInit {
 
   redireccionarDireccion(dato) {
     if (this.camposDesactivados != true) {
-      if (!this.selectMultiple) {
+      if (!this.selectMultipleDirecciones) {
         if (dato[0].fechaBaja != null) {
           sessionStorage.setItem("historicoDir", "true");
         }
@@ -1442,6 +1539,7 @@ export class FichaColegialComponent implements OnInit {
           enviarDatos = dato[0];
           sessionStorage.setItem("idDireccion", enviarDatos.idDireccion);
           sessionStorage.setItem("direccion", JSON.stringify(enviarDatos));
+          sessionStorage.setItem("fichaColegial", "true");
           sessionStorage.removeItem("editarDireccion");
           sessionStorage.setItem("editarDireccion", "true");
           sessionStorage.setItem("usuarioBody", JSON.stringify(this.idPersona));
@@ -1455,7 +1553,7 @@ export class FichaColegialComponent implements OnInit {
 
         this.router.navigate(["/consultarDatosDirecciones"]);
       } else {
-        this.numSelected = this.selectedDatos.length;
+        this.numSelectedDirecciones = this.selectedDatosDirecciones.length;
         sessionStorage.removeItem("esColegiado");
       }
     }
@@ -1486,6 +1584,10 @@ export class FichaColegialComponent implements OnInit {
     else return true;
   }
 
+  actualizaSeleccionadosBancarios(selectedDatos) {
+    this.numSelectedBancarios = selectedDatos.length;
+  }
+
   onInitDatosBancarios() {
     this.bodyDatosBancarios = new DatosBancariosItem();
     this.bodyDatosBancarios.idPersona = this.idPersona;
@@ -1493,7 +1595,93 @@ export class FichaColegialComponent implements OnInit {
     this.searchDatosBancarios();
   }
 
+  onChangeSelectAllBancarios(datos) {
+    if (this.selectAll === true) {
+      this.numSelected = datos.length;
+      this.selectMultipleBancarios = false;
+      this.selectedDatosBancarios = datos;
+    } else {
+      this.selectedDatosBancarios = [];
+      this.numSelected = 0;
+    }
+  }
+
+  isSelectMultipleBancarios() {
+    this.selectMultipleBancarios = !this.selectMultipleBancarios;
+    if (!this.selectMultipleBancarios) {
+      this.numSelected = 0;
+      this.selectedDatosBancarios = [];
+    } else {
+      this.selectAllDirecciones = false;
+      this.selectedDatosBancarios = [];
+      this.numSelected = 0;
+    }
+  }
+
+  confirmarEliminar(selectedDatos) {
+    let mess = this.translateService.instant("messages.deleteConfirmation");
+    let icon = "fa fa-trash-alt";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.eliminarRegistro(selectedDatos);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  eliminarRegistro(selectedDatos) {
+    this.progressSpinner = true;
+
+    let item = new DatosBancariosItem();
+
+    item.idCuentas = [];
+    item.idPersona = this.idPersona;
+
+    selectedDatos.forEach(element => {
+      item.idCuentas.push(element.idCuenta);
+    });
+
+    this.sigaServices.post("datosBancarios_delete", item).subscribe(
+      data => {
+        this.progressSpinner = false;
+        if (selectedDatos.length == 1) {
+          this.showSuccessDetalle(
+            this.translateService.instant("messages.deleted.success")
+          );
+        } else {
+          this.showSuccessDetalle(
+            selectedDatos.length +
+              " " +
+              this.translateService.instant("messages.deleted.selected.success")
+          );
+        }
+      },
+      error => {
+        console.log(error);
+        this.progressSpinner = false;
+      },
+      () => {
+        // this.historico = true;
+        this.selectedDatos = [];
+        this.searchDatosBancarios();
+      }
+    );
+  }
+
   searchDatosBancarios() {
+    this.progressSpinner = true;
     this.sigaServices
       .postPaginado(
         "fichaDatosBancarios_datosBancariosSearch",
@@ -1519,12 +1707,13 @@ export class FichaColegialComponent implements OnInit {
 
   redireccionarDatosBancarios(dato) {
     if (this.camposDesactivados != true) {
-      if (!this.selectMultiple) {
+      if (!this.selectMultipleBancarios) {
         var enviarDatos = null;
         if (dato && dato.length > 0) {
           enviarDatos = dato[0];
           sessionStorage.setItem("idCuenta", enviarDatos.idCuenta);
           sessionStorage.setItem("editar", "true");
+          sessionStorage.setItem("fichaColegial", "true");
           sessionStorage.setItem("datosCuenta", JSON.stringify(enviarDatos));
           sessionStorage.setItem(
             "usuarioBody",
@@ -1536,12 +1725,13 @@ export class FichaColegialComponent implements OnInit {
 
         this.router.navigate(["/consultarDatosBancarios"]);
       } else {
-        this.numSelected = this.selectedDatos.length;
+        this.numSelectedBancarios = this.selectedDatosBancarios.length;
       }
     }
   }
 
   nuevaCuentaBancaria() {
+    sessionStorage.setItem("fichaColegial", "true");
     sessionStorage.setItem(
       "usuarioBody",
       sessionStorage.getItem("personaBody")
@@ -1587,5 +1777,12 @@ export class FichaColegialComponent implements OnInit {
     this.router.navigate(["/informesGenericos"]);
   }
 
+  irExpedientes() {
+    this.router.navigate(["/tiposExpedientes"]);
+  }
+
+  irTurnoOficio() {
+    // this.router.navigate(["/tiposExpedientes"]);
+  }
   // FIN MÉTODOS PARA SERVICIOS DE INTERÉS
 }
