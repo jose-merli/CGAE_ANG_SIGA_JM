@@ -1,6 +1,6 @@
 export class CalendarItem {
-  idTipoCalendario: String;
-  color: String;
-  descripcion: String;
-  idCalendario: String;
+  idTipoCalendario: string;
+  color: string;
+  descripcion: string;
+  idCalendario: string;
 }

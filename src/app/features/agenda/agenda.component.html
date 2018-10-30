@@ -32,17 +32,21 @@
               </div>
             </div>
 
-            <label (click)="onClickLabelCheckbox()" class="ui-chkbox-label">{{calendario.descripcion}}</label>
+            <label (click)="onClickLabelCheckbox(calendario)" class="ui-chkbox-label">{{calendario.descripcion}}</label>
 
           </div>
         </div>
       </div>
 
       <div class="col-10">
-        <p-schedule [locale]="es" [height]="600" [events]="events" [header]="header" [eventLimit]="4" [editable]="true"></p-schedule>
+        <p-schedule [options]="options" [events]="events" [height]="600" [eventLimit]="4" [editable]="true" (onEventClick)="onClickEvento($event)"></p-schedule>
       </div>
 
     </div>
 
   </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
 </div>
