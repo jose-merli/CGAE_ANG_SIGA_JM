@@ -1,5 +1,6 @@
 export class EventoCalendario {
-  id: number;
+  id: string;
+  idCalendario: string;
   title: string;
   start: string;
   end: string;

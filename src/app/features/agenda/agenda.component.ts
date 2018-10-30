@@ -2,6 +2,8 @@ import { Component, OnInit, ViewEncapsulation, ViewChild } from "@angular/core";
 import { Router } from "../../../../node_modules/@angular/router";
 import { CalendarItem } from "../../models/CalendarItem";
 import { Checkbox } from "../../../../node_modules/primeng/primeng";
+import { SigaServices } from "../../_services/siga.service";
+import { EventoCalendario } from "../../models/EventoCalendario";
 @Component({
   selector: "app-agenda",
   templateUrl: "./agenda.component.html",
@@ -19,9 +21,13 @@ export class AgendaComponent implements OnInit {
   lectura: boolean = true;
   acceso: boolean = true;
 
+  progressSpinner: boolean = false;
+
   //Para el calendario
   events: any[];
+  eventosDTO;
   header: any;
+  options: any;
   calendarios: any[];
   selectedCalendario: any;
   color: any;
@@ -30,37 +36,22 @@ export class AgendaComponent implements OnInit {
   checked: boolean = true;
 
   fechaActual: Date = new Date();
-  constructor(private router: Router) {}
+  constructor(private router: Router, private sigaServices: SigaServices) {}
 
   ngOnInit() {
     this.listLecturaSelect = [];
     this.listAccesoSelect = [];
-    this.header = {
-      left: "prev,next",
-      center: "title",
-      right: "month,agendaWeek,agendaDay"
+
+    this.options = {
+      header: {
+        left: "prev,next",
+        center: "title",
+        right: "month,agendaWeek,agendaDay",
+        locale: "es"
+      }
     };
 
-    this.calendarios = [
-      {
-        idCalendario: "1",
-        descripcion: "Calendario exámenes",
-        color: "#ff9f89",
-        checked: false
-      },
-      {
-        idCalendario: "2",
-        descripcion: "Calendario seminario",
-        color: "#009414",
-        checked: false
-      },
-      {
-        idCalendario: "3",
-        descripcion: "Calendario extraordinario",
-        color: "#0de7e9",
-        checked: false
-      }
-    ];
+    this.getCalendarios();
 
     this.events = [];
   }
@@ -70,101 +61,60 @@ export class AgendaComponent implements OnInit {
     this.getEventos(calendario);
   }
 
-  onClickLabelCheckbox() {
-    alert("Esta acción llevará a la ficha del calendario. Por desarrollar.");
+  onClickLabelCheckbox(calendario: CalendarItem) {
+    sessionStorage.setItem("modoEdicion", "true");
+    sessionStorage.setItem("idCalendario", calendario.idCalendario);
+    sessionStorage.setItem("calendarEdit", JSON.stringify(calendario));
+    this.router.navigate(["/editarCalendario"]);
   }
 
-  showCalendar1() {
-    return [
-      {
-        idCalendario: "1",
-        title: "Reuniones iniciales",
-        start: "2018-10-07",
-        end: "2018-10-10",
-        color: "#ff9f89"
+  getCalendarios() {
+    this.progressSpinner = true;
+
+    this.sigaServices.get("agendaCalendario_getCalendarios").subscribe(
+      res => {
+        if (res.calendarItems) {
+          this.calendarios = res.calendarItems;
+        }
+
+        this.progressSpinner = false;
       },
-      {
-        idCalendario: "1",
-        title: "Evento repetido",
-        start: "2018-10-15",
-        color: "#ff9f89"
-      },
-      {
-        idCalendario: "1",
-        title: "Evento repetido",
-        start: "2018-10-20",
-        color: "#ff9f89"
-      },
-      {
-        idCalendario: "1",
-        title: "Conferencia",
-        start: "2018-10-22",
-        end: "2018-10-26",
-        color: "#ff9f89"
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
       }
-    ];
+    );
   }
 
-  showCalendar2() {
-    return [
-      {
-        idCalendario: "2",
-        title: "Conferencia inicial",
-        start: "2018-10-12",
-        end: "2018-10-15",
-        color: "#009414"
-      },
-      {
-        idCalendario: "2",
-        title: "Evento importante",
-        start: "2018-10-16",
-        color: "#009414"
-      },
-      {
-        idCalendario: "2",
-        title: "Examen",
-        start: "2018-10-20",
-        color: "#009414"
-      },
-      {
-        idCalendario: "2",
-        title: "Reuniones",
-        start: "2018-10-25",
-        end: "2018-10-26",
-        color: "#009414"
-      }
-    ];
-  }
-
-  showCalendar3() {
-    return [
-      {
-        idCalendario: "3",
-        title: "Exámenes extrordinarios",
-        start: "2018-10-02",
-        end: "2018-10-03",
-        color: "#0de7e9"
-      },
-      {
-        idCalendario: "3",
-        title: "Prácticas extraordinarias",
-        start: "2018-10-05",
-        color: "#0de7e9"
-      }
-    ];
+  getEventos(calendario) {
+    if (calendario.checked) {
+      this.getEventsByIdCalendario(calendario.idCalendario);
+    } else {
+      this.clearEventsByIdCalendario(calendario.idCalendario);
+    }
   }
 
   getEventsByIdCalendario(id: string) {
-    switch (id) {
-      case "1":
-        return this.showCalendar1();
+    this.progressSpinner = true;
 
-      case "2":
-        return this.showCalendar2();
+    this.sigaServices
+      .getParam(
+        "agendaCalendario_getEventosByIdCalendario",
+        "?idCalendario=" + id
+      )
+      .subscribe(
+        res => {
+          if (res.eventos) {
+            this.events = this.events.concat(res.eventos);
+          }
 
-      case "3":
-        return this.showCalendar3();
-    }
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        }
+      );
   }
 
   clearEventsByIdCalendario(id: string) {
@@ -177,17 +127,6 @@ export class AgendaComponent implements OnInit {
     });
 
     this.events = auxArray;
-  }
-
-  getEventos(calendario) {
-    if (calendario.checked) {
-      let auxArray: any[] = this.getEventsByIdCalendario(
-        calendario.idCalendario
-      );
-      this.events = this.events.concat(auxArray);
-    } else {
-      this.clearEventsByIdCalendario(calendario.idCalendario);
-    }
   }
 
   activateLectura() {
@@ -205,15 +144,22 @@ export class AgendaComponent implements OnInit {
     this.router.navigate(["/editarCalendario"]);
   }
 
-  isEditar() {
-    sessionStorage.setItem("modoEdicion", "true");
-    sessionStorage.setItem("idCalendario", "44");
-    let calendar = new CalendarItem();
-    calendar.idTipoCalendario = "1";
-    calendar.descripcion = "Prueba";
-    calendar.color = "#43453";
-    sessionStorage.setItem("calendarEdit", JSON.stringify(calendar));
+  onClickEvento(event) {
+    let evento: EventoCalendario = new EventoCalendario();
+    evento.id = event.calEvent.id;
+    evento.idCalendario = event.calEvent.idCalendario;
+    evento.title = event.calEvent.title;
+    evento.allDay = event.calEvent.allDay;
+    evento.color = event.calEvent.color;
 
-    this.router.navigate(["/editarCalendario"]);
+    if (event.calEvent.start) {
+      evento.start = event.calEvent.start._i;
+    }
+
+    if (event.calEvent.end) {
+      evento.end = event.calEvent.end._i;
+    }
+
+    alert(JSON.stringify(evento));
   }
 }

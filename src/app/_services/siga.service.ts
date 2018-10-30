@@ -295,7 +295,13 @@ export class SigaServices {
       "subtipoCurricular/historySubtipoCurricular",
     fichaDatosCurriculares_delete: "fichaDatosCurriculares/delete",
     fichaDatosCertificados_datosCertificadosSearch:
-      "fichaDatosCertificados/datosCertificadosSearch"
+      "fichaDatosCertificados/datosCertificadosSearch",
+
+    //Agenda calendario
+    agendaCalendario_getEventosByIdCalendario:
+      "agendaCalendario/getEventosByIdCalendario",
+
+    agendaCalendario_getCalendarios: "agendaCalendario/getCalendarios"
   };
 
   private menuToggled = new Subject<any>();
