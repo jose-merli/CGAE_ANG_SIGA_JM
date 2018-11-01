@@ -113,7 +113,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   file: File = undefined;
   ocultarMotivo: boolean = undefined;
 
-  @ViewChild("table") table: DataTable;
+  @ViewChild("table")
+  table: DataTable;
   selectedDatos;
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
@@ -454,6 +455,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     } else {
       this.body.banco = "";
       this.body.bic = "";
+
+      this.ibanValido = false;
     }
   }
 
@@ -535,15 +538,46 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   isValidIBAN(): boolean {
     this.body.iban = this.body.iban.replace(/\s/g, "");
-    return (
-      this.body.iban &&
-      typeof this.body.iban === "string" &&
-      // /ES\d{2}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}|ES\d{22}/.test(
-      ///[A-Z]{2}\d{22}?[\d]{0,2}/.test(this.body.iban)
-      /^ES\d{22}$/.test(this.body.iban)
-    );
+
+    if (this.body.iban.length != 24) {
+      return false;
+    }
+
+    let firstLetters = this.body.iban.substring(0, 1);
+    let secondfirstLetters = this.body.iban.substring(1, 2);
+    let num1 = this.getnumIBAN(firstLetters);
+    let num2 = this.getnumIBAN(secondfirstLetters);
+
+    let isbanaux = String(num1) + String(num2) + this.body.iban.substring(2);
+    // Se mueve los 6 primeros caracteres al final de la cadena.
+    isbanaux = isbanaux.substring(6) + isbanaux.substring(0, 6);
+
+    //Se calcula el resto, llamando a la función modulo97, definida más abajo
+    let resto = this.modulo97(isbanaux);
+    if (resto == "1") {
+      return true;
+    } else {
+      return false;
+    }
   }
 
+  getnumIBAN(letter) {
+    let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    return letters.search(letter) + 10;
+  }
+
+  modulo97(iban) {
+    var parts = Math.ceil(iban.length / 7);
+    var remainer = "";
+
+    for (var i = 1; i <= parts; i++) {
+      remainer = String(
+        parseFloat(remainer + iban.substr((i - 1) * 7, 7)) % 97
+      );
+    }
+
+    return remainer;
+  }
   validarIban(): boolean {
     if (
       (this.body.iban != null || this.body.iban != undefined) &&
@@ -638,6 +672,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     if (
       this.body.iban == null ||
       this.body.iban == undefined ||
+      (this.body.iban && this.isValidIBAN() == false) ||
       this.selectedTipo.length == 0
     ) {
       return true;
