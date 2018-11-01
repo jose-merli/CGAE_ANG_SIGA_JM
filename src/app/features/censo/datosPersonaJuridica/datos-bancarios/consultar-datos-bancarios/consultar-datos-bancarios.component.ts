@@ -324,13 +324,12 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
     this.getArrayTipoCuenta();
 
-    this.body.motivo = "registro creado";
+    //this.body.motivo = "registro creado";
     this.sigaServices.post("datosCuentaBancaria_insert", this.body).subscribe(
       data => {
         this.progressSpinner = false;
         this.body = JSON.parse(data["body"]);
 
-        this.showSuccess("Se han guardado correctamente los datos");
         sessionStorage.setItem("editar", "true");
       },
       error => {
@@ -345,14 +344,26 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.eliminarItem();
         }
         this.progressSpinner = false;
-      },
+      }, 
       () => {
+        if (this.ocultarMotivo == false) {
+          this.cerrarAuditoria();
+        }
         this.idCuenta = this.body.id;
         this.selectedTipo = [];
         this.body.motivo = undefined;
         this.cargarModoEdicion();
       }
     );
+  }
+
+  modo() {
+    this.registroEditable = sessionStorage.getItem("editar");
+    if (this.registroEditable == "false") {
+      this.guardarRegistro();
+    } else {
+      this.editarRegistro();
+    }
   }
 
   editarRegistro() {
@@ -698,7 +709,12 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.revisionCuentas = false;
         this.registroEditable = sessionStorage.getItem("editar");
         if (this.registroEditable == "false") {
-          this.guardarRegistro();
+          if (this.ocultarMotivo == false) {
+            this.displayAuditoria = true;
+          } else {
+            this.displayAuditoria = false;
+            this.guardarRegistro();
+          }
         } else {
           this.displayAuditoria = true;
           this.showGuardarAuditoria = false;
