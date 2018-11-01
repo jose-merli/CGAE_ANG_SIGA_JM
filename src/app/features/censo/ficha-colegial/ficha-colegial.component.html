@@ -783,7 +783,7 @@
 
               </div>
               <br>
-              <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+              <i [ngClass]="{ 'fa fa-angle-up': esFichaActiva('direcciones'), 'fa fa-angle-down': ! esFichaActiva('direcciones')} "></i>
             </div>
           </div>
 
@@ -799,9 +799,9 @@
 
       <div *ngIf="esFichaActiva('direcciones')" class="card-body card-body-ficha">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosDirecciones" pageLinks="4"
-          dataKey="idDireccion" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datosDirecciones"
-          [sortOrder]="1" [paginator]="activarPaginacionDireciones()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionarDireccion(selectedDatosDirecciones)"
-          (onRowUnselect)="actualizaSeleccionadosDirecciones(selectedDatosDirecciones)">
+          [ngClass]="{'customCursor': selectMultipleDirecciones}" dataKey="idDireccion" [responsive]="true" selectionMode="multiple"
+          #table class="tabla-listado" [value]="datosDirecciones" [sortOrder]="1" [paginator]="activarPaginacionDireciones()"
+          paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionarDireccion(selectedDatosDirecciones)" (onRowUnselect)="actualizaSeleccionadosDirecciones(selectedDatosDirecciones)">
           <p-column *ngFor="let col of colsDirecciones" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
             <ng-template let-datoH="rowData" pTemplate="body">

@@ -301,7 +301,11 @@ export class SigaServices {
     agendaCalendario_getEventosByIdCalendario:
       "agendaCalendario/getEventosByIdCalendario",
 
-    agendaCalendario_getCalendarios: "agendaCalendario/getCalendarios"
+    agendaCalendario_getCalendarios: "agendaCalendario/getCalendarios",
+    tipoCurricular_comboTipoCurricular: "tipoCurricular/comboTipoCurricular",
+    subtipoCurricular_comboSubtipoCurricular:
+      "subtipoCurricular/comboSubtipoCurricular",
+    fichaDatosCurriculares_update: "fichaDatosCurriculares/update"
   };
 
   private menuToggled = new Subject<any>();

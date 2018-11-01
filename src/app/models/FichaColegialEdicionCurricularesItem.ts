@@ -4,9 +4,12 @@ export class FichaColegialEdicionCurricularesItem {
   subtipoCurricular: String;
   fechaDesde: Date;
   fechaHasta: Date;
+  fechaMovimiento: Date;
+  fechaDesdeDate: Date;
+  fechaHastaDate: Date;
+  fechaMovimientoDate: Date;
   creditos: String;
-  verificado: Boolean;
-  fechaVerificacion: Date;
+  certificado: String;
   descripcion: String;
   motivo: String;
   idInstitucion: String;

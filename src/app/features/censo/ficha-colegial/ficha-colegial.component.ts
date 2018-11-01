@@ -380,11 +380,11 @@ export class FichaColegialComponent implements OnInit {
 
     this.colsCurriculares = [
       {
-        field: "fechaInicio",
+        field: "fechaDesde",
         header: "facturacion.seriesFacturacion.literal.fInicio"
       },
       {
-        field: "fechaFin",
+        field: "fechaHasta",
         header: "censo.consultaDatos.literal.fechaFin"
       },
       {
