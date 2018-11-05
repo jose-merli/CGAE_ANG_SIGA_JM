@@ -409,6 +409,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.solicitudEditar.tratamiento = this.tratamientoSelected.value;
     this.solicitudEditar.idEstadoCivil = this.estadoCivilSelected.value;
     this.solicitudEditar.idPais = this.paisSelected.value;
+    this.solicitudEditar.sexo = this.sexoSelected.value;
     if (this.paisSelected.value == "191") {
       this.solicitudEditar.idProvincia = this.provinciaSelected.value;
       this.solicitudEditar.idPoblacion = this.poblacionSelected.value;

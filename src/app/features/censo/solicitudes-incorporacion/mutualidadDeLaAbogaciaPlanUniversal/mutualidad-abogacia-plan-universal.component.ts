@@ -33,12 +33,28 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
 
   ngOnInit() {
 
-    //this.cargarCombos();
+    this.sigaServices.post("mutualidad_getEnums", "").subscribe(
+      result => {
+        debugger;
+      },
+      error => {
+        console.log(error);
+      }
+    );
 
   }
 
   cargarCombos() {
 
+
+    this.sigaServices.get("mutualidad_getEnums").subscribe(
+      result => {
+        debugger;
+      },
+      error => {
+        console.log(error);
+      }
+    );
 
     this.sigaServices.get("solicitudInciporporacion_pais").subscribe(
       result => {
