@@ -290,7 +290,8 @@ export class BusquedaGeneralComponent {
   checkFilterJuridic() {
     if (
       (this.selectedTipo == undefined ||
-        this.selectedTipo == null || this.selectedTipo.value == "" ||
+        this.selectedTipo == null ||
+        this.selectedTipo.value == "" ||
         this.selectedTipo.length < 1) &&
       (this.bodyJuridica.abreviatura == null ||
         this.bodyJuridica.abreviatura == null ||
@@ -509,7 +510,8 @@ export class BusquedaGeneralComponent {
         id[0].tipoIdentificacion = this.tipoCIF;
 
         sessionStorage.setItem("notario", JSON.stringify(id));
-        this.location.back();
+        //this.location.back();
+        this.router.navigate(["fichaPersonaJuridica"]);
       }
     }
     // ir a ficha de integrante
