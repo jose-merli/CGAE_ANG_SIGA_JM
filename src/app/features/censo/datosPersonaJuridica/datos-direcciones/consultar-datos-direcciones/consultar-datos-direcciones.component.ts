@@ -220,38 +220,40 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     );
   }
 
-  getLabelbyFilter(array) {
+  getLabelbyFilter(string): string {
     /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
-    array.map(e => {
-      let accents =
-        "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-      let accentsOut =
-        "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-      let i;
-      let x;
-      for (i = 0; i < e.label.length; i++) {
-        if ((x = accents.indexOf(e.label[i])) != -1) {
-          e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-          return e.labelSinTilde;
-        }
+    let labelSinTilde = string;
+    let accents =
+      "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+    let accentsOut =
+      "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+    let i;
+    let x;
+    for (i = 0; i < string.length; i++) {
+      if ((x = accents.indexOf(string.charAt(i))) != -1) {
+        labelSinTilde = string.replace(string.charAt(i), accentsOut[x]);
+        return labelSinTilde;
       }
-    });
+    }
+
+    return labelSinTilde;
   }
   getComboPoblacion(filtro: string) {
     this.progressSpinner = true;
-    this.poblacionBuscada = filtro;
+    this.poblacionBuscada = this.getLabelbyFilter(filtro);
+
     this.sigaServices
       .getParam(
         "direcciones_comboPoblacion",
-        "?idProvincia=" + this.body.idProvincia + "&filtro=" + filtro
+        "?idProvincia=" +
+          this.body.idProvincia +
+          "&filtro=" +
+          this.poblacionBuscada
       )
       .subscribe(
         n => {
           this.comboPoblacion = n.combooItems;
-
-          this.getLabelbyFilter(this.comboPoblacion);
-          this.dropdown.filterViewChild.nativeElement.value = this.poblacionBuscada;
         },
         error => {},
         () => {
@@ -674,6 +676,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   buscarPoblacion(e) {
     if (e.target.value && e.target.value !== null) {
       if (e.target.value.length >= 3) {
+        debugger;
         this.getComboPoblacion(e.target.value);
         this.resultadosPoblaciones = "No hay resultados";
       } else {
