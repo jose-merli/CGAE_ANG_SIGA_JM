@@ -271,6 +271,7 @@ export class SigaServices {
     alterMutua_propuestas: "alterMutua/propuestas",
     alterMutua_tarifaSolicitud: "alterMutua/tarifaSolicitud",
     alterMutua_solicitudAlter: "alterMutua/solicitudAlter",
+    mutualidad_getEnums: "mutualidad/enums",
     solicitudModificacion_tipoModificacion:
       "solicitudModificacion/tipoModificacion",
     solicitudModificacion_estado: "solicitudModificacion/estado",
@@ -357,9 +358,9 @@ export class SigaServices {
     return this.httpbackend
       .get(
         environment.newSigaUrl +
-          this.endpoints[service] +
-          "?institucion=" +
-          institucion
+        this.endpoints[service] +
+        "?institucion=" +
+        institucion
       )
       .map(response => {
         return response;
