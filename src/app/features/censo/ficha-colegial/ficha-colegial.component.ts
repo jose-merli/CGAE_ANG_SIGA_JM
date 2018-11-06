@@ -1295,7 +1295,7 @@ export class FichaColegialComponent implements OnInit {
 
   deleteCurriculares() {
     for (let i in this.datosCurriculares) {
-      if (this.datosCurriculares[i].fechaFin == null) {
+      if (this.datosCurriculares[i].fechaHasta == null) {
         this.sigaServices
           .post("fichaDatosCurriculares_delete", this.datosCurriculares[i])
           .subscribe(

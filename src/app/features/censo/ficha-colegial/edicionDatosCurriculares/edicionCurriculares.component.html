@@ -47,28 +47,28 @@
               </div>
 
               <div class="form-group col-lg-3 col-md-3">
-                <label>{{"censo.busquedaClientesAvanzada.literal.categoriaCV" | translate}}</label>
+                <label>{{"censo.busquedaClientesAvanzada.literal.categoriaCV" | translate}} (*)</label>
                 <br>
-                <p-dropdown class="select-form" [(ngModel)]='body.idTipoCv' [filter]="true" filterMatchMode="contains" [options]="categoriaCurricular"
-                  (onChange)="changeCategoria()">
+                <p-dropdown class="select-form" [(ngModel)]='body.idTipoCv' placeholder="Seleccionar" [filter]="true" filterMatchMode="contains"
+                  [options]="categoriaCurricular" (onChange)="changeCategoria()">
                 </p-dropdown>
               </div>
               <div class="form-group col-lg-3 col-md-3">
                 <label>Tipo Curricular</label>
                 <br>
-                <p-dropdown [disabled]="isDisabledCombos()" class="select-form" [(ngModel)]='body.idTipoCvSubtipo1' [filter]="true" filterMatchMode="contains"
-                  [options]="tipoCurricularCombo">
+                <p-dropdown [disabled]="isDisabledCombos()" class="select-form" placeholder="Seleccionar" [(ngModel)]='body.idTipoCvSubtipo1'
+                  [filter]="true" filterMatchMode="contains" [options]="tipoCurricularCombo">
                 </p-dropdown>
               </div>
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{"censo.busquedaClientesAvanzada.literal.subtiposCV" | translate}}</label>
                 <br>
-                <p-dropdown [disabled]="isDisabledCombos()" class="select-form" [(ngModel)]='body.idTipoCvSubtipo2' [filter]="true" filterMatchMode="contains"
-                  [options]="subtipoCurricularCombo">
+                <p-dropdown [disabled]="isDisabledCombos()" class="select-form" placeholder="Seleccionar" [(ngModel)]='body.idTipoCvSubtipo2'
+                  [filter]="true" filterMatchMode="contains" [options]="subtipoCurricularCombo">
                 </p-dropdown>
               </div>
               <div class="form-group col-lg-3 col-md-3">
-                <label>{{"administracion.auditoriaUsuarios.fechaDesde" | translate}}</label>
+                <label>{{"administracion.auditoriaUsuarios.fechaDesde" | translate}} (*)</label>
                 <p-calendar [locale]="es" [(ngModel)]="body.fechaDesde" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
               </div>
               <div class="form-group col-lg-3 col-md-3">
@@ -77,8 +77,11 @@
               </div>
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{"censo.datosCV.literal.creditos" | translate}}</label>
-                <input [(ngModel)]="body.creditos" type="text" class="form-control" [maxLength]="5" pInputText>
-
+                <input [(ngModel)]="body.creditos" (ngModelChange)="compruebaRegistro()" type="text" class="form-control" [maxLength]="5"
+                  pInputText>
+                <div *ngIf="creditosIncorrecto == true">
+                  <label class="labelError">Solo números</label>
+                </div>
               </div>
 
               <div class="form-group col-lg-3 col-md-3">
@@ -95,7 +98,7 @@
               </div>
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{"general.description" | translate}}</label>
-                <input type="text" class="form-control" [(ngModel)]="body.description" pInputText>
+                <input type="text" class="form-control" [(ngModel)]="body.descripcion" pInputText>
               </div>
             </div>
           </div>
@@ -105,7 +108,8 @@
         <div class="card-footer ">
           <div class="text-right main-button ">
             <button *ngIf="nuevo == false" (click)="duplicarRegistro()" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
-            <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+            <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="!activateRestablecer()"
+              label="{{ 'general.boton.restablecer' | translate}}"></button>
             <button (click)="guardarCv()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar()" label="{{ 'general.boton.guardar' | translate}}"></button>
           </div>
         </div>
