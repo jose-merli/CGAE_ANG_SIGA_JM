@@ -1336,10 +1336,15 @@ export class FichaColegialComponent implements OnInit {
 
   onInitCurriculares() {
     this.searchDatosCurriculares();
+    if (sessionStorage.getItem("abrirCurriculares")) {
+      this.abreCierraFicha("curriculares");
+    }
+    sessionStorage.removeItem("abrirCurriculares");
   }
 
   irNuevoCurriculares() {
     sessionStorage.setItem("nuevoCurriculo", "true");
+    sessionStorage.setItem("idPersona", JSON.stringify(this.idPersona));
     this.router.navigate(["/edicionCurriculares"]);
   }
   searchDatosCurriculares() {

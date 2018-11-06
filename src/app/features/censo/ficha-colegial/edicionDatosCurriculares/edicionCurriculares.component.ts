@@ -87,6 +87,8 @@ export class EdicionCurricularesComponent implements OnInit {
       this.body = new FichaColegialEdicionCurricularesItem();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       this.nuevo = true;
+      this.body.idPersona = JSON.parse(sessionStorage.getItem("idPersona"));
+      sessionStorage.removeItem("nuevoCurriculo");
     } else {
       this.body = JSON.parse(sessionStorage.getItem("curriculo"));
       this.body = this.body[0];
@@ -209,6 +211,7 @@ export class EdicionCurricularesComponent implements OnInit {
   }
 
   backTo() {
+    sessionStorage.setItem("abrirCurriculares", "true");
     this.router.navigate(["fichaColegial"]);
   }
 
@@ -228,6 +231,7 @@ export class EdicionCurricularesComponent implements OnInit {
 
   guardarCv() {
     this.progressSpinner = true;
+    this.certificadoToBoolean();
     this.body.dateFechaInicio = this.arreglarFecha(this.body.fechaDesde);
     this.body.dateFechaFin = this.arreglarFecha(this.body.fechaHasta);
     this.body.dateFechaMovimiento = this.arreglarFecha(
@@ -235,7 +239,27 @@ export class EdicionCurricularesComponent implements OnInit {
     );
 
     if (this.nuevo) {
-      this.progressSpinner = false;
+      this.sigaServices
+        .postPaginado(
+          "fichaDatosCurriculares_insert",
+          "?numPagina=1",
+          this.body
+        )
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+            this.activateGuardar();
+            this.showSuccess();
+            this.backTo();
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+            this.showFail();
+          },
+          () => {}
+        );
     } else {
       this.sigaServices
         .postPaginado(
@@ -249,6 +273,7 @@ export class EdicionCurricularesComponent implements OnInit {
             this.bodyInicial = JSON.parse(JSON.stringify(this.body));
             this.activateGuardar();
             this.showSuccess();
+            this.backTo();
           },
           err => {
             console.log(err);
