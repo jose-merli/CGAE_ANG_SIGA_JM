@@ -7,7 +7,7 @@ export class SolicitudesModificacionItem {
   numIdentificacion: String;
   nombre: String;
   apellidos: String;
-  fecha: Date;
+  fechaAlta: Date;
   fechaDesde: Date;
   fechaHasta: Date;
   motivo: String;

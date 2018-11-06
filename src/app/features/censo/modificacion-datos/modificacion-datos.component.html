@@ -19,13 +19,13 @@
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.solicitudTextoLibre.literal.tipoModificacion" | translate}}</label>
                         <br>
-                        <p-dropdown class="select-form" [options]="tipo" [(ngModel)]="selectedTipo" (onChange)="onChangeTipo($event.value)"></p-dropdown>
+                        <p-dropdown class="select-form" [options]="tipo" [(ngModel)]="body.tipoModificacion"></p-dropdown>
                     </div>
 
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaSolicitudesModificacion.literal.estado" | translate}}</label>
                         <br>
-                        <p-dropdown class="select-form" [options]="estado" [(ngModel)]="selectedEstado" (onChange)="onChangeEstado($event.value)"></p-dropdown>
+                        <p-dropdown class="select-form" [options]="estado" [(ngModel)]="body.estado"></p-dropdown>
                     </div>
 
                     <div class="form-group col-lg-3 col-md-3">
