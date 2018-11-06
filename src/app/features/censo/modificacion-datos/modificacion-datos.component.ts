@@ -49,6 +49,9 @@ export class ModificacionDatosComponent implements OnInit {
   body: SolicitudesModificacionItem = new SolicitudesModificacionItem();
   newBody: SolicitudesModificacionItem;
 
+  fechaDesde: Date;
+  fechaHasta: Date;
+
   constructor(
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
@@ -180,8 +183,9 @@ export class ModificacionDatosComponent implements OnInit {
     this.selectMultiple = false;
     this.selectedDatos = "";
 
-    this.body.fechaHasta = new Date(this.body.fechaHasta);
-    this.body.fechaDesde = new Date(this.body.fechaDesde);
+    this.body.fechaDesde = new Date(this.fechaDesde);
+    this.body.fechaHasta = new Date(this.fechaHasta);
+
     this.sigaServices
       .postPaginado(
         "solicitudModificacion_searchModificationRequest",
@@ -204,8 +208,8 @@ export class ModificacionDatosComponent implements OnInit {
   restore() {
     this.body.tipoModificacion = "";
     this.body.estado = "";
-    this.body.fechaDesde = null;
-    this.body.fechaHasta = null;
+    this.fechaDesde = null;
+    this.fechaHasta = null;
   }
 
   // Métodos para los mensajitos
