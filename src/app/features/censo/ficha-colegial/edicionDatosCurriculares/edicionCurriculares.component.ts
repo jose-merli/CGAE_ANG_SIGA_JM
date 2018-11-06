@@ -52,7 +52,6 @@ export class EdicionCurricularesComponent implements OnInit {
   subtipoCurricularCombo: any[];
   usuarioBody: any[];
   derechoAcceso: any;
-  activacionEditar: boolean;
   selectAll: boolean = false;
   update: boolean = true;
   progressSpinner: boolean = false;
@@ -67,6 +66,7 @@ export class EdicionCurricularesComponent implements OnInit {
   fechaBajaCargo: Date;
   columnasTabla: any = [];
   nuevo: Boolean;
+  creditosIncorrecto: boolean = false;
   // Obj extras
   bodyInicial: FichaColegialEdicionCurricularesItem = new FichaColegialEdicionCurricularesItem();
   body2: FichaColegialEdicionCurricularesItem = new FichaColegialEdicionCurricularesItem();
@@ -82,7 +82,6 @@ export class EdicionCurricularesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.changeCategoria();
     // this.editar = this.body.editar;
     if (sessionStorage.getItem("nuevoCurriculo")) {
       this.body = new FichaColegialEdicionCurricularesItem();
@@ -164,26 +163,28 @@ export class EdicionCurricularesComponent implements OnInit {
     // this.verificado
     this.booleanToCertificado();
     this.activateGuardar();
+    this.changeCategoria();
   }
   abrirFicha() {
     this.openFicha = !this.openFicha;
   }
 
   arreglarFecha(fecha) {
+    let fechaNueva = new Date();
     if (fecha != undefined && fecha != null) {
       let jsonDate = JSON.stringify(fecha);
       let rawDate = jsonDate.slice(1, -1);
       if (rawDate.length < 14) {
         let splitDate = rawDate.split("/");
-        let arrayDate = splitDate[2] + "/" + splitDate[1] + "/" + splitDate[0];
-        fecha = new Date((arrayDate += "T00:00:00.001Z"));
+        let arrayDate = splitDate[1] + "/" + splitDate[0] + "/" + splitDate[2];
+        fechaNueva = new Date(arrayDate);
       } else {
-        fecha = new Date(rawDate);
+        fechaNueva = new Date(rawDate);
       }
     } else {
-      fecha = undefined;
+      fechaNueva = undefined;
     }
-    return fecha;
+    return fechaNueva;
   }
 
   activarPaginacion() {
@@ -226,13 +227,15 @@ export class EdicionCurricularesComponent implements OnInit {
   // }
 
   guardarCv() {
-    this.body.fechaDesdeDate = this.arreglarFecha(this.body.fechaDesde);
-    this.body.fechaHastaDate = this.arreglarFecha(this.body.fechaHasta);
-    this.body.fechaMovimientoDate = this.arreglarFecha(
+    this.progressSpinner = true;
+    this.body.dateFechaInicio = this.arreglarFecha(this.body.fechaDesde);
+    this.body.dateFechaFin = this.arreglarFecha(this.body.fechaHasta);
+    this.body.dateFechaMovimiento = this.arreglarFecha(
       this.body.fechaMovimiento
     );
 
     if (this.nuevo) {
+      this.progressSpinner = false;
     } else {
       this.sigaServices
         .postPaginado(
@@ -243,7 +246,8 @@ export class EdicionCurricularesComponent implements OnInit {
         .subscribe(
           data => {
             this.progressSpinner = false;
-
+            this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+            this.activateGuardar();
             this.showSuccess();
           },
           err => {
@@ -267,6 +271,35 @@ export class EdicionCurricularesComponent implements OnInit {
     });
   }
 
+  compruebaRegistro() {
+    var a = this.body.creditos;
+    if (Number(this.body.creditos) && !this.onlySpaces(this.body.creditos)) {
+      this.creditosIncorrecto = false;
+      return true;
+    } else {
+      if (this.body.creditos == "" || this.onlySpaces(this.body.creditos)) {
+        this.creditosIncorrecto = null;
+        return false;
+      } else {
+        this.creditosIncorrecto = true;
+        return false;
+      }
+    }
+  }
+
+  onlySpaces(str) {
+    let i = 0;
+    var ret;
+    ret = true;
+    while (i < str.length) {
+      if (str[i] != " ") {
+        ret = false;
+      }
+      i++;
+    }
+    return ret;
+  }
+
   showSuccess() {
     this.msgs = [];
     this.msgs.push({
@@ -278,6 +311,7 @@ export class EdicionCurricularesComponent implements OnInit {
   restablecer() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.booleanToCertificado();
+    this.compruebaRegistro();
   }
 
   isDisabledCombos() {
@@ -289,6 +323,23 @@ export class EdicionCurricularesComponent implements OnInit {
   }
 
   activateGuardar() {
+    if (JSON.stringify(this.body) == JSON.stringify(this.bodyInicial)) {
+      return false;
+    } else {
+      if (
+        this.creditosIncorrecto == true ||
+        this.body.fechaDesde == null ||
+        this.body.idTipoCv == undefined ||
+        this.body.idTipoCv == null
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
+  activateRestablecer() {
     if (JSON.stringify(this.body) == JSON.stringify(this.bodyInicial)) {
       return false;
     } else {

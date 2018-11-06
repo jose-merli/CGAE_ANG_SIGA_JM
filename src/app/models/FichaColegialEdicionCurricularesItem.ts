@@ -5,9 +5,9 @@ export class FichaColegialEdicionCurricularesItem {
   fechaDesde: Date;
   fechaHasta: Date;
   fechaMovimiento: Date;
-  fechaDesdeDate: Date;
-  fechaHastaDate: Date;
-  fechaMovimientoDate: Date;
+  dateFechaInicio: Date;
+  dateFechaFin: Date;
+  dateFechaMovimiento: Date;
   creditos: String;
   certificado: String;
   descripcion: String;
