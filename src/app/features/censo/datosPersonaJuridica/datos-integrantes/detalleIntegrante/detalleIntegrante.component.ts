@@ -157,15 +157,15 @@ export class DetalleIntegranteComponent implements OnInit {
                 if (this.colegios.length == 1) {
                   this.isDisabledTipoColegio = true;
                   this.isDisabledColegio = true;
-                  this.isDisabledProvincia = true;
+                  this.isDisabledProvincia = false;
                   this.isDisabledNumColegio = true;
-                  this.progressSpinner = true;
-                  this.getProvinciaByIdColegio(this.colegios[0].value);
+                  // this.progressSpinner = true;
+                  // this.getProvinciaByIdColegio(this.colegios[0].value);
                   this.body.numColegiado = this.colegios[0].nColegiado;
                 } else {
                   this.isDisabledTipoColegio = true;
                   this.isDisabledColegio = false;
-                  this.isDisabledProvincia = true;
+                  this.isDisabledProvincia = false;
                   this.isDisabledNumColegio = true;
                 }
               },
@@ -245,7 +245,6 @@ export class DetalleIntegranteComponent implements OnInit {
     this.sigaServices.get("busquedaPer_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
-        console.log("no idPersona encontrado", this.colegios);
       },
       err => {
         console.log(err);
@@ -270,10 +269,10 @@ export class DetalleIntegranteComponent implements OnInit {
   }
 
   onChangeColegio(event) {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
 
     if (event) {
-      this.getProvinciaByIdColegio(event);
+      //this.getProvinciaByIdColegio(event);
 
       if (this.nColegiado.length > 1) {
         this.nColegiado.forEach(element => {
@@ -511,12 +510,12 @@ export class DetalleIntegranteComponent implements OnInit {
     if (this.esColegiado) {
       this.isDisabledTipoColegio = true;
       this.isDisabledColegio = true;
-      this.isDisabledProvincia = true;
+      this.isDisabledProvincia = false;
       this.isDisabledNumColegio = true;
     } else {
       this.isDisabledTipoColegio = false;
       this.isDisabledColegio = false;
-      this.isDisabledProvincia = true;
+      this.isDisabledProvincia = false;
       this.isDisabledNumColegio = false;
     }
   }
