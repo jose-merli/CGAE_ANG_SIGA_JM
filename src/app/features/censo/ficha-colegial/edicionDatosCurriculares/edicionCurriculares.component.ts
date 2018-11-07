@@ -83,6 +83,7 @@ export class EdicionCurricularesComponent implements OnInit {
 
   ngOnInit() {
     // this.editar = this.body.editar;
+    this.progressSpinner = true;
     if (sessionStorage.getItem("nuevoCurriculo")) {
       this.body = new FichaColegialEdicionCurricularesItem();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
@@ -100,9 +101,11 @@ export class EdicionCurricularesComponent implements OnInit {
     this.sigaServices.get("tipoCurricular_categoriaCurricular").subscribe(
       n => {
         this.categoriaCurricular = n.combooItems;
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       }
     );
 
