@@ -344,7 +344,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.eliminarItem();
         }
         this.progressSpinner = false;
-      }, 
+      },
       () => {
         if (this.ocultarMotivo == false) {
           this.cerrarAuditoria();
@@ -716,7 +716,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
             this.guardarRegistro();
           }
         } else {
-          this.displayAuditoria = true;
+          if (this.ocultarMotivo == false) {
+            this.displayAuditoria = true;
+          } else {
+            this.displayAuditoria = false;
+            this.guardarRegistro();
+          }
+        
           this.showGuardarAuditoria = false;
           this.body.motivo = undefined;
         }
