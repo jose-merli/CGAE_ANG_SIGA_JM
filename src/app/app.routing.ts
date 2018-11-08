@@ -202,6 +202,7 @@ import { NuevaSolicitudesModificacionComponent } from "./features/censo/modifica
 import { AgendaComponent } from "./features/agenda/agenda.component";
 import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaciones/datos-notificaciones.component";
 import { FichaEventosComponent } from "./features/agenda/ficha-eventos/ficha-eventos.component";
+import { FichaCursoComponent } from "./features/formacion/ficha-curso/ficha-curso.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -1071,6 +1072,11 @@ const appRoutes: Routes = [
   {
     path: "busquedaCursos",
     component: BusquedaCursosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fichaCurso",
+    component: FichaCursoComponent,
     canActivate: [AuthGuard]
   },
   { path: " ", redirectTo: "home" }

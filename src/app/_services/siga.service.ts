@@ -231,7 +231,12 @@ export class SigaServices {
     busquedaCursos_search: "busquedaCursos/search",
     busquedaCursos_archivar: "busquedaCursos/archivar",
     busquedaCursos_desarchivar: "busquedaCursos/desarchivar",
+    fichaCursos_getRolesTrainers: "fichaCursos/getRolesTrainers",
+    fichaCursos_getTypeCostTrainers: "fichaCursos/getTypeCostTrainers",
+    fichaCursos_updateTrainersCourse: "fichaCursos/updateTrainersCourse",
+    fichaCursos_saveTrainersCourse: "fichaCursos/saveTrainersCourse",
 
+    //Agenda
     fichaCalendario_getCalendarType: "fichaCalendario/getCalendarType",
     fichaCalendario_profiles: "fichaCalendario/profiles",
     fichaCalendario_updatePermissions: "fichaCalendario/updatePermissions",
@@ -245,7 +250,10 @@ export class SigaServices {
     fichaCalendario_deleteNotification: "fichaCalendario/deleteNotification",
     fichaCalendario_getHistoricEventNotifications:
       "fichaCalendario/getHistoricEventNotifications",
-    fichaEventos_getTrainers: "fichaEventos/getTrainers",
+    fichaEventos_getTrainersLabels: "fichaEventos/getTrainersLabels",
+    fichaEventos_downloadTemplateFile: "fichaEventos/downloadTemplateFile",
+    fichaEventos_getCalendars: "fichaEventos/getCalendars",
+    fichaCursos_getTrainersCourse: "fichaCursos/getTrainersCourse",
     datosNotificaciones_getTypeNotifications:
       "datosNotificaciones/getTypeNotifications",
     datosNotificaciones_getMeasuredUnit: "datosNotificaciones/getMeasuredUnit",
@@ -256,6 +264,7 @@ export class SigaServices {
     datosNotificaciones_getTypeWhere: "datosNotificaciones/getTypeWhere",
     datosNotificaciones_getTemplates: "datosNotificaciones/getTemplates",
     datosNotificaciones_getTypeSend: "datosNotificaciones/getTypeSend",
+
     fichaColegialSociedades_searchSocieties:
       "fichaColegialSociedades/searchSocieties",
     fichaColegialOtrasColegiaciones_searchOtherCollegues:

@@ -81,6 +81,9 @@ export class BusquedaGeneralComponent {
       activa: false
     }
   ];
+
+  isFormador: boolean = false;
+
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
   constructor(
     private formBuilder: FormBuilder,
@@ -106,8 +109,16 @@ export class BusquedaGeneralComponent {
       sessionStorage.getItem("newIntegrante") != undefined
     ) {
       this.newIntegrante = JSON.parse(sessionStorage.getItem("newIntegrante"));
-      sessionStorage.removeItem("newIntegrante");
+    
     }
+
+    if (
+      sessionStorage.getItem("abrirFormador") != null ||
+      sessionStorage.getItem("abrirFormador") != undefined
+    ) {
+      this.isFormador = true;
+    }
+
     this.colsFisicas = [
       { field: "nif", header: "NIF/CIF" },
       { field: "nombre", header: "Nombre" },
@@ -117,6 +128,7 @@ export class BusquedaGeneralComponent {
       { field: "situacion", header: "Estado colegial" },
       { field: "residente", header: "Residencia" }
     ];
+
     this.colsJuridicas = [
       { field: "tipo", header: "Tipo" },
       { field: "nif", header: "NIF/CIF" },
@@ -144,6 +156,7 @@ export class BusquedaGeneralComponent {
         value: 40
       }
     ];
+
     this.sigaServices.get("busquedaPer_colegio").subscribe(
       n => {
         this.colegios_rol = n.combooItems;
@@ -170,6 +183,7 @@ export class BusquedaGeneralComponent {
         this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
+
   checkTypeCIF(value: String): boolean {
     if (this.isValidDNI(value)) {
       this.tipoCIF = "10";
@@ -188,11 +202,13 @@ export class BusquedaGeneralComponent {
       return false;
     }
   }
+
   isValidPassport(dni: String): boolean {
     return (
       dni && typeof dni === "string" && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni)
     );
   }
+
   isValidNIE(nie: String): boolean {
     return (
       nie &&
@@ -200,6 +216,7 @@ export class BusquedaGeneralComponent {
       /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie)
     );
   }
+
   isValidCIF(cif: String): boolean {
     return (
       cif &&
@@ -207,6 +224,7 @@ export class BusquedaGeneralComponent {
       /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif)
     );
   }
+
   changeColsAndData() {
     if (this.persona == "f") {
       this.cols = this.colsFisicas;
@@ -229,6 +247,7 @@ export class BusquedaGeneralComponent {
       this.bodyJuridica.abreviatura = "";
     }
   }
+
   checkFilterFisic() {
     if (
       (this.bodyFisica.nombre == null ||
@@ -485,7 +504,7 @@ export class BusquedaGeneralComponent {
 
   irFichaColegial(id) {
     // ir a ficha de notario
-    if (!this.newIntegrante) {
+    if (sessionStorage.getItem("abrirNotario") == "true") {
       if (!this.selectMultiple && !this.selectAll) {
         if (
           sessionStorage.getItem("notario") != null ||
@@ -500,7 +519,10 @@ export class BusquedaGeneralComponent {
       }
     }
     // ir a ficha de integrante
-    else {
+    else if (
+      sessionStorage.getItem("newIntegrante") != null ||
+      sessionStorage.getItem("newIntegrante") != undefined
+    ) {
       sessionStorage.removeItem("notario");
       this.checkTypeCIF(id[0].nif);
       id[0].tipoIdentificacion = this.tipoCIF;
@@ -508,6 +530,15 @@ export class BusquedaGeneralComponent {
       sessionStorage.removeItem("nIntegrante");
       sessionStorage.setItem("nIntegrante", JSON.stringify(id));
       this.router.navigate(["detalleIntegrante"]);
+    }
+    // ir a ficha de formador
+    else if (this.isFormador) {
+      this.checkTypeCIF(id[0].nif);
+      id[0].tipoIdentificacion = this.tipoCIF;
+      id[0].completo = true;
+      sessionStorage.removeItem("abrirFormador");
+      sessionStorage.setItem("formador", JSON.stringify(id));
+      this.router.navigate(["/fichaCurso"]);
     }
   }
 

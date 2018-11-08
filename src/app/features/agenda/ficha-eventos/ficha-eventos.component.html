@@ -42,7 +42,8 @@
           <div class="row mb-3">
             <div class="col-lg-12 col-md-12">
               <label>Calendario</label>
-              <p-dropdown class="select-form" [filter]="true" filterBy="label,labelSinTilde" placeholder="Seleccionar" name="type"></p-dropdown>
+              <p-dropdown class="select-form" [options]="comboCalendars" [filter]="true" filterBy="label,labelSinTilde" placeholder="Seleccionar"
+                name="type" (onChange)="onChangeSelectCalendar($event)"></p-dropdown>
             </div>
           </div>
           <div class="row mb-3">
@@ -285,7 +286,7 @@
 
 
   <!-- TERJETAS FORMADORES-->
-  <div class="card">
+  <div class="card" *ngIf="isFormacionCalendar">
     <!-- Cabecera -->
     <div class="card-header header-ficha" (click)="abreCierraFicha('formadores')">
       <div *ngIf="!esFichaActiva('formadores')" class="form-row">
@@ -340,7 +341,7 @@
   </div>
 
   <!-- TERJETAS ASISTENCIA-->
-  <div class="card">
+  <div class="card" *ngIf="isFormacionCalendar">
     <!-- Cabecera -->
     <div class="card-header header-ficha" (click)="abreCierraFicha('asistencia')">
       <div *ngIf="!esFichaActiva('asistencia')" class="form-row">
@@ -367,7 +368,7 @@
     <!-- Cuerpo-->
     <div class="card-body card-body-ficha" *ngIf="esFichaActiva('asistencia')">
       <div *ngIf="esFichaActiva('asistencia')" class="card-body card-body-ficha">
-        <div *ngIf="!historico" class="row">
+        <div class="row">
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultipleAsistencia}"
             [(selection)]="selectedDatosAsistencia" pageLinks="4" dataKey="idAsistencia" [responsive]="true" selectionMode="multiple"
             #tableAsistencia class="tabla-listado" [value]="datosAsistencia" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both"
@@ -406,7 +407,7 @@
     </div>
     <div class="card-footer" *ngIf="esFichaActiva('asistencia')">
       <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-download" iconPos="left" label="Descargar"></button>
+        <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" iconPos="left" label="Descargar"></button>
         <button pButton type="button" (click)="unCheckAsist()" [disabled]="!checkAsistencias" icon="fa fa-times" iconPos="left" label="Desmarcar"></button>
         <button pButton type="button" (click)="checkAsist()" [disabled]="!checkAsistencias" icon="fa fa-check" iconPos="left" label="Marcar"></button>
         <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>

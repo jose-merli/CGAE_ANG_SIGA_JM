@@ -22,7 +22,7 @@
             <div class="form-row">
                 <div class="col-4">
                     <p-radioButton name="person" value="f" label="Personas Fisicas" [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
-                    <p-radioButton name="person" value="j" label="Personas Juridicas" [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
+                    <p-radioButton [disabled]="isFormador" name="person" value="j" label="Personas Juridicas" [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
                 </div>
             </div>
             <p class="title-module">{{"administracion.catalogos.titulo.datos.generales" | translate}}

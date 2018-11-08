@@ -1,21 +1,12 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ChangeDetectorRef,
-  Renderer2,
-  ElementRef,
-  Output,
-  EventEmitter
-} from "@angular/core";
-import { CalendarItem } from "../../../models/CalendarItem";
-import { PermisosCalendarioItem } from "../../../models/PermisosCalendarioItem";
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 import { DataTable, AutoComplete } from "primeng/primeng";
 import { Router } from "@angular/router";
 import { SigaServices } from "../../../_services/siga.service";
 import { NotificacionEventoObject } from "../../../models/NotificacionEventoObject";
 import { NotificacionEventoItem } from "../../../models/NotificacionEventoItem";
 import { ViewEncapsulation } from "@angular/core";
+import { saveAs } from "file-saver/FileSaver";
+import { AsistenciaCursoObject } from "../../../models/AsistenciaCursoObject";
 
 @Component({
   selector: "app-ficha-eventos",
@@ -27,6 +18,8 @@ export class FichaEventosComponent implements OnInit {
   comboEstados: any[];
   saveCalendarFlag: boolean = false;
   msgs;
+  isFormacionCalendar: boolean = false;
+  idCalendario;
 
   @ViewChild("tableAsistencia")
   tableAsistencia: DataTable;
@@ -36,6 +29,9 @@ export class FichaEventosComponent implements OnInit {
 
   @ViewChild("autocomplete")
   autoComplete: AutoComplete;
+
+  //Generales
+  comboCalendars;
 
   //Notificaciones
   selectedDatos;
@@ -83,13 +79,20 @@ export class FichaEventosComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.getComboCalendar();
     this.getComboEstado();
     this.getColsResults();
-    // this.getEventNotifications();
+    this.getComboAsistencia();
     this.getFichasPosibles();
     this.getColsResultsAsistencia();
     this.getResultsFormadores();
     this.getTrainers();
+
+    if (sessionStorage.getItem("isFormacionCalendar") == "true") {
+      this.isFormacionCalendar = true;
+    } else {
+      this.isFormacionCalendar = false;
+    }
   }
 
   //FUNCIONES FICHA DATOS GENERALES
@@ -100,11 +103,23 @@ export class FichaEventosComponent implements OnInit {
       { label: "Cumplido", value: "2" },
       { label: "Cancelado", value: "3" }
     ];
+  }
 
-    this.comboAsistencia = [
-      { label: "Sí", value: "S" },
-      { label: "No", value: "N" }
-    ];
+  //Función obtiene los tipos de calendarios que hay
+  getComboCalendar() {
+    this.sigaServices.get("fichaEventos_getCalendars").subscribe(
+      n => {
+        this.comboCalendars = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  onChangeSelectCalendar(event) {
+    this.idCalendario = event.value;
+    this.getEventNotifications();
   }
 
   //FUNCIONES FICHA NOTIFICACIONES
@@ -147,17 +162,16 @@ export class FichaEventosComponent implements OnInit {
         value: 40
       }
     ];
-    // this.getEventNotifications();
   }
 
   getEventNotifications() {
     this.progressSpinner = true;
     this.historico = false;
-    let idCalendario = sessionStorage.getItem("idCalendario");
+
     this.sigaServices
       .getParam(
         "fichaCalendario_getEventNotifications",
-        "?idCalendario=" + idCalendario
+        "?idCalendario=" + this.idCalendario
       )
       .subscribe(
         n => {
@@ -257,11 +271,10 @@ export class FichaEventosComponent implements OnInit {
   getHistoricEventNotifications() {
     this.progressSpinner = true;
     this.historico = true;
-    let idCalendario = sessionStorage.getItem("idCalendario");
     this.sigaServices
       .getParam(
         "fichaCalendario_getHistoricEventNotifications",
-        "?idCalendario=" + idCalendario
+        "?idCalendario=" + this.idCalendario
       )
       .subscribe(
         n => {
@@ -281,7 +294,7 @@ export class FichaEventosComponent implements OnInit {
 
   getTrainers() {
     this.sigaServices
-      .getParam("fichaEventos_getTrainers", "?idCurso=" + this.idCurso)
+      .getParam("fichaEventos_getTrainersLabels", "?idCurso=" + this.idCurso)
       .subscribe(
         n => {
           this.formadores = n.formadorCursoItem;
@@ -413,6 +426,13 @@ export class FichaEventosComponent implements OnInit {
 
   //FUNCIONES FICHA ASISTENCIA
 
+  getComboAsistencia() {
+    this.comboAsistencia = [
+      { label: "Sí", value: "S" },
+      { label: "No", value: "N" }
+    ];
+  }
+
   getColsResultsAsistencia() {
     this.datosAsistencia = [
       {
@@ -510,6 +530,29 @@ export class FichaEventosComponent implements OnInit {
       this.numSelectedAsistencia = 0;
       this.checkAsistencias = false;
     }
+  }
+
+  downloadTemplateFile() {
+    this.progressSpinner = true;
+    let asistencias = new AsistenciaCursoObject();
+    asistencias.asistenciaCursoItem = this.datosAsistencia;
+
+    this.sigaServices
+      .postDownloadFiles("fichaEventos_downloadTemplateFile", asistencias)
+      .subscribe(
+        data => {
+          const blob = new Blob([data], { type: "text/csv" });
+          saveAs(blob, "PlantillaAsistencia.xls");
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
   }
 
   //FUNCIONES GENERALES
