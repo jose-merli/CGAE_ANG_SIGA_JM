@@ -99,9 +99,10 @@
               <!-- *ngIf="!poblacionExtranjera" -->
               <div *ngIf="!poblacionExtranjera" class="form-group col-lg-6 col-md-6">
                 <label>Población</label>
-                <p-dropdown #input2 class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"
-                  [(disabled)]="isDisabledPoblacion" [options]="comboPoblacion" (input)="buscarPoblacion($event)" [emptyFilterMessage]="resultadosPoblaciones">
+                <p-dropdown #input2 class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true" filterBy="label,labelSinTilde" [(disabled)]="isDisabledPoblacion"
+                  [options]="comboPoblacion" (input)="buscarPoblacion($event)" [emptyFilterMessage]="resultadosPoblaciones" id="dropdown">
                 </p-dropdown>
+                 
               </div>
 
               <div *ngIf="poblacionExtranjera" class="form-group col-lg-6 col-md-6">

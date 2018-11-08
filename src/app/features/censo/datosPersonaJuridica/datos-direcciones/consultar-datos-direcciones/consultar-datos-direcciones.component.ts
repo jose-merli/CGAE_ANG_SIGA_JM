@@ -12,6 +12,7 @@ import { DropdownModule, Dropdown } from "primeng/dropdown";
 import { DatosDireccionesCodigoPostalItem } from "./../../../../../../app/models/DatosDireccionesCodigoPostalItem";
 import { DatosDireccionesCodigoPostalObject } from "./../../../../../../app/models/DatosDireccionesCodigoPostalObject";
 import { TranslateService } from "../../../../../commons/translate";
+import { Browser } from "../../../../../../../node_modules/protractor";
 
 @Component({
   selector: "app-consultar-datos-direcciones",
@@ -242,7 +243,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   getComboPoblacion(filtro: string) {
     this.progressSpinner = true;
     this.poblacionBuscada = this.getLabelbyFilter(filtro);
-
+    
     this.sigaServices
       .getParam(
         "direcciones_comboPoblacion",
@@ -254,6 +255,25 @@ para poder filtrar el dato con o sin estos caracteres*/
       .subscribe(
         n => {
           this.comboPoblacion = n.combooItems;
+
+          /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+    para poder filtrar el dato con o sin estos caracteres*/
+          this.comboPoblacion.map(e => {
+            let accents =
+              "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+            let accentsOut =
+              "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+            let i;
+            let x;
+            for (i = 0; i < e.label.length; i++) {
+              if ((x = accents.indexOf(e.label[i])) != -1) {
+                e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+                return e.labelSinTilde;
+              }
+            }
+          });
+
+          console.log("poblac1", this.comboPoblacion);
         },
         error => {},
         () => {
@@ -262,6 +282,26 @@ para poder filtrar el dato con o sin estos caracteres*/
         }
       );
   }
+
+  getLabelbyFilterArray(array) {
+    /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+para poder filtrar el dato con o sin estos caracteres*/
+    array.map(e => {
+      let accents =
+        "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+      let accentsOut =
+        "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+      let i;
+      let x;
+      for (i = 0; i < e.label.length; i++) {
+        if ((x = accents.indexOf(e.label[i])) != -1) {
+          e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+          return e.labelSinTilde;
+        }
+      }
+    });
+  }
+
   getComboPoblacionInicial() {
     this.progressSpinner = true;
     this.sigaServices
@@ -678,6 +718,8 @@ para poder filtrar el dato con o sin estos caracteres*/
       if (e.target.value.length >= 3) {
         debugger;
         this.getComboPoblacion(e.target.value);
+        console.log("pobl", e.target.value);
+        console.log("poblac", this.comboPoblacion);
         this.resultadosPoblaciones = "No hay resultados";
       } else {
         this.comboPoblacion = [];
