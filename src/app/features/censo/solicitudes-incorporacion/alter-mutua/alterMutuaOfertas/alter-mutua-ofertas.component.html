@@ -4,7 +4,7 @@
     <i class="fa fa-square"></i>
     <p>{{ 'menu.censo' | translate}}
         <i class="fa fa-angle-right"></i>
-        <!--{{'censo.alterMutua.titulo' | translate}}-->Alternativa al RETA
+        <!--{{'censo.alterMutua.titulo' | translate}}-->Ofertas
     </p>
 </div>
 
@@ -662,7 +662,7 @@
     <p-header class="title">
         <label><strong>Sin propuestas disponibles</strong></label>
     </p-header>
-    <div *ngIf="propuestas != null && propuestas != undefined" [innerHTML]="propuestas.mensaje" class="col-lg-12 col-md-12 ">
+    <div *ngIf="propuestas != null" [innerHTML]="propuestas.mensaje" class="col-lg-12 col-md-12 ">
     </div>
     <p-footer>
         <div class="text-right main-button ">
@@ -676,7 +676,7 @@
     <p-header class="title">
         <label><strong>Solicitar seguro</strong></label>
     </p-header>
-    <div *ngIf="datosSolicitud.error != false " [innerHTML]="datosSolicitud.mensaje" class="col-lg-12 col-md-12 ">
+    <div *ngIf="estadoSolicitudResponse != null" [innerHTML]="estadoSolicitudResponse.mensaje" class="col-lg-12 col-md-12 ">
     </div>
     <p-footer>
         <div class="text-right main-button ">
@@ -691,7 +691,7 @@
     <p-header class="title">
         <label><strong>Estado de la solicitud</strong></label>
     </p-header>
-    <div *ngIf="datosSolicitud.error != false " [innerHTML]="datosSolicitud.mensaje" class="col-lg-12 col-md-12 ">
+    <div *ngIf="estadoSolicitudResponse != null" [innerHTML]="estadoSolicitudResponse.mensaje" class="col-lg-12 col-md-12 ">
     </div>
     <p-footer>
         <div class="text-right main-button ">

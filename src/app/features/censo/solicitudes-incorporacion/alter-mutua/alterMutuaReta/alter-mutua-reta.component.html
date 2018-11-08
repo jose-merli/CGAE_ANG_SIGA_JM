@@ -648,13 +648,14 @@
 
 
 
-<p-dialog [(visible)]="mostrarInfo" responsive="true" [draggable]="false" modal="modal" resizable="false" [width]="680">
+<p-dialog class="alterMutuaInfo" [(visible)]="mostrarInfo" responsive="true" [draggable]="false" modal="modal"
+    resizable="false" [width]="680">
     <p-header class="title">
         <label *ngIf="modContratacionSelected != undefined"><strong>{{modContratacionSelected.label}}</strong></label>
     </p-header>
-    <div [innerHTML]="infoPropuesta.breve" *ngIf="modContratacionSelected != undefined" class="col-lg-12 col-md-12 alterMutuaInfo">
+    <div [innerHTML]="infoPropuesta.breve" *ngIf="modContratacionSelected != undefined" class="col-lg-12 col-md-12">
     </div>
-    <div [innerHTML]="infoPropuesta.descripcion" *ngIf="modContratacionSelected != undefined" class="col-lg-12 col-md-12 alterMutuaInfo"></div>
+    <div [innerHTML]="infoPropuesta.descripcion" *ngIf="modContratacionSelected != undefined" class="col-lg-12 col-md-12 "></div>
 </p-dialog>
 
 <p-dialog [(visible)]="!tienePropuesta" [closable]="false" responsive="true" [draggable]="false" modal="modal"
@@ -662,7 +663,7 @@
     <p-header class="title">
         <label><strong>Sin propuestas disponibles</strong></label>
     </p-header>
-    <div *ngIf="propuestas != null && propuestas != undefined" [innerHTML]="propuestas.mensaje" class="col-lg-12 col-md-12 ">
+    <div *ngIf="propuestas != null" [innerHTML]="propuestas.mensaje" class="col-lg-12 col-md-12 ">
     </div>
     <p-footer>
         <div class="text-right main-button ">
@@ -676,7 +677,7 @@
     <p-header class="title">
         <label><strong>Solicitar seguro</strong></label>
     </p-header>
-    <div *ngIf="datosSolicitud.error != false " [innerHTML]="datosSolicitud.mensaje" class="col-lg-12 col-md-12 ">
+    <div *ngIf="estadoSolicitudResponse != null" [innerHTML]="estadoSolicitudResponse.mensaje" class="col-lg-12 col-md-12 ">
     </div>
     <p-footer>
         <div class="text-right main-button ">
@@ -691,7 +692,7 @@
     <p-header class="title">
         <label><strong>Estado de la solicitud</strong></label>
     </p-header>
-    <div *ngIf="datosSolicitud.error != false " [innerHTML]="datosSolicitud.mensaje" class="col-lg-12 col-md-12 ">
+    <div *ngIf="estadoSolicitudResponse != null" [innerHTML]="estadoSolicitudResponse.mensaje" class="col-lg-12 col-md-12 ">
     </div>
     <p-footer>
         <div class="text-right main-button ">

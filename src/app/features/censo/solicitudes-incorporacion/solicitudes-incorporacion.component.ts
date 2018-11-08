@@ -110,7 +110,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     }
   }
   cargarCombos() {
-    this.sigaServices.get("solicitudInciporporacion_tipoSolicitud").subscribe(
+    this.sigaServices.get("solicitudIncorporacion_tipoSolicitud").subscribe(
       result => {
         this.tiposSolicitud = result.combooItems;
       },
@@ -119,7 +119,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
       }
     );
 
-    this.sigaServices.get("solicitudInciporporacion_estadoSolicitud").subscribe(
+    this.sigaServices.get("solicitudIncorporacion_estadoSolicitud").subscribe(
       result => {
         this.estadosSolicitud = result.combooItems;
       },
@@ -134,7 +134,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices
       .postPaginado(
-        "solicitudInciporporacion_searchSolicitud",
+        "solicitudIncorporacion_searchSolicitud",
         "?numPagina=1",
         this.body
       )
@@ -236,7 +236,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
 

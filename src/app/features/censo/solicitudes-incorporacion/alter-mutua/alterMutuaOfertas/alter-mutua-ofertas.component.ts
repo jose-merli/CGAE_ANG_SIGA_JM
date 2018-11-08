@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef, SecurityContext } from "@angular/core";
 import { Router } from "@angular/router";
 import { SigaServices } from "../../../../../_services/siga.service";
 import { TranslateService } from "../../../../../commons/translate";
@@ -124,18 +124,20 @@ export class AlterMutuaOfertasComponent implements OnInit {
     if (sessionStorage.getItem("datosSolicitud") != null) {
       this.datosSolicitud = JSON.parse(sessionStorage.getItem("datosSolicitud"));
       //Reta es tipo 1
-      this.tipoPropuesta = 1;
+      this.tipoPropuesta = 3;
       //ofertas es tipo 3
-      let tipoIdenficador;
-      if (this.datosSolicitud.tipoIdentificacion.lastIndexOf("NIF") == 0)
+
+      /*if (this.datosSolicitud.tipoIdentificacion.lastIndexOf("NIF") == 0)
         tipoIdenficador = 0
       else
-        tipoIdenficador = 1
-      let estadoColegiado = {
-        tipoIdentificador: tipoIdenficador,
-        identificador: this.datosSolicitud.numeroIdentificacion
+        tipoIdenficador = 1*/
+
+
+      let estadoSolicitud = {
+        idSolicitud: this.datosSolicitud.idSolicitud,
+        duplicado: false
       }
-      this.sigaServices.post("alterMutua_estadoColegiado", estadoColegiado).subscribe(result => {
+      this.sigaServices.post("alterMutua_estadoSolicitud", estadoSolicitud).subscribe(result => {
         this.estadoSolicitudResponse = JSON.parse(result.body);
         this.progressSpinner = false;
       }, error => {
@@ -144,6 +146,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
         if (this.estadoSolicitudResponse.error == false) {
           this.tieneSolicitud = true;
         } else {
+          this.estadoSolicitudResponse.mensaje = "No existe una solicitud de Alter Mutua para este colegiado."
           this.showSolicitarSeguro = true;
         }
       })
@@ -271,7 +274,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
       { label: 'Padre', value: 4 },
     ];
 
-    this.sigaServices.get("solicitudInciporporacion_tipoIdentificacion").subscribe(result => {
+    this.sigaServices.get("solicitudIncorporacion_tipoIdentificacion").subscribe(result => {
       this.comboTipoIdentificacion = result.combooItems;
     }, error => {
       console.log(error);
@@ -286,7 +289,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
       }
     );
 
-    this.sigaServices.get("solicitudInciporporacion_pais").subscribe(
+    this.sigaServices.get("solicitudIncorporacion_pais").subscribe(
       result => {
         this.paises = result.combooItems;
       },
@@ -304,7 +307,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
       }
     );
 
-    this.sigaServices.get("solicitudInciporporacion_tipoSolicitud").subscribe(
+    this.sigaServices.get("solicitudIncorporacion_tipoSolicitud").subscribe(
       result => {
         this.comboTiposSolicitud = result.combooItems;
         this.progressSpinner = false;
@@ -330,9 +333,11 @@ export class AlterMutuaOfertasComponent implements OnInit {
     this.sigaServices.post("alterMutua_propuestas", datosPropuesta).subscribe(result => {
 
       this.propuestas = JSON.parse(result.body);
+      this.propuestas.mensaje = this.domSanitizer.bypassSecurityTrustHtml(this.propuestas.mensaje);
+      console.log(this.propuestas.mensaje);
     }, error => {
       console.log(error);
-      this.showFail("No es posible solicitar el seguro alternativa al RETA");
+      this.showFail("No es posible solicitar el seguro ");
 
     }, () => {
       if (this.propuestas.error == true) {
@@ -371,7 +376,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
     this.datosAlter.observaciones = this.datosSolicitud.observaciones;
     this.provinciaSelected = { value: this.datosSolicitud.idProvincia };
     this.paisSelected = { value: this.datosSolicitud.idPais };
-    this.paisSelected == '191' ? this.deshabilitarDireccion = false : this.deshabilitarDireccion = true;
+    this.paisSelected.value == '191' ? this.deshabilitarDireccion = false : this.deshabilitarDireccion = true;
     this.sexoSelected = { value: this.datosSolicitud.sexo };
     this.estadoCivilSelected = { value: this.datosSolicitud.idEstadoCivil };
     this.provinciaSelected = { value: this.datosSolicitud.idProvincia };
@@ -567,6 +572,8 @@ export class AlterMutuaOfertasComponent implements OnInit {
 
 
   enviarDatosAlter() {
+
+    this.progressSpinner = true;
     this.datosAlter.idPaquete = this.modContratacionSelected.value;
     this.asegurado.modContratacion = this.modContratacionSelected.value;
     this.asegurado.sexo = this.sexoSelected.value;
@@ -628,8 +635,8 @@ export class AlterMutuaOfertasComponent implements OnInit {
 
 
     this.sigaServices.post("alterMutua_solicitudAlter", this.datosAlter).subscribe(result => {
-      this.propuestas = JSON.parse(result.body);
 
+      this.propuestas = JSON.parse(result.body);
     }, error => {
       console.log(error);
     }, () => {
@@ -638,6 +645,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
       } else {
         this.showFail("La solicitud no se ha enviado correctamente a Alter Mútua");
       }
+      this.progressSpinner = false;
     })
 
   }
@@ -675,6 +683,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
             breve: this.propuestas.propuestas[i].breve,
             descripcion: this.domSanitizer.bypassSecurityTrustHtml(this.propuestas.propuestas[i].descripcion)
           };
+          console.log(this.infoPropuesta.descripcion);
         }
       }
       if (event.value.value == "") {

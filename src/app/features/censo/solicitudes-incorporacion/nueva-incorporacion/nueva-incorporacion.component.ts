@@ -96,7 +96,7 @@ export class NuevaIncorporacionComponent implements OnInit {
       { value: "M", label: "Mujer" }
     ];
 
-    this.sigaServices.get("solicitudInciporporacion_tipoSolicitud").subscribe(
+    this.sigaServices.get("solicitudIncorporacion_tipoSolicitud").subscribe(
       result => {
         this.tiposSolicitud = result.combooItems;
         this.progressSpinner = false;
@@ -106,7 +106,7 @@ export class NuevaIncorporacionComponent implements OnInit {
       }
     );
 
-    this.sigaServices.get("solicitudInciporporacion_estadoSolicitud").subscribe(
+    this.sigaServices.get("solicitudIncorporacion_estadoSolicitud").subscribe(
       result => {
         this.estadosSolicitud = result.combooItems;
         this.progressSpinner = false;
@@ -116,7 +116,7 @@ export class NuevaIncorporacionComponent implements OnInit {
       }
     );
 
-    this.sigaServices.get("solicitudInciporporacion_tratamiento").subscribe(
+    this.sigaServices.get("solicitudIncorporacion_tratamiento").subscribe(
       result => {
         this.tratamientos = result.combooItems;
         this.progressSpinner = false;
@@ -126,7 +126,7 @@ export class NuevaIncorporacionComponent implements OnInit {
       }
     );
 
-    this.sigaServices.get("solicitudInciporporacion_estadoCivil").subscribe(
+    this.sigaServices.get("solicitudIncorporacion_estadoCivil").subscribe(
       result => {
         this.estadoCivil = result.combooItems;
         this.progressSpinner = false;
@@ -136,7 +136,7 @@ export class NuevaIncorporacionComponent implements OnInit {
       }
     );
 
-    this.sigaServices.get("solicitudInciporporacion_pais").subscribe(
+    this.sigaServices.get("solicitudIncorporacion_pais").subscribe(
       result => {
         this.paises = result.combooItems;
         this.progressSpinner = false;
@@ -147,7 +147,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     );
 
     this.sigaServices
-      .get("solicitudInciporporacion_tipoIdentificacion")
+      .get("solicitudIncorporacion_tipoIdentificacion")
       .subscribe(
         result => {
           this.tipoIdentificacion = result.combooItems;
@@ -158,7 +158,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         }
       );
 
-    this.sigaServices.get("solicitudInciporporacion_tipoColegiacion").subscribe(
+    this.sigaServices.get("solicitudIncorporacion_tipoColegiacion").subscribe(
       result => {
         this.tipoColegiacion = result.combooItems;
         this.progressSpinner = false;
@@ -169,7 +169,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     );
 
     this.sigaServices
-      .get("solicitudInciporporacion_modalidadDocumentacion")
+      .get("solicitudIncorporacion_modalidadDocumentacion")
       .subscribe(
         result => {
           this.modalidadDocumentacion = result.combooItems;
@@ -333,7 +333,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices
       .post(
-        "solicitudInciporporacion_aprobarSolicitud",
+        "solicitudIncorporacion_aprobarSolicitud",
         this.solicitudEditar.idSolicitud
       )
       .subscribe(
@@ -347,6 +347,7 @@ export class NuevaIncorporacionComponent implements OnInit {
               detail: "Solicitud aprobada."
             }
           ];
+          this.location.back();
         },
         error => {
           console.log(error);
@@ -366,7 +367,7 @@ export class NuevaIncorporacionComponent implements OnInit {
 
     this.sigaServices
       .post(
-        "solicitudInciporporacion_denegarSolicitud",
+        "solicitudIncorporacion_denegarSolicitud",
         this.solicitudEditar.idSolicitud
       )
       .subscribe(
@@ -379,6 +380,7 @@ export class NuevaIncorporacionComponent implements OnInit {
               detail: "Solicitud denegada."
             }
           ];
+          this.location.back();
         },
         error => {
           console.log(error);
@@ -438,7 +440,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     }
 
     this.sigaServices
-      .post("solicitudInciporporacion_nuevaSolicitud", this.solicitudEditar)
+      .post("solicitudIncorporacion_nuevaSolicitud", this.solicitudEditar)
       .subscribe(
         result => {
           sessionStorage.removeItem("editedSolicitud");
@@ -455,6 +457,7 @@ export class NuevaIncorporacionComponent implements OnInit {
               detail: "Solicitud guardada correctamente."
             }
           ];
+          this.location.back();
         },
         error => {
           this.msgs = [

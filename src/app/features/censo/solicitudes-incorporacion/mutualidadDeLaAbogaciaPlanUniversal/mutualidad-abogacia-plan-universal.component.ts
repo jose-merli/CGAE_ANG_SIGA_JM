@@ -38,6 +38,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
         debugger;
       },
       error => {
+        debugger;
         console.log(error);
       }
     );
@@ -47,16 +48,16 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
   cargarCombos() {
 
 
-    this.sigaServices.get("mutualidad_getEnums").subscribe(
+    /*this.sigaServices.get("mutualidad_getEnums").subscribe(
       result => {
         debugger;
       },
       error => {
         console.log(error);
       }
-    );
+    );*/
 
-    this.sigaServices.get("solicitudInciporporacion_pais").subscribe(
+    this.sigaServices.get("solicitudIncorporacion_pais").subscribe(
       result => {
         this.paises = result.combooItems;
         this.progressSpinner = false;
