@@ -39,6 +39,9 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
 
   cargarCombos() {
 
+    this.sigaServices.post("", "").subscribe(result => {
+
+    })
 
     this.sigaServices.get("solicitudInciporporacion_pais").subscribe(
       result => {
@@ -73,6 +76,8 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
       }
     );
   }
+
+
 
   abreCierraEstadoSolicitud() {
     this.mostrarEstadoSolicitud = !this.mostrarEstadoSolicitud;

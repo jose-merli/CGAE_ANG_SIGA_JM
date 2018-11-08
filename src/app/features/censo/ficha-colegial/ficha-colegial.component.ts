@@ -380,11 +380,11 @@ export class FichaColegialComponent implements OnInit {
 
     this.colsCurriculares = [
       {
-        field: "fechaInicio",
+        field: "fechaDesde",
         header: "facturacion.seriesFacturacion.literal.fInicio"
       },
       {
-        field: "fechaFin",
+        field: "fechaHasta",
         header: "censo.consultaDatos.literal.fechaFin"
       },
       {
@@ -1295,7 +1295,7 @@ export class FichaColegialComponent implements OnInit {
 
   deleteCurriculares() {
     for (let i in this.datosCurriculares) {
-      if (this.datosCurriculares[i].fechaFin == null) {
+      if (this.datosCurriculares[i].fechaHasta == null) {
         this.sigaServices
           .post("fichaDatosCurriculares_delete", this.datosCurriculares[i])
           .subscribe(
@@ -1336,10 +1336,15 @@ export class FichaColegialComponent implements OnInit {
 
   onInitCurriculares() {
     this.searchDatosCurriculares();
+    if (sessionStorage.getItem("abrirCurriculares")) {
+      this.abreCierraFicha("curriculares");
+    }
+    sessionStorage.removeItem("abrirCurriculares");
   }
 
   irNuevoCurriculares() {
     sessionStorage.setItem("nuevoCurriculo", "true");
+    sessionStorage.setItem("idPersona", JSON.stringify(this.idPersona));
     this.router.navigate(["/edicionCurriculares"]);
   }
   searchDatosCurriculares() {

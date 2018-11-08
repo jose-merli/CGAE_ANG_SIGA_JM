@@ -54,6 +54,7 @@ export class SolicitudIncorporacionItem {
   digitoControl: String;
   numeroCuenta: String;
   banco: String;
+  idInstitucion: String;
 
   constructor() { }
 }

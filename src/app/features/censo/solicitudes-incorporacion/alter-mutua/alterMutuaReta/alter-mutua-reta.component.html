@@ -8,6 +8,7 @@
     </p>
 </div>
 
+
 <div class="card">
     <!--datos propuesta-->
     <div class="card-header header-ficha" (click)="mostarDatosPropuesta()">
@@ -24,8 +25,7 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <label>Tarífa
-                        <span>dto
-                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                        <span>{{tarifa}}</span>
                     </label>
                     <i [hidden]="fichaColegiacion" class="fa fa-angle-down float-right"></i>
                 </div>
@@ -51,12 +51,12 @@
             </div>
             <div class="form-group col-lg-2 col-md-2">
                 <br>
-                <i *ngIf="modContratacionSelected != undefined && modContratacionSelected != ''" (click)="mostarPopUp()"
+                <i *ngIf="modContratacionSelected != undefined && modContratacionSelected.label != ''" (click)="mostarPopUp()"
                     class="fas fa-info-circle" style="cursor:pointer"></i>
             </div>
             <div class="form-group col-lg-3 col-md-3">
                 <label>Tarífa(€)</label>
-                <input type="text" disabled="true" class="form-control" pInputText>
+                <input type="text" disabled="true" class="form-control" [(ngModel)]='tarifa' pInputText>
             </div>
         </div>
     </div>
@@ -79,12 +79,10 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <label>Identificación
-                        <span>{{asegurado.Identificador}}
-                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                        <span>{{asegurado.Identificador}}</span>
                     </label>
                     <label>Nombre
-                        <span>{{asegurado.nombre}}
-                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                        <span>{{asegurado.nombre}}</span>
                     </label>
                     <label>Apellidos
                         <span>{{asegurado.apellidos}}</span>
@@ -136,12 +134,13 @@
             </div>
             <div class="form-group col-lg-3 col-md-3">
                 <label>Colegio</label>
-                <p-dropdown class="select-form" [(ngModel)]="ColegioSelected" [options]="comboColegios" optionLabel="label"
-                    dataKey="value"></p-dropdown>
+                <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="ColegioSelected" [options]="comboColegios"
+                    optionLabel="label" dataKey="value"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3">
                 <label>Situación del ejercicio</label>
-                <input type="text" class="form-control" [(ngModel)]="asegurado.tipoEjercicio" pInputText>
+                <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="tipoEjercicioSelected" [options]="comboTiposSolicitud"
+                    optionLabel="label" dataKey="value"></p-dropdown>
             </div>
         </div>
     </div>
@@ -230,22 +229,23 @@
                         <input type="text" class="form-control" [(ngModel)]="asegurado.domicilio" pInputText>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
-                        <label>CP</label>
-                        <input type="text" class="form-control" [(ngModel)]="asegurado.cp" pInputText>
-                    </div>
-                    <div class="form-group col-lg-4 col-md-4">
                         <label>País</label>
                         <p-dropdown class="select-form" [(ngModel)]="paisSelected" [options]="paises" optionLabel="label"
                             dataKey="value" (onChange)="onChangePais($event)"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
+                        <label>CP</label>
+                        <input type="text" class="form-control" [(ngModel)]="asegurado.cp" pInputText>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4">
                         <label>Provincia</label>
-                        <p-dropdown class="select-form" [(ngModel)]="provinciaSelected" [options]="provincias"
-                            optionLabel="label" dataKey="value"></p-dropdown>
+                        <p-dropdown [disabled]="deshabilitarDireccion" class="select-form" [(ngModel)]="provinciaSelected"
+                            [options]="provincias" optionLabel="label" dataKey="value"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
                         <label>Población</label>
-                        <input type="text" class="form-control" [(ngModel)]="asegurado.poblacion" pInputText>
+                        <input [disabled]="deshabilitarDireccion" type="text" class="form-control" [(ngModel)]="asegurado.poblacion"
+                            pInputText>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
                         <label>Tipo Dirección</label>
@@ -422,23 +422,25 @@
 
                 <ng-template pTemplate="paginatorLeft">
                     <div class="mostrar">
-                        <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al
+                        <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}}
+                            al
                             {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
                         <label>{{ "general.message.mostrar" | translate}}</label>
                         <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                        <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                        <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" |
+                            translate}}</label>
                     </div>
                 </ng-template>
                 <p-footer>
                     <div class="text-right main-button">
                         <!--<button (click)="volver();" [(disabled)]="isVolver" pButton type="button" icon="fa fa-undo"
                                                     iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>-->
-                        <button (click)="confirmEdit()" [(disabled)]="isEditar" pButton type="button" icon="far fa-save "
-                            iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                        <button (click)="confirmEdit()" [disabled]="!isCrear || isInvalidFamiliar()" pButton type="button"
+                            icon="far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
                         <!--<button (click)="confirmarBorrar()" [(disabled)]="isEliminar" pButton type="button" icon="fa fa-trash-alt"
                                                     iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>-->
-                        <button (click)="crear()" [(disabled)]="isCrear" pButton type="button" icon="fa fa-plus"
-                            iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+                        <button (click)="crear()" [disabled]="isCrear" pButton type="button" icon="fa fa-plus" iconPos="left"
+                            label="{{ 'general.boton.new' | translate}}"></button>
                     </div>
                 </p-footer>
             </p-dataTable>
@@ -464,8 +466,8 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <label>Beneficiarios
-                        <span>dto
-                            <!--{{solicitudEditar.estadoSolicitud}}--></span>
+                        <span *ngIf="datosB == null">0</span>
+                        <span *ngIf="datosB != null">{{datosB.length}}</span>
                     </label>
                     <i [hidden]="datosBeneficiarios" class="fa fa-angle-down float-right"></i>
                 </div>
@@ -485,7 +487,7 @@
         <div class="form-row">
             <div class="col-lg-3 col-md-3">
                 <label>Tipo beneficiario</label>
-                <p-dropdown class="select-form" [(ngModel)]="beneficiarioSelected" [options]="comboBeneficiario"
+                <p-dropdown class="select-form" [options]="comboBeneficiario" [(ngModel)]="beneficiarioSelected"
                     optionLabel="label" dataKey="value" (onChange)="onChangeTipoBenef($event)"></p-dropdown>
             </div>
             <div *ngIf="beneficiarioSelected != undefined && beneficiarioSelected.value == '3'" class="col-lg-12 col-md-12">
@@ -567,19 +569,22 @@
 
                     <ng-template pTemplate="paginatorLeft">
                         <div class="mostrar">
-                            <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al
+                            <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first +
+                                1}}
+                                al
                                 {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
                             <label>{{ "general.message.mostrar" | translate}}</label>
                             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" |
+                                translate}}</label>
                         </div>
                     </ng-template>
                     <p-footer>
                         <div class="text-right main-button">
                             <!--<button (click)="volver();" [(disabled)]="isVolver" pButton type="button" icon="fa fa-undo"
                                                     iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>-->
-                            <button (click)="confirmEditB()" [(disabled)]="isEditar" pButton type="button" icon="far fa-save "
-                                iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                            <button (click)="confirmEditB()" [disabled]="!isCrear || isInvalidHeredero()" pButton type="button"
+                                icon="far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
                             <!--<button (click)="confirmarBorrar()" [(disabled)]="isEliminar" pButton type="button" icon="fa fa-trash-alt"
                                                     iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>-->
                             <button (click)="crearB()" [(disabled)]="isCrear" pButton type="button" icon="fa fa-plus"
@@ -632,399 +637,67 @@
     </div>
 
 </div>
+
+
+
 <div class="mt-3 text-right main-button ">
+    <button (click)="enviarDatosAlter()" [disabled]="!isEnviar()" pButton type="button " icon="fa fa-save" iconPos="left"
+        label="Solicitar"></button>
     <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
-    <button (click)="enviarDatosAlter()" pButton type="button " icon="fa fa-save" iconPos="left" label="Solicitar"></button>
 </div>
 
 
 
 <p-dialog [(visible)]="mostrarInfo" responsive="true" [draggable]="false" modal="modal" resizable="false" [width]="680">
     <p-header class="title">
-        <label *ngIf="modContratacionSelected != undefined && modContratacionSelected == '1'"><strong>ALTER
-                PROFESIONAL JÓVEN</strong></label>
-        <label *ngIf="modContratacionSelected != undefined && modContratacionSelected == '2'"><strong>ALTER
-                PROFESIONAL</strong></label>
-        <label *ngIf="modContratacionSelected != undefined && modContratacionSelected == '3'"><strong>ALTER
-                PROFESIONAL PLUS</strong></label>
+        <label *ngIf="modContratacionSelected != undefined"><strong>{{modContratacionSelected.label}}</strong></label>
     </p-header>
-    <div *ngIf="modContratacionSelected != undefined && modContratacionSelected == '1'" class="col-lg-12 col-md-12"
-        class="alterMutuaInfo">
-        <label>ALTER PROFESIONAL JÓVEN es el <strong>conjunto de coberturas óptimo de los abogados Jóvenes,</strong></label><br>
-        <label> para poder ejercer por cuenta propia y estar en Alter Mutua de los Abogados como opción </label><br>
-        <label style="padding-bottom: 1rem;"><strong>alternativa al Régimen Especial de Trabajadores Autónomos (RETA).</strong></label><br>
-        <table width="600px">
-            <tbody>
-                <tr>
-                    <td width="350px" style="padding: 3px"><b>PRESTACIONES POR INCAPACIDAD</b></td>
-                    <td align="center" width="150px" style="padding: 3px"><b>Cobertura</b></td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Incapacidad por enfermedad o accidente</td>
-                    <td align="right" style="padding: 3px">Primeros 90días 30 €/día<br> resto 46 €/día</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Incapacidad parcial</td>
-                    <td align="right" style="padding: 3px">15 €/día</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Pensión por incapacidad permanente absoluta</td>
-                    <td align="right" style="padding: 3px">900 €/mes</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Subsidio por maternidad o adopción</td>
-                    <td align="right" style="padding: 3px">2.250 €</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Subsidio por paternidad</td>
-                    <td align="right" style="padding: 3px">450 €</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Lactancia natural o artificial</td>
-                    <td align="right" style="padding: 3px">675 €</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Cobertura por peligro vital de la madre o el feto</td>
-                    <td align="right" style="padding: 3px">30 €/día, 46 €/día</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Hospitalización por enfermedad o accidente</td>
-                    <td align="right" style="padding: 3px">72 €/día (UCI 216 €/día)</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Hospitalización por patologías del embarazo y parto</td>
-                    <td align="right" style="padding: 3px">72 €/día (UCI 216 €/día)</td>
-                </tr>
-                <tr>
-                    <td style="padding: 3px"><b>PRESTACIONES POR FALLECIMIENTO</b></td>
-                    <td align="right" style="padding: 3px">&nbsp;</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Pensión de Viudedad</td>
-                    <td align="right" style="padding: 3px">400 €/mes</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Pensión de Orfandad</td>
-                    <td align="right" style="padding: 3px">200 €/mes hijo</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Fallecimiento por cualquier causa</td>
-                    <td align="right" style="padding: 3px">Prov. matemática</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Servicio de Entierro</td>
-                    <td align="right" style="padding: 3px">3.500 €</td>
-                </tr>
-                <tr>
-                    <td style="padding: 3px"><b>PRESTACIÓN DE JUBILACIÓN</b></td>
-                    <td align="right" style="padding: 3px">&nbsp;</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Jubilación en forma de capital, transformable a renta</td>
-                    <td align="right" style="padding: 3px">194.798,78 €*</td>
-                </tr>
-                <tr>
-                    <td style="padding: 3px"><b>SERVICIOS SOCIALES</b></td>
-                    <td align="right" style="padding: 3px">&nbsp;</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Prestaciones sociales</td>
-                    <td align="right" style="padding: 3px">Incluido</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Servicio de orientación social</td>
-                    <td align="right" style="padding: 3px">Incluido</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Servicio de orientación nutricional</td>
-                    <td align="right" style="padding: 3px">Incluido</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Servicios Residenciales (residencias, centros de día)</td>
-                    <td align="right" style="padding: 3px">Acceso con descuentos</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Servicio de Conservación de Células Madre</td>
-                    <td align="right" style="padding: 3px">Acceso con descuentos</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Servicio de Atención al Duelo</td>
-                    <td align="right" style="padding: 3px">Gratuito (3 sesiones)</td>
-                </tr>
-            </tbody>
-        </table>
-        <i>* Entrará en vigor a los 3 años. Capital estimado en base a una
-            rentabilidad del
-            3,17%.</i>
-        <label><strong>[+] Información 902 512 777</strong> - <ins><a href="mailto:asesores@altermutua.com">asesores@altermutua.com</a></ins>
-            - <ins><a href="http://www.altermutua.com/es/alter30.aspx" target="_blank">web</a></ins></label>
+    <div [innerHTML]="infoPropuesta.breve" *ngIf="modContratacionSelected != undefined" class="col-lg-12 col-md-12 alterMutuaInfo">
     </div>
-    <div *ngIf="modContratacionSelected != undefined && modContratacionSelected == '2'" class="col-lg-12 col-md-12"
-        class="alterMutuaInfo">
-        <label>ALTER PROFESIONAL es el<strong>conjunto de coberturas óptimo</strong> para poder ejercer por cuenta
-            propia</label><br>
-        <label>y estar en Alter Mutua de los Abogados como opción<strong>alternativa al Régimen </strong></label><br>
-        <label style="padding-bottom: 1rem;"><strong>Especial de Trabajadores Autónomos (RETA).</strong></label><br>
-        <table width="600px">
-            <tbody>
-                <tr>
-                    <td width="350px" style="padding: 3px"><b>PRESTACIONES POR INCAPACIDAD</b></td>
-                    <td align="center" width="150px" style="padding: 3px"><b>Cobertura</b></td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Incapacidad por enfermedad o accidente</td>
-                    <td align="right" style="padding: 3px">Primeros 90días 30 €/día<br> resto 46 €/día</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Incapacidad parcial</td>
-                    <td align="right" style="padding: 3px">15 €/día</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Pensión por incapacidad permanente absoluta</td>
-                    <td align="right" style="padding: 3px">900 €/mes</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Subsidio por maternidad o adopción</td>
-                    <td align="right" style="padding: 3px">2.250 €</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Subsidio por paternidad</td>
-                    <td align="right" style="padding: 3px">450 €</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Lactancia natural o artificial</td>
-                    <td align="right" style="padding: 3px">675 €</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Cobertura por peligro vital de la madre o el feto</td>
-                    <td align="right" style="padding: 3px">30 €/día, 46 €/día</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Hospitalización por enfermedad o accidente</td>
-                    <td align="right" style="padding: 3px">72 €/día (UCI 216 €/día)</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Hospitalización por patologías del embarazo y parto</td>
-                    <td align="right" style="padding: 3px">72 €/día (UCI 216 €/día)</td>
-                </tr>
-                <tr>
-                    <td style="padding: 3px"><b>PRESTACIONES POR FALLECIMIENTO</b></td>
-                    <td align="right" style="padding: 3px">&nbsp;</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Pensión de Viudedad</td>
-                    <td align="right" style="padding: 3px">400 €/mes</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Pensión de Orfandad</td>
-                    <td align="right" style="padding: 3px">200 €/mes hijo</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Fallecimiento por cualquier causa</td>
-                    <td align="right" style="padding: 3px">Prov. matemática</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Servicio de Entierro</td>
-                    <td align="right" style="padding: 3px">3.500 €</td>
-                </tr>
-                <tr>
-                    <td style="padding: 3px"><b>PRESTACIÓN DE JUBILACIÓN</b></td>
-                    <td align="right" style="padding: 3px">&nbsp;</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Jubilación en forma de capital, transformable a renta</td>
-                    <td align="right" style="padding: 3px">194.785,69 €*</td>
-                </tr>
-                <tr>
-                    <td style="padding: 3px"><b>SERVICIOS SOCIALES</b></td>
-                    <td align="right" style="padding: 3px">&nbsp;</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Prestaciones sociales</td>
-                    <td align="right" style="padding: 3px">Incluido</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Servicio de orientación social</td>
-                    <td align="right" style="padding: 3px">Incluido</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Servicio de orientación nutricional</td>
-                    <td align="right" style="padding: 3px">Incluido</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Servicios Residenciales (residencias, centros de día)</td>
-                    <td align="right" style="padding: 3px">Acceso con descuentos</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Servicio de Conservación de Células Madre</td>
-                    <td align="right" style="padding: 3px">Acceso con descuentos</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Servicio de Atención al Duelo</td>
-                    <td align="right" style="padding: 3px">Gratuito (3 sesiones)</td>
-                </tr>
-            </tbody>
-        </table>
-        <i>* Entrará en vigor a los 3 años. Capital estimado en base a una
-            rentabilidad del
-            3,17%.</i>
-        <label><strong>[+] Información 902 512 777</strong> - <ins><a href="mailto:asesores@altermutua.com">asesores@altermutua.com</a></ins>
-            - <ins><a href="http://www.altermutua.com/es/alter30.aspx" target="_blank">web</a></ins></label>
-    </div>
+    <div [innerHTML]="infoPropuesta.descripcion" *ngIf="modContratacionSelected != undefined" class="col-lg-12 col-md-12 alterMutuaInfo"></div>
+</p-dialog>
 
-    <div *ngIf="modContratacionSelected != undefined && modContratacionSelected == '3'" class="col-lg-12 col-md-12"
-        class="alterMutuaInfo">
-
-        <label>ALTER PROFESIONAL PLUS es el <strong>conjunto de coberturas más completo</strong> para poder ejercer por
-        </label><br>
-        <label>y estar en Alter Mutua de los Abogados como opción <strong>alternativa al Régimen </strong></label><br>
-        <label style="padding-bottom: 1rem;"><strong>Especial de Trabajadores Autónomos (RETA).</strong></label><br>
-        <table width="600px">
-            <tbody>
-                <tr>
-                    <td width="350px" style="padding: 3px"><b>PRESTACIONES POR INCAPACIDAD</b></td>
-                    <td align="center" width="150px" style="padding: 3px"><b>Cobertura</b></td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Incapacidad por enfermedad o accidente</td>
-                    <td align="right" style="padding: 3px">Primeros 90días 30 €/día<br> resto 46 €/día</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Incapacidad parcial</td>
-                    <td align="right" style="padding: 3px">15 €/día</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Pensión por incapacidad permanente absoluta</td>
-                    <td align="right" style="padding: 3px">900 €/mes</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Pensión vitalicia en caso de dependencia severa</td>
-                    <td align="right" style="padding: 3px">500 €/mes</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Pensión vitalicia en caso de gran dependencia</td>
-                    <td align="right" style="padding: 3px">1.000 €/mes</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Subsidio por maternidad o adopción</td>
-                    <td align="right" style="padding: 3px">2.250 €</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Subsidio por paternidad</td>
-                    <td align="right" style="padding: 3px">450 €</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Lactancia natural o artificial</td>
-                    <td align="right" style="padding: 3px">675 €</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Cobertura por peligro vital de la madre o el feto</td>
-                    <td align="right" style="padding: 3px">30 €/día, 46 €/día</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Hospitalización por enfermedad o accidente</td>
-                    <td align="right" style="padding: 3px">72 €/día (UCI 216 €/día)</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Hospitalización por patologías del embarazo y parto</td>
-                    <td align="right" style="padding: 3px">72 €/día (UCI 216 €/día)</td>
-                </tr>
-                <tr>
-                    <td style="padding: 3px"><b>PRESTACIONES POR FALLECIMIENTO</b></td>
-                    <td align="right" style="padding: 3px">&nbsp;</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Pensión de Viudedad</td>
-                    <td align="right" style="padding: 3px">400 €/mes</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Pensión de Orfandad</td>
-                    <td align="right" style="padding: 3px">200 €/mes hijo</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Fallecimiento por cualquier causa</td>
-                    <td align="right" style="padding: 3px">Prov. matemática</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Servicio de Entierro</td>
-                    <td align="right" style="padding: 3px">3.500 €</td>
-                </tr>
-                <tr>
-                    <td style="padding: 3px"><b>PRESTACIÓN DE JUBILACIÓN</b></td>
-                    <td align="right" style="padding: 3px">&nbsp;</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Jubilación en forma de capital, transformable a renta</td>
-                    <td align="right" style="padding: 3px">194.785,69 €*</td>
-                </tr>
-                <tr>
-                    <td style="padding: 3px"><b>SEGURO MÉDICO</b></td>
-                    <td align="right" style="padding: 3px">&nbsp;</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Seguro de salud</td>
-                    <td align="right" style="padding: 3px">Completo</td>
-                </tr>
-                <tr>
-                    <td style="padding: 3px"><b>SUBSIDIOS MÉDICOS ECONÓMICOS</b></td>
-                    <td align="right" style="padding: 3px">&nbsp;</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Intervenciones quirúrgicas y pruebas de diagnóstico</td>
-                    <td align="right" style="padding: 3px">Indemnización baremo</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Indemnización por odontología</td>
-                    <td align="right" style="padding: 3px">Indemnización baremo</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Subsidio por gastos médicos</td>
-                    <td align="right" style="padding: 3px">Indemnización baremo</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Subsidio por ortopedia y prótesis</td>
-                    <td align="right" style="padding: 3px">Indemnización baremo</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Subsidio por óptica: gafas y lentes de contacto</td>
-                    <td align="right" style="padding: 3px">Indemnización baremo</td>
-                </tr>
-                <tr>
-                    <td style="padding: 3px"><b>SERVICIOS SOCIALES</b></td>
-                    <td align="right" style="padding: 3px">&nbsp;</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Prestaciones sociales</td>
-                    <td align="right" style="padding: 3px">Incluido</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Servicio de orientación social</td>
-                    <td align="right" style="padding: 3px">Incluido</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Servicio de orientación nutricional</td>
-                    <td align="right" style="padding: 3px">Incluido</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Servicios Residenciales (residencias, centros de día)</td>
-                    <td align="right" style="padding: 3px">Acceso con descuentos</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Servicio de Conservación de Células Madre</td>
-                    <td align="right" style="padding: 3px">Acceso con descuentos</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <td style="padding: 3px">Servicio de Atención al Duelo</td>
-                    <td align="right" style="padding: 3px">Gratuito (3 sesiones)</td>
-                </tr>
-            </tbody>
-        </table>
-        <i>* Entrará en vigor a los 3 años. Capital estimado en base a una
-            rentabilidad del
-            3,17%.</i>
-        <label><strong>[+] Información 902 512 777</strong> - <ins><a href="mailto:asesores@altermutua.com">asesores@altermutua.com</a></ins>
-            - <ins><a href="http://www.altermutua.com/es/alter30.aspx" target="_blank">web</a></ins></label>
+<p-dialog [(visible)]="!tienePropuesta" [closable]="false" responsive="true" [draggable]="false" modal="modal"
+    resizable="false" [width]="680">
+    <p-header class="title">
+        <label><strong>Sin propuestas disponibles</strong></label>
+    </p-header>
+    <div *ngIf="propuestas != null && propuestas != undefined" [innerHTML]="propuestas.mensaje" class="col-lg-12 col-md-12 ">
     </div>
+    <p-footer>
+        <div class="text-right main-button ">
+            <button (click)="backTo()" pButton type="button" icon="fa-check" iconPos="left" label="Aceptar"></button>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog [(visible)]="showSolicitarSeguro" [closable]="false" responsive="true" [draggable]="false" modal="modal"
+    resizable="false" [width]="680">
+    <p-header class="title">
+        <label><strong>Solicitar seguro</strong></label>
+    </p-header>
+    <div *ngIf="datosSolicitud.error != false " [innerHTML]="datosSolicitud.mensaje" class="col-lg-12 col-md-12 ">
+    </div>
+    <p-footer>
+        <div class="text-right main-button ">
+            <button (click)="buscarPropuestas()" pButton type="button" icon="fa-check" iconPos="left" label="Solicitar"></button>
+            <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog [(visible)]="tieneSolicitud" [closable]="false" responsive="true" [draggable]="false" modal="modal" resizable="false"
+    [width]="680">
+    <p-header class="title">
+        <label><strong>Estado de la solicitud</strong></label>
+    </p-header>
+    <div *ngIf="datosSolicitud.error != false " [innerHTML]="datosSolicitud.mensaje" class="col-lg-12 col-md-12 ">
+    </div>
+    <p-footer>
+        <div class="text-right main-button ">
+            <button (click)="backTo()" pButton type="button" icon="fa-check" iconPos="left" label="Aceptar"></button>
+        </div>
+    </p-footer>
 </p-dialog>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

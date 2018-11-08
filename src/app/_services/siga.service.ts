@@ -280,6 +280,7 @@ export class SigaServices {
     alterMutua_propuestas: "alterMutua/propuestas",
     alterMutua_tarifaSolicitud: "alterMutua/tarifaSolicitud",
     alterMutua_solicitudAlter: "alterMutua/solicitudAlter",
+    mutualidad_getEnums: "mutualidad/enums",
     solicitudModificacion_tipoModificacion:
       "solicitudModificacion/tipoModificacion",
     solicitudModificacion_estado: "solicitudModificacion/estado",
@@ -310,7 +311,12 @@ export class SigaServices {
     agendaCalendario_getEventosByIdCalendario:
       "agendaCalendario/getEventosByIdCalendario",
 
-    agendaCalendario_getCalendarios: "agendaCalendario/getCalendarios"
+    agendaCalendario_getCalendarios: "agendaCalendario/getCalendarios",
+    tipoCurricular_comboTipoCurricular: "tipoCurricular/comboTipoCurricular",
+    subtipoCurricular_comboSubtipoCurricular:
+      "subtipoCurricular/comboSubtipoCurricular",
+    fichaDatosCurriculares_update: "fichaDatosCurriculares/update",
+    fichaDatosCurriculares_insert: "/fichaDatosCurriculares/insert"
   };
 
   private menuToggled = new Subject<any>();
