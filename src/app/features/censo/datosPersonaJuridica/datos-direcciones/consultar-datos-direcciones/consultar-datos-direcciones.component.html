@@ -1,4 +1,4 @@
-<p-growl [(value)]="msgs" life="30000"></p-growl>
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -94,7 +94,7 @@
 
               <div class="form-group col-lg-6 col-md-6">
                 <label>Otra Provincia</label>
-                <p-checkbox name="otraProvincia" [(ngModel)]="checkOtraProvincia" [(disabled)]="disableCheck" binary="true" (onChange)="onChangeOtherProvincia($event)"></p-checkbox>
+                <p-checkbox name="otraProvincia" [(ngModel)]="checkOtraProvincia" #provincia [(disabled)]="disableCheck" binary="true" (onChange)="onChangeOtherProvincia($event)"></p-checkbox>
               </div>
               <!-- *ngIf="!poblacionExtranjera" -->
               <div *ngIf="!poblacionExtranjera" class="form-group col-lg-6 col-md-6">

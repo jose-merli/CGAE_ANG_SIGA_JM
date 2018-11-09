@@ -329,7 +329,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       data => {
         this.progressSpinner = false;
         this.body = JSON.parse(data["body"]);
-
+        this.showSuccess("Se han guardado correctamente los datos");
         sessionStorage.setItem("editar", "true");
       },
       error => {
@@ -343,6 +343,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         ) {
           this.eliminarItem();
         }
+
         this.progressSpinner = false;
       },
       () => {
@@ -720,9 +721,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
             this.displayAuditoria = true;
           } else {
             this.displayAuditoria = false;
-            this.guardarRegistro();
+            this.editarRegistro();
           }
-        
+
           this.showGuardarAuditoria = false;
           this.body.motivo = undefined;
         }

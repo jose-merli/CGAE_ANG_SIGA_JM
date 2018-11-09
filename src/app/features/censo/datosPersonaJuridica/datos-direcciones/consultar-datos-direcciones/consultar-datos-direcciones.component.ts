@@ -13,6 +13,7 @@ import { DatosDireccionesCodigoPostalItem } from "./../../../../../../app/models
 import { DatosDireccionesCodigoPostalObject } from "./../../../../../../app/models/DatosDireccionesCodigoPostalObject";
 import { TranslateService } from "../../../../../commons/translate";
 import { Browser } from "../../../../../../../node_modules/protractor";
+import { Checkbox } from "../../../../../../../node_modules/primeng/primeng";
 
 @Component({
   selector: "app-consultar-datos-direcciones",
@@ -71,7 +72,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
 
   @ViewChild("input2")
   dropdown: Dropdown;
-
+  @ViewChild("provincia")
+  checkbox: Checkbox;
   ngOnInit() {
     if (sessionStorage.getItem("historicoDir") != null) {
       this.historyDisable = true;
@@ -243,7 +245,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   getComboPoblacion(filtro: string) {
     this.progressSpinner = true;
     this.poblacionBuscada = this.getLabelbyFilter(filtro);
-    
+
     this.sigaServices
       .getParam(
         "direcciones_comboPoblacion",
@@ -450,10 +452,23 @@ para poder filtrar el dato con o sin estos caracteres*/
   onChangeOtherProvincia(event) {
     if (event) {
       this.isDisabledPoblacion = true;
+
       if (this.body.idPais == "191") {
         this.isDisabledProvincia = false;
       }
-      this.body.otraProvincia = "1";
+      //this.body.otraProvincia = "1";
+      if (
+        this.body.codigoPostal != null &&
+        this.checkOtraProvincia == true &&
+        ((this.body.idPoblacion == null &&
+          this.body.idPoblacion == undefined) ||
+          this.body.idPoblacion == "")
+      ) {
+        this.showFail("Debe seleccionar una población");
+        this.isDisabledPoblacion = false;
+        this.isDisabledProvincia = true;
+        this.checkbox.checked = false;
+      }
     } else {
       if (this.historyDisable == true) {
         this.isDisabledPoblacion = true;
@@ -467,7 +482,6 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.isDisabledPoblacion = false;
         }
       }
-
       //this.body.idPoblacion = "";
 
       //this.provinciaSelecionada = "";
@@ -476,6 +490,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.body.otraProvincia = "0";
     }
   }
+
   guardar() {
     if (this.body.codigoPostal == null || this.body.codigoPostal == undefined) {
       this.showFail("Debe especificar el Código Postal");
@@ -729,5 +744,9 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.comboPoblacion = [];
       this.resultadosPoblaciones = "No hay resultados";
     }
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }
