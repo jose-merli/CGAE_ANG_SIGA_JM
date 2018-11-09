@@ -26,6 +26,6 @@ export class FichaColegialGeneralesItem {
   partidoJudicial: any;
   publicarDatosContacto: boolean;
   comisiones: String;
-  etiquetas: any[];
+  grupos: any[];
   constructor() {}
 }

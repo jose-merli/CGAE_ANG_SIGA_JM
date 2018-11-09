@@ -43,7 +43,7 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
 
     })
 
-    this.sigaServices.get("solicitudInciporporacion_pais").subscribe(
+    this.sigaServices.get("solicitudIncorporacion_pais").subscribe(
       result => {
         this.paises = result.combooItems;
         this.progressSpinner = false;

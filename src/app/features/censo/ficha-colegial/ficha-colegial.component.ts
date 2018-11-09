@@ -5,6 +5,7 @@ import {
   ChangeDetectorRef,
   AfterViewInit
 } from "@angular/core";
+import { AutoComplete, Dialog, Calendar } from "primeng/primeng";
 import { esCalendar } from "../../../utils/calendar";
 import { Location } from "@angular/common";
 import { ConfirmationService, Message } from "primeng/components/common/api";
@@ -41,6 +42,7 @@ import { DatosGeneralesItem } from "../../../models/DatosGeneralesItem";
 import { DatosColegiadosObject } from "../../../models/DatosColegiadosObject";
 import { PersonaJuridicaItem } from "../../../models/PersonaJuridicaItem";
 import { PersonaJuridicaObject } from "../../../models/PersonaJuridicaObject";
+import { ComboEtiquetasItem } from "./../../../models/ComboEtiquetasItem";
 
 @Component({
   selector: "app-ficha-colegial",
@@ -97,7 +99,8 @@ export class FichaColegialComponent implements OnInit {
   camposDesactivados: boolean = false;
   datos: any[];
   datosCurriculares: any[] = [];
-
+  sortF: any;
+  sortO: any;
   bodyDirecciones: DatosDireccionesItem;
   bodyDatosBancarios: DatosBancariosItem;
   datosDirecciones: DatosDireccionesItem[] = [];
@@ -108,7 +111,7 @@ export class FichaColegialComponent implements OnInit {
   datosColegiales: FichaColegialColegialesItem[] = [];
   datosColegiaciones: any[] = [];
   datosCertificados: any[] = [];
-
+  etiquetasPersonaJuridica: any[];
   datosSociedades: any[] = [];
   file: File = undefined;
   edadCalculada: any;
@@ -128,16 +131,41 @@ export class FichaColegialComponent implements OnInit {
   esColegiado: boolean;
   archivoDisponible: boolean = false;
   existeImagen: boolean = false;
+  etiquetasPersonaJuridicaSelecionados: any[];
   imagenPersona: any;
   partidoJudicialObject: DatosDireccionesObject = new DatosDireccionesObject();
   partidoJudicialItem: DatosDireccionesItem = new DatosDireccionesItem();
-  // comboSexo: any[];
+  // etiquetas
+  showGuardar: boolean = false;
+  mensaje: String = "";
+  control: boolean = false;
+  checked: boolean = false;
+  autocompletar: boolean = false;
+  isCrear: boolean = false;
+  closable: boolean = false;
+  isFechaInicioCorrect: boolean = false;
+  isFechaBajaCorrect: boolean = false;
+  isTrue: boolean = false;
+  historico: boolean = false;
+  isClose: boolean = false;
+  comboEtiquetas: any[];
+  updateItems: Map<String, ComboEtiquetasItem> = new Map<
+    String,
+    ComboEtiquetasItem
+  >();
+  items: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
+  newItems: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
+  item: ComboEtiquetasItem = new ComboEtiquetasItem();
+  createItems: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
 
   @ViewChild("table")
   table: DataTable;
   selectedDatos;
   selectedDatosDirecciones;
   selectedDatosBancarios;
+
+  @ViewChild("auto")
+  autoComplete: AutoComplete;
 
   comboSexo = [
     { label: "", value: null },
@@ -674,6 +702,8 @@ export class FichaColegialComponent implements OnInit {
 
   onInitGenerales() {
     // this.activacionGuardarGenerales();
+    this.obtenerEtiquetasPersonaJuridicaConcreta();
+    this.etiquetasPersonaJuridicaSelecionados = this.generalBody.grupos;
     if (!this.esNewColegiado) {
       this.cargarImagen(this.idPersona);
       this.stringAComisiones();
@@ -787,6 +817,7 @@ export class FichaColegialComponent implements OnInit {
     this.checkGeneralBody.colegiado = this.esColegiado;
     this.arreglarFechas();
     this.comisionesAString();
+    this.generalBody.grupos = this.etiquetasPersonaJuridicaSelecionados;
     // fichaDatosGenerales_CreateNoColegiado
     if (!this.esNewColegiado) {
       this.sigaServices
@@ -809,6 +840,7 @@ export class FichaColegialComponent implements OnInit {
             }
             this.activacionGuardarGenerales();
             // this.body = JSON.parse(data["body"]);
+            this.obtenerEtiquetasPersonaJuridicaConcreta();
             this.progressSpinner = false;
             this.showSuccess();
           },
@@ -848,6 +880,7 @@ export class FichaColegialComponent implements OnInit {
             if (this.file != undefined) {
               this.guardarImagen(this.idPersona);
             }
+            this.obtenerEtiquetasPersonaJuridicaConcreta();
             this.progressSpinner = false;
             this.showSuccess();
           },
@@ -902,6 +935,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   activacionGuardarGenerales() {
+    this.generalBody.grupos = this.etiquetasPersonaJuridicaSelecionados;
     if (
       JSON.stringify(this.checkGeneralBody) != JSON.stringify(this.generalBody)
     ) {
@@ -962,11 +996,15 @@ export class FichaColegialComponent implements OnInit {
   restablecerGenerales() {
     if (this.esNewColegiado) {
       this.generalBody = new FichaColegialGeneralesItem();
+      this.etiquetasPersonaJuridicaSelecionados = this.generalBody.grupos;
+      this.obtenerEtiquetasPersonaJuridicaConcreta();
       this.stringAComisiones();
       this.activacionGuardarGenerales();
     } else {
       this.cargarImagen(this.idPersona);
       this.generalBody = JSON.parse(JSON.stringify(this.checkGeneralBody));
+      this.etiquetasPersonaJuridicaSelecionados = this.generalBody.grupos;
+      this.obtenerEtiquetasPersonaJuridicaConcreta();
       this.activacionGuardarGenerales();
       this.stringAComisiones();
     }
@@ -1030,6 +1068,184 @@ export class FichaColegialComponent implements OnInit {
           this.progressSpinner = false;
         }
       );
+  }
+
+  habilitarAutocompletar(event) {
+    if (event) {
+      this.autocompletar = true;
+    } else {
+      this.autocompletar = true;
+    }
+  }
+
+  // ETIQUETAS
+
+  filterLabelsMultiple(event) {
+    this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
+      n => {
+        // coger todas las etiquetas
+        this.comboEtiquetas = this.filterLabel(event.query, n.combooItems);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  filterLabel(query, etiquetas: any[]): any[] {
+    let filtered: any[] = [];
+    for (let i = 0; i < etiquetas.length; i++) {
+      let etiqueta = etiquetas[i];
+
+      if (etiqueta.label.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(etiqueta);
+      }
+    }
+
+    if (filtered.length == 0) {
+      this.control = true;
+    } else {
+      this.control = false;
+    }
+
+    return filtered;
+  }
+
+  // Evento para detectar la etiqueta de nueva creación
+  // onKeyUp(event) {
+  //   if (event.keyCode == 13) {
+  //     if (this.control) {
+  //       this.checked = true;
+  //       // this.dialog.closable = false;
+
+  //       // Variable controladora
+  //       this.isCrear = true;
+
+  //       // Variable controlador del deshabilitar fechas
+  //       //  this.calendar.readonlyInput = false;
+  //       this.historico = false;
+
+  //       // Rellenamos el objeto nuevo
+  //       this.item = new ComboEtiquetasItem();
+  //       this.item.idGrupo = "";
+  //       this.item.label = event.srcElement.value;
+
+  //       this.mensaje = this.translateService.instant(
+  //         "censo.datosGenerales.literal.crearEtiqueta"
+  //       );
+  //     }
+  //   }
+  // }
+
+  isNotContains(event): boolean {
+    var keepGoing = true;
+    this.updateItems.forEach(element => {
+      if (keepGoing) {
+        if (element.idGrupo == event.value) {
+          keepGoing = false;
+        }
+      }
+    });
+
+    return keepGoing;
+  }
+
+  // Evento para detectar una etiqueta existente
+  onSelect(event) {
+    this.activacionGuardarGenerales();
+    if (event) {
+      if (this.isNotContains(event)) {
+        this.checked = true;
+        // this.dialog.closable = false;
+
+        // Variable controladora
+        this.isCrear = false;
+
+        // Variable controlador del deshabilitar fechas
+        this.historico = false;
+
+        // Rellenamos los valores de la etiqueta
+        this.item = new ComboEtiquetasItem();
+        this.item.idGrupo = event.value;
+        this.item.label = event.label;
+
+        this.mensaje = this.translateService.instant(
+          "censo.datosGenerales.literal.asociarEtiqueta"
+        );
+      } else {
+        // Si existe en el array, lo borramos para que no queden registros duplicados
+        this.etiquetasPersonaJuridicaSelecionados.splice(
+          this.etiquetasPersonaJuridicaSelecionados.indexOf(event),
+          1
+        );
+      }
+    }
+  }
+
+  onUnselect(event) {
+    this.activacionGuardarGenerales();
+    if (event) {
+      this.showGuardar = true;
+    }
+  }
+
+  onClick(event, value) {
+    this.activacionGuardarGenerales();
+    if (event) {
+      this.checked = true;
+      // this.dialog.closable = true;
+
+      this.item = new ComboEtiquetasItem();
+      this.item.fechaInicio = value.fechaInicio;
+      this.item.fechaBaja = value.fechaBaja;
+
+      this.mensaje = "Histórico de fechas";
+
+      this.historico = true;
+
+      // this.calendar.readonlyInput = true;
+    }
+  }
+
+  deleteLabel(item) {
+    this.activacionGuardarGenerales();
+    this.etiquetasPersonaJuridicaSelecionados.splice(
+      this.etiquetasPersonaJuridicaSelecionados.indexOf(item),
+      1
+    );
+  }
+
+  obtenerEtiquetasPersonaJuridicaConcreta() {
+    this.sigaServices
+      .post("busquedaPerJuridica_etiquetasPersona", this.generalBody)
+      .subscribe(
+        n => {
+          // coger etiquetas de una persona juridica
+          this.etiquetasPersonaJuridica = JSON.parse(
+            n["body"]
+          ).comboEtiquetasItems;
+
+          // en cada busqueda vaciamos el vector para añadir las nuevas etiquetas
+          this.etiquetasPersonaJuridicaSelecionados = [];
+          this.etiquetasPersonaJuridica.forEach((value: any, index: number) => {
+            this.etiquetasPersonaJuridicaSelecionados.push(value);
+          });
+
+          this.etiquetasPersonaJuridicaSelecionados.forEach(
+            (value: any, index: number) => {
+              let pruebaComboE: ComboEtiquetasItem = new ComboEtiquetasItem();
+              pruebaComboE = value;
+              this.updateItems.set(value.idGrupo, pruebaComboE);
+            }
+          );
+
+          this.createItems = this.etiquetasPersonaJuridicaSelecionados;
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    this.generalBody.grupos = this.etiquetasPersonaJuridicaSelecionados;
   }
 
   cargarImagen(idPersona: String) {
@@ -1293,6 +1509,17 @@ export class FichaColegialComponent implements OnInit {
     else return true;
   }
 
+  changeSort(event) {
+    this.sortF = "fechaHasta";
+    this.sortO = 1;
+    if (this.table != undefined) {
+      this.table.sortField = this.sortF;
+      //this.table.sortOrder = this.sortO;
+    }
+
+    // this.table.sortMultiple();
+  }
+
   deleteCurriculares() {
     for (let i in this.datosCurriculares) {
       if (this.datosCurriculares[i].fechaHasta == null) {
@@ -1313,16 +1540,8 @@ export class FichaColegialComponent implements OnInit {
           );
       }
     }
-    // this.progressSpinner = true;
-    // let deleteCurriculares = new FichaColegialEdicionCurricularesObject();
-    // deleteCurriculares.FichaColegialEdicionCurricularesItem = selectedItem;
-    // let datosDelete = [];
-    // selectedItem.forEach(
-    //   (value: FichaColegialEdicionCurricularesItem, key: number) => {
-    //     value.idPersona = this.idPersona;
-    //     datosDelete.push(value);
-    //   }
   }
+  s;
   redireccionarCurriculares(dato) {
     if (dato && dato.length < 2 && !this.selectMultiple) {
       // enviarDatos = dato[0];
@@ -1340,6 +1559,10 @@ export class FichaColegialComponent implements OnInit {
       this.abreCierraFicha("curriculares");
     }
     sessionStorage.removeItem("abrirCurriculares");
+
+    // this.nuevafecha = new Date();
+    let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
+    this.changeSort(event);
   }
 
   irNuevoCurriculares() {

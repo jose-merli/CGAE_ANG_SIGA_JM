@@ -954,9 +954,9 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   color: white !important;
   background-color: #dc3545 !important;
 }
-.alterMutuaInfo {
-  overflow-y: auto;
-  height: 600px;
+.alterMutuaInfo .ui-dialog-content{
+  overflow-y: scroll;
+  //height: 600px;
   margin: 0 0 2.5rem 0;
 }
 .ui-growl-message-info .ui-growl-item {

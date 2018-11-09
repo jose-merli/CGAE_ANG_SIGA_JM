@@ -86,9 +86,9 @@ export class EdicionCurricularesComponent implements OnInit {
     this.progressSpinner = true;
     if (sessionStorage.getItem("nuevoCurriculo")) {
       this.body = new FichaColegialEdicionCurricularesItem();
+      this.body.idPersona = JSON.parse(sessionStorage.getItem("idPersona"));
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       this.nuevo = true;
-      this.body.idPersona = JSON.parse(sessionStorage.getItem("idPersona"));
       sessionStorage.removeItem("nuevoCurriculo");
     } else {
       this.body = JSON.parse(sessionStorage.getItem("curriculo"));
@@ -211,6 +211,31 @@ export class EdicionCurricularesComponent implements OnInit {
     } else {
       this.verificado = false;
     }
+  }
+
+  duplicarRegistro() {
+    this.body.dateFechaInicio = this.arreglarFecha(this.body.fechaDesde);
+    this.body.dateFechaFin = this.arreglarFecha(this.body.fechaHasta);
+    this.body.dateFechaMovimiento = this.arreglarFecha(
+      this.body.fechaMovimiento
+    );
+    this.sigaServices
+      .postPaginado("fichaDatosCurriculares_insert", "?numPagina=1", this.body)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          this.activateGuardar();
+          this.showSuccess();
+          this.backTo();
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+          this.showFail();
+        },
+        () => {}
+      );
   }
 
   backTo() {
@@ -387,6 +412,8 @@ export class EdicionCurricularesComponent implements OnInit {
       .subscribe(
         data => {
           this.tipoCurricularCombo = JSON.parse(data.body).combooItems;
+          this.body.idTipoCvSubtipo1 = "";
+          this.body.idTipoCvSubtipo2 = "";
         },
         err => {
           console.log(err);
