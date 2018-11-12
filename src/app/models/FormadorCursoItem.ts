@@ -8,12 +8,15 @@ export class FormadorCursoItem {
   fechaModificacion: string;
   idTipoCoste: string;
   tipoCoste: string;
-  nombreCompleto: string;
+  nombre: string;
+  apellidos: string;
   tarifa: string;
   tutor: string;
+  flagTutor: string;
+  tipoIdentificacion: string;
+  nif: string;
 
   color: string;
   editar: boolean;
-
   constructor() {}
 }

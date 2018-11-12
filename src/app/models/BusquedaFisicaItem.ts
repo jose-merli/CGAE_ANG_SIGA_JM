@@ -2,7 +2,7 @@ export class BusquedaFisicaItem {
   colegio: String;
   idPersona: String;
   idInstitucion: String[];
-  nif: String;
+  nif: string;
   nombre: String;
   apellidos: String;
   primerApellido: String;

@@ -8,6 +8,8 @@ import { FormadorCursoItem } from "../../../models/FormadorCursoItem";
 import { Table } from "../../../../../node_modules/primeng/table";
 import { FormadorCursoObject } from "../../../models/FormadorCursoObject";
 import { ErrorItem } from "../../../models/ErrorItem";
+import { TranslateService } from "../../../commons/translate";
+import { ConfirmationService } from "../../../../../node_modules/primeng/api";
 
 @Component({
   selector: "app-ficha-curso",
@@ -59,6 +61,7 @@ export class FichaCursoComponent implements OnInit {
   comboRoles;
   comboTipoCoste;
   formadoresUpdate = [];
+  numCheckedTutor: number = 0;
 
   //Sesiones
   colsSessions;
@@ -85,7 +88,9 @@ export class FichaCursoComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private translateService: TranslateService,
+    private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit() {
@@ -102,26 +107,23 @@ export class FichaCursoComponent implements OnInit {
     if (sessionStorage.getItem("modoEdicionCurso") == "true") {
       this.modoEdicion = true;
       this.curso = JSON.parse(sessionStorage.getItem("cursoSelected"))[0];
-      this.curso.idCurso = "2";
+
       if (
-        sessionStorage.getItem("formador") == null ||
-        sessionStorage.getItem("formador") == undefined
+        (sessionStorage.getItem("formador") != null ||
+          sessionStorage.getItem("formador") != undefined) &&
+        sessionStorage.getItem("toBackNewFormador") == "true"
       ) {
+        sessionStorage.removeItem("toBackNewFormador");
+        this.pressNewFormador = true;
+        this.modoEdicionFormador = false;
+        this.editFormador = true;
+        this.loadNewTrainer(JSON.parse(sessionStorage.getItem("formador")));
+      } else {
         this.getTrainers();
       }
     } else {
       this.modoEdicion = false;
       this.curso = new DatosCursosItem();
-    }
-
-    if (
-      sessionStorage.getItem("formador") != null ||
-      sessionStorage.getItem("formador") != undefined
-    ) {
-      this.pressNewFormador = true;
-      this.modoEdicionFormador = false;
-      this.editFormador = true;
-      this.loadNewTrainer(JSON.parse(sessionStorage.getItem("formador")));
     }
   }
 
@@ -171,11 +173,29 @@ export class FichaCursoComponent implements OnInit {
       )
       .subscribe(
         n => {
-          this.datosFormadores = n.formadorCursoItem;
+          this.datosFormadores = n.formadoresCursoItem;
           sessionStorage.setItem(
             "datosFormadoresInit",
             JSON.stringify(this.datosFormadores)
           );
+
+          for (let i = 0; this.datosFormadores.length > i; i++) {
+            if (this.datosFormadores[i].tutor == 1) {
+              this.datosFormadores[i].flagTutor = true;
+              this.numCheckedTutor++;
+            } else {
+              this.datosFormadores[i].flagTutor = false;
+            }
+          }
+
+          if (
+            sessionStorage.getItem("formador") != null ||
+            sessionStorage.getItem("formador") != undefined
+          ) {
+            sessionStorage.removeItem("formador");
+            this.tableFormadores.reset();
+          }
+
           this.progressSpinner = false;
         },
         err => {
@@ -190,8 +210,12 @@ export class FichaCursoComponent implements OnInit {
   getColsResultsFormadores() {
     this.colsFormadores = [
       {
-        field: "nombreCompleto",
+        field: "nombre",
         header: "administracion.parametrosGenerales.literal.nombre"
+      },
+      {
+        field: "apellidos",
+        header: "gratuita.mantenimientoTablasMaestra.literal.apellidos"
       },
       {
         select: "idRol",
@@ -206,6 +230,10 @@ export class FichaCursoComponent implements OnInit {
       {
         field: "tarifa",
         header: "general.boton.actualizarTarifa"
+      },
+      {
+        field: "flagTutor",
+        header: "form.busquedaCursos.literal.tutorResponsable"
       }
     ];
 
@@ -241,12 +269,13 @@ export class FichaCursoComponent implements OnInit {
     }
   }
 
-  onChangeSelectAllFormadoress() {
+  onChangeSelectAllFormadores(event) {
+    this.selectMultipleFormadores = !this.selectMultipleFormadores;
     if (this.selectAllFormadores === true) {
-      this.selectMultipleFormadores = false;
       this.selectedDatosFormadores = this.datosFormadores;
       this.numSelectedFormadores = this.datosFormadores.length;
     } else {
+      this.selectAllFormadores = false;
       this.selectedDatosFormadores = [];
       this.numSelectedFormadores = 0;
     }
@@ -291,6 +320,7 @@ export class FichaCursoComponent implements OnInit {
     this.selectMultipleFormadores = false;
     this.pressNewFormador = false;
     this.editFormador = false;
+    this.formadoresUpdate = [];
     this.tableFormadores.reset();
   }
 
@@ -305,7 +335,8 @@ export class FichaCursoComponent implements OnInit {
       idCurso: "",
       idRol: "",
       rol: "",
-      nombreCompleto: "",
+      nombre: "",
+      apellidos: "",
       tarifa: "",
       idTipoCoste: "",
       tipoCoste: "",
@@ -324,15 +355,21 @@ export class FichaCursoComponent implements OnInit {
     this.datosFormadores = JSON.parse(
       sessionStorage.getItem("datosFormadores")
     );
-    this.newFormadorCourse = new FormadorCursoItem();
-    this.datosFormadores[0].nombreCompleto =
-      newformador[0].nombre + " " + newformador[0].apellidos;
-    this.datosFormadores[0].idPersona = newformador[0].idPersona;
-    this.datosFormadores[0].idInstitucion = newformador[0].colegio;
-    this.datosFormadores[0].idRol = "";
-    this.datosFormadores[0].idTipoCoste = "";
-    this.datosFormadores[0].idCurso = this.curso.idCurso;
     this.fichasPosibles[2].activa = true;
+    this.newFormadorCourse = new FormadorCursoItem();
+    if (newformador.idPersona != null && newformador.idPersona != undefined) {
+      this.datosFormadores[0].nombre = newformador.nombre;
+      this.datosFormadores[0].apellidos = newformador.apellidos;
+      this.datosFormadores[0].idPersona = newformador.idPersona;
+      this.datosFormadores[0].idInstitucion = newformador.colegio;
+      this.datosFormadores[0].idRol = "";
+      this.datosFormadores[0].idTipoCoste = "";
+      this.datosFormadores[0].idCurso = this.curso.idCurso;
+    } else {
+      this.newFormadorCourse.nif = newformador.nif;
+      this.newFormadorCourse.tipoIdentificacion =
+        newformador.tipoIdentificacion;
+    }
   }
 
   actualizaSeleccionados(selectedDatos) {
@@ -345,23 +382,36 @@ export class FichaCursoComponent implements OnInit {
     let url = "";
 
     if (this.modoEdicionFormador) {
+      //Enviamos al back todos los formadores editados
       url = "fichaCursos_updateTrainersCourse";
       formador = new FormadorCursoObject();
       formador.error = new ErrorItem();
-      formador.formadoresCursoItem = this.datosFormadores;
+      formador.formadoresCursoItem = this.formadoresUpdate;
     } else {
+      //Mapeamos el formador que queremos insertar nuevo
       url = "fichaCursos_saveTrainersCourse";
       formador = this.tableFormadores.value[0];
       formador.idRol = this.newFormadorCourse.idRol;
       formador.idTipoCoste = this.newFormadorCourse.idTipoCoste;
       formador.tarifa = this.newFormadorCourse.tarifa;
+      formador.nif = this.newFormadorCourse.nif;
+      formador.tipoIdentificacion = this.newFormadorCourse.tipoIdentificacion;
+      formador.idCurso = this.curso.idCurso;
+      formador.nombre = this.newFormadorCourse.nombre;
+      formador.apellidos = this.newFormadorCourse.apellidos;
     }
 
     this.sigaServices.post(url, formador).subscribe(
       data => {
+        let error = JSON.parse(data.body).error;
+
+        if (error.message != "" && error.message != null) {
+          this.showFail(error.message);
+        }
         this.editFormador = false;
         this.pressNewFormador = false;
-        sessionStorage.removeItem("formador");
+        sessionStorage.setItem("formador", "true");
+        this.getTrainers();
       },
       err => {
         this.progressSpinner = false;
@@ -369,38 +419,99 @@ export class FichaCursoComponent implements OnInit {
     );
   }
 
+  //Funciones que controlan los formadores editados
   editFormadorTable(event) {
     this.editFormador = true;
     this.modoEdicionFormador = true;
 
-    // this.datosFormadores.forEach(element => {
-    //   let idFindFormador = this.formadoresUpdate.findIndex(
-    //     x => x.idPersona === element.idPersona
-    //   );
+    let idFindFormador = this.formadoresUpdate.findIndex(
+      x => x.idPersona === event.data.idPersona && x.idRol === event.data.idRol
+    );
 
-    //   if (idFindFormador == undefined) {
-    //     this.formadoresUpdate.push(this.datosFormadores[idFindFormador]);
-    //   }
-    // });
+    if (idFindFormador == -1) {
+      let id = this.datosFormadores.findIndex(
+        x =>
+          x.idPersona === event.data.idPersona && x.idRol === event.data.idRol
+      );
+      this.formadoresUpdate.push(this.datosFormadores[id]);
+    }
   }
 
   onChangeEdit(event, dato) {
     this.editFormador = true;
 
     let idFindFormador = this.formadoresUpdate.findIndex(
-      x => x.idPersona === dato.idPersona
+      x => x.idPersona === dato.idPersona && x.idRol === dato.idRol
     );
 
     if (idFindFormador == -1) {
-      this.formadoresUpdate.push(this.datosFormadores[idFindFormador]);
+      let id = this.datosFormadores.findIndex(
+        x => x.idPersona === dato.idPersona && x.idRol === dato.idRol
+      );
+      this.formadoresUpdate.push(this.datosFormadores[id]);
     }
   }
 
-  prueba(event) {
-    console.log(event);
+  deleteTrainer(selectedFormadores) {
+    this.progressSpinner = true;
+    let deleteTrainer = new FormadorCursoObject();
+
+    selectedFormadores.forEach(f => {
+      let formador = new FormadorCursoItem();
+      formador = f;
+      deleteTrainer.formadoresCursoItem.push(formador);
+    });
+
+    this.sigaServices
+      .post("fichaCursos_deleteTrainersCourse", deleteTrainer)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.showSuccessDelete();
+          this.getTrainers();
+          this.selectMultipleFormadores = false;
+        },
+        err => {
+          this.showFail(
+            this.translateService.instant(
+              "general.message.error.realiza.accion"
+            )
+          );
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
   }
 
-  deleteTrainer() {}
+  onChangeTutor(event, dato) {
+    let mess = "Holi";
+
+    if (this.numCheckedTutor == 1) {
+      mess = "¿Estás seguro que desea cambiar el tutor del curso?";
+    }
+
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        console.log("aceeptado");
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
 
   //Sesiones
 
@@ -602,10 +713,6 @@ export class FichaCursoComponent implements OnInit {
     return {};
   }
 
-  clear() {
-    this.msgs = [];
-  }
-
   backTo() {
     this.location.back();
   }
@@ -630,5 +737,27 @@ export class FichaCursoComponent implements OnInit {
   getRandomColor() {
     var color = Math.floor(0x1000000 * Math.random()).toString(16);
     return "#" + ("000000" + color).slice(-6);
+  }
+
+  showFail(msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Información",
+      detail: msg
+    });
+  }
+
+  showSuccessDelete() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: "Correcto",
+      detail: this.translateService.instant("general.message.accion.realizada")
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }

@@ -23,6 +23,7 @@ import { BusquedaJuridicaObject } from "./../../../../app/models/BusquedaJuridic
 import { BusquedaFisicaObject } from "./../../../../app/models/BusquedaFisicaObject";
 import { DatosNotarioItem } from "../../../models/DatosNotarioItem";
 import { DatosIntegrantesItem } from "../../../models/DatosIntegrantesItem";
+import { FormadorCursoItem } from "../../../models/FormadorCursoItem";
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -63,7 +64,7 @@ export class BusquedaGeneralComponent {
   @ViewChild("table")
   table;
   selectedDatos;
-  tipoCIF: String;
+  tipoCIF: string;
   newIntegrante: boolean = false;
   masFiltros: boolean = false;
   labelFiltros: string;
@@ -109,7 +110,6 @@ export class BusquedaGeneralComponent {
       sessionStorage.getItem("newIntegrante") != undefined
     ) {
       this.newIntegrante = JSON.parse(sessionStorage.getItem("newIntegrante"));
-    
     }
 
     if (
@@ -117,6 +117,7 @@ export class BusquedaGeneralComponent {
       sessionStorage.getItem("abrirFormador") != undefined
     ) {
       this.isFormador = true;
+      sessionStorage.setItem("toBackNewFormador", "true");
     }
 
     this.colsFisicas = [
@@ -537,7 +538,7 @@ export class BusquedaGeneralComponent {
       id[0].tipoIdentificacion = this.tipoCIF;
       id[0].completo = true;
       sessionStorage.removeItem("abrirFormador");
-      sessionStorage.setItem("formador", JSON.stringify(id));
+      sessionStorage.setItem("formador", JSON.stringify(id[0]));
       this.router.navigate(["/fichaCurso"]);
     }
   }
@@ -575,7 +576,7 @@ export class BusquedaGeneralComponent {
       message: mess,
       icon: icon,
       accept: () => {
-        if (!this.newIntegrante) {
+        if (sessionStorage.getItem("abrirNotario") == "true") {
           let notarioNIF = new DatosNotarioItem();
           if (this.bodyFisica.nif != null || this.bodyFisica.nif != undefined) {
             notarioNIF.nif = this.bodyFisica.nif;
@@ -593,7 +594,10 @@ export class BusquedaGeneralComponent {
 
           sessionStorage.setItem("notario", JSON.stringify(notariosNEW));
           this.location.back();
-        } else {
+        } else if (
+          sessionStorage.getItem("newIntegrante") != null ||
+          sessionStorage.getItem("newIntegrante") != undefined
+        ) {
           let integranteNew = new DatosIntegrantesItem();
           if (this.bodyFisica.nif != null || this.bodyFisica.nif != undefined) {
             integranteNew.nifCif = this.bodyFisica.nif;
@@ -623,6 +627,16 @@ export class BusquedaGeneralComponent {
           sessionStorage.removeItem("nIntegrante");
           sessionStorage.setItem("nIntegrante", JSON.stringify(integrantesNEW));
           this.router.navigate(["detalleIntegrante"]);
+        } else if (
+          sessionStorage.getItem("abrirFormador") != null ||
+          sessionStorage.getItem("abrirFormador") != undefined
+        ) {
+          let formador = new FormadorCursoItem();
+          formador.tipoIdentificacion = this.tipoCIF;
+          formador.nif = this.bodyFisica.nif;
+          sessionStorage.removeItem("abrirFormador");
+          sessionStorage.setItem("formador", JSON.stringify(formador));
+          this.router.navigate(["/fichaCurso"]);
         }
       },
       reject: () => {

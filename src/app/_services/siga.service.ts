@@ -254,6 +254,7 @@ export class SigaServices {
     fichaEventos_downloadTemplateFile: "fichaEventos/downloadTemplateFile",
     fichaEventos_getCalendars: "fichaEventos/getCalendars",
     fichaCursos_getTrainersCourse: "fichaCursos/getTrainersCourse",
+    fichaCursos_deleteTrainersCourse: "fichaCursos/deleteTrainersCourse",
     datosNotificaciones_getTypeNotifications:
       "datosNotificaciones/getTypeNotifications",
     datosNotificaciones_getMeasuredUnit: "datosNotificaciones/getMeasuredUnit",

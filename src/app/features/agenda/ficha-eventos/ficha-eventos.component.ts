@@ -297,7 +297,7 @@ export class FichaEventosComponent implements OnInit {
       .getParam("fichaEventos_getTrainersLabels", "?idCurso=" + this.idCurso)
       .subscribe(
         n => {
-          this.formadores = n.formadorCursoItem;
+          this.formadores = n.formadoresCursoItem;
           this.formadoresSuggest = this.formadores;
           this.progressSpinner = false;
         },
