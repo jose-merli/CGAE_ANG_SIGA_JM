@@ -316,7 +316,14 @@ export class SigaServices {
     subtipoCurricular_comboSubtipoCurricular:
       "subtipoCurricular/comboSubtipoCurricular",
     fichaDatosCurriculares_update: "fichaDatosCurriculares/update",
-    fichaDatosCurriculares_insert: "/fichaDatosCurriculares/insert"
+    fichaDatosCurriculares_insert: "/fichaDatosCurriculares/insert",
+
+    //Sanciones
+    busquedaSanciones_search: "busquedaSanciones/search",
+    busquedaSanciones_comboTipoSancion: "busquedaSanciones/comboTipoSancion",
+    busquedaSanciones_comboTipo: "busquedaSanciones/comboTipo",
+    busquedaSanciones_comboEstado: "busquedaSanciones/comboEstado",
+    busquedaSanciones_comboOrigen: "busquedaSanciones/comboOrigen"
   };
 
   private menuToggled = new Subject<any>();

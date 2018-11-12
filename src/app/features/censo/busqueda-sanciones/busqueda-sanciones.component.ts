@@ -1,19 +1,289 @@
-import { Component, OnInit } from "@angular/core";
-import { OldSigaServices } from "../../../_services/oldSiga.service";
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { SelectItem } from "primeng/components/common/api";
+import { SigaServices } from "../../../_services/siga.service";
+import { esCalendar } from "../../../utils/calendar";
+import { TranslateService } from "../../../commons/translate/translation.service";
+import { Router } from "@angular/router";
+import { BusquedaSancionesItem } from "../../../models/BusquedaSancionesItem";
+import { BusquedaSancionesObject } from "../../../models/BusquedaSancionesObject";
 
 @Component({
   selector: "app-busqueda-sanciones",
   templateUrl: "./busqueda-sanciones.component.html",
   styleUrls: ["./busqueda-sanciones.component.scss"]
 })
-export class BusquedaSancionesComponent {
-  constructor(public sigaServices: OldSigaServices) {}
+export class BusquedaSancionesComponent implements OnInit {
+  showBusquedaLetrado: boolean = true;
+  showBusquedaColegio: boolean = false;
+  showBusquedaSanciones: boolean = false;
+  progressSpinner: boolean = false;
+  selectMultiple: boolean = false;
+  selectAll: boolean = false;
 
-  ngOnInit() {}
+  tipo: SelectItem[];
+  tipoSancion: SelectItem[];
+  estado: SelectItem[];
+  origen: SelectItem[];
+  colegios: any[] = [];
 
-  onHideBusquedaLetrado() {}
+  es: any = esCalendar;
+  textSelected: String = "{0} opciones seleccionadas";
 
-  onHideBusquedaColegio() {}
+  @ViewChild("table")
+  table;
+  selectedDatos;
+  cols: any = [];
+  rowsPerPage: any = [];
+  data: any[];
+  dataNewElement: any[];
+  numSelected: number = 0;
+  selectedItem: number = 10;
 
-  onHideBusquedaSanciones() {}
+  body: BusquedaSancionesItem = new BusquedaSancionesItem();
+  bodySearch: BusquedaSancionesObject = new BusquedaSancionesObject();
+
+  constructor(
+    private sigaServices: SigaServices,
+    private changeDetectorRef: ChangeDetectorRef,
+    private translateService: TranslateService,
+    private router: Router
+  ) {}
+
+  ngOnInit() {
+    this.getComboTipoSancion();
+    this.getComboColegios();
+    this.getComboEstado();
+
+    this.data = [
+      {
+        colegioSancionador: "COLEGIO GENERAL",
+        nombre: "Miguel Letrado",
+        tipoSancion: "Penal",
+        estado: "PENDIENTE",
+        refConsejo: "#45678",
+        refColegio: "#3989",
+        fechaDesde: new Date(),
+        fechaHasta: new Date(),
+        sancionesRehabilitadas: "Si",
+        firmeza: "Si"
+      },
+      {
+        colegioSancionador: "COLEGIO GENERAL ANDALUZ",
+        nombre: "José Letrado",
+        tipoSancion: "Legal",
+        estado: "PENDIENTE",
+        refConsejo: "#4678",
+        refColegio: "#5989",
+        fechaDesde: new Date(),
+        fechaHasta: new Date(),
+        sancionesRehabilitadas: "No",
+        firmeza: "No"
+      }
+    ];
+
+    this.getDataTable();
+  }
+
+  getComboTipoSancion() {
+    this.sigaServices.get("busquedaSanciones_comboTipoSancion").subscribe(
+      n => {
+        this.tipoSancion = n.combooItems;
+        this.tipo = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getComboColegios() {
+    this.sigaServices.get("busquedaPer_colegio").subscribe(
+      n => {
+        this.colegios = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getComboEstado() {
+    this.estado = [
+      { label: "", value: "" },
+      { label: "Provisional", value: "Provisional" },
+      { label: "Recurrida", value: "Recurrida" },
+      { label: "Firme", value: "Firme" },
+      { label: "Firme Pdte. Ejecucion", value: "Firme Pdte. Ejecucion" }
+    ];
+  }
+
+  getComboOrigen() {
+    this.origen = [
+      { label: "", value: "" },
+      { label: "Colegio/consejo", value: "Colegio/consejo" },
+      { label: "Juzgado/Tribunal", value: "Juzgado/Tribunal" }
+    ];
+  }
+
+  getDataTable() {
+    this.cols = [
+      {
+        field: "colegioSancionador",
+        header: "busquedaSanciones.colegioSancionador.literal"
+      },
+      {
+        field: "nombre",
+        header: "administracion.parametrosGenerales.literal.nombre"
+      },
+      {
+        field: "tipoSancion",
+        header:
+          "menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal"
+      },
+      {
+        field: "estado",
+        header: "censo.busquedaSolicitudesModificacion.literal.estado"
+      },
+      {
+        field: "refConsejo",
+        header:
+          "menu.expediente.sanciones.busquedaPorColegio.RefConsejo.literal"
+      },
+      {
+        field: "refColegio",
+        header:
+          "menu.expediente.sanciones.busquedaPorColegio.RefColegio.literal"
+      },
+      {
+        field: "fechaDesde",
+        header: "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde"
+      },
+      {
+        field: "fechaHasta",
+        header: "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta"
+      },
+      {
+        field: "sancionesRehabilitadas",
+        header:
+          "menu.expediente.sanciones.busquedaPorColegio.sancionesRehabilitadas.literal"
+      },
+      {
+        field: "firmeza",
+        header: "menu.expediente.sanciones.firmeza.literal"
+      }
+    ];
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
+  }
+
+  search() {
+    // Llamada al rest
+    this.progressSpinner = true;
+    this.selectAll = false;
+    this.selectMultiple = false;
+    this.selectedDatos = "";
+
+    // Cambiar llamada
+    this.sigaServices
+      .postPaginado("busquedaSanciones_search", "?numPagina=1", this.body)
+      .subscribe(
+        data => {
+          this.bodySearch = JSON.parse(data["body"]);
+          this.data = this.bodySearch.busquedaSancionesItem;
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  restore() {
+    this.body.apellidos = "";
+    this.body.colegioSancionador = "";
+    this.body.estado = "";
+    this.body.fecha = null;
+    this.body.fechaArchivadaDesde = null;
+    this.body.fechaArchivadaHasta = null;
+    this.body.fechaDesde = null;
+    this.body.fechaHasta = null;
+    this.body.nif = "";
+    this.body.nombre = "";
+    this.body.origen = "";
+    this.body.primerApellido = "";
+    this.body.refColegio = "";
+    this.body.refConsejo = "";
+    this.body.chkArchivada = false;
+    this.body.chkRehabilitado = false;
+    this.body.segundoApellido = "";
+    this.body.tipo = "";
+    this.body.tipoSancion = "";
+  }
+
+  newRecord() {
+    this.router.navigate(["/busquedaGeneral"]);
+  }
+
+  onHideBusquedaLetrado() {
+    this.showBusquedaLetrado = !this.showBusquedaLetrado;
+  }
+
+  onHideBusquedaColegio() {
+    this.showBusquedaColegio = !this.showBusquedaColegio;
+  }
+
+  onHideBusquedaSanciones() {
+    this.showBusquedaSanciones = !this.showBusquedaSanciones;
+  }
+
+  // Métodos gestionar tabla
+  enablePagination() {
+    if (!this.data || this.data.length == 0) return false;
+    else return true;
+  }
+
+  redirectTo(selectedDatos) {
+    if (!this.selectMultiple) {
+      sessionStorage.setItem("rowData", JSON.stringify(selectedDatos));
+
+      this.router.navigate(["/detalleSancion"]);
+    } else {
+      this.numSelected = this.selectedDatos.length;
+    }
+  }
+
+  isSelectMultiple() {
+    this.selectMultiple = !this.selectMultiple;
+    if (!this.selectMultiple) {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    } else {
+      this.selectAll = false;
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
 }
