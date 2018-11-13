@@ -11,7 +11,7 @@ export class FormadorCursoItem {
   nombre: string;
   apellidos: string;
   tarifa: string;
-  tutor: string;
+  tutor: number;
   flagTutor: string;
   tipoIdentificacion: string;
   nif: string;
