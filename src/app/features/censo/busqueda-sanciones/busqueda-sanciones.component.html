@@ -45,9 +45,11 @@
                 <div class="form-row">
                     <div class="form-group col-lg-6 col-md-6">
                         <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
-                        <p-multiSelect [defaultLabel]="textFilter" filterBy="label" [(ngModel)]='body.colegioSancionador' [options]="colegios" optionLabel="label"
-                            [selectedItemsLabel]="textSelected" maxSelectedLabels="1" styleClass="widthAll" [panelStyle]="{width:'100%'}"></p-multiSelect>
-
+                        <!-- <p-multiSelect [defaultLabel]="textFilter" filterBy="label" [(ngModel)]='body.colegio' [options]="colegios" optionLabel="label"
+                            [selectedItemsLabel]="textSelected" maxSelectedLabels="1" styleClass="widthAll" [panelStyle]="{width:'100%'}" (onChange)="onChangeColegio($event)"></p-multiSelect> -->
+                            <p-multiSelect [defaultLabel]="textFilter" filterBy="label" [(ngModel)]='colegios_seleccionados' [options]="colegios"
+                            optionLabel="label" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" styleClass="widthAll"
+                            [panelStyle]="{width:'100%'}"></p-multiSelect>
                     </div>
                     <div class="form-group col-lg-3 col-md-2">
                         <label>{{"menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal" | translate}}</label>
@@ -72,36 +74,36 @@
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate}}</label>
                         <p-calendar [keepInvalid]="true" selectionMode="range" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy"
-                            [(ngModel)]="body.fecha"></p-calendar>
+                            [(ngModel)]="fecha"></p-calendar>
                     </div>
 
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate}}</label>
                         <p-calendar [keepInvalid]="true" selectionMode="range" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy"
-                            [(ngModel)]="body.fechaDesde"></p-calendar>
+                            [(ngModel)]="fechaDesde"></p-calendar>
                     </div>
 
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate}}</label>
                         <p-calendar [keepInvalid]="true" selectionMode="range" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy"
-                            [(ngModel)]="body.fechaHasta"></p-calendar>
+                            [(ngModel)]="fechaHasta"></p-calendar>
                     </div>
 
                     <div class="form-group col-lg-3 col-md-2">
                         <label class="d-block pb-2">{{"menu.expediente.sanciones.busquedaPorColegio.sancionesArchivadas.literal" | translate}}</label>
-                        <p-checkbox name="chkArchivada" [(ngModel)]="body.chkArchivada" binary="true"></p-checkbox>
+                        <p-checkbox name="chkArchivadas" [(ngModel)]="body.chkArchivadas" binary="true"></p-checkbox>
                     </div>
 
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "menu.expediente.sanciones.busquedaPorColegio.fechaArchivadaDesde.literal" | translate}}</label>
                         <p-calendar [keepInvalid]="true" selectionMode="range" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy"
-                            [(ngModel)]="body.fechaArchivadaDesde"></p-calendar>
+                            [(ngModel)]="fechaArchivadaDesde"></p-calendar>
                     </div>
 
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "menu.expediente.sanciones.busquedaPorColegio.fechaArchivadaHasta.literal" | translate}}</label>
                         <p-calendar [keepInvalid]="true" selectionMode="range" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy"
-                            [(ngModel)]="body.fechaArchivadaHasta"></p-calendar>
+                            [(ngModel)]="fechaArchivadaHasta"></p-calendar>
                     </div>
                 </div>
             </div>
@@ -141,7 +143,7 @@
         </div>
     </div>
     <!--FIN CARD-->
-    <div class="card mt-3">
+    <div *ngIf="isSearch" class="card mt-3">
         <div class="card-body p-0">
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
                 [(selection)]="selectedDatos" (onRowSelect)="redirectTo(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"

@@ -6,6 +6,7 @@ import { TranslateService } from "../../../commons/translate/translation.service
 import { Router } from "@angular/router";
 import { BusquedaSancionesItem } from "../../../models/BusquedaSancionesItem";
 import { BusquedaSancionesObject } from "../../../models/BusquedaSancionesObject";
+import { ComboItem } from "./../../../../app/models/ComboItem";
 
 @Component({
   selector: "app-busqueda-sanciones",
@@ -16,6 +17,7 @@ export class BusquedaSancionesComponent implements OnInit {
   showBusquedaLetrado: boolean = true;
   showBusquedaColegio: boolean = false;
   showBusquedaSanciones: boolean = false;
+  isSearch: boolean = false;
   progressSpinner: boolean = false;
   selectMultiple: boolean = false;
   selectAll: boolean = false;
@@ -25,9 +27,17 @@ export class BusquedaSancionesComponent implements OnInit {
   estado: SelectItem[];
   origen: SelectItem[];
   colegios: any[] = [];
+  colegios_seleccionados: any[] = [];
 
   es: any = esCalendar;
+  fechaDesde: Date;
+  fechaHasta: Date;
+  fecha: Date;
+  fechaArchivadaDesde: Date;
+  fechaArchivadaHasta: Date;
+
   textSelected: String = "{0} opciones seleccionadas";
+  textFilter: String = "Elegir";
 
   @ViewChild("table")
   table;
@@ -53,33 +63,6 @@ export class BusquedaSancionesComponent implements OnInit {
     this.getComboTipoSancion();
     this.getComboColegios();
     this.getComboEstado();
-
-    this.data = [
-      {
-        colegioSancionador: "COLEGIO GENERAL",
-        nombre: "Miguel Letrado",
-        tipoSancion: "Penal",
-        estado: "PENDIENTE",
-        refConsejo: "#45678",
-        refColegio: "#3989",
-        fechaDesde: new Date(),
-        fechaHasta: new Date(),
-        sancionesRehabilitadas: "Si",
-        firmeza: "Si"
-      },
-      {
-        colegioSancionador: "COLEGIO GENERAL ANDALUZ",
-        nombre: "José Letrado",
-        tipoSancion: "Legal",
-        estado: "PENDIENTE",
-        refConsejo: "#4678",
-        refColegio: "#5989",
-        fechaDesde: new Date(),
-        fechaHasta: new Date(),
-        sancionesRehabilitadas: "No",
-        firmeza: "No"
-      }
-    ];
 
     this.getDataTable();
   }
@@ -128,7 +111,7 @@ export class BusquedaSancionesComponent implements OnInit {
   getDataTable() {
     this.cols = [
       {
-        field: "colegioSancionador",
+        field: "colegio",
         header: "busquedaSanciones.colegioSancionador.literal"
       },
       {
@@ -163,7 +146,7 @@ export class BusquedaSancionesComponent implements OnInit {
         header: "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta"
       },
       {
-        field: "sancionesRehabilitadas",
+        field: "rehabilitado",
         header:
           "menu.expediente.sanciones.busquedaPorColegio.sancionesRehabilitadas.literal"
       },
@@ -199,10 +182,57 @@ export class BusquedaSancionesComponent implements OnInit {
     this.selectAll = false;
     this.selectMultiple = false;
     this.selectedDatos = "";
+    this.isSearch = true;
 
-    // Cambiar llamada
+    if (this.colegios_seleccionados != undefined) {
+      this.body.idColegios = [];
+      this.colegios_seleccionados.forEach((value: ComboItem, key: number) => {
+        this.body.idColegios.push(value.value);
+      });
+    }
+
+    if (this.fechaDesde != null && this.fechaDesde != undefined) {
+      this.body.fechaDesde = new Date(this.fechaDesde);
+    } else {
+      this.body.fechaDesde = null;
+    }
+
+    if (this.fechaHasta != null && this.fechaHasta != undefined) {
+      this.body.fechaHasta = new Date(this.fechaHasta);
+    } else {
+      this.body.fechaHasta = null;
+    }
+
+    if (this.fecha != null && this.fecha != undefined) {
+      this.body.fecha = new Date(this.fecha);
+    } else {
+      this.body.fecha = null;
+    }
+
+    if (
+      this.fechaArchivadaDesde != null &&
+      this.fechaArchivadaDesde != undefined
+    ) {
+      this.body.fechaArchivadaDesde = new Date(this.fechaArchivadaDesde);
+    } else {
+      this.body.fechaArchivadaDesde = null;
+    }
+
+    if (
+      this.fechaArchivadaHasta != null &&
+      this.fechaArchivadaHasta != undefined
+    ) {
+      this.body.fechaArchivadaHasta = new Date(this.fechaArchivadaHasta);
+    } else {
+      this.body.fechaArchivadaHasta = null;
+    }
+
     this.sigaServices
-      .postPaginado("busquedaSanciones_search", "?numPagina=1", this.body)
+      .postPaginado(
+        "busquedaSanciones_searchBusquedaSanciones",
+        "?numPagina=1",
+        this.body
+      )
       .subscribe(
         data => {
           this.bodySearch = JSON.parse(data["body"]);
@@ -216,23 +246,22 @@ export class BusquedaSancionesComponent implements OnInit {
   }
 
   restore() {
-    this.body.apellidos = "";
-    this.body.colegioSancionador = "";
-    this.body.estado = "";
-    this.body.fecha = null;
-    this.body.fechaArchivadaDesde = null;
-    this.body.fechaArchivadaHasta = null;
-    this.body.fechaDesde = null;
-    this.body.fechaHasta = null;
     this.body.nif = "";
     this.body.nombre = "";
-    this.body.origen = "";
     this.body.primerApellido = "";
+    this.body.segundoApellido = "";
+    this.colegios_seleccionados = [];
+    this.body.chkRehabilitado = false;
+    this.fecha = null;
+    this.fechaDesde = null;
+    this.fechaHasta = null;
+    this.body.chkArchivadas = false;
+    this.fechaArchivadaDesde = null;
+    this.fechaArchivadaHasta = null;
+    this.body.estado = "";
+    this.body.origen = "";
     this.body.refColegio = "";
     this.body.refConsejo = "";
-    this.body.chkArchivada = false;
-    this.body.chkRehabilitado = false;
-    this.body.segundoApellido = "";
     this.body.tipo = "";
     this.body.tipoSancion = "";
   }
