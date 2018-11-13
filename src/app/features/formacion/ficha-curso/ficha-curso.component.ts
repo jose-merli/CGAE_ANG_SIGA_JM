@@ -174,19 +174,20 @@ export class FichaCursoComponent implements OnInit {
       .subscribe(
         n => {
           this.datosFormadores = n.formadoresCursoItem;
-          sessionStorage.setItem(
-            "datosFormadoresInit",
-            JSON.stringify(this.datosFormadores)
-          );
 
           for (let i = 0; this.datosFormadores.length > i; i++) {
             if (this.datosFormadores[i].tutor == 1) {
               this.datosFormadores[i].flagTutor = true;
-              this.numCheckedTutor++;
+              this.numCheckedTutor = 1;
             } else {
               this.datosFormadores[i].flagTutor = false;
             }
           }
+
+          sessionStorage.setItem(
+            "datosFormadoresInit",
+            JSON.stringify(this.datosFormadores)
+          );
 
           if (
             sessionStorage.getItem("formador") != null ||
@@ -355,6 +356,16 @@ export class FichaCursoComponent implements OnInit {
     this.datosFormadores = JSON.parse(
       sessionStorage.getItem("datosFormadores")
     );
+
+    for (let i = 0; this.datosFormadores.length > i; i++) {
+      if (this.datosFormadores[i].tutor == 1) {
+        this.datosFormadores[i].flagTutor = true;
+        this.numCheckedTutor = 1;
+      } else {
+        this.datosFormadores[i].flagTutor = false;
+      }
+    }
+
     this.fichasPosibles[2].activa = true;
     this.newFormadorCourse = new FormadorCursoItem();
     if (newformador.idPersona != null && newformador.idPersona != undefined) {
@@ -365,6 +376,8 @@ export class FichaCursoComponent implements OnInit {
       this.datosFormadores[0].idRol = "";
       this.datosFormadores[0].idTipoCoste = "";
       this.datosFormadores[0].idCurso = this.curso.idCurso;
+      this.newFormadorCourse.apellidos = newformador.apellidos;
+      this.newFormadorCourse.nombre = newformador.nombre;
     } else {
       this.newFormadorCourse.nif = newformador.nif;
       this.newFormadorCourse.tipoIdentificacion =
@@ -399,6 +412,7 @@ export class FichaCursoComponent implements OnInit {
       formador.idCurso = this.curso.idCurso;
       formador.nombre = this.newFormadorCourse.nombre;
       formador.apellidos = this.newFormadorCourse.apellidos;
+      formador.idInstitucion = null;
     }
 
     this.sigaServices.post(url, formador).subscribe(
@@ -407,9 +421,12 @@ export class FichaCursoComponent implements OnInit {
 
         if (error.message != "" && error.message != null) {
           this.showFail(error.message);
+        } else {
+          this.showSuccess();
         }
-        this.editFormador = false;
+        this.editFormador = true;
         this.pressNewFormador = false;
+        this.modoEdicionFormador = true;
         sessionStorage.setItem("formador", "true");
         this.getTrainers();
       },
@@ -420,6 +437,7 @@ export class FichaCursoComponent implements OnInit {
   }
 
   //Funciones que controlan los formadores editados
+  //Si se edita un campo input de la tabla
   editFormadorTable(event) {
     this.editFormador = true;
     this.modoEdicionFormador = true;
@@ -429,14 +447,18 @@ export class FichaCursoComponent implements OnInit {
     );
 
     if (idFindFormador == -1) {
+      this.addTrainerUpdateList(idFindFormador, event.data);
+    } else {
       let id = this.datosFormadores.findIndex(
         x =>
           x.idPersona === event.data.idPersona && x.idRol === event.data.idRol
       );
-      this.formadoresUpdate.push(this.datosFormadores[id]);
+
+      this.formadoresUpdate[idFindFormador] = this.datosFormadores[id];
     }
   }
 
+  //Si se selecciona un select de la tabla
   onChangeEdit(event, dato) {
     this.editFormador = true;
 
@@ -445,10 +467,13 @@ export class FichaCursoComponent implements OnInit {
     );
 
     if (idFindFormador == -1) {
+      this.addTrainerUpdateList(idFindFormador, dato);
+    } else {
       let id = this.datosFormadores.findIndex(
         x => x.idPersona === dato.idPersona && x.idRol === dato.idRol
       );
-      this.formadoresUpdate.push(this.datosFormadores[id]);
+
+      this.formadoresUpdate[idFindFormador] = this.datosFormadores[id];
     }
   }
 
@@ -486,31 +511,171 @@ export class FichaCursoComponent implements OnInit {
   }
 
   onChangeTutor(event, dato) {
-    let mess = "Holi";
+    let mess = "";
+    this.editFormador = true;
 
-    if (this.numCheckedTutor == 1) {
+    //COMPROBAMOS QUE SI YA EXISTE UN FORMADOR ASIGNADO COMO TUTOR Y SE QUIERE MARCAR A OTRO FORMADOR SE CAMBIA LA ASIGNACION
+    if (this.numCheckedTutor == 1 && dato.flagTutor == true) {
       mess = "¿Estás seguro que desea cambiar el tutor del curso?";
-    }
 
-    let icon = "fa fa-edit";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        console.log("aceeptado");
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Cancel",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
+      let icon = "fa fa-edit";
+      this.confirmationService.confirm({
+        message: mess,
+        icon: icon,
+        accept: () => {
+          //1. Eliminamos el tutor asignado
+
+          //1.1 Buscamos el formador que tiene asignado ese rol
+          let idFormadorUnSelect = this.datosFormadores.findIndex(
+            x => x.tutor === 1
+          );
+
+          //1.2 Buscamos si ese formador se encuentra en la lista de formadores modificados
+          let id = this.formadoresUpdate.findIndex(
+            x =>
+              x.idPersona ==
+                this.datosFormadores[idFormadorUnSelect].idPersona &&
+              x.idRol == this.datosFormadores[idFormadorUnSelect].idRol
+          );
+
+          //1.3 Si no se encuentre en la lista de moficiados, se añade el formador modificado
+          if (id == -1) {
+            this.datosFormadores[idFormadorUnSelect].tutor = 0;
+            this.datosFormadores[idFormadorUnSelect].flagTutor = false;
+            this.formadoresUpdate.push(
+              this.datosFormadores[idFormadorUnSelect]
+            );
+            //1.4 Si se encuentra en la lista, modificamos el formador tanto en la lista de formadores modificados
+            //y en la lista de formadores
+          } else {
+            this.formadoresUpdate[id].tutor = 0;
+            this.datosFormadores[idFormadorUnSelect].tutor = 0;
+            this.datosFormadores[idFormadorUnSelect].flagTutor = false;
           }
-        ];
+
+          //2. Añadimos el nuevo formador
+
+          //2.1 Buscamos SI el formador que le vamos asignar el tutor se encuentra en la lista de formadores modificados
+          let idFindFormador = this.formadoresUpdate.findIndex(
+            x => x.idPersona === dato.idPersona && x.idRol === dato.idRol
+          );
+
+          //2.2 Buscamos al formador que le vamos asignar el tutor en la tabla de formadores
+          let idUpdateFormador = this.datosFormadores.findIndex(
+            x => x.idPersona === dato.idPersona && x.idRol === dato.idRol
+          );
+
+          //2.3 Si el formador no se encuentra en la tabla de formadores modificados se añade
+          if (idFindFormador == -1) {
+            this.datosFormadores[idUpdateFormador].tutor = 1;
+            this.datosFormadores[idUpdateFormador].flagTutor = true;
+            this.addTrainerUpdateList(idFindFormador, dato);
+            //2.4 Si se encuentra, se le asigna el valor de tutor en ambas tablas
+          } else {
+            this.formadoresUpdate[idFindFormador].tutor = 1;
+            this.formadoresUpdate[idFindFormador].flagTutor = true;
+            this.datosFormadores[idUpdateFormador].tutor = 1;
+            this.datosFormadores[idUpdateFormador].flagTutor = true;
+          }
+        },
+        reject: () => {
+          //Si cancela la operacion, se restablece los valores
+          let id = this.datosFormadores.findIndex(
+            x => x.idPersona === dato.idPersona && x.idRol === dato.idRol
+          );
+
+          if (this.datosFormadores[id].flagTutor) {
+            this.datosFormadores[id].flagTutor = false;
+          } else {
+            this.datosFormadores[id].flagTutor = true;
+          }
+
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "Cancel",
+              detail: this.translateService.instant(
+                "general.message.accion.cancelada"
+              )
+            }
+          ];
+        }
+      });
+      //SE COMPRUEBA SI SE DESASIGNA UN FORMADOR QUE ES TUTOR
+    } else if (this.numCheckedTutor == 1 && dato.flagTutor == false) {
+      this.numCheckedTutor = 0;
+
+      //1.1 Se le desasigna en la tabla de formadores
+      let id = this.datosFormadores.findIndex(
+        x => x.idPersona === dato.idPersona && x.idRol === dato.idRol
+      );
+
+      this.datosFormadores[id].tutor = 0;
+      this.datosFormadores[id].flagTutor = false;
+
+      //1.1 Se busca si ese formador se encuentra en la lista de formadores modificados
+      let idFindFormador = this.formadoresUpdate.findIndex(
+        x => x.idPersona === dato.idPersona && x.idRol === dato.idRol
+      );
+
+      //1.2 Si no existe se añade a la lista de formadores modificados y se le asigna en la tabla de formadores
+      if (idFindFormador == -1) {
+        this.formadoresUpdate.push(this.datosFormadores[id]);
+        //1.3 Si existe se modifica en la tabla
+      } else {
+        this.formadoresUpdate[id].tutor = 0;
       }
-    });
+      //SE COMPRUEBA SI NO HAY NINGUN FORMADOR ASIGNADO
+    } else {
+      this.numCheckedTutor = 1;
+      dato.tutor = 1;
+
+      //1.1 Se le asigna en la tabla de formadores
+      let id = this.datosFormadores.findIndex(
+        x => x.idPersona === dato.idPersona && x.idRol === dato.idRol
+      );
+      this.datosFormadores[id].tutor = 1;
+      this.datosFormadores[id].flagTutor = true;
+
+      //1.2 Se busca si esta en la tabla formadores modificados
+      let idFindFormador = this.formadoresUpdate.findIndex(
+        x => x.idPersona === dato.idPersona && x.idRol === dato.idRol
+      );
+
+      //1.2 Si no esta se añade
+      if (idFindFormador == -1) {
+        this.addTrainerUpdateList(idFindFormador, dato);
+      } else {
+        let id = this.datosFormadores.findIndex(
+          x => x.idPersona === dato.idPersona && x.idRol === dato.idRol
+        );
+        this.formadoresUpdate[idFindFormador].tutor = 1;
+      }
+    }
+  }
+
+  addTrainerUpdateList(idFindFormador, dato) {
+    let id = this.datosFormadores.findIndex(
+      x => x.idPersona === dato.idPersona && x.idRol === dato.idRol
+    );
+    this.formadoresUpdate.push(this.datosFormadores[id]);
+  }
+
+  validateForm() {
+    if (
+      this.newFormadorCourse.idRol == null ||
+      this.newFormadorCourse.idTipoCoste == null ||
+      this.newFormadorCourse.tarifa == null ||
+      this.newFormadorCourse.nombre == null ||
+      this.newFormadorCourse.apellidos == null ||
+      this.newFormadorCourse.tarifa == "" ||
+      this.newFormadorCourse.nombre == "" ||
+      this.newFormadorCourse.apellidos == ""
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   //Sesiones
@@ -749,6 +914,15 @@ export class FichaCursoComponent implements OnInit {
   }
 
   showSuccessDelete() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: "Correcto",
+      detail: this.translateService.instant("general.message.accion.realizada")
+    });
+  }
+
+  showSuccess() {
     this.msgs = [];
     this.msgs.push({
       severity: "success",
