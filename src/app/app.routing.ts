@@ -203,6 +203,7 @@ import { AgendaComponent } from "./features/agenda/agenda.component";
 import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaciones/datos-notificaciones.component";
 import { FichaEventosComponent } from "./features/agenda/ficha-eventos/ficha-eventos.component";
 import { FichaCursoComponent } from "./features/formacion/ficha-curso/ficha-curso.component";
+import { DetalleSancionComponent } from "./features/censo/busqueda-sanciones/detalle-sancion/detalle-sancion.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -335,6 +336,11 @@ const appRoutes: Routes = [
   {
     path: "busquedaSanciones",
     component: BusquedaSancionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "detalleSancion",
+    component: DetalleSancionComponent,
     canActivate: [AuthGuard]
   },
   {

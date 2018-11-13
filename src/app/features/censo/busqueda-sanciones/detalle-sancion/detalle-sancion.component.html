@@ -1,0 +1,296 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="busqueda-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>
+      {{ "menu.expedientes.sanciones" | translate }}
+      <i class="pl-1 fa fa-angle-right"></i
+      >{{ "busquedaSanciones.datosSancion.literal" | translate }}
+    </p>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <p class="title-module">
+        {{ "busquedaSanciones.datosSancion.literal" | translate }}
+        <i
+          (click)="onHideDatosSancion()"
+          *ngIf="showDatosSancion"
+          class="fa fa-angle-up float-right"
+        ></i>
+        <i
+          (click)="onHideDatosSancion()"
+          *ngIf="!showDatosSancion"
+          class="fa fa-angle-down float-right"
+        ></i>
+      </p>
+
+      <div *ngIf="showDatosSancion" class="module vista-simple">
+        <div class="row">
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{
+              "busquedaSanciones.detalleSancion.letrado.literal" | translate
+            }}</label>
+            <input
+              type="text"
+              name="letrado"
+              class="form-control"
+              [(ngModel)]="body.letrado"
+              pInputText
+            />
+          </div>
+
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{
+              "menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal"
+                | translate
+            }}</label>
+            <p-dropdown
+              class="select-form"
+              [options]="tipoSancion"
+              [(ngModel)]="body.tipoSancion"
+            ></p-dropdown>
+          </div>
+
+          <div class="form-group col-lg-3 col-md-3">
+            <label
+              >{{
+                "censo.busquedaSolicitudesModificacion.literal.estado"
+                  | translate
+              }}
+              (*)</label
+            >
+            <p-dropdown
+              class="select-form"
+              [options]="estado"
+              [(ngModel)]="body.estado"
+            ></p-dropdown>
+          </div>
+
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{
+              "busquedaSanciones.colegioSancionador.literal" | translate
+            }}</label>
+            <p-multiSelect
+              [defaultLabel]="textFilter"
+              filterBy="label"
+              [(ngModel)]="body.colegioSancionador"
+              [options]="colegios"
+              optionLabel="label"
+              [selectedItemsLabel]="textSelected"
+              maxSelectedLabels="1"
+              styleClass="widthAll"
+              [panelStyle]="{ width: '100%' }"
+            ></p-multiSelect>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{
+              "menu.expediente.sanciones.busquedaPorColegio.RefColegio.literal"
+                | translate
+            }}</label>
+            <input
+              type="text"
+              class="form-control"
+              pInputText
+              [(ngModel)]="body.refColegio"
+            />
+          </div>
+
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{
+              "busquedaSanciones.detalleSancion.fechaAcuerdo.literal"
+                | translate
+            }}</label>
+            <p-calendar
+              [keepInvalid]="true"
+              selectionMode="range"
+              [locale]="es"
+              icon="far fa-calendar-alt"
+              showIcon="true"
+              dateFormat="dd/mm/yy"
+              [(ngModel)]="body.fechaAcuerdo"
+            ></p-calendar>
+          </div>
+
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{
+              "menu.expediente.sanciones.firmeza.literal" | translate
+            }}</label>
+            <p-calendar
+              [keepInvalid]="true"
+              selectionMode="range"
+              [locale]="es"
+              icon="far fa-calendar-alt"
+              showIcon="true"
+              dateFormat="dd/mm/yy"
+              [(ngModel)]="body.fechaFirmeza"
+            ></p-calendar>
+          </div>
+
+          <div class="form-group col-lg-3 col-md-2">
+            <label></label>
+            <p-checkbox
+              name="chkFirmeza"
+              [(ngModel)]="body.chkFirmeza"
+              binary="true"
+            ></p-checkbox>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{
+              "busquedaSanciones.detalleSancion.rehabilitado.literal"
+                | translate
+            }}</label>
+
+            <p-calendar
+              [keepInvalid]="true"
+              selectionMode="range"
+              [locale]="es"
+              icon="far fa-calendar-alt"
+              showIcon="true"
+              dateFormat="dd/mm/yy"
+              [(ngModel)]="body.fechaRehabilitado"
+            ></p-calendar>
+          </div>
+
+          <div class="form-group col-lg-3 col-md-2">
+            <label></label>
+            <p-checkbox
+              name="chkRehabilitado"
+              [(ngModel)]="body.chkRehabilitado"
+              binary="true"
+            ></p-checkbox>
+          </div>
+
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{
+              "busquedaSanciones.detalleSancion.fechaInicio.literal" | translate
+            }}</label>
+            <p-calendar
+              [keepInvalid]="true"
+              selectionMode="range"
+              [locale]="es"
+              icon="far fa-calendar-alt"
+              showIcon="true"
+              dateFormat="dd/mm/yy"
+              [(ngModel)]="body.fechaDesde"
+            ></p-calendar>
+          </div>
+
+          <div class="form-group col-lg-3 col-md-3">
+              <label>{{
+                "busquedaSanciones.detalleSancion.fechaFin.literal" | translate
+              }}</label>
+              <p-calendar
+                [keepInvalid]="true"
+                selectionMode="range"
+                [locale]="es"
+                icon="far fa-calendar-alt"
+                showIcon="true"
+                dateFormat="dd/mm/yy"
+                [(ngModel)]="body.fechaHasta"
+              ></p-calendar>
+            </div>
+        </div>
+
+        <div class="row">
+          
+
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{
+              "busquedaSanciones.detalleSancion.fechaArchivada.literal"
+                | translate
+            }}</label>
+            <p-calendar
+              [keepInvalid]="true"
+              selectionMode="range"
+              [locale]="es"
+              icon="far fa-calendar-alt"
+              showIcon="true"
+              dateFormat="dd/mm/yy"
+              [(ngModel)]="body.fechaArchivada"
+            ></p-calendar>
+          </div>
+
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{
+              "busquedaSanciones.detalleSancion.multa.literal" | translate
+            }}</label>
+            <input
+              type="text"
+              class="form-control"
+              pInputText
+              [(ngModel)]="body.multa"
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-lg-12 col-md-12">
+            <label>{{
+              "busquedaSanciones.detalleSancion.texto.literal" | translate
+            }}</label>
+            <textarea
+              [rows]="10"
+              [cols]="10"
+              pInputTextarea
+              [(ngModel)]="body.texto"
+            ></textarea>
+          </div>
+
+          <div class="form-group col-lg-12 col-md-12">
+            <label>{{
+              "censo.nuevaSolicitud.observaciones" | translate
+            }}</label>
+            <textarea
+              [rows]="10"
+              [cols]="10"
+              pInputTextarea
+              [(ngModel)]="body.observaciones"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="text-right main-button ">
+        <button
+          (click)="save()"
+          pButton
+          type="button"
+          icon="far fa-save"
+          iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"
+        ></button>
+        <button
+          (click)="restore()"
+          pButton
+          type="button"
+          icon="fa fa-undo"
+          iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"
+        ></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<div class="mt-3 text-right main-button ">
+  <button
+    (click)="backTo()"
+    pButton
+    type="button"
+    icon="fa fa-angle-left"
+    iconPos="left"
+    label="{{ 'general.boton.volver' | translate}}"
+  ></button>
+</div>

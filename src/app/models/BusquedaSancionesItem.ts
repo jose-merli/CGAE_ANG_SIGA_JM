@@ -1,22 +1,31 @@
 export class BusquedaSancionesItem {
   nif: String;
   nombre: String;
+  letrado: String;
   apellidos: String;
   primerApellido: String;
   segundoApellido: String;
-  colegio: String;
+  colegioSancionador: String;
   tipoSancion: String;
   refColegio: String;
-  refConsejo: Date;
-  sancionesRehabilitadas: boolean;
+  refConsejo: String;
+  chkRehabilitado: boolean;
+  fechaRehabilitado: Date;
   fecha: Date;
   fechaDesde: Date;
   fechaHasta: Date;
-  sancionesArchivadas: boolean;
+  chkArchivada: boolean;
+  fechaArchivada: Date;
   fechaArchivadaDesde: Date;
   fechaArchivadaHasta: Date;
   tipo: String;
   origen: String;
   estado: String;
+  chkFirmeza: boolean;
+  fechaFirmeza: Date;
+  fechaAcuerdo: Date;
+  multa: String;
+  texto: String;
+  observaciones: String;
   constructor() {}
 }
