@@ -507,7 +507,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         JSON.stringify(this.body)
       );
       sessionStorage.setItem("esColegiado", "false");
-      sessionStorage.setItem("personaBody", JSON.stringify(id));
+      sessionStorage.setItem("personaBody", JSON.stringify(id[0]));
       console.log(id);
       this.router.navigate(["/fichaColegial"]);
     }

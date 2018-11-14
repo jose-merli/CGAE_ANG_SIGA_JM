@@ -22,10 +22,14 @@ export class FichaColegialGeneralesItem {
   incorporacion: Date;
   fechaNacimiento: Date;
   idioma: String;
+  motivo: String;
   asientoContable: String;
   partidoJudicial: any;
   publicarDatosContacto: boolean;
   comisiones: String;
   grupos: any[];
+  etiquetas: any[];
+  fechaBajaEtiq: Date;
+  fechaInicioEtiq: Date;
   constructor() {}
 }
