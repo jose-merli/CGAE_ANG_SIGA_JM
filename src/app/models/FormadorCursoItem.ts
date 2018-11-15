@@ -9,6 +9,7 @@ export class FormadorCursoItem {
   idTipoCoste: string;
   tipoCoste: string;
   nombre: string;
+  nombreCompleto: string;
   apellidos: string;
   tarifa: string;
   tutor: number;

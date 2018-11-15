@@ -33,131 +33,106 @@
     <!-- Cuerpo-->
     <div class="card-body card-body-ficha" *ngIf="esFichaActiva('generales')">
       <div class="form-row mb-3">
-        <div class="bloque col-lg-4 col-md-4">
+        <div class="bloque col-lg-7 col-md-7">
           <div class="row mb-3">
             <label class="ml-2">
               <strong>Datos Evento</strong>
             </label>
           </div>
           <div class="row mb-3">
-            <div class="col-lg-12 col-md-12">
+            <div class="col-lg-6 col-md-6">
               <label>Calendario</label>
               <p-dropdown class="select-form" [options]="comboCalendars" [filter]="true" filterBy="label,labelSinTilde" placeholder="Seleccionar"
-                name="type" (onChange)="onChangeSelectCalendar($event)"></p-dropdown>
+                name="type" (onChange)="onChangeSelectCalendar($event)" [(ngModel)]="newEvent.idCalendario"></p-dropdown>
             </div>
-          </div>
-          <div class="row mb-3">
-            <div class="col-lg-12 col-md-12">
+            <div class="col-lg-6 col-md-6">
               <label>Tipo Evento</label>
-              <input type="text" class="form-control" pInputText name="cuando">
+              <p-dropdown class="select-form" [options]="comboTipoEvento" name="tipoEvento" [(ngModel)]="newEvent.idTipoEvento" placeholder="Seleccionar"></p-dropdown>
             </div>
           </div>
           <div class="row mb-3">
-            <div class="col-lg-12 col-md-12">
+            <div class="col-lg-6 col-md-6">
               <label>Título</label>
-              <input type="text" class="form-control" pInputText name="cuando">
+              <input type="text" class="form-control" pInputText name="titulo" [(ngModel)]="newEvent.titulo">
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <label>Estado</label>
+                <p-dropdown class="select-form" [options]="comboEstados" name="estado" [(ngModel)]="selectedEstadoEvento"></p-dropdown>
             </div>
           </div>
           <div class="row mb-3">
-            <div class="col-lg-12 col-md-12">
+            <div class="col-lg-6 col-md-6">
               <label class="pb-2">Fecha Inicio</label>
-              <div class="row">
-                <div class="col-lg-12 col-md-12">
-                  <div class="row">
-                    <div class="col-lg-1 col-md-1 pt-1">
-                      <label class="small-letter">
-                        Día:
-                      </label>
-                    </div>
-                    <div class="col-lg-5 col-md-5">
-                      <p-calendar></p-calendar>
-                    </div>
-                    <div class="col-lg-1 col-md-1 pt-1 pl-0">
-                      <label class="small-letter">
-                        Hora:
-                      </label>
-                    </div>
-                    <div class="col-lg-5 col-md-5">
-                      <p-calendar [timeOnly]="true"></p-calendar>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  <p-calendar [showTime]="true" [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.fechaInicio" (onSelect)="selectInvalidDates()"></p-calendar>
             </div>
-          </div>
-          <div class="row mb-3">
-            <div class="col-lg-12 col-md-12">
-              <label class="mb-2">Fecha Fin</label>
-              <div class="row">
-                <div class="col-lg-12 col-md-12">
-                  <div class="row">
-                    <div class="col-lg-1 col-md-1 pt-1">
-                      <label class="small-letter">
-                        Día:
-                      </label>
-                    </div>
-                    <div class="col-lg-5 col-md-5">
-                      <p-calendar></p-calendar>
-                    </div>
-                    <div class="col-lg-1 col-md-1 pt-1 pl-0">
-                      <label class="small-letter">
-                        Hora:
-                      </label>
-                    </div>
-                    <div class="col-lg-5 col-md-5">
-                      <p-calendar [timeOnly]="true"></p-calendar>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div class="col-lg-6 col-md-6">
+                <label class="pb-2">Fecha Fin</label>
+                <p-calendar [showTime]="true" [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.fechaFin" [disabledDates]="invalidDates"></p-calendar>
             </div>
           </div>
           <div class="row mb-3">
             <div class="col-lg-12 col-md-12">
               <label>Lugar</label>
-              <input type="text" class="form-control" pInputText name="cuando">
+              <input type="text" class="form-control" pInputText name="lugar" [(ngModel)]="newEvent.lugar">
             </div>
           </div>
           <div class="row mb-3">
             <div class="col-lg-12 col-md-12">
               <label>Descripción</label>
-              <input type="text" class="form-control" pInputText name="cuando">
+              <input type="text" class="form-control" pInputText name="descripcion" [(ngModel)]="newEvent.descripcion">
             </div>
           </div>
           <div class="row mb-3">
             <div class="col-lg-12 col-md-12">
               <label>Recursos</label>
-              <input type="text" class="form-control" pInputText name="cuando">
-            </div>
-          </div>
-          <div class="row mb-3">
-            <div class="col-lg-12 col-md-12">
-              <label>Estado</label>
-              <p-dropdown class="select-form" [options]="comboEstados" name="estado"></p-dropdown>
+              <input type="text" class="form-control" pInputText name="recursos" [(ngModel)]="newEvent.recursos">
             </div>
           </div>
         </div>
-        <div class="bloque col-lg-8 col-md-8">
+        <div class="bloque col-lg-5 col-md-5">
           <div class="row mb-3">
             <label>
               <strong> Datos de repetición</strong>
             </label>
           </div>
-          <div class="row mb-3">
+          <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
-              <label>{{'certificados.mantenimiento.literal.valor' | translate}}(*)</label>
-              <input type="text" class="form-control" pInputText name="cuando">
+              <label class="pb-2">Fecha Inicio</label>
+                  <p-calendar [showTime]="true"></p-calendar>
             </div>
             <div class="col-lg-6 col-md-6">
-              <label>{{'formacion.datosNotificaciones.unidadMedida.literal' | translate}}(*)</label>
-              <p-dropdown class="select-form" [filter]="true" filterBy="label,labelSinTilde" placeholder="Seleccionar" name="idUnidadMedida"></p-dropdown>
+                <label class="pb-2">Fecha Fin</label>
+                <p-calendar [showTime]="true"></p-calendar>
             </div>
           </div>
-          <div class="row">
-            <div class="col-lg-6 col-md-6">
-              <label>{{'formacion.datosNotificaciones.antesDespues.literal' | translate}}</label>
-              <p-dropdown class="select-form" [filter]="false" name="idTipoCuando"></p-dropdown>
+          <div class="row mb-3">
+            <div class="col-lg-12 col-md-12">
+              <div class="row">
+                  <div class="col-lg-4 col-md-4">
+                      <label>Repetir cada:(*)</label>
+                  </div>
+                  <div class="col-lg-8 col-md-8">
+                      <p-dropdown [options]="comboRepeatEvery" [(ngModel)]="selectRepeatDate" placeholder="Seleccionar"></p-dropdown>
+                  </div>
+              </div>           
+            </div> 
+          </div>
+          <div class="row mb-3">
+            <div *ngIf="selectRepeatDate == 2" class="col-lg-12 col-md-12">
+                    <p-selectButton [options]="comboRepeatOn" multiple="multiple"></p-selectButton>   
             </div>
+            <div *ngIf="selectRepeatDate == 1" class="col-lg-12 col-md-12">
+                <p-selectButton class="daysSelectButton" [options]="comboDays" multiple="multiple" [(ngModel)]="dates"></p-selectButton>
+                <p class="mt-2">Días seleccionados: <span *ngFor="let d of dates">{{d}}, </span></p>
+                <!-- <p-calendar [(ngModel)]="dates" monthNavigator="false" dateFormat="dd" selectionMode="multiple" [readonlyInput]="true" ></p-calendar> -->
+              </div>
+          </div>
+          <div class="row mb-3">
+              <div class="col-lg-12 col-md-12">
+                <div class="ui-g-12"><p-radioButton name="group1" value="Option 1" label="Días Laborales" [(ngModel)]="val1" inputId="opt1"></p-radioButton></div>
+                <div class="ui-g-12"><p-radioButton name="group1" value="Option 2" label="Días festivos" [(ngModel)]="val1" inputId="opt2"></p-radioButton></div>
+                <div class="ui-g-12"><p-radioButton name="group1" value="Option 3" label="Ambos" [(ngModel)]="val1" inputId="opt3"></p-radioButton></div>
+              </div>
           </div>
         </div>
       </div>
@@ -165,7 +140,7 @@
     <div class="card-footer" *ngIf="esFichaActiva('generales')">
       <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}"></button>
-        <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+        <button pButton (click)="saveEvent()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>
   </div>

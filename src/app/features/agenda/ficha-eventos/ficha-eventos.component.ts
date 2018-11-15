@@ -7,6 +7,7 @@ import { NotificacionEventoItem } from "../../../models/NotificacionEventoItem";
 import { ViewEncapsulation } from "@angular/core";
 import { saveAs } from "file-saver/FileSaver";
 import { AsistenciaCursoObject } from "../../../models/AsistenciaCursoObject";
+import { EventoItem } from "../../../models/EventoItem";
 
 @Component({
   selector: "app-ficha-eventos",
@@ -32,6 +33,15 @@ export class FichaEventosComponent implements OnInit {
 
   //Generales
   comboCalendars;
+  comboTipoEvento;
+  selectRepeatDate;
+  comboDays;
+  comboRepeatEvery;
+  comboRepeatOn;
+  newEvent: EventoItem;
+  val1;
+  selectedEstadoEvento;
+  invalidDates;
 
   //Notificaciones
   selectedDatos;
@@ -57,7 +67,7 @@ export class FichaEventosComponent implements OnInit {
   backgroundColor: string;
   marginPx = "4px";
   bw = "white";
-  idCurso = "2";
+  idCurso;
 
   //Asistencia
   colsAsistencia;
@@ -81,27 +91,86 @@ export class FichaEventosComponent implements OnInit {
   ngOnInit() {
     this.getComboCalendar();
     this.getComboEstado();
+    this.getComboTipoEvento();
+    this.getCombosRepeats();
     this.getColsResults();
     this.getComboAsistencia();
     this.getFichasPosibles();
     this.getColsResultsAsistencia();
-    this.getResultsFormadores();
-    this.getTrainers();
 
     if (sessionStorage.getItem("isFormacionCalendar") == "true") {
       this.isFormacionCalendar = true;
+      this.idCurso = sessionStorage.getItem("idCurso");
+      this.getTrainers();
     } else {
       this.isFormacionCalendar = false;
     }
+
+    this.newEvent = new EventoItem();
   }
 
   //FUNCIONES FICHA DATOS GENERALES
 
   getComboEstado() {
-    this.comboEstados = [
-      { label: "Planificado", value: "1" },
-      { label: "Cumplido", value: "2" },
-      { label: "Cancelado", value: "3" }
+    this.sigaServices.get("fichaEventos_getEventStates").subscribe(
+      n => {
+        this.comboEstados = n.combooItems;
+        this.selectedEstadoEvento = this.comboEstados[0].value;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getCombosRepeats() {
+    this.comboRepeatEvery = [
+      { label: "Día", value: "1" },
+      { label: "Semana", value: "2" }
+    ];
+
+    this.comboRepeatOn = [
+      { label: "Lunes", value: "L" },
+      { label: "Martes", value: "M" },
+      { label: "Miércoles", value: "X" },
+      { label: "Jueves", value: "J" },
+      { label: "Viernes", value: "V" },
+      { label: "Sábado", value: "S" },
+      { label: "Domingo", value: "D" }
+    ];
+
+    this.comboDays = [
+      { label: "1", value: "1" },
+      { label: "2", value: "2" },
+      { label: "3", value: "3" },
+      { label: "4", value: "4" },
+      { label: "5", value: "5" },
+      { label: "6", value: "6" },
+      { label: "7", value: "7" },
+      { label: "8", value: "8" },
+      { label: "9", value: "9" },
+      { label: "10", value: "10" },
+      { label: "11", value: "11" },
+      { label: "12", value: "12" },
+      { label: "13", value: "13" },
+      { label: "14", value: "14" },
+      { label: "15", value: "15" },
+      { label: "16", value: "16" },
+      { label: "17", value: "17" },
+      { label: "18", value: "18" },
+      { label: "19", value: "19" },
+      { label: "20", value: "20" },
+      { label: "21", value: "21" },
+      { label: "22", value: "22" },
+      { label: "23", value: "23" },
+      { label: "24", value: "24" },
+      { label: "25", value: "25" },
+      { label: "26", value: "26" },
+      { label: "27", value: "27" },
+      { label: "28", value: "28" },
+      { label: "29", value: "29" },
+      { label: "30", value: "30" },
+      { label: "31", value: "31" }
     ];
   }
 
@@ -117,9 +186,44 @@ export class FichaEventosComponent implements OnInit {
     );
   }
 
+  //Función obtiene los tipos de calendarios que hay
+  getComboTipoEvento() {
+    this.sigaServices.get("fichaEventos_getTypeEvent").subscribe(
+      n => {
+        this.comboTipoEvento = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
   onChangeSelectCalendar(event) {
     this.idCalendario = event.value;
     this.getEventNotifications();
+  }
+
+  saveEvent() {
+    this.newEvent.idEstadoEvento = this.selectedEstadoEvento;
+    this.sigaServices
+      .post("fichaEventos_saveEventCalendar", this.newEvent)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  selectInvalidDates() {
+    let invalidDate = new Date();
+    invalidDate.setDate(this.newEvent.fechaInicio.getFullYear() - 80);
+    this.invalidDates = [this.newEvent.fechaInicio, invalidDate];
   }
 
   //FUNCIONES FICHA NOTIFICACIONES
@@ -310,51 +414,6 @@ export class FichaEventosComponent implements OnInit {
       );
   }
 
-  getResultsFormadores() {
-    this.datosFormadores = [
-      {
-        idFormador: "1",
-        nombre: "JOSE RAMIREZ PEREZ",
-        rol: "S",
-        tipoCoste: "?",
-        tarifa: "10€"
-      },
-      {
-        idFormador: "2",
-        nombre: "JOSE RAMIREZ PEREZ",
-        rol: "S",
-        tipoCoste: "?",
-        tarifa: "10€"
-      },
-      {
-        idFormador: "3",
-        nombre: "JOSE RAMIREZ PEREZ",
-        rol: "S",
-        tipoCoste: "?",
-        tarifa: "10€"
-      }
-    ];
-
-    this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
-      },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: 30,
-        value: 30
-      },
-      {
-        label: 40,
-        value: 40
-      }
-    ];
-  }
-
   filterTrainersMultiple(event) {
     if (
       this.formadoresSuggest.length > 0 &&
@@ -366,7 +425,9 @@ export class FichaEventosComponent implements OnInit {
         this.formadoresSuggest = [];
 
         this.formadores.forEach(element => {
-          let findFormador = this.results.find(x => x.id === element.id);
+          let findFormador = this.results.find(
+            x => x.idPersona === element.idPersona
+          );
           if (findFormador == undefined) {
             this.formadoresSuggest.push(element);
           }

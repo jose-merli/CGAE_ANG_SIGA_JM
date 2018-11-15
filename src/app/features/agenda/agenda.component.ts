@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild } from "@angular/core";
-import { Router } from "../../../../node_modules/@angular/router";
+import { Router } from "@angular/router";
 import { CalendarItem } from "../../models/CalendarItem";
-import { Checkbox } from "../../../../node_modules/primeng/primeng";
+import { Checkbox } from "primeng/primeng";
 import { SigaServices } from "../../_services/siga.service";
-import { EventoCalendario } from "../../models/EventoCalendario";
+import { EventoItem } from "../../models/EventoItem";
 @Component({
   selector: "app-agenda",
   templateUrl: "./agenda.component.html",
@@ -41,6 +41,7 @@ export class AgendaComponent implements OnInit {
   ngOnInit() {
     this.listLecturaSelect = [];
     this.listAccesoSelect = [];
+    sessionStorage.setItem("isFormacionCalendar", "false");
 
     this.options = {
       header: {
@@ -145,10 +146,10 @@ export class AgendaComponent implements OnInit {
   }
 
   onClickEvento(event) {
-    let evento: EventoCalendario = new EventoCalendario();
-    evento.id = event.calEvent.id;
+    let evento: EventoItem = new EventoItem();
+    evento.idEvento = event.calEvent.idEvento;
     evento.idCalendario = event.calEvent.idCalendario;
-    evento.title = event.calEvent.title;
+    evento.titulo = event.calEvent.titulo;
     evento.allDay = event.calEvent.allDay;
     evento.color = event.calEvent.color;
 

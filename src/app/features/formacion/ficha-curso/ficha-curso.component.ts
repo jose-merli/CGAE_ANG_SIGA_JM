@@ -749,6 +749,7 @@ export class FichaCursoComponent implements OnInit {
 
   newSession() {
     sessionStorage.setItem("isFormacionCalendar", "true");
+    sessionStorage.setItem("idCurso", this.curso.idCurso);
     this.router.navigate(["/fichaEventos"]);
   }
 

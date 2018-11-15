@@ -120,6 +120,8 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     sessionStorage.removeItem("datosFormadores");
     sessionStorage.removeItem("datosFormadoresInit");
     sessionStorage.removeItem("formador");
+    sessionStorage.removeItem("idCurso");
+    sessionStorage.setItem("isFormacionCalendar", "false");
     if (sessionStorage.getItem("filtrosBusquedaCursos") != null) {
       this.body = JSON.parse(sessionStorage.getItem("filtrosBusquedaCursos"));
       sessionStorage.removeItem("filtrosBusquedaCursos");
@@ -419,8 +421,8 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   }
 
   /*
-  * DIFERENTES ACCIONES SOBRE CURSOS
-  */
+   * DIFERENTES ACCIONES SOBRE CURSOS
+   */
 
   duplicarCursos() {
     this.progressSpinner = true;
@@ -522,12 +524,12 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   }
 
   /*
-  * FIN DIFERENTES ACCIONES SOBRE CURSOS
-  */
+   * FIN DIFERENTES ACCIONES SOBRE CURSOS
+   */
 
   /*
-  * Para mostrar notificaciones con respecto a las acciones sobre cursos
-  */
+   * Para mostrar notificaciones con respecto a las acciones sobre cursos
+   */
 
   mostrarInfoAccionSobreCursos(numCursos, mensaje) {
     //Por si ha habido error y ha resultado un número negativo
@@ -549,10 +551,10 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   }
 
   /*
-  *
-  * Los siguientes métodos son necesarios para obligar a que el rango de fechas introducido sea correcto
-  *
-  */
+   *
+   * Los siguientes métodos son necesarios para obligar a que el rango de fechas introducido sea correcto
+   *
+   */
 
   getFechaInscripcionDesde() {
     if (
