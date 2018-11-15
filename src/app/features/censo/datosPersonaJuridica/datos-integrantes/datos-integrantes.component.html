@@ -31,9 +31,6 @@
             <label>{{"censo.fichaIntegrantes.literal.estado" | translate}}
               <span> {{ body.ejerciente }} </span>
             </label>
-            <label>{{"censo.consultaComponentesJuridicos.literal.Participacion" | translate}}
-              <span>{{ body.capitalSocial }}</span>
-            </label>
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}" class="pull-right"></i>
           </div>
           <div *ngIf="!only && searchIntegrantes.datosIntegrantesItem.length == 0" class="d-flex justify-content-between">

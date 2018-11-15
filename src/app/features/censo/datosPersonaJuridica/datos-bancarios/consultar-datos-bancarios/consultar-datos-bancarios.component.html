@@ -72,13 +72,17 @@
                 </div>
               </div>
               <div class="form-group col-lg-3 col-md-6">
-                <label>{{"censo.fichaCliente.datosBancarios.cuentaBancaria.bic" | translate}}</label>
+                <!-- (ngModelChange)="recuperarBicBanco()" -->
+                <label>{{"censo.fichaCliente.datosBancarios.cuentaBancaria.bic" | translate}} (*)</label>
                 <input [(ngModel)]="body.bic" type="text" class="form-control" (ngModelChange)="recuperarBicBanco()" [disabled]="!editar"
                   pInputText>
+                  <div *ngIf="bicValido == false">
+                      <label class="labelError">{{"BIC incorrecto"}}</label>
+                    </div>
               </div>
               <div class="form-group col-lg-3 col-md-6">
                 <label>{{"censo.tipoAbono.banco" | translate}}</label>
-                <input [(ngModel)]="body.banco" type="text" class="form-control" [disabled]="!editar" pInputText>
+                <input [(ngModel)]="body.banco" type="text" class="form-control" [disabled]="true" pInputText>
               </div>
               <div class="form-group col-lg-3 col-md-6">
                 <label>{{"censo.datosCuentaBancaria.literal.tipoCuenta" | translate}} (*)</label>
@@ -160,7 +164,7 @@
                 <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaProducto' optionLabel="label" *ngIf="nuevo" [disabled]="!editarMandato"
                   [options]="combooItemsProducto" (onChange)="onChangeEsquemaProducto($event)">
                 </p-dropdown>
-                <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaProducto' optionLabel="label" *ngIf="!nuevo" [options]="combooItemsProducto"
+                <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaProducto' optionLabel="label" *ngIf="!nuevo" [disabled]="!editarMandato" [options]="combooItemsProducto"
                   (onChange)="onChangeEsquemaProducto($event)" [disabled]="mandatoAnexoVacio">
                 </p-dropdown>
 
@@ -197,7 +201,7 @@
                   [options]="combooItemsServicio" (onChange)="onChangeEsquemaServicio($event)">
 
                 </p-dropdown>
-                <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaServicio' optionLabel="label" *ngIf="!nuevo" [options]="combooItemsServicio"
+                <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaServicio' optionLabel="label" *ngIf="!nuevo" [disabled]="!editarMandato" [options]="combooItemsServicio"
                   (onChange)="onChangeEsquemaServicio($event)" [disabled]="mandatoAnexoVacio">
                 </p-dropdown>
 

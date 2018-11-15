@@ -123,6 +123,7 @@ export class SigaServices {
     datosCuentaBancaria_update: "busquedaPerJuridica/datosBancariosUpdate",
     datosCuentaBancaria_insert: "busquedaPerJuridica/datosBancariosInsert",
     datosCuentaBancaria_BIC_BANCO: "busquedaPerJuridica/BanksSearch",
+    datosCuentaBancaria_getLengthCodCountry: "busquedaPerJuridica/getLengthCodCountry",
     datosMandatos_search: "busquedaPerJuridica/MandatosSearch",
     datosMandatos_insert: "busquedaPerJuridica/mandatosInsert",
     datosMandatos_comboEsquema: "busquedaPerJuridica/comboEsquema",

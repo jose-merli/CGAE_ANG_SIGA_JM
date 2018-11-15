@@ -33,6 +33,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   editarMandato: boolean = false;
   formValido: boolean;
   ibanValido: boolean;
+  bicValido: boolean;
   titularValido: boolean;
   identificacionValida: boolean;
   tipoCuentaSeleccionado: boolean;
@@ -56,10 +57,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   mandatoAnexoVacio: boolean = false;
   activarMsgErrorProd: boolean;
   activarMsgErrorServ: boolean;
+  editarExt: boolean = false;
   //activarRestablecer: boolean = false;
 
   idCuenta: String;
   idPersona: String;
+  bic: String;
+  banco: String;
 
   nifTitular: String;
   titular: String;
@@ -113,6 +117,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   file: File = undefined;
   ocultarMotivo: boolean = undefined;
 
+  lengthCountryCode: Number = 0;
+
   @ViewChild("table")
   table: DataTable;
   selectedDatos;
@@ -163,6 +169,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.idPersona = this.usuarioBody[0].idPersona;
     this.idCuenta = sessionStorage.getItem("idCuenta");
+    this.bic = sessionStorage.getItem("bic");
 
     this.registroEditable = sessionStorage.getItem("editar");
 
@@ -170,6 +177,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       // editar
       this.cargarModoEdicion();
     } else {
+      sessionStorage.removeItem("bic");
       // nuevo
       this.cargarModoNuevoRegistro();
     }
@@ -286,6 +294,11 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.bodySearch = JSON.parse(data["body"]);
           this.body = this.bodySearch.datosBancariosItem[0];
           this.iban = this.body.iban;
+          this.bic = this.body.bic;
+          if (this.registroEditable == "false") {
+            this.body.bic = this.bic;
+          }
+          this.banco = this.body.banco;
 
           if (this.body == undefined) {
             this.body = new DatosBancariosItem();
@@ -298,6 +311,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.showFail(this.bodySearch.error.message.toString());
           console.log(error);
           this.progressSpinner = false;
+        },
+        () => {
+          this.autogenerarDatos();
         }
       );
   }
@@ -353,6 +369,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.idCuenta = this.body.id;
         this.selectedTipo = [];
         this.body.motivo = undefined;
+        this.registroEditable = "true";
         this.cargarModoEdicion();
       }
     );
@@ -401,6 +418,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.body.motivo = undefined;
 
         this.idCuenta = this.body.idCuenta;
+
         this.cargarDatosMandatos();
         this.cargarDatosAnexos();
       }
@@ -460,10 +478,25 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   autogenerarDatos() {
     this.body.iban = this.iban;
-    if (this.isValidIBAN()) {
-      this.recuperarBicBanco();
 
-      this.ibanValido = true;
+    if (this.body.iban != null && this.body.iban != "") {
+      var ccountry = this.body.iban.substring(0, 2);
+      if (ccountry == "ES") {
+        this.editarExt = false;
+
+        if (this.isValidIBAN()) {
+          this.recuperarBicBanco();
+
+          this.ibanValido = true;
+        } else {
+          this.body.banco = "";
+          this.body.bic = "";
+
+          this.ibanValido = false;
+        }
+      } else {
+        this.checkIbanExt(ccountry);
+      }
     } else {
       this.body.banco = "";
       this.body.bic = "";
@@ -473,28 +506,36 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   recuperarBicBanco() {
-    this.sigaServices
-      .post("datosCuentaBancaria_BIC_BANCO", this.body)
-      .subscribe(
-        data => {
-          this.bodyBancoBicSearch = JSON.parse(data["body"]);
-          this.bodyBancoBic = this.bodyBancoBicSearch.bancoBicItem[0];
+    if (this.editarExt) {
+      if (this.validarBIC()) {
+        this.bicValido = true;
+      } else {
+        this.bicValido = false;
+      }
+    } else {
+      this.sigaServices
+        .post("datosCuentaBancaria_BIC_BANCO", this.body)
+        .subscribe(
+          data => {
+            this.bodyBancoBicSearch = JSON.parse(data["body"]);
+            this.bodyBancoBic = this.bodyBancoBicSearch.bancoBicItem[0];
 
-          this.body.banco = this.bodyBancoBic.banco;
-          this.body.bic = this.bodyBancoBic.bic;
-          this.iban = this.body.iban.replace(/\s/g, "");
+            this.body.banco = this.bodyBancoBic.banco;
+            this.body.bic = this.bodyBancoBic.bic;
+            this.iban = this.body.iban.replace(/\s/g, "");
 
-          if (this.bodyBancoBic.bicEspanol == "1") {
-            this.editar = false;
-          } else {
-            this.editar = true;
+            if (this.bodyBancoBic.bicEspanol == "1") {
+              this.editar = false;
+            } else {
+              this.editar = true;
+            }
+          },
+          error => {
+            this.bodyBancoBicSearch = JSON.parse(error["error"]);
+            this.showFail(this.bodyBancoBicSearch.error.message.toString());
           }
-        },
-        error => {
-          this.bodyBancoBicSearch = JSON.parse(error["error"]);
-          this.showFail(this.bodyBancoBicSearch.error.message.toString());
-        }
-      );
+        );
+    }
   }
 
   // Validar IDENTIFICACIÓN
@@ -551,6 +592,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   isValidIBAN(): boolean {
     this.body.iban = this.body.iban.replace(/\s/g, "");
 
+    // IBAN ESPAÑOL
     if (this.body.iban.length != 24) {
       return false;
     }
@@ -592,13 +634,92 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
   validarIban(): boolean {
     if (
-      (this.body.iban != null || this.body.iban != undefined) &&
-      this.isValidIBAN()
+      (this.body.iban != null ||
+        this.body.iban != undefined ||
+        this.body.iban != "") &&
+      (this.isValidIBAN() || this.isValidIbanExt())
     ) {
       this.ibanValido = true;
       return true;
     } else {
       this.ibanValido = false;
+      return false;
+    }
+  }
+
+  checkIbanExt(ccountry) {
+    this.sigaServices
+      .post("datosCuentaBancaria_getLengthCodCountry", ccountry)
+      .subscribe(
+        data => {
+          this.lengthCountryCode = JSON.parse(data["body"]);
+        },
+        error => {},
+        () => {
+          if (this.isValidIbanExt()) {
+            this.ibanValido = true;
+            // Habilitamos el BIC
+
+            this.editarExt = true;
+
+            if (this.bic == undefined) {
+              if (this.registroEditable == "false") {
+                this.body.banco = "BANCO EXTRANJERO";
+              } else {
+                this.body.banco = "";
+              }
+              this.body.bic = "";
+            } else {
+              if (this.iban.substring(0, 2) != "ES") {
+                if (this.bic == undefined) {
+                  this.body.bic = "";
+                } else {
+                  if (
+                    this.body.bic.charAt(4) !=
+                      this.iban.substring(0, 2).charAt(0) &&
+                    this.body.bic.charAt(5) !=
+                      this.iban.substring(0, 2).charAt(1)
+                  ) {
+                    this.body.bic = "";
+                  }
+                }
+                // } else {
+                //   this.body.bic = this.bic;
+                // }
+
+                if (this.registroEditable == "false") {
+                  this.body.bic = "";
+                }
+
+                this.body.banco = "BANCO EXTRANJERO";
+              } else {
+                this.body.bic = this.bic;
+                this.body.banco = this.banco;
+                this.editarExt = false;
+              }
+            }
+          } else {
+            this.body.banco = "";
+            this.body.bic = "";
+            this.editarExt = false;
+            this.ibanValido = false;
+          }
+
+          if (this.editarExt) {
+            this.editar = true;
+          } else {
+            this.editar = false;
+          }
+
+          //sessionStorage.removeItem("bic");
+        }
+      );
+  }
+
+  isValidIbanExt(): boolean {
+    if (this.body.iban.length == this.lengthCountryCode) {
+      return true;
+    } else {
       return false;
     }
   }
@@ -623,8 +744,21 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     }
   }
 
-  validarBIC() {
-    if (this.body.bic.length) {
+  validarBIC(): boolean {
+    var ccountry = this.body.iban.substring(0, 2);
+    if (
+      this.body.bic != null &&
+      this.body.bic != undefined &&
+      this.body.bic != "" &&
+      this.body.bic.length == 11 &&
+      this.body.bic.charAt(4) == ccountry.charAt(0) &&
+      this.body.bic.charAt(5) == ccountry.charAt(1)
+    ) {
+      this.bicValido = true;
+      return true;
+    } else {
+      this.bicValido = false;
+      return false;
     }
   }
 
@@ -684,7 +818,12 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     if (
       this.body.iban == null ||
       this.body.iban == undefined ||
-      (this.body.iban && this.isValidIBAN() == false) ||
+      this.body.iban == "" ||
+      (this.body.iban && this.validarIban() == false) ||
+      this.body.bic == null ||
+      this.body.bic == undefined ||
+      this.body.bic == "" ||
+      (this.editarExt && this.body.bic && this.validarBIC() == false) ||
       this.selectedTipo.length == 0
     ) {
       return true;
@@ -697,6 +836,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     var revisionCuentas;
     if (
       this.validarIban() &&
+      this.validarBIC() &&
       this.validarTipoCuenta() &&
       this.validarTitular() &&
       this.validarIdentificacion()
