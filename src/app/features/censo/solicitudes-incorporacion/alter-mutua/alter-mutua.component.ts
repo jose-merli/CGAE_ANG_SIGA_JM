@@ -28,10 +28,12 @@ export class AlterMutuaComponent implements OnInit {
   }
 
   irAlterMutuaReta() {
+    sessionStorage.setItem("tipoPropuesta", "RETA");
     this.router.navigate(["/alterMutuaReta"]);
   }
 
   irOfertas() {
+    sessionStorage.setItem("tipoPropuesta", "Ofertas");
     this.router.navigate(["/alterMutuaOfertas"]);
   }
   backTo() {

@@ -146,9 +146,24 @@
               <p-checkbox [(disabled)]="camposDesactivados" (onChange)="activacionGuardarGenerales()" [(ngModel)]='comisiones' binary="true"></p-checkbox>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}}</label>
+              <!-- <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}}</label>
               <p-dropdown class="select-form" [(ngModel)]="generalBody.etiquetas" (onChange)="activacionGuardarGenerales()" placeholder="{{'general.boton.seleccionar' | translate}}"
-                [options]="comboIdentificacion"></p-dropdown>
+                [options]="comboIdentificacion"></p-dropdown> -->
+              <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}}
+                <i class="fa fa-plus" style="color:grey" (click)="habilitarAutocompletar($event)"></i>
+              </label>
+
+              <br>
+              <p-autoComplete #auto [(ngModel)]="etiquetasPersonaJuridicaSelecionados" [suggestions]="comboEtiquetas" (completeMethod)="filterLabelsMultiple($event)"
+                [minLength]="1" field="label" [multiple]="true" (onSelect)="onSelect($event)" (onUnselect)="onUnselect($event)"
+                [disabled]="!autocompletar" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}">
+                <ng-template let-etiquetasPersonaJuridicaSelecionados pTemplate="selectedItem">
+                  <div *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor != ''" class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li"
+                    [ngStyle]="{'background': etiquetasPersonaJuridicaSelecionados.backgroundColor}" (click)="onClick($event, etiquetasPersonaJuridicaSelecionados)">
+                    {{ etiquetasPersonaJuridicaSelecionados.label }}
+                  </div>
+                </ng-template>
+              </p-autoComplete>
             </div>
           </div>
         </div>
@@ -688,9 +703,10 @@
 
     <div *ngIf="esFichaActiva('curriculares')" class="card-body card-body-ficha">
       <div class="row">
-        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="4" dataKey="descripcion"
-          [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datosCurriculares" [sortOrder]="1"
-          [paginator]="activarPaginacionCurriculares()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionarCurriculares(selectedDatos)">
+        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="4" [sortField]="sortF"
+          [sortOrder]="sortO" (onSort)="changeSort($event)" [responsive]="true" selectionMode="multiple" #table class="tabla-listado"
+          [value]="datosCurriculares" [sortOrder]="1" [paginator]="activarPaginacionCurriculares()" paginatorPosition="both"
+          [rows]="selectedItem" (onRowSelect)="redireccionarCurriculares(selectedDatos)">
           <p-column *ngFor="let col of colsCurriculares" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
             aaa
@@ -783,7 +799,7 @@
 
               </div>
               <br>
-              <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+              <i [ngClass]="{ 'fa fa-angle-up': esFichaActiva('direcciones'), 'fa fa-angle-down': ! esFichaActiva('direcciones')} "></i>
             </div>
           </div>
 
@@ -799,9 +815,9 @@
 
       <div *ngIf="esFichaActiva('direcciones')" class="card-body card-body-ficha">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosDirecciones" pageLinks="4"
-          dataKey="idDireccion" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datosDirecciones"
-          [sortOrder]="1" [paginator]="activarPaginacionDireciones()" paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionarDireccion(selectedDatosDirecciones)"
-          (onRowUnselect)="actualizaSeleccionadosDirecciones(selectedDatosDirecciones)">
+          [ngClass]="{'customCursor': selectMultipleDirecciones}" dataKey="idDireccion" [responsive]="true" selectionMode="multiple"
+          #table class="tabla-listado" [value]="datosDirecciones" [sortOrder]="1" [paginator]="activarPaginacionDireciones()"
+          paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="redireccionarDireccion(selectedDatosDirecciones)" (onRowUnselect)="actualizaSeleccionadosDirecciones(selectedDatosDirecciones)">
           <p-column *ngFor="let col of colsDirecciones" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
             <ng-template let-datoH="rowData" pTemplate="body">
@@ -1048,6 +1064,79 @@
   <div class="mt-3 text-right main-button ">
     <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
   </div>
+
+  
+
+  <!-- CREAR ETIQUETA -->
+  <p-dialog #dialog [(visible)]="checked" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500"
+    [minWidth]="500">
+    <p-header class="title">
+      <label>{{ mensaje }}</label>
+    </p-header>
+
+    <div class="bloque col-lg-12 col-md-12">
+      <div class="row">
+
+        <!-- DESHABILITA EL FOCO  -->
+        <span class="ui-helper-hidden-accessible">
+          <input type="text" />
+        </span>
+
+        <div class="form-group col-lg-6 col-md-6">
+          <label *ngIf="historico">{{"administracion.auditoriaUsuarios.fechaDesde" | translate}}</label>
+          <label *ngIf="!historico">{{"administracion.auditoriaUsuarios.fechaDesde" | translate}} (*)</label>
+          <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="item.fechaInicio" [locale]="es"
+            [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="validateFields()"
+            [(disabled)]="historico"></p-calendar>
+        </div>
+
+        <div class="form-group col-lg-6 col-md-6 form-group-date">
+          <label *ngIf="historico">{{"administracion.auditoriaUsuarios.fechaHasta" | translate}}</label>
+          <label *ngIf="!historico">{{"administracion.auditoriaUsuarios.fechaHasta" | translate}} (*)</label>
+          <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="item.fechaBaja" [locale]="es"
+            [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="validateFields()"
+            [(disabled)]="historico"></p-calendar>
+          <div *ngIf="item.fechaBaja != null && !isFechaBajaCorrect && !historico">
+            <label class="labelError">La fecha de baja no puede ser anterior a la fecha de inicio</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p-footer *ngIf="!historico">
+      <div class="text-right main-button">
+        <button (click)="aceptDialogConfirmation(item)" pButton type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate}}"
+          [disabled]="!isTrue"></button>
+        <button (click)="closeDialogConfirmation(item)" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+  <!-- AUDITORIA -->
+
+  <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500"
+    [minWidth]="500">
+    <p-header class="title">
+      <label>{{"general.ventana.cgae" | translate}} -{{"censo.consultaHistorico.cabecera" | translate}}</label>
+    </p-header>
+
+    <div class="bloque col-lg-12 col-md-12">
+      <div class="row">
+        <div class="form-group col-lg-12 col-md-12">
+          <label>{{"censo.datosHistorico.literal.motivo" | translate}} (*)</label>
+          <textarea pInputTextarea [(ngModel)]="generalBody.motivo" (ngModelChange)="comprobarCampoMotivo()"></textarea>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="text-right main-button ">
+        <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
+        <button (click)="guardar()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+
   <app-dialog></app-dialog>
 
 

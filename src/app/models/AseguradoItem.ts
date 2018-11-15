@@ -5,6 +5,7 @@ export class AseguradoItem {
     modContratacion: String;
     tarifa: number;
     identificador: String;
+    tipoIdentificador: number;
     nombre: String;
     apellidos: String;
     fechaNacimiento: Date;

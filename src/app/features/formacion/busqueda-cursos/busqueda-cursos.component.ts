@@ -22,6 +22,7 @@ import {
 import { MultiSelect, Message } from "primeng/primeng";
 import { DatosCursosObject } from "../../../models/DatosCursosObject";
 import { AuthenticationService } from "../../../_services/authentication.service";
+import { Router } from "../../../../../node_modules/@angular/router";
 
 @Component({
   selector: "app-busqueda-cursos",
@@ -83,7 +84,8 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     private formBuilder: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,
     private authenticationService: AuthenticationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private router: Router
   ) {
     super(USER_VALIDATIONS);
     this.formBusqueda = this.formBuilder.group({
@@ -113,6 +115,14 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
 
   ngOnInit() {
     this.getCombos();
+    //Se elimina las variables en la sesion storage para que cuando se busque un nuevo curso
+    //Se inicialice todo desde el principio
+    sessionStorage.removeItem("abrirFormador");
+    sessionStorage.removeItem("datosFormadores");
+    sessionStorage.removeItem("datosFormadoresInit");
+    sessionStorage.removeItem("formador");
+    sessionStorage.removeItem("idCurso");
+    sessionStorage.setItem("isFormacionCalendar", "false");
     if (sessionStorage.getItem("filtrosBusquedaCursos") != null) {
       this.body = JSON.parse(sessionStorage.getItem("filtrosBusquedaCursos"));
       sessionStorage.removeItem("filtrosBusquedaCursos");
@@ -344,6 +354,20 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     this.selectedTemas = [];
   }
 
+  crearCurso() {
+    sessionStorage.setItem("modoEdicionCurso", "false");
+    this.router.navigate(["fichaCurso"]);
+  }
+
+  irEditarCurso(selectedDatos) {
+    sessionStorage.setItem("modoEdicionCurso", "true");
+    if (selectedDatos.length >= 1 && this.selectMultiple == false) {
+      sessionStorage.setItem("cursoSelected", JSON.stringify(selectedDatos));
+      console.log(selectedDatos);
+      this.router.navigate(["/fichaCurso"]);
+    }
+  }
+
   //Elimina los espacios en blancos finales e iniciales de los inputs de los filtros
   filtrosTrim() {
     if (this.body.codigoCurso != null) {
@@ -412,8 +436,8 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   }
 
   /*
-  * DIFERENTES ACCIONES SOBRE CURSOS
-  */
+   * DIFERENTES ACCIONES SOBRE CURSOS
+   */
 
   duplicarCursos() {
     this.progressSpinner = true;
@@ -515,12 +539,12 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   }
 
   /*
-  * FIN DIFERENTES ACCIONES SOBRE CURSOS
-  */
+   * FIN DIFERENTES ACCIONES SOBRE CURSOS
+   */
 
   /*
-  * Para mostrar notificaciones con respecto a las acciones sobre cursos
-  */
+   * Para mostrar notificaciones con respecto a las acciones sobre cursos
+   */
 
   mostrarInfoAccionSobreCursos(numCursos, mensaje) {
     //Por si ha habido error y ha resultado un número negativo
@@ -542,10 +566,10 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   }
 
   /*
-  *
-  * Los siguientes métodos son necesarios para obligar a que el rango de fechas introducido sea correcto
-  *
-  */
+   *
+   * Los siguientes métodos son necesarios para obligar a que el rango de fechas introducido sea correcto
+   *
+   */
 
   getFechaInscripcionDesde() {
     if (

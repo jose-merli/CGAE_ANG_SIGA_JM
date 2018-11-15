@@ -1,10 +1,10 @@
 export class FamiliarItem {
 
-    parentesco: String;
-    sexo: String;
+    parentesco: number;
+    sexo: number;
     nombre: String;
     apellido: String;
-    tipoIdentificacion: String;
+    tipoIdentificacion: number;
     identificacion: String;
     fechaNacimiento: Date;
 

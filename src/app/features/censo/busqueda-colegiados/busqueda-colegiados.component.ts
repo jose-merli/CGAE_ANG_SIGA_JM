@@ -146,7 +146,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         "filtrosBusquedaColegiados",
         JSON.stringify(this.body)
       );
-      sessionStorage.setItem("personaBody", JSON.stringify(id));
+      sessionStorage.setItem("personaBody", JSON.stringify(id[0]));
       console.log(id);
       this.router.navigate(["/fichaColegial"]);
     }

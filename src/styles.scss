@@ -954,9 +954,9 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   color: white !important;
   background-color: #dc3545 !important;
 }
-.alterMutuaInfo {
-  overflow-y: auto;
-  height: 600px;
+.alterMutuaInfo .ui-dialog-content{
+  overflow-y: scroll;
+  //height: 600px;
   margin: 0 0 2.5rem 0;
 }
 .ui-growl-message-info .ui-growl-item {
@@ -1002,6 +1002,14 @@ iframe .box,
 iframe .button,
 iframe .boxCombo {
   border-radius: 0 !important;
+}
+
+.date {
+  span.ui-calendar {
+    input.ui-inputtext.ui-widget.ui-state-default.ui-corner-all.ng-star-inserted {
+      width: 100% !important;
+    }
+  }
 }
 
 /**RESPONSIVE**/
@@ -1204,4 +1212,13 @@ iframe .boxCombo {
     border-radius: 0 !important;
     -webkit-border-radius: 0px !important;
   }
+}
+
+.small-letter {
+  font-size: 13px;
+}
+
+.textarea {
+  width: 100%;
+  height: 100%;
 }

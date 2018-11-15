@@ -269,6 +269,8 @@ import { FichaEventosComponent } from './features/agenda/ficha-eventos/ficha-eve
 
 //Calendario
 import { ScheduleModule } from "primeng/schedule";
+import { FichaCursoComponent } from './features/formacion/ficha-curso/ficha-curso.component';
+import { DetalleSancionComponent } from './features/censo/busqueda-sanciones/detalle-sancion/detalle-sancion.component';
 
 @NgModule({
   declarations: [
@@ -487,7 +489,9 @@ import { ScheduleModule } from "primeng/schedule";
     CargasMasivasComponent,
     NuevaSolicitudesModificacionComponent,
     DatosNotificacionesComponent,
-    FichaEventosComponent
+    FichaEventosComponent,
+    FichaCursoComponent,
+    DetalleSancionComponent
   ],
   imports: [
     BrowserModule,

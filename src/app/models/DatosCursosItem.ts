@@ -1,4 +1,5 @@
 export class DatosCursosItem {
+  idCurso: string;
   visibilidad: string;
   idVisibilidad: string;
   colegio: string;
@@ -17,7 +18,13 @@ export class DatosCursosItem {
   fechaImparticion: String;
   fechaImparticionDesde: Date;
   fechaImparticionHasta: Date;
+  tipo: string;
+  descripcion: string;
   temas: string[];
+  minimoAsistencia: string;
+  lugar: string;
+  autovalidacion: string;
+  adjunta: string;
 
   flagArchivado: number;
 

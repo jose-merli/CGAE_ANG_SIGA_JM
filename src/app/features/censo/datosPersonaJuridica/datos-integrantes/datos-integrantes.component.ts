@@ -79,6 +79,7 @@ export class DatosIntegrantesComponent implements OnInit {
 
   ngOnInit() {
     this.checkAcceso();
+    sessionStorage.removeItem("newIntegrante");
 
     // Cuando viene de la edición de un integrante
     if (sessionStorage.getItem("editarIntegrante") == "true") {

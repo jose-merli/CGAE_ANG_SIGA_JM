@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef, SecurityContext } from "@angular/core";
 import { Router } from "@angular/router";
 import { SigaServices } from "../../../../../_services/siga.service";
 import { TranslateService } from "../../../../../commons/translate";
@@ -8,6 +8,10 @@ import { AlterMutuaItem } from "../../../../../models/AlterMutuaItem";
 import { FamiliarItem } from "../../../../../models/FamiliarItem";
 import { SolicitudIncorporacionItem } from "../../../../../models/SolicitudIncorporacionItem";
 import { AseguradoItem } from "../../../../../models/AseguradoItem";
+import { Message } from "primeng/components/common/api";
+import { DomSanitizer } from "../../../../../../../node_modules/@angular/platform-browser";
+import { ConfirmationService } from "primeng/api";
+
 
 @Component({
   selector: "app-alter-mutua-reta",
@@ -22,8 +26,15 @@ export class AlterMutuaRetaComponent implements OnInit {
   datosCuentaBancaria: boolean = false;
   datosFamiliares: boolean = false;
   datosBeneficiarios: boolean = false;
+  datosEstadoSolicitud: boolean = false;
   observaciones: boolean = false;
   mostrarInfo: boolean = false;
+  tienePropuesta: boolean = true;
+  tieneSolicitud: boolean = false;
+  showSolicitarSeguro: boolean = false;
+  deshabilitarDireccion: boolean = false;
+  propuestas: any;
+  estadoSolicitudResponse: any;
 
   @ViewChild("table")
   table;
@@ -32,7 +43,6 @@ export class AlterMutuaRetaComponent implements OnInit {
   selectedDatos;
   selectedDatosB;
   cols: any = [];
-  msgs: any = [];
   progressSpinner: boolean = false;
   colsFisicas: any = [];
   datosAlter: AlterMutuaItem = new AlterMutuaItem();
@@ -40,6 +50,8 @@ export class AlterMutuaRetaComponent implements OnInit {
   herederosList: Array<FamiliarItem> = new Array<FamiliarItem>();
   asegurado: AseguradoItem = new AseguradoItem();
   herederos: boolean = false;
+  tipoPropuesta: number;
+  msgs: Message[] = [];
 
   rowsPerPage: any = [];
   datos: any;
@@ -57,23 +69,27 @@ export class AlterMutuaRetaComponent implements OnInit {
   isVolver: boolean = false;
   isCrear: boolean = false;
   isEliminar: boolean = false;
+  tarifa: any;
+  infoPropuesta: any;
 
 
   comboSexo: any[];
   comboColegios: any[];
   comboEstadoCivil: any[];
-  comboModContratacion: any[];
+  comboModContratacion: any[] = [];
   comboComunicacion: any[];
   comboIdioma: any[];
   comboBeneficiario: any[];
   comboParentesco: any[];
   comboTipoIdentificacion: any[];
+  comboTiposSolicitud: any[];
 
   paises: any[];
   provincias: any[];
   TipoDireccion: any[];
 
   sexoSelected: any;
+  sexoSelectedTabla: any;
   estadoCivilSelected: any;
   ColegioSelected: any;
   idiomaSelected: any;
@@ -84,6 +100,9 @@ export class AlterMutuaRetaComponent implements OnInit {
   tipoDirSelected: any;
   parentescoSelected: any;
   tipoIdentificacionSelected: any;
+  tipoSolicitudSelected: any;
+  tipoEjercicioSelected: any;
+  parentescoSend: any;
   datosSolicitud: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
 
   constructor(
@@ -92,21 +111,48 @@ export class AlterMutuaRetaComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     public datepipe: DatePipe,
-    private location: Location
+    private location: Location,
+    private domSanitizer: DomSanitizer,
+    private confirmationService: ConfirmationService
   ) {
 
   }
 
   ngOnInit() {
+    this.progressSpinner = true;
     this.es = this.translateService.getCalendarLocale();
-    this.cargarCombos();
-
-
-
 
     if (sessionStorage.getItem("datosSolicitud") != null) {
       this.datosSolicitud = JSON.parse(sessionStorage.getItem("datosSolicitud"));
-      this.tratarDatos();
+      //Reta es tipo 1
+      this.tipoPropuesta = 1;
+      //ofertas es tipo 3
+
+      /*if (this.datosSolicitud.tipoIdentificacion.lastIndexOf("NIF") == 0)
+        tipoIdenficador = 0
+      else
+        tipoIdenficador = 1*/
+
+
+      let estadoSolicitud = {
+        idSolicitud: this.datosSolicitud.idSolicitud,
+        duplicado: false
+      }
+      this.sigaServices.post("alterMutua_estadoSolicitud", estadoSolicitud).subscribe(result => {
+
+        this.estadoSolicitudResponse = JSON.parse(result.body);
+        this.progressSpinner = false;
+      }, error => {
+        console.log(error)
+      }, () => {
+        if (this.estadoSolicitudResponse.error == false) {
+          this.tieneSolicitud = true;
+        } else {
+          this.estadoSolicitudResponse.mensaje = "No existe una solicitud de Alter Mutua para este colegiado."
+          this.showSolicitarSeguro = true;
+        }
+      })
+
     }
 
 
@@ -167,13 +213,18 @@ export class AlterMutuaRetaComponent implements OnInit {
   }
 
   cargarCombos() {
-    this.comboModContratacion = [
-      { label: "", value: null },
-      { label: "Alter profesional joven", value: "1" },
-      { label: "Alter profesional", value: "2" },
-      { label: "Alter profesional plus", value: "3" }
-    ];
 
+    if (this.propuestas.propuestas != null) {
+      for (let i = 0; i < this.propuestas.propuestas.length; i++) {
+        if (i == 0) {
+          let item = { label: "", value: "" };
+          this.comboModContratacion.push(item);
+        }
+        let item = { label: this.propuestas.propuestas[i].nombre, value: this.propuestas.propuestas[i].idPaquete };
+        this.comboModContratacion.push(item);
+      }
+      this.comboModContratacion = [...this.comboModContratacion];
+    }
     this.comboSexo = [
       { label: "", value: null },
       { value: "H", label: "Hombre" },
@@ -190,21 +241,21 @@ export class AlterMutuaRetaComponent implements OnInit {
 
     this.comboIdioma = [
       { label: "", value: null },
-      { label: "Español", value: "1" },
-      { label: "Catalán", value: "2" }
+      { label: "Español", value: 1 },
+      { label: "Catalán", value: 2 }
     ];
 
     this.comboComunicacion = [
       { label: "", value: null },
-      { label: "Correo Electrónico", value: "1" },
-      { label: "Teléfono", value: "2" },
-      { label: "Carta", value: "3" }
+      { label: "Correo Electrónico", value: 1 },
+      { label: "Teléfono", value: 2 },
+      { label: "Carta", value: 3 }
     ];
 
     this.TipoDireccion = [
       { label: "", value: null },
-      { label: "Residencia", value: "1" },
-      { label: "Despacho", value: "2" }
+      { label: "Residencia", value: 1 },
+      { label: "Despacho", value: 2 }
     ];
 
     this.comboBeneficiario = [
@@ -216,16 +267,16 @@ export class AlterMutuaRetaComponent implements OnInit {
 
     this.comboParentesco = [
       { label: '', value: null },
-      { label: 'Hij@', value: '1' },
-      { label: 'Suegr@', value: '2' },
-      { label: 'Otra Relacion', value: '3' },
-      { label: 'Pareja', value: '4' },
-      { label: 'No Familiar', value: '5' },
-      { label: 'Conyuje', value: '6' },
-      { label: 'Padre', value: '7' },
+      { label: 'Hij@', value: 1 },
+      { label: 'Suegr@', value: 14 },
+      { label: 'Otra Relacion', value: 16 },
+      { label: 'Pareja', value: 17 },
+      { label: 'No Familiar', value: 18 },
+      { label: 'Conyuje', value: 3 },
+      { label: 'Padre', value: 4 },
     ];
 
-    this.sigaServices.get("solicitudInciporporacion_tipoIdentificacion").subscribe(result => {
+    this.sigaServices.get("solicitudIncorporacion_tipoIdentificacion").subscribe(result => {
       this.comboTipoIdentificacion = result.combooItems;
     }, error => {
       console.log(error);
@@ -240,7 +291,7 @@ export class AlterMutuaRetaComponent implements OnInit {
       }
     );
 
-    this.sigaServices.get("solicitudInciporporacion_pais").subscribe(
+    this.sigaServices.get("solicitudIncorporacion_pais").subscribe(
       result => {
         this.paises = result.combooItems;
       },
@@ -257,12 +308,57 @@ export class AlterMutuaRetaComponent implements OnInit {
         console.log(error);
       }
     );
+
+    this.sigaServices.get("solicitudIncorporacion_tipoSolicitud").subscribe(
+      result => {
+        this.comboTiposSolicitud = result.combooItems;
+        this.progressSpinner = false;
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+
+
+  buscarPropuestas() {
+    this.progressSpinner = true;
+    this.tieneSolicitud = false;
+
+    let datosPropuesta = {
+      tipoIdentificador: this.datosSolicitud.tipoIdentificacion,
+      identificador: this.datosSolicitud.numeroIdentificacion,
+      fechaNacimiento: this.datosSolicitud.fechaNacimiento,
+      sexo: this.datosSolicitud.sexo,
+      tipoPropuesta: this.tipoPropuesta
+    };
+    this.sigaServices.post("alterMutua_propuestas", datosPropuesta).subscribe(result => {
+
+      this.propuestas = JSON.parse(result.body);
+      this.propuestas.mensaje = this.domSanitizer.bypassSecurityTrustHtml(this.propuestas.mensaje);
+      console.log(this.propuestas.mensaje);
+    }, error => {
+      console.log(error);
+      this.showFail("No es posible solicitar el seguro alternativa al RETA");
+
+    }, () => {
+      if (this.propuestas.error == true) {
+        this.tienePropuesta = false;
+      } else {
+        this.tienePropuesta = true;
+        this.showSolicitarSeguro = false;
+      }
+      this.cargarCombos();
+      this.tratarDatos();
+      this.progressSpinner = false;
+    });
+
   }
 
 
   tratarDatos() {
 
-    console.log("tratar datos", this.datosSolicitud);
+
     this.asegurado.apellidos = this.datosSolicitud.apellidos;
     this.asegurado.cp = this.datosSolicitud.codigoPostal;
     this.asegurado.domicilio = this.datosSolicitud.domicilio;
@@ -282,20 +378,28 @@ export class AlterMutuaRetaComponent implements OnInit {
     this.datosAlter.observaciones = this.datosSolicitud.observaciones;
     this.provinciaSelected = { value: this.datosSolicitud.idProvincia };
     this.paisSelected = { value: this.datosSolicitud.idPais };
+    this.paisSelected.value == '191' ? this.deshabilitarDireccion = false : this.deshabilitarDireccion = true;
     this.sexoSelected = { value: this.datosSolicitud.sexo };
     this.estadoCivilSelected = { value: this.datosSolicitud.idEstadoCivil };
     this.provinciaSelected = { value: this.datosSolicitud.idProvincia };
+    this.ColegioSelected = { value: this.datosSolicitud.idInstitucion };
+    this.tipoEjercicioSelected = { value: this.datosSolicitud.idTipo };
+
 
   }
   onChangePais(event) {
 
-    this.paisSelected = event.value.value;
+    this.paisSelected = { value: event.value.value };
     if (event.value.value != "191") {
       this.provinciaSelected = null;
       this.asegurado.poblacion = null;
       this.asegurado.cp = null;
+      this.deshabilitarDireccion = true;
+    } else {
+      this.deshabilitarDireccion = false;
     }
   }
+
 
   isValidIBAN(): boolean {
     if (
@@ -314,7 +418,7 @@ export class AlterMutuaRetaComponent implements OnInit {
     this.datos.forEach((value: any, key: number) => {
       if (key == id) {
         this.datos[key].idParentesco = this.parentescoSelected;
-        this.datos[key].idSexo = this.sexoSelected;
+        this.datos[key].idSexo = this.sexoSelectedTabla;
         this.datos[key].nombre = this.datosFamiliar.nombre;
         this.datos[key].apellidos = this.datosFamiliar.apellidos;
         this.datos[key].idTipoIdentificacion = this.tipoIdentificacionSelected;
@@ -322,23 +426,37 @@ export class AlterMutuaRetaComponent implements OnInit {
         this.datos[key].fechaNacimiento = this.datosFamiliar.fechaNacimiento;
       }
     });
-    this.isCrear = false;
+  }
+  isInvalidFamiliar(): boolean {
+    if (this.datosFamiliar.idSexo != '' && this.datosFamiliar.nombre != '' && this.datosFamiliar.apellidos != '' && this.datosFamiliar.idParentesco != ''
+      && this.datosFamiliar.idTipoIdentificacion != '' && this.datosFamiliar.nIdentificacion != '' && this.datosFamiliar.fechaNacimiento != undefined) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
+  isInvalidHeredero(): boolean {
+    if (this.datosHeredero.idSexo != '' && this.datosHeredero.nombre != '' && this.datosHeredero.apellidos != '' && this.datosHeredero.idParentesco != ''
+      && this.datosHeredero.idTipoIdentificacion != '' && this.datosHeredero.nIdentificacion != '' && this.datosHeredero.fechaNacimiento != undefined) {
+      return false;
+    } else {
+      return true;
+    }
+  }
   irDatosHeredero(id) {
 
-    this.datos.forEach((value: any, key: number) => {
+    this.datosB.forEach((value: any, key: number) => {
       if (key == id) {
-        this.datos[key].idParentesco = this.parentescoSelected;
-        this.datos[key].idSexo = this.sexoSelected;
-        this.datos[key].nombre = this.datosFamiliar.nombre;
-        this.datos[key].apellidos = this.datosFamiliar.apellidos;
-        this.datos[key].idTipoIdentificacion = this.tipoIdentificacionSelected;
-        this.datos[key].nIdentificacion = this.datosFamiliar.nIdentificacion;
-        this.datos[key].fechaNacimiento = this.datosFamiliar.fechaNacimiento;
+        this.datosB[key].idParentesco = this.parentescoSelected;
+        this.datosB[key].idSexo = this.sexoSelectedTabla;
+        this.datosB[key].nombre = this.datosFamiliar.nombre;
+        this.datosB[key].apellidos = this.datosFamiliar.apellidos;
+        this.datosB[key].idTipoIdentificacion = this.tipoIdentificacionSelected;
+        this.datosB[key].nIdentificacion = this.datosFamiliar.nIdentificacion;
+        this.datosB[key].fechaNacimiento = this.datosFamiliar.fechaNacimiento;
       }
     });
-    this.isCrear = false;
   }
 
   onchangeParentesco(event) {
@@ -349,7 +467,7 @@ export class AlterMutuaRetaComponent implements OnInit {
 
   onchangeSexo(event) {
     if (event) {
-      this.sexoSelected = event.value.label;
+      this.sexoSelectedTabla = event.value.label;
     }
   }
 
@@ -360,9 +478,8 @@ export class AlterMutuaRetaComponent implements OnInit {
   }
 
   crear() {
-    this.isVolver = false;
+
     this.isCrear = true;
-    this.isEliminar = true;
     this.datosFamiliar = new DatosFamiliaresItem();
     if (this.datos == null || this.datos == undefined || this.datos.length == 0) {
       this.datos = [];
@@ -388,9 +505,7 @@ export class AlterMutuaRetaComponent implements OnInit {
   }
 
   crearB() {
-    this.isVolver = false;
     this.isCrear = true;
-    this.isEliminar = true;
     this.datosHeredero = new DatosFamiliaresItem();
     if (this.datosB == null || this.datosB == undefined || this.datosB.length == 0) {
       this.datosB = [];
@@ -421,7 +536,7 @@ export class AlterMutuaRetaComponent implements OnInit {
       if (key == value.idFamiliar) {
         this.datos[key].idFamiliar = value.idFamiliar;
         this.datos[key].idParentesco = this.parentescoSelected;
-        this.datos[key].idSexo = this.sexoSelected;
+        this.datos[key].idSexo = this.sexoSelectedTabla;
         this.datos[key].nombre = this.datosFamiliar.nombre;
         this.datos[key].apellidos = this.datosFamiliar.apellidos;
         this.datos[key].idTipoIdentificacion = this.tipoIdentificacionSelected;
@@ -431,6 +546,7 @@ export class AlterMutuaRetaComponent implements OnInit {
       }
     });
     this.isCrear = false;
+
     this.selectedDatos = [];
     this.selectAll = false;
   }
@@ -441,7 +557,7 @@ export class AlterMutuaRetaComponent implements OnInit {
       if (key == value.idFamiliar) {
         this.datosB[key].idFamiliar = value.idFamiliar;
         this.datosB[key].idParentesco = this.parentescoSelected;
-        this.datosB[key].idSexo = this.sexoSelected;
+        this.datosB[key].idSexo = this.sexoSelectedTabla;
         this.datosB[key].nombre = this.datosHeredero.nombre;
         this.datosB[key].apellidos = this.datosHeredero.apellidos;
         this.datosB[key].idTipoIdentificacion = this.tipoIdentificacionSelected;
@@ -459,19 +575,25 @@ export class AlterMutuaRetaComponent implements OnInit {
 
   enviarDatosAlter() {
 
-
-    //this.asegurado.modContratacion = this.modContratacionSelected;
-    //this.asegurado.sexo = this.sexoSelected;
+    this.progressSpinner = true;
+    this.datosAlter.idPaquete = this.modContratacionSelected.value;
+    this.asegurado.modContratacion = this.modContratacionSelected.value;
+    this.asegurado.sexo = this.sexoSelected.value;
     this.asegurado.estadoCivil = this.estadoCivilSelected.value;
-    //this.asegurado.colegio = this.ColegioSelected;
-    this.asegurado.medioComunicacion = this.comunicacionSelected;
-    this.asegurado.idioma = this.idiomaSelected;
+    this.asegurado.colegio = this.ColegioSelected.value;
+    this.asegurado.medioComunicacion = this.comunicacionSelected.value;
+    this.asegurado.idioma = this.idiomaSelected.value;
     this.asegurado.pais = this.paisSelected.value;
     this.asegurado.provincia = this.provinciaSelected.value;
-    this.asegurado.tipoDireccion = this.tipoDirSelected;
+    this.asegurado.tipoDireccion = this.tipoDirSelected.value;
+    this.asegurado.tipoEjercicio = this.tipoEjercicioSelected.value;
+    if (this.datosSolicitud.tipoIdentificacion.lastIndexOf("NIF") == 0)
+      this.asegurado.tipoIdentificador = 0
+    else
+      this.asegurado.tipoIdentificador = 1
 
     this.datosAlter.asegurado = this.asegurado;
-    //this.datosAlter.idPaquete = 1;
+
     if (this.herederos == true) {
       if (this.datosB != null) {
         this.datosB.forEach(element => {
@@ -479,7 +601,11 @@ export class AlterMutuaRetaComponent implements OnInit {
           heredero.nombre = element.nombre;
           heredero.apellido = element.apellidos;
           heredero.parentesco = element.idParentesco;
-          heredero.sexo = element.idSexo;
+          if (element.idSexo == "Hombre") {
+            heredero.sexo = 1;
+          } else {
+            heredero.sexo = 2;
+          }
           heredero.tipoIdentificacion = element.idTipoIdentificacion;
           heredero.identificacion = element.nIdentificacion;
           heredero.fechaNacimiento = element.fechaNacimiento;
@@ -494,7 +620,11 @@ export class AlterMutuaRetaComponent implements OnInit {
           familiar.nombre = element.nombre;
           familiar.apellido = element.apellidos;
           familiar.parentesco = element.idParentesco;
-          familiar.sexo = element.idSexo;
+          if (element.idSexo == "Hombre") {
+            familiar.sexo = 1;
+          } else {
+            familiar.sexo = 2;
+          }
           familiar.tipoIdentificacion = element.idTipoIdentificacion;
           familiar.identificacion = element.nIdentificacion;
           familiar.fechaNacimiento = element.fechaNacimiento;
@@ -508,8 +638,16 @@ export class AlterMutuaRetaComponent implements OnInit {
 
     this.sigaServices.post("alterMutua_solicitudAlter", this.datosAlter).subscribe(result => {
 
+      this.propuestas = JSON.parse(result.body);
     }, error => {
       console.log(error);
+    }, () => {
+      if (this.propuestas.error == false) {
+        this.showSuccess("La solicitud se ha enviado correctamente a Alter Mútua");
+      } else {
+        this.showFail("La solicitud no se ha enviado correctamente a Alter Mútua");
+      }
+      this.progressSpinner = false;
     })
 
   }
@@ -525,7 +663,11 @@ export class AlterMutuaRetaComponent implements OnInit {
   }
 
   isEnviar(): boolean {
-    if ("") {
+    if (this.modContratacionSelected != null && this.modContratacionSelected != "" && this.ColegioSelected != null && this.ColegioSelected != ""
+      && this.comunicacionSelected != null && this.comunicacionSelected != "" && this.idiomaSelected != null && this.idiomaSelected != ""
+      && this.asegurado.telefono != null && this.asegurado.domicilio && this.paisSelected != null && this.paisSelected != "" && this.asegurado.movil &&
+      this.tipoDirSelected != null && this.tipoDirSelected != "" && this.asegurado.mail != null && this.asegurado.iban != null && this.tipoEjercicioSelected != null &&
+      this.tipoEjercicioSelected != '' && (this.datos != null || this.datosB != null)) {
       return true;
     } else {
       return false;
@@ -534,16 +676,23 @@ export class AlterMutuaRetaComponent implements OnInit {
 
   onchangeModalidad(event) {
     if (event) {
-      /*this.modContratacionSelected = event.value.value;
-      let solicitud: AlterMutuaItem = new AlterMutuaItem();
-      solicitud.idPaquete = this.modContratacionSelected;
-
-      this.sigaServices.post("alterMutua_tarifaSolicitud",solicitud).subscribe(result =>{
-
-      },error =>{
-        console.log(error)
-      });*/
+      this.modContratacionSelected = event.value;
+      for (let i = 0; i < this.propuestas.propuestas.length; i++) {
+        if (event.value.value == this.propuestas.propuestas[i].idPaquete) {
+          this.tarifa = this.propuestas.propuestas[i].tarifa;
+          this.infoPropuesta = {
+            tarifa: this.propuestas.propuestas[i].tarifa,
+            breve: this.propuestas.propuestas[i].breve,
+            descripcion: this.domSanitizer.bypassSecurityTrustHtml(this.propuestas.propuestas[i].descripcion)
+          };
+          console.log(this.infoPropuesta.descripcion);
+        }
+      }
+      if (event.value.value == "") {
+        this.tarifa = null;
+      }
     }
+    console.log(this.infoPropuesta.descripcion);
   }
 
   mostarDatosPropuesta() {
@@ -565,6 +714,9 @@ export class AlterMutuaRetaComponent implements OnInit {
     this.datosBeneficiarios = !this.datosBeneficiarios;
   }
 
+  mostrarDatosEstado() {
+    this.datosEstadoSolicitud = !this.datosEstadoSolicitud;
+  }
   mostrarObservaciones() {
     this.observaciones = !this.observaciones;
   }
@@ -576,6 +728,27 @@ export class AlterMutuaRetaComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+
+  showFail(message: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Error",
+      detail: message
+    });
+  }
+
+  showSuccess(message) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: "Solicitud enviada",
+      detail: message
+    });
+  }
+
+
+
   backTo() {
     this.location.back();
   }

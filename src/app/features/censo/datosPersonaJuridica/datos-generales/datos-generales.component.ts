@@ -930,12 +930,15 @@ export class DatosGenerales implements OnInit {
           this.etiquetasPersonaJuridicaSelecionados.indexOf(event),
           1
         );
+        this.updateItems.delete(event.value);
+
       }
     }
   }
 
   onUnselect(event) {
     if (event) {
+      this.updateItems.delete(event.value);
       this.showGuardar = true;
     }
   }

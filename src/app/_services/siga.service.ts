@@ -231,7 +231,12 @@ export class SigaServices {
     busquedaCursos_search: "busquedaCursos/search",
     busquedaCursos_archivar: "busquedaCursos/archivar",
     busquedaCursos_desarchivar: "busquedaCursos/desarchivar",
+    fichaCursos_getRolesTrainers: "fichaCursos/getRolesTrainers",
+    fichaCursos_getTypeCostTrainers: "fichaCursos/getTypeCostTrainers",
+    fichaCursos_updateTrainersCourse: "fichaCursos/updateTrainersCourse",
+    fichaCursos_saveTrainersCourse: "fichaCursos/saveTrainersCourse",
 
+    //Agenda
     fichaCalendario_getCalendarType: "fichaCalendario/getCalendarType",
     fichaCalendario_profiles: "fichaCalendario/profiles",
     fichaCalendario_updatePermissions: "fichaCalendario/updatePermissions",
@@ -245,6 +250,14 @@ export class SigaServices {
     fichaCalendario_deleteNotification: "fichaCalendario/deleteNotification",
     fichaCalendario_getHistoricEventNotifications:
       "fichaCalendario/getHistoricEventNotifications",
+    fichaEventos_getTrainersLabels: "fichaEventos/getTrainersLabels",
+    fichaEventos_downloadTemplateFile: "fichaEventos/downloadTemplateFile",
+    fichaEventos_getCalendars: "fichaEventos/getCalendars",
+    fichaEventos_getTypeEvent:"fichaEventos/getTypeEvent",
+    fichaEventos_getEventStates:"fichaEventos/getEventStates",
+    fichaEventos_saveEventCalendar: "fichaEventos/saveEventCalendar",
+    fichaCursos_getTrainersCourse: "fichaCursos/getTrainersCourse",
+    fichaCursos_deleteTrainersCourse: "fichaCursos/deleteTrainersCourse",
     datosNotificaciones_getTypeNotifications:
       "datosNotificaciones/getTypeNotifications",
     datosNotificaciones_getMeasuredUnit: "datosNotificaciones/getMeasuredUnit",
@@ -255,6 +268,7 @@ export class SigaServices {
     datosNotificaciones_getTypeWhere: "datosNotificaciones/getTypeWhere",
     datosNotificaciones_getTemplates: "datosNotificaciones/getTemplates",
     datosNotificaciones_getTypeSend: "datosNotificaciones/getTypeSend",
+
     fichaColegialSociedades_searchSocieties:
       "fichaColegialSociedades/searchSocieties",
     fichaColegialOtrasColegiaciones_searchOtherCollegues:
@@ -270,6 +284,7 @@ export class SigaServices {
     alterMutua_propuestas: "alterMutua/propuestas",
     alterMutua_tarifaSolicitud: "alterMutua/tarifaSolicitud",
     alterMutua_solicitudAlter: "alterMutua/solicitudAlter",
+    mutualidad_getEnums: "mutualidad/enums",
     solicitudModificacion_tipoModificacion:
       "solicitudModificacion/tipoModificacion",
     solicitudModificacion_estado: "solicitudModificacion/estado",
@@ -300,7 +315,21 @@ export class SigaServices {
     agendaCalendario_getEventosByIdCalendario:
       "agendaCalendario/getEventosByIdCalendario",
 
-    agendaCalendario_getCalendarios: "agendaCalendario/getCalendarios"
+    agendaCalendario_getCalendarios: "agendaCalendario/getCalendarios",
+    tipoCurricular_comboTipoCurricular: "tipoCurricular/comboTipoCurricular",
+    subtipoCurricular_comboSubtipoCurricular:
+      "subtipoCurricular/comboSubtipoCurricular",
+    fichaDatosCurriculares_update: "fichaDatosCurriculares/update",
+    fichaDatosCurriculares_insert: "/fichaDatosCurriculares/insert",
+
+    //Sanciones
+    busquedaSanciones_searchBusquedaSanciones:
+      "busquedaSanciones/searchBusquedaSanciones",
+    busquedaSanciones_comboTipoSancion: "busquedaSanciones/comboTipoSancion",
+    busquedaSanciones_comboTipo: "busquedaSanciones/comboTipo",
+    busquedaSanciones_comboEstado: "busquedaSanciones/comboEstado",
+    busquedaSanciones_comboOrigen: "busquedaSanciones/comboOrigen",
+    fichaDatosGenerales_etiquetasPersona: "fichaDatosGenerales/etiquetasPersona"
   };
 
   private menuToggled = new Subject<any>();

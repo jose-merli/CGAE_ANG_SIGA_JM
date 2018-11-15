@@ -276,6 +276,83 @@
     </div>
 </div>
 
+
+<!--TARJETA UNIDAD FAMILIAR-->
+<div class="card">
+    <div class="card-header header-ficha" (click)="abreCierraDatosPoliza()">
+        <div [hidden]="datosPoliza" class="form-row">
+            <div class="col-lg-1 col-md-2">
+                <div class="img-colegiado">
+                    <i *ngIf="!existeImagen" class="fas fa-file-alt icon-ficha"></i>
+                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                </div>
+            </div>
+            <div class="col-lg-11 col-md-10">
+                <div class="d-flex justify-content-start mb-1">
+                    <label class="mr-auto title-ficha">Unidad familiar</label>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <label>Fecha nacimiento
+                        <span></span>
+                    </label>
+                    <label>Número de hijos
+                        <span></span>
+                    </label>
+                    <i *ngIf="!datosPoliza" class="fa fa-angle-down float-right"></i>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="datosPoliza" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado">
+                <i *ngIf="!existeImagen" class="fas fa-file-alt icon-ficha"></i>
+                <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+            </div>
+            <label class="title-ficha">Unidad familiar</label>
+            <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+    </div>
+    <!--cuerpo datos unidad familiar-->
+    <div [hidden]="!datosPoliza" class="card-body card-body-ficha">
+        <div class="form-row">
+            
+            <div class="col-lg-3 col-md-3">
+                <label>Opción de cobertura</label>
+                <p-dropdown class="select-form" [(ngModel)]="provinciaSelected" [options]="provincias" optionLabel="label"
+                    dataKey="value"></p-dropdown>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <label>Cuota mensual</label>
+                <input type="text" class="form-control" pInputText [(ngModel)]="s">
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <label>Capital objetivo estimado a 65 años</label>
+                <input type="text" class="form-control" pInputText [(ngModel)]="s">
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <label>Cuota mensual</label>
+                <input type="text" class="form-control" pInputText [(ngModel)]="s">
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <label>Beneficiarios</label>
+                <p-dropdown class="select-form" [(ngModel)]="provinciaSelected" [options]="provincias" optionLabel="label"
+                    dataKey="value"></p-dropdown>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <br>
+                <p-checkbox [(ngModel)]='valorCheckUsuarioAutomatico' binary="true" label=" Asistencia Sanitaria"></p-checkbox>
+            </div>
+            <div class="col-lg-7 col-md-7">
+                <br>
+                <label style="font-style:italic">Las cuotas aportadas durante los tres primeros años al sistema de
+                    previsión profesional para
+                    las garantías de Ahorro-Jubilacion, Fallecimiento, Incapacidad Permanente,
+                    Incapacidad Temporal Profesional y Dependencia, tendrá una reducción del 50% para los menores de 50
+                    años</label>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="mt-3 text-right main-button ">
     <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
     <button (click)="guardar()" pButton type="button " icon="fa fa-save" iconPos="left" label="Guardar"></button>

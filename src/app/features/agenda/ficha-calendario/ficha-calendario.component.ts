@@ -519,7 +519,7 @@ export class FichaCalendarioComponent implements OnInit {
       .subscribe(
         data => {
           this.progressSpinner = false;
-          this.showSuccessDelete();
+          // this.showSuccessDelete();
           this.getEventNotifications();
           this.selectMultiple = false;
         },
@@ -589,7 +589,6 @@ export class FichaCalendarioComponent implements OnInit {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-
   }
 
   getFichaPosibleByKey(key): any {

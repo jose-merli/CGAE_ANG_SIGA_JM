@@ -1,24 +1,13 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ChangeDetectorRef,
-  Renderer2,
-  ElementRef,
-  Output,
-  EventEmitter
-} from "@angular/core";
-import { CalendarItem } from "../../../models/CalendarItem";
-import { PermisosCalendarioItem } from "../../../models/PermisosCalendarioItem";
-import {
-  DataTable,
-  AutoComplete
-} from "../../../../../node_modules/primeng/primeng";
-import { Router } from "../../../../../node_modules/@angular/router";
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { DataTable, AutoComplete } from "primeng/primeng";
+import { Router } from "@angular/router";
 import { SigaServices } from "../../../_services/siga.service";
 import { NotificacionEventoObject } from "../../../models/NotificacionEventoObject";
 import { NotificacionEventoItem } from "../../../models/NotificacionEventoItem";
 import { ViewEncapsulation } from "@angular/core";
+import { saveAs } from "file-saver/FileSaver";
+import { AsistenciaCursoObject } from "../../../models/AsistenciaCursoObject";
+import { EventoItem } from "../../../models/EventoItem";
 
 @Component({
   selector: "app-ficha-eventos",
@@ -29,11 +18,12 @@ import { ViewEncapsulation } from "@angular/core";
 export class FichaEventosComponent implements OnInit {
   comboEstados: any[];
   saveCalendarFlag: boolean = false;
-  calendar: CalendarItem = new CalendarItem();
+  msgs;
+  isFormacionCalendar: boolean = false;
+  idCalendario;
 
-  comboCalendarType;
-  // map con los permisos {data, ObjectoPermisosBack}
-  permisosChange: PermisosCalendarioItem[] = [];
+  @ViewChild("tableAsistencia")
+  tableAsistencia: DataTable;
 
   @ViewChild("table")
   table: DataTable;
@@ -41,6 +31,19 @@ export class FichaEventosComponent implements OnInit {
   @ViewChild("autocomplete")
   autoComplete: AutoComplete;
 
+  //Generales
+  comboCalendars;
+  comboTipoEvento;
+  selectRepeatDate;
+  comboDays;
+  comboRepeatEvery;
+  comboRepeatOn;
+  newEvent: EventoItem;
+  val1;
+  selectedEstadoEvento;
+  invalidDates;
+
+  //Notificaciones
   selectedDatos;
   selectMultiple: boolean = false;
   rowsPerPage: any = [];
@@ -56,66 +59,171 @@ export class FichaEventosComponent implements OnInit {
   closeFicha: boolean = true;
   selectAllNotifications: any;
 
+  //Formadores
   datosFormadores: any[] = [];
   formadoresSuggest: any[] = [];
   formadores: any[] = [];
   results: any[] = [];
   backgroundColor: string;
+  marginPx = "4px";
+  bw = "white";
+  idCurso;
 
+  //Asistencia
   colsAsistencia;
   fichasPosibles;
+  selectedItemAsistencia;
   datosAsistencia = [];
   selectedDatosAsistencia;
   selectAllAsistencias: any;
-
-  marginPx = "4px";
-  bw = "white";
-
-  idCurso = "1";
+  selectedAsistencia: number = 10;
+  selectMultipleAsistencia: boolean = false;
+  numSelectedAsistencia: number = 0;
+  comboAsistencia;
+  checkAsistencias: boolean = false;
 
   constructor(
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
-    private router: Router,
-    private renderer: Renderer2
+    private router: Router
   ) {}
 
   ngOnInit() {
+    this.getComboCalendar();
     this.getComboEstado();
+    this.getComboTipoEvento();
+    this.getCombosRepeats();
     this.getColsResults();
-    this.getEventNotifications();
+    this.getComboAsistencia();
     this.getFichasPosibles();
     this.getColsResultsAsistencia();
-    this.getResultsFormadores();
-    this.formadores = [
-      {
-        id: "1",
-        nombre: "JOSE FRANCISCO LOPEZ GARCIA",
-        color: ""
-      },
-      {
-        id: "2",
-        nombre: "CARLOS PEREZ LOPEZ",
-        color: ""
-      },
-      {
-        id: "3",
-        nombre: "MARTA GARCIA FORTE",
-        color: ""
-      }
-    ];
 
-    this.formadoresSuggest = this.formadores;
+    if (sessionStorage.getItem("isFormacionCalendar") == "true") {
+      this.isFormacionCalendar = true;
+      this.idCurso = sessionStorage.getItem("idCurso");
+      this.getTrainers();
+    } else {
+      this.isFormacionCalendar = false;
+    }
+
+    this.newEvent = new EventoItem();
   }
 
   //FUNCIONES FICHA DATOS GENERALES
 
   getComboEstado() {
-    this.comboEstados = [
-      { label: "Planificado", value: "1" },
-      { label: "Cumplido", value: "2" },
-      { label: "Cancelado", value: "3" }
+    this.sigaServices.get("fichaEventos_getEventStates").subscribe(
+      n => {
+        this.comboEstados = n.combooItems;
+        this.selectedEstadoEvento = this.comboEstados[0].value;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getCombosRepeats() {
+    this.comboRepeatEvery = [
+      { label: "Día", value: "1" },
+      { label: "Semana", value: "2" }
     ];
+
+    this.comboRepeatOn = [
+      { label: "Lunes", value: "L" },
+      { label: "Martes", value: "M" },
+      { label: "Miércoles", value: "X" },
+      { label: "Jueves", value: "J" },
+      { label: "Viernes", value: "V" },
+      { label: "Sábado", value: "S" },
+      { label: "Domingo", value: "D" }
+    ];
+
+    this.comboDays = [
+      { label: "1", value: "1" },
+      { label: "2", value: "2" },
+      { label: "3", value: "3" },
+      { label: "4", value: "4" },
+      { label: "5", value: "5" },
+      { label: "6", value: "6" },
+      { label: "7", value: "7" },
+      { label: "8", value: "8" },
+      { label: "9", value: "9" },
+      { label: "10", value: "10" },
+      { label: "11", value: "11" },
+      { label: "12", value: "12" },
+      { label: "13", value: "13" },
+      { label: "14", value: "14" },
+      { label: "15", value: "15" },
+      { label: "16", value: "16" },
+      { label: "17", value: "17" },
+      { label: "18", value: "18" },
+      { label: "19", value: "19" },
+      { label: "20", value: "20" },
+      { label: "21", value: "21" },
+      { label: "22", value: "22" },
+      { label: "23", value: "23" },
+      { label: "24", value: "24" },
+      { label: "25", value: "25" },
+      { label: "26", value: "26" },
+      { label: "27", value: "27" },
+      { label: "28", value: "28" },
+      { label: "29", value: "29" },
+      { label: "30", value: "30" },
+      { label: "31", value: "31" }
+    ];
+  }
+
+  //Función obtiene los tipos de calendarios que hay
+  getComboCalendar() {
+    this.sigaServices.get("fichaEventos_getCalendars").subscribe(
+      n => {
+        this.comboCalendars = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  //Función obtiene los tipos de calendarios que hay
+  getComboTipoEvento() {
+    this.sigaServices.get("fichaEventos_getTypeEvent").subscribe(
+      n => {
+        this.comboTipoEvento = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  onChangeSelectCalendar(event) {
+    this.idCalendario = event.value;
+    this.getEventNotifications();
+  }
+
+  saveEvent() {
+    this.newEvent.idEstadoEvento = this.selectedEstadoEvento;
+    this.sigaServices
+      .post("fichaEventos_saveEventCalendar", this.newEvent)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  selectInvalidDates() {
+    let invalidDate = new Date();
+    invalidDate.setDate(this.newEvent.fechaInicio.getFullYear() - 80);
+    this.invalidDates = [this.newEvent.fechaInicio, invalidDate];
   }
 
   //FUNCIONES FICHA NOTIFICACIONES
@@ -158,17 +266,16 @@ export class FichaEventosComponent implements OnInit {
         value: 40
       }
     ];
-    this.getEventNotifications();
   }
 
   getEventNotifications() {
     this.progressSpinner = true;
     this.historico = false;
-    let idCalendario = sessionStorage.getItem("idCalendario");
+
     this.sigaServices
       .getParam(
         "fichaCalendario_getEventNotifications",
-        "?idCalendario=" + idCalendario
+        "?idCalendario=" + this.idCalendario
       )
       .subscribe(
         n => {
@@ -268,11 +375,10 @@ export class FichaEventosComponent implements OnInit {
   getHistoricEventNotifications() {
     this.progressSpinner = true;
     this.historico = true;
-    let idCalendario = sessionStorage.getItem("idCalendario");
     this.sigaServices
       .getParam(
         "fichaCalendario_getHistoricEventNotifications",
-        "?idCalendario=" + idCalendario
+        "?idCalendario=" + this.idCalendario
       )
       .subscribe(
         n => {
@@ -290,49 +396,22 @@ export class FichaEventosComponent implements OnInit {
 
   //FUNCIONES FICHA FORMADORES
 
-  getResultsFormadores() {
-    this.datosFormadores = [
-      {
-        idFormador: "1",
-        nombre: "JOSE RAMIREZ PEREZ",
-        rol: "S",
-        tipoCoste: "?",
-        tarifa: "10€"
-      },
-      {
-        idFormador: "2",
-        nombre: "JOSE RAMIREZ PEREZ",
-        rol: "S",
-        tipoCoste: "?",
-        tarifa: "10€"
-      },
-      {
-        idFormador: "3",
-        nombre: "JOSE RAMIREZ PEREZ",
-        rol: "S",
-        tipoCoste: "?",
-        tarifa: "10€"
-      }
-    ];
-
-    this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
-      },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: 30,
-        value: 30
-      },
-      {
-        label: 40,
-        value: 40
-      }
-    ];
+  getTrainers() {
+    this.sigaServices
+      .getParam("fichaEventos_getTrainersLabels", "?idCurso=" + this.idCurso)
+      .subscribe(
+        n => {
+          this.formadores = n.formadoresCursoItem;
+          this.formadoresSuggest = this.formadores;
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
   }
 
   filterTrainersMultiple(event) {
@@ -346,7 +425,9 @@ export class FichaEventosComponent implements OnInit {
         this.formadoresSuggest = [];
 
         this.formadores.forEach(element => {
-          let findFormador = this.results.find(x => x.id === element.id);
+          let findFormador = this.results.find(
+            x => x.idPersona === element.idPersona
+          );
           if (findFormador == undefined) {
             this.formadoresSuggest.push(element);
           }
@@ -357,25 +438,14 @@ export class FichaEventosComponent implements OnInit {
 
       this.autoComplete.focusInput();
     } else {
-      this.autoComplete.panelVisible = true;
-      this.formadoresSuggest = [];
-      this.formadoresSuggest.push({
-        id: "0",
-        nombre: "No hay más formadores"
-      });
+      this.autoComplete.panelVisible = false;
+      this.showInfoTrainers();
       this.autoComplete.focusInput();
     }
   }
 
   resetSuggestTrainers() {
     this.autoComplete.panelVisible = false;
-    this.formadores.forEach(element => {
-      let findFormador = this.results.find(x => x.id === element.id);
-      console.log(findFormador);
-      if (findFormador == undefined) {
-        this.formadoresSuggest.push(element);
-      }
-    });
   }
 
   visiblePanelBlur(event) {
@@ -401,9 +471,28 @@ export class FichaEventosComponent implements OnInit {
     return "#" + ("000000" + color).slice(-6);
   }
 
-  restTrainers() {}
+  showInfoTrainers() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: "Información",
+      detail: "No hay formadores para este curso."
+    });
+  }
+
+  restTrainers() {
+    this.results = [];
+    this.formadoresSuggest = this.formadores;
+  }
 
   //FUNCIONES FICHA ASISTENCIA
+
+  getComboAsistencia() {
+    this.comboAsistencia = [
+      { label: "Sí", value: "S" },
+      { label: "No", value: "N" }
+    ];
+  }
 
   getColsResultsAsistencia() {
     this.datosAsistencia = [
@@ -453,6 +542,78 @@ export class FichaEventosComponent implements OnInit {
         value: 40
       }
     ];
+  }
+
+  isSelectMultipleAsistencia() {
+    this.selectMultipleAsistencia = !this.selectMultipleAsistencia;
+    if (!this.selectMultipleAsistencia) {
+      this.selectedDatosAsistencia = [];
+      this.numSelectedAsistencia = 0;
+      this.checkAsistencias = false;
+    } else {
+      this.selectAllAsistencias = false;
+      this.selectedDatosAsistencia = [];
+      this.numSelectedAsistencia = 0;
+      this.checkAsistencias = true;
+    }
+  }
+
+  checkAsist() {
+    this.selectedDatosAsistencia.forEach(element => {
+      let idFindAsistencia = this.datosAsistencia.findIndex(
+        x => x.idAsistencia === element.idAsistencia
+      );
+      if (idFindAsistencia != undefined) {
+        this.datosAsistencia[idFindAsistencia].asistencia = "S";
+      }
+    });
+  }
+
+  unCheckAsist() {
+    this.selectedDatosAsistencia.forEach(element => {
+      let idFindAsistencia = this.datosAsistencia.findIndex(
+        x => x.idAsistencia === element.idAsistencia
+      );
+      if (idFindAsistencia != undefined) {
+        this.datosAsistencia[idFindAsistencia].asistencia = "N";
+      }
+    });
+  }
+
+  onChangeSelectAllAsistencias() {
+    if (this.selectAllAsistencias === true) {
+      this.selectMultipleAsistencia = false;
+      this.selectedDatosAsistencia = this.datosAsistencia;
+      this.numSelectedAsistencia = this.datosAsistencia.length;
+      this.checkAsistencias = true;
+    } else {
+      this.selectedDatosAsistencia = [];
+      this.numSelectedAsistencia = 0;
+      this.checkAsistencias = false;
+    }
+  }
+
+  downloadTemplateFile() {
+    this.progressSpinner = true;
+    let asistencias = new AsistenciaCursoObject();
+    asistencias.asistenciaCursoItem = this.datosAsistencia;
+
+    this.sigaServices
+      .postDownloadFiles("fichaEventos_downloadTemplateFile", asistencias)
+      .subscribe(
+        data => {
+          const blob = new Blob([data], { type: "text/csv" });
+          saveAs(blob, "PlantillaAsistencia.xls");
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
   }
 
   //FUNCIONES GENERALES
@@ -512,5 +673,9 @@ export class FichaEventosComponent implements OnInit {
       return fichaPosible[0];
     }
     return {};
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }

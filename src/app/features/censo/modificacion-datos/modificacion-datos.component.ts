@@ -30,10 +30,8 @@ export class ModificacionDatosComponent implements OnInit {
   msgs: Message[];
 
   tipo: SelectItem[];
-  selectedTipo: any;
 
   estado: SelectItem[];
-  selectedEstado: any;
 
   es: any = esCalendar;
 
@@ -50,6 +48,9 @@ export class ModificacionDatosComponent implements OnInit {
   bodySearch: SolicitudesModificacionObject = new SolicitudesModificacionObject();
   body: SolicitudesModificacionItem = new SolicitudesModificacionItem();
   newBody: SolicitudesModificacionItem;
+
+  fechaDesde: Date;
+  fechaHasta: Date;
 
   constructor(
     private sigaServices: SigaServices,
@@ -132,7 +133,7 @@ export class ModificacionDatosComponent implements OnInit {
         header: "censo.resultadosSolicitudesModificacion.literal.Nombre"
       },
       {
-        field: "fecha",
+        field: "fechaAlta",
         header: "censo.resultadosSolicitudesModificacion.literal.fecha"
       },
       {
@@ -182,6 +183,9 @@ export class ModificacionDatosComponent implements OnInit {
     this.selectMultiple = false;
     this.selectedDatos = "";
 
+    this.body.fechaDesde = new Date(this.fechaDesde);
+    this.body.fechaHasta = new Date(this.fechaHasta);
+
     this.sigaServices
       .postPaginado(
         "solicitudModificacion_searchModificationRequest",
@@ -202,10 +206,10 @@ export class ModificacionDatosComponent implements OnInit {
   }
 
   restore() {
-    this.selectedTipo = [];
-    this.selectedEstado = [];
-    this.body.fechaDesde = null;
-    this.body.fechaHasta = null;
+    this.body.tipoModificacion = "";
+    this.body.estado = "";
+    this.fechaDesde = null;
+    this.fechaHasta = null;
   }
 
   // Métodos para los mensajitos
@@ -310,7 +314,7 @@ export class ModificacionDatosComponent implements OnInit {
       (this.body.nombre == "" ||
         this.body.nombre == undefined ||
         this.onlySpaces(this.body.nombre)) &&
-      (this.body.fecha == null || this.body.fecha == undefined) &&
+      (this.body.fechaAlta == null || this.body.fechaAlta == undefined) &&
       (this.body.descripcion == "" ||
         this.body.descripcion == undefined ||
         this.onlySpaces(this.body.descripcion))
@@ -341,9 +345,4 @@ export class ModificacionDatosComponent implements OnInit {
 
     this.search();
   }
-
-  // OnChange para los combos
-  onChangeTipo(event) {}
-
-  onChangeEstado(event) {}
 }
