@@ -221,9 +221,9 @@ export class FichaEventosComponent implements OnInit {
   }
 
   selectInvalidDates() {
-    let invalidDate = new Date();
-    invalidDate.setDate(this.newEvent.fechaInicio.getFullYear() - 80);
-    this.invalidDates = [this.newEvent.fechaInicio, invalidDate];
+    // let invalidDate = new Date();
+    // invalidDate.setDate(this.newEvent.start.getFullYear() - 80);
+    // this.invalidDates = [this.newEvent.start, invalidDate];
   }
 
   //FUNCIONES FICHA NOTIFICACIONES

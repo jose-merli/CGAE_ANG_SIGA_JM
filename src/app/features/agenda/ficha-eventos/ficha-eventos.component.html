@@ -53,7 +53,7 @@
           <div class="row mb-3">
             <div class="col-lg-6 col-md-6">
               <label>Título</label>
-              <input type="text" class="form-control" pInputText name="titulo" [(ngModel)]="newEvent.titulo">
+              <input type="text" class="form-control" pInputText name="titulo" [(ngModel)]="newEvent.title">
             </div>
             <div class="col-lg-6 col-md-6">
                 <label>Estado</label>
@@ -63,11 +63,11 @@
           <div class="row mb-3">
             <div class="col-lg-6 col-md-6">
               <label class="pb-2">Fecha Inicio</label>
-                  <p-calendar [showTime]="true" [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.fechaInicio" (onSelect)="selectInvalidDates()"></p-calendar>
+                  <p-calendar [showTime]="true" [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.start" (onSelect)="selectInvalidDates()"></p-calendar>
             </div>
             <div class="col-lg-6 col-md-6">
                 <label class="pb-2">Fecha Fin</label>
-                <p-calendar [showTime]="true" [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.fechaFin" [disabledDates]="invalidDates"></p-calendar>
+                <p-calendar [showTime]="true" [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.end" [disabledDates]="invalidDates"></p-calendar>
             </div>
           </div>
           <div class="row mb-3">

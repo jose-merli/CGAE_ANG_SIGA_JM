@@ -149,7 +149,7 @@ export class AgendaComponent implements OnInit {
     let evento: EventoItem = new EventoItem();
     evento.idEvento = event.calEvent.idEvento;
     evento.idCalendario = event.calEvent.idCalendario;
-    evento.titulo = event.calEvent.titulo;
+    evento.title = event.calEvent.title;
     evento.allDay = event.calEvent.allDay;
     evento.color = event.calEvent.color;
 

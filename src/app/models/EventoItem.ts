@@ -1,15 +1,13 @@
 export class EventoItem {
   idEvento: string;
   idCalendario: string;
-  start: string;
-  end: string;
   allDay: boolean = true;
   color: string;
 
   idInstitucion: string;
-  titulo: string;
-  fechaInicio: Date;
-  fechaFin: Date;
+  title: string;
+  start: Date;
+  end: Date;
   lugar: string;
   descripcion: string;
   recursos: string;
@@ -18,6 +16,7 @@ export class EventoItem {
   fechaBaja: Date;
   usuModificacion: string;
   fechaModificacion: Date;
+  tipoAcceso: number;
 
   constructor() {}
 }
