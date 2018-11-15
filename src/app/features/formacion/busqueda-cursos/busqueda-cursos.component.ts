@@ -61,6 +61,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   comboEstados: any[];
   comboDisponibilidadPlazas: any[];
   comboTemas: any[];
+  comboLenguajes: any[];
 
   //para deshabilitar combo de visibilidad
   deshabilitarCombVis: boolean = false;
@@ -209,6 +210,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     this.getComboColegios();
     this.getComboEstados();
     this.getComboTemas();
+    this.getComboLenguajes();
   }
 
   /* INICIO IMPLEMENTACIÓN NUEVOS COMBOS */
@@ -246,6 +248,19 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
         this.arregloTildesCombo(this.comboEstados);
 
         this.getComboDisponibilidadPlazas(); //Llamado desde aquí para que sea asíncrono y su respectivo select pueda pillar la traducción del placeholder
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getComboLenguajes() {
+    // obtener lenguajes
+    this.sigaServices.get("busquedaCursos_lenguajeCursos").subscribe(
+      n => {
+        this.comboLenguajes = n.combooItems;
+        this.arregloTildesCombo(this.comboLenguajes);
       },
       err => {
         console.log(err);

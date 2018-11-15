@@ -3,4 +3,5 @@ export class CalendarItem {
   color: string;
   descripcion: string;
   idCalendario: string;
+  tipoAcceso: number;
 }
