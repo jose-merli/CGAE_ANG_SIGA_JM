@@ -33,9 +33,9 @@
             }}</label>
             <input
               type="text"
-              name="letrado"
+              name="nombre"
               class="form-control"
-              [(ngModel)]="body.letrado"
+              [(ngModel)]="body.nombre"
               pInputText
             />
           </div>
@@ -74,7 +74,7 @@
             <p-multiSelect
               [defaultLabel]="textFilter"
               filterBy="label"
-              [(ngModel)]="body.colegioSancionador"
+              [(ngModel)]="body.colegio"
               [options]="colegios"
               optionLabel="label"
               [selectedItemsLabel]="textSelected"

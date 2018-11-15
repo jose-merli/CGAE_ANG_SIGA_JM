@@ -323,11 +323,13 @@ export class SigaServices {
     fichaDatosCurriculares_insert: "/fichaDatosCurriculares/insert",
 
     //Sanciones
-    busquedaSanciones_search: "busquedaSanciones/search",
+    busquedaSanciones_searchBusquedaSanciones:
+      "busquedaSanciones/searchBusquedaSanciones",
     busquedaSanciones_comboTipoSancion: "busquedaSanciones/comboTipoSancion",
     busquedaSanciones_comboTipo: "busquedaSanciones/comboTipo",
     busquedaSanciones_comboEstado: "busquedaSanciones/comboEstado",
-    busquedaSanciones_comboOrigen: "busquedaSanciones/comboOrigen"
+    busquedaSanciones_comboOrigen: "busquedaSanciones/comboOrigen",
+    fichaDatosGenerales_etiquetasPersona: "fichaDatosGenerales/etiquetasPersona"
   };
 
   private menuToggled = new Subject<any>();
