@@ -44,6 +44,7 @@ import { DatosColegiadosObject } from "../../../models/DatosColegiadosObject";
 import { PersonaJuridicaItem } from "../../../models/PersonaJuridicaItem";
 import { PersonaJuridicaObject } from "../../../models/PersonaJuridicaObject";
 import { ComboEtiquetasItem } from "./../../../models/ComboEtiquetasItem";
+import { ComboItem } from "../../administracion/parametros/parametros-generales/parametros-generales.component";
 
 @Component({
   selector: "app-ficha-colegial",
@@ -237,6 +238,7 @@ export class FichaColegialComponent implements OnInit {
 
   ngOnInit() {
     // Cogemos los datos de la busqueda de Colegiados
+    this.getLetrado();
     if (
       sessionStorage.getItem("personaBody") != null &&
       sessionStorage.getItem("personaBody") != undefined &&
@@ -539,6 +541,24 @@ export class FichaColegialComponent implements OnInit {
   // }
 
   // MÉTODOS GENÉRICOS PARA TABLAS Y USOS VARIOS
+  getLetrado() {
+    let isLetrado: ComboItem;
+    this.sigaServices.get("getLetrado").subscribe(
+      data => {
+        isLetrado = data;
+        if(isLetrado.value == "S"){
+          sessionStorage.setItem("isLetrado", "true");
+        }else{
+          sessionStorage.setItem("isLetrado", "false");
+        }
+      },
+      err => {
+        sessionStorage.setItem("isLetrado", "true");
+        console.log(err);
+      }
+    );
+
+  }
 
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;

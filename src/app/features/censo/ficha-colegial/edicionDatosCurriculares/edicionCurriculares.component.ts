@@ -19,6 +19,7 @@ import { SubtipoCurricularItem } from "../../../../models/SubtipoCurricularItem"
   styleUrls: ["./edicionCurriculares.component.scss"]
 })
 export class EdicionCurricularesComponent implements OnInit {
+  isLetrado: boolean;
   cols: any = [];
   datos: any[];
   searchIntegrantes = new FichaColegialEdicionCurricularesObject();
@@ -82,6 +83,7 @@ export class EdicionCurricularesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // this.getLetrado();
     // this.editar = this.body.editar;
     this.progressSpinner = true;
     if (sessionStorage.getItem("nuevoCurriculo")) {
@@ -97,6 +99,9 @@ export class EdicionCurricularesComponent implements OnInit {
       this.nuevo = false;
     }
 
+    if (sessionStorage.getItem("isLetrado")) {
+      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    }
     // Llamada al rest para obtener la categoría curricular
     this.sigaServices.get("tipoCurricular_categoriaCurricular").subscribe(
       n => {
@@ -256,6 +261,89 @@ export class EdicionCurricularesComponent implements OnInit {
   //   }
   //   return fecha;
   // }
+
+  // getLetrado() {
+  //   this.sigaServices.get("getLetrado").subscribe(
+  //     data => {
+  //       this.isLetrado = data;
+  //     },
+  //     err => {
+  //       console.log(err);
+  //     }
+  //   );
+  // }
+
+  solicitudModificacion() {
+    this.sigaServices
+      .postPaginado(
+        "fichaDatosCurriculares_solicitudUpdate",
+        "?numPagina=1",
+        this.body
+      )
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          this.activateGuardar();
+          this.showSuccess();
+          this.backTo();
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+          this.showFail();
+        },
+        () => {}
+      );
+  }
+
+  solicitudGuardarCv() {
+    this.progressSpinner = true;
+    this.certificadoToBoolean();
+    this.body.dateFechaInicio = this.arreglarFecha(this.body.fechaDesde);
+    this.body.dateFechaFin = this.arreglarFecha(this.body.fechaHasta);
+    this.body.dateFechaMovimiento = this.arreglarFecha(
+      this.body.fechaMovimiento
+    );
+
+    if (this.nuevo) {
+      this.sigaServices
+        .postPaginado("insert", "?numPagina=1", this.body)
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+            this.activateGuardar();
+            this.showSuccess();
+            this.backTo();
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+            this.showFail();
+          },
+          () => {}
+        );
+    } else {
+      this.sigaServices
+        .postPaginado("update", "?numPagina=1", this.body)
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+            this.activateGuardar();
+            this.showSuccess();
+            this.backTo();
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+            this.showFail();
+          },
+          () => {}
+        );
+    }
+  }
 
   guardarCv() {
     this.progressSpinner = true;
