@@ -3,11 +3,14 @@ export class EventoItem {
   idCalendario: string;
   allDay: boolean = true;
   color: string;
-
   idInstitucion: string;
   title: string;
+
   start: Date;
   end: Date;
+  startRepeat: Date;
+  endRepeat: Date;
+
   lugar: string;
   descripcion: string;
   recursos: string;

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
-import { DataTable, AutoComplete } from "primeng/primeng";
+import { DataTable, AutoComplete, Calendar } from "primeng/primeng";
 import { Router } from "@angular/router";
 import { SigaServices } from "../../../_services/siga.service";
 import { NotificacionEventoObject } from "../../../models/NotificacionEventoObject";
@@ -31,6 +31,11 @@ export class FichaEventosComponent implements OnInit {
   @ViewChild("autocomplete")
   autoComplete: AutoComplete;
 
+  @ViewChild("fechaInicio")
+  fechaInicio: Calendar;
+
+  @ViewChild("fechaFin")
+  fechaFin: Calendar;
   //Generales
   comboCalendars;
   comboTipoEvento;
@@ -41,7 +46,9 @@ export class FichaEventosComponent implements OnInit {
   newEvent: EventoItem;
   val1;
   selectedEstadoEvento;
-  invalidDates;
+  invalidDateMin;
+  invalidDateMax;
+  today = new Date();
 
   //Notificaciones
   selectedDatos;
@@ -133,6 +140,15 @@ export class FichaEventosComponent implements OnInit {
       { label: "Día", value: "1" },
       { label: "Semana", value: "2" }
     ];
+
+    // this.sigaServices.get("fichaEventos_getRepeatEvery").subscribe(
+    //   n => {
+    //     this.comboRepeatEvery = n.combooItems;
+    //   },
+    //   err => {
+    //     console.log(err);
+    //   }
+    // );
 
     this.comboRepeatOn = [
       { label: "Lunes", value: "L" },
@@ -226,9 +242,43 @@ export class FichaEventosComponent implements OnInit {
   }
 
   selectInvalidDates() {
-    // let invalidDate = new Date();
-    // invalidDate.setDate(this.newEvent.start.getFullYear() - 80);
-    // this.invalidDates = [this.newEvent.start, invalidDate];
+    this.invalidDateMin = new Date(
+      JSON.parse(JSON.stringify(this.newEvent.start))
+    );
+    this.invalidDateMax = new Date(
+      JSON.parse(JSON.stringify(this.newEvent.start))
+    );
+    this.invalidDateMin.setHours(this.newEvent.start.getHours());
+    this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
+    this.invalidDateMax.setHours(23);
+    this.invalidDateMax.setMinutes(59);
+    this.newEvent.end = new Date(
+      JSON.parse(JSON.stringify(this.newEvent.start))
+    );
+  }
+  validatorDates(event) {
+    if (this.newEvent.end < this.newEvent.start) {
+      this.newEvent.end = new Date(
+        JSON.parse(JSON.stringify(this.newEvent.start))
+      );
+      this.fechaFin.currentHour = this.fechaInicio.currentHour;
+      this.fechaFin.currentMinute = this.fechaInicio.currentMinute;
+      this.fechaFin.inputfieldViewChild.nativeElement.value = this.fechaInicio.inputfieldViewChild.nativeElement.value;
+      this.fechaFin.inputFieldValue = this.fechaInicio.inputFieldValue;
+      this.fechaFin.value = this.fechaInicio.value;
+    }
+  }
+  unselectInvalidDates() {
+    if (this.newEvent.end.getHours() == this.newEvent.start.getHours()) {
+      if (this.newEvent.end.getMinutes() < this.newEvent.start.getMinutes()) {
+        this.newEvent.end.setMinutes(this.newEvent.start.getMinutes());
+      }
+
+      this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
+      this.invalidDateMin.setHours(this.newEvent.start.getHours());
+    } else {
+      this.invalidDateMin.setMinutes(0);
+    }
   }
 
   //FUNCIONES FICHA NOTIFICACIONES
