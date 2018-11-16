@@ -524,11 +524,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
             this.body.bic = this.bodyBancoBic.bic;
             this.iban = this.body.iban.replace(/\s/g, "");
 
-            if (this.bodyBancoBic.bicEspanol == "1") {
-              this.editar = false;
-            } else {
-              this.editar = true;
-            }
+            this.editar = false;
           },
           error => {
             this.bodyBancoBicSearch = JSON.parse(error["error"]);
