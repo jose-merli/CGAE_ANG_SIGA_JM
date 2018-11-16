@@ -1,15 +1,16 @@
 export class EventoItem {
   idEvento: string;
   idCalendario: string;
-  start: string;
-  end: string;
   allDay: boolean = true;
   color: string;
-
   idInstitucion: string;
   titulo: string;
-  fechaInicio: Date;
-  fechaFin: Date;
+
+  start: Date;
+  end: Date;
+  startRepeat: Date;
+  endRepeat: Date;
+
   lugar: string;
   descripcion: string;
   recursos: string;
