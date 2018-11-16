@@ -328,22 +328,42 @@ label {
     text-align: center;
   }
 
-  .ui-datatable th.ui-state-default {
+  .ui-datatable th.ui-state-default,.ui-table th.ui-state-default ,.ui-table .ui-table-thead > tr > th {
     background: $blue3 !important;
+    text-align: center;
     color: $grey1 !important;
     padding: 0.5rem;
     border: 1px solid $blue3 !important;
+    font-weight: normal;
     .ui-sortable-column-icon {
       font-size: 0.85rem;
     }
   }
 
   .ui-datatable .ui-datatable-tfoot > tr > td,
-  .ui-datatable .ui-datatable-data > tr > td {
+  .ui-datatable .ui-datatable-data > tr > td,
+  .ui-table .ui-table-tbody > tr > td
+   {
     color: $grey1;
     padding: 0.5rem;
     font-size: 0.8rem;
   }
+
+  .ui-table .ui-table-tbody > tr.ui-state-highlight,.ui-table.ui-table-hoverable-rows .ui-table-tbody > tr:not(.ui-state-highlight):hover{
+    background: $secondary-color;
+      td{
+          color: white;
+      }
+  
+      i{
+          color: white;
+      }   
+   
+  }
+  .ui-widget input{
+    width: 100%;
+}
+
 
   p-checkbox {
     display: block;
@@ -388,7 +408,7 @@ label {
     }
   }
 
-  .ui-datatable-footer {
+  .ui-datatable-footer{
     padding: 0.75rem 1.25rem;
   }
   .ui-datatable
@@ -990,6 +1010,9 @@ iframe .box, iframe .button, iframe .boxCombo{
 //   position: relative !important;
 // }
 
+p-footer .main-button{
+  padding: 0.75rem 1.25rem;
+}
 
 /**RESPONSIVE**/
 

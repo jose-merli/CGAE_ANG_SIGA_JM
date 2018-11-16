@@ -1,0 +1,12 @@
+<div class="modelos-comunicaciones-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{'menu.comunicaciones' | translate}}
+      <i class="pl-1 fa fa-angle-right"></i>{{ 'modelos.comunicaciones.literal.ficha' | translate}}
+    </p>
+  </div>
+  <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
+    <app-datos-generales-ficha *ngSwitchCase="'generales'"></app-datos-generales-ficha>
+  </div>
+  <app-dialog></app-dialog>
+</div>

@@ -250,6 +250,13 @@ import { ServiciosInteresComponent } from "./features/censo/datosPersonaJuridica
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
 import { ErrorAccesoComponent } from './commons/error/error-acceso/error-acceso.component';
 
+
+//INFORMES Y COMUNICACIONES
+import { PlantillasEnvioComponent } from './features/informes-comunicaciones/plantillas-envio/plantillas-envio.component';
+import { ModelosComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/modelos-comunicaciones.component';
+import { FichaModeloComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/ficha-modelo-comunicaciones.component';
+import { DatosGeneralesFichaComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/datos-generales-ficha/datos-generales-ficha.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -450,7 +457,11 @@ import { ErrorAccesoComponent } from './commons/error/error-acceso/error-acceso.
     // ListadoFicherosAnexosComponent,
     DatosDireccionesComponent,
     ConsultarDatosDireccionesComponent,
-    ErrorAccesoComponent
+    ErrorAccesoComponent,
+    PlantillasEnvioComponent,
+    ModelosComunicacionesComponent,
+    FichaModeloComunicacionesComponent,
+    DatosGeneralesFichaComponent
   ],
   imports: [
     BrowserModule,

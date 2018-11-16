@@ -186,6 +186,12 @@ import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-c
 //ERROR
 import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.component";
 
+//INFORMES Y COMUNICACIONES
+import { PlantillasEnvioComponent } from './features/informes-comunicaciones/plantillas-envio/plantillas-envio.component';
+import { ModelosComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/modelos-comunicaciones.component';
+import { FichaModeloComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/ficha-modelo-comunicaciones.component';
+
+
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
   { path: "login", component: LoginComponent },
@@ -907,6 +913,21 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
 
+  {
+    path: "plantillasEnvio",
+    component: PlantillasEnvioComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "modelosComunicaciones",
+    component: ModelosComunicacionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fichaModeloComunicaciones/:id",
+    component: FichaModeloComunicacionesComponent,
+    canActivate: [AuthGuard]
+  },
   // Administracion
   {
     path: "catalogosMaestros",
@@ -985,6 +1006,7 @@ const appRoutes: Routes = [
     component: GestionAuditoriaComponent,
     canActivate: [AuthGuard]
   },
+
   {
     path: "errorAcceso",
     component: ErrorAccesoComponent
