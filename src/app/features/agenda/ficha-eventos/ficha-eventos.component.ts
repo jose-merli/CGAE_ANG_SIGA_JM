@@ -105,8 +105,13 @@ export class FichaEventosComponent implements OnInit {
     } else {
       this.isFormacionCalendar = false;
     }
-
-    this.newEvent = new EventoItem();
+    if (sessionStorage.getItem("modoEdicion")) {
+      this.newEvent = JSON.parse(sessionStorage.getItem("eventoEdit"));
+      sessionStorage.removeItem("modoEdicion");
+      sessionStorage.removeItem("eventoEdit");
+    } else {
+      this.newEvent = new EventoItem();
+    }
   }
 
   //FUNCIONES FICHA DATOS GENERALES
