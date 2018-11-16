@@ -4,7 +4,7 @@ export class EventoItem {
   allDay: boolean = true;
   color: string;
   idInstitucion: string;
-  titulo: string;
+  title: string;
 
   start: Date;
   end: Date;
@@ -19,6 +19,7 @@ export class EventoItem {
   fechaBaja: Date;
   usuModificacion: string;
   fechaModificacion: Date;
+  tipoAcceso: number;
 
   constructor() {}
 }

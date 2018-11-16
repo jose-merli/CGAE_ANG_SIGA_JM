@@ -263,6 +263,8 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     );
   }
 
+
+
   getComboDisponibilidadPlazas() {
     this.comboDisponibilidadPlazas = [
       { label: "", value: "" },
