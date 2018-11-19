@@ -8,6 +8,8 @@ import { ViewEncapsulation } from "@angular/core";
 import { saveAs } from "file-saver/FileSaver";
 import { AsistenciaCursoObject } from "../../../models/AsistenciaCursoObject";
 import { EventoItem } from "../../../models/EventoItem";
+import { Location } from "@angular/common";
+import { DatosRepeticionEventoItem } from "../../../models/DatosRepeticionEventoItem";
 
 @Component({
   selector: "app-ficha-eventos",
@@ -44,11 +46,10 @@ export class FichaEventosComponent implements OnInit {
   comboRepeatEvery;
   comboRepeatOn;
   newEvent: EventoItem;
-  val1;
   selectedEstadoEvento;
   invalidDateMin;
   invalidDateMax;
-  today = new Date();
+  datosRepeticion: DatosRepeticionEventoItem;
 
   //Notificaciones
   selectedDatos;
@@ -92,7 +93,8 @@ export class FichaEventosComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {}
 
   ngOnInit() {
@@ -105,15 +107,18 @@ export class FichaEventosComponent implements OnInit {
     this.getFichasPosibles();
     this.getColsResultsAsistencia();
 
+    this.newEvent = new EventoItem();
+    this.datosRepeticion = new DatosRepeticionEventoItem();
+
     if (sessionStorage.getItem("isFormacionCalendar") == "true") {
       this.isFormacionCalendar = true;
       this.idCurso = sessionStorage.getItem("idCurso");
       this.getTrainers();
+      
     } else {
       this.isFormacionCalendar = false;
+      this.newEvent.idTipoEvento = "1";
     }
-
-    this.newEvent = new EventoItem();
   }
 
   //FUNCIONES FICHA DATOS GENERALES
@@ -130,30 +135,25 @@ export class FichaEventosComponent implements OnInit {
     );
   }
 
+  //Funcion que recargar los combos relacionados con los datos de repetición
   getCombosRepeats() {
-    this.comboRepeatEvery = [
-      { label: "Día", value: "1" },
-      { label: "Semana", value: "2" }
-    ];
+    this.sigaServices.get("fichaEventos_getRepeatEvery").subscribe(
+      n => {
+        this.comboRepeatEvery = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
 
-    // this.sigaServices.get("fichaEventos_getRepeatEvery").subscribe(
-    //   n => {
-    //     this.comboRepeatEvery = n.combooItems;
-    //   },
-    //   err => {
-    //     console.log(err);
-    //   }
-    // );
-
-    this.comboRepeatOn = [
-      { label: "Lunes", value: "L" },
-      { label: "Martes", value: "M" },
-      { label: "Miércoles", value: "X" },
-      { label: "Jueves", value: "J" },
-      { label: "Viernes", value: "V" },
-      { label: "Sábado", value: "S" },
-      { label: "Domingo", value: "D" }
-    ];
+    this.sigaServices.get("fichaEventos_getDaysWeek").subscribe(
+      n => {
+        this.comboRepeatOn = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
 
     this.comboDays = [
       { label: "1", value: "1" },
@@ -202,7 +202,7 @@ export class FichaEventosComponent implements OnInit {
     );
   }
 
-  //Función obtiene los tipos de calendarios que hay
+  //Función obtiene los tipos de eventos que hay
   getComboTipoEvento() {
     this.sigaServices.get("fichaEventos_getTypeEvent").subscribe(
       n => {
@@ -220,6 +220,12 @@ export class FichaEventosComponent implements OnInit {
   }
 
   saveEvent() {
+    if (this.checkRepetitionData()) {
+      this.newEvent.datosRepeticion = this.datosRepeticion;
+    } else {
+      this.newEvent.datosRepeticion = null;
+    }
+
     this.newEvent.idEstadoEvento = this.selectedEstadoEvento;
     this.sigaServices
       .post("fichaEventos_saveEventCalendar", this.newEvent)
@@ -234,6 +240,29 @@ export class FichaEventosComponent implements OnInit {
           this.progressSpinner = false;
         }
       );
+  }
+
+  restEvent() {
+    console.log(this.checkRepetitionData());
+  }
+
+  checkRepetitionData() {
+    if (
+      (this.datosRepeticion.tipoRepeticion == null ||
+        this.datosRepeticion.tipoRepeticion == undefined) &&
+      (this.datosRepeticion.fechaInicio == null ||
+        this.datosRepeticion.fechaInicio == undefined) &&
+      (this.datosRepeticion.fechaFin == null ||
+        this.datosRepeticion.fechaFin == undefined) &&
+      (this.datosRepeticion.tipoDiasRepeticion == null ||
+        this.datosRepeticion.tipoDiasRepeticion == undefined) &&
+      (this.datosRepeticion.valoresRepeticion == null ||
+        this.datosRepeticion.valoresRepeticion == undefined)
+    ) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   selectInvalidDates() {
@@ -263,6 +292,7 @@ export class FichaEventosComponent implements OnInit {
       this.fechaFin.value = this.fechaInicio.value;
     }
   }
+
   unselectInvalidDates() {
     if (this.newEvent.end.getHours() == this.newEvent.start.getHours()) {
       if (this.newEvent.end.getMinutes() < this.newEvent.start.getMinutes()) {
@@ -727,5 +757,9 @@ export class FichaEventosComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  backTo() {
+    this.location.back();
   }
 }

@@ -1,3 +1,5 @@
+import { DatosRepeticionEventoItem } from "./DatosRepeticionEventoItem";
+
 export class EventoItem {
   idEvento: string;
   idCalendario: string;
@@ -8,9 +10,6 @@ export class EventoItem {
 
   start: Date;
   end: Date;
-  startRepeat: Date;
-  endRepeat: Date;
-
   lugar: string;
   descripcion: string;
   recursos: string;
@@ -20,6 +19,8 @@ export class EventoItem {
   usuModificacion: string;
   fechaModificacion: Date;
   tipoAcceso: number;
+
+  datosRepeticion: DatosRepeticionEventoItem;
 
   constructor() {}
 }
