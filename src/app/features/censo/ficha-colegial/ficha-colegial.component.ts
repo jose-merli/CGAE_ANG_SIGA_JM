@@ -63,6 +63,9 @@ export class FichaColegialComponent implements OnInit {
   otrasColegiacionesBody: DatosColegiadosObject = new DatosColegiadosObject();
   certificadosBody: FichaColegialCertificadosObject = new FichaColegialCertificadosObject();
 
+  isLetrado: boolean;
+  displayAuditoria: boolean = false;
+
   idPersona: any;
   openFicha: boolean = false;
   es: any = esCalendar;
@@ -546,18 +549,20 @@ export class FichaColegialComponent implements OnInit {
     this.sigaServices.get("getLetrado").subscribe(
       data => {
         isLetrado = data;
-        if(isLetrado.value == "S"){
+        if (isLetrado.value == "S") {
           sessionStorage.setItem("isLetrado", "true");
-        }else{
+          this.isLetrado = true;
+        } else {
           sessionStorage.setItem("isLetrado", "false");
+          this.isLetrado = false;
         }
       },
       err => {
         sessionStorage.setItem("isLetrado", "true");
+        this.isLetrado = true;
         console.log(err);
       }
     );
-
   }
 
   isSelectMultiple() {

@@ -335,7 +335,9 @@ export class SigaServices {
       "fichaDatosGenerales/etiquetasPersona",
     getLetrado: "/getLetrado",
     fichaDatosCurriculares_solicitudUpdate:
-      "fichaDatosCurriculares/solicitudUpdate"
+      "fichaDatosCurriculares/solicitudUpdate",
+    fichaDatosDirecciones_solicitudCreate:
+      "fichaDatosDirecciones/solicitudCreate"
   };
 
   private menuToggled = new Subject<any>();

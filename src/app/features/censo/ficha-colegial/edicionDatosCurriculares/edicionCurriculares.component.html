@@ -111,10 +111,11 @@
             <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="!activateRestablecer()"
               label="{{ 'general.boton.restablecer' | translate}}"></button>
             <button *ngIf="isLetrado == false" (click)="guardarCv()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar()" label="{{ 'general.boton.guardar' | translate}}"></button>
-            <button *ngIf="isLetrado == true" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar()" label="Solicitar modificación"></button>
+            <button *ngIf="solicitaModificacion()" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar()" label="Solicitar modificación"></button>
+            <button *ngIf="solicitaCreacion()" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar()" label="Solicitar creación"></button>
           </div>
         </div>
-      </div>
+      </div> 
     </div>
   </div>
 

@@ -34,6 +34,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   msgs: Message[];
   fichaMisDatos: boolean = false;
   columnasDirecciones: any = [];
+  isLetrado: boolean = true;
   usuarioBody: any[];
   comboPais: any[];
   comboPoblacion: any[];
@@ -73,6 +74,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   dropdown: Dropdown;
 
   ngOnInit() {
+    if (sessionStorage.getItem("isLetrado")) {
+      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    }
     if (sessionStorage.getItem("historicoDir") != null) {
       this.historyDisable = true;
       this.disableCheck = true;
@@ -573,20 +577,44 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   comprobarAuditoria() {
     // modo edicion
-    if (this.registroEditable) {
-      // mostrar la auditoria depende de un parámetro que varía según la institución
-      this.body.motivo = undefined;
-
-      if (this.ocultarMotivo) {
-        this.guardar();
-      } else {
-        this.displayAuditoria = true;
-        this.showGuardarAuditoria = false;
+    if (this.isLetrado) {
+      this.progressSpinner = true;
+      // modo edicion
+      this.comprobarTablaDatosContactos();
+      this.comprobarCheckProvincia();
+      this.body.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
+      this.body.idPersona = JSON.parse(sessionStorage.getItem("usuarioBody"));
+      this.body.idProvincia = this.provinciaSelecionada;
+      this.sigaServices
+        .post("fichaDatosDirecciones_solicitudCreate", this.body)
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.body = JSON.parse(data["body"]);
+            this.backTo();
+          },
+          error => {
+            this.bodySearch = JSON.parse(error["error"]);
+            this.showFail(this.bodySearch.error.message.toString());
+            console.log(error);
+            this.progressSpinner = false;
+          }
+        );
+    } else {
+      if (this.registroEditable) {
+        // mostrar la auditoria depende de un parámetro que varía según la institución
+        this.body.motivo = undefined;
+        if (this.ocultarMotivo) {
+          this.guardar();
+        } else {
+          this.displayAuditoria = true;
+          this.showGuardarAuditoria = false;
+        }
       }
-    }
-    // modo creacion
-    else {
-      this.guardar();
+      // modo creacion
+      else {
+        this.guardar();
+      }
     }
   }
 

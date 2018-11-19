@@ -157,8 +157,10 @@
             <button *ngIf="nuevo == false" (click)="duplicarRegistro()" pButton type="button" [(disabled)]="historyDisable" icon="fa fa-reply-all"
               iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
             <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [(disabled)]="historyDisable" label="{{ 'general.boton.restablecer' | translate}}"></button>
-            <button (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [(disabled)]="historyDisable"
+            <button *ngIf="!isLetrado" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [(disabled)]="historyDisable"
               label="{{ 'general.boton.guardar' | translate}}"></button>
+              <button *ngIf="isLetrado" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [(disabled)]="historyDisable"
+              label="Solicitud Modificación"></button>
           </div>
         </div>
       </div>

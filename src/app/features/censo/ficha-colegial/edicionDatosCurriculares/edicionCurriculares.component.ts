@@ -171,7 +171,9 @@ export class EdicionCurricularesComponent implements OnInit {
     // this.verificado
     this.booleanToCertificado();
     this.activateGuardar();
-    this.changeCategoria();
+    if (this.nuevo == false) {
+      this.changeCategoria();
+    }
   }
   abrirFicha() {
     this.openFicha = !this.openFicha;
@@ -270,6 +272,21 @@ export class EdicionCurricularesComponent implements OnInit {
   //     }
   //   );
   // }
+
+  solicitaModificacion() {
+    if (this.isLetrado == true && this.nuevo == false) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  solicitaCreacion() {
+    if (this.isLetrado == true && this.nuevo == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   comprobarAuditoria() {
     // modo creación
