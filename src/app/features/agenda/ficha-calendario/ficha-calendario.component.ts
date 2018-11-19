@@ -462,6 +462,8 @@ export class FichaCalendarioComponent implements OnInit {
       sessionStorage.setItem("notifySelected", JSON.stringify(id));
       this.router.navigate(["/editarNotificacion"]);
       sessionStorage.setItem("fichaAbierta", "true");
+    } else {
+      this.numSelected = this.selectedDatos.length;
     }
   }
 

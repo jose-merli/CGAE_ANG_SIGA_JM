@@ -149,18 +149,36 @@ export class AgendaComponent implements OnInit {
     let evento: EventoItem = new EventoItem();
     evento.idEvento = event.calEvent.idEvento;
     evento.idCalendario = event.calEvent.idCalendario;
+    evento.idTipoEvento = event.calEvent.idTipoEvento;
+    evento.idEstadoEvento = event.calEvent.idEstadoEvento;
     evento.title = event.calEvent.title;
     evento.allDay = event.calEvent.allDay;
     evento.color = event.calEvent.color;
-
-    if (event.calEvent.start) {
-      evento.start = event.calEvent.start._i;
-    }
+    evento.descripcion = event.calEvent.descripcion;
+    evento.recursos = event.calEvent.recursos;
+    evento.lugar = event.calEvent.lugar;
+    evento.start = event.calEvent.start;
 
     if (event.calEvent.end) {
-      evento.end = event.calEvent.end._i;
+      evento.end = event.calEvent.end;
+    } else {
+      evento.end = evento.start;
     }
 
-    alert(JSON.stringify(evento));
+    // alert(JSON.stringify(evento));
+
+    sessionStorage.setItem("modoEdicion", "true");
+    sessionStorage.setItem("eventoEdit", JSON.stringify(evento));
+    this.router.navigate(["/fichaEventos"]);
+  }
+
+  onDayClickEvento(event) {
+    let evento: EventoItem = new EventoItem();
+    evento.start = event.date;
+    evento.end = event.date;
+
+    sessionStorage.setItem("modoEdicion", "true");
+    this.router.navigate(["/fichaEventos"]);
+    sessionStorage.setItem("eventoEdit", JSON.stringify(evento));
   }
 }

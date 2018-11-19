@@ -114,10 +114,19 @@ export class FichaEventosComponent implements OnInit {
       this.isFormacionCalendar = true;
       this.idCurso = sessionStorage.getItem("idCurso");
       this.getTrainers();
-      
     } else {
       this.isFormacionCalendar = false;
       this.newEvent.idTipoEvento = "1";
+    }
+
+    if (sessionStorage.getItem("modoEdicion")) {
+      this.newEvent = JSON.parse(sessionStorage.getItem("eventoEdit"));
+      this.newEvent.start = new Date(this.newEvent.start);
+      this.newEvent.end = new Date(this.newEvent.end);
+      sessionStorage.removeItem("modoEdicion");
+      sessionStorage.removeItem("eventoEdit");
+    } else {
+      this.newEvent = new EventoItem();
     }
   }
 
