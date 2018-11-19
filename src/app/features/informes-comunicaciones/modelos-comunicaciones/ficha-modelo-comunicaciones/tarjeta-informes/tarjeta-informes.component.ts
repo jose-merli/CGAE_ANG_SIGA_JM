@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { Router } from "@angular/router";
 import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
 import { TranslateService } from "./../../../../../commons/translate/translation.service";
 import { SigaServices } from "./../../../../../_services/siga.service";
-import { DatosGeneralesFicha } from '../../../../../models/DatosGeneralesFichaItem';
+import { DataTable } from "primeng/datatable";
 
 @Component({
-  selector: 'app-datos-generales-ficha',
-  templateUrl: './datos-generales-ficha.component.html',
-  styleUrls: ['./datos-generales-ficha.component.scss']
+  selector: 'app-tarjeta-informes',
+  templateUrl: './tarjeta-informes.component.html',
+  styleUrls: ['./tarjeta-informes.component.scss']
 })
-export class DatosGeneralesFichaComponent implements OnInit {
+export class TarjetaInformesComponent implements OnInit {
 
   openFicha: boolean = false;
   activacionEditar: boolean = true;
@@ -19,7 +19,18 @@ export class DatosGeneralesFichaComponent implements OnInit {
   permisosArray: any[];
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   clasesComunicaciones: any[];
-  body: DatosGeneralesFicha = new DatosGeneralesFicha;
+  datos: any[];
+  cols: any[];
+  first: number = 0;
+  selectedItem: number;
+  selectAll: boolean = false;
+  selectMultiple: boolean = false;
+  numSelected: number = 0;
+  rowsPerPage: any = [];
+
+
+  @ViewChild('table') table: DataTable;
+  selectedDatos
 
   fichasPosibles = [
     {
@@ -44,9 +55,28 @@ export class DatosGeneralesFichaComponent implements OnInit {
     }
   ];
 
-  constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices) { }
+  constructor(private router: Router, private translateService: TranslateService,
+    private sigaServices: SigaServices, private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
+
+    this.selectedItem = 10;
+    this.cols = [
+      { field: 'idioma', header: 'Idioma' },
+      { field: 'fechaAsociacion', header: 'Fecha asociación' },
+      { field: 'ficheroSalida', header: 'Fichero salida' },
+      { field: 'sufijo', header: 'Sufijo' },
+      { field: 'formatoSalida', header: 'Formato salida' },
+      { field: 'destinatarios', header: 'Destinatarios' },
+      { field: 'condicion', header: 'Condición' },
+      { field: 'multiDocumento', header: 'Multi-documento' },
+      { field: 'datos', header: 'Datos' }
+    ]
+
+    this.datos = [
+      { id: 1, idioma: 'prueba', fechaAsociacion: 'prueba' }
+
+    ]
   }
 
   abreCierraFicha() {
@@ -97,6 +127,44 @@ export class DatosGeneralesFichaComponent implements OnInit {
         // }
       }
     );
+  }
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
+
+
+  isSelectMultiple() {
+    this.selectMultiple = !this.selectMultiple;
+    if (!this.selectMultiple) {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    } else {
+      this.selectAll = false;
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.selectMultiple = false;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
+  navigateTo(dato) {
+    let id = dato[0].id;
+    if (!this.selectMultiple) {
+      this.router.navigate(['/fichaPlantillaDocumento', id]);
+    }
+
   }
 
 }

@@ -140,6 +140,7 @@ label {
 
   .header-ficha {
     padding: 0.5rem 1rem 0.5rem 0.33rem;
+    padding-left: .67rem;
     font-weight: normal;
     font-size: 0.8rem;
     text-overflow: ellipsis;
@@ -1012,6 +1013,11 @@ iframe .box, iframe .button, iframe .boxCombo{
 
 p-footer .main-button{
   padding: 0.75rem 1.25rem;
+}
+
+
+.ui-dropdown label.ui-dropdown-label{
+  text-align: left;
 }
 
 /**RESPONSIVE**/

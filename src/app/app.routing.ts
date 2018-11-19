@@ -190,6 +190,7 @@ import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.
 import { PlantillasEnvioComponent } from './features/informes-comunicaciones/plantillas-envio/plantillas-envio.component';
 import { ModelosComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/modelos-comunicaciones.component';
 import { FichaModeloComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/ficha-modelo-comunicaciones.component';
+import { PlantillaDocumentoComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-informes/plantilla-documento/plantilla-documento.component';
 
 
 const appRoutes: Routes = [
@@ -926,6 +927,11 @@ const appRoutes: Routes = [
   {
     path: "fichaModeloComunicaciones/:id",
     component: FichaModeloComunicacionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fichaPlantillaDocumento/:id",
+    component: PlantillaDocumentoComponent,
     canActivate: [AuthGuard]
   },
   // Administracion

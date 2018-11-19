@@ -256,6 +256,8 @@ import { PlantillasEnvioComponent } from './features/informes-comunicaciones/pla
 import { ModelosComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/modelos-comunicaciones.component';
 import { FichaModeloComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/ficha-modelo-comunicaciones.component';
 import { DatosGeneralesFichaComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/datos-generales-ficha/datos-generales-ficha.component';
+import { TarjetaInformesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-informes/tarjeta-informes.component';
+import { PlantillaDocumentoComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-informes/plantilla-documento/plantilla-documento.component';
 
 @NgModule({
   declarations: [
@@ -461,7 +463,9 @@ import { DatosGeneralesFichaComponent } from './features/informes-comunicaciones
     PlantillasEnvioComponent,
     ModelosComunicacionesComponent,
     FichaModeloComunicacionesComponent,
-    DatosGeneralesFichaComponent
+    DatosGeneralesFichaComponent,
+    TarjetaInformesComponent,
+    PlantillaDocumentoComponent
   ],
   imports: [
     BrowserModule,
