@@ -330,7 +330,11 @@ export class SigaServices {
     busquedaSanciones_comboTipo: "busquedaSanciones/comboTipo",
     busquedaSanciones_comboEstado: "busquedaSanciones/comboEstado",
     busquedaSanciones_comboOrigen: "busquedaSanciones/comboOrigen",
-    fichaDatosGenerales_etiquetasPersona: "fichaDatosGenerales/etiquetasPersona"
+    fichaDatosGenerales_etiquetasPersona:
+      "fichaDatosGenerales/etiquetasPersona",
+    getLetrado: "/getLetrado",
+    fichaDatosCurriculares_solicitudUpdate:
+      "fichaDatosCurriculares/solicitudUpdate"
   };
 
   private menuToggled = new Subject<any>();
