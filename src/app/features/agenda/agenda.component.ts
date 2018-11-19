@@ -175,6 +175,7 @@ export class AgendaComponent implements OnInit {
   onDayClickEvento(event) {
     let evento: EventoItem = new EventoItem();
     evento.start = event.date;
+    evento.end = event.date;
 
     sessionStorage.setItem("modoEdicion", "true");
     this.router.navigate(["/fichaEventos"]);

@@ -114,6 +114,8 @@ export class FichaEventosComponent implements OnInit {
     }
     if (sessionStorage.getItem("modoEdicion")) {
       this.newEvent = JSON.parse(sessionStorage.getItem("eventoEdit"));
+      this.newEvent.start = new Date(this.newEvent.start);
+      this.newEvent.end = new Date(this.newEvent.end);
       sessionStorage.removeItem("modoEdicion");
       sessionStorage.removeItem("eventoEdit");
     } else {
