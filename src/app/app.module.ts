@@ -259,6 +259,7 @@ import { DatosGeneralesFichaComponent } from './features/informes-comunicaciones
 import { TarjetaInformesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-informes/tarjeta-informes.component';
 import { PlantillaDocumentoComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-informes/plantilla-documento/plantilla-documento.component';
 import { DetallePlantillaEnvioComponent } from './features/informes-comunicaciones/plantillas-envio/detalle-plantilla-envio/detalle-plantilla-envio.component';
+import { TarjetaComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-comunicaciones/tarjeta-comunicaciones.component';
 
 @NgModule({
   declarations: [
@@ -467,7 +468,8 @@ import { DetallePlantillaEnvioComponent } from './features/informes-comunicacion
     DatosGeneralesFichaComponent,
     TarjetaInformesComponent,
     PlantillaDocumentoComponent,
-    DetallePlantillaEnvioComponent
+    DetallePlantillaEnvioComponent,
+    TarjetaComunicacionesComponent
   ],
   imports: [
     BrowserModule,

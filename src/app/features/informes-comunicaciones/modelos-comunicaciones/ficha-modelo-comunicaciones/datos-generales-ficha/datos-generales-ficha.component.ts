@@ -31,15 +31,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
       activa: false
     },
     {
-      key: "colegiales",
-      activa: false
-    },
-    {
-      key: "bancarios",
-      activa: false
-    },
-    {
-      key: "cv",
+      key: "comunicacion",
       activa: false
     }
   ];

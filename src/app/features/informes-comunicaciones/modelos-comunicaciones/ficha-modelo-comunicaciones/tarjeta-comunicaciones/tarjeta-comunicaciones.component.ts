@@ -1,16 +1,14 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { Router } from "@angular/router";
-import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
-import { TranslateService } from "./../../../../../commons/translate/translation.service";
-import { SigaServices } from "./../../../../../_services/siga.service";
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { DataTable } from "primeng/datatable";
+import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
+import { SigaServices } from "./../../../../../_services/siga.service";
 
 @Component({
-  selector: 'app-tarjeta-informes',
-  templateUrl: './tarjeta-informes.component.html',
-  styleUrls: ['./tarjeta-informes.component.scss']
+  selector: 'app-tarjeta-comunicaciones',
+  templateUrl: './tarjeta-comunicaciones.component.html',
+  styleUrls: ['./tarjeta-comunicaciones.component.scss']
 })
-export class TarjetaInformesComponent implements OnInit {
+export class TarjetaComunicacionesComponent implements OnInit {
 
   openFicha: boolean = false;
   activacionEditar: boolean = true;
@@ -18,7 +16,6 @@ export class TarjetaInformesComponent implements OnInit {
   permisos: any;
   permisosArray: any[];
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
-  clasesComunicaciones: any[];
   datos: any[];
   cols: any[];
   first: number = 0;
@@ -27,10 +24,12 @@ export class TarjetaInformesComponent implements OnInit {
   selectMultiple: boolean = false;
   numSelected: number = 0;
   rowsPerPage: any = [];
-
+  idiomas: any[];
+  formatos: any[];
+  sufijos: any[];
 
   @ViewChild('table') table: DataTable;
-  selectedDatos
+  selectedDatos;
 
   fichasPosibles = [
     {
@@ -47,28 +46,40 @@ export class TarjetaInformesComponent implements OnInit {
     }
   ];
 
-  constructor(private router: Router, private translateService: TranslateService,
-    private sigaServices: SigaServices, private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices) { }
 
   ngOnInit() {
 
     this.selectedItem = 10;
+
     this.cols = [
-      { field: 'idioma', header: 'Idioma' },
-      { field: 'fechaAsociacion', header: 'Fecha asociación' },
-      { field: 'ficheroSalida', header: 'Fichero salida' },
-      { field: 'sufijo', header: 'Sufijo' },
-      { field: 'formatoSalida', header: 'Formato salida' },
-      { field: 'destinatarios', header: 'Destinatarios' },
-      { field: 'condicion', header: 'Condición' },
-      { field: 'multiDocumento', header: 'Multi-documento' },
-      { field: 'datos', header: 'Datos' }
-    ]
+      { field: 'nombre', header: 'Nombre' },
+      { field: 'tipoEnvio', header: 'Tipo de envío' },
+    ];
 
     this.datos = [
-      { id: 1, idioma: 'prueba', fechaAsociacion: 'prueba' }
+      { id: '1', nombre: 'prueba', tipoEnvio: 'prueba' },
+      { id: '2', nombre: 'prueba', tipoEnvio: 'prueba' }
+    ];
 
-    ]
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
   }
 
   abreCierraFicha() {
@@ -151,12 +162,13 @@ export class TarjetaInformesComponent implements OnInit {
     }
   }
 
-  navigateTo(dato) {
-    let id = dato[0].id;
+  onRowSelect() {
     if (!this.selectMultiple) {
-      this.router.navigate(['/fichaPlantillaDocumento', id]);
+      this.selectedDatos = [];
     }
-
   }
+
+
+
 
 }
