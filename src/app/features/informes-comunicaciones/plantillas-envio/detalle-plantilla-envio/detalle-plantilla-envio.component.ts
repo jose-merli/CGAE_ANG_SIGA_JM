@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'app-detalle-plantilla-envio',
@@ -7,9 +8,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DetallePlantillaEnvioComponent implements OnInit {
 
-  constructor() { }
+  idPlantilla: string;
+  datosGenerales: boolean = false;
+
+  constructor(private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
+
+    this.idPlantilla = this.activatedRoute.snapshot.params["id"];
+    //llamar con id al servicio para traer el detalle de la plantilla
+
+  }
+
+
+
+  abreCierraFichaGeneral() {
+    this.datosGenerales = !this.datosGenerales;
   }
 
 }
