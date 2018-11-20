@@ -191,6 +191,7 @@ import { PlantillasEnvioComponent } from './features/informes-comunicaciones/pla
 import { ModelosComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/modelos-comunicaciones.component';
 import { FichaModeloComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/ficha-modelo-comunicaciones.component';
 import { PlantillaDocumentoComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-informes/plantilla-documento/plantilla-documento.component';
+import { DetallePlantillaEnvioComponent } from "./features/informes-comunicaciones/plantillas-envio/detalle-plantilla-envio/detalle-plantilla-envio.component";
 
 
 const appRoutes: Routes = [
@@ -913,12 +914,17 @@ const appRoutes: Routes = [
     component: BandejaEntradaComponent,
     canActivate: [AuthGuard]
   },
-
   {
     path: "plantillasEnvio",
     component: PlantillasEnvioComponent,
     canActivate: [AuthGuard]
   },
+  {
+    path: "detallePlantillas/:id",
+    component: DetallePlantillaEnvioComponent,
+    canActivate: [AuthGuard]
+  },
+
   {
     path: "modelosComunicaciones",
     component: ModelosComunicacionesComponent,
