@@ -20,7 +20,6 @@ export class PlantillasEnvioComponent implements OnInit {
   msgs: Message[];
   comboTipoEnvio: any = [];
   filtro: PlantillaEnvioSearchItem = new PlantillaEnvioSearchItem();
-  tipoEnvioSelected: any;
 
 
   //variables tabla
@@ -93,6 +92,10 @@ export class PlantillasEnvioComponent implements OnInit {
 
   getResultados() {
 
+
+    //llamar al servicio de busqueda
+    this.filtro;
+
     this.datos = [
       { id: '1', nombre: 'Plantilla test', tipoEnvio: 'SMS', descripcion: 'descripcion' },
       { id: '2', nombre: 'Plantilla test', tipoEnvio: 'Buro fax', descripcion: 'descripcion' },
@@ -137,7 +140,7 @@ export class PlantillasEnvioComponent implements OnInit {
 
   detallePlantilla(item) {
 
-    //sessionStorage.setItem("filtros", JSON.stringify(item));
+    sessionStorage.setItem("filtros", JSON.stringify(this.filtro));
     let id = item[0].id;
     if (!this.selectMultiple) {
       this.router.navigate(["/detallePlantillas", id]);
@@ -153,8 +156,7 @@ export class PlantillasEnvioComponent implements OnInit {
   onChangeTipoEnvio(event) {
 
     if (event.value) {
-      this.tipoEnvioSelected = event.value;
-
+      this.filtro.tipoEnvio = event.value;
     }
 
   }
