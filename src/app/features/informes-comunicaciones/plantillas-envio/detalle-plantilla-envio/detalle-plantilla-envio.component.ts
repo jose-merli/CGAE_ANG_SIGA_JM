@@ -10,6 +10,8 @@ export class DetallePlantillaEnvioComponent implements OnInit {
 
   idPlantilla: string;
   datosGenerales: boolean = false;
+  datosConsulta: boolean = false;
+  datosRemitente: boolean = false;
 
   constructor(private activatedRoute: ActivatedRoute) { }
 
@@ -24,6 +26,14 @@ export class DetallePlantillaEnvioComponent implements OnInit {
 
   abreCierraFichaGeneral() {
     this.datosGenerales = !this.datosGenerales;
+  }
+
+  abreCierraFichaConsulta() {
+    this.datosConsulta = !this.datosConsulta;
+  }
+
+  abreCierraFichaRemitente() {
+    this.datosRemitente = !this.datosRemitente;
   }
 
 }
