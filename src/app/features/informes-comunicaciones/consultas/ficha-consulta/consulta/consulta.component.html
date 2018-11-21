@@ -1,0 +1,83 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="ficha-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="abreCierraFicha()">
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fas fa-file-export icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-center mb-1">
+            <label class="mr-auto title-ficha">Consulta</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>xxx:
+              <!-- <span>{{body.nombre}}</span> -->
+            </label>
+            <label>xxx:
+              <!-- <span>{{body.nombre}}</span> -->
+            </label>
+            <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-file-export icon-ficha"></i>
+        </div>
+        <label class="title-ficha">Consulta</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <!--cuerpo datos generales-->
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
+      <div class="form-row">
+        <div class="form-group col-lg-12 col-md-12">
+          <label>Cuerpo</label>
+          <i (click)="onShowAyuda()" class="fa fa-info-circle ml-1 cursor-pointer"></i>
+          <textarea pInputTextarea autoResize="autoResize" [(ngModel)]="cuerpo"></textarea>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="openFicha" class="card-footer ">
+      <div class="text-right main-button ">
+        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="onShowValores()" pButton type="button" icon="fas fa-play" iconPos="left" label="{{ 'general.boton.ejecutar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-dialog [(visible)]="showAyuda" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+  <p-header>
+    <label>Ayuda</label>
+  </p-header>
+  <div>
+    Texto ayuda
+  </div>
+  <p-footer>
+    <div class="text-right main-button ">
+      <button (click)="onShowAyuda()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog [(visible)]="showValores" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+  <p-header>
+    <label>Ayuda</label>
+  </p-header>
+  <div class="form-row">
+    <div class="form-group col-lg-4 col-md-4">
+      <label>xxx</label>
+      <input type="text" class="form-control" pInputText>
+    </div>
+  </div>
+  <p-footer>
+    <div class="text-right main-button ">
+      <button (click)="onShowAyuda()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
+  </p-footer>
+</p-dialog>

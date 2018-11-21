@@ -8,17 +8,18 @@
   <div class="card">
     <div class="card-body">
       <div class="form-row">
-        <div class="form-group col-lg-6 col-md-6">
+        <div class="form-group col-lg-4 col-md-4">
           <label>Clase comunicaciones</label>
           <p-dropdown [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicaciones" class="select-form"></p-dropdown>
         </div>
-      </div>
-      <div class="form-row d-flex align-items-end">
-        <div class="form-group col-lg-3 col-md-3">
+        <div class="form-group col-lg-4 col-md-4">
           <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
           <input type="text" class="form-control" [(ngModel)]="body.nombre" pInputText>
         </div>
-        <div class="form-group col-lg-3 col-md-3">
+      </div>
+      <div class="form-row d-flex align-items-end">
+
+        <div class="form-group col-lg-4 col-md-4">
           <label>Colegio</label>
           <p-dropdown [options]="colegios" [(ngModel)]="body.idColegio" class="select-form"></p-dropdown>
         </div>

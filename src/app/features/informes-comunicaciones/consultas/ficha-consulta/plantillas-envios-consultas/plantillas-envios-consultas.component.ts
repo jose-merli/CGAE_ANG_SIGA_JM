@@ -6,12 +6,11 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
 
 @Component({
-  selector: 'app-tarjeta-informes',
-  templateUrl: './tarjeta-informes.component.html',
-  styleUrls: ['./tarjeta-informes.component.scss']
+  selector: 'app-plantillas-envios-consultas',
+  templateUrl: './plantillas-envios-consultas.component.html',
+  styleUrls: ['./plantillas-envios-consultas.component.scss']
 })
-export class TarjetaInformesComponent implements OnInit {
-
+export class PlantillasEnviosConsultasComponent implements OnInit {
   openFicha: boolean = false;
   activacionEditar: boolean = true;
   derechoAcceso: any;
@@ -23,8 +22,6 @@ export class TarjetaInformesComponent implements OnInit {
   cols: any[];
   first: number = 0;
   selectedItem: number;
-  selectAll: boolean = false;
-  selectMultiple: boolean = false;
   numSelected: number = 0;
   rowsPerPage: any = [];
 
@@ -44,10 +41,6 @@ export class TarjetaInformesComponent implements OnInit {
     {
       key: "plantillas",
       activa: false
-    },
-    {
-      key: "consultas",
-      activa: false
     }
   ];
 
@@ -57,21 +50,13 @@ export class TarjetaInformesComponent implements OnInit {
   ngOnInit() {
 
     this.selectedItem = 10;
+
     this.cols = [
-      { field: 'idioma', header: 'Idioma' },
-      { field: 'fechaAsociacion', header: 'Fecha asociación' },
-      { field: 'ficheroSalida', header: 'Fichero salida' },
-      { field: 'sufijo', header: 'Sufijo' },
-      { field: 'formatoSalida', header: 'Formato salida' },
-      { field: 'destinatarios', header: 'Destinatarios' },
-      { field: 'condicion', header: 'Condición' },
-      { field: 'multiDocumento', header: 'Multi-documento' },
-      { field: 'datos', header: 'Datos' }
+      { field: 'plantilla', header: 'Plantilla' },
     ]
 
     this.datos = [
-      { id: 1, idioma: 'prueba', fechaAsociacion: 'prueba' }
-
+      { id: '1', plantilla: 'prueba' }
     ]
   }
 
@@ -132,35 +117,11 @@ export class TarjetaInformesComponent implements OnInit {
   }
 
 
-  isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    } else {
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    }
-  }
-
-  onChangeSelectAll() {
-    if (this.selectAll === true) {
-      this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
-    } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    }
-  }
 
   navigateTo(dato) {
+    console.log(dato)
     let id = dato[0].id;
-    if (!this.selectMultiple) {
-      this.router.navigate(['/fichaPlantillaDocumento', id]);
-    }
 
+    // this.router.navigate(['/fichaModeloComunicaciones', id]);
   }
-
 }

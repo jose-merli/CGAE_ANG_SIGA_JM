@@ -2,57 +2,56 @@
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p>{{'menu.comunicaciones' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>Plantilla de documento
+      <i class="pl-1 fa fa-angle-right"></i>{{ 'modelos.comunicaciones.literal.busqueda' | translate}}
     </p>
   </div>
   <div class="card">
-    <div class="card-header">
-      <div class="d-flex justify-content-start mb-1">
-        <label class="mr-auto title-ficha">Datos generales</label>
-      </div>
-    </div>
     <div class="card-body">
       <div class="form-row">
         <div class="form-group col-lg-4 col-md-4">
-          <label>Plantilla:</label>
-          <p-dropdown [options]="colegios" [(ngModel)]="body.idPlantilla" class="select-form"></p-dropdown>
+          <label>Módulos</label>
+          <p-dropdown [options]="modulos" [(ngModel)]="body.idModulo" class="select-form"></p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-4">
-          <label>Idioma:</label>
-          <p-dropdown [options]="idiomas" [(ngModel)]="body.idIdioma" class="select-form"></p-dropdown>
+          <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
+          <input type="text" class="form-control" [(ngModel)]="body.nombre" pInputText>
         </div>
         <div class="form-group col-lg-4 col-md-4">
-          <label>Formato de Salida</label>
-          <p-dropdown [options]="formatos" [(ngModel)]="body.idFormato" class="select-form"></p-dropdown>
+          <label>Descripción</label>
+          <input type="text" class="form-control" [(ngModel)]="body.descripcion" pInputText>
+        </div>
+      </div>
+      <div class="form-row d-flex align-items-end">
+
+        <div class="form-group col-lg-4 col-md-4">
+          <label>Objetivo</label>
+          <p-dropdown [options]="objetivos" [(ngModel)]="body.idObjetivo" class="select-form"></p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-4">
-          <label>Nombre del fichero generado</label>
-          <input type="text" class="form-control" [(ngModel)]="body.nombreFichero" pInputText>
+          <label>Clase de comunicaciones</label>
+          <p-dropdown [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicaciones" class="select-form"></p-dropdown>
         </div>
-        <div class="form-group col-lg-4 col-md-4">
-          <label>Sufijo del fichero generado</label>
-          <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='body.idSufijo' [options]="sufijos" optionLabel="label"
-            [selectedItemsLabel]="textSelected" maxSelectedLabels="1" [panelStyle]="{width:'100%'}"></p-multiSelect>
+        <div class="form-group col-lg-2 col-md-3">
+          <label class="d-block">Genérica</label>
+          <p-radioButton class="mr-2" name="groupname" value="true" [(ngModel)]="body.generica" label="Sí"></p-radioButton>
+          <p-radioButton name="groupname" value="false" [(ngModel)]="body.generica" label="No"></p-radioButton>
         </div>
+
+
       </div>
     </div>
     <div class="card-footer">
       <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"></button>
-        <button pButton type="button" icon="fa fa-undo " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="onBuscar()" [disabled]="isButtonDisabled()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+        <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
       </div>
     </div>
   </div>
-  <div class="card">
-    <div class="card-header">
-      <div class="d-flex justify-content-start mb-1">
-        <label class="mr-auto title-ficha">Consultas</label>
-      </div>
-    </div>
+  <div class="card" *ngIf="showResultados">
     <div class="card-body p-0">
       <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
-        [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both"
-        selectionMode="multiple" (onRowSelect)="onRowSelect()">
+        [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple"
+        paginatorPosition="both" (onRowSelect)="navigateTo(selectedDatos)">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
             <col *ngFor="let col of columns" [style.width]="col.width">
@@ -70,10 +69,11 @@
         </ng-template>
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
-            <td *ngFor="let col of columns" pEditableColumn>
-              <p-dropdown *ngIf="col.field=='consulta'" [(ngModel)]="dato.consulta" [options]="consultas" class="select-form"></p-dropdown>
-              <p-dropdown *ngIf="col.field=='finalidad'" [(ngModel)]="dato.finalidad" [options]="finalidad" class="select-form"></p-dropdown>
-              <p-dropdown *ngIf="col.field=='tipoEjecucion'" [(ngModel)]="dato.tipoEjecucion" [options]="tipoEjecucion" class="select-form"></p-dropdown>
+            <td class="text-center" *ngFor="let col of columns">
+              <span *ngIf="col.field !='preseleccionado'"> {{dato[col.field]}}</span>
+              <span *ngIf="col.field=='preseleccionado'">
+                <i class="fa fa-check"></i>
+              </span>
             </td>
           </tr>
         </ng-template>
@@ -101,26 +101,17 @@
       </p-table>
       <p-footer>
         <div class="text-right main-button">
-          <button (click)="addConsulta()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-          <button *ngIf="selectedDatos && selectedDatos != '' && !showHistorico" (click)="onBorrar(selectedDatos)" pButton type="button"
-            icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
-          <button *ngIf="showHistorico" (click)="getHistorico('hidden')" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
-          <button pButton type="button" icon="	fa fa-undo " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
           <button *ngIf="selectedDatos && selectedDatos != ''" (click)="isSelectMultiple()" pButton type="button" icon="fa fa-check"
             iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
-          <button *ngIf="selectedDatos && selectedDatos != '' && showHistorico" (click)="onBorrar(selectedDatos)" pButton type="button"
-            icon="fa fa-check" iconPos="left" label="{{'general.message.rehabilitar' | translate}}"></button>
-          <button *ngIf="!showHistorico" (click)="getHistorico('visible')" pButton type="button" icon="fa fa-history" iconPos="left"
-            label="{{'general.message.mostrarHistorico' | translate}}"></button>
-
+          <button (click)="onBorrar(selectedDatos)" *ngIf="selectedDatos && selectedDatos != ''" pButton type=" button" icon="fa fa-trash-alt"
+            iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+          <button *ngIf="selectedDatos && selectedDatos !=''" (click)="onDuplicar()" pButton type="button" icon="fa
+            fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
         </div>
       </p-footer>
 
     </div>
   </div>
-</div>
-<div class="mt-3 text-right main-button ">
-  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="Volver"></button>
 </div>
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <app-dialog></app-dialog>

@@ -611,6 +611,8 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   background: $primary-color;
 }
 
+
+
 .ui-dialog .ui-dialog-titlebar {
   background: none;
   border-bottom: 1px solid $grey4;
@@ -633,6 +635,10 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
 
 .ui-dialog .ui-dialog-content {
   overflow: inherit;
+}
+
+.ui-dialog .ui-state-default, .ui-dialog .ui-widget-content .ui-state-default{
+  background: none;
 }
 
 .ui-datatable tbody > tr.ui-widget-content.ui-state-highlight {
@@ -705,6 +711,7 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
 .far {
   font-weight: 400 !important;
 }
+
 
 .ql-toolbar.ql-snow {
   background: $blue3;
@@ -1018,6 +1025,10 @@ p-footer .main-button{
 
 .ui-dropdown label.ui-dropdown-label{
   text-align: left;
+}
+
+.cursor-pointer{
+  cursor: pointer;
 }
 
 /**RESPONSIVE**/

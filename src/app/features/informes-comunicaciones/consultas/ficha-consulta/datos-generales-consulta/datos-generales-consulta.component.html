@@ -1,0 +1,112 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="ficha-container">
+  <!--DATOS GENERALES-->
+  <div class="card">
+    <div class="card-header header-ficha" (click)="abreCierraFicha()">
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fas poll-h icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-center mb-1">
+            <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate}}</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>Módulo:
+              <!-- <span>{{body.nombre}}</span> -->
+            </label>
+            <label>Nombre:
+              <!-- <span>{{body.nombre}}</span> -->
+            </label>
+            <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas poll-h icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ "general.message.datos.generales" | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <!--cuerpo datos generales-->
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="col-lg-8 col-md-8">
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Módulo</label>
+              <p-dropdown [options]="modulos" [(ngModel)]="body.idModulo" class="select-form"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Nombre</label>
+              <input type="text" class="form-control" [(ngModel)]="body.nombre" pInputText>
+            </div>
+          </div>
+          <div class="form-row d-flex align-items-start">
+            <div class="form-group col-lg-4 col-md-4">
+              <label>Objetivo</label>
+              <p-dropdown [options]="objetivos" [(ngModel)]="body.idObjetivo" class="select-form"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-2 col-md-2">
+              <label class="d-block">Genérica</label>
+              <p-radioButton class="mr-2 mt-auto" name="groupname" value="true" [(ngModel)]="body.generica" label="Sí"></p-radioButton>
+              <p-radioButton name="groupname" value="false" [(ngModel)]="body.generica" label="No"></p-radioButton>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Clases de comunicaciones</label>
+              <p-dropdown [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicaciones" class="select-form"></p-dropdown>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4 pl-0">
+          <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12">
+              <label>Descripción</label>
+              <textarea pInputTextarea style="height:90px" autoResize="autoResize" [(ngModel)]="body.descripcion"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="body.idObjetivo=='1'" class="form-row">
+        <p class="col-12 mb-2">
+          <strong>Datos destinatarios</strong>
+        </p>
+        <div class="form-group col-lg-4 col-md-4">
+          <label>Nombre</label>
+          <input type="text" class="form-control" [(ngModel)]="body.nombreDestinatario" pInputText>
+        </div>
+        <div class="form-group col-lg-4 col-md-4">
+          <label>Apellidos</label>
+          <input type="text" class="form-control" [(ngModel)]="body.apellidosDestinatario" pInputText>
+        </div>
+        <div class="form-group col-lg-4 col-md-4">
+          <label>Correo electrónico</label>
+          <input type="text" class="form-control" [(ngModel)]="body.emailDestinatario" pInputText>
+        </div>
+        <div class="form-group col-lg-4 col-md-4">
+          <label>Móvil</label>
+          <input type="text" class="form-control" [(ngModel)]="body.movilDestinatario" pInputText>
+        </div>
+        <div class="form-group col-lg-4 col-md-4">
+          <label>Dirección Postal</label>
+          <input type="text" class="form-control" [(ngModel)]="body.direccionDestinatario" pInputText>
+        </div>
+        <div class="form-group col-lg-4 col-md-4">
+          <label>Idioma</label>
+          <p-dropdown [options]="idiomas" [(ngModel)]="body.idIdiomaDestinatario" class="select-form"></p-dropdown>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="openFicha" class="card-footer ">
+      <div class="text-right main-button ">
+        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+
+</div>

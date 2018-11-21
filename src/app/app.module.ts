@@ -260,6 +260,14 @@ import { TarjetaInformesComponent } from './features/informes-comunicaciones/mod
 import { PlantillaDocumentoComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-informes/plantilla-documento/plantilla-documento.component';
 import { DetallePlantillaEnvioComponent } from './features/informes-comunicaciones/plantillas-envio/detalle-plantilla-envio/detalle-plantilla-envio.component';
 import { TarjetaComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-comunicaciones/tarjeta-comunicaciones.component';
+import { ConsultasComponent } from './features/informes-comunicaciones/consultas/consultas.component';
+import { FichaConsultaComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/ficha-consulta.component';
+import { DatosGeneralesConsultaComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/datos-generales-consulta/datos-generales-consulta.component';
+import { ModelosComunicacionesConsultaComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/modelos-comunicaciones-consulta/modelos-comunicaciones-consulta.component';
+import { PlantillasEnviosConsultasComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/plantillas-envios-consultas/plantillas-envios-consultas.component';
+import { ConsultaComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/consulta/consulta.component';
+
+
 
 @NgModule({
   declarations: [
@@ -469,7 +477,13 @@ import { TarjetaComunicacionesComponent } from './features/informes-comunicacion
     TarjetaInformesComponent,
     PlantillaDocumentoComponent,
     DetallePlantillaEnvioComponent,
-    TarjetaComunicacionesComponent
+    TarjetaComunicacionesComponent,
+    ConsultasComponent,
+    FichaConsultaComponent,
+    DatosGeneralesConsultaComponent,
+    ModelosComunicacionesConsultaComponent,
+    PlantillasEnviosConsultasComponent,
+    ConsultaComponent
   ],
   imports: [
     BrowserModule,

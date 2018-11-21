@@ -192,6 +192,8 @@ import { ModelosComunicacionesComponent } from './features/informes-comunicacion
 import { FichaModeloComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/ficha-modelo-comunicaciones.component';
 import { PlantillaDocumentoComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-informes/plantilla-documento/plantilla-documento.component';
 import { DetallePlantillaEnvioComponent } from "./features/informes-comunicaciones/plantillas-envio/detalle-plantilla-envio/detalle-plantilla-envio.component";
+import { ConsultasComponent } from './features/informes-comunicaciones/consultas/consultas.component';
+import { FichaConsultaComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/ficha-consulta.component';
 
 
 const appRoutes: Routes = [
@@ -940,6 +942,17 @@ const appRoutes: Routes = [
     component: PlantillaDocumentoComponent,
     canActivate: [AuthGuard]
   },
+  {
+    path: "consultas",
+    component: ConsultasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fichaConsulta/:id",
+    component: FichaConsultaComponent,
+    canActivate: [AuthGuard]
+  },
+
   // Administracion
   {
     path: "catalogosMaestros",
