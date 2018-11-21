@@ -49,6 +49,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   idPersona: String;
   textSelected: String = "{0} etiquetas seleccionadas";
   body: DatosDireccionesItem = new DatosDireccionesItem();
+  checkBody: DatosDireccionesItem = new DatosDireccionesItem();
   bodySearch: DatosDireccionesObject = new DatosDireccionesObject();
   historyDisable: boolean = false;
   bodyCodigoPostal: DatosDireccionesCodigoPostalItem = new DatosDireccionesCodigoPostalItem();
@@ -194,6 +195,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
           console.log(err);
         }
       );
+    this.checkBody = JSON.parse(JSON.stringify(this.body));
   }
 
   getDatosContactos() {
@@ -575,31 +577,100 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
 
+  guardarLetrado() {
+    this.progressSpinner = true;
+    // modo edicion
+    this.comprobarTablaDatosContactos();
+    this.comprobarCheckProvincia();
+    this.body.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
+    this.body.idPersona = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    this.body.idProvincia = this.provinciaSelecionada;
+    this.sigaServices
+      .post("fichaDatosDirecciones_solicitudCreate", this.body)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.body = JSON.parse(data["body"]);
+          this.backTo();
+          this.displayAuditoria = false;
+        },
+        error => {
+          this.bodySearch = JSON.parse(error["error"]);
+          this.showGenericFail();
+          console.log(error);
+          this.progressSpinner = false;
+          this.displayAuditoria = false;
+        }
+      );
+  }
+
+  igualInicio() {
+    if (JSON.stringify(this.body) == JSON.stringify(this.checkBody)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  tipoDireccionDisable() {
+    if (this.historyDisable) {
+      return true;
+    } else {
+      if (this.isLetrado) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  desactivaDuplicar() {
+    if (this.historyDisable) {
+      return true;
+    } else {
+      if (
+        this.codigoPostalValido &&
+        (this.body.idTipoDireccion == undefined || this.isLetrado)
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
+  desactivaGuardar() {
+    this.validarCodigoPostal();
+    this.comprobarTablaDatosContactos();
+    if (this.historyDisable) {
+      return true;
+    } else {
+      if (
+        this.codigoPostalValido &&
+        (this.body.idTipoDireccion == undefined || this.isLetrado) &&
+        !this.igualInicio()
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
+  showGenericFail() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "general.message.error.realiza.accion"
+      )
+    });
+  }
   comprobarAuditoria() {
     // modo edicion
     if (this.isLetrado) {
-      this.progressSpinner = true;
-      // modo edicion
-      this.comprobarTablaDatosContactos();
-      this.comprobarCheckProvincia();
-      this.body.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
-      this.body.idPersona = JSON.parse(sessionStorage.getItem("usuarioBody"));
-      this.body.idProvincia = this.provinciaSelecionada;
-      this.sigaServices
-        .post("fichaDatosDirecciones_solicitudCreate", this.body)
-        .subscribe(
-          data => {
-            this.progressSpinner = false;
-            this.body = JSON.parse(data["body"]);
-            this.backTo();
-          },
-          error => {
-            this.bodySearch = JSON.parse(error["error"]);
-            this.showFail(this.bodySearch.error.message.toString());
-            console.log(error);
-            this.progressSpinner = false;
-          }
-        );
+      this.displayAuditoria = true;
     } else {
       if (this.registroEditable) {
         // mostrar la auditoria depende de un parámetro que varía según la institución
@@ -666,7 +737,8 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   restablecer() {
     if (sessionStorage.getItem("direccion") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("direccion"));
+      this.body = JSON.parse(JSON.stringify(this.checkBody));
+      // this.checkBody = JSON.parse()
       this.body.idPersona = this.usuarioBody[0].idPersona;
       this.provinciaSelecionada = this.body.idProvincia;
       this.generarTabla();
@@ -689,6 +761,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   backTo() {
+    sessionStorage.removeItem("direccion");
     this.location.back();
   }
 

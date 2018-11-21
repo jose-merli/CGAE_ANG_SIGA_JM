@@ -337,7 +337,9 @@ export class SigaServices {
     fichaDatosCurriculares_solicitudUpdate:
       "fichaDatosCurriculares/solicitudUpdate",
     fichaDatosDirecciones_solicitudCreate:
-      "fichaDatosDirecciones/solicitudCreate"
+      "fichaDatosDirecciones/solicitudCreate",
+    fichaDatosGenerales_datosGeneralesSolicitudModificación:
+      "/fichaDatosGenerales/datosGeneralesSolicitudModificación"
   };
 
   private menuToggled = new Subject<any>();

@@ -487,6 +487,21 @@ export class EdicionCurricularesComponent implements OnInit {
     }
   }
 
+  activateDuplicar() {
+    if (
+      this.creditosIncorrecto == true ||
+      this.body.fechaDesde == null ||
+      this.body.idTipoCv == undefined ||
+      this.body.idTipoCv == null ||
+      this.body.descripcion == null ||
+      this.body.descripcion == ""
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   activateGuardar() {
     if (JSON.stringify(this.body) == JSON.stringify(this.bodyInicial)) {
       return false;
