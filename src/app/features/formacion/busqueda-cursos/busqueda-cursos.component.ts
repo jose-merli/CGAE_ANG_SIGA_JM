@@ -673,4 +673,12 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
 
     return null;
   }
+
+  changeColsAndData() {
+    this.datos = [];
+    this.body = new DatosCursosItem();
+    this.deshabilitarCombVis = false;
+    this.deshabilitarCombCol = false;
+    this.selectedTemas = [];
+  }
 }

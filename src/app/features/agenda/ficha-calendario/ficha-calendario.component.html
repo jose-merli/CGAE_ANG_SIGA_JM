@@ -227,7 +227,7 @@
         <div *ngIf="!historico" class="text-right main-button">
           <button (click)="getHistoricEventNotifications(); selectedDatos=[]" pButton type="button" icon="fa fa-history" iconPos="left"
             label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
-          <button [disabled]="!(selectedDatos && selectedDatos != '')" (click)="deleteNotification(selectedDatos)" pButton type="button"
+          <button [disabled]="!(selectedDatos && selectedDatos != '')" (click)="confirmarBorrar(selectedDatos); selectedDatos=false" pButton type="button"
             icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
           <button pButton (click)="newNotification()" type="button" icon="fa fa-plus" iconPos="left" label="{{
             'general.boton.new' | translate }}"></button>
@@ -238,9 +238,18 @@
         </div>
       </div>
     </div>
+
+    
+
   </div>
 </div>
 
+<div class="mt-3 text-right main-button ">
+  <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+</div>
+
+<app-dialog></app-dialog>
+ 
 <div *ngIf="progressSpinner " class="overlay-spinner ">
   <div class="loader "></div>
 </div>

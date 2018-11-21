@@ -1,13 +1,16 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
-import { SigaServices } from "../../../_services/siga.service";
-import { TreeNode } from "../../../utils/treenode";
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
+import { Router } from "../../../../../node_modules/@angular/router";
+import { DataTable } from "../../../../../node_modules/primeng/primeng";
+import { ConfirmationService } from "primeng/api";
 import { CalendarItem } from "../../../models/CalendarItem";
+import { TranslateService } from "../../../commons/translate/translation.service";
+import { NotificacionEventoItem } from "../../../models/NotificacionEventoItem";
+import { NotificacionEventoObject } from "../../../models/NotificacionEventoObject";
 import { PermisosCalendarioItem } from "../../../models/PermisosCalendarioItem";
 import { PermisosCalendarioObject } from "../../../models/PermisosCalendarioObject";
-import { DataTable } from "../../../../../node_modules/primeng/primeng";
-import { Router } from "../../../../../node_modules/@angular/router";
-import { NotificacionEventoObject } from "../../../models/NotificacionEventoObject";
-import { NotificacionEventoItem } from "../../../models/NotificacionEventoItem";
+import { TreeNode } from "../../../utils/treenode";
+import { SigaServices } from "../../../_services/siga.service";
+import { Location } from "@angular/common";
 
 @Component({
   selector: "app-ficha-calendario",
@@ -70,7 +73,10 @@ export class FichaCalendarioComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService,
+    private location: Location
   ) {
     this.numSeleccionados = 0;
     this.numCambios = 0;
@@ -521,7 +527,7 @@ export class FichaCalendarioComponent implements OnInit {
       .subscribe(
         data => {
           this.progressSpinner = false;
-          // this.showSuccessDelete();
+          this.showSuccessDelete();
           this.getEventNotifications();
           this.selectMultiple = false;
         },
@@ -534,6 +540,37 @@ export class FichaCalendarioComponent implements OnInit {
       );
   }
 
+  confirmarBorrar(selectedDatos) {
+    let mess = this.translateService.instant("messages.deleteConfirmation");
+    let icon = "fa fa-trash-alt";
+
+    if (selectedDatos.length > 1) {
+      mess =
+        this.translateService.instant("messages.deleteConfirmation.much") +
+        selectedDatos.length +
+        " " +
+        this.translateService.instant("messages.deleteConfirmation.register") +
+        "?";
+    }
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.deleteNotification(selectedDatos);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
   getHistoricEventNotifications() {
     this.progressSpinner = true;
     this.historico = true;
@@ -653,5 +690,13 @@ export class FichaCalendarioComponent implements OnInit {
         activa: true
       }
     ];
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+  backTo() {
+    this.location.back();
   }
 }
