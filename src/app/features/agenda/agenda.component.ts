@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewEncapsulation,
+  ViewChild,
+  OnDestroy
+} from "@angular/core";
 import { Router } from "@angular/router";
 import { CalendarItem } from "../../models/CalendarItem";
 import { Checkbox } from "primeng/primeng";
@@ -52,20 +58,24 @@ export class AgendaComponent implements OnInit {
       }
     };
 
-    this.getCalendarios();
-
     this.events = [];
+
+    this.getCalendarios();
   }
+
+  // ngOnDestroy() {
+  //   sessionStorage.removeItem("calendarEdit");
+  // }
 
   onClickCheckBox(calendario) {
     calendario.checked = !calendario.checked;
     this.getEventos(calendario);
+    sessionStorage.setItem("calendarios", JSON.stringify(this.calendarios));
   }
 
   onClickLabelCheckbox(calendario: CalendarItem) {
     sessionStorage.setItem("modoEdicion", "true");
     sessionStorage.setItem("idCalendario", calendario.idCalendario);
-    sessionStorage.setItem("calendarEdit", JSON.stringify(calendario));
     this.router.navigate(["/editarCalendario"]);
   }
 
@@ -78,6 +88,18 @@ export class AgendaComponent implements OnInit {
           this.calendarios = res.calendarItems;
         }
 
+        if (sessionStorage.getItem("calendarios")) {
+          JSON.parse(sessionStorage.getItem("calendarios")).forEach(element => {
+            if (element.checked) {
+              let posicion = this.calendarios.findIndex(
+                x => x.idCalendario === element.idCalendario
+              );
+
+              this.calendarios[posicion].checked = true;
+              this.getEventos(this.calendarios[posicion]);
+            }
+          });
+        }
         this.progressSpinner = false;
       },
       err => {
@@ -149,18 +171,54 @@ export class AgendaComponent implements OnInit {
     let evento: EventoItem = new EventoItem();
     evento.idEvento = event.calEvent.idEvento;
     evento.idCalendario = event.calEvent.idCalendario;
+    evento.idTipoEvento = event.calEvent.idTipoEvento;
+    evento.idEstadoEvento = event.calEvent.idEstadoEvento;
     evento.title = event.calEvent.title;
     evento.allDay = event.calEvent.allDay;
     evento.color = event.calEvent.color;
-
-    if (event.calEvent.start) {
-      evento.start = event.calEvent.start._i;
-    }
+    evento.descripcion = event.calEvent.descripcion;
+    evento.recursos = event.calEvent.recursos;
+    evento.lugar = event.calEvent.lugar;
+    evento.start = event.calEvent.start;
 
     if (event.calEvent.end) {
-      evento.end = event.calEvent.end._i;
+      evento.end = event.calEvent.end;
+    } else {
+      evento.end = evento.start;
     }
 
-    alert(JSON.stringify(evento));
+    // alert(JSON.stringify(evento));
+
+    sessionStorage.setItem("modoEdicion", "true");
+    sessionStorage.setItem("eventoEdit", JSON.stringify(evento));
+    this.router.navigate(["/fichaEventos"]);
+  }
+
+  onDayClickEvento(event) {
+    let calendar: CalendarItem = new CalendarItem();
+    let encontrado: boolean = false;
+    let contador: number = 0;
+
+    while (!encontrado && contador < this.calendarios.length) {
+      calendar = this.calendarios[contador];
+      if (
+        calendar.descripcion == "Calendario General" &&
+        calendar.tipoAcceso == 3
+      )
+        encontrado = true;
+
+      contador++;
+    }
+
+    if (encontrado) {
+      let evento: EventoItem = new EventoItem();
+      evento.start = event.date;
+      evento.end = event.date;
+
+      sessionStorage.setItem("calendarios", JSON.stringify(this.calendarios));
+      sessionStorage.setItem("eventoEdit", JSON.stringify(evento));
+      sessionStorage.setItem("modoEdicion", "true");
+      this.router.navigate(["/fichaEventos"]);
+    }
   }
 }

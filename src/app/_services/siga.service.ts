@@ -255,6 +255,8 @@ export class SigaServices {
     fichaEventos_getCalendars: "fichaEventos/getCalendars",
     fichaEventos_getTypeEvent: "fichaEventos/getTypeEvent",
     fichaEventos_getEventStates: "fichaEventos/getEventStates",
+    fichaEventos_getRepeatEvery: "fichaEventos/getRepeatEvery",
+    fichaEventos_getDaysWeek: "fichaEventos/getDaysWeek",
     fichaEventos_saveEventCalendar: "fichaEventos/saveEventCalendar",
     fichaCursos_getTrainersCourse: "fichaCursos/getTrainersCourse",
     fichaCursos_deleteTrainersCourse: "fichaCursos/deleteTrainersCourse",
@@ -383,9 +385,13 @@ export class SigaServices {
     busquedaSanciones_comboOrigen: "busquedaSanciones/comboOrigen",
     fichaDatosGenerales_etiquetasPersona:
       "fichaDatosGenerales/etiquetasPersona",
+    getLetrado: "/getLetrado",
     fichaDatosCurriculares_solicitudUpdate:
-      "/fichaDatosCurriculares/solicitudUpdate",
-    getLetrado: "getLetrado"
+      "fichaDatosCurriculares/solicitudUpdate",
+    fichaDatosDirecciones_solicitudCreate:
+      "fichaDatosDirecciones/solicitudCreate",
+    fichaDatosGenerales_datosGeneralesSolicitudModificación:
+      "/fichaDatosGenerales/datosGeneralesSolicitudModificación"
   };
 
   private menuToggled = new Subject<any>();

@@ -263,8 +263,6 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     );
   }
 
-
-
   getComboDisponibilidadPlazas() {
     this.comboDisponibilidadPlazas = [
       { label: "", value: "" },
@@ -347,11 +345,13 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   }
 
   irEditarCurso(selectedDatos) {
-    sessionStorage.setItem("modoEdicionCurso", "true");
     if (selectedDatos.length >= 1 && this.selectMultiple == false) {
+      sessionStorage.setItem("modoEdicionCurso", "true");
       sessionStorage.setItem("cursoSelected", JSON.stringify(selectedDatos));
       console.log(selectedDatos);
       this.router.navigate(["/fichaCurso"]);
+    } else {
+      this.numSelected = this.selectedDatos.length;
     }
   }
 
@@ -672,5 +672,13 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     }
 
     return null;
+  }
+
+  changeColsAndData() {
+    this.datos = [];
+    this.body = new DatosCursosItem();
+    this.deshabilitarCombVis = false;
+    this.deshabilitarCombCol = false;
+    this.selectedTemas = [];
   }
 }

@@ -63,6 +63,9 @@ export class FichaColegialComponent implements OnInit {
   otrasColegiacionesBody: DatosColegiadosObject = new DatosColegiadosObject();
   certificadosBody: FichaColegialCertificadosObject = new FichaColegialCertificadosObject();
 
+  isLetrado: boolean;
+  displayAuditoria: boolean = false;
+
   idPersona: any;
   openFicha: boolean = false;
   es: any = esCalendar;
@@ -128,11 +131,14 @@ export class FichaColegialComponent implements OnInit {
   fechaNacimiento: Date;
   fechaAlta: Date;
   comisiones: boolean;
+  guiaJudicial: boolean;
+  publicidad: boolean;
   partidoJudicial: any;
   esNewColegiado: boolean = false;
   esColegiado: boolean;
   archivoDisponible: boolean = false;
   existeImagen: boolean = false;
+  showGuardarAuditoria: boolean = false;
   etiquetasPersonaJuridicaSelecionados: ComboEtiquetasItem[] = [];
   imagenPersona: any;
   partidoJudicialObject: DatosDireccionesObject = new DatosDireccionesObject();
@@ -546,18 +552,20 @@ export class FichaColegialComponent implements OnInit {
     this.sigaServices.get("getLetrado").subscribe(
       data => {
         isLetrado = data;
-        if(isLetrado.value == "S"){
+        if (isLetrado.value == "S") {
           sessionStorage.setItem("isLetrado", "true");
-        }else{
+          this.isLetrado = true;
+        } else {
           sessionStorage.setItem("isLetrado", "false");
+          this.isLetrado = false;
         }
       },
       err => {
         sessionStorage.setItem("isLetrado", "true");
+        this.isLetrado = true;
         console.log(err);
       }
     );
-
   }
 
   isSelectMultiple() {
@@ -925,6 +933,25 @@ export class FichaColegialComponent implements OnInit {
         }
       );
   }
+
+  cerrarAuditoria() {
+    this.displayAuditoria = false;
+  }
+
+  comprobarAuditoria() {
+    // modo creación
+
+    // mostrar la auditoria depende de un parámetro que varía según la institución
+    this.generalBody.motivo = undefined;
+    this.showGuardarAuditoria = false;
+
+    if (!this.isLetrado) {
+      this.generalesGuardar();
+    } else {
+      this.displayAuditoria = true;
+    }
+  }
+
   generalesGuardar() {
     this.progressSpinner = true;
     this.generalBody.nombre = this.generalBody.soloNombre;
@@ -1054,11 +1081,68 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
+  comprobarCampoMotivo() {
+    if (
+      this.generalBody.motivo != undefined &&
+      this.generalBody.motivo != "" &&
+      this.generalBody.motivo.trim() != ""
+    ) {
+      this.showGuardarAuditoria = true;
+    } else {
+      this.showGuardarAuditoria = false;
+    }
+  }
+
+  solicitarModificacionGenerales() {
+    // fichaDatosGenerales_datosGeneralesSolicitudModificación
+    this.comisionesAString();
+
+    this.sigaServices
+      .post(
+        "fichaDatosGenerales_datosGeneralesSolicitudModificación",
+        this.generalBody
+      )
+      .subscribe(
+        data => {
+          // sessionStorage.removeItem("personaBody");
+          sessionStorage.setItem(
+            "personaBody",
+            JSON.stringify(this.generalBody)
+          );
+          this.checkGeneralBody = new FichaColegialGeneralesItem();
+
+          this.checkGeneralBody = JSON.parse(JSON.stringify(this.generalBody));
+          this.activacionGuardarGenerales();
+          this.progressSpinner = false;
+          this.cerrarAuditoria();
+          this.showSuccess();
+        },
+        error => {
+          console.log(error);
+          this.progressSpinner = false;
+          this.activacionGuardarGenerales();
+          this.cerrarAuditoria();
+          this.showFail();
+        }
+        // EVENTO PARA ACTIVAR GUARDAR AL BORRAR UNA ETIQUETA
+      );
+  }
+
   comisionesAString() {
     if (this.comisiones == true) {
       this.generalBody.comisiones = "1";
     } else {
       this.generalBody.comisiones = "0";
+    }
+    if (this.guiaJudicial == true) {
+      this.generalBody.guiaJudicial = "1";
+    } else {
+      this.generalBody.guiaJudicial = "0";
+    }
+    if (this.publicidad == true) {
+      this.generalBody.publicidad = "1";
+    } else {
+      this.generalBody.publicidad = "0";
     }
   }
 
@@ -1067,6 +1151,16 @@ export class FichaColegialComponent implements OnInit {
       this.comisiones = true;
     } else {
       this.comisiones = false;
+    }
+    if (this.generalBody.publicidad == "1") {
+      this.publicidad = true;
+    } else {
+      this.publicidad = false;
+    }
+    if (this.generalBody.guiaJudicial == "1") {
+      this.guiaJudicial = true;
+    } else {
+      this.guiaJudicial = false;
     }
   }
 
@@ -1231,10 +1325,12 @@ export class FichaColegialComponent implements OnInit {
   }
 
   habilitarAutocompletar(event) {
-    if (event) {
-      this.autocompletar = true;
-    } else {
-      this.autocompletar = true;
+    if (!this.isLetrado) {
+      if (event) {
+        this.autocompletar = true;
+      } else {
+        this.autocompletar = true;
+      }
     }
   }
 

@@ -77,7 +77,7 @@
               </div>
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{"censo.datosCV.literal.creditos" | translate}}</label>
-                <input [(ngModel)]="body.creditos" (ngModelChange)="compruebaRegistro()" type="text" class="form-control" [maxLength]="5"
+                <input [(ngModel)]="body.creditos" (ngModelChange)="compruebaRegistro()" [disabled]="isLetrado" type="text" class="form-control" [maxLength]="5"
                   pInputText>
                 <div *ngIf="creditosIncorrecto == true">
                   <label class="labelError">Solo números</label>
@@ -86,18 +86,18 @@
 
               <div class="form-group col-lg-3 col-md-3">
                 <br>
-                <p-checkbox [(ngModel)]='verificado' (onChange)="certificadoToBoolean()" label="{{'censo.consultaDatosCV.literal.verificado' | translate}}"
+                <p-checkbox [(ngModel)]='verificado' (onChange)="certificadoToBoolean()" [disabled]="isLetrado" label="{{'censo.consultaDatosCV.literal.verificado' | translate}}"
                   binary="true"></p-checkbox>
 
               </div>
 
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{"censo.consultaDatosCV.literal.fechaVerificacion" | translate}}</label>
-                <p-calendar [locale]="es" [(ngModel)]="body.fechaMovimiento" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                <p-calendar [locale]="es" [(ngModel)]="body.fechaMovimiento" [disabled]="isLetrado" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
 
               </div>
               <div class="form-group col-lg-3 col-md-3">
-                <label>{{"general.description" | translate}}</label>
+                <label>{{"general.description" | translate}} (*)</label>
                 <input type="text" class="form-control" [(ngModel)]="body.descripcion" pInputText>
               </div>
             </div>
@@ -107,14 +107,15 @@
         <br>
         <div class="card-footer ">
           <div class="text-right main-button ">
-            <button *ngIf="nuevo == false" (click)="duplicarRegistro()" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
+            <button *ngIf="nuevo == false" (click)="duplicarRegistro()" pButton type="button" [disabled]="!activateDuplicar()" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
             <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="!activateRestablecer()"
               label="{{ 'general.boton.restablecer' | translate}}"></button>
             <button *ngIf="isLetrado == false" (click)="guardarCv()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar()" label="{{ 'general.boton.guardar' | translate}}"></button>
-            <button *ngIf="isLetrado == true" (click)="solicitudGuardarCv()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar()" label="Solicitar modificación"></button>
+            <button *ngIf="solicitaModificacion()" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar()" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
+            <button *ngIf="solicitaCreacion()" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar()" label="{{ 'general.boton.solicitarNuevo' | translate}}"></button>
           </div>
         </div>
-      </div>
+      </div> 
     </div>
   </div>
 
@@ -126,7 +127,7 @@
 
 
 <!-- AUDITORIA -->
-<!-- 
+
 <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500"
   [minWidth]="500">
   <p-header class="title">
@@ -144,11 +145,11 @@
   <p-footer>
     <div class="text-right main-button ">
       <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
-      <button (click)="guardar()" [disabled]="!activateGuardar()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+      <button (click)="solicitudGuardarCv()" [(disabled)]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
 
     </div>
   </p-footer>
-</p-dialog> -->
+</p-dialog>
 
 
 

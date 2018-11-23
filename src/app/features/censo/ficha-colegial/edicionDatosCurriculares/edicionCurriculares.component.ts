@@ -28,11 +28,9 @@ export class EdicionCurricularesComponent implements OnInit {
   msgs: Message[] = [];
   es: any = esCalendar;
   verificado: Boolean;
-  displayAuditoria: any;
+  displayAuditoria: boolean = false;
   motivo: any;
-  showGuardarAuditoria: any;
-  comprobarCampoMotivo: any;
-  cerrarAuditoria: any;
+  showGuardarAuditoria: boolean = false;
   guardar: any;
   rowsPerPage: any = [];
   showDatosGenerales: boolean = true;
@@ -173,7 +171,9 @@ export class EdicionCurricularesComponent implements OnInit {
     // this.verificado
     this.booleanToCertificado();
     this.activateGuardar();
-    this.changeCategoria();
+    if (this.nuevo == false) {
+      this.changeCategoria();
+    }
   }
   abrirFicha() {
     this.openFicha = !this.openFicha;
@@ -273,28 +273,48 @@ export class EdicionCurricularesComponent implements OnInit {
   //   );
   // }
 
-  solicitudModificacion() {
-    this.sigaServices
-      .postPaginado(
-        "fichaDatosCurriculares_solicitudUpdate",
-        "?numPagina=1",
-        this.body
-      )
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-          this.activateGuardar();
-          this.showSuccess();
-          this.backTo();
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-          this.showFail();
-        },
-        () => {}
-      );
+  solicitaModificacion() {
+    if (this.isLetrado == true && this.nuevo == false) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  solicitaCreacion() {
+    if (this.isLetrado == true && this.nuevo == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  comprobarAuditoria() {
+    // modo creación
+
+    // mostrar la auditoria depende de un parámetro que varía según la institución
+    this.body.motivo = undefined;
+
+    if (!this.isLetrado) {
+      this.solicitudGuardarCv();
+    } else {
+      this.displayAuditoria = true;
+    }
+  }
+
+  cerrarAuditoria() {
+    this.displayAuditoria = false;
+  }
+
+  comprobarCampoMotivo() {
+    if (
+      this.body.motivo != undefined &&
+      this.body.motivo != "" &&
+      this.body.motivo.trim() != ""
+    ) {
+      this.showGuardarAuditoria = true;
+    } else {
+      this.showGuardarAuditoria = false;
+    }
   }
 
   solicitudGuardarCv() {
@@ -314,7 +334,7 @@ export class EdicionCurricularesComponent implements OnInit {
             this.progressSpinner = false;
             this.bodyInicial = JSON.parse(JSON.stringify(this.body));
             this.activateGuardar();
-            this.showSuccess();
+            this.showSuccess(); //Debe mostrar "solicitud realizada correctamente"
             this.backTo();
           },
           err => {
@@ -326,13 +346,17 @@ export class EdicionCurricularesComponent implements OnInit {
         );
     } else {
       this.sigaServices
-        .postPaginado("update", "?numPagina=1", this.body)
+        .postPaginado(
+          "fichaDatosCurriculares_solicitudUpdate",
+          "?numPagina=1",
+          this.body
+        )
         .subscribe(
           data => {
             this.progressSpinner = false;
             this.bodyInicial = JSON.parse(JSON.stringify(this.body));
             this.activateGuardar();
-            this.showSuccess();
+            this.showSuccess(); //Debe mostrar "solicitud realizada correctamente"
             this.backTo();
           },
           err => {
@@ -463,6 +487,21 @@ export class EdicionCurricularesComponent implements OnInit {
     }
   }
 
+  activateDuplicar() {
+    if (
+      this.creditosIncorrecto == true ||
+      this.body.fechaDesde == null ||
+      this.body.idTipoCv == undefined ||
+      this.body.idTipoCv == null ||
+      this.body.descripcion == null ||
+      this.body.descripcion == ""
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   activateGuardar() {
     if (JSON.stringify(this.body) == JSON.stringify(this.bodyInicial)) {
       return false;
@@ -471,7 +510,9 @@ export class EdicionCurricularesComponent implements OnInit {
         this.creditosIncorrecto == true ||
         this.body.fechaDesde == null ||
         this.body.idTipoCv == undefined ||
-        this.body.idTipoCv == null
+        this.body.idTipoCv == null ||
+        this.body.descripcion == null ||
+        this.body.descripcion == ""
       ) {
         return false;
       } else {
