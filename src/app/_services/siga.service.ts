@@ -288,8 +288,60 @@ export class SigaServices {
     solicitudModificacion_tipoModificacion:
       "solicitudModificacion/tipoModificacion",
     solicitudModificacion_estado: "solicitudModificacion/estado",
+    // Solicitud Modificacion
+    solicitudModificacion_searchSolModif:
+      "solicitudModificacion/searchSolModif",
+    solicitudModificacion_processSolModif:
+      "solicitudModificacion/processSolModif",
+    solicitudModificacion_denySolModif: "solicitudModificacion/denySolModif",
+    solicitudModificacion_searchSolModifDatosBancarios:
+      "solicitudModificacion/searchSolModifDatosBancarios",
+    solicitudModificacion_processSolModifDatosBancarios:
+      "solicitudModificacion/processSolModifDatosBancarios",
+    solicitudModificacion_denySolModifDatosBancarios:
+      "solicitudModificacion/denySolModifDatosBancarios",
+    solicitudModificacion_searchSolModifDatosCurriculares:
+      "solicitudModificacion/searchSolModifDatosCurriculares",
+    solicitudModificacion_processSolModifDatosCurriculares:
+      "solicitudModificacion/processSolModifDatosCurriculares",
+    solicitudModificacion_denySolModifDatosCurriculares:
+      "solicitudModificacion/denySolModifDatosCurriculares",
+    solicitudModificacion_searchSolModifDatosDirecciones:
+      "solicitudModificacion/searchSolModifDatosDirecciones",
+    solicitudModificacion_processSolModifDatosDirecciones:
+      "solicitudModificacion/processSolModifDatosDirecciones",
+    solicitudModificacion_denySolModifDatosDirecciones:
+      "solicitudModificacion/denySolModifDatosDirecciones",
+    solicitudModificacion_searchSolModifDatosExpedientes:
+      "solicitudModificacion/searchSolModifDatosExpedientes",
+    solicitudModificacion_processSolModifDatosExpedientes:
+      "solicitudModificacion/processSolModifDatosExpedientes",
+    solicitudModificacion_denySolModifDatosExpedientes:
+      "solicitudModificacion/denySolModifDatosExpedientes",
+    solicitudModificacion_searchSolModifDatosFacturacion:
+      "solicitudModificacion/searchSolModifDatosFacturacion",
+    solicitudModificacion_processSolModifDatosFacturacion:
+      "solicitudModificacion/processSolModifDatosFacturacion",
+    solicitudModificacion_denySolModifDatosFacturacion:
+      "solicitudModificacion/denySolModifDatosFacturacion",
+    solicitudModificacion_searchSolModifDatosGenerales:
+      "solicitudModificacion/searchSolModifDatosGenerales",
+    solicitudModificacion_processSolModifDatosGenerales:
+      "solicitudModificacion/processSolModifDatosGenerales",
+    solicitudModificacion_denySolModifDatosGenerales:
+      "solicitudModificacion/denySolModifDatosGenerales",
+    solicitudModificacion_searchSolModifDatosUseFoto:
+      "solicitudModificacion/searchSolModifDatosUseFoto",
+    solicitudModificacion_processSolModifDatosUseFoto:
+      "solicitudModificacion/processSolModifDatosUseFoto",
+    solicitudModificacion_denySolModifDatosUseFoto:
+      "solicitudModificacion/denySolModifDatosUseFoto",
     solicitudModificacion_searchModificationRequest:
       "solicitudModificacion/searchModificationRequest",
+    solicitudModificacionEspecifica_searchSpecificRequest:
+      "solicitudModificacionEspecifica/searchSpecificRequest",
+    solicitudModificacion_searchDatosDirecciones:
+      "solicitudModificacion/searchDatosDirecciones",
     tipoCurricular_categoriaCurricular: "tipoCurricular/categoriaCurricular",
     tipoCurricular_searchTipoCurricular: "tipoCurricular/searchTipoCurricular",
     tipoCurricular_createTipoCurricular: "tipoCurricular/createTipoCurricular",
