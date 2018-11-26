@@ -514,38 +514,6 @@ export class FichaColegialComponent implements OnInit {
     return {};
   }
 
-  // PENDIENTE AÑADIR IDPROCESO PROPIO DE FICHA COLEGIAL
-  // checkAcceso() {
-  //   let controlAcceso = new ControlAccesoDto();
-  //   controlAcceso.idProceso = "120";
-  //   let derechoAcceso;
-  //   this.sigaServices.post("acces_control", controlAcceso).subscribe(
-  //     data => {
-  //       let permisosTree = JSON.parse(data.body);
-  //       let permisosArray = permisosTree.permisoItems;
-  //       derechoAcceso = permisosArray[0].derechoacceso;
-  //     },
-  //     err => {
-  //       console.log(err);
-  //     },
-  //     () => {
-  //       if (derechoAcceso >= 2) {
-  //         this.activacionEditar = true;
-  //         if (derechoAcceso == 2) {
-  //           this.camposDesactivados = true;
-  //         }
-  //       } else {
-  //         sessionStorage.setItem("codError", "403");
-  //         sessionStorage.setItem(
-  //           "descError",
-  //           this.translateService.instant("generico.error.permiso.denegado")
-  //         );
-  //         this.router.navigate(["/errorAcceso"]);
-  //       }
-  //     }
-  //   );
-  // }
-
   // MÉTODOS GENÉRICOS PARA TABLAS Y USOS VARIOS
   getLetrado() {
     let isLetrado: ComboItem;
@@ -1007,7 +975,11 @@ export class FichaColegialComponent implements OnInit {
             );
 
             if (this.file != undefined) {
-              this.guardarImagen(this.idPersona);
+              if (this.isLetrado) {
+                this.solicitudGuardarImagen(this.idPersona);
+              } else {
+                this.guardarImagen(this.idPersona);
+              }
             }
             this.activacionGuardarGenerales();
             // this.body = JSON.parse(data["body"]);
@@ -1065,7 +1037,11 @@ export class FichaColegialComponent implements OnInit {
             );
             this.activacionGuardarGenerales();
             if (this.file != undefined) {
-              this.guardarImagen(this.idPersona);
+              if (this.isLetrado) {
+                this.solicitudGuardarImagen(this.idPersona);
+              } else {
+                this.guardarImagen(this.idPersona);
+              }
             }
             this.obtenerEtiquetasPersonaJuridicaConcreta();
             this.progressSpinner = false;
@@ -1110,7 +1086,9 @@ export class FichaColegialComponent implements OnInit {
             JSON.stringify(this.generalBody)
           );
           this.checkGeneralBody = new FichaColegialGeneralesItem();
-
+          if (this.file != undefined) {
+            this.solicitudGuardarImagen(this.idPersona);
+          }
           this.checkGeneralBody = JSON.parse(JSON.stringify(this.generalBody));
           this.activacionGuardarGenerales();
           this.progressSpinner = false;
@@ -1215,6 +1193,17 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
+  activacionRestablecerGenerales() {
+    this.generalBody.etiquetas = this.etiquetasPersonaJuridicaSelecionados;
+    if (
+      JSON.stringify(this.checkGeneralBody) != JSON.stringify(this.generalBody)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   onChangeCalendar(event) {
     // console.log(new Date(event));
     var hoy = new Date();
@@ -1310,6 +1299,27 @@ export class FichaColegialComponent implements OnInit {
         "personaJuridica_uploadFotografia",
         this.file,
         idPersona
+      )
+      .subscribe(
+        data => {
+          this.file = undefined;
+          this.cargarImagen(this.idPersona);
+          this.progressSpinner = false;
+        },
+        error => {
+          console.log(error);
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  solicitudGuardarImagen(idPersona: String) {
+    this.sigaServices
+      .postSendFileAndBody(
+        "personaJuridica_solicitudUploadFotografia",
+        this.file,
+        this.idPersona,
+        this.generalBody.motivo
       )
       .subscribe(
         data => {
@@ -1869,7 +1879,7 @@ export class FichaColegialComponent implements OnInit {
       }
     }
   }
-  s;
+ 
   redireccionarCurriculares(dato) {
     if (dato && dato.length < 2 && !this.selectMultiple) {
       // enviarDatos = dato[0];

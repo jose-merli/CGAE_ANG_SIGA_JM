@@ -339,7 +339,11 @@ export class SigaServices {
     fichaDatosDirecciones_solicitudCreate:
       "fichaDatosDirecciones/solicitudCreate",
     fichaDatosGenerales_datosGeneralesSolicitudModificación:
-      "/fichaDatosGenerales/datosGeneralesSolicitudModificación"
+      "/fichaDatosGenerales/datosGeneralesSolicitudModificación",
+    personaJuridica_solicitudUploadFotografia:
+      "personaJuridica/solicitudUploadFotografia",
+    busquedaPerJuridica_datosBancariosInsert:
+      "busquedaPerJuridica/datosBancariosInsert"
   };
 
   private menuToggled = new Subject<any>();
@@ -461,6 +465,36 @@ export class SigaServices {
 
     // pasar parametros por la request
     formData.append("idPersona", idPersona);
+
+    let headers = new HttpHeaders();
+
+    headers.append("Content-Type", "multipart/form-data");
+    headers.append("Accept", "application/json");
+
+    return this.http
+      .post(environment.newSigaUrl + this.endpoints[service], formData, {
+        headers: headers
+      })
+      .map(response => {
+        return response;
+      });
+  }
+
+  postSendFileAndBody(
+    service: string,
+    file: any,
+    idPersona: any,
+    motivo: any
+  ): Observable<any> {
+    let formData: FormData = new FormData();
+    if (file != undefined) {
+      formData.append("uploadFile", file, file.name);
+    }
+
+    // pasar parametros por la request
+    formData.append("idPersona", idPersona);
+
+    formData.append("motivo", motivo);
 
     let headers = new HttpHeaders();
 

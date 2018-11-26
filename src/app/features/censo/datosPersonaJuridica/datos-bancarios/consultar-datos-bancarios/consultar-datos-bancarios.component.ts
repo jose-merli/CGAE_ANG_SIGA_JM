@@ -72,7 +72,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   firmaLugar: String;
   iban: String;
   tipoCIF: String;
-
+  isLetrado: Boolean;
   msgs: Message[];
   usuarioBody: any[];
   cols: any = [];
@@ -129,6 +129,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    if (sessionStorage.getItem("isLetrado")) {
+      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+      // sessionStorage.removeItem("fichaColegial");
+    } else {
+      this.isLetrado = true;
+    }
+    // busquedaPerJuridica_datosBancariosInsert
     if (sessionStorage.getItem("fichaColegial")) {
       this.fichaMisDatos = true;
       sessionStorage.removeItem("fichaColegial");
@@ -323,6 +330,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     });
   }
 
+  // busquedaPerJuridica_datosBancariosInsert
   guardarRegistro() {
     this.progressSpinner = true;
 
@@ -362,9 +370,54 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     );
   }
 
+  solicitarGuardarRegistro() {
+    this.progressSpinner = true;
+
+    this.body.revisionCuentas = this.revisionCuentas;
+    this.body.idPersona = this.idPersona;
+
+    this.getArrayTipoCuenta();
+
+    this.body.motivo = "registro creado";
+    this.sigaServices
+      .post("busquedaPerJuridica_datosBancariosInsert", this.body)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.body = JSON.parse(data["body"]);
+
+          this.showSuccess("Se ha presentado correctamente la solicitud");
+          sessionStorage.setItem("editar", "true");
+        },
+        error => {
+          this.bodySearch = JSON.parse(error["error"]);
+          this.showFail(this.bodySearch.error.message.toString());
+          console.log(error);
+          //Error al insertar los mandatos de las cuentas
+          if (
+            this.bodySearch.error.message.toString() ==
+            "messages.censo.direcciones.facturacion"
+          ) {
+            this.eliminarItem();
+          }
+          this.progressSpinner = false;
+        },
+        () => {
+          this.idCuenta = this.body.id;
+          this.selectedTipo = [];
+          this.body.motivo = null;
+          this.cargarModoEdicion();
+        }
+      );
+  }
+
   editarRegistro() {
     if (!this.editar) {
-      this.guardarRegistro();
+      if (this.isLetrado) {
+        this.solicitarGuardarRegistro();
+      } else {
+        this.guardarRegistro();
+      }
     }
     this.progressSpinner = true;
 
@@ -602,12 +655,20 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.revisionCuentas = true;
         this.registroEditable = sessionStorage.getItem("editar");
         if (this.registroEditable == "false") {
-          this.guardarRegistro();
+          if (this.isLetrado) {
+            this.solicitarGuardarRegistro();
+          } else {
+            this.guardarRegistro();
+          }
         } else {
           // dependiendo de esta variable, se muestra o no la auditoria
           this.body.motivo = null;
           if (this.ocultarMotivo) {
-            this.editarRegistro();
+            if (this.isLetrado) {
+              this.solicitarGuardarRegistro();
+            } else {
+              this.editarRegistro();
+            }
           } else {
             this.displayAuditoria = true;
             this.showGuardarAuditoria = false;
@@ -657,7 +718,11 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.revisionCuentas = false;
         this.registroEditable = sessionStorage.getItem("editar");
         if (this.registroEditable == "false") {
-          this.guardarRegistro();
+          if (this.isLetrado) {
+            this.solicitarGuardarRegistro();
+          } else {
+            this.guardarRegistro();
+          }
         } else {
           this.displayAuditoria = true;
           this.showGuardarAuditoria = false;
