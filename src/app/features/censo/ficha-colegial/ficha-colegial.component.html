@@ -940,7 +940,7 @@
     <div *ngIf="esFichaActiva('bancarios')" class="card-body card-body-ficha">
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultipleBancarios}"
         [(selection)]="selectedDatosBancarios" [responsive]="true" selectionMode="multiple" dataKey="idPersona" #table class="tabla-listado"
-        [value]="datosBancarios" [sortOrder]="1" [paginator]="activarPaginacionBancarios()" (onRowSelect)="redireccionarDatosBancarios(selectedDatos)"
+        [value]="datosBancarios" [sortOrder]="1" [paginator]="activarPaginacionBancarios()" (onRowSelect)="redireccionarDatosBancarios(selectedDatosBancarios)"
         (onRowUnselect)="actualizaSeleccionadosBancarios(this.selectedDatosBancarios)" paginatorPosition="both" [rows]="selectedItem"
         pageLinks="4">
         <p-column *ngFor="let col of colsBancarios" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="{{'general.boton.search' | translate}}"

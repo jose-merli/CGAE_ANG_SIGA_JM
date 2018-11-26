@@ -395,7 +395,8 @@ export class SigaServices {
     personaJuridica_solicitudUploadFotografia:
       "personaJuridica/solicitudUploadFotografia",
     busquedaPerJuridica_datosBancariosInsert:
-      "busquedaPerJuridica/datosBancariosInsert"
+      "busquedaPerJuridica/datosBancariosInsert", 
+      busquedaPerJuridica_solicitudInsertBanksData: "busquedaPerJuridica/solicitudInsertBanksData",
   };
 
   private menuToggled = new Subject<any>();

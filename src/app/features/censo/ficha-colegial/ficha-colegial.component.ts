@@ -2277,13 +2277,13 @@ export class FichaColegialComponent implements OnInit {
         var enviarDatos = null;
         if (dato && dato.length > 0) {
           enviarDatos = dato[0];
-          sessionStorage.setItem("idCuenta", enviarDatos.idCuenta);
+          sessionStorage.setItem("idCuenta", dato[0].idCuenta);
+          sessionStorage.setItem("idPersona", this.idPersona);
           sessionStorage.setItem("editar", "true");
           sessionStorage.setItem("fichaColegial", "true");
-          sessionStorage.setItem("datosCuenta", JSON.stringify(enviarDatos));
+          sessionStorage.setItem("datosCuenta", JSON.stringify(dato[0]));
           sessionStorage.setItem(
-            "usuarioBody",
-            sessionStorage.getItem("personaBody")
+            "usuarioBody",JSON.stringify(dato[0])
           );
         } else {
           sessionStorage.setItem("editar", "false");
