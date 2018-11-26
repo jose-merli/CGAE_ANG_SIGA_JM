@@ -25,7 +25,6 @@ import { MantenimientoMandatosComponent } from "./features/censo/mantenimiento-m
 import { BusquedaSancionesComponent } from "./features/censo/busqueda-sanciones/busqueda-sanciones.component";
 import { BusquedaLetradosComponent } from "./features/censo/busqueda-letrados/busqueda-letrados.component";
 import { MantenimientoDuplicadosComponent } from "./features/censo/mantenimiento-duplicados/mantenimiento-duplicados.component";
-import { ModificacionDatosComponent } from "./features/censo/modificacion-datos/modificacion-datos.component";
 import { MediadoresComponent } from "./features/censo/mediadores/mediadores.component";
 import { CargasPeriodicasComponent } from "./features/censo/cargas-periodicas/cargas-periodicas.component";
 import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/configurar-perfil.component";
@@ -198,12 +197,13 @@ import { BusquedaCursosComponent } from "./features/formacion/busqueda-cursos/bu
 import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/ficha-calendario.component";
 import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
 import { SubtipoCurricularComponent } from "./features/censo/gestion-subtiposCV/subtipo-curricular/subtipo-curricular.component";
-import { NuevaSolicitudesModificacionComponent } from "./features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
 import { AgendaComponent } from "./features/agenda/agenda.component";
 import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaciones/datos-notificaciones.component";
 import { FichaEventosComponent } from "./features/agenda/ficha-eventos/ficha-eventos.component";
 import { FichaCursoComponent } from "./features/formacion/ficha-curso/ficha-curso.component";
 import { DetalleSancionComponent } from "./features/censo/busqueda-sanciones/detalle-sancion/detalle-sancion.component";
+import { SolicitudesModificacionComponent } from "./features/censo/solicitudes-modificacion/solicitudes-modificacion.component";
+import { NuevaSolicitudesModificacionComponent } from "./features/censo/solicitudes-modificacion/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -282,9 +282,14 @@ const appRoutes: Routes = [
     component: ComisionesCargosComponent,
     canActivate: [AuthGuard]
   },
+  // {
+  //   path: "solicitudesGenericas",
+  //   component: SolicitudesGenericasComponent,
+  //   canActivate: [AuthGuard]
+  // },
   {
     path: "solicitudesGenericas",
-    component: SolicitudesGenericasComponent,
+    component: SolicitudesModificacionComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -357,11 +362,6 @@ const appRoutes: Routes = [
   {
     path: "mantenimientoDuplicados",
     component: MantenimientoDuplicadosComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: "modificacionDatos",
-    component: ModificacionDatosComponent,
     canActivate: [AuthGuard]
   },
   {

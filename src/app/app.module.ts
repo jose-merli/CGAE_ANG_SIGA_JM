@@ -78,7 +78,6 @@ import { FichaColegialComponent } from "./features/censo/ficha-colegial/ficha-co
 import { EdicionCurricularesComponent } from "./features/censo/ficha-colegial/edicionDatosCurriculares/edicionCurriculares.component";
 import { BusquedaLetradosComponent } from "./features/censo/busqueda-letrados/busqueda-letrados.component";
 import { MantenimientoDuplicadosComponent } from "./features/censo/mantenimiento-duplicados/mantenimiento-duplicados.component";
-import { ModificacionDatosComponent } from "./features/censo/modificacion-datos/modificacion-datos.component";
 import { MediadoresComponent } from "./features/censo/mediadores/mediadores.component";
 import { CargasPeriodicasComponent } from "./features/censo/cargas-periodicas/cargas-periodicas.component";
 import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/configurar-perfil.component";
@@ -263,14 +262,15 @@ import { AgendaComponent } from "./features/agenda/agenda.component";
 import { SelectButtonModule, ColorPickerModule } from "primeng/primeng";
 import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/ficha-calendario.component";
 import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
-import { NuevaSolicitudesModificacionComponent } from "./features/censo/modificacion-datos/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
 import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaciones/datos-notificaciones.component";
-import { FichaEventosComponent } from './features/agenda/ficha-eventos/ficha-eventos.component';
+import { FichaEventosComponent } from "./features/agenda/ficha-eventos/ficha-eventos.component";
 
 //Calendario
 import { ScheduleModule } from "primeng/schedule";
-import { FichaCursoComponent } from './features/formacion/ficha-curso/ficha-curso.component';
-import { DetalleSancionComponent } from './features/censo/busqueda-sanciones/detalle-sancion/detalle-sancion.component';
+import { FichaCursoComponent } from "./features/formacion/ficha-curso/ficha-curso.component";
+import { DetalleSancionComponent } from "./features/censo/busqueda-sanciones/detalle-sancion/detalle-sancion.component";
+import { SolicitudesModificacionComponent } from "./features/censo/solicitudes-modificacion/solicitudes-modificacion.component";
+import { NuevaSolicitudesModificacionComponent } from './features/censo/solicitudes-modificacion/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component';
 
 @NgModule({
   declarations: [
@@ -312,7 +312,6 @@ import { DetalleSancionComponent } from './features/censo/busqueda-sanciones/det
     EdicionCurricularesComponent,
     BusquedaLetradosComponent,
     MantenimientoDuplicadosComponent,
-    ModificacionDatosComponent,
     MediadoresComponent,
     CargasPeriodicasComponent,
     ConfigurarPerfilComponent,
@@ -487,11 +486,12 @@ import { DetalleSancionComponent } from './features/censo/busqueda-sanciones/det
     AgendaComponent,
     FichaCalendarioComponent,
     CargasMasivasComponent,
-    NuevaSolicitudesModificacionComponent,
     DatosNotificacionesComponent,
     FichaEventosComponent,
     FichaCursoComponent,
-    DetalleSancionComponent
+    DetalleSancionComponent,
+    SolicitudesModificacionComponent,
+    NuevaSolicitudesModificacionComponent
   ],
   imports: [
     BrowserModule,
@@ -561,4 +561,4 @@ import { DetalleSancionComponent } from './features/censo/busqueda-sanciones/det
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

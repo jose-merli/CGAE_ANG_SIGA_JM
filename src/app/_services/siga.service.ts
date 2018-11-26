@@ -176,31 +176,31 @@ export class SigaServices {
     busquedaNoColegiados_searchNoColegiado:
       "/busquedaNocolegiado/searchNoColegiado",
     busquedaNoColegiados_searchHistoric: "busquedaNocolegiado/searchHistoric",
-    solicitudInciporporacion_tipoSolicitud:
+    solicitudIncorporacion_tipoSolicitud:
       "/solicitudIncorporacion/tipoSolicitud",
-    solicitudInciporporacion_estadoSolicitud:
+    solicitudIncorporacion_estadoSolicitud:
       "/solicitudIncorporacion/estadoSolicitud",
-    solicitudInciporporacion_searchSolicitud:
+    solicitudIncorporacion_searchSolicitud:
       "/solicitudIncorporacion/searchSolicitud",
 
     fichaColegialGenerales_tratamiento: "fichaDatosGenerales/tratamiento",
     fichaColegialGenerales_estadoCivil: "fichaDatosGenerales/estadoCivil",
     fichaColegialGenerales_pais: "fichaDatosColegiales/pais",
     fichaDatosCurriculares_search: "fichaDatosCurriculares/search",
-    solicitudInciporporacion_tratamiento: "solicitudIncorporacion/tratamiento",
-    solicitudInciporporacion_estadoCivil: "solicitudIncorporacion/estadoCivil",
-    solicitudInciporporacion_pais: "solicitudIncorporacion/pais",
-    solicitudInciporporacion_tipoIdentificacion:
+    solicitudIncorporacion_tratamiento: "solicitudIncorporacion/tratamiento",
+    solicitudIncorporacion_estadoCivil: "solicitudIncorporacion/estadoCivil",
+    solicitudIncorporacion_pais: "solicitudIncorporacion/pais",
+    solicitudIncorporacion_tipoIdentificacion:
       "solicitudIncorporacion/tipoIdentificacion",
-    solicitudInciporporacion_tipoColegiacion:
+    solicitudIncorporacion_tipoColegiacion:
       "solicitudIncorporacion/tipoColegiacion",
-    solicitudInciporporacion_modalidadDocumentacion:
+    solicitudIncorporacion_modalidadDocumentacion:
       "solicitudIncorporacion/modalidadDocumentacion",
-    solicitudInciporporacion_nuevaSolicitud:
+    solicitudIncorporacion_nuevaSolicitud:
       "solicitudIncorporacion/nuevaSolicitud",
-    solicitudInciporporacion_aprobarSolicitud:
+    solicitudIncorporacion_aprobarSolicitud:
       "solicitudIncorporacion/aprobarSolicitud",
-    solicitudInciporporacion_denegarSolicitud:
+    solicitudIncorporacion_denegarSolicitud:
       "solicitudIncorporacion/denegarSolicitud",
     fichaDatosBancarios_datosBancariosSearch:
       "fichaDatosBancarios/datosBancariosSearch",
@@ -290,8 +290,60 @@ export class SigaServices {
     solicitudModificacion_tipoModificacion:
       "solicitudModificacion/tipoModificacion",
     solicitudModificacion_estado: "solicitudModificacion/estado",
+    // Solicitud Modificacion
+    solicitudModificacion_searchSolModif:
+      "solicitudModificacion/searchSolModif",
+    solicitudModificacion_processSolModif:
+      "solicitudModificacion/processSolModif",
+    solicitudModificacion_denySolModif: "solicitudModificacion/denySolModif",
+    solicitudModificacion_searchSolModifDatosBancarios:
+      "solicitudModificacion/searchSolModifDatosBancarios",
+    solicitudModificacion_processSolModifDatosBancarios:
+      "solicitudModificacion/processSolModifDatosBancarios",
+    solicitudModificacion_denySolModifDatosBancarios:
+      "solicitudModificacion/denySolModifDatosBancarios",
+    solicitudModificacion_searchSolModifDatosCurriculares:
+      "solicitudModificacion/searchSolModifDatosCurriculares",
+    solicitudModificacion_processSolModifDatosCurriculares:
+      "solicitudModificacion/processSolModifDatosCurriculares",
+    solicitudModificacion_denySolModifDatosCurriculares:
+      "solicitudModificacion/denySolModifDatosCurriculares",
+    solicitudModificacion_searchSolModifDatosDirecciones:
+      "solicitudModificacion/searchSolModifDatosDirecciones",
+    solicitudModificacion_processSolModifDatosDirecciones:
+      "solicitudModificacion/processSolModifDatosDirecciones",
+    solicitudModificacion_denySolModifDatosDirecciones:
+      "solicitudModificacion/denySolModifDatosDirecciones",
+    solicitudModificacion_searchSolModifDatosExpedientes:
+      "solicitudModificacion/searchSolModifDatosExpedientes",
+    solicitudModificacion_processSolModifDatosExpedientes:
+      "solicitudModificacion/processSolModifDatosExpedientes",
+    solicitudModificacion_denySolModifDatosExpedientes:
+      "solicitudModificacion/denySolModifDatosExpedientes",
+    solicitudModificacion_searchSolModifDatosFacturacion:
+      "solicitudModificacion/searchSolModifDatosFacturacion",
+    solicitudModificacion_processSolModifDatosFacturacion:
+      "solicitudModificacion/processSolModifDatosFacturacion",
+    solicitudModificacion_denySolModifDatosFacturacion:
+      "solicitudModificacion/denySolModifDatosFacturacion",
+    solicitudModificacion_searchSolModifDatosGenerales:
+      "solicitudModificacion/searchSolModifDatosGenerales",
+    solicitudModificacion_processSolModifDatosGenerales:
+      "solicitudModificacion/processSolModifDatosGenerales",
+    solicitudModificacion_denySolModifDatosGenerales:
+      "solicitudModificacion/denySolModifDatosGenerales",
+    solicitudModificacion_searchSolModifDatosUseFoto:
+      "solicitudModificacion/searchSolModifDatosUseFoto",
+    solicitudModificacion_processSolModifDatosUseFoto:
+      "solicitudModificacion/processSolModifDatosUseFoto",
+    solicitudModificacion_denySolModifDatosUseFoto:
+      "solicitudModificacion/denySolModifDatosUseFoto",
     solicitudModificacion_searchModificationRequest:
       "solicitudModificacion/searchModificationRequest",
+    solicitudModificacionEspecifica_searchSpecificRequest:
+      "solicitudModificacionEspecifica/searchSpecificRequest",
+    solicitudModificacion_searchDatosDirecciones:
+      "solicitudModificacion/searchDatosDirecciones",
     tipoCurricular_categoriaCurricular: "tipoCurricular/categoriaCurricular",
     tipoCurricular_searchTipoCurricular: "tipoCurricular/searchTipoCurricular",
     tipoCurricular_createTipoCurricular: "tipoCurricular/createTipoCurricular",
