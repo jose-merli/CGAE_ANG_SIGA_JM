@@ -176,31 +176,31 @@ export class SigaServices {
     busquedaNoColegiados_searchNoColegiado:
       "/busquedaNocolegiado/searchNoColegiado",
     busquedaNoColegiados_searchHistoric: "busquedaNocolegiado/searchHistoric",
-    solicitudInciporporacion_tipoSolicitud:
+    solicitudIncorporacion_tipoSolicitud:
       "/solicitudIncorporacion/tipoSolicitud",
-    solicitudInciporporacion_estadoSolicitud:
+    solicitudIncorporacion_estadoSolicitud:
       "/solicitudIncorporacion/estadoSolicitud",
-    solicitudInciporporacion_searchSolicitud:
+    solicitudIncorporacion_searchSolicitud:
       "/solicitudIncorporacion/searchSolicitud",
 
     fichaColegialGenerales_tratamiento: "fichaDatosGenerales/tratamiento",
     fichaColegialGenerales_estadoCivil: "fichaDatosGenerales/estadoCivil",
     fichaColegialGenerales_pais: "fichaDatosColegiales/pais",
     fichaDatosCurriculares_search: "fichaDatosCurriculares/search",
-    solicitudInciporporacion_tratamiento: "solicitudIncorporacion/tratamiento",
-    solicitudInciporporacion_estadoCivil: "solicitudIncorporacion/estadoCivil",
-    solicitudInciporporacion_pais: "solicitudIncorporacion/pais",
-    solicitudInciporporacion_tipoIdentificacion:
+    solicitudIncorporacion_tratamiento: "solicitudIncorporacion/tratamiento",
+    solicitudIncorporacion_estadoCivil: "solicitudIncorporacion/estadoCivil",
+    solicitudIncorporacion_pais: "solicitudIncorporacion/pais",
+    solicitudIncorporacion_tipoIdentificacion:
       "solicitudIncorporacion/tipoIdentificacion",
-    solicitudInciporporacion_tipoColegiacion:
+    solicitudIncorporacion_tipoColegiacion:
       "solicitudIncorporacion/tipoColegiacion",
-    solicitudInciporporacion_modalidadDocumentacion:
+    solicitudIncorporacion_modalidadDocumentacion:
       "solicitudIncorporacion/modalidadDocumentacion",
-    solicitudInciporporacion_nuevaSolicitud:
+    solicitudIncorporacion_nuevaSolicitud:
       "solicitudIncorporacion/nuevaSolicitud",
-    solicitudInciporporacion_aprobarSolicitud:
+    solicitudIncorporacion_aprobarSolicitud:
       "solicitudIncorporacion/aprobarSolicitud",
-    solicitudInciporporacion_denegarSolicitud:
+    solicitudIncorporacion_denegarSolicitud:
       "solicitudIncorporacion/denegarSolicitud",
     fichaDatosBancarios_datosBancariosSearch:
       "fichaDatosBancarios/datosBancariosSearch",
@@ -405,7 +405,12 @@ export class SigaServices {
     fichaDatosDirecciones_solicitudCreate:
       "fichaDatosDirecciones/solicitudCreate",
     fichaDatosGenerales_datosGeneralesSolicitudModificación:
-      "/fichaDatosGenerales/datosGeneralesSolicitudModificación"
+      "/fichaDatosGenerales/datosGeneralesSolicitudModificación",
+    personaJuridica_solicitudUploadFotografia:
+      "personaJuridica/solicitudUploadFotografia",
+    busquedaPerJuridica_datosBancariosInsert:
+      "busquedaPerJuridica/datosBancariosInsert", 
+      busquedaPerJuridica_solicitudInsertBanksData: "busquedaPerJuridica/solicitudInsertBanksData",
   };
 
   private menuToggled = new Subject<any>();
@@ -527,6 +532,36 @@ export class SigaServices {
 
     // pasar parametros por la request
     formData.append("idPersona", idPersona);
+
+    let headers = new HttpHeaders();
+
+    headers.append("Content-Type", "multipart/form-data");
+    headers.append("Accept", "application/json");
+
+    return this.http
+      .post(environment.newSigaUrl + this.endpoints[service], formData, {
+        headers: headers
+      })
+      .map(response => {
+        return response;
+      });
+  }
+
+  postSendFileAndBody(
+    service: string,
+    file: any,
+    idPersona: any,
+    motivo: any
+  ): Observable<any> {
+    let formData: FormData = new FormData();
+    if (file != undefined) {
+      formData.append("uploadFile", file, file.name);
+    }
+
+    // pasar parametros por la request
+    formData.append("idPersona", idPersona);
+
+    formData.append("motivo", motivo);
 
     let headers = new HttpHeaders();
 

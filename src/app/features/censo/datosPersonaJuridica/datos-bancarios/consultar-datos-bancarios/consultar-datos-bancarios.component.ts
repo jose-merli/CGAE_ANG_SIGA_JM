@@ -72,9 +72,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   firmaLugar: String;
   iban: String;
   tipoCIF: String;
-
+  isLetrado: Boolean;
   msgs: Message[];
-  usuarioBody: any[];
+  usuarioBody: DatosBancariosItem = new DatosBancariosItem();
   cols: any = [];
   cols2: any = [];
   rowsPerPage: any = [];
@@ -129,6 +129,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    if (sessionStorage.getItem("isLetrado")) {
+      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+      // sessionStorage.removeItem("fichaColegial");
+    } else {
+      this.isLetrado = true;
+    }
+    // busquedaPerJuridica_datosBancariosInsert
     if (sessionStorage.getItem("fichaColegial")) {
       this.fichaMisDatos = true;
       sessionStorage.removeItem("fichaColegial");
@@ -166,7 +173,11 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     ];
 
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    this.idPersona = this.usuarioBody[0].idPersona;
+    if (sessionStorage.getItem("idPersona")) {
+      this.idPersona = sessionStorage.getItem("idPersona");
+    } else {
+      this.idPersona = this.usuarioBody.idPersona;
+    }
     this.idCuenta = sessionStorage.getItem("idCuenta");
 
     this.registroEditable = sessionStorage.getItem("editar");
@@ -272,8 +283,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   cargarModoNuevoRegistro() {
-    this.body.titular = this.usuarioBody[0].nombre;
-    this.body.nifTitular = this.usuarioBody[0].nif;
+    this.body.titular = this.usuarioBody.titular;
+    this.body.nifTitular = this.usuarioBody.nifTitular;
 
     this.nuevo = true;
     this.editar = false;
@@ -323,6 +334,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     });
   }
 
+  // busquedaPerJuridica_datosBancariosInsert
   guardarRegistro() {
     this.progressSpinner = true;
 
@@ -362,10 +374,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     );
   }
 
-  editarRegistro() {
-    if (!this.editar) {
-      this.guardarRegistro();
-    }
+  solicitarGuardarRegistro() {
     this.progressSpinner = true;
 
     this.body.revisionCuentas = this.revisionCuentas;
@@ -373,36 +382,92 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
     this.getArrayTipoCuenta();
 
-    this.sigaServices.post("datosCuentaBancaria_update", this.body).subscribe(
-      data => {
-        this.progressSpinner = false;
-        this.body.status = data.status;
+    this.sigaServices
+      .post("busquedaPerJuridica_solicitudInsertBanksData", this.body)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.body = JSON.parse(data["body"]);
 
-        this.showSuccess("Se han guardado correctamente los datos");
-      },
-      error => {
-        this.bodySearch = JSON.parse(error["error"]);
-        this.showFail(this.bodySearch.error.message.toString());
-        console.log(error);
-        //Error al insertar los mandatos de las cuentas
-        if (
-          this.bodySearch.error.message.toString() ==
-          "messages.censo.direcciones.facturacion"
-        ) {
-          this.eliminarItem();
+          this.showSuccess("Se ha presentado correctamente la solicitud");
+          sessionStorage.setItem("editar", "true");
+        },
+        error => {
+          this.bodySearch = JSON.parse(error["error"]);
+          this.showFail(this.bodySearch.error.message.toString());
+          console.log(error);
+          //Error al insertar los mandatos de las cuentas
+          if (
+            this.bodySearch.error.message.toString() ==
+            "messages.censo.direcciones.facturacion"
+          ) {
+            this.eliminarItem();
+          }
+          this.progressSpinner = false;
+        },
+        () => {
+          this.location.back();
+          this.idCuenta = this.body.id;
+          this.cerrarAuditoria();
+          this.selectedTipo = [];
+          this.body.motivo = null;
+          this.cargarModoEdicion();
+          this.idCuenta = this.body.idCuenta;
         }
-        this.progressSpinner = false;
-      },
-      () => {
-        // auditoria
-        this.cerrarAuditoria();
-        this.body.motivo = null;
+      );
+  }
 
-        this.idCuenta = this.body.idCuenta;
-        this.cargarDatosMandatos();
-        this.cargarDatosAnexos();
+  editarRegistro() {
+    if (!this.editar) {
+      if (this.isLetrado) {
+        this.solicitarGuardarRegistro();
+      } else {
+        this.guardarRegistro();
       }
-    );
+    } else {
+      if (this.isLetrado) {
+        this.solicitarGuardarRegistro();
+      } else {
+        this.progressSpinner = true;
+
+        this.body.revisionCuentas = this.revisionCuentas;
+        this.body.idPersona = this.idPersona;
+
+        this.getArrayTipoCuenta();
+
+        this.sigaServices
+          .post("datosCuentaBancaria_update", this.body)
+          .subscribe(
+            data => {
+              this.progressSpinner = false;
+              this.body.status = data.status;
+
+              this.showSuccess("Se han guardado correctamente los datos");
+            },
+            error => {
+              this.bodySearch = JSON.parse(error["error"]);
+              this.showFail(this.bodySearch.error.message.toString());
+              console.log(error);
+              //Error al insertar los mandatos de las cuentas
+              if (
+                this.bodySearch.error.message.toString() ==
+                "messages.censo.direcciones.facturacion"
+              ) {
+                this.eliminarItem();
+              }
+              this.progressSpinner = false;
+            },
+            () => {
+              // auditoria
+              this.cerrarAuditoria();
+              this.body.motivo = null;
+              this.idCuenta = this.body.idCuenta;
+              this.cargarDatosMandatos();
+              this.cargarDatosAnexos();
+            }
+          );
+      }
+    }
   }
 
   eliminarItem() {
@@ -439,8 +504,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       message: "¿Desea restablecer los datos?",
       icon: "fa fa-info",
       accept: () => {
-        this.body.titular = this.usuarioBody[0].denominacion;
-        this.body.nifTitular = this.usuarioBody[0].nif;
+        this.body.titular = this.usuarioBody.titular;
+        this.body.nifTitular = this.usuarioBody.nifTitular;
         this.body.iban = "";
         this.iban = "";
         this.body.bic = "";
@@ -602,12 +667,20 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.revisionCuentas = true;
         this.registroEditable = sessionStorage.getItem("editar");
         if (this.registroEditable == "false") {
-          this.guardarRegistro();
+          if (this.isLetrado) {
+            this.solicitarGuardarRegistro();
+          } else {
+            this.guardarRegistro();
+          }
         } else {
           // dependiendo de esta variable, se muestra o no la auditoria
           this.body.motivo = null;
           if (this.ocultarMotivo) {
-            this.editarRegistro();
+            if (this.isLetrado) {
+              this.solicitarGuardarRegistro();
+            } else {
+              this.editarRegistro();
+            }
           } else {
             this.displayAuditoria = true;
             this.showGuardarAuditoria = false;
@@ -649,7 +722,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.validarIdentificacion()
     ) {
       this.formValido = true;
-
       this.getArrayTipoCuenta();
       if (this.body.tipoCuenta.indexOf("C") !== -1) {
         this.validarCuentaCargo();
@@ -657,7 +729,11 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.revisionCuentas = false;
         this.registroEditable = sessionStorage.getItem("editar");
         if (this.registroEditable == "false") {
-          this.guardarRegistro();
+          if (this.isLetrado) {
+            this.solicitarGuardarRegistro();
+          } else {
+            this.guardarRegistro();
+          }
         } else {
           this.displayAuditoria = true;
           this.showGuardarAuditoria = false;
