@@ -36,7 +36,6 @@
               class="select-form"
               [options]="tipo"
               [(ngModel)]="body.tipoModificacion"
-              (onChange)="onChange($event)"
             ></p-dropdown>
           </div>
 
@@ -195,7 +194,7 @@
           <p-dropdown
             class="select-form"
             [options]="tipoSolGeneral"
-            [(ngModel)]="body.tipoModificacionSolGeneral"
+            [(ngModel)]="tipoModificacionSolGeneral"
             [(disabled)]="disableNew"
           ></p-dropdown>
         </div>
@@ -205,8 +204,7 @@
           >
           <textarea
             pInputTextarea
-            [(ngModel)]="body.motivoSolGeneral"
-            (ngModelChange)="comprobarCampoMotivo()"
+            [(ngModel)]="motivoSolGeneral"
             [(disabled)]="disableNew"
           ></textarea>
         </div>

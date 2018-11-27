@@ -291,6 +291,16 @@ export class SigaServices {
       "solicitudModificacion/tipoModificacion",
     solicitudModificacion_estado: "solicitudModificacion/estado",
     // Solicitud Modificacion
+    // GENERAL
+    solicitudModificacion_searchModificationRequest:
+      "solicitudModificacion/searchModificationRequest",
+    solicitudModificacion_processGeneralModificationRequest:
+      "solicitudModificacion/processGeneralModificationRequest",
+    solicitudModificacion_denyGeneralModificationRequest:
+      "solicitudModificacion/denyGeneralModificationRequest",
+    solicitudModificacion_insertGeneralModificationRequest:
+      "solicitudModificacion/insertGeneralModificationRequest",
+    // ESPECÍFICA
     solicitudModificacion_searchSolModif:
       "solicitudModificacion/searchSolModif",
     solicitudModificacion_processSolModif:
@@ -308,8 +318,13 @@ export class SigaServices {
       "solicitudModificacion/processSolModifDatosCurriculares",
     solicitudModificacion_denySolModifDatosCurriculares:
       "solicitudModificacion/denySolModifDatosCurriculares",
+    // SOL. DIRECCIONES
     solicitudModificacion_searchSolModifDatosDirecciones:
       "solicitudModificacion/searchSolModifDatosDirecciones",
+    solicitudModificacion_searchDirecciones:
+      "solicitudModificacion/searchDirecciones",
+    solicitudModificacion_searchSolModifDatosDireccionesDetail:
+      "solicitudModificacion/searchSolModifDatosDireccionesDetail",
     solicitudModificacion_processSolModifDatosDirecciones:
       "solicitudModificacion/processSolModifDatosDirecciones",
     solicitudModificacion_denySolModifDatosDirecciones:
@@ -338,8 +353,7 @@ export class SigaServices {
       "solicitudModificacion/processSolModifDatosUseFoto",
     solicitudModificacion_denySolModifDatosUseFoto:
       "solicitudModificacion/denySolModifDatosUseFoto",
-    solicitudModificacion_searchModificationRequest:
-      "solicitudModificacion/searchModificationRequest",
+
     solicitudModificacionEspecifica_searchSpecificRequest:
       "solicitudModificacionEspecifica/searchSpecificRequest",
     solicitudModificacion_searchDatosDirecciones:

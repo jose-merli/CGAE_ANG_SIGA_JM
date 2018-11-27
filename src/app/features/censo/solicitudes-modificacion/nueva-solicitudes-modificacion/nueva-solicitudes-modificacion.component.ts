@@ -56,6 +56,8 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.getDataTable();
+
     if (sessionStorage.getItem("rowData") != null) {
       this.body = JSON.parse(sessionStorage.getItem("rowData"));
 
@@ -63,29 +65,17 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
         this.disableButton = true;
       }
 
-      this.getDataTable();
-
-      if (this.body.tipoModificacion == "Datos de Direcciones") {
-        /*this.body.idSolicitud*/
-        this.getSolModAddresses();
+      // // Datos Direcciones
+      if ((this.body.tipoModificacion = "30")) {
+        // Llamar a los dos servicios y a un getTabla distinto
+        this.getTranslationsForAddresses();
+        this.getSolModAddresses(this.body);
       }
     }
   }
 
+  // Métodos necesarios para la tabla
   getDataTable() {
-    this.textAddressTranslations = [
-      "censo.datosDireccion.literal.pais2",
-      "censo.datosDireccion.literal.provincia",
-      "censo.consultaDirecciones.literal.poblacion",
-      "solicitudModificacion.especifica.poblacionExtranjera.literal",
-      "censo.ws.literal.codigopostal",
-      "solicitudModificacion.especifica.domicilio.literal",
-      "censo.ws.literal.telefono",
-      "censo.ws.literal.fax",
-      "censo.datosDireccion.literal.correo",
-      "solicitudModificacion.especifica.paginaWeb.literal"
-    ];
-
     this.cols = [
       {
         field: "texto",
@@ -119,19 +109,28 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
         value: 40
       }
     ];
-
-    console.log("TRaducciones", this.textAddressTranslations);
   }
 
-  getSolModAddresses() {
-    this.body.valor = this.body.idSolicitud;
-    this.getDataAddressModificationRequest(this.body);
+  // DIRECCIONES
+  getTranslationsForAddresses() {
+    this.textAddressTranslations = [
+      "censo.datosDireccion.literal.pais2",
+      "censo.datosDireccion.literal.provincia",
+      "censo.consultaDirecciones.literal.poblacion",
+      "solicitudModificacion.especifica.poblacionExtranjera.literal",
+      "censo.ws.literal.codigopostal",
+      "solicitudModificacion.especifica.domicilio.literal",
+      "censo.ws.literal.telefono",
+      "censo.ws.literal.fax",
+      "censo.datosDireccion.literal.correo",
+      "solicitudModificacion.especifica.paginaWeb.literal"
+    ];
   }
 
-  getDataAddressModificationRequest(idSolicitud) {
+  getSolModAddresses(idSolicitud) {
     this.sigaServices
       .postPaginado(
-        "solicitudModificacion_searchSolModifDatosDirecciones",
+        "solicitudModificacion_searchSolModifDatosDireccionesDetail",
         "?numPagina=1",
         idSolicitud
       )
@@ -220,9 +219,6 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
               modificacion: this.bodySoliModDirecciones.paginaWeb
             }
           ];
-
-          this.body.motivo = this.bodySoliModDirecciones.motivo;
-          console.log("HOLA", this.data);
         }
       );
   }
@@ -237,75 +233,75 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
 
   // PROCESS REQUEST AND DENY REQUEST
   processRequest() {
-    if ((this.body.tipoModificacion = "10")) {
+    if (this.body.tipoModificacion == "10") {
       this.updateRequestState(
         "solicitudModificacion_processSolModifDatosGenerales"
       );
-    } else if ((this.body.tipoModificacion = "20")) {
+    } else if (this.body.tipoModificacion == "20") {
       this.updateRequestState("solicitudModificacion_processSolModif");
-    } else if ((this.body.tipoModificacion = "30")) {
+    } else if (this.body.tipoModificacion == "30") {
       this.updateRequestState(
         "solicitudModificacion_processSolModifDatosDirecciones"
       );
-    } else if ((this.body.tipoModificacion = "35")) {
+    } else if (this.body.tipoModificacion == "35") {
       this.updateRequestState(
         "solicitudModificacion_processSolModifDatosUseFoto"
       );
-    } else if ((this.body.tipoModificacion = "40")) {
+    } else if (this.body.tipoModificacion == "40") {
       this.updateRequestState(
         "solicitudModificacion_processSolModifDatosBancarios"
       );
-    } else if ((this.body.tipoModificacion = "50")) {
+    } else if (this.body.tipoModificacion == "50") {
       this.updateRequestState(
         "solicitudModificacion_processSolModifDatosCurriculares"
       );
-    } else if ((this.body.tipoModificacion = "70")) {
+    } else if (this.body.tipoModificacion == "70") {
       this.updateRequestState(
         "solicitudModificacion_processSolModifDatosFacturacion"
       );
-    } else if ((this.body.tipoModificacion = "80")) {
+    } else if (this.body.tipoModificacion == "80") {
       this.updateRequestState("solicitudModificacion_processSolModif");
-    } else if ((this.body.tipoModificacion = "90")) {
+    } else if (this.body.tipoModificacion == "90") {
       this.updateRequestState(
         "solicitudModificacion_processSolModifDatosExpedientes"
       );
-    } else if ((this.body.tipoModificacion = "95")) {
+    } else if (this.body.tipoModificacion == "95") {
       this.updateRequestState("solicitudModificacion_processSolModif");
     }
   }
 
   denyRequest() {
-    if ((this.body.tipoModificacion = "10")) {
+    if (this.body.tipoModificacion == "10") {
       this.updateRequestState(
         "solicitudModificacion_denySolModifDatosGenerales"
       );
-    } else if ((this.body.tipoModificacion = "20")) {
+    } else if (this.body.tipoModificacion == "20") {
       this.updateRequestState("solicitudModificacion_denySolModif");
-    } else if ((this.body.tipoModificacion = "30")) {
+    } else if (this.body.tipoModificacion == "30") {
       this.updateRequestState(
         "solicitudModificacion_denySolModifDatosDirecciones"
       );
-    } else if ((this.body.tipoModificacion = "35")) {
+    } else if (this.body.tipoModificacion == "35") {
       this.updateRequestState("solicitudModificacion_denySolModifDatosUseFoto");
-    } else if ((this.body.tipoModificacion = "40")) {
+    } else if (this.body.tipoModificacion == "40") {
       this.updateRequestState(
         "solicitudModificacion_denySolModifDatosBancarios"
       );
-    } else if ((this.body.tipoModificacion = "50")) {
+    } else if (this.body.tipoModificacion == "50") {
       this.updateRequestState(
         "solicitudModificacion_denySolModifDatosCurriculares"
       );
-    } else if ((this.body.tipoModificacion = "70")) {
+    } else if (this.body.tipoModificacion == "70") {
       this.updateRequestState(
         "solicitudModificacion_denySolModifDatosFacturacion"
       );
-    } else if ((this.body.tipoModificacion = "80")) {
+    } else if (this.body.tipoModificacion == "80") {
       this.updateRequestState("solicitudModificacion_denySolModif");
-    } else if ((this.body.tipoModificacion = "90")) {
+    } else if (this.body.tipoModificacion == "90") {
       this.updateRequestState(
         "solicitudModificacion_denySolModifDatosExpedientes"
       );
-    } else if ((this.body.tipoModificacion = "95")) {
+    } else if (this.body.tipoModificacion == "95") {
       this.updateRequestState("solicitudModificacion_denySolModif");
     }
   }
@@ -313,12 +309,15 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
   updateRequestState(path: string) {
     this.progressSpinner = true;
 
-    this.sigaServices.postPaginado(path, "?numPagina=1", this.body).subscribe(
+    this.sigaServices.post(path, this.body).subscribe(
       data => {
         this.progressSpinner = false;
       },
       err => {
         this.progressSpinner = false;
+      },
+      () => {
+        this.return();
       }
     );
   }
