@@ -27,9 +27,9 @@
               <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}}
                 <span>{{ body.titular }}</span>
               </label>
-              <label>{{"administracion.usuarios.literal.NIF" | translate}}
+              <!--<label>{{"administracion.usuarios.literal.NIF" | translate}}
                 <span>{{ body.nifTitular }}</span>
-              </label>
+              </label>-->
               <label>{{"censo.mutualidad.literal.iban" | translate}}
                 <span>{{ body.iban }}</span>
               </label>
@@ -57,13 +57,13 @@
                   <label class="labelError">{{"El campo no puede estar vacío"}}</label>
                 </div>
               </div>
-              <div class="form-group col-lg-3 col-md-6">
+               <!--<div class="form-group col-lg-3 col-md-6">
                 <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
                 <input type="text" class="form-control" [(ngModel)]="body.nifTitular" pInputText>
                 <div *ngIf="identificacionValida == false">
                   <label class="labelError">{{"Identificación incorrecta"}}</label>
                 </div>
-              </div>
+              </div>-->
               <div class="form-group col-lg-3 col-md-6">
                 <label>{{"censo.mutualidad.literal.iban" | translate}} (*)</label>
                 <input type="text" class="form-control" [(ngModel)]="iban" (ngModelChange)="autogenerarDatos()" pInputText>

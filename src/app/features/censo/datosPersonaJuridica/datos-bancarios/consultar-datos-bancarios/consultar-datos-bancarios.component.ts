@@ -273,7 +273,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   cargarModoNuevoRegistro() {
     this.body.titular = this.usuarioBody[0].denominacion;
-    this.body.nifTitular = this.usuarioBody[0].nif;
+    //this.body.nifTitular = this.usuarioBody[0].nif;
 
     this.nuevo = true;
     this.editar = false;
@@ -461,7 +461,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       icon: "fa fa-info",
       accept: () => {
         this.body.titular = this.usuarioBody[0].denominacion;
-        this.body.nifTitular = this.usuarioBody[0].nif;
+        //this.body.nifTitular = this.usuarioBody[0].nif;
         this.body.iban = "";
         this.iban = "";
         this.body.bic = "";
@@ -834,8 +834,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.validarIban() &&
       this.validarBIC() &&
       this.validarTipoCuenta() &&
-      this.validarTitular() &&
-      this.validarIdentificacion()
+      this.validarTitular() 
+      //&&     this.validarIdentificacion()
     ) {
       this.formValido = true;
 
