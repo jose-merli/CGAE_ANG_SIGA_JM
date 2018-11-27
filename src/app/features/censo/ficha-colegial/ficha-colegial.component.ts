@@ -516,24 +516,29 @@ export class FichaColegialComponent implements OnInit {
 
   // MÉTODOS GENÉRICOS PARA TABLAS Y USOS VARIOS
   getLetrado() {
-    let isLetrado: ComboItem;
-    this.sigaServices.get("getLetrado").subscribe(
-      data => {
-        isLetrado = data;
-        if (isLetrado.value == "S") {
-          sessionStorage.setItem("isLetrado", "true");
-          this.isLetrado = true;
-        } else {
-          sessionStorage.setItem("isLetrado", "false");
-          this.isLetrado = false;
-        }
-      },
-      err => {
-        sessionStorage.setItem("isLetrado", "true");
-        this.isLetrado = true;
-        console.log(err);
-      }
-    );
+    if (JSON.parse(sessionStorage.getItem("isLetrado")) == true) {
+      this.isLetrado = true;
+    } else {
+      this.isLetrado = false;
+    }
+    // let isLetrado: ComboItem;
+    // this.sigaServices.get("getLetrado").subscribe(
+    //   data => {
+    //     isLetrado = data;
+    //     if (isLetrado.value == "S") {
+    //       sessionStorage.setItem("isLetrado", "true");
+    //       this.isEditable = true;
+    //     } else {
+    //       sessionStorage.setItem("isLetrado", "false");
+    //       this.isEditable = false;
+    //     }
+    //   },
+    //   err => {
+    //     sessionStorage.setItem("isLetrado", "true");
+    //     this.isEditable = true;
+    //     console.log(err);
+    //   }
+    // );
   }
 
   isSelectMultiple() {
@@ -1072,7 +1077,6 @@ export class FichaColegialComponent implements OnInit {
   solicitarModificacionGenerales() {
     // fichaDatosGenerales_datosGeneralesSolicitudModificación
     this.comisionesAString();
-
     this.sigaServices
       .post(
         "fichaDatosGenerales_datosGeneralesSolicitudModificación",
@@ -1167,12 +1171,13 @@ export class FichaColegialComponent implements OnInit {
   }
 
   activacionGuardarGenerales() {
+    this.comisionesAString();
     this.generalBody.etiquetas = this.etiquetasPersonaJuridicaSelecionados;
     if (
       JSON.stringify(this.checkGeneralBody) != JSON.stringify(this.generalBody)
     ) {
       if (
-        this.isValidDNI(this.generalBody.nif) &&
+        // this.isValidDNI(this.generalBody.nif) &&
         this.generalBody.nif != undefined &&
         this.generalBody.idTipoIdentificacion != "" &&
         this.generalBody.idTipoIdentificacion != undefined &&

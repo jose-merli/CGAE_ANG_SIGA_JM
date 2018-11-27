@@ -121,27 +121,6 @@ export class SolicitudesModificacionComponent implements OnInit {
     this.showCard = !this.showCard;
   }
 
-  getLetrado() {
-    let isLetrado: ComboItem;
-    this.sigaServices.get("getLetrado").subscribe(
-      data => {
-        isLetrado = data;
-        if (isLetrado.value == "S") {
-          sessionStorage.setItem("isLetrado", "true");
-          this.isLetrado = true;
-        } else {
-          sessionStorage.setItem("isLetrado", "false");
-          this.isLetrado = false;
-        }
-      },
-      err => {
-        sessionStorage.setItem("isLetrado", "true");
-        this.isLetrado = true;
-        console.log(err);
-      }
-    );
-  }
-
   getDataTable() {
     this.cols = [
       {
@@ -240,6 +219,32 @@ export class SolicitudesModificacionComponent implements OnInit {
     } else if (this.body.tipoModificacion == "99") {
       this.searchRequest("solicitudModificacion_searchSolModif");
     }
+  }
+
+  getLetrado() {
+    if (JSON.parse(sessionStorage.getItem("isLetrado")) == true) {
+      this.isLetrado = true;
+    } else {
+      this.isLetrado = false;
+    }
+    // let isLetrado: ComboItem;
+    // this.sigaServices.get("getLetrado").subscribe(
+    //   data => {
+    //     isLetrado = data;
+    //     if (isLetrado.value == "S") {
+    //       sessionStorage.setItem("isLetrado", "true");
+    //       this.isEditable = true;
+    //     } else {
+    //       sessionStorage.setItem("isLetrado", "false");
+    //       this.isEditable = false;
+    //     }
+    //   },
+    //   err => {
+    //     sessionStorage.setItem("isLetrado", "true");
+    //     this.isEditable = true;
+    //     console.log(err);
+    //   }
+    // );
   }
 
   searchRequest(path: string) {
