@@ -78,11 +78,43 @@ export class SolicitudesModificacionComponent implements OnInit {
 
     this.getDataTable();
 
-    if (sessionStorage.getItem("search") != null) {
-      this.isSearch = true;
-      this.data = JSON.parse(sessionStorage.getItem("search"));
-      sessionStorage.removeItem("search");
+    if (sessionStorage.getItem("saveFilters") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
+
+      if (sessionStorage.getItem("processingPerformed") == "true") {
+        this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
+        this.isSearch = true;
+        this.search();
+        sessionStorage.removeItem("saveFilters");
+      } else {
+        if (sessionStorage.getItem("search") != null) {
+          this.isSearch = true;
+          this.data = JSON.parse(sessionStorage.getItem("search"));
+          sessionStorage.removeItem("search");
+        }
+      }
+    } else {
+      if (sessionStorage.getItem("search") != null) {
+        this.isSearch = true;
+        this.data = JSON.parse(sessionStorage.getItem("search"));
+        sessionStorage.removeItem("search");
+      }
     }
+
+    // if (sessionStorage.getItem("processingPerformed") == "true") {
+    //   if (sessionStorage.getItem("saveFilters") != null) {
+    //     this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
+    //     this.isSearch = true;
+    //     this.search();
+    //     sessionStorage.removeItem("saveFilters");
+    //   }
+    // } else {
+    //   if (sessionStorage.getItem("search") != null) {
+    //     this.isSearch = true;
+    //     this.data = JSON.parse(sessionStorage.getItem("search"));
+    //     sessionStorage.removeItem("search");
+    //   }
+    // }
   }
 
   onHideCard() {
@@ -171,6 +203,8 @@ export class SolicitudesModificacionComponent implements OnInit {
 
   // SEARCH
   search() {
+    // Vamos a guardar los filtros para cuando vuelva
+    sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
     if (
       (this.body.tipoModificacion == null &&
         this.body.tipoModificacion == undefined) ||
@@ -219,6 +253,7 @@ export class SolicitudesModificacionComponent implements OnInit {
 
         // Almacenamos los resultados de la búsqueda
         sessionStorage.setItem("search", JSON.stringify(this.data));
+
         this.progressSpinner = false;
       },
       err => {

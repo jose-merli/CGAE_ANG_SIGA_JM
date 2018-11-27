@@ -308,12 +308,20 @@ export class SigaServices {
     solicitudModificacion_denySolModif: "solicitudModificacion/denySolModif",
     solicitudModificacion_searchSolModifDatosBancarios:
       "solicitudModificacion/searchSolModifDatosBancarios",
+    solicitudModificacion_searchDatosBancariosDetail:
+      "solicitudModificacion/searchDatosBancariosDetail",
+    solicitudModificacion_searchSolModifDatosBancariosDetail:
+      "solicitudModificacion/searchSolModifDatosBancariosDetail",
     solicitudModificacion_processSolModifDatosBancarios:
       "solicitudModificacion/processSolModifDatosBancarios",
     solicitudModificacion_denySolModifDatosBancarios:
       "solicitudModificacion/denySolModifDatosBancarios",
     solicitudModificacion_searchSolModifDatosCurriculares:
       "solicitudModificacion/searchSolModifDatosCurriculares",
+    solicitudModificacion_searchDatosCurricularesDetail:
+      "solicitudModificacion/searchDatosCurricularesDetail",
+    solicitudModificacion_searchSolModifDatosCurricularesDetail:
+      "solicitudModificacion/searchSolModifDatosCurricularesDetail",
     solicitudModificacion_processSolModifDatosCurriculares:
       "solicitudModificacion/processSolModifDatosCurriculares",
     solicitudModificacion_denySolModifDatosCurriculares:
@@ -347,8 +355,17 @@ export class SigaServices {
       "solicitudModificacion/processSolModifDatosGenerales",
     solicitudModificacion_denySolModifDatosGenerales:
       "solicitudModificacion/denySolModifDatosGenerales",
+    solicitudModificacion_searchSolModifDatosGeneralesDetail:
+      "solicitudModificacion/searchSolModifDatosGeneralesDetail",
+    solicitudModificacion_searchDatosGeneralesDetail:
+      "solicitudModificacion/searchDatosGeneralesDetail",
+    // FOTO
     solicitudModificacion_searchSolModifDatosUseFoto:
       "solicitudModificacion/searchSolModifDatosUseFoto",
+    solicitudModificacion_searchDatosUseFotoDetail:
+      "solicitudModificacion/searchDatosUseFotoDetail",
+    solicitudModificacion_searchSolModifDatosUseFotoDetail:
+      "solicitudModificacion/searchSolModifDatosUseFotoDetail",
     solicitudModificacion_processSolModifDatosUseFoto:
       "solicitudModificacion/processSolModifDatosUseFoto",
     solicitudModificacion_denySolModifDatosUseFoto:
@@ -409,8 +426,9 @@ export class SigaServices {
     personaJuridica_solicitudUploadFotografia:
       "personaJuridica/solicitudUploadFotografia",
     busquedaPerJuridica_datosBancariosInsert:
-      "busquedaPerJuridica/datosBancariosInsert", 
-      busquedaPerJuridica_solicitudInsertBanksData: "busquedaPerJuridica/solicitudInsertBanksData",
+      "busquedaPerJuridica/datosBancariosInsert",
+    busquedaPerJuridica_solicitudInsertBanksData:
+      "busquedaPerJuridica/solicitudInsertBanksData"
   };
 
   private menuToggled = new Subject<any>();
