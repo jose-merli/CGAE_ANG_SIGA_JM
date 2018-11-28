@@ -1,145 +1,16 @@
-<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-<div class="ficha-container">
-  <!--DATOS GENERALES-->
-  <div class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFichaGeneral()">
-      <div *ngIf="!datosGenerales" class="form-row">
-        <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
-            <i class="fa fa-user icon-ficha"></i>
-          </div>
-        </div>
-        <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate}}</label>
-          </div>
-          <div class="d-flex justify-content-between">
-            <label></label>
-            <i *ngIf="!datosGenerales" class="fa fa-angle-down float-right"></i>
-          </div>
-        </div>
-      </div>
-      <div *ngIf="datosGenerales" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
-          <i class="fa fa-user icon-ficha"></i>
-        </div>
-        <label class="title-ficha">{{ "general.message.datos.generales" | translate}}</label>
-        <i class="fa fa-angle-up ml-auto"></i>
-      </div>
-    </div>
-    <!--cuerpo datos generales-->
-    <div *ngIf="datosGenerales" class="card-body card-body-ficha">
-      <div class="row">
-        <div class="bloque col-lg-6 col-md-6">
-          <div class="form-group col-lg-12 col-md-12">
-            <label>Datos globales</label>
-          </div>
-        </div>
-        <div class="bloque col-lg-6 col-md-6">
-          <div class="form-group col-lg-12 col-md-12">
-            <label *ngIf="expression">Datos correo electrónico</label>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div *ngIf="datosGenerales" class="card-footer ">
-      <div class="text-right main-button ">
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-      </div>
-    </div>
-
+<div class="ficha-comunicacion-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{'menu.comunicaciones' | translate}}
+      <i class="pl-1 fa fa-angle-right"></i>{{ 'modelos.comunicaciones.literal.ficha' | translate}}
+    </p>
   </div>
-  <!--END DATOS GENERALES-->
-
-
-  <!--TARJETA CONSULTAS-->
-  <div class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFichaConsulta()">
-      <div *ngIf="!datosConsulta" class="form-row">
-        <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
-            <i class="fa fa-user icon-ficha"></i>
-          </div>
-        </div>
-        <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">Consultas</label>
-          </div>
-          <div class="d-flex justify-content-between">
-            <label></label>
-            <i *ngIf="!datosConsulta" class="fa fa-angle-down float-right"></i>
-          </div>
-        </div>
-      </div>
-      <div *ngIf="datosConsulta" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
-          <i class="fa fa-user icon-ficha"></i>
-        </div>
-        <label class="title-ficha">Consultas</label>
-        <i class="fa fa-angle-up ml-auto"></i>
-      </div>
-    </div>
-    <!--cuerpo consultas-->
-    <div *ngIf="datosConsulta" class="card-body card-body-ficha">
-      <div class="row">
-        <div class="form-group col-lg-12 col-md-12">
-          TABLA
-        </div>
-      </div>
-    </div>
-    <div *ngIf="datosConsulta" class="card-footer ">
-      <div class="text-right main-button ">
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-      </div>
-    </div>
+  <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
+    <app-datos-generales-plantilla *ngSwitchCase="'generales'"></app-datos-generales-plantilla>
+    <app-consultas-plantillas *ngSwitchCase="'consultas'"></app-consultas-plantillas>
+    <app-remitente-plantilla *ngSwitchCase="'remitente'"></app-remitente-plantilla>
   </div>
-  <!--TARJETA CONSULTAS-->
-
-
-  <!--TARJETA REMITENTE-->
-  <div class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFichaRemitente()">
-      <div *ngIf="!datosRemitente" class="form-row">
-        <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
-            <i class="fa fa-user icon-ficha"></i>
-          </div>
-        </div>
-        <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">Remitente</label>
-          </div>
-          <div class="d-flex justify-content-between">
-            <label></label>
-            <i *ngIf="!datosRemitente" class="fa fa-angle-down float-right"></i>
-          </div>
-        </div>
-      </div>
-      <div *ngIf="datosRemitente" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
-          <i class="fa fa-user icon-ficha"></i>
-        </div>
-        <label class="title-ficha">Remitente</label>
-        <i class="fa fa-angle-up ml-auto"></i>
-      </div>
-    </div>
-    <!--cuerpo remitente-->
-    <div *ngIf="datosRemitente" class="card-body card-body-ficha">
-      <div class="row">
-        <div class="form-group col-lg-12 col-md-12">
-          DatosRemitente
-        </div>
-      </div>
-    </div>
-    <div *ngIf="datosRemitente" class="card-footer ">
-      <div class="text-right main-button ">
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-      </div>
-    </div>
-  </div>
-  <!--TARJETA CONSULTAS-->
-
+</div>
+<div class="mt-3 text-right main-button ">
+  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="Volver"></button>
 </div>

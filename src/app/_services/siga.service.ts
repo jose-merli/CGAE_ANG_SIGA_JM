@@ -156,7 +156,14 @@ export class SigaServices {
     fichaColegialOtrasColegiaciones_searchOtherCollegues:
       "fichaColegialOtrasColegiaciones/searchOtherCollegues",
     fichaColegialOtrasColegiaciones_getLabelColegios:
-      "fichaColegialOtrasColegiaciones/getLabelColegios"
+      "fichaColegialOtrasColegiaciones/getLabelColegios",
+    enviosMasivos: 'enviosMasivos/enviosMasivos',
+    enviosMasivos_search: 'enviosMasivos/search',
+    enviosMasivos_estado: 'enviosMasivos/estadoEnvios',
+    enviosMasivos_tipo: 'enviosMasivos/tipoEnvios',
+    enviosMasivos_programar: 'enviosMasivos/programarEnvio',
+    enviosMasivos_cancelar: 'enviosMasivos/cancelarEnvio',
+
   };
 
   private menuToggled = new Subject<any>();
@@ -206,9 +213,9 @@ export class SigaServices {
     return this.httpbackend
       .get(
         environment.newSigaUrl +
-          this.endpoints[service] +
-          "?institucion=" +
-          institucion
+        this.endpoints[service] +
+        "?institucion=" +
+        institucion
       )
       .map(response => {
         return response;

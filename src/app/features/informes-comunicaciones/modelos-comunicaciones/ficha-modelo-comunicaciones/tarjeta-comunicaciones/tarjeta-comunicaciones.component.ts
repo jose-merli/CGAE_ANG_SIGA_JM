@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
 import { SigaServices } from "./../../../../../_services/siga.service";
+import { ComunicacionesModelosComItem } from '../../../../../models/ComunicacionesModelosComunicacionesItem';
 
 @Component({
   selector: 'app-tarjeta-comunicaciones',
@@ -24,9 +25,9 @@ export class TarjetaComunicacionesComponent implements OnInit {
   selectMultiple: boolean = false;
   numSelected: number = 0;
   rowsPerPage: any = [];
-  idiomas: any[];
   formatos: any[];
   sufijos: any[];
+  body: ComunicacionesModelosComItem = new ComunicacionesModelosComItem;
 
   @ViewChild('table') table: DataTable;
   selectedDatos;
@@ -49,6 +50,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
   constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices) { }
 
   ngOnInit() {
+    this.getDatos();
 
     this.selectedItem = 10;
 
@@ -165,6 +167,12 @@ export class TarjetaComunicacionesComponent implements OnInit {
   onRowSelect() {
     if (!this.selectMultiple) {
       this.selectedDatos = [];
+    }
+  }
+
+  getDatos() {
+    if (sessionStorage.getItem("modelosSearch") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
     }
   }
 

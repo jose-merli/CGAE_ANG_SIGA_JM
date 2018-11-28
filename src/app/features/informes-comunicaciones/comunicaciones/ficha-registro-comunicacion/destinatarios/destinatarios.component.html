@@ -1,0 +1,106 @@
+<!-- <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl> -->
+<div class="ficha-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="abreCierraFicha()">
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <!-- <div class="img-colegiado">
+            <i class="fas fa-file-alt icon-ficha"></i>
+          </div> -->
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-center mb-1">
+            <label class="mr-auto title-ficha">Destinatarios</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>Destinatarios:
+              <!-- <span>{{body.nombre}}</span> -->
+            </label>
+            <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <!-- <div class="img-colegiado">
+          <i class="fas fa-file-alt icon-ficha"></i>
+        </div> -->
+        <label class="title-ficha">Destinatarios</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <!--tarjetas destinatario-->
+    <div *ngIf="openFicha" class=" card-body card-body-ficha">
+      <div class="card" *ngFor="let destinatario of destinatarios">
+        <div (click)="onOpenDestinatario(destinatario)" class="card-header header-ficha">
+          <div class="form-row">
+            <div class="col-lg-1 col-md-2">
+              <div class="img-colegiado">
+                <i class="fa fa-user"></i>
+              </div>
+            </div>
+            <div class="col-lg-11 col-md-10">
+              <div class="d-flex justify-content-center mb-1">
+                <label class="mr-auto title-ficha">Destinatario</label>
+              </div>
+              <div class="d-flex justify-content-between">
+                <label>Grupo/categoría:
+                  <!-- <span>{{body.nombre}}</span> -->
+                </label>
+                <label>Documento Identidad:
+                  <!-- <span>{{body.nombre}}</span> -->
+                </label>
+                <i *ngIf="!destinatario.open" class="fas fa-redo mr-4 float-right"></i>
+                <i *ngIf="!destinatario.open" class="fa fa-angle-down float-right"></i>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="destinatario.open" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <!-- <div class="img-colegiado">
+                  <i class="fas fa-file-alt icon-ficha"></i>
+            </div> -->
+            <label class="title-ficha">Destinatario</label>
+            <i class="fa fa-angle-up ml-auto"></i>
+          </div>
+        </div>
+
+        <div *ngIf="destinatario.open" class="card-body card-body-ficha">
+          <div class="row">
+            <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
+              <div class="img-colegiado text-center my-0 mx-auto">
+                <i class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
+              </div>
+            </div>
+            <div class="bloque col-lg-10 col-md-9">
+              <div class="form-row">
+                <div class="form-group col-lg-4 col-md-4">
+                  <label>Grupo/categoría (*)</label>
+                  <p-dropdown class="select-form" [(ngModel)]="destinatario.idGrupo" [options]="grupos" [disabled]="true" optionName="label"></p-dropdown>
+                </div>
+                <div class="form-group col-lg-4 col-md-4">
+                  <label>Identificación (*)</label>
+                  <input type="text" class="form-control" [(ngModel)]="destinatario.nif" [attr.maxlength]="20" [disabled]="true" pInputText>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-lg-4 col-md-4">
+                  <label>Nombre</label>
+                  <input [(ngModel)]="destinatario.nombre" type="text" class="form-control" [disabled]="true" pInputText>
+                </div>
+                <div class="form-group col-lg-34 col-md-4">
+                  <label>Primer apellido</label>
+                  <input [(ngModel)]="destinatario.apellido1" type="text" class="form-control" [disabled]="true" pInputText>
+                </div>
+                <div class="form-group col-lg-4 col-md-4">
+                  <label>Segundo apellido</label>
+                  <input [(ngModel)]="destinatario.apellido2" type="text " class="form-control" [disabled]="true" pInputText>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>

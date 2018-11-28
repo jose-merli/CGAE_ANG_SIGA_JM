@@ -39,6 +39,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices) { }
 
   ngOnInit() {
+    this.getDatos();
   }
 
   abreCierraFicha() {
@@ -89,6 +90,12 @@ export class DatosGeneralesFichaComponent implements OnInit {
         // }
       }
     );
+  }
+
+  getDatos() {
+    if (sessionStorage.getItem("modelosSearch") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
+    }
   }
 
 }

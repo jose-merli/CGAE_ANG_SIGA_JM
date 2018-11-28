@@ -194,7 +194,10 @@ import { PlantillaDocumentoComponent } from './features/informes-comunicaciones/
 import { DetallePlantillaEnvioComponent } from "./features/informes-comunicaciones/plantillas-envio/detalle-plantilla-envio/detalle-plantilla-envio.component";
 import { ConsultasComponent } from './features/informes-comunicaciones/consultas/consultas.component';
 import { FichaConsultaComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/ficha-consulta.component';
-
+import { ComunicacionesComponent } from './features/informes-comunicaciones/comunicaciones/comunicaciones.component';
+import { FichaRegistroComunicacionComponent } from './features/informes-comunicaciones/comunicaciones/ficha-registro-comunicacion/ficha-registro-comunicacion.component';
+import { EnviosMasivosComponent } from './features/informes-comunicaciones/envios-masivos/envios-masivos.component';
+import { FichaRegistroEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/ficha-registro-envio-masivo.component';
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -933,12 +936,12 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: "fichaModeloComunicaciones/:id",
+    path: "fichaModeloComunicaciones",
     component: FichaModeloComunicacionesComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: "fichaPlantillaDocumento/:id",
+    path: "fichaPlantillaDocumento",
     component: PlantillaDocumentoComponent,
     canActivate: [AuthGuard]
   },
@@ -948,8 +951,32 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: "fichaConsulta/:id",
+    path: "fichaConsulta",
     component: FichaConsultaComponent,
+    canActivate: [AuthGuard]
+  },
+
+  {
+    path: "comunicaciones",
+    component: ComunicacionesComponent,
+    canActivate: [AuthGuard]
+  },
+
+  {
+    path: 'fichaRegistroComunicacion',
+    component: FichaRegistroComunicacionComponent,
+    canActivate: [AuthGuard]
+  },
+
+  {
+    path: "enviosMasivos",
+    component: EnviosMasivosComponent,
+    canActivate: [AuthGuard]
+  },
+
+  {
+    path: 'fichaEnvioMasivo',
+    component: FichaRegistroEnvioMasivoComponent,
     canActivate: [AuthGuard]
   },
 

@@ -1,0 +1,59 @@
+<!-- <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl> -->
+<div class="ficha-container">
+  <!--DATOS GENERALES-->
+  <div class="card">
+    <div class="card-header header-ficha" (click)="abreCierraFicha()">
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fas poll-h icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-center mb-1">
+            <label class="mr-auto title-ficha">Programación</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>Creado:
+              <!-- <span>{{body.nombre}}</span> -->
+            </label>
+            <label>Estado:
+              <!-- <span>{{body.nombre}}</span> -->
+            </label>
+            <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas poll-h icon-ficha"></i>
+        </div>
+        <label class="title-ficha">Programación</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <!--cuerpo datos generales-->
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
+      <div class="form-row">
+        <div class="form-group col-lg-3 col-md-4">
+          <label>Creado</label>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>Estado</label>
+        </div>
+        <div class="form-group col-lg-4 col-md-4">
+          <label>Fecha</label>
+          <p-calendar showTime="true" [locale]="es" [(ngModel)]="body.fechaProgramar" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
+            showIcon="true" [utc]="true"></p-calendar>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="openFicha" class="card-footer ">
+      <div class="text-right main-button ">
+        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { DataTable } from "primeng/datatable";
-import { FichaConsultaItem } from '../../../../../models/FichaConsultaItem';
+import { DatosGeneralesConsultaItem } from '../../../../../models/DatosGeneralesConsultaItem';
+import { DestinatariosItem } from '../../../../../models/DestinatariosItem';
 import { Location } from "@angular/common";
 import { SigaServices } from "./../../../../../_services/siga.service";
 
@@ -22,11 +23,13 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   selectMultiple: boolean = false;
   numSelected: number = 0;
   rowsPerPage: any = [];
-  body: FichaConsultaItem = new FichaConsultaItem();
+  body: DatosGeneralesConsultaItem = new DatosGeneralesConsultaItem();
+  bodyDestinatario: DestinatariosItem = new DestinatariosItem();
   modulos: any[];
   objetivos: any[];
   clasesComunicaciones: any[];
   idiomas: any[];
+
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -60,6 +63,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
 
   ngOnInit() {
 
+    this.getDatos();
 
     this.selectedItem = 4;
 
@@ -198,6 +202,12 @@ export class DatosGeneralesConsultaComponent implements OnInit {
 
   backTo() {
     this.location.back();
+  }
+
+  getDatos() {
+    if (sessionStorage.getItem("consultasSearch") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("consultasSearch"));
+    }
   }
 
 }

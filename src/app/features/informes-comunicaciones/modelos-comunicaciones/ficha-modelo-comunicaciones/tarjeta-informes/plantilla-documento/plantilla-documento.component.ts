@@ -20,7 +20,6 @@ export class PlantillaDocumentoComponent implements OnInit {
   selectMultiple: boolean = false;
   numSelected: number = 0;
   rowsPerPage: any = [];
-  idiomas: any[];
   formatos: any[];
   sufijos: any[];
   textFilter: string;
@@ -28,11 +27,21 @@ export class PlantillaDocumentoComponent implements OnInit {
   consultas: any[];
   finalidad: any[];
   tipoEjecucion: any[];
+  textSelected: any;
+  showHistorico: boolean = false;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private location: Location) {
+
+
+  }
+
+  ngOnInit() {
+    this.textFilter = "Elegir";
+
+    this.getDatos();
 
     this.selectedItem = 4;
 
@@ -74,10 +83,6 @@ export class PlantillaDocumentoComponent implements OnInit {
 
     // this.body.idConsulta = this.consultas[1].value;
 
-  }
-
-  ngOnInit() {
-    this.textFilter = "Elegir";
   }
 
 
@@ -130,6 +135,12 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   backTo() {
     this.location.back();
+  }
+
+  getDatos() {
+    if (sessionStorage.getItem("modelosSearch") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
+    }
   }
 
 

@@ -20,6 +20,7 @@ import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { ComboItem } from "./../../../../app/models/ComboItem";
 import { DataTable } from "primeng/datatable";
 import { Error } from "../../../models/Error";
+import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
 
 @Component({
   selector: "app-perfiles",
@@ -64,6 +65,13 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   selectedItem: number = 10;
   selectAll: boolean = false;
   numSelected: number = 0;
+
+  //Diálogo de comunicación
+  showComunicar: boolean = false;
+  modelosComunicacion: any[];
+  bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
+  tiposEnvio: any[];
+  plantillas: any[];
 
   constructor(
     private sigaServices: SigaServices,
@@ -695,4 +703,14 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   clear() {
     this.msgs = [];
   }
+
+  //Diálogo de comunicación: ver y enviar servicio
+  onComunicar(dato) {
+    this.showComunicar = true;
+  }
+
+  onEnviarComunicacion() {
+    this.showComunicar = false;
+  }
+
 }

@@ -45,6 +45,11 @@ export class ModelosComunicacionesComponent implements OnInit {
     private confirmationService: ConfirmationService, private router: Router) { }
 
   ngOnInit() {
+
+    if (sessionStorage.getItem("modelosSearch") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
+    }
+
     this.selectedItem = 4;
     this.getComboColegios();
     this.body.visible = true;
@@ -144,6 +149,7 @@ export class ModelosComunicacionesComponent implements OnInit {
 
   onBuscar() {
     this.showResultados = true;
+    sessionStorage.removeItem("modelosSearch")
     this.getResultados();
   }
 
@@ -218,13 +224,18 @@ export class ModelosComunicacionesComponent implements OnInit {
   navigateTo(dato) {
     let id = dato[0].id;
     if (!this.selectMultiple) {
-      this.router.navigate(['/fichaModeloComunicaciones', id]);
+      this.router.navigate(['/fichaModeloComunicaciones']);
+      sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
     }
 
   }
 
 
 
+  onAddModelo() {
+    this.router.navigate(['/fichaModeloComunicaciones']);
+    sessionStorage.removeItem("modelosSearch")
+  }
 
 
 

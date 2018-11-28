@@ -21,6 +21,8 @@ import { HistoricoUsuarioDto } from "../../../../models/HistoricoUsuarioDto";
 import { HistoricoUsuarioRequestDto } from "../../../../models/HistoricoUsuarioRequestDto";
 import { DataTable } from "primeng/datatable";
 
+import { DialogoComunicacionesItem } from "../../../../models/DialogoComunicacionItem";
+
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -60,6 +62,13 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   progressSpinner: boolean = false;
   volver: boolean = false;
   pButton;
+
+  //Diálogo de comunicación
+  showComunicar: boolean = false;
+  modelosComunicacion: any[];
+  bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
+  tiposEnvio: any[];
+  plantillas: any[];
 
   constructor(
     private sigaServices: SigaServices,
@@ -443,4 +452,15 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   clear() {
     this.msgs = [];
   }
+
+  //Diálogo de comunicación: ver y enviar servicio
+  onComunicar(dato) {
+    this.showComunicar = true;
+  }
+
+  onEnviarComunicacion() {
+    this.showComunicar = false;
+  }
+
+
 }

@@ -1,0 +1,122 @@
+<!-- <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl> -->
+<div class="ficha-container">
+  <!--DATOS GENERALES-->
+  <div class="card">
+    <div class="card-header header-ficha" (click)="abreCierraFicha()">
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <!-- <i class="fa fa-user icon-ficha"></i> -->
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate}}</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label></label>
+            <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <!-- <i class="fa fa-user icon-ficha"></i> -->
+        </div>
+        <label class="title-ficha">{{ "general.message.datos.generales" | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <!--cuerpo datos generales-->
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque" [ngClass]="{'col-lg-12':body.idTipoEnvio!='1' && body.idTipoEnvio!='2','col-lg-6':body.idTipoEnvio=='1' || body.idTipoEnvio=='2'}">
+          <div class="form-row">
+            <div class="form-group col-lg-12">
+              <label>
+                <strong>Datos globales</strong>
+              </label>
+            </div>
+            <div class="form-group" [ngClass]="{'col-lg-6':body.idTipoEnvio!='1' && body.idTipoEnvio!='2','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='2'}">
+              <label>Nombre</label>
+              <input type="text" [(ngModel)]="body.nombre" pInputText class="form-control">
+            </div>
+            <div class="form-group" [ngClass]="{'col-lg-6':body.idTipoEnvio!='1' && body.idTipoEnvio!='2','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='2'}">
+              <label>Tipo de envío</label>
+              <p-dropdown class="select-form" [(ngModel)]="body.idTipoEnvio" [options]="tiposEnvio"></p-dropdown>
+            </div>
+            <div class="form-group" [ngClass]="{'col-lg-6':body.idTipoEnvio!='1' && body.idTipoEnvio!='2','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='2'}">
+              <label>Descripción</label>
+              <textarea style="height: 85px" [(ngModel)]="body.descripcion" pInputTextarea></textarea>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="body.idTipoEnvio=='1' || body.idTipoEnvio=='2'" class="bloque col-lg-6 col-md-6">
+          <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12">
+              <label *ngIf="body.idTipoEnvio=='1'">
+                <strong>Datos de correo electrónico</strong>
+              </label>
+              <label *ngIf="body.idTipoEnvio=='2'">
+                <strong>Datos de SMS</strong>
+              </label>
+            </div>
+            <div *ngIf="body.idTipoEnvio=='1'" class="form-group col-lg-12 col-md-12">
+              <label>Correo electrónico</label>
+              <p-editor [(ngModel)]="body.email" [style]="{'height':'150px','text-align':'left'}">
+                <p-header>
+                  <span class=" ql-formats">
+                    <select class="ql-header">
+                      <option value="1">Heading</option>
+                      <option value="2">Subheading</option>
+                      <option selected>Normal</option>
+                    </select>
+                    <select class="ql-font">
+                      <option selected>Sans Serif</option>
+                      <option value="serif">Serif</option>
+                      <option value="monospace">Monospace</option>
+                    </select>
+                  </span>
+                  <span class="ql-formats">
+                    <button class="ql-bold" aria-label="Bold"></button>
+                    <button class="ql-italic" aria-label="Italic"></button>
+                    <button class="ql-underline" aria-label="Underline"></button>
+                  </span>
+                  <span class="ql-formats">
+                    <button class="ql-list" value="ordered" aria-label="Ordered List"></button>
+                    <button class="ql-list" value="bullet" aria-label="Unordered List"></button>
+                    <select class="ql-align">
+                      <option selected></option>
+                      <option value="center"></option>
+                      <option value="right"></option>
+                      <option value="justify"></option>
+                    </select>
+                  </span>
+                  <span class="ql-formats">
+                    <button class="ql-link" aria-label="Insertar Link"></button>
+                    <button class="ql-code-block" aria-label="Insertar código"></button>
+                  </span>
+                  <span class="ql-formats">
+                    <button class="ql-clean" aria-label="Remove Styles"></button>
+                  </span>
+                </p-header>
+              </p-editor>
+            </div>
+            <div *ngIf="body.idTipoEnvio=='2'" class="form-group col-lg-12 col-md-12">
+              <label>SMS</label>
+              <textarea style="height: 150px" [(ngModel)]="body.sms" pInputTextarea></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="openFicha" class="card-footer ">
+      <div class="text-right main-button ">
+        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+
+  </div>
+
+</div>

@@ -13,6 +13,7 @@ import { DatosBancariosObject } from "./../../../../../app/models/DatosBancarios
 import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
 import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
+import { DialogoComunicacionesItem } from "../../../../models/DialogoComunicacionItem";
 
 @Component({
   selector: "app-datos-bancarios",
@@ -44,6 +45,13 @@ export class DatosBancariosComponent implements OnInit {
   activacionEditar: boolean;
 
   suscripcionBusquedaNuevo: Subscription;
+
+  //Diálogo de comunicación
+  showComunicar: boolean = false;
+  modelosComunicacion: any[];
+  bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
+  tiposEnvio: any[];
+  plantillas: any[];
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -200,17 +208,17 @@ export class DatosBancariosComponent implements OnInit {
     this.sigaServices
       .postPaginado("datosBancarios_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        this.progressSpinner = false;
-        this.bodySearch = JSON.parse(data["body"]);
-        this.body = this.bodySearch.datosBancariosItem[0];
-      },
-      error => {
-        this.bodySearch = JSON.parse(error["error"]);
-        this.showFail(JSON.stringify(this.bodySearch.error.description));
-        console.log(error);
-        this.progressSpinner = false;
-      }
+        data => {
+          this.progressSpinner = false;
+          this.bodySearch = JSON.parse(data["body"]);
+          this.body = this.bodySearch.datosBancariosItem[0];
+        },
+        error => {
+          this.bodySearch = JSON.parse(error["error"]);
+          this.showFail(JSON.stringify(this.bodySearch.error.description));
+          console.log(error);
+          this.progressSpinner = false;
+        }
       );
   }
 
@@ -365,4 +373,16 @@ export class DatosBancariosComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+
+  //Diálogo de comunicación: ver y enviar servicio
+  onComunicar(dato) {
+    this.showComunicar = true;
+  }
+
+  onEnviarComunicacion() {
+    this.showComunicar = false;
+  }
+
+
+
 }

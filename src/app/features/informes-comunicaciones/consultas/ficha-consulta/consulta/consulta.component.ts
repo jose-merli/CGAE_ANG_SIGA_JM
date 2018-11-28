@@ -4,6 +4,7 @@ import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDt
 import { TranslateService } from "./../../../../../commons/translate/translation.service";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
+import { ConsultaConsultasItem } from '../../../../../models/ConsultaConsultasItem';
 
 
 @Component({
@@ -22,7 +23,7 @@ export class ConsultaComponent implements OnInit {
   cuerpo: String;
   showAyuda: boolean = false;
   showValores: boolean = false;
-
+  body: ConsultaConsultasItem = new ConsultaConsultasItem();
 
   fichasPosibles = [
     {
@@ -43,8 +44,7 @@ export class ConsultaComponent implements OnInit {
     private sigaServices: SigaServices, private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
-
-
+    this.getDatos();
   }
 
   abreCierraFicha() {
@@ -104,6 +104,13 @@ export class ConsultaComponent implements OnInit {
   onShowValores() {
     this.showValores = !this.showValores;
   }
+
+  getDatos() {
+    if (sessionStorage.getItem("consultasSearch") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("consultasSearch"));
+    }
+  }
+
 
 
 }

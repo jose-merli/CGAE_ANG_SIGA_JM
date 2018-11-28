@@ -112,6 +112,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   file: File = undefined;
   ocultarMotivo: boolean = undefined;
+  showComunicar: boolean = false;
 
   @ViewChild("table")
   table: DataTable;
@@ -125,7 +126,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     sessionStorage.setItem("editarDatosBancarios", "true");
@@ -505,7 +506,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
   checkTypeCIF(value: String): boolean {
@@ -801,7 +802,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   filtrarItemsComboEsquema(comboEsquema, buscarElemento) {
-    return comboEsquema.filter(function(obj) {
+    return comboEsquema.filter(function (obj) {
       return obj.value == buscarElemento;
     });
   }
@@ -1376,5 +1377,15 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+
+  //Diálogo de comunicación: ver y enviar servicio
+  onComunicar(dato) {
+    this.showComunicar = true;
+  }
+
+  onEnviarComunicacion() {
+    this.showComunicar = false;
   }
 }

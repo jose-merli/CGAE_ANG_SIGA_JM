@@ -16,6 +16,7 @@ import { Message } from "primeng/components/common/api";
 import { ContadorItem } from "./../../../../app/models/ContadorItem";
 import { ContadorResponseDto } from "./../../../../app/models/ContadorResponseDto";
 import { DataTable } from "primeng/datatable";
+import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -64,6 +65,13 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
   idPantalla: String;
   first: number = 0;
   rowsPerPage: any = [];
+
+  //Diálogo de comunicación
+  showComunicar: boolean = false;
+  modelosComunicacion: any[];
+  bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
+  tiposEnvio: any[];
+  plantillas: any[];
 
   @ViewChild("table") table: DataTable;
   constructor(
@@ -186,7 +194,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.table.reset();
   }
   // Control de buscar desactivado por ahora (hasta tener primer elemento del combo preparado)
-  onChangeCatalogo() {}
+  onChangeCatalogo() { }
   //cada vez que cambia el formulario comprueba esto
   onChangeForm(event) {
     this.idModulo = event;
@@ -336,5 +344,14 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   clear() {
     this.msgs = [];
+  }
+
+  //Diálogo de comunicación: ver y enviar servicio
+  onComunicar(dato) {
+    this.showComunicar = true;
+  }
+
+  onEnviarComunicacion() {
+    this.showComunicar = false;
   }
 }

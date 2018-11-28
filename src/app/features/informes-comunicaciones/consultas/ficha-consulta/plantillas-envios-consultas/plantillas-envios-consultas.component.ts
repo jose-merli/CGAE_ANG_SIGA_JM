@@ -4,6 +4,8 @@ import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDt
 import { TranslateService } from "./../../../../../commons/translate/translation.service";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
+import { PlantillasConsultasItem } from '../../../../../models/PlantillasConsultasItem';
+
 
 @Component({
   selector: 'app-plantillas-envios-consultas',
@@ -24,7 +26,7 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
   selectedItem: number;
   numSelected: number = 0;
   rowsPerPage: any = [];
-
+  body: PlantillasConsultasItem = new PlantillasConsultasItem();
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -48,6 +50,8 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
     private sigaServices: SigaServices, private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
+
+    this.getDatos();
 
     this.selectedItem = 10;
 
@@ -116,12 +120,16 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
     this.table.reset();
   }
 
-
-
   navigateTo(dato) {
     console.log(dato)
     let id = dato[0].id;
 
     // this.router.navigate(['/fichaModeloComunicaciones', id]);
+  }
+
+  getDatos() {
+    if (sessionStorage.getItem("consultasSearch") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("consultasSearch"));
+    }
   }
 }

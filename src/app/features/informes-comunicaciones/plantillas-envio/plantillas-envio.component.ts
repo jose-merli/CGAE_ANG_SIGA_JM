@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild, ChangeDetectorRef, HostListener } from '@
 import { DataTable } from "primeng/datatable";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { Router } from '@angular/router';
-import { TranslateService } from "../../../commons/translate/translation.service";
-import { SigaServices } from "./../../../_services/siga.service";
+// import { TranslateService } from "../../../commons/translate/translation.service";
+// import { SigaServices } from "./../../../_services/siga.service";
 import { PlantillaEnvioSearchItem } from '../../../models/PlantillaEnvioSearchItem';
 export enum KEY_CODE {
   ENTER = 13
@@ -19,7 +19,7 @@ export class PlantillasEnvioComponent implements OnInit {
   fichaBusqueda: boolean = true;
   msgs: Message[];
   comboTipoEnvio: any = [];
-  filtro: PlantillaEnvioSearchItem = new PlantillaEnvioSearchItem();
+  body: PlantillaEnvioSearchItem = new PlantillaEnvioSearchItem();
 
 
   //variables tabla
@@ -39,12 +39,20 @@ export class PlantillasEnvioComponent implements OnInit {
   @ViewChild('table') table: DataTable;
   selectedDatos
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef,
-    private confirmationService: ConfirmationService, private router: Router) { }
+  constructor(
+    // private sigaServices: SigaServices,
+    //  private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private confirmationService: ConfirmationService,
+    private router: Router
+  ) { }
 
 
   ngOnInit() {
 
+    if (sessionStorage.getItem("plantillasEnvioSearch") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("plantillasEnvioSearch"));
+    }
 
     this.configTabla();
 
@@ -94,7 +102,7 @@ export class PlantillasEnvioComponent implements OnInit {
 
 
     //llamar al servicio de busqueda
-    this.filtro;
+    this.body;
 
     this.datos = [
       { id: '1', nombre: 'Plantilla test', tipoEnvio: 'SMS', descripcion: 'descripcion' },
@@ -140,15 +148,17 @@ export class PlantillasEnvioComponent implements OnInit {
 
   detallePlantilla(item) {
 
-    sessionStorage.setItem("filtros", JSON.stringify(this.filtro));
+    sessionStorage.setItem("filtros", JSON.stringify(this.body));
     let id = item[0].id;
     if (!this.selectMultiple) {
-      this.router.navigate(["/detallePlantillas", id]);
+      this.router.navigate(["/fichaPlantillaEnvio"]);
+      sessionStorage.setItem("plantillasEnvioSearch", JSON.stringify(this.body));
     }
   }
 
   onBuscar() {
     this.showResultados = true;
+    sessionStorage.removeItem("plantillasEnvioSearch")
     this.getResultados();
   }
 
@@ -156,7 +166,7 @@ export class PlantillasEnvioComponent implements OnInit {
   onChangeTipoEnvio(event) {
 
     if (event.value) {
-      this.filtro.tipoEnvio = event.value;
+      this.body.tipoEnvio = event.value;
     }
 
   }
@@ -183,6 +193,12 @@ export class PlantillasEnvioComponent implements OnInit {
 
   abreCierraFicha() {
     this.fichaBusqueda = !this.fichaBusqueda;
+  }
+
+
+  onAddPlantilla() {
+    this.router.navigate(['/fichaPlantillaEnvio']);
+    sessionStorage.removeItem("plantillasEnvioSearch")
   }
 
 }

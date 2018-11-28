@@ -39,7 +39,7 @@
     <div class="card-footer">
       <div class="text-right main-button">
         <button (click)="onBuscar()" [disabled]="isButtonDisabled()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
-        <button pButton type="button" icon="fa fa-plus " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        <button (click)="onAddModelo()" pButton type="button" icon="fa fa-plus " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -115,5 +115,5 @@
     </div>
   </div>
 </div>
-<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<!-- <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl> -->
 <app-dialog></app-dialog>

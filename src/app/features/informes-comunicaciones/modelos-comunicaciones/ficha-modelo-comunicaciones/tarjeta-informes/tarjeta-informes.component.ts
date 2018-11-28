@@ -4,6 +4,8 @@ import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDt
 import { TranslateService } from "./../../../../../commons/translate/translation.service";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
+import { InformesModelosComItem } from '../../../../../models/InformesModelosComunicacionesItem';
+
 
 @Component({
   selector: 'app-tarjeta-informes',
@@ -27,6 +29,7 @@ export class TarjetaInformesComponent implements OnInit {
   selectMultiple: boolean = false;
   numSelected: number = 0;
   rowsPerPage: any = [];
+  body: InformesModelosComItem = new InformesModelosComItem;
 
 
   @ViewChild('table') table: DataTable;
@@ -55,6 +58,8 @@ export class TarjetaInformesComponent implements OnInit {
     private sigaServices: SigaServices, private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
+
+    this.getDatos();
 
     this.selectedItem = 10;
     this.cols = [
@@ -158,9 +163,17 @@ export class TarjetaInformesComponent implements OnInit {
   navigateTo(dato) {
     let id = dato[0].id;
     if (!this.selectMultiple) {
-      this.router.navigate(['/fichaPlantillaDocumento', id]);
+      this.router.navigate(['/fichaPlantillaDocumento']);
+      sessionStorage.setItem("modelosInformesSearch", JSON.stringify(this.body));
     }
 
   }
+
+  getDatos() {
+    if (sessionStorage.getItem("modelosSearch") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
+    }
+  }
+
 
 }

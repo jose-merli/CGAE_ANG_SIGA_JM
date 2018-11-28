@@ -41,6 +41,12 @@ export class ConsultasComponent implements OnInit {
     private confirmationService: ConfirmationService, private router: Router) { }
 
   ngOnInit() {
+
+
+    if (sessionStorage.getItem("consultasSearch") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("consultasSearch"));
+    }
+
     this.selectedItem = 4;
 
     this.cols = [
@@ -127,6 +133,7 @@ export class ConsultasComponent implements OnInit {
 
   onBuscar() {
     this.showResultados = true;
+    sessionStorage.removeItem("consultasSearch")
     this.getResultados();
   }
 
@@ -192,8 +199,15 @@ export class ConsultasComponent implements OnInit {
   navigateTo(dato) {
     let id = dato[0].id;
     if (!this.selectMultiple) {
-      this.router.navigate(['/fichaConsulta', id]);
+      this.router.navigate(['/fichaConsulta']);
+      sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
     }
+  }
 
+
+
+  onAddConsulta() {
+    this.router.navigate(['/fichaConsulta']);
+    sessionStorage.removeItem("consultasSearch")
   }
 }

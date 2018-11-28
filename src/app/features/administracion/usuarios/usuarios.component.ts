@@ -20,6 +20,7 @@ import { UsuarioDeleteRequestDto } from "./../../../../app/models/UsuarioDeleteR
 import { UsuarioItem } from "./../../../../app/models/UsuarioItem";
 import { ComboItem } from "./../../../../app/models/ComboItem";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
+import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -68,6 +69,14 @@ export class Usuarios extends SigaWrapper implements OnInit {
   selectAll: boolean = false;
   progressSpinner: boolean = false;
   numSelected: number = 0;
+
+
+  //Diálogo de comunicación
+  showComunicar: boolean = false;
+  modelosComunicacion: any[];
+  bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem()
+  tiposEnvio: any[];
+  plantillas: any[];
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
@@ -224,37 +233,37 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices
       .postPaginado("usuarios_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
-        this.searchUser = JSON.parse(data["body"]);
-        this.datosActivos = this.searchUser.usuarioItem;
-        this.table.paginator = true;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.body.activo = "S";
-        this.sigaServices
-          .postPaginado("usuarios_search", "?numPagina=1", this.body)
-          .subscribe(
-          data => {
-            console.log(data);
-            this.progressSpinner = false;
-            this.searchUser = JSON.parse(data["body"]);
-            for (let i in this.searchUser.usuarioItem) {
-              this.datosActivos.push(this.searchUser.usuarioItem[i]);
-            }
-            this.datos = this.datosActivos;
-            this.table.paginator = true;
-            this.table.reset();
-          },
-          err => {
-            console.log(err);
-            this.progressSpinner = false;
-          }
-          );
-      }
+        data => {
+          console.log(data);
+          this.searchUser = JSON.parse(data["body"]);
+          this.datosActivos = this.searchUser.usuarioItem;
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.body.activo = "S";
+          this.sigaServices
+            .postPaginado("usuarios_search", "?numPagina=1", this.body)
+            .subscribe(
+              data => {
+                console.log(data);
+                this.progressSpinner = false;
+                this.searchUser = JSON.parse(data["body"]);
+                for (let i in this.searchUser.usuarioItem) {
+                  this.datosActivos.push(this.searchUser.usuarioItem[i]);
+                }
+                this.datos = this.datosActivos;
+                this.table.paginator = true;
+                this.table.reset();
+              },
+              err => {
+                console.log(err);
+                this.progressSpinner = false;
+              }
+            );
+        }
       );
 
     this.historico = true;
@@ -392,24 +401,24 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices
       .postPaginado("usuarios_search", "?numPagina=1", this.body)
       .subscribe(
-      data => {
-        console.log(data);
-        this.progressSpinner = false;
-        this.searchUser = JSON.parse(data["body"]);
-        this.datos = this.searchUser.usuarioItem;
-        this.table.paginator = true;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      },
-      () => {
-        if (sessionStorage.getItem("first") != null) {
-          let first = JSON.parse(sessionStorage.getItem("first")) as number;
-          this.table.first = first;
-          sessionStorage.removeItem("first");
+        data => {
+          console.log(data);
+          this.progressSpinner = false;
+          this.searchUser = JSON.parse(data["body"]);
+          this.datos = this.searchUser.usuarioItem;
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          if (sessionStorage.getItem("first") != null) {
+            let first = JSON.parse(sessionStorage.getItem("first")) as number;
+            this.table.first = first;
+            sessionStorage.removeItem("first");
+          }
         }
-      }
       );
   }
   paginate(event) {
@@ -676,5 +685,14 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   clear() {
     this.msgs = [];
+  }
+
+  //Diálogo de comunicación: ver y enviar servicio
+  onComunicar(dato) {
+    this.showComunicar = true;
+  }
+
+  onEnviarComunicacion() {
+    this.showComunicar = false;
   }
 }

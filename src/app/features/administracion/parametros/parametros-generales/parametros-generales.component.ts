@@ -54,7 +54,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
   mapUpdate: Map<String, ParametroUpdateDto> = new Map<
     String,
     ParametroUpdateDto
-  >();
+    >();
   historico: boolean = false;
   msgs: Message[] = [];
   progressSpinner: boolean = false;
@@ -456,5 +456,5 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
 export class ComboItem {
   label: String;
   value: String;
-  constructor() {}
+  constructor() { }
 }
