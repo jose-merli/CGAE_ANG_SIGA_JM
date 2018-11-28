@@ -171,8 +171,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       { name: "Cargo", code: "C" },
       { name: "Cuenta SCJS", code: "S" }
     ];
-
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    if(this.usuarioBody[0]!= undefined){
+      this.usuarioBody = this.usuarioBody[0];
+    }
     if (sessionStorage.getItem("idPersona")) {
       this.idPersona = sessionStorage.getItem("idPersona");
     } else {

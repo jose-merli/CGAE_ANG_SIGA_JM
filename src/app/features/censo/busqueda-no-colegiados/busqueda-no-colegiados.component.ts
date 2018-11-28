@@ -311,24 +311,29 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   }
 
   getLetrado() {
-    let isLetrado: ComboItem;
-    this.sigaServices.get("getLetrado").subscribe(
-      data => {
-        isLetrado = data;
-        if (isLetrado.value == "S") {
-          sessionStorage.setItem("isLetrado", "true");
-          this.isEditable = true;
-        } else {
-          sessionStorage.setItem("isLetrado", "false");
-          this.isEditable = false;
-        }
-      },
-      err => {
-        sessionStorage.setItem("isLetrado", "true");
-        this.isEditable = true;
-        console.log(err);
-      }
-    );
+    if (JSON.parse(sessionStorage.getItem("isLetrado")) == true) {
+      this.isEditable = true;
+    } else {
+      this.isEditable = false;
+    }
+    // let isLetrado: ComboItem;
+    // this.sigaServices.get("getLetrado").subscribe(
+    //   data => {
+    //     isLetrado = data;
+    //     if (isLetrado.value == "S") {
+    //       sessionStorage.setItem("isLetrado", "true");
+    //       this.isEditable = true;
+    //     } else {
+    //       sessionStorage.setItem("isLetrado", "false");
+    //       this.isEditable = false;
+    //     }
+    //   },
+    //   err => {
+    //     sessionStorage.setItem("isLetrado", "true");
+    //     this.isEditable = true;
+    //     console.log(err);
+    //   }
+    // );
   }
 
   //Busca No colegiados según los filtros
