@@ -20,7 +20,7 @@
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>Fecha programación</label>
-          <p-calendar [locale]="es" [(ngModel)]="body.fechaCreacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
+          <p-calendar [locale]="es" [(ngModel)]="body.fechaProgramar" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
             [utc]="true"></p-calendar>
         </div>
       </div>
@@ -38,7 +38,7 @@
     </div>
     <div class="card-footer">
       <div class="text-right main-button">
-        <button (click)="onBuscar()" [disabled]="isButtonDisabled()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+        <button (click)="onBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
         <button (click)="onAddEnvio()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
       </div>
     </div>
