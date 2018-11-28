@@ -2,22 +2,28 @@ export class EnviosMasivosItem {
   idInstitucion: String;
   idEnvio: String;
   descripcion: String;
-  fecha: Date;
+  fechaCreacion: Date;
   generarDocumento: String;
   imprimirEtiquetas: String;
-  idPlantillaEnvios: String;
+  idPlantillasEnvios: String;
   idEstado: String;
   idTipoEnvios: String;
   idPlantilla: String;
   idImpresora: String;
-  fechaCreacion: Date;
-  fechaProgramar: Date;
+  fechaProgramada: Date;
   consulta: String;
   acuseRecibo: String;
   idTipoIntercambioTelematico: String;
-  comisionAjg: String;
+  comisionajg: Number;
   fechaBaja: Date;
   csv: String;
   idSolicitudEcos: String;
+  idCampo: String;
+  valorCampo: String;
+  idDocumento: String;
+  nombreDoc: String;
+  pathDocumento: String;
+  idGrupo: String;
+
   constructor() { }
 }
