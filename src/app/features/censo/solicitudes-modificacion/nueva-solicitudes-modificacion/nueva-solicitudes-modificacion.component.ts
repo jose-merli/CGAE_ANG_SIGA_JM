@@ -314,7 +314,7 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
   // DATOS BÁSICOS
   getTranslationsForBasicData() {
     this.textBasicDataTranslations = [
-      "solicitudModificacion.especifica.idioma.literal"
+      "censo.fichaCliente.situacion.idiomaPref"
     ];
   }
 
@@ -390,7 +390,7 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
         err => {},
         () => {
           this.body.idPersona = this.bodySolDatosCV.idPersona;
-          this.body.codigo = this.bodySolDatosCV.idCV;
+          this.body.codigo = this.bodySolDatosCV.idCv;
           this.getDataCVRequest(this.body);
         }
       );
@@ -454,8 +454,8 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
       "solicitudModificacion.especifica.abonoJCS.literal",
       "solicitudModificacion.especifica.iban.literal",
       "solicitudModificacion.especifica.codigoSucursal.literal",
-      "solicitudModificacion.especifica.numeroCuenta.literal",
-      "solicitudModificacion.especifica.titular.literal"
+      "censo.alterMutua.literal.numeroCuenta",
+      "facturacion.devolucionManual.titularDomiciliacion"
     ];
   }
 
@@ -526,7 +526,7 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
               modificacion: this.bodySolDatosBancarios.numeroCuenta
             },
             {
-              texto: this.textBankDataTranslations[5],
+              texto: this.textBankDataTranslations[6],
               estado: this.bodyDatosBancarios.titular,
               modificacion: this.bodySolDatosBancarios.titular
             }

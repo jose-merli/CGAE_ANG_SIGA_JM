@@ -92,6 +92,8 @@ export class SolicitudesModificacionComponent implements OnInit {
           this.data = JSON.parse(sessionStorage.getItem("search"));
           sessionStorage.removeItem("search");
         }
+
+        sessionStorage.removeItem("saveFilters");
       }
     } else {
       if (sessionStorage.getItem("search") != null) {
@@ -259,6 +261,9 @@ export class SolicitudesModificacionComponent implements OnInit {
       err => {
         console.log(err);
         this.progressSpinner = false;
+      },
+      () => {
+        //sessionStorage.removeItem("saveFilters");
       }
     );
   }

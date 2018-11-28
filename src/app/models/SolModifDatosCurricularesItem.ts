@@ -1,6 +1,6 @@
 export class SolModifDatosCurricularesItem {
   idPersona: String;
-  idCV: String;
+  idCv: String;
   categoriaCurricular: String;
   tipoCurricular: String;
   subtiposCurriculares: String;
