@@ -428,7 +428,9 @@ export class SigaServices {
     busquedaPerJuridica_datosBancariosInsert:
       "busquedaPerJuridica/datosBancariosInsert",
     busquedaPerJuridica_solicitudInsertBanksData:
-      "busquedaPerJuridica/solicitudInsertBanksData"
+      "busquedaPerJuridica/solicitudInsertBanksData",
+    fichaDatosColegiales_datosColegialesUpdate:
+      "/fichaDatosColegiales/datosColegialesUpdate"
   };
 
   private menuToggled = new Subject<any>();
