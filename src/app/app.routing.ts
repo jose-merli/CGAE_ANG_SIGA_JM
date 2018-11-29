@@ -925,7 +925,7 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: "detallePlantillas/:id",
+    path: "fichaPlantilla",
     component: DetallePlantillaEnvioComponent,
     canActivate: [AuthGuard]
   },

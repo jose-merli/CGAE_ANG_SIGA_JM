@@ -151,7 +151,7 @@ export class PlantillasEnvioComponent implements OnInit {
     sessionStorage.setItem("filtros", JSON.stringify(this.body));
     let id = item[0].id;
     if (!this.selectMultiple) {
-      this.router.navigate(["/fichaPlantillaEnvio"]);
+      this.router.navigate(["/fichaPlantilla"]);
       sessionStorage.setItem("plantillasEnvioSearch", JSON.stringify(this.body));
     }
   }
@@ -197,7 +197,7 @@ export class PlantillasEnvioComponent implements OnInit {
 
 
   onAddPlantilla() {
-    this.router.navigate(['/fichaPlantillaEnvio']);
+    this.router.navigate(['/fichaPlantilla']);
     sessionStorage.removeItem("plantillasEnvioSearch")
   }
 

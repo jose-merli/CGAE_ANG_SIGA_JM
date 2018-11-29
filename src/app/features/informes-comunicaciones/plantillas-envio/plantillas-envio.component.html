@@ -15,11 +15,11 @@
         <div class="form-row">
           <div class="form-group col-lg-4 col-md-4">
             <label>Nombre</label>
-            <input type="text" class="form-control" [(ngModel)]="filtro.nombre" pInputText>
+            <input type="text" class="form-control" [(ngModel)]="body.nombre" pInputText>
           </div>
           <div class="form-group col-lg-4 col-md-4">
             <label>Tipo de envío</label>
-            <p-dropdown class="select-form" [options]="comboTipoEnvio" [(ngModel)]="filtro.tipoEnvio" (onChange)="onChangeTipoEnvio($event)"
+            <p-dropdown class="select-form" [options]="comboTipoEnvio" [(ngModel)]="body.tipoEnvio" (onChange)="onChangeTipoEnvio($event)"
               dataKey="value"></p-dropdown>
           </div>
         </div>

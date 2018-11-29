@@ -32,7 +32,7 @@
     <div *ngIf="openFicha" class=" card-body card-body-ficha">
       <div class="card" *ngFor="let destinatario of destinatarios">
         <div (click)="onOpenDestinatario(destinatario)" class="card-header header-ficha">
-          <div class="form-row">
+          <div *ngIf="!destinatario.open" class="form-row">
             <div class="col-lg-1 col-md-2">
               <div class="img-colegiado">
                 <i class="fa fa-user"></i>
@@ -49,7 +49,7 @@
                 <label>Documento Identidad:
                   <!-- <span>{{body.nombre}}</span> -->
                 </label>
-                <i *ngIf="!destinatario.open" class="fas fa-redo mr-4 float-right"></i>
+                <i (click)="navigateTo() " *ngIf="!destinatario.open" class="fas fa-redo mr-4 float-right"></i>
                 <i *ngIf="!destinatario.open" class="fa fa-angle-down float-right"></i>
               </div>
             </div>
@@ -71,7 +71,7 @@
               </div>
             </div>
             <div class="bloque col-lg-10 col-md-9">
-              <div class="form-row">
+              <div class="form-row d-flex align-items-center">
                 <div class="form-group col-lg-4 col-md-4">
                   <label>Grupo/categoría (*)</label>
                   <p-dropdown class="select-form" [(ngModel)]="destinatario.idGrupo" [options]="grupos" [disabled]="true" optionName="label"></p-dropdown>
@@ -79,6 +79,9 @@
                 <div class="form-group col-lg-4 col-md-4">
                   <label>Identificación (*)</label>
                   <input type="text" class="form-control" [(ngModel)]="destinatario.nif" [attr.maxlength]="20" [disabled]="true" pInputText>
+                </div>
+                <div class="form-group col-lg-4 col-md-4">
+                  <i (click)="navigateTo() " class="fas fa-redo mr-4"></i>
                 </div>
               </div>
               <div class="form-row">

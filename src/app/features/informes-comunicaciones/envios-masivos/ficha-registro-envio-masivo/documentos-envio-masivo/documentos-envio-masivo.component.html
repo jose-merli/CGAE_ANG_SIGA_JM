@@ -24,11 +24,11 @@
         <!-- <div class="img-colegiado">
           <i class="fas fa-file-alt icon-ficha"></i>
         </div> -->
-        <label class="title-ficha">Destinatarios</label>
+        <label class="title-ficha">Documentos</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
-    <!--tarjetas destinatario-->
+    <!--tarjetas doc-->
     <div *ngIf="openFicha" class=" card-body card-body-ficha">
       <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
         [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple"

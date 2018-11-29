@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DestinatariosItem } from '../../../../../models/DestinatariosItem';
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-destinatarios',
@@ -40,7 +41,7 @@ export class DestinatariosComponent implements OnInit {
   ];
 
   constructor(
-    // private router: Router,
+    private router: Router,
     // private translateService: TranslateService,
     private sigaServices: SigaServices
   ) { }
@@ -118,6 +119,11 @@ export class DestinatariosComponent implements OnInit {
     //   dni.substr(8, 9).toUpperCase() ===
     //     DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     // );
+  }
+
+  navigateTo() {
+    this.router.navigate(['/fichaColegial']);
+    sessionStorage.setItem("destinatarioCom", JSON.stringify(this.body));
   }
 
 }

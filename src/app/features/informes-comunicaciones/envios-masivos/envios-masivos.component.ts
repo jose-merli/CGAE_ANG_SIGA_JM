@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, HostListener } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { EnviosMasivosItem } from '../../../models/EnviosMasivosItem';
+import { EnviosMasivosSearchItem } from '../../../models/EnviosMasivosSearchItem';
 import { EnviosMasivosObject } from '../../../models/EnviosMasivosObject';
 import { ProgramarItem } from '../../../models/ProgramarItem';
 import { TranslateService } from "../../../commons/translate/translation.service";
@@ -40,6 +41,7 @@ export class EnviosMasivosComponent implements OnInit {
   progressSpinner: boolean = false;
   searchEnviosMasivos: EnviosMasivosObject = new EnviosMasivosObject();
   programarArray: any[];
+  bodySearch: EnviosMasivosSearchItem = new EnviosMasivosSearchItem();
 
 
   @ViewChild('table') table: DataTable;
@@ -214,9 +216,8 @@ export class EnviosMasivosComponent implements OnInit {
   }
 
   getResultados() {
-    let searchObject = new EnviosMasivosItem();
     this.sigaServices
-      .postPaginado("enviosMasivos_search", "?numPagina=1", searchObject)
+      .postPaginado("enviosMasivos_search", "?numPagina=1", this.bodySearch)
       .subscribe(
         data => {
           this.progressSpinner = false;

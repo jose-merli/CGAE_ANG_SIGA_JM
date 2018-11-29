@@ -1,6 +1,5 @@
 <!-- <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl> -->
 <div class="ficha-container">
-  <!--TARJETA INFORMES-->
   <div class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha()">
       <div *ngIf="!openFicha" class="form-row">
@@ -85,13 +84,10 @@
         </ng-template>
       </p-table>
     </div>
-    <div *ngIf="openFicha" class="card-footer ">
+    <div *ngIf="openFicha && selectedDatos != '' && selectedDatos != null" class="card-footer">
       <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-download" iconPos="left" label="Descargar"></button>
       </div>
     </div>
-
   </div>
-  <!--END TARJETA INFORMES-->
-
 </div>

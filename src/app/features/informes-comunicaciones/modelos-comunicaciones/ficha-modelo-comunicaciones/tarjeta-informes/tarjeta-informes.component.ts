@@ -64,7 +64,7 @@ export class TarjetaInformesComponent implements OnInit {
     this.selectedItem = 10;
     this.cols = [
       { field: 'idioma', header: 'Idioma' },
-      { field: 'fechaAsociacion', header: 'Fecha asociación' },
+      // { field: 'fechaAsociacion', header: 'Fecha asociación' },
       { field: 'ficheroSalida', header: 'Fichero salida' },
       { field: 'sufijo', header: 'Sufijo' },
       { field: 'formatoSalida', header: 'Formato salida' },
@@ -75,7 +75,7 @@ export class TarjetaInformesComponent implements OnInit {
     ]
 
     this.datos = [
-      { id: 1, idioma: 'prueba', fechaAsociacion: 'prueba' }
+      { id: 1, idioma: 'prueba', ficheroSalida: 'prueba' }
 
     ]
   }

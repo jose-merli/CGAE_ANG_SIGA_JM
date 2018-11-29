@@ -49,21 +49,13 @@
       </div>
     </div>
   </div>
+
+  <div class="ayuda-consulta">
+    <p>Texto ayuda</p>
+  </div>
 </div>
 
-<p-dialog [(visible)]="showAyuda" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
-  <p-header>
-    <label>Ayuda</label>
-  </p-header>
-  <div>
-    Texto ayuda
-  </div>
-  <p-footer>
-    <div class="text-right main-button ">
-      <button (click)="onShowAyuda()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
-    </div>
-  </p-footer>
-</p-dialog>
+
 
 <p-dialog [(visible)]="showValores" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
   <p-header>
