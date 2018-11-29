@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+  OnDestroy
+} from "@angular/core";
 import {
   Message,
   SelectItem,
@@ -85,7 +91,8 @@ export class SolicitudesModificacionComponent implements OnInit {
         this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
         this.isSearch = true;
         this.search();
-        sessionStorage.removeItem("saveFilters");
+        // sessionStorage.removeItem("saveFilters");
+        // sessionStorage.removeItem("search");
       } else {
         if (sessionStorage.getItem("search") != null) {
           this.isSearch = true;
@@ -93,7 +100,7 @@ export class SolicitudesModificacionComponent implements OnInit {
           sessionStorage.removeItem("search");
         }
 
-        sessionStorage.removeItem("saveFilters");
+        // sessionStorage.removeItem("saveFilters");
       }
     } else {
       if (sessionStorage.getItem("search") != null) {
@@ -102,22 +109,12 @@ export class SolicitudesModificacionComponent implements OnInit {
         sessionStorage.removeItem("search");
       }
     }
-
-    // if (sessionStorage.getItem("processingPerformed") == "true") {
-    //   if (sessionStorage.getItem("saveFilters") != null) {
-    //     this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
-    //     this.isSearch = true;
-    //     this.search();
-    //     sessionStorage.removeItem("saveFilters");
-    //   }
-    // } else {
-    //   if (sessionStorage.getItem("search") != null) {
-    //     this.isSearch = true;
-    //     this.data = JSON.parse(sessionStorage.getItem("search"));
-    //     sessionStorage.removeItem("search");
-    //   }
-    // }
   }
+
+  // ngOnDestroy() {
+  //   sessionStorage.removeItem("saveFilters");
+  //   sessionStorage.removeItem("search");
+  // }
 
   onHideCard() {
     this.showCard = !this.showCard;
@@ -177,6 +174,17 @@ export class SolicitudesModificacionComponent implements OnInit {
 
   // Métodos botones del filtro
   newElement() {
+    this.selectedDatos = [];
+    this.sigaServices.get("solicitudModificacion_tipoModificacion").subscribe(
+      n => {
+        this.tipoSolGeneral = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+    this.tipoModificacionSolGeneral = null;
+    this.motivoSolGeneral = null;
     this.displayGeneralRequest = true;
     this.isNew = true;
     this.disableNew = false;
@@ -229,24 +237,6 @@ export class SolicitudesModificacionComponent implements OnInit {
     } else {
       this.isLetrado = false;
     }
-    // let isLetrado: ComboItem;
-    // this.sigaServices.get("getLetrado").subscribe(
-    //   data => {
-    //     isLetrado = data;
-    //     if (isLetrado.value == "S") {
-    //       sessionStorage.setItem("isLetrado", "true");
-    //       this.isEditable = true;
-    //     } else {
-    //       sessionStorage.setItem("isLetrado", "false");
-    //       this.isEditable = false;
-    //     }
-    //   },
-    //   err => {
-    //     sessionStorage.setItem("isLetrado", "true");
-    //     this.isEditable = true;
-    //     console.log(err);
-    //   }
-    // );
   }
 
   searchRequest(path: string) {
@@ -266,9 +256,6 @@ export class SolicitudesModificacionComponent implements OnInit {
       err => {
         console.log(err);
         this.progressSpinner = false;
-      },
-      () => {
-        //sessionStorage.removeItem("saveFilters");
       }
     );
   }
@@ -333,6 +320,7 @@ export class SolicitudesModificacionComponent implements OnInit {
       // abrir popup MODO CONSULTA
       this.displayGeneralRequest = true;
       this.isNew = false;
+      this.disableNew = true;
 
       // Rellenamos los datos
       this.tipoModificacionSolGeneral = selectedDatos.tipoModificacion;
@@ -344,6 +332,7 @@ export class SolicitudesModificacionComponent implements OnInit {
       ];
 
       this.motivoSolGeneral = selectedDatos.motivo;
+
       if (selectedDatos.estado == "PENDIENTE") {
         this.disableButton = false;
       } else {
@@ -357,8 +346,21 @@ export class SolicitudesModificacionComponent implements OnInit {
     this.displayGeneralRequest = false;
 
     if (this.isNew) {
-      this.tipoModificacionSolGeneral = "";
-      this.motivoSolGeneral = "";
+      this.tipoModificacionSolGeneral = null;
+      this.motivoSolGeneral = null;
+    }
+  }
+
+  validateButton() {
+    if (
+      this.tipoModificacionSolGeneral != null &&
+      this.tipoModificacionSolGeneral != undefined &&
+      this.motivoSolGeneral != null &&
+      this.motivoSolGeneral != undefined
+    ) {
+      return false;
+    } else {
+      return true;
     }
   }
 

@@ -107,6 +107,8 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
         this.getTranslationsForCVData();
         this.getSolModCVData(this.body);
       }
+
+      //  sessionStorage.removeItem("rowData");
     }
   }
 
