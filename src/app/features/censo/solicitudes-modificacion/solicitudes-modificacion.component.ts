@@ -32,6 +32,9 @@ export class SolicitudesModificacionComponent implements OnInit {
 
   es: any = esCalendar;
 
+  tipoModificacionSolGeneral: String;
+  motivoSolGeneral: String;
+
   bodySearch: SolicitudesModificacionObject = new SolicitudesModificacionObject();
   body: SolicitudesModificacionItem = new SolicitudesModificacionItem();
 
@@ -40,7 +43,7 @@ export class SolicitudesModificacionComponent implements OnInit {
   selectedDatos;
   cols: any = [];
   rowsPerPage: any = [];
-  data: any[];
+  data: any[] = [];
   selectedItem: number = 10;
 
   constructor(
@@ -74,31 +77,50 @@ export class SolicitudesModificacionComponent implements OnInit {
     );
 
     this.getDataTable();
+
+    if (sessionStorage.getItem("saveFilters") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
+
+      if (sessionStorage.getItem("processingPerformed") == "true") {
+        this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
+        this.isSearch = true;
+        this.search();
+        sessionStorage.removeItem("saveFilters");
+      } else {
+        if (sessionStorage.getItem("search") != null) {
+          this.isSearch = true;
+          this.data = JSON.parse(sessionStorage.getItem("search"));
+          sessionStorage.removeItem("search");
+        }
+
+        sessionStorage.removeItem("saveFilters");
+      }
+    } else {
+      if (sessionStorage.getItem("search") != null) {
+        this.isSearch = true;
+        this.data = JSON.parse(sessionStorage.getItem("search"));
+        sessionStorage.removeItem("search");
+      }
+    }
+
+    // if (sessionStorage.getItem("processingPerformed") == "true") {
+    //   if (sessionStorage.getItem("saveFilters") != null) {
+    //     this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
+    //     this.isSearch = true;
+    //     this.search();
+    //     sessionStorage.removeItem("saveFilters");
+    //   }
+    // } else {
+    //   if (sessionStorage.getItem("search") != null) {
+    //     this.isSearch = true;
+    //     this.data = JSON.parse(sessionStorage.getItem("search"));
+    //     sessionStorage.removeItem("search");
+    //   }
+    // }
   }
 
   onHideCard() {
     this.showCard = !this.showCard;
-  }
-
-  getLetrado() {
-    let isLetrado: ComboItem;
-    this.sigaServices.get("getLetrado").subscribe(
-      data => {
-        isLetrado = data;
-        if (isLetrado.value == "S") {
-          sessionStorage.setItem("isLetrado", "true");
-          this.isLetrado = true;
-        } else {
-          sessionStorage.setItem("isLetrado", "false");
-          this.isLetrado = false;
-        }
-      },
-      err => {
-        sessionStorage.setItem("isLetrado", "true");
-        this.isLetrado = true;
-        console.log(err);
-      }
-    );
   }
 
   getDataTable() {
@@ -162,41 +184,69 @@ export class SolicitudesModificacionComponent implements OnInit {
 
   // SEARCH
   search() {
+    // Vamos a guardar los filtros para cuando vuelva
+    sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
     if (
-      (this.body.tipoModificacion != null &&
+      (this.body.tipoModificacion == null &&
         this.body.tipoModificacion == undefined) ||
       this.body.tipoModificacion == ""
     ) {
       this.searchRequest("solicitudModificacion_searchModificationRequest");
-    } else if ((this.body.tipoModificacion = "10")) {
+    } else if (this.body.tipoModificacion == "10") {
       this.searchRequest("solicitudModificacion_searchSolModifDatosGenerales");
-    } else if ((this.body.tipoModificacion = "20")) {
+    } else if (this.body.tipoModificacion == "20") {
       this.searchRequest("solicitudModificacion_searchSolModif");
-    } else if ((this.body.tipoModificacion = "30")) {
+    } else if (this.body.tipoModificacion == "30") {
       this.searchRequest(
         "solicitudModificacion_searchSolModifDatosDirecciones"
       );
-    } else if ((this.body.tipoModificacion = "35")) {
+    } else if (this.body.tipoModificacion == "35") {
       this.searchRequest("solicitudModificacion_searchSolModifDatosUseFoto");
-    } else if ((this.body.tipoModificacion = "40")) {
+    } else if (this.body.tipoModificacion == "40") {
       this.searchRequest("solicitudModificacion_searchSolModifDatosBancarios");
-    } else if ((this.body.tipoModificacion = "50")) {
+    } else if (this.body.tipoModificacion == "50") {
       this.searchRequest(
         "solicitudModificacion_searchSolModifDatosCurriculares"
       );
-    } else if ((this.body.tipoModificacion = "70")) {
+    } else if (this.body.tipoModificacion == "70") {
       this.searchRequest(
         "solicitudModificacion_searchSolModifDatosFacturacion"
       );
-    } else if ((this.body.tipoModificacion = "80")) {
+    } else if (this.body.tipoModificacion == "80") {
       this.searchRequest("solicitudModificacion_searchSolModif");
-    } else if ((this.body.tipoModificacion = "90")) {
+    } else if (this.body.tipoModificacion == "90") {
       this.searchRequest(
         "solicitudModificacion_searchSolModifDatosExpedientes"
       );
-    } else if ((this.body.tipoModificacion = "95")) {
+    } else if (this.body.tipoModificacion == "99") {
       this.searchRequest("solicitudModificacion_searchSolModif");
     }
+  }
+
+  getLetrado() {
+    if (JSON.parse(sessionStorage.getItem("isLetrado")) == true) {
+      this.isLetrado = true;
+    } else {
+      this.isLetrado = false;
+    }
+    // let isLetrado: ComboItem;
+    // this.sigaServices.get("getLetrado").subscribe(
+    //   data => {
+    //     isLetrado = data;
+    //     if (isLetrado.value == "S") {
+    //       sessionStorage.setItem("isLetrado", "true");
+    //       this.isEditable = true;
+    //     } else {
+    //       sessionStorage.setItem("isLetrado", "false");
+    //       this.isEditable = false;
+    //     }
+    //   },
+    //   err => {
+    //     sessionStorage.setItem("isLetrado", "true");
+    //     this.isEditable = true;
+    //     console.log(err);
+    //   }
+    // );
   }
 
   searchRequest(path: string) {
@@ -207,129 +257,54 @@ export class SolicitudesModificacionComponent implements OnInit {
       data => {
         this.bodySearch = JSON.parse(data["body"]);
         this.data = this.bodySearch.solModificacionItems;
+
+        // Almacenamos los resultados de la búsqueda
+        sessionStorage.setItem("search", JSON.stringify(this.data));
+
         this.progressSpinner = false;
       },
       err => {
         console.log(err);
         this.progressSpinner = false;
+      },
+      () => {
+        //sessionStorage.removeItem("saveFilters");
       }
     );
   }
 
   // PROCESS REQUEST AND DENY REQUEST
   processRequest(selectedDatos) {
-    if ((selectedDatos.tipoModificacion = "10")) {
-      this.updateRequestState(
-        "solicitudModificacion_processSolModifDatosGenerales"
-      );
-    } else if ((selectedDatos.tipoModificacion = "20")) {
-      this.updateRequestState("solicitudModificacion_processSolModif");
-    } else if ((selectedDatos.tipoModificacion = "30")) {
-      this.updateRequestState(
-        "solicitudModificacion_processSolModifDatosDirecciones"
-      );
-    } else if ((selectedDatos.tipoModificacion = "35")) {
-      this.updateRequestState(
-        "solicitudModificacion_processSolModifDatosUseFoto"
-      );
-    } else if ((selectedDatos.tipoModificacion = "40")) {
-      this.updateRequestState(
-        "solicitudModificacion_processSolModifDatosBancarios"
-      );
-    } else if ((selectedDatos.tipoModificacion = "50")) {
-      this.updateRequestState(
-        "solicitudModificacion_processSolModifDatosCurriculares"
-      );
-    } else if ((selectedDatos.tipoModificacion = "70")) {
-      this.updateRequestState(
-        "solicitudModificacion_processSolModifDatosFacturacion"
-      );
-    } else if ((selectedDatos.tipoModificacion = "80")) {
-      this.updateRequestState("solicitudModificacion_processSolModif");
-    } else if ((selectedDatos.tipoModificacion = "90")) {
-      this.updateRequestState(
-        "solicitudModificacion_processSolModifDatosExpedientes"
-      );
-    } else if ((selectedDatos.tipoModificacion = "95")) {
-      this.updateRequestState("solicitudModificacion_processSolModif");
-    }
+    this.body.idSolicitud = selectedDatos.idSolicitud;
+    this.updateRequestState(
+      "solicitudModificacion_processGeneralModificationRequest"
+    );
   }
 
   denyRequest(selectedDatos) {
-    if ((selectedDatos.tipoModificacion = "10")) {
-      this.updateRequestState(
-        "solicitudModificacion_denySolModifDatosGenerales"
-      );
-    } else if ((selectedDatos.tipoModificacion = "20")) {
-      this.updateRequestState("solicitudModificacion_denySolModif");
-    } else if ((selectedDatos.tipoModificacion = "30")) {
-      this.updateRequestState(
-        "solicitudModificacion_denySolModifDatosDirecciones"
-      );
-    } else if ((selectedDatos.tipoModificacion = "35")) {
-      this.updateRequestState("solicitudModificacion_denySolModifDatosUseFoto");
-    } else if ((selectedDatos.tipoModificacion = "40")) {
-      this.updateRequestState(
-        "solicitudModificacion_denySolModifDatosBancarios"
-      );
-    } else if ((selectedDatos.tipoModificacion = "50")) {
-      this.updateRequestState(
-        "solicitudModificacion_denySolModifDatosCurriculares"
-      );
-    } else if ((selectedDatos.tipoModificacion = "70")) {
-      this.updateRequestState(
-        "solicitudModificacion_denySolModifDatosFacturacion"
-      );
-    } else if ((selectedDatos.tipoModificacion = "80")) {
-      this.updateRequestState("solicitudModificacion_denySolModif");
-    } else if ((selectedDatos.tipoModificacion = "90")) {
-      this.updateRequestState(
-        "solicitudModificacion_denySolModifDatosExpedientes"
-      );
-    } else if ((selectedDatos.tipoModificacion = "95")) {
-      this.updateRequestState("solicitudModificacion_denySolModif");
-    }
+    this.body.idSolicitud = selectedDatos.idSolicitud;
+    this.updateRequestState(
+      "solicitudModificacion_denyGeneralModificationRequest"
+    );
   }
 
   updateRequestState(path: string) {
     this.progressSpinner = true;
     this.isSearch = true;
 
-    this.sigaServices.postPaginado(path, "?numPagina=1", this.body).subscribe(
+    this.sigaServices.post(path, this.body).subscribe(
       data => {
         this.progressSpinner = false;
+        this.search();
       },
       err => {
         this.progressSpinner = false;
-      }
-    ),
+      },
       () => {
-        this.search();
-      };
+        this.closeDialog();
+      }
+    );
   }
-
-  // searchAllRequests() {
-  //   this.progressSpinner = true;
-  //   this.isSearch = true;
-
-  //   this.sigaServices
-  //     .postPaginado(
-  //       "solicitudModificacion_searchModificationRequest",
-  //       "?numPagina=1",
-  //       this.body
-  //     )
-  //     .subscribe(
-  //       data => {
-  //         this.bodySearch = JSON.parse(data["body"]);
-  //         this.data = this.bodySearch.solModificacionItems;
-  //         this.progressSpinner = false;
-  //       },
-  //       err => {
-  //         console.log(err);
-  //         this.progressSpinner = false;
-  //       }
-  //     );
-  // }
 
   restore() {
     this.body.tipoModificacion = "";
@@ -360,7 +335,7 @@ export class SolicitudesModificacionComponent implements OnInit {
       this.isNew = false;
 
       // Rellenamos los datos
-      this.body.tipoModificacionSolGeneral = selectedDatos.tipoModificacion;
+      this.tipoModificacionSolGeneral = selectedDatos.tipoModificacion;
       this.tipoSolGeneral = [
         {
           label: selectedDatos.tipoModificacion,
@@ -368,7 +343,7 @@ export class SolicitudesModificacionComponent implements OnInit {
         }
       ];
 
-      this.body.motivoSolGeneral = selectedDatos.motivo;
+      this.motivoSolGeneral = selectedDatos.motivo;
       if (selectedDatos.estado == "PENDIENTE") {
         this.disableButton = false;
       } else {
@@ -380,7 +355,32 @@ export class SolicitudesModificacionComponent implements OnInit {
   // POPUP
   closeDialog() {
     this.displayGeneralRequest = false;
+
+    if (this.isNew) {
+      this.tipoModificacionSolGeneral = "";
+      this.motivoSolGeneral = "";
+    }
   }
 
-  saveData() {}
+  saveData() {
+    this.progressSpinner = true;
+
+    this.body.idTipoModificacion = this.tipoModificacionSolGeneral;
+    this.body.motivo = this.motivoSolGeneral;
+    this.sigaServices
+      .post("solicitudModificacion_insertGeneralModificationRequest", this.body)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.search();
+        },
+        err => {
+          this.progressSpinner = false;
+        },
+        () => {
+          this.closeDialog();
+          this.isNew = false;
+        }
+      );
+  }
 }

@@ -14,6 +14,7 @@ import { DataTable } from "../../../../../node_modules/primeng/primeng";
 import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
 import { DatosNoColegiadosObject } from "../../../models/DatosNoColegiadosObject";
 import { DatePipe } from "../../../../../node_modules/@angular/common";
+import { ComboItem } from "../../administracion/parametros/parametros-generales/parametros-generales.component";
 
 @Component({
   selector: "app-busqueda-no-colegiados",
@@ -92,6 +93,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getLetrado();
     // Obtener Combos
     this.getCombos();
     this.es = this.translateService.getCalendarLocale();
@@ -306,6 +308,32 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     } else {
       this.isSelectMultiple();
     }
+  }
+
+  getLetrado() {
+    if (JSON.parse(sessionStorage.getItem("isLetrado")) == true) {
+      this.isEditable = true;
+    } else {
+      this.isEditable = false;
+    }
+    // let isLetrado: ComboItem;
+    // this.sigaServices.get("getLetrado").subscribe(
+    //   data => {
+    //     isLetrado = data;
+    //     if (isLetrado.value == "S") {
+    //       sessionStorage.setItem("isLetrado", "true");
+    //       this.isEditable = true;
+    //     } else {
+    //       sessionStorage.setItem("isLetrado", "false");
+    //       this.isEditable = false;
+    //     }
+    //   },
+    //   err => {
+    //     sessionStorage.setItem("isLetrado", "true");
+    //     this.isEditable = true;
+    //     console.log(err);
+    //   }
+    // );
   }
 
   //Busca No colegiados según los filtros

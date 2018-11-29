@@ -112,7 +112,7 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}}</label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" (onSelect)="onChangeCalendar($event)" yearRange="1930:2050" [locale]="es"
-                [(ngModel)]="fechaNacimiento" (onChange)="activacionGuardarGenerales()" [(disabled)]="isLetrado" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
+                [(ngModel)]="fechaNacimiento" (onSelect)="activacionGuardarGenerales()" [(disabled)]="isLetrado" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
                 [utc]="true" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-6 col-md-6">
@@ -170,13 +170,13 @@
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
               <label>{{"censo.fichaCliente.situacion.cabecera" | translate}}</label>
-              <p-dropdown class="select-form" [options]="comboSituacion"   [(disabled)]="isLetrado" (onChange)="activacionGuardarGenerales()" placeholder="{{'general.boton.seleccionar' | translate}}"
+              <p-dropdown class="select-form" [options]="comboSituacion"   [(disabled)]="isLetrado" (onSelect)="activacionGuardarGenerales()" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [(ngModel)]="generalBody.situacion"></p-dropdown>
             </div>
             <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
               <label>{{"administracion.usuarios.literal.fechaAlta" | translate}} (*)</label>
               <p-calendar [monthNavigator]="true"  [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(disabled)]="!esNewColegiado || isLetrado"
-                [(ngModel)]="fechaAlta" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true" (onChange)="activacionGuardarGenerales()"></p-calendar>
+                [(ngModel)]="fechaAlta" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true" (onSelect)="activacionGuardarGenerales()"></p-calendar>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.fichaCliente.situacion.idiomaPref" | translate}} (*)</label>
@@ -217,10 +217,10 @@
 
     <div *ngIf="esFichaActiva('generales')" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="restablecerGenerales()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="restablecerGenerales()" [disabled]="!activacionRestablecerGenerales()"  pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button *ngIf="!isLetrado" (click)="generalesGuardar()" [(disabled)]="!activarGuardarGenerales" pButton type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button *ngIf="isLetrado" (click)="comprobarAuditoria()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
+        <button *ngIf="isLetrado" (click)="comprobarAuditoria()" [(disabled)]="!activarGuardarGenerales" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -291,43 +291,45 @@
           <div class="form-row">
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.busquedaClientesAvanzada.literal.nColegiado" | translate}}</label>
-              <input [(ngModel)]="colegialesBody.numColegiado" type="text" class="form-control" pInputText>
+              <input [(ngModel)]="colegialesBody.numColegiado" (onChange)="activacionGuardarColegiales()" type="text" class="form-control" pInputText>
               <div *ngIf="identificacionValida == false">
                 <label class="labelError">{{"El documento es inválido"}}</label>
               </div>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosGenerales.literal.seguro" | translate}}</label>
-              <p-dropdown class="select-form" [(ngModel)]="colegialesBody.idTiposSeguro" placeholder="{{'general.boton.seleccionar' | translate}}"
+              <p-dropdown class="select-form"  (onChange)="activacionGuardarColegiales()" [(ngModel)]="colegialesBody.idTiposSeguro" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [options]="comboTipoSeguro"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3">
-              <label>{{"censo.fusionDuplicados.colegiaciones.inscrito" | translate}}</label>
-              <input [(ngModel)]="colegialesBody.residenteInscrito" type="text" class="form-control" [maxLength]="100" pInputText>
+              <label>Residente / Inscrito</label>
+              <!-- <input [(ngModel)]="colegialesBody.residenteInscrito" type="text"  (ngModelChange)="activacionGuardarColegiales()" class="form-control" [maxLength]="100" pInputText> -->
+              <p-dropdown class="select-form"  (onChange)="activacionGuardarColegiales()" [(ngModel)]="inscritoSeleccionado" placeholder="{{'general.boton.seleccionar' | translate}}"
+              [options]="comboResidente"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3 form-group-date">
               <label>{{"censo.consultaDatosColegiales.literal.nMutualista" | translate}}</label>
-              <input [(ngModel)]="colegialesBody.nMutualista" type="text" class="form-control" [maxLength]="100" pInputText>
+              <input [(ngModel)]="colegialesBody.nMutualista" type="text" class="form-control" (ngModelChange)="activacionGuardarColegiales()"  [maxLength]="100" pInputText>
             </div>
 
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosGenerales.literal.fechaIncorporacion" | translate}}</label>
-              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="colegialesBody.incorporacion"
+              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"  (onSelect)="activacionGuardarColegiales()" [(ngModel)]="colegialesBody.incorporacion"
                 dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true"></p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosGenerales.literal.fechaPresentacion" | translate}}</label>
-              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="colegialesBody.fechapresentacion"
+              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" (onSelect)="activacionGuardarColegiales()"  [(ngModel)]="colegialesBody.fechapresentacion"
                 dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true"></p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosGenerales.literal.fechaJura" | translate}}</label>
-              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="colegialesBody.fechaJura"
+              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" (onSelect)="activacionGuardarColegiales()"  [(ngModel)]="colegialesBody.fechaJura"
                 dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true"></p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosColegiales.literal.fechaTitulacion" | translate}}</label>
-              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="colegialesBody.fechaTitulacion"
+              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"  (onSelect)="activacionGuardarColegiales()" [(ngModel)]="colegialesBody.fechaTitulacion"
                 dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true"></p-calendar>
             </div>
           </div>
@@ -359,9 +361,7 @@
     <div *ngIf="esFichaActiva('colegiales')" class="card-footer ">
       <div class="text-right main-button ">
         <button (click)="restablecerColegiales()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button (click)="nuevo()" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-
+        <button (click)="guardarColegiales()" [(disabled)]="!activarGuardarColegiales" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -866,7 +866,7 @@
             <button *ngIf="selectedDatosDirecciones && selectedDatosDirecciones != '' && bodyDirecciones.historico==false" [(disabled)]="camposDesactivados"
               (click)="borrarSelectedDatos(selectedDatosDirecciones); selectedDatosDirecciones=false" pButton type="button"
               icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-            <button (click)="nuevaDireccion()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+            <button (click)="nuevaDireccion()" pButton type="button" [(disabled)]="isLetrado" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
 
           </div>
         </div>
@@ -940,7 +940,7 @@
     <div *ngIf="esFichaActiva('bancarios')" class="card-body card-body-ficha">
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultipleBancarios}"
         [(selection)]="selectedDatosBancarios" [responsive]="true" selectionMode="multiple" dataKey="idPersona" #table class="tabla-listado"
-        [value]="datosBancarios" [sortOrder]="1" [paginator]="activarPaginacionBancarios()" (onRowSelect)="redireccionarDatosBancarios(selectedDatos)"
+        [value]="datosBancarios" [sortOrder]="1" [paginator]="activarPaginacionBancarios()" (onRowSelect)="redireccionarDatosBancarios(selectedDatosBancarios)"
         (onRowUnselect)="actualizaSeleccionadosBancarios(this.selectedDatosBancarios)" paginatorPosition="both" [rows]="selectedItem"
         pageLinks="4">
         <p-column *ngFor="let col of colsBancarios" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="{{'general.boton.search' | translate}}"
@@ -977,7 +977,7 @@
               iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
             <button *ngIf="selectedDatos && selectedDatos != '' && !historico" (click)="confirmarEliminar(selectedDatos)" pButton type="button"
               icon="fa fa-trash-alt" iconPos="left" [(disabled)]="camposDesactivados" label="{{'general.boton.eliminar'  | translate}}"></button>
-            <button (click)="nuevaCuentaBancaria()" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-plus" iconPos="left"
+            <button (click)="nuevaCuentaBancaria()" [(disabled)]="isLetrado" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-plus" iconPos="left"
               label="{{ 'general.boton.new' | translate}}"></button>
           </div>
 
@@ -1095,7 +1095,7 @@
           <label *ngIf="historico">{{"administracion.auditoriaUsuarios.fechaDesde" | translate}}</label>
           <label *ngIf="!historico">{{"administracion.auditoriaUsuarios.fechaDesde" | translate}} (*)</label>
           <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="item.fechaInicio" [locale]="es"
-            [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="validateFields()"
+            [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (onSelect)="validateFields()"
             [(disabled)]="historico"></p-calendar>
         </div>
 
@@ -1103,7 +1103,7 @@
           <label *ngIf="historico">{{"administracion.auditoriaUsuarios.fechaHasta" | translate}}</label>
           <label *ngIf="!historico">{{"administracion.auditoriaUsuarios.fechaHasta" | translate}} (*)</label>
           <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="item.fechaBaja" [locale]="es"
-            [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="validateFields()"
+            [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (onSelect)="validateFields()"
             [(disabled)]="historico"></p-calendar>
           <div *ngIf="item.fechaBaja != null && !isFechaBajaCorrect && !historico">
             <label class="labelError">La fecha de baja no puede ser anterior a la fecha de inicio</label>

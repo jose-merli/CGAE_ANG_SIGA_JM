@@ -107,8 +107,12 @@
           <div class="text-right main-button ">
             <button *ngIf="!nuevo" (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
             <button *ngIf="nuevo" (click)="restablecerNuevo()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-            <button (click)="validarFormulario()" [disabled]="condiciones()" pButton type="button" icon="far fa-save" iconPos="left"
+            <button *ngIf="!isLetrado"(click)="validarFormulario()" [disabled]="condiciones()" pButton type="button" icon="far fa-save" iconPos="left"
               label="{{ 'general.boton.guardar' | translate}}"></button>
+              <button *ngIf="isLetrado && !nuevo"(click)="validarFormulario()" [disabled]="condiciones()" pButton type="button" icon="far fa-save" iconPos="left"
+              label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
+              <button *ngIf="isLetrado && nuevo"(click)="validarFormulario()" [disabled]="condiciones()" pButton type="button" icon="far fa-save" iconPos="left"
+              label="{{ 'general.boton.solicitarNuevo' | translate}}"></button>
           </div>
         </div>
       </div>
@@ -116,7 +120,7 @@
   </div>
 
   <!-- Datos Mandatos -->
-  <div class="busqueda-container">
+  <div *ngIf="!isLetrado" class="busqueda-container">
     <div class="card">
       <div class="card-header header-ficha" (click)="abrirFichaDatosMandatos()">
         <div *ngIf="!openFichaDatosMandatos" class="form-row">
@@ -231,7 +235,7 @@
   </div>
 
   <!--Listado ficheros anexo -->
-  <div class="busqueda-container">
+  <div *ngIf="!isLetrado" class="busqueda-container">
     <div class="card">
       <div class="card-header header-ficha" (click)="abrirFichaListadoFicherosAnexos()">
         <div *ngIf="!openFichaListadoFicherosAnexos" class="form-row">

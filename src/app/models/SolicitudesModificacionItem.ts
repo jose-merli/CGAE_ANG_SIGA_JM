@@ -17,8 +17,5 @@ export class SolicitudesModificacionItem {
   numColegiado: String;
   codigo: String;
 
-  // POPUP
-  tipoModificacionSolGeneral: String;
-  motivoSolGeneral: String;
   constructor() {}
 }

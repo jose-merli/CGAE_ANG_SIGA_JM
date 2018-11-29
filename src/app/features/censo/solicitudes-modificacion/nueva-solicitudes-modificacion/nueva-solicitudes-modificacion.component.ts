@@ -10,11 +10,13 @@ import { SelectItem } from "primeng/components/common/api";
 import { Location } from "@angular/common";
 import { esCalendar } from "../../../../utils/calendar";
 import { SigaServices } from "../../../../_services/siga.service";
-import { DatosDireccionesObject } from "../../../../models/DatosDireccionesObject";
-import { DatosDireccionesItem } from "../../../../models/DatosDireccionesItem";
 import { SoliModiDireccionesItem } from "../../../../models/SoliModiDireccionesItem";
 import { SoliModTableItem } from "../../../../models/SoliModiTableItem";
 import { TranslateService } from "../../../../commons/translate/translation.service";
+import { SoliModifFotoItem } from "../../../../models/SoliModifFotoItem";
+import { SoliModifDatosBasicosItem } from "../../../../models/SoliModifDatosBasicosItem";
+import { SolModifDatosCurricularesItem } from "../../../../models/SolModifDatosCurricularesItem";
+import { SolModifDatosBancariosItem } from "../../../../models/SolModifDatosBancariosItem";
 
 @Component({
   selector: "app-nueva-solicitudes-modificacion",
@@ -24,8 +26,27 @@ import { TranslateService } from "../../../../commons/translate/translation.serv
 })
 export class NuevaSolicitudesModificacionComponent implements OnInit {
   body: SolicitudesModificacionItem = new SolicitudesModificacionItem();
+
+  // DIRECCIONES
   bodySoliModDirecciones: SoliModiDireccionesItem = new SoliModiDireccionesItem();
   bodyDirecciones: SoliModiDireccionesItem = new SoliModiDireccionesItem();
+
+  // FOTO
+  bodySolModiFoto: SoliModifFotoItem = new SoliModifFotoItem();
+  bodyFoto: SoliModifFotoItem = new SoliModifFotoItem();
+
+  //DATOS BÁSICOS
+  bodySolDatosBasicos: SoliModifDatosBasicosItem = new SoliModifDatosBasicosItem();
+  bodyDatosBasicos: SoliModifDatosBasicosItem = new SoliModifDatosBasicosItem();
+
+  // DATOS CURRICULARES
+  bodySolDatosCV: SolModifDatosCurricularesItem = new SolModifDatosCurricularesItem();
+  bodyDatosCV: SolModifDatosCurricularesItem = new SolModifDatosCurricularesItem();
+
+  // DATOS BANCARIOS
+  bodySolDatosBancarios: SolModifDatosBancariosItem = new SolModifDatosBancariosItem();
+  bodyDatosBancarios: SolModifDatosBancariosItem = new SolModifDatosBancariosItem();
+
   es: any = esCalendar;
 
   disableButton: boolean = false;
@@ -45,6 +66,10 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
   rowsPerPage: any = [];
   data: SoliModTableItem[] = [];
   textAddressTranslations: String[];
+  textPhotoTranslations: String[];
+  textBasicDataTranslations: String[];
+  textCVDataTranslations: String[];
+  textBankDataTranslations: String[];
   numSelected: number = 0;
   selectedItem: number = 10;
 
@@ -56,36 +81,37 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.getDataTable();
+
     if (sessionStorage.getItem("rowData") != null) {
       this.body = JSON.parse(sessionStorage.getItem("rowData"));
-
+      console.log("BODY", this.body);
       if (this.body.estado == "REALIZADA" || this.body.estado == "DENEGADA") {
         this.disableButton = true;
       }
 
-      this.getDataTable();
-
-      if (this.body.tipoModificacion == "Datos de Direcciones") {
-        /*this.body.idSolicitud*/
-        this.getSolModAddresses();
+      if (this.body.idTipoModificacion == "30") {
+        // Llamar a los dos servicios y a un getTabla distinto
+        this.getTranslationsForAddresses();
+        this.getSolModAddresses(this.body);
+      } else if (this.body.idTipoModificacion == "35") {
+        this.getTranslationsForPhoto();
+        this.getSolModPhoto(this.body);
+      } else if (this.body.idTipoModificacion == "10") {
+        this.getTranslationsForBasicData();
+        this.getSolModBasicData(this.body);
+      } else if (this.body.idTipoModificacion == "40") {
+        this.getTranslationsForBankData();
+        this.getSolModBankData(this.body);
+      } else if (this.body.idTipoModificacion == "50") {
+        this.getTranslationsForCVData();
+        this.getSolModCVData(this.body);
       }
     }
   }
 
+  // Métodos necesarios para la tabla
   getDataTable() {
-    this.textAddressTranslations = [
-      "censo.datosDireccion.literal.pais2",
-      "censo.datosDireccion.literal.provincia",
-      "censo.consultaDirecciones.literal.poblacion",
-      "solicitudModificacion.especifica.poblacionExtranjera.literal",
-      "censo.ws.literal.codigopostal",
-      "solicitudModificacion.especifica.domicilio.literal",
-      "censo.ws.literal.telefono",
-      "censo.ws.literal.fax",
-      "censo.datosDireccion.literal.correo",
-      "solicitudModificacion.especifica.paginaWeb.literal"
-    ];
-
     this.cols = [
       {
         field: "texto",
@@ -119,19 +145,28 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
         value: 40
       }
     ];
-
-    console.log("TRaducciones", this.textAddressTranslations);
   }
 
-  getSolModAddresses() {
-    this.body.valor = this.body.idSolicitud;
-    this.getDataAddressModificationRequest(this.body);
+  // DIRECCIONES
+  getTranslationsForAddresses() {
+    this.textAddressTranslations = [
+      "censo.datosDireccion.literal.pais2",
+      "censo.datosDireccion.literal.provincia",
+      "censo.consultaDirecciones.literal.poblacion",
+      "solicitudModificacion.especifica.poblacionExtranjera.literal",
+      "censo.ws.literal.codigopostal",
+      "solicitudModificacion.especifica.domicilio.literal",
+      "censo.ws.literal.telefono",
+      "censo.ws.literal.fax",
+      "censo.datosDireccion.literal.correo",
+      "solicitudModificacion.especifica.paginaWeb.literal"
+    ];
   }
 
-  getDataAddressModificationRequest(idSolicitud) {
+  getSolModAddresses(idSolicitud) {
     this.sigaServices
       .postPaginado(
-        "solicitudModificacion_searchSolModifDatosDirecciones",
+        "solicitudModificacion_searchSolModifDatosDireccionesDetail",
         "?numPagina=1",
         idSolicitud
       )
@@ -220,9 +255,282 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
               modificacion: this.bodySoliModDirecciones.paginaWeb
             }
           ];
+        }
+      );
+  }
 
-          this.body.motivo = this.bodySoliModDirecciones.motivo;
-          console.log("HOLA", this.data);
+  // FOTO
+  getTranslationsForPhoto() {
+    this.textPhotoTranslations = [
+      "solicitudModificacion.especifica.exportarFoto.literal"
+    ];
+  }
+
+  getSolModPhoto(idSolicitud) {
+    this.sigaServices
+      .postPaginado(
+        "solicitudModificacion_searchSolModifDatosUseFotoDetail",
+        "?numPagina=1",
+        idSolicitud
+      )
+      .subscribe(
+        data => {
+          this.bodySolModiFoto = JSON.parse(data["body"]);
+          console.log("SOL FOTO", this.bodySolModiFoto);
+        },
+        err => {},
+        () => {
+          this.body.idPersona = this.bodySolModiFoto.idPersona;
+          this.getPhotoRequest(this.body);
+        }
+      );
+  }
+
+  getPhotoRequest(body) {
+    this.sigaServices
+      .postPaginado(
+        "solicitudModificacion_searchDatosUseFotoDetail",
+        "?numPagina=1",
+        body
+      )
+      .subscribe(
+        data => {
+          this.bodyFoto = JSON.parse(data["body"]);
+          console.log("FOTO", this.bodyFoto);
+        },
+        err => {},
+        () => {
+          this.data = [
+            {
+              texto: this.textPhotoTranslations[0],
+              estado: this.bodyFoto.expFoto,
+              modificacion: this.bodySolModiFoto.expFoto
+            }
+          ];
+        }
+      );
+  }
+
+  // DATOS BÁSICOS
+  getTranslationsForBasicData() {
+    this.textBasicDataTranslations = [
+      "censo.fichaCliente.situacion.idiomaPref"
+    ];
+  }
+
+  getSolModBasicData(idSolicitud) {
+    this.sigaServices
+      .postPaginado(
+        "solicitudModificacion_searchSolModifDatosGeneralesDetail",
+        "?numPagina=1",
+        idSolicitud
+      )
+      .subscribe(
+        data => {
+          this.bodySolDatosBasicos = JSON.parse(data["body"]);
+          console.log("SOL BASICOS", this.bodySolDatosBasicos);
+        },
+        err => {},
+        () => {
+          this.body.idPersona = this.bodySolDatosBasicos.idPersona;
+          this.getBasicDataRequest(this.body);
+        }
+      );
+  }
+
+  getBasicDataRequest(body) {
+    this.sigaServices
+      .postPaginado(
+        "solicitudModificacion_searchDatosGeneralesDetail",
+        "?numPagina=1",
+        body
+      )
+      .subscribe(
+        data => {
+          this.bodyDatosBasicos = JSON.parse(data["body"]);
+          console.log("DATOS BASICOS", this.bodyDatosBasicos);
+        },
+        err => {},
+        () => {
+          this.data = [
+            {
+              texto: this.textBasicDataTranslations[0],
+              estado: this.bodyDatosBasicos.idioma,
+              modificacion: this.bodySolDatosBasicos.idioma
+            }
+          ];
+        }
+      );
+  }
+
+  // DATOS CURRICULARES
+  getTranslationsForCVData() {
+    this.textCVDataTranslations = [
+      "censo.busquedaClientesAvanzada.literal.categoriaCV",
+      "censo.tipoCurricular.descripcion.literal",
+      "censo.busquedaClientesAvanzada.literal.subtiposCV",
+      "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde",
+      "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta",
+      "general.description"
+    ];
+  }
+
+  getSolModCVData(idSolicitud) {
+    this.sigaServices
+      .postPaginado(
+        "solicitudModificacion_searchSolModifDatosCurricularesDetail",
+        "?numPagina=1",
+        idSolicitud
+      )
+      .subscribe(
+        data => {
+          this.bodySolDatosCV = JSON.parse(data["body"]);
+          console.log("SOL CV", this.bodySolDatosCV);
+        },
+        err => {},
+        () => {
+          this.body.idPersona = this.bodySolDatosCV.idPersona;
+          this.body.codigo = this.bodySolDatosCV.idCv;
+          this.getDataCVRequest(this.body);
+        }
+      );
+  }
+
+  getDataCVRequest(body) {
+    this.sigaServices
+      .postPaginado(
+        "solicitudModificacion_searchDatosCurricularesDetail",
+        "?numPagina=1",
+        body
+      )
+      .subscribe(
+        data => {
+          this.bodyDatosCV = JSON.parse(data["body"]);
+          console.log("DATOS CV", this.bodyDatosCV);
+        },
+        err => {},
+        () => {
+          this.data = [
+            {
+              texto: this.textCVDataTranslations[0],
+              estado: this.bodyDatosCV.categoriaCurricular,
+              modificacion: this.bodySolDatosCV.categoriaCurricular
+            },
+            {
+              texto: this.textCVDataTranslations[1],
+              estado: this.bodyDatosCV.tipoCurricular,
+              modificacion: this.bodySolDatosCV.tipoCurricular
+            },
+            {
+              texto: this.textCVDataTranslations[2],
+              estado: this.bodyDatosCV.subtiposCurriculares,
+              modificacion: this.bodySolDatosCV.subtiposCurriculares
+            },
+            {
+              texto: this.textCVDataTranslations[3],
+              estado: this.bodyDatosCV.fechaDesde,
+              modificacion: this.bodySolDatosCV.fechaDesde
+            },
+            {
+              texto: this.textCVDataTranslations[4],
+              estado: this.bodyDatosCV.fechaHasta,
+              modificacion: this.bodySolDatosCV.fechaHasta
+            },
+            {
+              texto: this.textCVDataTranslations[5],
+              estado: this.bodyDatosCV.descripcion,
+              modificacion: this.bodySolDatosCV.descripcion
+            }
+          ];
+        }
+      );
+  }
+
+  // DATOS BANCARIOS
+  getTranslationsForBankData() {
+    this.textBankDataTranslations = [
+      "solicitudModificacion.especifica.abonoCargo.literal",
+      "solicitudModificacion.especifica.digitoControl.literal",
+      "solicitudModificacion.especifica.abonoJCS.literal",
+      "solicitudModificacion.especifica.iban.literal",
+      "solicitudModificacion.especifica.codigoSucursal.literal",
+      "censo.alterMutua.literal.numeroCuenta",
+      "facturacion.devolucionManual.titularDomiciliacion"
+    ];
+  }
+
+  getSolModBankData(idSolicitud) {
+    this.sigaServices
+      .postPaginado(
+        "solicitudModificacion_searchSolModifDatosBancariosDetail",
+        "?numPagina=1",
+        idSolicitud
+      )
+      .subscribe(
+        data => {
+          this.bodySolDatosBancarios = JSON.parse(data["body"]);
+          console.log("SOL BANCARIOS", this.bodySolDatosBancarios);
+        },
+        err => {},
+        () => {
+          this.body.idPersona = this.bodySolDatosBancarios.idPersona;
+          this.body.codigo = this.bodySolDatosBancarios.idCuenta;
+          this.getBankDataRequest(this.body);
+        }
+      );
+  }
+
+  getBankDataRequest(body) {
+    this.sigaServices
+      .postPaginado(
+        "solicitudModificacion_searchDatosBancariosDetail",
+        "?numPagina=1",
+        body
+      )
+      .subscribe(
+        data => {
+          this.bodyDatosBancarios = JSON.parse(data["body"]);
+          console.log("DATOS BANCARIOS", this.bodyDatosBancarios);
+        },
+        err => {},
+        () => {
+          this.data = [
+            {
+              texto: this.textBankDataTranslations[0],
+              estado: this.bodyDatosBancarios.abonoCargo,
+              modificacion: this.bodySolDatosBancarios.abonoCargo
+            },
+            {
+              texto: this.textBankDataTranslations[1],
+              estado: this.bodyDatosBancarios.abonoJCS,
+              modificacion: this.bodySolDatosBancarios.abonoJCS
+            },
+            {
+              texto: this.textBankDataTranslations[2],
+              estado: this.bodyDatosBancarios.codigoSucursal,
+              modificacion: this.bodySolDatosBancarios.codigoSucursal
+            },
+            {
+              texto: this.textBankDataTranslations[3],
+              estado: this.bodyDatosBancarios.digitoControl,
+              modificacion: this.bodySolDatosBancarios.digitoControl
+            },
+            {
+              texto: this.textBankDataTranslations[4],
+              estado: this.bodyDatosBancarios.iban,
+              modificacion: this.bodySolDatosBancarios.iban
+            },
+            {
+              texto: this.textBankDataTranslations[5],
+              estado: this.bodyDatosBancarios.numeroCuenta,
+              modificacion: this.bodySolDatosBancarios.numeroCuenta
+            },
+            {
+              texto: this.textBankDataTranslations[6],
+              estado: this.bodyDatosBancarios.titular,
+              modificacion: this.bodySolDatosBancarios.titular
+            }
+          ];
         }
       );
   }
@@ -237,88 +545,64 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
 
   // PROCESS REQUEST AND DENY REQUEST
   processRequest() {
-    if ((this.body.tipoModificacion = "10")) {
+    if (this.body.idTipoModificacion == "10") {
       this.updateRequestState(
         "solicitudModificacion_processSolModifDatosGenerales"
       );
-    } else if ((this.body.tipoModificacion = "20")) {
-      this.updateRequestState("solicitudModificacion_processSolModif");
-    } else if ((this.body.tipoModificacion = "30")) {
+    } else if (this.body.idTipoModificacion == "30") {
       this.updateRequestState(
         "solicitudModificacion_processSolModifDatosDirecciones"
       );
-    } else if ((this.body.tipoModificacion = "35")) {
+    } else if (this.body.idTipoModificacion == "35") {
       this.updateRequestState(
         "solicitudModificacion_processSolModifDatosUseFoto"
       );
-    } else if ((this.body.tipoModificacion = "40")) {
+    } else if (this.body.idTipoModificacion == "40") {
       this.updateRequestState(
         "solicitudModificacion_processSolModifDatosBancarios"
       );
-    } else if ((this.body.tipoModificacion = "50")) {
+    } else if (this.body.idTipoModificacion == "50") {
       this.updateRequestState(
         "solicitudModificacion_processSolModifDatosCurriculares"
       );
-    } else if ((this.body.tipoModificacion = "70")) {
-      this.updateRequestState(
-        "solicitudModificacion_processSolModifDatosFacturacion"
-      );
-    } else if ((this.body.tipoModificacion = "80")) {
-      this.updateRequestState("solicitudModificacion_processSolModif");
-    } else if ((this.body.tipoModificacion = "90")) {
-      this.updateRequestState(
-        "solicitudModificacion_processSolModifDatosExpedientes"
-      );
-    } else if ((this.body.tipoModificacion = "95")) {
-      this.updateRequestState("solicitudModificacion_processSolModif");
     }
   }
 
   denyRequest() {
-    if ((this.body.tipoModificacion = "10")) {
+    if (this.body.idTipoModificacion == "10") {
       this.updateRequestState(
         "solicitudModificacion_denySolModifDatosGenerales"
       );
-    } else if ((this.body.tipoModificacion = "20")) {
-      this.updateRequestState("solicitudModificacion_denySolModif");
-    } else if ((this.body.tipoModificacion = "30")) {
+    } else if (this.body.idTipoModificacion == "30") {
       this.updateRequestState(
         "solicitudModificacion_denySolModifDatosDirecciones"
       );
-    } else if ((this.body.tipoModificacion = "35")) {
+    } else if (this.body.idTipoModificacion == "35") {
       this.updateRequestState("solicitudModificacion_denySolModifDatosUseFoto");
-    } else if ((this.body.tipoModificacion = "40")) {
+    } else if (this.body.idTipoModificacion == "40") {
       this.updateRequestState(
         "solicitudModificacion_denySolModifDatosBancarios"
       );
-    } else if ((this.body.tipoModificacion = "50")) {
+    } else if (this.body.idTipoModificacion == "50") {
       this.updateRequestState(
         "solicitudModificacion_denySolModifDatosCurriculares"
       );
-    } else if ((this.body.tipoModificacion = "70")) {
-      this.updateRequestState(
-        "solicitudModificacion_denySolModifDatosFacturacion"
-      );
-    } else if ((this.body.tipoModificacion = "80")) {
-      this.updateRequestState("solicitudModificacion_denySolModif");
-    } else if ((this.body.tipoModificacion = "90")) {
-      this.updateRequestState(
-        "solicitudModificacion_denySolModifDatosExpedientes"
-      );
-    } else if ((this.body.tipoModificacion = "95")) {
-      this.updateRequestState("solicitudModificacion_denySolModif");
     }
   }
 
   updateRequestState(path: string) {
     this.progressSpinner = true;
 
-    this.sigaServices.postPaginado(path, "?numPagina=1", this.body).subscribe(
+    this.sigaServices.post(path, this.body).subscribe(
       data => {
         this.progressSpinner = false;
       },
       err => {
         this.progressSpinner = false;
+      },
+      () => {
+        this.return();
+        sessionStorage.setItem("processingPerformed", "true");
       }
     );
   }

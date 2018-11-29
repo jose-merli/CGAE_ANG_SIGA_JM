@@ -327,8 +327,13 @@ export class EdicionCurricularesComponent implements OnInit {
     );
 
     if (this.nuevo) {
+      this.body.idCv = null;
       this.sigaServices
-        .postPaginado("insert", "?numPagina=1", this.body)
+        .postPaginado(
+          "fichaDatosCurriculares_solicitudUpdate",
+          "?numPagina=1",
+          this.body
+        )
         .subscribe(
           data => {
             this.progressSpinner = false;
