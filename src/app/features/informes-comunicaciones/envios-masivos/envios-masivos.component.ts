@@ -223,9 +223,9 @@ export class EnviosMasivosComponent implements OnInit {
           this.progressSpinner = false;
           this.searchEnviosMasivos = JSON.parse(data["body"]);
           this.datos = this.searchEnviosMasivos.enviosMasivosItem;
-          if (this.datos.length == 1) {
-            this.body = this.datos[0];
-          }
+          // if (this.datos.length == 1) {
+          this.body = this.datos[0];
+          // }
           this.datos.forEach(element => {
             element.fechaProgramacion = new Date(element.fechaProgramacion);
             element.fechaCreacion = new Date(element.fechaCreacion);
