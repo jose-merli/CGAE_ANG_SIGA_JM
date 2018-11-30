@@ -71,7 +71,7 @@ export class EnviosMasivosComponent implements OnInit {
     this.cols = [
       { field: 'asunto', header: 'Asunto' },
       { field: 'fechaCreacion', header: 'Fecha creación' },
-      { field: 'fechaProgramacion', header: 'Fecha programación' },
+      { field: 'fechaProgramada', header: 'Fecha programación' },
       { field: 'formaEnvio', header: 'Forma envío' },
       { field: 'estado', header: 'Estado' }
     ];
