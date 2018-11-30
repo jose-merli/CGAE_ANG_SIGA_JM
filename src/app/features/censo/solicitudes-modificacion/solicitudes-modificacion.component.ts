@@ -91,30 +91,23 @@ export class SolicitudesModificacionComponent implements OnInit {
         this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
         this.isSearch = true;
         this.search();
-        // sessionStorage.removeItem("saveFilters");
-        // sessionStorage.removeItem("search");
       } else {
         if (sessionStorage.getItem("search") != null) {
           this.isSearch = true;
           this.data = JSON.parse(sessionStorage.getItem("search"));
           sessionStorage.removeItem("search");
         }
-
-        // sessionStorage.removeItem("saveFilters");
       }
+      sessionStorage.removeItem("saveFilters");
     } else {
       if (sessionStorage.getItem("search") != null) {
         this.isSearch = true;
         this.data = JSON.parse(sessionStorage.getItem("search"));
         sessionStorage.removeItem("search");
+        sessionStorage.removeItem("saveFilters");
       }
     }
   }
-
-  // ngOnDestroy() {
-  //   sessionStorage.removeItem("saveFilters");
-  //   sessionStorage.removeItem("search");
-  // }
 
   onHideCard() {
     this.showCard = !this.showCard;
@@ -193,7 +186,6 @@ export class SolicitudesModificacionComponent implements OnInit {
   // SEARCH
   search() {
     // Vamos a guardar los filtros para cuando vuelva
-    sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
     if (
       (this.body.tipoModificacion == null &&
         this.body.tipoModificacion == undefined) ||
@@ -248,9 +240,6 @@ export class SolicitudesModificacionComponent implements OnInit {
         this.bodySearch = JSON.parse(data["body"]);
         this.data = this.bodySearch.solModificacionItems;
 
-        // Almacenamos los resultados de la búsqueda
-        sessionStorage.setItem("search", JSON.stringify(this.data));
-
         this.progressSpinner = false;
       },
       err => {
@@ -298,6 +287,7 @@ export class SolicitudesModificacionComponent implements OnInit {
     this.body.estado = "";
     this.body.fechaDesde = null;
     this.body.fechaHasta = null;
+    sessionStorage.removeItem("saveFilters");
   }
 
   // Métodos gestionar tabla
@@ -314,6 +304,9 @@ export class SolicitudesModificacionComponent implements OnInit {
 
   onSelectRow(selectedDatos) {
     if (selectedDatos.especifica == "1") {
+      console.log("ERE", this.body);
+      sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
+      sessionStorage.setItem("search", JSON.stringify(this.data));
       sessionStorage.setItem("rowData", JSON.stringify(selectedDatos));
       this.router.navigate(["/nuevaSolicitudesModificacion"]);
     } else {
