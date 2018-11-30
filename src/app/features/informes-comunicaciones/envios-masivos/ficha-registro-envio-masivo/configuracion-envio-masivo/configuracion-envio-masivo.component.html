@@ -15,11 +15,12 @@
           </div>
           <div class="d-flex justify-content-between">
 
-            <label>Plantilla de emvío:
-              <!-- <span>{{body.nombre}}</span> -->
+            <label>Plantilla de envío:
+              <span>{{tipoEnvio}}</span>
             </label>
+
             <label>Tipo de envío:
-              <!-- <span>{{body.nombre}}</span> -->
+
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
           </div>
@@ -40,9 +41,11 @@
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
               <label>Plantilla de envío</label>
+              <p-dropdown [disabled]="editar" [options]="plantillas" [(ngModel)]="body.idPlantilla" class="select-form"></p-dropdown>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>Tipo de envío</label>
+              <p-dropdown [disabled]="editar" [options]="plantillas" [(ngModel)]="body.idPlantilla" class="select-form"></p-dropdown>
             </div>
           </div>
         </div>
@@ -54,7 +57,7 @@
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>Cuerpo</label>
-              <textarea style="height:155px" pInputTextarea autoResize="autoResize" [(ngModel)]="body.descripcion"></textarea>
+              <textarea style="height:155px" pInputTextarea autoResize="autoResize" [(ngModel)]="body.cuerpo"></textarea>
             </div>
           </div>
         </div>
