@@ -23,6 +23,7 @@ import { MultiSelect, Message } from "primeng/primeng";
 import { DatosCursosObject } from "../../../models/DatosCursosObject";
 import { AuthenticationService } from "../../../_services/authentication.service";
 import { Router } from "../../../../../node_modules/@angular/router";
+import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
 
 @Component({
   selector: "app-busqueda-cursos",
@@ -77,6 +78,9 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
 
   //Para los mensajes de info
   msgs: Message[] = [];
+
+  activacionEditar: boolean = true;
+  camposDesactivados: boolean = false;
 
   constructor(
     private sigaServices: SigaServices,
@@ -680,5 +684,45 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     this.deshabilitarCombVis = false;
     this.deshabilitarCombCol = false;
     this.selectedTemas = [];
+  }
+
+  habilitarComboVis() {
+    if (this.activacionEditar) return !this.deshabilitarCombVis;
+    else return true;
+  }
+
+  habilitarComboCol() {
+    if (this.activacionEditar) return !this.deshabilitarCombCol;
+    else return true;
+  }
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "120";
+    let derechoAcceso;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else if (derechoAcceso == 2) {
+          this.activacionEditar = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+    );
   }
 }
