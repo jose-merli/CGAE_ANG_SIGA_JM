@@ -1,17 +1,21 @@
 export class SolicitudesModificacionItem {
-  idPersona: String;
-  estado: String;
-  idSolicitud: String;
-  tipoModificacion: String;
-  numColegiado: String;
   numIdentificacion: String;
-  nombre: String;
-  apellidos: String;
-  fechaAlta: Date;
   fechaDesde: Date;
   fechaHasta: Date;
+  fechaModificacion: Date;
+  valor: String;
+
+  especifica: String;
+  idSolicitud: String;
   motivo: String;
-  descripcion: String;
+  idPersona: String;
+  fechaAlta: Date;
+  estado: String;
+  idTipoModificacion: String;
+  nombre: String;
+  tipoModificacion: String;
+  numColegiado: String;
+  codigo: String;
 
   constructor() {}
 }

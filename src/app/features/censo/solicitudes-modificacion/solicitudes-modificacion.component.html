@@ -1,0 +1,271 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="busqueda-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>
+      {{ "menu.censo" | translate }} <i class="fa fa-angle-right"></i>
+      {{ "censo.solicitudModificacion.literal.titulo" | translate }}
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <p class="title-module">
+        {{ "censo.solicitudModificacion.literal.titulo" | translate }}
+        <i
+          (click)="onHideCard()"
+          *ngIf="showCard"
+          class="fa fa-angle-up float-right"
+        ></i>
+        <i
+          (click)="onHideCard()"
+          *ngIf="!showCard"
+          class="fa fa-angle-down float-right"
+        ></i>
+      </p>
+
+      <div *ngIf="showCard" class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{
+              "censo.solicitudTextoLibre.literal.tipoModificacion" | translate
+            }}</label>
+            <br />
+            <p-dropdown
+              class="select-form"
+              [options]="tipo"
+              [(ngModel)]="body.tipoModificacion"
+            ></p-dropdown>
+          </div>
+
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{
+              "censo.busquedaSolicitudesModificacion.literal.estado" | translate
+            }}</label>
+            <br />
+            <p-dropdown
+              class="select-form"
+              [options]="estado"
+              [(ngModel)]="body.estado"
+            ></p-dropdown>
+          </div>
+
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{
+              "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde"
+                | translate
+            }}</label>
+            <p-calendar
+              [locale]="es"
+              icon="far fa-calendar-alt"
+              showIcon="true"
+              dateFormat="dd/mm/yy"
+              [(ngModel)]="body.fechaDesde"
+            ></p-calendar>
+          </div>
+
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{
+              "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta"
+                | translate
+            }}</label>
+            <p-calendar
+              [locale]="es"
+              icon="far fa-calendar-alt"
+              showIcon="true"
+              dateFormat="dd/mm/yy"
+              [(ngModel)]="body.fechaHasta"
+            ></p-calendar>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="text-right main-button ">
+        <button
+          (click)="restore()"
+          pButton
+          type="button"
+          icon="fa fa-undo"
+          iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"
+        ></button>
+        <button
+          (click)="search()"
+          pButton
+          type="button"
+          icon="fa fa-search"
+          iconPos="left"
+          label="{{ 'general.boton.search' | translate}}"
+        ></button>
+        <button
+          *ngIf="isLetrado"
+          (click)="newElement()"
+          pButton
+          type="button"
+          icon="fa fa-plus"
+          iconPos="left"
+          label="{{ 'general.boton.new' | translate}}"
+        ></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- cuerpo datos -->
+  <div *ngIf="isSearch" class="card mt-3">
+    <div class="card-body p-0">
+      <p-dataTable
+        emptyMessage="{{ 'general.message.no.registros' | translate}}"
+        [paginator]="enablePagination()"
+        (onRowSelect)="onSelectRow(selectedDatos)"
+        (onRowUnselect)="onRowUnselect(selectedDatos)"
+        selectionMode="single"
+        [(selection)]="selectedDatos"
+        [responsive]="true"
+        #table
+        class="tabla-listado"
+        [value]="data"
+        [sortOrder]="1"
+        [paginator]="true"
+        paginatorPosition="both"
+        [rows]="selectedItem"
+      >
+        <p-column
+          *ngFor="let col of cols"
+          [sortable]="true"
+          [field]="col.field"
+          [header]="col.header | translate"
+          filterPlaceholder="{{'general.boton.search' | translate}}"
+          [filter]="true"
+          filterMatchMode="contains"
+        >
+        </p-column>
+        <ng-template pTemplate="paginatorLeft">
+          <div class="mostrar d-flex text-right justify-content-end">
+            <label class="pr-3 registros-totales"
+              >Mostrando registros del {{ table.first + 1 }} al
+              {{ table.first + table.rows }} de un total de
+              {{ table.totalRecords }}
+            </label>
+            <label>{{ "general.message.mostrar" | translate }}</label>
+            <p-dropdown
+              [(ngModel)]="selectedItem"
+              [options]="rowsPerPage"
+              (onChange)="onChangeRowsPerPages($event)"
+            ></p-dropdown>
+            <label class="pl-1">
+              {{
+                "cargaMasivaDatosCurriculares.numRegistros.literal" | translate
+              }}</label
+            >
+          </div>
+        </ng-template>
+      </p-dataTable>
+    </div>
+  </div>
+  <app-dialog></app-dialog>
+
+  <!-- DIÁLOGO SOL. MOD. GENERAL -->
+  <p-dialog
+    [(visible)]="displayGeneralRequest"
+    responsive="true"
+    [draggable]="false"
+    modal="modal"
+    resizable="false"
+    [minHeight]="500"
+    [minWidth]="500"
+  >
+    <p-header class="title">
+      <label
+        >{{ "general.ventana.cgae" | translate }} -{{
+          "censo.solicitudModificacion.literal.titulo" | translate
+        }}</label
+      >
+    </p-header>
+
+    <div class="bloque col-lg-12 col-md-12">
+      <div class="row">
+        <div class="form-group col-lg-12 col-md-12">
+          <label>{{
+            "censo.solicitudTextoLibre.literal.tipoModificacion" | translate
+          }}</label>
+          <br />
+          <p-dropdown
+            class="select-form"
+            [options]="tipoSolGeneral"
+            [(ngModel)]="tipoModificacionSolGeneral"
+            [(disabled)]="disableNew"
+          ></p-dropdown>
+        </div>
+        <div class="form-group col-lg-12 col-md-12">
+          <label
+            >{{ "censo.datosHistorico.literal.motivo" | translate }} (*)</label
+          >
+          <textarea
+            pInputTextarea
+            [(ngModel)]="motivoSolGeneral"
+            [(disabled)]="disableNew"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <p-footer>
+      <div class="text-right main-button ">
+        <div *ngIf="!isNew">
+          <button
+            (click)="processRequest(selectedDatos)"
+            pButton
+            type="button"
+            icon="fa fa-gears"
+            iconPos="left"
+            label="{{'modificacionDatos.boton.procesarSolicitud' | translate}}"
+            [(disabled)]="disableButton"
+          ></button>
+          <button
+            (click)="denyRequest(selectedDatos)"
+            pButton
+            type="button"
+            icon="fa fa-times"
+            iconPos="left"
+            label="{{ 'general.boton.denegarSolicitud' | translate}}"
+            [(disabled)]="disableButton"
+          ></button>
+          <button
+            (click)="closeDialog()"
+            pButton
+            type="button"
+            icon="fa fa-close"
+            iconPos="left"
+            label="{{ 'general.boton.close' | translate}}"
+          ></button>
+        </div>
+
+        <div *ngIf="isNew">
+          <button
+            (click)="closeDialog()"
+            pButton
+            type="button"
+            icon="fa fa-close"
+            iconPos="left"
+            label="{{ 'general.boton.close' | translate}}"
+          ></button>
+          <button
+            (click)="saveData()"
+            pButton
+            type="button"
+            icon="fa fa-check"
+            iconPos="left"
+            label="{{ 'general.boton.submit' | translate}}"
+            [disabled]="validateButton()"
+          ></button>
+        </div>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+  <div *ngIf="progressSpinner" class="overlay-spinner ">
+    <div class="loader "></div>
+  </div>
+</div>

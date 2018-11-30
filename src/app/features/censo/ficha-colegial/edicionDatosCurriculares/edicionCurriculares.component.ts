@@ -171,7 +171,9 @@ export class EdicionCurricularesComponent implements OnInit {
     // this.verificado
     this.booleanToCertificado();
     this.activateGuardar();
-    this.changeCategoria();
+    if (this.nuevo == false) {
+      this.changeCategoria();
+    }
   }
   abrirFicha() {
     this.openFicha = !this.openFicha;
@@ -271,6 +273,21 @@ export class EdicionCurricularesComponent implements OnInit {
   //   );
   // }
 
+  solicitaModificacion() {
+    if (this.isLetrado == true && this.nuevo == false) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  solicitaCreacion() {
+    if (this.isLetrado == true && this.nuevo == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   comprobarAuditoria() {
     // modo creación
 
@@ -310,8 +327,13 @@ export class EdicionCurricularesComponent implements OnInit {
     );
 
     if (this.nuevo) {
+      this.body.idCv = null;
       this.sigaServices
-        .postPaginado("insert", "?numPagina=1", this.body)
+        .postPaginado(
+          "fichaDatosCurriculares_solicitudUpdate",
+          "?numPagina=1",
+          this.body
+        )
         .subscribe(
           data => {
             this.progressSpinner = false;
@@ -464,6 +486,21 @@ export class EdicionCurricularesComponent implements OnInit {
 
   isDisabledCombos() {
     if (this.body.idTipoCv != "" && this.body.idTipoCv != null) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  activateDuplicar() {
+    if (
+      this.creditosIncorrecto == true ||
+      this.body.fechaDesde == null ||
+      this.body.idTipoCv == undefined ||
+      this.body.idTipoCv == null ||
+      this.body.descripcion == null ||
+      this.body.descripcion == ""
+    ) {
       return false;
     } else {
       return true;

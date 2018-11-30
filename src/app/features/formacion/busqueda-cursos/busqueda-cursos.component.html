@@ -17,21 +17,21 @@
       <div *ngIf="showDatosGenerales" class="module vista-avanzada">
         <div class="form-row">
           <div class="form-group col-lg-3 col-md-2">
-            <label>{{ 'formacion.fichaCursos.datosGenerales.visibilidad' | translate}}</label>
-            <p-dropdown [disabled]="deshabilitarCombVis" placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form"
+            <label>{{ 'form.busquedaCursos.literal.visibilidad' | translate}}</label>
+            <p-dropdown [disabled]="habilitarComboVis()" placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form"
               [(ngModel)]='body.idVisibilidad' [options]="comboVisibilidad" [filter]="true" filterBy="label,labelSinTilde"
               (onChange)="onChangeSelectVisibilidad($event)"></p-dropdown>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}</label>
-            <p-dropdown [disabled]="deshabilitarCombCol" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
+            <p-dropdown [disabled]="habilitarComboCol" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
               [(ngModel)]='body.colegio' [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeSelectColegio($event)"></p-dropdown>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'form.busquedaCursos.literal.codigoCurso' | translate}}</label>
-            <input type="text" name="codigoCurso" [formControl]="formBusqueda.controls['codigoCurso']" class="form-control" [(ngModel)]='body.codigoCurso'
+            <input type="text" name="codigoCurso" [formControl]="formBusqueda.controls['codigoCurso']" [disabled]="checkAcceso()" class="form-control" [(ngModel)]='body.codigoCurso'
               pInputText>
             <small class="input-error" *ngIf="!formBusqueda.controls['codigoCurso'].pristine && formBusqueda.controls['codigoCurso'].status == 'INVALID'">
               {{'formacion.busquedaCursos.controlFiltros.minimoCaracteres' | translate }}</small>
@@ -39,20 +39,20 @@
 
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}}</label>
-            <input [formControl]="formBusqueda.controls['nombreCurso']" type="text" class="form-control" pInputText [(ngModel)]="body.nombreCurso">
+            <input [formControl]="formBusqueda.controls['nombreCurso']" type="text" class="form-control" pInputText [disabled]="checkAcceso()" [(ngModel)]="body.nombreCurso">
             <small class="input-error" *ngIf="!formBusqueda.controls['nombreCurso'].pristine && formBusqueda.controls['nombreCurso'].status == 'INVALID'">
                 {{'formacion.busquedaCursos.controlFiltros.minimoCaracteres' | translate }}</small>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'form.busquedaCursos.literal.estado' | translate}}</label>
-            <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]='body.idEstado' [options]="comboEstados"
+            <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]='body.idEstado' [disabled]="checkAcceso()" [options]="comboEstados"
               [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
           </div>
 
           <div [formGroup]="formGroupPrecios" class="form-group col-lg-3 col-md-2">
             <label>{{ 'form.busquedaCursos.literal.precioDesde' | translate}}</label>
-            <input type="number" min="0" formControlName='precioDesde' class="form-control" [(ngModel)]='body.precioDesde' pInputText>
+            <input type="number" min="0" formControlName='precioDesde' class="form-control" [disabled]="checkAcceso()" [(ngModel)]='body.precioDesde' pInputText>
             <small class="input-error" *ngIf="!formGroupPrecios.controls['precioDesde'].pristine && formGroupPrecios.controls['precioDesde'].errors?.validatePrecioDesde">
               {{'formacion.busquedaCursos.controlFiltros.precioDesde' | translate }}</small>
             <small class="input-error" *ngIf="!formGroupPrecios.controls['precioDesde'].pristine && formGroupPrecios.controls['precioDesde'].errors?.min">
@@ -60,8 +60,8 @@
           </div>
 
           <div [formGroup]="formGroupPrecios" class="form-group col-lg-3 col-md-2">
-            <label>{{ 'form.busquedaCursos.literal.precioHasta' | translate }}</label>
-            <input type="number" min="0" formControlName='precioHasta' class="form-control" [(ngModel)]='body.precioHasta' pInputText>
+            <label>{{ 'form.busquedaCursos.literal.precioHasta' | translate}}</label>
+            <input type="number" min="0" formControlName='precioHasta' class="form-control" [disabled]="checkAcceso()" [(ngModel)]='body.precioHasta' pInputText>
             <small class="input-error" *ngIf="!formGroupPrecios.controls['precioHasta'].pristine && formGroupPrecios.controls['precioHasta'].errors?.validatePrecioHasta">
               {{'formacion.busquedaCursos.controlFiltros.precioHasta' | translate }}</small>
             <small class="input-error" *ngIf="!formGroupPrecios.controls['precioHasta'].pristine && formGroupPrecios.controls['precioHasta'].errors?.min">
@@ -69,45 +69,45 @@
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
-            <label>{{ 'formacion.fichaCursos.datosDeGestion.plazasDisponibles' | translate }}</label>
-            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.plazasDisponibles'
+            <label>{{ 'form.busquedaCursos.literal.plazasDisponibles' | translate}}</label>
+            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [disabled]="checkAcceso()" [(ngModel)]='body.plazasDisponibles'
               [options]="comboDisponibilidadPlazas" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'form.busquedaCursos.literal.fechaInscripcionDesde' | translate }}</label>
             <p-calendar [monthNavigator]="true" [yearNavigator]="true" [maxDate]="getFechaInscripcionHasta()" yearRange="1930:2050" [locale]="es"
-              [utc]="true" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="body.fechaInscripcionDesde"></p-calendar>
+              [utc]="true" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [disabled]="checkAcceso()" [(ngModel)]="body.fechaInscripcionDesde"></p-calendar>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'form.busquedaCursos.literal.fechaInscripcionHasta' | translate }}</label>
             <p-calendar [monthNavigator]="true" [yearNavigator]="true" [minDate]="getFechaInscripcionDesde()" yearRange="1930:2050" [locale]="es"
-              [utc]="true" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="body.fechaInscripcionHasta"></p-calendar>
+              [utc]="true" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [disabled]="checkAcceso()" [(ngModel)]="body.fechaInscripcionHasta"></p-calendar>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'form.busquedaCursos.literal.fechaImparticionDesde' | translate}}</label>
             <p-calendar [monthNavigator]="true" [yearNavigator]="true" [maxDate]="getFechaImparticionHasta()" yearRange="1930:2050" [locale]="es"
-              [utc]="true" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="body.fechaImparticionDesde"></p-calendar>
+              [utc]="true" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [disabled]="checkAcceso()" [(ngModel)]="body.fechaImparticionDesde"></p-calendar>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'form.busquedaCursos.literal.fechaImparticionHasta' | translate}}</label>
             <p-calendar [monthNavigator]="true" [yearNavigator]="true" [minDate]="getFechaImparticionDesde()" yearRange="1930:2050" [locale]="es"
-              [utc]="true" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="body.fechaImparticionHasta"></p-calendar>
+              [utc]="true" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [disabled]="checkAcceso()" [(ngModel)]="body.fechaImparticionHasta"></p-calendar>
           </div>
 
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ 'form.busquedaCursos.literal.nombreApellidosFormador' | translate}}</label>
-            <input [formControl]="formBusqueda.controls['nombreApellidosFormador']" type="text" class="form-control" pInputText [(ngModel)]="body.nombreApellidosFormador">
+            <input [formControl]="formBusqueda.controls['nombreApellidosFormador']" type="text" class="form-control" pInputText [disabled]="checkAcceso()" [(ngModel)]="body.nombreApellidosFormador">
             <small class="input-error" *ngIf="!formBusqueda.controls['nombreApellidosFormador'].pristine && formBusqueda.controls['nombreApellidosFormador'].status == 'INVALID'">
               Debe tener como mínimo tres carácteres</small>
           </div>
 
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ 'form.busquedaCursos.literal.temas' | translate}}</label>
-            <p-multiSelect #mySelect [disabled]="!editar" defaultLabel="{{'general.boton.seleccionar' | translate}}" autoWidth="false" [(ngModel)]='selectedTemas'
+            <p-multiSelect #mySelect [disabled]="!editar" [defaultLabel]="literalMultiselect" autoWidth="false" [disabled]="checkAcceso()" [(ngModel)]='selectedTemas'
               [options]="comboTemas" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" styleClass="widthAll" defaultLabel=""
               optionLabel="label" [filter]="true"></p-multiSelect>
 
@@ -123,6 +123,7 @@
         <button pButton (click)="crearCurso()" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
         <button [disabled]="!formBusqueda.valid || !formGroupPrecios.valid" (click)="isBuscar(false)" pButton type="button" icon="fa fa-search"
           iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+          <button (click)="changeColsAndData()" pButton type="button " icon="fa fa-eraser " iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
       </div>
     </div>
   </div>

@@ -176,31 +176,31 @@ export class SigaServices {
     busquedaNoColegiados_searchNoColegiado:
       "/busquedaNocolegiado/searchNoColegiado",
     busquedaNoColegiados_searchHistoric: "busquedaNocolegiado/searchHistoric",
-    solicitudInciporporacion_tipoSolicitud:
+    solicitudIncorporacion_tipoSolicitud:
       "/solicitudIncorporacion/tipoSolicitud",
-    solicitudInciporporacion_estadoSolicitud:
+    solicitudIncorporacion_estadoSolicitud:
       "/solicitudIncorporacion/estadoSolicitud",
-    solicitudInciporporacion_searchSolicitud:
+    solicitudIncorporacion_searchSolicitud:
       "/solicitudIncorporacion/searchSolicitud",
 
     fichaColegialGenerales_tratamiento: "fichaDatosGenerales/tratamiento",
     fichaColegialGenerales_estadoCivil: "fichaDatosGenerales/estadoCivil",
     fichaColegialGenerales_pais: "fichaDatosColegiales/pais",
     fichaDatosCurriculares_search: "fichaDatosCurriculares/search",
-    solicitudInciporporacion_tratamiento: "solicitudIncorporacion/tratamiento",
-    solicitudInciporporacion_estadoCivil: "solicitudIncorporacion/estadoCivil",
-    solicitudInciporporacion_pais: "solicitudIncorporacion/pais",
-    solicitudInciporporacion_tipoIdentificacion:
+    solicitudIncorporacion_tratamiento: "solicitudIncorporacion/tratamiento",
+    solicitudIncorporacion_estadoCivil: "solicitudIncorporacion/estadoCivil",
+    solicitudIncorporacion_pais: "solicitudIncorporacion/pais",
+    solicitudIncorporacion_tipoIdentificacion:
       "solicitudIncorporacion/tipoIdentificacion",
-    solicitudInciporporacion_tipoColegiacion:
+    solicitudIncorporacion_tipoColegiacion:
       "solicitudIncorporacion/tipoColegiacion",
-    solicitudInciporporacion_modalidadDocumentacion:
+    solicitudIncorporacion_modalidadDocumentacion:
       "solicitudIncorporacion/modalidadDocumentacion",
-    solicitudInciporporacion_nuevaSolicitud:
+    solicitudIncorporacion_nuevaSolicitud:
       "solicitudIncorporacion/nuevaSolicitud",
-    solicitudInciporporacion_aprobarSolicitud:
+    solicitudIncorporacion_aprobarSolicitud:
       "solicitudIncorporacion/aprobarSolicitud",
-    solicitudInciporporacion_denegarSolicitud:
+    solicitudIncorporacion_denegarSolicitud:
       "solicitudIncorporacion/denegarSolicitud",
     fichaDatosBancarios_datosBancariosSearch:
       "fichaDatosBancarios/datosBancariosSearch",
@@ -293,8 +293,91 @@ export class SigaServices {
     solicitudModificacion_tipoModificacion:
       "solicitudModificacion/tipoModificacion",
     solicitudModificacion_estado: "solicitudModificacion/estado",
+    // Solicitud Modificacion
+    // GENERAL
     solicitudModificacion_searchModificationRequest:
       "solicitudModificacion/searchModificationRequest",
+    solicitudModificacion_processGeneralModificationRequest:
+      "solicitudModificacion/processGeneralModificationRequest",
+    solicitudModificacion_denyGeneralModificationRequest:
+      "solicitudModificacion/denyGeneralModificationRequest",
+    solicitudModificacion_insertGeneralModificationRequest:
+      "solicitudModificacion/insertGeneralModificationRequest",
+    // ESPECÍFICA
+    solicitudModificacion_searchSolModif:
+      "solicitudModificacion/searchSolModif",
+    solicitudModificacion_processSolModif:
+      "solicitudModificacion/processSolModif",
+    solicitudModificacion_denySolModif: "solicitudModificacion/denySolModif",
+    solicitudModificacion_searchSolModifDatosBancarios:
+      "solicitudModificacion/searchSolModifDatosBancarios",
+    solicitudModificacion_searchDatosBancariosDetail:
+      "solicitudModificacion/searchDatosBancariosDetail",
+    solicitudModificacion_searchSolModifDatosBancariosDetail:
+      "solicitudModificacion/searchSolModifDatosBancariosDetail",
+    solicitudModificacion_processSolModifDatosBancarios:
+      "solicitudModificacion/processSolModifDatosBancarios",
+    solicitudModificacion_denySolModifDatosBancarios:
+      "solicitudModificacion/denySolModifDatosBancarios",
+    solicitudModificacion_searchSolModifDatosCurriculares:
+      "solicitudModificacion/searchSolModifDatosCurriculares",
+    solicitudModificacion_searchDatosCurricularesDetail:
+      "solicitudModificacion/searchDatosCurricularesDetail",
+    solicitudModificacion_searchSolModifDatosCurricularesDetail:
+      "solicitudModificacion/searchSolModifDatosCurricularesDetail",
+    solicitudModificacion_processSolModifDatosCurriculares:
+      "solicitudModificacion/processSolModifDatosCurriculares",
+    solicitudModificacion_denySolModifDatosCurriculares:
+      "solicitudModificacion/denySolModifDatosCurriculares",
+    // SOL. DIRECCIONES
+    solicitudModificacion_searchSolModifDatosDirecciones:
+      "solicitudModificacion/searchSolModifDatosDirecciones",
+    solicitudModificacion_searchDirecciones:
+      "solicitudModificacion/searchDirecciones",
+    solicitudModificacion_searchSolModifDatosDireccionesDetail:
+      "solicitudModificacion/searchSolModifDatosDireccionesDetail",
+    solicitudModificacion_processSolModifDatosDirecciones:
+      "solicitudModificacion/processSolModifDatosDirecciones",
+    solicitudModificacion_denySolModifDatosDirecciones:
+      "solicitudModificacion/denySolModifDatosDirecciones",
+    solicitudModificacion_searchSolModifDatosExpedientes:
+      "solicitudModificacion/searchSolModifDatosExpedientes",
+    solicitudModificacion_processSolModifDatosExpedientes:
+      "solicitudModificacion/processSolModifDatosExpedientes",
+    solicitudModificacion_denySolModifDatosExpedientes:
+      "solicitudModificacion/denySolModifDatosExpedientes",
+    solicitudModificacion_searchSolModifDatosFacturacion:
+      "solicitudModificacion/searchSolModifDatosFacturacion",
+    solicitudModificacion_processSolModifDatosFacturacion:
+      "solicitudModificacion/processSolModifDatosFacturacion",
+    solicitudModificacion_denySolModifDatosFacturacion:
+      "solicitudModificacion/denySolModifDatosFacturacion",
+    solicitudModificacion_searchSolModifDatosGenerales:
+      "solicitudModificacion/searchSolModifDatosGenerales",
+    solicitudModificacion_processSolModifDatosGenerales:
+      "solicitudModificacion/processSolModifDatosGenerales",
+    solicitudModificacion_denySolModifDatosGenerales:
+      "solicitudModificacion/denySolModifDatosGenerales",
+    solicitudModificacion_searchSolModifDatosGeneralesDetail:
+      "solicitudModificacion/searchSolModifDatosGeneralesDetail",
+    solicitudModificacion_searchDatosGeneralesDetail:
+      "solicitudModificacion/searchDatosGeneralesDetail",
+    // FOTO
+    solicitudModificacion_searchSolModifDatosUseFoto:
+      "solicitudModificacion/searchSolModifDatosUseFoto",
+    solicitudModificacion_searchDatosUseFotoDetail:
+      "solicitudModificacion/searchDatosUseFotoDetail",
+    solicitudModificacion_searchSolModifDatosUseFotoDetail:
+      "solicitudModificacion/searchSolModifDatosUseFotoDetail",
+    solicitudModificacion_processSolModifDatosUseFoto:
+      "solicitudModificacion/processSolModifDatosUseFoto",
+    solicitudModificacion_denySolModifDatosUseFoto:
+      "solicitudModificacion/denySolModifDatosUseFoto",
+
+    solicitudModificacionEspecifica_searchSpecificRequest:
+      "solicitudModificacionEspecifica/searchSpecificRequest",
+    solicitudModificacion_searchDatosDirecciones:
+      "solicitudModificacion/searchDatosDirecciones",
     tipoCurricular_categoriaCurricular: "tipoCurricular/categoriaCurricular",
     tipoCurricular_searchTipoCurricular: "tipoCurricular/searchTipoCurricular",
     tipoCurricular_createTipoCurricular: "tipoCurricular/createTipoCurricular",
@@ -338,7 +421,19 @@ export class SigaServices {
       "fichaDatosGenerales/etiquetasPersona",
     getLetrado: "/getLetrado",
     fichaDatosCurriculares_solicitudUpdate:
-      "fichaDatosCurriculares/solicitudUpdate"
+      "fichaDatosCurriculares/solicitudUpdate",
+    fichaDatosDirecciones_solicitudCreate:
+      "fichaDatosDirecciones/solicitudCreate",
+    fichaDatosGenerales_datosGeneralesSolicitudModificación:
+      "/fichaDatosGenerales/datosGeneralesSolicitudModificación",
+    personaJuridica_solicitudUploadFotografia:
+      "personaJuridica/solicitudUploadFotografia",
+    busquedaPerJuridica_datosBancariosInsert:
+      "busquedaPerJuridica/datosBancariosInsert",
+    busquedaPerJuridica_solicitudInsertBanksData:
+      "busquedaPerJuridica/solicitudInsertBanksData",
+    fichaDatosColegiales_datosColegialesUpdate:
+      "/fichaDatosColegiales/datosColegialesUpdate"
   };
 
   private menuToggled = new Subject<any>();
@@ -460,6 +555,36 @@ export class SigaServices {
 
     // pasar parametros por la request
     formData.append("idPersona", idPersona);
+
+    let headers = new HttpHeaders();
+
+    headers.append("Content-Type", "multipart/form-data");
+    headers.append("Accept", "application/json");
+
+    return this.http
+      .post(environment.newSigaUrl + this.endpoints[service], formData, {
+        headers: headers
+      })
+      .map(response => {
+        return response;
+      });
+  }
+
+  postSendFileAndBody(
+    service: string,
+    file: any,
+    idPersona: any,
+    motivo: any
+  ): Observable<any> {
+    let formData: FormData = new FormData();
+    if (file != undefined) {
+      formData.append("uploadFile", file, file.name);
+    }
+
+    // pasar parametros por la request
+    formData.append("idPersona", idPersona);
+
+    formData.append("motivo", motivo);
 
     let headers = new HttpHeaders();
 

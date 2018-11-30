@@ -107,14 +107,15 @@
         <br>
         <div class="card-footer ">
           <div class="text-right main-button ">
-            <button *ngIf="nuevo == false" (click)="duplicarRegistro()" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
+            <button *ngIf="nuevo == false" (click)="duplicarRegistro()" pButton type="button" [disabled]="!activateDuplicar()" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
             <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="!activateRestablecer()"
               label="{{ 'general.boton.restablecer' | translate}}"></button>
             <button *ngIf="isLetrado == false" (click)="guardarCv()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar()" label="{{ 'general.boton.guardar' | translate}}"></button>
-            <button *ngIf="isLetrado == true" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar()" label="Solicitar modificación"></button>
+            <button *ngIf="solicitaModificacion()" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar()" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
+            <button *ngIf="solicitaCreacion()" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar()" label="{{ 'general.boton.solicitarNuevo' | translate}}"></button>
           </div>
         </div>
-      </div>
+      </div> 
     </div>
   </div>
 
