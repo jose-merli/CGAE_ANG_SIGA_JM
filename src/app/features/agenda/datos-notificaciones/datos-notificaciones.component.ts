@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { SigaServices } from "../../../_services/siga.service";
 import { NotificacionEventoItem } from "../../../models/NotificacionEventoItem";
 import { Location } from "@angular/common";
+import { EventoItem } from "../../../models/EventoItem";
 
 @Component({
   selector: "app-datos-notificaciones",
@@ -34,6 +35,8 @@ export class DatosNotificacionesComponent implements OnInit {
     this.progressSpinner = true;
     this.getCombos();
 
+    let evento: EventoItem = JSON.parse(sessionStorage.getItem("evento"));
+
     //Comprobamos si estamos en modoEdición o en modo Nuevo
     if (sessionStorage.getItem("modoEdicionNotify") == "true") {
       this.modoEdicion = true;
@@ -47,11 +50,16 @@ export class DatosNotificacionesComponent implements OnInit {
           this.notification.idTipoEnvio
         );
       }
+
+      this.notification.idEvento = evento.idEvento;
+      this.notification.idCalendario = evento.idCalendario;
     } else {
       this.modoEdicion = false;
       this.notification = new NotificacionEventoItem();
       this.notification.idTipoCuando = "1";
       this.notification.idCalendario = sessionStorage.getItem("idCalendario");
+      this.notification.idEvento = evento.idEvento;
+      this.notification.idCalendario = evento.idCalendario;
     }
   }
 
@@ -147,6 +155,7 @@ export class DatosNotificacionesComponent implements OnInit {
 
   backTo() {
     this.location.back();
+    sessionStorage.setItem("isNotificaciones", "true");
     sessionStorage.setItem("modoEdicion", "true");
   }
 
@@ -206,15 +215,19 @@ export class DatosNotificacionesComponent implements OnInit {
       this.modoEdicion = false;
       this.notification = new NotificacionEventoItem();
       this.notification.idCalendario = sessionStorage.getItem("idCalendario");
-      this.selectedTemplate = null;
+      this.selectedTemplate = undefined;
     }
   }
 
   validateForm() {
     if (
       this.notification.idTipoNotificacion == null ||
+      this.notification.idTipoNotificacion == undefined ||
       this.notification.idPlantilla == null ||
+      this.notification.idPlantilla == undefined ||
       this.notification.idUnidadMedida == null ||
+      this.notification.idUnidadMedida == undefined ||
+      this.notification.cuando == undefined ||
       this.notification.cuando == null
     ) {
       return true;

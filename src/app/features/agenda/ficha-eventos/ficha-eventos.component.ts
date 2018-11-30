@@ -1,5 +1,16 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
-import { DataTable, AutoComplete, Calendar } from "primeng/primeng";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+  OnDestroy
+} from "@angular/core";
+import {
+  DataTable,
+  AutoComplete,
+  Calendar,
+  ConfirmationService
+} from "primeng/primeng";
 import { Router } from "@angular/router";
 import { SigaServices } from "../../../_services/siga.service";
 import { NotificacionEventoObject } from "../../../models/NotificacionEventoObject";
@@ -9,7 +20,10 @@ import { saveAs } from "file-saver/FileSaver";
 import { AsistenciaCursoObject } from "../../../models/AsistenciaCursoObject";
 import { EventoItem } from "../../../models/EventoItem";
 import { Location } from "@angular/common";
-import { DatosRepeticionEventoItem } from "../../../models/DatosRepeticionEventoItem";
+import { EventoObject } from "../../../models/EventoObject";
+import { TranslateService } from "../../../commons/translate";
+import { esCalendar } from "../../../utils/calendar";
+import { CalendarItem } from "../../../models/CalendarItem";
 
 @Component({
   selector: "app-ficha-eventos",
@@ -17,12 +31,17 @@ import { DatosRepeticionEventoItem } from "../../../models/DatosRepeticionEvento
   styleUrls: ["./ficha-eventos.component.scss"],
   encapsulation: ViewEncapsulation.None
 })
-export class FichaEventosComponent implements OnInit {
-  comboEstados: any[];
+export class FichaEventosComponent implements OnInit, OnDestroy {
   saveCalendarFlag: boolean = false;
   msgs;
   isFormacionCalendar: boolean = false;
+  modoEdicionEventoByAgenda: boolean = false;
+  modoEdicionEvento: boolean = false;
   idCalendario;
+  tipoAccesoLectura: boolean = false;
+  selectedTipoLaboral = false;
+
+  es: any = esCalendar;
 
   @ViewChild("tableAsistencia")
   tableAsistencia: DataTable;
@@ -38,6 +57,7 @@ export class FichaEventosComponent implements OnInit {
 
   @ViewChild("fechaFin")
   fechaFin: Calendar;
+
   //Generales
   comboCalendars;
   comboTipoEvento;
@@ -45,11 +65,19 @@ export class FichaEventosComponent implements OnInit {
   comboDays;
   comboRepeatEvery;
   comboRepeatOn;
+  comboPartidoJudicial;
   newEvent: EventoItem;
-  selectedEstadoEvento;
-  invalidDateMin;
-  invalidDateMax;
-  datosRepeticion: DatosRepeticionEventoItem;
+  calendarioEdit: CalendarItem;
+  initEvent: EventoItem;
+  invalidDateMin: Date;
+  invalidDateMax: Date;
+  invalidDateMinEditionMode: Date;
+  invalidDateMaxEditionMode: Date;
+  comboEstados: any[];
+
+  valorTipoGeneral = "1";
+  valorTipoLaboral = "2";
+  valorTipoFormacion = "3";
 
   //Notificaciones
   selectedDatos;
@@ -94,11 +122,12 @@ export class FichaEventosComponent implements OnInit {
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit() {
-    this.getComboCalendar();
     this.getComboEstado();
     this.getComboTipoEvento();
     this.getCombosRepeats();
@@ -108,35 +137,222 @@ export class FichaEventosComponent implements OnInit {
     this.getColsResultsAsistencia();
 
     this.newEvent = new EventoItem();
-    this.datosRepeticion = new DatosRepeticionEventoItem();
+    this.initEvent = new EventoItem();
+    this.idCalendario = JSON.parse(
+      sessionStorage.getItem("calendarioEdit")
+    ).idCalendario;
 
-    if (sessionStorage.getItem("isFormacionCalendar") == "true") {
-      this.isFormacionCalendar = true;
-      this.idCurso = sessionStorage.getItem("idCurso");
-      this.getTrainers();
-    } else {
-      this.isFormacionCalendar = false;
-      this.newEvent.idTipoEvento = "1";
-    }
+    //Se comprueba de que pantalla llega y el modo Edicion/creacion
 
-    if (sessionStorage.getItem("modoEdicion")) {
+    //1. En caso de venir de la pantalla Agenda y en modo Edicion
+    if (sessionStorage.getItem("modoEdicionEventoByAgenda") == "true") {
+      //Indicamos que estamos en modo edicion
+      this.modoEdicionEventoByAgenda = true;
+
+      //Obtenemos el evento que recibimos de la pantalla calendario
       this.newEvent = JSON.parse(sessionStorage.getItem("eventoEdit"));
+      this.newEvent.idTipoCalendario = JSON.parse(
+        sessionStorage.getItem("calendarioEdit")
+      ).idTipoCalendario;
+
+      this.modoEdicionEvento = true;
+
       this.newEvent.start = new Date(this.newEvent.start);
       this.newEvent.end = new Date(this.newEvent.end);
-      sessionStorage.removeItem("modoEdicion");
-      sessionStorage.removeItem("eventoEdit");
+
+      //Se comprueba el tipo de acceso que tiene el evento
+      this.checkAcceso();
+
+      //Se guarda el evento con los valores iniciales para restablecer los valores
+      this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
+
+      //Se genera el combo tipo de Calendario,
+      //Si el evento no pertenece al calendario de formacion se genera el combo con solo laboral-general
+      if (this.newEvent.idTipoCalendario == this.valorTipoFormacion) {
+        this.getComboCalendar();
+        this.limitTimeEvent();
+
+        this.newEvent.fechaInicioRepeticion = new Date(
+          this.newEvent.fechaInicioRepeticion
+        );
+
+        this.newEvent.fechaFinRepeticion = new Date(
+          this.newEvent.fechaFinRepeticion
+        );
+        //Pertenece al calendario formacion
+      } else if (this.newEvent.idTipoCalendario == this.valorTipoGeneral) {
+        this.getComboCalendarLaboralGeneral();
+        this.limitTimeEvent();
+
+        this.newEvent.fechaInicioRepeticion = new Date(
+          this.newEvent.fechaInicioRepeticion
+        );
+
+        this.newEvent.fechaFinRepeticion = new Date(
+          this.newEvent.fechaFinRepeticion
+        );
+      } else {
+        this.getComboCalendarLaboralGeneral();
+      }
+
+      //Si el tipo de ediccion es un evento perteneciente al calendario laboral se genera el combo de lugares
+      if (this.newEvent.idTipoCalendario == this.valorTipoLaboral) {
+        this.selectedTipoLaboral = true;
+        this.getComboPartidoJudicial();
+        //Si no, el lugar se introduce manualmente
+      } else {
+        this.selectedTipoLaboral = false;
+      }
+
+      //2. En caso de venir de agenda pero en modo creación
+    } else if (sessionStorage.getItem("modoEdicionEventoByAgenda") == "false") {
+      this.modoEdicionEventoByAgenda = false;
+      // this.modoEdicionEvento = true;
+      this.newModeConfiguration();
+
+      //Se guarda el evento con los valores iniciales para restablecer los valores
+      this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
+
+      //3. En caso de venir de la pantalla Formacion
+    } else if (sessionStorage.getItem("isFormacionCalendar") == "true") {
+      this.isFormacionCalendar = true;
+      this.idCurso = sessionStorage.getItem("idCurso");
+
+      //Carga los formadores que pertenecen al curso que se va a crear el evento
+      this.getTrainers();
+
+      //Cargamos los tipo de calendarios que existen
+      this.getComboCalendar();
+      //Obligamos a que sea el tipo de calendario formacion
+      this.newEvent.idTipoCalendario = this.valorTipoFormacion;
+      this.newEvent.idTipoEvento = "8";
+
+      //Inficamos que no estamos en modo edicion
+      this.modoEdicionEvento = false;
+
+      //Se guarda el evento con los valores iniciales para restablecer los valores
+      this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
+
+      //limitamos tiempo de repeticion
+      this.limitTimeEvent();
+
+      //4. En caso de que venga notificaciones
+    } else if (sessionStorage.getItem("isNotificaciones") == "true") {
+      this.newEvent = JSON.parse(sessionStorage.getItem("evento"));
+      sessionStorage.removeItem("evento");
+
+      this.newEvent.start = new Date(this.newEvent.start);
+
+      this.newEvent.end = new Date(this.newEvent.end);
+
+      this.newEvent.fechaInicioRepeticion = new Date(
+        this.newEvent.fechaInicioRepeticion
+      );
+
+      this.newEvent.fechaFinRepeticion = new Date(
+        this.newEvent.fechaFinRepeticion
+      );
+
+      this.newEvent.idTipoCalendario = JSON.parse(
+        sessionStorage.getItem("calendarioEdit")
+      ).idTipoCalendario;
+
+      //Indicamos que estamos en modo edicion
+      this.modoEdicionEventoByAgenda = true;
+      this.modoEdicionEvento = true;
+      //Se comprueba el tipo de acceso que tiene el evento
+      this.checkAcceso();
+
+      //Se guarda el evento con los valores iniciales para restablecer los valores
+      this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
+
+      //5. Viene directo
     } else {
+      this.isFormacionCalendar = false;
       this.newEvent = new EventoItem();
+      //Obligamos que el tipo de evento sea Manual
+      this.newEvent.idTipoEvento = "1";
+      this.modoEdicionEvento = false;
+
+      this.getComboCalendar();
+    }
+
+    //Se cargan las notificaciones
+    this.getEventNotifications();
+  }
+
+  ngOnDestroy() {
+    //Se eliminan las variables de la sessionStorage
+    sessionStorage.removeItem("modoEdicionEventoByAgenda");
+    sessionStorage.removeItem("eventoEdit");
+    sessionStorage.removeItem("isNotificaciones");
+  }
+
+  checkAcceso() {
+    if (this.newEvent.tipoAcceso == 2) {
+      this.tipoAccesoLectura = true;
+    } else {
+      this.tipoAccesoLectura = false;
     }
   }
 
+  newModeConfiguration() {
+    //Blindeamos el evento recibido de la pantalla agenda
+    this.newEvent = JSON.parse(sessionStorage.getItem("eventoEdit"));
+    this.newEvent.start = new Date(this.newEvent.start);
+    this.newEvent.start.setHours(0);
+    this.newEvent.start.setMinutes(0);
+    this.newEvent.end = new Date(this.newEvent.end);
+    this.newEvent.end.setHours(0);
+    this.newEvent.end.setMinutes(0);
+
+    //Cargamos los combos que pueden ser
+    this.getComboCalendarLaboralGeneral();
+
+    //Cargamos el comboLugar por si se selecciona el tipo de calendario laboral
+    this.getComboPartidoJudicial();
+
+    //Indicamos que no estamos en modo edicion
+    this.modoEdicionEventoByAgenda = false;
+
+    //Obligamos que el tipo de evento sea Manual
+    this.newEvent.idTipoEvento = "1";
+
+    this.limitTimeEvent();
+  }
+
+  limitTimeEvent() {
+    //Indicamos que el limite que puede durar el evento
+    this.invalidDateMin = new Date(
+      JSON.parse(JSON.stringify(this.newEvent.start))
+    );
+    this.invalidDateMax = new Date(
+      JSON.parse(JSON.stringify(this.newEvent.start))
+    );
+    this.invalidDateMin.setHours(this.newEvent.start.getHours());
+    this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
+    this.invalidDateMax.setHours(this.newEvent.start.getHours());
+    this.invalidDateMax.setMinutes(59);
+
+    this.invalidDateMinEditionMode = new Date(
+      JSON.parse(JSON.stringify(this.newEvent.start))
+    );
+    this.invalidDateMaxEditionMode = new Date(
+      JSON.parse(JSON.stringify(this.newEvent.start))
+    );
+
+    this.invalidDateMinEditionMode.setHours(this.newEvent.start.getHours());
+    this.invalidDateMinEditionMode.setMinutes(this.newEvent.start.getMinutes());
+    this.invalidDateMaxEditionMode.setHours(23);
+    this.invalidDateMaxEditionMode.setMinutes(59);
+  }
   //FUNCIONES FICHA DATOS GENERALES
 
   getComboEstado() {
     this.sigaServices.get("fichaEventos_getEventStates").subscribe(
       n => {
         this.comboEstados = n.combooItems;
-        this.selectedEstadoEvento = this.comboEstados[0].value;
+        this.newEvent.idEstadoEvento = this.comboEstados[0].value;
       },
       err => {
         console.log(err);
@@ -165,45 +381,68 @@ export class FichaEventosComponent implements OnInit {
     );
 
     this.comboDays = [
-      { label: "1", value: "1" },
-      { label: "2", value: "2" },
-      { label: "3", value: "3" },
-      { label: "4", value: "4" },
-      { label: "5", value: "5" },
-      { label: "6", value: "6" },
-      { label: "7", value: "7" },
-      { label: "8", value: "8" },
-      { label: "9", value: "9" },
-      { label: "10", value: "10" },
-      { label: "11", value: "11" },
-      { label: "12", value: "12" },
-      { label: "13", value: "13" },
-      { label: "14", value: "14" },
-      { label: "15", value: "15" },
-      { label: "16", value: "16" },
-      { label: "17", value: "17" },
-      { label: "18", value: "18" },
-      { label: "19", value: "19" },
-      { label: "20", value: "20" },
-      { label: "21", value: "21" },
-      { label: "22", value: "22" },
-      { label: "23", value: "23" },
-      { label: "24", value: "24" },
-      { label: "25", value: "25" },
-      { label: "26", value: "26" },
-      { label: "27", value: "27" },
-      { label: "28", value: "28" },
-      { label: "29", value: "29" },
-      { label: "30", value: "30" },
-      { label: "31", value: "31" }
+      { label: "1", value: 1 },
+      { label: "2", value: 2 },
+      { label: "3", value: 3 },
+      { label: "4", value: 4 },
+      { label: "5", value: 5 },
+      { label: "6", value: 6 },
+      { label: "7", value: 7 },
+      { label: "8", value: 8 },
+      { label: "9", value: 9 },
+      { label: "10", value: 10 },
+      { label: "11", value: 11 },
+      { label: "12", value: 12 },
+      { label: "13", value: 13 },
+      { label: "14", value: 14 },
+      { label: "15", value: 15 },
+      { label: "16", value: 16 },
+      { label: "17", value: 17 },
+      { label: "18", value: 18 },
+      { label: "19", value: 19 },
+      { label: "20", value: 20 },
+      { label: "21", value: 21 },
+      { label: "22", value: 22 },
+      { label: "23", value: 23 },
+      { label: "24", value: 24 },
+      { label: "25", value: 25 },
+      { label: "26", value: 26 },
+      { label: "27", value: 27 },
+      { label: "28", value: 28 },
+      { label: "29", value: 29 },
+      { label: "30", value: 30 },
+      { label: "31", value: 31 }
     ];
   }
 
   //Función obtiene los tipos de calendarios que hay
   getComboCalendar() {
-    this.sigaServices.get("fichaEventos_getCalendars").subscribe(
+    this.sigaServices.get("fichaCalendario_getCalendarType").subscribe(
       n => {
         this.comboCalendars = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  //Funcion que obtiene los tipos de calendarios que se pueden crear si vienes de la pantalla Agenda
+  getComboCalendarLaboralGeneral() {
+    this.sigaServices.get("fichaCalendario_getCalendarType").subscribe(
+      n => {
+        let tipoGeneral = n.combooItems.find(
+          x => x.value === this.valorTipoGeneral
+        );
+
+        this.comboCalendars = new Array();
+        this.comboCalendars.push(tipoGeneral);
+
+        let tipoLaboral = n.combooItems.find(
+          x => x.value === this.valorTipoLaboral
+        );
+
+        this.comboCalendars.push(tipoLaboral);
       },
       err => {
         console.log(err);
@@ -223,54 +462,74 @@ export class FichaEventosComponent implements OnInit {
     );
   }
 
+  //Obtiene los partidos judiciales donde se puede realizar el evento
+  getComboPartidoJudicial() {
+    this.sigaServices.get("fichaEventos_getJudicialDistrict").subscribe(
+      n => {
+        this.comboPartidoJudicial = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
   onChangeSelectCalendar(event) {
-    this.idCalendario = event.value;
-    this.getEventNotifications();
+    if (event == this.valorTipoLaboral) {
+      this.selectedTipoLaboral = true;
+      this.newEvent.tipoDiasRepeticion = null;
+    } else {
+      this.selectedTipoLaboral = false;
+    }
   }
 
   saveEvent() {
-    if (this.checkRepetitionData()) {
-      this.newEvent.datosRepeticion = this.datosRepeticion;
+    let url = "";
+
+    if (sessionStorage.getItem("modoEdicionEventoByAgenda") == "true") {
+      url = "fichaEventos_updateEventCalendar";
     } else {
-      this.newEvent.datosRepeticion = null;
+      url = "fichaEventos_saveEventCalendar";
     }
 
-    this.newEvent.idEstadoEvento = this.selectedEstadoEvento;
-    this.sigaServices
-      .post("fichaEventos_saveEventCalendar", this.newEvent)
-      .subscribe(
-        data => {
+    this.sigaServices.post(url, this.newEvent).subscribe(
+      data => {
+        if (url == "fichaEventos_updateEventCalendar") {
+          this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
           this.progressSpinner = false;
-        },
-        err => {
+          this.showSuccess();
+        } else {
           this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
+          this.showSuccess();
+          this.modoEdicionEventoByAgenda = true;
         }
-      );
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showUnSuccess();
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   restEvent() {
-    console.log(this.checkRepetitionData());
-  }
+    this.newEvent = JSON.parse(JSON.stringify(this.initEvent));
+    this.newEvent.start = new Date(this.newEvent.start);
+    this.newEvent.end = new Date(this.newEvent.end);
 
-  checkRepetitionData() {
-    if (
-      (this.datosRepeticion.tipoRepeticion == null ||
-        this.datosRepeticion.tipoRepeticion == undefined) &&
-      (this.datosRepeticion.fechaInicio == null ||
-        this.datosRepeticion.fechaInicio == undefined) &&
-      (this.datosRepeticion.fechaFin == null ||
-        this.datosRepeticion.fechaFin == undefined) &&
-      (this.datosRepeticion.tipoDiasRepeticion == null ||
-        this.datosRepeticion.tipoDiasRepeticion == undefined) &&
-      (this.datosRepeticion.valoresRepeticion == null ||
-        this.datosRepeticion.valoresRepeticion == undefined)
-    ) {
-      return false;
+    this.newEvent.tipoDiasRepeticion = undefined;
+    if (this.newEvent.idTipoCalendario == this.valorTipoLaboral) {
+      this.newEvent.fechaInicioRepeticion = undefined;
+      this.newEvent.fechaFinRepeticion = undefined;
     } else {
-      return true;
+      this.newEvent.fechaInicioRepeticion = new Date(
+        this.newEvent.fechaInicioRepeticion
+      );
+      this.newEvent.fechaFinRepeticion = new Date(
+        this.newEvent.fechaFinRepeticion
+      );
     }
   }
 
@@ -289,6 +548,7 @@ export class FichaEventosComponent implements OnInit {
       JSON.parse(JSON.stringify(this.newEvent.start))
     );
   }
+
   validatorDates(event) {
     if (this.newEvent.end < this.newEvent.start) {
       this.newEvent.end = new Date(
@@ -312,6 +572,76 @@ export class FichaEventosComponent implements OnInit {
       this.invalidDateMin.setHours(this.newEvent.start.getHours());
     } else {
       this.invalidDateMin.setMinutes(0);
+    }
+  }
+
+  deleteEvent() {
+    let mess = "¿Estás seguro que desea eliminar este evento?";
+
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.progressSpinner = true;
+        let eventoDTO = new EventoObject();
+        eventoDTO.eventos.push(this.newEvent);
+
+        this.sigaServices.post("fichaEventos_deleteEvent", eventoDTO).subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.backTo();
+            this.showSuccess();
+          },
+          err => {
+            this.progressSpinner = false;
+            this.showUnSuccess();
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  validateForm() {
+    if (
+      this.newEvent.idTipoCalendario == null ||
+      this.newEvent.idTipoCalendario == undefined ||
+      this.newEvent.title == null ||
+      this.newEvent.title == undefined ||
+      this.newEvent.start == null ||
+      this.newEvent.start == undefined ||
+      this.newEvent.end == undefined ||
+      this.newEvent.end == null
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  disabledRadioButton() {
+    if (
+      this.modoEdicionEventoByAgenda ||
+      this.tipoAccesoLectura ||
+      this.selectedTipoLaboral
+    ) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -390,6 +720,7 @@ export class FichaEventosComponent implements OnInit {
       sessionStorage.setItem("modoEdicionNotify", "true");
       sessionStorage.removeItem("notifySelected");
       sessionStorage.setItem("notifySelected", JSON.stringify(id));
+      sessionStorage.setItem("evento", JSON.stringify(this.newEvent));
       this.router.navigate(["/editarNotificacion"]);
       sessionStorage.setItem("fichaAbierta", "true");
     }
@@ -408,6 +739,7 @@ export class FichaEventosComponent implements OnInit {
   newNotification() {
     sessionStorage.setItem("modoEdicionNotify", "false");
     sessionStorage.setItem("fichaAbierta", "true");
+    sessionStorage.setItem("evento", JSON.stringify(this.newEvent));
     this.router.navigate(["/editarNotificacion"]);
   }
 
@@ -770,5 +1102,23 @@ export class FichaEventosComponent implements OnInit {
 
   backTo() {
     this.location.back();
+  }
+
+  showSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: "Correcto",
+      detail: "Acción realizada correctamente"
+    });
+  }
+
+  showUnSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "cancel",
+      summary: "Incorrecto",
+      detail: "Acción no realizada correctamente"
+    });
   }
 }

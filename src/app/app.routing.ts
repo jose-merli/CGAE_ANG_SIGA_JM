@@ -204,6 +204,8 @@ import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaci
 import { FichaEventosComponent } from "./features/agenda/ficha-eventos/ficha-eventos.component";
 import { FichaCursoComponent } from "./features/formacion/ficha-curso/ficha-curso.component";
 import { DetalleSancionComponent } from "./features/censo/busqueda-sanciones/detalle-sancion/detalle-sancion.component";
+import { FichaInscripcionComponent } from "./features/formacion/ficha-inscripcion/ficha-inscripcion.component";
+import { BusquedaInscripcionesComponent } from "./features/formacion/busqueda-inscripciones/busqueda-inscripciones.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -973,7 +975,7 @@ const appRoutes: Routes = [
   //Agenda
 
   {
-    path: "fichaCalendario",
+    path: "agenda",
     component: AgendaComponent,
     canActivate: [AuthGuard]
   },
@@ -1076,13 +1078,18 @@ const appRoutes: Routes = [
     component: ErrorAccesoComponent
   },
   {
-    path: "busquedaCursos",
+    path: "buscarCursos",
     component: BusquedaCursosComponent,
     canActivate: [AuthGuard]
   },
   {
     path: "fichaCurso",
     component: FichaCursoComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "buscarInscripciones",
+    component: BusquedaInscripcionesComponent,
     canActivate: [AuthGuard]
   },
   { path: " ", redirectTo: "home" }

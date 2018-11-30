@@ -27,7 +27,7 @@
                   [(ngModel)]='calendar.idTipoCalendario' name="type" [disabled]="modoEdicion"></p-dropdown>
               </div>
               <div class="col-lg-6 col-md-6 pt-3">
-                <label class="pr-1">{{'formacion.fichaCalendario.color.cabecera' | translate}}:</label>
+                <label class="pr-1">{{'formacion.fichaCalendario.color' | translate}}:</label>
                 <p-colorPicker [(ngModel)]="colorSelect" name="color"></p-colorPicker>
               </div>
             </div>
@@ -80,9 +80,10 @@
     <div class="card-body card-body-ficha" *ngIf="esFichaActiva('confi')">
       <div class="module vista-simple scroll-perfil mt-2">
         <div class="text-right ml-auto form-group col-lg-6 col-md-6">
-          <label class="proceso-generico">Permisos Calendario SIGA ({{numSeleccionados}}/árbol)</label>
+          <!-- <label class="proceso-generico">Permisos Calendario SIGA ({{numSeleccionados}}/árbol)</label> -->
+          <label class="proceso-generico">{{'agenda.fichaCalendario.configuracionPerfiles.permisosCalendarioSIGA' | translate }}</label>
           <div class="mt-2">
-            <p-checkbox (onChange)="onChangeSelectAllProfiles()" [(ngModel)]="selectAll" class="d-inline-block mr-2" binary="true" label="Seleccionar todo"></p-checkbox>
+            <p-checkbox (onChange)="onChangeSelectAllProfiles()" [(ngModel)]="selectAll" class="d-inline-block mr-2" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"></p-checkbox>
           </div>
         </div>
         <div class="row">
@@ -98,10 +99,12 @@
         </div>
         <div *ngIf="selectProfile" [ngClass]="{'widthChange':isWidthChange,'widthNotChange':!isWidthChange}" class="menu-accesos">
           <div class="texto">
-            <label class="title">Administrar permisos de calendario</label>
+            <label class="title">{{'agenda.fichaCalendario.configuracionPerfiles.administrarPermisosCalendario' | translate }}</label>
             <div>
               <label class="mr-2">Seleccionados {{numSeleccionados}}/{{totalProfiles}}</label>
               <label class="mr-2">Cambios {{numCambios}}/{{totalProfiles}}</label>
+              <!-- <label class="mr-2">{{'agenda.fichaCalendario.configuracionPerfiles.perfilesSeleccionados' | translate }} </label>
+              <label class="mr-2">{{'agenda.fichaCalendario.configuracionPerfiles.cambioPerfiles' | translate }} </label> -->
             </div>
           </div>
           <div class="ml-auto">
@@ -115,6 +118,15 @@
               <div (click)="onChangeAcceso('sinAsignar')" class="mr-3 btn-acceso sin-asignar d-flex align-items-center">
                 <p>Sin asignar ({{sinAsignar}})</p>
               </div>
+              <!-- <div (click)="onChangeAcceso('total')" class="btn-acceso acceso-total d-flex align-items-center">
+                <p>{{'agenda.fichaCalendario.configuracionPerfiles.accesoTotal' | translate}}</p>
+              </div>
+              <div (click)="onChangeAcceso('lectura')" class="mr-3 btn-acceso solo-lectura d-flex align-items-center">
+                <p>{{'agenda.fichaCalendario.configuracionPerfiles.soloLectura' | translate}}</p>
+              </div>
+              <div (click)="onChangeAcceso('sinAsignar')" class="mr-3 btn-acceso sin-asignar d-flex align-items-center">
+                <p>{{'agenda.fichaCalendario.configuracionPerfiles.sinAsignar' | translate}}</p>
+              </div> -->
               <div class="ml-auto main-button d-flex">
                 <button pButton type="button" icon="fa fa-undo" iconPos="left" (click)="restablecerPermisos()" label="{{'general.boton.restablecer' | translate}}"></button>
                 <button class="mr-2" pButton type="button" icon="far fa-save" iconPos="left" (click)="savePermisos()" label="{{ 'general.boton.guardar' | translate}}"></button>
@@ -171,7 +183,7 @@
                 <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                 <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
                 <div class="ml-3 selectAllNotification">
-                  <p-checkbox (onChange)="onChangeSelectAllNotifications()" [(ngModel)]="selectAllNotifications" binary="true" label="Seleccionar todo"
+                  <p-checkbox (onChange)="onChangeSelectAllNotifications()" [(ngModel)]="selectAllNotifications" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                     name="groupname"></p-checkbox>
                 </div>
                 <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
@@ -212,7 +224,7 @@
                   <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                   <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
                   <div class="ml-3 selectAll">
-                    <p-checkbox (onChange)="onChangeSelectAllNotifications()" [(ngModel)]="selectAllNotifications" binary="true" label="Seleccionar todo"
+                    <p-checkbox (onChange)="onChangeSelectAllNotifications()" [(ngModel)]="selectAllNotifications" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                       name="groupname"></p-checkbox>
                   </div>
                   <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
@@ -239,6 +251,9 @@
       </div>
     </div>
   </div>
+</div>
+<div class="text-right main-button">
+  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
 </div>
 
 <div *ngIf="progressSpinner " class="overlay-spinner ">
