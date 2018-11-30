@@ -258,25 +258,24 @@
   </div>
   <app-dialog></app-dialog>
 </div>
-
-<!-- DIÁLOGO DE COMUNICACION -->
-<p-dialog [(visible)]="showComunicar" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+<!-- DIÁLOGO DE COMUNICACIÓN -->
+<p-dialog [(visible)]="showComunicar" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="650">
   <p-header class="title">
     <label>Comunicación</label>
   </p-header>
   <div class="form-row">
-    <div class="form-group col-lg-12 col-md-12">
+    <div class="form-group col-lg-4 col-md-4">
       <label>Modelos de comunicacion</label>
       <p-multiSelect filterBy="label" [options]="modelosComunicacion" optionLabel="label" styleClass="widthAll" [(ngModel)]='bodyComunicacion.modelosComunicacion'
         maxSelectedLabels="1" [panelStyle]="{width:'100%'}"></p-multiSelect>
     </div>
-    <div class="form-group col-lg-6 col-md-6">
-      <label>Tipo de envío</label>
-      <p-dropdown [options]="tiposEnvio" [(ngModel)]="bodyComunicacion.idEnvio" class="select-form"></p-dropdown>
-    </div>
-    <div class="form-group col-lg-6 col-md-6">
+    <div class="form-group col-lg-4 col-md-4">
       <label>Plantillas</label>
       <p-dropdown [options]="plantillas" [(ngModel)]="bodyComunicacion.idPlantilla" class="select-form"></p-dropdown>
+    </div>
+    <div class="form-group col-lg-4 col-md-4">
+      <label>Tipo de envío</label>
+      <p-dropdown [disabled]="true" [options]="tiposEnvio" [(ngModel)]="bodyComunicacion.idEnvio" class="select-form"></p-dropdown>
     </div>
   </div>
   <p-footer>

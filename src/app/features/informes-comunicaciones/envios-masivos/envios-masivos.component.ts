@@ -226,6 +226,10 @@ export class EnviosMasivosComponent implements OnInit {
           if (this.datos.length == 1) {
             this.body = this.datos[0];
           }
+          this.datos.forEach(element => {
+            element.fechaProgramacion = new Date(element.fechaProgramacion);
+            element.fechaCreacion = new Date(element.fechaCreacion);
+          });
         },
         err => {
           console.log(err);
@@ -235,8 +239,14 @@ export class EnviosMasivosComponent implements OnInit {
       );
   }
 
+
+
   isButtonDisabled() {
-    if (this.body.descripcion != '' && this.body.descripcion != null) {
+    if (this.bodySearch.fechaCreacion != null
+      // && ((this.bodySearch.asunto != '' && this.bodySearch.asunto != null) || (this.bodySearch.fechaProgramacion != null) ||
+      // (this.bodySearch.idEstado != '' && this.bodySearch.idEstado != null) ||
+      // (this.bodySearch.idTipoEnvios != '' && this.bodySearch.idTipoEnvios != null))
+    ) {
       return false;
     }
     return true;

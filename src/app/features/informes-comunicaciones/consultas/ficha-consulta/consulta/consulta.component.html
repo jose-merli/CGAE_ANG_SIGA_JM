@@ -5,7 +5,7 @@
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
-            <i class="fas fa-file-export icon-ficha"></i>
+            <i class="fas fa-laptop-code icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -25,7 +25,8 @@
       </div>
       <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
-          <i class="fas fa-file-export icon-ficha"></i>
+          <i class="fas fa-laptop-code icon-ficha">
+          </i>
         </div>
         <label class="title-ficha">Consulta</label>
         <i class="fa fa-angle-up ml-auto"></i>
@@ -33,11 +34,15 @@
     </div>
     <!--cuerpo datos generales-->
     <div *ngIf="openFicha" class="card-body card-body-ficha">
+      <div *ngIf="showAyuda" class="ayuda-consulta">
+        <i (click)="onShowAyuda()" class="fa fa-close float-right cursor-pointer"></i>
+        <p>Texto ayuda</p>
+      </div>
       <div class="form-row">
         <div class="form-group col-lg-12 col-md-12">
           <label>Cuerpo</label>
           <i (click)="onShowAyuda()" class="fa fa-info-circle ml-1 cursor-pointer"></i>
-          <textarea pInputTextarea autoResize="autoResize" [(ngModel)]="cuerpo"></textarea>
+          <textarea pInputTextarea autoResize="autoResize" style="height:250px" [(ngModel)]="cuerpo"></textarea>
         </div>
       </div>
     </div>
@@ -50,9 +55,6 @@
     </div>
   </div>
 
-  <div class="ayuda-consulta">
-    <p>Texto ayuda</p>
-  </div>
 </div>
 
 

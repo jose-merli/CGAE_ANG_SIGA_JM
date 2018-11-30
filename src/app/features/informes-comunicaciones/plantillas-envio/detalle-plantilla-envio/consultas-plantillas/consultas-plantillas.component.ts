@@ -127,7 +127,8 @@ export class ConsultasPlantillasComponent implements OnInit {
   navigateTo(dato) {
     let id = dato[0].id;
     if (!this.selectMultiple) {
-      this.router.navigate(['/fichaRegistroEnvioMasivo']);
+      this.router.navigate(['/fichaConsulta']);
+      sessionStorage.setItem("consultaPlantillaSearch", JSON.stringify(this.body))
     }
   }
 
@@ -153,6 +154,11 @@ export class ConsultasPlantillasComponent implements OnInit {
       return fichaPosible[0];
     }
     return {};
+  }
+
+  onAddConsulta() {
+    this.router.navigate(['/fichaConsulta']);
+    sessionStorage.removeItem("consultaPlantillaSearch")
   }
 
   getDatos() {

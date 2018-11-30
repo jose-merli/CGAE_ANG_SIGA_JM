@@ -3,5 +3,6 @@ export class DialogoComunicacionesItem {
   nombre: String;
   idEnvio: String;
   idPlantilla: String;
+  fechaProgramacion: Date;
   constructor() { }
 }

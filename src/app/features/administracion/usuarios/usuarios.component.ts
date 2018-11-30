@@ -21,6 +21,7 @@ import { UsuarioItem } from "./../../../../app/models/UsuarioItem";
 import { ComboItem } from "./../../../../app/models/ComboItem";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
+import { esCalendar } from "./../../../utils/calendar";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -69,7 +70,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
   selectAll: boolean = false;
   progressSpinner: boolean = false;
   numSelected: number = 0;
-
+  es: any = esCalendar;
 
   //Diálogo de comunicación
   showComunicar: boolean = false;
@@ -93,6 +94,8 @@ export class Usuarios extends SigaWrapper implements OnInit {
   selectedDatos;
 
   ngOnInit() {
+
+
     this.activo = true;
     this.checkAcceso();
     this.sigaServices.get("usuarios_rol").subscribe(

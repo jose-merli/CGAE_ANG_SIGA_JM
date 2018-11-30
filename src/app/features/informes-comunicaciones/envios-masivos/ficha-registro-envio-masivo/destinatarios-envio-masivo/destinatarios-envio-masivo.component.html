@@ -4,9 +4,9 @@
     <div class="card-header header-ficha" (click)="abreCierraFicha()">
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
-          <!-- <div class="img-colegiado">
-            <i class="fas fa-file-alt icon-ficha"></i>
-          </div> -->
+          <div class="img-colegiado">
+            <i class="fas fa-users icon-ficha"></i>
+          </div>
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-center mb-1">
@@ -21,9 +21,9 @@
         </div>
       </div>
       <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <!-- <div class="img-colegiado">
-          <i class="fas fa-file-alt icon-ficha"></i>
-        </div> -->
+        <div class="img-colegiado">
+          <i class="fas fa-users icon-ficha"></i>
+        </div>
         <label class="title-ficha">Destinatarios</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
@@ -38,6 +38,12 @@
           <div>{{item.label}}</div>
         </ng-template>
       </p-pickList>
+    </div>
+    <div *ngIf="openFicha" class="card-footer ">
+      <div class="text-right main-button ">
+        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+      </div>
     </div>
   </div>
 

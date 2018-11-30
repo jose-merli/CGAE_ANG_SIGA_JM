@@ -1022,7 +1022,6 @@ p-footer .main-button{
   padding: 0.75rem 1.25rem;
 }
 
-
 .ui-dropdown label.ui-dropdown-label{
   text-align: left;
 }
@@ -1033,6 +1032,10 @@ p-footer .main-button{
 
 .ayuda-consulta{
   width: 100%;
+  background: $secondary-color;
+  padding: 1rem;
+  color: white;
+  margin-bottom: 1rem;
 }
 
 /**RESPONSIVE**/

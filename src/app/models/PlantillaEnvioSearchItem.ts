@@ -1,7 +1,6 @@
 export class PlantillaEnvioSearchItem {
 
+    idTipoEnvios: String;
     nombre: String;
-    tipoEnvio: String;
-
     constructor() { };
 }

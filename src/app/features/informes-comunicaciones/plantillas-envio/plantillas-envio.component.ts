@@ -3,8 +3,9 @@ import { DataTable } from "primeng/datatable";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { Router } from '@angular/router';
 // import { TranslateService } from "../../../commons/translate/translation.service";
-// import { SigaServices } from "./../../../_services/siga.service";
+import { SigaServices } from "./../../../_services/siga.service";
 import { PlantillaEnvioSearchItem } from '../../../models/PlantillaEnvioSearchItem';
+import { PlantillaEnvioItem } from '../../../models/PlantillaEnvioItem';
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -18,9 +19,9 @@ export class PlantillasEnvioComponent implements OnInit {
 
   fichaBusqueda: boolean = true;
   msgs: Message[];
-  comboTipoEnvio: any = [];
-  body: PlantillaEnvioSearchItem = new PlantillaEnvioSearchItem();
-
+  tiposEnvio: any = [];
+  bodySearch: PlantillaEnvioSearchItem = new PlantillaEnvioSearchItem();
+  body: PlantillaEnvioItem = new PlantillaEnvioItem();
 
   //variables tabla
   datos: any[];
@@ -40,7 +41,7 @@ export class PlantillasEnvioComponent implements OnInit {
   selectedDatos
 
   constructor(
-    // private sigaServices: SigaServices,
+    private sigaServices: SigaServices,
     //  private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
@@ -51,12 +52,14 @@ export class PlantillasEnvioComponent implements OnInit {
   ngOnInit() {
 
     if (sessionStorage.getItem("plantillasEnvioSearch") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("plantillasEnvioSearch"));
+      this.bodySearch = JSON.parse(sessionStorage.getItem("plantillasEnvioSearch"));
+      this.onBuscar();
     }
 
     this.configTabla();
+    this.getTipoEnvios();
 
-    this.comboTipoEnvio = [{ label: '', value: '' }, { label: 'SMS', value: '1' }, { label: 'email', value: '2' }, { label: 'carta', value: '3' }]
+    // this.comboTipoEnvio = [{ label: '', value: '' }, { label: 'SMS', value: '1' }, { label: 'email', value: '2' }, { label: 'carta', value: '3' }]
 
 
   }
@@ -100,10 +103,7 @@ export class PlantillasEnvioComponent implements OnInit {
 
   getResultados() {
 
-
     //llamar al servicio de busqueda
-    this.body;
-
     this.datos = [
       { id: '1', nombre: 'Plantilla test', tipoEnvio: 'SMS', descripcion: 'descripcion' },
       { id: '2', nombre: 'Plantilla test', tipoEnvio: 'Buro fax', descripcion: 'descripcion' },
@@ -148,11 +148,10 @@ export class PlantillasEnvioComponent implements OnInit {
 
   detallePlantilla(item) {
 
-    sessionStorage.setItem("filtros", JSON.stringify(this.body));
     let id = item[0].id;
     if (!this.selectMultiple) {
       this.router.navigate(["/fichaPlantilla"]);
-      sessionStorage.setItem("plantillasEnvioSearch", JSON.stringify(this.body));
+      sessionStorage.setItem("plantillasEnvioSearch", JSON.stringify(this.bodySearch));
     }
   }
 
@@ -162,14 +161,6 @@ export class PlantillasEnvioComponent implements OnInit {
     this.getResultados();
   }
 
-
-  onChangeTipoEnvio(event) {
-
-    if (event.value) {
-      this.body.tipoEnvio = event.value;
-    }
-
-  }
 
   // Mensajes
   showFail(mensaje: string) {
@@ -199,6 +190,34 @@ export class PlantillasEnvioComponent implements OnInit {
   onAddPlantilla() {
     this.router.navigate(['/fichaPlantilla']);
     sessionStorage.removeItem("plantillasEnvioSearch")
+  }
+
+  getTipoEnvios() {
+    this.sigaServices.get("enviosMasivos_tipo").subscribe(
+      n => {
+        this.tiposEnvio = n.combooItems;
+
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+      para poder filtrar el dato con o sin estos caracteres*/
+        this.tiposEnvio.map(e => {
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
 }
