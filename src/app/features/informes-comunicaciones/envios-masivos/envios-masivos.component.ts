@@ -274,7 +274,7 @@ export class EnviosMasivosComponent implements OnInit {
 
 
   onConfirmarBorrar(dato) {
-
+    debugger;
     this.eliminarArray = [];
     dato.forEach(element => {
       let objEliminar = {
@@ -309,7 +309,9 @@ export class EnviosMasivosComponent implements OnInit {
   }
 
   navigateTo(dato) {
+    debugger;
     let id = dato[0].id;
+    console.log(dato[0].idEstado)
     if (!this.selectMultiple) {
       this.router.navigate(['/fichaRegistroEnvioMasivo']);
       sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(this.body));
@@ -325,16 +327,16 @@ export class EnviosMasivosComponent implements OnInit {
   }
 
   onCancelProgramar(dato) {
-    this.programarArray = [];
+    this.eliminarArray = [];
     this.showProgramar = false;
     dato.array.forEach(element => {
-      let objProgramar = {
-        idInstitucion: element.idInstitucion,
+      let objEliminar = {
+        idEstado: element.idEstado,
         idEnvio: element.idEnvio
       };
-      this.programarArray.push(objProgramar);
+      this.eliminarArray.push(objEliminar);
     });
-    this.sigaServices.post("enviosMasivos_cancelar", this.programarArray).subscribe(
+    this.sigaServices.post("enviosMasivos_cancelar", this.eliminarArray).subscribe(
       data => {
         this.showSuccess('Se ha programado el envío correctamente');
       },
@@ -372,6 +374,17 @@ export class EnviosMasivosComponent implements OnInit {
     this.router.navigate(['/fichaRegistroEnvioMasivo']);
     sessionStorage.removeItem("enviosMasivosSearch")
     sessionStorage.setItem("crearNuevoEnvio", JSON.stringify("true"));
+  }
+
+  isCancelarDisabled(dato) {
+    if (dato) {
+      if (dato.idEstado != '1' || dato.idEstado != '4') {
+        return true;
+      }
+      return false;
+    }
+
+
   }
 
 }

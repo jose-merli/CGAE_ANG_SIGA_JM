@@ -975,7 +975,7 @@ const appRoutes: Routes = [
   },
 
   {
-    path: 'fichaEnvioMasivo',
+    path: 'fichaRegistroEnvioMasivo',
     component: FichaRegistroEnvioMasivoComponent,
     canActivate: [AuthGuard]
   },
