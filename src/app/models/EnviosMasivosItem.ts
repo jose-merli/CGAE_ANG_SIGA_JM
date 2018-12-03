@@ -11,6 +11,7 @@ export class EnviosMasivosItem {
   asunto: String;
   cuerpo: String;
   idGrupo: String;
+  idEnvioDelete: String[] = [];
 
   constructor() { }
 }

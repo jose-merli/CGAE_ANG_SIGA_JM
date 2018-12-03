@@ -120,61 +120,23 @@ export class AuthenticationService {
         )
     }
 
-    // autenticateDevelop(formValues): Observable<any> {
-    //     let newSigaRquest = this.newSigaDevelopLogin(formValues);
-    //     //        let oldSigaRquest = this.oldSigaDevelopLogin(formValues);
-    //     return forkJoin([newSigaRquest]).map(
-    //         (response) => {
-    //             let newSigaResponse = response[0].headers.get("Authorization");
-    //             let newSigaResponseStatus = response[0].status;
-    //             if (newSigaResponseStatus == 200) {
-    //                 sessionStorage.setItem('osAutenticated', 'true');
-    //                 sessionStorage.setItem('authenticated', 'true');
-    //                 sessionStorage.setItem('Authorization', newSigaResponse);
-    //                 return true;
-    //             }
-    //         }
-    //     )
-
-    //     /*return forkJoin([oldSigaRquest, newSigaRquest]).map(
-    //         (response) => {
-    //             let newSigaResponse = response[1].headers.get("Authorization");
-    //             let oldSigaResponse = response[0].status;
-    //             if (oldSigaResponse == 200) {
-    //                 sessionStorage.setItem('osAutenticated', 'true');
-
-    //                 sessionStorage.setItem('authenticated', 'true');
-    //                 sessionStorage.setItem('Authorization', newSigaResponse);
-
-    //                 return true;
-    //             }
-
-    //         }
-    //     )*/
-
-    // }
-
-
-
-
     autenticateDevelop(formValues): Observable<any> {
         let newSigaRquest = this.newSigaDevelopLogin(formValues);
+        //        let oldSigaRquest = this.oldSigaDevelopLogin(formValues);
+        return forkJoin([newSigaRquest]).map(
+            (response) => {
+                let newSigaResponse = response[0].headers.get("Authorization");
+                let newSigaResponseStatus = response[0].status;
+                if (newSigaResponseStatus == 200) {
+                    sessionStorage.setItem('osAutenticated', 'true');
+                    sessionStorage.setItem('authenticated', 'true');
+                    sessionStorage.setItem('Authorization', newSigaResponse);
+                    return true;
+                }
+            }
+        )
 
-        // return forkJoin([newSigaRquest]).map(
-        //     (response) => {
-        //         let newSigaResponse = response[0].headers.get("Authorization");
-        //         let newSigaResponseStatus = response[0].status;
-        //         if (newSigaResponseStatus == 200) {
-        //             sessionStorage.setItem('osAutenticated', 'true');
-        //             sessionStorage.setItem('authenticated', 'true');
-        //             sessionStorage.setItem('Authorization', newSigaResponse);
-        //             return true;
-        //         }
-        //     }
-        // )
-
-        let oldSigaRquest = this.oldSigaDevelopLogin(formValues);
-        return forkJoin([oldSigaRquest, newSigaRquest]).map(
+        /*return forkJoin([oldSigaRquest, newSigaRquest]).map(
             (response) => {
                 let newSigaResponse = response[1].headers.get("Authorization");
                 let oldSigaResponse = response[0].status;
@@ -188,8 +150,46 @@ export class AuthenticationService {
                 }
 
             }
-        )
+        )*/
 
     }
+
+
+
+
+    // autenticateDevelop(formValues): Observable<any> {
+    //     let newSigaRquest = this.newSigaDevelopLogin(formValues);
+
+    //     // return forkJoin([newSigaRquest]).map(
+    //     //     (response) => {
+    //     //         let newSigaResponse = response[0].headers.get("Authorization");
+    //     //         let newSigaResponseStatus = response[0].status;
+    //     //         if (newSigaResponseStatus == 200) {
+    //     //             sessionStorage.setItem('osAutenticated', 'true');
+    //     //             sessionStorage.setItem('authenticated', 'true');
+    //     //             sessionStorage.setItem('Authorization', newSigaResponse);
+    //     //             return true;
+    //     //         }
+    //     //     }
+    //     // )
+
+    //     let oldSigaRquest = this.oldSigaDevelopLogin(formValues);
+    //     return forkJoin([oldSigaRquest, newSigaRquest]).map(
+    //         (response) => {
+    //             let newSigaResponse = response[1].headers.get("Authorization");
+    //             let oldSigaResponse = response[0].status;
+    //             if (oldSigaResponse == 200) {
+    //                 sessionStorage.setItem('osAutenticated', 'true');
+
+    //                 sessionStorage.setItem('authenticated', 'true');
+    //                 sessionStorage.setItem('Authorization', newSigaResponse);
+
+    //                 return true;
+    //             }
+
+    //         }
+    //     )
+
+    // }
 
 }

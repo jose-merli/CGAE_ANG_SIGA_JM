@@ -42,11 +42,10 @@ export class EnviosMasivosComponent implements OnInit {
   searchEnviosMasivos: EnviosMasivosObject = new EnviosMasivosObject();
   programarArray: any[];
   bodySearch: EnviosMasivosSearchItem = new EnviosMasivosSearchItem();
-
+  eliminarArray: any[];
 
   @ViewChild('table') table: DataTable;
   selectedDatos
-
 
   constructor(
     private sigaServices: SigaServices,
@@ -72,8 +71,8 @@ export class EnviosMasivosComponent implements OnInit {
       { field: 'asunto', header: 'Asunto' },
       { field: 'fechaCreacion', header: 'Fecha creación' },
       { field: 'fechaProgramada', header: 'Fecha programación' },
-      { field: 'formaEnvio', header: 'Forma envío' },
-      { field: 'estado', header: 'Estado' }
+      { field: 'tipoEnvio', header: 'Forma envío' },
+      { field: 'estadoEnvio', header: 'Estado' }
     ];
 
     this.rowsPerPage = [
@@ -94,7 +93,6 @@ export class EnviosMasivosComponent implements OnInit {
         value: 40
       }
     ];
-
 
   }
 
@@ -174,14 +172,11 @@ export class EnviosMasivosComponent implements OnInit {
     this.msgs = [];
   }
 
-
-
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
   }
-
 
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
@@ -239,8 +234,6 @@ export class EnviosMasivosComponent implements OnInit {
       );
   }
 
-
-
   isButtonDisabled() {
     if (this.bodySearch.fechaCreacion != null
       // && ((this.bodySearch.asunto != '' && this.bodySearch.asunto != null) || (this.bodySearch.fechaProgramacion != null) ||
@@ -257,9 +250,10 @@ export class EnviosMasivosComponent implements OnInit {
   }
 
   onBorrar(dato) {
+
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
-      message: 'h',
+      message: '¿Está seguro de cancelar los' + dato.length + 'envíos seleccionados',
       icon: "fa fa-trash-alt",
       accept: () => {
         this.onConfirmarBorrar(dato);
@@ -268,27 +262,42 @@ export class EnviosMasivosComponent implements OnInit {
         this.msgs = [
           {
             severity: "info",
-            summary: "info",
-            // detail: this.translateService.instant(
-            //   "general.message.accion.cancelada"
-            // )
+            // summary: "info",
+            // // detail: this.translateService.instant(
+            // //   "general.message.accion.cancelada"
+            // // )
           }
         ];
       }
     });
   }
 
+
   onConfirmarBorrar(dato) {
-    if (!this.selectAll) {
-      let x = this.datos.indexOf(dato);
-      this.datos.splice(x, 1);
-      this.selectedDatos = [];
-      this.selectMultiple = false;
-      this.showSuccess('Se ha eliminado el destinatario correctamente')
-    } else {
-      this.selectedDatos = [];
-      this.showSuccess('Se han eliminado los destinatarios correctamente')
-    }
+
+    this.eliminarArray = [];
+    dato.forEach(element => {
+      let objEliminar = {
+        idEstado: element.idEstado,
+        idEnvio: element.idEnvio,
+        fechaProgramacion: new Date(element.fechaProgramada)
+      };
+      this.eliminarArray.push(objEliminar);
+    });
+    debugger;
+    this.sigaServices.post("enviosMasivos_cancelar", this.eliminarArray).subscribe(
+      data => {
+        this.showSuccess('Se ha eliminado el envío correctamente');
+      },
+      err => {
+        this.showFail('Error al eliminar el envío');
+        console.log(err);
+      },
+      () => {
+        this.onBuscar();
+        this.table.reset();
+      }
+    );
   }
 
   //búsqueda con enter
@@ -344,7 +353,7 @@ export class EnviosMasivosComponent implements OnInit {
         idInstitucion: element.idInstitucion,
         idEstado: element.idEstado,
         idEnvio: element.idEnvio,
-        fechaProgramacion: element.fechaProgramar
+        fechaProgramacion: element.fechaProgramada
       };
       this.programarArray.push(objProgramar);
     });
@@ -365,5 +374,6 @@ export class EnviosMasivosComponent implements OnInit {
     sessionStorage.setItem("crearNuevoEnvio", JSON.stringify("true"));
   }
 
-
 }
+
+
