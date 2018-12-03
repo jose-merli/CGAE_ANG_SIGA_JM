@@ -274,7 +274,6 @@ export class EnviosMasivosComponent implements OnInit {
 
 
   onConfirmarBorrar(dato) {
-    debugger;
     this.eliminarArray = [];
     dato.forEach(element => {
       let objEliminar = {
@@ -284,7 +283,6 @@ export class EnviosMasivosComponent implements OnInit {
       };
       this.eliminarArray.push(objEliminar);
     });
-    debugger;
     this.sigaServices.post("enviosMasivos_cancelar", this.eliminarArray).subscribe(
       data => {
         this.showSuccess('Se ha eliminado el envío correctamente');
@@ -309,7 +307,6 @@ export class EnviosMasivosComponent implements OnInit {
   }
 
   navigateTo(dato) {
-    debugger;
     let id = dato[0].id;
     console.log(dato[0].idEstado)
     if (!this.selectMultiple) {
@@ -322,14 +319,14 @@ export class EnviosMasivosComponent implements OnInit {
     this.showProgramar = true;
 
     if (!this.selectMultiple) {
-      this.bodyProgramar.fechaProgramar = dato[0].fechaProgramacion;
+      this.bodyProgramar.fechaProgramada = dato[0].fechaProgramacion;
     }
   }
 
   onCancelProgramar(dato) {
     this.eliminarArray = [];
     this.showProgramar = false;
-    dato.array.forEach(element => {
+    dato.forEach(element => {
       let objEliminar = {
         idEstado: element.idEstado,
         idEnvio: element.idEnvio
@@ -350,17 +347,25 @@ export class EnviosMasivosComponent implements OnInit {
   onProgramar(dato) {
     this.showProgramar = false;
     this.programarArray = [];
-    dato.array.forEach(element => {
+    dato.forEach(element => {
       let objProgramar = {
-        idInstitucion: element.idInstitucion,
         idEstado: element.idEstado,
         idEnvio: element.idEnvio,
-        fechaProgramacion: element.fechaProgramada
+        asunto: element.asunto,
+        cuerpo: element.cuerpo,
+        idGrupo: element.idGrupo,
+        idPlantilla: element.idPlantilla,
+        idTipoEnvios: element.idTipoEnvios,
+        fecaBaja: new Date(element.fechaBaja),
+        fechaProgramada: new Date(this.bodyProgramar.fechaProgramada),
+        fechaCreacion: new Date(element.fechaCreacion)
       };
       this.programarArray.push(objProgramar);
     });
 
+
     this.sigaServices.post("enviosMasivos_programar", this.programarArray).subscribe(
+
       data => {
         this.showSuccess('Se ha programado el envío correctamente');
       },
@@ -378,14 +383,15 @@ export class EnviosMasivosComponent implements OnInit {
 
   isCancelarDisabled(dato) {
     if (dato) {
-      if (dato.idEstado != '1' || dato.idEstado != '4') {
+      if (dato.idEstado == '1' || dato.idEstado == '4') {
         return true;
       }
       return false;
     }
-
-
   }
+
+
+
 
 }
 

@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="modelos-comunicaciones-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -119,7 +120,7 @@
   <div class="form-row">
     <div class="form-group col-lg-8 col-md-8">
       <label>Fecha</label>
-      <p-calendar showTime="true" [locale]="es" [(ngModel)]="bodyProgramar.fechaProgramar" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
+      <p-calendar showTime="true" [locale]="es" [(ngModel)]="bodyProgramar.fechaProgramada" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
         showIcon="true" [utc]="true"></p-calendar>
     </div>
   </div>
