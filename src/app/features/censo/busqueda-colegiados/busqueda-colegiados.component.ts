@@ -388,7 +388,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     ) {
       this.body.fechaNacimiento = this.fechaNacimientoSelect;
     } else {
-      this.body.fechaNacimiento = null;
+      this.body.fechaNacimiento = undefined;
     }
 
     this.sigaServices

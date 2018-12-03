@@ -3,7 +3,7 @@
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>Ficha Curso</p>
+    <p>{{ 'formacion.fichaCurso.cabecera' | translate }}</p>
   </div>
 
   <!-- TARJETA DATOS GENERALES -->
@@ -46,11 +46,11 @@
       <div class="form-row mb-3">
         <div class="bloque col-lg-4 col-md-4">
           <div class="row mb-3">
-            <label class="ml-2"> <strong>Datos Generales</strong> </label>
+            <label class="ml-2"> <strong>{{'censo.consultaDatosGenerales.cabecera' | translate}}</strong> </label>
           </div>
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
-              <label>Nombre(*)</label>
+              <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}}(*)</label>
               <input
                 type="text"
                 class="form-control"
@@ -60,7 +60,7 @@
               />
             </div>
             <div class="col-lg-6 col-md-6">
-              <label>Código(*)</label>
+              <label>{{ 'formacion.fichaCursos.datosGenerales.codigo' | translate }}(*)</label>
               <input
                 type="text"
                 class="form-control"
@@ -72,7 +72,7 @@
           </div>
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
-              <label>Visibilidad</label>
+              <label>{{ 'form.busquedaCursos.literal.visibilidad' | translate}}</label>
               <p-dropdown
                 class="select-form"
                 [options]="comboVisibilidad"
@@ -81,7 +81,7 @@
               ></p-dropdown>
             </div>
             <div class="col-lg-6 col-md-6">
-              <label>Colegio</label>
+              <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}</label>
               <input
                 type="text"
                 class="form-control"
@@ -93,7 +93,7 @@
           </div>
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
-              <label>Tipo</label>
+              <label>{{'censo.busquedaClientesAvanzada.literal.tipoCliente' | translate}}</label>
               <input
                 type="text"
                 class="form-control"
@@ -103,7 +103,7 @@
               />
             </div>
             <div class="col-lg-6 col-md-6">
-              <label>Estado</label>
+              <label>{{ 'form.busquedaCursos.literal.estado' | translate }}</label>
               <input
                 type="text"
                 class="form-control"
@@ -115,7 +115,7 @@
           </div>
           <div class="row mb-4">
             <div class="col-lg-12 col-md-12">
-              <label>Descripción(*)</label>
+              <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}(*)</label>
               <textarea
                 pInputTextarea
                 class="textarea"
@@ -127,7 +127,7 @@
         </div>
         <div class="bloque col-lg-4 col-md-4">
           <div class="row mb-3">
-            <label> <strong> Datos de Gestión</strong> </label>
+            <label> <strong>{{ 'formacion.fichaCurso.datosGestion.cabecera' | translate }}</strong> </label>
           </div>
           <div class="row mb-4">
             <div class="col-lg-12 col-md-12">
@@ -201,7 +201,7 @@
           </div>
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
-              <label>Plazas Disponibles</label>
+              <label>{{ 'formacion.fichaCursos.datosDeGestion.plazasDisponibles' | translate }}</label>
               <input
                 type="text"
                 class="form-control"
@@ -211,7 +211,7 @@
               />
             </div>
             <div class="col-lg-6 col-md-6">
-              <label>Mínimo Asistencia</label>
+              <label>{{ 'formacion.fichaCursos.datosDeGestion.minimoAsistencia' | translate }}</label>
               <input
                 type="text"
                 class="form-control"
@@ -223,7 +223,7 @@
           </div>
           <div class="row mb-4">
             <div class="col-lg-12 col-md-12">
-              <label>Lugar</label>
+              <label>{{'agenda.fichaEventos.datosGenerales.lugar' | translate}}</label>
               <input
                 type="text"
                 class="form-control"
@@ -245,11 +245,11 @@
         </div>
         <div class="bloque col-lg-4 col-md-4">
           <div class="row mb-3">
-            <label> <strong> Datos Adicionales</strong> </label>
+            <label> <strong> {{'formacion.fichaCursos.datosGenerales.datosAdicionales.cabecera' | translate}}</strong> </label>
           </div>
           <div class="row mb-4">
             <div class="col-lg-12 col-md-12">
-              <label>Documentación Adjunta</label>
+              <label>{{'formacion.fichaCursos.datosGenerales.datosAdicionales.documentacionAdjunta' | translate}}</label>
               <input
                 type="text"
                 class="form-control"
@@ -261,7 +261,7 @@
           </div>
           <div class="row mb-4">
             <div class="col-lg-12 col-md-12">
-              <label>Temas</label>
+              <label>{{ 'form.busquedaCursos.literal.temas' | translate}}</label>
               <p-autoComplete
                 #autocomplete
                 [(ngModel)]="curso.temas"
@@ -289,13 +289,13 @@
           </div>
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
-              <label>Información adicional</label>
+              <label>{{'formacion.fichaCursos.datosGenerales.datosAdicionales.informacionAdicional' | translate}}</label>
               <a href="">www.informacionadicional.es</a>
             </div>
           </div>
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
-              <label>Encuesta de Satisfacción</label>
+              <label>{{'formacion.fichaCursos.datosGenerales.datosAdicionales.encuestaSatisfaccion' | translate}}</label>
               <a href="">www.encuentasatisfaccion.es</a>
             </div>
           </div>
@@ -366,13 +366,7 @@
         ></button>
 
         <!-- Botón guardar -->
-        <button
-          pButton
-          type="button"
-          icon="fa fa-caret-square-o-up"
-          iconPos="left"
-          label="Guardar"
-        ></button>
+        <!-- <button ppButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button> -->
       </div>
     </div>
   </div>
@@ -511,7 +505,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mt-2">
-            <label class="mr-auto title-ficha">Formadores</label>
+            <label class="mr-auto title-ficha">{{'agenda.fichaEventos.datosFormadores.cabecera' | translate}}</label>
           </div>
         </div>
       </div>
@@ -520,7 +514,7 @@
         class=" header-ficha-open d-flex justify-content-start align-items-center"
       >
         <div class="img-colegiado"><i class="fa fa-users icon-ficha"></i></div>
-        <label class="title-ficha">Formadores</label>
+        <label class="title-ficha">{{'agenda.fichaEventos.datosFormadores.cabecera' | translate}}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -1132,7 +1126,7 @@
       </div>
       <div class="col-lg-11 col-md-10">
         <div class="d-flex justify-content-start mt-2">
-          <label class="mr-auto title-ficha">Certificados</label>
+          <label class="mr-auto title-ficha">{{'formacion.fichaInscripcion.datosCertificados.cabecera' | translate}}</label>
         </div>
       </div>
     </div>
@@ -1143,7 +1137,7 @@
       <div class="img-colegiado">
         <i class="fa fa-certificate icon-ficha"></i>
       </div>
-      <label class="title-ficha">Certificados</label>
+      <label class="title-ficha">{{'formacion.fichaInscripcion.datosCertificados.cabecera' | translate}}</label>
       <i class="fa fa-angle-up ml-auto"></i>
     </div>
   </div>
@@ -1269,7 +1263,7 @@
       </div>
       <div class="col-lg-11 col-md-10">
         <div class="d-flex justify-content-start mt-2">
-          <label class="mr-auto title-ficha">Sesiones</label>
+          <label class="mr-auto title-ficha">{{'formacion.fichaCursos.sesiones.cabecera' | translate}}</label>
         </div>
       </div>
     </div>
@@ -1278,7 +1272,7 @@
       class=" header-ficha-open d-flex justify-content-start align-items-center"
     >
       <div class="img-colegiado"><i class="fa fa-user icon-ficha"></i></div>
-      <label class="title-ficha">Sesiones</label>
+      <label class="title-ficha">{{'formacion.fichaCursos.sesiones.cabecera' | translate}}</label>
       <i class="fa fa-angle-up ml-auto"></i>
     </div>
   </div>
@@ -1361,28 +1355,9 @@
   </div>
   <div class="card-footer" *ngIf="esFichaActiva('session')">
     <div class="text-right main-button">
-      <button
-        pButton
-        type="button"
-        icon="fa fa-times"
-        iconPos="left"
-        label="Duplicar"
-      ></button>
-      <button
-        pButton
-        type="button"
-        (click)="newSession()"
-        icon="fa fa-check"
-        iconPos="left"
-        label="Nuevo"
-      ></button>
-      <button
-        pButton
-        type="button"
-        icon="fa fa-search"
-        iconPos="left"
-        label="Cancelar"
-      ></button>
+        <button pButton type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
+        <button pButton type="button" icon="fa fa-plus" (click)="newSession()" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        <button pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
     </div>
   </div>
 </div>
@@ -1402,7 +1377,7 @@
       </div>
       <div class="col-lg-11 col-md-10">
         <div class="d-flex justify-content-start mt-2">
-          <label class="mr-auto title-ficha">Comunicaciones</label>
+          <label class="mr-auto title-ficha">{{'formacion.fichaCursos.comunicaciones.cabecera' | translate}}</label>
         </div>
       </div>
     </div>
@@ -1411,7 +1386,7 @@
       class=" header-ficha-open d-flex justify-content-start align-items-center"
     >
       <div class="img-colegiado"><i class="fa fa-comments icon-ficha"></i></div>
-      <label class="title-ficha">Comunicaciones</label>
+      <label class="title-ficha">{{'formacion.fichaCursos.comunicaciones.cabecera' | translate}}</label>
       <i class="fa fa-angle-up ml-auto"></i>
     </div>
   </div>

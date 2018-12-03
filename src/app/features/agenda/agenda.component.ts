@@ -10,6 +10,7 @@ import { CalendarItem } from "../../models/CalendarItem";
 import { Checkbox } from "primeng/primeng";
 import { SigaServices } from "../../_services/siga.service";
 import { EventoItem } from "../../models/EventoItem";
+import { findIndex } from "../../../../node_modules/rxjs/operators";
 @Component({
   selector: "app-agenda",
   templateUrl: "./agenda.component.html",
@@ -59,6 +60,8 @@ export class AgendaComponent implements OnInit {
     };
 
     this.events = [];
+    sessionStorage.removeItem("eventoEdit");
+    sessionStorage.removeItem("modoEdicionEventoByAgenda");
 
     this.getCalendarios();
   }
@@ -164,6 +167,7 @@ export class AgendaComponent implements OnInit {
 
   isNuevo() {
     sessionStorage.setItem("modoEdicion", "false");
+    sessionStorage.setItem("calendarios", JSON.stringify(this.calendarios));
     this.router.navigate(["/editarCalendario"]);
   }
 
@@ -180,6 +184,14 @@ export class AgendaComponent implements OnInit {
     evento.recursos = event.calEvent.recursos;
     evento.lugar = event.calEvent.lugar;
     evento.start = event.calEvent.start;
+    evento.fechaInicioRepeticion = event.calEvent.fechaInicioRepeticion;
+    evento.fechaFinRepeticion = event.calEvent.fechaFinRepeticion;
+    evento.tipoDiasRepeticion = event.calEvent.tipoDiasRepeticion;
+    evento.tipoRepeticion = event.calEvent.tipoRepeticion;
+    evento.valoresRepeticion = JSON.parse(
+      event.calEvent.valoresRepeticionString
+    );
+    evento.tipoAcceso = event.calEvent.tipoAcceso;
 
     if (event.calEvent.end) {
       evento.end = event.calEvent.end;
@@ -187,10 +199,18 @@ export class AgendaComponent implements OnInit {
       evento.end = evento.start;
     }
 
-    // alert(JSON.stringify(evento));
-
-    sessionStorage.setItem("modoEdicion", "true");
+    sessionStorage.setItem("modoEdicionEventoByAgenda", "true");
     sessionStorage.setItem("eventoEdit", JSON.stringify(evento));
+
+    let pos = this.calendarios.findIndex(
+      x => x.idCalendario === evento.idCalendario
+    );
+
+    sessionStorage.setItem(
+      "calendarioEdit",
+      JSON.stringify(this.calendarios[pos])
+    );
+
     this.router.navigate(["/fichaEventos"]);
   }
 

@@ -1,15 +1,15 @@
+import { SigaServices } from "../../../_services/siga.service";
+import { TreeNode } from "../../../utils/treenode";
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
 import { Router } from "../../../../../node_modules/@angular/router";
 import { DataTable } from "../../../../../node_modules/primeng/primeng";
 import { ConfirmationService } from "primeng/api";
 import { CalendarItem } from "../../../models/CalendarItem";
 import { TranslateService } from "../../../commons/translate/translation.service";
-import { NotificacionEventoItem } from "../../../models/NotificacionEventoItem";
-import { NotificacionEventoObject } from "../../../models/NotificacionEventoObject";
 import { PermisosCalendarioItem } from "../../../models/PermisosCalendarioItem";
 import { PermisosCalendarioObject } from "../../../models/PermisosCalendarioObject";
-import { TreeNode } from "../../../utils/treenode";
-import { SigaServices } from "../../../_services/siga.service";
+import { NotificacionEventoObject } from "../../../models/NotificacionEventoObject";
+import { NotificacionEventoItem } from "../../../models/NotificacionEventoItem";
 import { Location } from "@angular/common";
 
 @Component({
@@ -90,6 +90,9 @@ export class FichaCalendarioComponent implements OnInit {
 
   ngOnInit() {
     this.progressSpinner = true;
+    sessionStorage.removeItem("modoEdicionEventoByAgenda");
+    sessionStorage.removeItem("eventoEdit");
+
     if (sessionStorage.getItem("fichaAbierta") == "true") {
       this.getFichasEdit();
     } else {
@@ -143,6 +146,7 @@ export class FichaCalendarioComponent implements OnInit {
     this.sigaServices.post(url, this.calendar).subscribe(
       data => {
         this.progressSpinner = false;
+        this.showSuccess();
 
         if (!this.modoEdicion) {
           let body = JSON.parse(data["body"]);
@@ -257,7 +261,7 @@ export class FichaCalendarioComponent implements OnInit {
         data => {
           this.numCambios = 0;
           this.progressSpinner = false;
-          this.showSuccess();
+          this.showSuccessPermissions();
           this.treeInicial = JSON.parse(JSON.stringify(this.profilesTree));
         },
         err => {
@@ -640,12 +644,21 @@ export class FichaCalendarioComponent implements OnInit {
     return {};
   }
 
-  showSuccess() {
+  showSuccessPermissions() {
     this.msgs = [];
     this.msgs.push({
       severity: "success",
       summary: "Correcto",
       detail: "Árbol de permisos actualizado correctamente"
+    });
+  }
+
+  showSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: "Correcto",
+      detail: "Acción realizada correctamente"
     });
   }
 

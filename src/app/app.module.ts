@@ -269,8 +269,10 @@ import { FichaEventosComponent } from "./features/agenda/ficha-eventos/ficha-eve
 import { ScheduleModule } from "primeng/schedule";
 import { FichaCursoComponent } from "./features/formacion/ficha-curso/ficha-curso.component";
 import { DetalleSancionComponent } from "./features/censo/busqueda-sanciones/detalle-sancion/detalle-sancion.component";
+import { BusquedaInscripcionesComponent } from "./features/formacion/busqueda-inscripciones/busqueda-inscripciones.component";
+import { FichaInscripcionComponent } from "./features/formacion/ficha-inscripcion/ficha-inscripcion.component";
 import { SolicitudesModificacionComponent } from "./features/censo/solicitudes-modificacion/solicitudes-modificacion.component";
-import { NuevaSolicitudesModificacionComponent } from './features/censo/solicitudes-modificacion/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component';
+import { NuevaSolicitudesModificacionComponent } from "./features/censo/solicitudes-modificacion/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
 
 @NgModule({
   declarations: [
@@ -490,6 +492,8 @@ import { NuevaSolicitudesModificacionComponent } from './features/censo/solicitu
     FichaEventosComponent,
     FichaCursoComponent,
     DetalleSancionComponent,
+    BusquedaInscripcionesComponent,
+    FichaInscripcionComponent,
     SolicitudesModificacionComponent,
     NuevaSolicitudesModificacionComponent
   ],

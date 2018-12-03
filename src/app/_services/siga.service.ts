@@ -258,6 +258,9 @@ export class SigaServices {
     fichaEventos_getRepeatEvery: "fichaEventos/getRepeatEvery",
     fichaEventos_getDaysWeek: "fichaEventos/getDaysWeek",
     fichaEventos_saveEventCalendar: "fichaEventos/saveEventCalendar",
+    fichaEventos_updateEventCalendar: "fichaEventos/updateEventCalendar",
+    fichaEventos_deleteEvent: "fichaEventos/deleteEventCalendar",
+    fichaEventos_getJudicialDistrict: "fichaEventos/getJudicialDistrict",
     fichaCursos_getTrainersCourse: "fichaCursos/getTrainersCourse",
     fichaCursos_deleteTrainersCourse: "fichaCursos/deleteTrainersCourse",
     datosNotificaciones_getTypeNotifications:
