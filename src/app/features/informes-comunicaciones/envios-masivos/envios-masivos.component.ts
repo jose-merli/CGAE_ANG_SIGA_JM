@@ -338,30 +338,19 @@ export class EnviosMasivosComponent implements OnInit {
         this.showFail('Error al programar el envío');
         console.log(err);
       },
+      () => {
+        this.onBuscar();
+        this.table.reset();
+      }
     );
   }
 
   onProgramar(dato) {
     this.showProgramar = false;
-    this.programarArray = [];
     dato.forEach(element => {
-      let objProgramar = {
-        idEstado: element.idEstado,
-        idEnvio: element.idEnvio,
-        asunto: element.asunto,
-        cuerpo: element.cuerpo,
-        idGrupo: element.idGrupo,
-        idPlantilla: element.idPlantilla,
-        idTipoEnvios: element.idTipoEnvios,
-        fecaBaja: new Date(element.fechaBaja),
-        fechaProgramada: new Date(this.bodyProgramar.fechaProgramada),
-        fechaCreacion: new Date(element.fechaCreacion)
-      };
-      this.programarArray.push(objProgramar);
+      element.fechaProgramada = new Date(this.bodyProgramar.fechaProgramada)
     });
-
-
-    this.sigaServices.post("enviosMasivos_programar", this.programarArray).subscribe(
+    this.sigaServices.post("enviosMasivos_programar", dato).subscribe(
 
       data => {
         this.showSuccess('Se ha programado el envío correctamente');
