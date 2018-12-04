@@ -633,12 +633,25 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   border-top: 1px solid $grey4;
 }
 
+.ui-dialog .ui-dialog-footer .ui-button {
+  color:white !important;
+}
+
+
 .ui-dialog .ui-dialog-content {
   overflow: inherit;
 }
 
 .ui-dialog .ui-state-default, .ui-dialog .ui-widget-content .ui-state-default{
-  background: none;
+  background-color: $blue3;
+  color: $grey1;  
+  border: 1px solid #c6c7c8;
+  border-left: none;
+}
+
+.ui-dialog  .ui-inputtext {
+  background: white !important;
+  border-left: 1px solid #c6c7c8 !important;
 }
 
 .ui-datatable tbody > tr.ui-widget-content.ui-state-highlight {

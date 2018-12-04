@@ -118,10 +118,10 @@
     <label>Programar</label>
   </p-header>
   <div class="form-row">
-    <div class="form-group col-lg-8 col-md-8">
+    <div class="form-group col-lg-12 col-md-12">
       <label>Fecha</label>
-      <p-calendar showTime="true" [locale]="es" [(ngModel)]="bodyProgramar.fechaProgramada" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
-        showIcon="true" [utc]="true"></p-calendar>
+      <p-calendar [(ngModel)]="bodyProgramar.fechaProgramada" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
+        [utc]="true"></p-calendar>
     </div>
   </div>
   <p-footer>

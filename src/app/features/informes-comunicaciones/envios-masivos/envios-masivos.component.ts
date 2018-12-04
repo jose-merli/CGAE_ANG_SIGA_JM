@@ -218,11 +218,9 @@ export class EnviosMasivosComponent implements OnInit {
           this.progressSpinner = false;
           this.searchEnviosMasivos = JSON.parse(data["body"]);
           this.datos = this.searchEnviosMasivos.enviosMasivosItem;
-          // if (this.datos.length == 1) {
           this.body = this.datos[0];
-          // }
           this.datos.forEach(element => {
-            element.fechaProgramacion = new Date(element.fechaProgramacion);
+            element.fechaProgramada = new Date(element.fechaProgramada);
             element.fechaCreacion = new Date(element.fechaCreacion);
           });
         },
@@ -307,9 +305,8 @@ export class EnviosMasivosComponent implements OnInit {
   }
 
   navigateTo(dato) {
-    let id = dato[0].id;
-    console.log(dato[0].idEstado)
     if (!this.selectMultiple) {
+      // this.body.estado = dato[0].estado;
       this.router.navigate(['/fichaRegistroEnvioMasivo']);
       sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(this.body));
     }
@@ -389,6 +386,8 @@ export class EnviosMasivosComponent implements OnInit {
       return false;
     }
   }
+
+
 
 
 

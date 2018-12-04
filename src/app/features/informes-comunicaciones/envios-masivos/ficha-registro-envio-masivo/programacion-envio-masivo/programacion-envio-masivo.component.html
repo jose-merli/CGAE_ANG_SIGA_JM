@@ -36,14 +36,16 @@
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div class="form-row">
         <div class="form-group col-lg-3 col-md-4">
-          <label>Creado</label>
+          <label class="d-block">Creado:</label>
+          {{body.fechaCreacion | date: 'dd/MM/yyyy'}}
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>Estado</label>
+          <label>Estado:</label>
+          <p-dropdown disabled="true" [(ngModel)]="body.estadoEnvio" class="select-form"></p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-4">
-          <label>Fecha</label>
-          <p-calendar showTime="true" [locale]="es" [(ngModel)]="body.fechaProgramar" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
+          <label>Fecha de Programación</label>
+          <p-calendar showTime="true" [locale]="es" [(ngModel)]="body.fechaProgramada" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
             showIcon="true" [utc]="true"></p-calendar>
         </div>
       </div>

@@ -65,6 +65,8 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
 
   ngOnInit() {
 
+    this.body.fechaProgramada = null;
+
     this.getDatos();
 
     this.selectedItem = 4;
@@ -195,6 +197,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
+      // let fechaCreacion = new Date(this.body.fechaCreacion)
     }
   }
 

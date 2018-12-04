@@ -12,17 +12,11 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
 
 
   openFicha: boolean = false;
-  activacionEditar: boolean = true;
   body: ConfigEnviosMasivosItem = new ConfigEnviosMasivosItem();
-  modulos: any[];
-  objetivos: any[];
-  clasesComunicaciones: any[];
   editar: boolean = false;
   plantillas: any[];
   tipoEnvios: any[];
-
-  tipoEnvio: String;
-
+  progressSpinner: boolean;
 
 
   fichasPosibles = [
@@ -58,23 +52,10 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
 
   ngOnInit() {
 
+    this.editar = false;
     this.getDatos();
-
     this.getTipoEnvios();
 
-    this.objetivos = [
-      {
-        label: 'seleccione..', value: null
-      },
-      {
-        label: 'Destinatarios', value: '1'
-      },
-      {
-        label: 'Condicional', value: '2'
-      }
-    ]
-
-    // this.body.idConsulta = this.consultas[1].value;
   }
 
   getTipoEnvios() {
@@ -85,7 +66,6 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
       para poder filtrar el dato con o sin estos caracteres*/
         this.tipoEnvios.map(e => {
-          this.tipoEnvio = e.label;
           let accents =
             "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
           let accentsOut =
@@ -109,11 +89,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
 
 
   abreCierraFicha() {
-    // let fichaPosible = this.getFichaPosibleByKey(key);
-    if (this.activacionEditar == true) {
-      // fichaPosible.activa = !fichaPosible.activa;
-      this.openFicha = !this.openFicha;
-    }
+    this.openFicha = !this.openFicha;
   }
 
   esFichaActiva(key) {
@@ -139,8 +115,12 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
       this.editar = true;
+      console.log(this.editar)
+      console.log(this.body)
+    } else {
+      this.editar = false;
     }
-    this.editar = false;
+
   }
 
   onGuardar() {

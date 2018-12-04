@@ -40,12 +40,14 @@
         <div class="col-lg-6 col-md-6">
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
-              <label>Plantilla de envío</label>
-              <p-dropdown [disabled]="editar" [options]="plantillas" [(ngModel)]="body.idPlantilla" class="select-form"></p-dropdown>
+              <label>Plantilla de envío:</label>
+              <span *ngIf="editar">{{body.idPlantillasEnvio}}</span>
+              <p-dropdown *ngIf="!editar" [options]="plantillas" [(ngModel)]="body.idPlantilla" class="select-form"></p-dropdown>
             </div>
             <div class="form-group col-lg-12 col-md-12">
-              <label>Tipo de envío</label>
-              <p-dropdown [disabled]="editar" [options]="plantillas" [(ngModel)]="body.idPlantilla" class="select-form"></p-dropdown>
+              <label>Tipo de envío:</label>
+              <span *ngIf="editar==true">{{body.tipoEnvio}}</span>
+              <p-dropdown *ngIf="editar==false" [options]="plantillas" [(ngModel)]="body.idTipoEnvio" class="select-form"></p-dropdown>
             </div>
           </div>
         </div>
