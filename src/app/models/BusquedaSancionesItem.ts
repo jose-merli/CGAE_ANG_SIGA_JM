@@ -19,6 +19,7 @@ export class BusquedaSancionesItem {
   fechaDesde: Date;
   fechaHasta: Date;
   chkArchivadas: boolean;
+  chkAcuerdo: boolean;
   fechaArchivadaDesde: Date;
   fechaArchivadaHasta: Date;
 
