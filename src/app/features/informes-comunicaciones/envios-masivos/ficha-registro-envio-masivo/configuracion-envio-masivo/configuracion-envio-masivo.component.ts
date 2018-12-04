@@ -86,6 +86,40 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
     );
   }
 
+  onChangeTipoEnvio() {
+    this.getPlantillas();
+  }
+
+  getPlantillas() {
+    debugger;
+    console.log(this.body.idTipoEnvio);
+    this.sigaServices.post("plantillas", this.body.idTipoEnvio).subscribe(
+      n => {
+        this.plantillas = n.combooItems;
+
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+      para poder filtrar el dato con o sin estos caracteres*/
+        this.plantillas.map(e => {
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
 
 
   abreCierraFicha() {
