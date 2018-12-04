@@ -1,4 +1,5 @@
-<!-- <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl> -->
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<app-dialog></app-dialog>
 <div class="ficha-container">
   <!--DATOS GENERALES-->
   <div class="card">
@@ -37,21 +38,26 @@
     <!--cuerpo datos generales-->
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div class="row">
-        <div class="col-lg-6 col-md-6">
+        <div [ngClass]="{'col-lg-12':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-6':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
           <div class="form-row">
-            <div class="form-group col-lg-12 col-md-12">
+            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
               <label>Tipo de envío:</label>
               <span *ngIf="editar">{{body.tipoEnvio}}</span>
               <p-dropdown *ngIf="!editar" (onChange)="onChangeTipoEnvio()" [options]="tipoEnvios" [(ngModel)]="body.idTipoEnvio" class="select-form"></p-dropdown>
             </div>
-            <div class="form-group col-lg-12 col-md-12">
+            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
               <label>Plantilla de envío:</label>
               <span *ngIf="editar">{{body.idPlantillasEnvio}}</span>
-              <p-dropdown *ngIf="!editar" [disabled]="!body.idTipoEnvio" [options]="plantillas" [(ngModel)]="body.idPlantilla" class="select-form"></p-dropdown>
+              <p-dropdown *ngIf="!editar" [disabled]="plantillas && plantillas.length <= 0" [options]="plantillas" [(ngModel)]="body.idPlantilla"
+                class="select-form"></p-dropdown>
+            </div>
+            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
+              <label>Descripción</label>
+              <input type="text" class="form-control" [(ngModel)]="body.descripcion" pInputText>
             </div>
           </div>
         </div>
-        <div class="col-lg-6 col-md-6 pl-0">
+        <div *ngIf="body.idTipoEnvio== '1' || body.idTipoEnvio== '4' || body.idTipoEnvio== '5'" class="col-lg-6 col-md-12">
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
               <label>Asunto</label>
@@ -66,12 +72,14 @@
       </div>
 
     </div>
-    <div *ngIf="openFicha" class="card-footer ">
-      <div class="text-right main-button ">
-        <button (click)="onGuardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+    <div *ngIf="openFicha" class="card-footer">
+      <div class="text-right main-button">
+        <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
         <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
-        <button pButton type="button" icon="fas fa-share-square" iconPos="left" label="{{ 'general.boton.reenviar' | translate}}"></button>
+        <button *ngIf="editar" (click)="cancelar()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{
+          'general.boton.cancel' | translate}}"></button>
+        <button pButton type="button" icon="fas fa-share-square" iconPos="left" label="{{ 'general.boton.reenviar' |
+          translate}}"></button>
         <button pButton type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
       </div>
     </div>

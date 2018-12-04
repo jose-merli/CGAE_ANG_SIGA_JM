@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ConfigEnviosMasivosItem } from '../../../../../models/ConfiguracionEnviosMasivosItem';
 import { Location } from "@angular/common";
 import { SigaServices } from "./../../../../../_services/siga.service";
+import { Message, ConfirmationService } from "primeng/components/common/api";
+import { TranslateService } from "../../../../../commons/translate/translation.service";
 
 @Component({
   selector: 'app-configuracion-envio-masivo',
@@ -13,10 +15,14 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
 
   openFicha: boolean = false;
   body: ConfigEnviosMasivosItem = new ConfigEnviosMasivosItem();
+  bodyInicial: ConfigEnviosMasivosItem = new ConfigEnviosMasivosItem();
   editar: boolean = false;
   plantillas: any[];
   tipoEnvios: any[];
   progressSpinner: boolean;
+  msgs: Message[];
+  eliminarArray: any[];
+
 
 
   fichasPosibles = [
@@ -43,7 +49,9 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private location: Location,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService
   ) {
 
 
@@ -56,29 +64,35 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
     this.getDatos();
     this.getTipoEnvios();
 
+
   }
+
+  // Mensajes
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showInfo(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
 
   getTipoEnvios() {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
-      n => {
-        this.tipoEnvios = n.combooItems;
+      data => {
+        this.tipoEnvios = data.combooItems;
 
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-      para poder filtrar el dato con o sin estos caracteres*/
-        this.tipoEnvios.map(e => {
-          let accents =
-            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-          let accentsOut =
-            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
       },
       err => {
         console.log(err);
@@ -91,28 +105,10 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   }
 
   getPlantillas() {
-    debugger;
-    console.log(this.body.idTipoEnvio);
-    this.sigaServices.post("plantillas", this.body.idTipoEnvio).subscribe(
-      n => {
-        this.plantillas = n.combooItems;
-
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-      para poder filtrar el dato con o sin estos caracteres*/
-        this.plantillas.map(e => {
-          let accents =
-            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-          let accentsOut =
-            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
+    this.sigaServices.post("enviosMasivos_plantillas", this.body.idTipoEnvio).subscribe(
+      data => {
+        let comboPlantillas = JSON.parse(data["body"]);
+        this.plantillas = comboPlantillas.combooItems;
       },
       err => {
         console.log(err);
@@ -149,16 +145,86 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
       this.editar = true;
-      console.log(this.editar)
-      console.log(this.body)
+      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     } else {
       this.editar = false;
     }
 
   }
 
-  onGuardar() {
-    sessionStorage.removeItem("crearNuevoEnvio");
+
+  cancelar(dato) {
+
+    this.confirmationService.confirm({
+      // message: this.translateService.instant("messages.deleteConfirmation"),
+      message: '¿Está seguro de cancelar el envío?',
+      icon: "fa fa-trash-alt",
+      accept: () => {
+        this.confirmarCancelar();
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
   }
+
+
+  confirmarCancelar() {
+    debugger;
+    this.eliminarArray = [];
+    let objCancelar = {
+      idEstado: this.body.idEstado,
+      idEnvio: this.body.idEnvio,
+      fechaProgramacion: new Date(this.body.fechaProgramada)
+    };
+    this.eliminarArray.push(objCancelar);
+    this.sigaServices.post("enviosMasivos_cancelar", this.eliminarArray).subscribe(
+      data => {
+        this.showSuccess('Se ha cancelado el envío correctamente');
+      },
+      err => {
+        this.showFail('Error al cancelar el envío');
+        console.log(err);
+      },
+      () => {
+
+      }
+    );
+  }
+
+  guardar() {
+    this.sigaServices.post("enviosMasivos_guardarConf", this.body).subscribe(
+      data => {
+        this.showSuccess('Se ha guardado el envío correctamente');
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        // sessionStorage.removeItem("crearNuevoEnvio");
+      },
+      err => {
+        this.showFail('Error al guardar el envío');
+        console.log(err);
+      },
+      () => {
+
+      }
+    );
+
+
+  }
+
+  restablecer() {
+    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+  }
+
+
+
+
 
 }

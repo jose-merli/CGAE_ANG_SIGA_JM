@@ -1,4 +1,5 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<app-dialog></app-dialog>
 <div class="modelos-comunicaciones-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -39,8 +40,8 @@
     </div>
     <div class="card-footer">
       <div class="text-right main-button">
-        <button [disabled]="isButtonDisabled()" (click)="onBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
-        <button (click)="onAddEnvio()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        <button [disabled]="isButtonDisabled()" (click)="buscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+        <button (click)="addEnvio()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -104,7 +105,7 @@
         <div class="text-right main-button">
           <button (click)="isSelectMultiple()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
           <button (click)="onShowProgamar(selectedDatos)" pButton type="button" icon="fas fa-cog" iconPos="left" label="{{ 'general.boton.programar' | translate}}"></button>
-          <button [disabled]="isCancelarDisabled(selectedDatos)" (click)="onBorrar(selectedDatos)" pButton type="button" icon="fa fa-close"
+          <button [disabled]="isCancelarDisabled(selectedDatos)" (click)="cancelar(selectedDatos)" pButton type="button" icon="fa fa-close"
             iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
         </div>
       </div>
@@ -126,7 +127,7 @@
   </div>
   <p-footer>
     <div class="text-right main-button ">
-      <button (click)="onProgramar(selectedDatos)" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+      <button (click)="programar(selectedDatos)" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
     </div>
   </p-footer>
 </p-dialog>
@@ -136,5 +137,3 @@
   <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
   <div class="loader"></div>
 </div>
-
-<app-dialog></app-dialog>

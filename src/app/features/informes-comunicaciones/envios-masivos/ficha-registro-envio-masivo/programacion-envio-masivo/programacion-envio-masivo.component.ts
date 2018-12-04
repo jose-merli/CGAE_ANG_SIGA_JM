@@ -4,6 +4,7 @@ import { ProgEnviosMasivosItem } from '../../../../../models/ProgramacionEnviosM
 import { Location } from "@angular/common";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { esCalendar } from "../../../../../utils/calendar";
+import { Message } from "primeng/components/common/api";
 
 @Component({
   selector: 'app-programacion-envio-masivo',
@@ -15,8 +16,10 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
 
   openFicha: boolean = false;
   body: ProgEnviosMasivosItem = new ProgEnviosMasivosItem();
+  bodyInicial: ProgEnviosMasivosItem = new ProgEnviosMasivosItem();
   es: any = esCalendar;
   fecha: Date;
+  msgs: Message[];
 
 
 
@@ -57,6 +60,26 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
 
   }
 
+  // Mensajes
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showInfo(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
 
 
   abreCierraFicha() {
@@ -88,8 +111,34 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
-      // let fechaCreacion = new Date(this.body.fechaCreacion)
+      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+      this.body.fechaProgramada = new Date(this.body.fechaProgramada)
     }
   }
+
+  guardar() {
+    this.sigaServices.post("enviosMasivos_guardarProg", this.body).subscribe(
+      data => {
+        this.showSuccess('Se ha guardado la programación correctamente');
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+      },
+      err => {
+        this.showFail('Error al guardar la programación');
+        console.log(err);
+      },
+      () => {
+
+      }
+    );
+  }
+
+  restablecer() {
+    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    if (this.body.fechaProgramada != null) {
+      this.body.fechaProgramada = new Date(this.body.fechaProgramada)
+    }
+
+  }
+
 
 }

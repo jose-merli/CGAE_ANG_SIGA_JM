@@ -98,25 +98,8 @@ export class EnviosMasivosComponent implements OnInit {
 
   getTipoEnvios() {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
-      n => {
-        this.tiposEnvio = n.combooItems;
-
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-      para poder filtrar el dato con o sin estos caracteres*/
-        this.tiposEnvio.map(e => {
-          let accents =
-            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-          let accentsOut =
-            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
+      data => {
+        this.tiposEnvio = data.combooItems;
       },
       err => {
         console.log(err);
@@ -126,25 +109,8 @@ export class EnviosMasivosComponent implements OnInit {
 
   getEstadosEnvios() {
     this.sigaServices.get("enviosMasivos_estado").subscribe(
-      n => {
-        this.estados = n.combooItems;
-
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-      para poder filtrar el dato con o sin estos caracteres*/
-        this.estados.map(e => {
-          let accents =
-            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-          let accentsOut =
-            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
+      data => {
+        this.estados = data.combooItems;
       },
       err => {
         console.log(err);
@@ -201,7 +167,7 @@ export class EnviosMasivosComponent implements OnInit {
     }
   }
 
-  onBuscar() {
+  buscar() {
     this.showResultados = true;
     this.selectMultiple = false;
     this.selectedDatos = "";
@@ -243,27 +209,27 @@ export class EnviosMasivosComponent implements OnInit {
     return true;
   }
 
-  onDuplicar() {
+  duplicar() {
 
   }
 
-  onBorrar(dato) {
+  cancelar(dato) {
 
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
       message: '¿Está seguro de cancelar los' + dato.length + 'envíos seleccionados',
       icon: "fa fa-trash-alt",
       accept: () => {
-        this.onConfirmarBorrar(dato);
+        this.confirmarCancelar(dato);
       },
       reject: () => {
         this.msgs = [
           {
             severity: "info",
-            // summary: "info",
-            // // detail: this.translateService.instant(
-            // //   "general.message.accion.cancelada"
-            // // )
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
           }
         ];
       }
@@ -271,7 +237,7 @@ export class EnviosMasivosComponent implements OnInit {
   }
 
 
-  onConfirmarBorrar(dato) {
+  confirmarCancelar(dato) {
     this.eliminarArray = [];
     dato.forEach(element => {
       let objEliminar = {
@@ -283,14 +249,14 @@ export class EnviosMasivosComponent implements OnInit {
     });
     this.sigaServices.post("enviosMasivos_cancelar", this.eliminarArray).subscribe(
       data => {
-        this.showSuccess('Se ha eliminado el envío correctamente');
+        this.showSuccess('Se ha calcelado el envío correctamente');
       },
       err => {
-        this.showFail('Error al eliminar el envío');
+        this.showFail('Error al calcelar el envío');
         console.log(err);
       },
       () => {
-        this.onBuscar();
+        this.buscar();
         this.table.reset();
       }
     );
@@ -300,7 +266,7 @@ export class EnviosMasivosComponent implements OnInit {
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      this.onBuscar();
+      this.buscar();
     }
   }
 
@@ -320,32 +286,9 @@ export class EnviosMasivosComponent implements OnInit {
     }
   }
 
-  onCancelProgramar(dato) {
-    this.eliminarArray = [];
-    this.showProgramar = false;
-    dato.forEach(element => {
-      let objEliminar = {
-        idEstado: element.idEstado,
-        idEnvio: element.idEnvio
-      };
-      this.eliminarArray.push(objEliminar);
-    });
-    this.sigaServices.post("enviosMasivos_cancelar", this.eliminarArray).subscribe(
-      data => {
-        this.showSuccess('Se ha programado el envío correctamente');
-      },
-      err => {
-        this.showFail('Error al programar el envío');
-        console.log(err);
-      },
-      () => {
-        this.onBuscar();
-        this.table.reset();
-      }
-    );
-  }
 
-  onProgramar(dato) {
+
+  programar(dato) {
     this.showProgramar = false;
     dato.forEach(element => {
       element.fechaProgramada = new Date(this.bodyProgramar.fechaProgramada)
@@ -359,9 +302,13 @@ export class EnviosMasivosComponent implements OnInit {
         this.showFail('Error al programar el envío');
         console.log(err);
       },
+      () => {
+        this.buscar();
+        this.table.reset();
+      }
     );
   }
-  onAddEnvio() {
+  addEnvio() {
     this.router.navigate(['/fichaRegistroEnvioMasivo']);
     sessionStorage.removeItem("enviosMasivosSearch")
     sessionStorage.setItem("crearNuevoEnvio", JSON.stringify("true"));

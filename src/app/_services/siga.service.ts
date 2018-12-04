@@ -163,7 +163,9 @@ export class SigaServices {
     enviosMasivos_tipo: 'enviosMasivos/tipoEnvios',
     enviosMasivos_programar: 'enviosMasivos/programarEnvio',
     enviosMasivos_cancelar: 'enviosMasivos/cancelarEnvio',
-    plantillas: 'enviosMasivos/detalle/plantillas',
+    enviosMasivos_plantillas: 'enviosMasivos/detalle/plantillas',
+    enviosMasivos_guardarConf: 'enviosMasivos/detalle/guardarConfiguracion',
+    enviosMasivos_documentos: 'enviosMasivos/detalle/documentosEnvio'
 
   };
 
