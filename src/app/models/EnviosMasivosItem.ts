@@ -6,6 +6,7 @@ export class EnviosMasivosItem {
   idEstado: String;
   idTipoEnvios: String;
   idPlantilla: String;
+  nombrePlantilla: String;
   fechaProgramada: Date;
   fechaBaja: Date;
   asunto: String;
