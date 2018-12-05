@@ -65,17 +65,10 @@
                 <label>{{
                   "busquedaSanciones.colegioSancionador.literal" | translate
                 }}</label>
-                <p-multiSelect
-                  [defaultLabel]="textFilter"
-                  filterBy="label"
-                  [(ngModel)]="body.colegio"
-                  [options]="colegios"
-                  optionLabel="label"
-                  [selectedItemsLabel]="textSelected"
-                  maxSelectedLabels="1"
-                  styleClass="widthAll"
-                  [panelStyle]="{ width: '100%' }"
-                ></p-multiSelect>
+                <p-dropdown
+                  class="select-form" [options]="colegios" [(ngModel)]="body.colegio"
+                ></p-dropdown>
+
               </div>
               <div class="form-group col-lg-12 col-md-12">
                 <label>{{
@@ -84,7 +77,7 @@
                 }}</label>
                 <p-dropdown
                   class="select-form"
-                  [options]="tipoSancion"
+ [options]="tipoSancion"
                   [(ngModel)]="body.tipoSancion"
                   (onChange)="onChangeTipoSancion($event)"
                 ></p-dropdown>
@@ -141,9 +134,10 @@
                 }}</label>
                 <p-calendar
                   [keepInvalid]="true"
-                  selectionMode="range"
                   [locale]="es"
                   icon="far fa-calendar-alt"
+                  (onSelect)="deshabilitarFechas()"
+                  [(disabled)]="disabledFechaAcuerdo"
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaAcuerdo"
@@ -157,8 +151,9 @@
                 }}</label>
                 <p-checkbox
                   class="displayInit"
-                  name="chkFirmeza"
-                  [(ngModel)]="body.chkFirmeza"
+                  name="chkAcuerdo"
+                  [(ngModel)]="body.chkAcuerdo"
+                  (onChange)="deshabilitarFechas()"
                   binary="true"
                   [(disabled)]="isNew"
                 ></p-checkbox>
@@ -169,8 +164,9 @@
                 }}</label>
                 <p-calendar
                   [keepInvalid]="true"
-                  selectionMode="range"
                   [locale]="es"
+                  [(disabled)]="disabledFechaFirme"
+                  (onSelect)="deshabilitarFechas()"
                   icon="far fa-calendar-alt"
                   showIcon="true"
                   dateFormat="dd/mm/yy"
@@ -188,6 +184,7 @@
                   class="displayInit"
                   name="chkFirmeza"
                   [(ngModel)]="body.chkFirmeza"
+                  (onChange)="deshabilitarFechas()"
                   binary="true"
                   [(disabled)]="isNew"
                 ></p-checkbox>
@@ -198,9 +195,10 @@
                 }}</label>
                 <p-calendar
                   [keepInvalid]="true"
-                  selectionMode="range"
                   [locale]="es"
                   icon="far fa-calendar-alt"
+                  [(disabled)]="disabledPeriodoDesde"
+                  (onSelect)="deshabilitarFechas()"
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaDesde"
@@ -212,9 +210,10 @@
                 <label>{{ " " | translate }}</label>
                 <p-calendar
                   [keepInvalid]="true"
-                  selectionMode="range"
                   [locale]="es"
                   icon="far fa-calendar-alt"
+                  [(disabled)]="disabledPeriodoHasta"
+                  (onSelect)="deshabilitarFechas()"
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaHasta"
@@ -229,9 +228,10 @@
 
                 <p-calendar
                   [keepInvalid]="true"
-                  selectionMode="range"
                   [locale]="es"
                   icon="far fa-calendar-alt"
+                  [(disabled)]="disabledRehabilitado"
+                  (onSelect)="deshabilitarFechas()"
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaRehabilitado"
@@ -249,6 +249,7 @@
                   <p-checkbox
                     class="displayInit"
                     name="chkRehabilitado"
+                    (onChange)="deshabilitarFechas()"
                     [(ngModel)]="body.chkRehabilitado"
                     binary="true"
                     [(disabled)]="isNew"
@@ -262,9 +263,10 @@
                 }}</label>
                 <p-calendar
                   [keepInvalid]="true"
-                  selectionMode="range"
                   [locale]="es"
                   icon="far fa-calendar-alt"
+                  [(disabled)]="disabledFechaArchivada"
+                  (onSelect)="deshabilitarFechas()"
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaArchivada"

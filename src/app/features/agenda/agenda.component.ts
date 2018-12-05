@@ -7,10 +7,10 @@ import {
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { CalendarItem } from "../../models/CalendarItem";
-import { Checkbox } from "primeng/primeng";
+import { Checkbox, Schedule } from "primeng/primeng";
 import { SigaServices } from "../../_services/siga.service";
 import { EventoItem } from "../../models/EventoItem";
-import { findIndex } from "../../../../node_modules/rxjs/operators";
+import { findIndex } from "rxjs/operators";
 @Component({
   selector: "app-agenda",
   templateUrl: "./agenda.component.html",
@@ -40,6 +40,8 @@ export class AgendaComponent implements OnInit {
   color: any;
   selectedCalendarios: any[];
 
+  @ViewChild("calendario") calendarioSchedule;
+
   checked: boolean = true;
 
   fechaActual: Date = new Date();
@@ -58,6 +60,8 @@ export class AgendaComponent implements OnInit {
         locale: "es"
       }
     };
+
+    this.calendarioSchedule.timezone = "local";
 
     this.events = [];
     sessionStorage.removeItem("eventoEdit");
@@ -238,6 +242,7 @@ export class AgendaComponent implements OnInit {
       sessionStorage.setItem("calendarios", JSON.stringify(this.calendarios));
       sessionStorage.setItem("eventoEdit", JSON.stringify(evento));
       sessionStorage.setItem("modoEdicion", "true");
+      sessionStorage.setItem("modoEdicionEventoByAgenda", "false");
       this.router.navigate(["/fichaEventos"]);
     }
   }

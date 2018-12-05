@@ -700,29 +700,29 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = "120";
     let derechoAcceso;
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisosTree = JSON.parse(data.body);
-        let permisosArray = permisosTree.permisoItems;
-        derechoAcceso = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        if (derechoAcceso == 3) {
-          this.activacionEditar = true;
-        } else if (derechoAcceso == 2) {
-          this.activacionEditar = false;
-        } else {
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
-          this.router.navigate(["/errorAcceso"]);
-        }
-      }
-    );
+    // this.sigaServices.post("acces_control", controlAcceso).subscribe(
+    //   data => {
+    //     let permisosTree = JSON.parse(data.body);
+    //     let permisosArray = permisosTree.permisoItems;
+    //     derechoAcceso = permisosArray[0].derechoacceso;
+    //   },
+    //   err => {
+    //     console.log(err);
+    //   },
+    //   () => {
+    //     if (derechoAcceso == 3) {
+    //       this.activacionEditar = true;
+    //     } else if (derechoAcceso == 2) {
+    //       this.activacionEditar = false;
+    //     } else {
+    //       sessionStorage.setItem("codError", "403");
+    //       sessionStorage.setItem(
+    //         "descError",
+    //         this.translateService.instant("generico.error.permiso.denegado")
+    //       );
+    //       this.router.navigate(["/errorAcceso"]);
+    //     }
+    //   }
+    // );
   }
 }

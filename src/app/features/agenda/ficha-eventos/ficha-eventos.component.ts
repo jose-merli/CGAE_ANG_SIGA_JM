@@ -46,8 +46,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   @ViewChild("tableAsistencia")
   tableAsistencia: DataTable;
 
-  @ViewChild("table")
-  table: DataTable;
+  @ViewChild("tableNotifications")
+  tableNotifications: DataTable;
 
   @ViewChild("autocomplete")
   autoComplete: AutoComplete;
@@ -59,6 +59,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   fechaFin: Calendar;
 
   //Generales
+  disabledTipoEvento: boolean = false;
   comboCalendars;
   comboTipoEvento;
   selectRepeatDate;
@@ -74,26 +75,33 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   invalidDateMinEditionMode: Date;
   invalidDateMaxEditionMode: Date;
   comboEstados: any[];
+  createEvent: boolean = false;
+  checkFechaInicioRepeticion: boolean = false;
+  checkFechaFinRepeticion: boolean = false;
+  checkTipoRepeticion: boolean = false;
+  checkTipoDiasRepeticion: boolean = false;
 
   valorTipoGeneral = "1";
   valorTipoLaboral = "2";
   valorTipoFormacion = "3";
+  valorTipoEventoFestivo = "9";
+  valorTipoEventoGeneral = "1";
 
   //Notificaciones
-  selectedDatos;
-  selectMultiple: boolean = false;
+  selectedDatosNotifications;
+  selectMultipleNotifications: boolean = false;
+  selectAllNotifications: any;
+  datosNotificaciones = [];
+  selectedNotification: number = 10;
+  numSelectedNotification: number = 0;
   rowsPerPage: any = [];
-  cols: any = [];
-  datos: any[];
-  selectedItem: number = 10;
+  colsNotifications: any = [];
   sortO: number = 1;
-  numSelected: number = 0;
 
   historico: boolean = false;
   openFicha: boolean = false;
   progressSpinner: boolean = false;
   closeFicha: boolean = true;
-  selectAllNotifications: any;
 
   //Formadores
   datosFormadores: any[] = [];
@@ -108,7 +116,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   //Asistencia
   colsAsistencia;
   fichasPosibles;
-  selectedItemAsistencia;
   datosAsistencia = [];
   selectedDatosAsistencia;
   selectAllAsistencias: any;
@@ -138,9 +145,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
     this.newEvent = new EventoItem();
     this.initEvent = new EventoItem();
-    this.idCalendario = JSON.parse(
-      sessionStorage.getItem("calendarioEdit")
-    ).idCalendario;
 
     //Se comprueba de que pantalla llega y el modo Edicion/creacion
 
@@ -149,13 +153,19 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       //Indicamos que estamos en modo edicion
       this.modoEdicionEventoByAgenda = true;
 
+      //Indicamos que el evento ya esta creado para que pueda acceder a todas las tarjetas
+      this.createEvent = true;
+
       //Obtenemos el evento que recibimos de la pantalla calendario
       this.newEvent = JSON.parse(sessionStorage.getItem("eventoEdit"));
       this.newEvent.idTipoCalendario = JSON.parse(
         sessionStorage.getItem("calendarioEdit")
       ).idTipoCalendario;
 
+      this.idCalendario = this.newEvent.idCalendario;
+
       this.modoEdicionEvento = true;
+      this.disabledTipoEvento = true;
 
       this.newEvent.start = new Date(this.newEvent.start);
       this.newEvent.end = new Date(this.newEvent.end);
@@ -167,30 +177,39 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
 
       //Se genera el combo tipo de Calendario,
-      //Si el evento no pertenece al calendario de formacion se genera el combo con solo laboral-general
+      //Si el evento pertenece al calendario formacion
       if (this.newEvent.idTipoCalendario == this.valorTipoFormacion) {
         this.getComboCalendar();
         this.limitTimeEvent();
 
-        this.newEvent.fechaInicioRepeticion = new Date(
-          this.newEvent.fechaInicioRepeticion
-        );
+        if (this.newEvent.fechaInicioRepeticion != null) {
+          this.newEvent.fechaInicioRepeticion = new Date(
+            this.newEvent.fechaInicioRepeticion
+          );
+        }
 
-        this.newEvent.fechaFinRepeticion = new Date(
-          this.newEvent.fechaFinRepeticion
-        );
-        //Pertenece al calendario formacion
+        if (this.newEvent.fechaFinRepeticion != null) {
+          this.newEvent.fechaFinRepeticion = new Date(
+            this.newEvent.fechaFinRepeticion
+          );
+        }
+
+        //si no pertenece al calendario de formacion se genera el combo con solo laboral-general
       } else if (this.newEvent.idTipoCalendario == this.valorTipoGeneral) {
         this.getComboCalendarLaboralGeneral();
         this.limitTimeEvent();
 
-        this.newEvent.fechaInicioRepeticion = new Date(
-          this.newEvent.fechaInicioRepeticion
-        );
+        if (this.newEvent.fechaInicioRepeticion != null) {
+          this.newEvent.fechaInicioRepeticion = new Date(
+            this.newEvent.fechaInicioRepeticion
+          );
+        }
 
-        this.newEvent.fechaFinRepeticion = new Date(
-          this.newEvent.fechaFinRepeticion
-        );
+        if (this.newEvent.fechaFinRepeticion != null) {
+          this.newEvent.fechaFinRepeticion = new Date(
+            this.newEvent.fechaFinRepeticion
+          );
+        }
       } else {
         this.getComboCalendarLaboralGeneral();
       }
@@ -199,14 +218,21 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       if (this.newEvent.idTipoCalendario == this.valorTipoLaboral) {
         this.selectedTipoLaboral = true;
         this.getComboPartidoJudicial();
-        //Si no, el lugar se introduce manualmente
+
+        //Obligamos al estado a ser Festivo
+        this.newEvent.idTipoEvento = this.valorTipoEventoFestivo;
+        //Si no, el lugar se introduce manualmente porque estamos en calendario general
       } else {
         this.selectedTipoLaboral = false;
+        this.newEvent.idTipoEvento = this.valorTipoEventoGeneral;
       }
+
+      this.getEventNotifications();
 
       //2. En caso de venir de agenda pero en modo creación
     } else if (sessionStorage.getItem("modoEdicionEventoByAgenda") == "false") {
       this.modoEdicionEventoByAgenda = false;
+      this.disabledTipoEvento = true;
       // this.modoEdicionEvento = true;
       this.newModeConfiguration();
 
@@ -216,7 +242,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       //3. En caso de venir de la pantalla Formacion
     } else if (sessionStorage.getItem("isFormacionCalendar") == "true") {
       this.isFormacionCalendar = true;
+      this.disabledTipoEvento = true;
       this.idCurso = sessionStorage.getItem("idCurso");
+      // this.idCalendario =
 
       //Carga los formadores que pertenecen al curso que se va a crear el evento
       this.getTrainers();
@@ -238,24 +266,54 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
       //4. En caso de que venga notificaciones
     } else if (sessionStorage.getItem("isNotificaciones") == "true") {
+      //Se deja la pantalla tal como estaba
       this.newEvent = JSON.parse(sessionStorage.getItem("evento"));
       sessionStorage.removeItem("evento");
+
+      this.historico = JSON.parse(sessionStorage.getItem("historico"));
+      sessionStorage.removeItem("historico");
+
+      if (this.historico) {
+        this.datosNotificaciones = JSON.parse(
+          sessionStorage.getItem("notificaciones")
+        );
+        sessionStorage.removeItem("notificaciones");
+      } else {
+        this.getEventNotifications();
+      }
+
+      this.fichasPosibles[1].activa = true;
+
+      this.getComboCalendar();
+
+      //Indicamos que el evento ya esta creado para que pueda acceder a todas las tarjetas
+      this.createEvent = true;
+
+      this.disabledTipoEvento = true;
 
       this.newEvent.start = new Date(this.newEvent.start);
 
       this.newEvent.end = new Date(this.newEvent.end);
 
-      this.newEvent.fechaInicioRepeticion = new Date(
-        this.newEvent.fechaInicioRepeticion
-      );
+      if (this.newEvent.fechaInicioRepeticion) {
+        this.newEvent.fechaInicioRepeticion = new Date(
+          this.newEvent.fechaInicioRepeticion
+        );
+      }
 
-      this.newEvent.fechaFinRepeticion = new Date(
-        this.newEvent.fechaFinRepeticion
-      );
+      if (this.newEvent.fechaFinRepeticion) {
+        this.newEvent.fechaFinRepeticion = new Date(
+          this.newEvent.fechaFinRepeticion
+        );
+      }
 
       this.newEvent.idTipoCalendario = JSON.parse(
         sessionStorage.getItem("calendarioEdit")
       ).idTipoCalendario;
+
+      this.idCalendario = JSON.parse(
+        sessionStorage.getItem("calendarioEdit")
+      ).idCalendario;
 
       //Indicamos que estamos en modo edicion
       this.modoEdicionEventoByAgenda = true;
@@ -270,15 +328,13 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     } else {
       this.isFormacionCalendar = false;
       this.newEvent = new EventoItem();
+      this.disabledTipoEvento = false;
       //Obligamos que el tipo de evento sea Manual
       this.newEvent.idTipoEvento = "1";
       this.modoEdicionEvento = false;
 
       this.getComboCalendar();
     }
-
-    //Se cargan las notificaciones
-    this.getEventNotifications();
   }
 
   ngOnDestroy() {
@@ -314,9 +370,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
     //Indicamos que no estamos en modo edicion
     this.modoEdicionEventoByAgenda = false;
-
-    //Obligamos que el tipo de evento sea Manual
-    this.newEvent.idTipoEvento = "1";
 
     this.limitTimeEvent();
   }
@@ -478,8 +531,10 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     if (event == this.valorTipoLaboral) {
       this.selectedTipoLaboral = true;
       this.newEvent.tipoDiasRepeticion = null;
+      this.newEvent.idTipoEvento = this.valorTipoEventoFestivo;
     } else {
       this.selectedTipoLaboral = false;
+      this.newEvent.idTipoEvento = this.valorTipoEventoGeneral;
     }
   }
 
@@ -494,14 +549,25 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
     this.sigaServices.post(url, this.newEvent).subscribe(
       data => {
-        if (url == "fichaEventos_updateEventCalendar") {
-          this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
-          this.progressSpinner = false;
-          this.showSuccess();
+        if (JSON.parse(data.body).error.description != null) {
+          this.showUnSuccessBBDD();
         } else {
-          this.progressSpinner = false;
-          this.showSuccess();
-          this.modoEdicionEventoByAgenda = true;
+          if (url == "fichaEventos_updateEventCalendar") {
+            this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
+            this.progressSpinner = false;
+            this.showSuccess();
+          } else {
+            this.progressSpinner = false;
+            this.showSuccess();
+            this.modoEdicionEventoByAgenda = true;
+            this.createEvent = true;
+            //Obtenemos las notificaciones del evento del calendario especifico, dentro del message se ha guardado el idEvento creado
+            if (JSON.parse(data.body).id != "") {
+              let idEvento = JSON.parse(data.body).id;
+              this.newEvent.idEvento = idEvento;
+              this.getEventNotifications();
+            }
+          }
         }
       },
       err => {
@@ -518,19 +584,33 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.newEvent = JSON.parse(JSON.stringify(this.initEvent));
     this.newEvent.start = new Date(this.newEvent.start);
     this.newEvent.end = new Date(this.newEvent.end);
+    this.checkFechaInicioRepeticion = false;
+    this.checkFechaFinRepeticion = false;
+    this.checkTipoRepeticion = false;
+    this.checkTipoDiasRepeticion = false;
 
     this.newEvent.tipoDiasRepeticion = undefined;
     if (this.newEvent.idTipoCalendario == this.valorTipoLaboral) {
       this.newEvent.fechaInicioRepeticion = undefined;
       this.newEvent.fechaFinRepeticion = undefined;
+
     } else {
-      this.newEvent.fechaInicioRepeticion = new Date(
-        this.newEvent.fechaInicioRepeticion
-      );
-      this.newEvent.fechaFinRepeticion = new Date(
-        this.newEvent.fechaFinRepeticion
-      );
+      if (this.newEvent.fechaInicioRepeticion != null) {
+        this.newEvent.fechaInicioRepeticion = new Date(
+          this.newEvent.fechaInicioRepeticion
+        );
+      }
+
+      if (this.newEvent.fechaFinRepeticion != null) {
+        this.newEvent.fechaFinRepeticion = new Date(
+          this.newEvent.fechaFinRepeticion
+        );
+      }
     }
+
+    // if(this.newEvent.tipoDiasRepeticion == "L"){
+
+    // }
   }
 
   selectInvalidDates() {
@@ -617,19 +697,86 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   validateForm() {
+    let validateFormDatos: boolean = false;
+    let validateFormRepeticion: boolean = false;
+
     if (
-      this.newEvent.idTipoCalendario == null ||
-      this.newEvent.idTipoCalendario == undefined ||
-      this.newEvent.title == null ||
-      this.newEvent.title == undefined ||
-      this.newEvent.start == null ||
-      this.newEvent.start == undefined ||
-      this.newEvent.end == undefined ||
-      this.newEvent.end == null
+      !(
+        this.newEvent.idTipoCalendario == null ||
+        this.newEvent.idTipoCalendario == undefined ||
+        this.newEvent.title == null ||
+        this.newEvent.title == undefined ||
+        this.newEvent.start == null ||
+        this.newEvent.start == undefined ||
+        this.newEvent.end == undefined ||
+        this.newEvent.end == null
+      )
     ) {
-      return true;
+      validateFormDatos = true;
+    }
+
+    if (
+      (validateFormDatos && this.checkFechaInicioRepeticion) ||
+      (validateFormDatos && this.checkFechaFinRepeticion) ||
+      (validateFormDatos && this.checkTipoRepeticion) ||
+      (validateFormDatos && this.checkTipoDiasRepeticion)
+    ) {
+      if (
+        !(
+          this.newEvent.fechaInicioRepeticion == null ||
+          this.newEvent.fechaInicioRepeticion == undefined ||
+          this.newEvent.fechaFinRepeticion == null ||
+          this.newEvent.fechaFinRepeticion == undefined ||
+          this.newEvent.valoresRepeticion == undefined ||
+          this.newEvent.valoresRepeticion == null ||
+          this.newEvent.tipoRepeticion == undefined ||
+          this.newEvent.tipoRepeticion == null
+        )
+      ) {
+        validateFormRepeticion = true;
+      } else {
+        validateFormRepeticion = false;
+      }
     } else {
+      validateFormRepeticion = true;
+    }
+
+    if (validateFormDatos && validateFormRepeticion) {
       return false;
+    } else {
+      return true;
+    }
+  }
+
+  isCheckFechaInicioRepeticion() {
+    if (this.newEvent.fechaInicioRepeticion != null) {
+      this.checkFechaInicioRepeticion = true;
+    } else {
+      this.checkFechaInicioRepeticion = false;
+    }
+  }
+
+  isCheckFechaFinRepeticion() {
+    if (this.newEvent.fechaFinRepeticion != null) {
+      this.checkFechaFinRepeticion = true;
+    } else {
+      this.checkFechaFinRepeticion = false;
+    }
+  }
+
+  isCheckTipoRepeticion() {
+    if (this.newEvent.tipoRepeticion != null) {
+      this.checkTipoRepeticion = true;
+    } else {
+      this.checkTipoRepeticion = false;
+    }
+  }
+
+  isCheckTipoDiasRepeticion() {
+    if (this.newEvent.tipoDiasRepeticion != null) {
+      this.checkTipoDiasRepeticion = true;
+    } else {
+      this.checkTipoDiasRepeticion = false;
     }
   }
 
@@ -648,7 +795,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   //FUNCIONES FICHA NOTIFICACIONES
 
   getColsResults() {
-    this.cols = [
+    this.colsNotifications = [
       {
         field: "nombreTipoNotificacion",
         header: "formacion.datosNotificaciones.tipoNotificacion.cabecera"
@@ -693,12 +840,12 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
     this.sigaServices
       .getParam(
-        "fichaCalendario_getEventNotifications",
-        "?idCalendario=" + this.idCalendario
+        "fichaEventos_getEventNotifications",
+        "?idEvento=" + this.newEvent.idEvento
       )
       .subscribe(
         n => {
-          this.datos = n.eventNotificationItems;
+          this.datosNotificaciones = n.eventNotificationItems;
           this.progressSpinner = false;
         },
         err => {
@@ -716,27 +863,33 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   irEditarNotificacion(id) {
-    if (id.length >= 1 && this.selectMultiple == false) {
+    if (id.length >= 1 && this.selectMultipleNotifications == false) {
       sessionStorage.setItem("modoEdicionNotify", "true");
       sessionStorage.removeItem("notifySelected");
       sessionStorage.setItem("notifySelected", JSON.stringify(id));
       sessionStorage.setItem("evento", JSON.stringify(this.newEvent));
+      sessionStorage.setItem(
+        "notificaciones",
+        JSON.stringify(this.datosNotificaciones)
+      );
+      sessionStorage.setItem("historico", JSON.stringify(this.historico));
       this.router.navigate(["/editarNotificacion"]);
       sessionStorage.setItem("fichaAbierta", "true");
     }
   }
 
-  actualizaSeleccionados(selectedDatos) {
-    this.numSelected = selectedDatos.length;
+  actualizaSeleccionadosNotifications(selectedDatosNotifications) {
+    this.numSelectedNotification = selectedDatosNotifications.length;
   }
 
-  onChangeRowsPerPages(event) {
-    this.selectedItem = event.value;
+  onChangeRowsPerPagesNotifications(event) {
+    this.selectedNotification = event.value;
     this.changeDetectorRef.detectChanges();
-    this.table.reset();
+    this.tableNotifications.reset();
   }
 
   newNotification() {
+    sessionStorage.setItem("notificacionByEvento", "true");
     sessionStorage.setItem("modoEdicionNotify", "false");
     sessionStorage.setItem("fichaAbierta", "true");
     sessionStorage.setItem("evento", JSON.stringify(this.newEvent));
@@ -745,44 +898,43 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   onChangeSelectAllNotifications() {
     if (this.selectAllNotifications === true) {
-      this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+      this.selectMultipleNotifications = true;
+      this.selectedDatosNotifications = this.datosNotificaciones;
+      this.numSelectedNotification = this.datosNotificaciones.length;
     } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
+      this.selectedDatosNotifications = [];
+      this.numSelectedNotification = 0;
+      this.selectMultipleNotifications = false;
     }
   }
 
-  isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
+  isSelectMultipleNotifications() {
+    this.selectMultipleNotifications = !this.selectMultipleNotifications;
+    if (!this.selectMultipleNotifications) {
+      this.selectedDatosNotifications = [];
+      this.numSelectedNotification = 0;
     } else {
       this.selectAllNotifications = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
+      this.selectedDatosNotifications = [];
+      this.numSelectedNotification = 0;
     }
   }
 
   deleteNotification(selectedDatos) {
     this.progressSpinner = true;
     let deleteNotifications = new NotificacionEventoObject();
-
     selectedDatos.forEach(e => {
       let noti = new NotificacionEventoItem();
       noti = e;
       deleteNotifications.eventNotificationItems.push(noti);
     });
-
     this.sigaServices
       .post("fichaCalendario_deleteNotification", deleteNotifications)
       .subscribe(
         data => {
           this.progressSpinner = false;
           this.getEventNotifications();
-          this.selectMultiple = false;
+          this.selectMultipleNotifications = false;
         },
         err => {
           this.progressSpinner = false;
@@ -798,12 +950,12 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.historico = true;
     this.sigaServices
       .getParam(
-        "fichaCalendario_getHistoricEventNotifications",
-        "?idCalendario=" + this.idCalendario
+        "fichaEventos_getHistoricEventNotifications",
+        "?idEvento=" + this.newEvent.idEvento
       )
       .subscribe(
         n => {
-          this.datos = n.eventNotificationItems;
+          this.datosNotificaciones = n.eventNotificationItems;
           this.progressSpinner = false;
         },
         err => {
@@ -895,7 +1047,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   showInfoTrainers() {
     this.msgs = [];
     this.msgs.push({
-      severity: "success",
+      severity: "info",
       summary: "Información",
       detail: "No hay formadores para este curso."
     });
@@ -1082,7 +1234,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = !fichaPosible.activa;
+    if (this.createEvent) {
+      fichaPosible.activa = !fichaPosible.activa;
+    }
     this.openFicha = !this.openFicha;
   }
 
@@ -1119,6 +1273,15 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       severity: "cancel",
       summary: "Incorrecto",
       detail: "Acción no realizada correctamente"
+    });
+  }
+
+  showUnSuccessBBDD() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "cancel",
+      summary: "Incorrecto",
+      detail: "Se ha producido un error en BBDD contacte con su administrador"
     });
   }
 }

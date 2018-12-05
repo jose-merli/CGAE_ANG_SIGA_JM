@@ -1,15 +1,15 @@
-import { Component, OnInit } from "@angular/core";
-import { SigaServices } from "../../../_services/siga.service";
-import { NotificacionEventoItem } from "../../../models/NotificacionEventoItem";
 import { Location } from "@angular/common";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { EventoItem } from "../../../models/EventoItem";
+import { NotificacionEventoItem } from "../../../models/NotificacionEventoItem";
+import { SigaServices } from "../../../_services/siga.service";
 
 @Component({
   selector: "app-datos-notificaciones",
   templateUrl: "./datos-notificaciones.component.html",
   styleUrls: ["./datos-notificaciones.component.scss"]
 })
-export class DatosNotificacionesComponent implements OnInit {
+export class DatosNotificacionesComponent implements OnInit, OnDestroy {
   fichasPosibles = [
     {
       key: "notify",
@@ -17,6 +17,7 @@ export class DatosNotificacionesComponent implements OnInit {
     }
   ];
 
+  evento: EventoItem;
   comboNotifyType;
   comboAfterBefore;
   comboMeasureUnit;
@@ -25,6 +26,8 @@ export class DatosNotificacionesComponent implements OnInit {
   notification: NotificacionEventoItem;
 
   modoEdicion: boolean;
+  tipoAccesoLectura: boolean = false;
+  notificationLowDate: boolean = false;
   progressSpinner: boolean = false;
   disabledTypeSend: boolean = false;
   disabledSave: boolean = true;
@@ -34,8 +37,6 @@ export class DatosNotificacionesComponent implements OnInit {
   ngOnInit() {
     this.progressSpinner = true;
     this.getCombos();
-
-    let evento: EventoItem = JSON.parse(sessionStorage.getItem("evento"));
 
     //Comprobamos si estamos en modoEdición o en modo Nuevo
     if (sessionStorage.getItem("modoEdicionNotify") == "true") {
@@ -51,15 +52,38 @@ export class DatosNotificacionesComponent implements OnInit {
         );
       }
 
-      this.notification.idEvento = evento.idEvento;
-      this.notification.idCalendario = evento.idCalendario;
+      if (this.notification.fechaBaja != null) {
+        this.notificationLowDate = true;
+      } else {
+        this.notificationLowDate = false;
+      }
+
+      this.generateEvent();
+    } else if (sessionStorage.getItem("notificacionByEvento") == "true") {
+      this.generateEvent();
+
+      this.notification = new NotificacionEventoItem();
+      this.notification.idEvento = this.evento.idEvento;
     } else {
       this.modoEdicion = false;
       this.notification = new NotificacionEventoItem();
       this.notification.idTipoCuando = "1";
       this.notification.idCalendario = sessionStorage.getItem("idCalendario");
-      this.notification.idEvento = evento.idEvento;
-      this.notification.idCalendario = evento.idCalendario;
+    }
+  }
+
+  ngOnDestroy() {
+    sessionStorage.removeItem("notificacionByEvento");
+    sessionStorage.removeItem("notifySelected");
+  }
+
+  generateEvent() {
+    this.evento = JSON.parse(sessionStorage.getItem("evento"));
+
+    if (this.evento.tipoAcceso == 2) {
+      this.tipoAccesoLectura = true;
+    } else {
+      this.tipoAccesoLectura = false;
     }
   }
 

@@ -2431,6 +2431,10 @@ export class FichaColegialComponent implements OnInit {
 
   irTurnoOficio() {
     // this.router.navigate(["/tiposExpedientes"]);
+    let idInstitucion = this.generalBody.idPersona.substr(0,4);
+    let url = (this.sigaServices.getNewSigaUrl() + "SIGA/JGR_DefinirTurnosLetrado.do?&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"");
+    window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
+
   }
   // FIN MÉTODOS PARA SERVICIOS DE INTERÉS
 }
