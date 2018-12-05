@@ -686,43 +686,43 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     this.selectedTemas = [];
   }
 
-  habilitarComboVis() {
-    if (this.activacionEditar) return !this.deshabilitarCombVis;
-    else return true;
-  }
+  // habilitarComboVis() {
+  //   if (this.activacionEditar) return !this.deshabilitarCombVis;
+  //   else return true;
+  // }
 
-  habilitarComboCol() {
-    if (this.activacionEditar) return !this.deshabilitarCombCol;
-    else return true;
-  }
+  // habilitarComboCol() {
+  //   if (this.activacionEditar) return !this.deshabilitarCombCol;
+  //   else return true;
+  // }
 
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = "120";
     let derechoAcceso;
-    // this.sigaServices.post("acces_control", controlAcceso).subscribe(
-    //   data => {
-    //     let permisosTree = JSON.parse(data.body);
-    //     let permisosArray = permisosTree.permisoItems;
-    //     derechoAcceso = permisosArray[0].derechoacceso;
-    //   },
-    //   err => {
-    //     console.log(err);
-    //   },
-    //   () => {
-    //     if (derechoAcceso == 3) {
-    //       this.activacionEditar = true;
-    //     } else if (derechoAcceso == 2) {
-    //       this.activacionEditar = false;
-    //     } else {
-    //       sessionStorage.setItem("codError", "403");
-    //       sessionStorage.setItem(
-    //         "descError",
-    //         this.translateService.instant("generico.error.permiso.denegado")
-    //       );
-    //       this.router.navigate(["/errorAcceso"]);
-    //     }
-    //   }
-    // );
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (derechoAcceso == 3) {
+          this.activacionEditar = false;
+        } else if (derechoAcceso == 2) {
+          this.activacionEditar = true;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+    );
   }
 }
