@@ -32,28 +32,19 @@
           <div class="d-flex justify-content-between">
             <label
               >{{ "censo.fichaCliente.literal.identificacion" | translate }}
-              <span>{{ generalBody.nif }}</span>
-            </label>
-            <label
-              >{{
-                "gratuita.mantenimientoTablasMaestra.literal.apellidos"
-                  | translate
-              }}
-              <span
-                >{{ generalBody.apellidos1 }} {{ generalBody.apellidos2 }}</span
-              >
+              <span>{{ body.nif }}</span>
             </label>
             <label
               >{{
                 "administracion.parametrosGenerales.literal.nombre" | translate
               }}
-              <span>{{ generalBody.soloNombre }}</span>
+              <span>{{ body.nombre }}</span>
             </label>
             <label
               >{{
                 "censo.consultaDatosColegiacion.literal.fechaNac" | translate
               }}
-              <span>{{ generalBody.fechaNacimiento }}</span>
+              <span>{{ body.fechaNacimiento }}</span>
             </label>
           </div>
         </div>
@@ -95,6 +86,7 @@
                   class="select-form"
                   [options]="tipoSancion"
                   [(ngModel)]="body.tipoSancion"
+                  (onChange)="onChangeTipoSancion($event)"
                 ></p-dropdown>
               </div>
               <div class="form-group col-lg-12 col-md-12">
@@ -107,6 +99,7 @@
                   class="form-control"
                   pInputText
                   [(ngModel)]="body.refColegio"
+                  [(disabled)]="isNew"
                 />
               </div>
               <div class="form-group col-lg-12 col-md-12">
@@ -121,10 +114,11 @@
                   class="select-form"
                   [options]="estado"
                   [(ngModel)]="body.estado"
+                  [(disabled)]="isNew"
                 ></p-dropdown>
               </div>
 
-              <div class="form-group col-lg-12 col-md-12">
+              <div class="form-group col-lg-12 col-md-12" *ngIf="!hideMulta">
                 <label>{{
                   "busquedaSanciones.detalleSancion.multa.literal" | translate
                 }}</label>
@@ -133,6 +127,7 @@
                   class="form-control"
                   pInputText
                   [(ngModel)]="body.multa"
+                  [(disabled)]="isNew"
                 />
               </div>
             </div>
@@ -152,6 +147,7 @@
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaAcuerdo"
+                  [(disabled)]="isNew"
                 ></p-calendar>
               </div>
               <div class="form-group col-lg-6 col-md-6">
@@ -164,6 +160,7 @@
                   name="chkFirmeza"
                   [(ngModel)]="body.chkFirmeza"
                   binary="true"
+                  [(disabled)]="isNew"
                 ></p-checkbox>
               </div>
               <div class="form-group col-lg-6 col-md-6">
@@ -178,6 +175,7 @@
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaFirmeza"
+                  [(disabled)]="isNew"
                 ></p-calendar>
               </div>
 
@@ -191,6 +189,7 @@
                   name="chkFirmeza"
                   [(ngModel)]="body.chkFirmeza"
                   binary="true"
+                  [(disabled)]="isNew"
                 ></p-checkbox>
               </div>
               <div class="form-group col-lg-6 col-md-6">
@@ -205,6 +204,7 @@
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaDesde"
+                  [(disabled)]="isNew"
                 ></p-calendar>
               </div>
 
@@ -218,6 +218,7 @@
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaHasta"
+                  [(disabled)]="isNew"
                 ></p-calendar>
               </div>
               <div class="form-group col-lg-6 col-md-6">
@@ -234,6 +235,7 @@
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaRehabilitado"
+                  [(disabled)]="isNew"
                 ></p-calendar>
               </div>
 
@@ -249,6 +251,7 @@
                     name="chkRehabilitado"
                     [(ngModel)]="body.chkRehabilitado"
                     binary="true"
+                    [(disabled)]="isNew"
                   ></p-checkbox>
                 </label>
               </div>
@@ -265,6 +268,7 @@
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaArchivada"
+                  [(disabled)]="isNew"
                 ></p-calendar>
               </div>
             </div>
@@ -335,6 +339,7 @@
                   [cols]="10"
                   pInputTextarea
                   [(ngModel)]="body.texto"
+                  [(disabled)]="isNew"
                 ></textarea>
               </div>
             </div>
@@ -350,6 +355,7 @@
                   [cols]="10"
                   pInputTextarea
                   [(ngModel)]="body.observaciones"
+                  [(disabled)]="isNew"
                 ></textarea>
               </div>
             </div>

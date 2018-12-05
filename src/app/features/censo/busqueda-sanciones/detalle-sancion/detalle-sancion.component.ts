@@ -28,6 +28,8 @@ export class DetalleSancionComponent implements OnInit {
   tipoSancion: SelectItem[];
   estado: SelectItem[];
   existeImagen: boolean = false;
+  hideMulta: boolean = false;
+  isNew: boolean = true;
   colegios: any;
   es: any = esCalendar;
   imagenPersona: any;
@@ -89,6 +91,15 @@ export class DetalleSancionComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  onChangeTipoSancion(event) {
+    console.log("event", event);
+    if (event.value != 10) {
+      this.hideMulta = true;
+    } else {
+      this.hideMulta = false;
+    }
   }
 
   restore() {
