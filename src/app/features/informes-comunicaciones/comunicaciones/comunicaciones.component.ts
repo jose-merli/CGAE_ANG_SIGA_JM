@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, HostListener } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { ComunicacionesItem } from '../../../models/ComunicacionesItem';
+import { ComunicacionesSearchItem } from '../../../models/ComunicacionesSearchItem';
+import { ComunicacionesObject } from '../../../models/ComunicacionesObject';
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { SigaServices } from "./../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
@@ -35,7 +37,10 @@ export class ComunicacionesComponent implements OnInit {
   es: any = esCalendar;
   showProgramar: boolean = false;
   bodyProgramar: ProgramarItem = new ProgramarItem();
-
+  eliminarArray: any[];
+  progressSpinner: boolean = false;
+  searchComunicaciones: ComunicacionesObject = new ComunicacionesObject();
+  bodySearch: ComunicacionesSearchItem = new ComunicacionesSearchItem();
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -138,7 +143,7 @@ export class ComunicacionesComponent implements OnInit {
     }
   }
 
-  onBuscar() {
+  buscar() {
     this.showResultados = true;
     sessionStorage.removeItem("comunicacionesSearch")
     this.getResultados();
@@ -147,9 +152,32 @@ export class ComunicacionesComponent implements OnInit {
 
   getResultados() {
     this.datos = [
-      { id: '1', asunto: 'prueba' }
+      { idEstado: '1', idEnvio: '1', fechaProgramada: '12/12/2018', asunto: 'hola' }
     ]
+
+    this.sigaServices
+      .postPaginado("enviosMasivos_search", "?numPagina=1", this.bodySearch)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.searchComunicaciones = JSON.parse(data["body"]);
+          this.datos = this.searchComunicaciones.comunicacionesItem;
+          this.body = this.datos[0];
+          this.datos.forEach(element => {
+            element.fechaProgramada = new Date(element.fechaProgramada);
+            element.fechaCreacion = new Date(element.fechaCreacion);
+          });
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => { }
+      );
   }
+
+
+
 
   isButtonDisabled() {
     if (this.body.asunto != '' && this.body.asunto != null) {
@@ -158,12 +186,14 @@ export class ComunicacionesComponent implements OnInit {
     return true;
   }
 
-  onBorrar(dato) {
+  cancelar(dato) {
+
     this.confirmationService.confirm({
-      message: this.translateService.instant("messages.deleteConfirmation"),
+      // message: this.translateService.instant("messages.deleteConfirmation"),
+      message: '¿Está seguro de cancelar los' + dato.length + 'envíos seleccionados',
       icon: "fa fa-trash-alt",
       accept: () => {
-        this.onConfirmarBorrar(dato);
+        this.confirmarCancelar(dato);
       },
       reject: () => {
         this.msgs = [
@@ -179,24 +209,37 @@ export class ComunicacionesComponent implements OnInit {
     });
   }
 
-  onConfirmarBorrar(dato) {
-    if (!this.selectAll) {
-      let x = this.datos.indexOf(dato);
-      this.datos.splice(x, 1);
-      this.selectedDatos = [];
-      this.selectMultiple = false;
-      this.showSuccess('Se ha eliminado el destinatario correctamente')
-    } else {
-      this.selectedDatos = [];
-      this.showSuccess('Se han eliminado los destinatarios correctamente')
-    }
+
+  confirmarCancelar(dato) {
+    this.eliminarArray = [];
+    dato.forEach(element => {
+      let objEliminar = {
+        idEstado: element.idEstado,
+        idEnvio: element.idEnvio,
+        fechaProgramada: new Date(element.fechaProgramada)
+      };
+      this.eliminarArray.push(objEliminar);
+    });
+    this.sigaServices.post("enviosMasivos_cancelar", this.eliminarArray).subscribe(
+      data => {
+        this.showSuccess('Se ha calcelado el envío correctamente');
+      },
+      err => {
+        this.showFail('Error al calcelar el envío');
+        console.log(err);
+      },
+      () => {
+        this.buscar();
+        this.table.reset();
+      }
+    );
   }
 
   //búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      this.onBuscar();
+      this.buscar();
     }
   }
 

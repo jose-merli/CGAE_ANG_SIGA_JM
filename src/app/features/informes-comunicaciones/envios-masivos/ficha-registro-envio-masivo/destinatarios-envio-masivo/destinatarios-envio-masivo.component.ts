@@ -4,6 +4,7 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 import { esCalendar } from "../../../../../utils/calendar";
 import { DataTable } from "primeng/datatable";
 import { DestinatariosEnviosMasivosItem } from '../../../../../models/DestinatariosEnviosMasivosItem';
+import { Message, ConfirmationService } from "primeng/components/common/api";
 
 @Component({
   selector: 'app-destinatarios-envio-masivo',
@@ -17,6 +18,8 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
   etiquetasSeleccionadas: any[];
   etiquetasNoSeleccionadas: any[];
   body: DestinatariosEnviosMasivosItem = new DestinatariosEnviosMasivosItem();
+  msgs: Message[];
+  etiquetasPersonaJuridica: any[];
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -51,17 +54,56 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
 
     this.getDatos();
 
-    this.etiquetasSeleccionadas = [
-      { label: 'Administrador', value: '1' },
-      { label: 'Administrador General', value: '2' }
-    ]
+
+    // this.etiquetasSeleccionadas = [
+    //   { label: 'Administrador', value: '1' },
+    //   { label: 'Administrador General', value: '2' }
+    // ]
     this.etiquetasNoSeleccionadas = [
       { label: 'Grupo Deontológico', value: '1' },
       { label: 'Abogado', value: '2' }
     ]
 
-
   }
+
+
+  // Mensajes
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showInfo(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+  getDestinatarios() {
+    this.sigaServices
+      .post("busquedaPerJuridica_etiquetasPersona", this.body)
+      .subscribe(
+        n => {
+          // coger etiquetas de una persona juridica
+          this.etiquetasSeleccionadas = JSON.parse(n["body"]).combooItems;
+          console.log(this.etiquetasSeleccionadas);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
+
+
 
   abreCierraFicha() {
     if (sessionStorage.getItem("crearNuevoEnvio") == null) {
@@ -91,7 +133,12 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
+      // this.body.idLenguaje = '1';
+      // this.body.idPersona = '1';
+      this.getDestinatarios();
     }
+    this.getDestinatarios();
   }
+
 
 }

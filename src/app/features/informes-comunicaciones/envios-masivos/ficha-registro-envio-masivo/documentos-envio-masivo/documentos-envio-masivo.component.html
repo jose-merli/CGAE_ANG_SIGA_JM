@@ -53,7 +53,7 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
               <span *ngIf="col.field != 'pathDocumento'"> {{dato[col.field]}}</span>
-              <span *ngIf="col.field == 'pathDocumento'" (click)="downloadDocumento(dato)">
+              <span *ngIf="col.field == 'pathDocumento'">
                 <i class="fa fa-download"></i>
               </span>
             </td>
@@ -86,7 +86,7 @@
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button">
         <!-- <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button> -->
-        <p-fileUpload #fubauto chooseLabel="Nuevo" mode="basic" accept=".pdf,.doc,.docx" multiple="multiple" (onSelect)="uploadFile($event)"
+        <p-fileUpload #fubauto chooseLabel="Nuevo" name="file" mode="basic" accept=".pdf,.doc,.docx" multiple="multiple" (onSelect)="uploadFile($event)"
           auto="true">
         </p-fileUpload>
         <button (click)="eliminar(selectedDatos)" *ngIf="selectedDatos && selectedDatos !=''" pButton type="button" icon="far fa-times-circle"

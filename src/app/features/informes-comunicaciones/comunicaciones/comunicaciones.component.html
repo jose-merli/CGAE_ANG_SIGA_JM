@@ -1,3 +1,5 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<app-dialog></app-dialog>
 <div class="modelos-comunicaciones-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -18,7 +20,7 @@
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>Fecha creación</label>
-          <p-calendar [locale]="es" [(ngModel)]="body.fechaCreacion" dateFormat="dd-mm-yy" [utc]="true" icon="far fa-calendar-alt"
+          <p-calendar [locale]="es" [(ngModel)]="body.fechaCreacion" dateFormat="dd/mm/yy" [utc]="true" icon="far fa-calendar-alt"
             showIcon="true"></p-calendar>
         </div>
       </div>
@@ -43,7 +45,7 @@
     </div>
     <div class="card-footer">
       <div class="text-right main-button">
-        <button (click)="onBuscar()" [disabled]="isButtonDisabled()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+        <button (click)="buscar()" [disabled]="isButtonDisabled()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
         <button (click)="onAddComunicacion()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
       </div>
     </div>
@@ -101,7 +103,7 @@
         <div class="text-right main-button">
           <button (click)="isSelectMultiple()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
           <button (click)="onShowProgamar(selectedDatos)" pButton type=" button" icon="fas fa-cog" iconPos="left" label="{{ 'general.boton.programar' | translate}}"></button>
-          <button (click)="onBorrar(selectedDatos)" pButton type=" button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancelar' | translate}}"></button>
+          <button (click)="cancelar(selectedDatos)" pButton type=" button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
         </div>
       </div>
     </div>

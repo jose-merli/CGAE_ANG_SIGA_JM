@@ -52,7 +52,7 @@ export class ModelosComunicacionesComponent implements OnInit {
 
     this.selectedItem = 4;
     this.getComboColegios();
-    this.body.visible = true;
+    // this.body.visible = true;
 
 
 

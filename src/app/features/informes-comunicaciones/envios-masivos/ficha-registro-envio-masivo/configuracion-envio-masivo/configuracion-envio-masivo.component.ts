@@ -146,6 +146,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
       this.editar = true;
+      this.getPlantillas();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     } else {
       this.editar = false;

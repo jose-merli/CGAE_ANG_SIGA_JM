@@ -241,14 +241,16 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
     );
   }
 
-
-
   uploadFile(event: any) {
-    let fileList: FileList = event.target.files;
-    let nombreCompletoArchivo = fileList[0].name;
-    // se almacena el archivo para habilitar boton guardar
+    console.log(event)
+    let fileList: FileList = event.files;
     this.file = fileList[0];
-    console.log(this.file)
+  }
+
+  navigateTo(dato) {
+    if (!this.selectMultiple) {
+      this.downloadDocumento(dato)
+    }
   }
 
 }
