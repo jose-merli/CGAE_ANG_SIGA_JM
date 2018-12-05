@@ -80,19 +80,9 @@
           'general.boton.cancel' | translate}}"></button>
         <button pButton type="button" icon="fas fa-share-square" iconPos="left" label="{{ 'general.boton.reenviar' |
           translate}}"></button>
-        <button pButton type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
+        <button (click)="duplicar()" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
       </div>
     </div>
-  </div>in-button">
-  <button (click)="guardar()" [disabled]="isGuardarDisabled()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-  <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-  <button *ngIf="editar" (click)="cancelar()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{
-          'general.boton.cancel' | translate}}"></button>
-  <button pButton type="button" icon="fas fa-share-square" iconPos="left" label="{{ 'general.boton.reenviar' |
-          translate}}"></button>
-  <button (click)="duplicar()" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
-</div>
-</div>
-</div>
+  </div>
 
 </div>
