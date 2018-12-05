@@ -2,10 +2,9 @@ export class EnviosMasivosItem {
   idInstitucion: String;
   idEnvio: String;
   fechaCreacion: Date;
-  idPlantillasEnvios: String;
+  idPlantillasEnvio: String;
   idEstado: String;
   idTipoEnvios: String;
-  idPlantilla: String;
   nombrePlantilla: String;
   fechaProgramada: Date;
   fechaBaja: Date;

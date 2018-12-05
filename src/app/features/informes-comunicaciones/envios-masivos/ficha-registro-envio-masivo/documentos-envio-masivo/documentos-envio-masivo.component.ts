@@ -5,6 +5,8 @@ import { esCalendar } from "../../../../../utils/calendar";
 import { DataTable } from "primeng/datatable";
 import { DocumentosEnviosMasivosItem } from '../../../../../models/DocumentosEnviosMasivosItem';
 import { Message, ConfirmationService } from "primeng/components/common/api";
+import { TranslateService } from "../../../../../commons/translate/translation.service";
+import { saveAs } from "file-saver/FileSaver";
 
 
 @Component({
@@ -25,6 +27,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   rowsPerPage: any = [];
   body: DocumentosEnviosMasivosItem = new DocumentosEnviosMasivosItem();
   msgs: Message[];
+  file: File = undefined;
 
 
   @ViewChild('table') table: DataTable;
@@ -52,7 +55,8 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
 
   constructor(
     // private router: Router,
-    // private translateService: TranslateService,
+    private translateService: TranslateService,
+    private confirmationService: ConfirmationService,
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef
   ) { }
@@ -63,8 +67,8 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
 
     this.selectedItem = 10;
     this.cols = [
-      { field: 'nombre', header: 'Nombre' },
-      { field: 'enlaceDescarga', header: 'Enlace de descarga' }
+      { field: 'nombreDocumento', header: 'Nombre del documento' },
+      { field: 'pathDocumento', header: 'Enlace de descarga' }
     ]
 
   }
@@ -156,7 +160,8 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
     this.sigaServices.post("enviosMasivos_documentos", this.body.idEnvio).subscribe(
       data => {
         let datos = JSON.parse(data["body"]);
-        this.datos = datos.combooItems;
+        this.datos = datos.documentoEnvioItem;
+        console.log(this.datos)
       },
       err => {
         console.log(err);
@@ -165,6 +170,85 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
 
       }
     );
+  }
+
+  downloadDocumento(dato) {
+    let filename;
+    this.sigaServices
+      .post("enviosMasivos_infoDescargarDocumento", dato)
+      .subscribe(
+        data => {
+          let a = JSON.parse(data["body"]);
+          filename = a.value + a.label;
+        },
+        error => {
+          console.log(error);
+        },
+        () => {
+          this.sigaServices
+            .postDownloadFiles("enviosMasivos_descargarDocumento", dato)
+            .subscribe(data => {
+              const blob = new Blob([data], { type: "text/plain;charset=utf-8" });
+              if (blob.size == 0) {
+                this.showFail("messages.general.error.ficheroNoExiste");
+              } else {
+                //let filename = "2006002472110.pdf";
+                saveAs(data, filename);
+              }
+            });
+        }
+      );
+  }
+
+
+  eliminar(dato) {
+
+    this.confirmationService.confirm({
+      // message: this.translateService.instant("messages.deleteConfirmation"),
+      message: '¿Está seguro de eliminar los documentos?',
+      icon: "fa fa-trash-alt",
+      accept: () => {
+        this.confirmarEliminar(dato);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+
+  confirmarEliminar(dato) {
+    this.sigaServices.post("enviosMasivos_cancelar", dato).subscribe(
+      data => {
+        this.showSuccess('Se ha eliminado el documento correctamente');
+      },
+      err => {
+        this.showFail('Error al eliminado el envío');
+        console.log(err);
+      },
+      () => {
+        this.getDocumentos();
+        this.table.reset();
+      }
+    );
+  }
+
+
+
+  uploadFile(event: any) {
+    let fileList: FileList = event.target.files;
+    let nombreCompletoArchivo = fileList[0].name;
+    // se almacena el archivo para habilitar boton guardar
+    this.file = fileList[0];
+    console.log(this.file)
   }
 
 }

@@ -20,6 +20,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   es: any = esCalendar;
   fecha: Date;
   msgs: Message[];
+  arrayProgramar: any[];
 
 
 
@@ -116,21 +117,6 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
     }
   }
 
-  guardar() {
-    this.sigaServices.post("enviosMasivos_guardarProg", this.body).subscribe(
-      data => {
-        this.showSuccess('Se ha guardado la programación correctamente');
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-      },
-      err => {
-        this.showFail('Error al guardar la programación');
-        console.log(err);
-      },
-      () => {
-
-      }
-    );
-  }
 
   restablecer() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
@@ -140,5 +126,28 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
 
   }
 
+  guardar() {
+    this.arrayProgramar = [];
+    this.arrayProgramar.push(this.body);
+    this.sigaServices.post("enviosMasivos_programar", this.arrayProgramar).subscribe(
+      data => {
+        this.showSuccess('Se ha programado el envío correctamente');
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+      },
+      err => {
+        this.showFail('Error al programar el envío');
+        console.log(err);
+      },
+      () => {
+      }
+    );
+  }
+
+  isGuardarDisabled() {
+    if (this.body.fechaProgramada != null) {
+      return false;
+    }
+    return true;
+  }
 
 }

@@ -4,6 +4,7 @@ import { Location } from "@angular/common";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
+import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-configuracion-envio-masivo',
@@ -178,7 +179,6 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
 
 
   confirmarCancelar() {
-    debugger;
     this.eliminarArray = [];
     let objCancelar = {
       idEstado: this.body.idEstado,
@@ -205,7 +205,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
       data => {
         this.showSuccess('Se ha guardado el envío correctamente');
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        // sessionStorage.removeItem("crearNuevoEnvio");
+        sessionStorage.removeItem("crearNuevoEnvio");
       },
       err => {
         this.showFail('Error al guardar el envío');
@@ -222,6 +222,29 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   restablecer() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
   }
+
+  duplicar() {
+    this.sigaServices.post("enviosMasivos_duplicar", this.body).subscribe(
+      data => {
+        this.showSuccess('Se ha duplicado el envío correctamente');
+      },
+      err => {
+        this.showFail('Error al duplicar el envío');
+        console.log(err);
+      }
+    );
+  }
+
+
+  isGuardarDisabled() {
+    if (this.body.idTipoEnvio != '' && this.body.idTipoEnvio != null && this.body.idPlantillasEnvio != ''
+      && this.body.idPlantillasEnvio != null && this.body.descripcion != '' && this.body.descripcion != null) {
+      return false;
+    }
+    return true;
+  }
+
+
 
 
 

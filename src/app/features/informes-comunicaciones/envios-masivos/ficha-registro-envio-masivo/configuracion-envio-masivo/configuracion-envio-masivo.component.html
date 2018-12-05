@@ -41,18 +41,18 @@
         <div [ngClass]="{'col-lg-12':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-6':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
           <div class="form-row">
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
-              <label>Tipo de envío:</label>
+              <label class="d-block">Tipo de envío *</label>
               <span *ngIf="editar">{{body.tipoEnvio}}</span>
               <p-dropdown *ngIf="!editar" (onChange)="onChangeTipoEnvio()" [options]="tipoEnvios" [(ngModel)]="body.idTipoEnvio" class="select-form"></p-dropdown>
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
-              <label>Plantilla de envío:</label>
+              <label class="d-block">Plantilla de envío *</label>
               <span *ngIf="editar">{{body.idPlantillasEnvio}}</span>
-              <p-dropdown *ngIf="!editar" [disabled]="plantillas && plantillas.length <= 0" [options]="plantillas" [(ngModel)]="body.idPlantilla"
+              <p-dropdown *ngIf="!editar" [disabled]="plantillas && plantillas.length <= 0" [options]="plantillas" [(ngModel)]="body.idPlantillasEnvio"
                 class="select-form"></p-dropdown>
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
-              <label>Descripción</label>
+              <label class="d-block">Descripción *</label>
               <input type="text" class="form-control" [(ngModel)]="body.descripcion" pInputText>
             </div>
           </div>
@@ -74,7 +74,7 @@
     </div>
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button">
-        <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="guardar()" [disabled]="isGuardarDisabled()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
         <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button *ngIf="editar" (click)="cancelar()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{
           'general.boton.cancel' | translate}}"></button>

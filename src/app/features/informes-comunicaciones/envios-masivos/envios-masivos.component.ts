@@ -308,6 +308,7 @@ export class EnviosMasivosComponent implements OnInit {
       }
     );
   }
+
   addEnvio() {
     this.router.navigate(['/fichaRegistroEnvioMasivo']);
     sessionStorage.removeItem("enviosMasivosSearch")
