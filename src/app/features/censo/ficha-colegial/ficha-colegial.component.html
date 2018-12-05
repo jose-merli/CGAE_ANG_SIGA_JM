@@ -220,7 +220,9 @@
         <button (click)="restablecerGenerales()" [disabled]="!activacionRestablecerGenerales()"  pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button *ngIf="!isLetrado" (click)="generalesGuardar()" [(disabled)]="!activarGuardarGenerales" pButton type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button *ngIf="isLetrado" (click)="comprobarAuditoria()" [(disabled)]="!activarGuardarGenerales" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
+        <!-- <button *ngIf="isLetrado" (click)="comprobarAuditoria()" [(disabled)]="!activarGuardarGenerales" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button> -->
+        <button *ngIf="isLetrado" (click)="comprobarAuditoria()" disabled pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+
       </div>
     </div>
   </div>
@@ -748,8 +750,8 @@
     <div *ngIf="esFichaActiva('curriculares')" class="card-footer ">
       <div class="text-right main-button ">
         <!-- <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button> -->
-        <button (click)="deleteCurriculares(W)" pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-        <button (click)="irNuevoCurriculares()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        <button (click)="deleteCurriculares(W)" pButton type="button" [(disabled)]="isLetrado" icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+        <button (click)="irNuevoCurriculares()" pButton type="button" [(disabled)]="isLetrado" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
 
       </div>
     </div>
