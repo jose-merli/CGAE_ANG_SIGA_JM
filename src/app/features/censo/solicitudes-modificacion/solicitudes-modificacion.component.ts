@@ -381,4 +381,44 @@ export class SolicitudesModificacionComponent implements OnInit {
         }
       );
   }
+
+  // Control de fechas
+  getFechaHastaCalendar() {
+    if (
+      this.body.fechaHasta != undefined &&
+      this.body.fechaHasta != undefined
+    ) {
+      let one_day = 1000 * 60 * 60 * 24;
+
+      // convertir fechas en milisegundos
+      let fechaDesde = this.body.fechaHasta.getTime();
+      let fechaHasta = this.body.fechaHasta.getTime();
+      let msRangoFechas = fechaHasta - fechaDesde;
+
+      if (msRangoFechas < 0) this.body.fechaHasta = undefined;
+    }
+
+    return this.body.fechaHasta;
+  }
+
+  getFechaDesdeCalendar() {
+    if (
+      this.body.fechaDesde != undefined &&
+      this.body.fechaDesde != undefined
+    ) {
+      let one_day = 1000 * 60 * 60 * 24;
+
+      // convertir fechas en milisegundos
+      let fechaDesde = this.body.fechaDesde.getTime();
+      let fechaHasta = this.body.fechaDesde.getTime();
+      let msRangoFechas = fechaHasta - fechaDesde;
+
+      if (msRangoFechas < 0) this.body.fechaDesde = undefined;
+
+      // this.body.fechaDesde.setDate(this.body.fechaDesde.getDate() + 1);
+      // this.body.fechaDesde = new Date(this.body.fechaDesde.toString());
+    }
+
+    return this.body.fechaDesde;
+  }
 }

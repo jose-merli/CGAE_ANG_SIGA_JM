@@ -34,5 +34,6 @@ export class BusquedaSancionesItem {
   firmeza: String;
   fechaRehabilitado: Date;
 
+  fechaNacimiento: Date;
   constructor() {}
 }
