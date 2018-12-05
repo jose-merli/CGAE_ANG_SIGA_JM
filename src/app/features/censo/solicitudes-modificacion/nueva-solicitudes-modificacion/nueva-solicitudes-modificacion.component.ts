@@ -542,6 +542,7 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
   }
 
   return() {
+    sessionStorage.removeItem("rowData");
     this.location.back();
   }
 
