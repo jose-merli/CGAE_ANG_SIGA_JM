@@ -245,11 +245,11 @@ export class SigaServices {
     fichaCalendario_getCalendar: "fichaCalendario/getCalendar",
     fichaCalendario_getProfilesPermissions:
       "fichaCalendario/getProfilesPermissions",
-    fichaCalendario_getEventNotifications:
-      "fichaCalendario/getEventNotifications",
+    fichaCalendario_getCalendarNotifications:
+      "fichaCalendario/getCalendarNotifications",
     fichaCalendario_deleteNotification: "fichaCalendario/deleteNotification",
-    fichaCalendario_getHistoricEventNotifications:
-      "fichaCalendario/getHistoricEventNotifications",
+    fichaCalendario_getHistoricCalendarNotifications:
+      "fichaCalendario/getHistoricCalendarNotifications",
     fichaEventos_getTrainersLabels: "fichaEventos/getTrainersLabels",
     fichaEventos_downloadTemplateFile: "fichaEventos/downloadTemplateFile",
     fichaEventos_getCalendars: "fichaEventos/getCalendars",
@@ -261,6 +261,9 @@ export class SigaServices {
     fichaEventos_updateEventCalendar: "fichaEventos/updateEventCalendar",
     fichaEventos_deleteEvent: "fichaEventos/deleteEventCalendar",
     fichaEventos_getJudicialDistrict: "fichaEventos/getJudicialDistrict",
+    fichaEventos_getEventNotifications: "fichaEventos/getEventNotifications",
+    fichaEventos_getHistoricEventNotifications:
+      "fichaEventos/getHistoricEventNotifications",
     fichaCursos_getTrainersCourse: "fichaCursos/getTrainersCourse",
     fichaCursos_deleteTrainersCourse: "fichaCursos/deleteTrainersCourse",
     datosNotificaciones_getTypeNotifications:

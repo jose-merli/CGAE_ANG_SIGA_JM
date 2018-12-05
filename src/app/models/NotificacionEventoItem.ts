@@ -13,4 +13,5 @@ export class NotificacionEventoItem {
   idTipoCuando: string;
   fechaInicio: string;
   fechaFin: string;
+  fechaBaja: string;
 }

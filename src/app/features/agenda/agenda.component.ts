@@ -238,6 +238,7 @@ export class AgendaComponent implements OnInit {
       sessionStorage.setItem("calendarios", JSON.stringify(this.calendarios));
       sessionStorage.setItem("eventoEdit", JSON.stringify(evento));
       sessionStorage.setItem("modoEdicion", "true");
+      sessionStorage.setItem("modoEdicionEventoByAgenda", "false");
       this.router.navigate(["/fichaEventos"]);
     }
   }

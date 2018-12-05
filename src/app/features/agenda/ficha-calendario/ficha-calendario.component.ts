@@ -108,7 +108,7 @@ export class FichaCalendarioComponent implements OnInit {
       this.getCalendar(sessionStorage.getItem("idCalendario"));
       this.saveCalendarFlag = true;
       this.getProfiles();
-      this.getEventNotifications();
+      this.getCalendarNotifications();
     } else {
       this.modoEdicion = false;
       sessionStorage.removeItem("idCalendario");
@@ -156,7 +156,7 @@ export class FichaCalendarioComponent implements OnInit {
           }
           sessionStorage.setItem("idCalendario", body.id);
           this.getProfiles();
-          this.getEventNotifications();
+          this.getCalendarNotifications();
         }
       },
       err => {
@@ -434,16 +434,16 @@ export class FichaCalendarioComponent implements OnInit {
         value: 40
       }
     ];
-    this.getEventNotifications();
+    this.getCalendarNotifications();
   }
 
-  getEventNotifications() {
+  getCalendarNotifications() {
     this.progressSpinner = true;
     this.historico = false;
     let idCalendario = sessionStorage.getItem("idCalendario");
     this.sigaServices
       .getParam(
-        "fichaCalendario_getEventNotifications",
+        "fichaCalendario_getCalendarNotifications",
         "?idCalendario=" + idCalendario
       )
       .subscribe(
@@ -532,7 +532,7 @@ export class FichaCalendarioComponent implements OnInit {
         data => {
           this.progressSpinner = false;
           this.showSuccessDelete();
-          this.getEventNotifications();
+          this.getCalendarNotifications();
           this.selectMultiple = false;
         },
         err => {
@@ -575,13 +575,13 @@ export class FichaCalendarioComponent implements OnInit {
       }
     });
   }
-  getHistoricEventNotifications() {
+  getHistoricCalendarNotifications() {
     this.progressSpinner = true;
     this.historico = true;
     let idCalendario = sessionStorage.getItem("idCalendario");
     this.sigaServices
       .getParam(
-        "fichaCalendario_getHistoricEventNotifications",
+        "fichaCalendario_getHistoricCalendarNotifications",
         "?idCalendario=" + idCalendario
       )
       .subscribe(
