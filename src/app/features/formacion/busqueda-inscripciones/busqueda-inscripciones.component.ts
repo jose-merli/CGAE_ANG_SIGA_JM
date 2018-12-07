@@ -1,40 +1,92 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
+import { MultiSelect } from "primeng/primeng";
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators
+} from "@angular/forms";
+import { DataTable } from "primeng/primeng";
 import { DatosInscripcionItem } from "../../../models/DatosInscripcionItem";
-import { SigaServices } from "../../../_services/siga.service";
-import { DataTable } from "../../../../../node_modules/primeng/primeng";
 import { esCalendar } from "../../../utils/calendar";
+import { AuthenticationService } from "../../../_services/authentication.service";
+import { SigaServices } from "../../../_services/siga.service";
+import { TranslateService } from "../../../commons/translate";
+import { Router } from "@angular/router";
+import { SigaWrapper } from "../../../wrapper/wrapper.class";
+import { USER_VALIDATIONS } from "../../../properties/val-properties";
+import { DatosInscripcionObject } from "../../../models/DatosInscripcionObject";
 
 @Component({
   selector: "app-busqueda-inscripciones",
   templateUrl: "./busqueda-inscripciones.component.html",
   styleUrls: ["./busqueda-inscripciones.component.scss"]
 })
-export class BusquedaInscripcionesComponent implements OnInit {
-  showDatosGenerales;
+export class BusquedaInscripcionesComponent extends SigaWrapper
+  implements OnInit {
+  showDatosGenerales: boolean = true;
+  progressSpinner: boolean = false;
   body: DatosInscripcionItem = new DatosInscripcionItem();
   cols;
+  es: any = esCalendar;
+  formBusqueda: FormGroup;
+  buscar: boolean = false;
+  selectedTemas: any[] = [];
+  datos: any[];
+  numSelected: number = 0;
 
   @ViewChild("table")
   table: DataTable;
+
+  @ViewChild("mySelect")
+  mySelect: MultiSelect;
 
   selectedItem: number = 10;
   rowsPerPage: any = [];
   selectAll: boolean = false;
   selectMultiple: boolean = false;
   selectedDatos;
+  valorCheckPagada: boolean = false;
 
   // COMBOS
   comboVisibilidad: any[];
   comboColegios: any[];
-  comboEstados: any[];
+  comboEstadosCursos: any[];
+  comboEstadosInscripciones: any[];
   comboTemas: any[];
   comboCertificadoEmitido: any[];
   comboCalificacionEmitida: any[];
 
-  constructor(private sigaServices: SigaServices) {}
+  msgs: any;
+  clear: any;
+  sortO: any;
+  cancelarCursos: any;
+  finalizarCursos: any;
+  
+  inscripcionEncontrado = new DatosInscripcionObject();
+
+  constructor(
+    private sigaServices: SigaServices,
+    private formBuilder: FormBuilder,
+    private changeDetectorRef: ChangeDetectorRef,
+    private authenticationService: AuthenticationService,
+    private translateService: TranslateService,
+    private router: Router
+  ) {
+    super(USER_VALIDATIONS);
+    this.formBusqueda = this.formBuilder.group({
+      nombreCurso: new FormControl(null, Validators.minLength(3)),
+      codigoCurso: new FormControl(null, Validators.minLength(3)),
+      nombreApellidosFormador: new FormControl(null, Validators.minLength(3))
+    });
+  }
 
   ngOnInit() {
     this.getCombos();
+  }
+
+  ngAfterViewInit() {
+    this.mySelect.ngOnInit();
   }
 
   /* INICIO IMPLEMENTACIÓN NUEVOS COMBOS */
@@ -42,7 +94,8 @@ export class BusquedaInscripcionesComponent implements OnInit {
   getCombos() {
     this.getComboVisibilidad();
     this.getComboColegios();
-    this.getComboEstados();
+    this.getComboEstadosCursos();
+    this.getComboEstadosInscripciones();
     this.getComboTemas();
     this.getComboCalificacionEmitida();
     this.getComboCertificadoEmitido();
@@ -75,17 +128,32 @@ export class BusquedaInscripcionesComponent implements OnInit {
     );
   }
 
-  getComboEstados() {
+  getComboEstadosCursos() {
     // obtener estados
     this.sigaServices.get("busquedaCursos_estadosCursos").subscribe(
       n => {
-        this.comboEstados = n.combooItems;
-        this.arregloTildesCombo(this.comboEstados);
+        this.comboEstadosCursos = n.combooItems;
+        this.arregloTildesCombo(this.comboEstadosCursos);
       },
       err => {
         console.log(err);
       }
     );
+  }
+
+  getComboEstadosInscripciones() {
+    // obtener estados
+    this.sigaServices
+      .get("busquedaInscripciones_estadosInscripciones")
+      .subscribe(
+        n => {
+          this.comboEstadosInscripciones = n.combooItems;
+          this.arregloTildesCombo(this.comboEstadosInscripciones);
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 
   getComboCertificadoEmitido() {
@@ -98,16 +166,28 @@ export class BusquedaInscripcionesComponent implements OnInit {
   }
 
   getComboCalificacionEmitida() {
-    this.comboCalificacionEmitida = [
-      { label: "Sin Calificación", value: 1 },
-      { label: "Suspenso", value: 2 },
-      { label: "Aprobado", value: 3 },
-      { label: "Bien", value: 4 },
-      { label: "Notable", value: 5 },
-      { label: "Sobresaliente", value: 6 }
-    ];
+    // obtener calificaciones emitidas
+    this.sigaServices
+      .get("busquedaInscripciones_calificacionesEmitidas")
+      .subscribe(
+        n => {
+          this.comboCalificacionEmitida = n.combooItems;
+          this.arregloTildesCombo(this.comboCalificacionEmitida);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    // this.comboCalificacionEmitida = [
+    //   { label: "Sin Calificación", value: 1 },
+    //   { label: "Suspenso", value: 2 },
+    //   { label: "Aprobado", value: 3 },
+    //   { label: "Bien", value: 4 },
+    //   { label: "Notable", value: 5 },
+    //   { label: "Sobresaliente", value: 6 }
+    // ];
 
-    this.arregloTildesCombo(this.comboCalificacionEmitida);
+    // this.arregloTildesCombo(this.comboCalificacionEmitida);
   }
 
   getComboTemas() {
@@ -116,7 +196,7 @@ export class BusquedaInscripcionesComponent implements OnInit {
       n => {
         this.comboTemas = n.combooItems;
         this.arregloTildesCombo(this.comboTemas);
-        // this.mySelect.ngOnInit();
+        this.mySelect.ngOnInit();
       },
       err => {
         console.log(err);
@@ -220,27 +300,27 @@ export class BusquedaInscripcionesComponent implements OnInit {
         header: "formacion.busquedaInscripcion.estadoCurso"
       },
       {
-        field: "inicioCurso",
+        field: "fechaImparticionDesdeFormat",
         header: "formacion.busquedaInscripcion.inicioCurso"
       },
       {
-        field: "finCurso",
+        field: "fechaImparticionHastaFormat",
         header: "formacion.busquedaInscripcion.finCurso"
       },
       {
-        field: "precio",
+        field: "precioCurso",
         header: "form.busquedaCursos.literal.precio"
       },
       {
         field: "fechaSolicitud",
-        header: "censo.nuevaSolicitud.fechaSolicitud"
+        header: "formacion.busquedaInscripcion.fechaSolicitud"
       },
       {
         field: "estadoInscripcion",
-        header: "formacion.fichaInscripcion.estadoInscripcion"
+        header: "formacion.busquedaInscripcion.estadoInscripcion"
       },
       {
-        field: "asistencia",
+        field: "minimaAsistencia",
         header: "formacion.busquedaInscripcion.asistencia"
       },
       {
@@ -267,5 +347,76 @@ export class BusquedaInscripcionesComponent implements OnInit {
         value: 40
       }
     ];
+  }
+
+  //Busca inscripciones según los filtros
+  isBuscar(flagArchivado: boolean) {
+    this.progressSpinner = true;
+    this.buscar = true;
+
+    this.selectAll = false;
+    this.selectMultiple = false;
+
+    this.selectedDatos = "";
+    this.getColsResults();
+    this.filtrosTrim();
+
+    //Rellenamos el array de temas a partir de la estructura del p-multiselect
+    this.body.temas = [];
+    this.selectedTemas.forEach(element => {
+      this.body.temas.push(element.value);
+    });
+
+    this.sigaServices
+      .postPaginado("busquedaInscripciones_search", "?numPagina=1", this.body)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.inscripcionEncontrado = JSON.parse(data["body"]);
+          this.datos = this.inscripcionEncontrado.inscripcionItem;
+          this.table.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  //Elimina los espacios en blancos finales e iniciales de los inputs de los filtros
+  filtrosTrim() {
+    if (this.body.codigoCurso != null) {
+      this.body.codigoCurso = this.body.codigoCurso.trim();
+    }
+
+    if (this.body.nombreCurso != null) {
+      this.body.nombreCurso = this.body.nombreCurso.trim();
+    }
+  }
+
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.selectMultiple = false;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
+  isSelectMultiple() {
+    this.selectMultiple = !this.selectMultiple;
+    if (!this.selectMultiple) {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    } else {
+      this.selectAll = false;
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
   }
 }
