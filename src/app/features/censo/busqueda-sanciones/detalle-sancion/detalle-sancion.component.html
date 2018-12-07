@@ -1,5 +1,3 @@
-<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -127,6 +125,7 @@
                   [locale]="es"
                   [(disabled)]="disabledFechaFirme"
                   (onSelect)="deshabilitarFechas()"
+                  (onInput)="detectDateInput()"
                   icon="far fa-calendar-alt"
                   showIcon="true"
                   dateFormat="dd/mm/yy"
@@ -228,7 +227,6 @@
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaArchivada"
-                  [disabled]="disableFields()"
                 ></p-calendar>
               </div>
               <div class="form-group col-lg-6 col-md-6">
@@ -238,8 +236,8 @@
                 }}</label>
                 <p-checkbox
                   class="displayInit"
-                  name="chkArchivada"
-                  [(ngModel)]="body.chkArchivada"
+                  name="chkArchivadas"
+                  [(ngModel)]="body.chkArchivadas"
                   (onChange)="deshabilitarFechas()"
                   binary="true"
                   [disabled]="disabledChkArchivada"

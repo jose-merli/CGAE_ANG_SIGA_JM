@@ -35,5 +35,7 @@ export class BusquedaSancionesItem {
   fechaRehabilitado: Date;
 
   fechaNacimiento: Date;
+  texto: String;
+  observaciones: String;
   constructor() {}
 }
