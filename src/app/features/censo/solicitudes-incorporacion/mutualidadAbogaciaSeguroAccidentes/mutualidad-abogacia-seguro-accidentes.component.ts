@@ -1,9 +1,19 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, HostListener } from "@angular/core";
-import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+  HostListener
+} from "@angular/core";
+import {
+  FormGroup,
+  FormBuilder,
+  FormControl,
+  Validators
+} from "@angular/forms";
 import { Router } from "@angular/router";
 import { SigaServices } from "../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate";
-
 
 @Component({
   selector: "app-mutualidad-abogacia-seguro-accidentes",
@@ -11,7 +21,6 @@ import { TranslateService } from "../../../../commons/translate";
   styleUrls: ["./mutualidad-abogacia-seguro-accidentes.component.scss"]
 })
 export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
-
   mostrarEstadoSolicitud: boolean = false;
   progressSpinner: boolean = false;
   datosDireccion: boolean = false;
@@ -21,7 +30,13 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
   provincias: any[];
   poblaciones: any[];
   paises: any[];
-
+  msgs: any[];
+  existeImagen: any;
+  deshabilitarDireccion: any;
+  s: any;
+  sl: any;
+  clear: any;
+  onChangePais: any;
 
   constructor(
     private translateService: TranslateService,
@@ -29,19 +44,14 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
     private formBuilder: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
-
     //this.cargarCombos();
-
   }
 
   cargarCombos() {
-
-    this.sigaServices.post("", "").subscribe(result => {
-
-    })
+    this.sigaServices.post("", "").subscribe(result => {});
 
     this.sigaServices.get("solicitudIncorporacion_pais").subscribe(
       result => {
@@ -52,7 +62,6 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
         console.log(error);
       }
     );
-
 
     this.sigaServices.get("integrantes_provincias").subscribe(
       result => {
@@ -66,18 +75,22 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
   }
 
   onChangeProvincia(event) {
-    this.sigaServices.getParam("direcciones_comboPoblacion", "?idProvincia=" + event.value.value).subscribe(result => {
-      this.poblaciones = result.combooItems;
-      this.progressSpinner = false;
-      console.log(this.poblaciones);
-    },
-      error => {
-        console.log(error);
-      }
-    );
+    this.sigaServices
+      .getParam(
+        "direcciones_comboPoblacion",
+        "?idProvincia=" + event.value.value
+      )
+      .subscribe(
+        result => {
+          this.poblaciones = result.combooItems;
+          this.progressSpinner = false;
+          console.log(this.poblaciones);
+        },
+        error => {
+          console.log(error);
+        }
+      );
   }
-
-
 
   abreCierraEstadoSolicitud() {
     this.mostrarEstadoSolicitud = !this.mostrarEstadoSolicitud;
