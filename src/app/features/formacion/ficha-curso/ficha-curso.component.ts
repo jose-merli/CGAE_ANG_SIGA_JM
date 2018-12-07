@@ -10,6 +10,12 @@ import { FormadorCursoObject } from "../../../models/FormadorCursoObject";
 import { ErrorItem } from "../../../models/ErrorItem";
 import { TranslateService } from "../../../commons/translate";
 import { ConfirmationService } from "../../../../../node_modules/primeng/api";
+import { EventoItem } from "../../../models/EventoItem";
+import { AuthenticationService } from "../../../_services/authentication.service";
+import {
+  Droppable,
+  Dropdown
+} from "../../../../../node_modules/primeng/primeng";
 
 @Component({
   selector: "app-ficha-curso",
@@ -40,9 +46,19 @@ export class FichaCursoComponent implements OnInit {
   //Generales
   backgroundColor;
 
+  //para deshabilitar combo de visibilidad
+  deshabilitarCombVis: boolean = false;
+
+  //para deshabilitar combo de colegios
+  deshabilitarCombCol: boolean = false;
+
   //Formadores
   @ViewChild("tableFormadores")
   tableFormadores;
+
+  //Colegios
+  @ViewChild("tableFormadores")
+  colegio: Dropdown;
 
   colsFormadores;
   selectedItemFormadores;
@@ -90,12 +106,13 @@ export class FichaCursoComponent implements OnInit {
     private router: Router,
     private location: Location,
     private translateService: TranslateService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private authenticationService: AuthenticationService
   ) {}
 
   ngOnInit() {
     this.getFichasPosibles();
-    this.getComboVisibilidad();
+    this.getCombosDatosGenerales();
     this.getColsResultsFormadores();
     this.getColsResultsSessions();
     this.getColsResultsCertificates();
@@ -107,6 +124,18 @@ export class FichaCursoComponent implements OnInit {
     if (sessionStorage.getItem("modoEdicionCurso") == "true") {
       this.modoEdicion = true;
       this.curso = JSON.parse(sessionStorage.getItem("cursoSelected"))[0];
+      this.curso.fechaImparticionDesdeDate = this.arreglarFecha(
+        this.curso.fechaImparticionDesde
+      );
+      this.curso.fechaImparticionHastaDate = this.arreglarFecha(
+        this.curso.fechaImparticionHasta
+      );
+      this.curso.fechaInscripcionDesdeDate = this.arreglarFecha(
+        this.curso.fechaInscripcionDesde
+      );
+      this.curso.fechaInscripcionHastaDate = this.arreglarFecha(
+        this.curso.fechaInscripcionHasta
+      );
 
       if (
         (sessionStorage.getItem("formador") != null ||
@@ -124,10 +153,21 @@ export class FichaCursoComponent implements OnInit {
     } else {
       this.modoEdicion = false;
       this.curso = new DatosCursosItem();
+      //Obligamos a que sea el curso nuevo privado
+      this.curso.idVisibilidad = "1";
+      let colegio = 1;
+      this.onChangeSelectVisibilidadObligate(colegio);
     }
   }
 
   //TARJETA DATOS GENERALES
+
+  getCombosDatosGenerales() {
+    this.getComboEstados();
+    this.getComboVisibilidad();
+    this.getComboColegios();
+    this.getTemas();
+  }
 
   getComboVisibilidad() {
     // obtener visibilidad
@@ -135,6 +175,19 @@ export class FichaCursoComponent implements OnInit {
       n => {
         this.comboVisibilidad = n.combooItems;
         this.arregloTildesCombo(this.comboVisibilidad);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getComboColegios() {
+    // obtener colegios
+    this.sigaServices.get("busquedaPer_colegio").subscribe(
+      n => {
+        this.comboColegios = n.combooItems;
+        this.arregloTildesCombo(this.comboColegios);
       },
       err => {
         console.log(err);
@@ -161,6 +214,75 @@ export class FichaCursoComponent implements OnInit {
         color: ""
       }
     ];
+  }
+
+  getComboEstados() {
+    // obtener estados
+    this.sigaServices.get("busquedaCursos_estadosCursos").subscribe(
+      n => {
+        this.comboEstados = n.combooItems;
+        this.arregloTildesCombo(this.comboEstados);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  onChangeSelectVisibilidad(event) {
+    if (event.value == 1) {
+      this.deshabilitarCombCol = true;
+      this.curso.colegio = this.authenticationService.getInstitucionSession();
+    } else {
+      this.deshabilitarCombCol = false;
+    }
+  }
+
+  onChangeSelectVisibilidadObligate(colegio) {
+    if (colegio == 1) {
+      this.deshabilitarCombCol = true;
+      this.curso.colegio = this.authenticationService.getInstitucionSession();
+    } else {
+      this.deshabilitarCombCol = false;
+    }
+  }
+
+  onChangeSelectColegio(event) {
+    if (
+      event.value != "" &&
+      event.value != this.authenticationService.getInstitucionSession()
+    ) {
+      //Si elige un colegio que no es el propio, se deshabilita el combo de visibilidad y se selecciona 'Público' por defecto ya que los privados no deben mostrarse
+      this.deshabilitarCombVis = true;
+      this.curso.idVisibilidad = "0"; //Visibilidad pública
+    } else {
+      this.deshabilitarCombVis = false;
+    }
+  }
+
+  saveCourse() {
+    let url = "";
+
+    if (this.modoEdicion) {
+      //Enviamos al back todos los formadores editados
+      url = "fichaCursos_updateCourse";
+    } else {
+      //Mapeamos el formador que queremos insertar nuevo
+      url = "fichaCursos_saveCourse";
+    }
+
+    this.sigaServices.post(url, this.curso).subscribe(
+      data => {
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  announceCourse(){
+    // this.curso.idEstado 
   }
 
   //TARJETA FORMADORES
@@ -684,23 +806,23 @@ export class FichaCursoComponent implements OnInit {
     this.colsSessions = [
       {
         field: "fechaInicio",
-        header: "administracion.parametrosGenerales.literal.nombre"
+        header: "agenda.fichaEventos.datosGenerales.fechaInicio"
       },
       {
         field: "fechaFin",
-        header: "Rol"
+        header: "agenda.fichaEventos.datosGenerales.fechaFin"
       },
       {
         field: "formadores",
-        header: "Formadores"
+        header: "agenda.fichaEventos.datosFormadores.cabecera"
       },
       {
         field: "lugar",
-        header: "Lugar"
+        header: "agenda.fichaEventos.datosGenerales.lugar"
       },
       {
         field: "estado",
-        header: "Estado"
+        header: "form.busquedaCursos.literal.estado"
       }
     ];
 
@@ -722,6 +844,21 @@ export class FichaCursoComponent implements OnInit {
         value: 40
       }
     ];
+  }
+
+  getSessions() {
+    // this.sigaServices.get("fichaCursos_getSessionsCourse").subscribe(
+    //   n => {
+    //     this.datosSessions = n.eventNotificationItems;
+    //     this.progressSpinner = false;
+    //   },
+    //   err => {
+    //     this.progressSpinner = false;
+    //   },
+    //   () => {
+    //     this.progressSpinner = false;
+    //   }
+    // );
   }
 
   isSelectMultipleSessions() {
@@ -934,5 +1071,19 @@ export class FichaCursoComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  arreglarFecha(fecha) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -1);
+    if (rawDate.length < 14) {
+      let splitDate = rawDate.split("/");
+      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+      fecha = new Date((arrayDate += "T00:00:00.001Z"));
+    } else {
+      fecha = new Date(rawDate);
+    }
+
+    return fecha;
   }
 }

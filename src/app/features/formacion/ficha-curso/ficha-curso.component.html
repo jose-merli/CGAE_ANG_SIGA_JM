@@ -72,23 +72,15 @@
           </div>
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
-              <label>{{ 'form.busquedaCursos.literal.visibilidad' | translate}}</label>
-              <p-dropdown
-                class="select-form"
-                [options]="comboVisibilidad"
-                name="visibilidad"
-                [(ngModel)]="curso.idVisibilidad"
-              ></p-dropdown>
+                <label>{{ 'formacion.fichaCursos.datosGenerales.visibilidad' | translate}}</label>
+                <p-dropdown [disabled]="!modoEdicion" placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form"
+                  [(ngModel)]='curso.idVisibilidad' [options]="comboVisibilidad" [filter]="true" filterBy="label,labelSinTilde"
+                  (onChange)="onChangeSelectVisibilidad($event)"></p-dropdown>
             </div>
             <div class="col-lg-6 col-md-6">
-              <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}</label>
-              <input
-                type="text"
-                class="form-control"
-                pInputText
-                name="colegio"
-                [(ngModel)]="curso.colegio"
-              />
+                <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}</label>
+                <p-dropdown #colegio [disabled]="deshabilitarComboCol" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
+                  [(ngModel)]='curso.colegio' [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeSelectColegio($event)"></p-dropdown>
             </div>
           </div>
           <div class="row mb-4">
@@ -103,14 +95,9 @@
               />
             </div>
             <div class="col-lg-6 col-md-6">
-              <label>{{ 'form.busquedaCursos.literal.estado' | translate }}</label>
-              <input
-                type="text"
-                class="form-control"
-                pInputText
-                name="estado"
-                [(ngModel)]="curso.estado"
-              />
+                <label>{{ 'form.busquedaCursos.literal.estado' | translate}}</label>
+                <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]='curso.idEstado' [options]="comboEstados"
+                [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
             </div>
           </div>
           <div class="row mb-4">
@@ -130,7 +117,28 @@
             <label> <strong>{{ 'formacion.fichaCurso.datosGestion.cabecera' | translate }}</strong> </label>
           </div>
           <div class="row mb-4">
-            <div class="col-lg-12 col-md-12">
+              <div class="col-lg-6 col-md-6">
+                  <label>Fecha Inicio Inscripción</label>
+                  <p-calendar
+                        [locale]="es"
+                        [(ngModel)]="curso.fechaInscripcionDesdeDate"
+                        dateFormat="dd/mm/yy"
+                        icon="far fa-calendar-alt"
+                        showIcon="true"
+                      ></p-calendar>
+              </div>
+              <div class="col-lg-6 col-md-6">
+                  <label>Fecha Fin Inscripción</label>
+                  <p-calendar
+                        [locale]="es"
+                        [(ngModel)]="curso.fechaInscripcionHastaDate"
+                        dateFormat="dd/mm/yy"
+                        icon="far fa-calendar-alt"
+                        showIcon="true"
+                        [minDate]="curso.fechaInscripcionDesdeDate"
+                      ></p-calendar>
+              </div>
+            <!-- <div class="col-lg-12 col-md-12">
               <label class="pt-1">Fecha Inscripción</label>
               <div class="row">
                 <div class="col-lg-12 col-md-12">
@@ -162,10 +170,32 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
           <div class="row mb-4">
-            <div class="col-lg-12 col-md-12">
+            <div class="col-lg-6 col-md-6">
+                <label>Fecha Inicio Impartición</label>
+                <p-calendar
+                      [locale]="es"
+                      [(ngModel)]="curso.fechaImparticionDesdeDate"
+                      dateFormat="dd/mm/yy"
+                      icon="far fa-calendar-alt"
+                      showIcon="true"
+                      [minDate]="curso.fechaInscripcionHastaDate"
+                    ></p-calendar>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <label>Fecha Fin Impartición</label>
+                <p-calendar
+                      [locale]="es"
+                      [(ngModel)]="curso.fechaImparticionHastaDate"
+                      dateFormat="dd/mm/yy"
+                      icon="far fa-calendar-alt"
+                      showIcon="true"
+                      [minDate]="curso.fechaImparticionDesdeDate"
+                    ></p-calendar>
+            </div>
+            <!-- <div class="col-lg-12 col-md-12">
               <label class="pt-1">Fecha Impartición</label>
               <div class="row">
                 <div class="col-lg-12 col-md-12">
@@ -197,16 +227,16 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
-              <label>{{ 'formacion.fichaCursos.datosDeGestion.plazasDisponibles' | translate }}</label>
-              <input
+                <label>{{ 'formacion.fichaCursos.datosDeGestion.plazasDisponibles' | translate}}</label>
+                <input
                 type="text"
                 class="form-control"
                 pInputText
-                name="plazasDisponibles"
+                name="tipo"
                 [(ngModel)]="curso.plazasDisponibles"
               />
             </div>
@@ -322,13 +352,13 @@
           <button (click)="finalizarCursos()" pButton type="button" icon="fa fa-stop" iconPos="left" label="{{'general.boton.finalizar' | translate}}"
            [disabled]="selectedDatos == ''"></button>
         -->
-        <button
+        <!-- <button
           pButton
           type="button"
           icon="fa fa-stop"
           iconPos="left"
           label="{{'general.boton.finalizar' | translate}}"
-        ></button>
+        ></button> -->
 
         <!-- Botón desanunciar -->
         <!--
@@ -341,6 +371,7 @@
           icon="fa fa-bell-slash"
           iconPos="left"
           label="{{'form.busquedaCursos.literal.boton.desanunciar' | translate}}"
+          (click)="announceCourse()"
         ></button>
 
         <!-- Botón anunciar -->
@@ -366,7 +397,7 @@
         ></button>
 
         <!-- Botón guardar -->
-        <!-- <button ppButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button> -->
+        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" (click)="saveCourse()"></button> 
       </div>
     </div>
   </div>
