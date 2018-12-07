@@ -7,6 +7,7 @@ import { Router } from "@angular/router";
 import { BusquedaSancionesItem } from "../../../models/BusquedaSancionesItem";
 import { BusquedaSancionesObject } from "../../../models/BusquedaSancionesObject";
 import { ComboItem } from "./../../../../app/models/ComboItem";
+import { listenToElementOutputs } from "@angular/core/src/view/element";
 
 @Component({
   selector: "app-busqueda-sanciones",
