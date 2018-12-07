@@ -1,10 +1,20 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, HostListener } from "@angular/core";
-import { FormGroup, FormBuilder, FormControl, Validators } from "../../../../../../node_modules/@angular/forms";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+  HostListener
+} from "@angular/core";
+import {
+  FormGroup,
+  FormBuilder,
+  FormControl,
+  Validators
+} from "../../../../../../node_modules/@angular/forms";
 import { Router } from "../../../../../../node_modules/@angular/router";
 import { SigaServices } from "../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate";
 import { Location } from "@angular/common";
-
 
 @Component({
   selector: "app-mutualidad-abogacia-plan-universal",
@@ -12,7 +22,6 @@ import { Location } from "@angular/common";
   styleUrls: ["./mutualidad-abogacia-plan-universal.component.scss"]
 })
 export class MutualidadAbogaciaPlanUniversal implements OnInit {
-
   mostrarEstadoSolicitud: boolean = false;
   progressSpinner: boolean = false;
   datosDireccion: boolean = false;
@@ -27,12 +36,25 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
   paises: any[];
   comboPago: any[];
 
+  msgs: any;
+  existeImagen: any;
+  s: any;
+  sl: any;
+  clear: any;
+  onChangePais: any;
+  guardar: any;
+  valorCheckUsuarioAutomatico: any;
 
-  constructor(private translateService: TranslateService, private sigaServices: SigaServices, private formBuilder: FormBuilder, private changeDetectorRef: ChangeDetectorRef,
-    private router: Router, private location: Location) { }
+  constructor(
+    private translateService: TranslateService,
+    private sigaServices: SigaServices,
+    private formBuilder: FormBuilder,
+    private changeDetectorRef: ChangeDetectorRef,
+    private router: Router,
+    private location: Location
+  ) {}
 
   ngOnInit() {
-
     this.sigaServices.post("mutualidad_getEnums", "").subscribe(
       result => {
         debugger;
@@ -42,12 +64,9 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
         console.log(error);
       }
     );
-
   }
 
   cargarCombos() {
-
-
     /*this.sigaServices.get("mutualidad_getEnums").subscribe(
       result => {
         debugger;
@@ -66,7 +85,6 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
         console.log(error);
       }
     );
-
 
     this.sigaServices.get("integrantes_provincias").subscribe(
       result => {
@@ -87,15 +105,21 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
     }
   }
   onChangeProvincia(event) {
-    this.sigaServices.getParam("direcciones_comboPoblacion", "?idProvincia=" + event.value.value).subscribe(result => {
-      this.poblaciones = result.combooItems;
-      this.progressSpinner = false;
-      console.log(this.poblaciones);
-    },
-      error => {
-        console.log(error);
-      }
-    );
+    this.sigaServices
+      .getParam(
+        "direcciones_comboPoblacion",
+        "?idProvincia=" + event.value.value
+      )
+      .subscribe(
+        result => {
+          this.poblaciones = result.combooItems;
+          this.progressSpinner = false;
+          console.log(this.poblaciones);
+        },
+        error => {
+          console.log(error);
+        }
+      );
   }
 
   abreCierraEstadoSolicitud() {
