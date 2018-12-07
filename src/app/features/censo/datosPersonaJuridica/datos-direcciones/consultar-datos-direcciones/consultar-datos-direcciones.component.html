@@ -152,22 +152,22 @@
           </div>
         </div>
         <br>
-        <div class="card-footer ">
-          <div class="text-right main-button ">
-            <button *ngIf="nuevo == false" (click)="duplicarRegistro()" pButton type="button" [disabled]="desactivaDuplicar()" icon="fa fa-reply-all"
-              iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
-           
-            <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="igualInicio()" label="{{ 'general.boton.restablecer' | translate}}"></button>
+      </div>
+      <div *ngIf="openFicha" class="card-footer ">
+        <div class="text-right main-button ">
+          <button *ngIf="nuevo == false" (click)="duplicarRegistro()" pButton type="button" [disabled]="desactivaDuplicar()" icon="fa fa-reply-all"
+            iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
+         
+          <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="igualInicio()" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        
+          <button *ngIf="!isLetrado" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar()"
+            label="{{ 'general.boton.guardar' | translate}}"></button>
           
-            <button *ngIf="!isLetrado" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar()"
-              label="{{ 'general.boton.guardar' | translate}}"></button>
-            
-            <button *ngIf="isLetrado && !nuevo" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar()"
-              label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
-      
-            <button *ngIf="isLetrado && nuevo" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar()"
-              label="{{ 'general.boton.solicitarNuevo' | translate}}"></button>
-          </div>
+          <button *ngIf="isLetrado" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar()"
+            label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
+<!--       
+          <button *ngIf="isLetrado && nuevo" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar()"
+            label="{{ 'general.boton.solicitarNuevo' | translate}}"></button> -->
         </div>
       </div>
     </div>

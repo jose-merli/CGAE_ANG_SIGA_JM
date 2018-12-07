@@ -113,6 +113,8 @@
             <button *ngIf="isLetrado == false" (click)="guardarCv()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar()" label="{{ 'general.boton.guardar' | translate}}"></button>
             <button *ngIf="solicitaModificacion()" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar()" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
             <button *ngIf="solicitaCreacion()" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar()" label="{{ 'general.boton.solicitarNuevo' | translate}}"></button>
+            <!-- <button *ngIf="solicitaCreacion()" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" disabled label="{{ 'general.boton.solicitarModificacion' | translate}}"></button> -->
+
           </div>
         </div>
       </div> 

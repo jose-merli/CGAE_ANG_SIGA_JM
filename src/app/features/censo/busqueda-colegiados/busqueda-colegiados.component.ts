@@ -112,7 +112,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   ngOnInit() {
     this.getCombos();
-    sessionStorage.removeItem("esColegiado");
+    // sessionStorage.removeItem("esColegiado");
     if (sessionStorage.getItem("filtrosBusquedaColegiados") != null) {
       this.body = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaColegiados")

@@ -589,11 +589,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.checkTipoRepeticion = false;
     this.checkTipoDiasRepeticion = false;
 
-    this.newEvent.tipoDiasRepeticion = undefined;
     if (this.newEvent.idTipoCalendario == this.valorTipoLaboral) {
       this.newEvent.fechaInicioRepeticion = undefined;
       this.newEvent.fechaFinRepeticion = undefined;
-
     } else {
       if (this.newEvent.fechaInicioRepeticion != null) {
         this.newEvent.fechaInicioRepeticion = new Date(
@@ -607,10 +605,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         );
       }
     }
-
-    // if(this.newEvent.tipoDiasRepeticion == "L"){
-
-    // }
   }
 
   selectInvalidDates() {
