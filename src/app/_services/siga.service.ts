@@ -236,6 +236,12 @@ export class SigaServices {
     fichaCursos_updateTrainersCourse: "fichaCursos/updateTrainersCourse",
     fichaCursos_saveTrainersCourse: "fichaCursos/saveTrainersCourse",
 
+    busquedaInscripciones_estadosInscripciones:
+      "busquedaInscripciones/estadosInscripciones",
+    busquedaInscripciones_search: "busquedaInscripciones/search",
+    busquedaInscripciones_calificacionesEmitidas:
+      "busquedaInscripciones/calificacionesEmitidas",
+
     //Agenda
     fichaCalendario_getCalendarType: "fichaCalendario/getCalendarType",
     fichaCalendario_profiles: "fichaCalendario/profiles",
