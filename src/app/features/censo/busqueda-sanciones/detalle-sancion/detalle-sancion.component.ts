@@ -32,6 +32,7 @@ export class DetalleSancionComponent implements OnInit {
   es: any = esCalendar;
   imagenPersona: any;
   body: BusquedaSancionesItem = new BusquedaSancionesItem();
+  progressSpinner: boolean = false;
   disabledFechaAcuerdo: boolean = false;
   disabledFechaFirme: boolean = true;
   disabledPeriodoDesde: boolean = true;
@@ -159,6 +160,13 @@ export class DetalleSancionComponent implements OnInit {
         //Check desmarcado y fecha no informada
         this.disabledPeriodoDesde = true;
         this.disabledPeriodoHasta = true;
+
+        // LO NUEVO
+        this.disabledRehabilitado = true;
+        this.disabledChkRehabilitado = true;
+        this.disabledChkArchivada = true;
+        this.disabledFechaArchivada = true;
+
         this.disabledFechaFirme = false;
       }
     }
@@ -173,16 +181,23 @@ export class DetalleSancionComponent implements OnInit {
       } else {
         // Fecha no informada
         this.disabledPeriodoHasta = true;
+        this.disabledFechaArchivada = true;
       }
     }
   }
 
   deshabilitarFechaFin() {
-    if (this.body.fechaHasta != undefined) {
+    if (
+      this.body.fechaDesde != undefined &&
+      this.body.fechaHasta != undefined &&
+      this.disabledPeriodoDesde == false &&
+      this.disabledPeriodoHasta == false
+    ) {
       if (this.body.chkRehabilitado == true) {
         // Check marcado
         this.disabledChkRehabilitado = false;
         this.body.fechaRehabilitado = undefined;
+        this.disabledChkArchivada = false;
       } else if (this.body.fechaRehabilitado != undefined) {
         //Check desmarcado y fecha informada
         this.disabledFechaArchivada = false;
@@ -192,26 +207,22 @@ export class DetalleSancionComponent implements OnInit {
         this.disabledRehabilitado = false;
         //this.disabledChkRehabilitado = true;
 
-        this.disabledFechaArchivada = false;
         this.disabledChkArchivada = false;
+        this.disabledFechaArchivada = false;
       }
+    } else {
+      this.disabledFechaArchivada = true;
     }
   }
 
   deshabilitarFechaRehabilitado() {
-    if (this.body.chkRehabilitado == true) {
-      if (this.body.chkArchivadas == true) {
-        // Check marcado
-        this.disabledChkArchivada = false;
-        this.body.fechaArchivada = undefined;
-      } else if (this.body.fechaArchivada != undefined) {
-        //Check desmarcado y fecha informada
-        this.disabledFechaArchivada = false;
-      } else {
-        //Check desmarcado y fecha no informada
-        this.disabledFechaArchivada = false;
-        this.disabledChkArchivada = false;
-      }
+    if (this.body.chkArchivadas == true && this.disabledChkArchivada == false) {
+      // Check marcado
+      this.disabledChkArchivada = false;
+      this.disabledFechaArchivada = true;
+      this.body.fechaArchivada = undefined;
+    } else {
+      this.disabledFechaArchivada = false;
     }
   }
 
@@ -226,7 +237,15 @@ export class DetalleSancionComponent implements OnInit {
   detectDateInput() {
     if (this.body.fechaDesde == undefined) {
       this.disabledPeriodoHasta = true;
+      this.disabledChkRehabilitado = true;
     } else if (this.body.fechaHasta == undefined) {
+      this.disabledRehabilitado = true;
+      this.disabledChkRehabilitado = true;
+      this.disabledChkArchivada = true;
+      this.disabledFechaArchivada = true;
+    } else if (this.body.fechaFirmeza == undefined) {
+      this.disabledPeriodoHasta = true;
+      this.disabledPeriodoDesde = true;
       this.disabledRehabilitado = true;
       this.disabledChkRehabilitado = true;
       this.disabledChkArchivada = true;
@@ -259,4 +278,6 @@ export class DetalleSancionComponent implements OnInit {
       return true;
     }
   }
+
+  save() {}
 }

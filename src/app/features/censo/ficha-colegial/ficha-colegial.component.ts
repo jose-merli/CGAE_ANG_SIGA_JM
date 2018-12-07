@@ -83,7 +83,6 @@ export class FichaColegialComponent implements OnInit {
   selectMultipleBancarios: boolean = false;
   // irTurnoOficio: any;
   // irExpedientes: any;
-  irRegTel: any;
   msgs: Message[];
 
   colsColegiales: any = [];
@@ -536,24 +535,6 @@ export class FichaColegialComponent implements OnInit {
     } else {
       this.isLetrado = false;
     }
-    // let isLetrado: ComboItem;
-    // this.sigaServices.get("getLetrado").subscribe(
-    //   data => {
-    //     isLetrado = data;
-    //     if (isLetrado.value == "S") {
-    //       sessionStorage.setItem("isLetrado", "true");
-    //       this.isEditable = true;
-    //     } else {
-    //       sessionStorage.setItem("isLetrado", "false");
-    //       this.isEditable = false;
-    //     }
-    //   },
-    //   err => {
-    //     sessionStorage.setItem("isLetrado", "true");
-    //     this.isEditable = true;
-    //     console.log(err);
-    //   }
-    // );
   }
 
   // isSelectMultiple() {
@@ -1729,7 +1710,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   restablecerColegiales() {
-    this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+    this.colegialesBody = JSON.parse(JSON.stringify(this.checkColegialesBody));
     // this.colegialesBody = this.colegialesBody[0];
     this.itemAInscrito();
     this.checkColegialesBody = new FichaColegialColegialesItem();
@@ -2457,7 +2438,15 @@ export class FichaColegialComponent implements OnInit {
   irTurnoOficio() {
     // this.router.navigate(["/tiposExpedientes"]);
     let idInstitucion = this.generalBody.idPersona.substr(0,4);
-    let url = (this.sigaServices.getNewSigaUrl() + "SIGA/JGR_DefinirTurnosLetrado.do?&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"");
+    let url = (this.sigaServices.getNewSigaUrl() + "/SIGA/JGR_DefinirTurnosLetrado.do?&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"");
+    window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
+
+  }
+  
+  irRegTel() {
+    // this.router.navigate(["/tiposExpedientes"]);
+    let idInstitucion = this.generalBody.idPersona.substr(0,4);
+    let url = (this.sigaServices.getNewSigaUrl() + "/SIGA/CEN_Censo_DocumentacionRegTel.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
     window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
 
   }

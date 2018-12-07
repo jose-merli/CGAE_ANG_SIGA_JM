@@ -220,8 +220,8 @@
         <button (click)="restablecerGenerales()" [disabled]="!activacionRestablecerGenerales()"  pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button *ngIf="!isLetrado" (click)="generalesGuardar()" [(disabled)]="!activarGuardarGenerales" pButton type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
-        <!-- <button *ngIf="isLetrado" (click)="comprobarAuditoria()" [(disabled)]="!activarGuardarGenerales" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button> -->
-        <button *ngIf="isLetrado" (click)="comprobarAuditoria()" disabled pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button *ngIf="isLetrado" (click)="comprobarAuditoria()" [(disabled)]="!activarGuardarGenerales" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
+        <!-- <button *ngIf="isLetrado" (click)="comprobarAuditoria()" disabled pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button> -->
 
       </div>
     </div>
@@ -362,8 +362,9 @@
 
     <div *ngIf="esFichaActiva('colegiales')" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="restablecerColegiales()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="guardarColegiales()" [(disabled)]="!activarGuardarColegiales" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button [(disabled)]="!activarGuardarColegiales" (click)="restablecerColegiales()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button *ngIf="!isLetrado" (click)="guardarColegiales()" [(disabled)]="!activarGuardarColegiales" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button *ngIf="isLetrado" (click)="guardarColegiales()" disabled pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -991,7 +992,9 @@
           iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
         <button *ngIf="selectedDatosBancarios && selectedDatosBancarios != '' && !historico" (click)="confirmarEliminar(selectedDatosBancarios)" pButton type="button"
           icon="fa fa-trash-alt" iconPos="left" [disabled]="activadoBotonesLetrado()" label="{{'general.boton.eliminar'  | translate}}"></button>
-        <button (click)="nuevaCuentaBancaria()" [disabled]="activadoBotonesLetrado()" pButton type="button" icon="fa fa-plus" iconPos="left"
+        <button *ngIf="!isLetrado" (click)="nuevaCuentaBancaria()" [disabled]="activadoBotonesLetrado()" pButton type="button" icon="fa fa-plus" iconPos="left"
+          label="{{ 'general.boton.new' | translate}}"></button>
+          <button *ngIf="isLetrado" (click)="nuevaCuentaBancaria()" disabled pButton type="button" icon="fa fa-plus" iconPos="left"
           label="{{ 'general.boton.new' | translate}}"></button>
       </div>
     </div>
