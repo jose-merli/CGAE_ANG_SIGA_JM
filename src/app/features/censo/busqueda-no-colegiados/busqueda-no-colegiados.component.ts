@@ -97,7 +97,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     // Obtener Combos
     this.getCombos();
     this.es = this.translateService.getCalendarLocale();
-    sessionStorage.removeItem("esColegiado");
+    // sessionStorage.removeItem("esColegiado");
     if (sessionStorage.getItem("filtrosBusquedaNoColegiados") != null) {
       this.body = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaNoColegiados")
