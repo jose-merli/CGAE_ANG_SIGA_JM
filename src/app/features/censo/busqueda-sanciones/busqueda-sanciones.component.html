@@ -1,4 +1,3 @@
-<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
     <div class="header-title">
         <i class="fa fa-square"></i>
@@ -136,7 +135,7 @@
         </div>
         <div class="card-footer">
             <div class="text-right main-button">
-                <button (click)="restore()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate}}"></button>
+                <button (click)="restore()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear'| translate}}"></button>
                 <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
                 <button (click)="newRecord()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button>
             </div>

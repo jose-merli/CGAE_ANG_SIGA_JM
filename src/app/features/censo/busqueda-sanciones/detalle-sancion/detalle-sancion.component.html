@@ -1,5 +1,3 @@
-<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -66,7 +64,7 @@
                   "busquedaSanciones.colegioSancionador.literal" | translate
                 }}</label>
                 <p-dropdown
-                  class="select-form" [options]="colegios" [(ngModel)]="body.colegio"
+                  class="select-form" [options]="colegios" [(ngModel)]="body.colegio" (onChange)="disableFields()"
                 ></p-dropdown>
 
               </div>
@@ -79,7 +77,7 @@
                   class="select-form"
  [options]="tipoSancion"
                   [(ngModel)]="body.tipoSancion"
-                  (onChange)="onChangeTipoSancion($event)"
+                  (onChange)="disableFields()"
                 ></p-dropdown>
               </div>
               <div class="form-group col-lg-12 col-md-12">
@@ -92,35 +90,7 @@
                   class="form-control"
                   pInputText
                   [(ngModel)]="body.refColegio"
-                  [(disabled)]="isNew"
-                />
-              </div>
-              <div class="form-group col-lg-12 col-md-12">
-                <label
-                  >{{
-                    "censo.busquedaSolicitudesModificacion.literal.estado"
-                      | translate
-                  }}
-                  (*)</label
-                >
-                <p-dropdown
-                  class="select-form"
-                  [options]="estado"
-                  [(ngModel)]="body.estado"
-                  [(disabled)]="isNew"
-                ></p-dropdown>
-              </div>
-
-              <div class="form-group col-lg-12 col-md-12" *ngIf="!hideMulta">
-                <label>{{
-                  "busquedaSanciones.detalleSancion.multa.literal" | translate
-                }}</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  pInputText
-                  [(ngModel)]="body.multa"
-                  [(disabled)]="isNew"
+                  [disabled]="disableFields()"
                 />
               </div>
             </div>
@@ -141,22 +111,10 @@
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaAcuerdo"
-                  [(disabled)]="isNew"
                 ></p-calendar>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <br />
-                <label>{{
-                  "facturacion.altaAbonos.literal.acuerdoSinFecha" | translate
-                }}</label>
-                <p-checkbox
-                  class="displayInit"
-                  name="chkAcuerdo"
-                  [(ngModel)]="body.chkAcuerdo"
-                  (onChange)="deshabilitarFechas()"
-                  binary="true"
-                  [(disabled)]="isNew"
-                ></p-checkbox>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{
@@ -167,11 +125,11 @@
                   [locale]="es"
                   [(disabled)]="disabledFechaFirme"
                   (onSelect)="deshabilitarFechas()"
+                  (onInput)="detectDateInput()"
                   icon="far fa-calendar-alt"
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaFirmeza"
-                  [(disabled)]="isNew"
                 ></p-calendar>
               </div>
 
@@ -186,7 +144,7 @@
                   [(ngModel)]="body.chkFirmeza"
                   (onChange)="deshabilitarFechas()"
                   binary="true"
-                  [(disabled)]="isNew"
+                  [disabled]="disabledChkFirmeza"
                 ></p-checkbox>
               </div>
               <div class="form-group col-lg-6 col-md-6">
@@ -198,11 +156,11 @@
                   [locale]="es"
                   icon="far fa-calendar-alt"
                   [(disabled)]="disabledPeriodoDesde"
+                  (onInput)="detectDateInput()"
                   (onSelect)="deshabilitarFechas()"
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaDesde"
-                  [(disabled)]="isNew"
                 ></p-calendar>
               </div>
 
@@ -213,11 +171,11 @@
                   [locale]="es"
                   icon="far fa-calendar-alt"
                   [(disabled)]="disabledPeriodoHasta"
+                  (onInput)="detectDateInput()"
                   (onSelect)="deshabilitarFechas()"
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaHasta"
-                  [(disabled)]="isNew"
                 ></p-calendar>
               </div>
               <div class="form-group col-lg-6 col-md-6">
@@ -235,7 +193,6 @@
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaRehabilitado"
-                  [(disabled)]="isNew"
                 ></p-calendar>
               </div>
 
@@ -252,7 +209,7 @@
                     (onChange)="deshabilitarFechas()"
                     [(ngModel)]="body.chkRehabilitado"
                     binary="true"
-                    [(disabled)]="isNew"
+                    [disabled]="disabledChkRehabilitado"
                   ></p-checkbox>
                 </label>
               </div>
@@ -270,8 +227,21 @@
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaArchivada"
-                  [(disabled)]="isNew"
                 ></p-calendar>
+              </div>
+              <div class="form-group col-lg-6 col-md-6">
+                <br />
+                <label>{{
+                  "facturacion.altaAbonos.literal.archivadaSinFecha" | translate
+                }}</label>
+                <p-checkbox
+                  class="displayInit"
+                  name="chkArchivadas"
+                  [(ngModel)]="body.chkArchivadas"
+                  (onChange)="deshabilitarFechas()"
+                  binary="true"
+                  [disabled]="disabledChkArchivada"
+                ></p-checkbox>
               </div>
             </div>
           </div>
@@ -284,7 +254,8 @@
                 <label>{{
                   "facturacion.altaAbonos.literal.provisionalORecurrida"
                     | translate
-                }}</label>
+                }}  <label *ngIf="body.fechaAcuerdo">{{ body.fechaAcuerdo | date: 'MMM/yyyy'}}</label>
+              </label> 
               </div>
             </div>
             <div class="form-row">
@@ -341,7 +312,7 @@
                   [cols]="10"
                   pInputTextarea
                   [(ngModel)]="body.texto"
-                  [(disabled)]="isNew"
+                  [disabled]="disableFields()"
                 ></textarea>
               </div>
             </div>
@@ -357,7 +328,7 @@
                   [cols]="10"
                   pInputTextarea
                   [(ngModel)]="body.observaciones"
-                  [(disabled)]="isNew"
+                  [disabled]="disableFields()"
                 ></textarea>
               </div>
             </div>

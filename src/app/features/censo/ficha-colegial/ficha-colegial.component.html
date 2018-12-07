@@ -221,6 +221,8 @@
         <button *ngIf="!isLetrado" (click)="generalesGuardar()" [(disabled)]="!activarGuardarGenerales" pButton type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
         <button *ngIf="isLetrado" (click)="comprobarAuditoria()" [(disabled)]="!activarGuardarGenerales" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
+        <!-- <button *ngIf="isLetrado" (click)="comprobarAuditoria()" disabled pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button> -->
+
       </div>
     </div>
   </div>
@@ -360,8 +362,9 @@
 
     <div *ngIf="esFichaActiva('colegiales')" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="restablecerColegiales()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="guardarColegiales()" [(disabled)]="!activarGuardarColegiales" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button [(disabled)]="!activarGuardarColegiales" (click)="restablecerColegiales()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button *ngIf="!isLetrado" (click)="guardarColegiales()" [(disabled)]="!activarGuardarColegiales" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button *ngIf="isLetrado" (click)="guardarColegiales()" disabled pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -644,6 +647,11 @@
       </div>
       <br>
     </div>
+    <div *ngIf="esFichaActiva('sociedades')" class="card-footer">
+      <div class="text-right main-button ">
+
+      </div>
+    </div>
   </div>
 
   <!-- END FICHA SOCIEDADES -->
@@ -745,11 +753,11 @@
       <br>
     </div>
 
-    <div *ngIf="esFichaActiva('curriculares')" class="card-footer ">
+    <div *ngIf="esFichaActiva('curriculares')" class="card-footer">
       <div class="text-right main-button ">
         <!-- <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button> -->
-        <button (click)="deleteCurriculares(W)" pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-        <button (click)="irNuevoCurriculares()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        <button (click)="deleteCurriculares(W)" pButton type="button" [(disabled)]="isLetrado" icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+        <button (click)="irNuevoCurriculares()" pButton type="button" [(disabled)]="isLetrado" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
 
       </div>
     </div>
@@ -787,7 +795,6 @@
 
 
   <!-- INICIO FICHA DATOS DIRECCIONES -->
-  <div class="busqueda-container">
     <div class="card">
       <div class="card-header header-ficha" (click)="abreCierraFicha('direcciones')">
         <div *ngIf="!esFichaActiva('direcciones')" class="form-row">
@@ -823,6 +830,7 @@
       </div>
 
       <div *ngIf="esFichaActiva('direcciones')" class="card-body card-body-ficha">
+        <div class="row">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosDirecciones" pageLinks="4"
           [ngClass]="{'customCursor': selectMultipleDirecciones}" dataKey="idDireccion" [responsive]="true" selectionMode="multiple"
           #table class="tabla-listado" [value]="datosDirecciones" [sortOrder]="1" [paginator]="activarPaginacionDireciones()"
@@ -856,23 +864,25 @@
             </div>
           </ng-template>
         </p-dataTable>
+      </div>
         <br>
-        <div class="card-footer ">
-          <div class="text-right main-button ">
-            <button *ngIf="bodyDirecciones.historico" (click)="onInitDirecciones()" pButton type="button" icon="fa fa-undo" iconPos="left"
-              label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
-            <button *ngIf="!bodyDirecciones.historico" (click)="searchHistoricoDatosDirecciones()" pButton type="button" icon="fa fa-history"
-              iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-            <button *ngIf="selectedDatosDirecciones && selectedDatosDirecciones != '' && bodyDirecciones.historico==false" [(disabled)]="camposDesactivados"
-              (click)="borrarSelectedDatos(selectedDatosDirecciones); selectedDatosDirecciones=false" pButton type="button"
-              icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-            <button (click)="nuevaDireccion()" pButton type="button" [(disabled)]="isLetrado" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+      </div>
+      <div *ngIf="esFichaActiva('direcciones')" class="card-footer">
+        <div class="text-right main-button">
+          <button *ngIf="bodyDirecciones.historico" (click)="onInitDirecciones()" pButton type="button" icon="fa fa-undo" iconPos="left"
+            label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
 
-          </div>
+          <button *ngIf="!bodyDirecciones.historico" (click)="searchHistoricoDatosDirecciones()" pButton type="button" icon="fa fa-history"
+            iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
+
+          <button *ngIf="selectedDatosDirecciones && selectedDatosDirecciones != '' && bodyDirecciones.historico==false" [disabled]="activadoBotonesLetrado()"
+            (click)="borrarSelectedDatos(selectedDatosDirecciones); selectedDatosDirecciones=false" pButton type="button"
+            icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+
+          <button (click)="nuevaDireccion()" pButton type="button" [(disabled)]="isLetrado" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
         </div>
       </div>
     </div>
-  </div>
 
 
   <!-- END FICHA DATOS DIRECCIONES -->
@@ -938,6 +948,7 @@
     </div>
 
     <div *ngIf="esFichaActiva('bancarios')" class="card-body card-body-ficha">
+      <div class="row">
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultipleBancarios}"
         [(selection)]="selectedDatosBancarios" [responsive]="true" selectionMode="multiple" dataKey="idPersona" #table class="tabla-listado"
         [value]="datosBancarios" [sortOrder]="1" [paginator]="activarPaginacionBancarios()" (onRowSelect)="redireccionarDatosBancarios(selectedDatosBancarios)"
@@ -969,21 +980,23 @@
               <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
           </div>
         </ng-template>
-        <p-footer>
-          <div class="text-right main-button">
-            <button *ngIf="bodyDatosBancarios.historico" (click)="onInitDatosBancarios()" pButton type="button" icon="fa fa-undo" iconPos="left"
-              label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
-            <button *ngIf="!bodyDatosBancarios.historico" (click)="searchHistoricoDatosBancarios()" pButton type="button" icon="fa fa-history"
-              iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-            <button *ngIf="selectedDatos && selectedDatos != '' && !historico" (click)="confirmarEliminar(selectedDatos)" pButton type="button"
-              icon="fa fa-trash-alt" iconPos="left" [(disabled)]="camposDesactivados" label="{{'general.boton.eliminar'  | translate}}"></button>
-            <button (click)="nuevaCuentaBancaria()" [(disabled)]="isLetrado" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-plus" iconPos="left"
-              label="{{ 'general.boton.new' | translate}}"></button>
-          </div>
-
-        </p-footer>
-
       </p-dataTable>
+      </div>
+      <br>
+    </div>
+    <div *ngIf="esFichaActiva('bancarios')" class="card-footer">
+      <div class="text-right main-button">
+        <button *ngIf="bodyDatosBancarios.historico" (click)="onInitDatosBancarios()" pButton type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
+        <button *ngIf="!bodyDatosBancarios.historico" (click)="searchHistoricoDatosBancarios()" pButton type="button" icon="fa fa-history"
+          iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
+        <button *ngIf="selectedDatosBancarios && selectedDatosBancarios != '' && !historico" (click)="confirmarEliminar(selectedDatosBancarios)" pButton type="button"
+          icon="fa fa-trash-alt" iconPos="left" [disabled]="activadoBotonesLetrado()" label="{{'general.boton.eliminar'  | translate}}"></button>
+        <button *ngIf="!isLetrado" (click)="nuevaCuentaBancaria()" [disabled]="activadoBotonesLetrado()" pButton type="button" icon="fa fa-plus" iconPos="left"
+          label="{{ 'general.boton.new' | translate}}"></button>
+          <button *ngIf="isLetrado" (click)="nuevaCuentaBancaria()" disabled pButton type="button" icon="fa fa-plus" iconPos="left"
+          label="{{ 'general.boton.new' | translate}}"></button>
+      </div>
     </div>
   </div>
   <!-- END FICHA DATOS BANCARIOS -->

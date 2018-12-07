@@ -83,7 +83,6 @@ export class FichaColegialComponent implements OnInit {
   selectMultipleBancarios: boolean = false;
   // irTurnoOficio: any;
   // irExpedientes: any;
-  irRegTel: any;
   msgs: Message[];
 
   colsColegiales: any = [];
@@ -171,7 +170,7 @@ export class FichaColegialComponent implements OnInit {
 
   @ViewChild("table")
   table: DataTable;
-  selectedDatos;
+  // selectedDatos;
   selectedDatosDirecciones;
   selectedDatosBancarios;
 
@@ -267,7 +266,11 @@ export class FichaColegialComponent implements OnInit {
       this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.checkColegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.idPersona = this.generalBody.idPersona;
-      this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
+      if(sessionStorage.getItem("esColegiado")){
+        this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
+      }else{
+        this.esColegiado = true;
+      }
       this.generalBody.colegiado = this.esColegiado;
       // this.checkAcceso();
       this.onInitGenerales();
@@ -532,37 +535,19 @@ export class FichaColegialComponent implements OnInit {
     } else {
       this.isLetrado = false;
     }
-    // let isLetrado: ComboItem;
-    // this.sigaServices.get("getLetrado").subscribe(
-    //   data => {
-    //     isLetrado = data;
-    //     if (isLetrado.value == "S") {
-    //       sessionStorage.setItem("isLetrado", "true");
-    //       this.isEditable = true;
-    //     } else {
-    //       sessionStorage.setItem("isLetrado", "false");
-    //       this.isEditable = false;
-    //     }
-    //   },
-    //   err => {
-    //     sessionStorage.setItem("isLetrado", "true");
-    //     this.isEditable = true;
-    //     console.log(err);
-    //   }
-    // );
   }
 
-  isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.numSelected = 0;
-      this.selectedDatos = [];
-    } else {
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    }
-  }
+  // isSelectMultiple() {
+  //   this.selectMultiple = !this.selectMultiple;
+  //   if (!this.selectMultiple) {
+  //     this.numSelected = 0;
+  //     this.selectedDatos = [];
+  //   } else {
+  //     this.selectAll = false;
+  //     this.selectedDatos = [];
+  //     this.numSelected = 0;
+  //   }
+  // }
 
   onlySpaces(str) {
     let i = 0;
@@ -651,16 +636,16 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
-  onChangeSelectAll(datos) {
-    if (this.selectAll === true) {
-      this.numSelected = datos.length;
-      this.selectMultiple = false;
-      this.selectedDatos = datos;
-    } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    }
-  }
+  // onChangeSelectAll(datos) {
+  //   if (this.selectAll === true) {
+  //     this.numSelected = datos.length;
+  //     this.selectMultiple = false;
+  //     this.selectedDatos = datos;
+  //   } else {
+  //     this.selectedDatos = [];
+  //     this.numSelected = 0;
+  //   }
+  // }
 
   showFailUploadedImage() {
     this.msgs = [];
@@ -693,6 +678,14 @@ export class FichaColegialComponent implements OnInit {
       dni.substr(8, 9).toUpperCase() ===
         this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
+  }
+
+  activadoBotonesLetrado(){
+    if(this.isLetrado){
+      return true;
+    }else{
+      return this.camposDesactivados;
+    }
   }
 
   ngOnDestroy() {}
@@ -1659,7 +1652,9 @@ export class FichaColegialComponent implements OnInit {
   }
 
   itemAInscrito(){
+    if(this.colegialesBody.situacionresidente != undefined){
       this.inscritoSeleccionado = (this.colegialesBody.situacionresidente.toString() +""+ this.colegialesBody.comunitario.toString());
+    }
   }
 
   activacionGuardarColegiales(){
@@ -1715,7 +1710,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   restablecerColegiales() {
-    this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+    this.colegialesBody = JSON.parse(JSON.stringify(this.checkColegialesBody));
     // this.colegialesBody = this.colegialesBody[0];
     this.itemAInscrito();
     this.checkColegialesBody = new FichaColegialColegialesItem();
@@ -2050,7 +2045,7 @@ export class FichaColegialComponent implements OnInit {
     searchObject.historico = true;
     // this.buscar = false;
     this.selectMultiple = false;
-    this.selectedDatos = "";
+    this.selectedDatosDirecciones = "";
     this.selectAll = false;
     this.sigaServices
       .postPaginado("direcciones_search", "?numPagina=1", searchObject)
@@ -2202,7 +2197,6 @@ export class FichaColegialComponent implements OnInit {
         this.router.navigate(["/consultarDatosDirecciones"]);
       } else {
         this.numSelectedDirecciones = this.selectedDatosDirecciones.length;
-        sessionStorage.removeItem("esColegiado");
       }
     }
   }
@@ -2260,7 +2254,7 @@ export class FichaColegialComponent implements OnInit {
       this.numSelected = 0;
       this.selectedDatosBancarios = [];
     } else {
-      this.selectAllDirecciones = false;
+      this.selectAllBancarios = false;
       this.selectedDatosBancarios = [];
       this.numSelected = 0;
     }
@@ -2322,7 +2316,7 @@ export class FichaColegialComponent implements OnInit {
       },
       () => {
         // this.historico = true;
-        this.selectedDatos = [];
+        this.selectedDatosBancarios = [];
         this.searchDatosBancarios();
       }
     );
@@ -2415,24 +2409,44 @@ export class FichaColegialComponent implements OnInit {
   // MÉTODOS PARA SERVICIOS DE INTERÉS
 
   irFacturacion() {
-    this.router.navigate(["/facturas"]);
+    // this.router.navigate(["/facturas"]);   /SIGA/CEN_Facturacion.do?idInstitucion=2005& idPersona=-1& accion=ver& tipoAcceso=8  
+    let idInstitucion = this.generalBody.idPersona.substr(0,4);
+    let url = (this.sigaServices.getNewSigaUrl() + "/SIGA/CEN_Facturacion.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
+    window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
   }
   irAuditoria() {
-    this.router.navigate(["/auditoriaUsuarios"]);
-    sessionStorage.setItem("tarjeta", "/fichaPersonaJuridica");
+    // this.router.navigate(["/auditoriaUsuarios"]);
+    // sessionStorage.setItem("tarjeta", "/fichaPersonaJuridica");  /SIGA/CEN_Historico.do?idInstitucion=2005& idPersona=-1& accion=ver& tipoAcceso=8
+    let idInstitucion = this.generalBody.idPersona.substr(0,4);
+    let url = (this.sigaServices.getNewSigaUrl() + "/SIGA/CEN_Historico.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
+    window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
   }
   irComunicaciones() {
-    this.router.navigate(["/informesGenericos"]);
+    // this.router.navigate(["/informesGenericos"]);             /SIGA/CEN_Comunicaciones.do?idInstitucion=2005& idPersona=-1& accion=ver& tipoAcceso=8  
+    let idInstitucion = this.generalBody.idPersona.substr(0,4);
+    let url = (this.sigaServices.getNewSigaUrl() + "/SIGA/CEN_Comunicaciones.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
+    window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
   }
 
   irExpedientes() {
-    this.router.navigate(["/tiposExpedientes"]);
+    // this.router.navigate(["/tiposExpedientes"]);
+    let idInstitucion = this.generalBody.idPersona.substr(0,4);
+    let url = (this.sigaServices.getNewSigaUrl() + "/SIGA/CEN_Expedientes.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
+    window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
   }
 
   irTurnoOficio() {
     // this.router.navigate(["/tiposExpedientes"]);
     let idInstitucion = this.generalBody.idPersona.substr(0,4);
-    let url = (this.sigaServices.getNewSigaUrl() + "SIGA/JGR_DefinirTurnosLetrado.do?&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"");
+    let url = (this.sigaServices.getNewSigaUrl() + "/SIGA/JGR_DefinirTurnosLetrado.do?&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"");
+    window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
+
+  }
+  
+  irRegTel() {
+    // this.router.navigate(["/tiposExpedientes"]);
+    let idInstitucion = this.generalBody.idPersona.substr(0,4);
+    let url = (this.sigaServices.getNewSigaUrl() + "/SIGA/CEN_Censo_DocumentacionRegTel.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
     window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
 
   }

@@ -124,15 +124,6 @@ export class BusquedaSancionesComponent implements OnInit {
           "menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal"
       },
       {
-        field: "estado",
-        header: "censo.busquedaSolicitudesModificacion.literal.estado"
-      },
-      {
-        field: "refConsejo",
-        header:
-          "menu.expediente.sanciones.busquedaPorColegio.RefConsejo.literal"
-      },
-      {
         field: "refColegio",
         header:
           "menu.expediente.sanciones.busquedaPorColegio.RefColegio.literal"

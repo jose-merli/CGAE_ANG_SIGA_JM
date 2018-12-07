@@ -28,24 +28,27 @@ export class DetalleSancionComponent implements OnInit {
   tipoSancion: SelectItem[];
   estado: SelectItem[];
   existeImagen: boolean = false;
-  hideMulta: boolean = false;
-  isNew: boolean = true;
   colegios: any;
   es: any = esCalendar;
   imagenPersona: any;
   body: BusquedaSancionesItem = new BusquedaSancionesItem();
+  progressSpinner: boolean = false;
   disabledFechaAcuerdo: boolean = false;
   disabledFechaFirme: boolean = true;
   disabledPeriodoDesde: boolean = true;
   disabledPeriodoHasta: boolean = true;
   disabledRehabilitado: boolean = true;
   disabledFechaArchivada: boolean = true;
+  disabledChkFirmeza: boolean = true;
+  disabledChkRehabilitado: boolean = true;
+  disabledChkArchivada: boolean = true;
 
   constructor(private location: Location, private sigaServices: SigaServices) {}
 
   ngOnInit() {
-    this.getComboTipoSancion();
     this.getComboColegios();
+    this.getComboTipoSancion();
+
     if (
       sessionStorage.getItem("rowData") != null &&
       sessionStorage.getItem("rowData") != undefined
@@ -53,14 +56,24 @@ export class DetalleSancionComponent implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("rowData"));
       this.body = this.body[0];
       this.bodyToCheckbox();
+
+      this.getComboColegios();
     }
-    this.deshabilitarFechas();
+    //this.deshabilitarFechas();
   }
 
   getComboColegios() {
     this.sigaServices.get("busquedaPer_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
+
+        if (this.body != undefined) {
+          this.colegios.forEach(element => {
+            if (element.label == this.body.colegio) {
+              this.body.colegio = element.value;
+            }
+          });
+        }
       },
       err => {
         console.log(err);
@@ -76,13 +89,13 @@ export class DetalleSancionComponent implements OnInit {
       }
       i++;
     }
-    let j = 0;
-    while (this.colegios.length > j) {
-      if (this.colegios[j].label == this.body.colegio) {
-        this.body.colegio = this.colegios[j].value;
-      }
-      j++;
-    }
+    // let j = 0;
+    // while (this.colegios.length > j) {
+    //   if (this.colegios[j].label == this.body.colegio) {
+    //     this.body.colegio = this.colegios[j].value;
+    //   }
+    //   j++;
+    // }
   }
 
   onHideDatosSancion() {
@@ -119,56 +132,125 @@ export class DetalleSancionComponent implements OnInit {
     );
   }
 
-  onChangeTipoSancion(event) {
-    console.log("event", event);
-    if (event.value != 10) {
-      this.hideMulta = true;
-    } else {
-      this.hideMulta = false;
-    }
-  }
-
   deshabilitarAcuerdo() {
-    if (this.body.chkAcuerdo == true) {
-      //Check marcado
-      this.disabledFechaFirme = false;
-      this.disabledFechaAcuerdo = true;
-      this.body.fechaAcuerdo = undefined;
-    } else if (this.body.fechaAcuerdo != undefined) {
+    if (this.body.fechaAcuerdo != undefined) {
       //Check desmarcado y fecha informada
       this.disabledFechaFirme = false;
       this.disabledFechaAcuerdo = false;
+      this.disabledChkFirmeza = false;
     } else {
       //check desmarcado y fecha no informada
       this.disabledFechaFirme = true;
+      this.disabledChkFirmeza = true;
       this.disabledFechaAcuerdo = false;
     }
-    return this.disabledFechaAcuerdo;
   }
 
   deshabilitarFirmeza() {
-    if (this.body.chkFirmeza == true) {
-      //Check marcado
-      this.disabledPeriodoDesde = false;
-      this.disabledFechaFirme = true;
-      this.body.fechaFirmeza = undefined;
-    } else if (this.body.fechaAcuerdo != undefined) {
-      //Check desmarcado y fecha informada
-      this.disabledPeriodoDesde = false;
-      this.disabledFechaFirme = false;
-    } else {
-      //check desmarcado y fecha no informada
+    if (this.body.fechaAcuerdo != undefined) {
+      if (this.body.chkFirmeza == true) {
+        // Check marcado
+        this.disabledPeriodoDesde = false;
+        this.disabledFechaFirme = true;
+        this.body.fechaFirmeza = undefined;
+      } else if (this.body.fechaFirmeza != undefined) {
+        //Check desmarcado y fecha informada
+        this.disabledPeriodoDesde = false;
+      } else {
+        //Check desmarcado y fecha no informada
+        this.disabledPeriodoDesde = true;
+        this.disabledPeriodoHasta = true;
 
-      this.disabledPeriodoDesde = true;
-      //   this.disabledFechaFirme = false;
-      // } else {
-      //   this.disabledFechaFirme = true;
+        // LO NUEVO
+        this.disabledRehabilitado = true;
+        this.disabledChkRehabilitado = true;
+        this.disabledChkArchivada = true;
+        this.disabledFechaArchivada = true;
+
+        this.disabledFechaFirme = false;
+      }
+    }
+  }
+
+  deshabilitarFechaDesde() {
+    if (this.body.fechaFirmeza != undefined || this.body.chkFirmeza == true) {
+      if (this.body.fechaDesde != undefined) {
+        // Fecha informada
+        this.disabledPeriodoHasta = false;
+        this.disabledPeriodoDesde = false;
+      } else {
+        // Fecha no informada
+        this.disabledPeriodoHasta = true;
+        this.disabledFechaArchivada = true;
+      }
+    }
+  }
+
+  deshabilitarFechaFin() {
+    if (
+      this.body.fechaDesde != undefined &&
+      this.body.fechaHasta != undefined &&
+      this.disabledPeriodoDesde == false &&
+      this.disabledPeriodoHasta == false
+    ) {
+      if (this.body.chkRehabilitado == true) {
+        // Check marcado
+        this.disabledChkRehabilitado = false;
+        this.body.fechaRehabilitado = undefined;
+        this.disabledChkArchivada = false;
+      } else if (this.body.fechaRehabilitado != undefined) {
+        //Check desmarcado y fecha informada
+        this.disabledFechaArchivada = false;
+      } else {
+        //Check desmarcado y fecha no informada
+        // Rehabilitado no puede funcionar
+        this.disabledRehabilitado = false;
+        //this.disabledChkRehabilitado = true;
+
+        this.disabledChkArchivada = false;
+        this.disabledFechaArchivada = false;
+      }
+    } else {
+      this.disabledFechaArchivada = true;
+    }
+  }
+
+  deshabilitarFechaRehabilitado() {
+    if (this.body.chkArchivadas == true && this.disabledChkArchivada == false) {
+      // Check marcado
+      this.disabledChkArchivada = false;
+      this.disabledFechaArchivada = true;
+      this.body.fechaArchivada = undefined;
+    } else {
+      this.disabledFechaArchivada = false;
     }
   }
 
   deshabilitarFechas() {
     this.deshabilitarAcuerdo();
     this.deshabilitarFirmeza();
+    this.deshabilitarFechaDesde();
+    this.deshabilitarFechaFin();
+    this.deshabilitarFechaRehabilitado();
+  }
+
+  detectDateInput() {
+    if (this.body.fechaDesde == undefined) {
+      this.disabledPeriodoHasta = true;
+      this.disabledChkRehabilitado = true;
+    } else if (this.body.fechaHasta == undefined) {
+      this.disabledRehabilitado = true;
+      this.disabledChkRehabilitado = true;
+      this.disabledChkArchivada = true;
+      this.disabledFechaArchivada = true;
+    } else if (this.body.fechaFirmeza == undefined) {
+      this.disabledPeriodoHasta = true;
+      this.disabledPeriodoDesde = true;
+      this.disabledRehabilitado = true;
+      this.disabledChkRehabilitado = true;
+      this.disabledChkArchivada = true;
+      this.disabledFechaArchivada = true;
+    }
   }
 
   restore() {
@@ -179,4 +261,23 @@ export class DetalleSancionComponent implements OnInit {
     this.body.fechaDesde = null;
     this.body.fechaHasta = null;
   }
+
+  disableFields() {
+    if (
+      this.body.colegio != null &&
+      this.body.colegio != undefined &&
+      this.body.colegio != "" &&
+      this.body.tipoSancion != null &&
+      this.body.tipoSancion != undefined &&
+      this.body.tipoSancion != ""
+    ) {
+      this.disabledFechaAcuerdo = false;
+      return false;
+    } else {
+      this.disabledFechaAcuerdo = true;
+      return true;
+    }
+  }
+
+  save() {}
 }
