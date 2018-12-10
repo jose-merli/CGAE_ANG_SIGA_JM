@@ -159,16 +159,6 @@ export class EdicionCurricularesComponent implements OnInit {
         value: 40
       }
     ];
-    // this.sigaServices.get("tipoCurricular_categoriaCurricular").subscribe(
-    //   n => {
-    //     this.categoriaCurricular = n.combooItems;
-    //   },
-    //   err => {
-    //     console.log(err);
-    //   }
-    // );
-    // this.body.certificado
-    // this.verificado
     this.booleanToCertificado();
     this.activateGuardar();
     if (this.nuevo == false) {

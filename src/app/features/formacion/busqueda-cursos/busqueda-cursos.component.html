@@ -77,25 +77,25 @@
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'form.busquedaCursos.literal.fechaInscripcionDesde' | translate }}</label>
             <p-calendar [monthNavigator]="true" [yearNavigator]="true" [maxDate]="getFechaInscripcionHasta()" yearRange="1930:2050" [locale]="es"
-              [utc]="true" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="body.fechaInscripcionDesde"></p-calendar>
+              [utc]="true" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="body.fechaInscripcionDesdeDate"></p-calendar>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'form.busquedaCursos.literal.fechaInscripcionHasta' | translate }}</label>
             <p-calendar [monthNavigator]="true" [yearNavigator]="true" [minDate]="getFechaInscripcionDesde()" yearRange="1930:2050" [locale]="es"
-              [utc]="true" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="body.fechaInscripcionHasta"></p-calendar>
+              [utc]="true" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="body.fechaInscripcionHastaDate"></p-calendar>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'form.busquedaCursos.literal.fechaImparticionDesde' | translate}}</label>
             <p-calendar [monthNavigator]="true" [yearNavigator]="true" [maxDate]="getFechaImparticionHasta()" yearRange="1930:2050" [locale]="es"
-              [utc]="true" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="body.fechaImparticionDesde"></p-calendar>
+              [utc]="true" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="body.fechaImparticionDesdeDate"></p-calendar>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'form.busquedaCursos.literal.fechaImparticionHasta' | translate}}</label>
             <p-calendar [monthNavigator]="true" [yearNavigator]="true" [minDate]="getFechaImparticionDesde()" yearRange="1930:2050" [locale]="es"
-              [utc]="true" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="body.fechaImparticionHasta"></p-calendar>
+              [utc]="true" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="body.fechaImparticionHastaDate"></p-calendar>
           </div>
 
           <div class="form-group col-lg-3 col-md-3">
@@ -120,7 +120,7 @@
     </div>
     <div class="card-footer">
       <div class="text-right main-button">
-        <button pButton [disabled]="activacionEditar" (click)="crearCurso()" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        <button pButton [disabled]="" (click)="crearCurso()" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
         <button [disabled]="!formBusqueda.valid || !formGroupPrecios.valid" (click)="isBuscar(false)" pButton type="button" icon="fa fa-search"
           iconPos="left" label="{{'general.boton.search' | translate}}"></button>
           <button (click)="changeColsAndData()" pButton type="button " icon="fa fa-eraser " iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>

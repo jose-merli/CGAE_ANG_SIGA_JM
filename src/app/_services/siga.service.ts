@@ -235,6 +235,15 @@ export class SigaServices {
     fichaCursos_getTypeCostTrainers: "fichaCursos/getTypeCostTrainers",
     fichaCursos_updateTrainersCourse: "fichaCursos/updateTrainersCourse",
     fichaCursos_saveTrainersCourse: "fichaCursos/saveTrainersCourse",
+    fichaCursos_getSessionsCourse: "fichaCursos_getSessionsCourse",
+    fichaCursos_saveCourse: "fichaCursos/saveCourse",
+    fichaCursos_updateCourse: "fichaCursos/updateCourse",
+
+    busquedaInscripciones_estadosInscripciones:
+      "busquedaInscripciones/estadosInscripciones",
+    busquedaInscripciones_search: "busquedaInscripciones/search",
+    busquedaInscripciones_calificacionesEmitidas:
+      "busquedaInscripciones/calificacionesEmitidas",
 
     //Agenda
     fichaCalendario_getCalendarType: "fichaCalendario/getCalendarType",

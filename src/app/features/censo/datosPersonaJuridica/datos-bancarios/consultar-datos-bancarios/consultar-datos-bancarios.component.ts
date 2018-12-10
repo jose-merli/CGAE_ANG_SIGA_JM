@@ -96,6 +96,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   datefirmaFecha: Date;
 
   body: DatosBancariosItem = new DatosBancariosItem();
+  checkBody: DatosBancariosItem = new DatosBancariosItem();
+
   bodySearch: DatosBancariosObject = new DatosBancariosObject();
 
   bodyBancoBic: BancoBicItem = new BancoBicItem();
@@ -304,6 +306,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.progressSpinner = false;
           this.bodySearch = JSON.parse(data["body"]);
           this.body = this.bodySearch.datosBancariosItem[0];
+          this.checkBody = this.bodySearch.datosBancariosItem[0];
           this.iban = this.body.iban;
 
           if (this.body == undefined) {
@@ -499,6 +502,15 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         //this.activarRestablecer = true;
       }
     });
+  }
+
+  
+  igualInicio() {
+    if (JSON.stringify(this.body) == JSON.stringify(this.checkBody)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   restablecerNuevo() {

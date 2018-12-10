@@ -21,6 +21,8 @@ export class FichaInscripcionComponent implements OnInit {
   comboPrecio: any[];
   comboModoPago: any[];
 
+  backTo: any;
+
   constructor(private sigaServices: SigaServices) {}
 
   ngOnInit() {

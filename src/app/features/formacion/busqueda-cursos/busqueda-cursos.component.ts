@@ -131,6 +131,8 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
       sessionStorage.removeItem("filtrosBusquedaCursos");
       this.isBuscar(false);
     }
+
+    this.checkAcceso();
   }
 
   ngAfterViewInit() {
@@ -269,7 +271,6 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
 
   getComboDisponibilidadPlazas() {
     this.comboDisponibilidadPlazas = [
-      { label: "", value: "" },
       { label: "Sí", value: 1 },
       { label: "No", value: 0 }
     ];
@@ -568,8 +569,8 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
       this.body.fechaInscripcionHasta != undefined
     ) {
       // convertir fechas en milisegundos
-      let fechaDesde = this.body.fechaInscripcionDesde.getTime();
-      let fechaHasta = this.body.fechaInscripcionHasta.getTime();
+      let fechaDesde = this.body.fechaInscripcionDesdeDate.getTime();
+      let fechaHasta = this.body.fechaInscripcionHastaDate.getTime();
       let msRangoFechas = fechaHasta - fechaDesde;
 
       if (msRangoFechas < 0) this.body.fechaInscripcionDesde = undefined;
@@ -584,8 +585,8 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
       this.body.fechaInscripcionHasta != undefined
     ) {
       // convertir fechas en milisegundos
-      let fechaDesde = this.body.fechaInscripcionDesde.getTime();
-      let fechaHasta = this.body.fechaInscripcionHasta.getTime();
+      let fechaDesde = this.body.fechaInscripcionDesdeDate.getTime();
+      let fechaHasta = this.body.fechaInscripcionHastaDate.getTime();
       let msRangoFechas = fechaHasta - fechaDesde;
 
       if (msRangoFechas < 0) this.body.fechaInscripcionHasta = undefined;
@@ -599,8 +600,8 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
       this.body.fechaImparticionHasta != undefined
     ) {
       // convertir fechas en milisegundos
-      let fechaDesde = this.body.fechaImparticionDesde.getTime();
-      let fechaHasta = this.body.fechaImparticionHasta.getTime();
+      let fechaDesde = this.body.fechaImparticionDesdeDate.getTime();
+      let fechaHasta = this.body.fechaImparticionHastaDate.getTime();
       let msRangoFechas = fechaHasta - fechaDesde;
 
       if (msRangoFechas < 0) this.body.fechaImparticionDesde = undefined;
@@ -615,8 +616,8 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
       this.body.fechaImparticionHasta != undefined
     ) {
       // convertir fechas en milisegundos
-      let fechaDesde = this.body.fechaImparticionDesde.getTime();
-      let fechaHasta = this.body.fechaImparticionHasta.getTime();
+      let fechaDesde = this.body.fechaImparticionDesdeDate.getTime();
+      let fechaHasta = this.body.fechaImparticionHastaDate.getTime();
       let msRangoFechas = fechaHasta - fechaDesde;
 
       if (msRangoFechas < 0) this.body.fechaImparticionHasta = undefined;

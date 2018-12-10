@@ -41,10 +41,16 @@
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
-            <label>{{ 'form.busquedaCursos.literal.estado' | translate}}</label>
-            <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]='body.idEstado' [options]="comboEstados"
+            <label>{{ 'formacion.busquedaInscripcion.estadoCurso' | translate}}</label>
+            <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]='body.idEstadoCurso' [options]="comboEstadosCursos"
               [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
           </div>
+
+          <div class="form-group col-lg-3 col-md-2">
+              <label>{{ 'formacion.busquedaInscripcion.estadoInscripcion' | translate}}</label>
+              <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]='body.idEstadoInscripcion' [options]="comboEstadosInscripciones"
+                [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+            </div>
  
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'form.busquedaCursos.literal.fechaInscripcionDesde' | translate}}</label>
@@ -93,6 +99,11 @@
               <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.calificacionEmitida'
                 [options]="comboCalificacionEmitida" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
           </div>
+          <div class="form-check col-lg-3 col-md-3">
+              <br>
+              <label class="form-group-label">{{'formacion.busquedaInscripcion.pagada' | translate}}</label> &nbsp;&nbsp;
+              <p-checkbox [(ngModel)]='valorCheckPagada' binary="true"></p-checkbox>
+          </div>
 
         </div>
       </div>
@@ -104,12 +115,15 @@
         <button (click)="isBuscar(false)" pButton type="button" icon="fa fa-search"
           iconPos="left" label="{{'general.boton.search' | translate}}"></button> -->
           <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-          <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+          <button [disabled]="!formBusqueda.valid" (click)="isBuscar(false)" pButton type="button" icon="fa fa-search"
+          iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+          <!-- <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button> -->
       </div>
     </div>
   </div>
   <!--FIN CARD-->
-  <div *ngIf="buscar == true" class="card mt-3">
+  <!-- <div *ngIf="buscar == true" class="card mt-3"> -->
+  <div class="card mt-3">
     <div class="card-body p-0">
       <!-- <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
         [(selection)]="selectedDatos" (onRowSelect)="irEditarCurso(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
