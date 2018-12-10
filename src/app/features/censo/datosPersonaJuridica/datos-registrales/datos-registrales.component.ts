@@ -257,7 +257,6 @@ export class DatosRegistralesComponent implements OnInit {
   }
 
   compruebaRegistro() {
-    var a = this.body.contadorNumsspp;
     if (
       Number(this.body.contadorNumsspp) &&
       !this.onlySpaces(this.body.contadorNumsspp)

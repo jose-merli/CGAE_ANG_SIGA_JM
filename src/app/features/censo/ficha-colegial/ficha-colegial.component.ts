@@ -537,6 +537,19 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
+  arreglarFecha(fecha) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -1);
+    if (rawDate.length < 14) {
+      let splitDate = rawDate.split("/");
+      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+      fecha = new Date((arrayDate += "T00:00:00.001Z"));
+    } else {
+      fecha = new Date(rawDate);
+    }
+
+    return fecha;
+  }
   // isSelectMultiple() {
   //   this.selectMultiple = !this.selectMultiple;
   //   if (!this.selectMultiple) {
@@ -1257,8 +1270,8 @@ export class FichaColegialComponent implements OnInit {
       this.generalBody = JSON.parse(JSON.stringify(this.checkGeneralBody));
       this.etiquetasPersonaJuridicaSelecionados = this.generalBody.etiquetas;
       this.obtenerEtiquetasPersonaJuridicaConcreta();
-      this.activacionGuardarGenerales();
       this.stringAComisiones();
+      this.activacionGuardarGenerales();
     }
   }
 
@@ -1660,7 +1673,7 @@ export class FichaColegialComponent implements OnInit {
   activacionGuardarColegiales(){
     this.inscritoAItem();
     if (
-      JSON.stringify(this.checkColegialesBody) != JSON.stringify(this.colegialesBody)
+      JSON.stringify(this.checkColegialesBody) != JSON.stringify(this.colegialesBody) 
     ) {
       this.activarGuardarColegiales = true;
     } else {
@@ -1668,9 +1681,29 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
+  pasarFechas(){
+    this.colegialesBody.incorporacionDate = this.arreglarFecha(this.colegialesBody.incorporacion);
+    this.colegialesBody.fechapresentacionDate = this.arreglarFecha(this.colegialesBody.fechapresentacion);
+    this.colegialesBody.fechaTitulacionDate = this.arreglarFecha(this.colegialesBody.fechaTitulacion);
+    this.colegialesBody.fechaJuraDate = this.arreglarFecha(this.colegialesBody.fechaJura);
+  }
+  
+  numMutualistaCheck(){
+    this.activacionGuardarColegiales();
+    if (
+      Number(this.colegialesBody.nMutualista)
+    ) {
+      return true;
+    } else{
+      this.colegialesBody.nMutualista = "";
+      return false;
+    }
+  }
+
   guardarColegiales(){
     // Meter datos colegiales aquí para guardar y probar.
     this.inscritoAItem();
+    this.pasarFechas();
     this.sigaServices
     .post("fichaDatosColegiales_datosColegialesUpdate", this.colegialesBody)
     .subscribe(
@@ -1685,6 +1718,7 @@ export class FichaColegialComponent implements OnInit {
         this.obtenerEtiquetasPersonaJuridicaConcreta();
         this.progressSpinner = false;
         this.showSuccess();
+        this.onInitColegiales();
       },
       error => {
         console.log(error);
