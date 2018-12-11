@@ -29,9 +29,11 @@ export class DetalleSancionComponent implements OnInit {
   estado: SelectItem[];
   existeImagen: boolean = false;
   colegios: any;
+  msgs: any;
   es: any = esCalendar;
   imagenPersona: any;
   body: BusquedaSancionesItem = new BusquedaSancionesItem();
+  restoreBody: BusquedaSancionesItem = new BusquedaSancionesItem();
   progressSpinner: boolean = false;
   disabledFechaAcuerdo: boolean = false;
   disabledFechaFirme: boolean = true;
@@ -54,12 +56,24 @@ export class DetalleSancionComponent implements OnInit {
       sessionStorage.getItem("rowData") != undefined
     ) {
       this.body = JSON.parse(sessionStorage.getItem("rowData"));
-      this.body = this.body[0];
+      //this.body = this.body[0];
+      this.restoreBody = JSON.parse(sessionStorage.getItem("rowData"));
+      this.transformDates(this.body);
+
       this.bodyToCheckbox();
 
-      this.getComboColegios();
+      this.deshabilitarFechas();
     }
     //this.deshabilitarFechas();
+  }
+
+  transformDates(body) {
+    body.fechaAcuerdoDate = new Date(body.fechaAcuerdoDate);
+    body.fechaDesdeDate = new Date(body.fechaDesdeDate);
+    body.fechaHastaDate = new Date(body.fechaHastaDate);
+    body.fechaFirmezaDate = new Date(body.fechaFirmezaDate);
+    body.fechaRehabilitadoDate = new Date(body.fechaRehabilitadoDate);
+    body.fechaArchivadaDate = new Date(body.fechaArchivadaDate);
   }
 
   getComboColegios() {
@@ -67,13 +81,13 @@ export class DetalleSancionComponent implements OnInit {
       n => {
         this.colegios = n.combooItems;
 
-        if (this.body != undefined) {
-          this.colegios.forEach(element => {
-            if (element.label == this.body.colegio) {
-              this.body.colegio = element.value;
-            }
-          });
-        }
+        // if (this.body != undefined) {
+        //   this.colegios.forEach(element => {
+        //     if (element.label == this.body.colegio) {
+        //       this.body.colegio = element.value;
+        //     }
+        //   });
+        // }
       },
       err => {
         console.log(err);
@@ -102,7 +116,7 @@ export class DetalleSancionComponent implements OnInit {
     this.showDatosSancion = !this.showDatosSancion;
   }
 
-  backTo() {
+  return() {
     sessionStorage.removeItem("rowData");
     this.location.back();
   }
@@ -133,7 +147,7 @@ export class DetalleSancionComponent implements OnInit {
   }
 
   deshabilitarAcuerdo() {
-    if (this.body.fechaAcuerdo != undefined) {
+    if (this.body.fechaAcuerdoDate != undefined) {
       //Check desmarcado y fecha informada
       this.disabledFechaFirme = false;
       this.disabledFechaAcuerdo = false;
@@ -147,13 +161,13 @@ export class DetalleSancionComponent implements OnInit {
   }
 
   deshabilitarFirmeza() {
-    if (this.body.fechaAcuerdo != undefined) {
+    if (this.body.fechaAcuerdoDate != undefined) {
       if (this.body.chkFirmeza == true) {
         // Check marcado
         this.disabledPeriodoDesde = false;
         this.disabledFechaFirme = true;
-        this.body.fechaFirmeza = undefined;
-      } else if (this.body.fechaFirmeza != undefined) {
+        this.body.fechaFirmezaDate = undefined;
+      } else if (this.body.fechaFirmezaDate != undefined) {
         //Check desmarcado y fecha informada
         this.disabledPeriodoDesde = false;
       } else {
@@ -173,8 +187,11 @@ export class DetalleSancionComponent implements OnInit {
   }
 
   deshabilitarFechaDesde() {
-    if (this.body.fechaFirmeza != undefined || this.body.chkFirmeza == true) {
-      if (this.body.fechaDesde != undefined) {
+    if (
+      this.body.fechaFirmezaDate != undefined ||
+      this.body.chkFirmeza == true
+    ) {
+      if (this.body.fechaDesdeDate != undefined) {
         // Fecha informada
         this.disabledPeriodoHasta = false;
         this.disabledPeriodoDesde = false;
@@ -188,41 +205,66 @@ export class DetalleSancionComponent implements OnInit {
 
   deshabilitarFechaFin() {
     if (
-      this.body.fechaDesde != undefined &&
-      this.body.fechaHasta != undefined &&
+      this.body.fechaDesdeDate != undefined &&
+      this.body.fechaHastaDate != undefined &&
       this.disabledPeriodoDesde == false &&
       this.disabledPeriodoHasta == false
     ) {
       if (this.body.chkRehabilitado == true) {
         // Check marcado
         this.disabledChkRehabilitado = false;
-        this.body.fechaRehabilitado = undefined;
+        this.disabledRehabilitado = true;
+        this.body.fechaRehabilitadoDate = undefined;
         this.disabledChkArchivada = false;
-      } else if (this.body.fechaRehabilitado != undefined) {
-        //Check desmarcado y fecha informada
-        this.disabledFechaArchivada = false;
-      } else {
-        //Check desmarcado y fecha no informada
-        // Rehabilitado no puede funcionar
-        this.disabledRehabilitado = false;
-        //this.disabledChkRehabilitado = true;
+      } //else if (this.body.fechaRehabilitado != undefined) {
+      //Check desmarcado y fecha informada
+      // this.disabledRehabilitado = false;
+      // this.disabledChkArchivada = false;
+      // this.disabledFechaArchivada = false;
+      //}
+      // } else {
+      //   //Check desmarcado y fecha no informada
+      //   // Rehabilitado no puede funcionar
+      //   this.disabledRehabilitado = false;
+      //   //this.disabledChkRehabilitado = true;
 
-        this.disabledChkArchivada = false;
-        this.disabledFechaArchivada = false;
-      }
-    } else {
-      this.disabledFechaArchivada = true;
+      //   // this.disabledChkArchivada = false;
+      //   // this.disabledFechaArchivada = false;
+      // }
     }
   }
 
   deshabilitarFechaRehabilitado() {
-    if (this.body.chkArchivadas == true && this.disabledChkArchivada == false) {
-      // Check marcado
-      this.disabledChkArchivada = false;
-      this.disabledFechaArchivada = true;
-      this.body.fechaArchivada = undefined;
-    } else {
-      this.disabledFechaArchivada = false;
+    if (this.disabledChkRehabilitado == false) {
+      if (this.body.chkRehabilitado == true) {
+        if (
+          this.body.chkArchivadas == true &&
+          this.disabledChkArchivada == false
+        ) {
+          this.disabledFechaArchivada = true;
+          this.body.fechaArchivadaDate = undefined;
+        } else {
+          this.disabledFechaArchivada = false;
+        }
+      } else {
+        if (this.body.fechaRehabilitadoDate != undefined) {
+          if (
+            this.body.chkArchivadas == true &&
+            this.disabledChkArchivada == false
+          ) {
+            this.disabledChkArchivada = false;
+            this.disabledFechaArchivada = true;
+            this.body.fechaArchivadaDate = undefined;
+          } else {
+            this.disabledChkArchivada = false;
+            this.disabledFechaArchivada = false;
+          }
+        } else {
+          this.disabledRehabilitado = false;
+          this.disabledChkArchivada = true;
+          this.disabledFechaArchivada = true;
+        }
+      }
     }
   }
 
@@ -235,31 +277,65 @@ export class DetalleSancionComponent implements OnInit {
   }
 
   detectDateInput() {
-    if (this.body.fechaDesde == undefined) {
+    if (this.body.fechaDesdeDate == undefined) {
       this.disabledPeriodoHasta = true;
       this.disabledChkRehabilitado = true;
-    } else if (this.body.fechaHasta == undefined) {
+      this.disabledChkArchivada = true;
+      this.disabledFechaArchivada = true;
+    } else if (this.body.fechaHastaDate == undefined) {
       this.disabledRehabilitado = true;
       this.disabledChkRehabilitado = true;
       this.disabledChkArchivada = true;
       this.disabledFechaArchivada = true;
-    } else if (this.body.fechaFirmeza == undefined) {
+    } else if (this.body.fechaFirmezaDate == undefined) {
       this.disabledPeriodoHasta = true;
       this.disabledPeriodoDesde = true;
       this.disabledRehabilitado = true;
       this.disabledChkRehabilitado = true;
       this.disabledChkArchivada = true;
       this.disabledFechaArchivada = true;
+    } else if (this.body.fechaRehabilitadoDate == undefined) {
+      this.disabledChkArchivada = true;
+      this.disabledFechaArchivada = true;
     }
   }
 
+  // Control de fechas
+
+  arreglarFecha(fecha) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -1);
+    if (rawDate.length < 14) {
+      let splitDate = rawDate.split("/");
+      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+      fecha = new Date((arrayDate += "T00:00:00.001Z"));
+    } else {
+      fecha = new Date(rawDate);
+    }
+
+    return fecha;
+  }
+
   restore() {
-    this.body.tipoSancion = "";
-    this.body.estado = "";
-    this.body.refColegio = "";
-    this.body.fecha = null;
-    this.body.fechaDesde = null;
-    this.body.fechaHasta = null;
+    // this.body.idColegio = "";
+    // this.body.tipoSancion = "";
+    // this.body.refColegio = "";
+    // this.body.fechaAcuerdoDate = undefined;
+    // this.body.fechaFirmezaDate = undefined;
+    // this.body.fechaDesdeDate = undefined;
+    // this.body.fechaHastaDate = undefined;
+    // this.body.fechaRehabilitadoDate = undefined;
+    // this.body.fechaArchivadaDate = undefined;
+    // this.body.chkFirmeza = false;
+    // this.body.chkRehabilitado = false;
+    // this.body.chkArchivadas = false;
+    // this.body.texto = "";
+    // this.body.observaciones = "";
+
+    this.body = this.restoreBody;
+    this.getComboTipoSancion();
+    this.transformDates(this.body);
+    this.bodyToCheckbox();
   }
 
   disableFields() {
@@ -279,5 +355,40 @@ export class DetalleSancionComponent implements OnInit {
     }
   }
 
-  save() {}
+  // Método para actualizar el registro
+  save() {
+    this.sigaServices
+      .post("busquedaSanciones_updateSanction", this.body)
+      .subscribe(
+        data => {
+          this.showSuccess("Correcto");
+        },
+        error => {
+          this.showFail("Error");
+          console.log(error);
+        },
+        () => {
+          sessionStorage.setItem("back", "true");
+          this.return();
+        }
+      );
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: mensaje
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
 }

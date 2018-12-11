@@ -196,6 +196,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         }
       );
     this.checkBody = JSON.parse(JSON.stringify(this.body));
+    this.checkBody.idPais = "191";
   }
 
   getDatosContactos() {
@@ -625,13 +626,10 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   desactivaDuplicar() {
-    if (this.historyDisable) {
+    if (this.historyDisable || this.isLetrado) {
       return true;
     } else {
-      if (
-        this.codigoPostalValido &&
-        (this.body.idTipoDireccion == undefined || this.isLetrado)
-      ) {
+      if (this.codigoPostalValido && this.body.idTipoDireccion == undefined) {
         return false;
       } else {
         return true;
@@ -647,10 +645,14 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else {
       if (
         this.codigoPostalValido &&
-        (this.body.idTipoDireccion == undefined || this.isLetrado) &&
+        this.body.idTipoDireccion != undefined &&
         !this.igualInicio()
       ) {
-        return false;
+        if (this.isLetrado) {
+          return true;
+        } else {
+          return false;
+        }
       } else {
         return true;
       }
@@ -736,14 +738,13 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   restablecer() {
-    if (sessionStorage.getItem("direccion") != null) {
-      this.body = JSON.parse(JSON.stringify(this.checkBody));
-      // this.checkBody = JSON.parse()
-      this.body.idPersona = this.usuarioBody[0].idPersona;
-      this.provinciaSelecionada = this.body.idProvincia;
-      this.generarTabla();
-    }
+    // this.checkBody = JSON.parse()
+    this.body.idPersona = this.usuarioBody[0].idPersona;
+    this.provinciaSelecionada = this.body.idProvincia;
+    this.body = JSON.parse(JSON.stringify(this.checkBody));
+    this.generarTabla();
   }
+
   // Mensajes
   showFail(mensaje: string) {
     this.msgs = [];

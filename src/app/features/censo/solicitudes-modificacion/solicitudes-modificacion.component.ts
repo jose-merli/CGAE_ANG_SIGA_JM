@@ -307,7 +307,6 @@ export class SolicitudesModificacionComponent implements OnInit {
 
   onSelectRow(selectedDatos) {
     if (selectedDatos.especifica == "1") {
-      console.log("ERE", this.body);
       sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
       sessionStorage.setItem("search", JSON.stringify(this.data));
       sessionStorage.setItem("rowData", JSON.stringify(selectedDatos));

@@ -66,6 +66,30 @@ export class BusquedaSancionesComponent implements OnInit {
     this.getComboEstado();
 
     this.getDataTable();
+
+    if (sessionStorage.getItem("saveFilters") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
+
+      if (sessionStorage.getItem("back") == "true") {
+        this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
+        this.isSearch = true;
+        this.search();
+      } else {
+        if (sessionStorage.getItem("search") != null) {
+          this.isSearch = true;
+          this.data = JSON.parse(sessionStorage.getItem("search"));
+          sessionStorage.removeItem("search");
+        }
+      }
+      sessionStorage.removeItem("saveFilters");
+    } else {
+      if (sessionStorage.getItem("search") != null) {
+        this.isSearch = true;
+        this.data = JSON.parse(sessionStorage.getItem("search"));
+        sessionStorage.removeItem("search");
+        sessionStorage.removeItem("saveFilters");
+      }
+    }
   }
 
   getComboTipoSancion() {
@@ -184,15 +208,15 @@ export class BusquedaSancionesComponent implements OnInit {
     }
 
     if (this.fechaDesde != null && this.fechaDesde != undefined) {
-      this.body.fechaDesde = new Date(this.fechaDesde);
+      this.body.fechaDesdeDate = new Date(this.fechaDesde);
     } else {
-      this.body.fechaDesde = null;
+      this.body.fechaDesdeDate = null;
     }
 
     if (this.fechaHasta != null && this.fechaHasta != undefined) {
-      this.body.fechaHasta = new Date(this.fechaHasta);
+      this.body.fechaHastaDate = new Date(this.fechaHasta);
     } else {
-      this.body.fechaHasta = null;
+      this.body.fechaHastaDate = null;
     }
 
     if (this.fecha != null && this.fecha != undefined) {
@@ -205,18 +229,18 @@ export class BusquedaSancionesComponent implements OnInit {
       this.fechaArchivadaDesde != null &&
       this.fechaArchivadaDesde != undefined
     ) {
-      this.body.fechaArchivadaDesde = new Date(this.fechaArchivadaDesde);
+      this.body.fechaArchivadaDesdeDate = new Date(this.fechaArchivadaDesde);
     } else {
-      this.body.fechaArchivadaDesde = null;
+      this.body.fechaArchivadaDesdeDate = null;
     }
 
     if (
       this.fechaArchivadaHasta != null &&
       this.fechaArchivadaHasta != undefined
     ) {
-      this.body.fechaArchivadaHasta = new Date(this.fechaArchivadaHasta);
+      this.body.fechaArchivadaHastaDate = new Date(this.fechaArchivadaHasta);
     } else {
-      this.body.fechaArchivadaHasta = null;
+      this.body.fechaArchivadaHastaDate = null;
     }
 
     this.sigaServices
@@ -244,18 +268,19 @@ export class BusquedaSancionesComponent implements OnInit {
     this.body.segundoApellido = "";
     this.colegios_seleccionados = [];
     this.body.chkRehabilitado = false;
-    this.fecha = null;
-    this.fechaDesde = null;
-    this.fechaHasta = null;
+    this.fecha = undefined;
+    this.fechaDesde = undefined;
+    this.fechaHasta = undefined;
     this.body.chkArchivadas = false;
-    this.fechaArchivadaDesde = null;
-    this.fechaArchivadaHasta = null;
+    this.fechaArchivadaDesde = undefined;
+    this.fechaArchivadaHasta = undefined;
     this.body.estado = "";
     this.body.origen = "";
     this.body.refColegio = "";
     this.body.refConsejo = "";
     this.body.tipo = "";
     this.body.tipoSancion = "";
+    sessionStorage.removeItem("saveFilters");
   }
 
   newRecord() {
@@ -280,26 +305,17 @@ export class BusquedaSancionesComponent implements OnInit {
     else return true;
   }
 
-  redirectTo(selectedDatos) {
-    if (!this.selectMultiple) {
-      sessionStorage.setItem("rowData", JSON.stringify(selectedDatos));
+  onRowSelect(selectedDatos) {
+    // Guardamos los filtros
+    sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
 
-      this.router.navigate(["/detalleSancion"]);
-    } else {
-      this.numSelected = this.selectedDatos.length;
-    }
-  }
+    // Guardamos los datos de la búsqueda
+    sessionStorage.setItem("search", JSON.stringify(this.data));
 
-  isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    } else {
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    }
+    // Guardamos los datos seleccionados para pasarlos a la otra pantalla
+    sessionStorage.setItem("rowData", JSON.stringify(selectedDatos));
+
+    this.router.navigate(["/detalleSancion"]);
   }
 
   onChangeRowsPerPages(event) {

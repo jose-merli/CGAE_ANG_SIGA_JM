@@ -222,7 +222,6 @@
           label="{{ 'general.boton.guardar' | translate}}"></button>
         <button *ngIf="isLetrado" (click)="comprobarAuditoria()" [(disabled)]="!activarGuardarGenerales" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
         <!-- <button *ngIf="isLetrado" (click)="comprobarAuditoria()" disabled pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button> -->
-
       </div>
     </div>
   </div>
@@ -293,45 +292,48 @@
           <div class="form-row">
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.busquedaClientesAvanzada.literal.nColegiado" | translate}}</label>
-              <input [(ngModel)]="colegialesBody.numColegiado" (onChange)="activacionGuardarColegiales()" type="text" class="form-control" pInputText>
+              <input [(ngModel)]="colegialesBody.numColegiado" [(disabled)]="isLetrado" (ngModelChange)="activacionGuardarColegiales()" type="text" class="form-control" pInputText>
               <div *ngIf="identificacionValida == false">
                 <label class="labelError">{{"El documento es inválido"}}</label>
               </div>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosGenerales.literal.seguro" | translate}}</label>
-              <p-dropdown class="select-form"  (onChange)="activacionGuardarColegiales()" [(ngModel)]="colegialesBody.idTiposSeguro" placeholder="{{'general.boton.seleccionar' | translate}}"
+              <p-dropdown class="select-form" [(disabled)]="isLetrado" (onChange)="activacionGuardarColegiales()" [(ngModel)]="colegialesBody.idTiposSeguro" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [options]="comboTipoSeguro"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3">
-              <label>Residente / Inscrito</label>
+              <label>{{"censo.ws.literal.residenteInscrito" | translate}}</label>
               <!-- <input [(ngModel)]="colegialesBody.residenteInscrito" type="text"  (ngModelChange)="activacionGuardarColegiales()" class="form-control" [maxLength]="100" pInputText> -->
-              <p-dropdown class="select-form"  (onChange)="activacionGuardarColegiales()" [(ngModel)]="inscritoSeleccionado" placeholder="{{'general.boton.seleccionar' | translate}}"
+              <p-dropdown class="select-form"  (onChange)="activacionGuardarColegiales()" [(disabled)]="isLetrado" [(ngModel)]="inscritoSeleccionado" placeholder="{{'general.boton.seleccionar' | translate}}"
               [options]="comboResidente"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3 form-group-date">
               <label>{{"censo.consultaDatosColegiales.literal.nMutualista" | translate}}</label>
-              <input [(ngModel)]="colegialesBody.nMutualista" type="text" class="form-control" (ngModelChange)="activacionGuardarColegiales()"  [maxLength]="100" pInputText>
+              <input [(ngModel)]="colegialesBody.nMutualista" type="text" class="form-control"  [(disabled)]="isLetrado" (ngModelChange)="activacionGuardarColegiales()"  [maxLength]="100" pInputText>
+              <div *ngIf="!numMutualistaCheck()">
+                <label class="labelError">Solo números</label>
+              </div>
             </div>
 
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosGenerales.literal.fechaIncorporacion" | translate}}</label>
-              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"  (onSelect)="activacionGuardarColegiales()" [(ngModel)]="colegialesBody.incorporacion"
+              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"  [(disabled)]="isLetrado"  (onSelect)="activacionGuardarColegiales()" [(ngModel)]="colegialesBody.incorporacion"
                 dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true"></p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosGenerales.literal.fechaPresentacion" | translate}}</label>
-              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" (onSelect)="activacionGuardarColegiales()"  [(ngModel)]="colegialesBody.fechapresentacion"
+              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"  [(disabled)]="isLetrado" (onSelect)="activacionGuardarColegiales()"  [(ngModel)]="colegialesBody.fechapresentacion"
                 dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true"></p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosGenerales.literal.fechaJura" | translate}}</label>
-              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" (onSelect)="activacionGuardarColegiales()"  [(ngModel)]="colegialesBody.fechaJura"
+              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"  [(disabled)]="isLetrado" (onSelect)="activacionGuardarColegiales()"  [(ngModel)]="colegialesBody.fechaJura"
                 dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true"></p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.consultaDatosColegiales.literal.fechaTitulacion" | translate}}</label>
-              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"  (onSelect)="activacionGuardarColegiales()" [(ngModel)]="colegialesBody.fechaTitulacion"
+              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"  [(disabled)]="isLetrado"  (onSelect)="activacionGuardarColegiales()" [(ngModel)]="colegialesBody.fechaTitulacion"
                 dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true"></p-calendar>
             </div>
           </div>
@@ -1161,7 +1163,23 @@
 
   <app-dialog></app-dialog>
 
-  <div *ngIf="progressSpinner" class="overlay-spinner">
+  <p-dialog [(visible)]="displayServicios" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="1300"
+  [minWidth]="1300">
+  <p-header class="title">
+    <label>{{"general.ventana.cgae" | translate}}</label>
+  </p-header>
+
+  <app-my-iframe url="{{ url }}"></app-my-iframe>
+  
+  <p-footer>
+    <div class="text-right main-button ">
+      <button (click)="cerrarServicios()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
+      <!-- <button (click)="solicitudGuardarCv()" [(disabled)]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button> -->
+    </div>
+  </p-footer>
+</p-dialog>
+
+  <div #target *ngIf="progressSpinner" class="overlay-spinner">
     <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
     <div class="loader"></div>
   </div>

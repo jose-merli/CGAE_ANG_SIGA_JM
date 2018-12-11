@@ -106,8 +106,8 @@
       </div>
       <div *ngIf="openFichaCuentaBancaria" class="card-footer ">
         <div class="text-right main-button ">
-          <button *ngIf="!nuevo" (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-          <button *ngIf="nuevo" (click)="restablecerNuevo()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+          <button *ngIf="!nuevo" (click)="restablecer()" pButton type="button" [disabled]="igualInicio()" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+          <button *ngIf="nuevo" (click)="restablecerNuevo()" pButton type="button" [disabled]="igualInicio()" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
           <button *ngIf="!isLetrado"(click)="validarFormulario()" [disabled]="condiciones()" pButton type="button" icon="far fa-save" iconPos="left"
             label="{{ 'general.boton.guardar' | translate}}"></button>
             <button *ngIf="isLetrado"(click)="validarFormulario()" [disabled]="condiciones()" pButton type="button" icon="far fa-save" iconPos="left"

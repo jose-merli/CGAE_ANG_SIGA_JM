@@ -1,3 +1,5 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -42,7 +44,7 @@
               >{{
                 "censo.consultaDatosColegiacion.literal.fechaNac" | translate
               }}
-              <span>{{ body.fechaNacimiento }}</span>
+              <span>{{ body.fechaNacimientoDate }}</span>
             </label>
           </div>
         </div>
@@ -64,7 +66,7 @@
                   "busquedaSanciones.colegioSancionador.literal" | translate
                 }}</label>
                 <p-dropdown
-                  class="select-form" [options]="colegios" [(ngModel)]="body.colegio" (onChange)="disableFields()"
+                  class="select-form" [options]="colegios" [(ngModel)]="body.idColegio" (onChange)="disableFields()"
                 ></p-dropdown>
 
               </div>
@@ -110,7 +112,7 @@
                   [(disabled)]="disabledFechaAcuerdo"
                   showIcon="true"
                   dateFormat="dd/mm/yy"
-                  [(ngModel)]="body.fechaAcuerdo"
+                  [(ngModel)]="body.fechaAcuerdoDate"
                 ></p-calendar>
               </div>
               <div class="form-group col-lg-6 col-md-6">
@@ -129,7 +131,8 @@
                   icon="far fa-calendar-alt"
                   showIcon="true"
                   dateFormat="dd/mm/yy"
-                  [(ngModel)]="body.fechaFirmeza"
+                  [(ngModel)]="body.fechaFirmezaDate"
+                  [(minDate)]="body.fechaAcuerdoDate"
                 ></p-calendar>
               </div>
 
@@ -160,7 +163,8 @@
                   (onSelect)="deshabilitarFechas()"
                   showIcon="true"
                   dateFormat="dd/mm/yy"
-                  [(ngModel)]="body.fechaDesde"
+                  [(ngModel)]="body.fechaDesdeDate"
+                
                 ></p-calendar>
               </div>
 
@@ -175,7 +179,8 @@
                   (onSelect)="deshabilitarFechas()"
                   showIcon="true"
                   dateFormat="dd/mm/yy"
-                  [(ngModel)]="body.fechaHasta"
+                  [(ngModel)]="body.fechaHastaDate"
+                 
                 ></p-calendar>
               </div>
               <div class="form-group col-lg-6 col-md-6">
@@ -190,9 +195,11 @@
                   icon="far fa-calendar-alt"
                   [(disabled)]="disabledRehabilitado"
                   (onSelect)="deshabilitarFechas()"
+                  (onInput)="detectDateInput()"
                   showIcon="true"
                   dateFormat="dd/mm/yy"
-                  [(ngModel)]="body.fechaRehabilitado"
+                  [(ngModel)]="body.fechaRehabilitadoDate"
+                 
                 ></p-calendar>
               </div>
 
@@ -226,7 +233,8 @@
                   (onSelect)="deshabilitarFechas()"
                   showIcon="true"
                   dateFormat="dd/mm/yy"
-                  [(ngModel)]="body.fechaArchivada"
+                  [(ngModel)]="body.fechaArchivadaDate"
+                
                 ></p-calendar>
               </div>
               <div class="form-group col-lg-6 col-md-6">
@@ -254,7 +262,7 @@
                 <label>{{
                   "facturacion.altaAbonos.literal.provisionalORecurrida"
                     | translate
-                }}  <label *ngIf="body.fechaAcuerdo">{{ body.fechaAcuerdo | date: 'MMM/yyyy'}}</label>
+                }}  <label *ngIf="body.fechaAcuerdoDate">{{ body.fechaAcuerdoDate | date: 'MMM/yyyy'}}</label>
               </label> 
               </div>
             </div>
@@ -265,7 +273,7 @@
               <div class="form-group col-lg-6 col-md-6 mtop">
                 <label>{{
                   "facturacion.altaAbonos.literal.Firme" | translate
-                }}</label>
+                }}  <label *ngIf="body.fechaFirmezaDate">{{ body.fechaFirmezaDate | date: 'MMM/yyyy'}}</label> </label>
               </div>
             </div>
             <div class="form-row">
@@ -275,7 +283,7 @@
               <div class="form-group col-lg-6 col-md-6 mtop ">
                 <label>{{
                   "facturacion.altaAbonos.literal.enEjecucion" | translate
-                }}</label>
+                }}  <label *ngIf="body.fechaDesdeDate">{{ body.fechaDesdeDate | date: 'MMM/yyyy' }} </label> - <label *ngIf="body.fechaHastaDate">  {{ body.fechaHastaDate | date: 'MMM/yyyy' }} </label> </label>
               </div>
             </div>
             <div class="form-row">
@@ -285,7 +293,7 @@
               <div class="form-group col-lg-6 col-md-6 mtop">
                 <label>{{
                   "facturacion.altaAbonos.literal.Rehabilitado" | translate
-                }}</label>
+                }} <label *ngIf="body.fechaRehabilitadoDate">{{ body.fechaRehabilitadoDate | date: 'MMM/yyyy'}}</label> </label>
               </div>
             </div>
             <div class="form-row">
@@ -295,7 +303,7 @@
               <div class="form-group col-lg-6 col-md-6 mtop">
                 <label>{{
                   "facturacion.altaAbonos.literal.Archivada" | translate
-                }}</label>
+                }} <label *ngIf="body.fechaArchivadaDate">{{ body.fechaArchivadaDate | date: 'MMM/yyyy'}}</label> </label>
               </div>
             </div>
           </div>
@@ -364,7 +372,7 @@
 
   <div class="mt-3 text-right main-button ">
     <button
-      (click)="backTo()"
+      (click)="return()"
       pButton
       type="button"
       icon="fa fa-angle-left"
