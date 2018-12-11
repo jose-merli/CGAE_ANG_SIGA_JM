@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
     //   this.isScrollReseteable = result.scrollReset;
     //   console.log(result)
     // })
-    sessionStorage.clear();
+    // sessionStorage.clear();
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false;
     };
