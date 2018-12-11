@@ -645,10 +645,14 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else {
       if (
         this.codigoPostalValido &&
-        (this.body.idTipoDireccion == undefined || this.isLetrado) &&
+        this.body.idTipoDireccion != undefined &&
         !this.igualInicio()
       ) {
-        return false;
+        if (this.isLetrado) {
+          return true;
+        } else {
+          return false;
+        }
       } else {
         return true;
       }

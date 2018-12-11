@@ -433,20 +433,21 @@ export class EdicionCurricularesComponent implements OnInit {
   }
 
   compruebaRegistro() {
-    var a = this.body.creditos;
-    if (
-      Number(this.body.creditos) + 1 &&
-      !this.onlySpaces(this.body.creditos)
-    ) {
-      this.creditosIncorrecto = false;
-      return true;
-    } else {
-      if (this.body.creditos == "" || this.onlySpaces(this.body.creditos)) {
-        this.creditosIncorrecto = null;
-        return false;
+    if (this.body.creditos != null && this.body.creditos != undefined) {
+      if (
+        Number(this.body.creditos) + 1 &&
+        !this.onlySpaces(this.body.creditos)
+      ) {
+        this.creditosIncorrecto = false;
+        return true;
       } else {
-        this.creditosIncorrecto = true;
-        return false;
+        if (this.body.creditos == "" || this.onlySpaces(this.body.creditos)) {
+          this.creditosIncorrecto = null;
+          return false;
+        } else {
+          this.creditosIncorrecto = true;
+          return false;
+        }
       }
     }
   }
@@ -542,8 +543,8 @@ export class EdicionCurricularesComponent implements OnInit {
       .subscribe(
         data => {
           this.tipoCurricularCombo = JSON.parse(data.body).combooItems;
-          this.body.idTipoCvSubtipo1 = "";
-          this.body.idTipoCvSubtipo2 = "";
+          // this.body.idTipoCvSubtipo1 = "";
+          // this.body.idTipoCvSubtipo2 = "";
         },
         err => {
           console.log(err);
