@@ -626,13 +626,10 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   desactivaDuplicar() {
-    if (this.historyDisable) {
+    if (this.historyDisable || this.isLetrado) {
       return true;
     } else {
-      if (
-        this.codigoPostalValido &&
-        (this.body.idTipoDireccion == undefined || this.isLetrado)
-      ) {
+      if (this.codigoPostalValido && this.body.idTipoDireccion == undefined) {
         return false;
       } else {
         return true;
