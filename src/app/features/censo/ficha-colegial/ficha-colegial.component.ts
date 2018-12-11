@@ -117,6 +117,7 @@ export class FichaColegialComponent implements OnInit {
   datosColegiales: FichaColegialColegialesItem[] = [];
   datosColegiaciones: any[] = [];
   datosCertificados: any[] = [];
+  url: String;
   etiquetasPersonaJuridica: any[];
   datosSociedades: any[] = [];
   file: File = undefined;
@@ -159,6 +160,7 @@ export class FichaColegialComponent implements OnInit {
   isClose: boolean = false;
   comboEtiquetas: any[];
   inscritoSeleccionado: String = "00";
+  displayServicios: boolean = false;
   updateItems: Map<String, ComboEtiquetasItem> = new Map<
     String,
     ComboEtiquetasItem
@@ -2442,47 +2444,99 @@ export class FichaColegialComponent implements OnInit {
   //
   // MÉTODOS PARA SERVICIOS DE INTERÉS
 
+  // irFacturacion() {
+  //   // this.router.navigate(["/facturas"]);   /SIGA/CEN_Facturacion.do?idInstitucion=2005& idPersona=-1& accion=ver& tipoAcceso=8  
+  //   let idInstitucion = this.generalBody.idPersona.substr(0,4);
+  //   let url = (this.sigaServices.getNewSigaUrl() + "SIGA/CEN_Facturacion.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
+  //   window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
+  // }
+  // irAuditoria() {
+  //   // this.router.navigate(["/auditoriaUsuarios"]);
+  //   // sessionStorage.setItem("tarjeta", "/fichaPersonaJuridica");  /SIGA/CEN_Historico.do?idInstitucion=2005& idPersona=-1& accion=ver& tipoAcceso=8
+  //   let idInstitucion = this.generalBody.idPersona.substr(0,4);
+  //   let url = (this.sigaServices.getNewSigaUrl() + "SIGA/CEN_Historico.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
+  //   window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
+  // }
+  // irComunicaciones() {
+  //   // this.router.navigate(["/informesGenericos"]);             /SIGA/CEN_Comunicaciones.do?idInstitucion=2005& idPersona=-1& accion=ver& tipoAcceso=8  
+  //   let idInstitucion = this.generalBody.idPersona.substr(0,4);
+  //   let url = (this.sigaServices.getNewSigaUrl() + "SIGA/CEN_Comunicaciones.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
+  //   window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
+  // }
+
+  // irExpedientes() {
+  //   // this.router.navigate(["/tiposExpedientes"]);
+  //   let idInstitucion = this.generalBody.idPersona.substr(0,4);
+  //   let url = (this.sigaServices.getNewSigaUrl() + "SIGA/CEN_Expedientes.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
+  //   window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
+  // }
+
+  // irTurnoOficio() {
+  //   // this.router.navigate(["/tiposExpedientes"]);
+  //   let idInstitucion = this.generalBody.idPersona.substr(0,4);
+  //   let url = (this.sigaServices.getNewSigaUrl() + "SIGA/JGR_DefinirTurnosLetrado.do?&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"");
+  //   window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
+
+  // }
+  
+  // irRegTel() {
+  //   // this.router.navigate(["/tiposExpedientes"]);
+  //   let idInstitucion = this.generalBody.idPersona.substr(0,4);
+  //   let url = (this.sigaServices.getNewSigaUrl() + "SIGA/CEN_Censo_DocumentacionRegTel.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
+  //   window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
+
+  // }
+
+  cerrarServicios(){
+    this.displayServicios = false;
+  }
+
   irFacturacion() {
     // this.router.navigate(["/facturas"]);   /SIGA/CEN_Facturacion.do?idInstitucion=2005& idPersona=-1& accion=ver& tipoAcceso=8  
     let idInstitucion = this.generalBody.idPersona.substr(0,4);
-    let url = (this.sigaServices.getNewSigaUrl() + "SIGA/CEN_Facturacion.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
-    window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
+    this.url = (this.sigaServices.getNewSigaUrl() + "SIGA/CEN_Facturacion.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
+    // window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
+    this.displayServicios = true;
   }
   irAuditoria() {
     // this.router.navigate(["/auditoriaUsuarios"]);
     // sessionStorage.setItem("tarjeta", "/fichaPersonaJuridica");  /SIGA/CEN_Historico.do?idInstitucion=2005& idPersona=-1& accion=ver& tipoAcceso=8
     let idInstitucion = this.generalBody.idPersona.substr(0,4);
-    let url = (this.sigaServices.getNewSigaUrl() + "SIGA/CEN_Historico.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
-    window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
+    this.url = (this.sigaServices.getNewSigaUrl() + "SIGA/CEN_Historico.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
+    // window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
+    this.displayServicios = true;
   }
   irComunicaciones() {
     // this.router.navigate(["/informesGenericos"]);             /SIGA/CEN_Comunicaciones.do?idInstitucion=2005& idPersona=-1& accion=ver& tipoAcceso=8  
     let idInstitucion = this.generalBody.idPersona.substr(0,4);
-    let url = (this.sigaServices.getNewSigaUrl() + "SIGA/CEN_Comunicaciones.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
-    window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
+    this.url = (this.sigaServices.getNewSigaUrl() + "SIGA/CEN_Comunicaciones.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
+    // window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
+    this.displayServicios = true;
   }
 
   irExpedientes() {
     // this.router.navigate(["/tiposExpedientes"]);
     let idInstitucion = this.generalBody.idPersona.substr(0,4);
-    let url = (this.sigaServices.getNewSigaUrl() + "SIGA/CEN_Expedientes.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
-    window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
+    this.url = (this.sigaServices.getNewSigaUrl() + "SIGA/CEN_Expedientes.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
+    // window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
+    this.displayServicios = true;
   }
 
   irTurnoOficio() {
     // this.router.navigate(["/tiposExpedientes"]);
     let idInstitucion = this.generalBody.idPersona.substr(0,4);
-    let url = (this.sigaServices.getNewSigaUrl() + "SIGA/JGR_DefinirTurnosLetrado.do?&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"");
-    window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
-
+    this.url = (this.sigaServices.getNewSigaUrl() + "SIGA/JGR_DefinirTurnosLetrado.do?&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"");
+    // window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
+    this.displayServicios = true;
   }
   
   irRegTel() {
     // this.router.navigate(["/tiposExpedientes"]);
     let idInstitucion = this.generalBody.idPersona.substr(0,4);
-    let url = (this.sigaServices.getNewSigaUrl() + "SIGA/CEN_Censo_DocumentacionRegTel.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
-    window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
-
+    this.url = (this.sigaServices.getNewSigaUrl() + "SIGA/CEN_Censo_DocumentacionRegTel.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
+    // window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
+    this.displayServicios = true;
   }
+
   // FIN MÉTODOS PARA SERVICIOS DE INTERÉS
 }
