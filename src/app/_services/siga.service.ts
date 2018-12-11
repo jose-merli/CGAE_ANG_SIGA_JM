@@ -489,6 +489,10 @@ export class SigaServices {
     return environment.newSigaUrl;
   }
 
+  getOldSigaUrl() {
+    return environment.oldSigaUrl;
+  }
+
   getServucePath(service: string) {
     return this.endpoints[service];
   }
