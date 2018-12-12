@@ -21,6 +21,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   fecha: Date;
   msgs: Message[];
   arrayProgramar: any[];
+  currentDate: Date = new Date();
 
 
 

@@ -15,13 +15,14 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
 
   openFicha: boolean = false;
   openDestinatario: boolean;
-  etiquetasSeleccionadas: string[];
-  etiquetasNoSeleccionadas: string[];
+  etiquetasSeleccionadas: any[];
+  etiquetasNoSeleccionadas: any[];
   body: DestinatariosEnviosMasivosItem = new DestinatariosEnviosMasivosItem();
   msgs: Message[];
   etiquetasPersonaJuridica: any[];
   seleccionadasInicial: any[];
   noSeleccionadasInicial: any[];
+
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -87,8 +88,8 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
       .subscribe(
         n => {
           // coger etiquetas de una persona juridica
-          this.etiquetasSeleccionadas = n.combooItems;
-          this.seleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasSeleccionadas));
+          this.etiquetasNoSeleccionadas = n.combooItems;
+          this.noSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasNoSeleccionadas));
 
         },
         err => {
@@ -103,8 +104,8 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
       .subscribe(
         n => {
           // coger etiquetas de una persona juridica
-          this.etiquetasNoSeleccionadas = JSON.parse(n["body"]).combooItems;
-          this.noSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasNoSeleccionadas));
+          this.etiquetasSeleccionadas = JSON.parse(n["body"]).combooItems;
+          this.seleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasSeleccionadas));
 
         },
         err => {
@@ -117,20 +118,33 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
 
   guardar() {
 
+    let array: any[] = [];
+    let arrayNoSel: any[] = [];
+    this.etiquetasSeleccionadas.forEach(element => {
+      array.push(element.value)
+    });
+    this.etiquetasNoSeleccionadas.forEach(element => {
+      arrayNoSel.push(element.value)
+    });
+
     let objEtiquetas = {
-      idEnvio: this.body.idEnvio,
-      etiquetasSeleccionadas: this.etiquetasSeleccionadas,
-      etiquetasNoSeleccionadas: this.etiquetasNoSeleccionadas
+      etiquetasSeleccionadas: array,
+      etiquetasNoSeleccionadas: arrayNoSel,
+      idEnvio: this.body.idEnvio
     }
+
     this.sigaServices
       .post("enviosMasivos_guardarEtiquetas", objEtiquetas)
       .subscribe(
         n => {
+          this.showSuccess('Se han guardado las etiquetas correctamente');
           this.seleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasSeleccionadas));
           this.noSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasNoSeleccionadas));
         },
         err => {
+          this.showSuccess('Error al guardar las etiquetas');
           console.log(err);
+
         },
         () => {
 

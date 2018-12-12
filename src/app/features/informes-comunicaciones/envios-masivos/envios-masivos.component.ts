@@ -43,6 +43,7 @@ export class EnviosMasivosComponent implements OnInit {
   programarArray: any[];
   bodySearch: EnviosMasivosSearchItem = new EnviosMasivosSearchItem();
   eliminarArray: any[];
+  currentDate: Date = new Date();
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -58,8 +59,11 @@ export class EnviosMasivosComponent implements OnInit {
 
     sessionStorage.removeItem("crearNuevoEnvio")
 
-    if (sessionStorage.getItem("enviosMasivosSearch") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
+    if (sessionStorage.getItem("filtros") != null) {
+      this.bodySearch = JSON.parse(sessionStorage.getItem("filtros"));
+      this.bodySearch.fechaCreacion = new Date(this.bodySearch.fechaCreacion)
+      this.bodySearch.fechaProgramacion = new Date(this.bodySearch.fechaProgramacion)
+      this.buscar();
     }
 
     this.getTipoEnvios();
@@ -68,7 +72,7 @@ export class EnviosMasivosComponent implements OnInit {
     this.selectedItem = 10;
 
     this.cols = [
-      { field: 'asunto', header: 'Descripción' },
+      { field: 'descripcion', header: 'Descripción' },
       { field: 'fechaCreacion', header: 'Fecha creación' },
       { field: 'fechaProgramada', header: 'Fecha programación' },
       { field: 'tipoEnvio', header: 'Forma envío' },
@@ -111,6 +115,7 @@ export class EnviosMasivosComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_estado").subscribe(
       data => {
         this.estados = data.combooItems;
+        console.log(this.estados)
       },
       err => {
         console.log(err);
@@ -271,10 +276,14 @@ export class EnviosMasivosComponent implements OnInit {
   }
 
   navigateTo(dato) {
-    if (!this.selectMultiple) {
+    console.log(dato)
+    if (!this.selectMultiple && dato[0].idEstado != 5) {
       // this.body.estado = dato[0].estado;
       this.router.navigate(['/fichaRegistroEnvioMasivo']);
       sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(this.body));
+      sessionStorage.setItem("filtros", JSON.stringify(this.bodySearch));
+    } else if (dato[0].idEstado == 5) {
+      this.showInfo('El envío está en proceso, no puede editarse')
     }
   }
 

@@ -13,7 +13,7 @@
 
         <div class="form-group col-lg-4 col-md-4">
           <label>Descripción</label>
-          <input type="text" class="form-control" [(ngModel)]="bodySearch.asunto" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="bodySearch.descripcion" pInputText>
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>Fecha creación *</label>
@@ -123,13 +123,13 @@
   <div class="form-row">
     <div class="form-group col-lg-12 col-md-12">
       <label>Fecha</label>
-      <p-calendar [(ngModel)]="bodyProgramar.fechaProgramada" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
-        [utc]="true"></p-calendar>
+      <p-calendar showTime="true" [minDate]="currentDate" [(ngModel)]="bodyProgramar.fechaProgramada" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
+        showIcon="true" [utc]="true"></p-calendar>
     </div>
   </div>
   <p-footer>
     <div class="text-right main-button ">
-      <button (click)="programar(selectedDatos)" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+      <button (click)="programar(selectedDatos)" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
     </div>
   </p-footer>
 </p-dialog>

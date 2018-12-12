@@ -7,6 +7,7 @@ import { DocumentosEnviosMasivosItem } from '../../../../../models/DocumentosEnv
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { saveAs } from "file-saver/FileSaver";
+import { tick } from '@angular/core/testing';
 
 
 @Component({
@@ -83,7 +84,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
 
 
   // Mensajes
-  showFail(mensaje: string) {
+  ail(mensaje: string) {
     this.msgs = [];
     this.msgs.push({ severity: "error", summary: "", detail: mensaje });
   }
@@ -189,7 +190,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
             .subscribe(data => {
               const blob = new Blob([data], { type: "text/plain;charset=utf-8" });
               if (blob.size == 0) {
-                this.showFail("messages.general.error.ficheroNoExiste");
+                this.ail("messages.general.error.ficheroNoExiste");
               } else {
                 //let filename = "2006002472110.pdf";
                 saveAs(data, filename);
@@ -230,7 +231,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
         this.showSuccess('Se ha eliminado el documento correctamente');
       },
       err => {
-        this.showFail('Error al eliminado el envío');
+        this.ail('Error al eliminado el envío');
         console.log(err);
       },
       () => {
@@ -244,12 +245,30 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
     console.log(event)
     let fileList: FileList = event.files;
     this.file = fileList[0];
+
+    this.addFile();
   }
 
   navigateTo(dato) {
     if (!this.selectMultiple) {
       this.downloadDocumento(dato)
     }
+  }
+
+  addFile() {
+    this.sigaServices.post("enviosMasivos_subirDocumento", this.file).subscribe(
+      data => {
+        this.showSuccess('Se ha subido el documento correctamente');
+      },
+      err => {
+        this.ail('Error al subir el documento');
+        console.log(err);
+      },
+      () => {
+        // this.getDocumentos();
+        this.table.reset();
+      }
+    );
   }
 
 }

@@ -170,6 +170,7 @@ export class SigaServices {
     enviosMasivos_etiquetas: 'enviosMasivos/detalle/etiquetas',
     enviosMasivos_etiquetasEnvio: 'enviosMasivos/detalle/etiquetasEnvio ',
     enviosMasivos_guardarEtiquetas: 'enviosMasivos/detalle/guardarEtiquetas',
+    enviosMasivos_subirDocumento: 'enviosMasivos/detalle/subirDocumento'
 
   };
 

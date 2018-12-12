@@ -1,4 +1,4 @@
-<!-- <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl> -->
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="ficha-container">
   <div class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha()">
@@ -32,8 +32,8 @@
     <div *ngIf="openFicha" class=" card-body card-body-ficha">
       <p-pickList [source]="etiquetasSeleccionadas" [target]="etiquetasNoSeleccionadas" sourceHeader="Etiquetas seleccionadas"
         targetHeader="Etiquetas no seleccionadas" [responsive]="true" filterBy="label" dragdrop="true" dragdropScope="etiquetasSeleccionadas"
-        sourceFilterPlaceholder="Buscar etiqueta" targetFilterPlaceholder="Buscar etiqueta" [sourceStyle]="{ 'height': '300px'} "
-        [targetStyle]="{ 'height': '300px'} " disabled>
+        sourceFilterPlaceholder="Buscar etiqueta" targetFilterPlaceholder="Buscar etiqueta" [showSourceControls]="false" [showTargetControls]="false"
+        [sourceStyle]="{ 'height': '300px'} " [targetStyle]="{ 'height': '300px'} " disabled>
         <ng-template let-item pTemplate="item">
           <div>{{item.label}}</div>
         </ng-template>

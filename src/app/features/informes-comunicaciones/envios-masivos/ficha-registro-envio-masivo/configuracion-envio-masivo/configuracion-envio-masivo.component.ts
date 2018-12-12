@@ -111,6 +111,10 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
         let comboPlantillas = JSON.parse(data["body"]);
         this.plantillas = comboPlantillas.combooItems;
 
+        if (this.editar) {
+          this.body.idPlantillasEnvio = this.body.idPlantillasEnvio.toString();
+        }
+
         console.log(this.plantillas)
       },
       err => {
@@ -147,7 +151,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
-      this.body.idPlantillasEnvio = '0';
+
       this.editar = true;
       this.getPlantillas();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
