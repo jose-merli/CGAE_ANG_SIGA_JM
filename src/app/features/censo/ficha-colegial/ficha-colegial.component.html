@@ -1178,7 +1178,8 @@
   </p-footer>
 </p-dialog>
 
-  <div #target *ngIf="progressSpinner" class="overlay-spinner">
+  <!-- <div #target *ngIf="progressSpinner" class="overlay-spinner"> -->
+  <div *ngIf="progressSpinner" class="overlay-spinner">
     <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
     <div class="loader"></div>
   </div>

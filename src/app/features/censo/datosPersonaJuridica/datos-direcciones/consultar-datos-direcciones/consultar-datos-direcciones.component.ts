@@ -626,10 +626,13 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   desactivaDuplicar() {
-    if (this.historyDisable || this.isLetrado) {
+    if (this.historyDisable) {
       return true;
     } else {
-      if (this.codigoPostalValido && this.body.idTipoDireccion == undefined) {
+      if (
+        this.codigoPostalValido &&
+        (this.body.idTipoDireccion == undefined || this.isLetrado)
+      ) {
         return false;
       } else {
         return true;
@@ -645,14 +648,10 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else {
       if (
         this.codigoPostalValido &&
-        this.body.idTipoDireccion != undefined &&
+        (this.body.idTipoDireccion == undefined || this.isLetrado) &&
         !this.igualInicio()
       ) {
-        if (this.isLetrado) {
-          return true;
-        } else {
-          return false;
-        }
+        return false;
       } else {
         return true;
       }

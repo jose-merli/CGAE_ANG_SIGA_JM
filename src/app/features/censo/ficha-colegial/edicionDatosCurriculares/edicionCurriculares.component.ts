@@ -160,11 +160,10 @@ export class EdicionCurricularesComponent implements OnInit {
       }
     ];
     this.booleanToCertificado();
+    this.activateGuardar();
     if (this.nuevo == false) {
       this.changeCategoria();
     }
-    this.activateGuardar();
-    this.activateRestablecer();
   }
   abrirFicha() {
     this.openFicha = !this.openFicha;
@@ -433,21 +432,17 @@ export class EdicionCurricularesComponent implements OnInit {
   }
 
   compruebaRegistro() {
-    if (this.body.creditos != null && this.body.creditos != undefined) {
-      if (
-        Number(this.body.creditos) + 1 &&
-        !this.onlySpaces(this.body.creditos)
-      ) {
-        this.creditosIncorrecto = false;
-        return true;
+    var a = this.body.creditos;
+    if (Number(this.body.creditos) && !this.onlySpaces(this.body.creditos)) {
+      this.creditosIncorrecto = false;
+      return true;
+    } else {
+      if (this.body.creditos == "" || this.onlySpaces(this.body.creditos)) {
+        this.creditosIncorrecto = null;
+        return false;
       } else {
-        if (this.body.creditos == "" || this.onlySpaces(this.body.creditos)) {
-          this.creditosIncorrecto = null;
-          return false;
-        } else {
-          this.creditosIncorrecto = true;
-          return false;
-        }
+        this.creditosIncorrecto = true;
+        return false;
       }
     }
   }
@@ -488,15 +483,13 @@ export class EdicionCurricularesComponent implements OnInit {
   }
 
   activateDuplicar() {
-    this.compruebaRegistro();
     if (
       this.creditosIncorrecto == true ||
       this.body.fechaDesde == null ||
       this.body.idTipoCv == undefined ||
       this.body.idTipoCv == null ||
       this.body.descripcion == null ||
-      this.body.descripcion == "" ||
-      this.isLetrado
+      this.body.descripcion == ""
     ) {
       return false;
     } else {
@@ -543,8 +536,8 @@ export class EdicionCurricularesComponent implements OnInit {
       .subscribe(
         data => {
           this.tipoCurricularCombo = JSON.parse(data.body).combooItems;
-          // this.body.idTipoCvSubtipo1 = "";
-          // this.body.idTipoCvSubtipo2 = "";
+          this.body.idTipoCvSubtipo1 = "";
+          this.body.idTipoCvSubtipo2 = "";
         },
         err => {
           console.log(err);
