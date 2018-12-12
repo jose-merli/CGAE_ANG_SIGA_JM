@@ -56,17 +56,20 @@ export class ComunicacionesComponent implements OnInit {
   ngOnInit() {
     this.selectedItem = 4;
 
+    this.getTipoEnvios();
+    this.getEstadosEnvios();
+
     if (sessionStorage.getItem("comunicacionesSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("comunicacionesSearch"));
     }
 
     this.cols = [
-      { field: 'clasesComunicaciones', header: 'Clases de comunicaciones' },
+      // { field: 'clasesComunicaciones', header: 'Clases de comunicaciones' },
       { field: 'asunto', header: 'Asunto' },
       { field: 'fechaCreacion', header: 'Fecha creación' },
-      { field: 'formaEnvio', header: 'Forma envío' },
-      { field: 'tipoEnvio', header: 'Tipo de envío' },
-      { field: 'estado', header: 'Estado' }
+      { field: 'fechaProgramada', header: 'Fecha programación' },
+      { field: 'tipoEnvio', header: 'Forma envío' },
+      { field: 'estadoEnvio', header: 'Estado' }
     ];
 
     this.rowsPerPage = [
@@ -112,6 +115,29 @@ export class ComunicacionesComponent implements OnInit {
   }
 
 
+  getTipoEnvios() {
+    this.sigaServices.get("enviosMasivos_tipo").subscribe(
+      data => {
+        this.tiposEnvio = data.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+
+  getEstadosEnvios() {
+    this.sigaServices.get("enviosMasivos_estado").subscribe(
+      data => {
+        this.estados = data.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
 
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
@@ -151,9 +177,6 @@ export class ComunicacionesComponent implements OnInit {
   }
 
   getResultados() {
-    this.datos = [
-      { idEstado: '1', idEnvio: '1', fechaProgramada: '12/12/2018', asunto: 'hola' }
-    ]
 
     this.sigaServices
       .postPaginado("enviosMasivos_search", "?numPagina=1", this.bodySearch)
@@ -242,6 +265,30 @@ export class ComunicacionesComponent implements OnInit {
       this.buscar();
     }
   }
+
+
+  programar(dato) {
+    this.showProgramar = false;
+    dato.forEach(element => {
+      element.fechaProgramada = new Date(this.bodyProgramar.fechaProgramada)
+    });
+    this.sigaServices.post("enviosMasivos_programar", dato).subscribe(
+
+      data => {
+        this.showSuccess('Se ha programado el envío correctamente');
+      },
+      err => {
+        this.showFail('Error al programar el envío');
+        console.log(err);
+      },
+      () => {
+        this.buscar();
+        this.table.reset();
+      }
+    );
+  }
+
+
 
   navigateTo(dato) {
     let id = dato[0].id;

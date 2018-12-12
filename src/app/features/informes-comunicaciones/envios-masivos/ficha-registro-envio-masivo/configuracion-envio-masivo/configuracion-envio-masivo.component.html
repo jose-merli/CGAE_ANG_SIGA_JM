@@ -43,7 +43,7 @@
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
               <label class="d-block">Plantilla de envío *</label>
-              <p-dropdown [disabled]="(plantillas && plantillas.length <= 0) || editar" [options]="plantillas" [(ngModel)]="body.idPlantillasEnvio"
+              <p-dropdown [disabled]="(plantillas && plantillas.length <= 0) || editar" [options]="plantillas" [(ngModel)]="idPlantillasEnvio"
                 class="select-form"></p-dropdown>
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">

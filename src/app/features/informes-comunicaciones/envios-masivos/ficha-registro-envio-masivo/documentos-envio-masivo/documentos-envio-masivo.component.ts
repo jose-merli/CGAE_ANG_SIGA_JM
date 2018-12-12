@@ -161,7 +161,6 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
       data => {
         let datos = JSON.parse(data["body"]);
         this.datos = datos.documentoEnvioItem;
-        console.log(this.datos)
       },
       err => {
         console.log(err);

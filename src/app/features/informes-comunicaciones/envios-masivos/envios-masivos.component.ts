@@ -68,7 +68,7 @@ export class EnviosMasivosComponent implements OnInit {
     this.selectedItem = 10;
 
     this.cols = [
-      { field: 'asunto', header: 'Asunto' },
+      { field: 'asunto', header: 'Descripción' },
       { field: 'fechaCreacion', header: 'Fecha creación' },
       { field: 'fechaProgramada', header: 'Fecha programación' },
       { field: 'tipoEnvio', header: 'Forma envío' },

@@ -167,6 +167,9 @@ export class SigaServices {
     enviosMasivos_guardarConf: 'enviosMasivos/detalle/guardarConfiguracion',
     enviosMasivos_documentos: 'enviosMasivos/detalle/documentosEnvio',
     enviosMasivos_duplicar: 'enviosMasivos/detalle/duplicarEnvio ',
+    enviosMasivos_etiquetas: 'enviosMasivos/detalle/etiquetas',
+    enviosMasivos_etiquetasEnvio: 'enviosMasivos/detalle/etiquetasEnvio ',
+    enviosMasivos_guardarEtiquetas: 'enviosMasivos/detalle/guardarEtiquetas',
 
   };
 

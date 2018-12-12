@@ -2,6 +2,7 @@ export class DestinatariosEnviosMasivosItem {
   idInstitucion: String;
   idPersona: String;
   idLenguaje: String;
+  idEnvio;
   nif: String;
   denominacion: String;
   abreviatura: String;

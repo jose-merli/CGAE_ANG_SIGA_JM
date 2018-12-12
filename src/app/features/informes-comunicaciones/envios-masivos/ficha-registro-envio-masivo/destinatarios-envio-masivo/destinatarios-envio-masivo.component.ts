@@ -15,11 +15,13 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
 
   openFicha: boolean = false;
   openDestinatario: boolean;
-  etiquetasSeleccionadas: any[];
-  etiquetasNoSeleccionadas: any[];
+  etiquetasSeleccionadas: string[];
+  etiquetasNoSeleccionadas: string[];
   body: DestinatariosEnviosMasivosItem = new DestinatariosEnviosMasivosItem();
   msgs: Message[];
   etiquetasPersonaJuridica: any[];
+  seleccionadasInicial: any[];
+  noSeleccionadasInicial: any[];
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -55,14 +57,6 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
     this.getDatos();
 
 
-    // this.etiquetasSeleccionadas = [
-    //   { label: 'Administrador', value: '1' },
-    //   { label: 'Administrador General', value: '2' }
-    // ]
-    this.etiquetasNoSeleccionadas = [
-      { label: 'Grupo Deontológico', value: '1' },
-      { label: 'Abogado', value: '2' }
-    ]
 
   }
 
@@ -87,19 +81,62 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
     this.msgs = [];
   }
 
-  getDestinatarios() {
+  getSeleccionadas() {
     this.sigaServices
-      .post("busquedaPerJuridica_etiquetasPersona", this.body)
+      .get("enviosMasivos_etiquetas")
       .subscribe(
         n => {
           // coger etiquetas de una persona juridica
-          this.etiquetasSeleccionadas = JSON.parse(n["body"]).combooItems;
-          console.log(this.etiquetasSeleccionadas);
+          this.etiquetasSeleccionadas = n.combooItems;
+          this.seleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasSeleccionadas));
+
         },
         err => {
           console.log(err);
         }
       );
+  }
+
+  getNoSeleccionadas() {
+    this.sigaServices
+      .post("enviosMasivos_etiquetasEnvio", this.body.idEnvio)
+      .subscribe(
+        n => {
+          // coger etiquetas de una persona juridica
+          this.etiquetasNoSeleccionadas = JSON.parse(n["body"]).combooItems;
+          this.noSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasNoSeleccionadas));
+
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
+
+
+  guardar() {
+
+    let objEtiquetas = {
+      idEnvio: this.body.idEnvio,
+      etiquetasSeleccionadas: this.etiquetasSeleccionadas,
+      etiquetasNoSeleccionadas: this.etiquetasNoSeleccionadas
+    }
+    this.sigaServices
+      .post("enviosMasivos_guardarEtiquetas", objEtiquetas)
+      .subscribe(
+        n => {
+          this.seleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasSeleccionadas));
+          this.noSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasNoSeleccionadas));
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+
+        }
+      );
+
   }
 
 
@@ -133,11 +170,15 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
-      // this.body.idLenguaje = '1';
-      // this.body.idPersona = '1';
-      this.getDestinatarios();
+      this.getSeleccionadas();
+      this.getNoSeleccionadas();
     }
-    this.getDestinatarios();
+    this.getSeleccionadas();
+  }
+
+  restablecer() {
+    this.etiquetasSeleccionadas = JSON.parse(JSON.stringify(this.seleccionadasInicial));
+    this.etiquetasNoSeleccionadas = JSON.parse(JSON.stringify(this.noSeleccionadasInicial));
   }
 
 
