@@ -117,7 +117,7 @@ export class FichaColegialComponent implements OnInit {
   datosColegiales: FichaColegialColegialesItem[] = [];
   datosColegiaciones: any[] = [];
   datosCertificados: any[] = [];
-  url: String;
+  url: any;
   etiquetasPersonaJuridica: any[];
   datosSociedades: any[] = [];
   file: File = undefined;
@@ -256,6 +256,7 @@ export class FichaColegialComponent implements OnInit {
   ngOnInit() {
     // Cogemos los datos de la busqueda de Colegiados
     this.getLetrado();
+    this.url = "";
     if (
       sessionStorage.getItem("personaBody") != null &&
       sessionStorage.getItem("personaBody") != undefined &&
@@ -2495,7 +2496,7 @@ export class FichaColegialComponent implements OnInit {
     // this.router.navigate(["/facturas"]);   /SIGA/CEN_Facturacion.do?idInstitucion=2005& idPersona=-1& accion=ver& tipoAcceso=8  
     let idInstitucion = this.generalBody.idPersona.substr(0,4);
  
-    this.url = (this.sigaServices.getOldSigaUrl() + "CEN_Facturacion.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
+    this.url = this.sanitizer.bypassSecurityTrustResourceUrl((this.sigaServices.getOldSigaUrl() + "CEN_Facturacion.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8"));
     // window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
     this.displayServicios = true;
  
@@ -2505,35 +2506,35 @@ export class FichaColegialComponent implements OnInit {
     // sessionStoage.setItem("tarjeta", "/fichaPersonaJuridica");  /SIGA/CEN_Historico.do?idInstitucion=2005& idPersona=-1& accion=ver& tipoAcceso=8
     let idInstitucion = this.generalBody.idPersona.substr(0,4);
  
-    this.url = (this.sigaServices.getOldSigaUrl() + "CEN_Historico.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
+    this.url = this.sanitizer.bypassSecurityTrustResourceUrl((this.sigaServices.getOldSigaUrl() + "CEN_Historico.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8"));
     this.displayServicios = true;
  
   }
   irComunicaciones() {
     // this.router.navigate(["/informesGenericos"]);             /SIGA/CEN_Comunicaciones.do?idInstitucion=2005& idPersona=-1& accion=ver& tipoAcceso=8  
     let idInstitucion = this.generalBody.idPersona.substr(0,4);
-    this.url = (this.sigaServices.getOldSigaUrl() + "CEN_Comunicaciones.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
+    this.url = this.sanitizer.bypassSecurityTrustResourceUrl((this.sigaServices.getOldSigaUrl() + "CEN_Comunicaciones.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8"));
     this.displayServicios = true;
   }
 
   irExpedientes() {
     // this.router.navigate(["/tiposExpedientes"]);
     let idInstitucion = this.generalBody.idPersona.substr(0,4);
-    this.url = (this.sigaServices.getOldSigaUrl() + "CEN_Expedientes.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
+    this.url =this.sanitizer.bypassSecurityTrustResourceUrl((this.sigaServices.getOldSigaUrl() + "CEN_Expedientes.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8"));
     this.displayServicios = true;
   }
 
   irTurnoOficio() {
     // this.router.navigate(["/tiposExpedientes"]);
     let idInstitucion = this.generalBody.idPersona.substr(0,4);
-    this.url = (this.sigaServices.getOldSigaUrl() + "JGR_DefinirTurnosLetrado.do?&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"");
+    this.url = this.sanitizer.bypassSecurityTrustResourceUrl((this.sigaServices.getOldSigaUrl() + "JGR_DefinirTurnosLetrado.do?&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+""));
     this.displayServicios = true;
   }
   
   irRegTel() {
     // this.router.navigate(["/tiposExpedientes"]);
     let idInstitucion = this.generalBody.idPersona.substr(0,4);
-    this.url = (this.sigaServices.getOldSigaUrl() + "CEN_Censo_DocumentacionRegTel.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
+    this.url =this.sanitizer.bypassSecurityTrustResourceUrl((this.sigaServices.getOldSigaUrl() + "CEN_Censo_DocumentacionRegTel.do?idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8"));
     this.displayServicios = true;
   }
 

@@ -1168,9 +1168,9 @@
   <p-header class="title">
     <label>{{"general.ventana.cgae" | translate}}</label>
   </p-header>
-
-  <app-my-iframe url="{{ url }}"></app-my-iframe>
-  
+  <div class="mainFrameWrapper">
+    <iframe [src]="url" id="mainWorkArea" name="mainWorkArea" frameborder="0" scrolling="no" iframeAutoHeight></iframe>
+  </div>
   <p-footer>
     <div class="text-right main-button ">
       <button (click)="cerrarServicios()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
