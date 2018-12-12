@@ -43,7 +43,7 @@
                   [options]="comboNotifyType"
                   [filter]="true"
                   filterBy="label,labelSinTilde"
-                  placeholder="Seleccionar"
+                  placeholder="{{'general.boton.seleccionar' | translate}}"
                   name="type"
                   [disabled]="tipoAccesoLectura || notificationLowDate"
                 ></p-dropdown>
@@ -60,7 +60,7 @@
                   [(ngModel)]="selectedTemplate"
                   [filter]="false"
                   name="idPlantilla"
-                  placeholder="Seleccionar"
+                  placeholder="{{'general.boton.seleccionar' | translate}}"
                   (onChange)="onChangeTemplates($event)"
                   [disabled]="tipoAccesoLectura || notificationLowDate"
                 ></p-dropdown>
@@ -122,7 +122,7 @@
                   [options]="comboMeasureUnit"
                   [filter]="true"
                   filterBy="label,labelSinTilde"
-                  placeholder="Seleccionar"
+                  placeholder="{{'general.boton.seleccionar' | translate}}"
                   name="idUnidadMedida"
                   [disabled]="tipoAccesoLectura || notificationLowDate"
                 ></p-dropdown>

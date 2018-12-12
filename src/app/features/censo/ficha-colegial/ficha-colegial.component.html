@@ -140,7 +140,7 @@
             </div>
             <div class="form-check col-lg-6 col-md-6">
               <br>
-              <label class="form-group-label">Comisiones</label> &nbsp;&nbsp;
+              <label class="form-group-label">{{"menu.comisiones" | translate}}</label> &nbsp;&nbsp;
               <p-checkbox [(disabled)]="isLetrado" (onChange)="activacionGuardarGenerales()" [(ngModel)]='comisiones' binary="true"></p-checkbox>
             </div>
             <div class="form-group col-lg-6 col-md-6">
@@ -205,7 +205,7 @@
               <!-- <input type="text" disabled [pTooltip]="partidoJudicial" tooltipPosition="top" pInputText> -->
               <!-- </span> -->
               <div class="ayuda-btn">
-                <label>Partido Judicial </label>
+                <label>{{"menu.justiciaGratuita.maestros.partidosJudiciales" | translate}}</label>
                 <i class="fa fa-question" [pTooltip]="partidoJudicial" tooltipPosition="bottom"></i>
               </div> &nbsp;&nbsp;
             </div>
@@ -312,7 +312,7 @@
               <label>{{"censo.consultaDatosColegiales.literal.nMutualista" | translate}}</label>
               <input [(ngModel)]="colegialesBody.nMutualista" type="text" class="form-control"  [(disabled)]="isLetrado" (ngModelChange)="activacionGuardarColegiales()"  [maxLength]="100" pInputText>
               <div *ngIf="!numMutualistaCheck()">
-                <label class="labelError">Solo números</label>
+                <label class="labelError">{{"censo.ws.literal.soloNumeros" | translate}}</label>
               </div>
             </div>
 
@@ -412,8 +412,8 @@
 
           </div>
           <div class="d-flex justify-content-between">
-            <label class="registros-ficha">Número total de Colegiaciones:
-              <span>{{ datosColegiaciones.length }}</span>
+            <label class="registros-ficha">{{"censo.datosDireccion.literal.numero.colegiaciones" | translate}}
+              <span>{{datosColegiaciones.length }}</span>
             </label>
             <i *ngIf="!esFichaActiva('colegiaciones')" class="fa fa-angle-down float-right"></i>
           </div>
@@ -512,7 +512,7 @@
           </div>
           <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-between">
-              <label>Número total de Certificados:
+              <label>{{"censo.datosDireccion.literal.numero.certificados" | translate}}
                 <span>{{ datosCertificados.length }}</span>
               </label>
 
@@ -612,7 +612,7 @@
           </div>
           <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-between">
-              <label>Número total de Sociedades:
+              <label>{{"censo.datosDireccion.literal.numero.sociedades" | translate}}
                 <span>{{ sociedadesBody.busquedaJuridicaItems.length }}</span>
               </label>
             </div>
@@ -700,7 +700,7 @@
           </div>
           <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-between">
-              <label>Número total de Datos:
+              <label>{{"censo.datosDireccion.literal.numero.curriculares" | translate}}
                 <span>{{ datosCurriculares.length }}</span>
 
               </label>
@@ -728,7 +728,6 @@
           [rows]="selectedItem" (onRowSelect)="redireccionarCurriculares(selectedDatos)">
           <p-column *ngFor="let col of colsCurriculares" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
-            aaa
             <!-- <ng-template let-datoH="rowData" pTemplate="body">
               <span *ngIf="setItalic(datoH)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
               <span *ngIf="!setItalic(datoH)">{{datoH[col.field]}}</span>
@@ -811,7 +810,7 @@
             </div>
             <div class="d-flex justify-content-between">
               <div class="d-flex justify-content-between">
-                <label>Número total de Direcciones:
+                <label>{{"censo.datosDireccion.literal.numero.direccion" | translate}}
                   <span>{{ searchDireccionIdPersona.datosDireccionesItem.length }}</span>
                 </label>
 
@@ -1121,7 +1120,7 @@
             [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (onSelect)="validateFields()"
             [(disabled)]="historico"></p-calendar>
           <div *ngIf="item.fechaBaja != null && !isFechaBajaCorrect && !historico">
-            <label class="labelError">La fecha de baja no puede ser anterior a la fecha de inicio</label>
+            <label class="labelError">{{"gratuita.altaTurnos.error.fechaBajaPosteriorInicio" | translate}}</label>
           </div>
         </div>
       </div>
@@ -1170,7 +1169,7 @@
   </p-header>
 
   <app-my-iframe url="{{ url }}"></app-my-iframe>
-  
+
   <p-footer>
     <div class="text-right main-button ">
       <button (click)="cerrarServicios()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>

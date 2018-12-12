@@ -45,6 +45,8 @@ import { PersonaJuridicaItem } from "../../../models/PersonaJuridicaItem";
 import { PersonaJuridicaObject } from "../../../models/PersonaJuridicaObject";
 import { ComboEtiquetasItem } from "./../../../models/ComboEtiquetasItem";
 import { ComboItem } from "../../administracion/parametros/parametros-generales/parametros-generales.component";
+import { DatosColegiadosItem } from "../../../models/DatosColegiadosItem";
+import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
 
 @Component({
   selector: "app-ficha-colegial",
@@ -169,6 +171,8 @@ export class FichaColegialComponent implements OnInit {
   newItems: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   item: ComboEtiquetasItem = new ComboEtiquetasItem();
   createItems: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
+  persistencia: DatosColegiadosItem = undefined;
+  persistencia2: NoColegiadoItem = undefined;
 
   @ViewChild("table")
   table: DataTable;
@@ -256,6 +260,16 @@ export class FichaColegialComponent implements OnInit {
   ngOnInit() {
     // Cogemos los datos de la busqueda de Colegiados
     this.getLetrado();
+    if(sessionStorage.getItem("filtrosBusquedaColegiados")){
+      this.persistencia = new DatosColegiadosItem();
+      this.persistencia = JSON.parse(sessionStorage.getItem("filtrosBusquedaColegiados"));
+      sessionStorage.removeItem("filtrosBusquedaColegiados");
+    }
+    if(sessionStorage.getItem("filtrosBusquedaNoColegiados")){
+      this.persistencia2 = new NoColegiadoItem();
+      this.persistencia2 = JSON.parse(sessionStorage.getItem("filtrosBusquedaNoColegiados"));
+      sessionStorage.removeItem("filtrosBusquedaNoColegiados");
+    }
     if (
       sessionStorage.getItem("personaBody") != null &&
       sessionStorage.getItem("personaBody") != undefined &&
@@ -552,17 +566,6 @@ export class FichaColegialComponent implements OnInit {
 
     return fecha;
   }
-  // isSelectMultiple() {
-  //   this.selectMultiple = !this.selectMultiple;
-  //   if (!this.selectMultiple) {
-  //     this.numSelected = 0;
-  //     this.selectedDatos = [];
-  //   } else {
-  //     this.selectAll = false;
-  //     this.selectedDatos = [];
-  //     this.numSelected = 0;
-  //   }
-  // }
 
   onlySpaces(str) {
     let i = 0;
@@ -619,7 +622,12 @@ export class FichaColegialComponent implements OnInit {
   backTo() {
     sessionStorage.removeItem("personaBody");
     sessionStorage.removeItem("esNuevoNoColegiado");
-
+    if(this.persistencia != undefined){
+      sessionStorage.setItem("filtrosBusquedaColegiados", JSON.stringify(this.persistencia));
+    }
+    if(this.persistencia2 != undefined){
+      sessionStorage.setItem("filtrosBusquedaNoColegiados", JSON.stringify(this.persistencia2));
+    }
     // this.cardService.searchNewAnnounce.next(null);
     //this.location.back();
     if (sessionStorage.getItem("esColegiado") == "true") {
