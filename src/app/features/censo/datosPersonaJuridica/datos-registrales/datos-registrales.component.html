@@ -120,7 +120,7 @@
                 <input [(disabled)]="noEditable || camposDesactivados" [(ngModel)]="body.contadorNumsspp" type="text" class="form-control"
                   (ngModelChange)="compruebaRegistro()" pInputText>
                   <div *ngIf="contadorNoCorrecto == true">
-                    <label class="labelError">Solo números</label>
+                    <label class="labelError">{{"censo.ws.literal.soloNumeros" | translate}}</label>
                   </div>
               </div>
               <div class="form-group col-lg-4 col-md-4">

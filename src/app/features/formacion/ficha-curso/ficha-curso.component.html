@@ -696,7 +696,7 @@
                     [(ngModel)]="dato[colsFormadores[2].select]"
                     [options]="comboRoles"
                     [filter]="false"
-                    placeholder="Seleccionar"
+                    placeholder="{{'general.boton.seleccionar' | translate}}"
                     name="type"
                   ></p-dropdown>
                 </ng-template>
@@ -720,7 +720,7 @@
                     [(ngModel)]="dato[colsFormadores[3].select]"
                     [options]="comboTipoCoste"
                     [filter]="false"
-                    placeholder="Seleccionar"
+                    placeholder="{{'general.boton.seleccionar' | translate}}"
                     name="type"
                   ></p-dropdown>
                 </ng-template>
@@ -891,7 +891,7 @@
                     [(ngModel)]="newFormadorCourse.idRol"
                     [options]="comboRoles"
                     [filter]="false"
-                    placeholder="Seleccionar"
+                    placeholder="{{'general.boton.seleccionar' | translate}}"
                     name="type"
                   ></p-dropdown>
                 </ng-template>
@@ -919,7 +919,7 @@
                     [(ngModel)]="newFormadorCourse.idTipoCoste"
                     [options]="comboTipoCoste"
                     [filter]="false"
-                    placeholder="Seleccionar"
+                    placeholder="{{'general.boton.seleccionar' | translate}}"
                     name="type"
                   ></p-dropdown>
                 </ng-template>
@@ -1101,7 +1101,7 @@
               [filter]="true" filterMatchMode="contains">
 
               <ng-template *ngIf="col.field =='asistencia'" pTemplate="body" let-dato="rowData">
-                <p-dropdown class="select-form" [(ngModel)]="dato[col.field]" [options]="comboAsistencia" [filter]="false" placeholder="Seleccionar"
+                <p-dropdown class="select-form" [(ngModel)]="dato[col.field]" [options]="comboAsistencia" [filter]="false" placeholder="{{'general.boton.seleccionar' | translate}}"
                   name="type"></p-dropdown>
               </ng-template>
 
@@ -1441,7 +1441,7 @@
               [filter]="true" filterMatchMode="contains">
 
               <ng-template *ngIf="col.field =='asistencia'" pTemplate="body" let-dato="rowData">
-                <p-dropdown class="select-form" [(ngModel)]="dato[col.field]" [options]="comboAsistencia" [filter]="false" placeholder="Seleccionar"
+                <p-dropdown class="select-form" [(ngModel)]="dato[col.field]" [options]="comboAsistencia" [filter]="false" placeholder="{{'general.boton.seleccionar' | translate}}"
                   name="type"></p-dropdown>
               </ng-template>
 
@@ -1519,7 +1519,7 @@
               [filter]="true" filterMatchMode="contains">
 
               <ng-template *ngIf="col.field =='asistencia'" pTemplate="body" let-dato="rowData">
-                <p-dropdown class="select-form" [(ngModel)]="dato[col.field]" [options]="comboAsistencia" [filter]="false" placeholder="Seleccionar"
+                <p-dropdown class="select-form" [(ngModel)]="dato[col.field]" [options]="comboAsistencia" [filter]="false" placeholder="{{'general.boton.seleccionar' | translate}}"
                   name="type"></p-dropdown>
               </ng-template>
 
