@@ -172,7 +172,9 @@ export class SigaServices {
     enviosMasivos_guardarEtiquetas: 'enviosMasivos/detalle/guardarEtiquetas',
     enviosMasivos_subirDocumento: 'enviosMasivos/detalle/subirDocumento',
     enviosMasivos_guardarDocumento: 'enviosMasivos/detalle/guardarDocumentoEnvio',
-    enviosMasivos_borrarDocumento: 'enviosMasivos/detalle/borrarDocumentoEnvio'
+    enviosMasivos_borrarDocumento: 'enviosMasivos/detalle/borrarDocumentoEnvio',
+    consultas_comboObjetivos: 'consultas/objetivo',
+    consultas_comboModulos: 'consultas/modulo'
 
   };
 
