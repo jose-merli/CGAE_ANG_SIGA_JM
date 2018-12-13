@@ -99,7 +99,7 @@
           <div class="row">
             <div class="col-lg-6 col-md-6">
               <label>{{ 'censo.nuevaSolicitud.fechaSolicitud' | translate }}(*)</label>
-              <p-dropdown class="select-form" [options]="comboCalendars" [filter]="true" filterBy="label,labelSinTilde" placeholder="Seleccionar"
+              <p-dropdown class="select-form" [options]="comboCalendars" [filter]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}"
                 name="type" (onChange)="onChangeSelectCalendar($event)" [(ngModel)]="newEvent.idCalendario" [disabled]="modoEdicionEvento || tipoAccesoLectura"></p-dropdown>
             </div>
             <div class="col-lg-6 col-md-6">
@@ -218,7 +218,7 @@
         <div class="row">
           <div class="col-lg-6 col-md-6">
             <label>{{ 'form.busquedaCursos.literal.precio' | translate }}</label>
-            <p-dropdown class="select-form" [options]="comboPrecio" name="precio" placeholder="Seleccionar" name="precio"></p-dropdown>
+            <p-dropdown class="select-form" [options]="comboPrecio" name="precio" placeholder="{{'general.boton.seleccionar' | translate}}" name="precio"></p-dropdown>
           </div>
           <div class="col-lg-6 col-md-6">
             <label>{{ 'formacion.fichaInscripcion.datosPago.modoPago' | translate }}</label>
