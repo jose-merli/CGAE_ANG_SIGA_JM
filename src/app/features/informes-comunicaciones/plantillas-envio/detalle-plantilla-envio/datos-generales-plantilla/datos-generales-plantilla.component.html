@@ -61,6 +61,10 @@
                 <strong>Datos de SMS</strong>
               </label>
             </div>
+            <div class="form-group col-lg-12 col-md-12">
+              <label>Asunto</label>
+              <input type="text" class="form-control" [(ngModel)]="body.asunto" pInputText>
+            </div>
             <div *ngIf="body.idTipoEnvio=='1'" class="form-group col-lg-12 col-md-12">
               <label>Correo electrónico</label>
               <p-editor [(ngModel)]="body.email" [style]="{'height':'150px','text-align':'left'}">

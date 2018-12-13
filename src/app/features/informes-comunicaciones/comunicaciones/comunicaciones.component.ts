@@ -41,6 +41,8 @@ export class ComunicacionesComponent implements OnInit {
   progressSpinner: boolean = false;
   searchComunicaciones: ComunicacionesObject = new ComunicacionesObject();
   bodySearch: ComunicacionesSearchItem = new ComunicacionesSearchItem();
+  currentDate: Date = new Date();
+  estado: any;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -65,7 +67,7 @@ export class ComunicacionesComponent implements OnInit {
 
     this.cols = [
       // { field: 'clasesComunicaciones', header: 'Clases de comunicaciones' },
-      { field: 'asunto', header: 'Asunto' },
+      { field: 'asunto', header: 'Descripción' },
       { field: 'fechaCreacion', header: 'Fecha creación' },
       { field: 'fechaProgramada', header: 'Fecha programación' },
       { field: 'tipoEnvio', header: 'Forma envío' },
@@ -171,7 +173,8 @@ export class ComunicacionesComponent implements OnInit {
 
   buscar() {
     this.showResultados = true;
-    sessionStorage.removeItem("comunicacionesSearch")
+    sessionStorage.removeItem("comunicacionesSearch");
+    sessionStorage.removeItem("filtros");
     this.getResultados();
 
   }
@@ -203,12 +206,15 @@ export class ComunicacionesComponent implements OnInit {
 
 
   isButtonDisabled() {
-    if (this.body.asunto != '' && this.body.asunto != null) {
+    if (this.bodySearch.fechaCreacion != null
+      // && ((this.bodySearch.asunto != '' && this.bodySearch.asunto != null) || (this.bodySearch.fechaProgramacion != null) ||
+      // (this.bodySearch.idEstado != '' && this.bodySearch.idEstado != null) ||
+      // (this.bodySearch.idTipoEnvios != '' && this.bodySearch.idTipoEnvios != null))
+    ) {
       return false;
     }
     return true;
   }
-
   cancelar(dato) {
 
     this.confirmationService.confirm({
@@ -290,22 +296,24 @@ export class ComunicacionesComponent implements OnInit {
 
 
 
+
+
+
   navigateTo(dato) {
-    let id = dato[0].id;
-    if (!this.selectMultiple) {
+    this.estado = dato[0].idEstado;
+    if (!this.selectMultiple && this.estado == 4) {
+      // this.body.estado = dato[0].estado;
       this.router.navigate(['/fichaRegistroComunicacion']);
       sessionStorage.setItem("comunicacionesSearch", JSON.stringify(this.body));
+      sessionStorage.setItem("filtros", JSON.stringify(this.bodySearch));
+    } else if (!this.selectMultiple && this.estado != 4) {
+      this.showInfo('El envío no puede editarse')
     }
   }
-
   onShowProgamar(dato) {
     this.showProgramar = !this.showProgramar;
   }
 
 
-  onAddComunicacion() {
-    this.router.navigate(['/fichaRegistroComunicacion']);
-    sessionStorage.removeItem("comunicacionesSearch")
-  }
 
 }

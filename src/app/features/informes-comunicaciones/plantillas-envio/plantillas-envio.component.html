@@ -84,16 +84,14 @@
           </div>
         </ng-template>
       </p-table>
-      <p-footer>
-        <div class="text-right main-button">
-          <button *ngIf="selectedDatos && selectedDatos != ''" (click)="onBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt"
-            iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
-        </div>
-      </p-footer>
+      <div *ngIf="selectedDatos && selectedDatos != ''" class="card-footer">
+        <button (click)="isSelectMultiple()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
+        <button (click)="onBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
+      </div>
     </div>
   </div>
 </div>
 
-<div *ngIf="progressSpinner" class="overlay-spinner">
+<!-- <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
-</div>
+</div> -->

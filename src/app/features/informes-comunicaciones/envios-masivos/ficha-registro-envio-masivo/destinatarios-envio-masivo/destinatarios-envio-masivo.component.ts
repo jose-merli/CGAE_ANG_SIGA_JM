@@ -142,7 +142,7 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
           this.noSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasNoSeleccionadas));
         },
         err => {
-          this.showSuccess('Error al guardar las etiquetas');
+          this.showFail('Error al guardar las etiquetas');
           console.log(err);
 
         },

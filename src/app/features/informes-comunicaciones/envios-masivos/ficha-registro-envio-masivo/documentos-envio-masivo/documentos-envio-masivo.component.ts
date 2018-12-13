@@ -29,6 +29,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   body: DocumentosEnviosMasivosItem = new DocumentosEnviosMasivosItem();
   msgs: Message[];
   file: File = undefined;
+  eliminarArray: any[];
 
 
   @ViewChild('table') table: DataTable;
@@ -64,7 +65,6 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
 
   ngOnInit() {
 
-    this.getDatos();
 
     this.selectedItem = 10;
     this.cols = [
@@ -107,12 +107,14 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   abreCierraFicha() {
     if (sessionStorage.getItem("crearNuevoEnvio") == null) {
       this.openFicha = !this.openFicha;
+      this.getDatos();
     }
   }
 
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
+
   }
 
   getFichaPosibleByKey(key): any {
@@ -226,7 +228,15 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
 
 
   confirmarEliminar(dato) {
-    this.sigaServices.post("enviosMasivos_cancelar", dato).subscribe(
+    this.eliminarArray = [];
+    dato.forEach(element => {
+      let objEliminar = {
+        idEnvio: element.idEnvio,
+        rutaDocumento: element.pathDocumento
+      };
+      this.eliminarArray.push(objEliminar);
+    });
+    this.sigaServices.post("enviosMasivos_borrarDocumento", this.eliminarArray).subscribe(
       data => {
         this.showSuccess('Se ha eliminado el documento correctamente');
       },
@@ -242,7 +252,6 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   }
 
   uploadFile(event: any) {
-    console.log(event)
     let fileList: FileList = event.files;
     this.file = fileList[0];
 
@@ -256,19 +265,42 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   }
 
   addFile() {
-    this.sigaServices.post("enviosMasivos_subirDocumento", this.file).subscribe(
+    this.sigaServices.postSendContent("enviosMasivos_subirDocumento", this.file).subscribe(
       data => {
-        this.showSuccess('Se ha subido el documento correctamente');
+        this.body.pathDocumento = data.rutaDocumento;
+
+        this.guardar(data.nombreDocumento);
       },
       err => {
         this.ail('Error al subir el documento');
         console.log(err);
       },
       () => {
-        // this.getDocumentos();
-        this.table.reset();
       }
     );
   }
+
+  guardar(nombreDocumento) {
+    let objDoc = {
+      idEnvio: this.body.idEnvio,
+      rutaDocumento: this.body.pathDocumento,
+      nombreDocumento: nombreDocumento
+    }
+    this.sigaServices.post("enviosMasivos_guardarDocumento", objDoc).subscribe(
+      data => {
+        this.showSuccess('Se ha subido el documento correctamente');
+
+      },
+      err => {
+        this.ail('Error al guardar el documento');
+        console.log(err);
+      },
+      () => {
+        this.getDatos();
+      }
+    );
+  }
+
+
 
 }

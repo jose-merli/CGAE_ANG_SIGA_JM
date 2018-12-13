@@ -28,6 +28,7 @@ export class ProgramacionComponent implements OnInit {
   objetivos: any[];
   clasesComunicaciones: any[];
   es: any = esCalendar;
+  currentDate: Date = new Date();
 
   @ViewChild('table') table: DataTable;
   selectedDatos

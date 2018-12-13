@@ -1,5 +1,5 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-<app-dialog></app-dialog>
+<!-- <app-dialog></app-dialog> -->
 <div class="ficha-container">
   <div class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha()">
@@ -59,7 +59,7 @@
             </td>
           </tr>
         </ng-template>
-        <ng-template pTemplate=" emptymessage" let-columns>
+        <ng-template pTemplate="emptymessage" let-columns>
           <tr>
             <td [attr.colspan]="columns.length">
               No hay resultados.
@@ -86,8 +86,8 @@
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button">
         <!-- <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button> -->
-        <p-fileUpload #fubauto chooseLabel="Nuevo" name="file" mode="basic" accept=".pdf,.doc,.docx" multiple="multiple" (onSelect)="uploadFile($event)"
-          auto="true">
+        <p-fileUpload maxFileSize="5000000" #fubauto chooseLabel="Nuevo" name="file" mode="basic" accept=".pdf,.doc,.docx" multiple="multiple"
+          (onSelect)="uploadFile($event)" auto="true">
         </p-fileUpload>
         <button (click)="eliminar(selectedDatos)" *ngIf="selectedDatos && selectedDatos !=''" pButton type="button" icon="far fa-times-circle"
           iconPos="left" label="Eliminar"></button>

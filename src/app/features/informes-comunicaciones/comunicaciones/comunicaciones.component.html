@@ -11,26 +11,26 @@
     <div class="card-body">
       <div class="form-row">
         <div class="form-group col-lg-4 col-md-4">
-          <label>Clase de comunicaciones</label>
-          <p-dropdown [options]="clasesComunicaciones" [(ngModel)]="bodySearch.idClaseComunicaciones" class="select-form"></p-dropdown>
-        </div>
-        <div class="form-group col-lg-4 col-md-4">
-          <label>Asunto</label>
+          <label>Descripción</label>
           <input type="text" class="form-control" [(ngModel)]="bodySearch.asunto" pInputText>
         </div>
         <div class="form-group col-lg-4 col-md-4">
-          <label>Fecha creación</label>
+          <label>Fecha creación *</label>
           <p-calendar [locale]="es" [(ngModel)]="bodySearch.fechaCreacion" dateFormat="dd/mm/yy" [utc]="true" icon=" far fa-calendar-alt"
             showIcon="true"></p-calendar>
         </div>
-      </div>
-      <div class="form-row d-flex align-items-end">
-
         <div class="form-group col-lg-4 col-md-4">
           <label>Fecha programación</label>
           <p-calendar [locale]="es" [(ngModel)]="bodySearch.fechaProgramada" dateFormat="dd/mm/yy" [utc]="true" icon=" far fa-calendar-alt"
             showIcon="true"></p-calendar>
         </div>
+      </div>
+      <div class="form-row d-flex align-items-end">
+        <div class="form-group col-lg-4 col-md-4">
+          <label>Clase de comunicaciones</label>
+          <p-dropdown [options]="clasesComunicaciones" [(ngModel)]="bodySearch.idClaseComunicaciones" class="select-form"></p-dropdown>
+        </div>
+
         <div class="form-group col-lg-4 col-md-4">
           <label>Tipo de envío</label>
           <p-dropdown [options]="tiposEnvio" [(ngModel)]="bodySearch.idTipoEnvio" class="select-form"></p-dropdown>
@@ -46,7 +46,6 @@
     <div class="card-footer">
       <div class="text-right main-button">
         <button (click)="buscar()" [disabled]="isButtonDisabled()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
-        <button (click)="onAddComunicacion()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -102,8 +101,12 @@
       <div *ngIf="selectedDatos && selectedDatos != ''" class="card-footer">
         <div class="text-right main-button">
           <button (click)="isSelectMultiple()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
-          <button (click)="onShowProgamar(selectedDatos)" pButton type=" button" icon="fas fa-cog" iconPos="left" label="{{ 'general.boton.programar' | translate}}"></button>
-          <button (click)="cancelar(selectedDatos)" pButton type=" button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+          <button *ngIf="estado && (estado == 3 || estado == 6)" pButton type="button" icon="fas fa-sign-in-alt" iconPos="left" label="{{ 'general.boton.enviar' |
+          translate}}"></button>
+          <button *ngIf="estado && (estado == 4 || estado == 5)" (click)="onShowProgamar(selectedDatos)" pButton type="button" icon="fas fa-cog"
+            iconPos="left" label="{{ 'general.boton.programar' | translate}}"></button>
+          <button *ngIf="estado && estado == 4" [disabled]="isCancelarDisabled(selectedDatos)" (click)="cancelar(selectedDatos)" pButton
+            type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
         </div>
       </div>
     </div>
@@ -117,13 +120,14 @@
   <div class="form-row">
     <div class="form-group col-lg-8 col-md-8">
       <label>Fecha</label>
-      <p-calendar showTime="true" [locale]="es" [(ngModel)]="bodyProgramar.fechaProgramada" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
-        showIcon="true"></p-calendar>
+      <p-calendar [minDate]="currentDate" showTime=" true " [locale]="es " [(ngModel)]="bodyProgramar.fechaProgramada
+        " dateFormat="dd/mm/yy " icon="far fa-calendar-alt " showIcon="true "></p-calendar>
     </div>
   </div>
   <p-footer>
-    <div class="text-right main-button">
-      <button (click)="programar(selectedDatos)" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+    <div class="text-right main-button ">
+      <button (click)="programar(selectedDatos) " pButton type="button " icon="fa fa-save " iconPos="left " label="{{
+        'general.boton.guardar' | translate}} "></button>
     </div>
   </p-footer>
 </p-dialog>

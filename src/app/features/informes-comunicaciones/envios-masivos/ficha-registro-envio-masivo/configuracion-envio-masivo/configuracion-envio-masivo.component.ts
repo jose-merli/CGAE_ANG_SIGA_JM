@@ -209,11 +209,15 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   }
 
   guardar() {
+    this.body.idEstado = '4';
     this.sigaServices.post("enviosMasivos_guardarConf", this.body).subscribe(
       data => {
-        this.showSuccess('Se ha guardado el envío correctamente');
+        let result = JSON.parse(data["body"]);
+        this.body.idEnvio = result.description;
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         sessionStorage.removeItem("crearNuevoEnvio");
+        sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(this.body));
+        this.showSuccess('Se ha guardado el envío correctamente');
       },
       err => {
         this.showFail('Error al guardar el envío');

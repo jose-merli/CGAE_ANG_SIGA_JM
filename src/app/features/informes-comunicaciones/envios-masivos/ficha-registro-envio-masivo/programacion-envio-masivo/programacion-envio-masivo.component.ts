@@ -92,7 +92,9 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
 
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
+    this.getDatos();
     return fichaPosible.activa;
+
   }
 
   getFichaPosibleByKey(key): any {
@@ -114,8 +116,9 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-      this.body.fechaProgramada = new Date(this.body.fechaProgramada)
+      this.body.fechaProgramada = this.body.fechaProgramada ? new Date(this.body.fechaProgramada) : null;
     }
+    this.body.fechaProgramada = this.body.fechaProgramada ? new Date(this.body.fechaProgramada) : null;
   }
 
 
@@ -132,6 +135,8 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
     this.arrayProgramar.push(this.body);
     this.sigaServices.post("enviosMasivos_programar", this.arrayProgramar).subscribe(
       data => {
+
+        console.log(data)
         this.showSuccess('Se ha programado el envío correctamente');
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       },
@@ -150,5 +155,22 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
     }
     return true;
   }
+
+
+  transformaFecha(fecha) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -1);
+    if (rawDate.length < 14) {
+      let splitDate = rawDate.split("/");
+      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+      fecha = new Date((arrayDate += "T00:00:00.001Z"));
+    } else {
+      fecha = new Date(fecha);
+    }
+    return fecha;
+  }
+
+
+
 
 }
