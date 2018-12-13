@@ -48,6 +48,7 @@ export class ConsultasComponent implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("consultasSearch"));
     }
 
+    this.getCombos();
     this.selectedItem = 4;
 
     this.cols = [
@@ -101,6 +102,25 @@ export class ConsultasComponent implements OnInit {
   }
 
 
+
+  getCombos() {
+    this.sigaServices.get("consultas_comboObjetivos").subscribe(
+      data => {
+        this.objetivos = data.combooItems;
+      },
+      err => {
+        console.log(err);
+      }),
+
+      this.sigaServices.get("consultas_comboModulos").subscribe(
+        data => {
+          this.modulos = data.combooItems;
+        },
+        err => {
+          console.log(err);
+        })
+
+  }
 
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
