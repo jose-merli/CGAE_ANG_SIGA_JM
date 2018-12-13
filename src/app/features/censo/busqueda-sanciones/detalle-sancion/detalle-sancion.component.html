@@ -27,7 +27,6 @@
             <label class="mr-auto title-ficha">{{
               "general.message.datos.generales" | translate
             }}</label>
-            <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
           <div class="d-flex justify-content-between">
             <label
@@ -40,11 +39,17 @@
               }}
               <span>{{ body.nombre }}</span>
             </label>
-            <label
+            <label *ngIf="!isPersona"
+              >{{
+                "censo.general.literal.FechaConstitucion" | translate
+              }}
+              <span>{{ body.fechaNacimiento }}</span>
+            </label>
+            <label *ngIf="isPersona"
               >{{
                 "censo.consultaDatosColegiacion.literal.fechaNac" | translate
               }}
-              <span>{{ body.fechaNacimientoDate }}</span>
+              <span>{{ body.fechaNacimiento }}</span>
             </label>
           </div>
         </div>
@@ -66,7 +71,7 @@
                   "busquedaSanciones.colegioSancionador.literal" | translate
                 }}</label>
                 <p-dropdown
-                  class="select-form" [options]="colegios" [(ngModel)]="body.idColegio" (onChange)="disableFields()"
+                  class="select-form" [options]="colegios" [(ngModel)]="body.idColegio" (onChange)="disableFields()" [(disabled)]="disabledField"
                 ></p-dropdown>
 
               </div>
@@ -80,6 +85,7 @@
  [options]="tipoSancion"
                   [(ngModel)]="body.tipoSancion"
                   (onChange)="disableFields()"
+                  [(disabled)]="disabledField"
                 ></p-dropdown>
               </div>
               <div class="form-group col-lg-12 col-md-12">
@@ -92,7 +98,7 @@
                   class="form-control"
                   pInputText
                   [(ngModel)]="body.refColegio"
-                  [disabled]="disableFields()"
+                  [disabled]="disableFields() || disabledField"
                 />
               </div>
             </div>
@@ -164,7 +170,7 @@
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaDesdeDate"
-                
+                  [(minDate)]="body.fechaFirmezaDate"
                 ></p-calendar>
               </div>
 
@@ -180,7 +186,7 @@
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaHastaDate"
-                 
+                  [(minDate)]="body.fechaDesdeDate"
                 ></p-calendar>
               </div>
               <div class="form-group col-lg-6 col-md-6">
@@ -199,7 +205,7 @@
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaRehabilitadoDate"
-                 
+                  [(minDate)]="body.fechaHastaDate" 
                 ></p-calendar>
               </div>
 
@@ -234,7 +240,7 @@
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaArchivadaDate"
-                
+                  [(minDate)]="body.fechaRehabilitadoDate"
                 ></p-calendar>
               </div>
               <div class="form-group col-lg-6 col-md-6">
@@ -320,7 +326,7 @@
                   [cols]="10"
                   pInputTextarea
                   [(ngModel)]="body.texto"
-                  [disabled]="disableFields()"
+                  [disabled]="disableFields() || disabledField"
                 ></textarea>
               </div>
             </div>
@@ -336,7 +342,7 @@
                   [cols]="10"
                   pInputTextarea
                   [(ngModel)]="body.observaciones"
-                  [disabled]="disableFields()"
+                  [disabled]="disableFields() || disabledField"
                 ></textarea>
               </div>
             </div>
@@ -344,14 +350,15 @@
         </div>
       </div>
       <div class="card-footer">
-        <div class="text-right main-button ">
+        <div *ngIf="!disabledField" class="text-right main-button ">
           <button
             (click)="save()"
             pButton
             type="button"
-            icon="far fa-save"
+            icon="far fa-save" 
             iconPos="left"
             label="{{ 'general.boton.guardar' | translate}}"
+            [(disabled)] = "disabledGuardar"
           ></button>
           <button
             (click)="restore()"

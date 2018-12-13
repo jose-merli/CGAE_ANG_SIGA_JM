@@ -540,6 +540,12 @@ export class BusquedaGeneralComponent {
       sessionStorage.removeItem("abrirFormador");
       sessionStorage.setItem("formador", JSON.stringify(id[0]));
       this.router.navigate(["/fichaCurso"]);
+    } else if (
+      sessionStorage.getItem("nuevaSancion") != null &&
+      sessionStorage.getItem("nuevaSancion") != undefined
+    ) {
+      sessionStorage.setItem("nSancion", JSON.stringify(id));
+      this.router.navigate(["detalleSancion"]);
     }
   }
 

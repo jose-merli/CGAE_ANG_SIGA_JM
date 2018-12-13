@@ -430,6 +430,7 @@ export class SigaServices {
     busquedaSanciones_comboEstado: "busquedaSanciones/comboEstado",
     busquedaSanciones_comboOrigen: "busquedaSanciones/comboOrigen",
     busquedaSanciones_updateSanction: "busquedaSanciones/updateSanction",
+    busquedaSanciones_insertSanction: "busquedaSanciones/insertSanction",
     fichaDatosGenerales_etiquetasPersona:
       "fichaDatosGenerales/etiquetasPersona",
     getLetrado: "/getLetrado",
