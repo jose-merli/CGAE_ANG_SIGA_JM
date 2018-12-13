@@ -171,8 +171,8 @@ export class FichaColegialComponent implements OnInit {
   newItems: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   item: ComboEtiquetasItem = new ComboEtiquetasItem();
   createItems: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
-  persistencia: DatosColegiadosItem = undefined;
-  persistencia2: NoColegiadoItem = undefined;
+  persistenciaColeg: DatosColegiadosItem = undefined;
+  persistenciaNoCol: NoColegiadoItem = undefined;
 
   @ViewChild("table")
   table: DataTable;
@@ -261,13 +261,13 @@ export class FichaColegialComponent implements OnInit {
     // Cogemos los datos de la busqueda de Colegiados
     this.getLetrado();
     if(sessionStorage.getItem("filtrosBusquedaColegiados")){
-      this.persistencia = new DatosColegiadosItem();
-      this.persistencia = JSON.parse(sessionStorage.getItem("filtrosBusquedaColegiados"));
+      this.persistenciaColeg= new DatosColegiadosItem();
+      this.persistenciaColeg= JSON.parse(sessionStorage.getItem("filtrosBusquedaColegiados"));
       sessionStorage.removeItem("filtrosBusquedaColegiados");
     }
     if(sessionStorage.getItem("filtrosBusquedaNoColegiados")){
-      this.persistencia2 = new NoColegiadoItem();
-      this.persistencia2 = JSON.parse(sessionStorage.getItem("filtrosBusquedaNoColegiados"));
+      this.persistenciaNoCol = new NoColegiadoItem();
+      this.persistenciaNoCol = JSON.parse(sessionStorage.getItem("filtrosBusquedaNoColegiados"));
       sessionStorage.removeItem("filtrosBusquedaNoColegiados");
     }
     if (
@@ -622,11 +622,11 @@ export class FichaColegialComponent implements OnInit {
   backTo() {
     sessionStorage.removeItem("personaBody");
     sessionStorage.removeItem("esNuevoNoColegiado");
-    if(this.persistencia != undefined){
-      sessionStorage.setItem("filtrosBusquedaColegiados", JSON.stringify(this.persistencia));
+    if(this.persistenciaColeg!= undefined){
+      sessionStorage.setItem("filtrosBusquedaColegiados", JSON.stringify(this.persistenciaColeg));
     }
-    if(this.persistencia2 != undefined){
-      sessionStorage.setItem("filtrosBusquedaNoColegiados", JSON.stringify(this.persistencia2));
+    if(this.persistenciaNoCol != undefined){
+      sessionStorage.setItem("filtrosBusquedaNoColegiados", JSON.stringify(this.persistenciaNoCol));
     }
     // this.cardService.searchNewAnnounce.next(null);
     //this.location.back();
@@ -2453,9 +2453,8 @@ export class FichaColegialComponent implements OnInit {
   // MÉTODOS PARA SERVICIOS DE INTERÉS
 
   irFacturacion() {
-    let idInstitucion = this.generalBody.idPersona.substr(0,4);
-    let us = (this.sigaServices.getOldSigaUrl() + "CEN_Facturacion.do?granotmp="+new Date().getMilliseconds()+"&idInstitucion="+idInstitucion+"&tipoCliente=1&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
-    // window.open(url, "_blank", "menubar=1,resizable=1,width=1550,height=850, left=180");
+    let idInstitucion = this.generalBody.idInstitucion;
+      let us = (this.sigaServices.getOldSigaUrl() + "CEN_Facturacion.do?granotmp="+new Date().getMilliseconds()+"&idInstitucion="+idInstitucion+"&tipoCliente=1&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
     sessionStorage.setItem(
       "url",
       JSON.stringify(us)
@@ -2463,16 +2462,13 @@ export class FichaColegialComponent implements OnInit {
     this.router.navigate(["/facturas"]);  
    }
   irAuditoria() {
-    // this.router.navigate(["/auditoriaUsuarios"]);
-    // sessionStorage.setItem("tarjeta", "/fichaPersonaJuridica");  /SIGA/CEN_Historico.do?idInstitucion=2005& idPersona=-1& accion=ver& tipoAcceso=8
-    let idInstitucion = this.generalBody.idPersona.substr(0,4);
+    let idInstitucion = this.generalBody.idInstitucion;
     let us = (this.sigaServices.getOldSigaUrl() + "CEN_Historico.do?granotmp="+new Date().getMilliseconds()+"&idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipo=1&tipoAcceso=1");
     
     this.router.navigate(["/auditoria"]);  
   }
   irComunicaciones() {
-    // this.router.navigate(["/informesGenericos"]);             /SIGA/CEN_Comunicaciones.do?idInstitucion=2005& idPersona=-1& accion=ver& tipoAcceso=8  
-    let idInstitucion = this.generalBody.idPersona.substr(0,4);
+    let idInstitucion = this.generalBody.idInstitucion;
     let us = this.sigaServices.getOldSigaUrl() + "CEN_Comunicaciones.do?granotmp="+new Date().getMilliseconds()+"&idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipo=1&tipoAcceso=1";
     sessionStorage.setItem(
       "url",
@@ -2482,8 +2478,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   irExpedientes() {
-    // this.router.navigate(["/tiposExpedientes"]);/SIGA/CEN_Expedientes.do?granotmp=1544703091596&idInstitucion=2005&
-    let idInstitucion = this.generalBody.idPersona.substr(0,4);
+    let idInstitucion = this.generalBody.idInstitucion;
     let us =this.sigaServices.getOldSigaUrl() + "CEN_Expedientes.do?granotmp="+new Date().getMilliseconds()+"&idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipo=1&tipoAcceso=1";
     sessionStorage.setItem(
       "url",
@@ -2493,8 +2488,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   irTurnoOficio() {
-    // this.router.navigate(["/tiposExpedientes"]);
-    let idInstitucion = this.generalBody.idPersona.substr(0,4);
+    let idInstitucion = this.generalBody.idInstitucion;
     let  us = this.sigaServices.getOldSigaUrl() + "JGR_DefinirTurnosLetrado.do?granotmp="+new Date().getMilliseconds()+"&accion=ver&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"";
     sessionStorage.setItem(
       "url",
@@ -2504,8 +2498,7 @@ export class FichaColegialComponent implements OnInit {
   }
   
   irRegTel() {
-    // this.router.navigate(["/tiposExpedientes"]);
-    let idInstitucion = this.generalBody.idPersona.substr(0,4);
+    let idInstitucion = this.generalBody.idInstitucion;
     let us =this.sigaServices.getOldSigaUrl() + "CEN_Censo_DocumentacionRegTel.do?granotmp="+new Date().getMilliseconds()+"&idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8";
     sessionStorage.setItem(
       "url",
