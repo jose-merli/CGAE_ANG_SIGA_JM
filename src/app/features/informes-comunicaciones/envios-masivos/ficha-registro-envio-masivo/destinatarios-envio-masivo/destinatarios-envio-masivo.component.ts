@@ -82,7 +82,7 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
     this.msgs = [];
   }
 
-  getSeleccionadas() {
+  getExtistentes() {
     this.sigaServices
       .get("enviosMasivos_etiquetas")
       .subscribe(
@@ -98,7 +98,7 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
       );
   }
 
-  getNoSeleccionadas() {
+  getSeleccionadas() {
     this.sigaServices
       .post("enviosMasivos_etiquetasEnvio", this.body.idEnvio)
       .subscribe(
@@ -185,7 +185,7 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
       this.getSeleccionadas();
-      this.getNoSeleccionadas();
+      this.getExtistentes();
     }
     this.getSeleccionadas();
   }

@@ -30,10 +30,10 @@
     </div>
     <!--tarjetas destinatario-->
     <div *ngIf="openFicha" class=" card-body card-body-ficha">
-      <p-pickList [source]="etiquetasSeleccionadas" [target]="etiquetasNoSeleccionadas" sourceHeader="Etiquetas seleccionadas"
-        targetHeader="Etiquetas no seleccionadas" [responsive]="true" filterBy="label" dragdrop="true" dragdropScope="etiquetasSeleccionadas"
-        sourceFilterPlaceholder="Buscar etiqueta" targetFilterPlaceholder="Buscar etiqueta" [showSourceControls]="false" [showTargetControls]="false"
-        [sourceStyle]="{ 'height': '300px'} " [targetStyle]="{ 'height': '300px'} " disabled>
+      <p-pickList [source]="etiquetasNoSeleccionadas" [target]="etiquetasSeleccionadas" sourceHeader="Etiquetas existentes" targetHeader="Etiquetas seleccionadas"
+        [responsive]="true" filterBy="label" dragdrop="true" dragdropScope="etiquetasSeleccionadas" sourceFilterPlaceholder="Buscar etiqueta"
+        targetFilterPlaceholder="Buscar etiqueta" [showSourceControls]="false" [showTargetControls]="false" [sourceStyle]="{ 'height': '300px'} "
+        [targetStyle]="{ 'height': '300px'} " disabled>
         <ng-template let-item pTemplate="item">
           <div>{{item.label}}</div>
         </ng-template>

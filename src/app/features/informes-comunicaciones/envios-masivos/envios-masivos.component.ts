@@ -44,6 +44,7 @@ export class EnviosMasivosComponent implements OnInit {
   bodySearch: EnviosMasivosSearchItem = new EnviosMasivosSearchItem();
   eliminarArray: any[];
   currentDate: Date = new Date();
+  estado: any;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -276,8 +277,8 @@ export class EnviosMasivosComponent implements OnInit {
   }
 
   navigateTo(dato) {
-    console.log(dato)
-    if (!this.selectMultiple && dato[0].idEstado != 5) {
+    this.estado = dato[0].idEstado;
+    if (!this.selectMultiple && this.estado != 5) {
       // this.body.estado = dato[0].estado;
       this.router.navigate(['/fichaRegistroEnvioMasivo']);
       sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(this.body));
