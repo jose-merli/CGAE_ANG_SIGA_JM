@@ -120,11 +120,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     this.getCombos();
     //Se elimina las variables en la sesion storage para que cuando se busque un nuevo curso
     //Se inicialice todo desde el principio
-    sessionStorage.removeItem("abrirFormador");
-    sessionStorage.removeItem("datosFormadores");
-    sessionStorage.removeItem("datosFormadoresInit");
-    sessionStorage.removeItem("formador");
-    sessionStorage.removeItem("idCurso");
+    this.initSessionStorage();
     sessionStorage.setItem("isFormacionCalendar", "false");
     if (sessionStorage.getItem("filtrosBusquedaCursos") != null) {
       this.body = JSON.parse(sessionStorage.getItem("filtrosBusquedaCursos"));
@@ -132,11 +128,32 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
       this.isBuscar(false);
     }
 
+    if (sessionStorage.getItem("cursosInit")) {
+      this.buscar = true;
+
+      this.selectedDatos = "";
+      this.getColsResults();
+      this.filtrosTrim();
+
+      this.datos = JSON.parse(sessionStorage.getItem("cursosInit"));
+      sessionStorage.removeItem("cursosInit");
+    }
+
     this.checkAcceso();
   }
 
   ngAfterViewInit() {
     this.mySelect.ngOnInit();
+  }
+
+  initSessionStorage() {
+    sessionStorage.removeItem("abrirFormador");
+    sessionStorage.removeItem("datosFormadores");
+    sessionStorage.removeItem("datosFormadoresInit");
+    sessionStorage.removeItem("formador");
+    sessionStorage.removeItem("idCurso");
+    sessionStorage.removeItem("isFormacionCalendarByStartInscripcion");
+    sessionStorage.removeItem("courseCurrent");
   }
 
   onHideDatosGenerales() {
@@ -328,6 +345,10 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
           this.cursoEncontrado = JSON.parse(data["body"]);
           this.datos = this.cursoEncontrado.cursoItem;
           this.table.paginator = true;
+          sessionStorage.setItem(
+            "cursosInit",
+            JSON.stringify(this.cursoEncontrado.cursoItem)
+          );
         },
         err => {
           console.log(err);
@@ -352,7 +373,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   irEditarCurso(selectedDatos) {
     if (selectedDatos.length >= 1 && this.selectMultiple == false) {
       sessionStorage.setItem("modoEdicionCurso", "true");
-      sessionStorage.setItem("cursoSelected", JSON.stringify(selectedDatos));
+      sessionStorage.setItem("courseCurrent", JSON.stringify(selectedDatos[0]));
       console.log(selectedDatos);
       this.router.navigate(["/fichaCurso"]);
     } else {

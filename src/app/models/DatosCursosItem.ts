@@ -23,7 +23,7 @@ export class DatosCursosItem {
   fechaImparticionDesde: string;
   fechaImparticionHasta: string;
   tipo: string;
-  descripcion: string;
+  descripcionEstado: string;
   temas: string[];
   minimoAsistencia: string;
   lugar: string;
@@ -31,6 +31,12 @@ export class DatosCursosItem {
   adjunta: string;
 
   flagArchivado: number;
+  autovalidacionInscripcion: string;
+
+  idEventoInicioInscripcion: string;
+  idEventoFinInscripcion: string;
+
+  idTipoEvento: string;
 
   constructor() {}
 }
