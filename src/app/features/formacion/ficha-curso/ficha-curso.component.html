@@ -44,7 +44,7 @@
     <!-- Cuerpo -->
     <div class="card-body card-body-ficha" *ngIf="esFichaActiva('generales')">
       <div class="form-row mb-3">
-        <div class="bloque col-lg-4 col-md-4">
+        <div class="bloque col-lg-5 col-md-5">
           <div class="row mb-3">
             <label class="ml-2"> <strong>{{'censo.consultaDatosGenerales.cabecera' | translate}}</strong> </label>
           </div>
@@ -73,14 +73,14 @@
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
                 <label>{{ 'formacion.fichaCursos.datosGenerales.visibilidad' | translate}}</label>
-                <p-dropdown [disabled]="!modoEdicion" placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form"
+                <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form"
                   [(ngModel)]='curso.idVisibilidad' [options]="comboVisibilidad" [filter]="true" filterBy="label,labelSinTilde"
                   (onChange)="onChangeSelectVisibilidad($event)"></p-dropdown>
             </div>
             <div class="col-lg-6 col-md-6">
                 <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}</label>
-                <p-dropdown #colegio [disabled]="deshabilitarComboCol" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
-                  [(ngModel)]='curso.colegio' [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeSelectColegio($event)"></p-dropdown>
+                <p-dropdown #colegio [disabled]="fieldNoEditable"  class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
+                  [(ngModel)]='curso.colegio' [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeSelectColegio($event) "></p-dropdown>
             </div>
           </div>
           <div class="row mb-4">
@@ -96,19 +96,52 @@
             </div>
             <div class="col-lg-6 col-md-6">
                 <label>{{ 'form.busquedaCursos.literal.estado' | translate}}</label>
-                <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]='curso.idEstado' [options]="comboEstados"
-                [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+                <p-dropdown placeholder="-" class="select-form" [(ngModel)]='curso.idEstado' [options]="comboEstados"
+                [filter]="true" filterBy="label,labelSinTilde" [disabled]="fieldNoEditable"></p-dropdown>
             </div>
           </div>
           <div class="row mb-4">
             <div class="col-lg-12 col-md-12">
               <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}(*)</label>
-              <textarea
-                pInputTextarea
-                class="textarea"
-                name="descripcion"
-                [(ngModel)]="curso.descripcion"
-              ></textarea>
+              <!-- <p-editor [(ngModel)]="curso.descripcionEstado" [style]="{'height':'150px'}" name="descripcion"></p-editor> -->
+
+              <p-editor [(ngModel)]="curso.descripcionEstado" [style]="{'height':'150px'}" name="descripcion">
+                <p-header>
+                    <span class="ql-formats">
+                        <select class="ql-header">
+                          <option value="1">Heading</option>
+                          <option value="2">Subheading</option>
+                          <option selected>Normal</option>
+                        </select>
+                        <select class="ql-font">
+                          <option selected>Sans Serif</option>
+                          <option value="serif">Serif</option>
+                          <option value="monospace">Monospace</option>
+                        </select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-bold" aria-label="Bold"></button>
+                        <button class="ql-italic" aria-label="Italic"></button>
+                        <button class="ql-underline" aria-label="Underline"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered" aria-label="Ordered List"></button>
+                        <button class="ql-list" value="bullet" aria-label="Unordered List"></button>
+                        <select class="ql-align">
+                            <option selected></option>
+                            <option value="center"></option>
+                            <option value="right"></option>
+                            <option value="justify"></option>
+                        </select>
+                    </span>
+                </p-header>
+            </p-editor>
+
+
             </div>
           </div>
         </div>
@@ -125,6 +158,7 @@
                         dateFormat="dd/mm/yy"
                         icon="far fa-calendar-alt"
                         showIcon="true"
+                        (onSelect)="selectStartDateInscription($event)"
                       ></p-calendar>
               </div>
               <div class="col-lg-6 col-md-6">
@@ -136,41 +170,9 @@
                         icon="far fa-calendar-alt"
                         showIcon="true"
                         [minDate]="curso.fechaInscripcionDesdeDate"
+                        (onSelect)="selectEndDateInscription($event)"
                       ></p-calendar>
               </div>
-            <!-- <div class="col-lg-12 col-md-12">
-              <label class="pt-1">Fecha Inscripción</label>
-              <div class="row">
-                <div class="col-lg-12 col-md-12">
-                  <div class="row">
-                    <div class="col-lg-1 col-md-1 pt-1">
-                      <label class="small-letter"> Inicio: </label>
-                    </div>
-                    <div class="col-lg-5 col-md-5">
-                      <p-calendar
-                        [locale]="es"
-                        [(ngModel)]="curso.fechaInscripcionDesde"
-                        dateFormat="dd/mm/yy"
-                        icon="far fa-calendar-alt"
-                        showIcon="true"
-                      ></p-calendar>
-                    </div>
-                    <div class="col-lg-1 col-md-1 pt-1">
-                      <label class="small-letter"> Fin: </label>
-                    </div>
-                    <div class="col-lg-5 col-md-5">
-                      <p-calendar
-                        [locale]="es"
-                        [(ngModel)]="curso.fechaInscripcionHasta"
-                        dateFormat="dd/mm/yy"
-                        icon="far fa-calendar-alt"
-                        showIcon="true"
-                      ></p-calendar>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> -->
           </div>
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
@@ -182,6 +184,7 @@
                       icon="far fa-calendar-alt"
                       showIcon="true"
                       [minDate]="curso.fechaInscripcionHastaDate"
+                      [disabled]="fieldNoEditable"
                     ></p-calendar>
             </div>
             <div class="col-lg-6 col-md-6">
@@ -193,41 +196,9 @@
                       icon="far fa-calendar-alt"
                       showIcon="true"
                       [minDate]="curso.fechaImparticionDesdeDate"
+                      [disabled]="fieldNoEditable"
                     ></p-calendar>
             </div>
-            <!-- <div class="col-lg-12 col-md-12">
-              <label class="pt-1">Fecha Impartición</label>
-              <div class="row">
-                <div class="col-lg-12 col-md-12">
-                  <div class="row">
-                    <div class="col-lg-1 col-md-1 pt-1">
-                      <label class="small-letter"> Inicio: </label>
-                    </div>
-                    <div class="col-lg-5 col-md-5">
-                      <p-calendar
-                        [locale]="es"
-                        [(ngModel)]="curso.fechaImparticionDesde"
-                        dateFormat="dd/mm/yy"
-                        icon="far fa-calendar-alt"
-                        showIcon="true"
-                      ></p-calendar>
-                    </div>
-                    <div class="col-lg-1 col-md-1 pt-1">
-                      <label class="small-letter"> Fin: </label>
-                    </div>
-                    <div class="col-lg-5 col-md-5">
-                      <p-calendar
-                        [locale]="es"
-                        [(ngModel)]="curso.fechaImparticionHasta"
-                        dateFormat="dd/mm/yy"
-                        icon="far fa-calendar-alt"
-                        showIcon="true"
-                      ></p-calendar>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> -->
           </div>
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
@@ -268,12 +239,12 @@
               <label>Autovalidación de inscripciones</label>
               <p-checkbox
                 binary="true"
-                [(ngModel)]="curso.autovalidacion"
+                [(ngModel)]="curso.autovalidacionInscripcion"
               ></p-checkbox>
             </div>
           </div>
         </div>
-        <div class="bloque col-lg-4 col-md-4">
+        <div class="bloque col-lg-3 col-md-3">
           <div class="row mb-3">
             <label> <strong> {{'formacion.fichaCursos.datosGenerales.datosAdicionales.cabecera' | translate}}</strong> </label>
           </div>
@@ -318,15 +289,23 @@
             </div>
           </div>
           <div class="row mb-4">
-            <div class="col-lg-6 col-md-6">
-              <label>{{'formacion.fichaCursos.datosGenerales.datosAdicionales.informacionAdicional' | translate}}</label>
-              <a href="">www.informacionadicional.es</a>
+            <div class="col-lg-12 col-md-12 ml-3">
+              <div class="row">
+                  <label>{{'formacion.fichaCursos.datosGenerales.datosAdicionales.informacionAdicional' | translate}}</label>
+              </div>
+              <div class="row">
+                  <a href="">www.informacionadicional.es</a>
+              </div>
             </div>
           </div>
           <div class="row mb-4">
-            <div class="col-lg-6 col-md-6">
-              <label>{{'formacion.fichaCursos.datosGenerales.datosAdicionales.encuestaSatisfaccion' | translate}}</label>
-              <a href="">www.encuentasatisfaccion.es</a>
+            <div class="col-lg-12 col-md-12 ml-3">
+                <div class="row">
+                    <label>{{'formacion.fichaCursos.datosGenerales.datosAdicionales.encuestaSatisfaccion' | translate}}</label>
+                </div>
+                <div class="row">
+                    <a href="">www.encuentasatisfaccion.es</a>
+                </div>
             </div>
           </div>
         </div>
@@ -345,56 +324,28 @@
           icon="fa fa-ban"
           iconPos="left"
           label="{{'general.boton.cancel' | translate}}"
+          [disabled]="!modoEdicion"
         ></button>
 
         <!-- Botón finalizar -->
-        <!--
-          <button (click)="finalizarCursos()" pButton type="button" icon="fa fa-stop" iconPos="left" label="{{'general.boton.finalizar' | translate}}"
-           [disabled]="selectedDatos == ''"></button>
-        -->
-        <!-- <button
-          pButton
-          type="button"
-          icon="fa fa-stop"
-          iconPos="left"
-          label="{{'general.boton.finalizar' | translate}}"
-        ></button> -->
+        
+          <button pButton type="button" icon="fa fa-stop" iconPos="left" label="{{'general.boton.finalizar' | translate}}"
+             [disabled]="!modoEdicion"></button>
 
         <!-- Botón desanunciar -->
-        <!--
-          <button (click)="desanunciarCursos()" pButton type="button" icon="fa fa-bell-slash" iconPos="left" label="{{'form.busquedaCursos.literal.boton.desanunciar' | translate}}"
-           [disabled]="selectedDatos == ''"></button>
-        -->
-        <button
-          pButton
-          type="button"
-          icon="fa fa-bell-slash"
-          iconPos="left"
-          label="{{'form.busquedaCursos.literal.boton.desanunciar' | translate}}"
-          (click)="announceCourse()"
-        ></button>
-
+        
+          <button pButton type="button" icon="fa fa-bell-slash" iconPos="left" label="{{'form.busquedaCursos.literal.boton.desanunciar' | translate}}"
+           [disabled]="!modoEdicion"  (click)="releaseCourse()"></button>
+       
         <!-- Botón anunciar -->
-        <!--
-          <button (click)="anunciarCursos()" pButton type="button" icon="fa fa-bell" iconPos="left" label="{{'form.busquedaCursos.literal.boton.anunciar' | translate}}"
-           [disabled]="selectedDatos == ''"></button>
-        -->
-        <button
-          pButton
-          type="button"
-          icon="fa fa-bell"
-          iconPos="left"
-          label="{{'form.busquedaCursos.literal.boton.anunciar' | translate}}"
-        ></button>
+        
+          <button pButton type="button" icon="fa fa-bell" iconPos="left" label="{{'form.busquedaCursos.literal.boton.anunciar' | translate}}"
+              [disabled]="!modoEdicion" (click)="announceCourse()"></button>
+       
 
         <!-- Botón inscripción -->
-        <button
-          pButton
-          type="button"
-          icon="fa fa-caret-square-o-up"
-          iconPos="left"
-          label="Inscripción"
-        ></button>
+
+        <button pButton type="button" icon="fa fa-caret-square-o-up" iconPos="left" label="Inscripción" [disabled]="!modoEdicion"></button> 
 
         <!-- Botón guardar -->
         <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" (click)="saveCourse()"></button> 
@@ -1175,113 +1126,405 @@
 
   <!-- Cuerpo -->
   <div class="card-body card-body-ficha" *ngIf="esFichaActiva('certificate')">
-    <div *ngIf="esFichaActiva('certificate')" class="card-body card-body-ficha">
-      <div class="row">
-        <p-dataTable
-          emptyMessage="{{ 'general.message.no.registros' | translate}}"
-          [ngClass]="{ customCursor: selectMultipleCertificates }"
-          [(selection)]="selectedDatosCertificates"
-          pageLinks="4"
-          dataKey="idCertificates"
-          [responsive]="true"
-          selectionMode="multiple"
-          #tableCertificates
-          class="tabla-listado"
-          [value]="datosCertificates"
-          [sortOrder]="sortO"
-          [paginator]="true"
-          paginatorPosition="both"
-          [rows]="selectedCertificates"
-        >
-          <p-column
-            *ngFor="let col of colsCertificates"
-            [sortable]="true"
-            [field]="col.field"
-            [header]="col.header | translate"
-            filterPlaceholder="{{'general.boton.search' | translate}}"
-            [filter]="true"
-            filterMatchMode="contains"
-          >
-          </p-column>
-          <ng-template pTemplate="paginatorLeft">
-            <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales"
-                >Mostrando registros del {{ tableCertificates.first + 1 }} al
-                {{ tableCertificates.first + tableCertificates.rows }} de un
-                total de {{ tableCertificates.totalRecords }}</label
+      <div
+        *ngIf="esFichaActiva('certificate')"
+        class="card-body card-body-ficha"
+      >
+        <div class="row">
+          <div *ngIf="(selectMultipleCertificates || selectAllCertificates) && !pressNewCertificate">
+            <p-dataTable
+              emptyMessage="{{ 'general.message.no.registros' | translate}}"
+              [ngClass]="{ customCursor: selectMultipleCertificates }"
+              dataKey="tipoCertificado"
+              selectionMode="multiple"
+              [(selection)]="selectedDatosCertificates"
+              [responsive]="true"
+              #tableCertificates
+              class="tabla-listado"
+              [paginator]="true"
+              (onRowUnselect)="actualizaSeleccionadosCertificates(selectedDatosCertificates)"
+              [value]="datosCertificates"
+              [sortOrder]="1"
+              [paginator]="true"
+              paginatorPosition="both"
+              [rows]="selectedCertificates"
+              [editable]="selectMultipleCertificates"
+            >
+              <p-column
+                *ngFor="let col of colsCertificates"
+                [sortable]="true"
+                [field]="col.field"
+                [header]="col.header | translate"
+                filterPlaceholder="{{'general.boton.search' | translate}}"
+                [filter]="true"
+                filterMatchMode="contains"
               >
-              <label class="pr-3 numSeleccionados"
-                >Seleccionados: {{ numSelectedCertificates }}</label
-              >
-              <label>{{ "general.message.mostrar" | translate }}</label>
-              <p-dropdown
-                [(ngModel)]="selectedCertificates"
-                [options]="rowsPerPage"
-              ></p-dropdown>
-              <label class="pl-1">
-                {{
-                  "cargaMasivaDatosCurriculares.numRegistros.literal"
+              </p-column>
+
+              <ng-template pTemplate="paginatorLeft">
+                <div class="mostrar d-flex text-right justify-content-end">
+                  <label class="pr-3 registros-totales"
+                    >Mostrando registros del
+                    {{ tableCertificates.first + 1 }} al
+                    {{ tableCertificates.first + tableCertificates.rows }} de un
+                    total de {{ tableCertificates.totalRecords }}</label
+                  >
+                  <label class="pr-3 numSeleccionados"
+                    >Seleccionados: {{ numSelectedCertificates }}</label
+                  >
+                  <label>{{ "general.message.mostrar" | translate }}</label>
+                  <p-dropdown
+                    [(ngModel)]="selectedCertificates"
+                    [options]="rowsPerPage"
+                    (onChange)="onChangeRowsPerPages($event)"
+                  ></p-dropdown>
+                  <label class="pl-1">
+                    {{
+                      "cargaMasivaDatosCurriculares.numRegistros.literal"
+                        | translate
+                    }}</label
+                  >
+                  <div class="ml-3 selectAll">
+                    <p-checkbox
+                      (onChange)="onChangeSelectAllCertificates()"
+                      [(ngModel)]="selectAllCertificates"
+                      binary="true"
+                      label="Seleccionar todo"
+                      name="groupname"
+                    ></p-checkbox>
+                  </div>
+                  <label
+                    class="ml-3 seleccionMultiple"
+                    [ngClass]="{
+                      ' seleccion-multiple': selectMultipleCertificates
+                    }"
+                    (click)="
+                      isSelectMultipleCertificates();
+                      selectedDatosCertificates = false
+                    "
+                  >
+                    <i class="pr-2 fa fa-mouse-pointer"></i
+                    >{{
+                      "general.message.seleccion.multiple" | translate
+                    }}</label
+                  >
+                </div>
+              </ng-template>
+            </p-dataTable>
+          </div>
+
+          <!-- Editar Certificate -->
+          <div *ngIf="!selectMultipleCertificates && !pressNewCertificate && !selectAllCertificates">
+            <p-dataTable
+              emptyMessage="{{ 'general.message.no.registros' | translate}}"
+              [ngClass]="{ customCursor: selectMultipleCertificates }"
+              [paginator]="true"
+              #tableCertificates
+              class="tabla-listado"
+              [value]="datosCertificates"
+              paginatorPosition="both"
+              datakey="tipoCertificado"
+              [(selection)]="selectedDatosCertificates"
+              [rows]="selectedCertificates"
+              [editable]="!selectMultipleCertificates"
+              (onEdit)="editFormadorTable($event)"
+            >
+              <p-column
+                [sortable]="true"
+                [field]="colsCertificates[0].field"
+                [header]="
+                  'menu.certificados'
                     | translate
-                }}</label
-              >
-              <div class="ml-3 selectAllNotification">
-                <p-checkbox
-                  (onChange)="onChangeSelectAllCertificates()"
-                  [(ngModel)]="selectAllCertificates"
-                  binary="true"
-                  label="Seleccionar todo"
-                  name="groupname"
-                ></p-checkbox>
-              </div>
-              <label
-                class="ml-3 seleccionMultiple"
-                [ngClass]="{ 'seleccion-multiple': selectMultipleCertificates }"
-                (click)="
-                  isSelectMultipleCertificates();
-                  selectedDatosCertificates = false
                 "
+                [filter]="true"
+                filterPlaceholder="{{'general.boton.search' | translate}}"
+                filterMatchMode="contains"
               >
-                <i class="pr-2 fa fa-mouse-pointer"></i
-                >{{ "general.message.seleccion.multiple" | translate }}</label
+              <ng-template pTemplate="body" let-dato="rowData">
+                  <p-dropdown
+                    class="select-form"
+                    [(ngModel)]="dato[colsCertificates[0].field]"
+                    [options]="comboCertificates"
+                    [filter]="false"
+                    placeholder="Seleccionar"
+                    name="type"
+                  ></p-dropdown>
+                </ng-template>
+              </p-column>
+
+              <p-column
+                [sortable]="true"
+                [field]="colsCertificates[1].field"
+                [header]="
+                  'form.busquedaCursos.literal.precio'
+                    | translate
+                "
+                [filter]="true"
+                filterPlaceholder="{{'general.boton.search' | translate}}"
+                filterMatchMode="contains"
               >
-            </div>
-          </ng-template>
-        </p-dataTable>
+              <ng-template pTemplate="body" let-dato="rowData">
+                  <input type="text" class="form-control" [(ngModel)]="dato[colsCertificates[1].field]" pInputText>
+                </ng-template>
+             
+              </p-column>
+
+              <p-column
+                [sortable]="true"
+                [field]="colsCertificates[2].field"
+                [header]="
+                  'formacion.busquedaInscripcion.calificacion'
+                    | translate
+                "
+                [filter]="true"
+                filterPlaceholder="{{'general.boton.search' | translate}}"
+                filterMatchMode="contains"
+              >
+                <ng-template pTemplate="body" let-dato="rowData">
+                  <!-- <p-dropdown
+                    (onChange)="onChangeEdit($event, dato)"
+                    class="select-form"
+                    [(ngModel)]="dato[colsCertificates[3].select]"
+                    [options]="comboCalificaciones"
+                    [filter]="false"
+                    placeholder="Seleccionar"
+                    name="type"
+                  ></p-dropdown> -->
+                  <p-dropdown
+                    class="select-form"
+                    [(ngModel)]="dato[colsCertificates[2].field]"
+                    [options]="comboCalificaciones"
+                    [filter]="false"
+                    placeholder="Seleccionar"
+                    name="type"
+                  ></p-dropdown>
+                </ng-template>
+              </p-column>
+
+              <ng-template pTemplate="paginatorLeft">
+                <div class="mostrar d-flex text-right justify-content-end">
+                  <label class="pr-3 registros-totales"
+                    >Mostrando registros del
+                    {{ tableCertificates.first + 1 }} al
+                    {{ tableCertificates.first + tableCertificates.rows }} de un
+                    total de {{ tableCertificates.totalRecords }}</label
+                  >
+                  <label class="pr-3 numSeleccionados"
+                    >Seleccionados: {{ numSelectedCertificates }}</label
+                  >
+                  <label>{{ "general.message.mostrar" | translate }}</label>
+                  <p-dropdown
+                    [(ngModel)]="selectedCertificates"
+                    [options]="rowsPerPage"
+                    (onChange)="onChangeRowsPerPages($event)"
+                  ></p-dropdown>
+                  <label class="pl-1">
+                    {{
+                      "cargaMasivaDatosCurriculares.numRegistros.literal"
+                        | translate
+                    }}</label
+                  >
+                  <div class="ml-3 selectAll">
+                    <p-checkbox
+                      (onChange)="onChangeSelectAllCertificates($event)"
+                      [(ngModel)]="selectAllCertificates"
+                      binary="true"
+                      label="Seleccionar todo"
+                      name="groupname"
+                    ></p-checkbox>
+                  </div>
+                  <label
+                    class="ml-3 seleccionMultiple"
+                    [ngClass]="{
+                      'seleccion-multiple': selectMultipleCertificates
+                    }"
+                    (click)="
+                      isSelectMultipleCertificates();
+                      selectedDatosCertificates = false
+                    "
+                  >
+                    <i class="pr-2 fa fa-mouse-pointer"></i
+                    >{{
+                      "general.message.seleccion.multiple" | translate
+                    }}</label
+                  >
+                </div>
+              </ng-template>
+            </p-dataTable>
+          </div>
+
+          <!-- Nuevo Certificado -->
+          <div *ngIf="pressNewCertificate">
+            <p-dataTable
+              emptyMessage="{{ 'general.message.no.registros' | translate}}"
+              [ngClass]="{ customCursor: selectMultipleCertificates }"
+              [paginator]="true"
+              #tableCertificates
+              class="tabla-listado"
+              [value]="datosCertificates"
+              paginatorPosition="both"
+              datakey="tipoCertificado"
+              [rows]="selectedCertificates"
+              [editable]="!pressNewCertificate"
+            >
+              <p-column
+                [sortable]="true"
+                [field]="colsCertificates[0].field"
+                [header]="
+                  'menu.certificados'
+                    | translate
+                "
+                [filter]="true"
+                filterPlaceholder="{{'general.boton.search' | translate}}"
+                filterMatchMode="contains"
+              >
+                <ng-template let-col let-dato="rowData" pTemplate="body">
+                    <span *ngIf="dato[colsCertificates[0].value] != ''">{{
+                        dato[colsCertificates[0].field]
+                      }}</span>
+    
+                      <p-dropdown
+                        *ngIf="dato[colsCertificates[0].field] == ''"
+                        class="select-form"
+                        [(ngModel)]="newCertificate.tipoCertificado"
+                        [options]="comboCertificates"
+                        [filter]="false"
+                        placeholder="Seleccionar"
+                        name="type"
+                      ></p-dropdown>
+                </ng-template>
+              </p-column>
+
+              <p-column
+                [sortable]="true"
+                [field]="colsCertificates[1].field"
+                [header]="
+                  'form.busquedaCursos.literal.precio'
+                    | translate
+                "
+                [filter]="true"
+                filterPlaceholder="{{'general.boton.search' | translate}}"
+                filterMatchMode="contains"
+              >
+                <ng-template let-col let-dato="rowData" pTemplate="body">
+                  <span>{{ dato[colsCertificates[1].field] }}</span>
+                  <input
+                    *ngIf="dato[colsCertificates[1].field] == ''"
+                    [value]="dato[colsCertificates[1].field]"
+                    [(ngModel)]="newCertificate.precio"
+                    type="text"
+                    class="form-control"
+                    pInputText
+                  />
+                </ng-template>
+              </p-column>
+
+              <p-column
+                [sortable]="true"
+                [field]="colsCertificates[2].field"
+                [header]="'formacion.busquedaInscripcion.calificacion' | translate"
+                [filter]="true"
+                filterPlaceholder="{{'general.boton.search' | translate}}"
+                filterMatchMode="contains"
+              >
+                <ng-template let-dato="rowData" pTemplate="body">
+                  <span *ngIf="dato[colsCertificates[2].value] != ''">{{
+                    dato[colsCertificates[2].field]
+                  }}</span>
+
+                  <p-dropdown
+                    *ngIf="dato[colsCertificates[2].field] == ''"
+                    class="select-form"
+                    [(ngModel)]="newCertificate.idCalificacion"
+                    [options]="comboCalificaciones"
+                    [filter]="false"
+                    placeholder="Seleccionar"
+                    name="type"
+                  ></p-dropdown>
+                </ng-template>
+              </p-column>
+
+            
+              <ng-template pTemplate="paginatorLeft">
+                <div class="mostrar d-flex text-right justify-content-end">
+                  <label class="pr-3 registros-totales"
+                    >Mostrando registros del
+                    {{ tableCertificates.first + 1 }} al
+                    {{ tableCertificates.first + tableCertificates.rows }} de un
+                    total de {{ tableCertificates.totalRecords }}</label
+                  >
+                  <label class="pr-3 numSeleccionados"
+                    >Seleccionados: {{ numSelectedCertificates }}</label
+                  >
+                  <label>{{ "general.message.mostrar" | translate }}</label>
+                  <p-dropdown
+                    [(ngModel)]="selectedItemCertificates"
+                    [options]="rowsPerPage"
+                    (onChange)="onChangeRowsPerPages($event)"
+                  ></p-dropdown>
+                  <label class="pl-1">
+                    {{
+                      "cargaMasivaDatñosCurriculares.numRegistros.literal"
+                        | translate
+                    }}</label
+                  >
+                </div>
+              </ng-template>
+            </p-dataTable>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="card-footer" *ngIf="esFichaActiva('certificate')">
-    <div class="text-right main-button">
-      <button
-        pButton
-        type="button"
-        icon="fa fa-search"
-        iconPos="left"
-        label="{{ 'general.boton.guardar' | translate }}"
-      ></button>
-      <button
-        pButton
-        type="button"
-        icon="fa fa-undo"
-        iconPos="left"
-        label="{{ 'general.boton.restablecer'| translate }}"
-      ></button>
-      <button
-        pButton
-        type="button"
-        icon="fa fa-plus"
-        iconPos="left"
-        label="{{ 'general.boton.new'| translate }}"
-      ></button>
-      <button
-        pButton
-        type="button"
-        icon="fa fa-trash-alt"
-        iconPos="left"
-        label="{{ 'general.boton.eliminar'| translate }}"
-      ></button>
+    <div class="card-footer" *ngIf="esFichaActiva('certificate')">
+      <div class="text-right main-button">
+        <button
+          *ngIf="pressNewCertificate"
+          (click)="restCertificates()"
+          pButton
+          type="button"
+          icon="fa fa-ban"
+          iconPos="left"
+          label="{{'general.boton.cancel' | translate}}"
+        ></button>
+        <button
+          *ngIf="editCertificate || pressNewCertificate"
+          pButton
+          (click)="saveCertificates()"
+          type="button"
+          icon="fa fa-search"
+          iconPos="left"
+          label="{{ 'general.boton.guardar' | translate }}"
+          [disabled]="validateCertificate() && pressNewCertificate"
+        ></button>
+        <button
+          *ngIf="editCertificate && !pressNewCertificate"
+          pButton
+          (click)="restCertificates()"
+          type="button"
+          icon="fa fa-undo"
+          iconPos="left"
+          label="{{ 'general.boton.restablecer'| translate }}"
+        ></button>
+        <button
+          *ngIf="!pressNewCertificate && !selectMultipleCertificate"
+          pButton
+          (click)="newCertificates()"
+          type="button"
+          icon="fa fa-plus"
+          iconPos="left"
+          label="{{ 'general.boton.new'| translate }}"
+        ></button>
+        <button
+          *ngIf="selectMultipleCertificates"
+          pButton
+          (click)="deleteTrainer(selectedDatosCertificates)"
+          type="button"
+          icon="fa fa-trash-alt"
+          iconPos="left"
+          label="{{ 'general.boton.eliminar'| translate }}"
+        ></button>
+      </div>
     </div>
-  </div>
 </div>
 
 <!-- TERJETAS SESIONES -->
@@ -1316,8 +1559,10 @@
           emptyMessage="{{ 'general.message.no.registros' | translate}}"
           [ngClass]="{ customCursor: selectMultipleSessions }"
           [(selection)]="selectedDatosSessions"
+          (onRowSelect)="irEditarEvento(selectedDatosSessions)" 
+          (onRowUnselect)="actualizaSeleccionadosEvents(selectedDatosSessions)"
           pageLinks="4"
-          dataKey="idSessions"
+          dataKey="idEvento"
           [responsive]="true"
           selectionMode="multiple"
           #tableSessions

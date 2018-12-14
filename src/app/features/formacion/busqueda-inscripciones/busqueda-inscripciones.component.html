@@ -18,15 +18,15 @@
       <div *ngIf="showDatosGenerales" class="module vista-avanzada">
         <div class="form-row">
           <div class="form-group col-lg-3 col-md-2">
-            <label>{{ 'form.busquedaCursos.literal.visibilidad' | translate}}</label>
-            <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form"
+            <label>{{ 'formacion.fichaCursos.datosGenerales.visibilidad' | translate}}</label>
+            <p-dropdown [disabled]="deshabilitarCombVis" placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form"
               [(ngModel)]='body.idVisibilidad' [options]="comboVisibilidad" [filter]="true" filterBy="label,labelSinTilde"
               (onChange)="onChangeSelectVisibilidad($event)"></p-dropdown>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}</label>
-            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
+            <p-dropdown [disabled]="deshabilitarCombCol" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
               [(ngModel)]='body.colegio' [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeSelectColegio($event)"></p-dropdown>
           </div>
 
@@ -78,11 +78,14 @@
 
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ 'form.busquedaCursos.literal.nombreApellidosFormador' | translate}}</label>
-            <input type="text" class="form-control" pInputText [(ngModel)]="body.nombreApellidosFormador">
+            <div class="ui-inputgroup">
+              <input type="text" class="form-control" pInputText [disabled]="true" [(ngModel)]="body.nombreApellidosFormador">
+              <button pButton type="button" label="{{ 'general.boton.search' | translate}}" (click)="obtenerFormador()" icon="fa fa-search" iconPos="left"> </button>
+            </div>
           </div>
 
           <div class="form-group col-lg-3 col-md-3">
-            <label>{{ 'form.busquedaCursos.literal.temas' | translate}}</label>
+           <label>{{ 'form.busquedaCursos.literal.temas' | translate}}</label>
             <p-multiSelect #mySelect [disabled]="!editar" [defaultLabel]="literalMultiselect" autoWidth="false" [(ngModel)]='selectedTemas'
               [options]="comboTemas" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" styleClass="widthAll" defaultLabel=""
               optionLabel="label" [filter]="true"></p-multiSelect>
@@ -96,15 +99,15 @@
 
           <div class="form-group col-lg-3 col-md-2">
               <label>{{ 'formacion.busquedaInscripcion.calificacionEmitida' | translate }}</label>
-              <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.calificacionEmitida'
+              <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idCalificacion'
                 [options]="comboCalificacionEmitida" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
           </div>
-          <div class="form-check col-lg-3 col-md-3">
-              <br>
-              <label class="form-group-label">{{'formacion.busquedaInscripcion.pagada' | translate}}</label> &nbsp;&nbsp;
-              <p-checkbox [(ngModel)]='valorCheckPagada' binary="true"></p-checkbox>
-          </div>
 
+          <div class="form-group col-lg-3 col-md-2">
+              <label>{{'formacion.busquedaInscripcion.pagada' | translate}}</label>
+              <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.pagada'
+                [options]="comboPagada" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+          </div>
         </div>
       </div>
 
@@ -114,28 +117,24 @@
         <!-- <button pButton (click)="crearCurso()" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
         <button (click)="isBuscar(false)" pButton type="button" icon="fa fa-search"
           iconPos="left" label="{{'general.boton.search' | translate}}"></button> -->
-          <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+          <button (click)="changeColsAndData()" pButton type="button " icon="fa fa-eraser " iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
           <button [disabled]="!formBusqueda.valid" (click)="isBuscar(false)" pButton type="button" icon="fa fa-search"
           iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+          <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
           <!-- <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button> -->
       </div>
     </div>
   </div>
   <!--FIN CARD-->
-  <!-- <div *ngIf="buscar == true" class="card mt-3"> -->
-  <div class="card mt-3">
+  <div *ngIf="buscar == true" class="card mt-3">
+  <!-- <div class="card mt-3"> -->
     <div class="card-body p-0">
-      <!-- <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-        [(selection)]="selectedDatos" (onRowSelect)="irEditarCurso(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-        pageLinks="4" dataKey="idCurso" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos"
-        [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
-        <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-          [filter]="true" filterMatchMode="contains"> -->
-          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+          <p-dataTable [editable]="true" emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
           [(selection)]="selectedDatos" pageLinks="4" dataKey="nombreCurso" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos"
-          [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+          [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" (onEditInit)="guardarCodigo($event)" (onEdit)="editarCompleto($event)">
+
           <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-            [filter]="true" filterMatchMode="contains">
+            [filter]="true" filterMatchMode="contains" [editable]="col.field == 'calificacion'">
 
           <!-- <ng-template let-dato="rowData" pTemplate="body">
             <label [ngClass]="{'estiloHistorico': dato.flagArchivado == 1}">{{dato[col.field]}}</label>
@@ -162,25 +161,28 @@
         <p-footer>
           <div class="text-right main-button">
             <!-- Botón cancelar -->
-            <button (click)="cancelarCursos()" pButton type="button" icon="fa fa-ban" iconPos="left" label="{{ 'general.boton.cancel' | translate }}"
-              [disabled]="selectedDatos == ''"></button>
+            <!-- <button (click)="cancelarCursos()" pButton type="button" icon="fa fa-ban" iconPos="left" label="{{ 'general.boton.cancel' | translate }}"
+              [disabled]="selectedDatos == ''"></button> -->
 
             <!-- Botón Aprobar Inscripción -->
             <!-- <button (click)="finalizarCursos()" pButton type="button" icon="fa fa-stop" iconPos="left" label="Aprobar Inscripción"
               [disabled]="selectedDatos == ''"></button> -->
-              <button (click)="finalizarCursos()" pButton type="button" icon="fa fa-stop" iconPos="left" label="{{ 'formacion.busquedaInscripcion.aprobarInscripcion' | translate }}"
+              <button (click)="abrirPopUpMotivo(0)" pButton type="button" icon="fa fa-stop" iconPos="left" label="{{ 'formacion.busquedaInscripcion.aprobarInscripcion' | translate }}"
               [disabled]="selectedDatos == ''"></button>
 
             <!-- Botón Cancelar Inscripción -->
             <!-- <button (click)="desanunciarCursos()" pButton type="button" icon="fa fa-bell-slash" iconPos="left" label="Cancelar Inscripción"
               [disabled]="selectedDatos == ''"></button> -->
-              <button pButton type="button" icon="fa fa-bell-slash" iconPos="left" label="{{ 'formacion.busquedaInscripcion.cancelarInscripcion' | translate }}"></button>
-
-            <!-- Botón rechazar -->
-            <button pButton type="button" icon="fa fa-bell" iconPos="left" label="{{ 'formacion.busquedaInscripcion.rechazar' | translate }}"></button>
-
-            <!-- Botón calificar -->
-            <button pButton type="button" icon="fa fa-bell" iconPos="left" label="{{ 'formacion.busquedaInscripcion.calificar' | translate }}"></button>
+              <button (click)="abrirPopUpMotivo(1)" pButton type="button" icon="fa fa-bell-slash" iconPos="left" label="{{ 'formacion.busquedaInscripcion.cancelarInscripcion' | translate
+              }}" [disabled]="selectedDatos == ''"></button>
+              
+              <!-- Botón rechazar -->
+              <button (click)="abrirPopUpMotivo(2)" pButton type="button" icon="fa fa-bell" iconPos="left" label="{{ 'formacion.busquedaInscripcion.rechazar' | translate }}"
+                [disabled]="selectedDatos == ''"></button>
+              
+                <!-- Botón calificar -->
+              <button *ngIf="!calificacion" pButton type="button" icon="fa fa-bell" iconPos="left" (click)="onCalificacion()" label="{{ 'formacion.busquedaInscripcion.calificar' | translate }}"></button>
+              <button *ngIf="calificacion" pButton type="button" icon="far fa-save" iconPos="left" (click)="guardarCalificacion()" label="{{ 'general.boton.guardar' | translate}}"></button>
 
           </div>
         </p-footer>
@@ -195,3 +197,25 @@
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
+
+<p-dialog [(visible)]="displayMotivo" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500"
+  [minWidth]="500">
+  <p-header class="title">
+    <label>{{"general.ventana.cgae" | translate}} - {{'formacion.busquedaInscripcion.cabecera' | translate }}</label>
+  </p-header>
+
+  <div class="bloque col-lg-12 col-md-12">
+    <div class="row">
+      <div class="form-group col-lg-12 col-md-12">
+        <label>{{"censo.datosHistorico.literal.motivo" | translate}} (*)</label>
+        <textarea pInputTextarea [(ngModel)]="body.motivo" (ngModelChange)="comprobarCampoMotivo()"></textarea>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <div class="text-right main-button ">
+      <button (click)="cerrarMotivo()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
+      <button (click)="guardarAccion()" [disabled]="!showGuardar" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+    </div>
+  </p-footer>
+</p-dialog>

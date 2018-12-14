@@ -26,6 +26,11 @@ export class EventoItem {
   tipoRepeticion: String;
   fechaInicioRepeticion: Date;
   fechaFinRepeticion: Date;
+  idCurso: string;
+
+  estadoEvento: string;
+  fechaHoraInicio: string;
+  fechaHoraFin: string;
 
   constructor() {}
 }

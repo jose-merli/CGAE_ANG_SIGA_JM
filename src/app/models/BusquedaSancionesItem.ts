@@ -2,7 +2,7 @@ export class BusquedaSancionesItem {
   // Búsqueda por Letrado
   nif: string;
   multa: string;
-  nombre: string;
+  nombre: String;
   primerApellido: string;
   segundoApellido: string;
 
@@ -17,6 +17,7 @@ export class BusquedaSancionesItem {
   chkRehabilitado: boolean;
   rehabilitado: string;
   fecha: Date;
+  fechaAcuerdoHasta: Date;
   fechaDesde: string;
   fechaDesdeDate: Date;
   fechaHasta: string;
@@ -36,6 +37,7 @@ export class BusquedaSancionesItem {
   fechaAcuerdoDate: Date;
   fechaArchivada: string;
   fechaArchivadaDate: Date;
+  archivada: string;
   chkFirmeza: boolean;
   fechaFirmeza: string;
   fechaFirmezaDate: Date;
@@ -47,5 +49,8 @@ export class BusquedaSancionesItem {
   fechaNacimientoDate: Date;
   texto: string;
   observaciones: string;
+  idPersona: string;
+  idInstitucionS: string;
+
   constructor() {}
 }

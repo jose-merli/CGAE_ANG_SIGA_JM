@@ -70,6 +70,11 @@ export class FichaCalendarioComponent implements OnInit {
   openFicha: boolean = false;
   closeFicha: boolean = true;
 
+  acceso: boolean = false;
+  accesoHistorico: boolean = false;
+  accesoSeleccionDatos: boolean = false;
+  accesoCalendario: boolean = false;
+
   constructor(
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
@@ -114,6 +119,13 @@ export class FichaCalendarioComponent implements OnInit {
       sessionStorage.removeItem("idCalendario");
       this.progressSpinner = false;
     }
+  }
+
+  cargarPermisos() {
+    this.checkAcceso();
+    this.checkAccesoHistorico();
+    this.checkAccesoValidaCalendario();
+    this.checkAccesoSeleccionDatos();
   }
 
   //FUNCIONES FICHA DATOS GENERALES
@@ -183,6 +195,7 @@ export class FichaCalendarioComponent implements OnInit {
           console.log(err);
         },
         () => {
+          this.cargarPermisos();
           this.progressSpinner = false;
         }
       );
@@ -711,5 +724,40 @@ export class FichaCalendarioComponent implements OnInit {
 
   backTo() {
     this.location.back();
+  }
+
+  checkAcceso() {
+    if (this.calendar.tipoAcceso == 2) {
+      this.acceso = true;
+    } else {
+      this.acceso = false;
+    }
+  }
+
+  checkAccesoHistorico() {
+    if (this.calendar.tipoAcceso == 3 && !this.historico) {
+      this.accesoHistorico = false;
+    } else {
+      this.accesoHistorico = true;
+    }
+  }
+
+  checkAccesoValidaCalendario() {
+    if (this.calendar.tipoAcceso == 3 && this.validarCalendario()) {
+      this.accesoCalendario = false;
+    } else {
+      this.accesoCalendario = true;
+    }
+  }
+  checkAccesoSeleccionDatos() {
+    if (
+      this.selectedDatos &&
+      this.selectedDatos != "" &&
+      this.calendar.tipoAcceso == 3
+    ) {
+      this.accesoSeleccionDatos = false;
+    } else {
+      this.accesoSeleccionDatos = true;
+    }
   }
 }
