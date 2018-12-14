@@ -237,15 +237,20 @@ export class SigaServices {
     fichaCursos_getTypeCostTrainers: "fichaCursos/getTypeCostTrainers",
     fichaCursos_updateTrainersCourse: "fichaCursos/updateTrainersCourse",
     fichaCursos_saveTrainersCourse: "fichaCursos/saveTrainersCourse",
-    fichaCursos_getSessionsCourse: "fichaCursos_getSessionsCourse",
+    fichaCursos_getSessionsCourse: "fichaCursos/getSessionsCourse",
     fichaCursos_saveCourse: "fichaCursos/saveCourse",
     fichaCursos_updateCourse: "fichaCursos/updateCourse",
+    fichaCursos_releaseOrAnnounceCourse: "fichaCursos/releaseOrAnnounceCourse",
+    fichaCursos_searchCourse: "fichaCursos/searchCourse",
 
     busquedaInscripciones_estadosInscripciones:
       "busquedaInscripciones/estadosInscripciones",
     busquedaInscripciones_search: "busquedaInscripciones/search",
     busquedaInscripciones_calificacionesEmitidas:
       "busquedaInscripciones/calificacionesEmitidas",
+    busquedaInscripciones_updateEstado: "busquedaInscripciones/updateEstado",
+    busquedaInscripciones_updateCalificacion:
+      "busquedaInscripciones/updateCalificacion",
 
     //Agenda
     fichaCalendario_getCalendarType: "fichaCalendario/getCalendarType",
@@ -275,6 +280,7 @@ export class SigaServices {
     fichaEventos_getEventNotifications: "fichaEventos/getEventNotifications",
     fichaEventos_getHistoricEventNotifications:
       "fichaEventos/getHistoricEventNotifications",
+    fichaEventos_searchEvent: "fichaEventos/searchEvent",
     fichaCursos_getTrainersCourse: "fichaCursos/getTrainersCourse",
     fichaCursos_deleteTrainersCourse: "fichaCursos/deleteTrainersCourse",
     datosNotificaciones_getTypeNotifications:
