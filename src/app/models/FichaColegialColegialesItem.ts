@@ -2,11 +2,18 @@ export class FichaColegialColegialesItem {
   numColegiado: String;
   residenteInscrito: String;
   nMutualista: String;
-  incorporacion: String;
   idTiposSeguro: String;
+
+  incorporacion: Date;
   fechapresentacion: Date;
   fechaJura: Date;
   fechaTitulacion: Date;
+
+  incorporacionDate: Date;
+  fechapresentacionDate: Date;
+  fechaTitulacionDate: Date;
+  fechaJuraDate: Date;
+
   descripcion: String;
   observaciones: String;
   estadoColegial: String;

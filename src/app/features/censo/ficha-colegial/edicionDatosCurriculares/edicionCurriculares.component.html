@@ -45,26 +45,26 @@
               <div class="form-group col-lg-12 col-md-12">
                 <label style="font-weight: bold;">{{"censo.consultaDatosCV.cabecera" | translate}}</label>
               </div>
-
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{"censo.busquedaClientesAvanzada.literal.categoriaCV" | translate}} (*)</label>
                 <br>
-                <p-dropdown class="select-form" [(ngModel)]='body.idTipoCv' placeholder="Seleccionar" [filter]="true" filterMatchMode="contains"
+                <p-dropdown class="select-form" [(ngModel)]='body.idTipoCv' placeholder="{{'general.boton.seleccionar' | translate}}" emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}" [filter]="true" filterMatchMode="contains"
                   [options]="categoriaCurricular" (onChange)="changeCategoria()">
                 </p-dropdown>
               </div>
               <div class="form-group col-lg-3 col-md-3">
-                <label>Tipo Curricular</label>
+                <label>{{"censo.tipoCurricular.descripcion.literal" | translate}}</label>
                 <br>
-                <p-dropdown [disabled]="isDisabledCombos()" class="select-form" placeholder="Seleccionar" [(ngModel)]='body.idTipoCvSubtipo1'
-                  [filter]="true" filterMatchMode="contains" [options]="tipoCurricularCombo">
+                <p-dropdown [disabled]="isDisabledCombos()" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idTipoCvSubtipo1'
+                  [filter]="true" filterMatchMode="contains" [options]="tipoCurricularCombo" emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}">
                 </p-dropdown>
               </div>
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{"censo.busquedaClientesAvanzada.literal.subtiposCV" | translate}}</label>
                 <br>
-                <p-dropdown [disabled]="isDisabledCombos()" class="select-form" placeholder="Seleccionar" [(ngModel)]='body.idTipoCvSubtipo2'
-                  [filter]="true" filterMatchMode="contains" [options]="subtipoCurricularCombo">
+                <p-dropdown [disabled]="isDisabledCombos()" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idTipoCvSubtipo2'
+                  [filter]="true" filterMatchMode="contains" [options]="subtipoCurricularCombo" emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}" 
+                  >
                 </p-dropdown>
               </div>
               <div class="form-group col-lg-3 col-md-3">
@@ -80,7 +80,7 @@
                 <input [(ngModel)]="body.creditos" (ngModelChange)="compruebaRegistro()" [disabled]="isLetrado" type="text" class="form-control" [maxLength]="5"
                   pInputText>
                 <div *ngIf="creditosIncorrecto == true">
-                  <label class="labelError">Solo números</label>
+                  <label class="labelError">{{"censo.ws.literal.soloNumeros" | translate}}</label>
                 </div>
               </div>
 

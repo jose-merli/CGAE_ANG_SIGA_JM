@@ -1,41 +1,56 @@
 export class BusquedaSancionesItem {
   // Búsqueda por Letrado
-  nif: String;
-  multa: String;
+  nif: string;
+  multa: string;
   nombre: String;
-  primerApellido: String;
-  segundoApellido: String;
+  primerApellido: string;
+  segundoApellido: string;
 
   // Búsqueda por Colegio
-  colegio: String;
+  colegio: string;
   idColegios: String[];
-  tipoSancion: String;
-  refConsejo: String;
-  refColegio: String;
+  idColegio: string;
+  tipoSancion: string;
+  refConsejo: string;
+  refColegio: string;
 
   chkRehabilitado: boolean;
-  rehabilitado: String;
+  rehabilitado: string;
   fecha: Date;
-  fechaDesde: Date;
-  fechaHasta: Date;
+  fechaAcuerdoHasta: Date;
+  fechaDesde: string;
+  fechaDesdeDate: Date;
+  fechaHasta: string;
+  fechaHastaDate: Date;
   chkArchivadas: boolean;
   chkAcuerdo: boolean;
-  fechaArchivadaDesde: Date;
-  fechaArchivadaHasta: Date;
+  fechaArchivadaDesde: string;
+  fechaArchivadaDesdeDate: Date;
+  fechaArchivadaHasta: string;
+  fechaArchivadaHastaDate: Date;
 
   // Búsqueda por Sanciones
-  tipo: String;
-  origen: String;
-  estado: String;
-  fechaAcuerdo: Date;
-  fechaArchivada: Date;
+  tipo: string;
+  origen: string;
+  estado: string;
+  fechaAcuerdo: string;
+  fechaAcuerdoDate: Date;
+  fechaArchivada: string;
+  fechaArchivadaDate: Date;
+  archivada: string;
   chkFirmeza: boolean;
-  fechaFirmeza: Date;
-  firmeza: String;
-  fechaRehabilitado: Date;
+  fechaFirmeza: string;
+  fechaFirmezaDate: Date;
+  firmeza: string;
+  fechaRehabilitado: string;
+  fechaRehabilitadoDate: Date;
 
-  fechaNacimiento: Date;
-  texto: String;
-  observaciones: String;
+  fechaNacimiento: string;
+  fechaNacimientoDate: Date;
+  texto: string;
+  observaciones: string;
+  idPersona: string;
+  idInstitucionS: string;
+
   constructor() {}
 }
