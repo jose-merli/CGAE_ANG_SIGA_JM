@@ -175,6 +175,8 @@ export class SigaServices {
       "/busquedaNoColegiados/categoriaCurricular",
     busquedaNoColegiados_searchNoColegiado:
       "/busquedaNocolegiado/searchNoColegiado",
+    busquedaNocolegiado_deleteNoColegiado:
+      "/busquedaNocolegiado/deleteNoColegiado",
     busquedaNoColegiados_searchHistoric: "busquedaNocolegiado/searchHistoric",
     solicitudIncorporacion_tipoSolicitud:
       "/solicitudIncorporacion/tipoSolicitud",

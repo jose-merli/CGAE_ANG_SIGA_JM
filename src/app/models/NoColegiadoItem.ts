@@ -1,5 +1,6 @@
 export class NoColegiadoItem {
   idPersona: string;
+  idPersonas: string[];
   idInstitucion: string;
   nif: string;
   nombre: string;
@@ -15,7 +16,7 @@ export class NoColegiadoItem {
   codigoPostal: string;
   tipoDireccion: string;
   apellidos: string;
-  etiquetas: string;
+  traduccion: string[];
   sexo: string;
   estadoCivil: string;
   categoria: string;
