@@ -40,27 +40,26 @@ export class LoginDevelopComponent implements OnInit {
   onSubmit() { }
 
   ngOnInit() {
-    debugger;
-    // sessionStorage.removeItem("authenticated");
+    sessionStorage.removeItem("authenticated");
     this.ocultar = true;
-    // this.progressSpinner = true;
-    // this.sigaServices.getBackend("validaInstitucion").subscribe(
-    //   response => {
-    //     this.progressSpinner = false;
-    //     this.ocultar = true;
-    //   },
-    //   error => {
-    //     console.log("ERROR", error);
-    //     if (error.status == 403) {
-    //       let codError = error.status;
+    this.progressSpinner = true;
+    this.sigaServices.getBackend("validaInstitucion").subscribe(
+      response => {
+        this.progressSpinner = false;
+        this.ocultar = true;
+      },
+      error => {
+        console.log("ERROR", error);
+        if (error.status == 403) {
+          let codError = error.status;
 
-    //       sessionStorage.setItem("codError", codError);
-    //       sessionStorage.setItem("descError", "Imposible validar el certificado");
-    //       this.router.navigate(["/errorAcceso"]);
-    //       this.progressSpinner = false;
-    //     }
-    //   }
-    // );
+          sessionStorage.setItem("codError", codError);
+          sessionStorage.setItem("descError", "Imposible validar el certificado");
+          this.router.navigate(["/errorAcceso"]);
+          this.progressSpinner = false;
+        }
+      }
+    );
     this.sigaServices.getBackend("instituciones").subscribe(n => {
       this.instituciones = n.combooItems;
 

@@ -175,22 +175,31 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   }
 
   downloadDocumento(dato) {
-    let objDownload = {
-      rutaDocumento: dato.pathDocumento
-    };
     let filename;
     this.sigaServices
-      .postDownloadFiles("enviosMasivos_descargarDocumento", objDownload)
-      .subscribe(data => {
-        const blob = new Blob([data], { type: "application/octet-stream" });
-        if (blob.size == 0) {
-          this.ail("messages.general.error.ficheroNoExiste");
-        } else {
-          //let filename = "2006002472110.pdf";
-          saveAs(data, filename);
+      .post("enviosMasivos_infoDescargarDocumento", dato)
+      .subscribe(
+        data => {
+          let a = JSON.parse(data["body"]);
+          filename = a.value + a.label;
+        },
+        error => {
+          console.log(error);
+        },
+        () => {
+          this.sigaServices
+            .postDownloadFiles("enviosMasivos_descargarDocumento", dato)
+            .subscribe(data => {
+              const blob = new Blob([data], { type: "text/plain;charset=utf-8" });
+              if (blob.size == 0) {
+                this.ail("messages.general.error.ficheroNoExiste");
+              } else {
+                //let filename = "2006002472110.pdf";
+                saveAs(data, filename);
+              }
+            });
         }
-      });
-
+      );
   }
 
 
