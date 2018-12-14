@@ -171,6 +171,7 @@ export class SigaServices {
     enviosMasivos_etiquetasEnvio: 'enviosMasivos/detalle/etiquetasEnvio ',
     enviosMasivos_guardarEtiquetas: 'enviosMasivos/detalle/guardarEtiquetas',
     enviosMasivos_subirDocumento: 'enviosMasivos/detalle/subirDocumento',
+    consultas_claseComunicaciones: 'consultas/claseComunicacion',
     consultas_comboObjetivos: 'consultas/objetivo',
     consultas_comboModulos: 'consultas/modulo'
 
