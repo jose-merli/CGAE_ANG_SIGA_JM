@@ -11,8 +11,9 @@ export class DatosInscripcionItem {
   estadoCurso: string;
   estadoInscripcion: string;
   certificadoEmitido: string;
-  calificacionEmitida: string;
+  calificacion: string;
   nombreApellidosFormador: string;
+  idFormador: string;
   precioCurso: string;
   fechaInscripcion: Date;
   fechaInscripcionDesde: Date;
@@ -27,7 +28,11 @@ export class DatosInscripcionItem {
   lugar: string;
   autovalidacion: string;
   adjunta: string;
+  motivo: string;
+  tipoAccion: string;
+  pagada: string;
 
+  editar: boolean;
   flagArchivado: number;
   constructor() {}
 }

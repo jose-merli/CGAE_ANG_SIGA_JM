@@ -244,6 +244,9 @@ export class SigaServices {
     busquedaInscripciones_search: "busquedaInscripciones/search",
     busquedaInscripciones_calificacionesEmitidas:
       "busquedaInscripciones/calificacionesEmitidas",
+    busquedaInscripciones_updateEstado: "busquedaInscripciones/updateEstado",
+    busquedaInscripciones_updateCalificacion:
+      "busquedaInscripciones/updateCalificacion",
 
     //Agenda
     fichaCalendario_getCalendarType: "fichaCalendario/getCalendarType",
