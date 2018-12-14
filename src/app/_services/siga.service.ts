@@ -174,6 +174,7 @@ export class SigaServices {
     consultas_claseComunicaciones: 'consultas/claseComunicacion',
     enviosMasivos_guardarDocumento: 'enviosMasivos/detalle/guardarDocumentoEnvio',
     enviosMasivos_borrarDocumento: 'enviosMasivos/detalle/borrarDocumentoEnvio',
+    enviosMasivos_descargarDocumento: 'enviosMasivos/detalle/descargarDocumento',
     consultas_comboObjetivos: 'consultas/objetivo',
     consultas_comboModulos: 'consultas/modulo'
 

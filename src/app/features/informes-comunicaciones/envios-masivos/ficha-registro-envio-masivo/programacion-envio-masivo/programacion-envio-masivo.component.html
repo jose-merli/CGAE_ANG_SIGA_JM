@@ -1,5 +1,4 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-<app-dialog></app-dialog>
 <div class="ficha-container">
   <!--DATOS GENERALES-->
   <div class="card">
@@ -46,14 +45,15 @@
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>Fecha de Programación *</label>
-          <p-calendar [minDate]="currentDate" [locale]="es" showTime="true" [(ngModel)]="body.fechaProgramada" dateFormat="dd/mm/yy"
-            icon="far fa-calendar-alt" showIcon="true" [utc]="true"></p-calendar>
+          <p-calendar [minDate]="currentDate" [locale]="es" showTime="true" [(ngModel)]="body.fechaProgramada"
+            dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true"></p-calendar>
         </div>
       </div>
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="guardar()" [disabled]="isGuardarDisabled()" pButton type=" button " icon="far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}} "></button>
+        <button (click)="guardar()" [disabled]="isGuardarDisabled()" pButton type=" button " icon="far fa-save "
+          iconPos="left" label="{{ 'general.boton.guardar' | translate}} "></button>
         <button (click)="restablecer() " pButton type="button " icon="fa fa-undo " iconPos="left" label="{{'general.boton.restablecer' | translate}} "></button>
       </div>
     </div>

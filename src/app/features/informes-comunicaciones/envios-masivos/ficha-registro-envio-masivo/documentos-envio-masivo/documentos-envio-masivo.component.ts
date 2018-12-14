@@ -169,10 +169,12 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   }
 
   downloadDocumento(dato) {
+
     let objDownload = {
-      rutaDocumento: dato.pathDocumento
+      rutaDocumento: dato[0].pathDocumento,
+      nombreDocumento: dato[0].nombreDocumento
     };
-    let filename;
+
     this.sigaServices
       .postDownloadFiles("enviosMasivos_descargarDocumento", objDownload)
       .subscribe(data => {
@@ -180,8 +182,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
         if (blob.size == 0) {
           this.ail("messages.general.error.ficheroNoExiste");
         } else {
-          //let filename = "2006002472110.pdf";
-          saveAs(data, filename);
+          saveAs(data, dato[0].nombreDocumento);
         }
       });
   }
@@ -244,6 +245,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
     if (!this.selectMultiple) {
       this.downloadDocumento(dato)
     }
+    this.selectedDatos = [];
   }
 
   addFile() {
