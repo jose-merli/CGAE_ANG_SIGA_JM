@@ -23,7 +23,7 @@
             <div class="row pb-3">
               <div class="col-lg-6 col-md-6">
                 <label>{{'censo.consultaDatosGenerales.literal.tipoCliente' | translate}}(*)</label>
-                <p-dropdown class="select-form" [options]="comboCalendarType" [filter]="true" filterBy="label,labelSinTilde" placeholder="Seleccionar"
+                <p-dropdown class="select-form" [options]="comboCalendarType" [filter]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}"
                   [(ngModel)]='calendar.idTipoCalendario' name="type" [disabled]="modoEdicion"></p-dropdown>
               </div>
               <div class="col-lg-6 col-md-6 pt-3">

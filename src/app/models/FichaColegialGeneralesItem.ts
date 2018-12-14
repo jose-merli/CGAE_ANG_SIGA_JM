@@ -2,6 +2,7 @@ export class FichaColegialGeneralesItem {
   idPersona: String;
   nif: String;
   soloNombre: String;
+  idInstitucion: String;
   colegiado: Boolean;
   idTipoIdentificacion: String;
   nombre: String;

@@ -90,6 +90,7 @@ import { CommonModule } from "@angular/common";
 import { AccesoFichaPersonaComponent } from "./features/censo/datosPersonaJuridica/accesoFichaPersona/accesoFichaPersona.component";
 import { DatosBancariosComponent } from "./features/censo/datosPersonaJuridica/datos-bancarios/datos-bancarios.component";
 import { ConsultarDatosBancariosComponent } from "./features/censo/datosPersonaJuridica/datos-bancarios/consultar-datos-bancarios/consultar-datos-bancarios.component";
+import { AuditoriaComponent } from "./features/censo/auditoria/auditoria.component";
 // import { DatosCuentaBancariaComponent } from "./features/censo/datos-cuenta-bancaria/datos-cuenta-bancaria.component";
 // import { DatosMandatosComponent } from "./features/censo/datos-mandatos/datos-mandatos.component";
 // import { ListadoFicherosAnexosComponent } from "./features/censo/listado-ficheros-anexos/listado-ficheros-anexos.component";
@@ -273,6 +274,10 @@ import { BusquedaInscripcionesComponent } from "./features/formacion/busqueda-in
 import { FichaInscripcionComponent } from "./features/formacion/ficha-inscripcion/ficha-inscripcion.component";
 import { SolicitudesModificacionComponent } from "./features/censo/solicitudes-modificacion/solicitudes-modificacion.component";
 import { NuevaSolicitudesModificacionComponent } from "./features/censo/solicitudes-modificacion/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
+import { ComunicacionesComponent } from "./features/censo/comunicacionesCenso/comunicaciones.component";
+import { ExpedientesComponent } from "./features/censo/expedientesCenso/expedientes.component";
+import { RegtelComponent } from "./features/censo/regtel/regtel.component";
+import { TurnoOficioComponent } from "./features/censo/turnoOficioCenso/turnoOficio.component";
 
 @NgModule({
   declarations: [
@@ -288,6 +293,7 @@ import { NuevaSolicitudesModificacionComponent } from "./features/censo/solicitu
     HomeComponent,
     ConfirmDialogComponent,
     // Censo
+    AuditoriaComponent,
     AccesoFichaPersonaComponent,
     MutualidadAbogaciaPlanUniversal,
     SearchColegiadosComponent,
@@ -495,7 +501,14 @@ import { NuevaSolicitudesModificacionComponent } from "./features/censo/solicitu
     BusquedaInscripcionesComponent,
     FichaInscripcionComponent,
     SolicitudesModificacionComponent,
-    NuevaSolicitudesModificacionComponent
+    NuevaSolicitudesModificacionComponent,
+    ComunicacionesComponent,
+    ExpedientesComponent,
+    RegtelComponent,
+    TurnoOficioComponent
+
+
+
   ],
   imports: [
     BrowserModule,

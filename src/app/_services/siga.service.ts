@@ -235,9 +235,11 @@ export class SigaServices {
     fichaCursos_getTypeCostTrainers: "fichaCursos/getTypeCostTrainers",
     fichaCursos_updateTrainersCourse: "fichaCursos/updateTrainersCourse",
     fichaCursos_saveTrainersCourse: "fichaCursos/saveTrainersCourse",
-    fichaCursos_getSessionsCourse: "fichaCursos_getSessionsCourse",
+    fichaCursos_getSessionsCourse: "fichaCursos/getSessionsCourse",
     fichaCursos_saveCourse: "fichaCursos/saveCourse",
     fichaCursos_updateCourse: "fichaCursos/updateCourse",
+    fichaCursos_releaseOrAnnounceCourse: "fichaCursos/releaseOrAnnounceCourse",
+    fichaCursos_searchCourse: "fichaCursos/searchCourse",
 
     busquedaInscripciones_estadosInscripciones:
       "busquedaInscripciones/estadosInscripciones",
@@ -276,6 +278,7 @@ export class SigaServices {
     fichaEventos_getEventNotifications: "fichaEventos/getEventNotifications",
     fichaEventos_getHistoricEventNotifications:
       "fichaEventos/getHistoricEventNotifications",
+    fichaEventos_searchEvent: "fichaEventos/searchEvent",
     fichaCursos_getTrainersCourse: "fichaCursos/getTrainersCourse",
     fichaCursos_deleteTrainersCourse: "fichaCursos/deleteTrainersCourse",
     datosNotificaciones_getTypeNotifications:
@@ -433,6 +436,7 @@ export class SigaServices {
     busquedaSanciones_comboEstado: "busquedaSanciones/comboEstado",
     busquedaSanciones_comboOrigen: "busquedaSanciones/comboOrigen",
     busquedaSanciones_updateSanction: "busquedaSanciones/updateSanction",
+    busquedaSanciones_insertSanction: "busquedaSanciones/insertSanction",
     fichaDatosGenerales_etiquetasPersona:
       "fichaDatosGenerales/etiquetasPersona",
     getLetrado: "/getLetrado",
@@ -491,6 +495,10 @@ export class SigaServices {
 
   getNewSigaUrl() {
     return environment.newSigaUrl;
+  }
+
+  getOldSigaUrl() {
+    return environment.oldSigaUrl;
   }
 
   getServucePath(service: string) {

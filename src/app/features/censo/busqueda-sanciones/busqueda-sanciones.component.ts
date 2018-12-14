@@ -55,14 +55,11 @@ export class BusquedaSancionesComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
-    private translateService: TranslateService,
     private router: Router
   ) {}
 
   ngOnInit() {
     this.getComboTipoSancion();
-    this.getComboColegios();
-    this.getComboEstado();
 
     this.getDataTable();
 
@@ -71,9 +68,12 @@ export class BusquedaSancionesComponent implements OnInit {
 
       if (sessionStorage.getItem("back") == "true") {
         this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
-        this.isSearch = true;
-        this.search();
+        this.transformDates(this.body);
+
+        this.getComboColegios();
       } else {
+        this.getComboColegios();
+
         if (sessionStorage.getItem("search") != null) {
           this.isSearch = true;
           this.data = JSON.parse(sessionStorage.getItem("search"));
@@ -82,6 +82,8 @@ export class BusquedaSancionesComponent implements OnInit {
       }
       sessionStorage.removeItem("saveFilters");
     } else {
+      this.getComboColegios();
+
       if (sessionStorage.getItem("search") != null) {
         this.isSearch = true;
         this.data = JSON.parse(sessionStorage.getItem("search"));
@@ -89,6 +91,8 @@ export class BusquedaSancionesComponent implements OnInit {
         sessionStorage.removeItem("saveFilters");
       }
     }
+
+    console.log("array", this.colegios_seleccionados);
   }
 
   getComboTipoSancion() {
@@ -107,29 +111,40 @@ export class BusquedaSancionesComponent implements OnInit {
     this.sigaServices.get("busquedaPer_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
+
+        if (
+          sessionStorage.getItem("back") == "true" &&
+          this.body.idColegios != undefined
+        ) {
+          this.getInstitutionSession(this.colegios, this.body.idColegios);
+        }
       },
       err => {
         console.log(err);
+      },
+      () => {
+        if (sessionStorage.getItem("back") == "true") {
+          this.isSearch = true;
+          this.search();
+          sessionStorage.removeItem("back");
+        }
       }
     );
   }
 
-  getComboEstado() {
-    this.estado = [
-      { label: "", value: "" },
-      { label: "Provisional", value: "Provisional" },
-      { label: "Recurrida", value: "Recurrida" },
-      { label: "Firme", value: "Firme" },
-      { label: "Firme Pdte. Ejecucion", value: "Firme Pdte. Ejecucion" }
-    ];
-  }
-
-  getComboOrigen() {
-    this.origen = [
-      { label: "", value: "" },
-      { label: "Colegio/consejo", value: "Colegio/consejo" },
-      { label: "Juzgado/Tribunal", value: "Juzgado/Tribunal" }
-    ];
+  getInstitutionSession(colegios, idColegios) {
+    var obj: any;
+    colegios.forEach(element => {
+      idColegios.forEach(element1 => {
+        if (element.value == element1) {
+          obj = {
+            label: element.label,
+            value: element1
+          };
+          this.colegios_seleccionados.push(obj);
+        }
+      });
+    });
   }
 
   getDataTable() {
@@ -206,41 +221,7 @@ export class BusquedaSancionesComponent implements OnInit {
       });
     }
 
-    if (this.fechaDesde != null && this.fechaDesde != undefined) {
-      this.body.fechaDesdeDate = new Date(this.fechaDesde);
-    } else {
-      this.body.fechaDesdeDate = null;
-    }
-
-    if (this.fechaHasta != null && this.fechaHasta != undefined) {
-      this.body.fechaHastaDate = new Date(this.fechaHasta);
-    } else {
-      this.body.fechaHastaDate = null;
-    }
-
-    if (this.fecha != null && this.fecha != undefined) {
-      this.body.fecha = new Date(this.fecha);
-    } else {
-      this.body.fecha = null;
-    }
-
-    if (
-      this.fechaArchivadaDesde != null &&
-      this.fechaArchivadaDesde != undefined
-    ) {
-      this.body.fechaArchivadaDesdeDate = new Date(this.fechaArchivadaDesde);
-    } else {
-      this.body.fechaArchivadaDesdeDate = null;
-    }
-
-    if (
-      this.fechaArchivadaHasta != null &&
-      this.fechaArchivadaHasta != undefined
-    ) {
-      this.body.fechaArchivadaHastaDate = new Date(this.fechaArchivadaHasta);
-    } else {
-      this.body.fechaArchivadaHastaDate = null;
-    }
+    this.transformDates(this.body);
 
     this.sigaServices
       .postPaginado(
@@ -258,6 +239,50 @@ export class BusquedaSancionesComponent implements OnInit {
           this.progressSpinner = false;
         }
       );
+  }
+
+  transformDates(body) {
+    if (body.fechaDesdeDate != null && body.fechaDesdeDate != undefined) {
+      body.fechaDesdeDate = new Date(body.fechaDesdeDate);
+    } else {
+      body.fechaDesdeDate = null;
+    }
+
+    if (body.fechaHastaDate != null && body.fechaHastaDate != undefined) {
+      body.fechaHastaDate = new Date(body.fechaHastaDate);
+    } else {
+      body.fechaHastaDate = null;
+    }
+
+    if (body.fecha != null && body.fecha != undefined) {
+      body.fecha = new Date(body.fecha);
+    } else {
+      body.fecha = null;
+    }
+
+    if (body.fechaAcuerdoHasta != null && body.fechaAcuerdoHasta != undefined) {
+      body.fechaAcuerdoHasta = new Date(body.fechaAcuerdoHasta);
+    } else {
+      body.fechaAcuerdoHasta = null;
+    }
+
+    if (
+      body.fechaArchivadaDesdeDate != null &&
+      body.fechaArchivadaDesdeDate != undefined
+    ) {
+      body.fechaArchivadaDesdeDate = new Date(body.fechaArchivadaDesdeDate);
+    } else {
+      body.fechaArchivadaDesdeDate = null;
+    }
+
+    if (
+      body.fechaArchivadaHastaDate != null &&
+      body.fechaArchivadaHastaDate != undefined
+    ) {
+      body.fechaArchivadaHastaDate = new Date(body.fechaArchivadaHastaDate);
+    } else {
+      body.fechaArchivadaHastaDate = null;
+    }
   }
 
   restore() {
@@ -283,6 +308,7 @@ export class BusquedaSancionesComponent implements OnInit {
   }
 
   newRecord() {
+    sessionStorage.setItem("nuevaSancion", "true");
     this.router.navigate(["/busquedaGeneral"]);
   }
 
@@ -307,9 +333,6 @@ export class BusquedaSancionesComponent implements OnInit {
   onRowSelect(selectedDatos) {
     // Guardamos los filtros
     sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
-
-    // Guardamos los datos de la búsqueda
-    sessionStorage.setItem("search", JSON.stringify(this.data));
 
     // Guardamos los datos seleccionados para pasarlos a la otra pantalla
     sessionStorage.setItem("rowData", JSON.stringify(selectedDatos));

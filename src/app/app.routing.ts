@@ -206,6 +206,11 @@ import { FichaInscripcionComponent } from "./features/formacion/ficha-inscripcio
 import { BusquedaInscripcionesComponent } from "./features/formacion/busqueda-inscripciones/busqueda-inscripciones.component";
 import { SolicitudesModificacionComponent } from "./features/censo/solicitudes-modificacion/solicitudes-modificacion.component";
 import { NuevaSolicitudesModificacionComponent } from "./features/censo/solicitudes-modificacion/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
+import { ComunicacionesComponent } from "./features/censo/comunicacionesCenso/comunicaciones.component";
+import { ExpedientesComponent } from "./features/censo/expedientesCenso/expedientes.component";
+import { RegtelComponent } from "./features/censo/regtel/regtel.component";
+import { TurnoOficioComponent } from "./features/censo/turnoOficioCenso/turnoOficio.component";
+import { AuditoriaComponent } from "./features/censo/auditoria/auditoria.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -388,7 +393,7 @@ const appRoutes: Routes = [
   },
   {
     //CensoDocumentacionComponent
-    path: "censoDocumentacion",
+    path: "cargasMasivas",
     component: CargasMasivasComponent,
     canActivate: [AuthGuard]
   },
@@ -944,7 +949,33 @@ const appRoutes: Routes = [
     component: NuevaConsultaExpertaComponent,
     canActivate: [AuthGuard]
   },
-
+  {
+    path: "comunicacionesCenso",
+    component: ComunicacionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "expedientesCenso",
+    component: ExpedientesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "regTel",
+    component: RegtelComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "turnoOficioCenso",
+    component: TurnoOficioComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "auditoria",
+    component: AuditoriaComponent,
+    canActivate: [AuthGuard]
+  },
+  
+    
   //Comunicaciones
   {
     path: "informesGenericos",
