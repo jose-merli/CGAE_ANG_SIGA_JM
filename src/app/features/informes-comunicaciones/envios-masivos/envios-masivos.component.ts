@@ -62,8 +62,8 @@ export class EnviosMasivosComponent implements OnInit {
 
     if (sessionStorage.getItem("filtros") != null) {
       this.bodySearch = JSON.parse(sessionStorage.getItem("filtros"));
-      this.bodySearch.fechaCreacion = new Date(this.bodySearch.fechaCreacion)
-      this.bodySearch.fechaProgramacion = new Date(this.bodySearch.fechaProgramacion)
+      this.bodySearch.fechaCreacion = this.bodySearch.fechaCreacion ? new Date(this.bodySearch.fechaCreacion) : null;
+      this.bodySearch.fechaProgramacion = this.bodySearch.fechaProgramacion ? new Date(this.bodySearch.fechaProgramacion) : null;
       this.buscar();
     }
 
@@ -278,12 +278,12 @@ export class EnviosMasivosComponent implements OnInit {
 
   navigateTo(dato) {
     this.estado = dato[0].idEstado;
-    if (!this.selectMultiple && this.estado != 5) {
+    if (!this.selectMultiple && this.estado == 4) {
       // this.body.estado = dato[0].estado;
       this.router.navigate(['/fichaRegistroEnvioMasivo']);
       sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(this.body));
       sessionStorage.setItem("filtros", JSON.stringify(this.bodySearch));
-    } else if (dato[0].idEstado == 5) {
+    } else if (!this.selectMultiple && this.estado != 4) {
       this.showInfo('El envío está en proceso, no puede editarse')
     }
   }

@@ -22,6 +22,7 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
   etiquetasPersonaJuridica: any[];
   seleccionadasInicial: any[];
   noSeleccionadasInicial: any[];
+  progressSpinner: boolean = false;
 
 
   @ViewChild('table') table: DataTable;
@@ -57,8 +58,6 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
 
     this.getDatos();
 
-
-
   }
 
 
@@ -83,6 +82,7 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
   }
 
   getExtistentes() {
+    this.progressSpinner = true;
     this.sigaServices
       .get("enviosMasivos_etiquetas")
       .subscribe(
@@ -90,10 +90,12 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
           // coger etiquetas de una persona juridica
           this.etiquetasNoSeleccionadas = n.combooItems;
           this.noSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasNoSeleccionadas));
-
         },
         err => {
           console.log(err);
+        },
+        () => {
+          this.progressSpinner = false;
         }
       );
   }
@@ -110,8 +112,9 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
         },
         err => {
           console.log(err);
-        }
-      );
+        },
+
+    );
   }
 
 
@@ -147,7 +150,7 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
 
         },
         () => {
-
+          this.progressSpinner = false;
         }
       );
 
@@ -159,6 +162,9 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
   abreCierraFicha() {
     if (sessionStorage.getItem("crearNuevoEnvio") == null) {
       this.openFicha = !this.openFicha;
+      if (this.openFicha) {
+        this.getDatos();
+      }
     }
   }
 
@@ -182,6 +188,7 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
   }
 
   getDatos() {
+
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
       this.getSeleccionadas();

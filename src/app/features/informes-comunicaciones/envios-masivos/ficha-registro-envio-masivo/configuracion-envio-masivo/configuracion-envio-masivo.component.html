@@ -35,8 +35,13 @@
     <!--cuerpo datos generales-->
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div class="row">
-        <div [ngClass]="{'col-lg-12':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-6':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
+        <div class="bloque" [ngClass]="{'col-lg-12':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-6':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
           <div class="form-row">
+            <div class="form-group col-lg-12">
+              <label>
+                <strong>Datos globales</strong>
+              </label>
+            </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
               <label class="d-block">Tipo de envío *</label>
               <p-dropdown [disabled]="editar" (onChange)="onChangeTipoEnvio()" [options]="tipoEnvios" [(ngModel)]="body.idTipoEnvio" class="select-form"></p-dropdown>
@@ -52,15 +57,73 @@
             </div>
           </div>
         </div>
+
         <div *ngIf="body.idTipoEnvio== '1' || body.idTipoEnvio== '4' || body.idTipoEnvio== '5'" class="col-lg-6 col-md-12">
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
+              <label *ngIf="body.idTipoEnvio=='1'">
+                <strong>Datos de correo electrónico</strong>
+              </label>
+              <label *ngIf="body.idTipoEnvio=='4'">
+                <strong>Datos de SMS</strong>
+              </label>
+              <label *ngIf="body.idTipoEnvio=='5'">
+                <strong>Datos de Buro SMS</strong>
+              </label>
+            </div>
+            <div *ngIf="body.idTipoEnvio=='1'" class="form-group col-lg-12 col-md-12">
               <label>Asunto</label>
               <input type="text" class="form-control" [(ngModel)]="body.asunto" pInputText>
             </div>
-            <div class="form-group col-lg-12 col-md-12">
+            <div *ngIf="body.idTipoEnvio=='1'" class="form-group col-lg-12 col-md-12">
               <label>Cuerpo</label>
-              <textarea style="height:155px" pInputTextarea autoResize="autoResize" [(ngModel)]="body.cuerpo"></textarea>
+              <p-editor [(ngModel)]="body.email" [style]="{'height':'140px','text-align':'left'}">
+                <p-header>
+                  <span class=" ql-formats">
+                    <select class="ql-header">
+                      <option value="1">Heading</option>
+                      <option value="2">Subheading</option>
+                      <option selected>Normal</option>
+                    </select>
+                    <select class="ql-font">
+                      <option selected>Sans Serif</option>
+                      <option value="serif">Serif</option>
+                      <option value="monospace">Monospace</option>
+                    </select>
+                  </span>
+                  <span class="ql-formats">
+                    <button class="ql-bold" aria-label="Bold"></button>
+                    <button class="ql-italic" aria-label="Italic"></button>
+                    <button class="ql-underline" aria-label="Underline"></button>
+                  </span>
+                  <span class="ql-formats">
+                    <button class="ql-list" value="ordered" aria-label="Ordered List"></button>
+                    <button class="ql-list" value="bullet" aria-label="Unordered List"></button>
+                    <select class="ql-align">
+                      <option selected></option>
+                      <option value="center"></option>
+                      <option value="right"></option>
+                      <option value="justify"></option>
+                    </select>
+                  </span>
+                  <span class="ql-formats">
+                    <button class="ql-link" aria-label="Insertar Link"></button>
+                    <button class="ql-code-block" aria-label="Insertar código"></button>
+                  </span>
+                  <span class="ql-formats">
+                    <button class="ql-clean" aria-label="Remove Styles"></button>
+                  </span>
+                </p-header>
+              </p-editor>
+            </div>
+            <div *ngIf="body.idTipoEnvio=='4' || body.idTipoEnvio=='5'" class="form-group col-lg-3 col-md-3">
+              <label>Nº caracteres</label>
+              <input type="text" class="form-control" [(ngModel)]="body.caracteresSMS" [pKeyFilter]="patternSMS" pInputText>
+            </div>
+            <div *ngIf="body.idTipoEnvio=='4' || body.idTipoEnvio=='5'" class="form-group col-lg-12 col-md-12">
+              <label>Cuerpo</label>
+              <textarea [disabled]="!body.caracteresSMS" style="height:140px" pInputTextarea autoResize="autoResize" [(ngModel)]="body.cuerpo"
+                [maxlength]="body.caracteresSMS"></textarea>
             </div>
           </div>
         </div>
@@ -78,4 +141,10 @@
     </div>
   </div>
 
+</div>
+
+
+
+<div *ngIf="progressSpinner " class="overlay-spinner">
+  <div class="loader "></div>
 </div>

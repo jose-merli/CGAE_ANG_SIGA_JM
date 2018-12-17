@@ -29,6 +29,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   msgs: Message[];
   file: File = undefined;
   eliminarArray: any[];
+  progressSpinner: boolean = false;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -102,8 +103,11 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   abreCierraFicha() {
     if (sessionStorage.getItem("crearNuevoEnvio") == null) {
       this.openFicha = !this.openFicha;
-      this.getDatos();
+      if (this.openFicha) {
+        this.getDatos();
+      }
     }
+
   }
 
   esFichaActiva(key) {
@@ -154,8 +158,10 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   }
 
   getDocumentos() {
+    this.progressSpinner = true;
     this.sigaServices.post("enviosMasivos_documentos", this.body.idEnvio).subscribe(
       data => {
+
         let datos = JSON.parse(data["body"]);
         this.datos = datos.documentoEnvioItem;
       },
@@ -163,7 +169,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
         console.log(err);
       },
       () => {
-
+        this.progressSpinner = false;
       }
     );
   }
@@ -184,6 +190,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
         } else {
           saveAs(data, dato[0].nombreDocumento);
         }
+        this.selectedDatos = [];
       });
   }
 
@@ -245,12 +252,15 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
     if (!this.selectMultiple) {
       this.downloadDocumento(dato)
     }
-    this.selectedDatos = [];
   }
 
   addFile() {
+
+    this.progressSpinner = true;
+
     this.sigaServices.postSendContent("enviosMasivos_subirDocumento", this.file).subscribe(
       data => {
+
         this.body.pathDocumento = data.rutaDocumento;
 
         this.guardar(data.nombreDocumento);
@@ -273,7 +283,6 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
     this.sigaServices.post("enviosMasivos_guardarDocumento", objDoc).subscribe(
       data => {
         this.showSuccess('Se ha subido el documento correctamente');
-
       },
       err => {
         this.ail('Error al guardar el documento');
