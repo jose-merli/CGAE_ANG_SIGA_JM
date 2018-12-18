@@ -455,6 +455,21 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   duplicarCursos() {
     this.progressSpinner = true;
 
+    let curso = this.body;
+    curso.idCurso = null;
+
+    this.sigaServices.post("fichaCursos_saveCourse", this.body).subscribe(
+      data => {
+        this.progressSpinner = false;
+      },
+      error => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+
     //Llamar al rest de duplicar curso
     this.progressSpinner = false;
   }

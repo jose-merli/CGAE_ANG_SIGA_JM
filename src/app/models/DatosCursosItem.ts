@@ -27,7 +27,7 @@ export class DatosCursosItem {
   temas: string[];
   minimoAsistencia: string;
   lugar: string;
-  autovalidacion: string;
+  autovalidacion: boolean;
   adjunta: string;
 
   flagArchivado: number;
