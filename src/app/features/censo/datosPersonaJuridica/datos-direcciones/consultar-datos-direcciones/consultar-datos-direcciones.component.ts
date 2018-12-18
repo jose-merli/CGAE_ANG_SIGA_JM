@@ -63,7 +63,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   instituciones: any;
   tooltipFechaMod: any;
   poblacionBuscada: any;
-
+  permisos: boolean = true; //true
   constructor(
     private location: Location,
     private sigaServices: SigaServices,
@@ -75,6 +75,10 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   dropdown: Dropdown;
 
   ngOnInit() {
+    if (sessionStorage.getItem("permisos")) {
+      this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
+      this.historyDisable = !this.permisos;
+    }
     if (sessionStorage.getItem("isLetrado")) {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     }

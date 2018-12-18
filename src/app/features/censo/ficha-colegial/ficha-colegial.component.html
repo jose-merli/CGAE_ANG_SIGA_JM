@@ -426,6 +426,7 @@
               <p-dropdown
                 class="select-form"
                 [options]="generalIdiomas"
+                [(disabled)]="!this.permisos"
                 (onChange)="activacionGuardarGenerales()"
                 placeholder="{{'general.boton.seleccionar' | translate}}"
                 [(ngModel)]="generalBody.idLenguaje"
@@ -454,6 +455,7 @@
               &nbsp;&nbsp;
               <p-checkbox
                 (onChange)="activacionGuardarGenerales()"
+                [(disabled)]="!this.permisos"
                 [(ngModel)]="publicidad"
                 binary="true"
               ></p-checkbox>
@@ -467,6 +469,7 @@
               <p-checkbox
                 (onChange)="activacionGuardarGenerales()"
                 [(ngModel)]="guiaJudicial"
+                [(disabled)]="!this.permisos"
                 binary="true"
               ></p-checkbox>
             </div>
@@ -495,7 +498,7 @@
       <div class="text-right main-button ">
         <button
           (click)="restablecerGenerales()"
-          [disabled]="!activacionRestablecerGenerales()"
+          [disabled]="!activacionRestablecerGenerales() || !this.permisos"
           pButton
           type="button"
           icon="fa fa-undo"
@@ -505,7 +508,7 @@
         <button
           *ngIf="!isLetrado"
           (click)="generalesGuardar()"
-          [(disabled)]="!activarGuardarGenerales"
+          [(disabled)]="!activarGuardarGenerales || !this.permisos"
           pButton
           type="button"
           icon="far fa-save"
@@ -515,7 +518,7 @@
         <button
           *ngIf="isLetrado"
           (click)="comprobarAuditoria()"
-          [(disabled)]="!activarGuardarGenerales"
+          [(disabled)]="!activarGuardarGenerales || !this.permisos"
           pButton
           type="button"
           icon="fa fa-save"
