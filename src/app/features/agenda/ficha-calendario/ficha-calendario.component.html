@@ -28,13 +28,13 @@
               </div>
               <div class="col-lg-6 col-md-6 pt-3">
                 <label class="pr-1">{{'formacion.fichaCalendario.color' | translate}}:</label>
-                <p-colorPicker [(ngModel)]="colorSelect" name="color"></p-colorPicker>
+                <p-colorPicker [(ngModel)]="colorSelect" name="color" [disabled]="acceso"></p-colorPicker>
               </div>
             </div>
             <div class="row">
               <div class="col-lg-12 col-md-12">
                 <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}(*)</label>
-                <input type="text" class="form-control" [(ngModel)]='calendar.descripcion' pInputText name="descripcion">
+                <input type="text" class="form-control" [(ngModel)]='calendar.descripcion' pInputText name="descripcion" [disabled]="acceso">
               </div>
             </div>
           </div>
@@ -43,8 +43,8 @@
     </div>
     <div class="card-footer ">
       <div class="text-right main-button">
-        <button pButton (click)="resetCalendar()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}"></button>
-        <button pButton (click)="saveCalendar()" [disabled]="!validarCalendario()" type="button" icon="far fa-save" iconPos="left"
+        <button pButton (click)="resetCalendar()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="acceso"></button>
+        <button pButton (click)="saveCalendar()" [disabled]="accesoCalendario" type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>
@@ -97,7 +97,7 @@
             </p-tree>
           </div>
         </div>
-        <div *ngIf="selectProfile" [ngClass]="{'widthChange':isWidthChange,'widthNotChange':!isWidthChange}" class="menu-accesos">
+        <div *ngIf="selectProfile && !acceso" [ngClass]="{'widthChange':isWidthChange,'widthNotChange':!isWidthChange}" class="menu-accesos">
           <div class="texto">
             <label class="title">{{'agenda.fichaCalendario.configuracionPerfiles.administrarPermisosCalendario' | translate }}</label>
             <div>
@@ -238,15 +238,15 @@
       <div *ngIf="esFichaActiva('notify')" class="card-footer">
         <div *ngIf="!historico" class="text-right main-button">
           <button (click)="getHistoricCalendarNotifications(); selectedDatos=[]" pButton type="button" icon="fa fa-history" iconPos="left"
-            label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
-          <button [disabled]="!(selectedDatos && selectedDatos != '')" (click)="confirmarBorrar(selectedDatos); selectedDatos=false" pButton type="button"
+            label="{{ 'general.message.mostrarHistorico' | translate}}" [disabled]="acceso"></button>
+          <button [disabled]="accesoSeleccionDatos" (click)="confirmarBorrar(selectedDatos); selectedDatos=false" pButton type="button"
             icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
           <button pButton (click)="newNotification()" type="button" icon="fa fa-plus" iconPos="left" label="{{
-            'general.boton.new' | translate }}"></button>
+            'general.boton.new' | translate }}" [disabled]="acceso"></button>
         </div>
         <div *ngIf="historico" class="text-right main-button">
-          <button (click)="getCalendarNotifications()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
-          <button (click)="deleteSeleccion()" [disabled]="historico" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+          <button (click)="getCalendarNotifications()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}" [disabled]="acceso"></button>
+          <button (click)="deleteSeleccion()" [disabled]="accesoHistorico" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
         </div>
       </div>
     </div>

@@ -10,6 +10,7 @@ import { esCalendar } from "../../../utils/calendar";
 import { Router } from "../../../../../node_modules/@angular/router";
 import { SigaServices } from "../../../_services/siga.service";
 import { TranslateService } from "../../../commons/translate";
+import { ConfirmationService, Message } from "primeng/components/common/api";
 import { DataTable } from "../../../../../node_modules/primeng/primeng";
 import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
 import { DatosNoColegiadosObject } from "../../../models/DatosNoColegiadosObject";
@@ -58,6 +59,8 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   noColegiadoSearch = new DatosNoColegiadosObject();
 
+  msgs: Message[];
+
   @ViewChild("table")
   table: DataTable;
   selectedDatos;
@@ -83,7 +86,8 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private confirmationService: ConfirmationService
   ) {
     this.formBusqueda = this.formBuilder.group({
       nif: new FormControl(null, Validators.minLength(3)),
@@ -287,8 +291,8 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   onChangeSelectAll() {
     if (this.selectAll === true) {
       this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+      this.selectedDatos = this.noColegiadoSearch.noColegiadoItem;
+      this.numSelected = this.noColegiadoSearch.noColegiadoItem.length;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -345,6 +349,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     this.selectedDatos = "";
     this.getColsResults();
     this.filtrosTrim();
+
     if (
       this.fechaNacimientoSelect != undefined ||
       this.fechaNacimientoSelect != null
@@ -386,6 +391,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   toHistorico() {
     this.historico = true;
+    this.body.historico = true;
     this.buscar = false;
     this.selectMultiple = false;
     this.selectedDatos = "";
@@ -394,7 +400,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     this.selectAll = false;
     this.sigaServices
       .postPaginado(
-        "busquedaNoColegiados_searchHistoric",
+        "busquedaNoColegiados_searchNoColegiado",
         "?numPagina=1",
         this.body
       )
@@ -410,7 +416,9 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {}
+        () => {
+          this.body.historico = false;
+        }
       );
   }
 
@@ -430,8 +438,76 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     this.router.navigate(["/fichaColegial"]);
   }
 
-  deleteSeleccion() {
-    this.selectedDatos = [];
+  deleteSeleccion(selectedDatos) {
+    console.log("SE", selectedDatos);
+    let mess = this.translateService.instant("messages.deleteConfirmation");
+    let icon = "fa fa-trash-alt";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.removeColegiado(selectedDatos);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  removeColegiado(selectedDatos) {
+    this.progressSpinner = true;
+
+    let item = new NoColegiadoItem();
+
+    item.idPersonas = [];
+
+    selectedDatos.forEach(element => {
+      item.idPersonas.push(element.idPersona);
+    });
+
+    this.sigaServices
+      .post("busquedaNocolegiado_deleteNoColegiado", item)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          if (selectedDatos.length == 1) {
+            this.showSuccess(
+              this.translateService.instant("messages.deleted.success")
+            );
+          } else {
+            this.showSuccess(
+              selectedDatos.length +
+                " " +
+                this.translateService.instant(
+                  "messages.deleted.selected.success"
+                )
+            );
+          }
+        },
+        error => {
+          console.log(error);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.historico = true;
+          this.selectedDatos = [];
+          this.numSelected = 0;
+          this.isBuscar();
+        }
+      );
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
   }
 
   isCancelar() {
@@ -538,6 +614,8 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       sessionStorage.setItem("personaBody", JSON.stringify(id[0]));
       console.log(id);
       this.router.navigate(["/fichaColegial"]);
+    } else {
+      this.numSelected = this.selectedDatos.length;
     }
   }
 }

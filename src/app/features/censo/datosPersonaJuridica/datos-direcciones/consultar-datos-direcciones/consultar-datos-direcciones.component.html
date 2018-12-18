@@ -160,7 +160,7 @@
          
           <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="igualInicio()" label="{{ 'general.boton.restablecer' | translate}}"></button>
         
-          <button *ngIf="!isLetrado" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar()"
+          <button *ngIf="!isLetrado" (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar()"
             label="{{ 'general.boton.guardar' | translate}}"></button>
           
           <button *ngIf="isLetrado" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar()"

@@ -87,13 +87,17 @@ export class SolicitudesModificacionComponent implements OnInit {
     if (sessionStorage.getItem("saveFilters") != null) {
       this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
 
-      this.body.fechaDesde = new Date(this.body.fechaDesde.toString());
-      this.body.fechaHasta = new Date(this.body.fechaHasta.toString());
+      if (this.body.fechaDesde != null) {
+        this.body.fechaDesde = new Date(this.body.fechaDesde.toString());
+      } else if (this.body.fechaHasta != null) {
+        this.body.fechaHasta = new Date(this.body.fechaHasta.toString());
+      }
 
       if (sessionStorage.getItem("processingPerformed") == "true") {
         this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
         this.isSearch = true;
         this.search();
+        sessionStorage.removeItem("processingPerformed");
       } else {
         if (sessionStorage.getItem("search") != null) {
           this.isSearch = true;

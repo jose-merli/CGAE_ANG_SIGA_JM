@@ -175,6 +175,8 @@ export class SigaServices {
       "/busquedaNoColegiados/categoriaCurricular",
     busquedaNoColegiados_searchNoColegiado:
       "/busquedaNocolegiado/searchNoColegiado",
+    busquedaNocolegiado_deleteNoColegiado:
+      "/busquedaNocolegiado/deleteNoColegiado",
     busquedaNoColegiados_searchHistoric: "busquedaNocolegiado/searchHistoric",
     solicitudIncorporacion_tipoSolicitud:
       "/solicitudIncorporacion/tipoSolicitud",
@@ -246,6 +248,9 @@ export class SigaServices {
     busquedaInscripciones_search: "busquedaInscripciones/search",
     busquedaInscripciones_calificacionesEmitidas:
       "busquedaInscripciones/calificacionesEmitidas",
+    busquedaInscripciones_updateEstado: "busquedaInscripciones/updateEstado",
+    busquedaInscripciones_updateCalificacion:
+      "busquedaInscripciones/updateCalificacion",
 
     //Agenda
     fichaCalendario_getCalendarType: "fichaCalendario/getCalendarType",
