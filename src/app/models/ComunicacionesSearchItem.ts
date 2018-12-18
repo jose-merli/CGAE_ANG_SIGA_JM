@@ -4,6 +4,6 @@ export class ComunicacionesSearchItem {
   fechaCreacion: Date;
   idTipoEnvio: String;
   idEstado: String;
-  fechaProgramada: Date;
+  fechaProgramacion: Date;
   constructor() { }
 }

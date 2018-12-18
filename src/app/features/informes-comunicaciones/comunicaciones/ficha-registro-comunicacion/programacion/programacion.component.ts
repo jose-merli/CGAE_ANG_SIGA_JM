@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { ProgComunicacionItem } from '../../../../../models/ProgramacionComunicacionItem';
-import { Location } from "@angular/common";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { esCalendar } from "../../../../../utils/calendar";
+import { Message } from "primeng/components/common/api";
+
 
 @Component({
   selector: 'app-programacion',
@@ -24,10 +25,15 @@ export class ProgramacionComponent implements OnInit {
   numSelected: number = 0;
   rowsPerPage: any = [];
   body: ProgComunicacionItem = new ProgComunicacionItem();
+  bodyInicial: ProgComunicacionItem = new ProgComunicacionItem();
   modulos: any[];
   objetivos: any[];
   clasesComunicaciones: any[];
   es: any = esCalendar;
+  msgs: Message[];
+  arrayProgramar: any[];
+  currentDate: Date = new Date();
+  estados: string;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -54,8 +60,6 @@ export class ProgramacionComponent implements OnInit {
   ];
 
   constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private location: Location,
     private sigaServices: SigaServices
   ) {
 
@@ -65,63 +69,42 @@ export class ProgramacionComponent implements OnInit {
 
   ngOnInit() {
 
+
+    this.getEstadosEnvios();
+
     this.getDatos();
 
-    this.selectedItem = 10;
 
-    this.objetivos = [
-      {
-        label: 'seleccione..', value: null
-      },
-      {
-        label: 'Destinatarios', value: '1'
-      },
-      {
-        label: 'Condicional', value: '2'
-      }
-    ]
+  }
 
+  // Mensajes
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
 
-    this.cols = [
-      { field: 'consulta', header: 'Consulta' },
-      { field: 'finalidad', header: 'Finalidad' },
-      { field: 'tipoEjecucion', header: 'Tipo de ejecución' }
-    ];
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
 
-    this.datos = [
-      { id: '1', consulta: 'prueba', finalidad: 'prueba', tipoEjecucion: 'prueba' },
-      { id: '2', consulta: 'prueba', finalidad: 'prueba', tipoEjecucion: 'prueba' }
-    ];
+  showInfo(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+  }
 
-
-    this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
-      },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: 30,
-        value: 30
-      },
-      {
-        label: 40,
-        value: 40
-      }
-    ];
-
-    // this.body.idConsulta = this.consultas[1].value;
+  clear() {
+    this.msgs = [];
   }
 
 
+
   abreCierraFicha() {
-    // let fichaPosible = this.getFichaPosibleByKey(key);
-    if (this.activacionEditar == true) {
-      // fichaPosible.activa = !fichaPosible.activa;
+    if (sessionStorage.getItem("crearNuevaCom") == null) {
       this.openFicha = !this.openFicha;
+      if (!this.body.fechaProgramada) {
+        this.getDatos();
+      }
     }
   }
 
@@ -142,61 +125,75 @@ export class ProgramacionComponent implements OnInit {
 
 
 
-  onChangeRowsPerPages(event) {
-    this.selectedItem = event.value;
-    this.changeDetectorRef.detectChanges();
-    this.table.reset();
-  }
-
-
-  isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    } else {
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    }
-  }
-
-  onChangeSelectAll() {
-    if (this.selectAll === true) {
-      this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
-    } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    }
-  }
-
-  onRowSelect() {
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-    }
-  }
-
-  addConsulta() {
-    let obj = {
-      consulta: null,
-      finalidad: null,
-      tipoEjecucion: null
-    };
-    this.datos.push(obj);
-    this.datos = [... this.datos];
-  }
-
-
-  backTo() {
-    this.location.back();
-  }
-
-
   getDatos() {
     if (sessionStorage.getItem("comunicacionesSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("comunicacionesSearch"));
+      console.log(this.body)
+      this.body.fechaProgramada = this.body.fechaProgramada ? new Date(this.body.fechaProgramada) : null;
+      this.body.fechaCreacion = this.body.fechaCreacion ? new Date(this.body.fechaCreacion) : null;
+      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
+    this.body.fechaProgramada = this.body.fechaProgramada ? new Date(this.body.fechaProgramada) : null;
+    this.body.fechaCreacion = this.body.fechaCreacion ? new Date(this.body.fechaCreacion) : null;
+
   }
+
+
+  restablecer() {
+    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    if (this.body.fechaProgramada != null) {
+      this.body.fechaProgramada = new Date(this.body.fechaProgramada)
+    }
+
+  }
+
+  guardar() {
+    this.arrayProgramar = [];
+    let objProgramar = {
+      idEnvio: this.body.idEnvio,
+      idInstitucion: this.body.idInstitucion,
+      fechaProgramada: new Date(this.body.fechaProgramada),
+      idEstado: this.body.idEstado,
+      idTipoEnvio: this.body.idTipoEnvio,
+      idPlantillasEnvio: this.body.idPlantillasEnvio,
+      descripcion: this.body.descripcion
+
+    }
+    this.arrayProgramar.push(objProgramar);
+    this.sigaServices.post("enviosMasivos_programar", this.arrayProgramar).subscribe(
+      data => {
+        this.showSuccess('Se ha programado el envío correctamente');
+        this.body.fechaProgramada = objProgramar.fechaProgramada;
+        sessionStorage.setItem("comunicacionesSearch", JSON.stringify(this.body));
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+      },
+      err => {
+        this.showFail('Error al programar el envío');
+        console.log(err);
+      },
+      () => {
+      }
+    );
+  }
+
+  getEstadosEnvios() {
+    this.sigaServices.get("enviosMasivos_estado").subscribe(
+      data => {
+        this.estados = data.combooItems;
+        console.log(this.estados)
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+
+  isGuardarDisabled() {
+    if (this.body.fechaProgramada != null) {
+      return false;
+    }
+    return true;
+  }
+
 }

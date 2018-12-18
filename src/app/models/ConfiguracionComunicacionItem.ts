@@ -1,12 +1,16 @@
 
 export class ConfigComunicacionItem {
-  claseComunicacion: String;
-  modelo: String;
-  plantilla: Date;
-  tipoEnvio: Date;
+  idClaseComunicacion: String;
+  idModelo: String;
+  idPlantillasEnvio: String;
+  idTipoEnvio: String;
+  idEnvio: String;
+  idEstado: String;
   asunto: String;
   cuerpo: String;
-  creado: Date;
-  Estado: String;
+  descripcion: String;
+  fechaProgramada: Date;
+  fechaCreacion: Date;
+  caracteresSMS: String;
   constructor() { }
 }

@@ -178,7 +178,8 @@ export class EnviosMasivosComponent implements OnInit {
     this.selectMultiple = false;
     this.selectedDatos = "";
     this.progressSpinner = true;
-    sessionStorage.removeItem("enviosMasivosSearch")
+    sessionStorage.removeItem("enviosMasivosSearch");
+    sessionStorage.removeItem("filtros");
     this.getResultados();
   }
 
@@ -205,19 +206,13 @@ export class EnviosMasivosComponent implements OnInit {
   }
 
   isButtonDisabled() {
-    if (this.bodySearch.fechaCreacion != null
-      // && ((this.bodySearch.asunto != '' && this.bodySearch.asunto != null) || (this.bodySearch.fechaProgramacion != null) ||
-      // (this.bodySearch.idEstado != '' && this.bodySearch.idEstado != null) ||
-      // (this.bodySearch.idTipoEnvios != '' && this.bodySearch.idTipoEnvios != null))
-    ) {
+    if (this.bodySearch.fechaCreacion != null) {
       return false;
     }
     return true;
   }
 
-  duplicar() {
 
-  }
 
   cancelar(dato) {
 
@@ -324,20 +319,6 @@ export class EnviosMasivosComponent implements OnInit {
     sessionStorage.removeItem("enviosMasivosSearch")
     sessionStorage.setItem("crearNuevoEnvio", JSON.stringify("true"));
   }
-
-  isCancelarDisabled(dato) {
-    if (dato) {
-      if (dato.idEstado == '1' || dato.idEstado == '4') {
-        return true;
-      }
-      return false;
-    }
-  }
-
-
-
-
-
 
 }
 

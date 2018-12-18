@@ -1,7 +1,19 @@
 
 export class ProgComunicacionItem {
-  creado: Date;
+  idInstitucion: String;
+  idEnvio: String;
+  fechaCreacion: Date;
+  idPlantillasEnvio: String;
   idEstado: String;
-  fechaProgramar: Date;
+  idTipoEnvio: String;
+  nombrePlantilla: String;
+  fechaProgramada: Date;
+  fechaBaja: Date;
+  asunto: String;
+  cuerpo: String;
+  idGrupo: String;
+  idEnvioDelete: String[] = [];
+  estadoEnvio: String;
+  descripcion: String;
   constructor() { }
 }

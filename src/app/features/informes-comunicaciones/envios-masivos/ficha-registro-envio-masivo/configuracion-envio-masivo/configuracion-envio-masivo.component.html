@@ -117,13 +117,12 @@
               </p-editor>
             </div>
             <div *ngIf="body.idTipoEnvio=='4' || body.idTipoEnvio=='5'" class="form-group col-lg-3 col-md-3">
-              <label>Nº caracteres</label>
-              <input type="text" class="form-control" [(ngModel)]="body.caracteresSMS" [pKeyFilter]="patternSMS" pInputText>
+              <label>Nº caracteres: </label>
+              <label *ngIf="body.cuerpo">{{body.cuerpo.length}}</label>
             </div>
             <div *ngIf="body.idTipoEnvio=='4' || body.idTipoEnvio=='5'" class="form-group col-lg-12 col-md-12">
               <label>Cuerpo</label>
-              <textarea [disabled]="!body.caracteresSMS" style="height:140px" pInputTextarea autoResize="autoResize" [(ngModel)]="body.cuerpo"
-                [maxlength]="body.caracteresSMS"></textarea>
+              <textarea style="height:140px" pInputTextarea autoResize="autoResize" [(ngModel)]="body.cuerpo" maxlength="160"></textarea>
             </div>
           </div>
         </div>
@@ -140,10 +139,7 @@
       </div>
     </div>
   </div>
-
 </div>
-
-
 
 <div *ngIf="progressSpinner " class="overlay-spinner">
   <div class="loader "></div>

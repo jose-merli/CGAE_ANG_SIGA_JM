@@ -6,4 +6,5 @@ export class DestinatariosItem {
   nombre: String;
   apellido1: String;
   apellido2: String;
+  idEnvio: String;
 }

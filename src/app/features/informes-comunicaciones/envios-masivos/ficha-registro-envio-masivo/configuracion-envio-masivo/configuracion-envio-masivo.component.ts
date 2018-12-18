@@ -1,10 +1,8 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ConfigEnviosMasivosItem } from '../../../../../models/ConfiguracionEnviosMasivosItem';
-import { Location } from "@angular/common";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
-import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-configuracion-envio-masivo',
@@ -23,8 +21,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   progressSpinner: boolean;
   msgs: Message[];
   eliminarArray: any[];
-  patternSMS: any = /^1*(?:[1-9][1-9]?|150)$/;
-
+  tipoEnvio: string;
 
 
   fichasPosibles = [
@@ -49,8 +46,6 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
 
 
   constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private location: Location,
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
@@ -61,11 +56,10 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.editar = false;
     this.getDatos();
     this.getTipoEnvios();
-
-
 
   }
 
@@ -94,7 +88,11 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
         this.tipoEnvios = data.combooItems;
-        console.log(this.tipoEnvios)
+        this.tipoEnvios.map(e => {
+          if (this.body.idTipoEnvio == e.value) {
+            this.tipoEnvio = e.label;
+          }
+        })
 
       },
       err => {
@@ -151,13 +149,10 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
     return {};
   }
 
-  backTo() {
-    this.location.back();
-  }
+
 
   getDatos() {
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
-
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
       this.editar = true;
       this.getPlantillas();
@@ -169,7 +164,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   }
 
 
-  cancelar(dato) {
+  cancelar() {
 
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
@@ -219,7 +214,6 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
 
     this.sigaServices.post("enviosMasivos_guardarConf", this.body).subscribe(
       data => {
-        debugger;
         this.body.idEstado = '4';
         let result = JSON.parse(data["body"]);
         this.body.idEnvio = result.description;

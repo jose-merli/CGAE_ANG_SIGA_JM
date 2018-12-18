@@ -15,7 +15,7 @@ export class FichaRegistroEnvioMasivoComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute, private location: Location) { }
 
   ngOnInit() {
-    // this.idModelo = this.activatedRoute.snapshot.params["id"];
+
 
     this.fichasPosibles = [
       {

@@ -1,7 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Location } from "@angular/common";
 import { SigaServices } from "./../../../../../_services/siga.service";
-import { esCalendar } from "../../../../../utils/calendar";
 import { DataTable } from "primeng/datatable";
 import { DestinatariosEnviosMasivosItem } from '../../../../../models/DestinatariosEnviosMasivosItem';
 import { Message, ConfirmationService } from "primeng/components/common/api";
@@ -197,10 +195,7 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
     this.getSeleccionadas();
   }
 
-  restablecer() {
-    this.etiquetasSeleccionadas = JSON.parse(JSON.stringify(this.seleccionadasInicial));
-    this.etiquetasNoSeleccionadas = JSON.parse(JSON.stringify(this.noSeleccionadasInicial));
-  }
+
 
 
 }

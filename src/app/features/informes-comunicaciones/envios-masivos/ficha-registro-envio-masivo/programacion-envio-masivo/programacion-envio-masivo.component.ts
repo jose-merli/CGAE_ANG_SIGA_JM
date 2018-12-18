@@ -1,7 +1,5 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { DataTable } from "primeng/datatable";
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ProgEnviosMasivosItem } from '../../../../../models/ProgramacionEnviosMasivosItem';
-import { Location } from "@angular/common";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { esCalendar } from "../../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
@@ -23,7 +21,6 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   arrayProgramar: any[];
   currentDate: Date = new Date();
   estados: any[];
-
 
 
   fichasPosibles = [
@@ -48,7 +45,6 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    private location: Location,
     private sigaServices: SigaServices
   ) {
 
@@ -113,20 +109,18 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   }
 
 
-  backTo() {
-    this.location.back();
-  }
+
 
   getDatos() {
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
       console.log(this.body)
       this.body.fechaProgramada = this.body.fechaProgramada ? new Date(this.body.fechaProgramada) : null;
-      // this.body.fechaCreacion = this.body.fechaCreacion ? new Date(this.body.fechaCreacion) : null;
+      this.body.fechaCreacion = this.body.fechaCreacion ? new Date(this.body.fechaCreacion) : null;
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
     this.body.fechaProgramada = this.body.fechaProgramada ? new Date(this.body.fechaProgramada) : null;
-    // this.body.fechaCreacion = this.body.fechaCreacion ? new Date(this.body.fechaCreacion) : null;
+    this.body.fechaCreacion = this.body.fechaCreacion ? new Date(this.body.fechaCreacion) : null;
 
   }
 
@@ -140,7 +134,6 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   }
 
   guardar() {
-    debugger;
     this.arrayProgramar = [];
     let objProgramar = {
       idEnvio: this.body.idEnvio,
@@ -156,6 +149,8 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
     this.sigaServices.post("enviosMasivos_programar", this.arrayProgramar).subscribe(
       data => {
         this.showSuccess('Se ha programado el envío correctamente');
+        this.body.fechaProgramada = objProgramar.fechaProgramada;
+        sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(this.body));
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       },
       err => {

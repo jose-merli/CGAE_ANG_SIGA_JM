@@ -1,8 +1,8 @@
-import { ComunicacionesItem } from "./ComunicacionesItem";
+import { EnviosMasivosItem } from "./ComunicacionesItem";
 import { ErrorItem } from "./ErrorItem";
 
 export class ComunicacionesObject {
   error: ErrorItem;
-  comunicacionesItem: ComunicacionesItem[] = [];
+  enviosMasivosItem: EnviosMasivosItem[] = [];
   constructor() { }
 }

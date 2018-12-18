@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { Location } from "@angular/common";
 import { SigaServices } from "./../../../../../_services/siga.service";
-import { esCalendar } from "../../../../../utils/calendar";
 import { DataTable } from "primeng/datatable";
 import { DocComunicacionesItem } from '../../../../../models/DocumentosComunicacionesItem';
+import { Message, ConfirmationService } from "primeng/components/common/api";
+import { TranslateService } from "../../../../../commons/translate/translation.service";
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: 'app-documentos',
@@ -11,6 +12,7 @@ import { DocComunicacionesItem } from '../../../../../models/DocumentosComunicac
   styleUrls: ['./documentos.component.scss']
 })
 export class DocumentosComponent implements OnInit {
+
 
   openFicha: boolean = false;
   datos: any[];
@@ -22,7 +24,10 @@ export class DocumentosComponent implements OnInit {
   numSelected: number = 0;
   rowsPerPage: any = [];
   body: DocComunicacionesItem = new DocComunicacionesItem();
-
+  msgs: Message[];
+  file: File = undefined;
+  eliminarArray: any[];
+  progressSpinner: boolean = false;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -48,35 +53,66 @@ export class DocumentosComponent implements OnInit {
   ];
 
   constructor(
-    // private router: Router, 
-    // private translateService: TranslateService,
+    // private router: Router,
+    private translateService: TranslateService,
+    private confirmationService: ConfirmationService,
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
 
-    this.getDatos();
-
     this.selectedItem = 10;
+    this.getDatos();
     this.cols = [
-      { field: 'nombre', header: 'Nombre' },
-      { field: 'enlaceDescarga', header: 'Enlace de descarga' }
+      { field: 'nombreDocumento', header: 'Nombre del documento' },
+      { field: 'pathDocumento', header: 'Enlace de descarga' }
     ]
 
-    this.datos = [
-      { id: 1, nombre: 'prueba', enlaceDescarga: 'prueba' }
+  }
 
-    ]
+  getDatos() {
+    if (sessionStorage.getItem("comunicacionesSearch") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("comunicacionesSearch"));
+      this.getDocumentos();
+    }
+
+  }
+
+  // Mensajes
+  ail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showInfo(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
   abreCierraFicha() {
-    this.openFicha = !this.openFicha;
+    if (sessionStorage.getItem("crearNuevaCom") == null) {
+      this.openFicha = !this.openFicha;
+      if (this.openFicha) {
+        this.getDatos();
+      }
+    }
+
   }
 
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
+
   }
 
   getFichaPosibleByKey(key): any {
@@ -88,6 +124,7 @@ export class DocumentosComponent implements OnInit {
     }
     return {};
   }
+
 
 
   onChangeRowsPerPages(event) {
@@ -119,10 +156,141 @@ export class DocumentosComponent implements OnInit {
     }
   }
 
-  getDatos() {
-    if (sessionStorage.getItem("comunicacionesSearch") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("comunicacionesSearch"));
+  getDocumentos() {
+    this.progressSpinner = true;
+    this.sigaServices.post("enviosMasivos_documentos", this.body.idEnvio).subscribe(
+      data => {
+        let datos = JSON.parse(data["body"]);
+        this.datos = datos.documentoEnvioItem;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  downloadDocumento(dato) {
+
+    let objDownload = {
+      rutaDocumento: dato[0].pathDocumento,
+      nombreDocumento: dato[0].nombreDocumento
+    };
+
+    this.sigaServices
+      .postDownloadFiles("enviosMasivos_descargarDocumento", objDownload)
+      .subscribe(data => {
+        const blob = new Blob([data], { type: "application/octet-stream" });
+        if (blob.size == 0) {
+          this.ail("messages.general.error.ficheroNoExiste");
+        } else {
+          saveAs(data, dato[0].nombreDocumento);
+        }
+        this.selectedDatos = [];
+      });
+  }
+
+  eliminar(dato) {
+
+    this.confirmationService.confirm({
+      // message: this.translateService.instant("messages.deleteConfirmation"),
+      message: '¿Está seguro de eliminar los documentos?',
+      icon: "fa fa-trash-alt",
+      accept: () => {
+        this.confirmarEliminar(dato);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  confirmarEliminar(dato) {
+    this.eliminarArray = [];
+    dato.forEach(element => {
+      let objEliminar = {
+        idEnvio: element.idEnvio,
+        rutaDocumento: element.pathDocumento
+      };
+      this.eliminarArray.push(objEliminar);
+    });
+    this.sigaServices.post("enviosMasivos_borrarDocumento", this.eliminarArray).subscribe(
+      data => {
+        this.showSuccess('Se ha eliminado el documento correctamente');
+      },
+      err => {
+        this.ail('Error al eliminado el envío');
+        console.log(err);
+      },
+      () => {
+        this.getDocumentos();
+        this.table.reset();
+      }
+    );
+  }
+
+  uploadFile(event: any) {
+    let fileList: FileList = event.files;
+    this.file = fileList[0];
+
+    this.addFile();
+  }
+
+  navigateTo(dato) {
+    if (!this.selectMultiple) {
+      this.downloadDocumento(dato)
     }
   }
+
+  addFile() {
+
+    this.progressSpinner = true;
+
+    this.sigaServices.postSendContent("enviosMasivos_subirDocumento", this.file).subscribe(
+      data => {
+
+        this.body.pathDocumento = data.rutaDocumento;
+
+        this.guardar(data.nombreDocumento);
+      },
+      err => {
+        this.ail('Error al subir el documento');
+        console.log(err);
+      },
+      () => {
+      }
+    );
+  }
+
+  guardar(nombreDocumento) {
+    let objDoc = {
+      idEnvio: this.body.idEnvio,
+      rutaDocumento: this.body.pathDocumento,
+      nombreDocumento: nombreDocumento
+    }
+    this.sigaServices.post("enviosMasivos_guardarDocumento", objDoc).subscribe(
+      data => {
+        this.showSuccess('Se ha subido el documento correctamente');
+      },
+      err => {
+        this.ail('Error al guardar el documento');
+        console.log(err);
+      },
+      () => {
+        this.getDatos();
+      }
+    );
+  }
+
 
 }

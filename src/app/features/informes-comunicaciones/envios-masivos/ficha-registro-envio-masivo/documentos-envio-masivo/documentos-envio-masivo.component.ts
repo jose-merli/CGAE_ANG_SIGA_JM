@@ -1,13 +1,10 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { Location } from "@angular/common";
 import { SigaServices } from "./../../../../../_services/siga.service";
-import { esCalendar } from "../../../../../utils/calendar";
 import { DataTable } from "primeng/datatable";
 import { DocumentosEnviosMasivosItem } from '../../../../../models/DocumentosEnviosMasivosItem';
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { saveAs } from "file-saver/FileSaver";
-import { tick } from '@angular/core/testing';
 
 @Component({
   selector: 'app-documentos-envio-masivo',
@@ -65,6 +62,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   ngOnInit() {
 
     this.selectedItem = 10;
+    this.getDatos();
     this.cols = [
       { field: 'nombreDocumento', header: 'Nombre del documento' },
       { field: 'pathDocumento', header: 'Enlace de descarga' }
