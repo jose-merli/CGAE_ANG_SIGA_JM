@@ -29,6 +29,15 @@ export class BusquedaSancionesItem {
   fechaArchivadaHasta: string;
   fechaArchivadaHastaDate: Date;
 
+  fechaFirmezaDesdeDate: Date;
+  fechaFirmezaHastaDate: Date;
+  fechaImposicionDesdeDate: Date;
+  fechaImposicionHastaDate: Date;
+  fechaRehabilitadoDesdeDate: Date;
+  fechaRehabilitadoHastaDate: Date;
+  fechaResolucionDesdeDate: Date;
+  fechaResolucionHastaDate: Date;
+
   // Búsqueda por Sanciones
   tipo: string;
   origen: string;
@@ -51,6 +60,8 @@ export class BusquedaSancionesItem {
   observaciones: string;
   idPersona: string;
   idInstitucionS: string;
+
+  tipoFecha: string;
 
   constructor() {}
 }
