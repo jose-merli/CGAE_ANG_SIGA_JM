@@ -86,13 +86,22 @@
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
               <label>{{'censo.busquedaClientesAvanzada.literal.tipoCliente' | translate}}</label>
-              <input
+              <!-- <p-autoComplete #autocompleteService [(ngModel)]="curso." [suggestions]="serviceSuggest" [minLength]="1" field="label"
+              [multiple]="true" [style]="{'width':'100%'}">
+              <ng-template let-servicesSelecionados pTemplate="selectedItem">
+                <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
+                  [ngStyle]="{'background': servicesSelecionados.color, 'margin': marginPx, 'border': bw }">
+                  {{ formadoresSelecionados.nombreCompleto }}
+                </div>
+              </ng-template>
+            </p-autoComplete> -->
+            <!-- <input
                 type="text"
                 class="form-control"
                 pInputText
-                name="tipo"
+                name="codigo"
                 [(ngModel)]="curso.tipo"
-              />
+              /> -->
             </div>
             <div class="col-lg-6 col-md-6">
                 <label>{{ 'form.busquedaCursos.literal.estado' | translate}}</label>
@@ -239,7 +248,7 @@
               <label>Autovalidación de inscripciones</label>
               <p-checkbox
                 binary="true"
-                [(ngModel)]="curso.autovalidacionInscripcion"
+                [(ngModel)]="curso.autovalidacion"
               ></p-checkbox>
             </div>
           </div>
@@ -632,6 +641,8 @@
               >
               </p-column>
 
+              <!-- (onChange)="onChangeEdit($event)" -->
+
               <p-column
                 [sortable]="true"
                 [field]="colsFormadores[2].select"
@@ -642,7 +653,7 @@
               >
                 <ng-template let-dato="rowData" pTemplate="body">
                   <p-dropdown
-                    (onChange)="onChangeEdit($event)"
+                    (onChange)="onChangeTutor($event, dato)"
                     class="select-form"
                     [(ngModel)]="dato[colsFormadores[2].select]"
                     [options]="comboRoles"
@@ -688,7 +699,7 @@
               >
               </p-column>
 
-              <p-column
+              <!-- <p-column
                 [editable]="false"
                 [sortable]="true"
                 [field]="colsFormadores[5].field"
@@ -707,7 +718,7 @@
                     name="groupname"
                   ></p-checkbox>
                 </ng-template>
-              </p-column>
+              </p-column> -->
 
               <ng-template pTemplate="paginatorLeft">
                 <div class="mostrar d-flex text-right justify-content-end">
@@ -844,6 +855,7 @@
                     [filter]="false"
                     placeholder="{{'general.boton.seleccionar' | translate}}"
                     name="type"
+                    (onChange)="onChangeTutor($event, dato)"
                   ></p-dropdown>
                 </ng-template>
               </p-column>
@@ -899,7 +911,7 @@
                 </ng-template>
               </p-column>
 
-              <p-column
+              <!-- <p-column
                 [editable]="true"
                 [sortable]="true"
                 [field]="colsFormadores[5].field"
@@ -923,7 +935,7 @@
                   name="groupname"
                 ></p-checkbox>
                 </ng-template>
-              </p-column>
+              </p-column> -->
 
               <ng-template pTemplate="paginatorLeft">
                 <div class="mostrar d-flex text-right justify-content-end">
@@ -971,10 +983,10 @@
           pButton
           (click)="saveTrainers()"
           type="button"
-          icon="fa fa-search"
+          icon="far fa-save"
           iconPos="left"
+          [disabled]="validateTrainer()"
           label="{{ 'general.boton.guardar' | translate }}"
-          [disabled]="validateForm() && pressNewFormador"
         ></button>
         <button
           *ngIf="editFormador && !pressNewFormador"
@@ -993,6 +1005,7 @@
           icon="fa fa-plus"
           iconPos="left"
           label="{{ 'general.boton.new'| translate }}"
+          [disabled]="editFormador"
         ></button>
         <button
           *ngIf="selectMultipleFormadores"

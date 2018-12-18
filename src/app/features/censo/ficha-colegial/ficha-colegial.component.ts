@@ -1699,14 +1699,18 @@ export class FichaColegialComponent implements OnInit {
   }
   
   numMutualistaCheck(){
-    this.activacionGuardarColegiales();
-    if (
-      Number(this.colegialesBody.nMutualista)
-    ) {
+    if(this.colegialesBody.nMutualista != ""){
+      this.activacionGuardarColegiales();
+      if (
+        Number(this.colegialesBody.nMutualista)
+      ) {
+        return true;
+      } else{
+        this.colegialesBody.nMutualista = "";
+        return false;
+      }
+    }else{
       return true;
-    } else{
-      this.colegialesBody.nMutualista = "";
-      return false;
     }
   }
 
