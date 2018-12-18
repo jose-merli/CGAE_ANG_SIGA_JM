@@ -67,6 +67,7 @@ export class FichaColegialComponent implements OnInit {
   certificadosBody: FichaColegialCertificadosObject = new FichaColegialCertificadosObject();
 
   isLetrado: boolean;
+  permisos: boolean = true;
   displayAuditoria: boolean = false;
 
   idPersona: any;
@@ -519,6 +520,37 @@ export class FichaColegialComponent implements OnInit {
     ];
   }
 
+  //CONTROL DE PERMISOS
+  
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "12";
+    let derechoAcceso;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (derechoAcceso > 2) {
+          this.permisos = true;
+          if (derechoAcceso == 2) {
+            this.permisos = false;
+          }
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+    );
+  }
+
+
   // CONTROL DE PESTAÑAS ABRIR Y CERRAR
 
   abreCierraFicha(key) {
@@ -549,7 +581,7 @@ export class FichaColegialComponent implements OnInit {
     if (JSON.parse(sessionStorage.getItem("isLetrado")) == true) {
       this.isLetrado = true;
     } else {
-      this.isLetrado = false;
+      this.isLetrado = !this.permisos;
     }
   }
 
@@ -1699,14 +1731,18 @@ export class FichaColegialComponent implements OnInit {
   }
   
   numMutualistaCheck(){
-    this.activacionGuardarColegiales();
-    if (
-      Number(this.colegialesBody.nMutualista)
-    ) {
+    if(this.colegialesBody.nMutualista != ""){
+      this.activacionGuardarColegiales();
+      if (
+        Number(this.colegialesBody.nMutualista)
+      ) {
+        return true;
+      } else{
+        this.colegialesBody.nMutualista = "";
+        return false;
+      }
+    }else{
       return true;
-    } else{
-      this.colegialesBody.nMutualista = "";
-      return false;
     }
   }
 
@@ -2005,6 +2041,7 @@ export class FichaColegialComponent implements OnInit {
     if (dato && dato.length < 2 && !this.selectMultiple) {
       // enviarDatos = dato[0];
       sessionStorage.setItem("curriculo", JSON.stringify(dato));
+      sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
       sessionStorage.setItem("crearCurriculo", "false");
       this.router.navigate(["/edicionCurriculares"]);
     } else {
@@ -2226,6 +2263,7 @@ export class FichaColegialComponent implements OnInit {
           enviarDatos = dato[0];
           sessionStorage.setItem("idDireccion", enviarDatos.idDireccion);
           sessionStorage.setItem("direccion", JSON.stringify(enviarDatos));
+          sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
           sessionStorage.setItem("fichaColegial", "true");
           sessionStorage.removeItem("editarDireccion");
           sessionStorage.setItem("editarDireccion", "true");
@@ -2398,6 +2436,8 @@ export class FichaColegialComponent implements OnInit {
         if (dato && dato.length > 0) {
           enviarDatos = dato[0];
           sessionStorage.setItem("idCuenta", dato[0].idCuenta);
+          sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
+
           sessionStorage.setItem("idPersona", this.idPersona);
           sessionStorage.setItem("editar", "true");
           sessionStorage.setItem("fichaColegial", "true");
@@ -2489,10 +2529,18 @@ export class FichaColegialComponent implements OnInit {
 
   irTurnoOficio() {
     let idInstitucion = this.generalBody.idInstitucion;
-    let  us = this.sigaServices.getOldSigaUrl() + "JGR_DefinirTurnosLetrado.do?granotmp="+new Date().getMilliseconds()+"&accion=ver&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"";
+    // let  us = this.sigaServices.getOldSigaUrl() +"SIGA/CEN_BusquedaClientes.do?noReset=true";
+    
+    // let  us = this.sigaServices.getOldSigaUrl() + "JGR_DefinirTurnosLetrado.do?granotmp="+new Date().getMilliseconds()+"&accion=ver&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"";
+    let  us = this.sigaServices.getOldSigaUrl() + "CEN_BusquedaClientes.do?modo=Editar&seleccionarTodos=&colegiado=1&avanzada=&actionModal=&verFichaLetrado=&tablaDatosDinamicosD="+this.generalBody.idPersona+"%2C"+idInstitucion+"%2CNINGUNO%2C1&filaSelD=1" 
     sessionStorage.setItem(
       "url",
       JSON.stringify(us)
+    );
+    sessionStorage.removeItem("reload");
+    sessionStorage.setItem(
+      "reload",
+      "si"
     );
     this.router.navigate(["/turnoOficioCenso"]);
   }

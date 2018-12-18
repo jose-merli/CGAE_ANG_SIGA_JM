@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ViewChild,
+  ElementRef
+} from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Input } from "@angular/core";
 import { OldSigaServices } from "../../_services/oldSiga.service";
@@ -11,7 +17,7 @@ declare var ajusteAlto: any;
   templateUrl: "./my-iframe.component.html",
   styleUrls: ["./my-iframe.component.scss"]
 })
-export class MyIframeComponent implements OnInit {
+export class MyIframeComponent implements OnInit, AfterViewInit {
   @Input() url;
   // @ViewChild('iframe') iframe: ElementRef;
 
@@ -23,7 +29,6 @@ export class MyIframeComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    sessionStorage.removeItem("url");
     this.url = this.domSanitizer.bypassSecurityTrustResourceUrl(this.url);
 
     //ajusteAlto('mainWorkArea');
@@ -31,5 +36,9 @@ export class MyIframeComponent implements OnInit {
     //   // this.loading = false;
     //   this.iframe.nativeElement.src = blob;
     // });
+  }
+
+  ngAfterViewInit() {
+    window.scrollTo(0, 0);
   }
 }

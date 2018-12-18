@@ -69,7 +69,7 @@ export class EdicionCurricularesComponent implements OnInit {
   // Obj extras
   bodyInicial: FichaColegialEdicionCurricularesItem = new FichaColegialEdicionCurricularesItem();
   body2: FichaColegialEdicionCurricularesItem = new FichaColegialEdicionCurricularesItem();
-
+  permisos: boolean = true; //true
   @ViewChild("table")
   table;
   selectedDatos;
@@ -83,6 +83,9 @@ export class EdicionCurricularesComponent implements OnInit {
   ngOnInit() {
     // this.getLetrado();
     // this.editar = this.body.editar;
+    if (sessionStorage.getItem("permisos")) {
+      this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
+    }
     this.progressSpinner = true;
     if (sessionStorage.getItem("nuevoCurriculo")) {
       this.body = new FichaColegialEdicionCurricularesItem();
