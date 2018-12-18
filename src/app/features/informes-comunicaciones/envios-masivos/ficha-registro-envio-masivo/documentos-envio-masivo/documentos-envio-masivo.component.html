@@ -1,5 +1,4 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-<app-dialog></app-dialog>
 <div class="ficha-container">
   <div class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha()">
@@ -14,8 +13,8 @@
             <label class="mr-auto title-ficha">Documentos</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>Documentos:
-              <!-- <span>{{body.nombre}}</span> -->
+            <label>Nº documentos:
+              <span *ngIf="datos">{{datos.length}}</span>
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
           </div>
@@ -25,7 +24,8 @@
         <div class="img-colegiado">
           <i class="fas fa-file icon-ficha"></i>
         </div>
-        <label class="title-ficha">Documentos</label>
+        <label class="title-ficha">Documentos:
+        </label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -59,7 +59,7 @@
             </td>
           </tr>
         </ng-template>
-        <ng-template pTemplate=" emptymessage" let-columns>
+        <ng-template pTemplate="emptymessage" let-columns>
           <tr>
             <td [attr.colspan]="columns.length">
               No hay resultados.
@@ -94,4 +94,10 @@
       </div>
     </div>
   </div>
+</div>
+
+
+
+<div *ngIf="progressSpinner " class="overlay-spinner">
+  <div class="loader "></div>
 </div>

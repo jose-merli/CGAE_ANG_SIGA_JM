@@ -1,7 +1,5 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { DataTable } from "primeng/datatable";
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ProgEnviosMasivosItem } from '../../../../../models/ProgramacionEnviosMasivosItem';
-import { Location } from "@angular/common";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { esCalendar } from "../../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
@@ -22,7 +20,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   msgs: Message[];
   arrayProgramar: any[];
   currentDate: Date = new Date();
-
+  estados: any[];
 
 
   fichasPosibles = [
@@ -47,7 +45,6 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    private location: Location,
     private sigaServices: SigaServices
   ) {
 
@@ -56,6 +53,9 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   }
 
   ngOnInit() {
+
+
+    this.getEstadosEnvios();
 
     this.getDatos();
 
@@ -87,6 +87,9 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   abreCierraFicha() {
     if (sessionStorage.getItem("crearNuevoEnvio") == null) {
       this.openFicha = !this.openFicha;
+      if (!this.body.fechaProgramada) {
+        this.getDatos();
+      }
     }
   }
 
@@ -106,16 +109,19 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   }
 
 
-  backTo() {
-    this.location.back();
-  }
+
 
   getDatos() {
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
+      console.log(this.body)
+      this.body.fechaProgramada = this.body.fechaProgramada ? new Date(this.body.fechaProgramada) : null;
+      this.body.fechaCreacion = this.body.fechaCreacion ? new Date(this.body.fechaCreacion) : null;
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-      this.body.fechaProgramada = new Date(this.body.fechaProgramada)
     }
+    this.body.fechaProgramada = this.body.fechaProgramada ? new Date(this.body.fechaProgramada) : null;
+    this.body.fechaCreacion = this.body.fechaCreacion ? new Date(this.body.fechaCreacion) : null;
+
   }
 
 
@@ -129,10 +135,22 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
 
   guardar() {
     this.arrayProgramar = [];
-    this.arrayProgramar.push(this.body);
+    let objProgramar = {
+      idEnvio: this.body.idEnvio,
+      idInstitucion: this.body.idInstitucion,
+      fechaProgramada: new Date(this.body.fechaProgramada),
+      idEstado: this.body.idEstado,
+      idTipoEnvio: this.body.idTipoEnvio,
+      idPlantillasEnvio: this.body.idPlantillasEnvio,
+      descripcion: this.body.descripcion
+
+    }
+    this.arrayProgramar.push(objProgramar);
     this.sigaServices.post("enviosMasivos_programar", this.arrayProgramar).subscribe(
       data => {
         this.showSuccess('Se ha programado el envío correctamente');
+        this.body.fechaProgramada = objProgramar.fechaProgramada;
+        sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(this.body));
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       },
       err => {
@@ -144,11 +162,25 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
     );
   }
 
+  getEstadosEnvios() {
+    this.sigaServices.get("enviosMasivos_estado").subscribe(
+      data => {
+        this.estados = data.combooItems;
+        console.log(this.estados)
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+
   isGuardarDisabled() {
     if (this.body.fechaProgramada != null) {
       return false;
     }
     return true;
   }
+
 
 }

@@ -104,11 +104,13 @@
       <div *ngIf="selectedDatos && selectedDatos != ''" class="card-footer">
         <div class="text-right main-button">
           <button (click)="isSelectMultiple()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
-          <button pButton type="button" icon="fas fa-sign-in-alt" iconPos="left" label="{{ 'general.boton.enviar' |
+          <button *ngIf="estado && (estado == 3 || estado == 6)" pButton type="button" icon="fas fa-sign-in-alt" iconPos="left" label="{{ 'general.boton.enviar' |
           translate}}"></button>
-          <button (click)="onShowProgamar(selectedDatos)" pButton type="button" icon="fas fa-cog" iconPos="left" label="{{ 'general.boton.programar' | translate}}"></button>
-          <button *ngIf="estado && estado !==4" [disabled]="isCancelarDisabled(selectedDatos)" (click)="cancelar(selectedDatos)" pButton
-            type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+          <button *ngIf="estado && (estado == 4 || estado == 5)" (click)="onShowProgamar(selectedDatos)" pButton type="button" icon="fas fa-cog"
+            iconPos="left" label="{{ 'general.boton.programar' | translate}}"></button>
+          <button *ngIf="estado && estado == 4" (click)="cancelar(selectedDatos)" pButton type="button" icon="fa fa-close" iconPos="left"
+            label="{{ 'general.boton.cancel' | translate}}"></button>
+
         </div>
       </div>
     </div>
@@ -122,7 +124,7 @@
   </p-header>
   <div class="form-row">
     <div class="form-group col-lg-12 col-md-12">
-      <label>Fecha</label>
+      <label>Fecha y hora</label>
       <p-calendar showTime="true" [minDate]="currentDate" [(ngModel)]="bodyProgramar.fechaProgramada" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
         showIcon="true" [utc]="true"></p-calendar>
     </div>

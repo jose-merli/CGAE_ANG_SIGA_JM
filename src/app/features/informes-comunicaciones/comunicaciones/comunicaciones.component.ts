@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, HostListener } from '@angular/core';
 import { DataTable } from "primeng/datatable";
-import { ComunicacionesItem } from '../../../models/ComunicacionesItem';
+import { EnviosMasivosItem } from '../../../models/ComunicacionesItem';
 import { ComunicacionesSearchItem } from '../../../models/ComunicacionesSearchItem';
 import { ComunicacionesObject } from '../../../models/ComunicacionesObject';
 import { TranslateService } from "../../../commons/translate/translation.service";
@@ -20,7 +20,7 @@ export enum KEY_CODE {
   styleUrls: ['./comunicaciones.component.scss']
 })
 export class ComunicacionesComponent implements OnInit {
-  body: ComunicacionesItem = new ComunicacionesItem();
+  body: EnviosMasivosItem = new EnviosMasivosItem();
   datos: any[];
   cols: any[];
   first: number = 0;
@@ -41,6 +41,8 @@ export class ComunicacionesComponent implements OnInit {
   progressSpinner: boolean = false;
   searchComunicaciones: ComunicacionesObject = new ComunicacionesObject();
   bodySearch: ComunicacionesSearchItem = new ComunicacionesSearchItem();
+  estado: number;
+  currentDate: Date = new Date();
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -54,23 +56,30 @@ export class ComunicacionesComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
-    this.selectedItem = 4;
+    this.selectedItem = 10;
+
+    sessionStorage.removeItem("crearNuevaCom")
+
+    if (sessionStorage.getItem("filtrosCom") != null) {
+      this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosCom"));
+      this.bodySearch.fechaCreacion = this.bodySearch.fechaCreacion ? new Date(this.bodySearch.fechaCreacion) : null;
+      this.bodySearch.fechaProgramacion = this.bodySearch.fechaProgramacion ? new Date(this.bodySearch.fechaProgramacion) : null;
+      this.buscar();
+    }
 
     this.getTipoEnvios();
     this.getEstadosEnvios();
-
-    if (sessionStorage.getItem("comunicacionesSearch") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("comunicacionesSearch"));
-    }
+    this.getClasesComunicaciones();
 
     this.cols = [
-      // { field: 'clasesComunicaciones', header: 'Clases de comunicaciones' },
-      { field: 'asunto', header: 'Asunto' },
+      { field: 'clasesComunicaciones', header: 'Clases de comunicaciones' },
+      { field: 'descripcion', header: 'Descripción' },
       { field: 'fechaCreacion', header: 'Fecha creación' },
-      { field: 'fechaProgramada', header: 'Fecha programación' },
+      { field: 'fechaProgramacion', header: 'Fecha programación' },
       { field: 'tipoEnvio', header: 'Forma envío' },
       { field: 'estadoEnvio', header: 'Estado' }
     ];
+
 
     this.rowsPerPage = [
       {
@@ -139,6 +148,18 @@ export class ComunicacionesComponent implements OnInit {
   }
 
 
+
+  getClasesComunicaciones() {
+    this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
+      data => {
+        this.clasesComunicaciones = data.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
@@ -171,7 +192,9 @@ export class ComunicacionesComponent implements OnInit {
 
   buscar() {
     this.showResultados = true;
-    sessionStorage.removeItem("comunicacionesSearch")
+    this.progressSpinner = true;
+    sessionStorage.removeItem("comunicacionesSearch");
+    sessionStorage.removeItem("filtrosCom");
     this.getResultados();
 
   }
@@ -179,12 +202,12 @@ export class ComunicacionesComponent implements OnInit {
   getResultados() {
 
     this.sigaServices
-      .postPaginado("enviosMasivos_search", "?numPagina=1", this.bodySearch)
+      .postPaginado("comunicaciones_search", "?numPagina=1", this.bodySearch)
       .subscribe(
         data => {
           this.progressSpinner = false;
           this.searchComunicaciones = JSON.parse(data["body"]);
-          this.datos = this.searchComunicaciones.comunicacionesItem;
+          this.datos = this.searchComunicaciones.enviosMasivosItem;
           this.body = this.datos[0];
           this.datos.forEach(element => {
             element.fechaProgramada = new Date(element.fechaProgramada);
@@ -203,7 +226,7 @@ export class ComunicacionesComponent implements OnInit {
 
 
   isButtonDisabled() {
-    if (this.body.asunto != '' && this.body.asunto != null) {
+    if (this.bodySearch.fechaCreacion != null) {
       return false;
     }
     return true;
@@ -239,7 +262,7 @@ export class ComunicacionesComponent implements OnInit {
       let objEliminar = {
         idEstado: element.idEstado,
         idEnvio: element.idEnvio,
-        fechaProgramada: new Date(element.fechaProgramada)
+        fechaProgramacion: new Date(element.fechaProgramada)
       };
       this.eliminarArray.push(objEliminar);
     });
@@ -290,22 +313,26 @@ export class ComunicacionesComponent implements OnInit {
 
 
 
+
+
   navigateTo(dato) {
-    let id = dato[0].id;
-    if (!this.selectMultiple) {
+    this.estado = dato[0].idEstado;
+    if (!this.selectMultiple && this.estado == 4) {
+      // this.body.estado = dato[0].estado;
       this.router.navigate(['/fichaRegistroComunicacion']);
       sessionStorage.setItem("comunicacionesSearch", JSON.stringify(this.body));
+      sessionStorage.setItem("filtrosCom", JSON.stringify(this.bodySearch));
+    } else if (!this.selectMultiple && this.estado != 4) {
+      this.showInfo('La comunicación está en proceso, no puede editarse')
     }
   }
 
   onShowProgamar(dato) {
-    this.showProgramar = !this.showProgramar;
-  }
+    this.showProgramar = true;
 
-
-  onAddComunicacion() {
-    this.router.navigate(['/fichaRegistroComunicacion']);
-    sessionStorage.removeItem("comunicacionesSearch")
+    if (!this.selectMultiple) {
+      this.bodyProgramar.fechaProgramada = dato[0].fechaProgramacion;
+    }
   }
 
 }

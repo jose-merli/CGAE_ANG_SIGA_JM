@@ -1,36 +1,32 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <app-dialog></app-dialog>
-<div class="modelos-comunicaciones-container">
-  <div class="header-title">
-    <i class="fa fa-square"></i>
-    <p>{{'menu.comunicaciones' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>{{ 'modelos.comunicaciones.literal.busqueda' | translate}}
-    </p>
-  </div>
+<div class="ficha-container">
+  <!--DATOS GENERALES-->
   <div class="card">
     <div class="card-body">
       <div class="form-row">
         <div class="form-group col-lg-4 col-md-4">
-          <label>Clase de comunicaciones</label>
-          <p-dropdown [options]="clasesComunicaciones" [(ngModel)]="bodySearch.idClaseComunicaciones" class="select-form"></p-dropdown>
-        </div>
-        <div class="form-group col-lg-4 col-md-4">
-          <label>Asunto</label>
+          <label>Descripción</label>
           <input type="text" class="form-control" [(ngModel)]="bodySearch.asunto" pInputText>
         </div>
         <div class="form-group col-lg-4 col-md-4">
-          <label>Fecha creación</label>
+          <label>Fecha creación *</label>
           <p-calendar [locale]="es" [(ngModel)]="bodySearch.fechaCreacion" dateFormat="dd/mm/yy" [utc]="true" icon=" far fa-calendar-alt"
             showIcon="true"></p-calendar>
         </div>
-      </div>
-      <div class="form-row d-flex align-items-end">
-
         <div class="form-group col-lg-4 col-md-4">
           <label>Fecha programación</label>
-          <p-calendar [locale]="es" [(ngModel)]="bodySearch.fechaProgramada" dateFormat="dd/mm/yy" [utc]="true" icon=" far fa-calendar-alt"
+          <p-calendar [locale]="es" [(ngModel)]="bodySearch.fechaProgramacion" dateFormat="dd/mm/yy" [utc]="true" icon=" far fa-calendar-alt"
             showIcon="true"></p-calendar>
         </div>
+      </div>
+
+      <div class="form-row d-flex align-items-end">
+        <div class="form-group col-lg-4 col-md-4">
+          <label>Clase de comunicaciones</label>
+          <p-dropdown [options]="clasesComunicaciones" [(ngModel)]="bodySearch.idClaseComunicaciones" class="select-form"></p-dropdown>
+        </div>
+
         <div class="form-group col-lg-4 col-md-4">
           <label>Tipo de envío</label>
           <p-dropdown [options]="tiposEnvio" [(ngModel)]="bodySearch.idTipoEnvio" class="select-form"></p-dropdown>
@@ -39,14 +35,11 @@
           <label>Estado</label>
           <p-dropdown [options]="estados" [(ngModel)]="bodySearch.idEstado" class="select-form"></p-dropdown>
         </div>
-
-
       </div>
     </div>
     <div class="card-footer">
       <div class="text-right main-button">
         <button (click)="buscar()" [disabled]="isButtonDisabled()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
-        <button (click)="onAddComunicacion()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -73,8 +66,15 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <span> {{dato[col.field]}}</span>
+              <span *ngIf="col.field !='fechaCreacion'  && col.field !='fechaProgramacion'"> {{dato[col.field]}}</span>
+              <span *ngIf="
+                col.field=='fechaCreacion'">{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+              <span *ngIf="
+                col.field=='fechaProgramacion'">{{ dato[col.field] | date: 'd/M/yyyy, H:mm '}}</span>
+              <span *ngIf="
+                dato[col.field]==null ||dato[col.field]==''">-</span>
             </td>
+
           </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage" let-columns>
@@ -102,28 +102,39 @@
       <div *ngIf="selectedDatos && selectedDatos != ''" class="card-footer">
         <div class="text-right main-button">
           <button (click)="isSelectMultiple()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
-          <button (click)="onShowProgamar(selectedDatos)" pButton type=" button" icon="fas fa-cog" iconPos="left" label="{{ 'general.boton.programar' | translate}}"></button>
-          <button (click)="cancelar(selectedDatos)" pButton type=" button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+          <button *ngIf="estado && (estado == 3 || estado == 6)" pButton type="button" icon="fas fa-sign-in-alt" iconPos="left" label="{{ 'general.boton.enviar' |
+          translate}}"></button>
+          <button *ngIf="estado && (estado == 4 || estado == 5)" (click)="onShowProgamar(selectedDatos)" pButton type="button" icon="fas fa-cog"
+            iconPos="left" label="{{ 'general.boton.programar' | translate}}"></button>
+          <button *ngIf="estado && estado == 4" (click)="cancelar(selectedDatos)" pButton type="button" icon="fa fa-close" iconPos="left"
+            label="{{ 'general.boton.cancel' | translate}}"></button>
+
         </div>
       </div>
     </div>
   </div>
+
+  <p-dialog [(visible)]="showProgramar" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="400">
+    <p-header class="title">
+      <label>Programar</label>
+    </p-header>
+    <div class="form-row">
+      <div class="form-group col-lg-12 col-md-12">
+        <label>Fecha y hora</label>
+        <p-calendar showTime="true" [minDate]="currentDate" [(ngModel)]="bodyProgramar.fechaProgramada" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
+          showIcon="true" [utc]="true"></p-calendar>
+      </div>
+    </div>
+    <p-footer>
+      <div class="text-right main-button ">
+        <button (click)="programar(selectedDatos)" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+
 </div>
 
-<p-dialog [(visible)]="showProgramar" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="400">
-  <p-header class="title">
-    <label>Programar</label>
-  </p-header>
-  <div class="form-row">
-    <div class="form-group col-lg-8 col-md-8">
-      <label>Fecha</label>
-      <p-calendar showTime="true" [locale]="es" [(ngModel)]="bodyProgramar.fechaProgramada" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
-        showIcon="true"></p-calendar>
-    </div>
-  </div>
-  <p-footer>
-    <div class="text-right main-button">
-      <button (click)="programar(selectedDatos)" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
-    </div>
-  </p-footer>
-</p-dialog>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+  <div class="loader"></div>
+</div>

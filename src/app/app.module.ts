@@ -58,6 +58,8 @@ import { ChipsModule } from "primeng/chips";
 import { EditorModule } from "primeng/editor";
 import { PickListModule } from "primeng/picklist";
 import { FileUploadModule } from "primeng/fileupload";
+import { KeyFilterModule } from 'primeng/keyfilter';
+
 // Modulo de censo
 import { SearchColegiadosComponent } from "./features/censo/search-colegiados/search-colegiados.component";
 import { SearchNoColegiadosComponent } from "./features/censo/search-no-colegiados/search-no-colegiados.component";
@@ -549,7 +551,8 @@ import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicac
     ListboxModule,
     ProgressSpinnerModule,
     FileUploadModule,
-    DialogModule
+    DialogModule,
+    KeyFilterModule
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

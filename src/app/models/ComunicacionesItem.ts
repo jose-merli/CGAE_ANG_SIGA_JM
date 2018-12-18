@@ -1,6 +1,5 @@
-export class ComunicacionesItem {
-  idClaseComunicaciones: String;
-  idInstitucion: String;
+export class EnviosMasivosItem {
+  idClasesComunicaciones: String;
   idEnvio: String;
   fechaCreacion: Date;
   idPlantillasEnvio: String;
@@ -14,5 +13,6 @@ export class ComunicacionesItem {
   idGrupo: String;
   idEnvioDelete: String[] = [];
   estadoEnvio: String;
+
   constructor() { }
 }

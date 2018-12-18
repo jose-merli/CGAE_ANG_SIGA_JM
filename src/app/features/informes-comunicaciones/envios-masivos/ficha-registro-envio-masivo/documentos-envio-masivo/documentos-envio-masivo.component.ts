@@ -1,14 +1,10 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { Location } from "@angular/common";
 import { SigaServices } from "./../../../../../_services/siga.service";
-import { esCalendar } from "../../../../../utils/calendar";
 import { DataTable } from "primeng/datatable";
 import { DocumentosEnviosMasivosItem } from '../../../../../models/DocumentosEnviosMasivosItem';
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { saveAs } from "file-saver/FileSaver";
-import { tick } from '@angular/core/testing';
-
 
 @Component({
   selector: 'app-documentos-envio-masivo',
@@ -29,7 +25,8 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   body: DocumentosEnviosMasivosItem = new DocumentosEnviosMasivosItem();
   msgs: Message[];
   file: File = undefined;
-
+  eliminarArray: any[];
+  progressSpinner: boolean = false;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -64,9 +61,8 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
 
   ngOnInit() {
 
-    this.getDatos();
-
     this.selectedItem = 10;
+    this.getDatos();
     this.cols = [
       { field: 'nombreDocumento', header: 'Nombre del documento' },
       { field: 'pathDocumento', header: 'Enlace de descarga' }
@@ -81,7 +77,6 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
     }
 
   }
-
 
   // Mensajes
   ail(mensaje: string) {
@@ -103,16 +98,20 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
     this.msgs = [];
   }
 
-
   abreCierraFicha() {
     if (sessionStorage.getItem("crearNuevoEnvio") == null) {
       this.openFicha = !this.openFicha;
+      if (this.openFicha) {
+        this.getDatos();
+      }
     }
+
   }
 
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
+
   }
 
   getFichaPosibleByKey(key): any {
@@ -124,7 +123,6 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
     }
     return {};
   }
-
 
 
 
@@ -158,8 +156,10 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   }
 
   getDocumentos() {
+    this.progressSpinner = true;
     this.sigaServices.post("enviosMasivos_documentos", this.body.idEnvio).subscribe(
       data => {
+
         let datos = JSON.parse(data["body"]);
         this.datos = datos.documentoEnvioItem;
       },
@@ -167,39 +167,30 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
         console.log(err);
       },
       () => {
-
+        this.progressSpinner = false;
       }
     );
   }
 
   downloadDocumento(dato) {
-    let filename;
-    this.sigaServices
-      .post("enviosMasivos_infoDescargarDocumento", dato)
-      .subscribe(
-        data => {
-          let a = JSON.parse(data["body"]);
-          filename = a.value + a.label;
-        },
-        error => {
-          console.log(error);
-        },
-        () => {
-          this.sigaServices
-            .postDownloadFiles("enviosMasivos_descargarDocumento", dato)
-            .subscribe(data => {
-              const blob = new Blob([data], { type: "text/plain;charset=utf-8" });
-              if (blob.size == 0) {
-                this.ail("messages.general.error.ficheroNoExiste");
-              } else {
-                //let filename = "2006002472110.pdf";
-                saveAs(data, filename);
-              }
-            });
-        }
-      );
-  }
 
+    let objDownload = {
+      rutaDocumento: dato[0].pathDocumento,
+      nombreDocumento: dato[0].nombreDocumento
+    };
+
+    this.sigaServices
+      .postDownloadFiles("enviosMasivos_descargarDocumento", objDownload)
+      .subscribe(data => {
+        const blob = new Blob([data], { type: "application/octet-stream" });
+        if (blob.size == 0) {
+          this.ail("messages.general.error.ficheroNoExiste");
+        } else {
+          saveAs(data, dato[0].nombreDocumento);
+        }
+        this.selectedDatos = [];
+      });
+  }
 
   eliminar(dato) {
 
@@ -224,9 +215,16 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
     });
   }
 
-
   confirmarEliminar(dato) {
-    this.sigaServices.post("enviosMasivos_cancelar", dato).subscribe(
+    this.eliminarArray = [];
+    dato.forEach(element => {
+      let objEliminar = {
+        idEnvio: element.idEnvio,
+        rutaDocumento: element.pathDocumento
+      };
+      this.eliminarArray.push(objEliminar);
+    });
+    this.sigaServices.post("enviosMasivos_borrarDocumento", this.eliminarArray).subscribe(
       data => {
         this.showSuccess('Se ha eliminado el documento correctamente');
       },
@@ -242,7 +240,6 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   }
 
   uploadFile(event: any) {
-    console.log(event)
     let fileList: FileList = event.files;
     this.file = fileList[0];
 
@@ -256,19 +253,46 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   }
 
   addFile() {
-    this.sigaServices.post("enviosMasivos_subirDocumento", this.file).subscribe(
+
+    this.progressSpinner = true;
+
+    this.sigaServices.postSendContent("enviosMasivos_subirDocumento", this.file).subscribe(
       data => {
-        this.showSuccess('Se ha subido el documento correctamente');
+
+        this.body.pathDocumento = data.rutaDocumento;
+
+        this.guardar(data.nombreDocumento);
       },
       err => {
         this.ail('Error al subir el documento');
         console.log(err);
       },
       () => {
-        // this.getDocumentos();
-        this.table.reset();
       }
     );
   }
 
+  guardar(nombreDocumento) {
+    let objDoc = {
+      idEnvio: this.body.idEnvio,
+      rutaDocumento: this.body.pathDocumento,
+      nombreDocumento: nombreDocumento
+    }
+    this.sigaServices.post("enviosMasivos_guardarDocumento", objDoc).subscribe(
+      data => {
+        this.showSuccess('Se ha subido el documento correctamente');
+      },
+      err => {
+        this.ail('Error al guardar el documento');
+        console.log(err);
+      },
+      () => {
+        this.getDatos();
+      }
+    );
+  }
+
+
 }
+
+

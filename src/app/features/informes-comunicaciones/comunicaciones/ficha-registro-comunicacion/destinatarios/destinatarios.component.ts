@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DestinatariosItem } from '../../../../../models/DestinatariosItem';
+import { DestinatariosEnviosMasivosItem } from '../../../../../models/DestinatariosEnviosMasivosItem';
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
 import { Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class DestinatariosComponent implements OnInit {
 
   openFicha: boolean = false;
-  body: DestinatariosItem = new DestinatariosItem();
+  body: DestinatariosEnviosMasivosItem = new DestinatariosEnviosMasivosItem();
   grupos: any[];
   openDestinatario: boolean;
   destinatarios: any[];
@@ -49,26 +49,9 @@ export class DestinatariosComponent implements OnInit {
   ngOnInit() {
     this.getDatos();
 
-    this.destinatarios = [
-      {
-        id: '1',
-        idGrupo: '1',
-        nif: '29182234C',
-        nombre: 'Isabel',
-        apellido1: 'Salinero',
-        apellido2: '',
-        open: false,
-      },
-      {
-        id: '2',
-        idGrupo: '2',
-        nif: '344344Y',
-        nombre: 'Ana',
-        apellido1: 'FSF',
-        apellido2: '',
-        open: false,
-      }
-    ]
+    this.getDestinatarios();
+
+
   }
 
   abreCierraFicha() {
@@ -124,6 +107,22 @@ export class DestinatariosComponent implements OnInit {
   navigateTo() {
     this.router.navigate(['/fichaColegial']);
     sessionStorage.setItem("destinatarioCom", JSON.stringify(this.body));
+  }
+
+  getDestinatarios() {
+    this.sigaServices
+      .post("comunicaciones_destinatarios", this.body.idEnvio)
+      .subscribe(
+        n => {
+          // coger etiquetas de una persona juridica
+          this.destinatarios = JSON.parse(n["body"]).combooItems;
+        },
+        err => {
+          console.log(err);
+        },
+
+    );
+
   }
 
 }

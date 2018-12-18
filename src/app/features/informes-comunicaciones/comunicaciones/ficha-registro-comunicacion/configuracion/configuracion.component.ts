@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { DataTable } from "primeng/datatable";
+import { Component, OnInit } from '@angular/core';
 import { ConfigComunicacionItem } from '../../../../../models/ConfiguracionComunicacionItem';
-import { Location } from "@angular/common";
 import { SigaServices } from "./../../../../../_services/siga.service";
+import { Message, ConfirmationService } from "primeng/components/common/api";
+import { TranslateService } from "../../../../../commons/translate/translation.service";
 
 @Component({
   selector: 'app-configuracion',
@@ -16,18 +16,16 @@ export class ConfiguracionComponent implements OnInit {
   datos: any[];
   cols: any[];
   first: number = 0;
-  selectedItem: number;
-  selectAll: boolean = false;
-  selectMultiple: boolean = false;
-  numSelected: number = 0;
-  rowsPerPage: any = [];
   body: ConfigComunicacionItem = new ConfigComunicacionItem();
-  modulos: any[];
-  objetivos: any[];
   clasesComunicaciones: any[];
-
-  @ViewChild('table') table: DataTable;
-  selectedDatos
+  modelos: any[];
+  plantillas: any[];
+  tipoEnvios: any[];
+  progressSpinner: boolean;
+  msgs: Message[];
+  eliminarArray: any[];
+  editar: boolean = false;
+  tipoEnvio: string;
 
 
   fichasPosibles = [
@@ -52,61 +50,82 @@ export class ConfiguracionComponent implements OnInit {
 
 
   constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private location: Location,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService
   ) { }
 
   ngOnInit() {
 
+
     this.getDatos();
+    this.getTipoEnvios()
 
-    this.selectedItem = 10;
+  }
 
-    this.objetivos = [
-      {
-        label: 'seleccione..', value: null
+  // Mensajes
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showInfo(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+
+  getTipoEnvios() {
+    this.sigaServices.get("enviosMasivos_tipo").subscribe(
+      data => {
+        this.tipoEnvios = data.combooItems;
+
+        this.tipoEnvios.map(e => {
+          if (this.body.idTipoEnvio == e.value) {
+            this.tipoEnvio = e.label;
+          }
+        })
+
       },
-      {
-        label: 'Destinatarios', value: '1'
+      err => {
+        console.log(err);
       },
-      {
-        label: 'Condicional', value: '2'
+      () => {
       }
-    ]
+    );
+  }
 
+  onChangeTipoEnvio() {
+    this.getPlantillas();
+  }
 
-    this.cols = [
-      { field: 'consulta', header: 'Consulta' },
-      { field: 'finalidad', header: 'Finalidad' },
-      { field: 'tipoEjecucion', header: 'Tipo de ejecución' }
-    ];
+  getPlantillas() {
+    this.sigaServices.post("enviosMasivos_plantillas", this.body.idTipoEnvio).subscribe(
+      data => {
+        let comboPlantillas = JSON.parse(data["body"]);
+        this.plantillas = comboPlantillas.combooItems;
 
-    this.datos = [
-      { id: '1', consulta: 'prueba', finalidad: 'prueba', tipoEjecucion: 'prueba' },
-      { id: '2', consulta: 'prueba', finalidad: 'prueba', tipoEjecucion: 'prueba' }
-    ];
+        if (this.editar) {
+          this.body.idPlantillasEnvio = this.body.idPlantillasEnvio.toString();
+        }
 
-
-    this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
+        console.log(this.plantillas)
       },
-      {
-        label: 20,
-        value: 20
+      err => {
+        console.log(err);
       },
-      {
-        label: 30,
-        value: 30
-      },
-      {
-        label: 40,
-        value: 40
+      () => {
       }
-    ];
-
+    );
   }
 
 
@@ -136,61 +155,76 @@ export class ConfiguracionComponent implements OnInit {
 
 
 
-  onChangeRowsPerPages(event) {
-    this.selectedItem = event.value;
-    this.changeDetectorRef.detectChanges();
-    this.table.reset();
-  }
-
-
-  isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    } else {
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    }
-  }
-
-  onChangeSelectAll() {
-    if (this.selectAll === true) {
-      this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
-    } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    }
-  }
-
-  onRowSelect() {
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-    }
-  }
-
-  addConsulta() {
-    let obj = {
-      consulta: null,
-      finalidad: null,
-      tipoEjecucion: null
-    };
-    this.datos.push(obj);
-    this.datos = [... this.datos];
-  }
-
-
-  backTo() {
-    this.location.back();
-  }
-
   getDatos() {
     if (sessionStorage.getItem("comunicacionesSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("comunicacionesSearch"));
+      this.editar = true;
+      this.getPlantillas();
+    } else {
+      this.editar = false;
     }
+
   }
+
+
+  cancelar() {
+
+    this.confirmationService.confirm({
+      // message: this.translateService.instant("messages.deleteConfirmation"),
+      message: '¿Está seguro de cancelar el envío?',
+      icon: "fa fa-trash-alt",
+      accept: () => {
+        this.confirmarCancelar();
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+
+  confirmarCancelar() {
+    this.eliminarArray = [];
+    let objCancelar = {
+      idEstado: this.body.idEstado,
+      idEnvio: this.body.idEnvio,
+      fechaProgramacion: new Date(this.body.fechaProgramada)
+    };
+    this.eliminarArray.push(objCancelar);
+    this.sigaServices.post("enviosMasivos_cancelar", this.eliminarArray).subscribe(
+      data => {
+        this.showSuccess('Se ha cancelado el envío correctamente');
+      },
+      err => {
+        this.showFail('Error al cancelar el envío');
+        console.log(err);
+      },
+      () => {
+
+      }
+    );
+  }
+
+
+  duplicar() {
+    this.sigaServices.post("enviosMasivos_duplicar", this.body).subscribe(
+      data => {
+        this.showSuccess('Se ha duplicado el envío correctamente');
+      },
+      err => {
+        this.showFail('Error al duplicar el envío');
+        console.log(err);
+      }
+    );
+  }
+
 
 }
