@@ -2529,10 +2529,18 @@ export class FichaColegialComponent implements OnInit {
 
   irTurnoOficio() {
     let idInstitucion = this.generalBody.idInstitucion;
-    let  us = this.sigaServices.getOldSigaUrl() + "JGR_DefinirTurnosLetrado.do?granotmp="+new Date().getMilliseconds()+"&accion=ver&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"";
+    // let  us = this.sigaServices.getOldSigaUrl() +"SIGA/CEN_BusquedaClientes.do?noReset=true";
+    
+    // let  us = this.sigaServices.getOldSigaUrl() + "JGR_DefinirTurnosLetrado.do?granotmp="+new Date().getMilliseconds()+"&accion=ver&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"";
+    let  us = this.sigaServices.getOldSigaUrl() + "CEN_BusquedaClientes.do?modo=Editar&seleccionarTodos=&colegiado=1&avanzada=&actionModal=&verFichaLetrado=&tablaDatosDinamicosD="+this.generalBody.idPersona+"%2C"+idInstitucion+"%2CNINGUNO%2C1&filaSelD=1" 
     sessionStorage.setItem(
       "url",
       JSON.stringify(us)
+    );
+    sessionStorage.removeItem("reload");
+    sessionStorage.setItem(
+      "reload",
+      "si"
     );
     this.router.navigate(["/turnoOficioCenso"]);
   }

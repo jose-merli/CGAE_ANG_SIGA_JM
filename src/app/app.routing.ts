@@ -295,7 +295,7 @@ const appRoutes: Routes = [
   //   canActivate: [AuthGuard]
   // },
   {
-    path: "solicitudesGenericas",
+    path: "solicitudesModificacion",
     component: SolicitudesModificacionComponent,
     canActivate: [AuthGuard]
   },
@@ -974,8 +974,7 @@ const appRoutes: Routes = [
     component: AuditoriaComponent,
     canActivate: [AuthGuard]
   },
-  
-    
+
   //Comunicaciones
   {
     path: "informesGenericos",

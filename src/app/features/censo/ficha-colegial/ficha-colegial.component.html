@@ -318,9 +318,17 @@
               ></p-checkbox>
             </div>
             <div class="form-check col-lg-6 col-md-6">
-              <br>
-              <label class="form-group-label">{{"menu.comisiones" | translate}}</label> &nbsp;&nbsp;
-              <p-checkbox [(disabled)]="isLetrado" (onChange)="activacionGuardarGenerales()" [(ngModel)]='comisiones' binary="true"></p-checkbox>
+              <br />
+              <label class="form-group-label">{{
+                "menu.comisiones" | translate
+              }}</label>
+              &nbsp;&nbsp;
+              <p-checkbox
+                [(disabled)]="isLetrado"
+                (onChange)="activacionGuardarGenerales()"
+                [(ngModel)]="comisiones"
+                binary="true"
+              ></p-checkbox>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <!--
@@ -484,9 +492,17 @@
               -->
               <!-- </span> -->
               <div class="ayuda-btn">
-                <label>{{"menu.justiciaGratuita.maestros.partidosJudiciales" | translate}}</label>
-                <i class="fa fa-question" [pTooltip]="partidoJudicial" tooltipPosition="bottom"></i>
-              </div> &nbsp;&nbsp;
+                <label>{{
+                  "menu.justiciaGratuita.maestros.partidosJudiciales"
+                    | translate
+                }}</label>
+                <i
+                  class="fa fa-question"
+                  [pTooltip]="partidoJudicial"
+                  tooltipPosition="bottom"
+                ></i>
+              </div>
+              &nbsp;&nbsp;
             </div>
           </div>
         </div>
@@ -666,7 +682,9 @@
                 pInputText
               />
               <div *ngIf="!numMutualistaCheck()">
-                <label class="labelError">{{"censo.ws.literal.soloNumeros" | translate}}</label>
+                <label class="labelError">{{
+                  "censo.ws.literal.soloNumeros" | translate
+                }}</label>
               </div>
             </div>
 
@@ -856,8 +874,11 @@
             <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
           <div class="d-flex justify-content-between">
-            <label class="registros-ficha">{{"censo.datosDireccion.literal.numero.colegiaciones" | translate}}
-              <span>{{datosColegiaciones.length }}</span>
+            <label class="registros-ficha"
+              >{{
+                "censo.datosDireccion.literal.numero.colegiaciones" | translate
+              }}
+              <span>{{ datosColegiaciones.length }}</span>
             </label>
             <i
               *ngIf="!esFichaActiva('colegiaciones')"
@@ -978,7 +999,10 @@
           </div>
           <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-between">
-              <label>{{"censo.datosDireccion.literal.numero.certificados" | translate}}
+              <label
+                >{{
+                  "censo.datosDireccion.literal.numero.certificados" | translate
+                }}
                 <span>{{ datosCertificados.length }}</span>
               </label>
             </div>
@@ -1100,7 +1124,10 @@
           </div>
           <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-between">
-              <label>{{"censo.datosDireccion.literal.numero.sociedades" | translate}}
+              <label
+                >{{
+                  "censo.datosDireccion.literal.numero.sociedades" | translate
+                }}
                 <span>{{ sociedadesBody.busquedaJuridicaItems.length }}</span>
               </label>
             </div>
@@ -1206,7 +1233,10 @@
           </div>
           <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-between">
-              <label>{{"censo.datosDireccion.literal.numero.curriculares" | translate}}
+              <label
+                >{{
+                  "censo.datosDireccion.literal.numero.curriculares" | translate
+                }}
                 <span>{{ datosCurriculares.length }}</span>
               </label>
             </div>
@@ -1237,16 +1267,39 @@
       class="card-body card-body-ficha"
     >
       <div class="row">
-        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="4" [sortField]="sortF"
-          [sortOrder]="sortO" (onSort)="changeSort($event)" [responsive]="true" selectionMode="multiple" #table class="tabla-listado"
-          [value]="datosCurriculares" [sortOrder]="1" [paginator]="activarPaginacionCurriculares()" paginatorPosition="both"
-          [rows]="selectedItem" (onRowSelect)="redireccionarCurriculares(selectedDatos)">
-          <p-column *ngFor="let col of colsCurriculares" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-            [filter]="true" filterMatchMode="contains">
-            <!-- <ng-template let-datoH="rowData" pTemplate="body">
-              <span *ngIf="setItalic(datoH)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
-              <span *ngIf="!setItalic(datoH)">{{datoH[col.field]}}</span>
-            </ng-template> -->
+        <p-dataTable
+          emptyMessage="{{ 'general.message.no.registros' | translate}}"
+          [(selection)]="selectedDatos"
+          pageLinks="4"
+          [sortField]="sortF"
+          [sortOrder]="sortO"
+          (onSort)="changeSort($event)"
+          [responsive]="true"
+          selectionMode="multiple"
+          #table
+          class="tabla-listado"
+          [value]="datosCurriculares"
+          [sortOrder]="1"
+          [paginator]="activarPaginacionCurriculares()"
+          paginatorPosition="both"
+          [rows]="selectedItem"
+          (onRowSelect)="redireccionarCurriculares(selectedDatos)"
+        >
+          <p-column
+            *ngFor="let col of colsCurriculares"
+            [sortable]="true"
+            [field]="col.field"
+            [header]="col.header | translate"
+            filterPlaceholder="{{'general.boton.search' | translate}}"
+            [filter]="true"
+            filterMatchMode="contains"
+          >
+            <!--
+              <ng-template let-datoH="rowData" pTemplate="body">
+                <span *ngIf="setItalic(datoH)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
+                <span *ngIf="!setItalic(datoH)">{{datoH[col.field]}}</span>
+              </ng-template>
+            -->
           </p-column>
 
           <ng-template pTemplate="paginatorLeft">
@@ -1336,13 +1389,19 @@
           <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-between">
               <div class="d-flex justify-content-between">
-                <label>{{"censo.datosDireccion.literal.numero.direccion" | translate}}
-                  <span>{{ searchDireccionIdPersona.datosDireccionesItem.length }}</span>
+                <label
+                  >{{
+                    "censo.datosDireccion.literal.numero.direccion" | translate
+                  }}
+                  <span>{{
+                    searchDireccionIdPersona.datosDireccionesItem.length
+                  }}</span>
                 </label>
-
               </div>
-              <br>
-              <!-- <i [ngClass]="{ 'fa fa-angle-up': esFichaActiva('direcciones'), 'fa fa-angle-down': ! esFichaActiva('direcciones')} "></i> -->
+              <br />
+              <!--
+                <i [ngClass]="{ 'fa fa-angle-up': esFichaActiva('direcciones'), 'fa fa-angle-down': ! esFichaActiva('direcciones')} "></i>
+              -->
             </div>
             <br />
             <i
@@ -1838,13 +1897,34 @@
         </div>
 
         <div class="form-group col-lg-6 col-md-6 form-group-date">
-          <label *ngIf="historico">{{"administracion.auditoriaUsuarios.fechaHasta" | translate}}</label>
-          <label *ngIf="!historico">{{"administracion.auditoriaUsuarios.fechaHasta" | translate}} (*)</label>
-          <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="item.fechaBaja" [locale]="es"
-            [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (onSelect)="validateFields()"
-            [(disabled)]="historico"></p-calendar>
-          <div *ngIf="item.fechaBaja != null && !isFechaBajaCorrect && !historico">
-            <label class="labelError">{{"gratuita.altaTurnos.error.fechaBajaPosteriorInicio" | translate}}</label>
+          <label *ngIf="historico">{{
+            "administracion.auditoriaUsuarios.fechaHasta" | translate
+          }}</label>
+          <label *ngIf="!historico"
+            >{{
+              "administracion.auditoriaUsuarios.fechaHasta" | translate
+            }}
+            (*)</label
+          >
+          <p-calendar
+            [monthNavigator]="true"
+            [yearNavigator]="true"
+            yearRange="1930:2050"
+            [(ngModel)]="item.fechaBaja"
+            [locale]="es"
+            [utc]="true"
+            icon="far fa-calendar-alt"
+            dateFormat="dd/mm/yy"
+            showIcon="true"
+            (onSelect)="validateFields()"
+            [(disabled)]="historico"
+          ></p-calendar>
+          <div
+            *ngIf="item.fechaBaja != null && !isFechaBajaCorrect && !historico"
+          >
+            <label class="labelError">{{
+              "gratuita.altaTurnos.error.fechaBajaPosteriorInicio" | translate
+            }}</label>
           </div>
         </div>
       </div>
@@ -1931,11 +2011,20 @@
 
   <app-dialog></app-dialog>
 
-   
+  <!-- <div class="mainFrameWrapper">
+    <iframe
+      [src]="url"
+      id="mainWorkArea"
+      name="mainWorkArea"
+      frameborder="0"
+      scrolling="no"
+      iframeAutoHeight
+    ></iframe>
+  </div> -->
 
   <!-- <div #target *ngIf="progressSpinner" class="overlay-spinner"> -->
   <div *ngIf="progressSpinner" class="overlay-spinner">
-    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+    <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
     <div class="loader"></div>
   </div>
 </div>
