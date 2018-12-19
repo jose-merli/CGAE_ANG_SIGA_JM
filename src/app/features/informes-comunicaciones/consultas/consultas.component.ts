@@ -181,7 +181,6 @@ export class ConsultasComponent implements OnInit {
       .postPaginado("consultas_search", "?numPagina=1", this.bodySearch)
       .subscribe(
         data => {
-          debugger;
           this.progressSpinner = false;
           this.searchConsultas = JSON.parse(data["body"]);
           this.datos = this.searchConsultas.consultaItem;
