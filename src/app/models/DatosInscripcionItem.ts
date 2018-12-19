@@ -21,6 +21,8 @@ export class DatosInscripcionItem {
   fechaImparticion: Date;
   fechaImparticionDesde: Date;
   fechaImparticionHasta: Date;
+  fechaImparticionDesdeFormat: String;
+  fechaImparticionHastaFormat: String;
   tipo: string;
   descripcion: string;
   temas: string[];
@@ -32,6 +34,7 @@ export class DatosInscripcionItem {
   tipoAccion: string;
   pagada: string;
   fechaSolicitud: Date;
+  idPersona: string;
 
   editar: boolean;
   flagArchivado: number;

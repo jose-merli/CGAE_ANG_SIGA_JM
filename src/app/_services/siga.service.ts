@@ -104,6 +104,7 @@ export class SigaServices {
       "busquedaPerJuridica/datosGeneralesSearch",
     busquedaPerJuridica_create: "busquedaPerJuridica/create",
     accesoFichaPersona_search: "fichaPersona/search",
+    accesoFichaPersona_searchPersona: "fichaPersona/searchPersona",
     accesoFichaPersona_desasociarPersona: "fichaPersona/desasociarPersona",
     accesoFichaPersona_guardar: "fichaPersona/guardar",
     fichaPersona_crearNotario: "fichaPersona/crearNotario",
