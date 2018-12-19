@@ -539,7 +539,15 @@ export class BusquedaGeneralComponent {
       id[0].completo = true;
       sessionStorage.removeItem("abrirFormador");
       sessionStorage.setItem("formador", JSON.stringify(id[0]));
-      this.router.navigate(["/fichaCurso"]);
+      if (
+        sessionStorage.getItem("backInscripcion") != null ||
+        sessionStorage.getItem("backInscripcion") != undefined
+      ) {
+        this.router.navigate(["/buscarInscripciones"]);
+        sessionStorage.removeItem("backInscripcion");
+      } else {
+        this.router.navigate(["/fichaCurso"]);
+      }
     } else if (
       sessionStorage.getItem("nuevaSancion") != null &&
       sessionStorage.getItem("nuevaSancion") != undefined

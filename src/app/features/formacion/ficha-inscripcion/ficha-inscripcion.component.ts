@@ -1,5 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { SigaServices } from "../../../_services/siga.service";
+import { DatosInscripcionItem } from "../../../models/DatosInscripcionItem";
+import { esCalendar } from "../../../utils/calendar";
+import { Location } from "@angular/common";
 
 @Component({
   selector: "app-ficha-inscripcion",
@@ -13,7 +16,10 @@ export class FichaInscripcionComponent implements OnInit {
   closeFicha: boolean = true;
   fichasPosibles;
   msgs;
+  modoEdicion: boolean = false;
+  es: any = esCalendar;
 
+  inscripcion: DatosInscripcionItem = new DatosInscripcionItem();
   rowsPerPage;
   cols;
 
@@ -21,28 +27,35 @@ export class FichaInscripcionComponent implements OnInit {
   comboPrecio: any[];
   comboModoPago: any[];
 
-  backTo: any;
-
-  constructor(private sigaServices: SigaServices) {}
+  constructor(private sigaServices: SigaServices, private location: Location) {}
 
   ngOnInit() {
     this.getFichasPosibles();
     this.getComboEstados();
     this.getComboPrecio();
     this.getComboModoPago();
+
+    if (sessionStorage.getItem("modoEdicionInscripcion") == "true") {
+      this.modoEdicion = true;
+      this.inscripcion = JSON.parse(
+        sessionStorage.getItem("inscripcionCurrent")
+      );
+    }
   }
 
   getComboEstados() {
     // obtener estados
-    this.sigaServices.get("busquedaCursos_estadosCursos").subscribe(
-      n => {
-        this.comboEstados = n.combooItems;
-        this.arregloTildesCombo(this.comboEstados);
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    this.sigaServices
+      .get("busquedaInscripciones_estadosInscripciones")
+      .subscribe(
+        n => {
+          this.comboEstados = n.combooItems;
+          this.arregloTildesCombo(this.comboEstados);
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 
   getComboPrecio() {
@@ -131,5 +144,9 @@ export class FichaInscripcionComponent implements OnInit {
         }
       }
     });
+  }
+
+  backTo() {
+    this.location.back();
   }
 }

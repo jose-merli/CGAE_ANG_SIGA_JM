@@ -9,8 +9,8 @@
    <!-- TERJETAS CURSOS -->
    <div class="card">
     <!-- Cabecera -->
-    <div class="card-header header-ficha" (click)="abreCierraFicha('curso')">
-      <div *ngIf="!esFichaActiva('curso')" class="form-row">
+    <div class="card-header header-ficha">
+      <div class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
             <i class="fa fa-bell icon-ficha"></i>
@@ -20,52 +20,42 @@
           <div class="d-flex justify-content-start mt-2">
             <label class="mr-auto title-ficha">{{ 'formacion.fichaInscripcion.datosCursos.cabecera' | translate }}</label>
           </div>
+          <div class="d-flex justify-content-between">
+              <label
+              >{{ 'form.busquedaCursos.literal.codigoCurso' | translate }}</label>
+              <span>{{ inscripcion.codigoCurso }}</span>
+
+              <label
+              >{{ 'formacion.busquedaInscripcion.nombreCurso' | translate }}</label>
+              <span>{{ inscripcion.nombreCurso }}</span>
+
+              <label
+              >{{ 'form.busquedaCursos.literal.fechaImparticionDesde' | translate }}</label>
+              <span>{{ inscripcion.fechaImparticionDesdeFormat }}</span>
+
+              <label
+              >{{ 'form.busquedaCursos.literal.fechaImparticionHasta' | translate }}</label>
+              <span>{{ inscripcion.fechaImparticionHastaFormat }}</span>
+
+              <label
+              >{{ 'form.busquedaCursos.literal.temas' | translate }}</label>
+              <span>{{ inscripcion.temas }}</span>
+
+              <label
+              >{{ 'formacion.busquedaInscripcion.estadoCurso' | translate }}</label>
+              <span>{{ inscripcion.estadoCurso }}</span>
+              
+          </div>
+          
         </div>
-      </div>
-      <div *ngIf="esFichaActiva('curso')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
-          <i class="fa fa-bell icon-ficha"></i>
-        </div>
-        <label class="title-ficha">{{ 'formacion.fichaInscripcion.datosCursos.cabecera' | translate }} </label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
 
     <!-- Cuerpo-->
-    <div class="card-body card-body-ficha" *ngIf="esFichaActiva('curso')">
-      <div *ngIf="esFichaActiva('curso')" class="card-body card-body-ficha">
-        <div class="row">
-          <div class="col-lg-6 col-md-6">
-              <label>{{ 'formacion.fichaCursos.datosGenerales.codigo' | translate }}</label>
-              <input type="text" class="form-control" pInputText name="codigo">
-          </div>
-          <div class="col-lg-6 col-md-6">
-              <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate }}</label>
-              <input type="text" class="form-control" pInputText name="nombre">  
-          </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-lg-6 col-md-6">
-            <label>{{ 'agenda.fichaEventos.datosGenerales.fechaInicio' | translate }}</label>
-            <input type="text" class="form-control" pInputText name="fechaInicio">
-          </div>
-          <div class="col-lg-6 col-md-6">
-            <label>{{ 'agenda.fichaEventos.datosGenerales.fechaFin' | translate }}</label>
-            <input type="text" class="form-control" pInputText name="fechaFin">
-          </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-lg-6 col-md-6">
-            <label>{{ 'form.busquedaCursos.literal.temas' | translate }}</label>
-            <input type="text" class="form-control" pInputText name="temas">
-          </div>
-          <div class="col-lg-6 col-md-6">
-            <label>{{ 'formacion.busquedaInscripcion.estadoCurso' | translate }}</label>
-            <input type="text" class="form-control" pInputText name="estadoCurso">
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- <div class="card-body card-body-ficha" *ngIf="esFichaActiva('curso')">
+      
+    </div> -->
   </div>
 
   <!-- FICHA DATOS INSCRIPCION -->
@@ -95,28 +85,26 @@
 
     <!-- Cuerpo-->
     <div class="card-body card-body-ficha" *ngIf="esFichaActiva('inscripcion')">
-      <div class="form-row mb-3">
-          <div class="row">
-            <div class="col-lg-6 col-md-6">
-              <label>{{ 'censo.nuevaSolicitud.fechaSolicitud' | translate }}(*)</label>
-              <p-dropdown class="select-form" [options]="comboCalendars" [filter]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}"
-                name="type" (onChange)="onChangeSelectCalendar($event)" [(ngModel)]="newEvent.idCalendario" [disabled]="modoEdicionEvento || tipoAccesoLectura"></p-dropdown>
-            </div>
-            <div class="col-lg-6 col-md-6">
-              <label>{{ "censo.busquedaSolicitudesModificacion.literal.estado" | translate}}</label>
-              <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]='body.idEstado' [options]="comboEstados"
-              [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>            </div>
-          </div>
-          <div class="row mb-3">
-            <div class="col-lg-6 col-md-6">
-              <label>{{ 'formacion.busquedaInscripcion.asistencia' | translate }}</label>
-              <input type="text" class="form-control" pInputText name="asistencia">
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <label>{{ 'formacion.busquedaInscripcion.calificacion' | translate }}</label>
-                <input type="text" class="form-control" pInputText name="asistencia">
-            </div>
-          </div>
+      <div class="form-row lg-12 md-12">
+        <div class="col-lg-4 col-md-4">
+          <label>{{ 'censo.nuevaSolicitud.fechaSolicitud' | translate }}(*)</label>
+          <p-calendar [locale]="es" [(ngModel)]="inscripcion.fechaSolicitud" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+        </div>
+        <div class="col-lg-4 col-md-4">
+          <label>{{ "censo.busquedaSolicitudesModificacion.literal.estado" | translate}}</label>
+          <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]='inscripcion.idEstadoInscripcion'
+            [options]="comboEstados" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+        </div>
+        <div class="col-lg-2 col-md-2">
+          <label>{{ 'formacion.busquedaInscripcion.calificacion' | translate }}</label>
+          <input type="text" class="form-control" pInputText name="calificacion" [(ngModel)]='inscripcion.calificacion'>
+        </div>
+      </div>
+      <div class="form-row lg-12 md-12" style="margin-top: 10px">
+        <div class="col-lg-3 col-md-3">
+          <label>{{ 'formacion.busquedaInscripcion.asistencia' | translate }}</label>
+          <p-checkbox name="minimaAsistencia" binary="true" [(ngModel)]='inscripcion.minimaAsistencia'></p-checkbox>
+        </div>
       </div>
     </div>
     <div class="card-footer" *ngIf="esFichaActiva('inscripcion')">
