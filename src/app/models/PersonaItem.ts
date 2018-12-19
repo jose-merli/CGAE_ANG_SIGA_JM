@@ -2,8 +2,8 @@ import { ComboItem } from "./ComboItem";
 export class PersonaItem {
   nif: String;
   nombre: String;
-  primerApellido: String;
-  segundoApellido: String;
+  apellido1: String;
+  apellido2: String;
   colegio: ComboItem;
   numColegio: String;
   tipoPersonaJuridica: String;
@@ -11,5 +11,6 @@ export class PersonaItem {
   abreviatura: String;
   estadoColegial: String;
   residencia: String;
+  tipoIdentificacion: String;
   constructor() {}
 }

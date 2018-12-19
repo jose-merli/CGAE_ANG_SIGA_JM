@@ -17,6 +17,7 @@ import { SigaWrapper } from "../../../wrapper/wrapper.class";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { DatosInscripcionObject } from "../../../models/DatosInscripcionObject";
 import { FormadorCursoItem } from "../../../models/FormadorCursoItem";
+import { Location } from "@angular/common";
 
 @Component({
   selector: "app-busqueda-inscripciones",
@@ -100,6 +101,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
     private changeDetectorRef: ChangeDetectorRef,
     private authenticationService: AuthenticationService,
     private translateService: TranslateService,
+    private location: Location,
     private router: Router
   ) {
     super(USER_VALIDATIONS);
@@ -731,5 +733,9 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
+  }
+
+  backTo() {
+    this.location.back();
   }
 }
