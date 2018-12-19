@@ -5,6 +5,7 @@ export class FichaColegialGeneralesItem {
   idInstitucion: String;
   colegiado: Boolean;
   idTipoIdentificacion: String;
+  imagenCambiada: Boolean;
   nombre: String;
   apellidos1: String;
   apellidos2: String;
