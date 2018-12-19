@@ -38,13 +38,18 @@ export class TarjetaComunicacionesComponent implements OnInit {
       activa: false
     },
     {
+      key: "perfiles",
+      activa: false
+    },
+    {
       key: "informes",
       activa: false
     },
     {
       key: "comunicacion",
       activa: false
-    }
+    },
+
   ];
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices) { }
@@ -177,6 +182,15 @@ export class TarjetaComunicacionesComponent implements OnInit {
   }
 
 
+  addComunicacion() {
+    let objNewCom = {
+      nombre: '',
+      tipoEnvio: ''
+    }
+
+    this.datos.push(objNewCom);
+    this.selectedDatos = [];
+  }
 
 
 }

@@ -1,7 +1,7 @@
 
 export class ConfigComunicacionItem {
-  idClaseComunicacion: String;
-  idModelo: String;
+  claseComunicacion: String;
+  modeloComunicacion: String;
   idPlantillasEnvio: String;
   idTipoEnvio: String;
   idEnvio: String;

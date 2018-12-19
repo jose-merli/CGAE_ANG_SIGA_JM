@@ -7,6 +7,7 @@
   </div>
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
     <app-datos-generales-ficha *ngSwitchCase="'generales'"></app-datos-generales-ficha>
+    <app-perfiles-ficha *ngSwitchCase="'perfiles'"></app-perfiles-ficha>
     <app-tarjeta-informes *ngSwitchCase="'informes'"></app-tarjeta-informes>
     <app-tarjeta-comunicaciones *ngSwitchCase="'comunicacion'"></app-tarjeta-comunicaciones>
   </div>

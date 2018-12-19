@@ -22,6 +22,7 @@ export enum KEY_CODE {
 export class ModelosComunicacionesComponent implements OnInit {
 
   body: ModelosComunicacionesItem = new ModelosComunicacionesItem;
+  bodySearch: ModelosComunicacionesItem = new ModelosComunicacionesItem;
   colegios: any[];
   datos: any[];
   cols: any[];
@@ -46,17 +47,21 @@ export class ModelosComunicacionesComponent implements OnInit {
 
   ngOnInit() {
 
+    this.bodySearch.preseleccionado = '0';
+
+
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
     }
 
-    this.selectedItem = 4;
+    this.selectedItem = 10;
     this.getComboColegios();
     // this.body.visible = true;
 
 
 
     this.cols = [
+      { field: 'claseComunicacion', header: 'Clase comunicación' },
       { field: 'nombre', header: 'Nombre' },
       { field: 'institucion', header: 'Institución' },
       { field: 'orden', header: 'Orden' },

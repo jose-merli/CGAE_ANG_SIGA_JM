@@ -30,40 +30,48 @@
     <!--cuerpo datos generales-->
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div class="row">
-        <div class="bloque" [ngClass]="{'col-lg-12':body.idTipoEnvio!='1' && body.idTipoEnvio!='2','col-lg-6':body.idTipoEnvio=='1' || body.idTipoEnvio=='2'}">
+        <div class="bloque" [ngClass]="{'col-lg-12':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-6':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
           <div class="form-row">
             <div class="form-group col-lg-12">
               <label>
                 <strong>Datos globales</strong>
               </label>
             </div>
-            <div class="form-group" [ngClass]="{'col-lg-6':body.idTipoEnvio!='1' && body.idTipoEnvio!='2','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='2'}">
-              <label>Nombre</label>
-              <input type="text" [(ngModel)]="body.nombre" pInputText class="form-control">
+            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
+              <label class="d-block">Nombre *</label>
+              <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="body.nombre" pInputText>
             </div>
-            <div class="form-group" [ngClass]="{'col-lg-6':body.idTipoEnvio!='1' && body.idTipoEnvio!='2','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='2'}">
-              <label>Tipo de envío</label>
-              <p-dropdown class="select-form" [(ngModel)]="body.idTipoEnvio" [options]="tiposEnvio"></p-dropdown>
+            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
+              <label class="d-block">Tipo de envío *</label>
+              <p-dropdown [disabled]="editar" [options]="tiposEnvio" [(ngModel)]="body.idTipoEnvio" class="select-form"></p-dropdown>
             </div>
-            <div class="form-group" [ngClass]="{'col-lg-6':body.idTipoEnvio!='1' && body.idTipoEnvio!='2','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='2'}">
-              <label>Descripción</label>
-              <textarea style="height: 85px" [(ngModel)]="body.descripcion" pInputTextarea></textarea>
+            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
+              <label class="d-block">Descripción *</label>
+              <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="body.descripcion" pInputText>
             </div>
           </div>
         </div>
-        <div *ngIf="body.idTipoEnvio=='1' || body.idTipoEnvio=='2'" class="bloque col-lg-6 col-md-6">
+
+        <div *ngIf="body.idTipoEnvio== '1' || body.idTipoEnvio== '4' || body.idTipoEnvio== '5'" class="col-lg-6 col-md-12">
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
               <label *ngIf="body.idTipoEnvio=='1'">
                 <strong>Datos de correo electrónico</strong>
               </label>
-              <label *ngIf="body.idTipoEnvio=='2'">
+              <label *ngIf="body.idTipoEnvio=='4'">
                 <strong>Datos de SMS</strong>
+              </label>
+              <label *ngIf="body.idTipoEnvio=='5'">
+                <strong>Datos de Buro SMS</strong>
               </label>
             </div>
             <div *ngIf="body.idTipoEnvio=='1'" class="form-group col-lg-12 col-md-12">
-              <label>Correo electrónico</label>
-              <p-editor [(ngModel)]="body.email" [style]="{'height':'150px','text-align':'left'}">
+              <label>Asunto</label>
+              <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="body.asunto" pInputText>
+            </div>
+            <div *ngIf="body.idTipoEnvio=='1'" class="form-group col-lg-12 col-md-12">
+              <label>Cuerpo</label>
+              <p-editor [disabled]="editar" [(ngModel)]="body.email" [style]="{'height':'140px','text-align':'left'}">
                 <p-header>
                   <span class=" ql-formats">
                     <select class="ql-header">
@@ -102,14 +110,19 @@
                 </p-header>
               </p-editor>
             </div>
-            <div *ngIf="body.idTipoEnvio=='2'" class="form-group col-lg-12 col-md-12">
-              <label>SMS</label>
-              <textarea style="height: 150px" [(ngModel)]="body.sms" pInputTextarea></textarea>
+            <div *ngIf="body.idTipoEnvio=='4' || body.idTipoEnvio=='5'" class="form-group col-lg-3 col-md-3">
+              <label>Nº caracteres: </label>
+              <label *ngIf="body.cuerpo">{{body.cuerpo.length}}</label>
+            </div>
+            <div *ngIf="body.idTipoEnvio=='4' || body.idTipoEnvio=='5'" class="form-group col-lg-12 col-md-12">
+              <label>Cuerpo</label>
+              <textarea [disabled]="editar" style="height:140px" pInputTextarea autoResize="autoResize" [(ngModel)]="body.cuerpo" maxlength="160"></textarea>
             </div>
           </div>
         </div>
       </div>
     </div>
+
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
         <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>

@@ -324,7 +324,7 @@ label {
   width: 100% !important;
 }
 
-.tabla-listado {
+.tabla-listado, .ui-dialog .ui-state-default .tabla-listado,.ui-dialog .ui-widget-content .ui-state-default .tabla-listado  {
   p-dropdown {
     text-align: center;
   }
@@ -642,12 +642,7 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   overflow: inherit;
 }
 
-.ui-dialog .ui-state-default, .ui-dialog .ui-widget-content .ui-state-default{
-  background-color: $blue3;
-  color: $grey1;  
-  border: 1px solid #c6c7c8;
-  border-left: none;
-}
+
 
 .ui-dialog  .ui-inputtext {
   background: white !important;
@@ -1077,6 +1072,13 @@ p-footer .main-button{
     box-sizing: border-box;
     float: left;
     clear: left;
+  }
+
+  .ui-dialog .ui-state-default, .ui-dialog .ui-widget-content .ui-state-default{
+    background-color: $blue3;
+    color: $grey1;  
+    border: 1px solid #c6c7c8;
+    border-left: none;
   }
 
   .tabla-listado {

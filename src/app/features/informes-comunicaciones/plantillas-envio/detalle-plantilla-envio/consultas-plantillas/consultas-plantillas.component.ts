@@ -126,7 +126,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 
   navigateTo(dato) {
     let id = dato[0].id;
-    if (!this.selectMultiple) {
+    if (!this.selectMultiple && id) {
       this.router.navigate(['/fichaConsulta']);
       sessionStorage.setItem("consultaPlantillaSearch", JSON.stringify(this.body))
     }
@@ -156,9 +156,14 @@ export class ConsultasPlantillasComponent implements OnInit {
     return {};
   }
 
-  onAddConsulta() {
-    this.router.navigate(['/fichaConsulta']);
-    sessionStorage.removeItem("consultaPlantillaSearch")
+  addConsulta() {
+    let objNewConsulta = {
+      nombre: '',
+      finalidad: ''
+    }
+
+    this.datos.push(objNewConsulta);
+    this.selectedDatos = [];
   }
 
   getDatos() {

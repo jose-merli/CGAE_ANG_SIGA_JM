@@ -6,7 +6,7 @@
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
-            <i class="fas poll-h icon-ficha"></i>
+            <i class="fas fa-align-left icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -26,7 +26,7 @@
       </div>
       <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
-          <i class="fas poll-h icon-ficha"></i>
+          <i class="fas fa-align-left icon-ficha"></i>
         </div>
         <label class="title-ficha">{{ "general.message.datos.generales" | translate}}</label>
         <i class="fa fa-angle-up ml-auto"></i>
@@ -49,11 +49,11 @@
           </div>
           <div class="form-row d-flex align-items-end">
             <div class="form-group col-lg-6 col-md-6">
-              <label>Colegio</label>
+              <label>Colegio *</label>
               <p-dropdown [options]="colegios" [(ngModel)]="body.idColegio" class="select-form"></p-dropdown>
             </div>
             <div class="form-group col-lg-1 col-md-1">
-              <label>Orden</label>
+              <label>Orden *</label>
               <input type="text" class="form-control" [(ngModel)]="body.orden" pInputText>
             </div>
             <div class="form-group col-lg-2 col-md-3">

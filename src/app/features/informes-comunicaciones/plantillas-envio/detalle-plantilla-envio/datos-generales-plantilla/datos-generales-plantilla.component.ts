@@ -1,6 +1,7 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DatosGeneralesPlantillaItem } from '../../../../../models/DatosGeneralesPlantillaItem';
-import { Location } from "@angular/common";
+import { SigaServices } from "./../../../../../_services/siga.service";
+
 
 @Component({
   selector: 'app-datos-generales-plantilla',
@@ -34,9 +35,7 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
 
 
   constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private location: Location,
-    // private sigaServices: SigaServices
+    private sigaServices: SigaServices
   ) {
 
 
@@ -45,7 +44,9 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
 
   ngOnInit() {
 
+    this.getTipoEnvios();
     this.getDatos();
+
 
     this.tiposEnvio = [
       {
@@ -59,13 +60,10 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
       }
     ]
 
-    // this.body.idTipoEnvio = this.tiposEnvio[1].value;
   }
 
   abreCierraFicha() {
-    // let fichaPosible = this.getFichaPosibleByKey(key);
     if (this.activacionEditar == true) {
-      // fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
   }
@@ -91,6 +89,35 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("plantillasEnvioSearch"));
     }
   }
+
+  getTipoEnvios() {
+    this.sigaServices.get("enviosMasivos_tipo").subscribe(
+      n => {
+        this.tiposEnvio = n.combooItems;
+
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+      para poder filtrar el dato con o sin estos caracteres*/
+        this.tiposEnvio.map(e => {
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
 
 
 

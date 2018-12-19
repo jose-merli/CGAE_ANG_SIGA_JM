@@ -23,6 +23,10 @@ export class FichaModeloComunicacionesComponent implements OnInit {
         activa: false
       },
       {
+        key: "perfiles",
+        activa: false
+      },
+      {
         key: "informes",
         activa: false
       },

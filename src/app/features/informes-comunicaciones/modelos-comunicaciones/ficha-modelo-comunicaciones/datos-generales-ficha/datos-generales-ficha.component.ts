@@ -40,6 +40,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
 
   ngOnInit() {
     this.getDatos();
+
   }
 
   abreCierraFicha() {

@@ -79,7 +79,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   }
 
   // Mensajes
-  ail(mensaje: string) {
+  showFail(mensaje: string) {
     this.msgs = [];
     this.msgs.push({ severity: "error", summary: "", detail: mensaje });
   }
@@ -184,7 +184,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
       .subscribe(data => {
         const blob = new Blob([data], { type: "application/octet-stream" });
         if (blob.size == 0) {
-          this.ail("messages.general.error.ficheroNoExiste");
+          this.showFail("messages.general.error.ficheroNoExiste");
         } else {
           saveAs(data, dato[0].nombreDocumento);
         }
@@ -229,7 +229,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
         this.showSuccess('Se ha eliminado el documento correctamente');
       },
       err => {
-        this.ail('Error al eliminado el envío');
+        this.showFail('Error al eliminado el envío');
         console.log(err);
       },
       () => {
@@ -264,8 +264,14 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
         this.guardar(data.nombreDocumento);
       },
       err => {
-        this.ail('Error al subir el documento');
-        console.log(err);
+
+        if  (err.error.error.code  ==  400) {
+          this.showFail('Formato no permitido o tamaño maximo superado');
+        }  else  {
+          this.showFail('Error al subir el documento');
+          console.log(err);
+        }
+        this.progressSpinner  =  false;
       },
       () => {
       }
@@ -283,7 +289,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
         this.showSuccess('Se ha subido el documento correctamente');
       },
       err => {
-        this.ail('Error al guardar el documento');
+        this.showFail('Error al guardar el documento');
         console.log(err);
       },
       () => {

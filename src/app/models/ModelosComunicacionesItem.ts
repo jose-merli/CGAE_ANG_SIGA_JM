@@ -1,7 +1,7 @@
 export class ModelosComunicacionesItem {
   idClaseComunicaciones: String;
   nombre: String;
-  preseleccionado: boolean;
+  preseleccionado: String;
   visible: boolean;
   idColegio: string;
   orden: String;

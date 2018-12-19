@@ -62,6 +62,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   progressSpinner: boolean = false;
   volver: boolean = false;
   pButton;
+  first: number = 0;
 
   //Diálogo de comunicación
   showComunicar: boolean = false;
@@ -69,6 +70,8 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
   tiposEnvio: any[];
   plantillas: any[];
+  datosModelos: any[];
+  colsModelos: any[];
 
   constructor(
     private sigaServices: SigaServices,
@@ -82,7 +85,13 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
+
+  @ViewChild("tableModelos") tableModelos: DataTable;
+  selectedModelos;
+
+
   ngOnInit() {
+
     if (sessionStorage.getItem("tarjeta") != null) {
       this.volver = true;
     }
@@ -135,6 +144,13 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
         header: "administracion.auditoriaUsuarios.literal.motivo"
       }
     ];
+
+    this.colsModelos = [
+      { field: 'modelo', header: 'Modelo' },
+      { field: 'tipoEnvio', header: 'Tipo envío' },
+      { field: 'plantillaEnvio', header: 'Plantilla Envío' },
+
+    ]
 
     this.rowsPerPage = [
       {
@@ -456,6 +472,13 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   //Diálogo de comunicación: ver y enviar servicio
   onComunicar(dato) {
     this.showComunicar = true;
+    this.getModelosComunicacion();
+  }
+
+  getModelosComunicacion() {
+    this.datosModelos = [
+      { id: '1', modelo: '', tipoEnvio: '', plantillaEnvio: '' }
+    ]
   }
 
   onEnviarComunicacion() {

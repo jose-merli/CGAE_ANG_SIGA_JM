@@ -15,10 +15,10 @@
           </div>
           <div class="d-flex justify-content-between">
             <label>Clase de comunicación:
-              <!-- <span>{{body.nombre}}</span> -->
+              <span>{{body.claseComunicacion}}</span>
             </label>
             <label>Modelo de comunicaciones:
-              <!-- <span>{{body.nombre}}</span> -->
+              <span>{{body.modeloComunicacion}}</span>
             </label>
             <label>Tipo de envío:
               <span>{{tipoEnvio}}</span>
@@ -47,21 +47,19 @@
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
               <label>Clase de comunicaciones</label>
-              <p-dropdown [disabled]="editar" [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion" class="select-form"></p-dropdown>
+              <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="body.claseComunicacion" pInputText>
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
               <label>Modelo de comunicaciones</label>
-              <p-dropdown [disabled]="editar" [options]="modelos" [(ngModel)]="body.idModelo" class="select-form"></p-dropdown>
-
+              <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="body.modeloComunicacion" pInputText>
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
               <label class="d-block">Tipo de envío *</label>
-              <p-dropdown [disabled]="editar" (onChange)="onChangeTipoEnvio()" [options]="tipoEnvios" [(ngModel)]="body.idTipoEnvio" class="select-form"></p-dropdown>
+              <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="tipoEnvio" pInputText>
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
               <label class="d-block">Plantilla de envío *</label>
-              <p-dropdown [disabled]="(plantillas && plantillas.length <= 0) || editar" [options]="plantillas" [(ngModel)]="body.idPlantillasEnvio"
-                dataKey="value" class="select-form"></p-dropdown>
+              <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="plantilla" pInputText>
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
               <label class="d-block">Descripción *</label>

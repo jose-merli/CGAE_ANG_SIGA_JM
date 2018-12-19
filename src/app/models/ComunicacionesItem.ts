@@ -1,5 +1,5 @@
 export class EnviosMasivosItem {
-  idClasesComunicaciones: String;
+  idClaseComunicacion: String;
   idEnvio: String;
   fechaCreacion: Date;
   idPlantillasEnvio: String;

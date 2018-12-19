@@ -26,6 +26,7 @@ export class ConfiguracionComponent implements OnInit {
   eliminarArray: any[];
   editar: boolean = false;
   tipoEnvio: string;
+  plantilla: string;
 
 
   fichasPosibles = [
@@ -59,6 +60,7 @@ export class ConfiguracionComponent implements OnInit {
 
 
     this.getDatos();
+    this.getClasesComunicaciones();
     this.getTipoEnvios()
 
   }
@@ -113,6 +115,11 @@ export class ConfiguracionComponent implements OnInit {
       data => {
         let comboPlantillas = JSON.parse(data["body"]);
         this.plantillas = comboPlantillas.combooItems;
+        this.plantillas.map(e => {
+          if (this.body.idPlantillasEnvio == e.value) {
+            this.plantilla = e.label;
+          }
+        })
 
         if (this.editar) {
           this.body.idPlantillasEnvio = this.body.idPlantillasEnvio.toString();
@@ -164,6 +171,19 @@ export class ConfiguracionComponent implements OnInit {
       this.editar = false;
     }
 
+  }
+
+
+  getClasesComunicaciones() {
+    this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
+      data => {
+        this.clasesComunicaciones = data.combooItems;
+
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
 

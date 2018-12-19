@@ -41,17 +41,18 @@ export class TarjetaInformesComponent implements OnInit {
       activa: false
     },
     {
-      key: "modelos",
+      key: "perfiles",
       activa: false
     },
     {
-      key: "plantillas",
+      key: "informes",
       activa: false
     },
     {
-      key: "consultas",
+      key: "comunicacion",
       activa: false
-    }
+    },
+
   ];
 
   constructor(private router: Router, private translateService: TranslateService,
@@ -173,6 +174,10 @@ export class TarjetaInformesComponent implements OnInit {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
     }
+  }
+
+  addInforme() {
+    this.router.navigate(['/fichaPlantillaDocumento']);
   }
 
 

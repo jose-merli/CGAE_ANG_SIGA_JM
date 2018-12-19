@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { DatosRemitentePlantillaItem } from '../../../../../models/DatosRemitentePlantillaItem';
 import { Location } from "@angular/common";
 import { DataTable } from "primeng/datatable";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-remitente-plantilla',
@@ -44,8 +45,8 @@ export class RemitentePlantillaComponent implements OnInit {
 
 
   constructor(
+    private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
-    private location: Location,
     // private sigaServices: SigaServices
   ) {
 
@@ -56,6 +57,12 @@ export class RemitentePlantillaComponent implements OnInit {
   ngOnInit() {
 
     this.getDatos();
+
+    if (sessionStorage.getItem("abrirRemitente") == "true") {
+      this.openFicha = !this.openFicha;
+      sessionStorage.removeItem("abrirNotario");
+    }
+
 
     this.selectedItem = 5;
 
@@ -84,11 +91,7 @@ export class RemitentePlantillaComponent implements OnInit {
   }
 
   abreCierraFicha() {
-    // let fichaPosible = this.getFichaPosibleByKey(key);
-    if (this.activacionEditar == true) {
-      // fichaPosible.activa = !fichaPosible.activa;
-      this.openFicha = !this.openFicha;
-    }
+    this.openFicha = !this.openFicha;
   }
 
   esFichaActiva(key) {
@@ -145,5 +148,9 @@ export class RemitentePlantillaComponent implements OnInit {
     }
   }
 
+  buscar() {
+    sessionStorage.setItem("abrirRemitente", "true");
+    this.router.navigate(["/busquedaGeneral"]);
+  }
 
 }
