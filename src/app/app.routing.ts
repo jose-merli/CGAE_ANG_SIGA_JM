@@ -1122,6 +1122,13 @@ const appRoutes: Routes = [
     component: BusquedaInscripcionesComponent,
     canActivate: [AuthGuard]
   },
+  
+  {
+    path: "fichaInscripcion",
+    component: FichaInscripcionComponent,
+    canActivate: [AuthGuard]
+  },
+  
   { path: " ", redirectTo: "home" }
 ];
 export const routing = RouterModule.forRoot(appRoutes);

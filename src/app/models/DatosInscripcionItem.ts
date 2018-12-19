@@ -31,6 +31,7 @@ export class DatosInscripcionItem {
   motivo: string;
   tipoAccion: string;
   pagada: string;
+  fechaSolicitud: Date;
 
   editar: boolean;
   flagArchivado: number;
