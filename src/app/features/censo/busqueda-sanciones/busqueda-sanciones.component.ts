@@ -297,24 +297,12 @@ export class BusquedaSancionesComponent implements OnInit {
     this.body.fechaDesdeDate = undefined;
     this.body.fechaHastaDate = undefined;
     this.body.chkArchivadas = false;
-    this.body.fechaArchivadaDesde = undefined;
-    this.body.fechaArchivadaHasta = undefined;
-    this.body.estado = "";
-    this.body.origen = "";
+    this.body.fechaArchivadaDesdeDate = undefined;
+    this.body.fechaArchivadaHastaDate = undefined;
     this.body.refColegio = "";
     this.body.refConsejo = "";
-    this.body.tipo = "";
     this.body.tipoSancion = "";
-    this.body.fecha = undefined;
-    this.body.fechaAcuerdoHasta = undefined;
-    this.body.fechaFirmezaDesdeDate = undefined;
-    this.body.fechaFirmezaHastaDate = undefined;
-    this.body.fechaRehabilitadoDesdeDate = undefined;
-    this.body.fechaRehabilitadoHastaDate = undefined;
-    this.body.fechaResolucionDesdeDate = undefined;
-    this.body.fechaResolucionHastaDate = undefined;
-    this.body.fechaImposicionDesdeDate = undefined;
-    this.body.fechaImposicionHastaDate = undefined;
+    this.body.tipoFecha = "";
 
     sessionStorage.removeItem("saveFilters");
   }

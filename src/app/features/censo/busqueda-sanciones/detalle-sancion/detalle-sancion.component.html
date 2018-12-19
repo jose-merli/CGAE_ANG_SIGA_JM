@@ -69,7 +69,7 @@
               <div class="form-group col-lg-12 col-md-12">
                 <label>{{
                   "busquedaSanciones.colegioSancionador.literal" | translate
-                }}</label>
+                }} (*)</label>
                 <p-dropdown
                   class="select-form" [options]="colegios" [(ngModel)]="body.idColegio" (onChange)="disableFields()" [(disabled)]="disabledField"
                 ></p-dropdown>
@@ -79,7 +79,7 @@
                 <label>{{
                   "menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal"
                     | translate
-                }}</label>
+                }} (*)</label>
                 <p-dropdown
                   class="select-form"
  [options]="tipoSancion"
