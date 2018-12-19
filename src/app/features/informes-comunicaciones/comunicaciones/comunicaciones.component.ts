@@ -75,7 +75,7 @@ export class ComunicacionesComponent implements OnInit {
       { field: 'clasesComunicaciones', header: 'Clases de comunicaciones' },
       { field: 'descripcion', header: 'Descripción' },
       { field: 'fechaCreacion', header: 'Fecha creación' },
-      { field: 'fechaProgramacion', header: 'Fecha programación' },
+      { field: 'fechaProgramada', header: 'Fecha programación' },
       { field: 'tipoEnvio', header: 'Forma envío' },
       { field: 'estadoEnvio', header: 'Estado' }
     ];
@@ -208,9 +208,10 @@ export class ComunicacionesComponent implements OnInit {
           this.progressSpinner = false;
           this.searchComunicaciones = JSON.parse(data["body"]);
           this.datos = this.searchComunicaciones.enviosMasivosItem;
+          console.log(this.datos);
           this.body = this.datos[0];
           this.datos.forEach(element => {
-            element.fechaProgramada = new Date(element.fechaProgramada);
+            element.fechaProgramada = element.fechaProgramada ? new Date(element.fechaProgramada) : null;
             element.fechaCreacion = new Date(element.fechaCreacion);
           });
         },
