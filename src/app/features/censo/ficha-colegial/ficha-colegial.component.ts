@@ -1342,12 +1342,14 @@ export class FichaColegialComponent implements OnInit {
       // se almacena el archivo para habilitar boton guardar
       this.file = fileList[0];
       this.archivoDisponible = true;
+      this.generalBody.imagenCambiada == true;
       this.existeImagen = true;
       let urlCreator = window.URL;
       this.imagenPersona = this.sanitizer.bypassSecurityTrustUrl(
         urlCreator.createObjectURL(this.file)
       );
     }
+    this.activacionGuardarGenerales();
   }
 
   // guardar() {

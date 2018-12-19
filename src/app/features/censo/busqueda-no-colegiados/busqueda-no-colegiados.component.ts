@@ -314,6 +314,10 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     }
   }
 
+  clear() {
+    this.msgs = [];
+  }
+
   getLetrado() {
     if (JSON.parse(sessionStorage.getItem("isLetrado")) == true) {
       this.isEditable = true;
