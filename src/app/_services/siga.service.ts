@@ -177,11 +177,15 @@ export class SigaServices {
     enviosMasivos_descargarDocumento: 'enviosMasivos/detalle/descargarDocumento',
     consultas_comboObjetivos: 'consultas/objetivo',
     consultas_comboModulos: 'consultas/modulo',
+<<<<<<< Updated upstream
     comunicaciones_claseComunicaciones: 'comunicaciones/clasesComunicacion',
     comunicaciones_search: 'comunicaciones/search',
     comunicaciones_guardarConf: 'comunicaciones/detalle/configuracion',
     comunicaciones_destinatarios: 'comunicaciones/detalle/destinatarios',
 
+=======
+    consultas_search: 'consultas/search'
+>>>>>>> Stashed changes
 
   };
 

@@ -9,32 +9,37 @@
     <div class="card-body">
       <div class="form-row">
         <div class="form-group col-lg-4 col-md-4">
+<<<<<<< Updated upstream
           <label>Módulo</label>
           <p-dropdown [options]="modulos" [(ngModel)]="body.idModulo" class="select-form"></p-dropdown>
+=======
+          <label>Módulos</label>
+          <p-dropdown [options]="modulos" [(ngModel)]="bodySearch.idModulo" class="select-form"></p-dropdown>
+>>>>>>> Stashed changes
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
-          <input type="text" class="form-control" [(ngModel)]="body.nombre" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="bodySearch.nombre" pInputText>
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>Descripción</label>
-          <input type="text" class="form-control" [(ngModel)]="body.descripcion" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="bodySearch.descripcion" pInputText>
         </div>
       </div>
       <div class="form-row d-flex align-items-end">
 
         <div class="form-group col-lg-4 col-md-4">
           <label>Objetivo</label>
-          <p-dropdown [options]="objetivos" [(ngModel)]="body.idObjetivo" class="select-form"></p-dropdown>
+          <p-dropdown [options]="objetivos" [(ngModel)]="bodySearch.idObjetivo" class="select-form"></p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>Clase de comunicaciones</label>
-          <p-dropdown [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicaciones" class="select-form"></p-dropdown>
+          <p-dropdown [options]="clasesComunicaciones" [(ngModel)]="bodySearch.idClaseComunicacion" class="select-form"></p-dropdown>
         </div>
         <div class="form-group col-lg-2 col-md-3">
           <label class="d-block">Genérica</label>
-          <p-radioButton class="mr-2" name="groupname" value="true" [(ngModel)]="body.generica" label="Sí"></p-radioButton>
-          <p-radioButton name="groupname" value="false" [(ngModel)]="body.generica" label="No"></p-radioButton>
+          <p-radioButton class="mr-2" name="groupname" value="true" [(ngModel)]="bodySearch.generica" label="Sí"></p-radioButton>
+          <p-radioButton name="groupname" value="false" [(ngModel)]="bodySearch.generica" label="No"></p-radioButton>
         </div>
 
 

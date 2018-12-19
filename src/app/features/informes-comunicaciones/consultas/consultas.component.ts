@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, HostListener } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { ConsultasItem } from '../../../models/ConsultasItem';
+import { ConsultasSearchItem } from '../../../models/ConsultasSearchItem';
+import { ConsultasObject } from '../../../models/ConsultasObject';
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { SigaServices } from "./../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
@@ -28,10 +30,13 @@ export class ConsultasComponent implements OnInit {
   numSelected: number = 0;
   rowsPerPage: any = [];
   showResultados: boolean = false;
+  progressSpinner: boolean = false;
   msgs: Message[];
   modulos: any[];
   objetivos: any[];
   clasesComunicaciones: any[];
+  searchConsultas: ConsultasObject = new ConsultasObject();
+  bodySearch: ConsultasSearchItem = new ConsultasSearchItem();
 
 
   @ViewChild('table') table: DataTable;
@@ -42,6 +47,7 @@ export class ConsultasComponent implements OnInit {
     private confirmationService: ConfirmationService, private router: Router) { }
 
   ngOnInit() {
+
 
 
     if (sessionStorage.getItem("consultasSearch") != null) {
@@ -55,7 +61,7 @@ export class ConsultasComponent implements OnInit {
       { field: 'modulo', header: 'Módulo' },
       { field: 'nombre', header: 'Nombre' },
       { field: 'objetivo', header: 'Objetivo' },
-      { field: 'clasesComunicaciones', header: 'Clases de comunicaciones' },
+      { field: 'clasesComunicacion', header: 'Clases de comunicaciones' },
       { field: 'generica', header: 'Genérica' }
     ];
 
@@ -118,6 +124,14 @@ export class ConsultasComponent implements OnInit {
         },
         err => {
           console.log(err);
+        }),
+
+      this.sigaServices.get("consultas_claseComunicaciones").subscribe(
+        data => {
+          this.clasesComunicaciones = data.combooItems;
+        },
+        err => {
+          console.log(err);
         })
 
   }
@@ -154,18 +168,46 @@ export class ConsultasComponent implements OnInit {
 
   onBuscar() {
     this.showResultados = true;
+    this.selectMultiple = false;
+    this.selectedDatos = "";
+    this.progressSpinner = true;
     sessionStorage.removeItem("consultasSearch")
     this.getResultados();
+
   }
 
   getResultados() {
-    this.datos = [
-      { id: '1', nombre: 'Isabel Salinero', modulo: 'prueba' }
-    ]
+    this.sigaServices
+      .postPaginado("consultas_search", "?numPagina=1", this.bodySearch)
+      .subscribe(
+        data => {
+          debugger;
+          this.progressSpinner = false;
+          this.searchConsultas = JSON.parse(data["body"]);
+          this.datos = this.searchConsultas.consultaItem;
+          this.body = this.datos[0];
+
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => { }
+      );
   }
 
   isButtonDisabled() {
-    if (this.body.nombre != '' && this.body.nombre != null) {
+    if (this.bodySearch.nombre != '' && this.bodySearch.nombre != null) {
+      return false;
+    } else if (this.bodySearch.idObjetivo != '' && this.bodySearch.idObjetivo != null) {
+      return false;
+    } else if (this.bodySearch.idClaseComunicacion != '' && this.bodySearch.idClaseComunicacion != null) {
+      return false;
+    } else if (this.bodySearch.idModulo != '' && this.bodySearch.idModulo != null) {
+      return false;
+    } else if (this.bodySearch.descripcion != '' && this.bodySearch.descripcion != null) {
+      return false;
+    } else if (this.bodySearch.generica != '' && this.bodySearch.generica != null) {
       return false;
     }
     return true;
