@@ -268,7 +268,7 @@
                 <label>{{
                   "facturacion.altaAbonos.literal.provisionalORecurrida"
                     | translate
-                }}  <label *ngIf="body.fechaAcuerdoDate">{{ body.fechaAcuerdoDate | date: 'MMM/yyyy'}}</label>
+                }}  <label *ngIf="body.fechaAcuerdoDate">{{ body.fechaAcuerdoDate | date: 'MMM yyyy' }} </label>
               </label> 
               </div>
             </div>
@@ -279,7 +279,7 @@
               <div class="form-group col-lg-6 col-md-6 mtop">
                 <label>{{
                   "facturacion.altaAbonos.literal.Firme" | translate
-                }}  <label *ngIf="body.fechaFirmezaDate">{{ body.fechaFirmezaDate | date: 'MMM/yyyy'}}</label> </label>
+                }}  <label *ngIf="body.fechaFirmezaDate">{{ body.fechaFirmezaDate | date: 'MMM yyyy'}}</label> </label>
               </div>
             </div>
             <div class="form-row">
@@ -289,7 +289,7 @@
               <div class="form-group col-lg-6 col-md-6 mtop ">
                 <label>{{
                   "facturacion.altaAbonos.literal.enEjecucion" | translate
-                }}  <label *ngIf="body.fechaDesdeDate">{{ body.fechaDesdeDate | date: 'MMM/yyyy' }} </label> - <label *ngIf="body.fechaHastaDate">  {{ body.fechaHastaDate | date: 'MMM/yyyy' }} </label> </label>
+                }}  <label *ngIf="body.fechaDesdeDate">{{ body.fechaDesdeDate | date: 'MMM yyyy' }} </label> - <label *ngIf="body.fechaHastaDate">  {{ body.fechaHastaDate | date: 'MMM yyyy' }} </label> </label>
               </div>
             </div>
             <div class="form-row">
@@ -299,7 +299,7 @@
               <div class="form-group col-lg-6 col-md-6 mtop">
                 <label>{{
                   "facturacion.altaAbonos.literal.Rehabilitado" | translate
-                }} <label *ngIf="body.fechaRehabilitadoDate">{{ body.fechaRehabilitadoDate | date: 'MMM/yyyy'}}</label> </label>
+                }} <label *ngIf="body.fechaRehabilitadoDate">{{ body.fechaRehabilitadoDate | date: 'MMM yyyy'}}</label> </label>
               </div>
             </div>
             <div class="form-row">
@@ -309,7 +309,7 @@
               <div class="form-group col-lg-6 col-md-6 mtop">
                 <label>{{
                   "facturacion.altaAbonos.literal.Archivada" | translate
-                }} <label *ngIf="body.fechaArchivadaDate">{{ body.fechaArchivadaDate | date: 'MMM/yyyy'}}</label> </label>
+                }} <label *ngIf="body.fechaArchivadaDate">{{ body.fechaArchivadaDate | date: 'MMM yyyy'}}</label> </label>
               </div>
             </div>
           </div>
