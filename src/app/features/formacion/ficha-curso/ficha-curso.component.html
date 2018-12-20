@@ -86,22 +86,15 @@
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
               <label>{{'censo.busquedaClientesAvanzada.literal.tipoCliente' | translate}}</label>
-              <!-- <p-autoComplete #autocompleteService [(ngModel)]="curso." [suggestions]="serviceSuggest" [minLength]="1" field="label"
-              [multiple]="true" [style]="{'width':'100%'}">
+              <p-autoComplete #autocompleteService [(ngModel)]="resultsService" [suggestions]="suggestService" [minLength]="1" field="label"
+              [multiple]="true" [style]="{'width':'100%'}"  (onFocus)="filterServices($event)" (onBlur)="visiblePanelBlur($event)" (completeMethod)="filterLabelsMultiple($event)">
               <ng-template let-servicesSelecionados pTemplate="selectedItem">
                 <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
                   [ngStyle]="{'background': servicesSelecionados.color, 'margin': marginPx, 'border': bw }">
-                  {{ formadoresSelecionados.nombreCompleto }}
+                  {{ servicesSelecionados.label }}
                 </div>
               </ng-template>
-            </p-autoComplete> -->
-            <!-- <input
-                type="text"
-                class="form-control"
-                pInputText
-                name="codigo"
-                [(ngModel)]="curso.tipo"
-              /> -->
+            </p-autoComplete>
             </div>
             <div class="col-lg-6 col-md-6">
                 <label>{{ 'form.busquedaCursos.literal.estado' | translate}}</label>
@@ -1026,83 +1019,44 @@
   <!-- Cabecera -->
   <div
     class="card-header header-ficha"
-    (click)="abreCierraFicha('inscription')"
+    (click)="irBusquedaInscripcciones()"
   >
-    <div *ngIf="!esFichaActiva('inscription')" class="form-row">
+    <div class="form-row">
       <div class="col-lg-1 col-md-2">
         <div class="img-colegiado">
           <i class="fa fa-pencil-square icon-ficha"></i>
         </div>
       </div>
       <div class="col-lg-11 col-md-10">
-        <div class="d-flex justify-content-start mt-2">
-          <label class="mr-auto title-ficha">Inscripciones</label>
+        <div class="d-flex justify-content-start mb-1">
+          <label class="mr-auto title-ficha">
+            Inscripciones
+          </label>
+        </div>
+        <div class="d-flex justify-content-between col-lg-7">
+          <label
+            >Pendientes:
+            <span>{{ inscription.pendientes }}</span>
+          </label>
+          <label
+            >Aceptadas:
+             <span>{{ inscription.aprobadas }}</span>
+          </label>
+          <label
+            >Rechazadas:
+            <span>{{ inscription.rechazadas }}</span>
+          </label>
+          <label
+            >Canceladas:
+            <span>{{ inscription.canceladas }}</span>
+          </label>
+          <label
+            >Plazas Totales:
+             <span>{{ inscription.totales }}</span>
+          </label>
         </div>
       </div>
     </div>
-    <div
-      *ngIf="esFichaActiva('inscription')"
-      class=" header-ficha-open d-flex justify-content-start align-items-center"
-    >
-      <div class="img-colegiado">
-        <i class="fa fa-pencil-square icon-ficha"></i>
-      </div>
-      <label class="title-ficha">Inscripciones</label>
-      <i class="fa fa-angle-up ml-auto"></i>
-    </div>
-  </div>
-
-  <!-- Cuerpo -->
-  <div class="card-body card-body-ficha" *ngIf="esFichaActiva('inscription')">
-    <div *ngIf="esFichaActiva('inscription')" class="card-body card-body-ficha">
-      <!--
-        <div *ngIf="!historico" class="row">
-          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultipleAsistencia}"
-            [(selection)]="selectedDatosAsistencia" pageLinks="4" dataKey="idAsistencia" [responsive]="true" selectionMode="multiple"
-            #tableAsistencia class="tabla-listado" [value]="datosAsistencia" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both"
-            [rows]="selectedAsistencia">
-            <p-column *ngFor="let col of colsAsistencia" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-              [filter]="true" filterMatchMode="contains">
-
-              <ng-template *ngIf="col.field =='asistencia'" pTemplate="body" let-dato="rowData">
-                <p-dropdown class="select-form" [(ngModel)]="dato[col.field]" [options]="comboAsistencia" [filter]="false" placeholder="{{'general.boton.seleccionar' | translate}}"
-                  name="type"></p-dropdown>
-              </ng-template>
-
-            </p-column>
-
-            <ng-template pTemplate="paginatorLeft">
-              <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">Mostrando registros del {{tableAsistencia.first + 1}} al {{tableAsistencia.first + tableAsistencia.rows}}
-                  de un total de {{tableAsistencia.totalRecords}}</label>
-                <label class="pr-3 numSeleccionados">Seleccionados: {{numSelectedAsistencia}}</label>
-                <label>{{ "general.message.mostrar" | translate}}</label>
-                <p-dropdown [(ngModel)]="selectedAsistencia" [options]="rowsPerPage"></p-dropdown>
-                <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-                <div class="ml-3 selectAllNotification">
-                  <p-checkbox (onChange)="onChangeSelectAllAsistencias()" [(ngModel)]="selectAllAsistencias" binary="true" label="Seleccionar todo"
-                    name="groupname"></p-checkbox>
-                </div>
-                <label class="ml-3 seleccionMultiple" [ngClass]="{'seleccion-multiple': selectMultipleAsistencia}" (click)="isSelectMultipleAsistencia(); selectedDatosAsistencia=false">
-                  <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
-              </div>
-            </ng-template>
-
-
-          </p-dataTable>
-        </div>
-      -->
-    </div>
-  </div>
-  <div class="card-footer" *ngIf="esFichaActiva('inscription')">
-    <!--
-      <div class="text-right main-button">
-        <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" iconPos="left" label="Descargar"></button>
-        <button pButton type="button" (click)="unCheckAsist()" [disabled]="!checkAsistencias" icon="fa fa-times" iconPos="left" label="Desmarcar"></button>
-        <button pButton type="button" (click)="checkAsist()" [disabled]="!checkAsistencias" icon="fa fa-check" iconPos="left" label="Marcar"></button>
-        <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
-      </div>
-    -->
   </div>
 </div>
 
@@ -1572,8 +1526,8 @@
           emptyMessage="{{ 'general.message.no.registros' | translate}}"
           [ngClass]="{ customCursor: selectMultipleSessions }"
           [(selection)]="selectedDatosSessions"
-          (onRowSelect)="irEditarEvento(selectedDatosSessions)" 
-          (onRowUnselect)="actualizaSeleccionadosEvents(selectedDatosSessions)"
+          (onRowSelect)="irEditarSession(selectedDatosSessions)" 
+          (onRowUnselect)="actualizaSeleccionadosSessions(selectedDatosSessions)"
           pageLinks="4"
           dataKey="idEvento"
           [responsive]="true"
@@ -1767,59 +1721,44 @@
   <!-- Cuerpo -->
   <div class="card-body card-body-ficha" *ngIf="esFichaActiva('carga')">
     <div *ngIf="esFichaActiva('carga')" class="card-body card-body-ficha">
-      <!--
-        <div *ngIf="!historico" class="row">
-          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultipleAsistencia}"
-            [(selection)]="selectedDatosAsistencia" pageLinks="4" dataKey="idAsistencia" [responsive]="true" selectionMode="multiple"
-            #tableAsistencia class="tabla-listado" [value]="datosAsistencia" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both"
-            [rows]="selectedAsistencia">
-            <p-column *ngFor="let col of colsAsistencia" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-              [filter]="true" filterMatchMode="contains">
+      <div class="row">
+          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultipleCargas}"
+          [(selection)]="selectedDatosCargas" pageLinks="4" dataKey="idNotificacion" [responsive]="true" selectionMode="multiple" #tableCargas class="tabla-listado"
+          [value]="datosCargas" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedCargas">
+          <p-column *ngFor="let col of colsCargas" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+            [filter]="true" filterMatchMode="contains">
+          </p-column>
 
-              <ng-template *ngIf="col.field =='asistencia'" pTemplate="body" let-dato="rowData">
-                <p-dropdown class="select-form" [(ngModel)]="dato[col.field]" [options]="comboAsistencia" [filter]="false" placeholder="{{'general.boton.seleccionar' | translate}}"
-                  name="type"></p-dropdown>
-              </ng-template>
-
-            </p-column>
-
-            <ng-template pTemplate="paginatorLeft">
-              <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">Mostrando registros del {{tableAsistencia.first + 1}} al {{tableAsistencia.first + tableAsistencia.rows}}
-                  de un total de {{tableAsistencia.totalRecords}}</label>
-                <label class="pr-3 numSeleccionados">Seleccionados: {{numSelectedAsistencia}}</label>
-                <label>{{ "general.message.mostrar" | translate}}</label>
-                <p-dropdown [(ngModel)]="selectedAsistencia" [options]="rowsPerPage"></p-dropdown>
-                <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-                <div class="ml-3 selectAllNotification">
-                  <p-checkbox (onChange)="onChangeSelectAllAsistencias()" [(ngModel)]="selectAllAsistencias" binary="true" label="Seleccionar todo"
-                    name="groupname"></p-checkbox>
-                </div>
-                <label class="ml-3 seleccionMultiple" [ngClass]="{'seleccion-multiple': selectMultipleAsistencia}" (click)="isSelectMultipleAsistencia(); selectedDatosAsistencia=false">
-                  <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+          <ng-template pTemplate="paginatorLeft">
+            <div class="mostrar d-flex text-right justify-content-end">
+              <label class="pr-3 registros-totales">Mostrando registros del {{tableCargas.first + 1}} al {{tableCargas.first + tableCargas.rows}} de un total de {{tableCargas.totalRecords}}</label>
+              <label class="pr-3 numSeleccionados">Seleccionados: {{numSelectedCargas}}</label>
+              <label>{{ "general.message.mostrar" | translate}}</label>
+              <p-dropdown [(ngModel)]="selectedCargas" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesCargas($event)"></p-dropdown>
+              <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+              <div class="ml-3 selectAllNotification">
+                <p-checkbox (onChange)="onChangeSelectAllCargas()" [(ngModel)]="selectAllCargas" binary="true" label="{{'tablas.literal.seleccionarTodo' | translate}}"
+                  name="groupname"></p-checkbox>
               </div>
-            </ng-template>
+              <label class="ml-3 seleccionMultiple" [ngClass]="{'seleccion-multiple': selectMultipleCargas}" (click)="isSelectMultipleCargas(); selectedDatosCargas=false">
+                <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+            </div>
+          </ng-template>
 
-
-          </p-dataTable>
-        </div>
-      -->
+        </p-dataTable>
+      </div>
     </div>
   </div>
   <div class="card-footer" *ngIf="esFichaActiva('carga')">
     <div class="text-right main-button">
-      <!--
-        <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" iconPos="left" label="Descargar"></button>
-        <button pButton type="button" (click)="unCheckAsist()" [disabled]="!checkAsistencias" icon="fa fa-times" iconPos="left" label="Desmarcar"></button>
-        <button pButton type="button" (click)="checkAsist()" [disabled]="!checkAsistencias" icon="fa fa-check" iconPos="left" label="Marcar"></button>
-      -->
-      <button
-        pButton
-        type="button"
-        icon="fa fa-search"
-        iconPos="left"
-        label="{{ 'general.boton.guardar' | translate }}"
-      ></button>
+
+      <button pButton type="button" icon="fa fa-close" iconPos="left" label="Autovalidar"></button>
+      <p-fileUpload mode="basic" #pUploadFile  chooseLabel="Cargar Archivo"
+       class="edit my-0 mx-auto main-button" name="file"  accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+       (change)="getFile($event, form)" (click)="changeDisabledButton()" (onClear)="changeDisabledButton()"></p-fileUpload>
+      <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" iconPos="left" label="Descargar"></button>
+      <button pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+     
     </div>
   </div>
 </div>

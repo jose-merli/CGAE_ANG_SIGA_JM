@@ -2560,6 +2560,7 @@ export class FichaColegialComponent implements OnInit {
       "reload",
       "si"
     );
+    sessionStorage.setItem("personaBody", JSON.stringify(this.generalBody));
     this.router.navigate(["/turnoOficioCenso"]);
   }
   
