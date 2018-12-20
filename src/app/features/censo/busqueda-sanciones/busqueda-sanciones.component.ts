@@ -21,6 +21,8 @@ export class BusquedaSancionesComponent implements OnInit {
   progressSpinner: boolean = false;
   selectMultiple: boolean = false;
   selectAll: boolean = false;
+  isHistory: boolean = false;
+  hideHistory: boolean = false;
 
   tipo: SelectItem[];
   tipoSancion: SelectItem[];
@@ -218,6 +220,13 @@ export class BusquedaSancionesComponent implements OnInit {
 
   search() {
     // Llamada al rest
+
+    if (!this.isHistory) {
+      this.body.chkArchivadas = false;
+    } else {
+      this.body.chkArchivadas = undefined;
+    }
+
     this.progressSpinner = true;
     this.selectAll = false;
     this.selectMultiple = false;
@@ -344,5 +353,16 @@ export class BusquedaSancionesComponent implements OnInit {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
+  }
+
+  setItalic(datoH) {
+    if (datoH.archivada == "No") return false;
+    else return true;
+  }
+
+  historico() {
+    this.isHistory = true;
+    this.hideHistory = true;
+    this.search();
   }
 }

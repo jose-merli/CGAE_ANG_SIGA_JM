@@ -6,6 +6,7 @@ import { Location } from "@angular/common";
 import { PersonaItem } from "../../../models/PersonaItem";
 import { SelectItem } from "primeng/api";
 import { cardService } from "../../../_services/cardSearch.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-ficha-inscripcion",
@@ -40,7 +41,8 @@ export class FichaInscripcionComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private location: Location,
-    private cardService: cardService
+    private cardService: cardService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -226,5 +228,14 @@ export class FichaInscripcionComponent implements OnInit {
       });
       console.log(data);
     });
+  }
+
+  irFichaCurso() {
+    sessionStorage.setItem(
+      "codigoCursoInscripcion",
+      JSON.stringify(this.inscripcion.codigoCurso)
+    );
+    sessionStorage.setItem("isInscripcion", JSON.stringify(true));
+    this.router.navigate(["/fichaCurso"]);
   }
 }

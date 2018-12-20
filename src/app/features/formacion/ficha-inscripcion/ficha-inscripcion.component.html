@@ -6,8 +6,8 @@
   </div>
 
 
-   <!-- TARJETAS CURSOS -->
-   <div class="card">
+  <!-- TARJETAS CURSOS -->
+  <div class="card">
     <!-- Cabecera -->
     <div class="card-header header-ficha">
       <div class="form-row">
@@ -21,34 +21,26 @@
             <label class="mr-auto title-ficha">{{ 'formacion.fichaInscripcion.datosCursos.cabecera' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between">
-              <label
-              >{{ 'form.busquedaCursos.literal.codigoCurso' | translate }}</label>
-              <span>{{ inscripcion.codigoCurso }}</span>
-
-              <label
-              >{{ 'formacion.busquedaInscripcion.nombreCurso' | translate }}</label>
-              <span>{{ inscripcion.nombreCurso }}</span>
-
-              <label
-              >{{ 'form.busquedaCursos.literal.fechaImparticionDesde' | translate }}</label>
-              <span>{{ inscripcion.fechaImparticionDesdeFormat }}</span>
-
-              <label
-              >{{ 'form.busquedaCursos.literal.fechaImparticionHasta' | translate }}</label>
-              <span>{{ inscripcion.fechaImparticionHastaFormat }}</span>
-
-              <label
-              >{{ 'form.busquedaCursos.literal.temas' | translate }}</label>
-              <span>{{ inscripcion.temas }}</span>
-
-              <label
-              >{{ 'formacion.busquedaInscripcion.estadoCurso' | translate }}</label>
-              <span>{{ inscripcion.estadoCurso }}</span>
-              
+            <label>{{ 'form.busquedaCursos.literal.codigoCurso' | translate }}</label>
+            <span>{{ inscripcion.codigoCurso }}</span>
+  
+            <label>{{ 'formacion.busquedaInscripcion.nombreCurso' | translate }}</label>
+            <span>{{ inscripcion.nombreCurso }}</span>
+  
+            <label>{{ 'form.busquedaCursos.literal.fechaImparticionDesde' | translate }}</label>
+            <span>{{ inscripcion.fechaImparticionDesdeFormat }}</span>
+  
+            <label>{{ 'form.busquedaCursos.literal.fechaImparticionHasta' | translate }}</label>
+            <span>{{ inscripcion.fechaImparticionHastaFormat }}</span>
+  
+            <label>{{ 'form.busquedaCursos.literal.temas' | translate }}</label>
+            <span>{{ inscripcion.temas }}</span>
+  
+            <label>{{ 'formacion.busquedaInscripcion.estadoCurso' | translate }}</label>
+            <span>{{ inscripcion.estadoCurso }}</span>
+            <i class="fa fa-undo float-right" (click)="irFichaCurso()"></i>
           </div>
-          
         </div>
-        <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
 
@@ -155,7 +147,7 @@
         <label class="title-ficha">{{"formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
         <div class="ml-auto">
           <!-- <i class="fa fa-rotate-right redirect"></i> -->
-          <i class="fa fa-angle-up "></i>
+          <i class="fa fa-angle-up " ></i>
         </div>
       </div>
     </div>
