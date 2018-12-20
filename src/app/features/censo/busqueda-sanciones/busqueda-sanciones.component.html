@@ -96,7 +96,7 @@
                         <label>{{"menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal" | translate}}</label>
                         <p-dropdown class="select-form" [options]="tipoSancion" [(ngModel)]="body.tipoSancion"></p-dropdown>
                     </div>
-                    
+
                     <div class="form-group col-lg-3 col-md-3"></div>
                 </div>
             </div>
@@ -134,6 +134,8 @@
                         <label>{{ "general.message.mostrar" | translate}}</label>
                         <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                         <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                        <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+                            <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
                     </div>
                 </ng-template>
 
@@ -141,6 +143,7 @@
                     <div class="text-right main-button">
                       <button *ngIf="!hideHistory" (click)="historico()" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
                       <button *ngIf="hideHistory" (click)="hideHistory = false; isHistory = false; search()" pButton type="button" icon="fa fa-undo " iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+                      <button *ngIf="selectedDatos && selectedDatos != ''" (click)="updateRegistry(selectedDatos)" pButton type="button" icon="	fa fa-undo " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
                     </div>
                   </p-footer>
 

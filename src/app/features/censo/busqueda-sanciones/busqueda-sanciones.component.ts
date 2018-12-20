@@ -337,13 +337,15 @@ export class BusquedaSancionesComponent implements OnInit {
   }
 
   onRowSelect(selectedDatos) {
-    // Guardamos los filtros
-    sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
+    if (!this.selectMultiple) {
+      // Guardamos los filtros
+      sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
 
-    // Guardamos los datos seleccionados para pasarlos a la otra pantalla
-    sessionStorage.setItem("rowData", JSON.stringify(selectedDatos));
+      // Guardamos los datos seleccionados para pasarlos a la otra pantalla
+      sessionStorage.setItem("rowData", JSON.stringify(selectedDatos));
 
-    this.router.navigate(["/detalleSancion"]);
+      this.router.navigate(["/detalleSancion"]);
+    }
   }
 
   onChangeRowsPerPages(event) {
@@ -361,5 +363,33 @@ export class BusquedaSancionesComponent implements OnInit {
     this.isHistory = true;
     this.hideHistory = true;
     this.search();
+  }
+
+  isSelectMultiple() {
+    this.selectMultiple = !this.selectMultiple;
+    if (!this.selectMultiple) {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
+  updateRegistry(selectedDatos) {
+    this.body = new BusquedaSancionesItem();
+
+    this.body = selectedDatos;
+    this.body.restablecer = true;
+
+    this.sigaServices
+      .post("busquedaSanciones_updateSanction", this.body)
+      .subscribe(
+        data => {},
+        error => {},
+        () => {
+          this.search();
+        }
+      );
   }
 }
