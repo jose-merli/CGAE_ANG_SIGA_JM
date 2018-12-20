@@ -181,7 +181,9 @@ export class SigaServices {
     comunicaciones_search: 'comunicaciones/search',
     comunicaciones_guardarConf: 'comunicaciones/detalle/configuracion',
     comunicaciones_destinatarios: 'comunicaciones/detalle/destinatarios',
-    consultas_search: 'consultas/search'
+    consultas_search: 'consultas/search',
+    consultas_borrar: 'consultas/borrarConsulta',
+    consultas_listadoPlantillas: 'consultas/plantillasconsulta'
 
 
   };

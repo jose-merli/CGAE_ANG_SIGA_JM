@@ -59,9 +59,6 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
       { field: 'plantilla', header: 'Plantilla' },
     ]
 
-    this.datos = [
-      { id: '1', plantilla: 'prueba' }
-    ]
   }
 
   abreCierraFicha() {
@@ -130,6 +127,21 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("consultasSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("consultasSearch"));
+      this.getResultados();
     }
+  }
+
+  getResultados() {
+    this.sigaServices.postPaginado("consultas_listadoPlantillas", "?numPagina=1", this.body.idConsulta).subscribe(
+      data => {
+        debugger;
+        this.datos = JSON.parse(data["body"]);
+        console.log(this.datos)
+        this.body = this.datos[0];
+      },
+      err => {
+        console.log(err);
+      });
+
   }
 }

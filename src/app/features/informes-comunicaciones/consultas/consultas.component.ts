@@ -37,6 +37,8 @@ export class ConsultasComponent implements OnInit {
   clasesComunicaciones: any[];
   searchConsultas: ConsultasObject = new ConsultasObject();
   bodySearch: ConsultasSearchItem = new ConsultasSearchItem();
+  eliminarArray: any[];
+
 
 
   @ViewChild('table') table: DataTable;
@@ -48,6 +50,8 @@ export class ConsultasComponent implements OnInit {
 
   ngOnInit() {
 
+
+    this.bodySearch.generica = '0';
 
 
     if (sessionStorage.getItem("consultasSearch") != null) {
@@ -166,12 +170,12 @@ export class ConsultasComponent implements OnInit {
     }
   }
 
-  onBuscar() {
+  buscar() {
     this.showResultados = true;
     this.selectMultiple = false;
     this.selectedDatos = "";
     this.progressSpinner = true;
-    sessionStorage.removeItem("consultasSearch")
+    sessionStorage.removeItem("consultasSearch");
     this.getResultados();
 
   }
@@ -184,6 +188,7 @@ export class ConsultasComponent implements OnInit {
           this.progressSpinner = false;
           this.searchConsultas = JSON.parse(data["body"]);
           this.datos = this.searchConsultas.consultaItem;
+          console.log(this.datos)
           this.body = this.datos[0];
 
         },
@@ -195,33 +200,19 @@ export class ConsultasComponent implements OnInit {
       );
   }
 
-  isButtonDisabled() {
-    if (this.bodySearch.nombre != '' && this.bodySearch.nombre != null) {
-      return false;
-    } else if (this.bodySearch.idObjetivo != '' && this.bodySearch.idObjetivo != null) {
-      return false;
-    } else if (this.bodySearch.idClaseComunicacion != '' && this.bodySearch.idClaseComunicacion != null) {
-      return false;
-    } else if (this.bodySearch.idModulo != '' && this.bodySearch.idModulo != null) {
-      return false;
-    } else if (this.bodySearch.descripcion != '' && this.bodySearch.descripcion != null) {
-      return false;
-    } else if (this.bodySearch.generica != '' && this.bodySearch.generica != null) {
-      return false;
-    }
-    return true;
-  }
 
-  onDuplicar() {
+
+  duplicar() {
 
   }
+  borrar(dato) {
 
-  onBorrar(dato) {
     this.confirmationService.confirm({
-      message: this.translateService.instant("messages.deleteConfirmation"),
+      // message: this.translateService.instant("messages.deleteConfirmation"),
+      message: '¿Está seguro de cancelar los' + dato.length + 'envíos seleccionados',
       icon: "fa fa-trash-alt",
       accept: () => {
-        this.onConfirmarBorrar(dato);
+        this.confirmarCancelar(dato);
       },
       reject: () => {
         this.msgs = [
@@ -237,24 +228,35 @@ export class ConsultasComponent implements OnInit {
     });
   }
 
-  onConfirmarBorrar(dato) {
-    if (!this.selectAll) {
-      let x = this.datos.indexOf(dato);
-      this.datos.splice(x, 1);
-      this.selectedDatos = [];
-      this.selectMultiple = false;
-      this.showSuccess('Se ha eliminado el destinatario correctamente')
-    } else {
-      this.selectedDatos = [];
-      this.showSuccess('Se han eliminado los destinatarios correctamente')
-    }
+
+  confirmarCancelar(dato) {
+
+
+    this.eliminarArray = [];
+    dato.forEach(element => {
+      this.eliminarArray.push(element.idConsulta);
+    });
+    this.sigaServices.post("consultas_borrar", this.eliminarArray).subscribe(
+      data => {
+        this.showSuccess('Se ha eliminado el envío correctamente');
+      },
+      err => {
+        this.showFail('Error al eliminar el envío');
+        console.log(err);
+      },
+      () => {
+        this.table.reset();
+        this.buscar();
+
+      }
+    );
   }
 
   //búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      this.onBuscar();
+      this.buscar();
     }
   }
 
@@ -268,7 +270,7 @@ export class ConsultasComponent implements OnInit {
 
 
 
-  onAddConsulta() {
+  addConsulta() {
     this.router.navigate(['/fichaConsulta']);
     sessionStorage.removeItem("consultasSearch")
   }
