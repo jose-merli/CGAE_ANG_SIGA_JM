@@ -1,26 +1,27 @@
 import { Location } from "@angular/common";
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
+import { saveAs } from "file-saver/FileSaver";
 import { Router } from "../../../../../node_modules/@angular/router";
 import { ConfirmationService } from "../../../../../node_modules/primeng/api";
-import {
-  Dropdown,
-  AutoComplete
-} from "../../../../../node_modules/primeng/primeng";
+import { AutoComplete, Dropdown } from "../../../../../node_modules/primeng/primeng";
 import { TranslateService } from "../../../commons/translate";
 import { CertificadoItem } from "../../../models/CertificadoItem";
 import { DatosCursosItem } from "../../../models/DatosCursosItem";
 import { DatosCursosObject } from "../../../models/DatosCursosObject";
+import { DatosInscripcionItem } from "../../../models/DatosInscripcionItem";
 import { ErrorItem } from "../../../models/ErrorItem";
 import { FormadorCursoItem } from "../../../models/FormadorCursoItem";
 import { FormadorCursoObject } from "../../../models/FormadorCursoObject";
 import { esCalendar } from "../../../utils/calendar";
 import { AuthenticationService } from "../../../_services/authentication.service";
 import { SigaServices } from "../../../_services/siga.service";
+import { DomSanitizer } from "../../../../../node_modules/@angular/platform-browser";
 
 @Component({
   selector: "app-ficha-curso",
   templateUrl: "./ficha-curso.component.html",
-  styleUrls: ["./ficha-curso.component.scss"]
+  styleUrls: ["./ficha-curso.component.scss"],
+  encapsulation: ViewEncapsulation.None
 })
 export class FichaCursoComponent implements OnInit {
   openFicha;
@@ -35,7 +36,7 @@ export class FichaCursoComponent implements OnInit {
   fieldNoEditable: boolean = true;
   progressSpinner: boolean = false;
   curso: DatosCursosItem = new DatosCursosItem();
-  
+
   // COMBOS
   comboVisibilidad: any[];
   comboColegios: any[];
@@ -64,6 +65,13 @@ export class FichaCursoComponent implements OnInit {
   @ViewChild("tableSessions")
   tableSessions;
 
+   //Cargas
+   @ViewChild("tableCargas")
+   tableCargas;
+
+   @ViewChild("pUploadFile")
+   pUploadFile;
+
   //Colegios
   @ViewChild("colegio")
   colegio: Dropdown;
@@ -80,7 +88,9 @@ export class FichaCursoComponent implements OnInit {
   asignarTutor = 1;
   desasignarTutor = 0;
   temasSuggest;
-  serviceSuggest: any[] = [];
+  comboService: any[] = [];
+  suggestService: any[] = [];
+  resultsService: any[] = [];
 
   //Formadores
   colsFormadores;
@@ -114,7 +124,9 @@ export class FichaCursoComponent implements OnInit {
   selectMultipleSessions: boolean = false;
   numSelectedSessions: number = 0;
   comboSessions;
-  resultsService;
+
+  //Inscripciones
+  inscription: DatosInscripcionItem;
 
   //Certificados
   colsCertificates;
@@ -133,6 +145,23 @@ export class FichaCursoComponent implements OnInit {
   comboCalificaciones;
   certificatesUpdate = [];
 
+  //Cargas
+  colsCargas;
+  selectedItemCargas;
+  datosCargas = [];
+  selectedDatosCargas;
+  selectAllCargas: any;
+  selectedCargas: number = 10;
+  selectMultipleCargas: boolean = false;
+  numSelectedCargas: number = 0;
+  comboCargas;
+  archivoDisponible: boolean = false;
+  existeArchivo: boolean = false;
+  save_file: any;
+
+  file: File = undefined;
+
+
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
@@ -140,18 +169,20 @@ export class FichaCursoComponent implements OnInit {
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private domSanitizer: DomSanitizer
   ) {}
 
   ngOnInit() {
     this.progressSpinner = true;
     this.getFichasPosibles();
     this.getCombosDatosGenerales();
+    this.getCombosFormadores()
     this.getColsResultsFormadores();
     this.getColsResultsSessions();
     this.getColsResultsCertificates();
-    this.getComboRoles();
-    this.getComboTipoCoste();
+    this.getColsResultsCargas();
+   
     sessionStorage.removeItem("isFormacionCalendar");
     sessionStorage.removeItem("abrirFormador");
 
@@ -233,10 +264,10 @@ export class FichaCursoComponent implements OnInit {
         );
       }
 
-      if (  this.curso.autovalidacionInscripcion == "1") {
+      if (this.curso.autovalidacionInscripcion == "1") {
         this.curso.autovalidacion = true;
       } else {
-        this.curso.autovalidacion = false;     
+        this.curso.autovalidacion = false;
       }
 
       if (
@@ -254,10 +285,21 @@ export class FichaCursoComponent implements OnInit {
       }
 
       this.getSessions();
-
+      this.getServicesCourse();
+      this.getCountInscriptions();
       this.progressSpinner = false;
 
-      //4. Modo nuevo
+      //4. Viene de la ficha de inscripcion
+    } else if (sessionStorage.getItem("isInscripcion") == "true") {
+      
+      this.curso = new DatosCursosItem();
+      this.curso.idCurso = JSON.parse(sessionStorage.getItem("codigoCursoInscripcion"));
+      this.searchCourse(this.curso.idCurso);
+      
+      sessionStorage.removeItem("isInscripcion");
+      sessionStorage.removeItem("codigoCursoInscripcion");
+
+      //5. Modo nuevo
     } else {
       this.modoEdicion = false;
       this.curso = new DatosCursosItem();
@@ -279,6 +321,12 @@ export class FichaCursoComponent implements OnInit {
     this.getComboVisibilidad();
     this.getComboColegios();
     this.getTemas();
+    this.getComboServicios();
+  }
+
+  getCombosFormadores(){
+    this.getComboRoles();
+    this.getComboTipoCoste();
   }
 
   arreglarFechasEvento() {
@@ -367,6 +415,47 @@ export class FichaCursoComponent implements OnInit {
     );
   }
 
+  getComboServicios() {
+    // obtener tipos servicios
+    this.sigaServices.get("fichaCursos_getServicesCourse").subscribe(
+      n => {
+        this.comboService = n.combooItems;
+        this.arregloTildesCombo(this.comboService);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getServicesCourse() {
+    this.progressSpinner = true;
+    this.sigaServices
+      .getParam(
+        "fichaCursos_getServicesSpecificCourse",
+        "?idCurso=" + this.curso.idCurso
+      )
+      .subscribe(
+        n => {
+          this.resultsService = n.combooItems;
+
+          this.resultsService.forEach(e => {
+            if (e.color == undefined) {
+              e.color = this.getRandomColor();
+            }
+          });
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
   onChangeSelectVisibilidad(event) {
     if (event.value == 1) {
       this.deshabilitarCombCol = true;
@@ -407,6 +496,8 @@ export class FichaCursoComponent implements OnInit {
       this.curso.autovalidacionInscripcion = "0";
     }
 
+    this.curso.tipoServicios = this.resultsService;
+
     if (this.modoEdicion) {
       //Enviamos al back todos los formadores editados
       url = "fichaCursos_updateCourse";
@@ -420,13 +511,17 @@ export class FichaCursoComponent implements OnInit {
         this.progressSpinner = false;
         this.modoEdicion = true;
 
-        if (JSON.parse(data.body).error.code == 200) {
-          this.showSuccess();
-        } else {
-          this.showFail(JSON.parse(data.body).error.description);
-        }
+        // if (JSON.parse(data.body).error.code == 200) {
+        //   this.showSuccess();
+        // } else {
+        //   this.showFail(JSON.parse(data.body).error.description);
+        // }
 
-        this.curso.idCurso = JSON.parse(data.body).id;
+        this.showSuccess();
+
+        if (!this.modoEdicion) {
+          this.curso.idCurso = JSON.parse(data.body).id;
+        }
       },
       err => {
         this.progressSpinner = false;
@@ -528,6 +623,8 @@ export class FichaCursoComponent implements OnInit {
         }
 
         this.getSessions();
+        this.getServicesCourse();
+        this.getCountInscriptions();
       },
       err => {
         this.progressSpinner = false;
@@ -536,6 +633,98 @@ export class FichaCursoComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+  }
+
+  filterServices(event) {
+    let query = event.query;
+
+    if (
+      this.comboService.length > 0 &&
+      this.comboService.length != this.resultsService.length
+    ) {
+      if (this.resultsService.length > 0) {
+        this.suggestService = [];
+
+        this.comboService.forEach(element => {
+          let findService = this.resultsService.find(
+            x => x.value === element.value
+          );
+          if (findService == undefined) {
+            this.suggestService.push(element);
+          }
+        });
+
+        this.resultsService.forEach(e => {
+          if (e.color == undefined) {
+            e.color = this.getRandomColor();
+          }
+        });
+      } else {
+        this.suggestService = JSON.parse(JSON.stringify(this.comboService));
+      }
+      this.autocompleteService.suggestionsUpdated = true;
+      this.autocompleteService.panelVisible = true;
+      this.autocompleteService.focusInput();
+    } else {
+      if (this.autocompleteService.highlightOption != undefined) {
+        this.resultsService.forEach(e => {
+          if (e.color == undefined) {
+            e.color = this.getRandomColor();
+          }
+        });
+      }
+
+      this.autocompleteService.panelVisible = false;
+      this.autocompleteService.focusInput();
+    }
+  }
+
+  filterLabelsMultiple(event) {
+    let query = event.query;
+    this.suggestService = [];
+
+    this.comboService.forEach(element => {
+      if (element.label.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        let findService = this.resultsService.find(
+          x => x.value === element.value
+        );
+        if (findService == undefined) {
+          this.suggestService.push(element);
+        }
+      }
+    });
+
+    this.resultsService.forEach(e => {
+      if (e.color == undefined) {
+        e.color = this.getRandomColor();
+      }
+    });
+  }
+
+  resetSuggestServices() {
+    this.autocompleteService.panelVisible = false;
+  }
+
+  visiblePanelBlur(event) {
+    if (this.autocompleteService.highlightOption != undefined) {
+      this.autocompleteService.highlightOption.color = this.getRandomColor();
+      this.resultsService.push(this.autocompleteService.highlightOption);
+      this.autocompleteService.highlightOption = undefined;
+    }
+    this.autocompleteService.panelVisible = false;
+  }
+
+  visiblePanelOnSelect() {
+    this.autocompleteService.panelVisible = false;
+  }
+
+  showInfoServices() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "info",
+      summary: "Información",
+      detail: "No hay servicios definidos para este curso."
+    });
   }
 
   //TARJETA FORMADORES
@@ -1251,24 +1440,55 @@ export class FichaCursoComponent implements OnInit {
 
   irEditarSession(id) {
     if (id.length >= 1 && this.selectMultipleSessions == false) {
-      // sessionStorage.setItem("modoEdicionNotify", "true");
+      sessionStorage.setItem("modoEdicionSession", "true");
       sessionStorage.removeItem("eventoSelected");
       sessionStorage.setItem("eventoSelected", JSON.stringify(id));
       sessionStorage.setItem("sessions", JSON.stringify(this.datosSessions));
-      this.router.navigate(["/editarNotificacion"]);
+      this.router.navigate(["/fichaEventos"]);
       sessionStorage.setItem("fichaAbierta", "true");
     }
   }
 
-  actualizaSeleccionadosNotifications(selectedDatosNotifications) {
-    this.numSelectedSessions = selectedDatosNotifications.length;
+  actualizaSeleccionadosSessions(selectedDatosSessions) {
+    this.numSelectedSessions = selectedDatosSessions.length;
   }
 
-  onChangeRowsPerPagesNotifications(event) {
+  onChangeRowsPerPagesSessions(event) {
     this.selectedSessions = event.value;
     this.changeDetectorRef.detectChanges();
     this.tableSessions.reset();
   }
+
+
+  //Inscripciones
+  irBusquedaInscripcciones(){
+    this.router.navigate(["/buscarInscripciones"]);
+  }
+
+  getCountInscriptions(){
+    this.inscription = new DatosInscripcionItem();
+    this.progressSpinner = true;
+    this.sigaServices
+      .getParam(
+        "fichaCursos_getCountIncriptions",
+        "?idCurso=" + this.curso.idCurso
+      )
+      .subscribe(
+        n => {
+          this.inscription = n;
+
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
 
   //Certificados
 
@@ -1408,6 +1628,27 @@ export class FichaCursoComponent implements OnInit {
     }
   }
 
+
+  //Cargas
+
+  getColsResultsCargas() {
+    this.colsCargas = [
+      {
+        field: "nombreCompleto",
+        header: "administracion.parametrosGenerales.literal.nombre"
+      },
+      {
+        field: "fecha",
+        header: "censo.resultadosSolicitudesModificacion.literal.fecha"
+      },
+      {
+        field: "totalesCorrectas",
+        header: "agenda.fichaEventos.datosFormadores.cabecera"
+      }
+    ];
+
+  }
+
   //FUNCIONES GENERALES
   getFichasPosibles() {
     this.fichasPosibles = [
@@ -1444,6 +1685,119 @@ export class FichaCursoComponent implements OnInit {
         activa: false
       }
     ];
+  }
+
+  downloadTemplateFile() {
+    this.progressSpinner = true;
+    this.sigaServices
+      .postDownloadFiles("fichaCursos_downloadTemplateFile", this.curso)
+      .subscribe(
+        data => {
+          const blob = new Blob([data], { type: "text/csv" });
+          saveAs(blob, "PlantillaInscripciones.xls");
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  actualizaSeleccionadosCargas(selectedDatosCargas) {
+    this.numSelectedCargas = selectedDatosCargas.length;
+  }
+
+  onChangeRowsPerPagesCargas(event) {
+    this.selectedCargas = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tableCargas.reset();
+  }
+
+  onChangeSelectAllCargas() {
+    if (this.selectAllCargas === true) {
+      this.selectMultipleCargas = true;
+      this.selectedDatosCargas = this.datosCargas;
+      this.numSelectedCargas = this.datosCargas.length;
+    } else {
+      this.selectedDatosCargas = [];
+      this.numSelectedCargas = 0;
+      this.selectMultipleCargas = false;
+    }
+  }
+
+  getFile(event: any) {
+    // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
+    let fileList: FileList = event.target.files;
+
+    let nombreCompletoArchivo = fileList[0].name;
+    let extensionArchivo = nombreCompletoArchivo.substring(
+      nombreCompletoArchivo.lastIndexOf("."),
+      nombreCompletoArchivo.length
+    );
+
+    if (
+      extensionArchivo == null ||
+      extensionArchivo.trim() == "" ||
+      !/\.(xls|xlsx)$/i.test(extensionArchivo.trim().toUpperCase())
+    ) {
+      // Mensaje de error de formato de imagen y deshabilitar boton guardar
+      this.file = undefined;
+      this.archivoDisponible = false;
+      this.existeArchivo = false;
+    } else {
+      // se almacena el archivo para habilitar boton guardar
+      this.file = fileList[0];
+      this.archivoDisponible = true;
+      //
+      this.existeArchivo = true;
+      let urlCreator = window.URL;
+      this.save_file = this.domSanitizer.bypassSecurityTrustUrl(
+        urlCreator.createObjectURL(this.file)
+      );
+
+      this.uploadFile();
+    }
+  }
+
+  uploadFile() {
+    this.progressSpinner = true;
+    if (this.file != undefined) {
+      this.sigaServices
+        .postSendContent("cargasMasivasEtiquetas_uploadFile", this.file)
+        .subscribe(
+          data => {
+            this.file = null;
+            this.progressSpinner = false;
+
+            this.showSuccess();
+          },
+          error => {
+            console.log(error);
+            this.showFail("Error en la subida del fichero.");
+            this.progressSpinner = false;
+          },
+          () => {
+            this.pUploadFile.clear();
+            this.progressSpinner = false;
+          }
+        );
+    }
+  }
+
+  isSelectMultipleCargas() {
+    this.selectMultipleCargas = !this.selectMultipleCargas;
+    if (!this.selectMultipleCargas) {
+      this.selectedDatosCargas = [];
+      this.numSelectedCargas = 0;
+    } else {
+      this.selectAllCargas = false;
+      this.selectedDatosCargas = [];
+      this.numSelectedCargas = 0;
+    }
   }
 
   //Funciones controlan las fichas

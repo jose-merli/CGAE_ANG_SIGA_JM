@@ -434,8 +434,14 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       
       }
 
-      //7. Viene directo
-    } else {
+      //7. Viene en modo edicion sesion
+    } else if(sessionStorage.getItem("modoEdicionSession") == "true"){
+     //Inficamos que estamos en modo edicion
+     this.modoEdicionEvento = true;
+      this.newEvent = JSON.parse(sessionStorage.getItem("eventoSelected"));
+    
+     //8. Viene directo
+    }else {
       this.isFormacionCalendar = false;
       this.newEvent = new EventoItem();
       this.disabledTipoEvento = false;
@@ -1171,6 +1177,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.autoComplete.focusInput();
     }
   }
+  
 
   resetSuggestTrainers() {
     this.autoComplete.panelVisible = false;

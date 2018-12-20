@@ -1,3 +1,5 @@
+import { ComboItem } from "./ComboItem";
+
 export class DatosCursosItem {
   idCurso: string;
   visibilidad: string;
@@ -29,6 +31,7 @@ export class DatosCursosItem {
   lugar: string;
   autovalidacion: boolean;
   adjunta: string;
+  tipoServicios: ComboItem[];
 
   flagArchivado: number;
   autovalidacionInscripcion: string;

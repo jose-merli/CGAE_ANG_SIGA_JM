@@ -1,3 +1,4 @@
+import { ErrorItem } from "./ErrorItem";
 export class FichaColegialGeneralesItem {
   idPersona: String;
   nif: String;
@@ -35,5 +36,6 @@ export class FichaColegialGeneralesItem {
   fechaInicioEtiq: Date;
   guiaJudicial: String;
   publicidad: String;
+  error: ErrorItem;
   constructor() {}
 }
