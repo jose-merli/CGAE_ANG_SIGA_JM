@@ -305,9 +305,6 @@ export class BusquedaSancionesComponent implements OnInit {
     this.body.chkRehabilitado = false;
     this.body.fechaDesdeDate = undefined;
     this.body.fechaHastaDate = undefined;
-    this.body.chkArchivadas = false;
-    this.body.fechaArchivadaDesdeDate = undefined;
-    this.body.fechaArchivadaHastaDate = undefined;
     this.body.refColegio = "";
     this.body.refConsejo = "";
     this.body.tipoSancion = "";
