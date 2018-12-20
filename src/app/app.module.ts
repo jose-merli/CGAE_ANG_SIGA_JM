@@ -1,5 +1,5 @@
 import { BrowserModule } from "@angular/platform-browser";
-import { NgModule } from "@angular/core";
+import { NgModule, LOCALE_ID } from "@angular/core";
 import { HttpModule } from "@angular/http";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -9,6 +9,8 @@ import { MenubarModule } from "primeng/menubar";
 import { PanelMenuModule } from "primeng/panelmenu";
 import { MenuItem } from "primeng/api";
 import { DialogModule } from "primeng/dialog";
+import es from "@angular/common/locales/es";
+import { registerLocaleData } from "@angular/common";
 
 import { AuthGuard } from "./_guards/auth.guards";
 import { OldSigaServices } from "./_services/oldSiga.service";
@@ -279,6 +281,8 @@ import { ExpedientesComponent } from "./features/censo/expedientesCenso/expedien
 import { RegtelComponent } from "./features/censo/regtel/regtel.component";
 import { TurnoOficioComponent } from "./features/censo/turnoOficioCenso/turnoOficio.component";
 
+registerLocaleData(es);
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -506,9 +510,6 @@ import { TurnoOficioComponent } from "./features/censo/turnoOficioCenso/turnoOfi
     ExpedientesComponent,
     RegtelComponent,
     TurnoOficioComponent
-
-
-
   ],
   imports: [
     BrowserModule,
@@ -574,7 +575,8 @@ import { TurnoOficioComponent } from "./features/censo/turnoOficioCenso/turnoOfi
       useClass: JwtInterceptor,
       multi: true
     },
-    CookieService
+    CookieService,
+    { provide: LOCALE_ID, useValue: "es-ES" }
   ],
   bootstrap: [AppComponent]
 })

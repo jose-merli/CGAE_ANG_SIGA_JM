@@ -118,7 +118,7 @@
         <button (click)="isBuscar(false)" pButton type="button" icon="fa fa-search"
           iconPos="left" label="{{'general.boton.search' | translate}}"></button> -->
           <button (click)="changeColsAndData()" pButton type="button " icon="fa fa-eraser " iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
-          <button [disabled]="!formBusqueda.valid" (click)="isBuscar(false)" pButton type="button" icon="fa fa-search"
+          <button [disabled]="!formBusqueda.valid" (click)="isBuscar()" pButton type="button" icon="fa fa-search"
           iconPos="left" label="{{'general.boton.search' | translate}}"></button>
           <!-- <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button> -->
           <!-- <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button> -->
@@ -189,9 +189,11 @@
           </div>
         </p-footer>
       </p-dataTable>
-
     </div>
   </div>
+  <div class="text-right main-button">
+      <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+    </div>
   <!--FIN DE PRINCIPAL-->
   <app-dialog></app-dialog>
 </div>

@@ -314,6 +314,10 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     }
   }
 
+  clear() {
+    this.msgs = [];
+  }
+
   getLetrado() {
     if (JSON.parse(sessionStorage.getItem("isLetrado")) == true) {
       this.isEditable = true;
@@ -477,7 +481,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       .post("busquedaNocolegiado_deleteNoColegiado", item)
       .subscribe(
         data => {
-          this.progressSpinner = false;
+        
           if (selectedDatos.length == 1) {
             this.showSuccess(
               this.translateService.instant("messages.deleted.success")
@@ -497,6 +501,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           this.progressSpinner = false;
         },
         () => {
+          this.progressSpinner = false;
           this.historico = true;
           this.selectedDatos = [];
           this.numSelected = 0;

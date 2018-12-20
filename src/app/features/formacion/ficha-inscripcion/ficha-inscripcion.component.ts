@@ -3,6 +3,9 @@ import { SigaServices } from "../../../_services/siga.service";
 import { DatosInscripcionItem } from "../../../models/DatosInscripcionItem";
 import { esCalendar } from "../../../utils/calendar";
 import { Location } from "@angular/common";
+import { PersonaItem } from "../../../models/PersonaItem";
+import { SelectItem } from "primeng/api";
+import { cardService } from "../../../_services/cardSearch.service";
 
 @Component({
   selector: "app-ficha-inscripcion",
@@ -18,8 +21,12 @@ export class FichaInscripcionComponent implements OnInit {
   msgs;
   modoEdicion: boolean = false;
   es: any = esCalendar;
+  isValidate: boolean;
+  isEditable: boolean = false;
 
+  body: PersonaItem = new PersonaItem();
   inscripcion: DatosInscripcionItem = new DatosInscripcionItem();
+
   rowsPerPage;
   cols;
 
@@ -27,7 +34,14 @@ export class FichaInscripcionComponent implements OnInit {
   comboPrecio: any[];
   comboModoPago: any[];
 
-  constructor(private sigaServices: SigaServices, private location: Location) {}
+  comboTipoIdentificacion: SelectItem[];
+  selectedTipoIdentificacion: any = {};
+
+  constructor(
+    private sigaServices: SigaServices,
+    private location: Location,
+    private cardService: cardService
+  ) {}
 
   ngOnInit() {
     this.getFichasPosibles();
@@ -40,6 +54,21 @@ export class FichaInscripcionComponent implements OnInit {
       this.inscripcion = JSON.parse(
         sessionStorage.getItem("inscripcionCurrent")
       );
+
+      // Cargamos los datos de la persona asignada a dicha inscripcion
+      this.sigaServices
+        .post("accesoFichaPersona_searchPersona", this.inscripcion.idPersona)
+        .subscribe(
+          data => {
+            if (data != undefined && data != null) {
+              this.body = JSON.parse(data["body"]);
+              this.obtenerTiposIdentificacion();
+            }
+          },
+          error => {
+            console.log(error);
+          }
+        );
     }
   }
 
@@ -148,5 +177,54 @@ export class FichaInscripcionComponent implements OnInit {
 
   backTo() {
     this.location.back();
+  }
+
+  obtenerTiposIdentificacion() {
+    this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
+      n => {
+        this.comboTipoIdentificacion = n.combooItems;
+
+        // obtener la identificacion a seleccionar
+        if (this.body.tipoIdentificacion != undefined) {
+          let ident = this.comboTipoIdentificacion.find(
+            item => item.value == this.body.tipoIdentificacion
+          );
+
+          this.selectedTipoIdentificacion = ident.value;
+        } else {
+          let ident: SelectItem;
+          ident.value = "";
+          this.selectedTipoIdentificacion = ident;
+        }
+
+        this.comprobarValidacion();
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  comprobarValidacion() {
+    if (
+      (this.body.tipoIdentificacion != undefined ||
+        this.body.tipoIdentificacion != null) &&
+      this.body.nif != undefined &&
+      this.body.nombre != undefined &&
+      this.body.nombre.trim() != "" &&
+      this.body.apellido1 != undefined &&
+      this.body.apellido2 != ""
+    ) {
+      this.isValidate = true;
+    } else {
+      this.isValidate = false;
+    }
+
+    this.cardService.newCardValidator$.subscribe(data => {
+      data.map(result => {
+        result.cardNotario = this.isValidate;
+      });
+      console.log(data);
+    });
   }
 }
