@@ -1,32 +1,32 @@
 export class BusquedaSancionesItem {
   // Búsqueda por Letrado
-  nif: string;
-  multa: string;
+  nif: String;
+  multa: String;
   nombre: String;
-  primerApellido: string;
-  segundoApellido: string;
+  primerApellido: String;
+  segundoApellido: String;
 
   // Búsqueda por Colegio
-  colegio: string;
+  colegio: String;
   idColegios: String[];
-  idColegio: string;
-  tipoSancion: string;
-  refConsejo: string;
-  refColegio: string;
+  idColegio: String;
+  tipoSancion: String;
+  refConsejo: String;
+  refColegio: String;
 
   chkRehabilitado: boolean;
-  rehabilitado: string;
+  rehabilitado: String;
   fecha: Date;
   fechaAcuerdoHasta: Date;
-  fechaDesde: string;
+  fechaDesde: String;
   fechaDesdeDate: Date;
-  fechaHasta: string;
+  fechaHasta: String;
   fechaHastaDate: Date;
   chkArchivadas: boolean;
   chkAcuerdo: boolean;
-  fechaArchivadaDesde: string;
+  fechaArchivadaDesde: String;
   fechaArchivadaDesdeDate: Date;
-  fechaArchivadaHasta: string;
+  fechaArchivadaHasta: String;
   fechaArchivadaHastaDate: Date;
 
   fechaFirmezaDesdeDate: Date;
@@ -39,29 +39,29 @@ export class BusquedaSancionesItem {
   fechaResolucionHastaDate: Date;
 
   // Búsqueda por Sanciones
-  tipo: string;
-  origen: string;
-  estado: string;
-  fechaAcuerdo: string;
+  tipo: String;
+  origen: String;
+  estado: String;
+  fechaAcuerdo: String;
   fechaAcuerdoDate: Date;
-  fechaArchivada: string;
+  fechaArchivada: String;
   fechaArchivadaDate: Date;
-  archivada: string;
+  archivada: String;
   chkFirmeza: boolean;
-  fechaFirmeza: string;
+  fechaFirmeza: String;
   fechaFirmezaDate: Date;
-  firmeza: string;
-  fechaRehabilitado: string;
+  firmeza: String;
+  fechaRehabilitado: String;
   fechaRehabilitadoDate: Date;
 
-  fechaNacimiento: string;
+  fechaNacimiento: String;
   fechaNacimientoDate: Date;
-  texto: string;
-  observaciones: string;
-  idPersona: string;
-  idInstitucionS: string;
+  texto: String;
+  observaciones: String;
+  idPersona: String;
+  idInstitucionS: String;
 
-  tipoFecha: string;
+  tipoFecha: String;
 
   constructor() {}
 }

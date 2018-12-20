@@ -47,6 +47,8 @@ import { ComboEtiquetasItem } from "./../../../models/ComboEtiquetasItem";
 import { ComboItem } from "../../administracion/parametros/parametros-generales/parametros-generales.component";
 import { DatosColegiadosItem } from "../../../models/DatosColegiadosItem";
 import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
+import { BusquedaSancionesItem } from "../../../models/BusquedaSancionesItem";
+import { BusquedaSancionesObject } from "../../../models/BusquedaSancionesObject";
 
 @Component({
   selector: "app-ficha-colegial",
@@ -66,6 +68,8 @@ export class FichaColegialComponent implements OnInit {
   sociedadesBody: PersonaJuridicaObject = new PersonaJuridicaObject();
   otrasColegiacionesBody: DatosColegiadosObject = new DatosColegiadosObject();
   certificadosBody: FichaColegialCertificadosObject = new FichaColegialCertificadosObject();
+  bodySanciones: BusquedaSancionesItem = new BusquedaSancionesItem();
+  bodySearchSanciones: BusquedaSancionesObject = new BusquedaSancionesObject();
 
   isLetrado: boolean;
   permisos: boolean = true;
@@ -127,6 +131,7 @@ export class FichaColegialComponent implements OnInit {
   datosSociedades: any[] = [];
   file: File = undefined;
   edadCalculada: any;
+  dataSanciones: any[];
 
   // Datos Generales
   generalTratamiento: any[];
@@ -150,7 +155,7 @@ export class FichaColegialComponent implements OnInit {
   imagenPersona: any;
   partidoJudicialObject: DatosDireccionesObject = new DatosDireccionesObject();
   partidoJudicialItem: DatosDireccionesItem = new DatosDireccionesItem();
-  displayServicios:boolean = false;
+  displayServicios: boolean = false;
   // etiquetas
   showGuardar: boolean = false;
   mensaje: String = "";
@@ -182,6 +187,7 @@ export class FichaColegialComponent implements OnInit {
   // selectedDatos;
   selectedDatosDirecciones;
   selectedDatosBancarios;
+  selectedDatosSanciones;
 
   @ViewChild("auto")
   autoComplete: AutoComplete;
@@ -263,14 +269,18 @@ export class FichaColegialComponent implements OnInit {
   ngOnInit() {
     // Cogemos los datos de la busqueda de Colegiados
     this.getLetrado();
-    if(sessionStorage.getItem("filtrosBusquedaColegiados")){
-      this.persistenciaColeg= new DatosColegiadosItem();
-      this.persistenciaColeg= JSON.parse(sessionStorage.getItem("filtrosBusquedaColegiados"));
+    if (sessionStorage.getItem("filtrosBusquedaColegiados")) {
+      this.persistenciaColeg = new DatosColegiadosItem();
+      this.persistenciaColeg = JSON.parse(
+        sessionStorage.getItem("filtrosBusquedaColegiados")
+      );
       sessionStorage.removeItem("filtrosBusquedaColegiados");
     }
-    if(sessionStorage.getItem("filtrosBusquedaNoColegiados")){
+    if (sessionStorage.getItem("filtrosBusquedaNoColegiados")) {
       this.persistenciaNoCol = new NoColegiadoItem();
-      this.persistenciaNoCol = JSON.parse(sessionStorage.getItem("filtrosBusquedaNoColegiados"));
+      this.persistenciaNoCol = JSON.parse(
+        sessionStorage.getItem("filtrosBusquedaNoColegiados")
+      );
       sessionStorage.removeItem("filtrosBusquedaNoColegiados");
     }
     if (
@@ -283,11 +293,13 @@ export class FichaColegialComponent implements OnInit {
       this.checkGeneralBody = new FichaColegialGeneralesItem();
       this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
-      this.checkColegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      this.checkColegialesBody = JSON.parse(
+        sessionStorage.getItem("personaBody")
+      );
       this.idPersona = this.generalBody.idPersona;
-      if(sessionStorage.getItem("esColegiado")){
+      if (sessionStorage.getItem("esColegiado")) {
         this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
-      }else{
+      } else {
         this.esColegiado = true;
       }
       this.generalBody.colegiado = this.esColegiado;
@@ -318,7 +330,7 @@ export class FichaColegialComponent implements OnInit {
     this.onInitSociedades();
 
     this.onInitOtrasColegiaciones();
-
+    this.searchSanciones();
     // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
     this.colsColegiales = [
       {
@@ -560,7 +572,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   //CONTROL DE PERMISOS
-  
+
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = "12";
@@ -582,13 +594,15 @@ export class FichaColegialComponent implements OnInit {
           }
         } else {
           sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
           this.router.navigate(["/errorAcceso"]);
         }
       }
     );
   }
-
 
   // CONTROL DE PESTAÑAS ABRIR Y CERRAR
 
@@ -693,11 +707,17 @@ export class FichaColegialComponent implements OnInit {
   backTo() {
     sessionStorage.removeItem("personaBody");
     sessionStorage.removeItem("esNuevoNoColegiado");
-    if(this.persistenciaColeg!= undefined){
-      sessionStorage.setItem("filtrosBusquedaColegiados", JSON.stringify(this.persistenciaColeg));
+    if (this.persistenciaColeg != undefined) {
+      sessionStorage.setItem(
+        "filtrosBusquedaColegiados",
+        JSON.stringify(this.persistenciaColeg)
+      );
     }
-    if(this.persistenciaNoCol != undefined){
-      sessionStorage.setItem("filtrosBusquedaNoColegiados", JSON.stringify(this.persistenciaNoCol));
+    if (this.persistenciaNoCol != undefined) {
+      sessionStorage.setItem(
+        "filtrosBusquedaNoColegiados",
+        JSON.stringify(this.persistenciaNoCol)
+      );
     }
     // this.cardService.searchNewAnnounce.next(null);
     //this.location.back();
@@ -764,6 +784,10 @@ export class FichaColegialComponent implements OnInit {
     else return true;
   }
 
+  setItalica(datoH) {
+    if (datoH.archivada == "No") return false;
+    else return true;
+  }
   isValidDNI(dni: String): boolean {
     return (
       dni &&
@@ -774,10 +798,10 @@ export class FichaColegialComponent implements OnInit {
     );
   }
 
-  activadoBotonesLetrado(){
-    if(this.isLetrado){
+  activadoBotonesLetrado() {
+    if (this.isLetrado) {
       return true;
-    }else{
+    } else {
       return this.camposDesactivados;
     }
   }
@@ -1095,9 +1119,9 @@ export class FichaColegialComponent implements OnInit {
             this.progressSpinner = false;
             this.activacionGuardarGenerales();
             this.generalError = JSON.parse(error["error"]);
-            if(this.generalError.error.message.toString()){
+            if (this.generalError.error.message.toString()) {
               this.showFailDetalle(this.generalError.error.message.toString());
-            }else{
+            } else {
               this.showFail();
             }
           }
@@ -1160,9 +1184,9 @@ export class FichaColegialComponent implements OnInit {
             this.progressSpinner = false;
             this.activacionGuardarGenerales();
             this.generalError = JSON.parse(error["error"]);
-            if(this.generalError.error.message.toString()){
+            if (this.generalError.error.message.toString()) {
               this.showFailDetalle(this.generalError.error.message.toString());
-            }else{
+            } else {
               this.showFail();
             }
           }
@@ -1213,9 +1237,9 @@ export class FichaColegialComponent implements OnInit {
           this.activacionGuardarGenerales();
           this.cerrarAuditoria();
           this.generalError = JSON.parse(error["error"]);
-          if(this.generalError.error.message.toString()){
+          if (this.generalError.error.message.toString()) {
             this.showFailDetalle(this.generalError.error.message.toString());
-          }else{
+          } else {
             this.showFail();
           }
         }
@@ -1746,32 +1770,36 @@ export class FichaColegialComponent implements OnInit {
     else return true;
   }
 
-  inscritoAItem(){
-    if (this.inscritoSeleccionado == "01"){
+  inscritoAItem() {
+    if (this.inscritoSeleccionado == "01") {
       this.colegialesBody.situacionresidente = "0";
       this.colegialesBody.comunitario = "1";
-    }else if (this.inscritoSeleccionado == "10"){
+    } else if (this.inscritoSeleccionado == "10") {
       this.colegialesBody.situacionresidente = "1";
       this.colegialesBody.comunitario = "0";
-    }else if (this.inscritoSeleccionado == "11"){
+    } else if (this.inscritoSeleccionado == "11") {
       this.colegialesBody.situacionresidente = "1";
       this.colegialesBody.comunitario = "1";
-    }else{
+    } else {
       this.colegialesBody.situacionresidente = "0";
       this.colegialesBody.comunitario = "0";
     }
   }
 
-  itemAInscrito(){
-    if(this.colegialesBody.situacionresidente != undefined){
-      this.inscritoSeleccionado = (this.colegialesBody.situacionresidente.toString() +""+ this.colegialesBody.comunitario.toString());
+  itemAInscrito() {
+    if (this.colegialesBody.situacionresidente != undefined) {
+      this.inscritoSeleccionado =
+        this.colegialesBody.situacionresidente.toString() +
+        "" +
+        this.colegialesBody.comunitario.toString();
     }
   }
 
-  activacionGuardarColegiales(){
+  activacionGuardarColegiales() {
     this.inscritoAItem();
     if (
-      JSON.stringify(this.checkColegialesBody) != JSON.stringify(this.colegialesBody) 
+      JSON.stringify(this.checkColegialesBody) !=
+      JSON.stringify(this.colegialesBody)
     ) {
       this.activarGuardarColegiales = true;
     } else {
@@ -1779,57 +1807,63 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
-  pasarFechas(){
-    this.colegialesBody.incorporacionDate = this.arreglarFecha(this.colegialesBody.incorporacion);
-    this.colegialesBody.fechapresentacionDate = this.arreglarFecha(this.colegialesBody.fechapresentacion);
-    this.colegialesBody.fechaTitulacionDate = this.arreglarFecha(this.colegialesBody.fechaTitulacion);
-    this.colegialesBody.fechaJuraDate = this.arreglarFecha(this.colegialesBody.fechaJura);
+  pasarFechas() {
+    this.colegialesBody.incorporacionDate = this.arreglarFecha(
+      this.colegialesBody.incorporacion
+    );
+    this.colegialesBody.fechapresentacionDate = this.arreglarFecha(
+      this.colegialesBody.fechapresentacion
+    );
+    this.colegialesBody.fechaTitulacionDate = this.arreglarFecha(
+      this.colegialesBody.fechaTitulacion
+    );
+    this.colegialesBody.fechaJuraDate = this.arreglarFecha(
+      this.colegialesBody.fechaJura
+    );
   }
-  
-  numMutualistaCheck(){
-    if(this.colegialesBody.nMutualista != ""){
+
+  numMutualistaCheck() {
+    if (this.colegialesBody.nMutualista != "") {
       this.activacionGuardarColegiales();
-      if (
-        Number(this.colegialesBody.nMutualista)
-      ) {
+      if (Number(this.colegialesBody.nMutualista)) {
         return true;
-      } else{
+      } else {
         this.colegialesBody.nMutualista = "";
         return false;
       }
-    }else{
+    } else {
       return true;
     }
   }
 
-  guardarColegiales(){
+  guardarColegiales() {
     // Meter datos colegiales aquí para guardar y probar.
     this.inscritoAItem();
     this.pasarFechas();
     this.sigaServices
-    .post("fichaDatosColegiales_datosColegialesUpdate", this.colegialesBody)
-    .subscribe(
-      data => {
-        this.checkColegialesBody = new FichaColegialColegialesItem();
+      .post("fichaDatosColegiales_datosColegialesUpdate", this.colegialesBody)
+      .subscribe(
+        data => {
+          this.checkColegialesBody = new FichaColegialColegialesItem();
 
-        this.checkColegialesBody = JSON.parse(
-          JSON.stringify(this.colegialesBody)
-        );
-        this.activacionGuardarColegiales();
-        // this.body = JSON.parse(data["body"]);
-        this.obtenerEtiquetasPersonaJuridicaConcreta();
-        this.progressSpinner = false;
-        this.showSuccess();
-        this.onInitColegiales();
-      },
-      error => {
-        console.log(error);
-        this.progressSpinner = false;
-        this.activacionGuardarGenerales();
-        this.showFail();
-      }
-      // EVENTO PARA ACTIVAR GUARDAR AL BORRAR UNA ETIQUETA
-    );
+          this.checkColegialesBody = JSON.parse(
+            JSON.stringify(this.colegialesBody)
+          );
+          this.activacionGuardarColegiales();
+          // this.body = JSON.parse(data["body"]);
+          this.obtenerEtiquetasPersonaJuridicaConcreta();
+          this.progressSpinner = false;
+          this.showSuccess();
+          this.onInitColegiales();
+        },
+        error => {
+          console.log(error);
+          this.progressSpinner = false;
+          this.activacionGuardarGenerales();
+          this.showFail();
+        }
+        // EVENTO PARA ACTIVAR GUARDAR AL BORRAR UNA ETIQUETA
+      );
   }
 
   onInitColegiales() {
@@ -1851,9 +1885,7 @@ export class FichaColegialComponent implements OnInit {
     this.itemAInscrito();
     this.checkColegialesBody = new FichaColegialColegialesItem();
 
-    this.checkColegialesBody = JSON.parse(
-      JSON.stringify(this.colegialesBody)
-    );
+    this.checkColegialesBody = JSON.parse(JSON.stringify(this.colegialesBody));
 
     this.activacionGuardarColegiales();
   }
@@ -2092,7 +2124,7 @@ export class FichaColegialComponent implements OnInit {
       }
     }
   }
- 
+
   redireccionarCurriculares(dato) {
     if (dato && dato.length < 2 && !this.selectMultiple) {
       // enviarDatos = dato[0];
@@ -2498,9 +2530,7 @@ export class FichaColegialComponent implements OnInit {
           sessionStorage.setItem("editar", "true");
           sessionStorage.setItem("fichaColegial", "true");
           sessionStorage.setItem("datosCuenta", JSON.stringify(dato[0]));
-          sessionStorage.setItem(
-            "usuarioBody",JSON.stringify(dato[0])
-          );
+          sessionStorage.setItem("usuarioBody", JSON.stringify(dato[0]));
         } else {
           sessionStorage.setItem("editar", "false");
         }
@@ -2550,66 +2580,184 @@ export class FichaColegialComponent implements OnInit {
 
   irFacturacion() {
     let idInstitucion = this.generalBody.idInstitucion;
-      let us = (this.sigaServices.getOldSigaUrl() + "CEN_Facturacion.do?granotmp="+new Date().getMilliseconds()+"&idInstitucion="+idInstitucion+"&tipoCliente=1&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8");
-    sessionStorage.setItem(
-      "url",
-      JSON.stringify(us)
-    );
-    this.router.navigate(["/facturas"]);  
-   }
+    let us =
+      this.sigaServices.getOldSigaUrl() +
+      "CEN_Facturacion.do?granotmp=" +
+      new Date().getMilliseconds() +
+      "&idInstitucion=" +
+      idInstitucion +
+      "&tipoCliente=1&idPersona=" +
+      this.generalBody.idPersona +
+      "&accion=ver&tipoAcceso=8";
+    sessionStorage.setItem("url", JSON.stringify(us));
+    this.router.navigate(["/facturas"]);
+  }
   irAuditoria() {
     let idInstitucion = this.generalBody.idInstitucion;
-    let us = (this.sigaServices.getOldSigaUrl() + "CEN_Historico.do?granotmp="+new Date().getMilliseconds()+"&idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipo=1&tipoAcceso=1");
-    
-    this.router.navigate(["/auditoria"]);  
+    let us =
+      this.sigaServices.getOldSigaUrl() +
+      "CEN_Historico.do?granotmp=" +
+      new Date().getMilliseconds() +
+      "&idInstitucion=" +
+      idInstitucion +
+      "&idPersona=" +
+      this.generalBody.idPersona +
+      "&accion=ver&tipo=1&tipoAcceso=1";
+
+    this.router.navigate(["/auditoria"]);
   }
   irComunicaciones() {
     let idInstitucion = this.generalBody.idInstitucion;
-    let us = this.sigaServices.getOldSigaUrl() + "CEN_Comunicaciones.do?granotmp="+new Date().getMilliseconds()+"&idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipo=1&tipoAcceso=1";
-    sessionStorage.setItem(
-      "url",
-      JSON.stringify(us)
-    );
-    this.router.navigate(["/comunicacionesCenso"]); 
+    let us =
+      this.sigaServices.getOldSigaUrl() +
+      "CEN_Comunicaciones.do?granotmp=" +
+      new Date().getMilliseconds() +
+      "&idInstitucion=" +
+      idInstitucion +
+      "&idPersona=" +
+      this.generalBody.idPersona +
+      "&accion=ver&tipo=1&tipoAcceso=1";
+    sessionStorage.setItem("url", JSON.stringify(us));
+    this.router.navigate(["/comunicacionesCenso"]);
   }
 
   irExpedientes() {
     let idInstitucion = this.generalBody.idInstitucion;
-    let us =this.sigaServices.getOldSigaUrl() + "CEN_Expedientes.do?granotmp="+new Date().getMilliseconds()+"&idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipo=1&tipoAcceso=1";
-    sessionStorage.setItem(
-      "url",
-      JSON.stringify(us)
-    );
-      this.router.navigate(["/expedientesCenso"]);
+    let us =
+      this.sigaServices.getOldSigaUrl() +
+      "CEN_Expedientes.do?granotmp=" +
+      new Date().getMilliseconds() +
+      "&idInstitucion=" +
+      idInstitucion +
+      "&idPersona=" +
+      this.generalBody.idPersona +
+      "&accion=ver&tipo=1&tipoAcceso=1";
+    sessionStorage.setItem("url", JSON.stringify(us));
+    this.router.navigate(["/expedientesCenso"]);
   }
 
   irTurnoOficio() {
     let idInstitucion = this.generalBody.idInstitucion;
     // let  us = this.sigaServices.getOldSigaUrl() +"SIGA/CEN_BusquedaClientes.do?noReset=true";
-    
+
     // let  us = this.sigaServices.getOldSigaUrl() + "JGR_DefinirTurnosLetrado.do?granotmp="+new Date().getMilliseconds()+"&accion=ver&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"";
-    let  us = this.sigaServices.getOldSigaUrl() + "CEN_BusquedaClientes.do?modo=Editar&seleccionarTodos=&colegiado=1&avanzada=&actionModal=&verFichaLetrado=&tablaDatosDinamicosD="+this.generalBody.idPersona+"%2C"+idInstitucion+"%2CNINGUNO%2C1&filaSelD=1" 
-    sessionStorage.setItem(
-      "url",
-      JSON.stringify(us)
-    );
+    let us =
+      this.sigaServices.getOldSigaUrl() +
+      "CEN_BusquedaClientes.do?modo=Editar&seleccionarTodos=&colegiado=1&avanzada=&actionModal=&verFichaLetrado=&tablaDatosDinamicosD=" +
+      this.generalBody.idPersona +
+      "%2C" +
+      idInstitucion +
+      "%2CNINGUNO%2C1&filaSelD=1";
+    sessionStorage.setItem("url", JSON.stringify(us));
     sessionStorage.removeItem("reload");
-    sessionStorage.setItem(
-      "reload",
-      "si"
-    );
+    sessionStorage.setItem("reload", "si");
     sessionStorage.setItem("personaBody", JSON.stringify(this.generalBody));
     this.router.navigate(["/turnoOficioCenso"]);
   }
-  
+
   irRegTel() {
     let idInstitucion = this.generalBody.idInstitucion;
-    let us =this.sigaServices.getOldSigaUrl() + "CEN_Censo_DocumentacionRegTel.do?granotmp="+new Date().getMilliseconds()+"&idInstitucion="+idInstitucion+"&idPersona="+this.generalBody.idPersona+"&accion=ver&tipoAcceso=8";
-    sessionStorage.setItem(
-      "url",
-      JSON.stringify(us)
-    );
+    let us =
+      this.sigaServices.getOldSigaUrl() +
+      "CEN_Censo_DocumentacionRegTel.do?granotmp=" +
+      new Date().getMilliseconds() +
+      "&idInstitucion=" +
+      idInstitucion +
+      "&idPersona=" +
+      this.generalBody.idPersona +
+      "&accion=ver&tipoAcceso=8";
+    sessionStorage.setItem("url", JSON.stringify(us));
     this.router.navigate(["/regTel"]);
   }
   // FIN MÉTODOS PARA SERVICIOS DE INTERÉS
+
+  //INICIO METODOS TARJETA SANCIONES
+
+  // Métodos gestionar tabla
+  enablePagination() {
+    if (!this.dataSanciones || this.dataSanciones.length == 0) return false;
+    else return true;
+  }
+
+  onRowSelectSanciones(selectedDatos) {
+    // Guardamos los filtros
+    sessionStorage.setItem("saveFilters", JSON.stringify(this.bodySanciones));
+
+    // Guardamos los datos seleccionados para pasarlos a la otra pantalla
+    sessionStorage.setItem("rowData", JSON.stringify(selectedDatos));
+
+    this.router.navigate(["/detalleSancion"]);
+  }
+
+  searchSanciones() {
+    // Llamada al rest
+
+    this.bodySanciones.chkArchivadas = undefined;
+    this.bodySanciones.idPersona = this.generalBody.idPersona;
+    this.bodySanciones.nif = this.generalBody.nif;
+    this.bodySanciones.tipoFecha = "";
+    this.bodySanciones.idColegios = [];
+    this.bodySanciones.idColegios.push(this.generalBody.idInstitucion);
+
+    this.transformDates(this.bodySanciones);
+
+    this.sigaServices
+      .postPaginado(
+        "busquedaSanciones_searchBusquedaSanciones",
+        "?numPagina=1",
+        this.bodySanciones
+      )
+      .subscribe(
+        data => {
+          this.bodySearchSanciones = JSON.parse(data["body"]);
+          this.dataSanciones = this.bodySearchSanciones.busquedaSancionesItem;
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  transformDates(bodySanciones) {
+    if (
+      bodySanciones.fechaDesdeDate != null &&
+      bodySanciones.fechaDesdeDate != undefined
+    ) {
+      bodySanciones.fechaDesdeDate = new Date(bodySanciones.fechaDesdeDate);
+    } else {
+      bodySanciones.fechaDesdeDate = null;
+    }
+
+    if (
+      bodySanciones.fechaHastaDate != null &&
+      bodySanciones.fechaHastaDate != undefined
+    ) {
+      bodySanciones.fechaHastaDate = new Date(bodySanciones.fechaHastaDate);
+    } else {
+      bodySanciones.fechaHastaDate = null;
+    }
+
+    if (
+      bodySanciones.fechaArchivadaDesdeDate != null &&
+      bodySanciones.fechaArchivadaDesdeDate != undefined
+    ) {
+      bodySanciones.fechaArchivadaDesdeDate = new Date(
+        bodySanciones.fechaArchivadaDesdeDate
+      );
+    } else {
+      bodySanciones.fechaArchivadaDesdeDate = null;
+    }
+
+    if (
+      bodySanciones.fechaArchivadaHastaDate != null &&
+      bodySanciones.fechaArchivadaHastaDate != undefined
+    ) {
+      bodySanciones.fechaArchivadaHastaDate = new Date(
+        bodySanciones.fechaArchivadaHastaDate
+      );
+    } else {
+      bodySanciones.fechaArchivadaHastaDate = null;
+    }
+  }
 }
