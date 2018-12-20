@@ -242,6 +242,11 @@ export class SigaServices {
     fichaCursos_updateCourse: "fichaCursos/updateCourse",
     fichaCursos_releaseOrAnnounceCourse: "fichaCursos/releaseOrAnnounceCourse",
     fichaCursos_searchCourse: "fichaCursos/searchCourse",
+    fichaCursos_getServicesCourse: "fichaCursos/getServicesCourse",
+    fichaCursos_getServicesSpecificCourse:
+      "fichaCursos/getServicesSpecificCourse",
+    fichaCursos_getCountIncriptions: "fichaCursos/getCountIncriptions",
+    fichaCursos_downloadTemplateFile: "fichaCursos/downloadTemplateFile",
 
     busquedaInscripciones_estadosInscripciones:
       "busquedaInscripciones/estadosInscripciones",

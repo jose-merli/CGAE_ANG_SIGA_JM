@@ -34,5 +34,12 @@ export class DatosInscripcionItem {
 
   editar: boolean;
   flagArchivado: number;
+
+  canceladas: string;
+  aprobadas: string;
+  rechazadas: string;
+  pendientes: string;
+  totales: string;
+
   constructor() {}
 }
