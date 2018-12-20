@@ -1101,8 +1101,134 @@
     <div *ngIf="esFichaActiva('certificados')" class="card-footer "></div>
   </div>
 
+
   <!-- END FICHA CERTIFICADOS -->
 
+  <!-- FICHA SANCIONES -->
+  <div class="card">
+    <div
+      class="card-header header-ficha"
+      (click)="abreCierraFicha('sanciones')"
+    >
+      <div *ngIf="!esFichaActiva('sanciones')" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-gavel icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha">{{
+              "menu.certificados" | translate
+            }}</label>
+            <!-- <label class="registros-ficha">(0 registros)</label> -->
+          </div>
+          <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between">
+              <label
+                >{{
+                  "censo.datosDireccion.literal.numero.certificados" | translate
+                }}
+                <span>{{ datosCertificados.length }}</span>
+              </label>
+            </div>
+            <i
+              *ngIf="!esFichaActiva('sanciones')"
+              class="fa fa-angle-down float-right"
+            ></i>
+          </div>
+        </div>
+      </div>
+      <div
+        *ngIf="esFichaActiva('sanciones')"
+        class=" header-ficha-open d-flex justify-content-start align-items-center"
+      >
+        <div class="img-colegiado">
+          <i class="fa fa-gavel icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ "menu.certificados" | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <!-- cuerpo -->
+
+    <div
+      *ngIf="esFichaActiva('sanciones')"
+      class="card-body card-body-ficha"
+    >
+      <div class="row">
+        <p-dataTable
+          emptyMessage="{{ 'general.message.no.registros' | translate}}"
+          [(selection)]="selectedDatos"
+          pageLinks="4"
+          dataKey="idSolicitud"
+          [responsive]="true"
+          selectionMode="multiple"
+          #table
+          class="tabla-listado"
+          [value]="datosCertificados"
+          [sortOrder]="1"
+          [paginator]="activarPaginacionCertificados()"
+          paginatorPosition="both"
+          [rows]="selectedItem"
+          (onRowSelect)="redireccionarCerts(selectedDatos)"
+        >
+          <p-column
+            *ngFor="let col of colsCertificados"
+            [sortable]="true"
+            [field]="col.field"
+            [header]="col.header | translate"
+            filterPlaceholder="{{'general.boton.search' | translate}}"
+            [filter]="true"
+            filterMatchMode="contains"
+          >
+            <ng-template let-datoH="rowData" pTemplate="body">
+              <span
+                *ngIf="setItalic(datoH)"
+                [ngStyle]="{
+                  'font-style': 'italic',
+                  'font-weight': 'bold',
+                  'text-decoration': 'line-through'
+                }"
+                >{{ datoH[col.field] }}</span
+              >
+              <span *ngIf="!setItalic(datoH)">{{ datoH[col.field] }}</span>
+            </ng-template>
+          </p-column>
+
+          <ng-template pTemplate="paginatorLeft">
+            <div class="mostrar d-flex text-right justify-content-end">
+              <label class="pr-3 registros-totales"
+                >Mostrando registros del {{ table.first + 1 }} al
+                {{ table.first + table.rows }} de un total de
+                {{ table.totalRecords }}</label
+              >
+              <!--
+                <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+              -->
+              <label>{{ "general.message.mostrar" | translate }}</label>
+              <p-dropdown
+                [(ngModel)]="selectedItem"
+                [options]="rowsPerPage"
+                (onChange)="onChangeRowsPerPages($event)"
+              ></p-dropdown>
+              <label class="pl-1">
+                {{
+                  "cargaMasivaDatosCurriculares.numRegistros.literal"
+                    | translate
+                }}</label
+              >
+            </div>
+          </ng-template>
+        </p-dataTable>
+      </div>
+      <br />
+    </div>
+    <div *ngIf="esFichaActiva('sanciones')" class="card-footer "></div>
+  </div>
+  
+
+  <!-- END FICHA SANCIONES -->
   <!-- FICHA SOCIEDADES -->
   <div class="card">
     <div

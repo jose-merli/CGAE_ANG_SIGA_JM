@@ -95,6 +95,7 @@ export class FichaColegialComponent implements OnInit {
   colsCurriculares: any = [];
   colsDirecciones: any = [];
   colsBancarios: any = [];
+  colsSanciones: any = [];
 
   rowsPerPage: any = [];
   tipoCuenta: any[] = [];
@@ -497,6 +498,43 @@ export class FichaColegialComponent implements OnInit {
       {
         field: "fechaFirmaProductos",
         header: "Fecha firma del mandato de productos"
+      }
+    ];
+    this.colsSanciones = [
+      {
+        field: "colegio",
+        header: "busquedaSanciones.colegioSancionador.literal"
+      },
+      {
+        field: "nombre",
+        header: "administracion.parametrosGenerales.literal.nombre"
+      },
+      {
+        field: "tipoSancion",
+        header:
+          "menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal"
+      },
+      {
+        field: "refColegio",
+        header:
+          "menu.expediente.sanciones.busquedaPorColegio.RefColegio.literal"
+      },
+      {
+        field: "fechaDesde",
+        header: "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde"
+      },
+      {
+        field: "fechaHasta",
+        header: "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta"
+      },
+      {
+        field: "rehabilitado",
+        header:
+          "menu.expediente.sanciones.busquedaPorColegio.sancionesRehabilitadas.literal"
+      },
+      {
+        field: "firmeza",
+        header: "menu.expediente.sanciones.firmeza.literal"
       }
     ];
 
