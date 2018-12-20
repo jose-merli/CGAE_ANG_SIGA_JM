@@ -95,6 +95,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   datefechaUso: Date;
   datefirmaFecha: Date;
 
+  permisos: Boolean = true;
   body: DatosBancariosItem = new DatosBancariosItem();
   checkBody: DatosBancariosItem = new DatosBancariosItem();
 
@@ -131,6 +132,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    if (sessionStorage.getItem("permisos")) {
+      this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
+    }
     if (sessionStorage.getItem("isLetrado")) {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
       // sessionStorage.removeItem("fichaColegial");
@@ -174,7 +178,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       { name: "Cuenta SCJS", code: "S" }
     ];
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    if(this.usuarioBody[0]!= undefined){
+    if (this.usuarioBody[0] != undefined) {
       this.usuarioBody = this.usuarioBody[0];
     }
     if (sessionStorage.getItem("idPersona")) {
@@ -504,7 +508,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     });
   }
 
-  
   igualInicio() {
     if (JSON.stringify(this.body) == JSON.stringify(this.checkBody)) {
       return true;

@@ -6,11 +6,11 @@
   </div>
 
 
-   <!-- TERJETAS CURSOS -->
+   <!-- TARJETAS CURSOS -->
    <div class="card">
     <!-- Cabecera -->
-    <div class="card-header header-ficha" (click)="abreCierraFicha('curso')">
-      <div *ngIf="!esFichaActiva('curso')" class="form-row">
+    <div class="card-header header-ficha">
+      <div class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
             <i class="fa fa-bell icon-ficha"></i>
@@ -20,52 +20,42 @@
           <div class="d-flex justify-content-start mt-2">
             <label class="mr-auto title-ficha">{{ 'formacion.fichaInscripcion.datosCursos.cabecera' | translate }}</label>
           </div>
+          <div class="d-flex justify-content-between">
+              <label
+              >{{ 'form.busquedaCursos.literal.codigoCurso' | translate }}</label>
+              <span>{{ inscripcion.codigoCurso }}</span>
+
+              <label
+              >{{ 'formacion.busquedaInscripcion.nombreCurso' | translate }}</label>
+              <span>{{ inscripcion.nombreCurso }}</span>
+
+              <label
+              >{{ 'form.busquedaCursos.literal.fechaImparticionDesde' | translate }}</label>
+              <span>{{ inscripcion.fechaImparticionDesdeFormat }}</span>
+
+              <label
+              >{{ 'form.busquedaCursos.literal.fechaImparticionHasta' | translate }}</label>
+              <span>{{ inscripcion.fechaImparticionHastaFormat }}</span>
+
+              <label
+              >{{ 'form.busquedaCursos.literal.temas' | translate }}</label>
+              <span>{{ inscripcion.temas }}</span>
+
+              <label
+              >{{ 'formacion.busquedaInscripcion.estadoCurso' | translate }}</label>
+              <span>{{ inscripcion.estadoCurso }}</span>
+              
+          </div>
+          
         </div>
-      </div>
-      <div *ngIf="esFichaActiva('curso')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
-          <i class="fa fa-bell icon-ficha"></i>
-        </div>
-        <label class="title-ficha">{{ 'formacion.fichaInscripcion.datosCursos.cabecera' | translate }} </label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
 
     <!-- Cuerpo-->
-    <div class="card-body card-body-ficha" *ngIf="esFichaActiva('curso')">
-      <div *ngIf="esFichaActiva('curso')" class="card-body card-body-ficha">
-        <div class="row">
-          <div class="col-lg-6 col-md-6">
-              <label>{{ 'formacion.fichaCursos.datosGenerales.codigo' | translate }}</label>
-              <input type="text" class="form-control" pInputText name="codigo">
-          </div>
-          <div class="col-lg-6 col-md-6">
-              <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate }}</label>
-              <input type="text" class="form-control" pInputText name="nombre">  
-          </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-lg-6 col-md-6">
-            <label>{{ 'agenda.fichaEventos.datosGenerales.fechaInicio' | translate }}</label>
-            <input type="text" class="form-control" pInputText name="fechaInicio">
-          </div>
-          <div class="col-lg-6 col-md-6">
-            <label>{{ 'agenda.fichaEventos.datosGenerales.fechaFin' | translate }}</label>
-            <input type="text" class="form-control" pInputText name="fechaFin">
-          </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-lg-6 col-md-6">
-            <label>{{ 'form.busquedaCursos.literal.temas' | translate }}</label>
-            <input type="text" class="form-control" pInputText name="temas">
-          </div>
-          <div class="col-lg-6 col-md-6">
-            <label>{{ 'formacion.busquedaInscripcion.estadoCurso' | translate }}</label>
-            <input type="text" class="form-control" pInputText name="estadoCurso">
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- <div class="card-body card-body-ficha" *ngIf="esFichaActiva('curso')">
+      
+    </div> -->
   </div>
 
   <!-- FICHA DATOS INSCRIPCION -->
@@ -95,28 +85,26 @@
 
     <!-- Cuerpo-->
     <div class="card-body card-body-ficha" *ngIf="esFichaActiva('inscripcion')">
-      <div class="form-row mb-3">
-          <div class="row">
-            <div class="col-lg-6 col-md-6">
-              <label>{{ 'censo.nuevaSolicitud.fechaSolicitud' | translate }}(*)</label>
-              <p-dropdown class="select-form" [options]="comboCalendars" [filter]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}"
-                name="type" (onChange)="onChangeSelectCalendar($event)" [(ngModel)]="newEvent.idCalendario" [disabled]="modoEdicionEvento || tipoAccesoLectura"></p-dropdown>
-            </div>
-            <div class="col-lg-6 col-md-6">
-              <label>{{ "censo.busquedaSolicitudesModificacion.literal.estado" | translate}}</label>
-              <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]='body.idEstado' [options]="comboEstados"
-              [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>            </div>
-          </div>
-          <div class="row mb-3">
-            <div class="col-lg-6 col-md-6">
-              <label>{{ 'formacion.busquedaInscripcion.asistencia' | translate }}</label>
-              <input type="text" class="form-control" pInputText name="asistencia">
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <label>{{ 'formacion.busquedaInscripcion.calificacion' | translate }}</label>
-                <input type="text" class="form-control" pInputText name="asistencia">
-            </div>
-          </div>
+      <div class="form-row lg-12 md-12">
+        <div class="col-lg-4 col-md-4">
+          <label>{{ 'censo.nuevaSolicitud.fechaSolicitud' | translate }}(*)</label>
+          <p-calendar [locale]="es" [(ngModel)]="inscripcion.fechaSolicitud" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [disabled]="!isEditable"></p-calendar>
+        </div>
+        <div class="col-lg-4 col-md-4">
+          <label>{{ "censo.busquedaSolicitudesModificacion.literal.estado" | translate}}</label>
+          <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]='inscripcion.idEstadoInscripcion'
+            [options]="comboEstados" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!isEditable"></p-dropdown>
+        </div>
+        <div class="col-lg-2 col-md-2">
+          <label>{{ 'formacion.busquedaInscripcion.calificacion' | translate }}</label>
+          <input type="text" class="form-control" pInputText name="calificacion" [(ngModel)]='inscripcion.calificacion' [disabled]="!isEditable">
+        </div>
+      </div>
+      <div class="form-row lg-12 md-12" style="margin-top: 10px">
+        <div class="col-lg-3 col-md-3">
+          <label>{{ 'formacion.busquedaInscripcion.asistencia' | translate }}</label>
+          <p-checkbox name="minimaAsistencia" binary="true" [(ngModel)]='inscripcion.minimaAsistencia' [disabled]="!isEditable"></p-checkbox>
+        </div>
       </div>
     </div>
     <div class="card-footer" *ngIf="esFichaActiva('inscripcion')">
@@ -124,64 +112,106 @@
         <!-- <button pButton (click)="restEvent()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="tipoAccesoLectura"></button>
         <button pButton (click)="saveEvent()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="validateForm() || tipoAccesoLectura"></button>
        -->
-       <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}"></button>
-       <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+       <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="!isEditable"></button>
+       <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="!isEditable"></button>
       </div>
     </div>
   </div>
 
   <!-- TERJETAS PERSONAKES-->
   <div class="card">
-    <!-- Cabecera -->
     <div class="card-header header-ficha" (click)="abreCierraFicha('personales')">
       <div *ngIf="!esFichaActiva('personales')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
-            <i class="fa fa-users icon-ficha"></i>
+            <i class=" fa fa-user   icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mt-2">
-            <label class="mr-auto title-ficha">{{ 'formacion.fichaInscripcion.datosPersonales.cabecera' | translate }}</label>
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha">{{"formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>{{"administracion.usuarios.literal.NIF" | translate}}
+              <span>{{ body.nif }}</span>
+            </label>
+            <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}
+              <span>{{ body.nombre }} {{ body.apellido1 }} {{ body.apellido2 }}</span>
+            </label>
+            <div></div>
+  
+            <div>
+              <!-- <i class="fa fa-rotate-right redirect"></i> -->
+              <i [ngClass]="{ 'fa fa-angle-up': esFichaActiva('personales'), 'fa fa-angle-down': esFichaActiva('personales')} "></i>
+            </div>
+  
           </div>
         </div>
       </div>
       <div *ngIf="esFichaActiva('personales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
-          <i class="fa fa-users icon-ficha"></i>
+          <i class=" fa fa-user   icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{ 'formacion.fichaInscripcion.datosPersonales.cabecera' | translate }}</label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <label class="title-ficha">{{"formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
+        <div class="ml-auto">
+          <!-- <i class="fa fa-rotate-right redirect"></i> -->
+          <i class="fa fa-angle-up "></i>
+        </div>
       </div>
     </div>
-
-    <!-- Cuerpo-->
-    <div class="card-body card-body-ficha" *ngIf="esFichaActiva('personales')">
-      <!-- <div class="row">
-        <div class="col-lg-11 col-md-11">
-          <p-autoComplete #autocomplete [(ngModel)]="results" [suggestions]="formadoresSuggest" [minLength]="1" field="nombreCompleto"
-            [multiple]="true" (onSelect)="visiblePanelOnSelect()" (onUnselect)="resetSuggestTrainers()" (onBlur)="visiblePanelBlur($event)"
-            [style]="{'width':'100%'}">
-            <ng-template let-formadoresSelecionados pTemplate="selectedItem">
-              <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
-                [ngStyle]="{'background': formadoresSelecionados.color, 'margin': marginPx, 'border': bw }">
-                {{ formadoresSelecionados.nombreCompleto }}
-              </div>
-            </ng-template>
-          </p-autoComplete>
-        </div>
-        <div class="col-lg-1 col-md-1">
-          <div class="text-left main-button">
-            <button pButton (click)="filterTrainersMultiple()" type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate }}" [disabled]="tipoAccesoLectura"></button>
+  
+    <!--cuerpo datos generales-->
+    <div *ngIf="esFichaActiva('personales')" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
+          <div class="img-colegiado text-center my-0 mx-auto">
+            <i class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
+            <!-- <p-fileUpload #fubauto chooseLabel="" class="edit my-0 mx-auto main-button" mode="basic" name="file" auto="true" accept="image/*"
+                            (change)="uploadImage($event)" auto="true">
+                        </p-fileUpload> -->
           </div>
         </div>
-      </div> -->
+        <div class="bloque col-lg-10 col-md-9">
+  
+          <div class="form-row">
+            <div class="form-group col-lg-3 col-md-6">
+              <label>{{"censo.fichaCliente.literal.identificacion" | translate}} (*)</label>
+              <input type="text" class="form-control" [(ngModel)]="body.nif" [disabled]="true" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-6">
+              <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
+              <p-dropdown class="select-form" [(ngModel)]="selectedTipoIdentificacion" [options]="comboTipoIdentificacion" [disabled]="true"
+                optionName="label"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-3 col-md-6"></div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
+              <input [(ngModel)]="body.nombre" (ngModelChange)="activarGuardarNotarioNoExistente($event)" type="text" class="form-control"
+                [(disabled)]="!editar" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-6">
+              <label>{{"censo.busquedaClientes.literal.apellido1" | translate}}</label>
+              <input [(ngModel)]="body.apellido1" (ngModelChange)="activarGuardarNotarioNoExistente($event)" type="text" class="form-control"
+                [(disabled)]="!editar" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-6">
+              <label>{{"censo.busquedaClientes.literal.apellido2" | translate}}</label>
+              <input [(ngModel)]="body.apellido2" type="text " class="form-control" [(disabled)]="!editar" pInputText>
+            </div>
+  
+          </div>
+        </div>
+      </div>
+      <br>
+  
     </div>
-    <div class="card-footer" *ngIf="esFichaActiva('personales')">
-      <!-- <div class="text-right main-button">
-        <button pButton (click)="restTrainers()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="tipoAccesoLectura"></button>
-        <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
-      </div> -->
+  
+    <div *ngIf="esFichaActiva('personales')" class="card-footer ">
+      <div class="text-right main-button ">
+        <button (click)="desasociarPersona()" [(disabled)]="!desasociar" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate}}"></button>
+        <button (click)="guardar()" [(disabled)]="!guardarNotario" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="isSearch()" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
+      </div>
     </div>
   </div>
 
@@ -313,7 +343,7 @@
       
   <div class="text-right main-button">
   <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
-</div>
+  </div>
 
   <app-dialog></app-dialog>
   <div *ngIf="progressSpinner " class="overlay-spinner ">

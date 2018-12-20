@@ -1,5 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { SigaServices } from "../../../_services/siga.service";
+import { DatosInscripcionItem } from "../../../models/DatosInscripcionItem";
+import { esCalendar } from "../../../utils/calendar";
+import { Location } from "@angular/common";
+import { PersonaItem } from "../../../models/PersonaItem";
+import { SelectItem } from "primeng/api";
+import { cardService } from "../../../_services/cardSearch.service";
 
 @Component({
   selector: "app-ficha-inscripcion",
@@ -13,6 +19,13 @@ export class FichaInscripcionComponent implements OnInit {
   closeFicha: boolean = true;
   fichasPosibles;
   msgs;
+  modoEdicion: boolean = false;
+  es: any = esCalendar;
+  isValidate: boolean;
+  isEditable: boolean = false;
+
+  body: PersonaItem = new PersonaItem();
+  inscripcion: DatosInscripcionItem = new DatosInscripcionItem();
 
   rowsPerPage;
   cols;
@@ -21,28 +34,57 @@ export class FichaInscripcionComponent implements OnInit {
   comboPrecio: any[];
   comboModoPago: any[];
 
-  backTo: any;
+  comboTipoIdentificacion: SelectItem[];
+  selectedTipoIdentificacion: any = {};
 
-  constructor(private sigaServices: SigaServices) {}
+  constructor(
+    private sigaServices: SigaServices,
+    private location: Location,
+    private cardService: cardService
+  ) {}
 
   ngOnInit() {
     this.getFichasPosibles();
     this.getComboEstados();
     this.getComboPrecio();
     this.getComboModoPago();
+
+    if (sessionStorage.getItem("modoEdicionInscripcion") == "true") {
+      this.modoEdicion = true;
+      this.inscripcion = JSON.parse(
+        sessionStorage.getItem("inscripcionCurrent")
+      );
+
+      // Cargamos los datos de la persona asignada a dicha inscripcion
+      this.sigaServices
+        .post("accesoFichaPersona_searchPersona", this.inscripcion.idPersona)
+        .subscribe(
+          data => {
+            if (data != undefined && data != null) {
+              this.body = JSON.parse(data["body"]);
+              this.obtenerTiposIdentificacion();
+            }
+          },
+          error => {
+            console.log(error);
+          }
+        );
+    }
   }
 
   getComboEstados() {
     // obtener estados
-    this.sigaServices.get("busquedaCursos_estadosCursos").subscribe(
-      n => {
-        this.comboEstados = n.combooItems;
-        this.arregloTildesCombo(this.comboEstados);
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    this.sigaServices
+      .get("busquedaInscripciones_estadosInscripciones")
+      .subscribe(
+        n => {
+          this.comboEstados = n.combooItems;
+          this.arregloTildesCombo(this.comboEstados);
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 
   getComboPrecio() {
@@ -130,6 +172,59 @@ export class FichaInscripcionComponent implements OnInit {
           return e.labelSinTilde;
         }
       }
+    });
+  }
+
+  backTo() {
+    this.location.back();
+  }
+
+  obtenerTiposIdentificacion() {
+    this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
+      n => {
+        this.comboTipoIdentificacion = n.combooItems;
+
+        // obtener la identificacion a seleccionar
+        if (this.body.tipoIdentificacion != undefined) {
+          let ident = this.comboTipoIdentificacion.find(
+            item => item.value == this.body.tipoIdentificacion
+          );
+
+          this.selectedTipoIdentificacion = ident.value;
+        } else {
+          let ident: SelectItem;
+          ident.value = "";
+          this.selectedTipoIdentificacion = ident;
+        }
+
+        this.comprobarValidacion();
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  comprobarValidacion() {
+    if (
+      (this.body.tipoIdentificacion != undefined ||
+        this.body.tipoIdentificacion != null) &&
+      this.body.nif != undefined &&
+      this.body.nombre != undefined &&
+      this.body.nombre.trim() != "" &&
+      this.body.apellido1 != undefined &&
+      this.body.apellido2 != ""
+    ) {
+      this.isValidate = true;
+    } else {
+      this.isValidate = false;
+    }
+
+    this.cardService.newCardValidator$.subscribe(data => {
+      data.map(result => {
+        result.cardNotario = this.isValidate;
+      });
+      console.log(data);
     });
   }
 }
