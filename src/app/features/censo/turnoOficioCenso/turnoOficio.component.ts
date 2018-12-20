@@ -1,12 +1,19 @@
-import { Component, OnInit, Inject, ViewChild } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Inject,
+  ViewChild,
+  ViewEncapsulation
+} from "@angular/core";
 import { OldSigaServices } from "../../../_services/oldSiga.service";
 import { Router } from "@angular/router";
 import { DOCUMENT } from "@angular/platform-browser";
-
+import { Location } from "@angular/common";
 @Component({
   selector: "app-turnoOficio",
   templateUrl: "./turnoOficio.component.html",
-  styleUrls: ["./turnoOficio.component.scss"]
+  styleUrls: ["./turnoOficio.component.scss"],
+  encapsulation: ViewEncapsulation.None
 })
 export class TurnoOficioComponent implements OnInit {
   @ViewChild("con")
@@ -16,6 +23,7 @@ export class TurnoOficioComponent implements OnInit {
   constructor(
     private sigaServices: OldSigaServices,
     private router: Router,
+    private location: Location,
     @Inject(DOCUMENT) private document: Document
   ) {
     this.progressSpinner = true;
@@ -33,7 +41,6 @@ export class TurnoOficioComponent implements OnInit {
         this.router.navigate(["/turnoOficioCenso"]);
       }, 2000);
     } else {
-      debugger;
       this.url = JSON.parse(sessionStorage.getItem("url"));
       sessionStorage.removeItem("url");
       setTimeout(() => {
@@ -46,4 +53,7 @@ export class TurnoOficioComponent implements OnInit {
   }
 
   ngOnInit() {}
+  volver() {
+    this.router.navigate(["/fichaColegial"]);
+  }
 }

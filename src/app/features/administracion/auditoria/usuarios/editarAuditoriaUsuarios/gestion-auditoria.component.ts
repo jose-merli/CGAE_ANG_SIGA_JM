@@ -80,7 +80,10 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
           this.activacionEditar = false;
         } else {
           sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
           this.router.navigate(["/errorAcceso"]);
         }
       }
