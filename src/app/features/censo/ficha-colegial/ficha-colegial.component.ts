@@ -58,6 +58,7 @@ export class FichaColegialComponent implements OnInit {
 
   // Bodys
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
+  generalError: FichaColegialGeneralesObject = new FichaColegialGeneralesObject();
   checkGeneralBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   checkColegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
@@ -616,7 +617,7 @@ export class FichaColegialComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "",
+      summary: "Incorrecto",
       detail: this.translateService.instant(mensaje)
     });
   }
@@ -1055,7 +1056,12 @@ export class FichaColegialComponent implements OnInit {
             console.log(error);
             this.progressSpinner = false;
             this.activacionGuardarGenerales();
-            this.showFail();
+            this.generalError = JSON.parse(error["error"]);
+            if(this.generalError.error.message.toString()){
+              this.showFailDetalle(this.generalError.error.message.toString());
+            }else{
+              this.showFail();
+            }
           }
           // EVENTO PARA ACTIVAR GUARDAR AL BORRAR UNA ETIQUETA
         );
@@ -1115,7 +1121,12 @@ export class FichaColegialComponent implements OnInit {
             console.log(error);
             this.progressSpinner = false;
             this.activacionGuardarGenerales();
-            this.showFail();
+            this.generalError = JSON.parse(error["error"]);
+            if(this.generalError.error.message.toString()){
+              this.showFailDetalle(this.generalError.error.message.toString());
+            }else{
+              this.showFail();
+            }
           }
         );
     }
@@ -1163,7 +1174,12 @@ export class FichaColegialComponent implements OnInit {
           this.progressSpinner = false;
           this.activacionGuardarGenerales();
           this.cerrarAuditoria();
-          this.showFail();
+          this.generalError = JSON.parse(error["error"]);
+          if(this.generalError.error.message.toString()){
+            this.showFailDetalle(this.generalError.error.message.toString());
+          }else{
+            this.showFail();
+          }
         }
         // EVENTO PARA ACTIVAR GUARDAR AL BORRAR UNA ETIQUETA
       );
