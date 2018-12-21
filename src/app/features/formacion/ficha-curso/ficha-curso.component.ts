@@ -1757,7 +1757,7 @@ export class FichaCursoComponent implements OnInit {
     this.progressSpinner = true;
     if (this.file != undefined) {
       this.sigaServices
-        .postSendContent("cargasMasivasEtiquetas_uploadFile", this.file)
+        .postSendContent("fichaCursos_uploadFile", this.file)
         .subscribe(
           data => {
             this.file = null;
