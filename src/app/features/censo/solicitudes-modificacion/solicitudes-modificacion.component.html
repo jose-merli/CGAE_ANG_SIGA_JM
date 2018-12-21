@@ -233,7 +233,7 @@
       <div class="text-right main-button ">
         <div *ngIf="!isNew">
           <button
-            (click)="processRequest(selectedDatos)"
+            (click)="processMultipleRequest(selectedDatos)"
             pButton
             type="button"
             icon="fa fa-gears"
@@ -242,7 +242,7 @@
             [(disabled)]="disableButton"
           ></button>
           <button
-            (click)="denyRequest(selectedDatos)"
+            (click)="denyMultipleRequest(selectedDatos)"
             pButton
             type="button"
             icon="fa fa-times"

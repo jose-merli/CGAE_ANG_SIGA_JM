@@ -260,21 +260,6 @@ export class SolicitudesModificacionComponent implements OnInit {
   }
 
   // PROCESS REQUEST AND DENY REQUEST
-  processRequest(selectedDatos) {
-    // this.body.idSolicitud = selectedDatos[0].idSolicitud;
-    this.bodyMultiple.solModificacionItems[0] = selectedDatos;
-    this.updateRequestState(
-      "solicitudModificacion_processGeneralModificationRequest"
-    );
-  }
-
-  denyRequest(selectedDatos) {
-    // this.body.idSolicitud = selectedDatos[0].idSolicitud;
-    this.bodyMultiple.solModificacionItems[0] = selectedDatos;
-    this.updateRequestState(
-      "solicitudModificacion_denyGeneralModificationRequest"
-    );
-  }
 
   processMultipleRequest(selectedDatos) {
     this.bodyMultiple = selectedDatos;
