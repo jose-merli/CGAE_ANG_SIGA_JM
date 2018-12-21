@@ -2696,8 +2696,8 @@ export class FichaColegialComponent implements OnInit {
     this.bodySanciones.idPersona = this.generalBody.idPersona;
     this.bodySanciones.nif = this.generalBody.nif;
     this.bodySanciones.tipoFecha = "";
-    this.bodySanciones.idColegios = [];
-    this.bodySanciones.idColegios.push(this.generalBody.idInstitucion);
+    // this.bodySanciones.idColegios = [];
+    // this.bodySanciones.idColegios.push(this.generalBody.i.idInstitucion);
 
     this.transformDates(this.bodySanciones);
 

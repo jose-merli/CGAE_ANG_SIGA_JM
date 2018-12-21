@@ -7,6 +7,7 @@ import { Router } from "@angular/router";
 import { BusquedaSancionesItem } from "../../../models/BusquedaSancionesItem";
 import { BusquedaSancionesObject } from "../../../models/BusquedaSancionesObject";
 import { ComboItem } from "./../../../../app/models/ComboItem";
+import { AuthenticationService } from "../../../_services/authentication.service";
 
 @Component({
   selector: "app-busqueda-sanciones",
@@ -53,7 +54,8 @@ export class BusquedaSancionesComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private authenticationService: AuthenticationService
   ) {}
 
   ngOnInit() {
@@ -110,7 +112,17 @@ export class BusquedaSancionesComponent implements OnInit {
     this.sigaServices.get("busquedaPer_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
-
+        if (this.authenticationService.getInstitucionSession() != "2000") {
+          this.colegios = [];
+          n.combooItems.forEach(element => {
+            if (
+              this.authenticationService.getInstitucionSession() ==
+              element.value
+            ) {
+              this.colegios.push(element);
+            }
+          });
+        }
         if (
           sessionStorage.getItem("back") == "true" &&
           this.body.idColegios != undefined
@@ -130,7 +142,7 @@ export class BusquedaSancionesComponent implements OnInit {
       }
     );
   }
-
+  getColegioFilter() {}
   getInstitutionSession(colegios, idColegios) {
     var obj: any;
     colegios.forEach(element => {
