@@ -7,6 +7,7 @@ import { Router } from "@angular/router";
 import { BusquedaSancionesItem } from "../../../models/BusquedaSancionesItem";
 import { BusquedaSancionesObject } from "../../../models/BusquedaSancionesObject";
 import { ComboItem } from "./../../../../app/models/ComboItem";
+import { AuthenticationService } from "../../../_services/authentication.service";
 
 @Component({
   selector: "app-busqueda-sanciones",
@@ -21,6 +22,8 @@ export class BusquedaSancionesComponent implements OnInit {
   progressSpinner: boolean = false;
   selectMultiple: boolean = false;
   selectAll: boolean = false;
+  isHistory: boolean = false;
+  hideHistory: boolean = false;
 
   tipo: SelectItem[];
   tipoSancion: SelectItem[];
@@ -51,7 +54,8 @@ export class BusquedaSancionesComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private authenticationService: AuthenticationService
   ) {}
 
   ngOnInit() {
@@ -108,7 +112,17 @@ export class BusquedaSancionesComponent implements OnInit {
     this.sigaServices.get("busquedaPer_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
-
+        if (this.authenticationService.getInstitucionSession() != "2000") {
+          this.colegios = [];
+          n.combooItems.forEach(element => {
+            if (
+              this.authenticationService.getInstitucionSession() ==
+              element.value
+            ) {
+              this.colegios.push(element);
+            }
+          });
+        }
         if (
           sessionStorage.getItem("back") == "true" &&
           this.body.idColegios != undefined
@@ -128,7 +142,7 @@ export class BusquedaSancionesComponent implements OnInit {
       }
     );
   }
-
+  getColegioFilter() {}
   getInstitutionSession(colegios, idColegios) {
     var obj: any;
     colegios.forEach(element => {
@@ -218,6 +232,13 @@ export class BusquedaSancionesComponent implements OnInit {
 
   search() {
     // Llamada al rest
+
+    if (!this.isHistory) {
+      this.body.chkArchivadas = false;
+    } else {
+      this.body.chkArchivadas = undefined;
+    }
+
     this.progressSpinner = true;
     this.selectAll = false;
     this.selectMultiple = false;
@@ -296,9 +317,6 @@ export class BusquedaSancionesComponent implements OnInit {
     this.body.chkRehabilitado = false;
     this.body.fechaDesdeDate = undefined;
     this.body.fechaHastaDate = undefined;
-    this.body.chkArchivadas = false;
-    this.body.fechaArchivadaDesdeDate = undefined;
-    this.body.fechaArchivadaHastaDate = undefined;
     this.body.refColegio = "";
     this.body.refConsejo = "";
     this.body.tipoSancion = "";
@@ -331,18 +349,59 @@ export class BusquedaSancionesComponent implements OnInit {
   }
 
   onRowSelect(selectedDatos) {
-    // Guardamos los filtros
-    sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
+    if (!this.selectMultiple) {
+      // Guardamos los filtros
+      sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
 
-    // Guardamos los datos seleccionados para pasarlos a la otra pantalla
-    sessionStorage.setItem("rowData", JSON.stringify(selectedDatos));
+      // Guardamos los datos seleccionados para pasarlos a la otra pantalla
+      sessionStorage.setItem("rowData", JSON.stringify(selectedDatos));
 
-    this.router.navigate(["/detalleSancion"]);
+      this.router.navigate(["/detalleSancion"]);
+    }
   }
 
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
+  }
+
+  setItalic(datoH) {
+    if (datoH.archivada == "No") return false;
+    else return true;
+  }
+
+  historico() {
+    this.isHistory = true;
+    this.hideHistory = true;
+    this.search();
+  }
+
+  isSelectMultiple() {
+    this.selectMultiple = !this.selectMultiple;
+    if (!this.selectMultiple) {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
+  updateRegistry(selectedDatos) {
+    this.body = new BusquedaSancionesItem();
+
+    this.body = selectedDatos;
+    this.body.restablecer = true;
+
+    this.sigaServices
+      .post("busquedaSanciones_updateSanction", this.body)
+      .subscribe(
+        data => {},
+        error => {},
+        () => {
+          this.search();
+        }
+      );
   }
 }

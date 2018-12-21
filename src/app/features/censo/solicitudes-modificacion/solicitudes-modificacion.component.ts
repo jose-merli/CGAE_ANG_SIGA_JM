@@ -31,7 +31,10 @@ export class SolicitudesModificacionComponent implements OnInit {
   disableNew: boolean = true;
   isNew: boolean = false;
   progressSpinner: boolean = false;
-
+  selectMultiple: boolean = false;
+  selectAll: boolean = false;
+  numSelected: number = 0;
+  desactivaProcesarMultiple: boolean = false;
   tipo: SelectItem[];
   tipoSolGeneral: SelectItem[];
   estado: SelectItem[];
@@ -42,6 +45,7 @@ export class SolicitudesModificacionComponent implements OnInit {
   motivoSolGeneral: String;
 
   bodySearch: SolicitudesModificacionObject = new SolicitudesModificacionObject();
+  bodyMultiple: SolicitudesModificacionObject = new SolicitudesModificacionObject();
   body: SolicitudesModificacionItem = new SolicitudesModificacionItem();
 
   @ViewChild("table")
@@ -246,7 +250,6 @@ export class SolicitudesModificacionComponent implements OnInit {
       data => {
         this.bodySearch = JSON.parse(data["body"]);
         this.data = this.bodySearch.solModificacionItems;
-
         this.progressSpinner = false;
       },
       err => {
@@ -257,15 +260,16 @@ export class SolicitudesModificacionComponent implements OnInit {
   }
 
   // PROCESS REQUEST AND DENY REQUEST
-  processRequest(selectedDatos) {
-    this.body.idSolicitud = selectedDatos.idSolicitud;
+
+  processMultipleRequest(selectedDatos) {
+    this.bodyMultiple = selectedDatos;
     this.updateRequestState(
       "solicitudModificacion_processGeneralModificationRequest"
     );
   }
 
-  denyRequest(selectedDatos) {
-    this.body.idSolicitud = selectedDatos.idSolicitud;
+  denyMultipleRequest(selectedDatos) {
+    this.bodyMultiple = selectedDatos;
     this.updateRequestState(
       "solicitudModificacion_denyGeneralModificationRequest"
     );
@@ -275,7 +279,7 @@ export class SolicitudesModificacionComponent implements OnInit {
     this.progressSpinner = true;
     this.isSearch = true;
 
-    this.sigaServices.post(path, this.body).subscribe(
+    this.sigaServices.post(path, this.bodyMultiple).subscribe(
       data => {
         this.progressSpinner = false;
         this.search();
@@ -287,6 +291,27 @@ export class SolicitudesModificacionComponent implements OnInit {
         this.closeDialog();
       }
     );
+  }
+
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.selectMultiple = false;
+      this.selectedDatos = this.data;
+      this.numSelected = this.data.length;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
+  isSelectMultiple() {
+    this.selectMultiple = !this.selectMultiple;
+    if (!this.selectMultiple) {
+      this.selectedDatos = [];
+    } else {
+      this.selectAll = false;
+      this.selectedDatos = [];
+    }
   }
 
   restore() {
@@ -310,33 +335,45 @@ export class SolicitudesModificacionComponent implements OnInit {
   }
 
   onSelectRow(selectedDatos) {
-    if (selectedDatos.especifica == "1") {
-      sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
-      sessionStorage.setItem("search", JSON.stringify(this.data));
-      sessionStorage.setItem("rowData", JSON.stringify(selectedDatos));
-      this.router.navigate(["/nuevaSolicitudesModificacion"]);
-    } else {
-      // abrir popup MODO CONSULTA
-      this.displayGeneralRequest = true;
-      this.isNew = false;
-      this.disableNew = true;
-
-      // Rellenamos los datos
-      this.tipoModificacionSolGeneral = selectedDatos.tipoModificacion;
-      this.tipoSolGeneral = [
-        {
-          label: selectedDatos.tipoModificacion,
-          value: selectedDatos.idTipoModificacion
-        }
-      ];
-
-      this.motivoSolGeneral = selectedDatos.motivo;
-
-      if (selectedDatos.estado == "PENDIENTE") {
-        this.disableButton = false;
+    if (!this.selectMultiple) {
+      if (selectedDatos[0].especifica == "1") {
+        sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
+        sessionStorage.setItem("search", JSON.stringify(this.data));
+        sessionStorage.setItem("rowData", JSON.stringify(selectedDatos[0]));
+        this.router.navigate(["/nuevaSolicitudesModificacion"]);
       } else {
-        this.disableButton = true;
+        // abrir popup MODO CONSULTA
+        this.displayGeneralRequest = true;
+        this.isNew = false;
+        this.disableNew = true;
+
+        // Rellenamos los datos
+        this.tipoModificacionSolGeneral = selectedDatos[0].tipoModificacion;
+        this.tipoSolGeneral = [
+          {
+            label: selectedDatos[0].tipoModificacion,
+            value: selectedDatos[0].idTipoModificacion
+          }
+        ];
+
+        this.motivoSolGeneral = selectedDatos.motivo;
+
+        if (selectedDatos[0].estado == "PENDIENTE") {
+          this.disableButton = false;
+        } else {
+          this.disableButton = true;
+        }
       }
+    } else {
+      if (
+        selectedDatos[selectedDatos.length - 1].especifica == "1" ||
+        selectedDatos[selectedDatos.length - 1].estado != "PENDIENTE"
+      ) {
+        this.selectedDatos.splice(selectedDatos.length - 1, 1);
+      }
+      // if (selectedDatos[selectedDatos.length - 1].estado != "PENDIENTE") {
+      //   this.selectedDatos.splice(selectedDatos.length - 1, 1);
+      // }
     }
   }
 

@@ -119,8 +119,7 @@
         emptyMessage="{{ 'general.message.no.registros' | translate}}"
         [paginator]="enablePagination()"
         (onRowSelect)="onSelectRow(selectedDatos)"
-        (onRowUnselect)="onRowUnselect(selectedDatos)"
-        selectionMode="single"
+        selectionMode="multiple"
         [(selection)]="selectedDatos"
         [responsive]="true"
         #table
@@ -129,8 +128,7 @@
         [sortOrder]="1"
         [paginator]="true"
         paginatorPosition="both"
-        [rows]="selectedItem"
-      >
+        [rows]="selectedItem">
         <p-column
           *ngFor="let col of cols"
           [sortable]="true"
@@ -138,9 +136,9 @@
           [header]="col.header | translate"
           filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true"
-          filterMatchMode="contains"
-        >
+          filterMatchMode="contains">
         </p-column>
+
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales"
@@ -159,9 +157,33 @@
                 "cargaMasivaDatosCurriculares.numRegistros.literal" | translate
               }}</label
             >
+            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+              <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
           </div>
         </ng-template>
       </p-dataTable>
+    </div>
+    <div class="card-footer">
+      <div *ngIf="selectMultiple && selectedDatos.length > 0" class="text-right main-button ">
+        <button
+        (click)="processMultipleRequest(selectedDatos)"
+        pButton
+        type="button"
+        icon="fa fa-gears"
+        iconPos="left"
+        label="{{'modificacionDatos.boton.procesarSolicitud' | translate}}"
+        [(disabled)]="isLetrado"
+      ></button>
+      <button
+        (click)="denyMultipleRequest(selectedDatos)"
+        pButton
+        type="button"
+        icon="fa fa-times"
+        iconPos="left"
+        label="{{ 'general.boton.denegarSolicitud' | translate}}"
+        [(disabled)]="isLetrado">
+      </button>
+      </div>
     </div>
   </div>
   <app-dialog></app-dialog>
@@ -174,14 +196,12 @@
     modal="modal"
     resizable="false"
     [minHeight]="500"
-    [minWidth]="500"
-  >
+    [minWidth]="500">
     <p-header class="title">
       <label
         >{{ "general.ventana.cgae" | translate }} -{{
           "censo.solicitudModificacion.literal.titulo" | translate
-        }}</label
-      >
+        }}</label>
     </p-header>
 
     <div class="bloque col-lg-12 col-md-12">
@@ -215,7 +235,7 @@
       <div class="text-right main-button ">
         <div *ngIf="!isNew">
           <button
-            (click)="processRequest(selectedDatos)"
+            (click)="processMultipleRequest(selectedDatos)"
             pButton
             type="button"
             icon="fa fa-gears"
@@ -224,7 +244,7 @@
             [(disabled)]="disableButton"
           ></button>
           <button
-            (click)="denyRequest(selectedDatos)"
+            (click)="denyMultipleRequest(selectedDatos)"
             pButton
             type="button"
             icon="fa fa-times"
@@ -238,8 +258,8 @@
             type="button"
             icon="fa fa-close"
             iconPos="left"
-            label="{{ 'general.boton.close' | translate}}"
-          ></button>
+            label="{{ 'general.boton.close' | translate}}">
+          </button>
         </div>
 
         <div *ngIf="isNew">

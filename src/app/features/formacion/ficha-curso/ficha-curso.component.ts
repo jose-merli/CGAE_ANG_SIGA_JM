@@ -289,7 +289,17 @@ export class FichaCursoComponent implements OnInit {
       this.getCountInscriptions();
       this.progressSpinner = false;
 
-      //4. Modo nuevo
+      //4. Viene de la ficha de inscripcion
+    } else if (sessionStorage.getItem("isInscripcion") == "true") {
+      
+      this.curso = new DatosCursosItem();
+      this.curso.idCurso = JSON.parse(sessionStorage.getItem("codigoCursoInscripcion"));
+      this.searchCourse(this.curso.idCurso);
+      
+      sessionStorage.removeItem("isInscripcion");
+      sessionStorage.removeItem("codigoCursoInscripcion");
+
+      //5. Modo nuevo
     } else {
       this.modoEdicion = false;
       this.curso = new DatosCursosItem();

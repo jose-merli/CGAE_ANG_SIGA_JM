@@ -122,12 +122,41 @@ export class DetalleSancionComponent implements OnInit {
   }
 
   transformDates(body) {
-    body.fechaAcuerdoDate = new Date(body.fechaAcuerdoDate);
-    body.fechaDesdeDate = new Date(body.fechaDesdeDate);
-    body.fechaHastaDate = new Date(body.fechaHastaDate);
-    body.fechaFirmezaDate = new Date(body.fechaFirmezaDate);
-    body.fechaRehabilitadoDate = new Date(body.fechaRehabilitadoDate);
-    body.fechaArchivadaDate = new Date(body.fechaArchivadaDate);
+    if(body.fechaAcuerdoDate != null){
+      body.fechaAcuerdoDate = new Date(body.fechaAcuerdoDate);
+    }else{
+      body.fechaAcuerdoDate = undefined;
+    }
+
+    if(body.fechaDesdeDate != null){
+      body.fechaDesdeDate = new Date(body.fechaDesdeDate);
+    }else{
+      body.fechaDesdeDate = undefined;
+    }
+
+    if(body.fechaHastaDate != null){
+      body.fechaHastaDate = new Date(body.fechaHastaDate);
+    }else{
+      body.fechaHastaDate = undefined;
+    }
+
+    if(body.fechaFirmezaDate != null){
+      body.fechaFirmezaDate = new Date(body.fechaFirmezaDate);
+    }else{
+      body.fechaFirmezaDate = undefined;
+    }
+
+    if(body.fechaRehabilitadoDate != null){
+      body.fechaRehabilitadoDate = new Date(body.fechaRehabilitadoDate);
+    }else{
+      body.fechaRehabilitadoDate = undefined;
+    }
+
+    if(body.fechaArchivadaDate != null){
+      body.fechaArchivadaDate = new Date(body.fechaArchivadaDate);
+    }else{
+      body.fechaArchivadaDate = undefined;
+    }
   }
 
   fillFieldsInsertMode(body, newBody) {
@@ -151,6 +180,17 @@ export class DetalleSancionComponent implements OnInit {
     this.sigaServices.get("busquedaPer_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
+        if (this.authenticationService.getInstitucionSession() != "2000") {
+          this.colegios = [];
+          n.combooItems.forEach(element => {
+            if (
+              this.authenticationService.getInstitucionSession() ==
+              element.value
+            ) {
+              this.colegios.push(element);
+            }
+          });
+        }
       },
       err => {
         console.log(err);
