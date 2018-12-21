@@ -172,6 +172,7 @@
         icon="fa fa-gears"
         iconPos="left"
         label="{{'modificacionDatos.boton.procesarSolicitud' | translate}}"
+        [(disabled)]="isLetrado"
       ></button>
       <button
         (click)="denyMultipleRequest(selectedDatos)"
@@ -180,7 +181,8 @@
         icon="fa fa-times"
         iconPos="left"
         label="{{ 'general.boton.denegarSolicitud' | translate}}"
-      ></button>
+        [(disabled)]="isLetrado">
+      </button>
       </div>
     </div>
   </div>
@@ -233,7 +235,7 @@
       <div class="text-right main-button ">
         <div *ngIf="!isNew">
           <button
-            (click)="processRequest(selectedDatos)"
+            (click)="processMultipleRequest(selectedDatos)"
             pButton
             type="button"
             icon="fa fa-gears"
@@ -242,7 +244,7 @@
             [(disabled)]="disableButton"
           ></button>
           <button
-            (click)="denyRequest(selectedDatos)"
+            (click)="denyMultipleRequest(selectedDatos)"
             pButton
             type="button"
             icon="fa fa-times"

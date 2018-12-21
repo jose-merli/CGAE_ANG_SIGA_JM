@@ -180,6 +180,17 @@ export class DetalleSancionComponent implements OnInit {
     this.sigaServices.get("busquedaPer_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
+        if (this.authenticationService.getInstitucionSession() != "2000") {
+          this.colegios = [];
+          n.combooItems.forEach(element => {
+            if (
+              this.authenticationService.getInstitucionSession() ==
+              element.value
+            ) {
+              this.colegios.push(element);
+            }
+          });
+        }
       },
       err => {
         console.log(err);
