@@ -4,6 +4,7 @@ import { DatosGeneralesConsultaItem } from '../../../../../models/DatosGenerales
 import { DestinatariosItem } from '../../../../../models/DestinatariosItem';
 import { Location } from "@angular/common";
 import { SigaServices } from "./../../../../../_services/siga.service";
+import { Message, ConfirmationService } from "primeng/components/common/api";
 
 @Component({
   selector: 'app-datos-generales-consulta',
@@ -14,7 +15,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
 
 
   openFicha: boolean = false;
-  activacionEditar: boolean = true;
+  editar: boolean;
   datos: any[];
   cols: any[];
   first: number = 0;
@@ -24,11 +25,14 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   numSelected: number = 0;
   rowsPerPage: any = [];
   body: DatosGeneralesConsultaItem = new DatosGeneralesConsultaItem();
+  bodyInicial: DatosGeneralesConsultaItem = new DatosGeneralesConsultaItem();
   bodyDestinatario: DestinatariosItem = new DestinatariosItem();
   modulos: any[];
   objetivos: any[];
   clasesComunicaciones: any[];
   idiomas: any[];
+  institucionActual: any;
+  msgs: Message[];
 
 
   @ViewChild('table') table: DataTable;
@@ -64,24 +68,14 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   ngOnInit() {
 
     this.getDatos();
+    this.getInstitucion();
+    this.getClasesComunicaciones();
+    this.getObjetivos();
+    this.getModulos();
 
     this.selectedItem = 4;
 
     this.getIdioma();
-
-    this.objetivos = [
-      {
-        label: 'seleccione..', value: null
-      },
-      {
-        label: 'Destinatarios', value: '1'
-      },
-      {
-        label: 'Condicional', value: '2'
-      }
-    ]
-
-    this.body.idObjetivo = this.objetivos[0].value;
 
     this.cols = [
       { field: 'consulta', header: 'Consulta' },
@@ -117,6 +111,33 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     // this.body.idConsulta = this.consultas[1].value;
   }
 
+  // Mensajes
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showInfo(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+
+  getInstitucion() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
+  }
+
   getIdioma() {
     this.sigaServices.get("etiquetas_lenguaje").subscribe(
       n => {
@@ -128,12 +149,43 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     );
   }
 
+  getClasesComunicaciones() {
+    this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
+      data => {
+        this.clasesComunicaciones = data.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getModulos() {
+    this.sigaServices.get("consultas_comboModulos").subscribe(
+      data => {
+        this.modulos = data.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getObjetivos() {
+    this.sigaServices.get("consultas_comboObjetivos").subscribe(
+      data => {
+        this.objetivos = data.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
   abreCierraFicha() {
-    // let fichaPosible = this.getFichaPosibleByKey(key);
-    if (this.activacionEditar == true) {
-      // fichaPosible.activa = !fichaPosible.activa;
-      this.openFicha = !this.openFicha;
-    }
+    // fichaPosible.activa = !fichaPosible.activa;
+    this.openFicha = !this.openFicha;
+
   }
 
   esFichaActiva(key) {
@@ -206,8 +258,44 @@ export class DatosGeneralesConsultaComponent implements OnInit {
 
   getDatos() {
     if (sessionStorage.getItem("consultasSearch") != null) {
+      this.editar = true;
       this.body = JSON.parse(sessionStorage.getItem("consultasSearch"));
+      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    } else {
+      this.editar = false;
     }
   }
+
+
+  guardar() {
+
+    this.sigaServices.post("enviosMasivos_guardarConf", this.body).subscribe(
+      data => {
+
+        let result = JSON.parse(data["body"]);
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        sessionStorage.removeItem("crearNuevaConsulta");
+        sessionStorage.setItem("consultasSeacrh", JSON.stringify(this.body));
+        this.showSuccess('Se ha guardado la consulta correctamente');
+      },
+      err => {
+        this.showFail('Error al guardar la consulta');
+        console.log(err);
+      },
+      () => {
+
+      }
+    );
+
+
+  }
+
+
+  restablecer() {
+    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+  }
+
+
+
 
 }

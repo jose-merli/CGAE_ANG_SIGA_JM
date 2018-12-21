@@ -208,7 +208,6 @@ export class ComunicacionesComponent implements OnInit {
           this.progressSpinner = false;
           this.searchComunicaciones = JSON.parse(data["body"]);
           this.datos = this.searchComunicaciones.enviosMasivosItem;
-          console.log(this.datos);
           this.body = this.datos[0];
           this.datos.forEach(element => {
             element.fechaProgramada = element.fechaProgramada ? new Date(element.fechaProgramada) : null;
@@ -219,7 +218,9 @@ export class ComunicacionesComponent implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => { }
+        () => {
+          this.table.reset();
+        }
       );
   }
 

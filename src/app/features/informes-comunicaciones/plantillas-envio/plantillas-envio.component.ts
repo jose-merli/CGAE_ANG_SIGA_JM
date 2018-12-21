@@ -110,7 +110,6 @@ export class PlantillasEnvioComponent implements OnInit {
       { id: '3', nombre: 'Plantilla test', tipoEnvio: 'Paloma mensajera', descripcion: 'descripcion' },
       { id: '4', nombre: 'Plantilla test', tipoEnvio: 'Telequinesis', descripcion: 'descripcion' }
     ]
-    console.log(this.datos);
 
   }
 

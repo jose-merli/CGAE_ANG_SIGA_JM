@@ -116,7 +116,6 @@ export class DestinatariosComponent implements OnInit {
         n => {
           // coger etiquetas de una persona juridica
           this.destinatarios = JSON.parse(n["body"]).destinatarios;
-          console.log(this.destinatarios);
         },
         err => {
           console.log(err);

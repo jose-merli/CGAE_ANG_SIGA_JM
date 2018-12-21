@@ -62,13 +62,13 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
   }
 
   abreCierraFicha() {
-    // let fichaPosible = this.getFichaPosibleByKey(key);
-    if (this.activacionEditar == true) {
-      // fichaPosible.activa = !fichaPosible.activa;
+    if (sessionStorage.getItem("crearNuevaConsulta") == null) {
       this.openFicha = !this.openFicha;
+      if (this.openFicha) {
+        this.getDatos();
+      }
     }
   }
-
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
@@ -134,8 +134,7 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
   getResultados() {
     this.sigaServices.postPaginado("consultas_listadoPlantillas", "?numPagina=1", this.body.idConsulta).subscribe(
       data => {
-        debugger;
-        this.datos = JSON.parse(data["body"]);
+        this.datos = JSON.parse(data["body"]).listadoPlantillas;
         console.log(this.datos)
         this.body = this.datos[0];
       },

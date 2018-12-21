@@ -291,8 +291,6 @@ export class EnviosMasivosComponent implements OnInit {
     }
   }
 
-
-
   programar(dato) {
     this.showProgramar = false;
     dato.forEach(element => {

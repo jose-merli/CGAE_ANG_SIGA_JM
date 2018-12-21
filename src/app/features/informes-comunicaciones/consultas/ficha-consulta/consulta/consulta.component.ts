@@ -48,10 +48,11 @@ export class ConsultaComponent implements OnInit {
   }
 
   abreCierraFicha() {
-    // let fichaPosible = this.getFichaPosibleByKey(key);
-    if (this.activacionEditar == true) {
-      // fichaPosible.activa = !fichaPosible.activa;
+    if (sessionStorage.getItem("crearNuevaConsulta") == null) {
       this.openFicha = !this.openFicha;
+      if (this.openFicha) {
+        this.getDatos();
+      }
     }
   }
 

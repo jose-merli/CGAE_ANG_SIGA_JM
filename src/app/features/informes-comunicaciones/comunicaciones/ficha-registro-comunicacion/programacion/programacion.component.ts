@@ -128,7 +128,6 @@ export class ProgramacionComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("comunicacionesSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("comunicacionesSearch"));
-      console.log(this.body)
       this.body.fechaProgramada = this.body.fechaProgramada ? new Date(this.body.fechaProgramada) : null;
       this.body.fechaCreacion = this.body.fechaCreacion ? new Date(this.body.fechaCreacion) : null;
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
@@ -180,7 +179,6 @@ export class ProgramacionComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_estado").subscribe(
       data => {
         this.estados = data.combooItems;
-        console.log(this.estados)
       },
       err => {
         console.log(err);

@@ -36,7 +36,15 @@
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div *ngIf="showAyuda" class="ayuda-consulta">
         <i (click)="onShowAyuda()" class="fa fa-close float-right cursor-pointer"></i>
-        <p>Texto ayuda</p>
+        <p>Texto ayuda 13. Las consultas de tipo "Facturación" o "Envío a Grupos" tienen las siguientes restricciones:  No
+          puede incorporar solicitudes de criterios dinámicos por interfaz.  Para las consultas de tipo "Facturación" los
+          siguientes campos son obligatorios: IDINSTITUCION , IDPERSONA.  Para las consultas de tipo "Envío a Grupos": IDINSTITUCION,
+          IDPERSONA, CODIGOPOSTAL, CORREOELECTRONICO, DOMICILIO, MOVIL, FAX1, FAX1, IDPAIS, IDPROVINCIA, IDPOBLACION. 14.
+          Las consultas de tipo "Envío a Grupos" tiene las siguientes restricciones:  Las consultas listas para envíos han
+          de llevar la tabla CEN_CLIENTE y CEN_DIRECCIONES sin alias.  NO se debe añadir condiciones para filtrar la dirección,
+          ya que eso se hace automáticamente. 15. Se han añadido los nuevos operadores =,!=,IS NULL,LIKE al formato de los
+          criterios TEXTO. A estos operadores se añaden >,>=,
+          <,<=c uando el formato sea NUMERO, </p>
       </div>
       <div class="form-row">
         <div class="form-group col-lg-12 col-md-12">

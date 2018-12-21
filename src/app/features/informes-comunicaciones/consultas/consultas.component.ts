@@ -38,6 +38,9 @@ export class ConsultasComponent implements OnInit {
   searchConsultas: ConsultasObject = new ConsultasObject();
   bodySearch: ConsultasSearchItem = new ConsultasSearchItem();
   eliminarArray: any[];
+  duplicarArray: any[];
+  selectedInstitucion: any;
+  institucionActual: any;
 
 
 
@@ -51,11 +54,15 @@ export class ConsultasComponent implements OnInit {
   ngOnInit() {
 
 
-    this.bodySearch.generica = '0';
+    this.bodySearch.generica = '1';
 
+    this.getInstitucion();
 
-    if (sessionStorage.getItem("consultasSearch") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("consultasSearch"));
+    sessionStorage.removeItem("crearNuevaConsulta");
+
+    if (sessionStorage.getItem("filtrosConsulta") != null) {
+      this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosConsulta"));
+      this.buscar();
     }
 
     this.getCombos();
@@ -89,6 +96,13 @@ export class ConsultasComponent implements OnInit {
     ];
 
 
+  }
+
+
+  getInstitucion() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
   }
 
   // Mensajes
@@ -176,6 +190,7 @@ export class ConsultasComponent implements OnInit {
     this.selectedDatos = "";
     this.progressSpinner = true;
     sessionStorage.removeItem("consultasSearch");
+    sessionStorage.removeItem("filtrosConsulta");
     this.getResultados();
 
   }
@@ -188,7 +203,6 @@ export class ConsultasComponent implements OnInit {
           this.progressSpinner = false;
           this.searchConsultas = JSON.parse(data["body"]);
           this.datos = this.searchConsultas.consultaItem;
-          console.log(this.datos)
           this.body = this.datos[0];
 
         },
@@ -196,15 +210,41 @@ export class ConsultasComponent implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => { }
+        () => {
+          this.table.reset();
+        }
       );
   }
 
 
 
-  duplicar() {
+  duplicar(dato) {
 
+    this.duplicarArray = [];
+    dato.forEach(element => {
+      let objDuplicar = {
+        idConsulta: element.idConsulta,
+        idInstitucion: element.idInstitucion
+      }
+      this.duplicarArray.push(objDuplicar);
+    });
+    this.sigaServices.post("consultas_borrar", this.duplicarArray).subscribe(
+      data => {
+        this.showSuccess('Se ha duplicado la consulta correctamente');
+      },
+      err => {
+        this.showFail('Error al duplicado la consulta');
+        console.log(err);
+      },
+      () => {
+        this.table.reset();
+        this.buscar();
+
+      }
+    );
   }
+
+
   borrar(dato) {
 
     this.confirmationService.confirm({
@@ -234,14 +274,25 @@ export class ConsultasComponent implements OnInit {
 
     this.eliminarArray = [];
     dato.forEach(element => {
-      this.eliminarArray.push(element.idConsulta);
+      let objEliminar = {
+        idConsulta: element.idConsulta,
+        idInstitucion: element.idInstitucion
+      }
+      this.eliminarArray.push(objEliminar);
     });
     this.sigaServices.post("consultas_borrar", this.eliminarArray).subscribe(
       data => {
-        this.showSuccess('Se ha eliminado el envío correctamente');
+        let noBorrar = JSON.parse(data["body"]).message
+        if (noBorrar == "noBorrar") {
+          this.showInfo('No puede eliminarse la consulta');
+        } else {
+          this.showSuccess('Se ha eliminado la consulta correctamente');
+        }
+
+
       },
       err => {
-        this.showFail('Error al eliminar el envío');
+        this.showFail('Error al eliminar la consulta');
         console.log(err);
       },
       () => {
@@ -262,9 +313,16 @@ export class ConsultasComponent implements OnInit {
 
   navigateTo(dato) {
     let id = dato[0].id;
+    this.selectedInstitucion = dato[0].idInstitucion;
     if (!this.selectMultiple) {
-      this.router.navigate(['/fichaConsulta']);
-      sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
+      if ((this.selectedInstitucion == this.institucionActual && dato[0].generica == "No") ||
+        (this.institucionActual == 2000 && dato[0].generica == "Si")) {
+        this.router.navigate(['/fichaConsulta']);
+        sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
+        sessionStorage.setItem("filtrosConsulta", JSON.stringify(this.bodySearch));
+      } else {
+        this.showInfo('No puede editarse la consulta')
+      }
     }
   }
 
@@ -273,5 +331,8 @@ export class ConsultasComponent implements OnInit {
   addConsulta() {
     this.router.navigate(['/fichaConsulta']);
     sessionStorage.removeItem("consultasSearch")
+    sessionStorage.setItem("crearNuevaConsulta", JSON.stringify("true"));
   }
+
+
 }

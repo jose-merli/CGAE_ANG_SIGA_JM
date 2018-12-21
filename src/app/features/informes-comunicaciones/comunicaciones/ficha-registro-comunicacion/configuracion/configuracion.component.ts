@@ -125,7 +125,6 @@ export class ConfiguracionComponent implements OnInit {
           this.body.idPlantillasEnvio = this.body.idPlantillasEnvio.toString();
         }
 
-        console.log(this.plantillas)
       },
       err => {
         console.log(err);
