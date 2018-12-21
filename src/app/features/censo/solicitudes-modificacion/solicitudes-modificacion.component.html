@@ -172,6 +172,7 @@
         icon="fa fa-gears"
         iconPos="left"
         label="{{'modificacionDatos.boton.procesarSolicitud' | translate}}"
+        [(disabled)]="isLetrado"
       ></button>
       <button
         (click)="denyMultipleRequest(selectedDatos)"
@@ -180,7 +181,8 @@
         icon="fa fa-times"
         iconPos="left"
         label="{{ 'general.boton.denegarSolicitud' | translate}}"
-      ></button>
+        [(disabled)]="isLetrado">
+      </button>
       </div>
     </div>
   </div>
