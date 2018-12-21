@@ -38,7 +38,7 @@
   
             <label>{{ 'formacion.busquedaInscripcion.estadoCurso' | translate }}</label>
             <span>{{ inscripcion.estadoCurso }}</span>
-            <i class="fa fa-undo float-right" (click)="irFichaCurso()"></i>
+            <i class="fas fa-redo float-right" (click)="irFichaCurso()"></i>
           </div>
         </div>
       </div>
@@ -125,10 +125,10 @@
           </div>
           <div class="d-flex justify-content-between">
             <label>{{"administracion.usuarios.literal.NIF" | translate}}
-              <span>{{ body.nif }}</span>
+              <span>{{ persona.nif }}</span>
             </label>
             <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}
-              <span>{{ body.nombre }} {{ body.apellido1 }} {{ body.apellido2 }}</span>
+              <span>{{ persona.nombre }} {{ persona.apellido1 }} {{ persona.apellido2 }}</span>
             </label>
             <div></div>
   
@@ -168,7 +168,7 @@
           <div class="form-row">
             <div class="form-group col-lg-3 col-md-6">
               <label>{{"censo.fichaCliente.literal.identificacion" | translate}} (*)</label>
-              <input type="text" class="form-control" [(ngModel)]="body.nif" [disabled]="true" pInputText>
+              <input type="text" class="form-control" [(ngModel)]="persona.nif" [disabled]="true" pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-6">
               <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
@@ -178,17 +178,17 @@
             <div class="form-group col-lg-3 col-md-6"></div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
-              <input [(ngModel)]="body.nombre" (ngModelChange)="activarGuardarNotarioNoExistente($event)" type="text" class="form-control"
+              <input [(ngModel)]="persona.nombre" (ngModelChange)="activarGuardarNotarioNoExistente($event)" type="text" class="form-control"
                 [(disabled)]="!editar" pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-6">
               <label>{{"censo.busquedaClientes.literal.apellido1" | translate}}</label>
-              <input [(ngModel)]="body.apellido1" (ngModelChange)="activarGuardarNotarioNoExistente($event)" type="text" class="form-control"
+              <input [(ngModel)]="persona.apellido1" (ngModelChange)="activarGuardarNotarioNoExistente($event)" type="text" class="form-control"
                 [(disabled)]="!editar" pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-6">
               <label>{{"censo.busquedaClientes.literal.apellido2" | translate}}</label>
-              <input [(ngModel)]="body.apellido2" type="text " class="form-control" [(disabled)]="!editar" pInputText>
+              <input [(ngModel)]="persona.apellido2" type="text " class="form-control" [(disabled)]="!editar" pInputText>
             </div>
   
           </div>
@@ -202,7 +202,7 @@
       <div class="text-right main-button ">
         <button (click)="desasociarPersona()" [(disabled)]="!desasociar" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate}}"></button>
         <button (click)="guardar()" [(disabled)]="!guardarNotario" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button (click)="isSearch()" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
+        <button (click)="isSearch()" [(disabled)]="!isAdministrador" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
       </div>
     </div>
   </div>

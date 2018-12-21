@@ -7,6 +7,7 @@ import { PersonaItem } from "../../../models/PersonaItem";
 import { SelectItem } from "primeng/api";
 import { cardService } from "../../../_services/cardSearch.service";
 import { Router } from "@angular/router";
+import { DatosCursosItem } from "../../../models/DatosCursosItem";
 
 @Component({
   selector: "app-ficha-inscripcion",
@@ -25,8 +26,10 @@ export class FichaInscripcionComponent implements OnInit {
   isValidate: boolean;
   isEditable: boolean = false;
 
-  body: PersonaItem = new PersonaItem();
+  persona: PersonaItem = new PersonaItem();
   inscripcion: DatosInscripcionItem = new DatosInscripcionItem();
+  curso: DatosCursosItem = new DatosCursosItem();
+  isAdministrador: Boolean = false;
 
   rowsPerPage;
   cols;
@@ -50,28 +53,95 @@ export class FichaInscripcionComponent implements OnInit {
     this.getComboEstados();
     this.getComboPrecio();
     this.getComboModoPago();
+    this.compruebaAdministrador();
 
+    // Se accede a la ficha de inscripcion desde la busqueda de inscripciones
     if (sessionStorage.getItem("modoEdicionInscripcion") == "true") {
       this.modoEdicion = true;
       this.inscripcion = JSON.parse(
         sessionStorage.getItem("inscripcionCurrent")
       );
 
-      // Cargamos los datos de la persona asignada a dicha inscripcion
-      this.sigaServices
-        .post("accesoFichaPersona_searchPersona", this.inscripcion.idPersona)
-        .subscribe(
-          data => {
-            if (data != undefined && data != null) {
-              this.body = JSON.parse(data["body"]);
-              this.obtenerTiposIdentificacion();
-            }
-          },
-          error => {
-            console.log(error);
-          }
-        );
+      // Cargamos la persona con el idPersona que obtenemos de la inscripcion
+      this.cargaPersonaInscripcion();
+
+      // Se accede a la ficha de inscripcion para crearla
+      // Para cargar los datos del curso nos enviaran el idCurso
+      // y rellenaremos nuestro objeto inscripcion con los datos necesarios del curso
+    } else {
+      if (
+        sessionStorage.getItem("idCursoInscripcion") != undefined &&
+        sessionStorage.getItem("idCursoInscripcion") != null
+      ) {
+        let idCurso = sessionStorage.getItem("idCursoInscripcion");
+        this.searchCourse(idCurso);
+        this.cargarDatosCursoInscripcion();
+      }
+
+      // Intentamos cargar los datos de la persona que se ha logueado mediante el token llamando al back
+      if (!this.isAdministrador) this.cargarPersonaNuevaInscripcion();
     }
+  }
+
+  compruebaAdministrador() {
+    this.sigaServices.get("busquedaInscripciones_isAdministrador").subscribe(
+      data => {
+        if (data != undefined && data != null) {
+          this.isAdministrador = JSON.parse(data);
+        }
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+
+  cargarPersonaNuevaInscripcion() {
+    this.sigaServices
+      .post("busquedaInscripciones_searchPersona", this.inscripcion.idPersona)
+      .subscribe(
+        data => {
+          if (data != undefined && data != null) {
+            this.persona = JSON.parse(data["body"]);
+            this.obtenerTiposIdentificacion();
+          }
+        },
+        error => {
+          console.log(error);
+        }
+      );
+  }
+
+  cargarDatosCursoInscripcion() {
+    // Cargamos los datos obtenidos de bbdd del curso a nuestra inscripcion
+    this.inscripcion.codigoCurso = this.curso.idCurso;
+    this.inscripcion.nombreCurso = this.curso.nombreCurso;
+    this.inscripcion.fechaImparticionDesdeFormat = this.curso.fechaImparticionDesde;
+    this.inscripcion.fechaImparticionHastaFormat = this.curso.fechaImparticionHasta;
+    this.inscripcion.temas = this.curso.temas;
+    this.inscripcion.estadoCurso = this.curso.estado;
+    this.inscripcion.idEstadoCuso = this.curso.idEstado;
+    this.inscripcion.minimaAsistencia = this.curso.minimoAsistencia;
+    // Por defecto debe aparecer como estado pendiente de aprobacion
+    this.inscripcion.idEstadoInscripcion = "1";
+    this.inscripcion.fechaSolicitud = new Date();
+  }
+
+  cargaPersonaInscripcion() {
+    // Cargamos los datos de la persona asignada a dicha inscripcion
+    this.sigaServices
+      .post("accesoFichaPersona_searchPersona", this.inscripcion.idPersona)
+      .subscribe(
+        data => {
+          if (data != undefined && data != null) {
+            this.persona = JSON.parse(data["body"]);
+            this.obtenerTiposIdentificacion();
+          }
+        },
+        error => {
+          console.log(error);
+        }
+      );
   }
 
   getComboEstados() {
@@ -187,9 +257,9 @@ export class FichaInscripcionComponent implements OnInit {
         this.comboTipoIdentificacion = n.combooItems;
 
         // obtener la identificacion a seleccionar
-        if (this.body.tipoIdentificacion != undefined) {
+        if (this.persona.tipoIdentificacion != undefined) {
           let ident = this.comboTipoIdentificacion.find(
-            item => item.value == this.body.tipoIdentificacion
+            item => item.value == this.persona.tipoIdentificacion
           );
 
           this.selectedTipoIdentificacion = ident.value;
@@ -209,13 +279,13 @@ export class FichaInscripcionComponent implements OnInit {
 
   comprobarValidacion() {
     if (
-      (this.body.tipoIdentificacion != undefined ||
-        this.body.tipoIdentificacion != null) &&
-      this.body.nif != undefined &&
-      this.body.nombre != undefined &&
-      this.body.nombre.trim() != "" &&
-      this.body.apellido1 != undefined &&
-      this.body.apellido2 != ""
+      (this.persona.tipoIdentificacion != undefined ||
+        this.persona.tipoIdentificacion != null) &&
+      this.persona.nif != undefined &&
+      this.persona.nombre != undefined &&
+      this.persona.nombre.trim() != "" &&
+      this.persona.apellido1 != undefined &&
+      this.persona.apellido2 != ""
     ) {
       this.isValidate = true;
     } else {
@@ -237,5 +307,33 @@ export class FichaInscripcionComponent implements OnInit {
     );
     sessionStorage.setItem("isInscripcion", JSON.stringify(true));
     this.router.navigate(["/fichaCurso"]);
+  }
+
+  searchCourse(idCurso) {
+    this.progressSpinner = true;
+    this.sigaServices.post("fichaCursos_searchCourse", idCurso).subscribe(
+      data => {
+        this.progressSpinner = false;
+        this.curso = JSON.parse(data.body);
+
+        if (this.curso.fechaInscripcionDesdeDate != null) {
+          this.curso.fechaInscripcionDesdeDate = new Date(
+            this.curso.fechaInscripcionDesdeDate
+          );
+        }
+
+        if (this.curso.fechaInscripcionHastaDate != null) {
+          this.curso.fechaInscripcionHastaDate = new Date(
+            this.curso.fechaInscripcionHastaDate
+          );
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 }
