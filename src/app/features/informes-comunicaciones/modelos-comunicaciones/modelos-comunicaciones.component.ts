@@ -36,6 +36,7 @@ export class ModelosComunicacionesComponent implements OnInit {
   showHistorico: boolean = false;
   msgs: Message[];
   clasesComunicaciones: any[];
+  progressSpinner: boolean = false;
 
 
   @ViewChild('table') table: DataTable;
@@ -50,9 +51,11 @@ export class ModelosComunicacionesComponent implements OnInit {
     this.bodySearch.preseleccionado = '0';
 
 
-    if (sessionStorage.getItem("modelosSearch") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
+    if (sessionStorage.getItem("filtrosModelos") != null) {
+      this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosModelos"));
+      this.buscar();
     }
+
 
     this.selectedItem = 10;
     this.getComboColegios();
@@ -152,11 +155,17 @@ export class ModelosComunicacionesComponent implements OnInit {
     }
   }
 
-  onBuscar() {
+
+  buscar() {
     this.showResultados = true;
+    this.selectMultiple = false;
+    this.selectedDatos = "";
+    this.progressSpinner = true;
     sessionStorage.removeItem("modelosSearch")
+    sessionStorage.removeItem("filtrosModelos");
     this.getResultados();
   }
+
 
   getResultados() {
     this.datos = [
@@ -222,7 +231,7 @@ export class ModelosComunicacionesComponent implements OnInit {
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      this.onBuscar();
+      this.buscar();
     }
   }
 
@@ -231,6 +240,7 @@ export class ModelosComunicacionesComponent implements OnInit {
     if (!this.selectMultiple) {
       this.router.navigate(['/fichaModeloComunicaciones']);
       sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
+      sessionStorage.setItem("filtrosModelos", JSON.stringify(this.bodySearch));
     }
 
   }

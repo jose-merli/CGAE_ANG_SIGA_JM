@@ -51,9 +51,9 @@ export class PlantillasEnvioComponent implements OnInit {
 
   ngOnInit() {
 
-    if (sessionStorage.getItem("plantillasEnvioSearch") != null) {
-      this.bodySearch = JSON.parse(sessionStorage.getItem("plantillasEnvioSearch"));
-      this.onBuscar();
+    if (sessionStorage.getItem("filtrosPlantillas") != null) {
+      this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosPlantillas"));
+      this.buscar();
     }
 
     this.configTabla();
@@ -151,12 +151,14 @@ export class PlantillasEnvioComponent implements OnInit {
     if (!this.selectMultiple) {
       this.router.navigate(["/fichaPlantilla"]);
       sessionStorage.setItem("plantillasEnvioSearch", JSON.stringify(this.bodySearch));
+      sessionStorage.setItem("filtrosPlantillas", JSON.stringify(this.bodySearch));
     }
   }
 
-  onBuscar() {
+  buscar() {
     this.showResultados = true;
     sessionStorage.removeItem("plantillasEnvioSearch")
+    sessionStorage.removeItem("filtrosPlantillas")
     this.getResultados();
   }
 

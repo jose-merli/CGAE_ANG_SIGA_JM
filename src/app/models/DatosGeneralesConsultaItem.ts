@@ -1,9 +1,10 @@
 export class DatosGeneralesConsultaItem {
+  idConsulta: String;
   idModulo: String;
   nombre: String;
   descripcion: String;
   idObjetivo: String;
-  idClaseComunicaciones: string;
+  idClaseComunicacion: String;
   generica: String;
   constructor() { }
 }

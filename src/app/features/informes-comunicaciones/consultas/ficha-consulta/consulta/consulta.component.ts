@@ -24,6 +24,7 @@ export class ConsultaComponent implements OnInit {
   showAyuda: boolean = false;
   showValores: boolean = false;
   body: ConsultaConsultasItem = new ConsultaConsultasItem();
+  saltoLinea: string = '';
 
   fichasPosibles = [
     {
@@ -109,8 +110,16 @@ export class ConsultaComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("consultasSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("consultasSearch"));
+
+      if (this.body.sentencia != 'undefined' && this.body.sentencia != null) {
+        this.body.sentencia = this.body.sentencia.replace(new RegExp(",", "g"), ",\n");
+      }
+
     }
   }
+
+
+
 
 
 

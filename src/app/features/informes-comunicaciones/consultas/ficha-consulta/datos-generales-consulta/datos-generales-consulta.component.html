@@ -38,18 +38,18 @@
         <div class="col-lg-8 col-md-8">
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
-              <label>Módulo</label>
+              <label>Módulo *</label>
               <p-dropdown [options]="modulos" [(ngModel)]="body.idModulo" class="select-form"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>Nombre</label>
+              <label>Nombre *</label>
               <input type="text" class="form-control" [(ngModel)]="body.nombre" pInputText>
             </div>
           </div>
           <div class="form-row d-flex align-items-start">
             <div class="form-group col-lg-4 col-md-4">
-              <label>Objetivo</label>
-              <p-dropdown [options]="objetivos" [(ngModel)]="body.idObjetivo" class="select-form"></p-dropdown>
+              <label>Objetivo *</label>
+              <p-dropdown (onChange)="onChangeObjetivo()" [options]="objetivos" [(ngModel)]="body.idObjetivo" class="select-form"></p-dropdown>
             </div>
             <div class="form-group col-lg-2 col-md-2">
               <label class="d-block">Genérica</label>
@@ -59,15 +59,15 @@
                 label="No"></p-radioButton>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>Clases de comunicaciones</label>
-              <p-dropdown [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicaciones" class="select-form"></p-dropdown>
+              <label>Clases de comunicaciones *</label>
+              <p-dropdown [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion" class="select-form"></p-dropdown>
             </div>
           </div>
         </div>
         <div class="col-lg-4 col-md-4 pl-0">
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
-              <label>Descripción</label>
+              <label>Descripción *</label>
               <textarea pInputTextarea style="height:90px" autoResize="autoResize" [(ngModel)]="body.descripcion"></textarea>
             </div>
           </div>

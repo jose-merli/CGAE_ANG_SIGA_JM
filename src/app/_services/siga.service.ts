@@ -183,7 +183,8 @@ export class SigaServices {
     comunicaciones_destinatarios: 'comunicaciones/detalle/destinatarios',
     consultas_search: 'consultas/search',
     consultas_borrar: 'consultas/borrarConsulta',
-    consultas_listadoPlantillas: 'consultas/plantillasconsulta'
+    consultas_listadoPlantillas: 'consultas/plantillasconsulta',
+    consultas_guardarDatosGenerales: 'consultas/confGeneral'
 
 
   };

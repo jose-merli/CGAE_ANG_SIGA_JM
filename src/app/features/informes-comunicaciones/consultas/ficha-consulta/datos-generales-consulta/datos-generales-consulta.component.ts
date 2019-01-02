@@ -263,19 +263,20 @@ export class DatosGeneralesConsultaComponent implements OnInit {
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     } else {
       this.editar = false;
+      this.body.generica = 'Si';
     }
   }
 
 
   guardar() {
 
-    this.sigaServices.post("enviosMasivos_guardarConf", this.body).subscribe(
+    this.sigaServices.post("consultas_guardarDatosGenerales", this.body).subscribe(
       data => {
 
         let result = JSON.parse(data["body"]);
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         sessionStorage.removeItem("crearNuevaConsulta");
-        sessionStorage.setItem("consultasSeacrh", JSON.stringify(this.body));
+        sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
         this.showSuccess('Se ha guardado la consulta correctamente');
       },
       err => {
@@ -286,8 +287,6 @@ export class DatosGeneralesConsultaComponent implements OnInit {
 
       }
     );
-
-
   }
 
 
@@ -295,6 +294,18 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
   }
 
+
+  isButtonDisabled() {
+    if (this.body.idModulo != null && this.body.idModulo != '' && this.body.idClaseComunicacion != null && this.body.idClaseComunicacion != ''
+      && this.body.idObjetivo != null && this.body.idObjetivo != '' && this.body.nombre != null && this.body.nombre != '') {
+      return false;
+    }
+    return true;
+  }
+
+  onChangeObjetivo() {
+    sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
+  }
 
 
 

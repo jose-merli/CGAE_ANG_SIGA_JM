@@ -3,6 +3,11 @@
 /*** TIPOGRAFÍAS ***/
 
 @font-face {
+  font-family: abogacia;
+  src:  url("./assets/fonts/Servicios-REDABOGACIA-Regular.ttf") format("truetype");
+}
+
+@font-face {
   font-family: OpenSansCondensedBold;
   src: url("./assets/fonts/OpenSansCondensedBold.eot");
   src: url("./assets/fonts/OpenSansCondensedBold.eot?#iefix")
@@ -1054,7 +1059,7 @@ p-footer .main-button{
 
 
 
-/**RESPONSIVE**/
+/**VE**/
 
 @media (max-width: 55em) {
   /* Default 35em */

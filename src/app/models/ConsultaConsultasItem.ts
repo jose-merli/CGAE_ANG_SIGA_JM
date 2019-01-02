@@ -1,5 +1,4 @@
 export class ConsultaConsultasItem {
-  nombre: String;
-  enlace: String;
+  sentencia: String;
   constructor() { }
 }
