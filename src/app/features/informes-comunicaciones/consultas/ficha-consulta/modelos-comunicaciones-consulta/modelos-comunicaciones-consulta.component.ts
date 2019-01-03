@@ -64,9 +64,7 @@ export class ModelosComunicacionesConsultaComponent implements OnInit {
       { field: 'modelo', header: 'Modelo' },
     ]
 
-    this.datos = [
-      { id: '1', modelo: 'prueba' }
-    ]
+
   }
 
 
@@ -137,7 +135,25 @@ export class ModelosComunicacionesConsultaComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("consultasSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("consultasSearch"));
+      this.getResultados();
     }
   }
+
+
+  getResultados() {
+    this.sigaServices.postPaginado("consultas_listadoModelos", "?numPagina=1", this.body.idConsulta).subscribe(
+      data => {
+        debugger;
+        this.datos = JSON.parse(data["body"]).listadoModelos;
+        console.log(this.datos)
+        this.body = this.datos[0];
+      },
+      err => {
+        console.log(err);
+      });
+
+  }
+
+
 
 }

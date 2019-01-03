@@ -185,7 +185,8 @@ export class SigaServices {
     consultas_borrar: 'consultas/borrarConsulta',
     consultas_listadoPlantillas: 'consultas/plantillasconsulta',
     consultas_guardarDatosGenerales: 'consultas/confGeneral',
-    consultas_guardarConsulta: 'consultas/confConsulta'
+    consultas_guardarConsulta: 'consultas/confConsulta',
+    consultas_listadoModelos: 'consultas/modelosconsulta ',
 
 
   };

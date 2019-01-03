@@ -1,5 +1,5 @@
 export class ModelosComConsultasItem {
-  nombre: String;
-  enlace: String;
+  idConsulta: String;
+  modelo: String;
   constructor() { }
 }

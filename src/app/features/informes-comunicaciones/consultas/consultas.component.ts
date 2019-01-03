@@ -54,7 +54,7 @@ export class ConsultasComponent implements OnInit {
   ngOnInit() {
 
 
-    this.bodySearch.generica = '1';
+    this.bodySearch.generica = 'S';
 
     this.getInstitucion();
 
@@ -315,7 +315,7 @@ export class ConsultasComponent implements OnInit {
     let id = dato[0].id;
     this.selectedInstitucion = dato[0].idInstitucion;
     if (!this.selectMultiple) {
-      if ((this.selectedInstitucion == this.institucionActual && dato[0].generica == "No") ||
+      if ((this.selectedInstitucion == this.institucionActual && dato[0].generica == "N") ||
         (this.institucionActual == 2000 && dato[0].generica == "S")) {
         this.router.navigate(['/fichaConsulta']);
         sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
