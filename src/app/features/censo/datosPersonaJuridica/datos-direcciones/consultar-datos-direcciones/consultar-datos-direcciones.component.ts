@@ -12,6 +12,8 @@ import { DropdownModule, Dropdown } from "primeng/dropdown";
 import { DatosDireccionesCodigoPostalItem } from "./../../../../../../app/models/DatosDireccionesCodigoPostalItem";
 import { DatosDireccionesCodigoPostalObject } from "./../../../../../../app/models/DatosDireccionesCodigoPostalObject";
 import { TranslateService } from "../../../../../commons/translate";
+import { Browser } from "../../../../../../../node_modules/protractor";
+import { Checkbox } from "../../../../../../../node_modules/primeng/primeng";
 
 @Component({
   selector: "app-consultar-datos-direcciones",
@@ -73,7 +75,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
 
   @ViewChild("input2")
   dropdown: Dropdown;
-
+  @ViewChild("provincia")
+  checkbox: Checkbox;
   ngOnInit() {
     if (sessionStorage.getItem("permisos")) {
       this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
@@ -125,7 +128,15 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
           this.body.nombrePoblacion !== null &&
           this.body.nombrePoblacion !== undefined
         ) {
-          this.getComboPoblacion(this.body.nombrePoblacion.substring(0, 3));
+          if (this.checkOtraProvincia) {
+            this.comboPoblacion = [];
+            this.comboPoblacion.push({
+              label: this.body.nombrePoblacion,
+              value: this.body.idPoblacion
+            });
+          } else {
+            this.getComboPoblacion(this.body.nombrePoblacion.substring(0, 3));
+          }
         }
         //else {
 
@@ -221,13 +232,90 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     this.sigaServices.get("integrantes_provincias").subscribe(
       n => {
         this.comboProvincia = n.combooItems;
+
+        this.comboProvincia.map(e => {
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
       },
       error => {},
       () => {}
     );
   }
 
-  getLabelbyFilter(array) {
+  getLabelbyFilter(string): string {
+    /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+para poder filtrar el dato con o sin estos caracteres*/
+    let labelSinTilde = string;
+    let accents =
+      "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+    let accentsOut =
+      "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+    let i;
+    let x;
+    for (i = 0; i < string.length; i++) {
+      if ((x = accents.indexOf(string.charAt(i))) != -1) {
+        labelSinTilde = string.replace(string.charAt(i), accentsOut[x]);
+        return labelSinTilde;
+      }
+    }
+
+    return labelSinTilde;
+  }
+  getComboPoblacion(filtro: string) {
+    this.progressSpinner = true;
+    this.poblacionBuscada = this.getLabelbyFilter(filtro);
+
+    this.sigaServices
+      .getParam(
+        "direcciones_comboPoblacion",
+        "?idProvincia=" +
+          this.body.idProvincia +
+          "&filtro=" +
+          this.poblacionBuscada
+      )
+      .subscribe(
+        n => {
+          this.comboPoblacion = n.combooItems;
+
+          /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+    para poder filtrar el dato con o sin estos caracteres*/
+          this.comboPoblacion.map(e => {
+            let accents =
+              "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+            let accentsOut =
+              "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+            let i;
+            let x;
+            for (i = 0; i < e.label.length; i++) {
+              if ((x = accents.indexOf(e.label[i])) != -1) {
+                e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+                return e.labelSinTilde;
+              }
+            }
+          });
+
+          console.log("poblac1", this.comboPoblacion);
+        },
+        error => {},
+        () => {
+          // this.isDisabledPoblacion = false;
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  getLabelbyFilterArray(array) {
     /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
     array.map(e => {
@@ -245,27 +333,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
     });
   }
-  getComboPoblacion(filtro: string) {
-    this.progressSpinner = true;
-    this.poblacionBuscada = filtro;
-    this.sigaServices
-      .getParam(
-        "direcciones_comboPoblacion",
-        "?idProvincia=" + this.body.idProvincia + "&filtro=" + filtro
-      )
-      .subscribe(
-        n => {
-          this.comboPoblacion = n.combooItems;
-          this.getLabelbyFilter(this.comboPoblacion);
-          this.dropdown.filterViewChild.nativeElement.value = this.poblacionBuscada;
-        },
-        error => {},
-        () => {
-          // this.isDisabledPoblacion = false;
-          this.progressSpinner = false;
-        }
-      );
-  }
+
   getComboPoblacionInicial() {
     this.progressSpinner = true;
     this.sigaServices
@@ -395,9 +463,6 @@ para poder filtrar el dato con o sin estos caracteres*/
           } else {
             this.isDisabledPoblacion = false;
           }
-          this.body.idPoblacion = "";
-          this.comboPoblacion = [];
-          // this.getComboPoblacion();
         }
         this.codigoPostalValido = true;
       } else {
@@ -410,7 +475,6 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (this.checkOtraProvincia == false) {
       this.body.idPoblacion = "";
       this.comboPoblacion = [];
-      // this.getComboPoblacion();
     } else {
       this.body.idPoblacion = "";
     }
@@ -418,10 +482,23 @@ para poder filtrar el dato con o sin estos caracteres*/
   onChangeOtherProvincia(event) {
     if (event) {
       this.isDisabledPoblacion = true;
+
       if (this.body.idPais == "191") {
         this.isDisabledProvincia = false;
       }
-      this.body.otraProvincia = "1";
+      //this.body.otraProvincia = "1";
+      if (
+        this.body.codigoPostal != null &&
+        this.checkOtraProvincia == true &&
+        ((this.body.idPoblacion == null &&
+          this.body.idPoblacion == undefined) ||
+          this.body.idPoblacion == "")
+      ) {
+        this.showFail("Debe seleccionar una población");
+        this.isDisabledPoblacion = false;
+        this.isDisabledProvincia = true;
+        this.checkbox.checked = false;
+      }
     } else {
       if (this.historyDisable == true) {
         this.isDisabledPoblacion = true;
@@ -435,8 +512,9 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.isDisabledPoblacion = false;
         }
       }
-      this.body.idPoblacion = "";
-      this.provinciaSelecionada = "";
+      //this.body.idPoblacion = "";
+
+      //this.provinciaSelecionada = "";
       this.isDisabledProvincia = true;
       this.onChangeCodigoPostal();
       this.body.otraProvincia = "0";
@@ -444,65 +522,69 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   guardar() {
-    if (
-      this.body.idTipoDireccion != null &&
-      this.body.idTipoDireccion != undefined &&
-      this.body.idTipoDireccion.length > 0
-    ) {
-      this.progressSpinner = true;
-      // modo edicion
-      if (this.registroEditable) {
-        this.comprobarTablaDatosContactos();
-        this.comprobarCheckProvincia();
-        this.body.esColegiado = JSON.parse(
-          sessionStorage.getItem("esColegiado")
-        );
-        this.body.idPersona = JSON.parse(sessionStorage.getItem("usuarioBody"));
-        this.body.idProvincia = this.provinciaSelecionada;
-        this.sigaServices.post("direcciones_update", this.body).subscribe(
-          data => {
-            this.progressSpinner = false;
-            this.body = JSON.parse(data["body"]);
-            this.backTo();
-          },
-          error => {
-            this.bodySearch = JSON.parse(error["error"]);
-            this.showFail(this.bodySearch.error.message.toString());
-            console.log(error);
-            this.progressSpinner = false;
-          }
-        );
-      }
-      // modo creacion
-      else {
-        this.comprobarTablaDatosContactos();
-        this.comprobarCheckProvincia();
-        this.body.idProvincia = this.provinciaSelecionada;
-        this.body.esColegiado = JSON.parse(
-          sessionStorage.getItem("esColegiado")
-        );
-        this.body.idPersona = JSON.parse(sessionStorage.getItem("usuarioBody"));
-        this.body.motivo = "registro creado";
-        this.sigaServices.post("direcciones_insert", this.body).subscribe(
-          data => {
-            this.progressSpinner = false;
-            this.body = JSON.parse(data["body"]);
-            this.backTo();
-          },
-          error => {
-            this.bodySearch = JSON.parse(error["error"]);
-            this.showFail(this.bodySearch.error.message.toString());
-            console.log(error);
-            this.progressSpinner = false;
-          },
-          () => {
-            // auditoria
-            this.body.motivo = undefined;
-            this.progressSpinner = false;
-          }
-        );
-      }
-    }
+    if (this.body.codigoPostal == null || this.body.codigoPostal == undefined) {
+      this.showFail("Debe especificar el Código Postal");
+    } else {
+		if (
+		  this.body.idTipoDireccion != null &&
+		  this.body.idTipoDireccion != undefined &&
+		  this.body.idTipoDireccion.length > 0
+		) {
+		  this.progressSpinner = true;
+		  // modo edicion
+		  if (this.registroEditable) {
+			this.comprobarTablaDatosContactos();
+			this.comprobarCheckProvincia();
+			this.body.esColegiado = JSON.parse(
+			  sessionStorage.getItem("esColegiado")
+			);
+			this.body.idPersona = JSON.parse(sessionStorage.getItem("usuarioBody"));
+			this.body.idProvincia = this.provinciaSelecionada;
+			this.sigaServices.post("direcciones_update", this.body).subscribe(
+			  data => {
+				this.progressSpinner = false;
+				this.body = JSON.parse(data["body"]);
+				this.backTo();
+			  },
+			  error => {
+				this.bodySearch = JSON.parse(error["error"]);
+				this.showFail(this.bodySearch.error.message.toString());
+				console.log(error);
+				this.progressSpinner = false;
+			  }
+			);
+		  }
+		  // modo creacion
+		  else {
+			this.comprobarTablaDatosContactos();
+			this.comprobarCheckProvincia();
+			this.body.idProvincia = this.provinciaSelecionada;
+			this.body.esColegiado = JSON.parse(
+			  sessionStorage.getItem("esColegiado")
+			);
+			this.body.idPersona = JSON.parse(sessionStorage.getItem("usuarioBody"));
+			this.body.motivo = "registro creado";
+			this.sigaServices.post("direcciones_insert", this.body).subscribe(
+			  data => {
+				this.progressSpinner = false;
+				this.body = JSON.parse(data["body"]);
+				this.backTo();
+			  },
+			  error => {
+				this.bodySearch = JSON.parse(error["error"]);
+				this.showFail(this.bodySearch.error.message.toString());
+				console.log(error);
+				this.progressSpinner = false;
+			  },
+			  () => {
+				// auditoria
+				this.body.motivo = undefined;
+				this.progressSpinner = false;
+			  }
+			);
+		  }
+		}
+	}
   }
   duplicarRegistro() {
     this.body.idDireccion = null;
@@ -772,7 +854,10 @@ para poder filtrar el dato con o sin estos caracteres*/
   buscarPoblacion(e) {
     if (e.target.value && e.target.value !== null) {
       if (e.target.value.length >= 3) {
+        debugger;
         this.getComboPoblacion(e.target.value);
+        console.log("pobl", e.target.value);
+        console.log("poblac", this.comboPoblacion);
         this.resultadosPoblaciones = "No hay resultados";
       } else {
         this.comboPoblacion = [];
@@ -782,5 +867,9 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.comboPoblacion = [];
       this.resultadosPoblaciones = "No hay resultados";
     }
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }

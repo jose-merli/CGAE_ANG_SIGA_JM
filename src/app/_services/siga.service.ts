@@ -54,6 +54,7 @@ export class SigaServices {
     parametros_update: "parametros/update",
     parametros_historico: "parametros/historico",
     etiquetas_lenguaje: "etiquetas/lenguaje",
+    etiquetas_lenguajeFiltrado: "etiquetas/lenguajeFiltrado",
     etiquetas_search: "etiquetas/search",
     etiquetas_update: "etiquetas/update",
     contadores_search: "contadores/search",
@@ -123,6 +124,7 @@ export class SigaServices {
     datosCuentaBancaria_search:
       "busquedaPerJuridica/datosBancariosGeneralSearch",
     datosCuentaBancaria_update: "busquedaPerJuridica/datosBancariosUpdate",
+
     datosCuentaBancaria_insert: "fichaDatosBancarios/datosBancariosInsert",
     datosCuentaBancaria_BIC_BANCO: "fichaDatosBancarios/BanksSearch",
     datosMandatos_search: "fichaDatosBancarios/MandatosSearch",
@@ -131,6 +133,7 @@ export class SigaServices {
     anexos_search: "fichaDatosBancarios/AnexosSearch",
     anexos_update: "fichaDatosBancarios/updateAnexos",
     anexos_insert: "fichaDatosBancarios/insertAnexos",
+    datosCuentaBancaria_getLengthCodCountry: "busquedaPerJuridica/getLengthCodCountry",
     busquedaPerJuridica_uploadFile: "busquedaPerJuridica/uploadFile",
     busquedaPerJuridica_fileDownloadInformation:
       "busquedaPerJuridica/fileDownloadInformation",
@@ -154,7 +157,6 @@ export class SigaServices {
     integrantes_update: "tarjetaIntegrantes/update",
     integrantes_insert: "tarjetaIntegrantes/create",
     integrantes_delete: "tarjetaIntegrantes/delete",
-
     // censoII
 
     fichaDatosDirecciones_datosDireccionesSearch:
@@ -471,7 +473,12 @@ export class SigaServices {
     busquedaPerJuridica_solicitudInsertBanksData:
       "busquedaPerJuridica/solicitudInsertBanksData",
     fichaDatosColegiales_datosColegialesUpdate:
-      "/fichaDatosColegiales/datosColegialesUpdate"
+      "/fichaDatosColegiales/datosColegialesUpdate",
+
+    usuario_cambioIdioma: "usuario/cambioIdioma",
+    fichaColegialOtrasColegiaciones_getLabelColegios:
+      "fichaColegialOtrasColegiaciones/getLabelColegios"
+
   };
 
   private menuToggled = new Subject<any>();

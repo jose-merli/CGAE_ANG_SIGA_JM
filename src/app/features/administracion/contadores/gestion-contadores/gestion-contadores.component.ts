@@ -49,7 +49,8 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   ) {
     super(USER_VALIDATIONS);
   }
-  @ViewChild("table") table;
+  @ViewChild("table")
+  table;
   ngOnInit() {
     console.log(sessionStorage);
     this.checkAcceso();
@@ -87,11 +88,20 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
           this.editar = false;
         } else {
           sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
           this.router.navigate(["/errorAcceso"]);
         }
       }
     );
+  }
+
+  onChangeCheck(event) {
+    this.checkmodificable = event;
+
+    this.modificableToBody();
   }
 
   checkEditar() {
