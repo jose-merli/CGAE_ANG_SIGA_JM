@@ -1,4 +1,4 @@
-<!-- <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl> -->
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="ficha-container">
   <!--DATOS GENERALES-->
   <div class="card">
@@ -53,10 +53,9 @@
             </div>
             <div class="form-group col-lg-2 col-md-2">
               <label class="d-block">Genérica</label>
-              <p-radioButton [disabled]="editar && institucionActual != 2000 " class="mr-2 mt-auto" name="groupname" value="Si" [(ngModel)]="body.generica"
+              <p-radioButton [disabled]="editar && institucionActual != 2000 " class="mr-2 mt-auto" name="groupname" value="S" [(ngModel)]="body.generica"
                 label="Sí"></p-radioButton>
-              <p-radioButton [disabled]="editar && institucionActual != 2000 " name="groupname" value="No" [(ngModel)]="body.generica"
-                label="No"></p-radioButton>
+              <p-radioButton [disabled]="editar && institucionActual != 2000 " name="groupname" value="N" [(ngModel)]="body.generica" label="No"></p-radioButton>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Clases de comunicaciones *</label>

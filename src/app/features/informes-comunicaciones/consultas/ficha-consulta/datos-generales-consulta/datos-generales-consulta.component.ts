@@ -263,7 +263,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     } else {
       this.editar = false;
-      this.body.generica = 'Si';
+      this.body.generica = 'S';
     }
   }
 
@@ -292,6 +292,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
 
   restablecer() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.body.generica = 'S';
   }
 
 

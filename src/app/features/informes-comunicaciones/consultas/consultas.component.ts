@@ -316,7 +316,7 @@ export class ConsultasComponent implements OnInit {
     this.selectedInstitucion = dato[0].idInstitucion;
     if (!this.selectMultiple) {
       if ((this.selectedInstitucion == this.institucionActual && dato[0].generica == "No") ||
-        (this.institucionActual == 2000 && dato[0].generica == "Si")) {
+        (this.institucionActual == 2000 && dato[0].generica == "S")) {
         this.router.navigate(['/fichaConsulta']);
         sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
         sessionStorage.setItem("filtrosConsulta", JSON.stringify(this.bodySearch));

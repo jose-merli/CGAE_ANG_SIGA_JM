@@ -5,6 +5,8 @@ import { TranslateService } from "./../../../../../commons/translate/translation
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
 import { ConsultaConsultasItem } from '../../../../../models/ConsultaConsultasItem';
+import { Message } from "primeng/components/common/api";
+
 
 
 @Component({
@@ -24,7 +26,9 @@ export class ConsultaComponent implements OnInit {
   showAyuda: boolean = false;
   showValores: boolean = false;
   body: ConsultaConsultasItem = new ConsultaConsultasItem();
+  bodyInicial: ConsultaConsultasItem = new ConsultaConsultasItem();
   saltoLinea: string = '';
+  msgs: Message[];
 
   fichasPosibles = [
     {
@@ -47,6 +51,27 @@ export class ConsultaComponent implements OnInit {
   ngOnInit() {
     this.getDatos();
   }
+
+  // Mensajes
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showInfo(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
 
   abreCierraFicha() {
     if (sessionStorage.getItem("crearNuevaConsulta") == null) {
@@ -110,17 +135,33 @@ export class ConsultaComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("consultasSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("consultasSearch"));
-
       if (this.body.sentencia != 'undefined' && this.body.sentencia != null) {
         this.body.sentencia = this.body.sentencia.replace(new RegExp(",", "g"), ",\n");
       }
-
+      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
   }
 
+  guardar() {
+    this.sigaServices.post("consultas_guardarConsulta", this.body).subscribe(
+      data => {
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        this.showSuccess('Se ha guardado la consulta correctamente');
+      },
+      err => {
+        this.showFail('Error al guardar la consulta');
+        console.log(err);
+      },
+      () => {
 
+      }
+    );
 
+  }
 
+  restablecer() {
+    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+  }
 
 
 }
