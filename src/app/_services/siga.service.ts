@@ -249,6 +249,8 @@ export class SigaServices {
     fichaCursos_getCountIncriptions: "fichaCursos/getCountIncriptions",
     fichaCursos_downloadTemplateFile: "fichaCursos/downloadTemplateFile",
     fichaCursos_uploadFile: "fichaCursos/uploadFile",
+    fichaCursos_getMassiveLoadInscriptions:
+      "fichaCursos/getMassiveLoadInscriptions",
 
     busquedaInscripciones_estadosInscripciones:
       "busquedaInscripciones/estadosInscripciones",
@@ -293,6 +295,10 @@ export class SigaServices {
     fichaEventos_searchEvent: "fichaEventos/searchEvent",
     fichaCursos_getTrainersCourse: "fichaCursos/getTrainersCourse",
     fichaCursos_deleteTrainersCourse: "fichaCursos/deleteTrainersCourse",
+    fichaCursos_deleteInscriptionsCourse:
+      "fichaCursos/deleteInscriptionsCourse",
+    fichaCursos_autovalidateInscriptionsCourse:
+      "fichaCursos/autovalidateInscriptionsCourse",
     datosNotificaciones_getTypeNotifications:
       "datosNotificaciones/getTypeNotifications",
     datosNotificaciones_getMeasuredUnit: "datosNotificaciones/getMeasuredUnit",
@@ -688,5 +694,32 @@ export class SigaServices {
 
   notifyMenuToggled() {
     this.menuToggled.next();
+  }
+
+  postSendContentAndParameter(
+    service: string,
+    param: string,
+    file: any
+  ): Observable<any> {
+    let formData: FormData = new FormData();
+    if (file != undefined) {
+      formData.append("uploadFile", file, file.name);
+    }
+    let headers = new HttpHeaders();
+
+    headers.append("Content-Type", "multipart/form-data");
+    headers.append("Accept", "application/json");
+
+    return this.http
+      .post(
+        environment.newSigaUrl + this.endpoints[service] + param,
+        formData,
+        {
+          headers: headers
+        }
+      )
+      .map(response => {
+        return response;
+      });
   }
 }

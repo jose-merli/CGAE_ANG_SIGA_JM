@@ -1,9 +1,18 @@
 import { Location } from "@angular/common";
-import { ChangeDetectorRef, Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation
+} from "@angular/core";
 import { saveAs } from "file-saver/FileSaver";
 import { Router } from "../../../../../node_modules/@angular/router";
 import { ConfirmationService } from "../../../../../node_modules/primeng/api";
-import { AutoComplete, Dropdown } from "../../../../../node_modules/primeng/primeng";
+import {
+  AutoComplete,
+  Dropdown
+} from "../../../../../node_modules/primeng/primeng";
 import { TranslateService } from "../../../commons/translate";
 import { CertificadoItem } from "../../../models/CertificadoItem";
 import { DatosCursosItem } from "../../../models/DatosCursosItem";
@@ -16,6 +25,7 @@ import { esCalendar } from "../../../utils/calendar";
 import { AuthenticationService } from "../../../_services/authentication.service";
 import { SigaServices } from "../../../_services/siga.service";
 import { DomSanitizer } from "../../../../../node_modules/@angular/platform-browser";
+import { CargaMasivaInscripcionObject } from "../../../models/CargaMasivaInscripcionObject";
 
 @Component({
   selector: "app-ficha-curso",
@@ -65,12 +75,12 @@ export class FichaCursoComponent implements OnInit {
   @ViewChild("tableSessions")
   tableSessions;
 
-   //Cargas
-   @ViewChild("tableCargas")
-   tableCargas;
+  //Cargas
+  @ViewChild("tableCargas")
+  tableCargas;
 
-   @ViewChild("pUploadFile")
-   pUploadFile;
+  @ViewChild("pUploadFile")
+  pUploadFile;
 
   //Colegios
   @ViewChild("colegio")
@@ -161,7 +171,6 @@ export class FichaCursoComponent implements OnInit {
 
   file: File = undefined;
 
-
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
@@ -177,12 +186,12 @@ export class FichaCursoComponent implements OnInit {
     this.progressSpinner = true;
     this.getFichasPosibles();
     this.getCombosDatosGenerales();
-    this.getCombosFormadores()
+    this.getCombosFormadores();
     this.getColsResultsFormadores();
     this.getColsResultsSessions();
     this.getColsResultsCertificates();
     this.getColsResultsCargas();
-   
+
     sessionStorage.removeItem("isFormacionCalendar");
     sessionStorage.removeItem("abrirFormador");
 
@@ -209,6 +218,8 @@ export class FichaCursoComponent implements OnInit {
       }
 
       this.arreglarFechasEvento();
+      this.getMassiveLoadInscriptions();
+
       this.progressSpinner = false;
 
       //2.Proviene de la creacion evento Incripcion Fin
@@ -233,6 +244,8 @@ export class FichaCursoComponent implements OnInit {
       }
 
       this.arreglarFechasEvento();
+      this.getMassiveLoadInscriptions();
+
       this.progressSpinner = false;
 
       //3. Estamos en modo edicion
@@ -287,15 +300,19 @@ export class FichaCursoComponent implements OnInit {
       this.getSessions();
       this.getServicesCourse();
       this.getCountInscriptions();
+      this.getMassiveLoadInscriptions();
+
       this.progressSpinner = false;
 
       //4. Viene de la ficha de inscripcion
     } else if (sessionStorage.getItem("isInscripcion") == "true") {
-      
       this.curso = new DatosCursosItem();
-      this.curso.idCurso = JSON.parse(sessionStorage.getItem("codigoCursoInscripcion"));
+      this.curso.idCurso = JSON.parse(
+        sessionStorage.getItem("codigoCursoInscripcion")
+      );
       this.searchCourse(this.curso.idCurso);
-      
+      this.getMassiveLoadInscriptions();
+
       sessionStorage.removeItem("isInscripcion");
       sessionStorage.removeItem("codigoCursoInscripcion");
 
@@ -308,7 +325,6 @@ export class FichaCursoComponent implements OnInit {
       this.curso.idEstado = this.valorEstadoAbierto;
       let colegio = 1;
       this.onChangeSelectVisibilidadObligate(colegio);
-      this.progressSpinner = false;
     }
 
     this.getNumTutor();
@@ -324,7 +340,7 @@ export class FichaCursoComponent implements OnInit {
     this.getComboServicios();
   }
 
-  getCombosFormadores(){
+  getCombosFormadores() {
     this.getComboRoles();
     this.getComboTipoCoste();
   }
@@ -469,6 +485,8 @@ export class FichaCursoComponent implements OnInit {
     if (colegio == 1) {
       this.deshabilitarCombCol = true;
       this.curso.colegio = this.authenticationService.getInstitucionSession();
+      this.progressSpinner = false;
+
     } else {
       this.deshabilitarCombCol = false;
     }
@@ -509,19 +527,14 @@ export class FichaCursoComponent implements OnInit {
     this.sigaServices.post(url, this.curso).subscribe(
       data => {
         this.progressSpinner = false;
-        this.modoEdicion = true;
-
-        // if (JSON.parse(data.body).error.code == 200) {
-        //   this.showSuccess();
-        // } else {
-        //   this.showFail(JSON.parse(data.body).error.description);
-        // }
 
         this.showSuccess();
 
         if (!this.modoEdicion) {
           this.curso.idCurso = JSON.parse(data.body).id;
+          this.getCountInscriptions();
         }
+        this.modoEdicion = true;
       },
       err => {
         this.progressSpinner = false;
@@ -1459,13 +1472,12 @@ export class FichaCursoComponent implements OnInit {
     this.tableSessions.reset();
   }
 
-
   //Inscripciones
-  irBusquedaInscripcciones(){
+  irBusquedaInscripcciones() {
     this.router.navigate(["/buscarInscripciones"]);
   }
 
-  getCountInscriptions(){
+  getCountInscriptions() {
     this.inscription = new DatosInscripcionItem();
     this.progressSpinner = true;
     this.sigaServices
@@ -1488,7 +1500,6 @@ export class FichaCursoComponent implements OnInit {
         }
       );
   }
-
 
   //Certificados
 
@@ -1628,63 +1639,47 @@ export class FichaCursoComponent implements OnInit {
     }
   }
 
-
   //Cargas
 
   getColsResultsCargas() {
     this.colsCargas = [
       {
-        field: "nombreCompleto",
+        field: "nombreFichero",
         header: "administracion.parametrosGenerales.literal.nombre"
       },
       {
-        field: "fecha",
+        field: "fechaCarga",
         header: "censo.resultadosSolicitudesModificacion.literal.fecha"
       },
       {
-        field: "totalesCorrectas",
-        header: "agenda.fichaEventos.datosFormadores.cabecera"
+        field2: "inscripcionesCorrectas",
+        field: "numeroLineasTotales",
+        header: "formacion.fichaCursos.cargaMasivaInscripciones.totalesCorrectas"
       }
     ];
-
   }
 
-  //FUNCIONES GENERALES
-  getFichasPosibles() {
-    this.fichasPosibles = [
-      {
-        key: "generales",
-        activa: true
-      },
-      {
-        key: "price",
-        activa: false
-      },
-      {
-        key: "formadores",
-        activa: false
-      },
-      {
-        key: "inscription",
-        activa: false
-      },
-      {
-        key: "certificate",
-        activa: false
-      },
-      {
-        key: "session",
-        activa: false
-      },
-      {
-        key: "communications",
-        activa: false
-      },
-      {
-        key: "carga",
-        activa: false
-      }
-    ];
+  getMassiveLoadInscriptions() {
+    this.progressSpinner = true;
+    this.sigaServices
+      .getParam(
+        "fichaCursos_getMassiveLoadInscriptions",
+        "?idCurso=" + this.curso.idCurso
+      )
+      .subscribe(
+        n => {
+          this.datosCargas = n.cargaMasivaInscripcionesItem;
+          this.getCountInscriptions();
+
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
   }
 
   downloadTemplateFile() {
@@ -1765,15 +1760,21 @@ export class FichaCursoComponent implements OnInit {
 
   uploadFile() {
     this.progressSpinner = true;
+
     if (this.file != undefined) {
       this.sigaServices
-        .postSendContent("fichaCursos_uploadFile", this.file)
+        .postSendContentAndParameter(
+          "fichaCursos_uploadFile",
+          "?idCurso=" + this.curso.idCurso,
+          this.file
+        )
         .subscribe(
           data => {
             this.file = null;
             this.progressSpinner = false;
 
             this.showSuccess();
+            this.getMassiveLoadInscriptions();
           },
           error => {
             console.log(error);
@@ -1800,6 +1801,121 @@ export class FichaCursoComponent implements OnInit {
     }
   }
 
+  deleteInscriptions(selectedDatosCargas) {
+    this.progressSpinner = true;
+    let deleteInscriptions = new CargaMasivaInscripcionObject();
+    deleteInscriptions.cargaMasivaInscripcionesItem = selectedDatosCargas;
+
+    this.sigaServices
+      .post("fichaCursos_deleteInscriptionsCourse", deleteInscriptions)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+        
+          this.getCountInscriptions();
+
+          if(JSON.parse(data.body).error.code == null){
+            this.showMessage("info", "Información", JSON.parse(data.body).error.description);
+          }else if(JSON.parse(data.body).error.code == 200){
+            this.showMessage("success", "Correcto", JSON.parse(data.body).error.description);
+          }else if(JSON.parse(data.body).error.code == 400){
+            this.showMessage("error", "Incorrecto", JSON.parse(data.body).error.description);
+          }
+         
+
+          this.selectMultipleCargas = false;
+          this.selectAllCargas = false;
+        },
+        err => {
+          this.showFail(
+            this.translateService.instant(
+              "general.message.error.realiza.accion"
+            )
+          );
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  autovalidateInscriptions(selectedDatosCargas) {
+    this.progressSpinner = true;
+    let autovalidateInscriptions = new CargaMasivaInscripcionObject();
+    autovalidateInscriptions.cargaMasivaInscripcionesItem = selectedDatosCargas;
+
+    this.sigaServices
+      .post("fichaCursos_autovalidateInscriptionsCourse", autovalidateInscriptions)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.getCountInscriptions();
+
+          if(JSON.parse(data.body).error.code == null){
+            this.showMessage("info", "Información", JSON.parse(data.body).error.description);
+          }else if(JSON.parse(data.body).error.code == 200){
+            this.showMessage("success", "Correcto", JSON.parse(data.body).error.description);
+          }else if(JSON.parse(data.body).error.code == 400){
+            this.showMessage("error", "Incorrecto", JSON.parse(data.body).error.description);
+          }
+         
+
+          this.selectMultipleCargas = false;
+          this.selectAllCargas = false;
+        },
+        err => {
+          this.showFail(
+            this.translateService.instant(
+              "general.message.error.realiza.accion"
+            )
+          );
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  //FUNCIONES GENERALES
+  getFichasPosibles() {
+    this.fichasPosibles = [
+      {
+        key: "generales",
+        activa: true
+      },
+      {
+        key: "price",
+        activa: false
+      },
+      {
+        key: "formadores",
+        activa: false
+      },
+      {
+        key: "inscription",
+        activa: false
+      },
+      {
+        key: "certificate",
+        activa: false
+      },
+      {
+        key: "session",
+        activa: false
+      },
+      {
+        key: "communications",
+        activa: false
+      },
+      {
+        key: "carga",
+        activa: false
+      }
+    ];
+  }
+
   //Funciones controlan las fichas
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
@@ -1813,7 +1929,9 @@ export class FichaCursoComponent implements OnInit {
 
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = !fichaPosible.activa;
+    if (this.modoEdicion) {
+      fichaPosible.activa = !fichaPosible.activa;
+    }
     this.openFicha = !this.openFicha;
   }
 
@@ -1853,11 +1971,11 @@ export class FichaCursoComponent implements OnInit {
     return "#" + ("000000" + color).slice(-6);
   }
 
-  showFail(msg) {
+  showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
-      severity: "error",
-      summary: "Información",
+      severity: severity,
+      summary: summary,
       detail: msg
     });
   }
@@ -1896,5 +2014,23 @@ export class FichaCursoComponent implements OnInit {
     }
 
     return fecha;
+  }
+
+  showInfo(message: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "info",
+      summary: "Error",
+      detail: message
+    });
+  }
+
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: mensaje
+    });
   }
 }
