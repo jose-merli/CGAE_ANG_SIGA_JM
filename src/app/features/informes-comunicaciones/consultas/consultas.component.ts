@@ -200,6 +200,7 @@ export class ConsultasComponent implements OnInit {
       .postPaginado("consultas_search", "?numPagina=1", this.bodySearch)
       .subscribe(
         data => {
+          debugger;
           this.progressSpinner = false;
           this.searchConsultas = JSON.parse(data["body"]);
           this.datos = this.searchConsultas.consultaItem;
@@ -313,6 +314,7 @@ export class ConsultasComponent implements OnInit {
 
   navigateTo(dato) {
     let id = dato[0].id;
+    console.log(dato)
     this.selectedInstitucion = dato[0].idInstitucion;
     if (!this.selectMultiple) {
       if ((this.selectedInstitucion == this.institucionActual && dato[0].generica == "N") ||
@@ -334,5 +336,11 @@ export class ConsultasComponent implements OnInit {
     sessionStorage.setItem("crearNuevaConsulta", JSON.stringify("true"));
   }
 
+  isButtonDisabled() {
+    if (this.bodySearch.idModulo != null && this.bodySearch.idModulo != '') {
+      return false;
+    }
+    return true;
+  }
 
 }

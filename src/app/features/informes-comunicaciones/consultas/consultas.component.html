@@ -11,7 +11,7 @@
     <div class="card-body">
       <div class="form-row">
         <div class="form-group col-lg-4 col-md-4">
-          <label>Módulo</label>
+          <label>Módulo *</label>
           <p-dropdown [options]="modulos" [(ngModel)]="bodySearch.idModulo" class="select-form"></p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-4">
@@ -44,7 +44,7 @@
     </div>
     <div class="card-footer">
       <div class="text-right main-button">
-        <button (click)="buscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+        <button [disabled]="isButtonDisabled()" (click)="buscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
         <button (click)="addConsulta()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
       </div>
     </div>
