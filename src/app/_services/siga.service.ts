@@ -465,7 +465,8 @@ export class SigaServices {
     busquedaPerJuridica_solicitudInsertBanksData:
       "busquedaPerJuridica/solicitudInsertBanksData",
     fichaDatosColegiales_datosColegialesUpdate:
-      "/fichaDatosColegiales/datosColegialesUpdate"
+      "/fichaDatosColegiales/datosColegialesUpdate",
+    fichaColegialRegTel_searchListDoc: "fichaColegialRegTel/searchListDoc"
   };
 
   private menuToggled = new Subject<any>();
