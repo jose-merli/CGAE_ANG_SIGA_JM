@@ -6,6 +6,10 @@ import { Message } from "primeng/components/common/api";
 import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
 import { DatosIntegrantesItem } from "../../../../../models/DatosIntegrantesItem";
 import { DatosIntegrantesObject } from "../../../../../models/DatosIntegrantesObject";
+import { TranslateService } from "./../../../../../commons/translate/translation.service";
+import { ColegiadoItem } from "../../../../../models/ColegiadoItem";
+import { ColegiadoObject } from "../../../../../models/ColegiadoObject";
+
 /*** COMPONENTES ***/
 
 @Component({
@@ -30,7 +34,7 @@ export class DetalleIntegranteComponent implements OnInit {
   disabledRadio: boolean = false;
   disabled: boolean = false;
   selectMultiple: boolean = false;
-  blockCrear: boolean = true;
+  block: boolean = true;
   isDisablednifCif: boolean = true;
   isDisabledNombre: boolean = true;
   isDisabledApellidos1: boolean = true;
@@ -48,6 +52,7 @@ export class DetalleIntegranteComponent implements OnInit {
   descripcionCargo: any;
   descripcionProvincia: any;
   descripcionTipoColegio: any;
+  idInstColegio: any;
   permisosArray: any[];
   usuarioBody: any[];
   cargosArray: any[];
@@ -71,12 +76,24 @@ export class DetalleIntegranteComponent implements OnInit {
   body1: DatosIntegrantesItem = new DatosIntegrantesItem();
   body2: DatosIntegrantesItem = new DatosIntegrantesItem();
   esColegiado: boolean = false;
+  colegio: String;
+  colegios: any[] = [];
+  idInstitucion: any;
+
+  colegiadoSearch: ColegiadoObject = new ColegiadoObject();
+  datosColegiados: any[] = [];
+
+  nColegiado: any[] = [];
 
   @ViewChild("table")
   table;
   selectedDatos;
 
-  constructor(private sigaServices: SigaServices, private router: Router) {}
+  constructor(
+    private sigaServices: SigaServices,
+    private router: Router,
+    private translateService: TranslateService
+  ) {}
 
   ngOnInit() {
     if (sessionStorage.getItem("historicoInt") != null) {
@@ -94,12 +111,17 @@ export class DetalleIntegranteComponent implements OnInit {
       sessionStorage.getItem("nIntegrante") != undefined
     ) {
       this.beanNewIntegrante();
+      this.getComboColegios();
     }
     // modificacion
     else {
       var a = JSON.parse(sessionStorage.getItem("integrante"));
       // caso de que la persona integrante colegiada
-      if (a.ejerciente != null && a.ejerciente != "NO COLEGIADO") {
+      if (
+        a.ejerciente != null &&
+        a.ejerciente != "NO COLEGIADO" &&
+        a.ejerciente != "SOCIEDAD"
+      ) {
         this.esColegiado = true;
       } else {
         // caso de que la persona integrante sea no colegiada
@@ -111,6 +133,49 @@ export class DetalleIntegranteComponent implements OnInit {
       }
       if (a.fechaBajaCargo != null || a.fechaBajaCargo != undefined) {
         this.fechaBajaCargo = a.fechaBajaCargo;
+      }
+
+      if (this.body.idPersona != null) {
+        if (this.esColegiado) {
+          this.sigaServices
+            .post(
+              "fichaColegialOtrasColegiaciones_getLabelColegios",
+              this.body.idPersonaComponente
+            )
+            .subscribe(
+              n => {
+                this.colegios = JSON.parse(n["body"]).comboColegiadoItems;
+                console.log("colegiaciones", this.colegios);
+
+                this.colegios.forEach(element => {
+                  this.nColegiado.push({
+                    idInstitucion: element.value,
+                    nColegiado: element.nColegiado
+                  });
+                });
+
+                if (this.colegios.length == 1) {
+                  this.isDisabledTipoColegio = true;
+                  this.isDisabledColegio = true;
+                  this.isDisabledProvincia = false;
+                  this.isDisabledNumColegio = true;
+                  // this.progressSpinner = true;
+                  // this.getProvinciaByIdColegio(this.colegios[0].value);
+                  this.body.numColegiado = this.colegios[0].nColegiado;
+                } else {
+                  this.isDisabledTipoColegio = true;
+                  this.isDisabledColegio = false;
+                  this.isDisabledProvincia = false;
+                  this.isDisabledNumColegio = true;
+                }
+              },
+              err => {
+                console.log(err);
+              }
+            );
+        }
+      } else {
+        this.getComboColegios();
       }
 
       if (this.historico) {
@@ -144,7 +209,7 @@ export class DetalleIntegranteComponent implements OnInit {
       },
       { field: "apellidos", header: "Apellidos" },
       { field: "fechaInicioCargo", header: "Fecha de alta - fecha de baja" },
-      { field: "cargos", header: "Cargos del integrante" },
+      { field: "cargo", header: "Cargos del integrante" },
       { field: "liquidacionComoSociedad", header: "Liquidación como sociedad" },
       { field: "ejerciente", header: "Ejerciente" },
       { field: "participacion", header: "Participación en la sociedad" }
@@ -169,9 +234,54 @@ export class DetalleIntegranteComponent implements OnInit {
       }
     ];
 
+    //Combos
+
     this.getComboProvincias();
     this.getComboTipoColegio();
     this.getComboTiposCargos();
+  }
+
+  getComboColegios() {
+    this.sigaServices.get("busquedaPer_colegio").subscribe(
+      n => {
+        this.colegios = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getProvinciaByIdColegio(idInstitucion) {
+    this.body.valor = idInstitucion;
+    this.sigaServices.post("integrantes_provinciaColegio", this.body).subscribe(
+      data => {
+        this.body.idProvincia = JSON.parse(data["body"]).valor;
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  onChangeColegio(event) {
+    //this.progressSpinner = true;
+
+    if (event) {
+      //this.getProvinciaByIdColegio(event);
+
+      if (this.nColegiado.length > 1) {
+        this.nColegiado.forEach(element => {
+          if (element.idInstitucion == event) {
+            this.body.numColegiado = element.nColegiado;
+          }
+        });
+      }
+    }
   }
 
   getComboProvincias() {
@@ -179,22 +289,6 @@ export class DetalleIntegranteComponent implements OnInit {
       n => {
         this.provinciasArray = n.combooItems;
 
-        // si estamos en la creacion, busca provincia del colegio asociado
-        if (
-          sessionStorage.getItem("nIntegrante") != null ||
-          sessionStorage.getItem("nIntegrante") != undefined
-        ) {
-          this.body.valor = this.body.idInstitucionIntegrante;
-          this.sigaServices
-            .post("integrantes_provinciaColegio", this.body)
-            .subscribe(
-              data => {
-                this.body.idProvincia = JSON.parse(data["body"]).valor;
-              },
-              err => {},
-              () => {}
-            );
-        }
         this.actualizarDescripcionProvincia();
       },
       err => {
@@ -237,12 +331,6 @@ export class DetalleIntegranteComponent implements OnInit {
       err => {
         console.log(err);
       }
-      //   ,
-      //   () => {
-      //     this.cargosArray.forEach((value:ComboItem, key:number)){
-
-      //   }
-      // }
     );
   }
 
@@ -296,13 +384,7 @@ export class DetalleIntegranteComponent implements OnInit {
         this.body.idPersona = ir[0].idPersona;
         this.body.idPersonaIntegrante = ir[0].idPersona;
       }
-      if (ir[0].colegio != null) {
-        this.body.idInstitucion = ir[0].colegio;
-        this.body.idInstitucionIntegrante = ir[0].numeroInstitucion;
-      } else {
-        this.body.idInstitucion = ir[0].idInstitucion;
-        this.body.idInstitucionIntegrante = ir[0].numeroInstitucion;
-      }
+
       if (ir[0].fechaAlta != null) {
         this.body.fechaCargo = ir[0].fechaAlta;
         this.fechaCarga = ir[0].fechaAlta;
@@ -347,16 +429,40 @@ export class DetalleIntegranteComponent implements OnInit {
       } else if (ir[0].numColegiado != null) {
         this.body.numColegiado = ir[0].numColegiado;
       }
-      if (ir[0].idProvincia != null) {
-        this.body.idProvincia = ir[0].idProvincia;
-      }
 
       // caso de que la persona integrante colegiada
-      if (ir[0].situacion != null && ir[0].situacion != "NO COLEGIADO") {
+      if (
+        ir[0].situacion != null &&
+        ir[0].situacion != "NO COLEGIADO" &&
+        ir[0].situacion != "SOCIEDAD"
+      ) {
         this.esColegiado = true;
+
+        if (ir[0].colegio != null && ir[0].colegio != undefined) {
+          this.body.idInstitucion = ir[0].colegio.value;
+          this.body.idInstitucionIntegrante = ir[0].numeroInstitucion;
+
+          this.body.colegio = ir[0].colegio.value;
+        } else {
+          this.body.idInstitucion = ir[0].idInstitucion;
+          this.body.idInstitucionIntegrante = ir[0].numeroInstitucion;
+
+          this.body.colegio = ir[0].numeroInstitucion;
+        }
+
+        if (ir[0].idProvincia != null) {
+          this.body.idProvincia = ir[0].idProvincia;
+        }
+
+        if (ir[0].numeroInstitucion != null) {
+          this.body.numeroInstitucion = ir[0].numeroInstitucion;
+        }
       } else {
         // caso de que la persona integrante sea no colegiada
         this.esColegiado = false;
+
+        this.body.numeroInstitucion = ir[0].numeroInstitucion;
+        this.body.idInstitucion = ir[0].idInstitucion;
       }
 
       this.body.idPersonaPadre = this.usuarioBody[0].idPersona;
@@ -374,7 +480,7 @@ export class DetalleIntegranteComponent implements OnInit {
       this.body.apellidos1 = ir[0].apellidos1;
       this.body.apellidos2 = ir[0].apellidos2;
 
-      this.ajustarPantallaParaCrear();
+      this.ajustarPantallaPara();
     }
   }
   isSelectMultiple() {
@@ -387,13 +493,13 @@ export class DetalleIntegranteComponent implements OnInit {
     }
   }
 
-  ajustarPantallaParaCrear() {
+  ajustarPantallaPara() {
     this.isDisablednifCif = true;
     this.isDisabledNombre = false;
     this.isDisabledApellidos1 = false;
     this.isDisabledApellidos2 = false;
     this.isDisabledTipoColegio = false;
-    this.isDisabledProvincia = false;
+    //this.isDisabledProvincia = false;
 
     if (this.body.idTipoColegio == "41" || this.body.idTipoColegio == "1") {
       this.isDisabledNumColegio = true;
@@ -401,7 +507,17 @@ export class DetalleIntegranteComponent implements OnInit {
       this.isDisabledNumColegio = false;
     }
 
-    this.isDisabledColegio = true;
+    if (this.esColegiado) {
+      this.isDisabledTipoColegio = true;
+      this.isDisabledColegio = true;
+      this.isDisabledProvincia = false;
+      this.isDisabledNumColegio = true;
+    } else {
+      this.isDisabledTipoColegio = false;
+      this.isDisabledColegio = false;
+      this.isDisabledProvincia = false;
+      this.isDisabledNumColegio = false;
+    }
   }
 
   ajustarPantallaParaAsignar() {
@@ -409,18 +525,12 @@ export class DetalleIntegranteComponent implements OnInit {
     this.isDisabledNombre = true;
     this.isDisabledApellidos1 = true;
     this.isDisabledApellidos2 = true;
-    if (this.esColegiado) {
-      this.isDisabledTipoColegio = true;
-      this.isDisabledProvincia = true;
-      this.isDisabledNumColegio = true;
-      this.isDisabledNumColegio = true;
-    } else {
+    if (!this.esColegiado) {
       this.isDisabledTipoColegio = false;
+      this.isDisabledColegio = true;
       this.isDisabledProvincia = false;
       this.isDisabledNumColegio = false;
     }
-
-    this.isDisabledColegio = true;
   }
 
   todoDisable() {
@@ -478,14 +588,24 @@ export class DetalleIntegranteComponent implements OnInit {
   }
 
   guardar() {
+    //this.progressSpinner = true;
     if (
       sessionStorage.getItem("nIntegrante") != null ||
       sessionStorage.getItem("nIntegrante") != undefined
     ) {
-      this.crearIntegrante();
+      this.Integrante();
     } else {
       this.updateIntegrante();
     }
+  }
+
+  showSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant("general.message.accion.realizada")
+    });
   }
 
   showFail(message: string) {
@@ -503,6 +623,7 @@ export class DetalleIntegranteComponent implements OnInit {
 
   updateIntegrante() {
     let updateIntegrante = new DatosIntegrantesItem();
+    updateIntegrante = this.body;
     let isParticipacionNumerico = false;
     if (this.fechaCarga != undefined && this.fechaCarga != null) {
       this.arreglarFechas();
@@ -526,15 +647,18 @@ export class DetalleIntegranteComponent implements OnInit {
     } else {
       updateIntegrante.idCargo = "";
     }
+    if (this.body.numColegiado != undefined && this.body.numColegiado != null) {
+      updateIntegrante.numColegiado = this.body.numColegiado;
+    }
     if (
       this.body.capitalSocial != undefined &&
       this.body.capitalSocial != null
     ) {
       // comprueba si es numérico + permite el 0 como valor y que este vacio el campo
       if (
-        Number(this.body.capitalSocial) ||
-        this.body.capitalSocial == "" ||
-        this.body.capitalSocial == "0"
+        this.body.capitalSocial ||
+        this.body.capitalSocial == undefined ||
+        this.body.capitalSocial == 0
       ) {
         isParticipacionNumerico = true;
         updateIntegrante.capitalSocial = this.body.capitalSocial;
@@ -543,7 +667,7 @@ export class DetalleIntegranteComponent implements OnInit {
       }
     } else {
       isParticipacionNumerico = true;
-      updateIntegrante.capitalSocial = "";
+      updateIntegrante.capitalSocial = undefined;
     }
     if (this.body.idPersona != undefined && this.body.idPersona != null) {
       updateIntegrante.idPersona = this.body.idPersona;
@@ -551,24 +675,40 @@ export class DetalleIntegranteComponent implements OnInit {
     if (this.body.idComponente != undefined && this.body.idComponente != null) {
       updateIntegrante.idComponente = this.body.idComponente;
     }
+    if (
+      this.body.idPersonaComponente != undefined &&
+      this.body.idPersonaComponente != null
+    ) {
+      updateIntegrante.idPersonaComponente = this.body.idPersonaComponente;
+    }
 
-    let numParticipacion = parseInt(this.body.capitalSocial);
+    if (this.body.idProvincia != undefined && this.body.idProvincia != null) {
+      updateIntegrante.idProvincia = this.body.idProvincia;
+    }
+
+    if (this.body.colegio != undefined && this.body.colegio != null) {
+      updateIntegrante.colegio = this.body.colegio;
+    }
+
+    let numParticipacion = this.body.capitalSocial;
 
     if (
       (isParticipacionNumerico && numParticipacion <= 100) ||
-      updateIntegrante.capitalSocial == ""
+      updateIntegrante.capitalSocial == undefined
     ) {
       this.sigaServices
         .postPaginado("integrantes_update", "?numPagina=1", updateIntegrante)
         .subscribe(
           data => {
             this.progressSpinner = false;
+            this.showSuccess();
           },
           err => {
             console.log(err);
             this.progressSpinner = false;
           },
           () => {
+            this.progressSpinner = false;
             this.backTo();
           }
         );
@@ -576,10 +716,12 @@ export class DetalleIntegranteComponent implements OnInit {
       this.showFail(
         "El campo Participación debe ser numérico y menor o igual que 100"
       );
+
+      this.progressSpinner = false;
     }
   }
 
-  crearIntegrante() {
+  Integrante() {
     let newIntegrante = new DatosIntegrantesItem();
     let isParticipacionNumerico = false;
 
@@ -639,9 +781,9 @@ export class DetalleIntegranteComponent implements OnInit {
         this.body.capitalSocial != null
       ) {
         if (
-          Number(this.body.capitalSocial) ||
-          this.body.capitalSocial == "" ||
-          this.body.capitalSocial == "0"
+          this.body.capitalSocial ||
+          this.body.capitalSocial == undefined ||
+          this.body.capitalSocial == 0
         ) {
           isParticipacionNumerico = true;
           newIntegrante.capitalSocial = this.body.capitalSocial;
@@ -650,7 +792,7 @@ export class DetalleIntegranteComponent implements OnInit {
         }
       } else {
         isParticipacionNumerico = true;
-        newIntegrante.capitalSocial = "";
+        newIntegrante.capitalSocial = undefined;
       }
       if (
         this.body.idComponente != undefined &&
@@ -682,7 +824,7 @@ export class DetalleIntegranteComponent implements OnInit {
       ) {
         newIntegrante.idInstitucionIntegrante = this.body.idInstitucionIntegrante;
       } else {
-        newIntegrante.idInstitucionIntegrante = "";
+        newIntegrante.idInstitucionIntegrante = this.body.colegio;
       }
       if (
         this.body.idTipoColegio != undefined &&
@@ -710,10 +852,33 @@ export class DetalleIntegranteComponent implements OnInit {
       } else {
         newIntegrante.tipo = "";
       }
-      let numParticipacion = parseInt(this.body.capitalSocial);
+      if (!this.esColegiado) {
+        if (
+          this.body.numeroInstitucion != undefined &&
+          this.body.numeroInstitucion != null
+        ) {
+          newIntegrante.colegio = this.body.numeroInstitucion;
+        }
+
+        if (
+          this.body.idInstitucion != null &&
+          this.body.idInstitucion != undefined
+        ) {
+          newIntegrante.colegio = this.body.idInstitucion;
+        }
+      }
+
+      if (
+        this.esColegiado &&
+        this.body.colegio != undefined &&
+        this.body.colegio != null
+      ) {
+        newIntegrante.colegio = this.body.colegio;
+      }
+      let numParticipacion = this.body.capitalSocial;
       if (
         (isParticipacionNumerico && numParticipacion <= 100) ||
-        newIntegrante.capitalSocial == ""
+        newIntegrante.capitalSocial == undefined
       ) {
         this.sigaServices
           .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
@@ -790,9 +955,9 @@ export class DetalleIntegranteComponent implements OnInit {
         this.body.capitalSocial != null
       ) {
         if (
-          Number(this.body.capitalSocial) ||
-          this.body.capitalSocial == "" ||
-          this.body.capitalSocial == "0"
+          this.body.capitalSocial ||
+          this.body.capitalSocial == undefined ||
+          this.body.capitalSocial == 0
         ) {
           isParticipacionNumerico = true;
           newIntegrante.capitalSocial = this.body.capitalSocial;
@@ -801,7 +966,7 @@ export class DetalleIntegranteComponent implements OnInit {
         }
       } else {
         isParticipacionNumerico = true;
-        newIntegrante.capitalSocial = "";
+        newIntegrante.capitalSocial = undefined;
       }
       if (
         this.body.idComponente != undefined &&
@@ -833,7 +998,7 @@ export class DetalleIntegranteComponent implements OnInit {
       ) {
         newIntegrante.idInstitucionIntegrante = this.body.idInstitucionIntegrante;
       } else {
-        newIntegrante.idInstitucionIntegrante = "";
+        newIntegrante.idInstitucionIntegrante = this.body.colegio;
       }
       if (
         this.body.idTipoColegio != undefined &&
@@ -861,10 +1026,10 @@ export class DetalleIntegranteComponent implements OnInit {
       } else {
         newIntegrante.tipo = "";
       }
-      let numParticipacion = parseInt(this.body.capitalSocial);
+      let numParticipacion = this.body.capitalSocial;
       if (
         (isParticipacionNumerico && numParticipacion <= 100) ||
-        newIntegrante.capitalSocial == ""
+        newIntegrante.capitalSocial == undefined
       ) {
         this.sigaServices
           .postPaginado("integrantes_insert", "?numPagina=1", newIntegrante)
@@ -881,7 +1046,9 @@ export class DetalleIntegranteComponent implements OnInit {
             }
           );
       } else {
-        this.showFail("El campo Participación debe ser numérico");
+        this.showFail(
+          "El campo Participación debe ser numérico y menor o igual que 100"
+        );
       }
     }
   }
@@ -899,5 +1066,12 @@ export class DetalleIntegranteComponent implements OnInit {
     this.descripcionProvincia = this.provinciasArray.find(
       item => item.value === this.body.idProvincia
     );
+
+    console.log("dde", this.descripcionProvincia);
+  }
+
+  onChange(event) {
+    console.log("fo", event.replace(".", ","));
+    this.body.capitalSocial = event.replace(",", ".");
   }
 }

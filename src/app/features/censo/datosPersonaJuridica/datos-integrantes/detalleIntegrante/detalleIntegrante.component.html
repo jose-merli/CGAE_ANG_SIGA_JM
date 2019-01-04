@@ -112,6 +112,8 @@
     <!--COMIENZO COLEGIACION-->
 
     <div *ngIf="esFichaActiva('colegiacion')" class="card-body card-body-ficha">
+
+
       <div class="row">
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.busquedaClientesAvanzada.literal.tipoColegio" | translate}} (*)</label>
@@ -119,14 +121,14 @@
             [(disabled)]="isDisabledTipoColegio"></p-dropdown>
 
         </div>
-        <div class="form-group col-lg-3 col-md-6">
+        <div *ngIf="esColegiado" class="form-group col-lg-3 col-md-6">
           <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
-          <input type="text" class="form-control" [(disabled)]="isDisabledColegio" pInputText>
+          <p-dropdown [options]="colegios" [(ngModel)]="body.colegio" [(disabled)]="isDisabledColegio" class="select-form" (onChange)="onChangeColegio($event.value)"></p-dropdown>
         </div>
-        <div class="form-group col-lg-3 col-md-6">
+        <div *ngIf="!esColegiado" class="form-group col-lg-3 col-md-6">
           <label>{{"censo.datosDireccion.literal.provincia" | translate}}</label>
-          <p-dropdown [(ngModel)]="body.idProvincia" (ngModelChange)="actualizarDescripcionProvincia()" class="select-form" [options]="provinciasArray"
-            [(disabled)]="isDisabledProvincia"></p-dropdown>
+          <p-dropdown [(ngModel)]="body.idProvincia" [(disabled)]="isDisabledProvincia" (ngModelChange)="actualizarDescripcionProvincia()"
+            class="select-form" [options]="provinciasArray"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
@@ -213,7 +215,8 @@
         </div>
         <div class="form-group col-lg-2 col-md-4">
           <label>{{"censo.consultaComponentesJuridicos.literal.Participacion" | translate}}</label>
-          <input type="text" class="form-control" [(disabled)]="historico" [(ngModel)]="body.capitalSocial" pInputText>
+          <input type="text" class="form-control" [(disabled)]="historico" [(ngModel)]="body.capitalSocial" ui-number-mask="3" (ngModelChange)="onChange($event)"
+            pInputText>
         </div>
 
 
@@ -228,4 +231,9 @@
     <button *ngIf="editar" (click)="guardar();" pButton type="button" icon="	fa fa-edit " [(disabled)]="historico" iconPos="left"
       label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
   </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+  <div class="loader"></div>
 </div>

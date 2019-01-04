@@ -34,9 +34,9 @@
               <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}}
                 <span>{{ body.titular }}</span>
               </label>
-              <label>{{"administracion.usuarios.literal.NIF" | translate}}
+              <!--<label>{{"administracion.usuarios.literal.NIF" | translate}}
                 <span>{{ body.nifTitular }}</span>
-              </label>
+              </label>-->
               <label>{{"censo.mutualidad.literal.iban" | translate}}
                 <span>{{ body.iban }}</span>
               </label>
@@ -64,13 +64,13 @@
                   <label class="labelError">{{"El campo no puede estar vacío"}}</label>
                 </div>
               </div>
-              <div class="form-group col-lg-3 col-md-6">
+               <!--<div class="form-group col-lg-3 col-md-6">
                 <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
                 <input type="text" class="form-control" [(disabled)]="!permisos" [(ngModel)]="body.nifTitular" pInputText>
                 <div *ngIf="identificacionValida == false">
                   <label class="labelError">{{"Identificación incorrecta"}}</label>
                 </div>
-              </div>
+              </div>-->
               <div class="form-group col-lg-3 col-md-6">
                 <label>{{"censo.mutualidad.literal.iban" | translate}} (*)</label>
                 <input type="text" class="form-control"[(disabled)]="!permisos"  [(ngModel)]="iban" (ngModelChange)="autogenerarDatos()" pInputText>
@@ -79,9 +79,13 @@
                 </div>
               </div>
               <div class="form-group col-lg-3 col-md-6">
-                <label>{{"censo.fichaCliente.datosBancarios.cuentaBancaria.bic" | translate}}</label>
-                <input [(ngModel)]="body.bic" type="text" class="form-control" (ngModelChange)="recuperarBicBanco()" [disabled]="!editar || !permisos"
-                  pInputText>
+
+                <!-- (ngModelChange)="recuperarBicBanco()" -->
+                <label>{{"censo.fichaCliente.datosBancarios.cuentaBancaria.bic" | translate}} (*)</label>
+                <input [(ngModel)]="body.bic" type="text" class="form-control" (ngModelChange)="recuperarBicBanco()" [disabled]="!editar || !permisos" pInputText>
+                  <div *ngIf="bicValido == false">
+                      <label class="labelError">{{"BIC incorrecto"}}</label>
+                    </div>
               </div>
               <div class="form-group col-lg-3 col-md-6">
                 <label>{{"censo.tipoAbono.banco" | translate}}</label>
@@ -171,10 +175,10 @@
                 <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaProducto' optionLabel="label" *ngIf="nuevo" [disabled]="!editarMandato || !permisos"
                   [options]="combooItemsProducto" (onChange)="onChangeEsquemaProducto($event)">
                 </p-dropdown>
-                <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaProducto' optionLabel="label" *ngIf="!nuevo" [options]="combooItemsProducto"
-                  (onChange)="onChangeEsquemaProducto($event)" [disabled]="mandatoAnexoVacio || !permisos">
-                </p-dropdown>
 
+                <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaProducto' optionLabel="label" *ngIf="!nuevo" [options]="combooItemsProducto"
+                  (onChange)="onChangeEsquemaProducto($event)" [disabled]="mandatoAnexoVacio || !permisos || !editarMandato">
+                </p-dropdown>
               </div>
               <p-checkbox *ngIf="isSelectedProducto == true" [(ngModel)]='checkProducto' binary="true" [(disabled)]="!permisos" (ngModelChange)="validarCheckProducto()"></p-checkbox>
               <label *ngIf="isSelectedProducto == true">{{"censo.fichaCliente.datosBancarios.autorizacion.b2b" | translate}}</label>
@@ -209,7 +213,8 @@
 
                 </p-dropdown>
                 <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaServicio' optionLabel="label" *ngIf="!nuevo" [options]="combooItemsServicio"
-                  (onChange)="onChangeEsquemaServicio($event)" [disabled]="mandatoAnexoVacio || !permisos">
+                  (onChange)="onChangeEsquemaServicio($event)" [disabled]="mandatoAnexoVacio || !permisos || !editarMandato">
+
                 </p-dropdown>
 
               </div>
@@ -481,6 +486,7 @@
         <button (click)="cerrarAuditoria()"  [(disabled)]="!permisos" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
         <button (click)="editarRegistro()" [disabled]="!showGuardarAuditoria || !permisos" pButton type="button" icon="fa fa-save" iconPos="left"
           label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+
       </div>
     </p-footer>
   </p-dialog>

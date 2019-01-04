@@ -54,6 +54,7 @@ export class SigaServices {
     parametros_update: "parametros/update",
     parametros_historico: "parametros/historico",
     etiquetas_lenguaje: "etiquetas/lenguaje",
+    etiquetas_lenguajeFiltrado: "etiquetas/lenguajeFiltrado",
     etiquetas_search: "etiquetas/search",
     etiquetas_update: "etiquetas/update",
     contadores_search: "contadores/search",
@@ -123,6 +124,7 @@ export class SigaServices {
     datosCuentaBancaria_search:
       "busquedaPerJuridica/datosBancariosGeneralSearch",
     datosCuentaBancaria_update: "busquedaPerJuridica/datosBancariosUpdate",
+
     datosCuentaBancaria_insert: "fichaDatosBancarios/datosBancariosInsert",
     datosCuentaBancaria_BIC_BANCO: "fichaDatosBancarios/BanksSearch",
     datosMandatos_search: "fichaDatosBancarios/MandatosSearch",
@@ -131,6 +133,8 @@ export class SigaServices {
     anexos_search: "fichaDatosBancarios/AnexosSearch",
     anexos_update: "fichaDatosBancarios/updateAnexos",
     anexos_insert: "fichaDatosBancarios/insertAnexos",
+    datosCuentaBancaria_getLengthCodCountry:
+      "busquedaPerJuridica/getLengthCodCountry",
     busquedaPerJuridica_uploadFile: "busquedaPerJuridica/uploadFile",
     busquedaPerJuridica_fileDownloadInformation:
       "busquedaPerJuridica/fileDownloadInformation",
@@ -154,7 +158,6 @@ export class SigaServices {
     integrantes_update: "tarjetaIntegrantes/update",
     integrantes_insert: "tarjetaIntegrantes/create",
     integrantes_delete: "tarjetaIntegrantes/delete",
-
     // censoII
 
     fichaDatosDirecciones_datosDireccionesSearch:
@@ -249,6 +252,8 @@ export class SigaServices {
     fichaCursos_getCountIncriptions: "fichaCursos/getCountIncriptions",
     fichaCursos_downloadTemplateFile: "fichaCursos/downloadTemplateFile",
     fichaCursos_uploadFile: "fichaCursos/uploadFile",
+    fichaCursos_getMassiveLoadInscriptions:
+      "fichaCursos/getMassiveLoadInscriptions",
 
     busquedaInscripciones_estadosInscripciones:
       "busquedaInscripciones/estadosInscripciones",
@@ -293,6 +298,12 @@ export class SigaServices {
     fichaEventos_searchEvent: "fichaEventos/searchEvent",
     fichaCursos_getTrainersCourse: "fichaCursos/getTrainersCourse",
     fichaCursos_deleteTrainersCourse: "fichaCursos/deleteTrainersCourse",
+    fichaCursos_deleteInscriptionsCourse:
+      "fichaCursos/deleteInscriptionsCourse",
+    fichaCursos_autovalidateInscriptionsCourse:
+      "fichaCursos/autovalidateInscriptionsCourse",
+    fichaCursos_getTopicsCourse: "fichaCursos/getTopicsCourse",
+    fichaCursos_getTopicsSpecificCourse: "fichaCursos/getTopicsSpecificCourse",
     datosNotificaciones_getTypeNotifications:
       "datosNotificaciones/getTypeNotifications",
     datosNotificaciones_getMeasuredUnit: "datosNotificaciones/getMeasuredUnit",
@@ -466,7 +477,10 @@ export class SigaServices {
       "busquedaPerJuridica/solicitudInsertBanksData",
     fichaDatosColegiales_datosColegialesUpdate:
       "/fichaDatosColegiales/datosColegialesUpdate",
-    fichaColegialRegTel_searchListDoc: "fichaColegialRegTel/searchListDoc"
+    fichaColegialRegTel_searchListDoc: "fichaColegialRegTel/searchListDoc",
+    usuario_cambioIdioma: "usuario/cambioIdioma",
+    fichaColegialOtrasColegiaciones_getLabelColegios:
+      "fichaColegialOtrasColegiaciones/getLabelColegios"
   };
 
   private menuToggled = new Subject<any>();
@@ -689,5 +703,32 @@ export class SigaServices {
 
   notifyMenuToggled() {
     this.menuToggled.next();
+  }
+
+  postSendContentAndParameter(
+    service: string,
+    param: string,
+    file: any
+  ): Observable<any> {
+    let formData: FormData = new FormData();
+    if (file != undefined) {
+      formData.append("uploadFile", file, file.name);
+    }
+    let headers = new HttpHeaders();
+
+    headers.append("Content-Type", "multipart/form-data");
+    headers.append("Accept", "application/json");
+
+    return this.http
+      .post(
+        environment.newSigaUrl + this.endpoints[service] + param,
+        formData,
+        {
+          headers: headers
+        }
+      )
+      .map(response => {
+        return response;
+      });
   }
 }

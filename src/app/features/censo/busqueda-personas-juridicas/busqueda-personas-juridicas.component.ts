@@ -75,7 +75,8 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     super(USER_VALIDATIONS);
   }
 
-  @ViewChild("table") table: DataTable;
+  @ViewChild("table")
+  table: DataTable;
   selectedDatos;
 
   ngOnInit() {
@@ -187,7 +188,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
           this.activacionEditar = false;
         } else {
           sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
           this.router.navigate(["/errorAcceso"]);
         }
       }
@@ -323,7 +327,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => { }
+        () => {}
       );
   }
 
@@ -408,7 +412,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   obtenerNombreIntegrantes(dato) {
-    return dato.nombresIntegrantes;
+      return dato.nombresIntegrantes;
   }
 
   paginate(event) {
