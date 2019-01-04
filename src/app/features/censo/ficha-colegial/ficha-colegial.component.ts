@@ -171,10 +171,7 @@ export class FichaColegialComponent implements OnInit {
   isClose: boolean = false;
   comboEtiquetas: any[];
   inscritoSeleccionado: String = "00";
-  updateItems: Map<String, ComboEtiquetasItem> = new Map<
-    String,
-    ComboEtiquetasItem
-  >();
+  updateItems: Map<String, ComboEtiquetasItem> = new Map<String,ComboEtiquetasItem>();
   items: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   newItems: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   item: ComboEtiquetasItem = new ComboEtiquetasItem();
@@ -251,6 +248,10 @@ export class FichaColegialComponent implements OnInit {
     {
       key: "interes",
       activa: false
+    }, 
+    {
+      key:"regtel",
+      activa:false
     }
   ];
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";

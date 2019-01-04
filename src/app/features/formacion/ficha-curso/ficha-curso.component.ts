@@ -52,7 +52,6 @@ export class FichaCursoComponent implements OnInit {
   comboColegios: any[];
   comboEstados: any[];
   comboDisponibilidadPlazas: any[];
-  comboTemas: any[];
 
   //Generales
   backgroundColor;
@@ -89,6 +88,9 @@ export class FichaCursoComponent implements OnInit {
   @ViewChild("autocompleteService")
   autocompleteService: AutoComplete;
 
+  @ViewChild("autocompleteTopics")
+  autocompleteTopics: AutoComplete;
+
   //Generales
   valorEstadoAbierto = "0";
   valorEstadoAnunciado = "1";
@@ -97,10 +99,16 @@ export class FichaCursoComponent implements OnInit {
   valorTipoSesion = "8";
   asignarTutor = 1;
   desasignarTutor = 0;
-  temasSuggest;
+  comboTopics: any[] = [];
   comboService: any[] = [];
   suggestService: any[] = [];
+  suggestTopics: any[] = [];
   resultsService: any[] = [];
+  resultsTopics: any[] = [];
+  edicionDocumentoAdjunto:boolean = true;
+  edicionEncuestaSatisfaccion:boolean = true;
+  edicionInformacionAdicional:boolean = true;
+
 
   //Formadores
   colsFormadores;
@@ -219,8 +227,7 @@ export class FichaCursoComponent implements OnInit {
 
       this.arreglarFechasEvento();
       this.getMassiveLoadInscriptions();
-
-      this.progressSpinner = false;
+      this.configurationInformacionAdicional();
 
       //2.Proviene de la creacion evento Incripcion Fin
     } else if (
@@ -245,8 +252,7 @@ export class FichaCursoComponent implements OnInit {
 
       this.arreglarFechasEvento();
       this.getMassiveLoadInscriptions();
-
-      this.progressSpinner = false;
+      this.configurationInformacionAdicional();
 
       //3. Estamos en modo edicion
     } else if (sessionStorage.getItem("modoEdicionCurso") == "true") {
@@ -299,10 +305,10 @@ export class FichaCursoComponent implements OnInit {
 
       this.getSessions();
       this.getServicesCourse();
+      this.getTopicsCourse();
       this.getCountInscriptions();
       this.getMassiveLoadInscriptions();
-
-      this.progressSpinner = false;
+      this.configurationInformacionAdicional();
 
       //4. Viene de la ficha de inscripcion
     } else if (sessionStorage.getItem("isInscripcion") == "true") {
@@ -312,6 +318,7 @@ export class FichaCursoComponent implements OnInit {
       );
       this.searchCourse(this.curso.idCurso);
       this.getMassiveLoadInscriptions();
+      this.configurationInformacionAdicional();
 
       sessionStorage.removeItem("isInscripcion");
       sessionStorage.removeItem("codigoCursoInscripcion");
@@ -332,11 +339,31 @@ export class FichaCursoComponent implements OnInit {
 
   //TARJETA DATOS GENERALES
 
+  configurationInformacionAdicional(){
+    if(this.curso.adjunto != null && this.curso.adjunto != undefined && this.curso.adjunto != ""){
+      this.edicionDocumentoAdjunto = false;
+    } else{
+      this.edicionDocumentoAdjunto = true;
+    }
+
+    if(this.curso.adicional != null && this.curso.adicional != undefined && this.curso.adicional != ""){
+      this.edicionInformacionAdicional = false;
+    } else{
+      this.edicionInformacionAdicional = true;
+    }
+
+    if(this.curso.encuesta != null && this.curso.encuesta != undefined && this.curso.encuesta != ""){
+      this.edicionEncuestaSatisfaccion = false;
+    } else{
+      this.edicionEncuestaSatisfaccion = true;
+    }
+  }
+
   getCombosDatosGenerales() {
     this.getComboEstados();
     this.getComboVisibilidad();
     this.getComboColegios();
-    this.getTemas();
+    this.getComboTemas();
     this.getComboServicios();
   }
 
@@ -396,26 +423,19 @@ export class FichaCursoComponent implements OnInit {
       }
     );
   }
-
-  getTemas() {
+  
+  getComboTemas() {
     this.backgroundColor = this.getRandomColor();
-    this.temasSuggest = [
-      {
-        idTema: "1",
-        nombre: "Cocina",
-        color: ""
+    // obtener colegios
+    this.sigaServices.get("fichaCursos_getTopicsCourse").subscribe(
+      n => {
+        this.comboTopics = n.combooItems;
+        this.arregloTildesCombo(this.comboTopics);
       },
-      {
-        idTema: "2",
-        nombre: "Astrología",
-        color: ""
-      },
-      {
-        idTema: "3",
-        nombre: "Estética",
-        color: ""
+      err => {
+        console.log(err);
       }
-    ];
+    );
   }
 
   getComboEstados() {
@@ -456,6 +476,34 @@ export class FichaCursoComponent implements OnInit {
           this.resultsService = n.combooItems;
 
           this.resultsService.forEach(e => {
+            if (e.color == undefined) {
+              e.color = this.getRandomColor();
+            }
+          });
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  getTopicsCourse() {
+    this.progressSpinner = true;
+    this.sigaServices
+      .getParam(
+        "fichaCursos_getTopicsSpecificCourse",
+        "?idCurso=" + this.curso.idCurso
+      )
+      .subscribe(
+        n => {
+          this.resultsTopics = n.combooItems;
+
+          this.resultsTopics.forEach(e => {
             if (e.color == undefined) {
               e.color = this.getRandomColor();
             }
@@ -515,6 +563,7 @@ export class FichaCursoComponent implements OnInit {
     }
 
     this.curso.tipoServicios = this.resultsService;
+    this.curso.temasCombo = this.resultsTopics;
 
     if (this.modoEdicion) {
       //Enviamos al back todos los formadores editados
@@ -535,6 +584,7 @@ export class FichaCursoComponent implements OnInit {
           this.getCountInscriptions();
         }
         this.modoEdicion = true;
+        this.configurationInformacionAdicional();
       },
       err => {
         this.progressSpinner = false;
@@ -637,6 +687,7 @@ export class FichaCursoComponent implements OnInit {
 
         this.getSessions();
         this.getServicesCourse();
+        this.getTopicsCourse();
         this.getCountInscriptions();
       },
       err => {
@@ -646,6 +697,87 @@ export class FichaCursoComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+  }
+
+  filterTopics(event) {
+    if (
+      this.comboTopics.length > 0 &&
+      this.comboTopics.length != this.resultsTopics.length
+    ) {
+      if (this.resultsTopics.length > 0) {
+        this.suggestTopics = [];
+
+        this.comboTopics.forEach(element => {
+          let findTopic = this.resultsTopics.find(
+            x => x.value === element.value
+          );
+          if (findTopic == undefined) {
+            this.suggestTopics.push(element);
+          }
+        });
+
+        this.resultsTopics.forEach(e => {
+          if (e.color == undefined) {
+            e.color = this.getRandomColor();
+          }
+        });
+      } else {
+        this.suggestTopics = JSON.parse(JSON.stringify(this.comboTopics));
+      }
+      this.autocompleteTopics.suggestionsUpdated = true;
+      this.autocompleteTopics.panelVisible = true;
+      this.autocompleteTopics.focusInput();
+    } else {
+      if (this.autocompleteTopics.highlightOption != undefined) {
+        this.resultsTopics.forEach(e => {
+          if (e.color == undefined) {
+            e.color = this.getRandomColor();
+          }
+        });
+      }
+
+      this.autocompleteTopics.panelVisible = false;
+      this.autocompleteTopics.focusInput();
+    }
+  }
+
+  filterLabelsMultipleTopics(event) {
+    let query = event.query;
+    this.suggestTopics = [];
+
+    this.comboTopics.forEach(element => {
+      if (element.label.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        let findTopic = this.resultsTopics.find(
+          x => x.value === element.value
+        );
+        if (findTopic == undefined) {
+          this.suggestTopics.push(element);
+        }
+      }
+    });
+
+    this.resultsTopics.forEach(e => {
+      if (e.color == undefined) {
+        e.color = this.getRandomColor();
+      }
+    });
+  }
+
+  resetSuggestServicesTopics() {
+    this.autocompleteTopics.panelVisible = false;
+  }
+
+  visiblePanelBlurTopics(event) {
+    if (this.autocompleteTopics.highlightOption != undefined) {
+      this.autocompleteTopics.highlightOption.color = this.getRandomColor();
+      this.resultsTopics.push(this.autocompleteTopics.highlightOption);
+      this.autocompleteTopics.highlightOption = undefined;
+    }
+    this.autocompleteTopics.panelVisible = false;
+  }
+
+  visiblePanelOnSelectTopics() {
+    this.autocompleteTopics.panelVisible = false;
   }
 
   filterServices(event) {
@@ -738,6 +870,27 @@ export class FichaCursoComponent implements OnInit {
       summary: "Información",
       detail: "No hay servicios definidos para este curso."
     });
+  }
+
+  editDocumentoAdjunto(){
+    if(this.edicionDocumentoAdjunto)
+    this.edicionDocumentoAdjunto = false;
+    else
+    this.edicionDocumentoAdjunto = true;
+  }
+
+  editInformacionAdicional(){
+    if(this.edicionInformacionAdicional)
+    this.edicionInformacionAdicional = false;
+    else
+    this.edicionInformacionAdicional = true;
+  }
+
+  editEncuestaSatisfaccion(){
+    if(this.edicionEncuestaSatisfaccion)
+    this.edicionEncuestaSatisfaccion = false;
+    else
+    this.edicionEncuestaSatisfaccion = true;
   }
 
   //TARJETA FORMADORES
@@ -1455,7 +1608,7 @@ export class FichaCursoComponent implements OnInit {
     if (id.length >= 1 && this.selectMultipleSessions == false) {
       sessionStorage.setItem("modoEdicionSession", "true");
       sessionStorage.removeItem("eventoSelected");
-      sessionStorage.setItem("eventoSelected", JSON.stringify(id));
+      sessionStorage.setItem("eventoSelected", JSON.stringify(id[0]));
       sessionStorage.setItem("sessions", JSON.stringify(this.datosSessions));
       this.router.navigate(["/fichaEventos"]);
       sessionStorage.setItem("fichaAbierta", "true");

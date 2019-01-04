@@ -344,13 +344,11 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.path = "formacionInicioInscripcion";
 
       let curso = JSON.parse(sessionStorage.getItem("curso"));
-     
 
       if (curso.idCurso != undefined && curso.idCurso != null) {
         this.idCurso = curso.idCurso;
         this.searchEvent(curso);
       } else {
-       
         this.newEvent = new EventoItem();
         //Obligamos a que sea tipo calendario formacion
         this.newEvent.idTipoCalendario = this.valorTipoFormacion;
@@ -399,7 +397,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.idCurso = curso.idCurso;
         this.searchEvent(curso);
       } else {
-       
         this.newEvent = new EventoItem();
         //Obligamos a que sea tipo calendario formacion
         this.newEvent.idTipoCalendario = this.valorTipoFormacion;
@@ -431,17 +428,54 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
         //Se guarda el evento con los valores iniciales para restablecer los valores
         this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
-      
       }
 
       //7. Viene en modo edicion sesion
-    } else if(sessionStorage.getItem("modoEdicionSession") == "true"){
-     //Inficamos que estamos en modo edicion
-     this.modoEdicionEvento = true;
+    } else if (sessionStorage.getItem("modoEdicionSession") == "true") {
+      //Inficamos que estamos en modo edicion
+      this.modoEdicionEvento = true;
+      this.isFormacionCalendar = true;
+      //Indicamos que el evento ya esta creado para que pueda acceder a todas las tarjetas
+      this.createEvent = true;
+
+      //Obtenemos el evento que recibimos de la pantalla calendario
       this.newEvent = JSON.parse(sessionStorage.getItem("eventoSelected"));
-    
-     //8. Viene directo
-    }else {
+
+      this.idCalendario = this.newEvent.idCalendario;
+
+      this.modoEdicionEvento = true;
+      this.disabledTipoEvento = true;
+
+      this.newEvent.start = new Date(this.newEvent.start);
+      this.newEvent.end = new Date(this.newEvent.end);
+
+      //Se comprueba el tipo de acceso que tiene el evento
+      this.checkAcceso();
+
+      //Se guarda el evento con los valores iniciales para restablecer los valores
+      this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
+
+      //Se genera el combo tipo de Calendario,
+      //Si el evento pertenece al calendario formacion
+      if (this.newEvent.idTipoCalendario == this.valorTipoFormacion) {
+        this.getComboCalendar();
+        this.limitTimeEvent();
+
+        if (this.newEvent.fechaInicioRepeticion != null) {
+          this.newEvent.fechaInicioRepeticion = new Date(
+            this.newEvent.fechaInicioRepeticion
+          );
+        }
+
+        if (this.newEvent.fechaFinRepeticion != null) {
+          this.newEvent.fechaFinRepeticion = new Date(
+            this.newEvent.fechaFinRepeticion
+          );
+        }
+      }
+
+      //8. Viene directo
+    } else {
       this.isFormacionCalendar = false;
       this.newEvent = new EventoItem();
       this.disabledTipoEvento = false;
@@ -659,7 +693,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
     if (
       sessionStorage.getItem("modoEdicionEventoByAgenda") == "true" ||
-      (this.modoTipoEventoInscripcion && this.modoEdicionEvento)
+      (this.modoTipoEventoInscripcion && this.modoEdicionEvento) || this.modoEdicionEvento
     ) {
       url = "fichaEventos_updateEventCalendar";
     } else {
@@ -915,7 +949,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.newEvent.idCurso = this.idCurso;
         //Obligamos a que sea el tipo de calendario formacion
         this.newEvent.idTipoCalendario = this.valorTipoFormacion;
-       
+
         if (
           sessionStorage.getItem("isFormacionCalendarByStartInscripcion") ==
           "true"
@@ -934,8 +968,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
         //Cargamos los tipo de calendarios que existen
         this.getComboCalendar();
-
-      
 
         //Inficamos que estamos en modo edicion
         this.modoEdicionEvento = true;
@@ -1177,7 +1209,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.autoComplete.focusInput();
     }
   }
-  
 
   resetSuggestTrainers() {
     this.autoComplete.panelVisible = false;
@@ -1454,7 +1485,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   showUnSuccess() {
     this.msgs = [];
     this.msgs.push({
-      severity: "cancel",
+      severity: "error",
       summary: "Incorrecto",
       detail: "Acción no realizada correctamente"
     });
@@ -1463,7 +1494,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   showUnSuccessBBDD() {
     this.msgs = [];
     this.msgs.push({
-      severity: "cancel",
+      severity: "error",
       summary: "Incorrecto",
       detail: "Se ha producido un error en BBDD contacte con su administrador"
     });

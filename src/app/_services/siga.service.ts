@@ -306,6 +306,8 @@ export class SigaServices {
       "fichaCursos/deleteInscriptionsCourse",
     fichaCursos_autovalidateInscriptionsCourse:
       "fichaCursos/autovalidateInscriptionsCourse",
+    fichaCursos_getTopicsCourse: "fichaCursos/getTopicsCourse",
+    fichaCursos_getTopicsSpecificCourse: "fichaCursos/getTopicsSpecificCourse",
     datosNotificaciones_getTypeNotifications:
       "datosNotificaciones/getTypeNotifications",
     datosNotificaciones_getMeasuredUnit: "datosNotificaciones/getMeasuredUnit",
@@ -479,7 +481,7 @@ export class SigaServices {
       "busquedaPerJuridica/solicitudInsertBanksData",
     fichaDatosColegiales_datosColegialesUpdate:
       "/fichaDatosColegiales/datosColegialesUpdate",
-
+    fichaColegialRegTel_searchListDoc: "fichaColegialRegTel/searchListDoc",
     usuario_cambioIdioma: "usuario/cambioIdioma",
     fichaColegialOtrasColegiaciones_getLabelColegios:
       "fichaColegialOtrasColegiaciones/getLabelColegios"
