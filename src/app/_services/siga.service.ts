@@ -133,7 +133,8 @@ export class SigaServices {
     anexos_search: "fichaDatosBancarios/AnexosSearch",
     anexos_update: "fichaDatosBancarios/updateAnexos",
     anexos_insert: "fichaDatosBancarios/insertAnexos",
-    datosCuentaBancaria_getLengthCodCountry: "busquedaPerJuridica/getLengthCodCountry",
+    datosCuentaBancaria_getLengthCodCountry:
+      "busquedaPerJuridica/getLengthCodCountry",
     busquedaPerJuridica_uploadFile: "busquedaPerJuridica/uploadFile",
     busquedaPerJuridica_fileDownloadInformation:
       "busquedaPerJuridica/fileDownloadInformation",
@@ -187,6 +188,10 @@ export class SigaServices {
       "/solicitudIncorporacion/estadoSolicitud",
     solicitudIncorporacion_searchSolicitud:
       "/solicitudIncorporacion/searchSolicitud",
+    solicitudIncorporacion_searchNumColegiado:
+      "/solicitudIncorporacion/searchNumColegiado",
+    solicitudIncorporacion_searchNifExistente:
+      "/solicitudIncorporacion/searchNifExistente",
 
     fichaColegialGenerales_tratamiento: "fichaDatosGenerales/tratamiento",
     fichaColegialGenerales_estadoCivil: "fichaDatosGenerales/estadoCivil",
@@ -478,7 +483,6 @@ export class SigaServices {
     usuario_cambioIdioma: "usuario/cambioIdioma",
     fichaColegialOtrasColegiaciones_getLabelColegios:
       "fichaColegialOtrasColegiaciones/getLabelColegios"
-
   };
 
   private menuToggled = new Subject<any>();
