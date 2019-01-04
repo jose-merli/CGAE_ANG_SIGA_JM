@@ -26,11 +26,14 @@ export class DatosCursosItem {
   fechaImparticionHasta: string;
   tipo: string;
   descripcionEstado: string;
+  temasCombo: ComboItem[];
   temas: string[];
   minimoAsistencia: string;
   lugar: string;
   autovalidacion: boolean;
-  adjunta: string;
+  adjunto: string;
+  adicional: string;
+  encuesta: string;
   tipoServicios: ComboItem[];
 
   flagArchivado: number;

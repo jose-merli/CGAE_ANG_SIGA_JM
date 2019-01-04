@@ -253,60 +253,56 @@
           <div class="row mb-4">
             <div class="col-lg-12 col-md-12">
               <label>{{'formacion.fichaCursos.datosGenerales.datosAdicionales.documentacionAdjunta' | translate}}</label>
-              <input
-                type="text"
-                class="form-control"
-                pInputText
-                name="adjunta"
-                [(ngModel)]="curso.adjunta"
-              />
+              <div *ngIf="edicionDocumentoAdjunto" class="ui-inputgroup">
+                  <input type="text" class="form-control" pInputText name="adjunto" [(ngModel)]="curso.adjunto"/>
+                  <button (click)="editDocumentoAdjunto()" pButton type="button" icon="fas fa-check" class="ui-button-warn"></button>      
+            </div>
+            <div *ngIf="!edicionDocumentoAdjunto" class="ui-inputgroup">
+                <a *ngIf="curso.adjunto != undefined && curso.adjunto != ''" [href]="curso.adjunto" class="col-11" target="_blank">{{curso.adjunto}}</a>
+                <span *ngIf="curso.adjunto == undefined || curso.adjunto == ''" class="col-11">{{curso.adjunto}}</span>
+                <button (click)="editDocumentoAdjunto()" pButton type="button" icon="fas fa-pencil-alt" class="ui-button-warn button-edit"></button>      
+          </div>
             </div>
           </div>
           <div class="row mb-4">
             <div class="col-lg-12 col-md-12">
               <label>{{ 'form.busquedaCursos.literal.temas' | translate}}</label>
-              <p-autoComplete
-                #autocomplete
-                [(ngModel)]="curso.temas"
-                [suggestions]="temasSuggest"
-                [minLength]="1"
-                field="nombre"
-                [multiple]="true"
-                [style]="{ width: '100%' }"
-                (completeMethod)="getTemas($event)"
-              >
-                <ng-template let-temasSeleccionado pTemplate="selectedItem">
-                  <div
-                    class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
-                    [ngStyle]="{
-                      background: temasSeleccionado.color,
-                      margin: marginPx,
-                      border: bw
-                    }"
-                  >
-                    {{ temasSeleccionado.nombre }}
-                  </div>
-                </ng-template>
-              </p-autoComplete>
-            </div>
-          </div>
-          <div class="row mb-4">
-            <div class="col-lg-12 col-md-12 ml-3">
-              <div class="row">
-                  <label>{{'formacion.fichaCursos.datosGenerales.datosAdicionales.informacionAdicional' | translate}}</label>
-              </div>
-              <div class="row">
-                  <a href="">www.informacionadicional.es</a>
-              </div>
-            </div>
-          </div>
-          <div class="row mb-4">
-            <div class="col-lg-12 col-md-12 ml-3">
-                <div class="row">
-                    <label>{{'formacion.fichaCursos.datosGenerales.datosAdicionales.encuestaSatisfaccion' | translate}}</label>
+              <p-autoComplete #autocompleteTopics [(ngModel)]="resultsTopics" [suggestions]="suggestTopics" [minLength]="1" field="label"
+              [multiple]="true" [style]="{'width':'100%'}"  (onFocus)="filterTopics($event)" (onBlur)="visiblePanelBlurTopics($event)" (completeMethod)="filterLabelsMultipleTopics($event)">
+              <ng-template let-topicsSelecionados pTemplate="selectedItem">
+                <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
+                  [ngStyle]="{'background': topicsSelecionados.color, 'margin': marginPx, 'border': bw }">
+                  {{ topicsSelecionados.label }}
                 </div>
-                <div class="row">
-                    <a href="">www.encuentasatisfaccion.es</a>
+              </ng-template>
+            </p-autoComplete>
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col-lg-12 col-md-12">
+                  <label>{{'formacion.fichaCursos.datosGenerales.datosAdicionales.informacionAdicional' | translate}}</label>
+              <div *ngIf="edicionInformacionAdicional" class="ui-inputgroup">
+                    <input type="text" class="form-control" pInputText name="adicional" [(ngModel)]="curso.adicional"/>
+                    <button (click)="editInformacionAdicional()" pButton type="button" icon="fas  fa-check" class="ui-button-warn"></button>      
+              </div>
+              <div *ngIf="!edicionInformacionAdicional" class="ui-inputgroup">
+                  <a *ngIf="curso.adicional != undefined && curso.adicional != ''" [href]="curso.adicional" class="col-11" target="_blank">{{curso.adicional}}</a>
+                  <span *ngIf="curso.adicional == undefined || curso.adicional == ''" class="col-11">{{curso.adicional}}</span>
+                  <button (click)="editInformacionAdicional()" pButton type="button" icon="fas fa-pencil-alt" class="ui-button-warn button-edit"></button>      
+            </div>
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col-lg-12 col-md-12">
+                  <label>{{'formacion.fichaCursos.datosGenerales.datosAdicionales.encuestaSatisfaccion' | translate}}</label>
+                  <div *ngIf="edicionEncuestaSatisfaccion" class="ui-inputgroup">
+                      <input type="text" class="form-control" pInputText name="encuesta" [(ngModel)]="curso.encuesta"/>
+                      <button (click)="editEncuestaSatisfaccion()" pButton type="button" icon="fas  fa-check" class="ui-button-warn"></button>      
+                  </div>
+                  <div *ngIf="!edicionEncuestaSatisfaccion" class="ui-inputgroup">
+                      <a *ngIf="curso.encuesta != undefined && curso.encuesta != ''" [href]="curso.encuesta" class="col-11" target="_blank">{{curso.encuesta}}</a>
+                      <span *ngIf="curso.encuesta == undefined || curso.encuesta == ''" class="col-11">{{curso.encuesta}}</span>
+                      <button (click)="editEncuestaSatisfaccion()" pButton type="button" icon="fas fa-pencil-alt" class="ui-button-warn button-edit"></button>      
                 </div>
             </div>
           </div>

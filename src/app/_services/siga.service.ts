@@ -299,6 +299,8 @@ export class SigaServices {
       "fichaCursos/deleteInscriptionsCourse",
     fichaCursos_autovalidateInscriptionsCourse:
       "fichaCursos/autovalidateInscriptionsCourse",
+    fichaCursos_getTopicsCourse: "fichaCursos/getTopicsCourse",
+    fichaCursos_getTopicsSpecificCourse: "fichaCursos/getTopicsSpecificCourse",
     datosNotificaciones_getTypeNotifications:
       "datosNotificaciones/getTypeNotifications",
     datosNotificaciones_getMeasuredUnit: "datosNotificaciones/getMeasuredUnit",
