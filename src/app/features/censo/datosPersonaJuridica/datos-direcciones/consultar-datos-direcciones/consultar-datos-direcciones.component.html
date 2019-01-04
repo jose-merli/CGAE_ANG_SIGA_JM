@@ -1,4 +1,4 @@
-<p-growl [(value)]="msgs" life="30000"></p-growl>
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
 <div class="busqueda-container">
 
   <div *ngIf="!fichaMisDatos" class="header-title">
@@ -87,8 +87,9 @@
 
               <div class="form-group col-lg-6 col-md-6">
                 <label>Provincia</label>
+                <!-- (onChange)="onChangeProvincia()" -->
                 <p-dropdown class="select-form" [(ngModel)]='provinciaSelecionada' [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"
-                  [(disabled)]="isDisabledProvincia" [options]="comboProvincia" (onChange)="onChangeProvincia()">
+                  [(disabled)]="isDisabledProvincia" [options]="comboProvincia">
                 </p-dropdown>
               </div>
 
@@ -100,14 +101,15 @@
 
               <div class="form-group col-lg-6 col-md-6">
                 <label>Otra Provincia</label>
-                <p-checkbox name="otraProvincia" [(ngModel)]="checkOtraProvincia" [(disabled)]="disableCheck" binary="true" (onChange)="onChangeOtherProvincia($event)"></p-checkbox>
+                <p-checkbox name="otraProvincia" [(ngModel)]="checkOtraProvincia" #provincia [(disabled)]="disableCheck" binary="true" (onChange)="onChangeOtherProvincia($event)"></p-checkbox>
               </div>
               <!-- *ngIf="!poblacionExtranjera" -->
               <div *ngIf="!poblacionExtranjera" class="form-group col-lg-6 col-md-6">
                 <label>Población</label>
-                <p-dropdown #input2 class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"
-                  [(disabled)]="isDisabledPoblacion" [options]="comboPoblacion" (input)="buscarPoblacion($event)" [emptyFilterMessage]="resultadosPoblaciones">
+                <p-dropdown #input2 class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true" filterBy="label,labelSinTilde" [(disabled)]="isDisabledPoblacion"
+                  [options]="comboPoblacion" (input)="buscarPoblacion($event)" [emptyFilterMessage]="resultadosPoblaciones" id="dropdown">
                 </p-dropdown>
+                 
               </div>
 
               <div *ngIf="poblacionExtranjera" class="form-group col-lg-6 col-md-6">

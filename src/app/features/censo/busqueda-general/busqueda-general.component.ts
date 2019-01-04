@@ -35,6 +35,7 @@ export enum KEY_CODE {
 })
 export class BusquedaGeneralComponent {
   formBusqueda: FormGroup;
+  comboIdentificacion: any[];
   cols: any = [];
   colsFisicas: any = [];
   colsJuridicas: any = [];
@@ -86,6 +87,8 @@ export class BusquedaGeneralComponent {
   isFormador: boolean = false;
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
+  selectedTipo: any;
+
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -173,6 +176,14 @@ export class BusquedaGeneralComponent {
     );
 
     this.checkStatusInit();
+
+    // Combo de identificación
+    this.sigaServices.get("busquedaPerJuridica_tipo").subscribe(
+      n => {
+        this.comboIdentificacion = n.combooItems;
+      },
+      error => {}
+    );
   }
 
   isValidDNI(dni: String): boolean {
@@ -242,7 +253,8 @@ export class BusquedaGeneralComponent {
       this.colegios_seleccionados = [];
       this.datos = [];
 
-      this.bodyJuridica.tipo = "";
+      this.selectedTipo = "";
+      //this.bodyJuridica.tipo = this.selectedTipo;
       this.bodyJuridica.nif = "";
       this.bodyJuridica.denominacion = "";
       this.bodyJuridica.abreviatura = "";
@@ -297,9 +309,10 @@ export class BusquedaGeneralComponent {
 
   checkFilterJuridic() {
     if (
-      (this.bodyJuridica.tipo == null ||
-        this.bodyJuridica.tipo == null ||
-        this.bodyJuridica.tipo.trim().length < 3) &&
+      (this.selectedTipo == undefined ||
+        this.selectedTipo == null ||
+        this.selectedTipo.value == "" ||
+        this.selectedTipo.length < 1) &&
       (this.bodyJuridica.abreviatura == null ||
         this.bodyJuridica.abreviatura == null ||
         this.bodyJuridica.abreviatura.trim().length < 3) &&
@@ -318,9 +331,9 @@ export class BusquedaGeneralComponent {
       return false;
     } else {
       // quita espacios vacios antes de buscar
-      if (this.bodyJuridica.tipo != undefined) {
-        this.bodyJuridica.tipo = this.bodyJuridica.tipo.trim();
-      }
+      // if (this.bodyJuridica.tipo != undefined) {
+      //   this.bodyJuridica.tipo = this.bodyJuridica.tipo.trim();
+      // }
       if (this.bodyJuridica.abreviatura != undefined) {
         this.bodyJuridica.abreviatura = this.bodyJuridica.abreviatura.trim();
       }
@@ -427,7 +440,7 @@ export class BusquedaGeneralComponent {
       }
     } else {
       if (this.checkFilterJuridic()) {
-        if (this.bodyJuridica.tipo == undefined) {
+        if (this.selectedTipo != undefined && this.selectedTipo.value == "") {
           this.bodyJuridica.tipo = "";
         }
         if (this.bodyJuridica.nif == undefined) {
@@ -515,8 +528,10 @@ export class BusquedaGeneralComponent {
         }
         this.checkTypeCIF(id[0].nif);
         id[0].tipoIdentificacion = this.tipoCIF;
+
         sessionStorage.setItem("notario", JSON.stringify(id));
-        this.location.back();
+        //this.location.back();
+        this.router.navigate(["fichaPersonaJuridica"]);
       }
     }
     // ir a ficha de integrante
@@ -527,6 +542,7 @@ export class BusquedaGeneralComponent {
       sessionStorage.removeItem("notario");
       this.checkTypeCIF(id[0].nif);
       id[0].tipoIdentificacion = this.tipoCIF;
+      id[0].colegio = this.colegios_seleccionados[0];
       id[0].completo = true;
       sessionStorage.removeItem("nIntegrante");
       sessionStorage.setItem("nIntegrante", JSON.stringify(id));
@@ -627,11 +643,14 @@ export class BusquedaGeneralComponent {
             integranteNew.nombre = this.bodyFisica.nombre;
             integranteNew.apellidos1 = this.bodyFisica.primerApellido;
             integranteNew.apellidos2 = this.bodyFisica.segundoApellido;
+            integranteNew.ejerciente = "NO COLEGIADO";
           }
           // datos de persona fisica para pasar a pantalla integrante
           else {
             integranteNew.nombre = this.bodyJuridica.denominacion;
             integranteNew.apellidos1 = this.bodyJuridica.abreviatura;
+            integranteNew.ejerciente = "SOCIEDAD";
+            integranteNew.colegio = this.colegios_seleccionados[0];
           }
 
           integranteNew.completo = false;
@@ -758,5 +777,10 @@ export class BusquedaGeneralComponent {
 
   clear() {
     this.msgs = [];
+  }
+
+  getTipo(event) {
+    this.selectedTipo = event;
+    this.bodyJuridica.tipo = this.selectedTipo.value;
   }
 }

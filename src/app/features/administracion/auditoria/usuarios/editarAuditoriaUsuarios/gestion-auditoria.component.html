@@ -58,11 +58,11 @@
 
     <div class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="confirmEdit() " pButton type="button " [disabled]="isHabilitadoGuardarCerrar() " icon=" fa fa-edit
-  " iconPos="left " label="{{ 'general.boton.guardarCerrar' | translate}} " [disabled]="formGroup.invalid "></button>
+        <button (click)="confirmEdit()" pButton type="button" [disabled]="isHabilitadoGuardarCerrar()" icon="fa fa-edit" iconPos="left"
+          label="{{ 'general.boton.guardarCerrar' | translate}}" [disabled]="formGroup.invalid"></button>
 
-        <button (click)="volver(); " pButton type="button " icon=" fa fa-close " iconPos="left " label="{{
-  'general.boton.cancel' | translate}} "></button>
+        <button (click)="volver();" pButton type="button" icon="fa fa-close" iconPos="left" label="{{
+  'general.boton.cancel' | translate}}"></button>
       </div>
     </div>
     <app-dialog></app-dialog>
