@@ -343,7 +343,7 @@
 
         <!-- Botón inscripción -->
 
-        <button pButton type="button" icon="fa fa-caret-square-o-up" iconPos="left" label="Inscripción" [disabled]="!modoEdicion"></button> 
+        <button pButton type="button" icon="fa fa-caret-square-o-up" iconPos="left" label="Inscripción" [disabled]="!modoEdicion" (click)="irInscripcion()"></button> 
 
         <!-- Botón guardar -->
         <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" (click)="saveCourse()"></button> 

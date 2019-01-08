@@ -561,6 +561,12 @@ export class BusquedaGeneralComponent {
       ) {
         this.router.navigate(["/buscarInscripciones"]);
         sessionStorage.removeItem("backInscripcion");
+      } else if (
+        sessionStorage.getItem("backFichaInscripcion") != null ||
+        sessionStorage.getItem("backFichaInscripcion") != undefined
+      ) {
+        this.router.navigate(["/fichaInscripcion"]);
+        sessionStorage.removeItem("backFichaInscripcion");
       } else {
         this.router.navigate(["/fichaCurso"]);
       }
@@ -669,7 +675,12 @@ export class BusquedaGeneralComponent {
           formador.nif = this.bodyFisica.nif;
           sessionStorage.removeItem("abrirFormador");
           sessionStorage.setItem("formador", JSON.stringify(formador));
-          this.router.navigate(["/fichaCurso"]);
+          if (
+            sessionStorage.getItem("backFichaInscripcion") != null &&
+            sessionStorage.getItem("backFichaInscripcion")
+          )
+            this.router.navigate(["/fichaInscripcion"]);
+          else this.router.navigate(["/fichaCurso"]);
         }
       },
       reject: () => {

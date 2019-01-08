@@ -8,6 +8,8 @@ import { SelectItem } from "primeng/api";
 import { cardService } from "../../../_services/cardSearch.service";
 import { Router } from "@angular/router";
 import { DatosCursosItem } from "../../../models/DatosCursosItem";
+import { TranslateService } from "../../../commons/translate";
+import { PersonaObject } from "../../../models/PersonaObject";
 
 @Component({
   selector: "app-ficha-inscripcion",
@@ -24,12 +26,14 @@ export class FichaInscripcionComponent implements OnInit {
   modoEdicion: boolean = false;
   es: any = esCalendar;
   isValidate: boolean;
-  isEditable: boolean = false;
+  editar: boolean = false;
 
   persona: PersonaItem = new PersonaItem();
+  bodySearch: PersonaObject = new PersonaObject();
   inscripcion: DatosInscripcionItem = new DatosInscripcionItem();
   curso: DatosCursosItem = new DatosCursosItem();
-  isAdministrador: Boolean = false;
+  isAdministrador: boolean = false;
+  isNuevoNoColegiado: boolean = false;
 
   rowsPerPage;
   cols;
@@ -41,11 +45,15 @@ export class FichaInscripcionComponent implements OnInit {
   comboTipoIdentificacion: SelectItem[];
   selectedTipoIdentificacion: any = {};
 
+  guardarPersona: boolean = false;
+  inscripcionInsertada: boolean = false;
+
   constructor(
     private sigaServices: SigaServices,
     private location: Location,
     private cardService: cardService,
-    private router: Router
+    private router: Router,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit() {
@@ -53,7 +61,6 @@ export class FichaInscripcionComponent implements OnInit {
     this.getComboEstados();
     this.getComboPrecio();
     this.getComboModoPago();
-    this.compruebaAdministrador();
 
     // Se accede a la ficha de inscripcion desde la busqueda de inscripciones
     if (sessionStorage.getItem("modoEdicionInscripcion") == "true") {
@@ -63,7 +70,10 @@ export class FichaInscripcionComponent implements OnInit {
       );
 
       // Cargamos la persona con el idPersona que obtenemos de la inscripcion
-      this.cargaPersonaInscripcion();
+      // this.cargaPersonaInscripcion();
+
+      this.searchCourse(this.inscripcion.idCurso);
+      sessionStorage.removeItem("modoEdicionInscripcion");
 
       // Se accede a la ficha de inscripcion para crearla
       // Para cargar los datos del curso nos enviaran el idCurso
@@ -76,11 +86,90 @@ export class FichaInscripcionComponent implements OnInit {
         let idCurso = sessionStorage.getItem("idCursoInscripcion");
         this.searchCourse(idCurso);
         this.cargarDatosCursoInscripcion();
-      }
+        this.modoEdicion = false;
+        sessionStorage.removeItem("idCursoInscripcion");
+        sessionStorage.removeItem("pantallaListaInscripciones");
+        
+        // Al volver de la busqueda de la persona, entrará por este if
+        if (
+          (sessionStorage.getItem("formador") != null ||
+            sessionStorage.getItem("formador") != undefined) &&
+          sessionStorage.getItem("toBackNewFormador") == "true"
+        ) {
+          this.cargaInscripcion();
 
-      // Intentamos cargar los datos de la persona que se ha logueado mediante el token llamando al back
-      if (!this.isAdministrador) this.cargarPersonaNuevaInscripcion();
+          this.loadNewTrainer(JSON.parse(sessionStorage.getItem("formador")));
+
+          this.modoEdicion = true;
+          this.inscripcionInsertada = true;
+          this.isNuevoNoColegiado = true;
+          this.fichasPosibles[2].activa = true;
+
+          sessionStorage.removeItem("formador");
+          sessionStorage.removeItem("toBackNewFormador");
+
+          // Si no existe idPersona significa que venimos de busquedaGeneral y que queremos guardar una nueva persona
+          if (
+            this.persona.idPersona == null ||
+            this.persona.idPersona == undefined
+          ) {
+            this.editar = true;
+            this.isNuevoNoColegiado = true;
+          }
+
+          // Este sería el caso de ir a la pantalla de busqueda general y pulsar el boton volver
+        } else if (sessionStorage.getItem("toBackNewFormador") == "true") {
+          this.cargaInscripcion();
+          if (
+            sessionStorage.getItem("personaInscripcionActual") != null &&
+            sessionStorage.getItem("personaInscripcionActual") != undefined
+          ) {
+            let compruebaString = sessionStorage.getItem(
+              "personaInscripcionActual"
+            );
+            if (compruebaString != "{}") {
+              this.persona = JSON.parse(
+                sessionStorage.getItem("personaInscripcionActual")
+              );
+              this.obtenerTiposIdentificacion();
+              this.guardarPersona = true;
+            }
+
+            sessionStorage.removeItem("personaInscripcionActual");
+          }
+          this.inscripcionInsertada = true;
+          this.modoEdicion = true;
+          sessionStorage.removeItem("toBackNewFormador");
+          this.fichasPosibles[2].activa = true;
+          this.isNuevoNoColegiado = true;
+        }
+      } else {
+        if (
+          sessionStorage.getItem("inscripcionActual") != null &&
+          sessionStorage.getItem("inscripcionActual") != undefined
+        ) {
+          this.inscripcion = JSON.parse(
+            sessionStorage.getItem("inscripcionActual")
+          );
+          this.inscripcionInsertada = true;
+          this.modoEdicion = true;
+          sessionStorage.removeItem("inscripcionActual");
+        }
+      }
     }
+
+    this.compruebaAdministrador();
+  }
+
+  cargaInscripcion() {
+    this.inscripcion = JSON.parse(sessionStorage.getItem("inscripcionActual"));
+
+    this.inscripcion.fechaSolicitudDate = new Date(
+      this.inscripcion.fechaSolicitudDate
+    );
+    this.inscripcion.fechaSolicitud = new Date(this.inscripcion.fechaSolicitud);
+
+    sessionStorage.removeItem("inscripcionActual");
   }
 
   compruebaAdministrador() {
@@ -88,6 +177,15 @@ export class FichaInscripcionComponent implements OnInit {
       data => {
         if (data != undefined && data != null) {
           this.isAdministrador = JSON.parse(data);
+        }
+
+        if (!this.isNuevoNoColegiado) {
+          if (this.modoEdicion) {
+            this.cargaPersonaInscripcion();
+          } else {
+            if (this.isAdministrador) this.persona = new PersonaItem();
+            else this.cargarPersonaNuevaInscripcion();
+          }
         }
       },
       error => {
@@ -104,6 +202,8 @@ export class FichaInscripcionComponent implements OnInit {
           if (data != undefined && data != null) {
             this.persona = JSON.parse(data["body"]);
             this.obtenerTiposIdentificacion();
+
+            this.guardarPersona = true;
           }
         },
         error => {
@@ -128,20 +228,27 @@ export class FichaInscripcionComponent implements OnInit {
   }
 
   cargaPersonaInscripcion() {
-    // Cargamos los datos de la persona asignada a dicha inscripcion
-    this.sigaServices
-      .post("accesoFichaPersona_searchPersona", this.inscripcion.idPersona)
-      .subscribe(
-        data => {
-          if (data != undefined && data != null) {
-            this.persona = JSON.parse(data["body"]);
-            this.obtenerTiposIdentificacion();
+    if (
+      this.inscripcion.idPersona != null &&
+      this.inscripcion.idPersona != undefined
+    ) {
+      // Cargamos los datos de la persona asignada a dicha inscripcion
+      this.sigaServices
+        .post("accesoFichaPersona_searchPersona", this.inscripcion.idPersona)
+        .subscribe(
+          data => {
+            if (data != undefined && data != null) {
+              this.persona = JSON.parse(data["body"]);
+              this.obtenerTiposIdentificacion();
+
+              this.guardarPersona = true;
+            }
+          },
+          error => {
+            console.log(error);
           }
-        },
-        error => {
-          console.log(error);
-        }
-      );
+        );
+    }
   }
 
   getComboEstados() {
@@ -183,11 +290,11 @@ export class FichaInscripcionComponent implements OnInit {
     this.fichasPosibles = [
       {
         key: "curso",
-        activa: true
+        activa: false
       },
       {
         key: "inscripcion",
-        activa: false
+        activa: true
       },
       {
         key: "personales",
@@ -214,6 +321,14 @@ export class FichaInscripcionComponent implements OnInit {
     let fichaPosible = this.getFichaPosibleByKey(key);
     fichaPosible.activa = !fichaPosible.activa;
     this.openFicha = !this.openFicha;
+  }
+
+  abreCierraFichaPersonal(key) {
+    if (this.inscripcionInsertada || this.modoEdicion) {
+      let fichaPosible = this.getFichaPosibleByKey(key);
+      fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
   }
 
   getFichaPosibleByKey(key): any {
@@ -248,7 +363,21 @@ export class FichaInscripcionComponent implements OnInit {
   }
 
   backTo() {
-    this.location.back();
+    if (
+      sessionStorage.getItem("pantallaListaInscripciones") != null &&
+      sessionStorage.getItem("pantallaListaInscripciones") != undefined
+    ) {
+      this.router.navigate(["/buscarInscripciones"]);
+      sessionStorage.removeItem("pantallaListaInscripciones");
+    } else if (
+      sessionStorage.getItem("pantallaFichaCurso") != null &&
+      sessionStorage.getItem("pantallaFichaCurso") != undefined
+    ) {
+      this.router.navigate(["/fichaCurso"]);
+      sessionStorage.removeItem("pantallaFichaCurso");
+    } else {
+      this.location.back();
+    }
   }
 
   obtenerTiposIdentificacion() {
@@ -303,18 +432,24 @@ export class FichaInscripcionComponent implements OnInit {
   irFichaCurso() {
     sessionStorage.setItem(
       "codigoCursoInscripcion",
-      JSON.stringify(this.inscripcion.codigoCurso)
+      JSON.stringify(this.inscripcion.idCurso)
+    );
+    sessionStorage.setItem(
+      "inscripcionActual",
+      JSON.stringify(this.inscripcion)
     );
     sessionStorage.setItem("isInscripcion", JSON.stringify(true));
+    sessionStorage.setItem("modoEdicionCurso", JSON.stringify(true));
     this.router.navigate(["/fichaCurso"]);
   }
 
   searchCourse(idCurso) {
     this.progressSpinner = true;
-    this.sigaServices.post("fichaCursos_searchCourse", idCurso).subscribe(
+    this.sigaServices.post("fichaInscripcion_searchCourse", idCurso).subscribe(
       data => {
         this.progressSpinner = false;
         this.curso = JSON.parse(data.body);
+        this.inscripcion.idCurso = this.curso.idCurso;
 
         if (this.curso.fechaInscripcionDesdeDate != null) {
           this.curso.fechaInscripcionDesdeDate = new Date(
@@ -335,5 +470,208 @@ export class FichaInscripcionComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+  }
+
+  guardarInscripcion() {
+    let url = "";
+
+    this.inscripcion.fechaSolicitudDate = this.inscripcion.fechaSolicitud;
+
+    // if (!this.modoEdicion && this.isAdministrador) {
+    //Tendremos que hacer update
+    url = "fichaInscripcion_saveInscripcion";
+    // }
+
+    this.sigaServices.post(url, this.inscripcion).subscribe(
+      data => {
+        this.inscripcion.idInscripcion = JSON.parse(
+          data["body"]
+        ).combooItems[0].value;
+
+        this.progressSpinner = false;
+
+        this.inscripcionInsertada = true;
+        this.modoEdicion = true;
+        this.showSuccess();
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showFail("La acción no se ha realizado correctamente");
+        this.inscripcionInsertada = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  showSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: "Correcto",
+      detail: this.translateService.instant("general.message.accion.realizada")
+    });
+  }
+
+  showFail(msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Información",
+      detail: msg
+    });
+  }
+
+  isSearch() {
+    sessionStorage.setItem("abrirFormador", "true");
+    sessionStorage.setItem("backFichaInscripcion", "true");
+    sessionStorage.setItem("idCursoInscripcion", this.curso.idCurso);
+
+    // Transformamos las fechas para que a la vuelta tengan el formato correcto
+    this.inscripcion.fechaSolicitud = this.transformaFecha(
+      this.inscripcion.fechaSolicitud
+    );
+    this.inscripcion.fechaSolicitudDate = this.transformaFecha(
+      this.inscripcion.fechaSolicitud
+    );
+
+    sessionStorage.setItem(
+      "inscripcionActual",
+      JSON.stringify(this.inscripcion)
+    );
+    if (this.persona != null && this.persona != undefined)
+      sessionStorage.setItem(
+        "personaInscripcionActual",
+        JSON.stringify(this.persona)
+      );
+
+    this.router.navigate(["/busquedaGeneral"]);
+  }
+
+  loadNewTrainer(newformador) {
+    this.persona = newformador;
+    this.obtenerTiposIdentificacion();
+    if (this.persona.nif != null && this.persona.nif != undefined) {
+      this.guardarPersona = true;
+    }
+  }
+
+  actualizaPersona() {
+    if (
+      this.editar &&
+      this.persona.nombre != undefined &&
+      this.persona.apellido1
+    ) {
+      if (this.persona.apellido2 == undefined) {
+        this.persona.apellido2 = "";
+      }
+      this.crearNotarioYGuardar();
+    } else {
+      this.inscripcion.idPersona = this.persona.idPersona;
+      this.sigaServices
+        .post("fichaInscripcion_updateInscripcion", this.inscripcion)
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.guardarPersona = false;
+            this.showSuccess();
+          },
+          err => {
+            this.progressSpinner = false;
+            this.showFail("La acción no se ha realizado correctamente");
+            this.inscripcionInsertada = false;
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+    }
+  }
+
+  crearNotarioYGuardar() {
+    this.sigaServices.post("fichaPersona_crearNotario", this.persona).subscribe(
+      data => {
+        this.persona.idPersona = JSON.parse(data["body"]).combooItems[0].value;
+
+        this.progressSpinner = true;
+
+        this.sigaServices
+          .post("fichaInscripcion_guardarPersona", this.persona)
+          .subscribe(
+            data => {
+              this.progressSpinner = false;
+              this.editar = false;
+
+              // Ultimo paso para actualizar el idPersona con la inscripcion
+              this.inscripcion.idPersona = this.persona.idPersona;
+              this.sigaServices
+                .post("fichaInscripcion_updateInscripcion", this.inscripcion)
+                .subscribe(
+                  data => {
+                    this.progressSpinner = false;
+                    this.guardarPersona = false;
+                    this.showSuccess();
+                  },
+                  err => {
+                    this.progressSpinner = false;
+                    this.showFail("La acción no se ha realizado correctamente");
+                    this.inscripcionInsertada = false;
+                  },
+                  () => {
+                    this.progressSpinner = false;
+                  }
+                );
+            },
+            error => {
+              this.bodySearch = JSON.parse(error["error"]);
+              this.showFail(JSON.stringify(this.bodySearch.error.message));
+              console.log(error);
+
+              this.showFail("Ha habido un error al crear el notario");
+              this.progressSpinner = false;
+            },
+            () => {
+              this.progressSpinner = false;
+            }
+          );
+      },
+      error => {
+        console.log(error);
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  activarGuardarNotarioNoExistente(event) {
+    if (
+      this.editar &&
+      this.persona.nombre != undefined &&
+      this.persona.nombre.trim() != "" &&
+      this.persona.apellido1 != undefined &&
+      this.persona.apellido1 != ""
+    ) {
+      this.guardarPersona = true;
+    } else {
+      if (this.editar) {
+        this.guardarPersona = false;
+      }
+    }
+  }
+
+  transformaFecha(fecha) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -1);
+    if (rawDate.length < 14) {
+      let splitDate = rawDate.split("/");
+      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+      fecha = new Date((arrayDate += "T00:00:00.001Z"));
+    } else {
+      fecha = new Date(fecha);
+    }
+    return fecha;
   }
 }
