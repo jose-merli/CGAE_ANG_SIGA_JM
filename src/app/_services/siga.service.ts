@@ -188,6 +188,10 @@ export class SigaServices {
       "/solicitudIncorporacion/estadoSolicitud",
     solicitudIncorporacion_searchSolicitud:
       "/solicitudIncorporacion/searchSolicitud",
+    solicitudIncorporacion_searchNumColegiado:
+      "/solicitudIncorporacion/searchNumColegiado",
+    solicitudIncorporacion_searchNifExistente:
+      "/solicitudIncorporacion/searchNifExistente",
 
     fichaColegialGenerales_tratamiento: "fichaDatosGenerales/tratamiento",
     fichaColegialGenerales_estadoCivil: "fichaDatosGenerales/estadoCivil",
@@ -276,6 +280,10 @@ export class SigaServices {
     busquedaInscripciones_searchPersona: "busquedaInscripciones/searchPersona",
     busquedaInscripciones_isAdministrador:
       "busquedaInscripciones/isAdministrador",
+    fichaInscripcion_searchCourse: "fichaInscripcion/searchCourse",
+    fichaInscripcion_saveInscripcion: "fichaInscripcion/saveInscripcion",
+    fichaInscripcion_updateInscripcion: "fichaInscripcion/updateInscripcion",
+    fichaInscripcion_guardarPersona: "fichaInscripcion/guardarPersona",
 
     //Agenda
     fichaCalendario_getCalendarType: "fichaCalendario/getCalendarType",
@@ -488,7 +496,7 @@ export class SigaServices {
       "busquedaPerJuridica/solicitudInsertBanksData",
     fichaDatosColegiales_datosColegialesUpdate:
       "/fichaDatosColegiales/datosColegialesUpdate",
-
+    fichaColegialRegTel_searchListDoc: "fichaColegialRegTel/searchListDoc",
     usuario_cambioIdioma: "usuario/cambioIdioma",
     fichaColegialOtrasColegiaciones_getLabelColegios:
       "fichaColegialOtrasColegiaciones/getLabelColegios"

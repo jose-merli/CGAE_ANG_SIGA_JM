@@ -34,6 +34,7 @@ export class DatosInscripcionItem {
   tipoAccion: string;
   pagada: string;
   fechaSolicitud: Date;
+  fechaSolicitudDate: Date;
   idPersona: string;
 
   editar: boolean;

@@ -7,6 +7,7 @@ export class SolicitudIncorporacionItem {
   apellido2: String;
   sexo: String;
   fechaNacimiento: Date;
+  fechaNacimientoStr: any;
   numColegiado: String;
   fechaSolicitud: Date;
   fechaEstado: Date;
@@ -56,5 +57,5 @@ export class SolicitudIncorporacionItem {
   banco: String;
   idInstitucion: String;
 
-  constructor() { }
+  constructor() {}
 }

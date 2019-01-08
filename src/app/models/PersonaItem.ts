@@ -1,5 +1,6 @@
 import { ComboItem } from "./ComboItem";
 export class PersonaItem {
+  idPersona: string;
   nif: String;
   nombre: String;
   apellido1: String;

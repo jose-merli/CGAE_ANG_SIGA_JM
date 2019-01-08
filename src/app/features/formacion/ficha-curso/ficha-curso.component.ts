@@ -295,39 +295,55 @@ export class FichaCursoComponent implements OnInit {
 
       //3. Estamos en modo edicion
     } else if (sessionStorage.getItem("modoEdicionCurso") == "true") {
+      
       this.modoEdicion = true;
-      this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
 
-      if (this.curso.fechaImparticionDesde != null) {
-        this.curso.fechaImparticionDesdeDate = this.arreglarFecha(
-          this.curso.fechaImparticionDesde
+      //4. Viene de la ficha de inscripcion
+      if (sessionStorage.getItem("isInscripcion") == "true") {
+        this.curso = new DatosCursosItem();
+        this.curso.idCurso = JSON.parse(
+          sessionStorage.getItem("codigoCursoInscripcion")
         );
-      }
+        this.searchCourse(this.curso.idCurso);
+        this.getMassiveLoadInscriptions();
+        this.configurationInformacionAdicional();
 
-      if (this.curso.fechaImparticionHasta != null) {
-        this.curso.fechaImparticionHastaDate = this.arreglarFecha(
-          this.curso.fechaImparticionHasta
-        );
-      }
-
-      if (this.curso.fechaInscripcionDesde != null) {
-        this.curso.fechaInscripcionDesdeDate = this.arreglarFecha(
-          this.curso.fechaInscripcionDesde
-        );
-      }
-
-      if (this.curso.fechaInscripcionHasta != null) {
-        this.curso.fechaInscripcionHastaDate = this.arreglarFecha(
-          this.curso.fechaInscripcionHasta
-        );
-      }
-
-      if (this.curso.autovalidacionInscripcion == "1") {
-        this.curso.autovalidacion = true;
+        sessionStorage.removeItem("isInscripcion");
+        sessionStorage.removeItem("codigoCursoInscripcion");
       } else {
-        this.curso.autovalidacion = false;
-      }
 
+        this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
+
+        if (this.curso.fechaImparticionDesde != null) {
+          this.curso.fechaImparticionDesdeDate = this.arreglarFecha(
+            this.curso.fechaImparticionDesde
+          );
+        }
+
+        if (this.curso.fechaImparticionHasta != null) {
+          this.curso.fechaImparticionHastaDate = this.arreglarFecha(
+            this.curso.fechaImparticionHasta
+          );
+        }
+
+        if (this.curso.fechaInscripcionDesde != null) {
+          this.curso.fechaInscripcionDesdeDate = this.arreglarFecha(
+            this.curso.fechaInscripcionDesde
+          );
+        }
+
+        if (this.curso.fechaInscripcionHasta != null) {
+          this.curso.fechaInscripcionHastaDate = this.arreglarFecha(
+            this.curso.fechaInscripcionHasta
+          );
+        }
+
+        if (this.curso.autovalidacionInscripcion == "1") {
+          this.curso.autovalidacion = true;
+        } else {
+          this.curso.autovalidacion = false;
+        }
+      }
       if (
         (sessionStorage.getItem("formador") != null ||
           sessionStorage.getItem("formador") != undefined) &&
@@ -350,21 +366,6 @@ export class FichaCursoComponent implements OnInit {
       this.getCountInscriptions();
       this.getMassiveLoadInscriptions();
       this.configurationInformacionAdicional();
-
-      //4. Viene de la ficha de inscripcion
-    } else if (sessionStorage.getItem("isInscripcion") == "true") {
-      this.curso = new DatosCursosItem();
-      this.curso.idCurso = JSON.parse(
-        sessionStorage.getItem("codigoCursoInscripcion")
-      );
-      this.searchCourse(this.curso.idCurso);
-      this.getMassiveLoadInscriptions();
-      this.getPrices();
-      this.getCertificatesCourse();
-      this.configurationInformacionAdicional();
-
-      sessionStorage.removeItem("isInscripcion");
-      sessionStorage.removeItem("codigoCursoInscripcion");
 
       //5. Modo nuevo
     } else {
@@ -2721,5 +2722,11 @@ export class FichaCursoComponent implements OnInit {
       summary: "Incorrecto",
       detail: mensaje
     });
+  }
+
+  irInscripcion(){
+    sessionStorage.setItem("idCursoInscripcion", JSON.stringify(this.curso.idCurso));
+    sessionStorage.setItem("pantallaFichaCurso", "true");
+    this.router.navigate(["/fichaInscripcion"]);
   }
 }

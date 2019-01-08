@@ -22,22 +22,22 @@
           </div>
           <div class="d-flex justify-content-between">
             <label>{{ 'form.busquedaCursos.literal.codigoCurso' | translate }}</label>
-            <span>{{ inscripcion.codigoCurso }}</span>
+            <span>{{ curso.codigoCurso }}</span>
   
             <label>{{ 'formacion.busquedaInscripcion.nombreCurso' | translate }}</label>
-            <span>{{ inscripcion.nombreCurso }}</span>
+            <span>{{ curso.nombreCurso }}</span>
   
             <label>{{ 'form.busquedaCursos.literal.fechaImparticionDesde' | translate }}</label>
-            <span>{{ inscripcion.fechaImparticionDesdeFormat }}</span>
+            <span>{{ curso.fechaImparticionDesde }}</span>
   
             <label>{{ 'form.busquedaCursos.literal.fechaImparticionHasta' | translate }}</label>
-            <span>{{ inscripcion.fechaImparticionHastaFormat }}</span>
+            <span>{{ curso.fechaImparticionHasta }}</span>
   
             <label>{{ 'form.busquedaCursos.literal.temas' | translate }}</label>
-            <span>{{ inscripcion.temas }}</span>
+            <span>{{ curso.temas }}</span>
   
             <label>{{ 'formacion.busquedaInscripcion.estadoCurso' | translate }}</label>
-            <span>{{ inscripcion.estadoCurso }}</span>
+            <span>{{ curso.estado }}</span>
             <i class="fas fa-redo float-right" (click)="irFichaCurso()"></i>
           </div>
         </div>
@@ -80,22 +80,22 @@
       <div class="form-row lg-12 md-12">
         <div class="col-lg-4 col-md-4">
           <label>{{ 'censo.nuevaSolicitud.fechaSolicitud' | translate }}(*)</label>
-          <p-calendar [locale]="es" [(ngModel)]="inscripcion.fechaSolicitud" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [disabled]="!isEditable"></p-calendar>
+          <p-calendar [locale]="es" [(ngModel)]="inscripcion.fechaSolicitud" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [disabled]="modoEdicion"></p-calendar>
         </div>
         <div class="col-lg-4 col-md-4">
           <label>{{ "censo.busquedaSolicitudesModificacion.literal.estado" | translate}}</label>
           <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]='inscripcion.idEstadoInscripcion'
-            [options]="comboEstados" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!isEditable"></p-dropdown>
+            [options]="comboEstados" [filter]="true" filterBy="label,labelSinTilde" [disabled]="true"></p-dropdown>
         </div>
         <div class="col-lg-2 col-md-2">
           <label>{{ 'formacion.busquedaInscripcion.calificacion' | translate }}</label>
-          <input type="text" class="form-control" pInputText name="calificacion" [(ngModel)]='inscripcion.calificacion' [disabled]="!isEditable">
+          <input type="text" class="form-control" pInputText name="calificacion" [(ngModel)]='inscripcion.calificacion' [disabled]="true">
         </div>
       </div>
       <div class="form-row lg-12 md-12" style="margin-top: 10px">
         <div class="col-lg-3 col-md-3">
           <label>{{ 'formacion.busquedaInscripcion.asistencia' | translate }}</label>
-          <p-checkbox name="minimaAsistencia" binary="true" [(ngModel)]='inscripcion.minimaAsistencia' [disabled]="!isEditable"></p-checkbox>
+          <p-checkbox name="minimaAsistencia" binary="true" [(ngModel)]='inscripcion.minimaAsistencia' [disabled]="true"></p-checkbox>
         </div>
       </div>
     </div>
@@ -104,15 +104,15 @@
         <!-- <button pButton (click)="restEvent()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="tipoAccesoLectura"></button>
         <button pButton (click)="saveEvent()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="validateForm() || tipoAccesoLectura"></button>
        -->
-       <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="!isEditable"></button>
-       <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="!isEditable"></button>
+       <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="modoEdicion"></button>
+       <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="modoEdicion" (click)="guardarInscripcion()"></button>
       </div>
     </div>
   </div>
 
   <!-- TERJETAS PERSONAKES-->
   <div class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha('personales')">
+    <div class="card-header header-ficha" (click)="abreCierraFichaPersonal('personales')">
       <div *ngIf="!esFichaActiva('personales')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -200,18 +200,17 @@
   
     <div *ngIf="esFichaActiva('personales')" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="desasociarPersona()" [(disabled)]="!desasociar" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate}}"></button>
-        <button (click)="guardar()" [(disabled)]="!guardarNotario" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="actualizaPersona()" [(disabled)]="!guardarPersona" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
         <button (click)="isSearch()" [(disabled)]="!isAdministrador" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
       </div>
     </div>
   </div>
 
-   
-
-  <!-- TERJETAS PAGO-->
+  
+<!-- 
+ TERJETAS PAGO
   <div class="card">
-    <!-- Cabecera -->
+  Cabecera
     <div class="card-header header-ficha" (click)="abreCierraFicha('pago')">
       <div *ngIf="!esFichaActiva('pago')" class="form-row">
         <div class="col-lg-1 col-md-2">
@@ -234,7 +233,7 @@
       </div>
     </div>
 
-    <!-- Cuerpo-->
+    Cuerpo
     <div class="card-body card-body-ficha" *ngIf="esFichaActiva('pago')">
       <div *ngIf="esFichaActiva('pago')" class="card-body card-body-ficha">
         <div class="row">
@@ -260,12 +259,12 @@
       </div>
     </div>
     <div class="card-footer" *ngIf="esFichaActiva('pago')">
-      <!-- <div class="text-right main-button">
+      <div class="text-right main-button">
         <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" iconPos="left" label="Descargar" [disabled]="tipoAccesoLectura"></button>
         <button pButton type="button" (click)="unCheckAsist()" [disabled]="!checkAsistencias" icon="fa fa-times" iconPos="left" label="Desmarcar" [disabled]="tipoAccesoLectura"></button>
         <button pButton type="button" (click)="checkAsist()" [disabled]="!checkAsistencias" icon="fa fa-check" iconPos="left" label="Marcar" [disabled]="tipoAccesoLectura"></button>
         <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
-      </div> -->
+      </div> 
       <div class="text-right main-button">
           <button pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'formacion.fichaInscripcion.datosPago.boton.pagar' | translate }}"></button>
           <button pButton type="button" icon="fa fa-times" iconPos="left" label="{{ 'formacion.fichaInscripcion.datosPago.boton.facturar' | translate }}"></button>
@@ -273,7 +272,7 @@
           <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
         </div>
     </div>
-  </div>
+  </div> -->
 
     <!-- TERJETAS CERTIFICADO-->
     <div class="card">

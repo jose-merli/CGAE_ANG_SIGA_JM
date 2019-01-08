@@ -68,25 +68,32 @@
                   <label>{{fechaModificacion}}</label>
               </div> -->
               <div class="form-group col-lg-12 col-md-12">
-                <label>Dirección</label>
+                <label>
+                  {{"censo.consultaDirecciones.literal.direccion" | translate}}
+              </label>
                 <input [(ngModel)]="body.domicilio" type="text" class="form-control" [(disabled)]="historyDisable" [maxLength]="99" pInputText>
               </div>
               <div class="form-group col-lg-6 col-md-6">
-                <label>País</label>
+                <label>
+                  {{"censo.datosDireccion.literal.pais2" | translate}}
+              </label>
                 <p-dropdown class="select-form" [(ngModel)]="body.idPais" [filter]="true" filterMatchMode="contains" [options]="comboPais"
                   [(disabled)]="historyDisable" (onChange)="onChangePais()">
                 </p-dropdown>
               </div>
 
               <div class="form-group col-lg-6 col-md-6">
-                <label>Código postal (*)</label>
+                <label>
+                  {{"censo.ws.literal.codigopostal" | translate}} (*)
+              </label>
                 <input [(ngModel)]="body.codigoPostal" type="text" class="form-control" [(disabled)]="isDisabledCodigoPostal" [maxLength]="5"
                   (ngModelChange)="onChangeCodigoPostal()" pInputText>
-
               </div>
 
               <div class="form-group col-lg-6 col-md-6">
-                <label>Provincia</label>
+                <label>
+                  {{"censo.datosDireccion.literal.provincia" | translate}}
+              </label>
                 <!-- (onChange)="onChangeProvincia()" -->
                 <p-dropdown class="select-form" [(ngModel)]='provinciaSelecionada' [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"
                   [(disabled)]="isDisabledProvincia" [options]="comboProvincia">
@@ -105,7 +112,9 @@
               </div>
               <!-- *ngIf="!poblacionExtranjera" -->
               <div *ngIf="!poblacionExtranjera" class="form-group col-lg-6 col-md-6">
-                <label>Población</label>
+                <label>
+                  {{"censo.consultaDirecciones.literal.poblacion" | translate}}
+              </label>
                 <p-dropdown #input2 class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true" filterBy="label,labelSinTilde" [(disabled)]="isDisabledPoblacion"
                   [options]="comboPoblacion" (input)="buscarPoblacion($event)" [emptyFilterMessage]="resultadosPoblaciones" id="dropdown">
                 </p-dropdown>
