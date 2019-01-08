@@ -186,14 +186,14 @@ export class SigaServices {
     consultas_listadoPlantillas: 'consultas/plantillasconsulta',
     consultas_guardarDatosGenerales: 'consultas/confGeneral',
     consultas_guardarConsulta: 'consultas/confConsulta',
-    consultas_listadoModelos: 'consultas/modelosconsulta ',
+    consultas_listadoModelos: 'consultas/modelosconsulta',
+    consultas_ejecutarConsulta: 'consultas/ejecutarConsulta'
 
 
   };
 
   private menuToggled = new Subject<any>();
   menuToggled$ = this.menuToggled.asObservable();
-
   constructor(
     private http: HttpClient,
     handler: HttpBackend,

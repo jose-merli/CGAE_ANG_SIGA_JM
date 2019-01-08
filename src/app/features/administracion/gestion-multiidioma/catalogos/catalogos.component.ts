@@ -16,7 +16,9 @@ import { MultiidiomaCatalogoSearchDto } from "../../../../models/MultiidiomaCata
 import { MultiidiomaCatalogoUpdateDto } from "../../../../models/MultiidiomaCatalogoUpdateDto";
 import { MultiidiomaCatalogoItem } from "../../../../models/MultiidiomaCatalogoItem";
 import { ControlAccesoDto } from "../../../../../app/models/ControlAccesoDto";
+import { DialogoComunicacionesItem } from "../../../../models/DialogoComunicacionItem";
 import { Router } from "@angular/router";
+import { esCalendar } from "./../../../../utils/calendar";
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -58,6 +60,17 @@ export class Catalogos extends SigaWrapper implements OnInit {
   editar: boolean = false;
   habilitarBotones: boolean = false;
   local: String;
+  es: any = esCalendar;
+
+  //Diálogo de comunicación
+  showComunicar: boolean = false;
+  modelosComunicacion: any[];
+  bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
+  tiposEnvio: any[];
+  plantillas: any[];
+  datosModelos: any[];
+  colsModelos: any[];
+
 
   constructor(
     private sigaServices: SigaServices,
@@ -136,14 +149,21 @@ export class Catalogos extends SigaWrapper implements OnInit {
       {
         field: "descripcionBusqueda",
         header:
-        "administracion.multidioma.etiquetas.literal.descripcionInstitucion"
+          "administracion.multidioma.etiquetas.literal.descripcionInstitucion"
       },
       {
         field: "descripcionTraduccion",
         header:
-        "administracion.multidioma.etiquetas.literal.descripcionIdiomaSeleccionado"
+          "administracion.multidioma.etiquetas.literal.descripcionIdiomaSeleccionado"
       }
     ];
+
+    this.colsModelos = [
+      { field: 'modelo', header: 'Modelo' },
+      { field: 'tipoEnvio', header: 'Tipo envío' },
+      { field: 'plantillaEnvio', header: 'Plantilla Envío' },
+
+    ]
 
     this.rowsPerPage = [
       {
@@ -178,17 +198,17 @@ export class Catalogos extends SigaWrapper implements OnInit {
     this.sigaServices
       .postPaginado("catalogos_search", "?numPagina=1", this.bodySearch)
       .subscribe(
-      data => {
-        console.log(data);
-        this.searchParametros = JSON.parse(data["body"]);
-        this.datosTraduccion = this.searchParametros.multiidiomaCatalogoItem;
-        this.progressSpinner = false;
-        this.buscarSeleccionado = true;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      }
+        data => {
+          console.log(data);
+          this.searchParametros = JSON.parse(data["body"]);
+          this.datosTraduccion = this.searchParametros.multiidiomaCatalogoItem;
+          this.progressSpinner = false;
+          this.buscarSeleccionado = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        }
       );
   }
   datos(event) {
@@ -353,5 +373,21 @@ export class Catalogos extends SigaWrapper implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  //Diálogo de comunicación: ver y enviar servicio
+  onComunicar(dato) {
+    this.showComunicar = true;
+    this.getModelosComunicacion();
+  }
+
+  getModelosComunicacion() {
+    this.datosModelos = [
+      { id: '1', modelo: '', tipoEnvio: '', plantillaEnvio: '' }
+    ]
+  }
+
+  onEnviarComunicacion() {
+    this.showComunicar = false;
   }
 }

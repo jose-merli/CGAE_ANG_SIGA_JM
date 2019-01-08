@@ -51,6 +51,8 @@ export class PlantillasEnvioComponent implements OnInit {
 
   ngOnInit() {
 
+    sessionStorage.removeItem("crearNuevaPlantilla");
+
     if (sessionStorage.getItem("filtrosPlantillas") != null) {
       this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosPlantillas"));
       this.buscar();
@@ -188,9 +190,10 @@ export class PlantillasEnvioComponent implements OnInit {
   }
 
 
-  onAddPlantilla() {
+  addPlantilla() {
     this.router.navigate(['/fichaPlantilla']);
     sessionStorage.removeItem("plantillasEnvioSearch")
+    sessionStorage.setItem("crearNuevaPlantilla", JSON.stringify("true"));
   }
 
   getTipoEnvios() {

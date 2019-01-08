@@ -158,7 +158,7 @@ export class PerfilesFichaComponent implements OnInit {
 
 
   abreCierraFicha() {
-    if (sessionStorage.getItem("crearNuevoEnvio") == null) {
+    if (sessionStorage.getItem("crearNuevoModelo") == null) {
       this.openFicha = !this.openFicha;
       if (this.openFicha) {
         this.getDatos();

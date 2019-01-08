@@ -99,4 +99,8 @@ export class DatosGeneralesFichaComponent implements OnInit {
     }
   }
 
+  guardar() {
+    sessionStorage.removeItem("crearNuevoModelo");
+  }
+
 }

@@ -17,6 +17,7 @@ import { ContadorItem } from "./../../../../app/models/ContadorItem";
 import { ContadorResponseDto } from "./../../../../app/models/ContadorResponseDto";
 import { DataTable } from "primeng/datatable";
 import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
+import { esCalendar } from "./../../../utils/calendar";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -65,13 +66,14 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
   idPantalla: String;
   first: number = 0;
   rowsPerPage: any = [];
-
   //Diálogo de comunicación
   showComunicar: boolean = false;
   modelosComunicacion: any[];
   bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
   tiposEnvio: any[];
   plantillas: any[];
+  datosModelos: any[];
+  colsModelos: any[];
 
   @ViewChild("table") table: DataTable;
   constructor(
@@ -149,6 +151,14 @@ para poder filtrar el dato con o sin estos caracteres*/
         header: "administracion.parametrosGenerales.literal.sufijo"
       }
     ];
+
+    this.colsModelos = [
+      { field: 'modelo', header: 'Modelo' },
+      { field: 'tipoEnvio', header: 'Tipo envío' },
+      { field: 'plantillaEnvio', header: 'Plantilla Envío' },
+
+    ]
+
 
     this.rowsPerPage = [
       {

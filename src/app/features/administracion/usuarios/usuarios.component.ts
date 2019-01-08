@@ -71,13 +71,14 @@ export class Usuarios extends SigaWrapper implements OnInit {
   progressSpinner: boolean = false;
   numSelected: number = 0;
   es: any = esCalendar;
-
   //Diálogo de comunicación
   showComunicar: boolean = false;
   modelosComunicacion: any[];
-  bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem()
+  bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
   tiposEnvio: any[];
   plantillas: any[];
+  datosModelos: any[];
+  colsModelos: any[];
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
@@ -174,6 +175,13 @@ para poder filtrar el dato con o sin estos caracteres*/
         width: "5%"
       }
     ];
+
+    this.colsModelos = [
+      { field: 'modelo', header: 'Modelo' },
+      { field: 'tipoEnvio', header: 'Tipo envío' },
+      { field: 'plantillaEnvio', header: 'Plantilla Envío' },
+
+    ]
 
     this.rowsPerPage = [
       {
@@ -690,12 +698,22 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.msgs = [];
   }
 
+
   //Diálogo de comunicación: ver y enviar servicio
   onComunicar(dato) {
     this.showComunicar = true;
+    this.getModelosComunicacion();
+  }
+
+  getModelosComunicacion() {
+    this.datosModelos = [
+      { id: '1', modelo: '', tipoEnvio: '', plantillaEnvio: '' }
+    ]
   }
 
   onEnviarComunicacion() {
     this.showComunicar = false;
   }
+
+
 }

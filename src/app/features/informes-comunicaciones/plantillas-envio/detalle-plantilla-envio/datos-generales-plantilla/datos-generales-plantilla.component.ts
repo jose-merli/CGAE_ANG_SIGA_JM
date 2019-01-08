@@ -118,6 +118,10 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
     );
   }
 
+  guardar() {
+    sessionStorage.removeItem("crearNuevaPlantilla");
+  }
+
 
 
 

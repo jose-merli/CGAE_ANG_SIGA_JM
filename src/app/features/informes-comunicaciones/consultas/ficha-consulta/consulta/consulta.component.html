@@ -5,7 +5,7 @@
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
-            <i class="fas fa-laptop-code icon-ficha"></i>
+            <i class="fas fa-comment-alt icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -25,7 +25,7 @@
       </div>
       <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
-          <i class="fas fa-laptop-code icon-ficha">
+          <i class="fas fa-comment-alt icon-ficha">
           </i>
         </div>
         <label class="title-ficha">Consulta</label>
@@ -58,8 +58,7 @@
       <div class="text-right main-button ">
         <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
         <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button [disabled]="isButtonDisabled()" (click)="onShowValores()" pButton type="button" icon="fas fa-play" iconPos="left"
-          label="{{ 'general.boton.ejecutar' | translate}}"></button>
+        <button [disabled]="isButtonDisabled()" (click)="ejecutar()" pButton type="button" icon="fas fa-play" iconPos="left" label="{{ 'general.boton.ejecutar' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -73,11 +72,11 @@
     <label>Valores</label>
   </p-header>
   <div *ngIf="valores">
-    <div class="form-row" *ngFor="let dato of valores">
-      <div class="form-group col-lg-2 col-md-2">
-        <label>{{dato.clave}}</label>
+    <div class="form-row mt-3" *ngFor="let dato of valores">
+      <div class="form-group col-lg-3 col-md-3">
+        <label class="mr-2">{{dato.clave}} </label>
       </div>
-      <div class="form-group col-lg-10 col-md-10">
+      <div class="form-group col-lg-9 col-md-9">
         <input type="text" class="form-control" [(ngModel)]="dato.valor" pInputText>
       </div>
     </div>
@@ -85,6 +84,7 @@
   <p-footer>
     <div class="text-right main-button ">
       <button (click)="ejecutar()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+      <button (click)="enviar()" pButton type="button" icon="fa fa-save " iconPos="left" label="{{'general.boton.guardar' | translate}}"></button>
     </div>
   </p-footer>
 </p-dialog>

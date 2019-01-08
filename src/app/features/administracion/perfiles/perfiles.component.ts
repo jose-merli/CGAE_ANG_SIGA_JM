@@ -72,6 +72,8 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
   tiposEnvio: any[];
   plantillas: any[];
+  datosModelos: any[];
+  colsModelos: any[];
 
   constructor(
     private sigaServices: SigaServices,
@@ -122,6 +124,14 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         header: "menu.administracion.perfilrol"
       }
     ];
+
+    this.colsModelos = [
+      { field: 'modelo', header: 'Modelo' },
+      { field: 'tipoEnvio', header: 'Tipo envío' },
+      { field: 'plantillaEnvio', header: 'Plantilla Envío' },
+
+    ]
+
 
     this.rowsPerPage = [
       {
