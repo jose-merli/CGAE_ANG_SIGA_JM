@@ -141,7 +141,7 @@ export class ModelosComunicacionesConsultaComponent implements OnInit {
 
 
   getResultados() {
-    this.sigaServices.postPaginado("consultas_listadoModelos", "?numPagina=1", this.body.idConsulta).subscribe(
+    this.sigaServices.post("consultas_listadoModelos", this.body).subscribe(
       data => {
         debugger;
         this.datos = JSON.parse(data["body"]).listadoModelos;

@@ -132,7 +132,7 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
   }
 
   getResultados() {
-    this.sigaServices.postPaginado("consultas_listadoPlantillas", "?numPagina=1", this.body.idConsulta).subscribe(
+    this.sigaServices.post("consultas_listadoPlantillas", this.body).subscribe(
       data => {
         this.datos = JSON.parse(data["body"]).listadoPlantillas;
         console.log(this.datos)
