@@ -37,6 +37,7 @@ export class SolicitudIncorporacionItem {
   domicilio: String;
   telefono1: String;
   telefono2: String;
+  bic: String;
   fax1: String;
   fax2: String;
   movil: String;

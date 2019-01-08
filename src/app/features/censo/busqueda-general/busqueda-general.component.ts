@@ -24,6 +24,8 @@ import { BusquedaFisicaObject } from "./../../../../app/models/BusquedaFisicaObj
 import { DatosNotarioItem } from "../../../models/DatosNotarioItem";
 import { DatosIntegrantesItem } from "../../../models/DatosIntegrantesItem";
 import { FormadorCursoItem } from "../../../models/FormadorCursoItem";
+import { SolicitudIncorporacionItem } from "../../../models/SolicitudIncorporacionItem";
+
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -62,6 +64,8 @@ export class BusquedaGeneralComponent {
   selectAll: boolean = false;
   msgs: any[];
   selectedItem: number = 10;
+  institucion: ComboItem = new ComboItem();
+
   @ViewChild("table")
   table;
   selectedDatos;
@@ -108,6 +112,11 @@ export class BusquedaGeneralComponent {
 
   ngOnInit() {
     this.persona = "f";
+
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucion = n;
+    });
+
     if (
       sessionStorage.getItem("newIntegrante") != null ||
       sessionStorage.getItem("newIntegrante") != undefined
@@ -547,6 +556,26 @@ export class BusquedaGeneralComponent {
       sessionStorage.removeItem("nIntegrante");
       sessionStorage.setItem("nIntegrante", JSON.stringify(id));
       this.router.navigate(["detalleIntegrante"]);
+      // ir a ficha de solicitud de Incorporación
+    } else if (sessionStorage.getItem("solicitudIncorporacion") == "true") {
+      let enviar = new SolicitudIncorporacionItem();
+
+      if (id[0].numeroInstitucion != this.institucion.value) {
+        // enviar = id[0];
+        enviar.numeroIdentificacion = id[0].nif;
+        enviar.apellido1 = id[0].primerApellido;
+        enviar.nombre = id[0].nombre;
+        enviar.numColegiado = id[0].numeroColegiado;
+        enviar.idInstitucion = id[0].numeroInstitucion;
+        enviar.apellido2 = id[0].segundoApellido;
+
+        sessionStorage.setItem("nuevaIncorporacion", JSON.stringify(enviar));
+        this.router.navigate(["/nuevaIncorporacion"]);
+      } else {
+        this.showFail(
+          "No se puede crear una solicitud de modificación a partir de una persona de la misma institución"
+        );
+      }
     }
     // ir a ficha de formador
     else if (this.isFormador) {
@@ -630,6 +659,24 @@ export class BusquedaGeneralComponent {
 
           sessionStorage.setItem("notario", JSON.stringify(notariosNEW));
           this.location.back();
+        } else if (sessionStorage.getItem("solicitudIncorporacion") == "true") {
+          let enviar = new SolicitudIncorporacionItem();
+          if (this.bodyFisica.nif != undefined || this.bodyFisica.nif != "") {
+            enviar.numeroIdentificacion = this.bodyFisica.nif;
+            enviar.nombre = this.bodyFisica.nombre;
+            enviar.apellido1 = this.bodyFisica.primerApellido;
+            enviar.apellido2 = this.bodyFisica.segundoApellido;
+            enviar.numColegiado = this.bodyFisica.numeroColegiado;
+            sessionStorage.setItem(
+              "nuevaIncorporacion",
+              JSON.stringify(enviar)
+            );
+            this.router.navigate(["/nuevaIncorporacion"]);
+          } else {
+            this.showFail(
+              "No se puede crear una solicitud de modificación a partir de una persona jurídica"
+            );
+          }
         } else if (
           sessionStorage.getItem("newIntegrante") != null ||
           sessionStorage.getItem("newIntegrante") != undefined

@@ -170,7 +170,9 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   irNuevaSolicitud() {
     sessionStorage.removeItem("editedSolicitud");
     sessionStorage.setItem("consulta", "false");
-    this.router.navigate(["/nuevaIncorporacion"]);
+    sessionStorage.setItem("solicitudIncorporacion", "true");
+    // this.router.navigate(["/nuevaIncorporacion"]);
+    this.router.navigate(["/busquedaGeneral"]);
   }
   irDetalleSolicitud(item) {
     if (item && item.length > 0) {
@@ -236,7 +238,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
 

@@ -12,6 +12,8 @@ import { SolicitudIncorporacionItem } from "../../../../models/SolicitudIncorpor
 import { ConfirmationService } from "primeng/api";
 import { Location } from "@angular/common";
 import { Message } from "primeng/components/common/api";
+import { isNumeric } from "rxjs/util/isNumeric";
+
 import { DropdownModule, Dropdown } from "primeng/dropdown";
 
 @Component({
@@ -64,6 +66,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   codigoPostalValido: boolean = false;
   numColegiadoDisponible: boolean;
   dniDisponible: boolean;
+  vieneDeBusqueda: boolean = false;
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
   constructor(
@@ -93,7 +96,18 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.solicitudEditar.idPais = "191";
     } else {
       this.consulta = false;
+
+      if (sessionStorage.getItem("nuevaIncorporacion")) {
+        this.solicitudEditar = JSON.parse(
+          sessionStorage.getItem("nuevaIncorporacion")
+        );
+      }
       this.estadoSolicitudSelected = "20";
+      this.vieneDeBusqueda = true;
+      this.dniDisponible = false;
+    }
+    if (this.isValidIBAN()) {
+      this.recuperarBicBanco();
     }
   }
 
@@ -338,25 +352,32 @@ export class NuevaIncorporacionComponent implements OnInit {
   }
 
   onChangeNColegiado() {
-    if (this.solicitudEditar.numColegiado.length == 4) {
-      this.sigaServices
-        .post("solicitudIncorporacion_searchNumColegiado", this.solicitudEditar)
-        .subscribe(
-          data => {
-            let resultado = JSON.parse(data["body"]);
-            if (resultado.numColegiado == "disponible") {
-              this.numColegiadoDisponible = true;
-            } else {
-              this.numColegiadoDisponible = false;
-            }
-          },
-          error => {
-            let resultado = JSON.parse(error["error"]);
-            this.showFail(resultado.error.message.toString());
-          }
-        );
+    if (!this.isValidNumColegiado()) {
+      this.solicitudEditar.numColegiado = undefined;
     } else {
-      this.numColegiadoDisponible = undefined;
+      if (this.solicitudEditar.numColegiado.length == 4) {
+        this.sigaServices
+          .post(
+            "solicitudIncorporacion_searchNumColegiado",
+            this.solicitudEditar
+          )
+          .subscribe(
+            data => {
+              let resultado = JSON.parse(data["body"]);
+              if (resultado.numColegiado == "disponible") {
+                this.numColegiadoDisponible = true;
+              } else {
+                this.numColegiadoDisponible = false;
+              }
+            },
+            error => {
+              let resultado = JSON.parse(error["error"]);
+              this.showFail(resultado.error.message.toString());
+            }
+          );
+      } else {
+        this.numColegiadoDisponible = undefined;
+      }
     }
   }
 
@@ -384,8 +405,9 @@ export class NuevaIncorporacionComponent implements OnInit {
                   this.tratamientoSelected = this.solicitudEditar.tratamiento;
                   this.estadoCivilSelected = this.solicitudEditar.idEstadoCivil;
                   this.sexoSelected = this.solicitudEditar.sexo;
-                  this.solicitudEditar.fechaNacimiento = this.solicitudEditar.fechaNacimientoStr;
+                  this.solicitudEditar.fechaNacimiento = undefined;
                   this.dniDisponible = false;
+                  this.vieneDeBusqueda = false;
                 },
                 reject: () => {
                   this.dniDisponible = undefined;
@@ -430,10 +452,11 @@ export class NuevaIncorporacionComponent implements OnInit {
           let bodyBancoBic = bodyBancoBicSearch.bancoBicItem[0];
 
           this.solicitudEditar.banco = bodyBancoBic.banco;
+          this.solicitudEditar.bic = bodyBancoBic.bic;
         },
         error => {
           let bodyBancoBicSearch = JSON.parse(error["error"]);
-          this.showFail(bodyBancoBicSearch.error.message.toString());
+          this.showFailGenerico();
         }
       );
   }
@@ -589,7 +612,7 @@ export class NuevaIncorporacionComponent implements OnInit {
               detail: "Solicitud guardada correctamente."
             }
           ];
-          this.location.back();
+          this.router.navigate(["/solicitudesIncorporacion"]);
         },
         error => {
           this.progressSpinner = false;
@@ -632,6 +655,14 @@ export class NuevaIncorporacionComponent implements OnInit {
       /^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(
         this.solicitudEditar.codigoPostal
       )
+    );
+  }
+
+  isValidNumColegiado(): boolean {
+    return (
+      this.solicitudEditar.numColegiado &&
+      typeof this.solicitudEditar.numColegiado === "string" &&
+      /^[0-9]*$/.test(this.solicitudEditar.numColegiado)
     );
   }
 
@@ -682,6 +713,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       (this.isValidIBAN() ||
         this.solicitudEditar.iban == "" ||
         this.solicitudEditar.iban == undefined) &&
+        this.provinciaSelected != "" &&
       this.estadoSolicitudSelected != "" &&
       this.estadoSolicitudSelected != undefined &&
       this.solicitudEditar.fechaEstado != null &&
@@ -698,6 +730,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.solicitudEditar.fechaIncorporacion != undefined &&
       this.solicitudEditar.numColegiado != null &&
       this.solicitudEditar.numColegiado != undefined &&
+      this.numColegiadoDisponible &&
       this.tipoIdentificacionSelected != "" &&
       this.tipoIdentificacionSelected != undefined &&
       this.solicitudEditar.numeroIdentificacion != null &&
@@ -713,6 +746,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.paisSelected != undefined &&
       this.solicitudEditar.domicilio != null &&
       this.solicitudEditar.domicilio != undefined &&
+      this.isValidCodigoPostal() &&
       this.solicitudEditar.codigoPostal != null &&
       this.solicitudEditar.codigoPostal != undefined &&
       this.solicitudEditar.telefono1 != null &&
@@ -799,7 +833,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   backTo() {
     sessionStorage.removeItem("editedSolicitud");
-    this.location.back();
+    this.router.navigate(["/solicitudesIncorporacion"]);
   }
 
   irAlterMutua() {
@@ -837,5 +871,10 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
   irSegAccidentes() {
     //TODO: this.router.navigate(["/alterMutua"]);
+  }
+
+  ngOnDestroy() {
+    sessionStorage.removeItem("solicitudIncorporacion");
+    sessionStorage.removeItem("nuevaIncorporacion");
   }
 }
