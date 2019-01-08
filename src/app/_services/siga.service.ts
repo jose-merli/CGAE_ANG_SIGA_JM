@@ -234,6 +234,8 @@ export class SigaServices {
     cargasMasivas_downloadOriginalFile: "cargasMasivas/downloadOriginalFile",
     cargasMasivas_downloadLogFile: "cargasMasivas/downloadLogFile",
 
+    busquedaCensoGeneral_search: "busquedaCensoGeneral/search",
+
     //Formación
     busquedaCursos_visibilidadCursos: "busquedaCursos/visibilidadCursos",
     busquedaCursos_estadosCursos: "busquedaCursos/estadosCursos",
