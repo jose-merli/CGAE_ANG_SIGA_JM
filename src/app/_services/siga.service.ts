@@ -133,7 +133,8 @@ export class SigaServices {
     anexos_search: "fichaDatosBancarios/AnexosSearch",
     anexos_update: "fichaDatosBancarios/updateAnexos",
     anexos_insert: "fichaDatosBancarios/insertAnexos",
-    datosCuentaBancaria_getLengthCodCountry: "busquedaPerJuridica/getLengthCodCountry",
+    datosCuentaBancaria_getLengthCodCountry:
+      "busquedaPerJuridica/getLengthCodCountry",
     busquedaPerJuridica_uploadFile: "busquedaPerJuridica/uploadFile",
     busquedaPerJuridica_fileDownloadInformation:
       "busquedaPerJuridica/fileDownloadInformation",
@@ -253,6 +254,16 @@ export class SigaServices {
     fichaCursos_uploadFile: "fichaCursos/uploadFile",
     fichaCursos_getMassiveLoadInscriptions:
       "fichaCursos/getMassiveLoadInscriptions",
+    fichaCursos_cancelCourse: "fichaCursos/cancelCourse",
+    fichaCursos_finishCourse: "fichaCursos/finishCourse",
+    fichaCursos_getPricesCourse: "fichaCursos/getPricesCourse",
+    fichaCursos_getQualificationsCourse: "fichaCursos/getQualificationsCourse",
+    fichaCursos_getTypesCertificatesCourse:
+      "fichaCursos/getTypesCertificatesCourse",
+    fichaCursos_getCertificatesCourse: "fichaCursos/getCertificatesCourse",
+    fichaCursos_saveCertificateCourse: "fichaCursos/saveCertificateCourse",
+    fichaCursos_updateCertificatesCourse:
+      "fichaCursos/updateCertificatesCourse",
 
     busquedaInscripciones_estadosInscripciones:
       "busquedaInscripciones/estadosInscripciones",
@@ -303,6 +314,7 @@ export class SigaServices {
       "fichaCursos/autovalidateInscriptionsCourse",
     fichaCursos_getTopicsCourse: "fichaCursos/getTopicsCourse",
     fichaCursos_getTopicsSpecificCourse: "fichaCursos/getTopicsSpecificCourse",
+    fichaCursos_getCodeCourse: "fichaCursos/getCodeCourse",
     datosNotificaciones_getTypeNotifications:
       "datosNotificaciones/getTypeNotifications",
     datosNotificaciones_getMeasuredUnit: "datosNotificaciones/getMeasuredUnit",
@@ -480,7 +492,6 @@ export class SigaServices {
     usuario_cambioIdioma: "usuario/cambioIdioma",
     fichaColegialOtrasColegiaciones_getLabelColegios:
       "fichaColegialOtrasColegiaciones/getLabelColegios"
-
   };
 
   private menuToggled = new Subject<any>();
