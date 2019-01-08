@@ -6,6 +6,7 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
 import { ConsultaConsultasItem } from '../../../../../models/ConsultaConsultasItem';
 import { Message } from "primeng/components/common/api";
+import { saveAs } from "file-saver/FileSaver";
 
 
 
@@ -31,6 +32,7 @@ export class ConsultaComponent implements OnInit {
   msgs: Message[];
   valores: any[];
   consultaEditada: boolean = false;
+  camposValores: any;
 
   fichasPosibles = [
     {
@@ -52,7 +54,7 @@ export class ConsultaComponent implements OnInit {
 
   ngOnInit() {
     this.getDatos();
-
+    this.valores = [];
   }
 
   // Mensajes
@@ -131,19 +133,13 @@ export class ConsultaComponent implements OnInit {
     this.showAyuda = !this.showAyuda;
   }
 
-  onShowValores() {
-    // si la consulta requiere valores
-    // /crear condicional según lo que traiga el back
-    // si los requiere es true y sale el popUp, si no es false y se ejecuta directamente
-    this.showValores = true;
-
-  }
 
   getDatos() {
     if (sessionStorage.getItem("consultasSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("consultasSearch"));
       if (this.body.sentencia != 'undefined' && this.body.sentencia != null) {
         this.body.sentencia = this.body.sentencia.replace(new RegExp(",", "g"), ",\n");
+
       }
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
@@ -153,13 +149,11 @@ export class ConsultaComponent implements OnInit {
 
     this.sigaServices.post("consultas_guardarConsulta", this.body).subscribe(
       data => {
+        sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.showSuccess('Se ha guardado la consulta correctamente');
         this.consultaEditada = false;
-        this.valores = [
-          { clave: 'clave1', valor: '' },
-          { clave: 'clave2', valor: '' }
-        ];
+
       },
       err => {
         this.showFail('Error al guardar la consulta');
@@ -174,22 +168,24 @@ export class ConsultaComponent implements OnInit {
 
   ejecutar() {
 
-    this.showValores = false;
-    this.sigaServices.post("consultas_guardarConsulta", this.body).subscribe(
-      data => {
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        this.showSuccess('Se ha ejecutado la consulta correctamente');
-      },
-      err => {
-        this.showFail('Error al ejecutar la consulta');
-        console.log(err);
-      },
-      () => {
+    this.valores = [];
 
-      }
-    );
+    let re = this.body.sentencia.match(/%%\S.*%%/g);
+
+    if (re && re.length > 0) {
+      re.map(element => {
+        let valores = element.replace('%%', '');
+        valores = valores.substring(0, valores.length - 2);
+        this.valores.push({ clave: valores, valor: '' });
+      });
+
+      this.showValores = true;
+    } else {
+      this.enviar();
+    }
 
   }
+
 
   isButtonDisabled() {
     if (this.consultaEditada) {
@@ -206,5 +202,25 @@ export class ConsultaComponent implements OnInit {
     this.consultaEditada = true;
   }
 
+  enviar() {
+
+    if (this.body.sentencia.indexOf('%%') != -1) {
+      for (let dato of this.valores) {
+        this.body.sentencia = this.body.sentencia.replace("%%" + dato.clave + "%%", dato.valor);
+      }
+    }
+    this.sigaServices
+      .postDownloadFiles("consultas_ejecutarConsulta", this.body.sentencia)
+      .subscribe(data => {
+        this.showValores = false;
+        const blob = new Blob([data], { type: "application/octet-stream" });
+        if (blob.size == 0) {
+          this.showFail("messages.general.error.ficheroNoExiste");
+        } else {
+          saveAs(data, data.nombreDocumento);
+        }
+      });
+
+  }
 
 }

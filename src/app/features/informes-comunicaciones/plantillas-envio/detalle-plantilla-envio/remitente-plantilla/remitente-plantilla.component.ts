@@ -91,8 +91,15 @@ export class RemitentePlantillaComponent implements OnInit {
   }
 
   abreCierraFicha() {
-    this.openFicha = !this.openFicha;
+    if (sessionStorage.getItem("crearNuevaPlantilla") == null) {
+      this.openFicha = !this.openFicha;
+      if (this.openFicha) {
+        this.getDatos();
+      }
+    }
   }
+
+
 
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);

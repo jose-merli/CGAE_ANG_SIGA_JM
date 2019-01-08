@@ -45,13 +45,14 @@ export class DatosBancariosComponent implements OnInit {
   activacionEditar: boolean;
 
   suscripcionBusquedaNuevo: Subscription;
-
   //Diálogo de comunicación
   showComunicar: boolean = false;
   modelosComunicacion: any[];
   bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
   tiposEnvio: any[];
   plantillas: any[];
+  datosModelos: any[];
+  colsModelos: any[];
 
   @ViewChild("table") table: DataTable;
   selectedDatos;

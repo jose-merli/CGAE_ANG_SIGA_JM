@@ -50,6 +50,7 @@ export class ModelosComunicacionesComponent implements OnInit {
 
     this.bodySearch.preseleccionado = '0';
 
+    sessionStorage.removeItem("crearNuevoModelo");
 
     if (sessionStorage.getItem("filtrosModelos") != null) {
       this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosModelos"));
@@ -247,9 +248,10 @@ export class ModelosComunicacionesComponent implements OnInit {
 
 
 
-  onAddModelo() {
+  addModelo() {
     this.router.navigate(['/fichaModeloComunicaciones']);
     sessionStorage.removeItem("modelosSearch")
+    sessionStorage.setItem("crearNuevoModelo", JSON.stringify("true"));
   }
 
 

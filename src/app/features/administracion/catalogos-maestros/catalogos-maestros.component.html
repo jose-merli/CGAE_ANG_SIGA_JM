@@ -284,3 +284,75 @@
     </div>
   </p-footer>
 </p-dialog>
+<!-- DIÁLOGO DE COMUNICACIÓN -->
+<p-dialog [(visible)]="showComunicar" responsive="true" [draggable]="false" modal="modal" resizable="false" [width]="650">
+  <p-header class="title">
+    <label>Selección del modelo de comunicacion</label>
+  </p-header>
+  <div class="form-row">
+    <div class="form-group col-lg-6 col-md-6">
+      <label>Modelos de comunicacion</label>
+      <p-multiSelect filterBy="label" [options]="modelosComunicacion" optionLabel="label" styleClass="widthAll" [(ngModel)]='bodyComunicacion.modelosComunicacion'
+        maxSelectedLabels="1" [panelStyle]="{width:'100%'}" defaultLabel="Seleccionar"></p-multiSelect>
+    </div>
+    <div class="form-group col-lg-6 col-md-6">
+      <label>Fecha programada</label>
+      <p-calendar showTime="true" [locale]="es" [(ngModel)]="bodyComunicacion.fechaProgramacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
+        showIcon="true"></p-calendar>
+    </div>
+    <p-table [value]="modelosComunicacion" [columns]="colsModelos" [(selection)]="selectedModelos" [responsive]="true" #tableModelos
+      class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}"
+      paginatorPosition="both" selectionMode="multiple" (onRowSelect)="onRowSelectModelos()">
+      <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+          <col *ngFor="let col of columns" [style.width]="col.width">
+        </colgroup>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th style="width: 3em">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th *ngFor="let col of columns">
+            {{col.header}}
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+          <td>
+            <p-tableCheckbox [value]="dato"></p-tableCheckbox>
+          </td>
+          <td *ngFor="let col of columns" pEditableColumn>
+            <p-dropdown *ngIf="col.field!='modelo' && col.field != 'tipoEnvio'" [disabled]="true" [(ngModel)]="dato[col.field]" [options]="consultas"
+              class="select-form"></p-dropdown>
+            <p-dropdown *ngIf="col.field!='modelo' && col.field != 'plantillaEnvio'" [(ngModel)]="dato[col.field]" [options]="consultas"
+              class="select-form"></p-dropdown>
+            <span *ngIf="col.field=='modelo'">{{dato[col.field]}}</span>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="columns.length +1">
+            No hay resultados.
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="paginatorleft">
+        <div class="mostrar d-flex text-right justify-content-end">
+          <label class="pr-3 registros-totales">Mostrando registros del {{tableModelos.first + 1}} al {{tableModelos.first + tableModelos.rows}} de un total de
+            {{tableModelos.totalRecords}}</label>
+          <!-- <label>{{"general.message.mostrar" | translate}}</label> -->
+          <!-- <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> -->
+          <!-- <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label> -->
+        </div>
+      </ng-template>
+    </p-table>
+  </div>
+  <p-footer>
+    <div class="text-right main-button ">
+      <button (click)="onEnviarComunicacion()" pButton type="button" icon="fas fa-share-square" iconPos="left" label="{{ 'general.boton.enviar' | translate}}"></button>
+    </div>
+  </p-footer>
+</p-dialog>

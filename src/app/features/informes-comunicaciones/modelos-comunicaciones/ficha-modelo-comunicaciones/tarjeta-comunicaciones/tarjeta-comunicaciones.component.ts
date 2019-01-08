@@ -90,10 +90,11 @@ export class TarjetaComunicacionesComponent implements OnInit {
   }
 
   abreCierraFicha() {
-    // let fichaPosible = this.getFichaPosibleByKey(key);
-    if (this.activacionEditar == true) {
-      // fichaPosible.activa = !fichaPosible.activa;
+    if (sessionStorage.getItem("crearNuevoModelo") == null) {
       this.openFicha = !this.openFicha;
+      if (this.openFicha) {
+        this.getDatos();
+      }
     }
   }
 

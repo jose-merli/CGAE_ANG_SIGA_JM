@@ -134,10 +134,13 @@ export class ConsultasPlantillasComponent implements OnInit {
 
 
   abreCierraFicha() {
-    // let fichaPosible = this.getFichaPosibleByKey(key);
 
-    // fichaPosible.activa = !fichaPosible.activa;
-    this.openFicha = !this.openFicha;
+    if (sessionStorage.getItem("crearNuevaPlantilla") == null) {
+      this.openFicha = !this.openFicha;
+      if (this.openFicha) {
+        this.getDatos();
+      }
+    }
 
   }
 

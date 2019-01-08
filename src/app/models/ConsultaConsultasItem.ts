@@ -1,6 +1,6 @@
 export class ConsultaConsultasItem {
   idConsulta: String;
   idInstitucion: String;
-  sentencia: String;
+  sentencia: string;
   constructor() { }
 }
