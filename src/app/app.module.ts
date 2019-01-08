@@ -280,6 +280,7 @@ import { ComunicacionesComponent } from './features/censo/comunicacionesCenso/co
 import { ExpedientesComponent } from './features/censo/expedientesCenso/expedientes.component';
 import { RegtelComponent } from './features/censo/regtel/regtel.component';
 import { TurnoOficioComponent } from './features/censo/turnoOficioCenso/turnoOficio.component';
+import { BusquedaCensoGeneralComponent } from './features/censo/busqueda-censo-general/busqueda-censo-general.component';
 
 registerLocaleData(es);
 
@@ -510,7 +511,8 @@ registerLocaleData(es);
 		ComunicacionesComponent,
 		ExpedientesComponent,
 		RegtelComponent,
-		TurnoOficioComponent
+		TurnoOficioComponent,
+		BusquedaCensoGeneralComponent
 	],
 	imports: [
 		BrowserModule,
