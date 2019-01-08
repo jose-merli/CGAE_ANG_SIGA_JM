@@ -269,12 +269,16 @@ export class DatosGeneralesConsultaComponent implements OnInit {
       }
     } else {
       this.editar = false;
-      this.body.generica = "S";
+      this.generica = "S";
     }
   }
 
 
   guardar() {
+
+    this.body.generica = this.generica;
+
+    console.log(this.body)
 
     this.sigaServices.post("consultas_guardarDatosGenerales", this.body).subscribe(
       data => {

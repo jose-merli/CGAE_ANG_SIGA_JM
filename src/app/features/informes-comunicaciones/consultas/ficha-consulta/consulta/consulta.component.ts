@@ -203,8 +203,9 @@ export class ConsultaComponent implements OnInit {
   }
 
   enviar() {
+    let re = this.body.sentencia.match(/%%\S.*%%/g);
 
-    if (this.body.sentencia.indexOf('%%') != -1) {
+    if (re && re.length > 0) {
       for (let dato of this.valores) {
         this.body.sentencia = this.body.sentencia.replace("%%" + dato.clave + "%%", dato.valor);
       }
