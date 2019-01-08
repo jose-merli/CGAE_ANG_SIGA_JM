@@ -200,7 +200,6 @@ export class ConsultasComponent implements OnInit {
       .postPaginado("consultas_search", "?numPagina=1", this.bodySearch)
       .subscribe(
         data => {
-          debugger;
           this.progressSpinner = false;
           this.searchConsultas = JSON.parse(data["body"]);
           this.datos = this.searchConsultas.consultaItem;
@@ -317,12 +316,13 @@ export class ConsultasComponent implements OnInit {
     console.log(dato)
     this.selectedInstitucion = dato[0].idInstitucion;
     if (!this.selectMultiple) {
-      if ((this.selectedInstitucion == this.institucionActual && dato[0].generica == "N") ||
-        (this.institucionActual == 2000 && dato[0].generica == "S")) {
+      if ((this.selectedInstitucion == this.institucionActual && dato[0].generica == "No") ||
+        (this.institucionActual == 2000 && dato[0].generica == "Si")) {
         this.router.navigate(['/fichaConsulta']);
         sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
         sessionStorage.setItem("filtrosConsulta", JSON.stringify(this.bodySearch));
       } else {
+        this.selectedDatos = [];
         this.showInfo('No puede editarse la consulta')
       }
     }

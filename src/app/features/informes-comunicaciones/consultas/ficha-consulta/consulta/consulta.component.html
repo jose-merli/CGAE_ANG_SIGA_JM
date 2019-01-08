@@ -50,7 +50,7 @@
         <div class="form-group col-lg-12 col-md-12">
           <label>Cuerpo</label>
           <i (click)="onShowAyuda()" class="fa fa-info-circle ml-1 cursor-pointer"></i>
-          <textarea pInputTextarea autoResize="autoResize" style="height:250px" [(ngModel)]="body.sentencia"></textarea>
+          <textarea (input)="onChangeConsulta()" pInputTextarea autoResize="autoResize" style="height:250px" [(ngModel)]="body.sentencia"></textarea>
         </div>
       </div>
     </div>
@@ -58,7 +58,8 @@
       <div class="text-right main-button ">
         <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
         <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="onShowValores()" pButton type="button" icon="fas fa-play" iconPos="left" label="{{ 'general.boton.ejecutar' | translate}}"></button>
+        <button [disabled]="isButtonDisabled()" (click)="onShowValores()" pButton type="button" icon="fas fa-play" iconPos="left"
+          label="{{ 'general.boton.ejecutar' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -69,17 +70,21 @@
 
 <p-dialog [(visible)]="showValores" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
   <p-header>
-    <label>Ayuda</label>
+    <label>Valores</label>
   </p-header>
-  <div class="form-row">
-    <div class="form-group col-lg-4 col-md-4">
-      <label>xxx</label>
-      <input type="text" class="form-control" pInputText>
+  <div *ngIf="valores">
+    <div class="form-row" *ngFor="let dato of valores">
+      <div class="form-group col-lg-2 col-md-2">
+        <label>{{dato.clave}}</label>
+      </div>
+      <div class="form-group col-lg-10 col-md-10">
+        <input type="text" class="form-control" [(ngModel)]="dato.valor" pInputText>
+      </div>
     </div>
   </div>
   <p-footer>
     <div class="text-right main-button ">
-      <button (click)="onShowAyuda()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+      <button (click)="ejecutar()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
     </div>
   </p-footer>
 </p-dialog>

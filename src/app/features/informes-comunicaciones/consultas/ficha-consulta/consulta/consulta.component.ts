@@ -29,6 +29,8 @@ export class ConsultaComponent implements OnInit {
   bodyInicial: ConsultaConsultasItem = new ConsultaConsultasItem();
   saltoLinea: string = '';
   msgs: Message[];
+  valores: any[];
+  consultaEditada: boolean = false;
 
   fichasPosibles = [
     {
@@ -50,6 +52,7 @@ export class ConsultaComponent implements OnInit {
 
   ngOnInit() {
     this.getDatos();
+
   }
 
   // Mensajes
@@ -129,7 +132,11 @@ export class ConsultaComponent implements OnInit {
   }
 
   onShowValores() {
-    this.showValores = !this.showValores;
+    // si la consulta requiere valores
+    // /crear condicional según lo que traiga el back
+    // si los requiere es true y sale el popUp, si no es false y se ejecuta directamente
+    this.showValores = true;
+
   }
 
   getDatos() {
@@ -143,10 +150,16 @@ export class ConsultaComponent implements OnInit {
   }
 
   guardar() {
+
     this.sigaServices.post("consultas_guardarConsulta", this.body).subscribe(
       data => {
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.showSuccess('Se ha guardado la consulta correctamente');
+        this.consultaEditada = false;
+        this.valores = [
+          { clave: 'clave1', valor: '' },
+          { clave: 'clave2', valor: '' }
+        ];
       },
       err => {
         this.showFail('Error al guardar la consulta');
@@ -159,8 +172,38 @@ export class ConsultaComponent implements OnInit {
 
   }
 
+  ejecutar() {
+
+    this.showValores = false;
+    this.sigaServices.post("consultas_guardarConsulta", this.body).subscribe(
+      data => {
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        this.showSuccess('Se ha ejecutado la consulta correctamente');
+      },
+      err => {
+        this.showFail('Error al ejecutar la consulta');
+        console.log(err);
+      },
+      () => {
+
+      }
+    );
+
+  }
+
+  isButtonDisabled() {
+    if (this.consultaEditada) {
+      return true;
+    }
+    return false;
+  }
+
   restablecer() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+  }
+
+  onChangeConsulta() {
+    this.consultaEditada = true;
   }
 
 

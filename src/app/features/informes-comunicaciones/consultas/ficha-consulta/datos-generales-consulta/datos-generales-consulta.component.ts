@@ -33,6 +33,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   idiomas: any[];
   institucionActual: any;
   msgs: Message[];
+  generica: string;
 
 
   @ViewChild('table') table: DataTable;
@@ -261,6 +262,11 @@ export class DatosGeneralesConsultaComponent implements OnInit {
       this.editar = true;
       this.body = JSON.parse(sessionStorage.getItem("consultasSearch"));
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+      if (this.body.generica == "Si") {
+        this.generica = "S"
+      } else {
+        this.generica = "N"
+      }
     } else {
       this.editar = false;
       this.body.generica = "S";
