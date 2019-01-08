@@ -725,6 +725,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
         JSON.stringify(selectedDatos[0])
       );
       console.log(selectedDatos);
+      sessionStorage.setItem("pantallaListaInscripciones", "true");
       this.router.navigate(["/fichaInscripcion"]);
     } else {
       this.numSelected = this.selectedDatos.length;
