@@ -1,10 +1,10 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <app-dialog></app-dialog>
-<div class="modelos-comunicaciones-container">
+<div *ngIf="isCargado('menu.enviosAGrupos')" class="modelos-comunicaciones-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{'menu.comunicaciones' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>{{ 'modelos.comunicaciones.literal.busqueda' | translate}}
+    <p>{{'menu.enviosAGrupos' | translate}}
+      <i class="pl-1 fa fa-angle-right"></i>{{ 'enviosMasivos.literal.titulo' | translate}}
     </p>
   </div>
   <div class="card">
@@ -12,16 +12,16 @@
       <div class="form-row">
 
         <div class="form-group col-lg-4 col-md-4">
-          <label>Descripción</label>
+          <label>{{'enviosMasivos.literal.descripcion' | translate}}</label>
           <input type="text" class="form-control" [(ngModel)]="bodySearch.descripcion" pInputText>
         </div>
         <div class="form-group col-lg-4 col-md-4">
-          <label>Fecha creación *</label>
+          <label>{{'enviosMasivos.literal.fechaCreacion' | translate}} *</label>
           <p-calendar [locale]="es" [(ngModel)]="bodySearch.fechaCreacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
             [utc]="true"></p-calendar>
         </div>
         <div class="form-group col-lg-4 col-md-4">
-          <label>Fecha programación</label>
+          <label>{{'enviosMasivos.literal.fechaProgramacion' | translate}}</label>
           <p-calendar [locale]="es" [(ngModel)]="bodySearch.fechaProgramacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
             [utc]="true"></p-calendar>
         </div>
@@ -29,11 +29,11 @@
       <div class="form-row d-flex align-items-end">
 
         <div class="form-group col-lg-4 col-md-4">
-          <label>Tipo de envío</label>
+          <label>{{'enviosMasivos.literal.tipoEnvio' | translate}}</label>
           <p-dropdown [options]="tiposEnvio" [(ngModel)]="bodySearch.idTipoEnvio" class="select-form"></p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-4">
-          <label>Estado</label>
+          <label>{{'enviosMasivos.literal.estado' | translate}}</label>
           <p-dropdown [options]="estados" [(ngModel)]="bodySearch.idEstado" class="select-form"></p-dropdown>
         </div>
       </div>
@@ -137,7 +137,7 @@
 </p-dialog>
 
 
-<div *ngIf="progressSpinner" class="overlay-spinner">
+<div *ngIf="progressSpinner || loaderEtiquetas" class="overlay-spinner">
   <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
   <div class="loader"></div>
 </div>

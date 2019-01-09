@@ -43,6 +43,7 @@ export class ComunicacionesComponent implements OnInit {
   bodySearch: ComunicacionesSearchItem = new ComunicacionesSearchItem();
   estado: number;
   currentDate: Date = new Date();
+  loaderEtiquetas: boolean = false;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -336,5 +337,19 @@ export class ComunicacionesComponent implements OnInit {
       this.bodyProgramar.fechaProgramada = dato[0].fechaProgramacion;
     }
   }
+
+  /*
+función para que no cargue primero las etiquetas de los idiomas*/
+
+  isCargado(key) {
+    if (key != this.translateService.instant(key)) {
+      this.loaderEtiquetas = false;
+      return key
+    } else {
+      this.loaderEtiquetas = true;
+    }
+
+  }
+
 
 }

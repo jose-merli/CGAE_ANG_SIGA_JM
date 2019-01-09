@@ -126,7 +126,6 @@ export class ModelosComunicacionesConsultaComponent implements OnInit {
   }
 
   navigateTo(dato) {
-    console.log(dato)
     let id = dato[0].id;
 
     this.router.navigate(['/fichaModeloComunicaciones', id]);
@@ -145,7 +144,6 @@ export class ModelosComunicacionesConsultaComponent implements OnInit {
       data => {
         debugger;
         this.datos = JSON.parse(data["body"]).listadoModelos;
-        console.log(this.datos)
         this.body = this.datos[0];
       },
       err => {

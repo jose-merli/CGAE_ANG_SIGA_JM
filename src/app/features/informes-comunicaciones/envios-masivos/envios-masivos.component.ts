@@ -45,6 +45,7 @@ export class EnviosMasivosComponent implements OnInit {
   eliminarArray: any[];
   currentDate: Date = new Date();
   estado: any;
+  loaderEtiquetas: boolean = false;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -317,6 +318,21 @@ export class EnviosMasivosComponent implements OnInit {
     sessionStorage.removeItem("enviosMasivosSearch")
     sessionStorage.setItem("crearNuevoEnvio", JSON.stringify("true"));
   }
+
+  /*
+  función para que no cargue primero las etiquetas de los idiomas*/
+
+  isCargado(key) {
+    if (key != this.translateService.instant(key)) {
+      this.loaderEtiquetas = false;
+      return key
+    } else {
+      this.loaderEtiquetas = true;
+    }
+
+  }
+
+
 
 }
 

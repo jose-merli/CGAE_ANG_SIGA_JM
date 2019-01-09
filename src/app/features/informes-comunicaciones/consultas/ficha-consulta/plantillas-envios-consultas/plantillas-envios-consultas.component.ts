@@ -118,7 +118,6 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
   }
 
   navigateTo(dato) {
-    console.log(dato)
     let id = dato[0].id;
 
     // this.router.navigate(['/fichaModeloComunicaciones', id]);
@@ -135,7 +134,6 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
     this.sigaServices.post("consultas_listadoPlantillas", this.body).subscribe(
       data => {
         this.datos = JSON.parse(data["body"]).listadoPlantillas;
-        console.log(this.datos)
         this.body = this.datos[0];
       },
       err => {

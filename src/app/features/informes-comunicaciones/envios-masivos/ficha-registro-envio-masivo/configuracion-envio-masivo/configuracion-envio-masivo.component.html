@@ -12,11 +12,11 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-center mb-1">
-            <label class="mr-auto title-ficha">Configuración de la comunicación</label>
+            <label class="mr-auto title-ficha">{{'enviosMasivos.literal.configComunicacion' | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
 
-            <label>Tipo de envío:
+            <label>{{'enviosMasivos.literal.tipoEnvio' | translate}}
               <span>{{tipoEnvio}}</span>
             </label>
 
@@ -28,7 +28,7 @@
         <div class="img-colegiado">
           <i class="fas fa-cog icon-ficha"></i>
         </div>
-        <label class="title-ficha">Configuración de la comunicación</label>
+        <label class="title-ficha">{{'enviosMasivos.literal.datosGlobales' | translate}}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -39,20 +39,20 @@
           <div class="form-row">
             <div class="form-group col-lg-12">
               <label>
-                <strong>Datos globales</strong>
+                <strong>{{'enviosMasivos.literal.configComunicacion' | translate}}</strong>
               </label>
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
-              <label class="d-block">Tipo de envío *</label>
+              <label class="d-block">{{'enviosMasivos.literal.tipoEnvio' | translate}} *</label>
               <p-dropdown [disabled]="editar" (onChange)="onChangeTipoEnvio()" [options]="tipoEnvios" [(ngModel)]="body.idTipoEnvio" class="select-form"></p-dropdown>
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
-              <label class="d-block">Plantilla de envío *</label>
+              <label class="d-block">{{'enviosMasivos.literal.plantillasEnvio' | translate}} *</label>
               <p-dropdown [disabled]="(plantillas && plantillas.length <= 0) || editar" [options]="plantillas" [(ngModel)]="body.idPlantillasEnvio"
                 dataKey="value" class="select-form"></p-dropdown>
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
-              <label class="d-block">Descripción *</label>
+              <label class="d-block">{{'enviosMasivos.literal.descripcion' | translate}} *</label>
               <input type="text" class="form-control" [(ngModel)]="body.descripcion" pInputText>
             </div>
           </div>
@@ -62,7 +62,7 @@
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
               <label *ngIf="body.idTipoEnvio=='1'">
-                <strong>Datos de correo electrónico</strong>
+                <strong>{{'enviosMasivos.literal.datosCorreo' | translate}}</strong>
               </label>
               <label *ngIf="body.idTipoEnvio=='4'">
                 <strong>Datos de SMS</strong>
@@ -72,11 +72,11 @@
               </label>
             </div>
             <div *ngIf="body.idTipoEnvio=='1'" class="form-group col-lg-12 col-md-12">
-              <label>Asunto</label>
+              <label>{{'enviosMasivos.literal.asunto' | translate}}</label>
               <input type="text" class="form-control" [(ngModel)]="body.asunto" pInputText>
             </div>
             <div *ngIf="body.idTipoEnvio=='1'" class="form-group col-lg-12 col-md-12">
-              <label>Cuerpo</label>
+              <label>{{'enviosMasivos.literal.cuerpo' | translate}}</label>
               <p-editor [(ngModel)]="body.email" [style]="{'height':'140px','text-align':'left'}">
                 <p-header>
                   <span class=" ql-formats">
@@ -117,11 +117,11 @@
               </p-editor>
             </div>
             <div *ngIf="body.idTipoEnvio=='4' || body.idTipoEnvio=='5'" class="form-group col-lg-3 col-md-3">
-              <label>Nº caracteres: </label>
+              <label>{{'enviosMasivos.literal.numCaracteres' | translate}}: </label>
               <label *ngIf="body.cuerpo">{{body.cuerpo.length}}</label>
             </div>
             <div *ngIf="body.idTipoEnvio=='4' || body.idTipoEnvio=='5'" class="form-group col-lg-12 col-md-12">
-              <label>Cuerpo</label>
+              <label>{{'enviosMasivos.literal.cuerpo' | translate}}</label>
               <textarea style="height:140px" pInputTextarea autoResize="autoResize" [(ngModel)]="body.cuerpo" maxlength="160"></textarea>
             </div>
           </div>
