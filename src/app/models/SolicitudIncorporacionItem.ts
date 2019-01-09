@@ -1,11 +1,14 @@
 export class SolicitudIncorporacionItem {
   idSolicitud: String;
   numeroIdentificacion: String;
+  identificador: String;
   nombreSolicitud: String;
   apellidos: String;
   apellido1: String;
   apellido2: String;
   sexo: String;
+  cobertura: String;
+  duplicado: boolean;
   fechaNacimiento: Date;
   fechaNacimientoStr: any;
   numColegiado: String;
