@@ -482,6 +482,8 @@ export class SigaServices {
     fichaDatosColegiales_datosColegialesUpdate:
       "/fichaDatosColegiales/datosColegialesUpdate",
     fichaColegialRegTel_searchListDoc: "fichaColegialRegTel/searchListDoc",
+    fichaColegialRegTel_searchListDir:"fichaColegialRegTel/searchListDir",
+    fichaColegialRegTel_downloadDoc:"fichaColegialRegTel/downloadDoc",
     usuario_cambioIdioma: "usuario/cambioIdioma",
     fichaColegialOtrasColegiaciones_getLabelColegios:
       "fichaColegialOtrasColegiaciones/getLabelColegios"
