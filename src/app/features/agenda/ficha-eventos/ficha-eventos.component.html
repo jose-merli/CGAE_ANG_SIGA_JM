@@ -352,7 +352,7 @@
       <div *ngIf="esFichaActiva('asistencia')" class="card-body card-body-ficha">
         <div class="row">
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultipleAsistencia}"
-            [(selection)]="selectedDatosAsistencia" pageLinks="4" dataKey="idAsistencia" [responsive]="true" selectionMode="multiple"
+            [(selection)]="selectedDatosAsistencia" pageLinks="4" dataKey="idPersona" [responsive]="true" selectionMode="multiple"
             #tableAsistencia class="tabla-listado" [value]="datosAsistencia" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both"
             [rows]="selectedAsistencia">
             <p-column *ngFor="let col of colsAsistencia" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
@@ -360,7 +360,7 @@
 
               <ng-template *ngIf="col.field =='asistencia'" pTemplate="body" let-dato="rowData">
                 <p-dropdown class="select-form" [(ngModel)]="dato[col.field]" [options]="comboAsistencia" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate }}"
-                  name="type" [disabled]="tipoAccesoLectura"></p-dropdown>
+                  name="type" [disabled]="tipoAccesoLectura" (onChange)="setAssistanceUpdate(dato)"></p-dropdown>
               </ng-template>
 
             </p-column>
@@ -389,10 +389,10 @@
     </div>
     <div class="card-footer" *ngIf="esFichaActiva('asistencia')">
       <div class="text-right main-button">
-        <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" iconPos="left" label="{{ 'agenda.fichaEventos.datosAsistencia.boton.descargar' | translate }}" [disabled]="tipoAccesoLectura"></button>
-        <button pButton type="button" (click)="unCheckAsist()" [disabled]="!checkAsistencias" icon="fa fa-times" iconPos="left" label="{{ 'agenda.fichaEventos.datosAsistencia.boton.desmarcar' | translate }}" [disabled]="tipoAccesoLectura"></button>
-        <button pButton type="button" (click)="checkAsist()" [disabled]="!checkAsistencias" icon="fa fa-check" iconPos="left" label="{{'agenda.fichaEventos.datosAsistencia.boton.marcar' | translate }}" [disabled]="tipoAccesoLectura"></button>
-        <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+        <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate }}" [disabled]="tipoAccesoLectura"></button>
+        <button pButton type="button" (click)="unCheckAsist()" [disabled]="!checkAsistencias || tipoAccesoLectura" icon="fa fa-times" iconPos="left" label="{{ 'agenda.fichaEventos.datosAsistencia.desmarcar' | translate }}"></button>
+        <button pButton type="button" (click)="checkAsist()" [disabled]="!checkAsistencias || tipoAccesoLectura" icon="fa fa-check" iconPos="left" label="{{'agenda.fichaEventos.datosAsistencia.marcar' | translate }}"></button>
+        <button pButton type="button" (click)="saveAssistancesCourse()" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>
   </div>

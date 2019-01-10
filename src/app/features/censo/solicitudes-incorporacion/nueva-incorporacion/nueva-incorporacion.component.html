@@ -1,15 +1,16 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{ "menu.censo" | translate}}
-        <i class="fa fa-angle-right"></i>{{"censo.nuevaSolicitud" | translate}}
+    <p>{{ "menu.censo" | translate }}
+        <i class="fa fa-angle-right"></i>{{"menu.solicitudIncorporacion" | translate}}
     </p>
 </div>
 <div *ngIf="dniDisponible==false" class="info-limit d-flex justify-content-center align-items-center mb-1">
     <i class="fa fa-info-circle pr-2"></i>
     <div class="d-inline-block">
         <div>
-            <span class="pr-2 text-left">{{"censo.solicitudIncorporacion.literal.seUsaDniIntroducido" | translate}}.</span>
+            <span *ngIf="!vieneDeBusqueda" class="pr-2 text-left">{{"censo.solicitudIncorporacion.literal.seUsaDniIntroducido" | translate}}.</span>
+            <span *ngIf="vieneDeBusqueda" class="pr-2 text-left">{{"censo.SolicitudIncorporacion.literal.cargaPersonaExistente" | translate}}.</span>
         </div>
     </div> 
 </div>
@@ -339,7 +340,7 @@
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
-                        {{"censo.datosDireccion.literal.provincia" | translate}}
+                        {{"censo.datosDireccion.literal.provincia" | translate}} (*)
                     </label>
                     <p-dropdown  class="select-form" [(ngModel)]='provinciaSelected' [options]="provincias" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" disabled ></p-dropdown>
                   
@@ -357,27 +358,27 @@
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
                         {{"censo.ws.literal.telefono" | translate}} 1 (*)</label>
-                    <input [disabled]="consulta" type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.telefono1">
+                    <input [disabled]="consulta" type="number" class="form-control" pInputText [(ngModel)]="solicitudEditar.telefono1">
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
                         {{"censo.ws.literal.telefono" | translate}} 2</label>
-                    <input [disabled]="consulta" type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.telefono2">
+                    <input [disabled]="consulta" type="number" class="form-control" pInputText [(ngModel)]="solicitudEditar.telefono2">
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
                         {{"censo.ws.literal.fax" | translate}} 1</label>
-                    <input [disabled]="consulta" type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.fax1">
+                    <input [disabled]="consulta" type="number" class="form-control" pInputText [(ngModel)]="solicitudEditar.fax1">
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
                         {{"censo.ws.literal.fax" | translate}} 2</label>
-                    <input [disabled]="consulta" type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.fax2">
+                    <input [disabled]="consulta" type="number" class="form-control" pInputText [(ngModel)]="solicitudEditar.fax2">
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
                         {{"censo.datosDireccion.literal.telefonoMovil" | translate}}</label>
-                    <input [disabled]="consulta" type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.movil">
+                    <input [disabled]="consulta" type="number" class="form-control" pInputText [(ngModel)]="solicitudEditar.movil">
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
@@ -452,6 +453,11 @@
                     <div *ngIf="isValidIBAN() == false">
                         <small class="input-error" *ngIf="!isValidIBAN()">{{"IBAN incorrecto"}}</small>
                     </div>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                        <!-- (ngModelChange)="recuperarBicBanco()" -->
+                        <label>{{"censo.fichaCliente.datosBancarios.cuentaBancaria.bic" | translate}}</label>
+                        <input [(ngModel)]="solicitudEditar.bic" type="text" class="form-control" (ngModelChange)="recuperarBicBanco()" disabled pInputText>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>{{"censo.tipoAbono.banco" | translate}}</label>

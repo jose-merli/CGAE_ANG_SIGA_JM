@@ -121,6 +121,16 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
     ) {
       sessionStorage.removeItem("toBackNewFormador");
       this.loadNewTrainer(JSON.parse(sessionStorage.getItem("formador")));
+    } else if (
+      sessionStorage.getItem("cursoSelected") != null ||
+      sessionStorage.getItem("cursoSelected") != undefined
+    ) {
+      this.body.idCurso = JSON.parse(
+        sessionStorage.getItem("cursoSelected")
+      ).idCurso;
+      sessionStorage.removeItem("cursoSelected");
+
+      this.isBuscar();
     }
   }
 
@@ -725,6 +735,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
         JSON.stringify(selectedDatos[0])
       );
       console.log(selectedDatos);
+      sessionStorage.setItem("pantallaListaInscripciones", "true");
       this.router.navigate(["/fichaInscripcion"]);
     } else {
       this.numSelected = this.selectedDatos.length;

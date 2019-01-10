@@ -38,6 +38,7 @@ import { ConsultarDatosBancariosComponent } from "./features/censo/datosPersonaJ
 import { DatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/datos-direcciones.component";
 import { ConsultarDatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/consultar-datos-direcciones/consultar-datos-direcciones.component";
 import { MutualidadAbogaciaPlanUniversal } from "./features/censo/solicitudes-incorporacion/mutualidadDeLaAbogaciaPlanUniversal/mutualidad-abogacia-plan-universal.component";
+import { BusquedaCensoGeneralComponent } from './features/censo/busqueda-censo-general/busqueda-censo-general.component';
 
 //Certificados
 import { ComunicacionInterprofesionalComponent } from "./features/certificados/comunicacion-interprofesional/comunicacion-interprofesional.component";
@@ -389,6 +390,11 @@ const appRoutes: Routes = [
   {
     path: "configurarPerfil",
     component: ConfigurarPerfilComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "busquedaCensoGeneral",
+    component: BusquedaCensoGeneralComponent,
     canActivate: [AuthGuard]
   },
   {

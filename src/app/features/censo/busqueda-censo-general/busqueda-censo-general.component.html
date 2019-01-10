@@ -1,0 +1,91 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+
+    <div class="busqueda-container">
+        <div class="header-title">
+            <i class="fa fa-square"></i>
+            <p>{{ "menu.censo" | translate}}
+                <i class="fa fa-angle-right"></i>{{'menu.busquedaCensoGeneral.literal' | translate}}</p>
+        </div>
+    
+    
+        <div class="card">
+            <!-- Datos generales -->
+            <div class="card-body">
+                <p class="title-module">{{ "censo.consultaDatosGenerales.cabecera" | translate}}
+                    <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+                    <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+                </p>
+                <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+                    <div class="form-row">
+                        <div class="form-group col-lg-3 col-md-3">
+                            <label>{{"administracion.usuarios.literal.NIFCIF" | translate}}</label>
+                            <input type="text" class="form-control" [attr.maxlength]="20" pInputText [(ngModel)]='body.nif'>
+                        </div>
+                        <div class="form-group col-lg-3 col-md-3">
+                            <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
+                            <input type="text" class="form-control" pInputText [(ngModel)]='body.nombre'>
+                        </div>
+                        <div class="form-group col-lg-3 col-md-3">
+                            <label>{{"censo.busquedaClientes.literal.apellido1" | translate}}</label>
+                            <input type="text" class="form-control" pInputText [(ngModel)]='body.primerApellido'>
+                        </div>
+                        <div class="form-group col-lg-3 col-md-3">
+                            <label>{{"censo.busquedaClientes.literal.apellido2" | translate}}</label>
+                            <input type="text" class="form-control" pInputText [(ngModel)]='body.segundoApellido'>
+                        </div>
+                        <div class="form-group col-lg-3 col-md-3">
+                            <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
+                            <input type="text" class="form-control" pInputText [(ngModel)]='body.numeroColegiado'>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
+                            <p-multiSelect [defaultLabel]="textFilter" filterBy="label" [(ngModel)]='colegios_seleccionados' [options]="colegios"
+                                optionLabel="label" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" styleClass="widthAll"
+                                [panelStyle]="{width:'100%'}"></p-multiSelect>
+    
+                        </div>
+                        
+                    </div>
+                </div>
+
+            </div>
+            <div class="card-footer">
+                <div class="text-right main-button">
+                    <button (click)="isLimpiar()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate}}"></button>
+                    <button (click)="isBuscar()"  [disabled]="disableBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+    
+                </div>
+            </div>
+        </div>
+        <!--FIN CARD-->
+
+    <div *ngIf="buscar == true" class="card mt-3">
+        <div class="card-body p-0">
+            <!--<div class="m-3 d-flex justify-content-end">
+
+            </div>-->
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" 
+                [(selection)]="selectedDatos" (onRowSelect)="irFichaColegial(selectedDatos)" [responsive]="true"
+                selectionMode="single" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both"
+                [rows]="selectedItem" pageLinks="4">
+                <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    filterMatchMode="contains"></p-column>
+                <ng-template pTemplate="paginatorLeft">
+                    <div class="mostrar">
+                        <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                        <label>Mostrar</label>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                        <label> registros</label>
+                    </div>
+                </ng-template>
+            </p-dataTable>
+        </div>
+    </div>
+</div>
+<app-dialog></app-dialog>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div *ngIf="progressSpinner " class="overlay-spinner ">
+    <div class="loader "></div>
+</div>

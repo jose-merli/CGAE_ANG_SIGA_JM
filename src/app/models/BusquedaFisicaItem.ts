@@ -15,5 +15,7 @@ export class BusquedaFisicaItem {
   numeroInstitucion: String;
   idProvincia: String;
   idActividadProfesional: String;
+  domicilio: String;
+  fechaEstado: String;
   constructor() {}
 }

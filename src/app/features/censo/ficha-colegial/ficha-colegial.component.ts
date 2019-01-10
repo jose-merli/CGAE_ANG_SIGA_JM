@@ -92,9 +92,13 @@ export class FichaColegialComponent implements OnInit {
   selectMultiple: boolean = false;
   selectMultipleDirecciones: boolean = false;
   selectMultipleBancarios: boolean = false;
+ 
   buttonVisibleRegtelAtras: boolean = true;
   buttonVisibleRegtelCarpeta: boolean = true;
   buttonVisibleRegtelDescargar: boolean = true;
+ 
+  disabledNif: boolean = false;
+ 
   // irTurnoOficio: any;
   // irExpedientes: any;
   msgs: Message[];
@@ -275,6 +279,14 @@ export class FichaColegialComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+
+    if(sessionStorage.getItem("busquedaCensoGeneral") == "true"){
+      this.disabledNif = true; 
+    }else{
+      this.disabledNif = false; 
+    }
+  
+
     // Cogemos los datos de la busqueda de Colegiados
     this.getLetrado();
     if (sessionStorage.getItem("filtrosBusquedaColegiados")) {
@@ -317,11 +329,19 @@ export class FichaColegialComponent implements OnInit {
       this.onInitColegiales();
       this.onInitSociedades();
       this.onInitOtrasColegiaciones();
+      this.searchSanciones();
       this.searchCertificados();
       
     } else {
-      this.generalBody = new FichaColegialGeneralesItem();
-      this.colegialesBody = new FichaColegialColegialesItem();
+
+      if(sessionStorage.getItem("busquedaCensoGeneral") == "true"){
+        this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
+        this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      }else{
+        this.generalBody = new FichaColegialGeneralesItem();
+        this.colegialesBody = new FichaColegialColegialesItem();
+      }
+     
       // this.searchDatosBancariosIdPersona.datosBancariosItem[0] = new DatosBancariosItem();
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
@@ -337,10 +357,10 @@ export class FichaColegialComponent implements OnInit {
       this.onInitRegTel();
     }
 
-    this.onInitSociedades();
+   // this.onInitSociedades();
 
-    this.onInitOtrasColegiaciones();
-    this.searchSanciones();
+   // this.onInitOtrasColegiaciones();
+   
     // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
     this.colsColegiales = [
       {
@@ -753,6 +773,10 @@ export class FichaColegialComponent implements OnInit {
       this.router.navigate(["/busquedaColegiados"]);
     } else if (sessionStorage.getItem("esColegiado") == "false") {
       this.router.navigate(["/busquedaNoColegiados"]);
+    }
+
+    if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
+      this.router.navigate(["/busquedaCensoGeneral"]);
     }
   }
 
@@ -2201,7 +2225,7 @@ export class FichaColegialComponent implements OnInit {
           // this.table.reset();
         },
         err => {
-          console.log(err);
+       //   console.log(err);
         }
       );
   }
