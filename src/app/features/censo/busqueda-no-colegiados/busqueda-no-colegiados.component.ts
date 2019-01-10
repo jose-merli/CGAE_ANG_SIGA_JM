@@ -97,6 +97,8 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   }
 
   ngOnInit() {
+    sessionStorage.removeItem("busquedaCensoGeneral");
+
     this.getLetrado();
     // Obtener Combos
     this.getCombos();
@@ -481,7 +483,6 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       .post("busquedaNocolegiado_deleteNoColegiado", item)
       .subscribe(
         data => {
-        
           if (selectedDatos.length == 1) {
             this.showSuccess(
               this.translateService.instant("messages.deleted.success")

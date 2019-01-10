@@ -6,6 +6,12 @@ import { BusquedaFisicaObject } from "../../../models/BusquedaFisicaObject";
 import { Router } from "../../../../../node_modules/@angular/router";
 import { DatosColegiadosItem } from "../../../models/DatosColegiadosItem";
 import { DatosColegiadosObject } from "../../../models/DatosColegiadosObject";
+import { AuthenticationService } from "../../../_services/authentication.service";
+import { DatosNoColegiadosObject } from "../../../models/DatosNoColegiadosObject";
+import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
+import { TranslateService } from "../../../commons/translate";
+import { ConfirmationService } from "../../../../../node_modules/primeng/primeng";
+import { FichaColegialGeneralesItem } from "../../../models/FichaColegialGeneralesItem";
 
 @Component({
   selector: "app-busqueda-censo-general",
@@ -21,6 +27,8 @@ export class BusquedaCensoGeneralComponent implements OnInit {
   colegios: any[];
   msgs: any[];
   datos: any[] = [];
+  datosColegiados: any[] = [];
+  datosNoColegiados: any[] = [];
   colegios_seleccionados: any[] = [];
 
   showDatosGenerales: boolean = true;
@@ -30,12 +38,13 @@ export class BusquedaCensoGeneralComponent implements OnInit {
   body: BusquedaFisicaItem = new BusquedaFisicaItem();
   bodySearch = new BusquedaFisicaObject();
 
-  fichasPosibles = [
-    {
-      key: "generales",
-      activa: false
-    }
-  ];
+  bodyNoColegiado: NoColegiadoItem = new NoColegiadoItem();
+  noColegiadoSearch = new DatosNoColegiadosObject();
+
+  personaBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
+
+  bodyColegiado: DatosColegiadosItem = new DatosColegiadosItem();
+  colegiadoSearch = new DatosColegiadosObject();
 
   selectedItem: number = 10;
   @ViewChild("table")
@@ -45,10 +54,27 @@ export class BusquedaCensoGeneralComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private location: Location,
-    private router: Router
+    private router: Router,
+    private authenticationService: AuthenticationService,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit() {
+    sessionStorage.removeItem("esNuevoNoColegiado");
+
+    if (sessionStorage.getItem("filtrosBusqueda") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("filtrosBusqueda"));
+
+      if (sessionStorage.getItem("busquedaCensoGeneral") != null) {
+        this.body = JSON.parse(sessionStorage.getItem("filtrosBusqueda"));
+        this.isBuscar();
+        sessionStorage.removeItem("busquedaCensoGeneral");
+      }
+
+      sessionStorage.removeItem("filtrosBusqueda");
+    }
+
     this.fillDataTable();
 
     this.sigaServices.get("busquedaPer_colegio").subscribe(
@@ -72,28 +98,32 @@ export class BusquedaCensoGeneralComponent implements OnInit {
         header: "administracion.parametrosGenerales.literal.nombre"
       },
       {
+        field: "apellidos",
+        header: "gratuita.mantenimientoTablasMaestra.literal.apellidos"
+      },
+      {
         field: "numeroColegiado",
         header: "censo.busquedaClientesAvanzada.literal.nColegiado"
+      },
+      {
+        field: "colegio",
+        header: "censo.busquedaClientesAvanzada.literal.colegio"
       },
       {
         field: "situacion",
         header: "censo.fichaCliente.situacion.cabecera"
       },
       {
+        field: "fechaEstado",
+        header: "censo.nuevaSolicitud.fechaEstado"
+      },
+      {
         field: "residente",
         header: "censo.ws.literal.residente"
       },
       {
-        field: "correo",
-        header: "censo.datosDireccion.literal.correo"
-      },
-      {
-        field: "telefono",
-        header: "censo.ws.literal.telefono"
-      },
-      {
-        field: "movil",
-        header: "censo.datosDireccion.literal.movil"
+        field: "domicilio",
+        header: "solicitudModificacion.especifica.domicilio.literal"
       }
     ];
 
@@ -129,12 +159,38 @@ export class BusquedaCensoGeneralComponent implements OnInit {
 
   // Métodos
   isBuscar() {
-    this.buscar = true;
-    this.search();
+    if (
+      this.body.numeroColegiado != undefined &&
+      this.body.numeroColegiado != ""
+    ) {
+      if (
+        this.colegios_seleccionados != undefined &&
+        this.colegios_seleccionados.length > 0
+      ) {
+        this.search();
+      } else {
+        this.showFail("Debe introducir un colegio para buscar.");
+      }
+    } else if (
+      this.colegios_seleccionados != undefined &&
+      this.colegios_seleccionados.length > 0
+    ) {
+      if (
+        this.body.numeroColegiado != undefined &&
+        this.body.numeroColegiado != ""
+      ) {
+        this.search();
+      } else {
+        this.showFail("Debe introducir un número de colegiado para buscar.");
+      }
+    } else {
+      this.search();
+    }
   }
 
   search() {
     this.progressSpinner = true;
+    this.buscar = true;
 
     if (
       this.colegios_seleccionados != undefined &&
@@ -151,7 +207,6 @@ export class BusquedaCensoGeneralComponent implements OnInit {
           this.progressSpinner = false;
           this.bodySearch = JSON.parse(data["body"]);
           this.datos = this.bodySearch.busquedaFisicaItems;
-          console.log("ccccc", this.datos);
         },
         err => {
           console.log(err);
@@ -161,24 +216,156 @@ export class BusquedaCensoGeneralComponent implements OnInit {
   }
 
   irFichaColegial(selectedDatos) {
-    if (
-      selectedDatos.numeroInstitucion == 2000 ||
-      selectedDatos.numeroInstitucion == 2062 ||
-      selectedDatos.numeroInstitucion == 2039 ||
-      selectedDatos.numeroInstitucion == 2063 ||
-      selectedDatos.numeroInstitucion == 2038 ||
-      selectedDatos.numeroInstitucion == 2011
-    ) {
-      sessionStorage.setItem("personaBody", JSON.stringify(selectedDatos[0]));
-      this.router.navigate(["/fichaColegial"]);
+    sessionStorage.setItem("busquedaCensoGeneral", "true");
+
+    sessionStorage.setItem("filtrosBusqueda", JSON.stringify(this.body));
+
+    if (this.authenticationService.getInstitucionSession() == 2000) {
+      this.getNoColegiado(selectedDatos);
+    } else {
+      if (
+        this.selectedDatos.numeroInstitucion ==
+        this.authenticationService.getInstitucionSession()
+      ) {
+        // Colegiado
+        this.getColegiado(selectedDatos);
+      } else if (
+        this.selectedDatos.numeroInstitucion !=
+        this.authenticationService.getInstitucionSession()
+      ) {
+        this.getNoColegiado(selectedDatos);
+      }
     }
   }
 
-  backTo() {
-    this.location.back();
+  getColegiado(selectedDatos) {
+    this.bodyColegiado.nif = selectedDatos.nif;
+    this.bodyColegiado.numColegiado = selectedDatos.numeroColegiado;
+
+    this.sigaServices
+      .postPaginado(
+        "busquedaColegiados_searchColegiado",
+        "?numPagina=1",
+        this.bodyColegiado
+      )
+      .subscribe(data => {
+        this.colegiadoSearch = JSON.parse(data["body"]);
+        this.datosColegiados = this.colegiadoSearch.colegiadoItem;
+
+        sessionStorage.setItem(
+          "personaBody",
+          JSON.stringify(this.datosColegiados[0])
+        );
+        this.router.navigate(["/fichaColegial"]);
+      });
+  }
+
+  getNoColegiado(selectedDatos) {
+    this.bodyNoColegiado.nif = selectedDatos.nif;
+    this.bodyNoColegiado.idInstitucion = this.authenticationService.getInstitucionSession();
+
+    this.sigaServices
+      .postPaginado(
+        "busquedaNoColegiados_searchNoColegiado",
+        "?numPagina=1",
+        this.bodyNoColegiado
+      )
+      .subscribe(data => {
+        this.progressSpinner = false;
+        this.noColegiadoSearch = JSON.parse(data["body"]);
+        this.datosNoColegiados = this.noColegiadoSearch.noColegiadoItem;
+
+        if (this.datosNoColegiados.length > 0) {
+          if (this.datosNoColegiados[0].fechaNacimiento != null) {
+            this.datosNoColegiados[0].fechaNacimiento = this.personaBodyFecha(
+              this.datosNoColegiados[0].fechaNacimiento
+            );
+          }
+
+          sessionStorage.setItem(
+            "personaBody",
+            JSON.stringify(this.datosNoColegiados[0])
+          );
+
+          this.router.navigate(["/fichaColegial"]);
+        } else {
+          this.confirmationService.confirm({
+            message: "¿Desea crear un no colegiado?",
+            icon: "fa fa-info",
+            accept: () => {
+              sessionStorage.setItem("esNuevoNoColegiado", "true");
+
+              let noColegiado = new NoColegiadoItem();
+              noColegiado.nif = selectedDatos.nif;
+              noColegiado.soloNombre = selectedDatos.nombre;
+              noColegiado.apellidos1 = selectedDatos.primerApellido;
+              noColegiado.apellidos2 = selectedDatos.segundoApellido;
+
+              this.datosNoColegiados.push(noColegiado);
+              sessionStorage.setItem(
+                "personaBody",
+                JSON.stringify(this.datosNoColegiados[0])
+              );
+
+              this.router.navigate(["/fichaColegial"]);
+            },
+            reject: () => {
+              this.msgs = [
+                {
+                  severity: "info",
+                  summary: "Info",
+                  detail: this.translateService.instant(
+                    "general.message.accion.cancelada"
+                  )
+                }
+              ];
+
+              this.selectedDatos = [];
+            }
+          });
+          sessionStorage.removeItem("esNuevoNoColegiado");
+        }
+      });
+  }
+
+  personaBodyFecha(fecha) {
+    let f = fecha.substring(0, 10);
+    let year = f.substring(0, 4);
+    let month = f.substring(5, 7);
+    let day = f.substring(8, 10);
+
+    return day + "/" + month + "/" + year;
   }
 
   clear() {
     this.msgs = [];
+  }
+
+  showFail(message: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Error",
+      detail: message
+    });
+  }
+
+  disableBuscar(): boolean {
+    if (
+      (this.body.nif != undefined && this.body.nif != "") ||
+      (this.body.nombre != undefined && this.body.nombre != "") ||
+      (this.body.primerApellido != undefined &&
+        this.body.primerApellido != "") ||
+      (this.body.segundoApellido != undefined &&
+        this.body.segundoApellido != "") ||
+      (this.body.numeroColegiado != undefined &&
+        this.body.numeroColegiado != "") ||
+      (this.colegios_seleccionados != undefined &&
+        this.colegios_seleccionados.length > 0)
+    ) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

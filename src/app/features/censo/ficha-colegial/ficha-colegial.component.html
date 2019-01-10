@@ -193,7 +193,7 @@
               <input
                 [(ngModel)]="generalBody.nif"
                 type="text"
-                [(disabled)]="isLetrado"
+                [(disabled)]="isLetrado || disabledNif"
                 class="form-control"
                 (ngModelChange)="activacionGuardarGenerales()"
                 pInputText
@@ -1177,7 +1177,7 @@
   <!-- END FICHA CERTIFICADOS -->
 
   <!-- FICHA SANCIONES -->
-  <div class="card">
+  <div *ngIf="!esNewColegiado" class="card">
     <div
       class="card-header header-ficha"
       (click)="abreCierraFicha('sanciones')"
@@ -1201,7 +1201,7 @@
                 >{{
                   "censo.consultaDatosColegiacion.literal.numSanciones" | translate
                 }}
-                <span>{{ dataSanciones.length }}</span>
+                <span>{{ bodySearchSanciones.busquedaSancionesItem.length }}</span>
               </label>
             </div>
             <i
