@@ -67,6 +67,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   numColegiadoDisponible: boolean;
   dniDisponible: boolean;
   vieneDeBusqueda: boolean = false;
+  solicitarMutualidad: boolean = true;
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
   constructor(
@@ -93,7 +94,29 @@ export class NuevaIncorporacionComponent implements OnInit {
       );
       this.consulta = true;
       this.tratarDatos();
+
+      // Acceso a Web Service para saber si hay una solicitud de Mutualidad.
       this.solicitudEditar.idPais = "191";
+      this.solicitudEditar.identificador = this.solicitudEditar.numeroIdentificacion;
+
+      this.sigaServices
+        .post("mutualidad_estadoMutualista", this.solicitudEditar)
+        .subscribe(
+          result => {
+            let prueba = JSON.parse(result.body);
+            if ((prueba.idSolicitud = "0")) {
+              this.solicitarMutualidad = true;
+            } else {
+              this.solicitarMutualidad = false;
+              this.solicitudEditar.idSolicitudMutualidad = prueba.idSolicitud;
+              this.solicitudEditar.estadoMutualidad = prueba.valorRespuesta;
+            }
+          },
+          error => {
+            debugger;
+            console.log(error);
+          }
+        );
     } else {
       this.consulta = false;
 
@@ -867,10 +890,20 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   irPlanUniversal() {
-    sessionStorage.setItem(
-      "solicitudEnviada",
-      JSON.stringify(this.solicitudEditar)
-    );
+    if (this.solicitarMutualidad) {
+      sessionStorage.setItem(
+        "solicitudEnviada",
+        JSON.stringify(this.solicitudEditar)
+      );
+    } else {
+      // consultar mutualidad.
+      sessionStorage.setItem(
+        "solicitudEnviada",
+        JSON.stringify(this.solicitudEditar)
+      );
+      sessionStorage.setItem("consultaPlanUniversal", "true");
+    }
+
     this.router.navigate(["/MutualidadAbogaciaPlanUniversal"]);
   }
   irSegAccidentes() {

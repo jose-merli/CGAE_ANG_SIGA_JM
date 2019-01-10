@@ -7,6 +7,7 @@ export class DatosPlanUniversalItem {
   abreviatura: String;
   capitalObjetivo: String;
   fechaConstitucion: Date;
+  titular: String;
   fechaAlta: Date;
   tipo: String;
   numeroIntegrantes: String;
@@ -44,6 +45,7 @@ export class DatosPlanUniversalItem {
   correoElectronico: String;
   cuentaBancaria: String;
   iban: String;
+  hijos: String[];
   swift: String;
   periodicidadPago: String;
   idCobertura: String;

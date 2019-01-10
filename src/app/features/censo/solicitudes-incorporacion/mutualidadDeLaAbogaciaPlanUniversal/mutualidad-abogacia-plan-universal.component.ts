@@ -27,7 +27,7 @@ import { DropdownModule, Dropdown } from "primeng/dropdown";
   styleUrls: ["./mutualidad-abogacia-plan-universal.component.scss"]
 })
 export class MutualidadAbogaciaPlanUniversal implements OnInit {
-  mostrarEstadoSolicitud: boolean = false;
+  // mostrarEstadoSolicitud: boolean = false;
   progressSpinner: boolean = false;
   datosDireccion: boolean = false;
   datosBancarios: boolean = false;
@@ -63,7 +63,8 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
   resultadosPoblaciones: string;
   codigoPostalValido: boolean;
   solicitud: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
-
+  cedeDatos: boolean;
+  modoLectura: boolean = false;
   constructor(
     private translateService: TranslateService,
     private sigaServices: SigaServices,
@@ -77,6 +78,10 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
   dropdown: Dropdown;
 
   ngOnInit() {
+    if (sessionStorage.getItem("consultaPlanUniversal")) {
+      this.modoLectura = true;
+      sessionStorage.removeItem("consultaPlanUniversal");
+    }
     this.es = this.translateService.getCalendarLocale();
     this.solicitud = JSON.parse(sessionStorage.getItem("solicitudEnviada"));
     this.body = JSON.parse(sessionStorage.getItem("solicitudEnviada"));
@@ -147,11 +152,48 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
     }
   }
 
+  isGuardar() {
+    if (
+      this.cedeDatos == true &&
+      this.modoLectura == false &&
+      this.solicitud.estadoCivil &&
+      this.body.idPais != "" &&
+      this.body.idPais != undefined &&
+      this.body.domicilio != "" &&
+      this.body.domicilio != undefined &&
+      this.body.codigoPostal != "" &&
+      this.body.codigoPostal != undefined &&
+      this.body.idProvincia != "" &&
+      this.body.idProvincia != undefined &&
+      this.body.telefono != "" &&
+      this.body.telefono != undefined &&
+      this.body.correoElectronico != "" &&
+      this.body.correoElectronico != undefined &&
+      this.body.cuentaBancaria != "" &&
+      this.body.cuentaBancaria != undefined &&
+      this.body.titular != "" &&
+      this.body.titular != undefined &&
+      this.body.idCobertura != "" &&
+      this.body.idCobertura != undefined &&
+      this.body.idBeneficiario != "" &&
+      this.body.idBeneficiario != undefined &&
+      this.body.idAsistenciaSanitaria != "" &&
+      this.body.idAsistenciaSanitaria != undefined
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   obtenerCuotaYCapObj() {
+    this.body.hijos = [];
+    this.body.codigoPostal = "";
     // necesita int sexo;
     //  int cobertura;
     //  Date fechaNacimiento;
     // this.solicitud.sexo = this.body.sexo;
+    let sexo = this.solicitud.sexo;
     if (this.solicitud.sexo == "H") {
       this.solicitud.sexo = "0";
     } else {
@@ -168,6 +210,9 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
         },
         error => {
           console.log(error);
+        },
+        () => {
+          this.solicitud.sexo = sexo;
         }
       );
   }
@@ -356,9 +401,9 @@ para poder filtrar el dato con o sin estos caracteres*/
       );
   }
 
-  abreCierraEstadoSolicitud() {
-    this.mostrarEstadoSolicitud = !this.mostrarEstadoSolicitud;
-  }
+  // abreCierraEstadoSolicitud() {
+  //   this.mostrarEstadoSolicitud = !this.mostrarEstadoSolicitud;
+  // }
   abreCierraDatosDireccion() {
     this.datosDireccion = !this.datosDireccion;
   }
