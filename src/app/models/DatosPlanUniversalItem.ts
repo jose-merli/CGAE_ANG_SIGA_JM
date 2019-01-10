@@ -31,6 +31,7 @@ export class DatosPlanUniversalItem {
   primerApellido: String;
   segundoApellido: String;
   fechaNacimiento: String;
+  fechaNacConyuge: String;
   naturalDe: String;
   estadoCivil: String;
   idPais: String;
