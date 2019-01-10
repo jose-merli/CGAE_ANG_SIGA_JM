@@ -315,7 +315,6 @@ export class FichaCursoComponent implements OnInit {
         this.getMassiveLoadInscriptions();
         this.configurationInformacionAdicional();
 
-        sessionStorage.removeItem("isInscripcion");
         sessionStorage.removeItem("codigoCursoInscripcion");
       } else if(sessionStorage.getItem("isSession") == "true"){
         this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
@@ -2750,7 +2749,12 @@ export class FichaCursoComponent implements OnInit {
   }
 
   backTo() {
-    this.location.back();
+    if (sessionStorage.getItem("isInscripcion") != null && sessionStorage.getItem("isInscripcion") != undefined) {
+      this.router.navigate(["/buscarCursos"]);
+      sessionStorage.removeItem("isInscripcion");
+    } else {
+      this.location.back();
+    }
   }
 
   arregloTildesCombo(combo) {

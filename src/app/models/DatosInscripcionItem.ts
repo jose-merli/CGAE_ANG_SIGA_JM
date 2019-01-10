@@ -10,7 +10,9 @@ export class DatosInscripcionItem {
   idEstadoInscripcion: string;
   estadoCurso: string;
   estadoInscripcion: string;
-  certificadoEmitido: string;
+  certificadoEmitido: number;
+  emitirCertificado: number;
+  isCertificadoAutomatico: boolean;
   calificacion: string;
   nombreApellidosFormador: string;
   idFormador: string;
