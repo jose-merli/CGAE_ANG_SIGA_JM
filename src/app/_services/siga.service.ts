@@ -187,7 +187,9 @@ export class SigaServices {
     consultas_guardarDatosGenerales: 'consultas/confGeneral',
     consultas_guardarConsulta: 'consultas/confConsulta',
     consultas_listadoModelos: 'consultas/modelosconsulta',
-    consultas_ejecutarConsulta: 'consultas/ejecutarConsulta'
+    consultas_ejecutarConsulta: 'consultas/ejecutarConsulta',
+    plantillasEnvio_search: 'plantillasEnvio/plantillasEnvioSearch',
+    plantillasEnvio_guardarDatosGenerales: 'plantillasEnvio/datosGenerales'
 
 
   };

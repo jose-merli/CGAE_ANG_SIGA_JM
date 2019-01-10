@@ -2,10 +2,11 @@ import { Component, OnInit, ViewChild, ChangeDetectorRef, HostListener } from '@
 import { DataTable } from "primeng/datatable";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { Router } from '@angular/router';
-// import { TranslateService } from "../../../commons/translate/translation.service";
+import { TranslateService } from "../../../commons/translate/translation.service";
 import { SigaServices } from "./../../../_services/siga.service";
 import { PlantillaEnvioSearchItem } from '../../../models/PlantillaEnvioSearchItem';
 import { PlantillaEnvioItem } from '../../../models/PlantillaEnvioItem';
+import { PlantillasEnvioObject } from '../../../models/PlantillasEnvioObject';
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -22,6 +23,7 @@ export class PlantillasEnvioComponent implements OnInit {
   tiposEnvio: any = [];
   bodySearch: PlantillaEnvioSearchItem = new PlantillaEnvioSearchItem();
   body: PlantillaEnvioItem = new PlantillaEnvioItem();
+  searchPlantillasEnvio: PlantillasEnvioObject = new PlantillasEnvioObject();
 
   //variables tabla
   datos: any[];
@@ -34,6 +36,8 @@ export class PlantillasEnvioComponent implements OnInit {
   rowsPerPage: any = [];
   showResultados: boolean = false;
   showHistorico: boolean = false;
+  progressSpinner: boolean = false;
+  loaderEtiquetas: boolean = false;
 
 
 
@@ -42,7 +46,7 @@ export class PlantillasEnvioComponent implements OnInit {
 
   constructor(
     private sigaServices: SigaServices,
-    //  private translateService: TranslateService,
+    private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private router: Router
@@ -52,6 +56,14 @@ export class PlantillasEnvioComponent implements OnInit {
   ngOnInit() {
 
     sessionStorage.removeItem("crearNuevaPlantilla");
+
+
+
+    this.cols = [
+      { field: 'nombre', header: 'Nombre', width: '25%' },
+      { field: 'tipoEnvio', header: 'Tipo de envío', width: '25%' },
+      { field: 'descripcion', header: 'Descripción' },
+    ];
 
     if (sessionStorage.getItem("filtrosPlantillas") != null) {
       this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosPlantillas"));
@@ -70,12 +82,6 @@ export class PlantillasEnvioComponent implements OnInit {
 
   configTabla() {
 
-
-    this.cols = [
-      { field: 'nombre', header: 'Nombre', width: '25%' },
-      { field: 'tipoEnvio', header: 'Tipo de envío', width: '25%' },
-      { field: 'descripcion', header: 'Descripción' },
-    ];
 
     //numero de filas predeterminadas a mostrar
     this.selectedItem = 10;
@@ -106,12 +112,22 @@ export class PlantillasEnvioComponent implements OnInit {
   getResultados() {
 
     //llamar al servicio de busqueda
-    this.datos = [
-      { id: '1', nombre: 'Plantilla test', tipoEnvio: 'SMS', descripcion: 'descripcion' },
-      { id: '2', nombre: 'Plantilla test', tipoEnvio: 'Buro fax', descripcion: 'descripcion' },
-      { id: '3', nombre: 'Plantilla test', tipoEnvio: 'Paloma mensajera', descripcion: 'descripcion' },
-      { id: '4', nombre: 'Plantilla test', tipoEnvio: 'Telequinesis', descripcion: 'descripcion' }
-    ]
+    this.sigaServices
+      .postPaginado("plantillasEnvio_search", "?numPagina=1", this.bodySearch)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.searchPlantillasEnvio = JSON.parse(data["body"]);
+          this.datos = this.searchPlantillasEnvio.plantillasItem;
+          console.log(this.datos)
+          this.body = this.datos[0];
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => { }
+      );
 
   }
 
@@ -152,12 +168,13 @@ export class PlantillasEnvioComponent implements OnInit {
     let id = item[0].id;
     if (!this.selectMultiple) {
       this.router.navigate(["/fichaPlantilla"]);
-      sessionStorage.setItem("plantillasEnvioSearch", JSON.stringify(this.bodySearch));
+      sessionStorage.setItem("plantillasEnvioSearch", JSON.stringify(this.body));
       sessionStorage.setItem("filtrosPlantillas", JSON.stringify(this.bodySearch));
     }
   }
 
   buscar() {
+    this.progressSpinner = true;
     this.showResultados = true;
     sessionStorage.removeItem("plantillasEnvioSearch")
     sessionStorage.removeItem("filtrosPlantillas")
@@ -222,6 +239,19 @@ export class PlantillasEnvioComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  /*
+función para que no cargue primero las etiquetas de los idiomas*/
+
+  isCargado(key) {
+    if (key != this.translateService.instant(key)) {
+      this.loaderEtiquetas = false;
+      return key
+    } else {
+      this.loaderEtiquetas = true;
+    }
+
   }
 
 }

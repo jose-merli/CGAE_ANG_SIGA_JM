@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DatosGeneralesPlantillaItem } from '../../../../../models/DatosGeneralesPlantillaItem';
 import { SigaServices } from "./../../../../../_services/siga.service";
+import { Message, ConfirmationService } from "primeng/components/common/api";
 
 
 @Component({
@@ -14,7 +15,10 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
   openFicha: boolean = false;
   activacionEditar: boolean = true;
   body: DatosGeneralesPlantillaItem = new DatosGeneralesPlantillaItem();
+  bodyInicial: DatosGeneralesPlantillaItem = new DatosGeneralesPlantillaItem();
   tiposEnvio: any[];
+  msgs: Message[];
+  editar: boolean = false;
 
 
 
@@ -62,6 +66,26 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
 
   }
 
+  // Mensajes
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showInfo(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
   abreCierraFicha() {
     if (this.activacionEditar == true) {
       this.openFicha = !this.openFicha;
@@ -87,6 +111,10 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("plantillasEnvioSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("plantillasEnvioSearch"));
+      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+      this.editar = true;
+    } else {
+      this.editar = false;
     }
   }
 
@@ -119,9 +147,40 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
   }
 
   guardar() {
-    sessionStorage.removeItem("crearNuevaPlantilla");
+
+    this.sigaServices
+      .postPaginado("plantillasEnvio_guardarDatosGenerales", "?numPagina=1", this.body)
+      .subscribe(
+        data => {
+          let result = JSON.parse(data["body"]);
+          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          sessionStorage.removeItem("crearNuevaPlantilla");
+          sessionStorage.setItem("plantillasEnvioSearch", JSON.stringify(this.body));
+          this.showSuccess('Se ha guardado la plantilla correctamente');
+
+        },
+        err => {
+          console.log(err);
+          this.showFail('Error al guardar la plantilla');
+        },
+        () => { }
+      );
+
+
   }
 
+
+  isGuardarDisabled() {
+    if (this.body.idTipoEnvios != '' && this.body.idTipoEnvios != null && this.body.descripcion != ''
+      && this.body.descripcion != null && this.body.nombre != '' && this.body.nombre != null) {
+      return false;
+    }
+    return true;
+  }
+
+  restablecer() {
+    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+  }
 
 
 

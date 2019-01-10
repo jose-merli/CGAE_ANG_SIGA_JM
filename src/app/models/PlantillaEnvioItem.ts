@@ -1,5 +1,6 @@
 export class PlantillaEnvioItem {
 
+    tipoEnvio: String;
     idTipoEnvios: String;
     idPlantillaEnvios: String;
     nombre: String;

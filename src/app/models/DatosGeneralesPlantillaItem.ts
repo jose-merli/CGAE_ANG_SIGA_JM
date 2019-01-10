@@ -2,7 +2,7 @@
 export class DatosGeneralesPlantillaItem {
   nombre: String;
   descripcion: String;
-  idTipoEnvio: String;
+  idTipoEnvios: String;
   email: String;
   sms: String;
   constructor() { }
