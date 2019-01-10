@@ -286,6 +286,8 @@ export class SigaServices {
     fichaInscripcion_saveInscripcion: "fichaInscripcion/saveInscripcion",
     fichaInscripcion_updateInscripcion: "fichaInscripcion/updateInscripcion",
     fichaInscripcion_guardarPersona: "fichaInscripcion/guardarPersona",
+    fichaInscripcion_generarSolicitudCertificados:
+      "fichaInscripcion/generarSolicitudCertificados",
 
     //Agenda
     fichaCalendario_getCalendarType: "fichaCalendario/getCalendarType",

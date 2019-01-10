@@ -122,6 +122,15 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       sessionStorage.removeItem("toBackNewFormador");
       this.loadNewTrainer(JSON.parse(sessionStorage.getItem("formador")));
     }
+
+    if (
+      sessionStorage.getItem("datosTabla") != null &&
+      sessionStorage.getItem("datosTabla") != undefined
+    ) {
+      this.datos = JSON.parse(sessionStorage.getItem("datosTabla"));
+      this.buscar = true;
+      sessionStorage.removeItem("datosTabla");
+    }
   }
 
   ngAfterViewInit() {
@@ -198,9 +207,9 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
   getComboCertificadoEmitido() {
     this.comboCertificadoEmitido = [
-      { label: "", value: 2 },
+      { label: "", value: 0 },
       { label: "Sí", value: 1 },
-      { label: "No", value: 0 }
+      { label: "No", value: 2 }
     ];
 
     this.arregloTildesCombo(this.comboCertificadoEmitido);
@@ -636,6 +645,11 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
     });
   }
 
+  showMessageCalificacion(mensaje: string, tipo: string) {
+    // this.msgs = [];
+    this.msgs.push({ severity: tipo, summary: "", detail: mensaje });
+  }
+
   cerrarMotivo() {
     this.displayMotivo = false;
     this.body.motivo = "";
@@ -690,27 +704,48 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   }
 
   guardarCalificacion() {
+    this.msgs = [];
+    let CALIFICACION_REX = /^([0-9]{1})(\.\d{1,2})?$|10$/;
     this.progressSpinner = true;
     this.datos.forEach((value: DatosInscripcionItem, key: number) => {
       if (value.editar) {
-        if (value.calificacion != null && value.calificacion != undefined) {
+        if (
+          value.calificacion != null &&
+          value.calificacion != undefined &&
+          value.calificacion != ""
+        ) {
+          value.calificacion = value.calificacion.replace(",", ".");
+          if (CALIFICACION_REX.test(value.calificacion)) {
+            this.sigaServices
+              .post("busquedaInscripciones_updateCalificacion", value)
+              .subscribe(
+                data => {
+                  this.showMessageCalificacion(
+                    "Calificacion actualizada correctamente",
+                    "success"
+                  );
+                  this.progressSpinner = false;
+                  value.editar = false;
+                  // this.isBuscar();
+                },
+                error => {
+                  this.showMessageCalificacion("Ha ocurrido un error", "error");
+                  this.onCalificacion();
+                  this.progressSpinner = false;
+                }
+              );
+          } else {
+            this.onCalificacion();
+            this.showMessageCalificacion(
+              "Se ha introducido una calificacion de manera incorrecta",
+              "error"
+            );
+            this.progressSpinner = false;
+          }
+        } else {
+          value.editar = false;
         }
-
-        this.sigaServices
-          .post("busquedaInscripciones_updateCalificacion", value)
-          .subscribe(
-            data => {
-              this.showSuccess("Calificaciones actualizadas correctamente");
-              this.progressSpinner = false;
-              this.isBuscar();
-            },
-            error => {
-              this.showFail("Ha ocurrido un error");
-              this.progressSpinner = false;
-            }
-          );
       }
-      value.editar = false;
     });
 
     this.onCalificacion();
@@ -726,6 +761,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       );
       console.log(selectedDatos);
       sessionStorage.setItem("pantallaListaInscripciones", "true");
+      sessionStorage.setItem("datosTabla", JSON.stringify(this.datos));
       this.router.navigate(["/fichaInscripcion"]);
     } else {
       this.numSelected = this.selectedDatos.length;
@@ -738,5 +774,11 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
   backTo() {
     this.location.back();
+  }
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
   }
 }

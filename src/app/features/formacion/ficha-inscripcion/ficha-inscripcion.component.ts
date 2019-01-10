@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 import { SigaServices } from "../../../_services/siga.service";
 import { DatosInscripcionItem } from "../../../models/DatosInscripcionItem";
 import { esCalendar } from "../../../utils/calendar";
@@ -35,7 +35,13 @@ export class FichaInscripcionComponent implements OnInit {
   isAdministrador: boolean = false;
   isNuevoNoColegiado: boolean = false;
 
-  rowsPerPage;
+  datosCertificates = [];
+  colsCertificates;
+  selectedCertificates: number = 10;
+  generarCertificado: boolean = false;
+  checkCertificadoAutomatico: boolean = false;
+
+  rowsPerPage: any = [];
   cols;
 
   comboEstados: any[];
@@ -48,12 +54,19 @@ export class FichaInscripcionComponent implements OnInit {
   guardarPersona: boolean = false;
   inscripcionInsertada: boolean = false;
 
+  minDateFechaSolicitud: Date;
+
+  //Certificados
+  @ViewChild("tableCertificates")
+  tableCertificates;
+
   constructor(
     private sigaServices: SigaServices,
     private location: Location,
     private cardService: cardService,
     private router: Router,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -61,6 +74,7 @@ export class FichaInscripcionComponent implements OnInit {
     this.getComboEstados();
     this.getComboPrecio();
     this.getComboModoPago();
+    this.getColsResultsCertificates();
 
     // Se accede a la ficha de inscripcion desde la busqueda de inscripciones
     if (sessionStorage.getItem("modoEdicionInscripcion") == "true") {
@@ -69,8 +83,7 @@ export class FichaInscripcionComponent implements OnInit {
         sessionStorage.getItem("inscripcionCurrent")
       );
 
-      // Cargamos la persona con el idPersona que obtenemos de la inscripcion
-      // this.cargaPersonaInscripcion();
+      this.controlCertificadoAutomatico();
 
       this.searchCourse(this.inscripcion.idCurso);
       sessionStorage.removeItem("modoEdicionInscripcion");
@@ -83,13 +96,17 @@ export class FichaInscripcionComponent implements OnInit {
         sessionStorage.getItem("idCursoInscripcion") != undefined &&
         sessionStorage.getItem("idCursoInscripcion") != null
       ) {
+        this.minDateFechaSolicitud = new Date();
+
         let idCurso = sessionStorage.getItem("idCursoInscripcion");
+        this.curso.idCurso = idCurso;
         this.searchCourse(idCurso);
+
         this.cargarDatosCursoInscripcion();
         this.modoEdicion = false;
         sessionStorage.removeItem("idCursoInscripcion");
         sessionStorage.removeItem("pantallaListaInscripciones");
-        
+
         // Al volver de la busqueda de la persona, entrará por este if
         if (
           (sessionStorage.getItem("formador") != null ||
@@ -151,9 +168,27 @@ export class FichaInscripcionComponent implements OnInit {
           this.inscripcion = JSON.parse(
             sessionStorage.getItem("inscripcionActual")
           );
+
+          this.controlCertificadoAutomatico();
+          this.inscripcion.fechaSolicitud = this.transformaFecha(
+            this.inscripcion.fechaSolicitud
+          );
+          this.inscripcion.fechaSolicitudDate = this.transformaFecha(
+            this.inscripcion.fechaSolicitud
+          );
+
           this.inscripcionInsertada = true;
           this.modoEdicion = true;
           sessionStorage.removeItem("inscripcionActual");
+        }
+
+        if (
+          sessionStorage.getItem("courseCurrent") != null &&
+          sessionStorage.getItem("courseCurrent") != undefined
+        ) {
+          this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
+          this.getCertificatesCourse();
+          this.compruebaGenerarCertificado();
         }
       }
     }
@@ -164,10 +199,12 @@ export class FichaInscripcionComponent implements OnInit {
   cargaInscripcion() {
     this.inscripcion = JSON.parse(sessionStorage.getItem("inscripcionActual"));
 
-    this.inscripcion.fechaSolicitudDate = new Date(
+    this.inscripcion.fechaSolicitudDate = this.transformaFecha(
       this.inscripcion.fechaSolicitudDate
     );
-    this.inscripcion.fechaSolicitud = new Date(this.inscripcion.fechaSolicitud);
+    this.inscripcion.fechaSolicitud = this.transformaFecha(
+      this.inscripcion.fechaSolicitud
+    );
 
     sessionStorage.removeItem("inscripcionActual");
   }
@@ -305,7 +342,7 @@ export class FichaInscripcionComponent implements OnInit {
         activa: false
       },
       {
-        key: "certificados",
+        key: "certificado",
         activa: false
       }
     ];
@@ -374,6 +411,11 @@ export class FichaInscripcionComponent implements OnInit {
       sessionStorage.getItem("pantallaFichaCurso") != undefined
     ) {
       this.router.navigate(["/fichaCurso"]);
+      sessionStorage.setItem("isInscripcion", JSON.stringify(true));
+      sessionStorage.setItem(
+        "codigoCursoInscripcion",
+        JSON.stringify(this.inscripcion.idCurso)
+      );
       sessionStorage.removeItem("pantallaFichaCurso");
     } else {
       this.location.back();
@@ -462,6 +504,9 @@ export class FichaInscripcionComponent implements OnInit {
             this.curso.fechaInscripcionHastaDate
           );
         }
+
+        this.getCertificatesCourse();
+        this.compruebaGenerarCertificado();
       },
       err => {
         this.progressSpinner = false;
@@ -511,6 +556,17 @@ export class FichaInscripcionComponent implements OnInit {
       severity: "success",
       summary: "Correcto",
       detail: this.translateService.instant("general.message.accion.realizada")
+    });
+  }
+
+  mensajeCertificadoEmitido() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Información",
+      detail: this.translateService.instant(
+        "Ya se ha realizado una solicitud de certificado previa"
+      )
     });
   }
 
@@ -673,5 +729,146 @@ export class FichaInscripcionComponent implements OnInit {
       fecha = new Date(fecha);
     }
     return fecha;
+  }
+
+  getCertificatesCourse() {
+    // obtener certificaciones
+    this.sigaServices
+      .getParam(
+        "fichaCursos_getCertificatesCourse",
+        "?idCurso=" + this.curso.idCurso
+      )
+      .subscribe(
+        n => {
+          this.datosCertificates = n.certificadoCursoItem;
+          sessionStorage.setItem(
+            "datosCertificatesInit",
+            JSON.stringify(this.datosCertificates)
+          );
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
+  getColsResultsCertificates() {
+    this.colsCertificates = [
+      {
+        field: "nombreCertificado",
+        header: "menu.certificados"
+      },
+      {
+        field: "precio",
+        header: "form.busquedaCursos.literal.precio"
+      },
+      {
+        field: "calificacion",
+        header: "formacion.busquedaInscripcion.calificacion"
+      }
+    ];
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
+  }
+
+  onChangeRowsPerPages(event) {
+    this.selectedCertificates = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tableCertificates.reset();
+  }
+
+  compruebaGenerarCertificado() {
+    // idEstado = 4 --> Estado finalizado
+
+    // Controlamos cuando debe estar habilitado el botón de generar certificado
+    if (
+      this.curso.idEstado == "4" &&
+      (this.inscripcion.calificacion != null &&
+        this.inscripcion.calificacion != undefined &&
+        this.inscripcion.calificacion != "")
+    )
+      this.generarCertificado = true;
+    else this.generarCertificado = false;
+
+    // Controlamos cuando debe estar habilitado el check de generar certificado automaticamente
+    if (this.curso.idEstado == "4") {
+      this.checkCertificadoAutomatico = true;
+    } else {
+      this.checkCertificadoAutomatico = false;
+    }
+  }
+
+  actualizarCertificado() {
+    if (this.inscripcion.isCertificadoAutomatico)
+      this.inscripcion.emitirCertificado = 1;
+    else this.inscripcion.emitirCertificado = 0;
+
+    this.sigaServices
+      .post("fichaInscripcion_updateInscripcion", this.inscripcion)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.guardarPersona = false;
+          this.showSuccess();
+        },
+        err => {
+          this.progressSpinner = false;
+          this.showFail("La acción no se ha realizado correctamente");
+          this.inscripcionInsertada = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  controlCertificadoAutomatico() {
+    // Controlamos el check de certificado automatico
+    if (this.inscripcion.emitirCertificado == 1)
+      this.inscripcion.isCertificadoAutomatico = true;
+    else this.inscripcion.isCertificadoAutomatico = false;
+  }
+
+  generarSolicitudCertificado() {
+    if (this.inscripcion.certificadoEmitido == 1) {
+      this.mensajeCertificadoEmitido();
+    } else {
+      this.progressSpinner = true;
+      this.sigaServices
+        .post("fichaInscripcion_generarSolicitudCertificados", this.inscripcion)
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.guardarPersona = false;
+            this.inscripcion.certificadoEmitido = 1;
+            this.showSuccess();
+          },
+          err => {
+            this.progressSpinner = false;
+            this.showFail("La acción no se ha realizado correctamente");
+            this.inscripcionInsertada = false;
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+    }
   }
 }
