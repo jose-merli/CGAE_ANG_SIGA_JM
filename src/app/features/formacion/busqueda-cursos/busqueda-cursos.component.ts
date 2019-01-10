@@ -22,7 +22,7 @@ import {
 import { MultiSelect, Message } from "primeng/primeng";
 import { DatosCursosObject } from "../../../models/DatosCursosObject";
 import { AuthenticationService } from "../../../_services/authentication.service";
-import { Router } from "../../../../../node_modules/@angular/router";
+import { Router } from "@angular/router";
 import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
 
 @Component({
@@ -127,17 +127,9 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
       sessionStorage.removeItem("filtrosBusquedaCursos");
       this.isBuscar(false);
     }
-
-    if (sessionStorage.getItem("cursosInit")) {
-      this.buscar = true;
-
-      this.selectedDatos = "";
-      this.getColsResults();
-      this.filtrosTrim();
-
-      this.datos = JSON.parse(sessionStorage.getItem("cursosInit"));
-      sessionStorage.removeItem("cursosInit");
-    }
+    this.getColsResults();
+    this.filtrosTrim();
+    this.selectedDatos = "";
 
     this.checkAcceso();
   }
@@ -345,10 +337,6 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
           this.cursoEncontrado = JSON.parse(data["body"]);
           this.datos = this.cursoEncontrado.cursoItem;
           this.table.paginator = true;
-          sessionStorage.setItem(
-            "cursosInit",
-            JSON.stringify(this.cursoEncontrado.cursoItem)
-          );
         },
         err => {
           console.log(err);
@@ -375,6 +363,10 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
       sessionStorage.setItem("modoEdicionCurso", "true");
       sessionStorage.setItem("courseCurrent", JSON.stringify(selectedDatos[0]));
       console.log(selectedDatos);
+      sessionStorage.setItem(
+        "filtrosBusquedaCursos",
+        JSON.stringify(this.body)
+      );
       this.router.navigate(["/fichaCurso"]);
     } else {
       this.numSelected = this.selectedDatos.length;
