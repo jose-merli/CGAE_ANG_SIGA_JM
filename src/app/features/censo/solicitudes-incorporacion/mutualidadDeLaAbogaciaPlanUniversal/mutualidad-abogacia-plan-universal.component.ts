@@ -16,6 +16,8 @@ import { SigaServices } from "../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate";
 import { Location } from "@angular/common";
 import { DatosPlanUniversalItem } from "../../../../models/DatosPlanUniversalItem";
+import { DatosSolicitudGratuitaObject } from "../../../../models/DatosSolicitudGratuitaObject";
+
 import { SolicitudIncorporacionItem } from "../../../../models/SolicitudIncorporacionItem";
 import { DropdownModule, Dropdown } from "primeng/dropdown";
 
@@ -42,10 +44,9 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
   datosUdFamiliar: boolean = false;
   msgs: any;
   existeImagen: any;
-  s: any;
+  es: any;
+  estadoCivil: any[];
   sl: any;
-  clear: any;
-  guardar: any;
   valorCheckUsuarioAutomatico: any;
   asistenciaSanitaria: any[];
   designacionBeneficiarios: any[];
@@ -75,17 +76,8 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
   @ViewChild("poblacion")
   dropdown: Dropdown;
 
-  onChangePais(event) {
-    this.body.idPais = event.value;
-    if (event.value.value != "191") {
-      this.isValidCodigoPostal();
-      this.provinciaSelected = null;
-      this.poblacionSelected = null;
-      this.body.codigoPostal = null;
-    }
-  }
-
   ngOnInit() {
+    this.es = this.translateService.getCalendarLocale();
     this.solicitud = JSON.parse(sessionStorage.getItem("solicitudEnviada"));
     this.body = JSON.parse(sessionStorage.getItem("solicitudEnviada"));
     this.fechaNacimiento = this.transformaFecha(this.solicitud.fechaNacimiento);
@@ -145,6 +137,16 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
     this.cargarCombos();
   }
 
+  onChangePais(event) {
+    this.body.idPais = event.value;
+    if (event.value.value != "191") {
+      this.isValidCodigoPostal();
+      this.provinciaSelected = null;
+      this.poblacionSelected = null;
+      this.body.codigoPostal = null;
+    }
+  }
+
   obtenerCuotaYCapObj() {
     // necesita int sexo;
     //  int cobertura;
@@ -190,6 +192,16 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
   }
 
   cargarCombos() {
+    this.sigaServices.get("solicitudIncorporacion_estadoCivil").subscribe(
+      result => {
+        this.estadoCivil = result.combooItems;
+        this.progressSpinner = false;
+      },
+      error => {
+        console.log(error);
+      }
+    );
+
     this.sigaServices.get("solicitudIncorporacion_pais").subscribe(
       result => {
         this.paises = result.combooItems;
@@ -318,6 +330,32 @@ para poder filtrar el dato con o sin estos caracteres*/
       );
   }
 
+  guardar() {
+    let solicitud = new DatosSolicitudGratuitaObject();
+
+    solicitud.datosPersona = JSON.parse(JSON.stringify(this.solicitud));
+    solicitud.datosDireccion = JSON.parse(JSON.stringify(this.body));
+    solicitud.datosDireccion.cp = this.body.codigoPostal;
+    solicitud.datosDireccion.direccion = this.body.domicilio;
+    solicitud.datosDireccion.email = this.body.correoElectronico;
+    solicitud.datosDireccion.movil = this.body.motivo;
+    solicitud.datosDireccion.num = this.body.telefono;
+    solicitud.datosDireccion.poblacion = this.body.idPoblacion;
+    solicitud.datosDireccion.provincia = this.body.idProvincia;
+    solicitud.datosDireccion.telefono = this.body.telefono;
+
+    this.sigaServices
+      .post("mutualidad_solicitudPolizaProfesional", solicitud)
+      .subscribe(
+        result => {
+          let prueba = JSON.parse(result.body);
+        },
+        error => {
+          console.log(error);
+        }
+      );
+  }
+
   abreCierraEstadoSolicitud() {
     this.mostrarEstadoSolicitud = !this.mostrarEstadoSolicitud;
   }
@@ -335,6 +373,10 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   abreCierraDatosUdFamiliar() {
     this.datosUdFamiliar = !this.datosUdFamiliar;
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
   backTo() {
