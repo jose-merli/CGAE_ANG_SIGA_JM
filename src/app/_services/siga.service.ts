@@ -251,6 +251,8 @@ export class SigaServices {
     fichaCursos_saveCourse: "fichaCursos/saveCourse",
     fichaCursos_updateCourse: "fichaCursos/updateCourse",
     fichaCursos_releaseOrAnnounceCourse: "fichaCursos/releaseOrAnnounceCourse",
+    fichaCursos_releaseCourse: "fichaCursos/releaseCourse",
+    fichaCursos_announceCourse: "fichaCursos/announceCourse",
     fichaCursos_searchCourse: "fichaCursos/searchCourse",
     fichaCursos_getServicesCourse: "fichaCursos/getServicesCourse",
     fichaCursos_getServicesSpecificCourse:
@@ -361,7 +363,7 @@ export class SigaServices {
     mutualidad_getEnums: "mutualidad/enums",
     mutualidad_estadoMutualista: "mutualidad/estadoMutualista",
     mutualidad_estadoSolicitud: "mutualidad/estadoSolicitud",
-    
+
     mutualidad_obtenerCuotaYCapObjetivo: "mutualidad/obtenerCuotaYCapObjetivo",
     mutualidad_solicitudPolizaProfesional:
       "mutualidad/solicitudPolizaProfesional",

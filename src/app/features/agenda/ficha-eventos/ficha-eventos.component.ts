@@ -344,7 +344,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     } else if (
       sessionStorage.getItem("isFormacionCalendarByStartInscripcion") == "true"
     ) {
-      this.isFormacionCalendar = true;
       this.modoTipoEventoInscripcion = true;
       this.disabledTipoEvento = true;
       this.path = "formacionInicioInscripcion";
@@ -395,7 +394,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       sessionStorage.getItem("isFormacionCalendarByStartInscripcion") == "false"
     ) {
       this.modoTipoEventoInscripcion = true;
-      this.isFormacionCalendar = true;
       this.disabledTipoEvento = true;
       this.path = "formacionFinInscripcion";
 

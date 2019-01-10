@@ -109,6 +109,7 @@ export class FichaCursoComponent implements OnInit {
   valorEstadoAbierto = "0";
   valorEstadoAnunciado = "1";
   valorEstadoCancelado = "5";
+  valorEstadoFinalizado = "4";
   valorTipoInicioIncripcion = "4";
   valorTipoFinIncripcion = "5";
   valorTipoSesion = "8";
@@ -787,6 +788,7 @@ export class FichaCursoComponent implements OnInit {
         this.sigaServices.post("fichaCursos_finishCourse", cursoDTO).subscribe(
           data => {
             this.progressSpinner = false;
+            this.curso.idEstado = this.valorEstadoFinalizado;
 
             if (JSON.parse(data.body).error.code == null) {
               this.showMessage(
