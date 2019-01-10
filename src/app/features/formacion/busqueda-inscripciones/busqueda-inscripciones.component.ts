@@ -121,6 +121,16 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
     ) {
       sessionStorage.removeItem("toBackNewFormador");
       this.loadNewTrainer(JSON.parse(sessionStorage.getItem("formador")));
+    } else if (
+      sessionStorage.getItem("cursoSelected") != null ||
+      sessionStorage.getItem("cursoSelected") != undefined
+    ) {
+      this.body.idCurso = JSON.parse(
+        sessionStorage.getItem("cursoSelected")
+      ).idCurso;
+      sessionStorage.removeItem("cursoSelected");
+
+      this.isBuscar();
     }
 
     if (

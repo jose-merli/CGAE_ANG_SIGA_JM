@@ -1,29 +1,29 @@
+import { Location } from "@angular/common";
 import {
+  ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit,
   ViewChild,
-  ChangeDetectorRef,
-  OnDestroy
+  ViewEncapsulation
 } from "@angular/core";
+import { Router } from "@angular/router";
+import { saveAs } from "file-saver/FileSaver";
 import {
-  DataTable,
   AutoComplete,
   Calendar,
-  ConfirmationService
+  ConfirmationService,
+  DataTable
 } from "primeng/primeng";
-import { Router } from "@angular/router";
-import { SigaServices } from "../../../_services/siga.service";
-import { NotificacionEventoObject } from "../../../models/NotificacionEventoObject";
-import { NotificacionEventoItem } from "../../../models/NotificacionEventoItem";
-import { ViewEncapsulation } from "@angular/core";
-import { saveAs } from "file-saver/FileSaver";
-import { AsistenciaCursoObject } from "../../../models/AsistenciaCursoObject";
-import { EventoItem } from "../../../models/EventoItem";
-import { Location } from "@angular/common";
-import { EventoObject } from "../../../models/EventoObject";
 import { TranslateService } from "../../../commons/translate";
-import { esCalendar } from "../../../utils/calendar";
 import { CalendarItem } from "../../../models/CalendarItem";
+import { EventoItem } from "../../../models/EventoItem";
+import { EventoObject } from "../../../models/EventoObject";
+import { NotificacionEventoItem } from "../../../models/NotificacionEventoItem";
+import { NotificacionEventoObject } from "../../../models/NotificacionEventoObject";
+import { esCalendar } from "../../../utils/calendar";
+import { SigaServices } from "../../../_services/siga.service";
+import { AsistenciaEventoObject } from "../../../models/AsistenciaEventoObject";
 
 @Component({
   selector: "app-ficha-eventos",
@@ -129,6 +129,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   numSelectedAsistencia: number = 0;
   comboAsistencia;
   checkAsistencias: boolean = false;
+  asistenciasUpdate = [];
 
   constructor(
     private sigaServices: SigaServices,
@@ -187,6 +188,10 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       if (this.newEvent.idTipoCalendario == this.valorTipoFormacion) {
         this.getComboCalendar();
         this.limitTimeEvent();
+        this.idCurso = this.newEvent.idCurso;
+        this.getEntryListCourse();
+
+        this.isFormacionCalendar = true;
 
         if (this.newEvent.fechaInicioRepeticion != null) {
           this.newEvent.fechaInicioRepeticion = new Date(
@@ -272,6 +277,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
       //limitamos tiempo de repeticion
       this.limitTimeEvent();
+      this.getEntryListCourse();
 
       //4. En caso de que venga notificaciones
     } else if (sessionStorage.getItem("isNotificaciones") == "true") {
@@ -380,6 +386,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
         //Se guarda el evento con los valores iniciales para restablecer los valores
         this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
+
+        this.getEntryListCourse();
       }
 
       //6. En caso de que venga de creacion de nuevo curso, crear el evento fin de inscripcion
@@ -428,6 +436,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
         //Se guarda el evento con los valores iniciales para restablecer los valores
         this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
+
+        this.getEntryListCourse();
       }
 
       //7. Viene en modo edicion sesion
@@ -473,6 +483,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           );
         }
       }
+      this.idCurso = this.newEvent.idCurso;
+      this.getEntryListCourse();
 
       //8. Viene directo
     } else {
@@ -693,7 +705,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
     if (
       sessionStorage.getItem("modoEdicionEventoByAgenda") == "true" ||
-      (this.modoTipoEventoInscripcion && this.modoEdicionEvento) || this.modoEdicionEvento
+      (this.modoTipoEventoInscripcion && this.modoEdicionEvento) ||
+      this.modoEdicionEvento
     ) {
       url = "fichaEventos_updateEventCalendar";
     } else {
@@ -1255,38 +1268,20 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   getComboAsistencia() {
     this.comboAsistencia = [
-      { label: "Sí", value: "S" },
-      { label: "No", value: "N" }
+      { label: "Sí", value: "1" },
+      { label: "No", value: "0" }
     ];
   }
 
   getColsResultsAsistencia() {
-    this.datosAsistencia = [
-      {
-        idAsistencia: "1",
-        nombre: "JOSE RAMIREZ PEREZ",
-        asistencia: "S"
-      },
-      {
-        idAsistencia: "2",
-        nombre: "JUAN LOPEZ PEREZ",
-        asistencia: "S"
-      },
-      {
-        idAsistencia: "3",
-        nombre: "JOSE RAMIREZ PEREZ",
-        asistencia: "N"
-      }
-    ];
-
     this.colsAsistencia = [
       {
-        field: "nombre",
+        field: "nombrePersona",
         header: "administracion.parametrosGenerales.literal.nombre"
       },
       {
         field: "asistencia",
-        header: "Asistencia"
+        header: "formacion.busquedaInscripcion.asistencia"
       }
     ];
 
@@ -1310,6 +1305,70 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     ];
   }
 
+  getEntryListCourse() {
+    this.sigaServices
+      .getParam("fichaEventos_getEntryListCourse", "?idCurso=" + this.idCurso)
+      .subscribe(
+        n => {
+          this.datosAsistencia = n.asistenciaEventoItem;
+        },
+        err => {
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  setAssistanceUpdate(dato) {
+    let idFindAssitance = this.asistenciasUpdate.findIndex(
+      x => x.idPersona === dato.idPersona
+    );
+
+    if (idFindAssitance == -1) {
+      this.addAssistanceUpdateList(idFindAssitance, dato);
+    } else {
+      let id = this.datosAsistencia.findIndex(
+        x => x.idPersona === dato.idPersona
+      );
+
+      this.asistenciasUpdate[idFindAssitance] = this.datosAsistencia[id];
+    }
+  }
+
+  addAssistanceUpdateList(idFindCertificate, dato) {
+    let id = this.datosAsistencia.findIndex(
+      x => x.idPersona === dato.idPersona
+    );
+
+    if (this.datosAsistencia[id].idEvento == null) {
+      this.datosAsistencia[id].idEvento = this.newEvent.idEvento;
+    }
+    this.asistenciasUpdate.push(this.datosAsistencia[id]);
+  }
+
+  saveAssistancesCourse() {
+    let asistencias = new AsistenciaEventoObject();
+    asistencias.asistenciaEventoItem = this.asistenciasUpdate;
+
+    this.sigaServices
+      .post("fichaEventos_saveAssistancesCourse", asistencias)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.showSuccess();
+        },
+        err => {
+          this.progressSpinner = false;
+          this.showUnSuccess();
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
   isSelectMultipleAsistencia() {
     this.selectMultipleAsistencia = !this.selectMultipleAsistencia;
     if (!this.selectMultipleAsistencia) {
@@ -1327,23 +1386,30 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   checkAsist() {
     this.selectedDatosAsistencia.forEach(element => {
       let idFindAsistencia = this.datosAsistencia.findIndex(
-        x => x.idAsistencia === element.idAsistencia
+        x => x.idPersona === element.idPersona
       );
       if (idFindAsistencia != undefined) {
-        this.datosAsistencia[idFindAsistencia].asistencia = "S";
+        this.datosAsistencia[idFindAsistencia].asistencia = "1";
       }
+
+      this.setAssistanceUpdate(element);
     });
+
+    this.selectAllAsistencias = false;
   }
 
   unCheckAsist() {
     this.selectedDatosAsistencia.forEach(element => {
       let idFindAsistencia = this.datosAsistencia.findIndex(
-        x => x.idAsistencia === element.idAsistencia
+        x => x.idPersona === element.idPersona
       );
       if (idFindAsistencia != undefined) {
-        this.datosAsistencia[idFindAsistencia].asistencia = "N";
+        this.datosAsistencia[idFindAsistencia].asistencia = "0";
       }
+
+      this.setAssistanceUpdate(element);
     });
+    this.selectAllAsistencias = false;
   }
 
   onChangeSelectAllAsistencias() {
@@ -1361,8 +1427,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   downloadTemplateFile() {
     this.progressSpinner = true;
-    let asistencias = new AsistenciaCursoObject();
-    asistencias.asistenciaCursoItem = this.datosAsistencia;
+    let asistencias = new AsistenciaEventoObject();
+    asistencias.asistenciaEventoItem = this.datosAsistencia;
 
     this.sigaServices
       .postDownloadFiles("fichaEventos_downloadTemplateFile", asistencias)

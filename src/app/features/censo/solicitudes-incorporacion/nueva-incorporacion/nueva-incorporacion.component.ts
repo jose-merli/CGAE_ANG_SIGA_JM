@@ -713,7 +713,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       (this.isValidIBAN() ||
         this.solicitudEditar.iban == "" ||
         this.solicitudEditar.iban == undefined) &&
-        this.provinciaSelected != "" &&
+      this.provinciaSelected != "" &&
       this.estadoSolicitudSelected != "" &&
       this.estadoSolicitudSelected != undefined &&
       this.solicitudEditar.fechaEstado != null &&
@@ -867,6 +867,10 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   irPlanUniversal() {
+    sessionStorage.setItem(
+      "solicitudEnviada",
+      JSON.stringify(this.solicitudEditar)
+    );
     this.router.navigate(["/MutualidadAbogaciaPlanUniversal"]);
   }
   irSegAccidentes() {

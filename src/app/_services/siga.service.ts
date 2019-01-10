@@ -270,6 +270,19 @@ export class SigaServices {
     fichaCursos_saveCertificateCourse: "fichaCursos/saveCertificateCourse",
     fichaCursos_updateCertificatesCourse:
       "fichaCursos/updateCertificatesCourse",
+    fichaCursos_deleteCertificatesCourse:
+      "fichaCursos/deleteCertificatesCourse",
+    fichaCursos_duplicateSessionsCourse: "fichaCursos/duplicateSessionsCourse",
+    fichaCursos_cancelSessionsCourse: "fichaCursos/cancelSessionsCourse",
+    fichaCursos_getTrainersCourse: "fichaCursos/getTrainersCourse",
+    fichaCursos_deleteTrainersCourse: "fichaCursos/deleteTrainersCourse",
+    fichaCursos_deleteInscriptionsCourse:
+      "fichaCursos/deleteInscriptionsCourse",
+    fichaCursos_autovalidateInscriptionsCourse:
+      "fichaCursos/autovalidateInscriptionsCourse",
+    fichaCursos_getTopicsCourse: "fichaCursos/getTopicsCourse",
+    fichaCursos_getTopicsSpecificCourse: "fichaCursos/getTopicsSpecificCourse",
+    fichaCursos_getCodeCourse: "fichaCursos/getCodeCourse",
 
     busquedaInscripciones_estadosInscripciones:
       "busquedaInscripciones/estadosInscripciones",
@@ -317,16 +330,10 @@ export class SigaServices {
     fichaEventos_getEventNotifications: "fichaEventos/getEventNotifications",
     fichaEventos_getHistoricEventNotifications:
       "fichaEventos/getHistoricEventNotifications",
+    fichaEventos_getEntryListCourse: "fichaEventos/getEntryListCourse",
     fichaEventos_searchEvent: "fichaEventos/searchEvent",
-    fichaCursos_getTrainersCourse: "fichaCursos/getTrainersCourse",
-    fichaCursos_deleteTrainersCourse: "fichaCursos/deleteTrainersCourse",
-    fichaCursos_deleteInscriptionsCourse:
-      "fichaCursos/deleteInscriptionsCourse",
-    fichaCursos_autovalidateInscriptionsCourse:
-      "fichaCursos/autovalidateInscriptionsCourse",
-    fichaCursos_getTopicsCourse: "fichaCursos/getTopicsCourse",
-    fichaCursos_getTopicsSpecificCourse: "fichaCursos/getTopicsSpecificCourse",
-    fichaCursos_getCodeCourse: "fichaCursos/getCodeCourse",
+    fichaEventos_saveAssistancesCourse: "fichaEventos/saveAssistancesCourse",
+
     datosNotificaciones_getTypeNotifications:
       "datosNotificaciones/getTypeNotifications",
     datosNotificaciones_getMeasuredUnit: "datosNotificaciones/getMeasuredUnit",
@@ -354,6 +361,15 @@ export class SigaServices {
     alterMutua_tarifaSolicitud: "alterMutua/tarifaSolicitud",
     alterMutua_solicitudAlter: "alterMutua/solicitudAlter",
     mutualidad_getEnums: "mutualidad/enums",
+    mutualidad_estadoMutualista: "mutualidad/estadoMutualista",
+    mutualidad_estadoSolicitud: "mutualidad/estadoSolicitud",
+    
+    mutualidad_obtenerCuotaYCapObjetivo: "mutualidad/obtenerCuotaYCapObjetivo",
+    mutualidad_solicitudPolizaProfesional:
+      "mutualidad/solicitudPolizaProfesional",
+    mutualidad_solicitudPolizaAccuGratuitos:
+      "mutualidad/solicitudPolizaAccuGratuitos",
+
     solicitudModificacion_tipoModificacion:
       "solicitudModificacion/tipoModificacion",
     solicitudModificacion_estado: "solicitudModificacion/estado",
@@ -501,6 +517,8 @@ export class SigaServices {
     fichaDatosColegiales_datosColegialesUpdate:
       "/fichaDatosColegiales/datosColegialesUpdate",
     fichaColegialRegTel_searchListDoc: "fichaColegialRegTel/searchListDoc",
+    fichaColegialRegTel_searchListDir:"fichaColegialRegTel/searchListDir",
+    fichaColegialRegTel_downloadDoc:"fichaColegialRegTel/downloadDoc",
     usuario_cambioIdioma: "usuario/cambioIdioma",
     fichaColegialOtrasColegiaciones_getLabelColegios:
       "fichaColegialOtrasColegiaciones/getLabelColegios"

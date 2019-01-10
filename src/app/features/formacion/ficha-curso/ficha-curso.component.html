@@ -60,7 +60,7 @@
               />
             </div>
             <div class="col-lg-6 col-md-6">
-              <label>{{ 'formacion.fichaCursos.datosGenerales.codigo' | translate }}</label>
+              <label>{{ 'formacion.fichaCursos.datosGenerales.codigo' | translate }}(*)</label>
               <input
                 type="text"
                 class="form-control"
@@ -73,13 +73,13 @@
           </div>
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
-                <label>{{ 'formacion.fichaCursos.datosGenerales.visibilidad' | translate}}</label>
+                <label>{{ 'formacion.fichaCursos.datosGenerales.visibilidad' | translate}}(*)</label>
                 <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form"
                   [(ngModel)]='curso.idVisibilidad' [options]="comboVisibilidad" [filter]="true" filterBy="label,labelSinTilde"
                   (onChange)="onChangeSelectVisibilidad($event)"></p-dropdown>
             </div>
             <div class="col-lg-6 col-md-6">
-                <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}</label>
+                <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}(*)</label>
                 <p-dropdown #colegio [disabled]="fieldNoEditable"  class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
                   [(ngModel)]='curso.colegio' [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeSelectColegio($event) "></p-dropdown>
             </div>
@@ -98,7 +98,7 @@
             </p-autoComplete>
             </div>
             <div class="col-lg-6 col-md-6">
-                <label>{{ 'form.busquedaCursos.literal.estado' | translate}}</label>
+                <label>{{ 'form.busquedaCursos.literal.estado' | translate}}(*)</label>
                 <p-dropdown placeholder="-" class="select-form" [(ngModel)]='curso.idEstado' [options]="comboEstados"
                 [filter]="true" filterBy="label,labelSinTilde" [disabled]="fieldNoEditable"></p-dropdown>
             </div>
@@ -154,7 +154,7 @@
           </div>
           <div class="row mb-4">
               <div class="col-lg-6 col-md-6">
-                  <label>Fecha Inicio Inscripción</label>
+                  <label>Fecha Inicio Inscripción(*)</label>
                   <p-calendar
                         [locale]="es"
                         [(ngModel)]="curso.fechaInscripcionDesdeDate"
@@ -165,7 +165,7 @@
                       ></p-calendar>
               </div>
               <div class="col-lg-6 col-md-6">
-                  <label>Fecha Fin Inscripción</label>
+                  <label>Fecha Fin Inscripción(*)</label>
                   <p-calendar
                         [locale]="es"
                         [(ngModel)]="curso.fechaInscripcionHastaDate"
@@ -338,7 +338,7 @@
         <button pButton type="button" icon="fa fa-caret-square-o-up" iconPos="left" label="Inscripción" [disabled]="!modoEdicion" (click)="irInscripcion()"></button> 
 
         <!-- Botón guardar -->
-        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" (click)="saveCourse()"></button> 
+        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" (click)="saveCourse()" [disabled]="validateCourse()"></button> 
       </div>
     </div>
   </div>
@@ -1178,7 +1178,7 @@
                   <p-dropdown
                     [(ngModel)]="selectedCertificates"
                     [options]="rowsPerPage"
-                    (onChange)="onChangeRowsPerPagesNotifications($event)"
+                    (onChange)="onChangeRowsPerPagesCertificates($event)"
                   ></p-dropdown>
                   <label class="pl-1">
                     {{
@@ -1308,7 +1308,7 @@
                   <p-dropdown
                     [(ngModel)]="selectedCertificates"
                     [options]="rowsPerPage"
-                    (onChange)="onChangeRowsPerPages($event)"
+                    (onChange)="onChangeRowsPerPagesCertificates($event)"
                   ></p-dropdown>
                   <label class="pl-1">
                     {{
@@ -1450,7 +1450,7 @@
                   <p-dropdown
                     [(ngModel)]="selectedItemCertificates"
                     [options]="rowsPerPage"
-                    (onChange)="onChangeRowsPerPages($event)"
+                    (onChange)="onChangeRowsPerPagesCertificates($event)"
                   ></p-dropdown>
                   <label class="pl-1">
                     {{
@@ -1496,7 +1496,7 @@
           label="{{ 'general.boton.restablecer'| translate }}"
         ></button>
         <button
-          *ngIf="!pressNewCertificate && !selectMultipleCertificate"
+          *ngIf="!pressNewCertificate && !selectMultipleCertificates"
           pButton
           (click)="newCertificates()"
           type="button"
@@ -1508,7 +1508,7 @@
         <button
           *ngIf="selectMultipleCertificates"
           pButton
-          (click)="deleteTrainer(selectedDatosCertificates)"
+          (click)="deleteCertificates(selectedDatosCertificates)"
           type="button"
           icon="fa fa-trash-alt"
           iconPos="left"
@@ -1622,130 +1622,10 @@
   </div>
   <div class="card-footer" *ngIf="esFichaActiva('session')">
     <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-reply-all" (click)="duplicateSession()" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
+        <button pButton type="button" icon="fa fa-reply-all" (click)="duplicateSession()" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}" [disabled]="disabledDuplicate()" ></button>
         <button pButton type="button" icon="fa fa-plus" (click)="newSession()" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-        <button pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+        <button pButton type="button" icon="fa fa-close" (click)="cancelSessions()"iconPos="left" label="{{ 'general.boton.cancel' | translate}}"  [disabled]="!selectMultipleSessions"></button>
     </div>
-  </div>
-</div>
-
-<!-- TERJETAS COMUNICACIONES -->
-<div class="card">
-  <!-- Cabecera -->
-  <div
-    class="card-header header-ficha"
-    (click)="abreCierraFicha('communications')"
-  >
-    <div *ngIf="!esFichaActiva('communications')" class="form-row">
-      <div class="col-lg-1 col-md-2">
-        <div class="img-colegiado">
-          <i class="fa fa-comments icon-ficha"></i>
-        </div>
-      </div>
-      <div class="col-lg-11 col-md-10">
-        <div class="d-flex justify-content-start mt-2">
-          <label class="mr-auto title-ficha">{{'formacion.fichaCursos.comunicaciones.cabecera' | translate}}</label>
-        </div>
-      </div>
-    </div>
-    <div
-      *ngIf="esFichaActiva('communications')"
-      class=" header-ficha-open d-flex justify-content-start align-items-center"
-    >
-      <div class="img-colegiado"><i class="fa fa-comments icon-ficha"></i></div>
-      <label class="title-ficha">{{'formacion.fichaCursos.comunicaciones.cabecera' | translate}}</label>
-      <i class="fa fa-angle-up ml-auto"></i>
-    </div>
-  </div>
-
-  <!-- Cuerpo -->
-  <div
-    class="card-body card-body-ficha"
-    *ngIf="esFichaActiva('communications')"
-  >
-    <div
-      *ngIf="esFichaActiva('communications')"
-      class="card-body card-body-ficha"
-    >
-    <div *ngIf="!historico" class="row">
-        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-          [(selection)]="selectedDatosNotificacions" (onRowSelect)="irEditarNotificacion(selectedDatosNotificacions)" (onRowUnselect)="actualizaSeleccionadosNotificacion(selectedDatosNotificacion)"
-          pageLinks="4" dataKey="idNotificacion" [responsive]="true" selectionMode="multiple" #tableNotificacions class="tabla-listado"
-          [value]="datosNotifications" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItemNotificacion">
-          <p-column *ngFor="let col of colsNotificacions" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-            [filter]="true" filterMatchMode="contains">
-          </p-column>
-
-          <ng-template pTemplate="paginatorLeft">
-            <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">Mostrando registros del {{tableNotificacions.first + 1}} al {{tableNotificacions.first + tableNotificacions.rows}} de un total de {{tableNotificacions.totalRecords}}</label>
-              <label class="pr-3 numSeleccionados">Seleccionados: {{numSelectedNotificacions}}</label>
-              <label>{{ "general.message.mostrar" | translate}}</label>
-              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-              <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-              <div class="ml-3 selectAllNotification">
-                <p-checkbox (onChange)="onChangeSelectAllNotifications()" [(ngModel)]="selectAllNotifications" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-                  name="groupname"></p-checkbox>
-              </div>
-              <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultipleNotificacions}" (click)="isSelectMultipleNotificacions(); selectedDatosNotificacions=false">
-                <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
-            </div>
-          </ng-template>
-
-
-        </p-dataTable>
-      </div>
-      <!--HISTORICO-->
-      <div *ngIf="historico" class="card mt-3">
-        <div class="card-body p-0">
-
-          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-            [(selection)]="selectedDatosNotificacions" (onRowSelect)="irEditarNotificacion(selectedDatosNotificacions)" pageLinks="4" dataKey="idNotificacion"
-            [responsive]="true" selectionMode="multiple" #tableNotificacions class="tabla-listado" [value]="datosNotifications" [sortOrder]="1" [paginator]="true"
-            paginatorPosition="both" [rows]="selectedItemNotificacions">
-            <p-column *ngFor="let col of colsNotificacions" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-              [filter]="true" filterMatchMode="contains">
-              <ng-template let-datoH="rowData" pTemplate="body">
-                <div *ngIf="setItalic(datoH)">
-                  <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
-                </div>
-                <div *ngIf="!setItalic(datoH)">
-                  <span>{{datoH[col.field]}}</span>
-                </div>
-
-              </ng-template>
-
-            </p-column>
-
-            <ng-template pTemplate="paginatorLeft">
-              <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">Mostrando registros del {{tableNotificacions.first + 1}} al {{tableNotificacions.first + tableNotificacions.rows}} de un total de {{tableNotificacions.totalRecords}}</label>
-                <label class="pr-3 numSeleccionados">Seleccionados: {{numSelectedNotificacions}}</label>
-                <label>{{ "general.message.mostrar" | translate}}</label>
-                <p-dropdown [(ngModel)]="selectedItemNotificacions" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-                <div class="ml-3 selectAll">
-                  <p-checkbox (onChange)="onChangeSelectAllNotifications()" [(ngModel)]="selectAllNotifications" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-                    name="groupname"></p-checkbox>
-                </div>
-                <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultipleNotificacions}" (click)="isSelectMultipleNotificacions(); selectedDatosNotificacions=false">
-                  <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
-              </div>
-            </ng-template>
-          </p-dataTable>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="card-footer" *ngIf="esFichaActiva('communications')">
-    <!--
-      <div class="text-right main-button">
-        <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" iconPos="left" label="Descargar"></button>
-        <button pButton type="button" (click)="unCheckAsist()" [disabled]="!checkAsistencias" icon="fa fa-times" iconPos="left" label="Desmarcar"></button>
-        <button pButton type="button" (click)="checkAsist()" [disabled]="!checkAsistencias" icon="fa fa-check" iconPos="left" label="Marcar"></button>
-        <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
-      </div>
-    -->
   </div>
 </div>
 
@@ -1817,7 +1697,7 @@
       <button pButton type="button" [disabled]="!selectMultipleCargas" (click)="autovalidateInscriptions(selectedDatosCargas)" icon="fa fa-close" iconPos="left" label="Autovalidar"></button>
       <p-fileUpload mode="basic" #pUploadFile  chooseLabel="Cargar Archivo"
        class="edit my-0 mx-auto main-button" name="file"  accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-       (change)="getFile($event, form)" (click)="changeDisabledButton()" (onClear)="changeDisabledButton()"></p-fileUpload>
+       (change)="getFile($event, form)"></p-fileUpload>
       <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" iconPos="left" label="Descargar"></button>
       <button pButton type="button" [disabled]="!selectMultipleCargas" (click)="deleteInscriptions(selectedDatosCargas)"icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
      
