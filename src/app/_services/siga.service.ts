@@ -359,6 +359,15 @@ export class SigaServices {
     alterMutua_tarifaSolicitud: "alterMutua/tarifaSolicitud",
     alterMutua_solicitudAlter: "alterMutua/solicitudAlter",
     mutualidad_getEnums: "mutualidad/enums",
+    mutualidad_estadoMutualista: "mutualidad/estadoMutualista",
+    mutualidad_estadoSolicitud: "mutualidad/estadoSolicitud",
+    
+    mutualidad_obtenerCuotaYCapObjetivo: "mutualidad/obtenerCuotaYCapObjetivo",
+    mutualidad_solicitudPolizaProfesional:
+      "mutualidad/solicitudPolizaProfesional",
+    mutualidad_solicitudPolizaAccuGratuitos:
+      "mutualidad/solicitudPolizaAccuGratuitos",
+
     solicitudModificacion_tipoModificacion:
       "solicitudModificacion/tipoModificacion",
     solicitudModificacion_estado: "solicitudModificacion/estado",
