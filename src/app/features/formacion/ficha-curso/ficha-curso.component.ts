@@ -664,6 +664,7 @@ export class FichaCursoComponent implements OnInit {
           this.curso.idCurso = JSON.parse(data.body).id;
           this.curso.codigoCurso = JSON.parse(data.body).status;
           this.getCountInscriptions();
+          this.getPrices();
           this.showMessage(
             "success",
             "Correcto",
@@ -1271,10 +1272,6 @@ export class FichaCursoComponent implements OnInit {
         field: "tarifa",
         header: "general.boton.actualizarTarifa"
       }
-      // {
-      //   field: "flagTutor",
-      //   header: "form.busquedaCursos.literal.tutorResponsable"
-      // }
     ];
 
     this.rowsPerPage = [

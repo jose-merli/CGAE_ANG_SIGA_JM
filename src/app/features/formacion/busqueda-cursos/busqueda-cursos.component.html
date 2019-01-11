@@ -3,7 +3,9 @@
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p>{{ "menu.formacion" | translate}}
-      <i class="fa fa-angle-right"></i>{{'menu.formacion.busquedaCursos' | translate}}</p>
+      <!-- <i class="fa fa-angle-right"></i>{{'menu.formacion.busquedaCursos' | translate}}</p> -->
+      <i class="fa fa-angle-right"></i>Búsqueda Cursos</p>
+
   </div>
 
 
@@ -25,7 +27,7 @@
 
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}</label>
-            <p-dropdown [disabled]="deshabilitarComboCol" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
+            <p-dropdown [disabled]="deshabilitarCombCol" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
               [(ngModel)]='body.colegio' [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeSelectColegio($event)"></p-dropdown>
           </div>
 
