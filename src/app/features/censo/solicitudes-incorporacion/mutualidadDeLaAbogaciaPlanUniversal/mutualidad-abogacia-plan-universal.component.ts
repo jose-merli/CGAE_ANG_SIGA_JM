@@ -19,6 +19,8 @@ import { DatosPlanUniversalItem } from "../../../../models/DatosPlanUniversalIte
 import { DatosSolicitudGratuitaObject } from "../../../../models/DatosSolicitudGratuitaObject";
 
 import { SolicitudIncorporacionItem } from "../../../../models/SolicitudIncorporacionItem";
+import { DatosSolicitudMutualidadItem } from "../../../../models/DatosSolicitudMutualidadItem";
+
 import { DropdownModule, Dropdown } from "primeng/dropdown";
 
 @Component({
@@ -88,21 +90,42 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
     this.body.telefono = this.solicitud.telefono1;
     this.body.cuentaBancaria = this.solicitud.iban;
 
-    // Acceso a Web Service para saber si hay una solicitud de Mutualidad.
-    this.solicitud.idPais = "191";
-    this.solicitud.identificador = this.solicitud.numeroIdentificacion;
-
+    // Buscamos en cen_solicitudMutualidad
+    let mutualidadRequest = new DatosSolicitudMutualidadItem();
+    mutualidadRequest.numeroidentificador = this.solicitud.numeroIdentificacion;
     this.sigaServices
-      .post("mutualidad_estadoMutualista", this.solicitud)
+      .post("mutualidad_searchSolicitud", mutualidadRequest)
       .subscribe(
         result => {
-          let prueba = JSON.parse(result.body);
-          if ((prueba.idSolicitud = "0")) {
-            this.modoLectura = false;
-          } else {
+          let resultParsed = JSON.parse(result.body);
+          if (
+            resultParsed.idsolicitud != null &&
+            resultParsed.idsolicitud != undefined
+          ) {
+            this.solicitud = JSON.parse(result.body);
+            this.body = JSON.parse(result.body);
             this.modoLectura = true;
-            this.solicitud.idSolicitudMutualidad = prueba.idSolicitud;
-            this.solicitud.estadoMutualidad = prueba.valorRespuesta;
+          } else {
+            // Acceso a Web Service para saber si hay una solicitud de Mutualidad.
+            this.solicitud.idPais = "191";
+            this.solicitud.identificador = this.solicitud.numeroIdentificacion;
+            this.sigaServices
+              .post("mutualidad_estadoMutualista", this.solicitud)
+              .subscribe(
+                result => {
+                  let prueba = JSON.parse(result.body);
+                  if ((prueba.idSolicitud = "0")) {
+                    this.modoLectura = false;
+                  } else {
+                    this.modoLectura = true;
+                    this.solicitud.idSolicitudMutualidad = prueba.idSolicitud;
+                    this.solicitud.estadoMutualidad = prueba.valorRespuesta;
+                  }
+                },
+                error => {
+                  console.log(error);
+                }
+              );
           }
         },
         error => {
@@ -110,27 +133,15 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
         }
       );
 
-    this.solicitud.identificador = this.solicitud.numeroIdentificacion;
-
-    this.sigaServices
-      .post("mutualidad_estadoMutualista", this.solicitud)
-      .subscribe(
-        result => {
-          let prueba = JSON.parse(result.body);
-        },
-        error => {
-          console.log(error);
-        }
-      );
-
-    // Necesita boolean duplicado;
+    this.paisSelected = this.solicitud.idPais;
     this.solicitud.duplicado = true;
-
     this.sigaServices
       .post("mutualidad_estadoSolicitud", this.solicitud)
       .subscribe(
         result => {
           let prueba = JSON.parse(result.body);
+          this.solicitud.idSolicitudMutualidad = prueba.idSolicitud;
+          this.solicitud.estadoMutualidad = prueba.valorRespuesta;
         },
         error => {
           console.log(error);
@@ -139,6 +150,8 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
 
     this.obtenerCuotaYCapObj();
     this.cargarCombos();
+    this.onChangeCodigoPostal();
+    this.provinciaSelected = this.body.idProvincia;
   }
 
   onChangePais(event) {
@@ -181,7 +194,6 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
 
   obtenerCuotaYCapObj() {
     this.body.hijos = [];
-    this.body.codigoPostal = "";
     // necesita int sexo;
     //  int cobertura;
     //  Date fechaNacimiento;
@@ -417,7 +429,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     solicitud.datosPoliza.formaPago = this.body.periodicidadPago;
     solicitud.datosPoliza.opcionesCobertura = this.body.idCobertura;
     solicitud.datosPoliza.idMutualista = this.body.idEstadoMutualista;
-    
+
     if (solicitud.datosPersona.sexo == "H") {
       solicitud.datosPersona.sexo = "0";
     } else {
