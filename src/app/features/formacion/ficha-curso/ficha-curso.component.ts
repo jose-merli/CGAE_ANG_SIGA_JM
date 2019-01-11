@@ -705,7 +705,11 @@ export class FichaCursoComponent implements OnInit {
           }
         );
     } else {
-      this.showFail("El curso debe tener el estado abierto para ser anunciado");
+      this.showMessage(
+        "info",
+        "Información",
+        "El curso debe tener el estado abierto para ser anunciado"
+      );
     }
   }
 
@@ -727,7 +731,9 @@ export class FichaCursoComponent implements OnInit {
           }
         );
     } else {
-      this.showFail(
+      this.showMessage(
+        "info",
+        "Información",
         "El curso debe tener el estado anunciado para ser desanunciado"
       );
     }

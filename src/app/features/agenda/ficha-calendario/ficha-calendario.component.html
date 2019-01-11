@@ -239,7 +239,7 @@
         <div *ngIf="!historico" class="text-right main-button">
           <button (click)="getHistoricCalendarNotifications(); selectedDatos=[]" pButton type="button" icon="fa fa-history" iconPos="left"
             label="{{ 'general.message.mostrarHistorico' | translate}}" [disabled]="acceso"></button>
-          <button [disabled]="accesoSeleccionDatos" (click)="confirmarBorrar(selectedDatos); selectedDatos=false" pButton type="button"
+          <button [disabled]="disabledNotifications()" (click)="confirmarBorrar(selectedDatos); selectedDatos=false" pButton type="button"
             icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
           <button pButton (click)="newNotification()" type="button" icon="fa fa-plus" iconPos="left" label="{{
             'general.boton.new' | translate }}" [disabled]="acceso"></button>
