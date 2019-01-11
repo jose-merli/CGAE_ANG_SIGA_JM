@@ -10,6 +10,7 @@ export class DatosPersonaItem {
   ejerciente: Number;
   estadoCivil: String;
   fechaNacimiento: Date;
+  numHijos: number;
   fechaNacConyuge: Date;
   idMutualista: String;
   NumColegiado: String;

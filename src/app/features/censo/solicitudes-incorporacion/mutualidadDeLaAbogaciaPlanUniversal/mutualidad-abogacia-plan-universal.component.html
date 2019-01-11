@@ -221,7 +221,7 @@
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.ws.literal.telefono" | translate}} 1 (*)</label>
-                        <input [disabled]="modoLectura" type="number" class="form-control" pInputText [(ngModel)]="body.telefono1">
+                        <input [disabled]="modoLectura" type="number" class="form-control" pInputText [(ngModel)]="body.telefono">
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
@@ -350,11 +350,11 @@
             </div>
             <div class="col-lg-3 col-md-3">
                 <label>Cuota mensual</label>
-                <input type="text" class="form-control" pInputText [disabled]="modoLectura" [(ngModel)]="body.cuotaMensual">
+                <input type="text" class="form-control" pInputText disabled [(ngModel)]="body.cuotaMensual">
             </div>
             <div class="col-lg-3 col-md-3">
                 <label>Capital objetivo estimado a 65 años</label>
-                <input type="text" class="form-control" pInputText [disabled]="modoLectura" [(ngModel)]="body.capitalObjetivo">
+                <input type="text" class="form-control" pInputText disabled [(ngModel)]="body.capitalObjetivo">
             </div>
             <div class="col-lg-3 col-md-3">
                 <label>Beneficiarios</label>
@@ -424,7 +424,7 @@
             </div>
             <div class="col-lg-3 col-md-3">
                 <label>Número de hijos</label>
-                <input type="number" class="form-control" [disabled]="modoLectura" pInputText [(ngModel)]="s">
+                <input type="number" class="form-control" [disabled]="modoLectura" pInputText [(ngModel)]="body.numHijos">
             </div>
             <div class="col-lg-6 col-md-6">
             </div>
