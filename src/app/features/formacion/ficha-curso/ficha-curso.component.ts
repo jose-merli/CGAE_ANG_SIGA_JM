@@ -794,7 +794,6 @@ export class FichaCursoComponent implements OnInit {
         this.sigaServices.post("fichaCursos_finishCourse", cursoDTO).subscribe(
           data => {
             this.progressSpinner = false;
-            this.curso.idEstado = this.valorEstadoFinalizado;
 
             if (JSON.parse(data.body).error.code == null) {
               this.showMessage(
@@ -808,6 +807,9 @@ export class FichaCursoComponent implements OnInit {
                 "Correcto",
                 JSON.parse(data.body).error.description
               );
+
+              this.curso.idEstado = this.valorEstadoFinalizado;
+
             } else if (JSON.parse(data.body).error.code == 400) {
               this.showMessage(
                 "error",
@@ -2852,5 +2854,27 @@ export class FichaCursoComponent implements OnInit {
     );
     sessionStorage.setItem("pantallaFichaCurso", "true");
     this.router.navigate(["/fichaInscripcion"]);
+  }
+
+  controlBotonesEstado(button: string) {
+    let estado = this.curso.idEstado;
+    if (this.modoEdicion) {
+
+      if (button == 'Cancelar')
+        if (estado != '4')
+          return true;
+
+      if (button == 'Finalizar')
+        if (estado == '3')
+          return true;
+
+      if (button == 'Desanunciar')
+        if (estado == '1')
+          return true;
+
+      if (button == 'Anunciar')
+        if (estado == '0')
+          return true;
+    }
   }
 }

@@ -43,6 +43,7 @@ export class DatosCursosItem {
   idEventoFinInscripcion: string;
 
   idTipoEvento: string;
+  idInstitucion: string;
 
   constructor() {}
 }

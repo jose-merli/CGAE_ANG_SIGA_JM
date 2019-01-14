@@ -62,6 +62,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   noColegiadoSearch = new DatosNoColegiadosObject();
   subtipoCurricular: SubtipoCurricularItem = new SubtipoCurricularItem();
   subtipoCV: string[];
+  noResultsSubtipos: boolean = true;
 
   msgs: Message[];
 
@@ -102,7 +103,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   ngOnInit() {
     sessionStorage.removeItem("busquedaCensoGeneral");
-    sessionStorage.removeItem("disabled");
+    sessionStorage.removeItem("disabledAction");
 
     this.getLetrado();
     // Obtener Combos
@@ -278,6 +279,16 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       .subscribe(
         data => {
           this.comboSubtipoCV = JSON.parse(data["body"]).combooItems;
+
+          if (this.comboSubtipoCV.length == 0) {
+            this.noResultsSubtipos = true;
+            this.comboSubtipoCV.push({
+              label: "No hay resultados",
+              value: "0"
+            });
+          } else {
+            this.noResultsSubtipos = false;
+          }
         },
         err => {
           console.log(err);
@@ -662,9 +673,9 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       console.log(id);
 
       if (id[0].fechaBaja != null) {
-        sessionStorage.setItem("disabled", "true");
+        sessionStorage.setItem("disabledAction", "true");
       } else {
-        sessionStorage.setItem("disabled", "false");
+        sessionStorage.setItem("disabledAction", "false");
       }
 
       this.router.navigate(["/fichaColegial"]);
