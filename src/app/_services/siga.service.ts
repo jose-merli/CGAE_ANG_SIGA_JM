@@ -367,7 +367,7 @@ export class SigaServices {
     mutualidad_getEnums: "mutualidad/enums",
     mutualidad_estadoMutualista: "mutualidad/estadoMutualista",
     mutualidad_estadoSolicitud: "mutualidad/estadoSolicitud",
-
+    mutualidad_searchSolicitud: "mutualidad/searchSolicitud",
     mutualidad_obtenerCuotaYCapObjetivo: "mutualidad/obtenerCuotaYCapObjetivo",
     mutualidad_solicitudPolizaProfesional:
       "mutualidad/solicitudPolizaProfesional",
