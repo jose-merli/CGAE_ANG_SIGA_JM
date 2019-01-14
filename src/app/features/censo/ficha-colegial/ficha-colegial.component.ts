@@ -181,6 +181,7 @@ export class FichaColegialComponent implements OnInit {
   historico: boolean = false;
   historicoCV: boolean = false;
   isClose: boolean = false;
+  disabledAction: boolean = false;
   comboEtiquetas: any[];
   inscritoSeleccionado: String = "00";
   updateItems: Map<String, ComboEtiquetasItem> = new Map<
@@ -287,6 +288,13 @@ export class FichaColegialComponent implements OnInit {
       this.disabledNif = true;
     } else {
       this.disabledNif = false;
+    }
+
+    if(sessionStorage.getItem("disabled") == "true"){
+      // Es baja colegial
+      this.disabledAction = true;
+    }else{
+      this.disabledAction = false;
     }
 
     // Cogemos los datos de la busqueda de Colegiados
@@ -2476,18 +2484,24 @@ export class FichaColegialComponent implements OnInit {
         }
         var enviarDatos = null;
         if (dato && dato.length > 0) {
-          enviarDatos = dato[0];
-          sessionStorage.setItem("idDireccion", enviarDatos.idDireccion);
-          sessionStorage.setItem("direccion", JSON.stringify(enviarDatos));
-          sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
-          sessionStorage.setItem("fichaColegial", "true");
-          sessionStorage.removeItem("editarDireccion");
-          sessionStorage.setItem("editarDireccion", "true");
-          sessionStorage.setItem("usuarioBody", JSON.stringify(this.idPersona));
-          sessionStorage.setItem(
-            "esColegiado",
-            sessionStorage.getItem("esColegiado")
-          );
+
+          
+            enviarDatos = dato[0];
+            sessionStorage.setItem("idDireccion", enviarDatos.idDireccion);
+            sessionStorage.setItem("direccion", JSON.stringify(enviarDatos));
+            sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
+            sessionStorage.setItem("fichaColegial", "true");
+            sessionStorage.removeItem("editarDireccion");
+            
+            sessionStorage.setItem("editarDireccion", "true");
+            
+            sessionStorage.setItem("usuarioBody", JSON.stringify(this.idPersona));
+            sessionStorage.setItem(
+              "esColegiado",
+              sessionStorage.getItem("esColegiado")
+            );
+          
+          
         } else {
           sessionStorage.setItem("editar", "false");
         }
