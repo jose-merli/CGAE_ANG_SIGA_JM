@@ -205,7 +205,7 @@
                         <label>
                             {{"censo.datosDireccion.literal.provincia" | translate}} (*)
                         </label>
-                        <p-dropdown  class="select-form" [(ngModel)]='provinciaSelected' [options]="provincias" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" disabled ></p-dropdown>
+                        <p-dropdown  class="select-form" [(ngModel)]='provinciaSelected' (onChange)="obtenerProvinciaDesc($event)"  [options]="provincias" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" disabled ></p-dropdown>
                       
                         <!--<input type="text" class="form-control" pInputText [(ngModel)]="body.nombreProvincia">-->
                     </div>
@@ -214,7 +214,7 @@
                             {{"censo.consultaDirecciones.literal.poblacion" | translate}}
                         </label>
                         <p-dropdown #poblacion [disabled]="consulta || deshabilitarDireccion()" (input)="buscarPoblacion($event)" class="select-form" [(ngModel)]="poblacionSelected"
-                            [options]="poblaciones" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [emptyFilterMessage]="resultadosPoblaciones"></p-dropdown>
+                            [options]="poblaciones" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"  (onChange)="obtenerPoblacionDesc($event)" [emptyFilterMessage]="resultadosPoblaciones"></p-dropdown>
     
                         <!-- <input type="text" class="form-control" pInputText [(ngModel)]="body.nombrePoblacion">-->
                     </div>
