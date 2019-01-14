@@ -94,29 +94,6 @@ export class NuevaIncorporacionComponent implements OnInit {
       );
       this.consulta = true;
       this.tratarDatos();
-
-      // Acceso a Web Service para saber si hay una solicitud de Mutualidad.
-      this.solicitudEditar.idPais = "191";
-      this.solicitudEditar.identificador = this.solicitudEditar.numeroIdentificacion;
-
-      this.sigaServices
-        .post("mutualidad_estadoMutualista", this.solicitudEditar)
-        .subscribe(
-          result => {
-            let prueba = JSON.parse(result.body);
-            if ((prueba.idSolicitud = "0")) {
-              this.solicitarMutualidad = true;
-            } else {
-              this.solicitarMutualidad = false;
-              this.solicitudEditar.idSolicitudMutualidad = prueba.idSolicitud;
-              this.solicitudEditar.estadoMutualidad = prueba.valorRespuesta;
-            }
-          },
-          error => {
-            debugger;
-            console.log(error);
-          }
-        );
     } else {
       this.consulta = false;
 
@@ -478,7 +455,7 @@ export class NuevaIncorporacionComponent implements OnInit {
           this.solicitudEditar.bic = bodyBancoBic.bic;
         },
         error => {
-          let bodyBancoBicSearch = JSON.parse(error["error"]);
+          // let bodyBancoBicSearch = JSON.parse(error["error"]);
           this.showFailGenerico();
         }
       );
@@ -890,24 +867,37 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   irPlanUniversal() {
-    if (this.solicitarMutualidad) {
-      sessionStorage.setItem(
-        "solicitudEnviada",
-        JSON.stringify(this.solicitudEditar)
+    // Acceso a Web Service para saber si hay una solicitud de Mutualidad.
+    this.solicitudEditar.idPais = "191";
+    this.solicitudEditar.identificador = this.solicitudEditar.numeroIdentificacion;
+    this.sigaServices
+      .post("mutualidad_estadoMutualista", this.solicitudEditar)
+      .subscribe(
+        result => {
+          let prueba = JSON.parse(result.body);
+          if ((prueba.valorRespuesta = "1")) {
+            this.solicitudEditar.idSolicitudMutualidad = prueba.idSolicitud;
+            this.solicitudEditar.estadoMutualidad = prueba.valorRespuesta;
+            sessionStorage.setItem(
+              "solicitudEnviada",
+              JSON.stringify(this.solicitudEditar)
+            );
+            this.router.navigate(["/MutualidadAbogaciaPlanUniversal"]);
+          } else {
+            //  this.modoLectura = true;
+            this.showFail(
+              "El Colegiado no es eligible para la solicitud de Mutualidad."
+            );
+          }
+        },
+        error => {
+          console.log(error);
+        }
       );
-    } else {
-      // consultar mutualidad.
-      sessionStorage.setItem(
-        "solicitudEnviada",
-        JSON.stringify(this.solicitudEditar)
-      );
-      sessionStorage.setItem("consultaPlanUniversal", "true");
-    }
-
-    this.router.navigate(["/MutualidadAbogaciaPlanUniversal"]);
   }
+
   irSegAccidentes() {
-    //TODO: this.router.navigate(["/alterMutua"]);
+    this.router.navigate(["/mutualidadSeguroAccidentes"]);
   }
 
   ngOnDestroy() {

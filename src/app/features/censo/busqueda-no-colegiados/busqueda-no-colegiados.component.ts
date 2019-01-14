@@ -69,9 +69,6 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   table: DataTable;
   selectedDatos;
 
-  @ViewChild("prueba")
-  prueba: MultiSelect;
-
   fichasPosibles = [
     {
       key: "generales",
@@ -105,6 +102,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   ngOnInit() {
     sessionStorage.removeItem("busquedaCensoGeneral");
+    sessionStorage.removeItem("disabled");
 
     this.getLetrado();
     // Obtener Combos
@@ -280,7 +278,6 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       .subscribe(
         data => {
           this.comboSubtipoCV = JSON.parse(data["body"]).combooItems;
-          console.log(this.prueba);
         },
         err => {
           console.log(err);
@@ -663,6 +660,13 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       sessionStorage.setItem("esColegiado", "false");
       sessionStorage.setItem("personaBody", JSON.stringify(id[0]));
       console.log(id);
+
+      if (id[0].fechaBaja != null) {
+        sessionStorage.setItem("disabled", "true");
+      } else {
+        sessionStorage.setItem("disabled", "false");
+      }
+
       this.router.navigate(["/fichaColegial"]);
     } else {
       this.numSelected = this.selectedDatos.length;

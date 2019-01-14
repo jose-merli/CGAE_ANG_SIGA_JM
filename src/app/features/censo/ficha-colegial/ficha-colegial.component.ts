@@ -98,7 +98,6 @@ export class FichaColegialComponent implements OnInit {
   buttonVisibleRegtelDescargar: boolean = true;
  
   disabledNif: boolean = false;
-  disabledActions: boolean = false;
  
   // irTurnoOficio: any;
   // irExpedientes: any;
@@ -180,10 +179,15 @@ export class FichaColegialComponent implements OnInit {
   isFechaBajaCorrect: boolean = false;
   isTrue: boolean = false;
   historico: boolean = false;
+  historicoCV: boolean = false;
   isClose: boolean = false;
-  comboEtiquetas: any[] = [];
+  disabledAction: boolean = false;
+  comboEtiquetas: any[];
   inscritoSeleccionado: String = "00";
-  updateItems: Map<String, ComboEtiquetasItem> = new Map<String,ComboEtiquetasItem>();
+  updateItems: Map<String, ComboEtiquetasItem> = new Map<
+    String,
+    ComboEtiquetasItem
+  >();
   items: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   newItems: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   item: ComboEtiquetasItem = new ComboEtiquetasItem();
@@ -193,7 +197,7 @@ export class FichaColegialComponent implements OnInit {
 
   @ViewChild("table")
   table: DataTable;
-  // selectedDatos;
+  selectedDatos;
   selectedDatosDirecciones;
   selectedDatosBancarios;
   selectedDatosSanciones;
@@ -260,10 +264,10 @@ export class FichaColegialComponent implements OnInit {
     {
       key: "interes",
       activa: false
-    }, 
+    },
     {
-      key:"regtel",
-      activa:false
+      key: "regtel",
+      activa: false
     }
   ];
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
@@ -280,13 +284,18 @@ export class FichaColegialComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-
-    if(sessionStorage.getItem("busquedaCensoGeneral") == "true"){
-      this.disabledNif = true; 
-    }else{
-      this.disabledNif = false; 
+    if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
+      this.disabledNif = true;
+    } else {
+      this.disabledNif = false;
     }
-  
+
+    if(sessionStorage.getItem("disabledAction") == "true"){
+      // Es baja colegial
+      this.disabledAction = true;
+    }else{
+      this.disabledAction = false;
+    }
 
     // Cogemos los datos de la busqueda de Colegiados
     this.getLetrado();
@@ -326,12 +335,6 @@ export class FichaColegialComponent implements OnInit {
       }
       this.generalBody.colegiado = this.esColegiado;
 
-      if(this.generalBody.fechaBaja != null){
-        this.isLetrado = true;
-      }else{
-        this.isLetrado = false;
-      }
-
 
       // this.checkAcceso();
       this.onInitGenerales();
@@ -343,15 +346,14 @@ export class FichaColegialComponent implements OnInit {
       this.searchCertificados();
       
     } else {
-
-      if(sessionStorage.getItem("busquedaCensoGeneral") == "true"){
+      if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
         this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
         this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
-      }else{
+      } else {
         this.generalBody = new FichaColegialGeneralesItem();
         this.colegialesBody = new FichaColegialColegialesItem();
       }
-     
+
       // this.searchDatosBancariosIdPersona.datosBancariosItem[0] = new DatosBancariosItem();
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
@@ -367,10 +369,10 @@ export class FichaColegialComponent implements OnInit {
       this.onInitRegTel();
     }
 
-   // this.onInitSociedades();
+    // this.onInitSociedades();
 
-   // this.onInitOtrasColegiaciones();
-   
+    // this.onInitOtrasColegiaciones();
+
     // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
     this.colsColegiales = [
       {
@@ -2166,6 +2168,32 @@ export class FichaColegialComponent implements OnInit {
   }
 
   deleteCurriculares() {
+    let mess = this.translateService.instant("messages.deleteConfirmation");
+    let icon = "fa fa-trash-alt";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.eliminarRegistroCV();
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+
+        this.selectedDatos = [];
+        this.selectMultiple = false;
+      }
+    });
+  }
+
+  eliminarRegistroCV() {
     for (let i in this.datosCurriculares) {
       if (this.datosCurriculares[i].fechaHasta == null) {
         this.sigaServices
@@ -2181,6 +2209,8 @@ export class FichaColegialComponent implements OnInit {
             () => {
               this.progressSpinner = false;
               this.editar = false;
+              this.selectedDatos = [];
+              this.selectMultiple = false;
             }
           );
       }
@@ -2191,7 +2221,13 @@ export class FichaColegialComponent implements OnInit {
     if (dato && dato.length < 2 && !this.selectMultiple) {
       // enviarDatos = dato[0];
       sessionStorage.setItem("curriculo", JSON.stringify(dato));
-      sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
+
+      if (dato[0].fechaBaja != null) {
+        sessionStorage.setItem("permisos", "false");
+      } else {
+        sessionStorage.setItem("permisos", "true");
+      }
+
       sessionStorage.setItem("crearCurriculo", "false");
       this.router.navigate(["/edicionCurriculares"]);
     } else {
@@ -2212,13 +2248,15 @@ export class FichaColegialComponent implements OnInit {
   }
 
   irNuevoCurriculares() {
+    sessionStorage.removeItem("permisos");
     sessionStorage.setItem("nuevoCurriculo", "true");
     sessionStorage.setItem("idPersona", JSON.stringify(this.idPersona));
     this.router.navigate(["/edicionCurriculares"]);
   }
   searchDatosCurriculares() {
     let bodyCurricular = {
-      idPersona: this.idPersona
+      idPersona: this.idPersona,
+      historico: this.historicoCV
     };
     this.sigaServices
       .postPaginado(
@@ -2235,9 +2273,48 @@ export class FichaColegialComponent implements OnInit {
           // this.table.reset();
         },
         err => {
-       //   console.log(err);
+          //   console.log(err);
         }
       );
+  }
+
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.numSelected = this.datosCurriculares.length;
+      this.selectMultiple = false;
+      this.selectedDatos = this.datosCurriculares;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
+  isSelectMultiple() {
+    this.selectMultiple = !this.selectMultiple;
+    if (!this.selectMultiple) {
+      this.numSelected = 0;
+      this.selectedDatos = [];
+    } else {
+      this.selectAll = false;
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
+  cargarDatosCV() {
+    this.historicoCV = false;
+
+    this.searchDatosCurriculares();
+
+    if (!this.historicoCV) {
+      this.selectMultiple = false;
+      this.selectAll = false;
+    }
+  }
+
+  cargarHistorico() {
+    this.historicoCV = true;
+    this.searchDatosCurriculares();
   }
   // FIN CURRICULARES
   //
@@ -2410,18 +2487,24 @@ export class FichaColegialComponent implements OnInit {
         }
         var enviarDatos = null;
         if (dato && dato.length > 0) {
-          enviarDatos = dato[0];
-          sessionStorage.setItem("idDireccion", enviarDatos.idDireccion);
-          sessionStorage.setItem("direccion", JSON.stringify(enviarDatos));
-          sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
-          sessionStorage.setItem("fichaColegial", "true");
-          sessionStorage.removeItem("editarDireccion");
-          sessionStorage.setItem("editarDireccion", "true");
-          sessionStorage.setItem("usuarioBody", JSON.stringify(this.idPersona));
-          sessionStorage.setItem(
-            "esColegiado",
-            sessionStorage.getItem("esColegiado")
-          );
+
+          
+            enviarDatos = dato[0];
+            sessionStorage.setItem("idDireccion", enviarDatos.idDireccion);
+            sessionStorage.setItem("direccion", JSON.stringify(enviarDatos));
+            sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
+            sessionStorage.setItem("fichaColegial", "true");
+            sessionStorage.removeItem("editarDireccion");
+            
+            sessionStorage.setItem("editarDireccion", "true");
+            
+            sessionStorage.setItem("usuarioBody", JSON.stringify(this.idPersona));
+            sessionStorage.setItem(
+              "esColegiado",
+              sessionStorage.getItem("esColegiado")
+            );
+          
+          
         } else {
           sessionStorage.setItem("editar", "false");
         }
@@ -2586,10 +2669,16 @@ export class FichaColegialComponent implements OnInit {
         if (dato && dato.length > 0) {
           enviarDatos = dato[0];
           sessionStorage.setItem("idCuenta", dato[0].idCuenta);
-          sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
+          //sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
 
-          sessionStorage.setItem("idPersona", this.idPersona);
+          if (dato[0].fechaBaja != null) {
+            sessionStorage.setItem("permisos", "false");
+          } else {
+            sessionStorage.setItem("permisos", "true");
+          }
+
           sessionStorage.setItem("editar", "true");
+          sessionStorage.setItem("idPersona", this.idPersona);
           sessionStorage.setItem("fichaColegial", "true");
           sessionStorage.setItem("datosCuenta", JSON.stringify(dato[0]));
           sessionStorage.setItem("usuarioBody", JSON.stringify(dato[0]));
@@ -2605,6 +2694,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   nuevaCuentaBancaria() {
+    sessionStorage.removeItem("permisos");
     sessionStorage.setItem("fichaColegial", "true");
     sessionStorage.setItem(
       "usuarioBody",

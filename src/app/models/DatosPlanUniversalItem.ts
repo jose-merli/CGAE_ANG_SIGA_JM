@@ -35,6 +35,7 @@ export class DatosPlanUniversalItem {
   fechaNacConyuge: String;
   naturalDe: String;
   estadoCivil: String;
+  numHijos: number;
   idPais: String;
   idProvincia: String;
   idPoblacion: String;
@@ -50,7 +51,7 @@ export class DatosPlanUniversalItem {
   periodicidadPago: String;
   idCobertura: String;
   cuotaMensual: String;
-  idBeneficiario: String;
+  idBeneficiario: number;
   idAsistenciaSanitaria: String;
   constructor() {}
 }
