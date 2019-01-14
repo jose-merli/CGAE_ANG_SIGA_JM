@@ -117,6 +117,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   displayAuditoria: boolean = false;
   showGuardarAuditoria: boolean = false;
+  disabledAction: boolean = false;
 
   file: File = undefined;
   ocultarMotivo: boolean = undefined;
@@ -142,10 +143,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
     }
 
-    if(sessionStorage.getItem("disabledAction") == "true"){
-      this.permisos = false;
-    }else{
-      this.permisos = true;
+    if (sessionStorage.getItem("disabledAction") == "true") {
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
     }
 
     if (sessionStorage.getItem("isLetrado")) {
@@ -306,10 +307,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   cargarModoNuevoRegistro() {
-    if(this.usuarioBody[0].denominacion != undefined){
+    if (this.usuarioBody[0].denominacion != undefined) {
       this.body.titular = this.usuarioBody[0].denominacion;
     }
-  
+
     //this.body.nifTitular = this.usuarioBody[0].nif;
 
     this.nuevo = true;
@@ -328,7 +329,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.progressSpinner = false;
           this.bodySearch = JSON.parse(data["body"]);
           this.body = this.bodySearch.datosBancariosItem[0];
-          this.checkBody = this.bodySearch.datosBancariosItem[0];
+          this.checkBody = JSON.parse(
+            JSON.stringify(this.bodySearch.datosBancariosItem[0])
+          );
           this.iban = this.body.iban;
           this.bic = this.body.bic;
           if (this.registroEditable == "false") {

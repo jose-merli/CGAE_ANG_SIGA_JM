@@ -66,6 +66,7 @@ export class DetalleIntegranteComponent implements OnInit {
   numSelected: number = 0;
   masFiltros: boolean = false;
   openFicha: boolean = false;
+  disabledAction: boolean = false;
   fichasPosibles: any[];
   body: DatosIntegrantesItem = new DatosIntegrantesItem();
   datosIntegrantes: DatosIntegrantesObject = new DatosIntegrantesObject();
@@ -101,9 +102,9 @@ export class DetalleIntegranteComponent implements OnInit {
     }
 
     if(sessionStorage.getItem("disabledAction") == "true"){
-      this.historico = true;
+      this.disabledAction = true;
     }else{
-      this.historico = false;
+      this.disabledAction = false;
     }
 
     sessionStorage.removeItem("historicoInt");

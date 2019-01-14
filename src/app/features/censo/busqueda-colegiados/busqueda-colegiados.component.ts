@@ -57,6 +57,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   es: any = esCalendar;
 
   editar: boolean = true;
+  noResultsSubtipos: boolean = true;
 
   comboEtiquetas: any[];
   comboSituacion: any[];
@@ -395,7 +396,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           this.comboSubtipoCV = JSON.parse(data["body"]).combooItems;
 
           if (this.comboSubtipoCV.length == 0) {
-            this.comboSubtipoCV.push({ label: "No hay resultados", value: 0 });
+            this.noResultsSubtipos = true;
+          } else {
+            this.noResultsSubtipos = false;
           }
 
           this.arregloTildesCombo(this.comboSubtipoCV);
