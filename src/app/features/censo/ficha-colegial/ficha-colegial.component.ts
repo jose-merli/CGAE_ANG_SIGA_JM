@@ -290,12 +290,7 @@ export class FichaColegialComponent implements OnInit {
       this.disabledNif = false;
     }
 
-    if(sessionStorage.getItem("disabled") == "true"){
-      // Es baja colegial
-      this.disabledAction = true;
-    }else{
-      this.disabledAction = false;
-    }
+    
 
     // Cogemos los datos de la busqueda de Colegiados
     this.getLetrado();
@@ -304,7 +299,7 @@ export class FichaColegialComponent implements OnInit {
       this.persistenciaColeg = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaColegiados")
       );
-      sessionStorage.removeItem("filtrosBusquedaColegiados");
+      //sessionStorage.removeItem("filtrosBusquedaColegiados");
     }
     if (sessionStorage.getItem("filtrosBusquedaNoColegiados")) {
       this.persistenciaNoCol = new NoColegiadoItem();
@@ -332,6 +327,14 @@ export class FichaColegialComponent implements OnInit {
       } else {
         this.esColegiado = true;
       }
+
+      if(sessionStorage.getItem("disabledAction") == "true"){
+        // Es baja colegial o histórico
+        this.disabledAction = true;
+      }else{
+        this.disabledAction = false;
+      }
+
       this.generalBody.colegiado = this.esColegiado;
       // this.checkAcceso();
       this.onInitGenerales();

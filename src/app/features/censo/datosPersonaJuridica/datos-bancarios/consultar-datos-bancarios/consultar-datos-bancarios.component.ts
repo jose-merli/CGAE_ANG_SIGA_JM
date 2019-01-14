@@ -141,6 +141,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     if (sessionStorage.getItem("permisos")) {
       this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
     }
+
+    if(sessionStorage.getItem("disabledAction") == "true"){
+      this.permisos = false;
+    }else{
+      this.permisos = true;
+    }
+
     if (sessionStorage.getItem("isLetrado")) {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
       // sessionStorage.removeItem("fichaColegial");

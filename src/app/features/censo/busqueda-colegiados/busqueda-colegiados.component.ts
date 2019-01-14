@@ -115,7 +115,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   ngOnInit() {
     this.getCombos();
     // sessionStorage.removeItem("esColegiado");
-    sessionStorage.removeItem("disabled");
+    sessionStorage.removeItem("disabledAction");
 
     if (sessionStorage.getItem("filtrosBusquedaColegiados") != null) {
       this.body = JSON.parse(
@@ -154,9 +154,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       console.log(id);
 
       if (id[0].situacion == 30) {
-        sessionStorage.setItem("disabled", "true");
+        sessionStorage.setItem("disabledAction", "true");
       } else {
-        sessionStorage.setItem("disabled", "false");
+        sessionStorage.setItem("disabledAction", "false");
       }
 
       this.router.navigate(["/fichaColegial"]);

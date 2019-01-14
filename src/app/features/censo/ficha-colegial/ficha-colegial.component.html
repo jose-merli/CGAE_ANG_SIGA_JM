@@ -170,7 +170,7 @@
               #fubauto
               chooseLabel=""
               class="edit my-0 mx-auto main-button"
-              [(disabled)]="isLetrado"
+              [(disabled)]="isLetrado || disabledAction"
               mode="basic"
               name="file"
               auto="true"
@@ -342,7 +342,7 @@
                 (ngModelChange)="activacionGuardarGenerales()"
                 type="text"
                 class="form-control"
-                [(disabled)]="disabledAction"
+                disabled
                 pInputText
               />
             </div>
@@ -354,7 +354,7 @@
               <input
                 [(ngModel)]="generalBody.naturalDe"
                 (ngModelChange)="activacionGuardarGenerales()"
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado  || disabledAction"
                 type="text"
                 class="form-control"
                 pInputText
@@ -371,7 +371,7 @@
                 (onChange)="activacionGuardarGenerales()"
                 placeholder="{{'general.boton.seleccionar' | translate}}"
                 [(ngModel)]="generalBody.idEstadoCivil"
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado  || disabledAction"
                 [options]="generalEstadoCivil"
               ></p-dropdown>
             </div>
@@ -383,7 +383,7 @@
               >
               &nbsp;&nbsp;
               <p-checkbox
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado  || disabledAction"
                 (onChange)="activacionGuardarGenerales()"
                 [(ngModel)]="generalBody.publicarDatosContacto"
                 binary="true"
@@ -396,7 +396,7 @@
               }}</label>
               &nbsp;&nbsp;
               <p-checkbox
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado  || disabledAction"
                 (onChange)="activacionGuardarGenerales()"
                 [(ngModel)]="comisiones"
                 binary="true"
@@ -917,7 +917,7 @@
     <div *ngIf="esFichaActiva('colegiales')" class="card-footer ">
       <div class="text-right main-button ">
         <button
-          [(disabled)]="!activarGuardarColegiales"
+          [(disabled)]="!activarGuardarColegiales || disabledAction"
           (click)="restablecerColegiales()"
           pButton
           type="button"
@@ -928,7 +928,7 @@
         <button
           *ngIf="!isLetrado"
           (click)="guardarColegiales()"
-          [(disabled)]="!activarGuardarColegiales"
+          [(disabled)]="!activarGuardarColegiales || disabledAction"
           pButton
           type="button"
           icon="far fa-save"
@@ -1747,7 +1747,7 @@
             selectedDatosDirecciones != '' &&
             bodyDirecciones.historico == false
           "
-          [disabled]="activadoBotonesLetrado()"
+          [disabled]="activadoBotonesLetrado() || disabledAction" 
           (click)="
             borrarSelectedDatos(selectedDatosDirecciones);
             selectedDatosDirecciones = false
@@ -1939,13 +1939,13 @@
           type="button"
           icon="fa fa-trash-alt"
           iconPos="left"
-          [disabled]="activadoBotonesLetrado()"
+          [disabled]="activadoBotonesLetrado() || disabledAction"
           label="{{'general.boton.eliminar'  | translate}}"
         ></button>
         <button
           *ngIf="!isLetrado"
           (click)="nuevaCuentaBancaria()"
-          [disabled]="activadoBotonesLetrado()"
+          [disabled]="activadoBotonesLetrado() || disabledAction"
           pButton
           type="button"
           icon="fa fa-plus"
@@ -2088,7 +2088,7 @@
   <div *ngIf="esFichaActiva('regtel')" class="card-footer">
     <div class="text-right main-button">
       <button
-      [disabled] = "buttonVisibleRegtelAtras"
+      [disabled] = "buttonVisibleRegtelAtras || disabledAction"
       (click)="onClickAtrasRegtel()"
       pButton
       type="button"
@@ -2097,7 +2097,7 @@
       label="{{ 'general.boton.volver' | translate}}"
     ></button>
     <button
-    [disabled] = "buttonVisibleRegtelCarpeta"
+    [disabled] = "buttonVisibleRegtelCarpeta || disabledAction"
       (click)="onClickCarpetaRegTel()"
       pButton
       type="button"
@@ -2106,7 +2106,7 @@
       label="{{ 'censo.regtel.literal.vercarpeta' | translate}}"
     ></button>
     <button
-    [disabled] = "buttonVisibleRegtelDescargar"
+    [disabled] = "buttonVisibleRegtelDescargar || disabledAction"
       (click)="onClickDescargarRegTel()"
       pButton
       type="button"

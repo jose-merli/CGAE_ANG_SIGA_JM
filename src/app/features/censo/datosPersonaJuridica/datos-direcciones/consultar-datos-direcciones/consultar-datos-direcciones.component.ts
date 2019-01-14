@@ -59,7 +59,6 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   disableCheck: boolean;
   poblacionExtranjera: boolean;
   displayAuditoria: boolean = false;
-  disabledAction: boolean = false;
   showGuardarAuditoria: boolean = false;
   ocultarMotivo: boolean = undefined;
   resultadosPoblaciones: any;
@@ -79,16 +78,17 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   @ViewChild("provincia")
   checkbox: Checkbox;
   ngOnInit() {
-    if (sessionStorage.getItem("disabled") == "true") {
-      this.disabledAction = true;
-    } else {
-      this.disabledAction = false;
-    }
-
     if (sessionStorage.getItem("permisos")) {
       this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
       this.historyDisable = !this.permisos;
     }
+
+    if (sessionStorage.getItem("disabledAction") == "true") {
+      this.historyDisable = true;
+    } else {
+      this.historyDisable = false;
+    }
+
     if (sessionStorage.getItem("isLetrado")) {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     }

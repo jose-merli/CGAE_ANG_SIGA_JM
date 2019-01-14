@@ -113,6 +113,7 @@ export class DatosGenerales implements OnInit {
   isTrue: boolean = false;
   historico: boolean = false;
   isClose: boolean = false;
+  disabledAction: boolean = false;
 
   etiqueta: String;
   arrayInicial: String[] = [];
@@ -193,6 +194,12 @@ export class DatosGenerales implements OnInit {
 
   ngOnInit() {
     // dentro de este metodo se llama a continueOnInit()
+    if (sessionStorage.getItem("disabledAction") == "true") {
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
+    }
+
     this.checkAcceso();
   }
   continueOnInit() {
@@ -931,7 +938,6 @@ export class DatosGenerales implements OnInit {
           1
         );
         this.updateItems.delete(event.value);
-
       }
     }
   }
