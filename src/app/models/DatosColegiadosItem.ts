@@ -40,6 +40,7 @@ export class DatosColegiadosItem {
   fechaTitulacion: Date;
   comisiones: string;
   partidoJudicial: string;
+  subtipoCV: string[];
 
   constructor() {}
 }

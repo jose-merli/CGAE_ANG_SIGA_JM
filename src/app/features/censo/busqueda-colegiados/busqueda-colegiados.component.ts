@@ -24,6 +24,7 @@ import {
 } from "../../../../../node_modules/@angular/forms";
 import { DatosColegiadosObject } from "../../../models/DatosColegiadosObject";
 import { TrimPipePipe } from "../../../commons/trim-pipe/trim-pipe.pipe";
+import { SubtipoCurricularItem } from "../../../models/SubtipoCurricularItem";
 
 @Component({
   selector: "app-busqueda-colegiados",
@@ -72,6 +73,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   textSelected: String = "{0} etiquetas seleccionadas";
   body: DatosColegiadosItem = new DatosColegiadosItem();
   colegiadoSearch = new DatosColegiadosObject();
+  subtipoCurricular: SubtipoCurricularItem = new SubtipoCurricularItem();
 
   siNoResidencia: any;
   siNoInscrito: any;
@@ -113,6 +115,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   ngOnInit() {
     this.getCombos();
     // sessionStorage.removeItem("esColegiado");
+    sessionStorage.removeItem("disabledAction");
+
     if (sessionStorage.getItem("filtrosBusquedaColegiados") != null) {
       this.body = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaColegiados")
@@ -148,6 +152,13 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       );
       sessionStorage.setItem("personaBody", JSON.stringify(id[0]));
       console.log(id);
+
+      if (id[0].situacion == 30) {
+        sessionStorage.setItem("disabledAction", "true");
+      } else {
+        sessionStorage.setItem("disabledAction", "false");
+      }
+
       this.router.navigate(["/fichaColegial"]);
     }
   }
@@ -365,6 +376,36 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     );
   }
 
+  onChangeCategoriaCurricular(event) {
+    if (event) {
+      this.subtipoCurricular.idTipoCV = event.value;
+      this.getComboSubtipoCurricular();
+    }
+  }
+
+  getComboSubtipoCurricular() {
+    this.sigaServices
+      .postPaginado(
+        "subtipoCurricular_comboSubtipoCurricular",
+        "?numPagina=1",
+        this.subtipoCurricular
+      )
+      .subscribe(
+        data => {
+          this.comboSubtipoCV = JSON.parse(data["body"]).combooItems;
+
+          if (this.comboSubtipoCV.length == 0) {
+            this.comboSubtipoCV.push({ label: "No hay resultados", value: 0 });
+          }
+
+          this.arregloTildesCombo(this.comboSubtipoCV);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
   //Busca colegiados según los filtros
   isBuscar() {
     this.selectAll = false;
@@ -417,6 +458,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   isLimpiar() {
     this.body = new DatosColegiadosItem();
+    this.comboSubtipoCV = [];
+    this.fechaIncorporacionDesdeSelect = undefined;
+    this.fechaIncorporacionHastaSelect = undefined;
+    this.fechaNacimientoSelect = undefined;
   }
 
   //Elimina los espacios en blancos finales e iniciales de los inputs de los filtros
@@ -474,7 +519,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       },
       {
         field: "residenteInscrito",
-        header: "censo.colegiarColegiados.literal.residenteInscrito"
+        header: "censo.busquedaClientes.noResidente"
       },
       {
         field: "correo",

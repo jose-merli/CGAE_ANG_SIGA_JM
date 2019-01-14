@@ -37,5 +37,6 @@ export class FichaColegialGeneralesItem {
   guiaJudicial: String;
   publicidad: String;
   error: ErrorItem;
+  fechaBaja: string;
   constructor() {}
 }

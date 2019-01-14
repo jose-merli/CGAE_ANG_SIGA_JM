@@ -82,6 +82,13 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
       this.historyDisable = !this.permisos;
     }
+
+    if (sessionStorage.getItem("disabledAction") == "true") {
+      this.historyDisable = true;
+    } else {
+      this.historyDisable = false;
+    }
+
     if (sessionStorage.getItem("isLetrado")) {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     }
@@ -525,66 +532,70 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (this.body.codigoPostal == null || this.body.codigoPostal == undefined) {
       this.showFail("Debe especificar el Código Postal");
     } else {
-		if (
-		  this.body.idTipoDireccion != null &&
-		  this.body.idTipoDireccion != undefined &&
-		  this.body.idTipoDireccion.length > 0
-		) {
-		  this.progressSpinner = true;
-		  // modo edicion
-		  if (this.registroEditable) {
-			this.comprobarTablaDatosContactos();
-			this.comprobarCheckProvincia();
-			this.body.esColegiado = JSON.parse(
-			  sessionStorage.getItem("esColegiado")
-			);
-			this.body.idPersona = JSON.parse(sessionStorage.getItem("usuarioBody"));
-			this.body.idProvincia = this.provinciaSelecionada;
-			this.sigaServices.post("direcciones_update", this.body).subscribe(
-			  data => {
-				this.progressSpinner = false;
-				this.body = JSON.parse(data["body"]);
-				this.backTo();
-			  },
-			  error => {
-				this.bodySearch = JSON.parse(error["error"]);
-				this.showFail(this.bodySearch.error.message.toString());
-				console.log(error);
-				this.progressSpinner = false;
-			  }
-			);
-		  }
-		  // modo creacion
-		  else {
-			this.comprobarTablaDatosContactos();
-			this.comprobarCheckProvincia();
-			this.body.idProvincia = this.provinciaSelecionada;
-			this.body.esColegiado = JSON.parse(
-			  sessionStorage.getItem("esColegiado")
-			);
-			this.body.idPersona = JSON.parse(sessionStorage.getItem("usuarioBody"));
-			this.body.motivo = "registro creado";
-			this.sigaServices.post("direcciones_insert", this.body).subscribe(
-			  data => {
-				this.progressSpinner = false;
-				this.body = JSON.parse(data["body"]);
-				this.backTo();
-			  },
-			  error => {
-				this.bodySearch = JSON.parse(error["error"]);
-				this.showFail(this.bodySearch.error.message.toString());
-				console.log(error);
-				this.progressSpinner = false;
-			  },
-			  () => {
-				// auditoria
-				this.body.motivo = undefined;
-				this.progressSpinner = false;
-			  }
-			);
-		  }
-		}
-	}
+      if (
+        this.body.idTipoDireccion != null &&
+        this.body.idTipoDireccion != undefined &&
+        this.body.idTipoDireccion.length > 0
+      ) {
+        this.progressSpinner = true;
+        // modo edicion
+        if (this.registroEditable) {
+          this.comprobarTablaDatosContactos();
+          this.comprobarCheckProvincia();
+          this.body.esColegiado = JSON.parse(
+            sessionStorage.getItem("esColegiado")
+          );
+          this.body.idPersona = JSON.parse(
+            sessionStorage.getItem("usuarioBody")
+          );
+          this.body.idProvincia = this.provinciaSelecionada;
+          this.sigaServices.post("direcciones_update", this.body).subscribe(
+            data => {
+              this.progressSpinner = false;
+              this.body = JSON.parse(data["body"]);
+              this.backTo();
+            },
+            error => {
+              this.bodySearch = JSON.parse(error["error"]);
+              this.showFail(this.bodySearch.error.message.toString());
+              console.log(error);
+              this.progressSpinner = false;
+            }
+          );
+        }
+        // modo creacion
+        else {
+          this.comprobarTablaDatosContactos();
+          this.comprobarCheckProvincia();
+          this.body.idProvincia = this.provinciaSelecionada;
+          this.body.esColegiado = JSON.parse(
+            sessionStorage.getItem("esColegiado")
+          );
+          this.body.idPersona = JSON.parse(
+            sessionStorage.getItem("usuarioBody")
+          );
+          this.body.motivo = "registro creado";
+          this.sigaServices.post("direcciones_insert", this.body).subscribe(
+            data => {
+              this.progressSpinner = false;
+              this.body = JSON.parse(data["body"]);
+              this.backTo();
+            },
+            error => {
+              this.bodySearch = JSON.parse(error["error"]);
+              this.showFail(this.bodySearch.error.message.toString());
+              console.log(error);
+              this.progressSpinner = false;
+            },
+            () => {
+              // auditoria
+              this.body.motivo = undefined;
+              this.progressSpinner = false;
+            }
+          );
+        }
+      }
+    }
   }
   duplicarRegistro() {
     this.body.idDireccion = null;
