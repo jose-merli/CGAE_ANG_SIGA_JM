@@ -303,6 +303,8 @@ export class SigaServices {
     fichaInscripcion_guardarPersona: "fichaInscripcion/guardarPersona",
     fichaInscripcion_generarSolicitudCertificados:
       "fichaInscripcion/generarSolicitudCertificados",
+    fichaInscripcion_checkMinimaAsistencia:
+      "fichaInscripcion/checkMinimaAsistencia",
 
     //Agenda
     fichaCalendario_getCalendarType: "fichaCalendario/getCalendarType",
@@ -519,8 +521,8 @@ export class SigaServices {
     fichaDatosColegiales_datosColegialesUpdate:
       "/fichaDatosColegiales/datosColegialesUpdate",
     fichaColegialRegTel_searchListDoc: "fichaColegialRegTel/searchListDoc",
-    fichaColegialRegTel_searchListDir:"fichaColegialRegTel/searchListDir",
-    fichaColegialRegTel_downloadDoc:"fichaColegialRegTel/downloadDoc",
+    fichaColegialRegTel_searchListDir: "fichaColegialRegTel/searchListDir",
+    fichaColegialRegTel_downloadDoc: "fichaColegialRegTel/downloadDoc",
     usuario_cambioIdioma: "usuario/cambioIdioma",
     fichaColegialOtrasColegiaciones_getLabelColegios:
       "fichaColegialOtrasColegiaciones/getLabelColegios"

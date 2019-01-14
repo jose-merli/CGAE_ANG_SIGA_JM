@@ -29,6 +29,7 @@ export class DatosInscripcionItem {
   descripcion: string;
   temas: string[];
   minimaAsistencia: string;
+  checkMinimaAsistencia: boolean;
   lugar: string;
   autovalidacion: string;
   adjunta: string;
@@ -38,6 +39,7 @@ export class DatosInscripcionItem {
   fechaSolicitud: Date;
   fechaSolicitudDate: Date;
   idPersona: string;
+  idInstitucion: string;
 
   editar: boolean;
   flagArchivado: number;
