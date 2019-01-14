@@ -611,6 +611,11 @@ export class FichaCalendarioComponent implements OnInit {
       );
   }
 
+  disabledNotifications() {
+    if (this.selectMultiple || this.selectAllNotifications) return false;
+    else return true;
+  }
+
   //FUNCIONES GENERALES DE LA PANTALLA
   //Funciones controlan las fichas
   esFichaActiva(key) {

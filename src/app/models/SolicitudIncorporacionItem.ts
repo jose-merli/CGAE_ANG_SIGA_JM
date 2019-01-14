@@ -1,5 +1,7 @@
 export class SolicitudIncorporacionItem {
   idSolicitud: String;
+  estadoMutualidad: String;
+  idSolicitudMutualidad: String;
   numeroIdentificacion: String;
   identificador: String;
   nombreSolicitud: String;

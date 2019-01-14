@@ -49,6 +49,8 @@ import { DatosColegiadosItem } from "../../../models/DatosColegiadosItem";
 import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
 import { BusquedaSancionesItem } from "../../../models/BusquedaSancionesItem";
 import { BusquedaSancionesObject } from "../../../models/BusquedaSancionesObject";
+import { DocushareObject } from "../../../models/DocushareObject";
+import { DocushareItem } from "../../../models/DocushareItem";
 
 @Component({
   selector: "app-ficha-colegial",
@@ -70,7 +72,8 @@ export class FichaColegialComponent implements OnInit {
   certificadosBody: FichaColegialCertificadosObject = new FichaColegialCertificadosObject();
   bodySanciones: BusquedaSancionesItem = new BusquedaSancionesItem();
   bodySearchSanciones: BusquedaSancionesObject = new BusquedaSancionesObject();
-
+  bodySearchRegTel: DocushareObject= new DocushareObject();
+  bodyRegTel: any[];
   isLetrado: boolean;
   permisos: boolean = true;
   displayAuditoria: boolean = false;
@@ -89,7 +92,13 @@ export class FichaColegialComponent implements OnInit {
   selectMultiple: boolean = false;
   selectMultipleDirecciones: boolean = false;
   selectMultipleBancarios: boolean = false;
+ 
+  buttonVisibleRegtelAtras: boolean = true;
+  buttonVisibleRegtelCarpeta: boolean = true;
+  buttonVisibleRegtelDescargar: boolean = true;
+ 
   disabledNif: boolean = false;
+ 
   // irTurnoOficio: any;
   // irExpedientes: any;
   msgs: Message[];
@@ -102,6 +111,7 @@ export class FichaColegialComponent implements OnInit {
   colsDirecciones: any = [];
   colsBancarios: any = [];
   colsSanciones: any = [];
+  colsRegtel: any = [];
 
   rowsPerPage: any = [];
   tipoCuenta: any[] = [];
@@ -190,7 +200,7 @@ export class FichaColegialComponent implements OnInit {
   selectedDatosDirecciones;
   selectedDatosBancarios;
   selectedDatosSanciones;
-
+  selectedDatosRegtel: DocushareItem;
   @ViewChild("auto")
   autoComplete: AutoComplete;
 
@@ -323,6 +333,7 @@ export class FichaColegialComponent implements OnInit {
       this.onInitOtrasColegiaciones();
       this.searchSanciones();
       this.searchCertificados();
+      
     } else {
       if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
         this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
@@ -344,6 +355,7 @@ export class FichaColegialComponent implements OnInit {
       this.onInitCurriculares();
       this.onInitDirecciones();
       this.onInitDatosBancarios();
+      this.onInitRegTel();
     }
 
     // this.onInitSociedades();
@@ -417,6 +429,24 @@ export class FichaColegialComponent implements OnInit {
       {
         field: "fechaEmision",
         header: "facturacion.busquedaAbonos.literal.fecha2"
+      }
+    ];
+    this.colsRegtel = [
+      {
+       field: "originalFilename",
+        header: "censo.resultadosSolicitudesModificacion.literal.Nombre"
+      },
+      {
+        field: "summary",
+        header: "censo.regtel.literal.resumen"
+      },
+      {
+        field: "fechaModificacion",
+        header: "censo.datosDireccion.literal.fechaModificacion"
+      },
+      {
+        field: "sizeKB",
+        header: "censo.regtel.literal.tamanno"
       }
     ];
 
@@ -2864,5 +2894,87 @@ export class FichaColegialComponent implements OnInit {
     } else {
       bodySanciones.fechaArchivadaHastaDate = null;
     }
+  }
+
+  onInitRegTel(){
+    this.sigaServices
+    .postPaginado(
+      "fichaColegialRegTel_searchListDoc",
+      "?numPagina=1",
+      this.idPersona
+    )
+    .subscribe(
+      data => {
+        this.bodySearchRegTel = JSON.parse(data["body"]);
+        this.bodyRegTel= this.bodySearchRegTel.docuShareObjectVO;
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    );
+
+  }
+  onRowSelectedRegTel(selectedDatosRegtel){
+    this.selectedDatosRegtel = selectedDatosRegtel;
+    if(this.selectedDatosRegtel.tipo== "0"){
+      this.buttonVisibleRegtelCarpeta = false;
+      this.buttonVisibleRegtelDescargar =true;
+      
+    }else{
+      this.buttonVisibleRegtelCarpeta = true;
+      this.buttonVisibleRegtelDescargar =false;
+      
+    } 
+  }
+  
+  onRowDesselectedRegTel(){
+    this.buttonVisibleRegtelCarpeta = true;
+    this.buttonVisibleRegtelDescargar = true;
+  }
+  onClickAtrasRegtel(){
+    
+  }
+
+  onClickCarpetaRegTel(){
+    this.selectedDatosRegtel.idPersona = this.idPersona;
+    this.sigaServices
+    .postPaginado(
+      "fichaColegialRegTel_searchListDir",
+      "?numPagina=1",
+      this.selectedDatosRegtel
+    )
+    .subscribe(
+      data => {
+        this.bodySearchRegTel = JSON.parse(data["body"]);
+        this.bodyRegTel= this.bodySearchRegTel.docuShareObjectVO;
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    );
+
+  }
+  onClickDescargarRegTel(){
+    this.progressSpinner = false;
+    this.sigaServices
+    .postPaginado(
+      "fichaColegialRegTel_downloadDoc",
+      "?numPagina=1",
+      this.selectedDatosRegtel
+    )
+    .subscribe(
+      data => {
+        const blob = new Blob([data]   );
+        saveAs(blob, "PlantillaMasivaDatosGF_Original.xls");
+        // this.bodySearchRegTel = JSON.parse(data["body"]);
+        // this.bodyRegTel= this.bodySearchRegTel.docuShareObjectVO;
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    );
   }
 }

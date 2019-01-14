@@ -109,6 +109,7 @@ export class FichaCursoComponent implements OnInit {
   valorEstadoAbierto = "0";
   valorEstadoAnunciado = "1";
   valorEstadoCancelado = "5";
+  valorEstadoFinalizado = "4";
   valorTipoInicioIncripcion = "4";
   valorTipoFinIncripcion = "5";
   valorTipoSesion = "8";
@@ -314,7 +315,6 @@ export class FichaCursoComponent implements OnInit {
         this.getMassiveLoadInscriptions();
         this.configurationInformacionAdicional();
 
-        sessionStorage.removeItem("isInscripcion");
         sessionStorage.removeItem("codigoCursoInscripcion");
       } else if(sessionStorage.getItem("isSession") == "true"){
         this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
@@ -664,6 +664,7 @@ export class FichaCursoComponent implements OnInit {
           this.curso.idCurso = JSON.parse(data.body).id;
           this.curso.codigoCurso = JSON.parse(data.body).status;
           this.getCountInscriptions();
+          this.getPrices();
           this.showMessage(
             "success",
             "Correcto",
@@ -705,7 +706,11 @@ export class FichaCursoComponent implements OnInit {
           }
         );
     } else {
-      this.showFail("El curso debe tener el estado abierto para ser anunciado");
+      this.showMessage(
+        "info",
+        "Información",
+        "El curso debe tener el estado abierto para ser anunciado"
+      );
     }
   }
 
@@ -727,7 +732,9 @@ export class FichaCursoComponent implements OnInit {
           }
         );
     } else {
-      this.showFail(
+      this.showMessage(
+        "info",
+        "Información",
         "El curso debe tener el estado anunciado para ser desanunciado"
       );
     }
@@ -787,6 +794,7 @@ export class FichaCursoComponent implements OnInit {
         this.sigaServices.post("fichaCursos_finishCourse", cursoDTO).subscribe(
           data => {
             this.progressSpinner = false;
+            this.curso.idEstado = this.valorEstadoFinalizado;
 
             if (JSON.parse(data.body).error.code == null) {
               this.showMessage(
@@ -1264,10 +1272,6 @@ export class FichaCursoComponent implements OnInit {
         field: "tarifa",
         header: "general.boton.actualizarTarifa"
       }
-      // {
-      //   field: "flagTutor",
-      //   header: "form.busquedaCursos.literal.tutorResponsable"
-      // }
     ];
 
     this.rowsPerPage = [
@@ -2748,7 +2752,12 @@ export class FichaCursoComponent implements OnInit {
   }
 
   backTo() {
-    this.location.back();
+    if (sessionStorage.getItem("isInscripcion") != null && sessionStorage.getItem("isInscripcion") != undefined) {
+      this.router.navigate(["/buscarCursos"]);
+      sessionStorage.removeItem("isInscripcion");
+    } else {
+      this.location.back();
+    }
   }
 
   arregloTildesCombo(combo) {

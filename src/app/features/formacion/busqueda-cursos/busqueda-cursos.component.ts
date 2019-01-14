@@ -1,29 +1,28 @@
 import {
+  ChangeDetectorRef,
   Component,
   OnInit,
-  ViewEncapsulation,
   ViewChild,
-  ChangeDetectorRef
+  ViewEncapsulation
 } from "@angular/core";
-
-import { SigaServices } from "../../../_services/siga.service";
-import { SigaWrapper } from "../../../wrapper/wrapper.class";
-import { TranslateService } from "../../../commons/translate/translation.service";
-import { USER_VALIDATIONS } from "../../../properties/val-properties";
-import { DataTable } from "primeng/datatable";
-import { esCalendar } from "../../../utils/calendar";
-import { DatosCursosItem } from "../../../models/DatosCursosItem";
 import {
   FormBuilder,
-  FormGroup,
   FormControl,
+  FormGroup,
   Validators
 } from "@angular/forms";
-import { MultiSelect, Message } from "primeng/primeng";
-import { DatosCursosObject } from "../../../models/DatosCursosObject";
-import { AuthenticationService } from "../../../_services/authentication.service";
 import { Router } from "@angular/router";
+import { DataTable } from "primeng/datatable";
+import { Message, MultiSelect, ConfirmationService } from "primeng/primeng";
+import { TranslateService } from "../../../commons/translate/translation.service";
 import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
+import { DatosCursosItem } from "../../../models/DatosCursosItem";
+import { DatosCursosObject } from "../../../models/DatosCursosObject";
+import { USER_VALIDATIONS } from "../../../properties/val-properties";
+import { esCalendar } from "../../../utils/calendar";
+import { SigaWrapper } from "../../../wrapper/wrapper.class";
+import { AuthenticationService } from "../../../_services/authentication.service";
+import { SigaServices } from "../../../_services/siga.service";
 
 @Component({
   selector: "app-busqueda-cursos",
@@ -88,6 +87,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private authenticationService: AuthenticationService,
     private translateService: TranslateService,
+    private confirmationService: ConfirmationService,
     private router: Router
   ) {
     super(USER_VALIDATIONS);
@@ -531,31 +531,165 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   }
 
   anunciarCursos() {
-    this.progressSpinner = true;
+    let cursoDTO = new DatosCursosObject();
+    cursoDTO.cursoItem = this.selectedDatos;
 
-    //Llamar al rest de anunciar curso/s
-    this.progressSpinner = false;
+    this.sigaServices.post("fichaCursos_announceCourse", cursoDTO).subscribe(
+      data => {
+        this.progressSpinner = false;
+        this.isBuscar(false);
+
+        if (JSON.parse(data.body).error.code == null) {
+          this.showMessage(
+            "info",
+            "Información",
+            JSON.parse(data.body).error.description
+          );
+        } else if (JSON.parse(data.body).error.code == 200) {
+          this.showMessage(
+            "success",
+            "Correcto",
+            JSON.parse(data.body).error.description
+          );
+        } else if (JSON.parse(data.body).error.code == 400) {
+          this.showMessage(
+            "error",
+            "Incorrecto",
+            JSON.parse(data.body).error.description
+          );
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   desanunciarCursos() {
-    this.progressSpinner = true;
+    let cursoDTO = new DatosCursosObject();
+    cursoDTO.cursoItem = this.selectedDatos;
 
-    //Llamar al rest de desanunciar curso/s
-    this.progressSpinner = false;
+    this.sigaServices.post("fichaCursos_releaseCourse", cursoDTO).subscribe(
+      data => {
+        this.progressSpinner = false;
+        this.isBuscar(false);
+
+        if (JSON.parse(data.body).error.code == null) {
+          this.showMessage(
+            "info",
+            "Información",
+            JSON.parse(data.body).error.description
+          );
+        } else if (JSON.parse(data.body).error.code == 200) {
+          this.showMessage(
+            "success",
+            "Correcto",
+            JSON.parse(data.body).error.description
+          );
+        } else if (JSON.parse(data.body).error.code == 400) {
+          this.showMessage(
+            "error",
+            "Incorrecto",
+            JSON.parse(data.body).error.description
+          );
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   finalizarCursos() {
-    this.progressSpinner = true;
+    let mess =
+      "A continuación se actualizarán la ficha de los alumnos con las calificaciones obtenidas y se les emitirán los certificados correspondientes. ¿Desea continuar?";
 
-    //Llamar al rest de finalizar curso/s
-    this.progressSpinner = false;
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        let cursoDTO = new DatosCursosObject();
+        cursoDTO.cursoItem = [];
+        cursoDTO.cursoItem = this.selectedDatos;
+
+        this.sigaServices.post("fichaCursos_finishCourse", cursoDTO).subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.isBuscar(false);
+
+            if (JSON.parse(data.body).error.code == null) {
+              this.showMessage(
+                "info",
+                "Información",
+                JSON.parse(data.body).error.description
+              );
+            } else if (JSON.parse(data.body).error.code == 200) {
+              this.showMessage(
+                "success",
+                "Correcto",
+                JSON.parse(data.body).error.description
+              );
+            } else if (JSON.parse(data.body).error.code == 400) {
+              this.showMessage(
+                "error",
+                "Incorrecto",
+                JSON.parse(data.body).error.description
+              );
+            }
+          },
+          err => {
+            this.progressSpinner = false;
+          }
+        );
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
   }
 
   cancelarCursos() {
-    this.progressSpinner = true;
+    let cursoDTO = new DatosCursosObject();
+    cursoDTO.cursoItem = [];
+    cursoDTO.cursoItem = this.selectedDatos;
 
-    //Llamar al rest de cancelar curso/s
-    this.progressSpinner = false;
+    this.sigaServices.post("fichaCursos_cancelCourse", cursoDTO).subscribe(
+      data => {
+        this.progressSpinner = false;
+        this.isBuscar(false);
+        if (JSON.parse(data.body).error.code == null) {
+          this.showMessage(
+            "info",
+            "Información",
+            JSON.parse(data.body).error.description
+          );
+        } else if (JSON.parse(data.body).error.code == 200) {
+          this.showMessage(
+            "success",
+            "Correcto",
+            JSON.parse(data.body).error.description
+          );
+        } else if (JSON.parse(data.body).error.code == 400) {
+          this.showMessage(
+            "error",
+            "Incorrecto",
+            JSON.parse(data.body).error.description
+          );
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   /*
@@ -753,5 +887,14 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
         }
       }
     );
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 }

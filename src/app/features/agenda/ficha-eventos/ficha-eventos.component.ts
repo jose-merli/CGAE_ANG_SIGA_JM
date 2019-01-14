@@ -191,8 +191,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.idCurso = this.newEvent.idCurso;
         this.getEntryListCourse();
 
-        this.isFormacionCalendar = true;
-
         if (this.newEvent.fechaInicioRepeticion != null) {
           this.newEvent.fechaInicioRepeticion = new Date(
             this.newEvent.fechaInicioRepeticion
@@ -225,17 +223,13 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.getComboCalendarLaboralGeneral();
       }
 
-      //Si el tipo de ediccion es un evento perteneciente al calendario laboral se genera el combo de lugares
+      if (this.newEvent.idTipoEvento == this.valorTipoEventoSesion) {
+        this.isFormacionCalendar = true;
+      }
+
       if (this.newEvent.idTipoCalendario == this.valorTipoLaboral) {
         this.selectedTipoLaboral = true;
         this.getComboPartidoJudicial();
-
-        //Obligamos al estado a ser Festivo
-        this.newEvent.idTipoEvento = this.valorTipoEventoFestivo;
-        //Si no, el lugar se introduce manualmente porque estamos en calendario general
-      } else {
-        this.selectedTipoLaboral = false;
-        this.newEvent.idTipoEvento = this.valorTipoEventoGeneral;
       }
 
       this.getEventNotifications();
@@ -344,7 +338,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     } else if (
       sessionStorage.getItem("isFormacionCalendarByStartInscripcion") == "true"
     ) {
-      this.isFormacionCalendar = true;
       this.modoTipoEventoInscripcion = true;
       this.disabledTipoEvento = true;
       this.path = "formacionInicioInscripcion";
@@ -395,7 +388,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       sessionStorage.getItem("isFormacionCalendarByStartInscripcion") == "false"
     ) {
       this.modoTipoEventoInscripcion = true;
-      this.isFormacionCalendar = true;
       this.disabledTipoEvento = true;
       this.path = "formacionFinInscripcion";
 

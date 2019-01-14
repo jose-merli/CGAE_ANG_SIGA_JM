@@ -8,9 +8,9 @@
 </div>
 
 <!--Tarjeta estado solicitud-->
-<div class="card" hidden>
-        <div class="card-header header-ficha" (click)="abreCierraEstadoSolicitud()">
-            <div [hidden]="mostrarEstadoSolicitud" class="form-row">
+<div class="card" [hidden]="!modoLectura">
+        <div class="card-header header-ficha">
+            <div class="form-row">
                 <div class="col-lg-1 col-md-2">
                     <div class="img-colegiado">
                         <i *ngIf="!existeImagen" class="fas fa-info icon-ficha"></i>
@@ -19,42 +19,18 @@
                 </div>
                 <div class="col-lg-11 col-md-10">
                     <div class="d-flex justify-content-start mb-1">
-                        <label class="mr-auto title-ficha">Datos de solicitud</label>
+                        <label class="mr-auto title-ficha">{{"censo.nuevaSolicitud.headerSolicitud" | translate}}</label>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <label>Estado
-                            <span>dto
-                                <!--{{solicitud.tipoSolicitud}}--></span>
+                        <label>{{"censo.resultadosSolicitudesModificacion.literal.idSolicitud" | translate}}
+                            <span>{{solicitud.idSolicitudMutualidad}}</span>
                         </label>
-                        <i *ngIf="!mostrarEstadoSolicitud" class="fa fa-angle-down float-right"></i>
+                        <label>{{"censo.fichaIntegrantes.literal.estado" | translate}}
+                                <span>{{solicitud.estadoMutualidad}}</span>
+                        </label>
+                        <i class="float-right"></i>
+
                     </div>
-                </div>
-            </div>
-            <div *ngIf="mostrarEstadoSolicitud" class=" header-ficha-open d-flex justify-content-start align-items-center">
-                <div class="img-colegiado">
-                    <i *ngIf="!existeImagen" class="fas fa-info icon-ficha"></i>
-                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
-                </div>
-                <label class="title-ficha">Estado Solicitud
-                    <!--{{ "general.message.datos.generales" | translate}}--></label>
-                <i class="fa fa-angle-up ml-auto"></i>
-            </div>
-        </div>
-    
-        <div [hidden]="!mostrarEstadoSolicitud " class="card-body card-body-ficha">
-            <div class="form-row">
-                    <div class="col-lg-3 col-md-3">
-                            <label>Solicitud de Alta</label>
-                            <label>idSolicitud</label>
-                        </div>
-    
-                <div class="col-lg-3 col-md-3">
-                    <label>Estado solicitud</label>
-                    <p-dropdown class="select-form" [(ngModel)]="body.idEstadoSolicitud"
-                    [options]="poblaciones" optionLabel="label" dataKey="value"></p-dropdown>
-                </div>
-                <div class="col-lg-3 col-md-3">
-                    <label>Estado mutualista</label>
                 </div>
             </div>
         </div>
@@ -142,7 +118,7 @@
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.consultaDatosGenerales.literal.estadoCivil" | translate}} (*)</label>
-                            <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="solicitud.estadoCivil" [options]="estadoCivil"
+                            <p-dropdown [disabled]="modoLectura" class="select-form" [(ngModel)]="solicitud.idEstadoCivil" [options]="estadoCivil"
                             ></p-dropdown>   
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
@@ -210,20 +186,20 @@
                         <label>
                             {{"censo.datosDireccion.literal.pais2" | translate}} (*)
                         </label>
-                        <p-dropdown [disabled]="consulta" placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]="paisSelected" [options]="paises"
+                        <p-dropdown [disabled]="modoLectura" placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]="paisSelected" [options]="paises"
                              (onChange)="onChangePais($event)"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.consultaDirecciones.literal.direccion" | translate}} (*)
                         </label>
-                        <input [disabled]="consulta" type="text" class="form-control" pInputText [(ngModel)]="body.domicilio">
+                        <input [disabled]="modoLectura" type="text" class="form-control" pInputText [(ngModel)]="body.domicilio">
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.ws.literal.codigopostal" | translate}} (*)
                         </label>
-                        <input [disabled]="consulta" type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.codigoPostal" (ngModelChange)="onChangeCodigoPostal()" pInputText>
+                        <input [disabled]="modoLectura" type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.codigoPostal" (ngModelChange)="onChangeCodigoPostal()" pInputText>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
@@ -245,17 +221,17 @@
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.ws.literal.telefono" | translate}} 1 (*)</label>
-                        <input [disabled]="consulta" type="number" class="form-control" pInputText [(ngModel)]="body.telefono1">
+                        <input [disabled]="modoLectura" type="number" class="form-control" pInputText [(ngModel)]="body.telefono">
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.datosDireccion.literal.telefonoMovil" | translate}}</label>
-                        <input [disabled]="consulta" type="number" class="form-control" pInputText [(ngModel)]="body.movil">
+                        <input [disabled]="modoLectura" type="number" class="form-control" pInputText [(ngModel)]="body.movil">
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.datosDireccion.literal.correo" | translate}} (*)</label>
-                        <input [disabled]="consulta" type="text" class="form-control" pInputText [(ngModel)]="body.correoElectronico">
+                        <input [disabled]="modoLectura" type="text" class="form-control" pInputText [(ngModel)]="body.correoElectronico">
                     </div>
                 </div>
             </div>
@@ -274,16 +250,16 @@
             </div>
             <div class="col-lg-11 col-md-10">
                 <div class="d-flex justify-content-start mb-1">
-                    <label class="mr-auto title-ficha">Datos Bancarios</label>
+                    <label class="mr-auto title-ficha">{{"censo.consultaDatosBancarios.cabecera" | translate}}</label>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <label>Titular
+                    <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}}
                         <span>{{body.titular}}</span>
                     </label>
-                    <label>IBAN
+                    <label>{{"censo.mutualidad.literal.iban" | translate}}
                         <span>{{body.iban}}</span>
                     </label>
-                    <label>SWIFT
+                    <label>{{"censo.fichaCliente.datosBancarios.cuentaBancaria.bic" | translate}}
                         <span>{{body.bic}}</span>
                     </label>
                     <i *ngIf="!datosBancarios" class="fa fa-angle-down float-right"></i>
@@ -295,7 +271,7 @@
                 <i *ngIf="!existeImagen" class="fas fa-credit-card icon-ficha"></i>
                 <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
             </div>
-            <label class="title-ficha">Datos Bancarios</label>
+            <label class="title-ficha">{{"censo.consultaDatosBancarios.cabecera" | translate}}</label>
             <i class="fa fa-angle-up ml-auto"></i>
         </div>
     </div>
@@ -303,20 +279,20 @@
     <div [hidden]="!datosBancarios" class="card-body card-body-ficha">
         <div class="form-row">
             <div class="form-group col-lg-3 col-md-3">
-                <label>Titular</label>
-                <input type="text" class="form-control" pInputText [(ngModel)]="body.titular">
+                <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}}</label>
+                <input type="text" class="form-control" pInputText [disabled]="modoLectura" [(ngModel)]="body.titular">
             </div>
             <div class="form-group col-lg-3 col-md-3">
-                <label>IBAN</label>
-                <input type="text" class="form-control" pInputText [(ngModel)]="body.iban">
+                <label>{{"censo.mutualidad.literal.iban" | translate}}</label>
+                <input type="text" class="form-control" [disabled]="modoLectura" pInputText [(ngModel)]="body.iban">
             </div>
             <div class="form-group col-lg-3 col-md-3">
-                <label>SWIFT</label>
-                <input type="text" class="form-control" pInputText [(ngModel)]="body.bic">
+                <label>{{"censo.fichaCliente.datosBancarios.cuentaBancaria.bic" | translate}}</label>
+                <input type="text" class="form-control" [disabled]="modoLectura" pInputText [(ngModel)]="body.bic">
             </div>
             <div class="form-group col-lg-3 col-md-3">
-                <label>Periocidad de pago</label>
-                <p-dropdown class="select-form" [(ngModel)]="pagoSelected" [options]="formasPago" optionLabel="label"
+                <label>{{"censo.mutualidad.literal.periodicidadPago" | translate}}</label>
+                <p-dropdown class="select-form" [(ngModel)]="pagoSelected" [disabled]="modoLectura" [options]="formasPago" optionLabel="label"
                     dataKey="value"></p-dropdown>
             </div>
         </div>
@@ -336,18 +312,18 @@
             </div>
             <div class="col-lg-11 col-md-10">
                 <div class="d-flex justify-content-start mb-1">
-                    <label class="mr-auto title-ficha">Datos Póliza</label>
+                    <label class="mr-auto title-ficha">{{"censo.consultaDatosRegistrales.literal.DatosPoliza" | translate}}</label>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <label>Opcion de cobertura
+                    <label>{{"censo.mutualidad.literal.opcionCobertura" | translate}}
                         <span>{{body.idCobertura}}</span>
                     </label>
 
-                    <label>Cuota Mensual
+                    <label>{{"censo.mutualidad.literal.cuotaMensual" | translate}}
                          <span>{{body.cuotaMensual}} €</span>
                      </label>
                     
-                     <label>Capital objetivo estimado a 65 años
+                     <label>{{"censo.mutualidad.literal.capitalObjetivo" | translate}}
                             <span>{{body.capitalObjetivo}} €</span>
                      </label>
                         
@@ -360,7 +336,7 @@
                 <i *ngIf="!existeImagen" class="fas fa-file-alt icon-ficha"></i>
                 <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
             </div>
-            <label class="title-ficha">Datos Póliza</label>
+            <label class="title-ficha">{{"censo.consultaDatosRegistrales.literal.DatosPoliza" | translate}}</label>
             <i class="fa fa-angle-up ml-auto"></i>
         </div>
     </div>
@@ -368,32 +344,31 @@
     <div [hidden]="!datosPoliza" class="card-body card-body-ficha">
         <div class="form-row">
             <div class="col-lg-3 col-md-3">
-                <label>Opción de cobertura</label>
-                <p-dropdown class="select-form" [(ngModel)]="body.idCobertura" (onChange)="obtenerCuotaYCapObj()" [options]="opcionesCoberturas" optionLabel="label"
+                <label>{{"censo.mutualidad.literal.opcionCobertura" | translate}}</label>
+                <p-dropdown class="select-form" [(ngModel)]="body.idCobertura" (onChange)="obtenerCuotaYCapObj()" [disabled]="modoLectura" [options]="opcionesCoberturas" optionLabel="label"
                     dataKey="value"></p-dropdown>
             </div>
             <div class="col-lg-3 col-md-3">
-                <label>Cuota mensual</label>
-                <input type="text" class="form-control" pInputText [(ngModel)]="body.cuotaMensual">
+                <label>{{"censo.mutualidad.literal.cuotaMensual" | translate}}</label>
+                <input type="text" class="form-control" pInputText disabled [(ngModel)]="body.cuotaMensual">
             </div>
             <div class="col-lg-3 col-md-3">
-                <label>Capital objetivo estimado a 65 años</label>
-                <input type="text" class="form-control" pInputText [(ngModel)]="body.capitalObjetivo">
+                <label>{{"censo.mutualidad.literal.capitalObjetivo" | translate}}</label>
+                <input type="text" class="form-control" pInputText disabled [(ngModel)]="body.capitalObjetivo">
             </div>
             <div class="col-lg-3 col-md-3">
-                <label>Beneficiarios</label>
-                <p-dropdown class="select-form" [(ngModel)]="body.idBeneficiarios" [options]="designacionBeneficiarios" optionLabel="label"
+                <label>{{"censo.mutualidad.literal.beneficiarios" | translate}}</label>
+                <p-dropdown class="select-form" [(ngModel)]="body.idBeneficiarios" [disabled]="modoLectura" [options]="designacionBeneficiarios" optionLabel="label"
                     dataKey="value"></p-dropdown>
             </div>
             <div class="col-lg-3 col-md-3">
-                <label>Asistencia Sanitaria</label>
-                <p-dropdown class="select-form" [(ngModel)]="body.idAsistenciaSanitaria" [options]="asistenciaSanitaria" optionLabel="label"
+                <label>{{"censo.mutualidad.literal.asistenciaSanitaria" | translate}}</label>
+                <p-dropdown class="select-form" [(ngModel)]="body.idAsistenciaSanitaria" [disabled]="modoLectura" [options]="asistenciaSanitaria" optionLabel="label"
                 dataKey="value"></p-dropdown>
             </div>
             <div class="col-lg-12 col-md-12">
                 <br>
-                <label style="font-style:italic">Las cuotas aportadas durante los tres primeros años al sistema de
-                    previsión profesional para
+                <label style="font-style:italic">Las cuotas aportadas durante los tres primeros años al sistema de previsión profesional para
                     las garantías de Ahorro-Jubilacion, Fallecimiento, Incapacidad Permanente,
                     Incapacidad Temporal Profesional y Dependencia, tendrán una reducción del 50% para los menores de 50
                     años</label>
@@ -415,8 +390,8 @@
             </div>
             <div class="col-lg-11 col-md-10">
                 <div class="d-flex justify-content-start mb-1">
-                    <label class="mr-auto title-ficha">Unidad familiar</label>
-                </div>
+                    <label class="mr-auto title-ficha">{{"gratuita.personaJG.literal.unidadFamiliar" | translate}}</label>
+                </div> 
                 <div class="d-flex justify-content-between">
                     <label>Fecha nacimiento
                         <span></span>
@@ -433,7 +408,7 @@
                 <i *ngIf="!existeImagen" class="fas fa-file-alt icon-ficha"></i>
                 <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
             </div>
-            <label class="title-ficha">Unidad familiar</label>
+            <label class="title-ficha">{{"gratuita.personaJG.literal.unidadFamiliar" | translate}}</label>
             <i class="fa fa-angle-up ml-auto"></i>
         </div>
     </div>
@@ -442,13 +417,13 @@
         <div class="form-row">
             <div class="col-lg-3 col-md-3">
                 <label>Fecha nacimiento cónyuge</label>
-                <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050"
+                <p-calendar [monthNavigator]="true" [disabled]="modoLectura" [yearNavigator]="true" yearRange="1930:2050"
                 [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true"
                 [(ngModel)]="body.fechaNacConyuge"></p-calendar>
             </div>
             <div class="col-lg-3 col-md-3">
                 <label>Número de hijos</label>
-                <input type="number" class="form-control" pInputText [(ngModel)]="s">
+                <input type="number" class="form-control" [disabled]="modoLectura" pInputText [(ngModel)]="body.numHijos">
             </div>
             <div class="col-lg-6 col-md-6">
             </div>
@@ -457,35 +432,34 @@
             </div> 
             <div class="col-lg-2 col-md-2">
                 <label>Hijo 1</label>
-                <input type="text" class="form-control" pInputText [(ngModel)]="hijo1">
+                <input type="number" class="form-control" pInputText [disabled]="modoLectura" [(ngModel)]="body.hijos[0]">
             </div>
             <div class="col-lg-2 col-md-2">
                <label>Hijo 2</label>
-               <input type="text" class="form-control" pInputText [(ngModel)]="hijo2">
+               <input type="number" class="form-control" pInputText [disabled]="modoLectura" [(ngModel)]="body.hijos[1]">
             </div>
             <div class="col-lg-2 col-md-2">
                 <label>Hijo 3</label>
-                <input type="text" class="form-control" pInputText [(ngModel)]="hijo3">
+                <input type="number" class="form-control" pInputText [disabled]="modoLectura" [(ngModel)]="body.hijos[2]">
             </div>
             <div class="col-lg-2 col-md-2">
                 <label>Hijo 4</label>
-                <input type="text" class="form-control" pInputText [(ngModel)]="hijo4">
+                <input type="number" class="form-control" pInputText [disabled]="modoLectura" [(ngModel)]="body.hijos[3]">
             </div>
             <div class="col-lg-2 col-md-2">
                 <label>Hijo 5</label>
-                <input type="text" class="form-control" pInputText [(ngModel)]="hijo5">
+                <input type="number" class="form-control" pInputText [disabled]="modoLectura" [(ngModel)]="body.hijos[4]">
             </div>
         </div>
     </div>
 </div>
 <div>
-        <p-checkbox [(ngModel)]="selectAll" binary="true" label="El colegiado consiente la cesión de los datos por parte del Colegio a la Mutualidad General de la Abogacía" name="groupname"></p-checkbox>
+    <p-checkbox [(ngModel)]="cedeDatos" binary="true" label="El colegiado consiente la cesión de los datos por parte del Colegio a la Mutualidad General de la Abogacía" [disabled]="modoLectura" name="groupname"></p-checkbox>
 </div>
 <div class="mt-3 text-right main-button ">
     <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
-    <button (click)="guardar()" pButton type="button " icon="fa fa-save" iconPos="left" label="Guardar"></button>
+    <button (click)="guardar()" pButton type="button " [disabled]="!isGuardar()" icon="fa fa-save" iconPos="left" label="Guardar"></button>
 </div>
-
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
     <div class="loader"></div>
