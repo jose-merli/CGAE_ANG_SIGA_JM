@@ -60,12 +60,14 @@
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaClientesAvanzada.literal.categoriaCV" | translate}}</label>
-                        <p-dropdown class="select-form" [options]="comboCategoriaCurricular" placeholder="{{'general.boton.seleccionar' | translate}}"
-                            [(ngModel)]="body.idcv"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.tipoCV' [options]="comboCategoriaCurricular" placeholder="{{'general.boton.seleccionar' | translate}}"
+                        [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeCategoriaCurricular($event)"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
-                        <label>{{ "censo.busquedaClientesAvanzada.literal.subtiposCV" | translate}}</label>
-                        <p-dropdown class="select-form" [options]="select" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.subCategoria"></p-dropdown>
+                        <label>{{"censo.busquedaClientesAvanzada.literal.subtiposCV" | translate}}</label>
+                        <p-multiSelect *ngIf="!noResultsSubtipos" [disabled]="!editar" [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='body.subtipoCV' [options]="comboSubtipoCV"
+                            maxSelectedLabels="1" styleClass="widthAll"></p-multiSelect>
+                        <p-dropdown *ngIf="noResultsSubtipos" styleClass="widthAll" class="select-form" [options]="comboSubtipoCV" placeholder="Elegir" [(ngModel)]="body.subtipoCV"></p-dropdown>
                     </div>
                 </div>
             </div>
@@ -114,13 +116,13 @@
         <div class="card-footer ">
             <div class="text-right main-button">
                 <button (click)="isLimpiar()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}"></button>
-                <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+                <button (click)="isBuscar(false)" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
                 <button (click)="isCrear()" [disabled]="isEditable" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
 
             </div>
         </div>
     </div>
-    <div *ngIf="buscar == true" class="card mt-3">
+    <div *ngIf="!historico && buscar" class="card mt-3">
         <div class="card-body p-0">
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
                 [(selection)]="selectedDatos" (onRowSelect)="irEditarNoColegiado(selectedDatos)" pageLinks="4" dataKey="nif"
@@ -145,7 +147,7 @@
                     <div class="text-right main-button">
                         <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-send" iconPos="left" label="{{ 'general.boton.comunicar' | translate }}"
                             disabled></button>
-                        <button (click)="toHistorico()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
+                        <button (click)="isBuscar(true)" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
                         <button (click)="deleteSeleccion(selectedDatos)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"
                             [disabled]="!selectMultiple"></button>
                         <!-- <button (click)="isCrear()" [disabled]="isEditable" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button> -->
@@ -156,11 +158,11 @@
     </div>
 
     <!--HISTORICO-->
-    <div *ngIf="historico == true" class="card mt-3">
+    <div *ngIf="historico" class="card mt-3">
         <div class="card-body p-0">
 
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-                [(selection)]="selectedDatos" (onRowSelect)="irEditarPersona(selectedDatos)" pageLinks="4" dataKey="nif" [responsive]="true"
+                [(selection)]="selectedDatos" (onRowSelect)="irEditarNoColegiado(selectedDatos)" pageLinks="4" dataKey="nif" [responsive]="true"
                 selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both"
                 [rows]="selectedItem">
                 <p-column *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
@@ -196,7 +198,7 @@
                     <div class="text-right main-button">
                         <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-send" iconPos="left" label="{{ 'general.boton.comunicar' | translate }}"
                             disabled></button>
-                        <button (click)="isBuscar()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+                        <button (click)="isBuscar(false)" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
                         <button (click)="deleteSeleccion()" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"
                            disabled></button>
 

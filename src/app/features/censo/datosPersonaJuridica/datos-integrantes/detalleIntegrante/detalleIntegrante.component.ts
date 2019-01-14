@@ -99,6 +99,13 @@ export class DetalleIntegranteComponent implements OnInit {
     if (sessionStorage.getItem("historicoInt") != null) {
       this.historico = true;
     }
+
+    if(sessionStorage.getItem("disabledAction") == "true"){
+      this.historico = true;
+    }else{
+      this.historico = false;
+    }
+
     sessionStorage.removeItem("historicoInt");
     sessionStorage.removeItem("newIntegrante");
 
