@@ -355,7 +355,7 @@ export class FichaColegialComponent implements OnInit {
       this.onInitCurriculares();
       this.onInitDirecciones();
       this.onInitDatosBancarios();
-      this.onInitRegTel();
+      // this.onInitRegTel();
     }
 
     // this.onInitSociedades();
@@ -1851,8 +1851,8 @@ export class FichaColegialComponent implements OnInit {
   activacionGuardarColegiales() {
     this.inscritoAItem();
     if (
-      JSON.stringify(this.checkColegialesBody) !=
-      JSON.stringify(this.colegialesBody)
+      (JSON.stringify(this.checkColegialesBody) !=
+      JSON.stringify(this.colegialesBody)) && this.colegialesBody.numColegiado != "" && this.colegialesBody.idTiposSeguro != "" && this.colegialesBody.residenteInscrito != "" && this.colegialesBody.incorporacion != null && this.colegialesBody.fechapresentacion != null && this.colegialesBody.fechaJura != null
     ) {
       this.activarGuardarColegiales = true;
     } else {

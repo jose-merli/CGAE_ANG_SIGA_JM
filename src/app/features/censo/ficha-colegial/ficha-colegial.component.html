@@ -673,7 +673,7 @@
               "censo.consultaDatosGenerales.literal.fechaPresentacion"
                 | translate
             }}
-            <span>{{ colegialesBody.fechaPresentacion }}</span>
+            <span>{{ colegialesBody.fechapresentacion }}</span>
           </label>
 
           <label
@@ -721,7 +721,7 @@
             <div class="form-group col-lg-3 col-md-3">
               <label>{{
                 "censo.busquedaClientesAvanzada.literal.nColegiado" | translate
-              }}</label>
+              }} (*)</label>
               <input
                 [(ngModel)]="colegialesBody.numColegiado"
                 [(disabled)]="isLetrado"
@@ -739,7 +739,7 @@
             <div class="form-group col-lg-3 col-md-3">
               <label>{{
                 "censo.consultaDatosGenerales.literal.seguro" | translate
-              }}</label>
+              }} (*)</label>
               <p-dropdown
                 class="select-form"
                 [(disabled)]="isLetrado"
@@ -752,7 +752,7 @@
             <div class="form-group col-lg-3 col-md-3">
               <label>{{
                 "censo.ws.literal.residenteInscrito" | translate
-              }}</label>
+              }} (*)</label>
               <!--
                 <input [(ngModel)]="colegialesBody.residenteInscrito" type="text"  (ngModelChange)="activacionGuardarColegiales()" class="form-control" [maxLength]="100" pInputText>
               -->
@@ -789,7 +789,7 @@
               <label>{{
                 "censo.consultaDatosGenerales.literal.fechaIncorporacion"
                   | translate
-              }}</label>
+              }} (*)</label>
               <p-calendar
                 [monthNavigator]="true"
                 [yearNavigator]="true"
@@ -808,38 +808,37 @@
               <label>{{
                 "censo.consultaDatosGenerales.literal.fechaPresentacion"
                   | translate
-              }}</label>
+              }} (*)</label>
               <p-calendar
                 [monthNavigator]="true"
                 [yearNavigator]="true"
                 yearRange="1930:2050"
                 [locale]="es"
                 [(disabled)]="isLetrado"
-                (onSelect)="activacionGuardarColegiales()"
                 [(ngModel)]="colegialesBody.fechapresentacion"
                 dateFormat="dd/mm/yy"
                 icon="far fa-calendar-alt"
                 showIcon="true"
                 [utc]="true"
+                (ngModelChange)="activacionGuardarColegiales()"
+
               ></p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{
                 "censo.consultaDatosGenerales.literal.fechaJura" | translate
-              }}</label>
+              }} (*)</label>
               <p-calendar
                 [monthNavigator]="true"
                 [yearNavigator]="true"
                 yearRange="1930:2050"
                 [locale]="es"
                 [(disabled)]="isLetrado"
-                (onSelect)="activacionGuardarColegiales()"
                 [(ngModel)]="colegialesBody.fechaJura"
                 dateFormat="dd/mm/yy"
                 icon="far fa-calendar-alt"
-                showIcon="true"
-                [utc]="true"
-              ></p-calendar>
+                showIcon="true" [utc]="true"                 (ngModelChange)="activacionGuardarColegiales()"
+                ></p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{
@@ -852,12 +851,12 @@
                 yearRange="1930:2050"
                 [locale]="es"
                 [(disabled)]="isLetrado"
-                (onSelect)="activacionGuardarColegiales()"
                 [(ngModel)]="colegialesBody.fechaTitulacion"
                 dateFormat="dd/mm/yy"
                 icon="far fa-calendar-alt"
                 showIcon="true"
-                [utc]="true"
+                [utc]="true"                 (ngModelChange)="activacionGuardarColegiales()"
+
               ></p-calendar>
             </div>
           </div>
@@ -917,7 +916,6 @@
     <div *ngIf="esFichaActiva('colegiales')" class="card-footer ">
       <div class="text-right main-button ">
         <button
-          [(disabled)]="!activarGuardarColegiales"
           (click)="restablecerColegiales()"
           pButton
           type="button"
@@ -1966,8 +1964,9 @@
     </div>
   </div>
   <!-- END FICHA DATOS BANCARIOS -->
+
  <!-- INICIO FICHA REGTEL -->
- <div class="card">
+ <!-- <div class="card">
   <div
     class="card-header header-ficha"
     (click)="abreCierraFicha('regtel')"
@@ -2117,8 +2116,10 @@
     ></button>
      
     </div>
-  </div>
+  </div> 
 </div>
+-->
+
 <!-- END FICHA REGTEL-->
 
 
