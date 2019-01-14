@@ -250,7 +250,7 @@
             </div>
             <div class="col-lg-11 col-md-10">
                 <div class="d-flex justify-content-start mb-1">
-                    <label class="mr-auto title-ficha">Datos Bancarios</label>
+                    <label class="mr-auto title-ficha">{{"censo.consultaDatosBancarios.cabecera" | translate}}</label>
                 </div>
                 <div class="d-flex justify-content-between">
                     <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}}
@@ -312,18 +312,18 @@
             </div>
             <div class="col-lg-11 col-md-10">
                 <div class="d-flex justify-content-start mb-1">
-                    <label class="mr-auto title-ficha">Datos Póliza</label>
+                    <label class="mr-auto title-ficha">{{"censo.consultaDatosRegistrales.literal.DatosPoliza" | translate}}</label>
                 </div>
                 <div class="d-flex justify-content-between">
                     <label>{{"censo.mutualidad.literal.opcionCobertura" | translate}}
                         <span>{{body.idCobertura}}</span>
                     </label>
 
-                    <label>Cuota Mensual
+                    <label>{{"censo.mutualidad.literal.cuotaMensual" | translate}}
                          <span>{{body.cuotaMensual}} €</span>
                      </label>
                     
-                     <label>Capital objetivo estimado a 65 años
+                     <label>{{"censo.mutualidad.literal.capitalObjetivo" | translate}}
                             <span>{{body.capitalObjetivo}} €</span>
                      </label>
                         
@@ -336,7 +336,7 @@
                 <i *ngIf="!existeImagen" class="fas fa-file-alt icon-ficha"></i>
                 <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
             </div>
-            <label class="title-ficha">Datos Póliza</label>
+            <label class="title-ficha">{{"censo.consultaDatosRegistrales.literal.DatosPoliza" | translate}}</label>
             <i class="fa fa-angle-up ml-auto"></i>
         </div>
     </div>
@@ -344,32 +344,31 @@
     <div [hidden]="!datosPoliza" class="card-body card-body-ficha">
         <div class="form-row">
             <div class="col-lg-3 col-md-3">
-                <label>Opción de cobertura</label>
+                <label>{{"censo.mutualidad.literal.opcionCobertura" | translate}}</label>
                 <p-dropdown class="select-form" [(ngModel)]="body.idCobertura" (onChange)="obtenerCuotaYCapObj()" [disabled]="modoLectura" [options]="opcionesCoberturas" optionLabel="label"
                     dataKey="value"></p-dropdown>
             </div>
             <div class="col-lg-3 col-md-3">
-                <label>Cuota mensual</label>
+                <label>{{"censo.mutualidad.literal.cuotaMensual" | translate}}</label>
                 <input type="text" class="form-control" pInputText disabled [(ngModel)]="body.cuotaMensual">
             </div>
             <div class="col-lg-3 col-md-3">
-                <label>Capital objetivo estimado a 65 años</label>
+                <label>{{"censo.mutualidad.literal.capitalObjetivo" | translate}}</label>
                 <input type="text" class="form-control" pInputText disabled [(ngModel)]="body.capitalObjetivo">
             </div>
             <div class="col-lg-3 col-md-3">
-                <label>Beneficiarios</label>
+                <label>{{"censo.mutualidad.literal.beneficiarios" | translate}}</label>
                 <p-dropdown class="select-form" [(ngModel)]="body.idBeneficiarios" [disabled]="modoLectura" [options]="designacionBeneficiarios" optionLabel="label"
                     dataKey="value"></p-dropdown>
             </div>
             <div class="col-lg-3 col-md-3">
-                <label>Asistencia Sanitaria</label>
+                <label>{{"censo.mutualidad.literal.asistenciaSanitaria" | translate}}</label>
                 <p-dropdown class="select-form" [(ngModel)]="body.idAsistenciaSanitaria" [disabled]="modoLectura" [options]="asistenciaSanitaria" optionLabel="label"
                 dataKey="value"></p-dropdown>
             </div>
             <div class="col-lg-12 col-md-12">
                 <br>
-                <label style="font-style:italic">Las cuotas aportadas durante los tres primeros años al sistema de
-                    previsión profesional para
+                <label style="font-style:italic">Las cuotas aportadas durante los tres primeros años al sistema de previsión profesional para
                     las garantías de Ahorro-Jubilacion, Fallecimiento, Incapacidad Permanente,
                     Incapacidad Temporal Profesional y Dependencia, tendrán una reducción del 50% para los menores de 50
                     años</label>
@@ -391,8 +390,8 @@
             </div>
             <div class="col-lg-11 col-md-10">
                 <div class="d-flex justify-content-start mb-1">
-                    <label class="mr-auto title-ficha">Unidad familiar</label>
-                </div>
+                    <label class="mr-auto title-ficha">{{"gratuita.personaJG.literal.unidadFamiliar" | translate}}</label>
+                </div> 
                 <div class="d-flex justify-content-between">
                     <label>Fecha nacimiento
                         <span></span>
@@ -409,7 +408,7 @@
                 <i *ngIf="!existeImagen" class="fas fa-file-alt icon-ficha"></i>
                 <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
             </div>
-            <label class="title-ficha">Unidad familiar</label>
+            <label class="title-ficha">{{"gratuita.personaJG.literal.unidadFamiliar" | translate}}</label>
             <i class="fa fa-angle-up ml-auto"></i>
         </div>
     </div>

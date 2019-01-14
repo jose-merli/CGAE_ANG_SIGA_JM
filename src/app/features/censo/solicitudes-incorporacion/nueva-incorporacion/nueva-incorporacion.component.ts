@@ -897,7 +897,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   irSegAccidentes() {
-    //TODO: this.router.navigate(["/alterMutua"]);
+    this.router.navigate(["/mutualidadSeguroAccidentes"]);
   }
 
   ngOnDestroy() {
