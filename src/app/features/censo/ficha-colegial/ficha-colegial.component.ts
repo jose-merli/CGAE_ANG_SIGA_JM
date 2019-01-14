@@ -73,7 +73,7 @@ export class FichaColegialComponent implements OnInit {
   bodySanciones: BusquedaSancionesItem = new BusquedaSancionesItem();
   bodySearchSanciones: BusquedaSancionesObject = new BusquedaSancionesObject();
   bodySearchRegTel: DocushareObject= new DocushareObject();
-  bodyRegTel: any[];
+  bodyRegTel: any[] = [];
   isLetrado: boolean;
   permisos: boolean = true;
   displayAuditoria: boolean = false;
@@ -123,7 +123,7 @@ export class FichaColegialComponent implements OnInit {
   activacionEditar: boolean = true;
   selectedItem: number = 10;
   camposDesactivados: boolean = false;
-  datos: any[];
+  datos: any[] = [];
   datosCurriculares: any[] = [];
   sortF: any;
   sortO: any;
@@ -138,19 +138,19 @@ export class FichaColegialComponent implements OnInit {
   datosColegiaciones: any[] = [];
   datosCertificados: any[] = [];
   url: any;
-  etiquetasPersonaJuridica: any[];
+  etiquetasPersonaJuridica: any[] = [];
   datosSociedades: any[] = [];
   file: File = undefined;
   edadCalculada: any;
-  dataSanciones: any[];
+  dataSanciones: any[] = [];
 
   // Datos Generales
-  generalTratamiento: any[];
-  generalEstadoCivil: any[];
-  generalIdiomas: any[];
-  comboSituacion: any[];
-  tipoIdentificacion: any[];
-  comboTipoSeguro: any[];
+  generalTratamiento: any[] = [];
+  generalEstadoCivil: any[] = [];
+  generalIdiomas: any[] = [];
+  comboSituacion: any[] = [];
+  tipoIdentificacion: any[] = [];
+  comboTipoSeguro: any[] = [];
   fechaNacimiento: Date;
   fechaAlta: Date;
   comisiones: boolean;
@@ -290,7 +290,12 @@ export class FichaColegialComponent implements OnInit {
       this.disabledNif = false;
     }
 
-    
+    if(sessionStorage.getItem("disabledAction") == "true"){
+      // Es baja colegial
+      this.disabledAction = true;
+    }else{
+      this.disabledAction = false;
+    }
 
     // Cogemos los datos de la busqueda de Colegiados
     this.getLetrado();
@@ -306,7 +311,8 @@ export class FichaColegialComponent implements OnInit {
       this.persistenciaNoCol = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaNoColegiados")
       );
-      sessionStorage.removeItem("filtrosBusquedaNoColegiados");
+
+      // sessionStorage.removeItem("filtrosBusquedaNoColegiados");
     }
     if (
       sessionStorage.getItem("personaBody") != null &&
@@ -328,14 +334,9 @@ export class FichaColegialComponent implements OnInit {
         this.esColegiado = true;
       }
 
-      if(sessionStorage.getItem("disabledAction") == "true"){
-        // Es baja colegial o histórico
-        this.disabledAction = true;
-      }else{
-        this.disabledAction = false;
-      }
-
       this.generalBody.colegiado = this.esColegiado;
+
+
       // this.checkAcceso();
       this.onInitGenerales();
       this.onInitCurriculares();
@@ -366,7 +367,7 @@ export class FichaColegialComponent implements OnInit {
       this.onInitCurriculares();
       this.onInitDirecciones();
       this.onInitDatosBancarios();
-      this.onInitRegTel();
+      // this.onInitRegTel();
     }
 
     // this.onInitSociedades();
@@ -1862,8 +1863,8 @@ export class FichaColegialComponent implements OnInit {
   activacionGuardarColegiales() {
     this.inscritoAItem();
     if (
-      JSON.stringify(this.checkColegialesBody) !=
-      JSON.stringify(this.colegialesBody)
+      (JSON.stringify(this.checkColegialesBody) !=
+      JSON.stringify(this.colegialesBody)) && this.colegialesBody.numColegiado != "" && this.colegialesBody.idTiposSeguro != "" && this.colegialesBody.residenteInscrito != "" && this.colegialesBody.incorporacion != null && this.colegialesBody.fechapresentacion != null && this.colegialesBody.fechaJura != null
     ) {
       this.activarGuardarColegiales = true;
     } else {
