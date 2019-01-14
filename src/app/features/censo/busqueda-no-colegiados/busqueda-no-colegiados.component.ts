@@ -1,21 +1,22 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
-import { OldSigaServices } from "../../../_services/oldSiga.service";
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
+import { ConfirmationService, Message } from "primeng/components/common/api";
+import { DatePipe } from "../../../../../node_modules/@angular/common";
 import {
-  FormGroup,
   FormBuilder,
   FormControl,
+  FormGroup,
   Validators
 } from "../../../../../node_modules/@angular/forms";
-import { esCalendar } from "../../../utils/calendar";
 import { Router } from "../../../../../node_modules/@angular/router";
-import { SigaServices } from "../../../_services/siga.service";
+import {
+  DataTable,
+  MultiSelect
+} from "../../../../../node_modules/primeng/primeng";
 import { TranslateService } from "../../../commons/translate";
-import { ConfirmationService, Message } from "primeng/components/common/api";
-import { DataTable } from "../../../../../node_modules/primeng/primeng";
-import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
 import { DatosNoColegiadosObject } from "../../../models/DatosNoColegiadosObject";
-import { DatePipe } from "../../../../../node_modules/@angular/common";
-import { ComboItem } from "../../administracion/parametros/parametros-generales/parametros-generales.component";
+import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
+import { SigaServices } from "../../../_services/siga.service";
+import { SubtipoCurricularItem } from "../../../models/SubtipoCurricularItem";
 
 @Component({
   selector: "app-busqueda-no-colegiados",
@@ -31,6 +32,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   comboPoblacion: any;
   comboTipoDireccion: any;
   comboCategoriaCurricular: any;
+  comboSubtipoCV: any;
   comboSexo: any;
   progressSpinner: boolean = false;
   resultadosPoblaciones: any;
@@ -58,12 +60,17 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   fechaNacimientoSelectOld: Date;
 
   noColegiadoSearch = new DatosNoColegiadosObject();
+  subtipoCurricular: SubtipoCurricularItem = new SubtipoCurricularItem();
+  subtipoCV: string[];
 
   msgs: Message[];
 
   @ViewChild("table")
   table: DataTable;
   selectedDatos;
+
+  @ViewChild("prueba")
+  prueba: MultiSelect;
 
   fichasPosibles = [
     {
@@ -109,7 +116,12 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         sessionStorage.getItem("filtrosBusquedaNoColegiados")
       );
       sessionStorage.removeItem("filtrosBusquedaNoColegiados");
-      this.isBuscar();
+
+      if (this.body.historico) {
+        this.isBuscar(true);
+      } else {
+        this.isBuscar(false);
+      }
     }
   }
 
@@ -249,6 +261,33 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     }
   }
 
+  //Tipo Curricular
+  onChangeCategoriaCurricular(event) {
+    if (event) {
+      this.subtipoCurricular.idTipoCV = event.value;
+      this.getComboSubtipoCurricular();
+    }
+  }
+
+  //SubtipoCurricular
+  getComboSubtipoCurricular() {
+    this.sigaServices
+      .postPaginado(
+        "subtipoCurricular_comboSubtipoCurricular",
+        "?numPagina=1",
+        this.subtipoCurricular
+      )
+      .subscribe(
+        data => {
+          this.comboSubtipoCV = JSON.parse(data["body"]).combooItems;
+          console.log(this.prueba);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
   //Funcion que valida el codido postal
   isValidCodigoPostal(): boolean {
     return (
@@ -327,7 +366,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       this.isEditable = false;
     }
     // let isLetrado: ComboItem;
-    // this.sigaServices.get("getLetrado").subscribe(
+    // this.sigaServices.get("getLetrado").scribe(
     //   data => {
     //     isLetrado = data;
     //     if (isLetrado.value == "S") {
@@ -347,10 +386,18 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   }
 
   //Busca No colegiados según los filtros
-  isBuscar() {
+  isBuscar(flagArchivado: boolean) {
     this.selectAll = false;
-    this.historico = false;
     this.buscar = true;
+
+    if (flagArchivado) {
+      this.body.historico = true;
+      this.historico = true;
+    } else {
+      this.body.historico = false;
+      this.historico = false;
+    }
+
     this.selectMultiple = false;
     this.selectedDatos = "";
     this.getColsResults();
@@ -369,7 +416,6 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     }
 
     this.progressSpinner = true;
-    this.buscar = true;
 
     this.sigaServices
       .postPaginado(
@@ -383,7 +429,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           this.noColegiadoSearch = JSON.parse(data["body"]);
           this.datos = this.noColegiadoSearch.noColegiadoItem;
           this.convertirStringADate(this.datos);
-          this.table.paginator = true;
+          // this.table.paginator = true;
         },
         err => {
           console.log(err);
@@ -422,9 +468,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {
-          this.body.historico = false;
-        }
+        () => {}
       );
   }
 
@@ -506,7 +550,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           this.historico = true;
           this.selectedDatos = [];
           this.numSelected = 0;
-          this.isBuscar();
+          this.isBuscar(false);
         }
       );
   }
@@ -525,9 +569,9 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       if (element.fechaNacimiento == "" || element.fechaNacimiento == null) {
         element.fechaNacimiento = null;
       } else {
-        var year = element.fechaNacimiento.substring(0, 4);
-        var month = element.fechaNacimiento.substring(5, 7);
-        var day = element.fechaNacimiento.substring(8, 10);
+        var year = element.fechaNacimiento.slice(0, 4);
+        var month = element.fechaNacimiento.slice(5, 7);
+        var day = element.fechaNacimiento.slice(8, 10);
         element.fechaNacimiento = "";
         element.fechaNacimiento = day + "/" + month + "/" + year;
       }

@@ -73,7 +73,7 @@ export class FichaColegialComponent implements OnInit {
   bodySanciones: BusquedaSancionesItem = new BusquedaSancionesItem();
   bodySearchSanciones: BusquedaSancionesObject = new BusquedaSancionesObject();
   bodySearchRegTel: DocushareObject= new DocushareObject();
-  bodyRegTel: any[];
+  bodyRegTel: any[] = [];
   isLetrado: boolean;
   permisos: boolean = true;
   displayAuditoria: boolean = false;
@@ -98,6 +98,7 @@ export class FichaColegialComponent implements OnInit {
   buttonVisibleRegtelDescargar: boolean = true;
  
   disabledNif: boolean = false;
+  disabledActions: boolean = false;
  
   // irTurnoOficio: any;
   // irExpedientes: any;
@@ -123,7 +124,7 @@ export class FichaColegialComponent implements OnInit {
   activacionEditar: boolean = true;
   selectedItem: number = 10;
   camposDesactivados: boolean = false;
-  datos: any[];
+  datos: any[] = [];
   datosCurriculares: any[] = [];
   sortF: any;
   sortO: any;
@@ -138,19 +139,19 @@ export class FichaColegialComponent implements OnInit {
   datosColegiaciones: any[] = [];
   datosCertificados: any[] = [];
   url: any;
-  etiquetasPersonaJuridica: any[];
+  etiquetasPersonaJuridica: any[] = [];
   datosSociedades: any[] = [];
   file: File = undefined;
   edadCalculada: any;
-  dataSanciones: any[];
+  dataSanciones: any[] = [];
 
   // Datos Generales
-  generalTratamiento: any[];
-  generalEstadoCivil: any[];
-  generalIdiomas: any[];
-  comboSituacion: any[];
-  tipoIdentificacion: any[];
-  comboTipoSeguro: any[];
+  generalTratamiento: any[] = [];
+  generalEstadoCivil: any[] = [];
+  generalIdiomas: any[] = [];
+  comboSituacion: any[] = [];
+  tipoIdentificacion: any[] = [];
+  comboTipoSeguro: any[] = [];
   fechaNacimiento: Date;
   fechaAlta: Date;
   comisiones: boolean;
@@ -180,7 +181,7 @@ export class FichaColegialComponent implements OnInit {
   isTrue: boolean = false;
   historico: boolean = false;
   isClose: boolean = false;
-  comboEtiquetas: any[];
+  comboEtiquetas: any[] = [];
   inscritoSeleccionado: String = "00";
   updateItems: Map<String, ComboEtiquetasItem> = new Map<String,ComboEtiquetasItem>();
   items: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
@@ -301,7 +302,8 @@ export class FichaColegialComponent implements OnInit {
       this.persistenciaNoCol = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaNoColegiados")
       );
-      sessionStorage.removeItem("filtrosBusquedaNoColegiados");
+
+      // sessionStorage.removeItem("filtrosBusquedaNoColegiados");
     }
     if (
       sessionStorage.getItem("personaBody") != null &&
@@ -323,6 +325,14 @@ export class FichaColegialComponent implements OnInit {
         this.esColegiado = true;
       }
       this.generalBody.colegiado = this.esColegiado;
+
+      if(this.generalBody.fechaBaja != null){
+        this.isLetrado = true;
+      }else{
+        this.isLetrado = false;
+      }
+
+
       // this.checkAcceso();
       this.onInitGenerales();
       this.onInitCurriculares();
