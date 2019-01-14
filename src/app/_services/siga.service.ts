@@ -189,7 +189,13 @@ export class SigaServices {
     consultas_listadoModelos: 'consultas/modelosconsulta',
     consultas_ejecutarConsulta: 'consultas/ejecutarConsulta',
     plantillasEnvio_search: 'plantillasEnvio/plantillasEnvioSearch',
-    plantillasEnvio_guardarDatosGenerales: 'plantillasEnvio/datosGenerales'
+    plantillasEnvio_guardarDatosGenerales: 'plantillasEnvio/datosGenerales',
+    plantillasEnvio_consultas: 'plantillasEnvio/consultasPlantillas',
+    plantillasEnvio_borrar: 'plantillasEnvio/borrarPlantilla',
+    plantillasEnvio_comboConsultas: 'plantillasEnvio/consultasDisp',
+    plantillasEnvio_finalidadConsulta: 'plantillasEnvio/finalidadConsulta',
+    plantillasEnvio_asociarConsulta: 'plantillasEnvio/asociarConsulta',
+    plantillasEnvio_desaociarConsulta: 'plantillasEnvio/desasociarConsulta'
 
 
   };

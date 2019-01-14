@@ -203,8 +203,6 @@ export class ConsultasComponent implements OnInit {
           this.progressSpinner = false;
           this.searchConsultas = JSON.parse(data["body"]);
           this.datos = this.searchConsultas.consultaItem;
-          this.body = this.datos[0];
-
         },
         err => {
           console.log(err);
@@ -319,7 +317,7 @@ export class ConsultasComponent implements OnInit {
       if ((this.selectedInstitucion == this.institucionActual && dato[0].generica == "No") ||
         (this.institucionActual == 2000 && dato[0].generica == "Si")) {
         this.router.navigate(['/fichaConsulta']);
-        sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
+        sessionStorage.setItem("consultasSearch", JSON.stringify(dato[0]));
         sessionStorage.setItem("filtrosConsulta", JSON.stringify(this.bodySearch));
       } else {
         this.selectedDatos = [];

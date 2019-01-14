@@ -1,4 +1,5 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<app-dialog></app-dialog>
 <div *ngIf="isCargado('menu.enviosAGrupos')" class="plantillas-envio-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -55,10 +56,7 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <span *ngIf="col.field !='preseleccionado'"> {{dato[col.field]}}</span>
-              <span *ngIf="col.field=='preseleccionado'">
-                <i class="fa fa-check"></i>
-              </span>
+              <span> {{dato[col.field]}}</span>
             </td>
           </tr>
         </ng-template>
@@ -87,7 +85,7 @@
       <p-footer>
         <div class="text-right main-button">
           <button (click)="isSelectMultiple()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
-          <button *ngIf="selectedDatos && selectedDatos != ''" (click)="onBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt"
+          <button *ngIf="selectedDatos && selectedDatos != ''" (click)="eliminar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt"
             iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
         </div>
       </p-footer>
