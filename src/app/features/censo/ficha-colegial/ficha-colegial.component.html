@@ -193,7 +193,7 @@
               <input
                 [(ngModel)]="generalBody.nif"
                 type="text"
-                [(disabled)]="isLetrado || disabledNif || disabledAction"
+                [(disabled)]="isLetrado || disabledNif"
                 class="form-control"
                 (ngModelChange)="activacionGuardarGenerales()"
                 pInputText
@@ -215,7 +215,7 @@
               <p-dropdown
                 class="select-form"
                 [options]="tipoIdentificacion"
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado"
                 placeholder="{{'general.boton.seleccionar' | translate}}"
                 [(ngModel)]="generalBody.idTipoIdentificacion"
                 (onChange)="activacionGuardarGenerales()"
@@ -231,7 +231,7 @@
               >
               <input
                 [(ngModel)]="generalBody.soloNombre"
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado"
                 type="text"
                 class="form-control"
                 (ngModelChange)="activacionGuardarGenerales()"
@@ -249,7 +249,7 @@
               <input
                 [(ngModel)]="generalBody.apellidos1"
                 type="text"
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado"
                 class="form-control"
                 [maxLength]="100"
                 (ngModelChange)="activacionGuardarGenerales()"
@@ -262,7 +262,7 @@
               }}</label>
               <input
                 [(ngModel)]="generalBody.apellidos2"
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado"
                 (ngModelChange)="activacionGuardarGenerales()"
                 dateFormat="dd/mm/yy"
                 [style]="{ position: 'relative', 'z-index': '1000' }"
@@ -282,7 +282,7 @@
                 class="select-form"
                 [(ngModel)]="generalBody.sexo"
                 [options]="comboSexo"
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado"
                 (onChange)="activacionGuardarGenerales()"
                 [filter]="true"
                 filterBy="label,labelSinTilde"
@@ -301,7 +301,7 @@
                 placeholder="{{'general.boton.seleccionar' | translate}}"
                 [options]="generalTratamiento"
                 [(ngModel)]="generalBody.idTratamiento"
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado"
                 (onChange)="activacionGuardarGenerales()"
               ></p-dropdown>
             </div>
@@ -326,7 +326,7 @@
                 [locale]="es"
                 [(ngModel)]="fechaNacimiento"
                 (onSelect)="activacionGuardarGenerales()"
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado"
                 dateFormat="dd/mm/yy"
                 icon="far fa-calendar-alt"
                 [utc]="true"
@@ -342,7 +342,7 @@
                 (ngModelChange)="activacionGuardarGenerales()"
                 type="text"
                 class="form-control"
-                [(disabled)]="disabledAction"
+                disabled
                 pInputText
               />
             </div>
@@ -354,7 +354,7 @@
               <input
                 [(ngModel)]="generalBody.naturalDe"
                 (ngModelChange)="activacionGuardarGenerales()"
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado"
                 type="text"
                 class="form-control"
                 pInputText
@@ -371,7 +371,7 @@
                 (onChange)="activacionGuardarGenerales()"
                 placeholder="{{'general.boton.seleccionar' | translate}}"
                 [(ngModel)]="generalBody.idEstadoCivil"
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado"
                 [options]="generalEstadoCivil"
               ></p-dropdown>
             </div>
@@ -383,7 +383,7 @@
               >
               &nbsp;&nbsp;
               <p-checkbox
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado"
                 (onChange)="activacionGuardarGenerales()"
                 [(ngModel)]="generalBody.publicarDatosContacto"
                 binary="true"
@@ -396,7 +396,7 @@
               }}</label>
               &nbsp;&nbsp;
               <p-checkbox
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado"
                 (onChange)="activacionGuardarGenerales()"
                 [(ngModel)]="comisiones"
                 binary="true"
@@ -431,7 +431,7 @@
                 [multiple]="true"
                 (onSelect)="onSelect($event)"
                 (onUnselect)="onUnselect($event)"
-                [disabled]="!autocompletar || disabledAction"
+                [disabled]="!autocompletar"
                 [style]="{ width: '100%' }"
                 [inputStyle]="{ width: '100%' }"
               >
@@ -469,7 +469,7 @@
               <p-dropdown
                 class="select-form"
                 [options]="comboSituacion"
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado"
                 (onSelect)="activacionGuardarGenerales()"
                 placeholder="{{'general.boton.seleccionar' | translate}}"
                 [(ngModel)]="generalBody.situacion"
@@ -487,7 +487,7 @@
                 [yearNavigator]="true"
                 yearRange="1930:2050"
                 [locale]="es"
-                [(disabled)]="!esNewColegiado || isLetrado || disabledAction"
+                [(disabled)]="!esNewColegiado || isLetrado"
                 [(ngModel)]="fechaAlta"
                 dateFormat="dd/mm/yy"
                 icon="far fa-calendar-alt"
@@ -506,7 +506,7 @@
               <p-dropdown
                 class="select-form"
                 [options]="generalIdiomas"
-                [(disabled)]="!this.permisos || disabledAction"
+                [(disabled)]="!this.permisos"
                 (onChange)="activacionGuardarGenerales()"
                 placeholder="{{'general.boton.seleccionar' | translate}}"
                 [(ngModel)]="generalBody.idLenguaje"
@@ -520,7 +520,7 @@
               <input
                 type="text "
                 class="form-control "
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado"
                 (ngModelChange)="activacionGuardarGenerales()"
                 [(ngModel)]="generalBody.asientoContable"
                 [maxLength]="19"
@@ -535,7 +535,7 @@
               &nbsp;&nbsp;
               <p-checkbox
                 (onChange)="activacionGuardarGenerales()"
-                [(disabled)]="!this.permisos || disabledAction"
+                [(disabled)]="!this.permisos"
                 [(ngModel)]="publicidad"
                 binary="true"
               ></p-checkbox>
@@ -549,7 +549,7 @@
               <p-checkbox
                 (onChange)="activacionGuardarGenerales()"
                 [(ngModel)]="guiaJudicial"
-                [(disabled)]="!this.permisos || disabledAction"
+                [(disabled)]="!this.permisos"
                 binary="true"
               ></p-checkbox>
             </div>
@@ -586,7 +586,7 @@
       <div class="text-right main-button ">
         <button
           (click)="restablecerGenerales()"
-          [disabled]="!activacionRestablecerGenerales() || !this.permisos || disabledAction"
+          [disabled]="!activacionRestablecerGenerales() || !this.permisos"
           pButton
           type="button"
           icon="fa fa-undo"
@@ -596,7 +596,7 @@
         <button
           *ngIf="!isLetrado"
           (click)="generalesGuardar()"
-          [(disabled)]="!activarGuardarGenerales || !this.permisos || disabledAction"
+          [(disabled)]="!activarGuardarGenerales || !this.permisos"
           pButton
           type="button"
           icon="far fa-save"
@@ -606,7 +606,7 @@
         <button
           *ngIf="isLetrado"
           (click)="comprobarAuditoria()"
-          [(disabled)]="!activarGuardarGenerales || !this.permisos || disabledAction"
+          [(disabled)]="!activarGuardarGenerales || !this.permisos"
           pButton
           type="button"
           icon="fa fa-save"
@@ -673,7 +673,7 @@
               "censo.consultaDatosGenerales.literal.fechaPresentacion"
                 | translate
             }}
-            <span>{{ colegialesBody.fechaPresentacion }}</span>
+            <span>{{ colegialesBody.fechapresentacion }}</span>
           </label>
 
           <label
@@ -721,10 +721,10 @@
             <div class="form-group col-lg-3 col-md-3">
               <label>{{
                 "censo.busquedaClientesAvanzada.literal.nColegiado" | translate
-              }}</label>
+              }} (*)</label>
               <input
                 [(ngModel)]="colegialesBody.numColegiado"
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado"
                 (ngModelChange)="activacionGuardarColegiales()"
                 type="text"
                 class="form-control"
@@ -739,10 +739,10 @@
             <div class="form-group col-lg-3 col-md-3">
               <label>{{
                 "censo.consultaDatosGenerales.literal.seguro" | translate
-              }}</label>
+              }} (*)</label>
               <p-dropdown
                 class="select-form"
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado"
                 (onChange)="activacionGuardarColegiales()"
                 [(ngModel)]="colegialesBody.idTiposSeguro"
                 placeholder="{{'general.boton.seleccionar' | translate}}"
@@ -752,14 +752,14 @@
             <div class="form-group col-lg-3 col-md-3">
               <label>{{
                 "censo.ws.literal.residenteInscrito" | translate
-              }}</label>
+              }} (*)</label>
               <!--
                 <input [(ngModel)]="colegialesBody.residenteInscrito" type="text"  (ngModelChange)="activacionGuardarColegiales()" class="form-control" [maxLength]="100" pInputText>
               -->
               <p-dropdown
                 class="select-form"
                 (onChange)="activacionGuardarColegiales()"
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado"
                 [(ngModel)]="inscritoSeleccionado"
                 placeholder="{{'general.boton.seleccionar' | translate}}"
                 [options]="comboResidente"
@@ -773,7 +773,7 @@
                 [(ngModel)]="colegialesBody.nMutualista"
                 type="text"
                 class="form-control"
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado"
                 (ngModelChange)="activacionGuardarColegiales()"
                 [maxLength]="100"
                 pInputText
@@ -789,13 +789,13 @@
               <label>{{
                 "censo.consultaDatosGenerales.literal.fechaIncorporacion"
                   | translate
-              }}</label>
+              }} (*)</label>
               <p-calendar
                 [monthNavigator]="true"
                 [yearNavigator]="true"
                 yearRange="1930:2050"
                 [locale]="es"
-                [(disabled)]="isLetrado || disabledAction"
+                [(disabled)]="isLetrado"
                 (onSelect)="activacionGuardarColegiales()"
                 [(ngModel)]="colegialesBody.incorporacion"
                 dateFormat="dd/mm/yy"
@@ -808,38 +808,37 @@
               <label>{{
                 "censo.consultaDatosGenerales.literal.fechaPresentacion"
                   | translate
-              }}</label>
+              }} (*)</label>
               <p-calendar
                 [monthNavigator]="true"
                 [yearNavigator]="true"
                 yearRange="1930:2050"
                 [locale]="es"
-                [(disabled)]="isLetrado || disabledAction"
-                (onSelect)="activacionGuardarColegiales()"
+                [(disabled)]="isLetrado"
                 [(ngModel)]="colegialesBody.fechapresentacion"
                 dateFormat="dd/mm/yy"
                 icon="far fa-calendar-alt"
                 showIcon="true"
                 [utc]="true"
+                (ngModelChange)="activacionGuardarColegiales()"
+
               ></p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{
                 "censo.consultaDatosGenerales.literal.fechaJura" | translate
-              }}</label>
+              }} (*)</label>
               <p-calendar
                 [monthNavigator]="true"
                 [yearNavigator]="true"
                 yearRange="1930:2050"
                 [locale]="es"
-                [(disabled)]="isLetrado || disabledAction"
-                (onSelect)="activacionGuardarColegiales()"
+                [(disabled)]="isLetrado"
                 [(ngModel)]="colegialesBody.fechaJura"
                 dateFormat="dd/mm/yy"
                 icon="far fa-calendar-alt"
-                showIcon="true"
-                [utc]="true"
-              ></p-calendar>
+                showIcon="true" [utc]="true"                 (ngModelChange)="activacionGuardarColegiales()"
+                ></p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{
@@ -851,13 +850,13 @@
                 [yearNavigator]="true"
                 yearRange="1930:2050"
                 [locale]="es"
-                [(disabled)]="isLetrado || disabledAction"
-                (onSelect)="activacionGuardarColegiales()"
+                [(disabled)]="isLetrado"
                 [(ngModel)]="colegialesBody.fechaTitulacion"
                 dateFormat="dd/mm/yy"
                 icon="far fa-calendar-alt"
                 showIcon="true"
-                [utc]="true"
+                [utc]="true"                 (ngModelChange)="activacionGuardarColegiales()"
+
               ></p-calendar>
             </div>
           </div>
@@ -917,7 +916,6 @@
     <div *ngIf="esFichaActiva('colegiales')" class="card-footer ">
       <div class="text-right main-button ">
         <button
-          [(disabled)]="!activarGuardarColegiales"
           (click)="restablecerColegiales()"
           pButton
           type="button"
@@ -1540,7 +1538,7 @@
           (click)="deleteCurriculares(W)"
           pButton
           type="button"
-          [(disabled)]="isLetrado || disabledAction"
+          [(disabled)]="isLetrado"
           icon="fa fa-trash-alt "
           iconPos="left"
           label="{{'general.boton.eliminar' | translate}}"
@@ -1549,7 +1547,7 @@
           (click)="irNuevoCurriculares()"
           pButton
           type="button"
-          [(disabled)]="isLetrado || disabledAction"
+          [(disabled)]="isLetrado"
           icon="fa fa-plus"
           iconPos="left"
           label="{{ 'general.boton.new' | translate}}"
@@ -1763,7 +1761,7 @@
           (click)="nuevaDireccion()"
           pButton
           type="button"
-          [(disabled)]="isLetrado || disabledAction"
+          [(disabled)]="isLetrado"
           icon="fa fa-plus"
           iconPos="left"
           label="{{ 'general.boton.new' | translate}}"
@@ -1966,8 +1964,9 @@
     </div>
   </div>
   <!-- END FICHA DATOS BANCARIOS -->
+
  <!-- INICIO FICHA REGTEL -->
- <div class="card">
+ <!-- <div class="card">
   <div
     class="card-header header-ficha"
     (click)="abreCierraFicha('regtel')"
@@ -1982,7 +1981,7 @@
             "censo.regtel.literal.titulo" | translate
           }}</label>
         </div>
-        <!-- <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between">
           <label
           >{{ "censo.regtel.literal.numero.directorios" | translate }}
           <span>{{ bodyRegTel.length }}</span>
@@ -1993,7 +1992,7 @@
               'fa fa-angle-down': !esFichaActiva('regtel')
             }"
           ></i>
-        </div> -->
+        </div>
       </div>
     </div>
     <div
@@ -2008,7 +2007,7 @@
     </div>
   </div>
 
-  <!-- <div *ngIf="esFichaActiva('regtel')" class="card-body card-body-ficha">
+ <div *ngIf="esFichaActiva('regtel')" class="card-body card-body-ficha">
     <div class="row">
       
       <p-dataTable
@@ -2084,7 +2083,7 @@
       </p-dataTable> 
     </div>
     <br />
-  </div>-->
+  </div>
   <div *ngIf="esFichaActiva('regtel')" class="card-footer">
     <div class="text-right main-button">
       <button
@@ -2117,8 +2116,10 @@
     ></button>
      
     </div>
-  </div>
+  </div> 
 </div>
+-->
+
 <!-- END FICHA REGTEL-->
 
 
