@@ -121,7 +121,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   file: File = undefined;
   ocultarMotivo: boolean = undefined;
 
-
   lengthCountryCode: Number = 0;
 
   @ViewChild("table")
@@ -300,7 +299,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   cargarModoNuevoRegistro() {
-    this.body.titular = this.usuarioBody[0].denominacion;
+    if(this.usuarioBody[0].denominacion != undefined){
+      this.body.titular = this.usuarioBody[0].denominacion;
+    }
+  
     //this.body.nifTitular = this.usuarioBody[0].nif;
 
     this.nuevo = true;
@@ -413,7 +415,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.editarRegistro();
     }
   }
-  
+
   solicitarGuardarRegistro() {
     this.progressSpinner = true;
 
@@ -552,7 +554,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       message: "¿Desea restablecer los datos?",
       icon: "fa fa-info",
       accept: () => {
-
         this.body.titular = this.usuarioBody[0].denominacion;
         //this.body.nifTitular = this.usuarioBody[0].nif;
         this.body.iban = "";
@@ -935,7 +936,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.validarIban() &&
       this.validarBIC() &&
       this.validarTipoCuenta() &&
-      this.validarTitular() 
+      this.validarTitular()
       //&&     this.validarIdentificacion()
     ) {
       this.formValido = true;

@@ -667,6 +667,31 @@
               }}
               <span>{{ colegialesBody.incorporacion }}</span>
             </label>
+
+            <label
+            >{{
+              "censo.consultaDatosGenerales.literal.fechaPresentacion"
+                | translate
+            }}
+            <span>{{ colegialesBody.fechaPresentacion }}</span>
+          </label>
+
+          <label
+          >{{
+            "censo.consultaDatosGenerales.literal.fechaJura"
+              | translate
+          }}
+          <span>{{ colegialesBody.fechaJura }}</span>
+        </label>
+
+        <label
+        >{{
+          "censo.consultaDatosColegiales.literal.fechaTitulacion"
+            | translate
+        }}
+        <span>{{ colegialesBody.fechaTitulacion }}</span>
+      </label>
+
             <i
               *ngIf="!esFichaActiva('colegiales')"
               class="fa fa-angle-down float-right"
@@ -1456,12 +1481,14 @@
             [filter]="true"
             filterMatchMode="contains"
           >
-            <!--
-              <ng-template let-datoH="rowData" pTemplate="body">
-                <span *ngIf="setItalic(datoH)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
-                <span *ngIf="!setItalic(datoH)">{{datoH[col.field]}}</span>
-              </ng-template>
-            -->
+          <ng-template let-datoH="rowData" pTemplate="body">
+            <div *ngIf="setItalic(datoH)">
+              <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
+            </div>
+            <div *ngIf="!setItalic(datoH)">
+              <span>{{datoH[col.field]}}</span>
+            </div>
+          </ng-template>
           </p-column>
 
           <ng-template pTemplate="paginatorLeft">
@@ -1486,6 +1513,9 @@
                     | translate
                 }}</label
               >
+
+              <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+                <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
               <!--
                 <div class="ml-3 selectAll">
                   <p-checkbox (onChange)="onChangeSelectAll(this.datosCurriculares)" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo"
@@ -1506,7 +1536,7 @@
         <!--
           <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
         -->
-        <button
+        <button *ngIf="selectedDatos && selectedDatos != ''" 
           (click)="deleteCurriculares(W)"
           pButton
           type="button"
@@ -1524,6 +1554,8 @@
           iconPos="left"
           label="{{ 'general.boton.new' | translate}}"
         ></button>
+        <button (click)="cargarDatosCV()" *ngIf="historicoCV" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
+        <button (click)="cargarHistorico()" *ngIf="!historicoCV" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
       </div>
     </div>
   </div>
