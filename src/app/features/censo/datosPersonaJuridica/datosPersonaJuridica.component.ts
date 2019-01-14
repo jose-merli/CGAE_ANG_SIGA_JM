@@ -72,6 +72,10 @@ export class DatosPersonaJuridicaComponent implements OnInit {
 
     if (sessionStorage.getItem("filtrosBusquedaColegiados") != undefined) {
       this.router.navigate(["busquedaColegiados"]);
+    } else if (
+      sessionStorage.getItem("filtrosBusquedaNoColegiados") != undefined
+    ) {
+      this.router.navigate(["busquedaNoColegiados"]);
     } else {
       this.location.back();
     }

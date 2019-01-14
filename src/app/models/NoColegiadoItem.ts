@@ -33,5 +33,8 @@ export class NoColegiadoItem {
   naturalDe: string;
   asientoContable: string;
   tratamiento: string;
+
+  subtipoCV: string[];
+  tipoCV: string;
   constructor() {}
 }
