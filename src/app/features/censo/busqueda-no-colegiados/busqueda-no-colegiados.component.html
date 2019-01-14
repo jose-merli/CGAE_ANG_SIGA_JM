@@ -65,8 +65,9 @@
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.busquedaClientesAvanzada.literal.subtiposCV" | translate}}</label>
-                        <p-multiSelect [disabled]="!editar" [defaultLabel]="textFilter" defaultLabel="No hay resultados" autoWidth="false" [(ngModel)]='body.subtipoCV' [options]="comboSubtipoCV"
+                        <p-multiSelect *ngIf="!noResultsSubtipos" [disabled]="!editar" [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='body.subtipoCV' [options]="comboSubtipoCV"
                             maxSelectedLabels="1" styleClass="widthAll"></p-multiSelect>
+                        <p-dropdown *ngIf="noResultsSubtipos" styleClass="widthAll" class="select-form" [options]="comboSubtipoCV" placeholder="Elegir" [(ngModel)]="body.subtipoCV"></p-dropdown>
                     </div>
                 </div>
             </div>

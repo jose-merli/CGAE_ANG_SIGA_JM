@@ -83,6 +83,7 @@ export class FichaInscripcionComponent implements OnInit {
         sessionStorage.getItem("inscripcionCurrent")
       );
 
+      this.checkMinimaAsistencia();
       this.controlCertificadoAutomatico();
 
       this.searchCourse(this.inscripcion.idCurso);
@@ -102,7 +103,6 @@ export class FichaInscripcionComponent implements OnInit {
         this.curso.idCurso = idCurso;
         this.searchCourse(idCurso);
 
-        this.cargarDatosCursoInscripcion();
         this.modoEdicion = false;
         sessionStorage.removeItem("idCursoInscripcion");
         sessionStorage.removeItem("pantallaListaInscripciones");
@@ -169,7 +169,9 @@ export class FichaInscripcionComponent implements OnInit {
             sessionStorage.getItem("inscripcionActual")
           );
 
+          this.checkMinimaAsistencia();
           this.controlCertificadoAutomatico();
+
           this.inscripcion.fechaSolicitud = this.transformaFecha(
             this.inscripcion.fechaSolicitud
           );
@@ -259,6 +261,7 @@ export class FichaInscripcionComponent implements OnInit {
     this.inscripcion.estadoCurso = this.curso.estado;
     this.inscripcion.idEstadoCuso = this.curso.idEstado;
     this.inscripcion.minimaAsistencia = this.curso.minimoAsistencia;
+    this.inscripcion.idInstitucion = this.curso.idInstitucion;
     // Por defecto debe aparecer como estado pendiente de aprobacion
     this.inscripcion.idEstadoInscripcion = "1";
     this.inscripcion.fechaSolicitud = new Date();
@@ -507,6 +510,7 @@ export class FichaInscripcionComponent implements OnInit {
 
         this.getCertificatesCourse();
         this.compruebaGenerarCertificado();
+        this.cargarDatosCursoInscripcion();
       },
       err => {
         this.progressSpinner = false;
@@ -870,5 +874,23 @@ export class FichaInscripcionComponent implements OnInit {
           }
         );
     }
+  }
+
+  checkMinimaAsistencia() {
+    this.progressSpinner = true;
+    this.sigaServices
+      .post("fichaInscripcion_checkMinimaAsistencia", this.inscripcion)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.inscripcion.checkMinimaAsistencia = JSON.parse(data.body);
+        },
+        err => {
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
   }
 }

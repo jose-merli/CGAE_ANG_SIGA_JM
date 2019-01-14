@@ -167,6 +167,7 @@ export class FichaColegialComponent implements OnInit {
   partidoJudicialObject: DatosDireccionesObject = new DatosDireccionesObject();
   partidoJudicialItem: DatosDireccionesItem = new DatosDireccionesItem();
   displayServicios: boolean = false;
+  atrasRegTel: String="";
   // etiquetas
   showGuardar: boolean = false;
   mensaje: String = "";
@@ -2952,9 +2953,37 @@ export class FichaColegialComponent implements OnInit {
   }
   onClickAtrasRegtel(){
     
+    this.selectedDatosRegtel.idPersona = this.idPersona;
+    this.selectedDatosRegtel.title= this.atrasRegTel;
+    this.sigaServices
+    .postPaginado(
+      "fichaColegialRegTel_searchListDir",
+      "?numPagina=1",
+      this.selectedDatosRegtel
+    )
+    .subscribe(
+      data => {
+        
+        this.bodySearchRegTel = JSON.parse(data["body"]);
+        this.bodyRegTel= this.bodySearchRegTel.docuShareObjectVO;
+        this.atrasRegTel = this.bodyRegTel[0].id.substring(0, this.bodyRegTel[0].id.length - this.bodyRegTel[0].title.length);
+        if(this.atrasRegTel.length>1){
+          this.buttonVisibleRegtelAtras=true;
+        }
+        this.buttonVisibleRegtelCarpeta=true;
+        this.buttonVisibleRegtelDescargar=true;
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    );
+
   }
 
   onClickCarpetaRegTel(){
+    this.atrasRegTel = this.selectedDatosRegtel.id.substring(13
+      , this.selectedDatosRegtel.id.length - this.selectedDatosRegtel.title.length)
     this.selectedDatosRegtel.idPersona = this.idPersona;
     this.sigaServices
     .postPaginado(
@@ -2966,6 +2995,14 @@ export class FichaColegialComponent implements OnInit {
       data => {
         this.bodySearchRegTel = JSON.parse(data["body"]);
         this.bodyRegTel= this.bodySearchRegTel.docuShareObjectVO;
+        if(this.atrasRegTel.length>13){
+          this.buttonVisibleRegtelAtras=true;
+          
+        }else{
+          this.buttonVisibleRegtelAtras=false;
+        }
+        this.buttonVisibleRegtelCarpeta=true;
+        this.buttonVisibleRegtelDescargar=true;
         this.progressSpinner = false;
       },
       err => {
@@ -2984,8 +3021,8 @@ export class FichaColegialComponent implements OnInit {
     )
     .subscribe(
       data => {
-        const blob = new Blob([data]   );
-        saveAs(blob, "PlantillaMasivaDatosGF_Original.xls");
+        const blob = new Blob([data]);
+        saveAs(blob);
         // this.bodySearchRegTel = JSON.parse(data["body"]);
         // this.bodyRegTel= this.bodySearchRegTel.docuShareObjectVO;
         this.progressSpinner = false;

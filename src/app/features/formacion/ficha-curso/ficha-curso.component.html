@@ -314,22 +314,22 @@
         <!-- Botón cancelar -->
         
           <button (click)="cancelCourse()" pButton type="button" icon="fa fa-ban" iconPos="left" label="{{'general.boton.cancel' | translate}}"
-           [disabled]="!modoEdicion"></button>
+           [disabled]="!controlBotonesEstado('Cancelar')"></button>
 
         <!-- Botón finalizar -->
         
           <button (click)="finishCourse()" pButton type="button" icon="fa fa-stop" iconPos="left" label="{{'general.boton.finalizar' | translate}}"
-             [disabled]="!modoEdicion"></button>
+             [disabled]="!controlBotonesEstado('Finalizar')"></button>
 
         <!-- Botón desanunciar -->
         
           <button pButton type="button" icon="fa fa-bell-slash" iconPos="left" label="{{'form.busquedaCursos.literal.boton.desanunciar' | translate}}"
-           [disabled]="!modoEdicion"  (click)="releaseCourse()"></button>
+           [disabled]="!controlBotonesEstado('Desanunciar')"  (click)="releaseCourse()"></button>
        
         <!-- Botón anunciar -->
         
           <button pButton type="button" icon="fa fa-bell" iconPos="left" label="{{'form.busquedaCursos.literal.boton.anunciar' | translate}}"
-              [disabled]="!modoEdicion" (click)="announceCourse()"></button>
+              [disabled]="!controlBotonesEstado('Anunciar')" (click)="announceCourse()"></button>
        
 
         <!-- Botón inscripción -->

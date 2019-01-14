@@ -599,18 +599,31 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
                   // Inscripciones rechazadas
                   mensaje =
                     "form.busquedaInscripciones.mensaje.inscripciones.rechazadas";
-
-                this.mostrarInfoAccionSobreInscripciones(data.body, mensaje);
               }
+              this.mostrarInfoAccionSobreInscripciones(data.body, mensaje);
             } else if (Array<String>(data.body)) {
-              let cadenaId: String = "";
-              let listaIds: Array<String> = JSON.parse(data.body);
-              listaIds.forEach(element => {
-                cadenaId += "<br> - " + element;
-              });
+              // let cadenaId: String = "";
+              // let listaIds: Array<String> = JSON.parse(data.body);
+              // listaIds.forEach(element => {
+              //   cadenaId += "<br> - " + element;
+              // });
+              let mensajeAccion: string;
+
+              if (this.tipoAccion == 0)
+                // Inscripcion aprobada
+                mensajeAccion = "aprobar";
+              if (this.tipoAccion == 1)
+                // Inscripcion cancelada
+                mensajeAccion = "cancelar";
+              if (this.tipoAccion == 2)
+                // Inscripcion rechazada
+                mensajeAccion = "rechazar";
+
               mensaje =
-                "Los siguientes cursos no tienen plazas disponibles : " +
-                cadenaId;
+                "Uno o varios cursos no permiten " +
+                mensajeAccion +
+                " inscripciones";
+
               this.showFail(mensaje);
             }
 

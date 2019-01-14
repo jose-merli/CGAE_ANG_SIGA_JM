@@ -183,8 +183,8 @@
                 [disabled]="selectedDatos == ''"></button>
               
                 <!-- Botón calificar -->
-              <button *ngIf="!calificacion" pButton type="button" icon="fa fa-bell" iconPos="left" (click)="onCalificacion()" label="{{ 'formacion.busquedaInscripcion.calificar' | translate }}"></button>
-              <button *ngIf="calificacion" pButton type="button" icon="far fa-save" iconPos="left" (click)="guardarCalificacion()" label="{{ 'general.boton.guardar' | translate}}"></button>
+              <button *ngIf="!calificacion" pButton type="button" icon="fa fa-bell" iconPos="left" (click)="onCalificacion()" label="{{ 'formacion.busquedaInscripcion.calificar' | translate }}" [disabled]="datos == ''"></button>
+              <button *ngIf="calificacion" pButton type="button" icon="far fa-save" iconPos="left" (click)="guardarCalificacion()" label="{{ 'general.boton.guardar' | translate}}" [disabled]="datos == ''"></button>
 
           </div>
         </p-footer>
