@@ -34,6 +34,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
   suscripcionBusquedaNuevo: Subscription;
   activacionEditar: boolean;
   camposDesactivados: boolean;
+  disabledAction: boolean = false;
   file: File = undefined;
   isValidate: boolean;
   constructor(
@@ -44,6 +45,12 @@ export class AccesoFichaPersonaComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    if (sessionStorage.getItem("disabledAction") == "true") {
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
+    }
+
     if (sessionStorage.getItem("historicoSociedad") != null) {
       this.camposDesactivados = true;
       this.desasociar = false;

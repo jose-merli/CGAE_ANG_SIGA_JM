@@ -52,6 +52,7 @@ export class DatosIntegrantesComponent implements OnInit {
   numSelected: number = 0;
   usuarioBody: any[];
   openFicha: boolean = false;
+  disabledAction: boolean = false;
   idPersona: String;
   body: DatosIntegrantesItem = new DatosIntegrantesItem();
   datosIntegrantes: DatosIntegrantesObject = new DatosIntegrantesObject();
@@ -91,6 +92,12 @@ export class DatosIntegrantesComponent implements OnInit {
 
     if (sessionStorage.getItem("historicoSociedad") != null) {
       this.camposDesactivados = true;
+    }
+
+    if (sessionStorage.getItem("disabledAction") == "true") {
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
     }
 
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));

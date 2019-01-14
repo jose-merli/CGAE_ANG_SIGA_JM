@@ -70,7 +70,11 @@ export class DatosPersonaJuridicaComponent implements OnInit {
     sessionStorage.removeItem("usuarioBody");
     this.cardService.searchNewAnnounce.next(null);
 
-    this.location.back();
+    if (sessionStorage.getItem("filtrosBusquedaColegiados") != undefined) {
+      this.router.navigate(["busquedaColegiados"]);
+    } else {
+      this.location.back();
+    }
     // this.router.navigate(["searchNoColegiados"]);
   }
 

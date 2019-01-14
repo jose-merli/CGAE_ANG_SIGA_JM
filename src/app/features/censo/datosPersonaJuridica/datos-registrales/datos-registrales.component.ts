@@ -99,6 +99,7 @@ export class DatosRegistralesComponent implements OnInit {
   suscripcionBusquedaNuevo: Subscription;
   activacionEditar: boolean;
   camposDesactivados: boolean = false;
+  disabledAction: boolean = false;
   camposObligatorios: any = [];
   isValidate: boolean;
   isNuevo: boolean;
@@ -126,6 +127,12 @@ export class DatosRegistralesComponent implements OnInit {
   ngOnInit() {
     this.checkAcceso();
     this.desactivadoGuardar();
+
+    if (sessionStorage.getItem("disabledAction") == "true") {
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
+    }
 
     this.sigaServices.get("datosRegistrales_datosContador").subscribe(
       data => {
