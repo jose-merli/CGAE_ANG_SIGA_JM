@@ -6,8 +6,8 @@ export class DatosPersonaItem {
   apellido2: String;
   sexo: String;
   profesion: String;
-  asistenciaSanitaria: Number;
-  ejerciente: Number;
+  asistenciaSanitaria: String;
+  ejerciente: String;
   estadoCivil: String;
   fechaNacimiento: Date;
   numHijos: number;
