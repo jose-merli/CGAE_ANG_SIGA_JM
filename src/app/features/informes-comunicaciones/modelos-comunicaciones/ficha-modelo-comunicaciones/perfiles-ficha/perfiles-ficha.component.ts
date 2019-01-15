@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
-import { DestinatariosEnviosMasivosItem } from '../../../../../models/DestinatariosEnviosMasivosItem';
+import { ModelosComunicacionesItem } from '../../../../../models/ModelosComunicacionesItem';
 import { Message, ConfirmationService } from "primeng/components/common/api";
 
 @Component({
@@ -13,13 +13,13 @@ export class PerfilesFichaComponent implements OnInit {
 
   openFicha: boolean = false;
   openDestinatario: boolean;
-  etiquetasSeleccionadas: any[];
-  etiquetasNoSeleccionadas: any[];
-  body: DestinatariosEnviosMasivosItem = new DestinatariosEnviosMasivosItem();
+  perfilesSeleccionados: any[];
+  perfilesNoSeleccionados: any[];
+  body: ModelosComunicacionesItem = new ModelosComunicacionesItem();
   msgs: Message[];
   etiquetasPersonaJuridica: any[];
-  seleccionadasInicial: any[];
-  noSeleccionadasInicial: any[];
+  perfilesSeleccionadosInicial: any[];
+  perfilesNoSeleccionadosInicial: any[];
   progressSpinner: boolean = false;
 
 
@@ -79,15 +79,15 @@ export class PerfilesFichaComponent implements OnInit {
     this.msgs = [];
   }
 
-  getExtistentes() {
+  getPerfilesExtistentes() {
     this.progressSpinner = true;
     this.sigaServices
-      .get("enviosMasivos_etiquetas")
+      .get("modelos_detalle_perfiles")
       .subscribe(
         n => {
           // coger etiquetas de una persona juridica
-          this.etiquetasNoSeleccionadas = n.combooItems;
-          this.noSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasNoSeleccionadas));
+          this.perfilesNoSeleccionados = n.combooItems;
+          this.perfilesNoSeleccionadosInicial = JSON.parse(JSON.stringify(this.perfilesNoSeleccionados));
         },
         err => {
           console.log(err);
@@ -98,14 +98,14 @@ export class PerfilesFichaComponent implements OnInit {
       );
   }
 
-  getSeleccionadas() {
+  getPerfilesSeleccionados() {
     this.sigaServices
-      .post("enviosMasivos_etiquetasEnvio", this.body.idEnvio)
+      .post("modelos_detalle_perfilesModelo", this.body)
       .subscribe(
         n => {
           // coger etiquetas de una persona juridica
-          this.etiquetasSeleccionadas = JSON.parse(n["body"]).combooItems;
-          this.seleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasSeleccionadas));
+          this.perfilesSeleccionados = JSON.parse(n["body"]).combooItems;
+          this.perfilesSeleccionadosInicial = JSON.parse(JSON.stringify(this.perfilesSeleccionados));
 
         },
         err => {
@@ -116,34 +116,33 @@ export class PerfilesFichaComponent implements OnInit {
   }
 
 
-
   guardar() {
 
     let array: any[] = [];
     let arrayNoSel: any[] = [];
-    this.etiquetasSeleccionadas.forEach(element => {
+    this.perfilesSeleccionados.forEach(element => {
       array.push(element.value)
     });
-    this.etiquetasNoSeleccionadas.forEach(element => {
+    this.perfilesNoSeleccionados.forEach(element => {
       arrayNoSel.push(element.value)
     });
 
-    let objEtiquetas = {
-      etiquetasSeleccionadas: array,
-      etiquetasNoSeleccionadas: arrayNoSel,
-      idEnvio: this.body.idEnvio
+    let objPerfiles = {
+      perfilesSeleccionados: array,
+      perfilesNoSeleccionados: arrayNoSel,
+      idModeloComunicacion: this.body.idModeloComunicacion
     }
 
     this.sigaServices
-      .post("enviosMasivos_guardarEtiquetas", objEtiquetas)
+      .post("modelos_detalle_guardarPerfiles", objPerfiles)
       .subscribe(
         n => {
-          this.showSuccess('Se han guardado las etiquetas correctamente');
-          this.seleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasSeleccionadas));
-          this.noSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasNoSeleccionadas));
+          this.showSuccess('Se han guardado los perfiles correctamente');
+          this.perfilesSeleccionadosInicial = JSON.parse(JSON.stringify(this.perfilesSeleccionados));
+          this.perfilesNoSeleccionadosInicial = JSON.parse(JSON.stringify(this.perfilesNoSeleccionados));
         },
         err => {
-          this.showSuccess('Error al guardar las etiquetas');
+          this.showFail('Error al guardar los perfiles');
           console.log(err);
 
         },
@@ -187,15 +186,17 @@ export class PerfilesFichaComponent implements OnInit {
 
   getDatos() {
 
-    if (sessionStorage.getItem("enviosMasivosSearch") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
-      this.getSeleccionadas();
-      this.getExtistentes();
+    if (sessionStorage.getItem("modelosSearch") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
+      this.getPerfilesSeleccionados();
+      this.getPerfilesExtistentes();
     }
-    this.getSeleccionadas();
+    this.getPerfilesSeleccionados();
   }
 
-
+  restablecer(){
+    this.getDatos();
+  }
 
 
 }

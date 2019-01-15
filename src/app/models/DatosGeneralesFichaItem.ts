@@ -1,9 +1,9 @@
 export class DatosGeneralesFicha {
-  idClaseComunicaciones: String;
+  idClaseComunicacion: String;
   nombre: String;
-  preseleccionado: boolean;
+  preseleccionar: boolean;
   visible: boolean;
-  idColegio: string;
+  idInstitucion: string;
   orden: String;
   descripcion: String;
   constructor() { }

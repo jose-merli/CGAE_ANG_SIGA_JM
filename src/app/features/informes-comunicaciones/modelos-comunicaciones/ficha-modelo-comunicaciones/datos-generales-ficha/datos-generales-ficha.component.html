@@ -39,7 +39,7 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>Clase comunicaciones *</label>
-              <p-dropdown [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicaciones" class="select-form"></p-dropdown>
+              <p-dropdown [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion" class="select-form"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
@@ -50,7 +50,7 @@
           <div class="form-row d-flex align-items-end">
             <div class="form-group col-lg-6 col-md-6">
               <label>Colegio *</label>
-              <p-dropdown [options]="colegios" [(ngModel)]="body.idColegio" class="select-form"></p-dropdown>
+              <p-dropdown [options]="colegios" [(ngModel)]="body.idInstitucion" class="select-form"></p-dropdown>
             </div>
             <div class="form-group col-lg-1 col-md-1">
               <label>Orden *</label>
@@ -58,8 +58,8 @@
             </div>
             <div class="form-group col-lg-2 col-md-3">
               <label class="d-block">Preseleccionado</label>
-              <p-radioButton class="mr-2" name="groupname" value="true" [(ngModel)]="body.preseleccionado" label="Sí"></p-radioButton>
-              <p-radioButton name="groupname" value="false" [(ngModel)]="body.preseleccionado" label="No"></p-radioButton>
+              <p-radioButton class="mr-2" name="groupname" value="SI" [(ngModel)]="body.preseleccionar" label="Sí"></p-radioButton>
+              <p-radioButton name="groupname" value="NO" [(ngModel)]="body.preseleccionar" label="No"></p-radioButton>
             </div>
             <!-- <div class="form-group col-lg-2 col-md-2">
               <label class="d-block">Visible</label>

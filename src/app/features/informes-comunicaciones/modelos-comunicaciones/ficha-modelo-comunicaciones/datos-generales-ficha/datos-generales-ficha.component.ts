@@ -4,6 +4,7 @@ import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDt
 import { TranslateService } from "./../../../../../commons/translate/translation.service";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { DatosGeneralesFicha } from '../../../../../models/DatosGeneralesFichaItem';
+import { Message, ConfirmationService } from "primeng/components/common/api";
 
 @Component({
   selector: 'app-datos-generales-ficha',
@@ -19,7 +20,10 @@ export class DatosGeneralesFichaComponent implements OnInit {
   permisosArray: any[];
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   clasesComunicaciones: any[];
+  colegios: any[];
+  bodyInicial: DatosGeneralesFicha = new DatosGeneralesFicha;
   body: DatosGeneralesFicha = new DatosGeneralesFicha;
+  msgs: Message[];
 
   fichasPosibles = [
     {
@@ -39,6 +43,8 @@ export class DatosGeneralesFichaComponent implements OnInit {
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices) { }
 
   ngOnInit() {
+    this.getClasesComunicaciones();
+    this.getComboColegios();
     this.getDatos();
 
   }
@@ -96,11 +102,66 @@ export class DatosGeneralesFichaComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
+      this.bodyInicial = JSON.parse(sessionStorage.getItem("modelosSearch"));
     }
   }
 
   guardar() {
     sessionStorage.removeItem("crearNuevoModelo");
+    this.sigaServices.post("modelos_detalle_datosGenerales", this.body).subscribe(
+      data => {
+        this.showSuccess("Datos generales guardados correctamente");
+      },
+      err => {
+        console.log(err);
+        this.showFail("Error al guardar los datos generales");
+      }
+    );
+  }
+
+  getComboColegios() {
+    this.sigaServices.get("busquedaPer_colegio").subscribe(
+      n => {
+        this.colegios = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getClasesComunicaciones() {
+    this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
+      data => {
+        this.clasesComunicaciones = data.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  restablecer() {
+    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+  }
+
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showInfo(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 }
