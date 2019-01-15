@@ -54,5 +54,9 @@ export class DatosPlanUniversalItem {
 	idBeneficiario: number;
 	idAsistenciaSanitaria: String;
 	idEstadoCivil: String;
+	pais: String;
+	nombrePoblacion: String;
+	bic: String;
+	idBeneficiarios: String;
 	constructor() {}
 }
