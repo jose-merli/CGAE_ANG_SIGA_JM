@@ -114,7 +114,11 @@ export class CargaEtiquetasComponent implements OnInit {
             this.body.errores = data["error"];
             let mensaje = this.body.errores.message.toString();
 
-            this.showSuccess(mensaje);
+            if (data["error"].code == 200) {
+              this.showMessage("success", "Correcto", data["error"].message);
+            } else if (data["error"].code == null) {
+              this.showMessage("info", "Información", data["error"].message);
+            }
           },
           error => {
             console.log(error);
@@ -127,6 +131,15 @@ export class CargaEtiquetasComponent implements OnInit {
           }
         );
     }
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 
   getFile(event: any) {
@@ -323,12 +336,6 @@ export class CargaEtiquetasComponent implements OnInit {
     }
 
     return fecha;
-  }
-
-  loadHistory() {
-    this.history = true;
-    this.buscar = false;
-    this.selectedDatos = [];
   }
 
   onChangeRowsPerPages(event) {

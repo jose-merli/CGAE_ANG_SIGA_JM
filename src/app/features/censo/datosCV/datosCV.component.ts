@@ -6,7 +6,7 @@ import { OldSigaServices } from '../../../_services/oldSiga.service'
   templateUrl: './datosCv.component.html',
   styleUrls: ['./datosCv.component.scss']
 })
-export class DatosCVComponent {
+export class DatosCVComponent2 {
 
   url;
 
