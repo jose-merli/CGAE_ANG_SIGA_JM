@@ -5,7 +5,7 @@ export class ProgEnviosMasivosItem {
   fechaCreacion: Date;
   idPlantillasEnvio: String;
   idEstado: String;
-  idTipoEnvio: String;
+  idTipoEnvios: String;
   nombrePlantilla: String;
   fechaProgramada: Date;
   fechaBaja: Date;

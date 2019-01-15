@@ -1,7 +1,7 @@
 
 export class ConfigEnviosMasivosItem {
   idPlantillasEnvio: String;
-  idTipoEnvio: String;
+  idTipoEnvios: String;
   idEnvio: String;
   idEstado: String;
   asunto: String;

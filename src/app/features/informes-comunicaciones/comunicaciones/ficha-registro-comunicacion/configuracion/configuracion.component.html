@@ -38,54 +38,54 @@
     <!--cuerpo datos generales-->
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div class="row">
-        <div class="bloque" [ngClass]="{'col-lg-12':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-6':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
+        <div class="bloque" [ngClass]="{'col-lg-12':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-6':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
           <div class="form-row">
             <div class="form-group col-lg-12">
               <label>
                 <strong>Datos globales</strong>
               </label>
             </div>
-            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
+            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label>Clase de comunicaciones</label>
               <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="body.claseComunicacion" pInputText>
             </div>
-            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
+            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label>Modelo de comunicaciones</label>
               <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="body.modeloComunicacion" pInputText>
             </div>
-            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
+            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">Tipo de envío *</label>
               <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="tipoEnvio" pInputText>
             </div>
-            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
+            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">Plantilla de envío *</label>
               <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="plantilla" pInputText>
             </div>
-            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvio!='1' && body.idTipoEnvio!='4' && body.idTipoEnvio!='5','col-lg-12':body.idTipoEnvio=='1' || body.idTipoEnvio=='4' || body.idTipoEnvio=='5'}">
+            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">Descripción *</label>
               <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="body.descripcion" pInputText>
             </div>
           </div>
         </div>
 
-        <div *ngIf="body.idTipoEnvio== '1' || body.idTipoEnvio== '4' || body.idTipoEnvio== '5'" class="col-lg-6 col-md-12">
+        <div *ngIf="body.idTipoEnvios== '1' || body.idTipoEnvios== '4' || body.idTipoEnvios== '5'" class="col-lg-6 col-md-12">
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
-              <label *ngIf="body.idTipoEnvio=='1'">
+              <label *ngIf="body.idTipoEnvios=='1'">
                 <strong>Datos de correo electrónico</strong>
               </label>
-              <label *ngIf="body.idTipoEnvio=='4'">
+              <label *ngIf="body.idTipoEnvios=='4'">
                 <strong>Datos de SMS</strong>
               </label>
-              <label *ngIf="body.idTipoEnvio=='5'">
+              <label *ngIf="body.idTipoEnvios=='5'">
                 <strong>Datos de Buro SMS</strong>
               </label>
             </div>
-            <div *ngIf="body.idTipoEnvio=='1'" class="form-group col-lg-12 col-md-12">
+            <div *ngIf="body.idTipoEnvios=='1'" class="form-group col-lg-12 col-md-12">
               <label>Asunto</label>
               <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="body.asunto" pInputText>
             </div>
-            <div *ngIf="body.idTipoEnvio=='1'" class="form-group col-lg-12 col-md-12">
+            <div *ngIf="body.idTipoEnvios=='1'" class="form-group col-lg-12 col-md-12">
               <label>Cuerpo</label>
               <p-editor [disabled]="editar" [(ngModel)]="body.email" [style]="{'height':'140px','text-align':'left'}">
                 <p-header>
@@ -126,11 +126,11 @@
                 </p-header>
               </p-editor>
             </div>
-            <div *ngIf="body.idTipoEnvio=='4' || body.idTipoEnvio=='5'" class="form-group col-lg-3 col-md-3">
+            <div *ngIf="body.idTipoEnvios=='4' || body.idTipoEnvios=='5'" class="form-group col-lg-3 col-md-3">
               <label>Nº caracteres: </label>
               <label *ngIf="body.cuerpo">{{body.cuerpo.length}}</label>
             </div>
-            <div *ngIf="body.idTipoEnvio=='4' || body.idTipoEnvio=='5'" class="form-group col-lg-12 col-md-12">
+            <div *ngIf="body.idTipoEnvios=='4' || body.idTipoEnvios=='5'" class="form-group col-lg-12 col-md-12">
               <label>Cuerpo</label>
               <textarea [disabled]="editar" style="height:140px" pInputTextarea autoResize="autoResize" [(ngModel)]="body.cuerpo" maxlength="160"></textarea>
             </div>

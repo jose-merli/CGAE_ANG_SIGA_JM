@@ -89,7 +89,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
       data => {
         this.tipoEnvios = data.combooItems;
         this.tipoEnvios.map(e => {
-          if (this.body.idTipoEnvio == e.value) {
+          if (this.body.idTipoEnvios == e.value) {
             this.tipoEnvio = e.label;
           }
         })
@@ -108,7 +108,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   }
 
   getPlantillas() {
-    this.sigaServices.post("enviosMasivos_plantillas", this.body.idTipoEnvio).subscribe(
+    this.sigaServices.post("enviosMasivos_plantillas", this.body.idTipoEnvios).subscribe(
       data => {
         let comboPlantillas = JSON.parse(data["body"]);
         this.plantillas = comboPlantillas.combooItems;
@@ -255,7 +255,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
 
 
   isGuardarDisabled() {
-    if (this.body.idTipoEnvio != '' && this.body.idTipoEnvio != null && this.body.idPlantillasEnvio != ''
+    if (this.body.idTipoEnvios != '' && this.body.idTipoEnvios != null && this.body.idPlantillasEnvio != ''
       && this.body.idPlantillasEnvio != null && this.body.descripcion != '' && this.body.descripcion != null) {
       return false;
     }

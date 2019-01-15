@@ -1,4 +1,5 @@
-<!-- <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl> -->
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<app-dialog></app-dialog>
 <div class="ficha-container">
   <!--DATOS GENERALES-->
   <div class="card">
@@ -50,9 +51,10 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td *ngFor="let col of columns" pEditableColumn>
-              <p-dropdown *ngIf="col.field=='nombre' && dato.nombre == ''" [(ngModel)]="dato.nombre" [options]="consultas" class="select-form"></p-dropdown>
-              <span *ngIf="col.field=='nombre' && dato.nombre != ''">{{dato[col.field]}}</span>
-              <span *ngIf="dato.finalidad != ''">{{dato[col.field]}}</span>
+              <p-dropdown *ngIf="col.field=='nombre' && !dato.asociada" [(ngModel)]="dato[col.field]" [options]="consultas" class="select-form"
+                (onChange)="onChangeConsultas($event)" dataKey="label"></p-dropdown>
+              <span *ngIf="col.field=='nombre' && dato.asociada">{{dato.nombre}}</span>
+              <span *ngIf="col.field=='finalidad' && dato.finalidad != ''">{{dato.finalidad}}</span>
             </td>
           </tr>
         </ng-template>
@@ -83,11 +85,11 @@
         <div class="text-right main-button">
           <button *ngIf="selectedDatos && selectedDatos !=''" (click)="isSelectMultiple()" pButton type="button" icon="fa fa-check"
             iconPos="left" label="{{ 'general.message.deseleccionar' | translate}}"></button>
-          <button (click)="addConsulta()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.newConsulta' | translate}}"></button>
-          <button *ngIf="selectedDatos && selectedDatos !='' && !showHistorico" (click)="onBorrar(selectedDatos)" pButton type="button"
-            icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-          <button *ngIf="selectedDatos && selectedDatos !='' && showHistorico" (click)="onBorrar(selectedDatos)" pButton type="button"
-            icon="fa fa-check" iconPos="left" label="{{ 'general.message.rehabilitar' | translate}}"></button>
+          <button [disabled]="nuevaConsulta" (click)="addConsulta()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Añadir"></button>
+          <button *ngIf="selectedDatos && selectedDatos.length == 1" (click)="asociar(selectedDatos)" pButton type="button" icon="fa fa-arrows-alt-h"
+            iconPos="left" label="asociar"></button>
+          <button *ngIf="selectedDatos && selectedDatos !=''" (click)="desasociar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt"
+            iconPos="left" label="Desasociar"></button>
         </div>
       </p-footer>
     </div>
@@ -95,10 +97,16 @@
       <div class="text-right main-button">
         <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{
                 'general.boton.restablecer' | translate}}"></button>
-        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="goNuevaConsulta()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{
+                  'general.boton.new' | translate}}"></button>
+        <!-- <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button> -->
       </div>
     </div>
 
   </div>
 
+</div>
+<div *ngIf="progressSpinner || loaderEtiquetas" class="overlay-spinner">
+  <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+  <div class="loader"></div>
 </div>

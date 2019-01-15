@@ -209,7 +209,6 @@ export class ComunicacionesComponent implements OnInit {
           this.progressSpinner = false;
           this.searchComunicaciones = JSON.parse(data["body"]);
           this.datos = this.searchComunicaciones.enviosMasivosItem;
-          this.body = this.datos[0];
           this.datos.forEach(element => {
             element.fechaProgramada = element.fechaProgramada ? new Date(element.fechaProgramada) : null;
             element.fechaCreacion = new Date(element.fechaCreacion);
@@ -323,7 +322,7 @@ export class ComunicacionesComponent implements OnInit {
     if (!this.selectMultiple && this.estado == 4) {
       // this.body.estado = dato[0].estado;
       this.router.navigate(['/fichaRegistroComunicacion']);
-      sessionStorage.setItem("comunicacionesSearch", JSON.stringify(this.body));
+      sessionStorage.setItem("comunicacionesSearch", JSON.stringify(dato[0]));
       sessionStorage.setItem("filtrosCom", JSON.stringify(this.bodySearch));
     } else if (!this.selectMultiple && this.estado != 4) {
       this.showInfo('La comunicación está en proceso, no puede editarse')

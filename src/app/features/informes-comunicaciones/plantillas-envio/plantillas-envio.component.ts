@@ -7,6 +7,7 @@ import { SigaServices } from "./../../../_services/siga.service";
 import { PlantillaEnvioSearchItem } from '../../../models/PlantillaEnvioSearchItem';
 import { PlantillaEnvioItem } from '../../../models/PlantillaEnvioItem';
 import { PlantillasEnvioObject } from '../../../models/PlantillasEnvioObject';
+import { useAnimation } from '@angular/core/src/animation/dsl';
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -38,6 +39,10 @@ export class PlantillasEnvioComponent implements OnInit {
   showHistorico: boolean = false;
   progressSpinner: boolean = false;
   loaderEtiquetas: boolean = false;
+  eliminarArray: any[];
+  institucionActual: any;
+  noEditable: boolean = true;
+
 
 
 
@@ -72,11 +77,19 @@ export class PlantillasEnvioComponent implements OnInit {
 
     this.configTabla();
     this.getTipoEnvios();
+    this.getInstitucion();
 
     // this.comboTipoEnvio = [{ label: '', value: '' }, { label: 'SMS', value: '1' }, { label: 'email', value: '2' }, { label: 'carta', value: '3' }]
 
 
   }
+
+  getInstitucion() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
+  }
+
 
 
 
@@ -119,8 +132,8 @@ export class PlantillasEnvioComponent implements OnInit {
           this.progressSpinner = false;
           this.searchPlantillasEnvio = JSON.parse(data["body"]);
           this.datos = this.searchPlantillasEnvio.plantillasItem;
-          console.log(this.datos)
-          this.body = this.datos[0];
+          console.log(this.datos);
+
         },
         err => {
           console.log(err);
@@ -166,9 +179,10 @@ export class PlantillasEnvioComponent implements OnInit {
   detallePlantilla(item) {
 
     let id = item[0].id;
+    console.log(item)
     if (!this.selectMultiple) {
       this.router.navigate(["/fichaPlantilla"]);
-      sessionStorage.setItem("plantillasEnvioSearch", JSON.stringify(this.body));
+      sessionStorage.setItem("plantillasEnvioSearch", JSON.stringify(item[0]));
       sessionStorage.setItem("filtrosPlantillas", JSON.stringify(this.bodySearch));
     }
   }
@@ -253,5 +267,55 @@ función para que no cargue primero las etiquetas de los idiomas*/
     }
 
   }
+
+  eliminar(dato) {
+
+    this.confirmationService.confirm({
+      // message: this.translateService.instant("messages.deleteConfirmation"),
+      message: '¿Está seguro de cancelar los' + dato.length + 'envíos seleccionados',
+      icon: "fa fa-trash-alt",
+      accept: () => {
+        this.confirmarEliminar(dato);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+
+  confirmarEliminar(dato) {
+    this.eliminarArray = [];
+    dato.forEach(element => {
+      let objEliminar = {
+        idInstitucion: element.idInstitucion,
+        idPlantillaEnvios: element.idPlantillaEnvios,
+        idTipoEnvios: element.idTipoEnvios
+      };
+      this.eliminarArray.push(objEliminar);
+    });
+    this.sigaServices.post("plantillasEnvio_borrar", this.eliminarArray).subscribe(
+      data => {
+        this.showSuccess('Se ha eliminado la plantilla correctamente');
+      },
+      err => {
+        this.showFail('Error al eliminar la plantilla');
+        console.log(err);
+      },
+      () => {
+        this.buscar();
+        this.table.reset();
+      }
+    );
+  }
+
 
 }

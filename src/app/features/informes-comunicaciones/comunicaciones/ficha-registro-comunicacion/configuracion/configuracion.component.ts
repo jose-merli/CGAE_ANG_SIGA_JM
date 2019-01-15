@@ -92,7 +92,7 @@ export class ConfiguracionComponent implements OnInit {
         this.tipoEnvios = data.combooItems;
 
         this.tipoEnvios.map(e => {
-          if (this.body.idTipoEnvio == e.value) {
+          if (this.body.idTipoEnvios == e.value) {
             this.tipoEnvio = e.label;
           }
         })
@@ -111,7 +111,7 @@ export class ConfiguracionComponent implements OnInit {
   }
 
   getPlantillas() {
-    this.sigaServices.post("enviosMasivos_plantillas", this.body.idTipoEnvio).subscribe(
+    this.sigaServices.post("enviosMasivos_plantillas", this.body.idTipoEnvios).subscribe(
       data => {
         let comboPlantillas = JSON.parse(data["body"]);
         this.plantillas = comboPlantillas.combooItems;

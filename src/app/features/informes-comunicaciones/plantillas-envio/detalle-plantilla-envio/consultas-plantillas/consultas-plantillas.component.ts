@@ -2,7 +2,11 @@ import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { Location } from "@angular/common";
 import { Router } from '@angular/router';
-import { PlantillaEnvioSearchItem } from '../../../../../models/PlantillaEnvioSearchItem';
+import { PlantillaEnvioConsultasItem } from '../../../../../models/PlantillaEnvioConsultasItem';
+import { PlantillasEnvioConsultasObject } from '../../../../../models/PlantillasEnvioConsultasObject';
+import { SigaServices } from "./../../../../../_services/siga.service";
+import { Message, ConfirmationService } from "primeng/components/common/api";
+import { TranslateService } from "../../../../../commons/translate/translation.service";
 
 @Component({
   selector: 'app-consultas-plantillas',
@@ -24,7 +28,15 @@ export class ConsultasPlantillasComponent implements OnInit {
   sufijos: any[];
   textFilter: string;
   openFicha: boolean = false;
-  body: PlantillaEnvioSearchItem = new PlantillaEnvioSearchItem();
+  body: PlantillaEnvioConsultasItem = new PlantillaEnvioConsultasItem();
+  searchConsultasPlantillasEnvio: PlantillasEnvioConsultasObject = new PlantillasEnvioConsultasObject();
+  progressSpinner: boolean = false;
+  consultas: any = [];
+  selectedConsulta: string;
+  nuevaConsulta: boolean = false;
+  eliminarArray: any[];
+  msgs: Message[];
+  finalidad: string;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -47,27 +59,23 @@ export class ConsultasPlantillasComponent implements OnInit {
   ];
 
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private location: Location, private router: Router) {
+  constructor(private changeDetectorRef: ChangeDetectorRef, private location: Location, private router: Router, private sigaServices: SigaServices,
+    private confirmationService: ConfirmationService, private translateService: TranslateService) {
 
 
   }
 
   ngOnInit() {
 
-    this.getDatos();
+    // this.getDatos();
 
     this.textFilter = "Elegir";
 
-    this.selectedItem = 4;
+    this.selectedItem = 10;
 
     this.cols = [
       { field: 'nombre', header: 'Nombre' },
       { field: 'finalidad', header: 'Finalidad' },
-    ];
-
-    this.datos = [
-      { id: '1', nombre: 'prueba', finalidad: 'prueba' },
-      { id: '2', nombre: 'prueba', finalidad: 'prueba' }
     ];
 
 
@@ -93,6 +101,25 @@ export class ConsultasPlantillasComponent implements OnInit {
     // this.body.idConsulta = this.consultas[1].value;
   }
 
+  // Mensajes
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showInfo(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
 
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
@@ -126,6 +153,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 
   navigateTo(dato) {
     let id = dato[0].id;
+    console.log(dato)
     if (!this.selectMultiple && id) {
       this.router.navigate(['/fichaConsulta']);
       sessionStorage.setItem("consultaPlantillaSearch", JSON.stringify(this.body))
@@ -161,20 +189,184 @@ export class ConsultasPlantillasComponent implements OnInit {
 
   addConsulta() {
     let objNewConsulta = {
+      idConsulta: '',
       nombre: '',
-      finalidad: ''
+      finalidad: '',
+      asociada: false
     }
 
+    this.nuevaConsulta = true;
+
     this.datos.push(objNewConsulta);
+    this.datos = [... this.datos];
     this.selectedDatos = [];
   }
 
   getDatos() {
     if (sessionStorage.getItem("plantillasEnvioSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("plantillasEnvioSearch"));
+      this.progressSpinner = true;
+      this.getResultados();
     }
   }
 
+  getResultados() {
+
+    //llamar al servicio de busqueda
+    this.sigaServices
+      .post("plantillasEnvio_consultas", this.body)
+      .subscribe(
+        data => {
+
+          this.searchConsultasPlantillasEnvio = JSON.parse(data["body"]);
+          this.datos = this.searchConsultasPlantillasEnvio.consultaItem;
+          this.getConsultas();
+          this.datos.map(e => {
+            let id = e.idConsulta;
+            this.getFinalidad(id);
+            return e.finalidad = '', e.asociada = true;
+          })
+
+
+
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => { }
+      );
+
+  }
+
+
+  getConsultas() {
+    this.sigaServices
+      .get("plantillasEnvio_comboConsultas")
+      .subscribe(
+        data => {
+          this.consultas = data.combooItems;
+          console.log(this.consultas)
+
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => { }
+      );
+  }
+
+  onChangeConsultas(e) {
+    let id = e.value;
+    this.getFinalidad(id);
+    console.log(id)
+  }
+
+  asociar(dato) {
+    let objAsociar = {
+      idConsulta: dato[0].idConsulta,
+      idTipoEnvios: this.body.idTipoEnvios,
+      idPlantillaEnvios: this.body.idPlantillaEnvios
+    }
+
+    this.sigaServices
+      .post("plantillasEnvio_asociarConsulta", objAsociar)
+      .subscribe(
+        data => {
+          this.nuevaConsulta = false;
+          this.showSuccess('La consulta ha sido asociada correctamente');
+
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+          this.showFail('Error al asociar la consulta');
+        },
+        () => {
+          this.getResultados();
+        }
+      );
+  }
+
+  desasociar(dato) {
+
+    this.confirmationService.confirm({
+      // message: this.translateService.instant("messages.deleteConfirmation"),
+      message: '¿Está seguro de cancelar los' + dato.length + 'envíos seleccionados',
+      icon: "fa fa-trash-alt",
+      accept: () => {
+        this.confirmarDesasociar(dato);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+
+  confirmarDesasociar(dato) {
+    // this.eliminarArray = [];
+    // dato.forEach(element => {
+    let objEliminar = {
+      idConsulta: dato[0].idConsulta,
+      idTipoEnvios: this.body.idTipoEnvios,
+      idPlantillaEnvios: this.body.idPlantillaEnvios
+    };
+    //   this.eliminarArray.push(objEliminar);
+    // });
+    this.sigaServices.post("plantillasEnvio_desaociarConsulta", objEliminar).subscribe(
+      data => {
+        this.showSuccess('Se ha desasociado la plantilla correctamente');
+      },
+      err => {
+        this.showFail('Error al desasociar la plantilla');
+        console.log(err);
+      },
+      () => {
+        this.getResultados();
+      }
+    );
+  }
+
+  goNuevaConsulta() {
+    this.router.navigate(['/fichaConsulta']);
+    sessionStorage.setItem("nuevaConsultaPlantillaEnvios", JSON.stringify(this.body))
+  }
+
+  getFinalidad(id) {
+    this.sigaServices
+      .post("plantillasEnvio_finalidadConsulta", id)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.finalidad = JSON.parse(data["body"]).finalidad;
+          for (let dato of this.datos) {
+            if (!dato.idConsulta) {
+              dato.idConsulta = id;
+              dato.finalidad = this.finalidad;
+            } else if (dato.idConsulta && dato.idConsulta == id) {
+              dato.finalidad = this.finalidad;
+            }
+          }
+          this.datos = [... this.datos];
+          console.log(this.datos)
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => { }
+      );
+  }
 
 
 }

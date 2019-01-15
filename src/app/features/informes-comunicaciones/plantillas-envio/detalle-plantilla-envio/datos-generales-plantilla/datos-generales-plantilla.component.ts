@@ -111,6 +111,7 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("plantillasEnvioSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("plantillasEnvioSearch"));
+      console.log(this.body)
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       this.editar = true;
     } else {
@@ -123,22 +124,6 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
       n => {
         this.tiposEnvio = n.combooItems;
 
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-      para poder filtrar el dato con o sin estos caracteres*/
-        this.tiposEnvio.map(e => {
-          let accents =
-            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-          let accentsOut =
-            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
       },
       err => {
         console.log(err);
@@ -153,9 +138,10 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
       .subscribe(
         data => {
           let result = JSON.parse(data["body"]);
+          sessionStorage.setItem("plantillasEnvioSearch", JSON.stringify(this.body));
           this.bodyInicial = JSON.parse(JSON.stringify(this.body));
           sessionStorage.removeItem("crearNuevaPlantilla");
-          sessionStorage.setItem("plantillasEnvioSearch", JSON.stringify(this.body));
+
           this.showSuccess('Se ha guardado la plantilla correctamente');
 
         },
