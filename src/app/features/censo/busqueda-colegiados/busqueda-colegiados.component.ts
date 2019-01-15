@@ -87,10 +87,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   resultadosPoblaciones: any;
   historico: boolean;
 
-  fechaNacimientoSelect: Date;
-  fechaNacimientoSelectOld: Date;
   fechaIncorporacionHastaSelect: Date;
   fechaIncorporacionDesdeSelect: Date;
+  fechaNacimientoHastaSelect: Date;
+  fechaNacimientoDesdeSelect: Date;
 
   constructor(
     private sigaServices: SigaServices,
@@ -346,6 +346,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.sigaServices.get("busquedaColegiados_categoriaCurricular").subscribe(
       n => {
         this.comboCategoriaCurricular = n.combooItems;
+        this.arregloTildesCombo(this.comboCategoriaCurricular);
       },
       err => {
         console.log(err);
@@ -411,52 +412,58 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   //Busca colegiados según los filtros
   isBuscar() {
-    this.selectAll = false;
-    this.historico = false;
-    this.buscar = true;
-    this.selectMultiple = false;
+    if (this.checkFilters()) {
+      this.selectAll = false;
+      this.historico = false;
+      this.buscar = true;
+      this.selectMultiple = false;
 
-    this.selectedDatos = "";
-    this.getColsResults();
-    this.filtrosTrim();
-    this.progressSpinner = true;
-    this.buscar = true;
+      this.selectedDatos = "";
+      this.getColsResults();
+      this.filtrosTrim();
+      this.progressSpinner = true;
+      this.buscar = true;
 
-    this.body.fechaIncorporacion = [];
-    this.body.fechaIncorporacion[1] = this.fechaIncorporacionHastaSelect;
-    this.body.fechaIncorporacion[0] = this.fechaIncorporacionDesdeSelect;
+      this.body.fechaIncorporacion = [];
+      this.body.fechaIncorporacion[1] = this.fechaIncorporacionHastaSelect;
+      this.body.fechaIncorporacion[0] = this.fechaIncorporacionDesdeSelect;
 
-    if (
-      this.fechaNacimientoSelect != undefined ||
-      this.fechaNacimientoSelect != null
-    ) {
-      this.body.fechaNacimiento = this.fechaNacimientoSelect;
-    } else {
-      this.body.fechaNacimiento = undefined;
+      this.body.fechaNacimientoRango = [];
+      this.body.fechaNacimientoRango[1] = this.fechaNacimientoHastaSelect;
+      this.body.fechaNacimientoRango[0] = this.fechaNacimientoDesdeSelect;
+
+      // if (
+      //   this.fechaNacimientoSelect != undefined ||
+      //   this.fechaNacimientoSelect != null
+      // ) {
+      //   this.body.fechaNacimiento = this.fechaNacimientoSelect;
+      // } else {
+      //   this.body.fechaNacimiento = undefined;
+      // }
+
+      this.sigaServices
+        .postPaginado(
+          "busquedaColegiados_searchColegiado",
+          "?numPagina=1",
+          this.body
+        )
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.colegiadoSearch = JSON.parse(data["body"]);
+            this.datos = this.colegiadoSearch.colegiadoItem;
+            this.table.paginator = true;
+            this.body.fechaIncorporacion = [];
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
     }
-
-    this.sigaServices
-      .postPaginado(
-        "busquedaColegiados_searchColegiado",
-        "?numPagina=1",
-        this.body
-      )
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.colegiadoSearch = JSON.parse(data["body"]);
-          this.datos = this.colegiadoSearch.colegiadoItem;
-          this.table.paginator = true;
-          this.body.fechaIncorporacion = [];
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
-        }
-      );
   }
 
   isLimpiar() {
@@ -464,7 +471,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.comboSubtipoCV = [];
     this.fechaIncorporacionDesdeSelect = undefined;
     this.fechaIncorporacionHastaSelect = undefined;
-    this.fechaNacimientoSelect = undefined;
+    this.fechaNacimientoDesdeSelect = undefined;
+    this.fechaNacimientoHastaSelect = undefined;
   }
 
   //Elimina los espacios en blancos finales e iniciales de los inputs de los filtros
@@ -525,6 +533,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         header: "censo.busquedaClientes.noResidente"
       },
       {
+        field: "fechaNacimiento",
+        header: "censo.consultaDatosColegiacion.literal.fechaNac"
+      },
+      {
         field: "correo",
         header: "censo.datosDireccion.literal.correo"
       },
@@ -557,7 +569,89 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       }
     ];
   }
+
   clear() {
     this.msgs = [];
+  }
+
+  checkFilters() {
+    if (
+      (this.body.nombre == null ||
+        this.body.nombre == null ||
+        this.body.nombre.trim().length < 3) &&
+      (this.body.apellidos == null ||
+        this.body.apellidos == null ||
+        this.body.apellidos.trim().length < 3) &&
+      (this.body.numColegiado == null ||
+        this.body.numColegiado == null ||
+        this.body.numColegiado.trim().length < 3) &&
+      (this.body.codigoPostal == null ||
+        this.body.codigoPostal == null ||
+        this.body.codigoPostal.trim().length < 3) &&
+      (this.body.nif == null ||
+        this.body.nif == null ||
+        this.body.nif.trim().length < 3) &&
+      (this.body.correo == null ||
+        this.body.correo == null ||
+        this.body.correo.trim().length < 3) &&
+      (this.body.movil == null ||
+        this.body.movil == null ||
+        this.body.movil.trim().length < 3) &&
+      (this.body.telefono == null ||
+        this.body.telefono == null ||
+        this.body.telefono.trim().length < 3) &&
+      (this.body.idgrupo == undefined ||
+        this.body.idgrupo == null ||
+        this.body.idgrupo.length < 1) &&
+      (this.fechaIncorporacionDesdeSelect == undefined ||
+        this.fechaIncorporacionDesdeSelect == null) &&
+      (this.fechaIncorporacionHastaSelect == undefined ||
+        this.fechaIncorporacionHastaSelect == null) &&
+      (this.body.situacion == undefined || this.body.situacion == null) &&
+      (this.body.residencia == undefined || this.body.residencia == null) &&
+      (this.body.inscrito == undefined || this.body.inscrito == null) &&
+      (this.body.sexo == undefined || this.body.sexo == null) &&
+      (this.body.idEstadoCivil == undefined ||
+        this.body.idEstadoCivil == null) &&
+      (this.fechaNacimientoDesdeSelect == undefined ||
+        this.fechaNacimientoDesdeSelect == null) &&
+      (this.fechaNacimientoHastaSelect == undefined ||
+        this.fechaNacimientoHastaSelect == null) &&
+      (this.body.tipoCV == undefined || this.body.tipoCV == null) &&
+      (this.body.subtipoCV == undefined ||
+        this.body.subtipoCV == null ||
+        this.body.subtipoCV.length < 1) &&
+      (this.body.tipoDireccion == undefined || this.body.tipoDireccion == null)
+    ) {
+      this.showSearchIncorrect();
+      this.progressSpinner = false;
+      return false;
+    } else {
+      // quita espacios vacios antes de buscar
+      if (this.body.nombre != undefined) {
+        this.body.nombre = this.body.nombre.trim();
+      }
+      if (this.body.apellidos != undefined) {
+        this.body.apellidos = this.body.apellidos.trim();
+      }
+      if (this.body.numColegiado != undefined) {
+        this.body.numColegiado = this.body.numColegiado.trim();
+      }
+      if (this.body.nif != undefined) {
+        this.body.nif = this.body.nif.trim();
+      }
+      return true;
+    }
+  }
+
+  showSearchIncorrect() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "cen.busqueda.error.busquedageneral"
+      )
+    });
   }
 }
