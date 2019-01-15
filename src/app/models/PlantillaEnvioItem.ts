@@ -9,5 +9,8 @@ export class PlantillaEnvioItem {
     usuModificacion: String;
     acuseRecibo: String;
     fechaBaja: Date;
+    idPersona: String;
+    idDireccion: String;
+    idInstitucionDir: String;
     constructor() { };
 }

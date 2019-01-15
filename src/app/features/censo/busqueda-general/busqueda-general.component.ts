@@ -68,6 +68,11 @@ export class BusquedaGeneralComponent {
   newIntegrante: boolean = false;
   masFiltros: boolean = false;
   labelFiltros: string;
+  idPlantillaEnvios: string;
+  colegioDisabled: boolean = false;
+  bodyRemitente: any = [];
+  institucionActual: string;
+
   fichasPosibles = [
     {
       key: "generales",
@@ -103,6 +108,38 @@ export class BusquedaGeneralComponent {
   }
 
   ngOnInit() {
+    this.getInstitucion();
+    this.sigaServices.get("busquedaPer_colegio").subscribe(
+      n => {
+        this.colegios_rol = n.combooItems;
+        if (sessionStorage.getItem("abrirRemitente") == 'true') {
+          this.bodyRemitente = sessionStorage.getItem("plantillasEnvioSearch");
+
+          for (let colegio of this.colegios_rol) {
+            if (colegio.value == this.institucionActual) {
+              this.colegios_seleccionados = [{
+                label: colegio.label,
+                value: this.institucionActual
+              }];
+            }
+          }
+
+          // this.colegios_seleccionados[0].label = this.institucionActual;
+          this.colegioDisabled = true;
+        } else {
+          this.colegioDisabled = false;
+        }
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        // this.sigaServices.get("institucionActual").subscribe(n => {
+        //   this.colegios_seleccionados.push(n);
+        // });
+      }
+    );
+
     this.persona = "f";
     if (
       sessionStorage.getItem("newIntegrante") != null ||
@@ -111,6 +148,8 @@ export class BusquedaGeneralComponent {
       this.newIntegrante = JSON.parse(sessionStorage.getItem("newIntegrante"));
       sessionStorage.removeItem("newIntegrante");
     }
+
+
     this.colsFisicas = [
       { field: "nif", header: "NIF/CIF" },
       { field: "nombre", header: "Nombre" },
@@ -147,19 +186,9 @@ export class BusquedaGeneralComponent {
         value: 40
       }
     ];
-    this.sigaServices.get("busquedaPer_colegio").subscribe(
-      n => {
-        this.colegios_rol = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        // this.sigaServices.get("institucionActual").subscribe(n => {
-        //   this.colegios_seleccionados.push(n);
-        // });
-      }
-    );
+
+
+
 
     this.checkStatusInit();
 
@@ -168,8 +197,14 @@ export class BusquedaGeneralComponent {
       n => {
         this.comboIdentificacion = n.combooItems;
       },
-      error => {}
+      error => { }
     );
+  }
+
+  getInstitucion() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
   }
 
   isValidDNI(dni: String): boolean {
@@ -178,7 +213,7 @@ export class BusquedaGeneralComponent {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
   checkTypeCIF(value: String): boolean {
@@ -498,13 +533,14 @@ export class BusquedaGeneralComponent {
 
   irFichaColegial(id) {
     // ir a ficha de notario
-    if (!this.newIntegrante) {
+    if (!this.newIntegrante && sessionStorage.getItem("abrirRemitente") != 'true') {
       if (!this.selectMultiple && !this.selectAll) {
         if (
           sessionStorage.getItem("notario") != null ||
           sessionStorage.getItem("notario") != undefined
         ) {
           sessionStorage.removeItem("notario");
+          sessionStorage.removeItem("abrirRemitente");
         }
         this.checkTypeCIF(id[0].nif);
         id[0].tipoIdentificacion = this.tipoCIF;
@@ -515,8 +551,9 @@ export class BusquedaGeneralComponent {
       }
     }
     // ir a ficha de integrante
-    else {
+    else if (this.newIntegrante && sessionStorage.getItem("abrirRemitente") != 'true') {
       sessionStorage.removeItem("notario");
+      sessionStorage.removeItem("abrirRemitente");
       this.checkTypeCIF(id[0].nif);
       id[0].tipoIdentificacion = this.tipoCIF;
       id[0].colegio = this.colegios_seleccionados[0];
@@ -524,6 +561,12 @@ export class BusquedaGeneralComponent {
       sessionStorage.removeItem("nIntegrante");
       sessionStorage.setItem("nIntegrante", JSON.stringify(id));
       this.router.navigate(["detalleIntegrante"]);
+    } else if (sessionStorage.getItem("abrirRemitente") == 'true') {
+      sessionStorage.setItem("remitente", JSON.stringify(id[0]));
+      sessionStorage.removeItem("abrirRemitente");
+      sessionStorage.removeItem("notario");
+      sessionStorage.removeItem("integrante");
+      this.location.back();
     }
   }
 

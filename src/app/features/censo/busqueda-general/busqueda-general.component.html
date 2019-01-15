@@ -84,8 +84,9 @@
                     </div>
                     <div class="form-group col-lg-6 col-md-6">
                         <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
-                        <p-multiSelect filterBy="label" [options]="colegios_rol" optionLabel="label" [defaultLabel]="textFilter" styleClass="widthAll"
-                            [(ngModel)]='colegios_seleccionados' [selectedItemsLabel]="textSelected" maxSelectedLabels="1" [panelStyle]="{width:'100%'}"></p-multiSelect>
+                        <p-multiSelect [disabled]="colegioDisabled" filterBy="label" [options]="colegios_rol" optionLabel="label" [defaultLabel]="textFilter"
+                            styleClass="widthAll" [(ngModel)]='colegios_seleccionados' [selectedItemsLabel]="textSelected" maxSelectedLabels="1"
+                            [panelStyle]="{width:'100%'}"></p-multiSelect>
                     </div>
                 </div>
             </div>

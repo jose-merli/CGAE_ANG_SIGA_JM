@@ -195,7 +195,12 @@ export class SigaServices {
     plantillasEnvio_comboConsultas: 'plantillasEnvio/consultasDisp',
     plantillasEnvio_finalidadConsulta: 'plantillasEnvio/finalidadConsulta',
     plantillasEnvio_asociarConsulta: 'plantillasEnvio/asociarConsulta',
-    plantillasEnvio_desaociarConsulta: 'plantillasEnvio/desasociarConsulta'
+    plantillasEnvio_desaociarConsulta: 'plantillasEnvio/desasociarConsulta',
+    plantillasEnvio_detalleRemitente: 'plantillasEnvio/detalleRemitente',
+    plantillasEnvio_personaDireccion: 'plantillasEnvio/personaYdirecciones',
+    plantillasEnvio_guardarRemitente: 'plantillasEnvio/guardarRemitente'
+
+
 
 
   };
