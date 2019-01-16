@@ -1429,6 +1429,25 @@ export class FichaColegialComponent implements OnInit {
     this.edadCalculada = edad;
   }
 
+  onWriteCalendar() {
+    // console.log(new Date(event));
+    var hoy = new Date();
+
+    if(this.fechaNacimiento instanceof Date){
+      var edad = hoy.getFullYear() - this.fechaNacimiento.getFullYear();
+      var m = hoy.getMonth() - this.fechaNacimiento.getMonth();
+
+      if (m < 0 || (m === 0 && hoy.getDate() < this.fechaNacimiento.getDate())) {
+        edad--;
+      }
+
+      this.edadCalculada = edad;
+
+    }else{
+      this.edadCalculada = "";
+    }
+  }
+
   calcularEdad(fecha) {
     var hoy = new Date();
     var dateParts = fecha.split("/");

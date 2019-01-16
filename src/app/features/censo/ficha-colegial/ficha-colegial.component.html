@@ -266,6 +266,7 @@
                 (ngModelChange)="activacionGuardarGenerales()"
                 dateFormat="dd/mm/yy"
                 [style]="{ position: 'relative', 'z-index': '1000' }"
+                [maxLength]="100"
                 type="text"
                 class="form-control"
                 pInputText
@@ -322,6 +323,7 @@
                 [monthNavigator]="true"
                 [yearNavigator]="true"
                 (onSelect)="onChangeCalendar($event)"
+                (onInput)="onWriteCalendar(fechaNacimiento)"
                 yearRange="1930:2050"
                 [locale]="es"
                 [(ngModel)]="fechaNacimiento"
@@ -356,6 +358,7 @@
                 (ngModelChange)="activacionGuardarGenerales()"
                 [(disabled)]="isLetrado  || disabledAction"
                 type="text"
+                [maxLength]="100"
                 class="form-control"
                 pInputText
               />
