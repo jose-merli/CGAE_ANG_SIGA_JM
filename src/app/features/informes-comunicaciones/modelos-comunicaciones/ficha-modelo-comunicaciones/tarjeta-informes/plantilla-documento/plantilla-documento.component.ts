@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { FichaPlantillasDocument } from '../../../../../../models/FichaPlantillasDocumentoItem';
+import { ConsultasSearchItem } from '../../../../../../models/ConsultasSearchItem';
+import { ModelosComunicacionesItem } from '../../../../../../models/ModelosComunicacionesItem';
 import { SigaServices } from "./../../../../../../_services/siga.service";
 import { Location } from "@angular/common";
 import { Message, ConfirmationService } from "primeng/components/common/api";
@@ -26,6 +28,9 @@ export class PlantillaDocumentoComponent implements OnInit {
   sufijos: any[];
   textFilter: string;
   body: FichaPlantillasDocument = new FichaPlantillasDocument();
+  consultaSearch: ConsultasSearchItem = new ConsultasSearchItem();
+  modeloItem: ModelosComunicacionesItem = new ModelosComunicacionesItem();
+  consultasCombo: any[];
   consultas: any[];
   finalidad: any[];
   tipoEjecucion: any[];
@@ -141,14 +146,69 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   getDatos() {
+    this.getComboFormatos();
+    this.getComboSufijos();
+
     if (sessionStorage.getItem("modelosSearch") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
+      this.modeloItem = JSON.parse(sessionStorage.getItem("modelosSearch"));
+
+      this.body.idClaseComunicacion = this.modeloItem.idClaseComunicacion;
+      this.body.idInstitucion = this.modeloItem.idInstitucion;
+      this.getConsultasPlantilla();
     }
   }
 
-  getConsultas(){
+  getComboFormatos(){
+    this.sigaServices.get("modelos_plantilla_formatos").subscribe(
+      n => {
+        this.formatos = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getComboSufijos() {
+    this.sigaServices.get("modelos_plantilla_sufijos").subscribe(
+      n => {
+        this.sufijos = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getComboObjetivos() {
+    this.sigaServices.get("consultas_comboObjetivos").subscribe(
+      n => {
+        this.finalidad = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+  
+
+  getConsultasDisponibles(){
     this.sigaServices
-      .post("modelos_consultas", this.body)
+      .post("modelos_combo_consultas", this.body)
+      .subscribe(
+        data => {
+          this.consultasCombo = JSON.parse(data["body"]);
+        },
+        err => {
+          this.showFail('Error al cargar las consultas');
+          console.log(err);
+        }
+      );
+  }
+
+  getConsultasPlantilla(){
+    this.sigaServices
+      .post("modelos_plantilla_consultas", this.body)
       .subscribe(
         data => {
           this.consultas = JSON.parse(data["body"]);
@@ -160,9 +220,9 @@ export class PlantillaDocumentoComponent implements OnInit {
       );
   }
 
-  getConsultasHistorico(){
+  getConsultasPlantillaHistorico(){
     this.sigaServices
-      .post("modelos_consultas_historico", this.body)
+      .post("modelos_plantilla_consultas_historico", this.body)
       .subscribe(
         data => {
           this.consultas = JSON.parse(data["body"]);

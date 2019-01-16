@@ -5,5 +5,6 @@ export class ConsultasSearchItem {
     idClaseComunicacion: String;
     idObjetivo: String;
     generica: String;
+    idInstitucion:String;
     constructor() { }
 }

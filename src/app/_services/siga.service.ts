@@ -198,17 +198,18 @@ export class SigaServices {
     modelos_detalle_perfiles: 'modelos/detalle/perfiles',
     modelos_detalle_perfilesModelo: 'modelos/detalle/perfilesModelo',
     modelos_detalle_guardarPerfiles: 'modelos/detalle/guardarPerfiles',
-    modelo_detalle_informes: 'modelos/detalle/informes',
-    modelos_consultas: 'modelos/consultas',
-    modelos_consultas_historico: 'modelos/consultas/historico',
+    modelos_detalle_informes: 'modelos/detalle/informes',
+    modelos_combo_consultas: 'modelos/combo/consultas',
+    modelos_plantilla_consultas: 'modelos/plantilla/consultas',
+    modelos_consultas_historico: 'modelos/plantilla/consultas/historico',
+    modelos_plantilla_formatos: 'modelos/plantilla/formatos',
+    modelos_plantilla_sufijos: 'modelos/plantilla/sufijos',
     plantillasEnvio_consultas: 'plantillasEnvio/consultasPlantillas',
     plantillasEnvio_borrar: 'plantillasEnvio/borrarPlantilla',
     plantillasEnvio_comboConsultas: 'plantillasEnvio/consultasDisp',
     plantillasEnvio_finalidadConsulta: 'plantillasEnvio/finalidadConsulta',
     plantillasEnvio_asociarConsulta: 'plantillasEnvio/asociarConsulta',
     plantillasEnvio_desaociarConsulta: 'plantillasEnvio/desasociarConsulta'
-
-
   };
 
   private menuToggled = new Subject<any>();

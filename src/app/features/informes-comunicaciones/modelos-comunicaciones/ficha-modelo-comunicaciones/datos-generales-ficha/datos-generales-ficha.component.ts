@@ -111,6 +111,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
     this.sigaServices.post("modelos_detalle_datosGenerales", this.body).subscribe(
       data => {
         this.showSuccess("Datos generales guardados correctamente");
+        sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
       },
       err => {
         console.log(err);
