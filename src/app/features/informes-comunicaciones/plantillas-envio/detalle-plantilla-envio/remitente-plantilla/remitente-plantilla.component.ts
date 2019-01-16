@@ -220,7 +220,8 @@ export class RemitentePlantillaComponent implements OnInit {
           this.remitenteInicial = JSON.parse(JSON.stringify(this.remitente));
 
           console.log(this.direccion)
-          this.getComboPoblacionInicial();
+          let filtro = '';
+          this.getComboPoblacionInicial(filtro);
 
         },
         err => {
@@ -257,7 +258,8 @@ export class RemitentePlantillaComponent implements OnInit {
             }
 
             console.log(this.direccion)
-            this.getComboPoblacionInicial();
+            let filtro = '';
+            this.getComboPoblacionInicial(filtro);
 
 
           }
