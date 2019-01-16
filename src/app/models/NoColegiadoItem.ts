@@ -16,7 +16,8 @@ export class NoColegiadoItem {
   codigoPostal: string;
   tipoDireccion: string;
   apellidos: string;
-  traduccion: string[];
+  idgrupo: string[];
+  fechaNacimientoRango: Date[];
   sexo: string;
   estadoCivil: string;
   categoria: string;
@@ -33,6 +34,8 @@ export class NoColegiadoItem {
   naturalDe: string;
   asientoContable: string;
   tratamiento: string;
+
+  idEstadoCivil: string;
 
   subtipoCV: string[];
   tipoCV: string;

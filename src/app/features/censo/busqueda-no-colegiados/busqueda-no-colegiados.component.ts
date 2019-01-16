@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation
+} from "@angular/core";
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { DatePipe } from "../../../../../node_modules/@angular/common";
 import {
@@ -21,7 +27,8 @@ import { SubtipoCurricularItem } from "../../../models/SubtipoCurricularItem";
 @Component({
   selector: "app-busqueda-no-colegiados",
   templateUrl: "./busqueda-no-colegiados.component.html",
-  styleUrls: ["./busqueda-no-colegiados.component.scss"]
+  styleUrls: ["./busqueda-no-colegiados.component.scss"],
+  encapsulation: ViewEncapsulation.None
 })
 export class BusquedaNoColegiadosComponent implements OnInit {
   formBusqueda: FormGroup;
@@ -32,13 +39,14 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   comboPoblacion: any;
   comboTipoDireccion: any;
   comboCategoriaCurricular: any;
+  comboTipoCV: any;
   comboSubtipoCV: any;
   comboSexo: any;
   progressSpinner: boolean = false;
   resultadosPoblaciones: any;
 
   editar: boolean = true;
-  textFilter: String = "Elegir";
+  textFilter: String = "Seleccionar";
   body: NoColegiadoItem = new NoColegiadoItem();
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
@@ -56,8 +64,9 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   selectedItem: number = 10;
   selectAll: boolean = false;
   numSelected: number = 0;
-  fechaNacimientoSelect: Date;
-  fechaNacimientoSelectOld: Date;
+
+  fechaNacimientoHastaSelect: Date;
+  fechaNacimientoDesdeSelect: Date;
 
   noColegiadoSearch = new DatosNoColegiadosObject();
   subtipoCurricular: SubtipoCurricularItem = new SubtipoCurricularItem();
@@ -117,9 +126,13 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       sessionStorage.removeItem("filtrosBusquedaNoColegiados");
 
       if (this.body.historico) {
-        this.isBuscar(true);
+        if (this.checkFiltersInit()) {
+          this.isBuscar(true);
+        }
       } else {
-        this.isBuscar(false);
+        if (this.checkFiltersInit()) {
+          this.isBuscar(false);
+        }
       }
     }
   }
@@ -173,6 +186,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     this.sigaServices.get("busquedaNoColegiados_estadoCivil").subscribe(
       n => {
         this.comboEstadoCivil = n.combooItems;
+        this.arregloTildesCombo(this.comboEstadoCivil);
       },
       err => {
         console.log(err);
@@ -185,6 +199,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
       n => {
         this.comboEtiquetas = n.combooItems;
+        this.arregloTildesCombo(this.comboEtiquetas);
       },
       err => {
         console.log(err);
@@ -197,6 +212,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     this.sigaServices.get("busquedaNoColegiados_tipoDireccion").subscribe(
       n => {
         this.comboTipoDireccion = n.combooItems;
+        this.arregloTildesCombo(this.comboTipoDireccion);
       },
       err => {
         console.log(err);
@@ -209,6 +225,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     this.sigaServices.get("busquedaNoColegiados_categoriaCurricular").subscribe(
       n => {
         this.comboCategoriaCurricular = n.combooItems;
+        this.arregloTildesCombo(this.comboCategoriaCurricular);
       },
       err => {
         console.log(err);
@@ -263,32 +280,42 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   //Tipo Curricular
   onChangeCategoriaCurricular(event) {
     if (event) {
-      this.subtipoCurricular.idTipoCV = event.value;
-      this.getComboSubtipoCurricular();
+      this.getComboTipoCurricular(event.value);
+      this.getComboSubtipoCurricular(event.value);
     }
   }
 
-  //SubtipoCurricular
-  getComboSubtipoCurricular() {
+  //TipoCurricular
+  getComboTipoCurricular(idTipoCV) {
     this.sigaServices
-      .postPaginado(
-        "subtipoCurricular_comboSubtipoCurricular",
-        "?numPagina=1",
-        this.subtipoCurricular
+      .getParam(
+        "busquedaNoColegiados_getCurricularTypeCombo",
+        "?idTipoCV=" + idTipoCV
       )
       .subscribe(
-        data => {
-          this.comboSubtipoCV = JSON.parse(data["body"]).combooItems;
-
-          if (this.comboSubtipoCV.length == 0) {
-            this.noResultsSubtipos = true;
-          } else {
-            this.noResultsSubtipos = false;
-          }
+        n => {
+          this.comboTipoCV = n.combooItems;
+          this.arregloTildesCombo(this.comboTipoCV);
         },
-        err => {
-          console.log(err);
-        }
+        error => {},
+        () => {}
+      );
+  }
+
+  //SubtipoCurricular
+  getComboSubtipoCurricular(idTipoCV) {
+    this.sigaServices
+      .getParam(
+        "busquedaNoColegiados_getCurricularSubtypeCombo",
+        "?idTipoCV=" + idTipoCV
+      )
+      .subscribe(
+        n => {
+          this.comboSubtipoCV = n.combooItems;
+          this.arregloTildesCombo(this.comboSubtipoCV);
+        },
+        error => {},
+        () => {}
       );
   }
 
@@ -391,58 +418,52 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   //Busca No colegiados según los filtros
   isBuscar(flagArchivado: boolean) {
-    this.selectAll = false;
-    this.buscar = true;
+    if (this.checkFilters()) {
+      this.selectAll = false;
+      this.buscar = true;
 
-    if (flagArchivado) {
-      this.body.historico = true;
-      this.historico = true;
-    } else {
-      this.body.historico = false;
-      this.historico = false;
+      if (flagArchivado) {
+        this.body.historico = true;
+        this.historico = true;
+      } else {
+        this.body.historico = false;
+        this.historico = false;
+      }
+
+      this.selectMultiple = false;
+      this.selectedDatos = "";
+      this.getColsResults();
+      this.filtrosTrim();
+
+      this.body.fechaNacimientoRango = [];
+      this.body.fechaNacimientoRango[1] = this.fechaNacimientoHastaSelect;
+      this.body.fechaNacimientoRango[0] = this.fechaNacimientoDesdeSelect;
+
+      this.progressSpinner = true;
+
+      this.sigaServices
+        .postPaginado(
+          "busquedaNoColegiados_searchNoColegiado",
+          "?numPagina=1",
+          this.body
+        )
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.noColegiadoSearch = JSON.parse(data["body"]);
+            this.datos = this.noColegiadoSearch.noColegiadoItem;
+            this.convertirStringADate(this.datos);
+            // this.table.paginator = true;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
     }
-
-    this.selectMultiple = false;
-    this.selectedDatos = "";
-    this.getColsResults();
-    this.filtrosTrim();
-
-    if (
-      this.fechaNacimientoSelect != undefined ||
-      this.fechaNacimientoSelect != null
-    ) {
-      this.body.fechaNacimiento = this.datePipe.transform(
-        this.fechaNacimientoSelect,
-        "dd/MM/yyyy"
-      );
-    } else {
-      this.body.fechaNacimiento = null;
-    }
-
-    this.progressSpinner = true;
-
-    this.sigaServices
-      .postPaginado(
-        "busquedaNoColegiados_searchNoColegiado",
-        "?numPagina=1",
-        this.body
-      )
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.noColegiadoSearch = JSON.parse(data["body"]);
-          this.datos = this.noColegiadoSearch.noColegiadoItem;
-          this.convertirStringADate(this.datos);
-          // this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
-        }
-      );
   }
 
   toHistorico() {
@@ -478,7 +499,8 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   isLimpiar() {
     this.body = new NoColegiadoItem();
-    this.fechaNacimientoSelect = null;
+    this.fechaNacimientoDesdeSelect = undefined;
+    this.fechaNacimientoHastaSelect = undefined;
   }
 
   isCrear() {
@@ -678,5 +700,135 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     } else {
       this.numSelected = this.selectedDatos.length;
     }
+  }
+
+  checkFilters() {
+    if (
+      (this.body.nombre == null ||
+        this.body.nombre == null ||
+        this.body.nombre.trim().length < 3) &&
+      (this.body.apellidos == null ||
+        this.body.apellidos == null ||
+        this.body.apellidos.trim().length < 3) &&
+      (this.body.codigoPostal == null ||
+        this.body.codigoPostal == null ||
+        this.body.codigoPostal.trim().length < 3) &&
+      (this.body.nif == null ||
+        this.body.nif == null ||
+        this.body.nif.trim().length < 3) &&
+      (this.body.correo == null ||
+        this.body.correo == null ||
+        this.body.correo.trim().length < 3) &&
+      (this.body.movil == null ||
+        this.body.movil == null ||
+        this.body.movil.trim().length < 3) &&
+      (this.body.telefono == null ||
+        this.body.telefono == null ||
+        this.body.telefono.trim().length < 3) &&
+      (this.body.idgrupo == undefined ||
+        this.body.idgrupo == null ||
+        this.body.idgrupo.length < 1) &&
+      (this.body.sexo == undefined || this.body.sexo == null) &&
+      (this.body.idEstadoCivil == undefined ||
+        this.body.idEstadoCivil == null) &&
+      (this.fechaNacimientoDesdeSelect == undefined ||
+        this.fechaNacimientoDesdeSelect == null) &&
+      (this.fechaNacimientoHastaSelect == undefined ||
+        this.fechaNacimientoHastaSelect == null) &&
+      (this.body.tipoCV == undefined || this.body.tipoCV == null) &&
+      (this.body.subtipoCV == undefined ||
+        this.body.subtipoCV == null ||
+        this.body.subtipoCV.length < 1) &&
+      (this.body.tipoDireccion == undefined || this.body.tipoDireccion == null)
+    ) {
+      this.showSearchIncorrect();
+      this.progressSpinner = false;
+      return false;
+    } else {
+      // quita espacios vacios antes de buscar
+      if (this.body.nombre != undefined) {
+        this.body.nombre = this.body.nombre.trim();
+      }
+      if (this.body.apellidos != undefined) {
+        this.body.apellidos = this.body.apellidos.trim();
+      }
+      if (this.body.nif != undefined) {
+        this.body.nif = this.body.nif.trim();
+      }
+      return true;
+    }
+  }
+
+  checkFiltersInit() {
+    if (
+      (this.body.nombre == null ||
+        this.body.nombre == null ||
+        this.body.nombre.trim().length < 3) &&
+      (this.body.apellidos == null ||
+        this.body.apellidos == null ||
+        this.body.apellidos.trim().length < 3) &&
+      (this.body.codigoPostal == null ||
+        this.body.codigoPostal == null ||
+        this.body.codigoPostal.trim().length < 3) &&
+      (this.body.nif == null ||
+        this.body.nif == null ||
+        this.body.nif.trim().length < 3) &&
+      (this.body.correo == null ||
+        this.body.correo == null ||
+        this.body.correo.trim().length < 3) &&
+      (this.body.movil == null ||
+        this.body.movil == null ||
+        this.body.movil.trim().length < 3) &&
+      (this.body.telefono == null ||
+        this.body.telefono == null ||
+        this.body.telefono.trim().length < 3) &&
+      (this.body.idgrupo == undefined ||
+        this.body.idgrupo == null ||
+        this.body.idgrupo.length < 1) &&
+      (this.body.sexo == undefined || this.body.sexo == null) &&
+      (this.body.idEstadoCivil == undefined ||
+        this.body.idEstadoCivil == null) &&
+      (this.fechaNacimientoDesdeSelect == undefined ||
+        this.fechaNacimientoDesdeSelect == null) &&
+      (this.fechaNacimientoHastaSelect == undefined ||
+        this.fechaNacimientoHastaSelect == null) &&
+      (this.body.tipoCV == undefined || this.body.tipoCV == null) &&
+      (this.body.subtipoCV == undefined ||
+        this.body.subtipoCV == null ||
+        this.body.subtipoCV.length < 1) &&
+      (this.body.tipoDireccion == undefined || this.body.tipoDireccion == null)
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  showSearchIncorrect() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "cen.busqueda.error.busquedageneral"
+      )
+    });
+  }
+
+  arregloTildesCombo(combo) {
+    combo.map(e => {
+      let accents =
+        "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+      let accentsOut =
+        "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+      let i;
+      let x;
+      for (i = 0; i < e.label.length; i++) {
+        if ((x = accents.indexOf(e.label[i])) != -1) {
+          e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+          return e.labelSinTilde;
+        }
+      }
+    });
   }
 }

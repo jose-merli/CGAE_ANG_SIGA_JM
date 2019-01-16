@@ -360,8 +360,10 @@ export class FichaColegialComponent implements OnInit {
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
+      this.activacionEditar = false;
       this.onInitGenerales();
     } else {
+      this.activacionEditar = true;
       this.esNewColegiado = false;
     }
     if (!this.esNewColegiado) {
@@ -670,7 +672,13 @@ export class FichaColegialComponent implements OnInit {
 
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
-    if (this.activacionEditar == true) {
+
+    if(key == 'generales' && !this.activacionEditar){
+      fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+
+    if (this.activacionEditar) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
@@ -854,6 +862,7 @@ export class FichaColegialComponent implements OnInit {
     if (datoH.archivada == "No") return false;
     else return true;
   }
+
   isValidDNI(dni: String): boolean {
     return (
       dni &&
@@ -1244,6 +1253,8 @@ export class FichaColegialComponent implements OnInit {
             this.obtenerEtiquetasPersonaJuridicaConcreta();
             this.progressSpinner = false;
             this.showSuccess();
+            this.activacionEditar = true;
+
           },
           error => {
             console.log(error);

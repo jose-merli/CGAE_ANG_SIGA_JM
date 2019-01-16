@@ -176,12 +176,20 @@ export class SigaServices {
     busquedaNoColegiados_poblacion: "/busquedaNoColegiados/poblacion",
     busquedaNoColegiados_tipoDireccion: "/busquedaNoColegiados/tipoDireccion",
     busquedaNoColegiados_categoriaCurricular:
-      "/busquedaNoColegiados/categoriaCurricular",
+      "/busquedaColegiados/categoriaCurricular",
+    busquedaColegiados_getCurricularTypeCombo:
+      "busquedaColegiados/getCurricularTypeCombo",
+    busquedaColegiados_getCurricularSubtypeCombo:
+      "busquedaColegiados/getCurricularSubtypeCombo",
     busquedaNoColegiados_searchNoColegiado:
       "/busquedaNocolegiado/searchNoColegiado",
     busquedaNocolegiado_deleteNoColegiado:
       "/busquedaNocolegiado/deleteNoColegiado",
     busquedaNoColegiados_searchHistoric: "busquedaNocolegiado/searchHistoric",
+    busquedaNoColegiados_getCurricularTypeCombo:
+      "busquedaNoColegiados/getCurricularTypeCombo",
+    busquedaNoColegiados_getCurricularSubtypeCombo:
+      "busquedaNoColegiados/getCurricularSubtypeCombo",
     solicitudIncorporacion_tipoSolicitud:
       "/solicitudIncorporacion/tipoSolicitud",
     solicitudIncorporacion_estadoSolicitud:
