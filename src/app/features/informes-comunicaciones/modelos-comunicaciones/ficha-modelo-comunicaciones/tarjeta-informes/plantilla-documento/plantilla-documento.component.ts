@@ -3,8 +3,6 @@ import { DataTable } from "primeng/datatable";
 import { FichaPlantillasDocument } from '../../../../../../models/FichaPlantillasDocumentoItem';
 import { ConsultasSearchItem } from '../../../../../../models/ConsultasSearchItem';
 import { ModelosComunicacionesItem } from '../../../../../../models/ModelosComunicacionesItem';
-import { InformesModelosComItem } from '../../../../../../models/InformesModelosComunicacionesItem';
-
 import { SigaServices } from "./../../../../../../_services/siga.service";
 import { Location } from "@angular/common";
 import { Message, ConfirmationService } from "primeng/components/common/api";
@@ -18,12 +16,15 @@ import { Message, ConfirmationService } from "primeng/components/common/api";
 
 export class PlantillaDocumentoComponent implements OnInit {
 
-  datos: any[];
-  cols: any[];
+  datos: any = [];
+  cols: any = [];
   first: number = 0;
+  firstDocs: number = 0;
   selectedItem: number;
   selectAll: boolean = false;
+  selectAllDocs: boolean = false;
   selectMultiple: boolean = false;
+  selectMultipleDocs: boolean = false;
   numSelected: number = 0;
   rowsPerPage: any = [];
   formatos: any[];
@@ -32,17 +33,25 @@ export class PlantillaDocumentoComponent implements OnInit {
   body: FichaPlantillasDocument = new FichaPlantillasDocument();
   consultaSearch: ConsultasSearchItem = new ConsultasSearchItem();
   modeloItem: ModelosComunicacionesItem = new ModelosComunicacionesItem();
-  informeItem: InformesModelosComItem = new InformesModelosComItem();
   consultasCombo: any[];
-  consultas: any[];
-  finalidad: any[];
-  tipoEjecucion: any[];
+  consultas: any = [];
   textSelected: any;
   showHistorico: boolean = false;
   msgs: Message[];
+  documentos: any = [];
+  colsDocumentos: any = [];
+  idiomas: any = [];
+  progressSpinner: boolean = false;
+  finalidad: string;
+  showDatosGenerales: boolean = true;
+  showConsultas: boolean = false;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
+
+
+  @ViewChild('tableDocs') tableDocs: DataTable;
+  selectedDocs
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private location: Location, private sigaServices: SigaServices) {
 
@@ -51,21 +60,20 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   ngOnInit() {
     this.textFilter = "Elegir";
+    this.textSelected = "{0} ficheros seleccionadas";
+    this.firstDocs = 0;
 
     this.getDatos();
+    this.busquedaIdioma();
+    this.getConsultasDisponibles();
 
     this.selectedItem = 4;
 
     this.cols = [
       { field: 'consulta', header: 'Consulta' },
-      { field: 'finalidad', header: 'Finalidad' },
-      { field: 'tipoEjecucion', header: 'Tipo de ejecución' }
+      { field: 'finalidad', header: 'Finalidad' }
     ];
 
-    this.datos = [
-      { id: '1', consulta: 'prueba', finalidad: 'prueba', tipoEjecucion: 'prueba' },
-      { id: '2', consulta: 'prueba', finalidad: 'prueba', tipoEjecucion: 'prueba' }
-    ];
 
     this.consultas = [
       { label: 'Seleccione una consulta', value: null },
@@ -92,9 +100,28 @@ export class PlantillaDocumentoComponent implements OnInit {
       }
     ];
 
+    this.colsDocumentos = [
+      { field: 'plantilla', header: 'Plantilla' },
+      { field: 'idioma', header: 'idioma' }
+    ]
+
+    this.datos = []
+
     // this.body.idConsulta = this.consultas[1].value;
 
   }
+
+  busquedaIdioma() {
+    this.sigaServices.get("etiquetas_lenguaje").subscribe(
+      n => {
+        this.idiomas = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
 
 
   onChangeRowsPerPages(event) {
@@ -116,15 +143,35 @@ export class PlantillaDocumentoComponent implements OnInit {
     }
   }
 
-  onChangeSelectAll() {
-    if (this.selectAll === true) {
-      this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+  isSelectMultipleDocs() {
+    this.selectMultipleDocs = !this.selectMultipleDocs;
+    if (!this.selectMultipleDocs) {
+      this.selectedDocs = [];
     } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
+      this.selectAll = false;
+      this.selectedDocs = [];
     }
+  }
+
+  onChangeSelectAll(key) {
+    if (key != 'docs') {
+      if (this.selectAll === true) {
+        this.selectMultiple = false;
+        this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
+    } else {
+      if (this.selectAllDocs === true) {
+        this.selectMultipleDocs = false;
+        this.selectedDocs = this.documentos;
+      } else {
+        this.selectedDocs = [];
+      }
+    }
+
   }
 
   onRowSelect() {
@@ -133,14 +180,23 @@ export class PlantillaDocumentoComponent implements OnInit {
     }
   }
 
+  addDocumento() {
+    let obj = {
+      plantilla: '',
+      idioma: '',
+    };
+    this.documentos.push(obj);
+    this.documentos = [... this.documentos];
+  }
+
+
   addConsulta() {
     let obj = {
       consulta: null,
-      finalidad: null,
-      tipoEjecucion: null
+      finalidad: null
     };
     this.datos.push(obj);
-    this.datos = [... this.datos];
+    // this.datos = [... this.datos];
   }
 
 
@@ -148,24 +204,29 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.location.back();
   }
 
+  getHistorico(key) {
+    if (key == 'visible') {
+      this.showHistorico = true;
+    } else if (key == 'hidden') {
+      this.showHistorico = false;
+    }
+    this.getResultados();
+  }
+
   getDatos() {
     this.getComboFormatos();
     this.getComboSufijos();
-    this.getConsultasDisponibles();
-    
+
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.modeloItem = JSON.parse(sessionStorage.getItem("modelosSearch"));
 
       this.body.idClaseComunicacion = this.modeloItem.idClaseComunicacion;
       this.body.idInstitucion = this.modeloItem.idInstitucion;
-    }
-    if(sessionStorage.getItem("modelosInformesSearch") != null){
-      this.informeItem = JSON.parse(sessionStorage.getItem("modelosInformesSearch"));
-      this.getConsultasPlantilla();
+      this.getResultados()
     }
   }
 
-  getComboFormatos(){
+  getComboFormatos() {
     this.sigaServices.get("modelos_plantilla_formatos").subscribe(
       n => {
         this.formatos = n.combooItems;
@@ -187,24 +248,17 @@ export class PlantillaDocumentoComponent implements OnInit {
     );
   }
 
-  getComboObjetivos() {
-    this.sigaServices.get("consultas_comboObjetivos").subscribe(
-      n => {
-        this.finalidad = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-  
 
-  getConsultasDisponibles(){
+
+
+  getConsultasDisponibles() {
     this.sigaServices
+
       .post("modelos_combo_consultas", this.body)
       .subscribe(
         data => {
-          this.consultasCombo = JSON.parse(data["body"]);
+          this.consultasCombo = JSON.parse(data["body"]).combooItems;
+          console.log(this.consultasCombo)
         },
         err => {
           this.showFail('Error al cargar las consultas');
@@ -213,12 +267,18 @@ export class PlantillaDocumentoComponent implements OnInit {
       );
   }
 
-  getConsultasPlantilla(){
+
+
+  getResultados() {
+    let service = "modelos_plantilla_consultas";
+    if (this.showHistorico) {
+      service = "modelos_plantilla_consultas_historico";
+    }
     this.sigaServices
-      .post("modelos_plantilla_consultas", this.body)
+      .post(service, this.body)
       .subscribe(
         data => {
-          this.consultas = JSON.parse(data["body"]);
+          this.datos = JSON.parse(data["body"]).consultaItem;
         },
         err => {
           this.showFail('Error al cargar las consultas');
@@ -227,19 +287,10 @@ export class PlantillaDocumentoComponent implements OnInit {
       );
   }
 
-  getConsultasPlantillaHistorico(){
-    this.sigaServices
-      .post("modelos_plantilla_consultas_historico", this.body)
-      .subscribe(
-        data => {
-          this.consultas = JSON.parse(data["body"]);
-        },
-        err => {
-          this.showFail('Error al cargar las consultas');
-          console.log(err);
-        }
-      );
+  guardarDatosGenerales() {
+    sessionStorage.removeitem("crearNuevaPlantillaDocumento")
   }
+
 
   // Mensajes
   showFail(mensaje: string) {
@@ -259,5 +310,52 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  onChangeIdioma() {
+
+  }
+
+  getFinalidad(id) {
+    this.sigaServices
+      .post("plantillasEnvio_finalidadConsulta", id)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.finalidad = JSON.parse(data["body"]).finalidad;
+          for (let dato of this.datos) {
+            if (!dato.idConsulta) {
+              dato.idConsulta = id;
+              dato.finalidad = this.finalidad;
+            } else if (dato.idConsulta && dato.idConsulta == id) {
+              dato.finalidad = this.finalidad;
+            }
+          }
+          this.datos = [... this.datos];
+          console.log(this.datos)
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => { }
+      );
+  }
+
+  onChangeConsultas(e) {
+    let id = e.value;
+    this.getFinalidad(id);
+    console.log(id)
+  }
+
+  onShowDatosGenerales() {
+    this.showDatosGenerales = !this.showDatosGenerales;
+  }
+
+  onShowConsultas() {
+    if (sessionStorage.getItem("crearNuevaPlantillaDocumento") == null) {
+      this.showConsultas = !this.showConsultas
+    }
+
   }
 }

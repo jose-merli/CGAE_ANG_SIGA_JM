@@ -3,6 +3,8 @@ import { DataTable } from "primeng/datatable";
 import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { ComunicacionesModelosComItem } from '../../../../../models/ComunicacionesModelosComunicacionesItem';
+import { Message, ConfirmationService } from "primeng/components/common/api";
+import { ModelosComunicacionesItem } from '../../../../../models/ModelosComunicacionesItem';
 
 @Component({
   selector: 'app-tarjeta-comunicaciones',
@@ -16,6 +18,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
   derechoAcceso: any;
   permisos: any;
   permisosArray: any[];
+  msgs: Message[];
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   datos: any[];
   cols: any[];
@@ -27,7 +30,8 @@ export class TarjetaComunicacionesComponent implements OnInit {
   rowsPerPage: any = [];
   formatos: any[];
   sufijos: any[];
-  body: ComunicacionesModelosComItem = new ComunicacionesModelosComItem;
+  body: ModelosComunicacionesItem = new ModelosComunicacionesItem();
+
 
   @ViewChild('table') table: DataTable;
   selectedDatos;
@@ -60,13 +64,8 @@ export class TarjetaComunicacionesComponent implements OnInit {
     this.selectedItem = 10;
 
     this.cols = [
-      { field: 'nombre', header: 'Nombre' },
+      { field: 'nombrePlantilla', header: 'Nombre' },
       { field: 'tipoEnvio', header: 'Tipo de envío' },
-    ];
-
-    this.datos = [
-      { id: '1', nombre: 'prueba', tipoEnvio: 'prueba' },
-      { id: '2', nombre: 'prueba', tipoEnvio: 'prueba' }
     ];
 
     this.rowsPerPage = [
@@ -179,18 +178,54 @@ export class TarjetaComunicacionesComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
+
+      this.sigaServices.post("modelos_detalle_plantillas", this.body.idModeloComunicacion).subscribe(result => {
+        debugger;
+        let data = JSON.parse(result.body);
+        this.datos = data.plantillas;
+      }, error => {
+
+      }, () => {
+
+      })
     }
   }
 
 
   addComunicacion() {
-    let objNewCom = {
-      nombre: '',
-      tipoEnvio: ''
+    let nuevaPlantillaComunicacion = {
+      idModeloComunicacion: this.body.idModeloComunicacion,
+      idPlantillaEnvios: this.body.idPlantillaEnvios
     }
-
-    this.datos.push(objNewCom);
     this.selectedDatos = [];
+
+    this.sigaServices.post("modelos_detalle_guardarPlantilla", nuevaPlantillaComunicacion).subscribe(result => {
+
+    }, error => {
+      console.log(error);
+    }, () => {
+
+    })
+  }
+
+  // Mensajes
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showInfo(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 

@@ -172,10 +172,10 @@ export class TarjetaInformesComponent implements OnInit {
 
   }
 
-  getDatos(){
+  getDatos() {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.modelo = JSON.parse(sessionStorage.getItem("modelosSearch"));
-    }    
+    }
     this.getInformes();
   }
   getInformes() {
@@ -190,6 +190,7 @@ export class TarjetaInformesComponent implements OnInit {
   }
 
   addInforme() {
+    sessionStorage.setItem("crearNuevaPlantillaDocumento", 'true')
     this.router.navigate(['/fichaPlantillaDocumento']);
   }
 
