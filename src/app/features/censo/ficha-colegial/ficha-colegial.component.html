@@ -1967,7 +1967,7 @@
   <!-- END FICHA DATOS BANCARIOS -->
 
  <!-- INICIO FICHA REGTEL -->
- <!-- <div class="card">
+ <div class="card">
   <div
     class="card-header header-ficha"
     (click)="abreCierraFicha('regtel')"
@@ -1985,7 +1985,7 @@
         <div class="d-flex justify-content-between">
           <label
           >{{ "censo.regtel.literal.numero.directorios" | translate }}
-          <span>{{ bodyRegTel.length }}</span>
+          <span>{{ messageRegtel }}</span>
         </label> 
           <i
             [ngClass]="{
@@ -2012,7 +2012,7 @@
     <div class="row">
       
       <p-dataTable
-        emptyMessage="{{ 'general.message.no.registros' | translate}}"
+        emptyMessage="{{ messageRegtel }}"
         
         [(selection)]="selectedDatosRegtel"
         [responsive]="true"
@@ -2119,7 +2119,7 @@
     </div>
   </div> 
 </div>
--->
+ 
 
 <!-- END FICHA REGTEL-->
 
