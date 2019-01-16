@@ -2939,6 +2939,7 @@ export class FichaColegialComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
+          this.messageRegtel = this.translateService.instant("general.message.no.registros");
           this.progressSpinner = false;
         }
       );
@@ -2962,6 +2963,7 @@ export class FichaColegialComponent implements OnInit {
             }
           },
           err => {
+            this.messageRegtel = this.translateService.instant("general.message.no.registros");
             this.progressSpinner = false;
           }
         );
@@ -3016,6 +3018,7 @@ export class FichaColegialComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
+        this.messageRegtel = this.translateService.instant("general.message.no.registros");
         this.progressSpinner = false;
       }
     );
@@ -3080,6 +3083,7 @@ export class FichaColegialComponent implements OnInit {
         }
       },
       err => {
+        this.messageRegtel = this.translateService.instant("general.message.no.registros");
         this.progressSpinner = false;
       }
     );
@@ -3110,6 +3114,7 @@ export class FichaColegialComponent implements OnInit {
 
         },
         err => {
+          this.messageRegtel = this.translateService.instant("general.message.no.registros");
           this.progressSpinner = false;
         }
       );
