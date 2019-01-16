@@ -64,11 +64,12 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
   resultadosPoblaciones: string;
   codigoPostalValido: boolean;
   solicitud: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
-  cedeDatos: boolean;
   modoLectura: boolean = false;
   paisDesc: any;
   provinciaDesc: any;
   poblacionDesc: any;
+  cedeDatos: boolean;
+
   constructor(
     private translateService: TranslateService,
     private sigaServices: SigaServices,
@@ -78,10 +79,10 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
     private location: Location
   ) {}
 
-  @ViewChild("poblacion")
-  dropdown: Dropdown;
+  @ViewChild("poblacion") dropdown: Dropdown;
 
   ngOnInit() {
+    this.progressSpinner = true;
     this.es = this.translateService.getCalendarLocale();
     this.solicitud = JSON.parse(sessionStorage.getItem("solicitudEnviada"));
     this.body = JSON.parse(sessionStorage.getItem("solicitudEnviada"));
@@ -91,7 +92,7 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
     this.body.idAsistenciaSanitaria = "3";
     this.body.telefono = this.solicitud.telefono1;
     this.body.cuentaBancaria = this.solicitud.iban;
-
+    this.pagoSelected = "12";
     // Buscamos en cen_solicitudMutualidad
     let mutualidadRequest = new DatosSolicitudMutualidadItem();
     mutualidadRequest.numeroidentificador = this.solicitud.numeroIdentificacion;
@@ -104,8 +105,26 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
             resultParsed.idsolicitud != null &&
             resultParsed.idsolicitud != undefined
           ) {
-            this.solicitud = JSON.parse(result.body);
-            this.body = JSON.parse(result.body);
+            let solicitud = JSON.parse(result.body);
+            let body = JSON.parse(result.body);
+            solicitud.tipoIdentificacion = this.solicitud.tipoIdentificacion;
+            solicitud.numeroIdentificacion = this.solicitud.numeroIdentificacion;
+            solicitud.tratamiento = this.solicitud.tratamiento;
+            solicitud.idEstadoCivil = this.solicitud.idEstadoCivil;
+            solicitud.naturalDe = this.solicitud.naturalDe;
+            this.solicitud = solicitud;
+            body.idpais = this.body.idPais;
+            body.codigoPostal = this.body.codigoPostal;
+            body.idPoblacion = this.body.idPoblacion;
+            body.telefono = this.body.telefono;
+            body.correoElectronico = this.body.correoElectronico;
+            body.bic = this.body.bic;
+            body.titular = this.body.titular;
+            this.body = body;
+
+            if (this.body.hijos == undefined) {
+              this.body.hijos = [];
+            }
             this.modoLectura = true;
           } else {
             // Acceso a Web Service para saber si hay una solicitud de Mutualidad.
@@ -115,14 +134,14 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
               .post("mutualidad_estadoMutualista", this.solicitud)
               .subscribe(
                 result => {
-                  let prueba = JSON.parse(result.body);
-                  if ((prueba.idSolicitud = "0")) {
+                  let estadoMut = JSON.parse(result.body);
+                  if ((estadoMut.idSolicitud = "0")) {
                     this.modoLectura = false;
                   } else {
                     this.modoLectura = true;
-                    this.solicitud.idSolicitudMutualidad = prueba.idSolicitud;
-                    this.solicitud.estadoMutualidad = prueba.valorRespuesta;
                   }
+                  this.solicitud.idSolicitudMutualidad = estadoMut.idSolicitud;
+                  this.solicitud.estadoMutualidad = estadoMut.valorRespuesta;
                 },
                 error => {
                   console.log(error);
@@ -132,21 +151,25 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
         },
         error => {
           console.log(error);
-        }
-      );
-
-    this.paisSelected = this.solicitud.idPais;
-    this.solicitud.duplicado = true;
-    this.sigaServices
-      .post("mutualidad_estadoSolicitud", this.solicitud)
-      .subscribe(
-        result => {
-          let prueba = JSON.parse(result.body);
-          this.solicitud.idSolicitudMutualidad = prueba.idSolicitud;
-          this.solicitud.estadoMutualidad = prueba.valorRespuesta;
         },
-        error => {
-          console.log(error);
+        () => {
+          this.paisSelected = this.solicitud.idPais;
+          this.solicitud.duplicado = true;
+          this.solicitud.idSolicitud = this.solicitud.idsolicitudincorporacion;
+          this.sigaServices
+            .post("mutualidad_estadoSolicitud", this.solicitud)
+            .subscribe(
+              result => {
+                let prueba = JSON.parse(result.body);
+                this.solicitud.idSolicitudMutualidad = prueba.idSolicitud;
+                this.solicitud.estadoMutualidad = prueba.valorRespuesta;
+                this.progressSpinner = false;
+              },
+              error => {
+                console.log(error);
+                this.progressSpinner = false;
+              }
+            );
         }
       );
 
@@ -158,6 +181,8 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
 
   onChangePais(event) {
     this.body.idPais = event.value;
+    // this.paisDesc = event.label;
+
     if (event.value.value != "191") {
       this.isValidCodigoPostal();
       this.provinciaSelected = null;
@@ -173,6 +198,8 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
       this.solicitud.estadoCivil &&
       this.body.idPais != "" &&
       this.body.idPais != undefined &&
+      this.poblacionSelected != "" &&
+      this.poblacionSelected != undefined &&
       this.body.domicilio != "" &&
       this.body.domicilio != undefined &&
       this.body.codigoPostal != "" &&
@@ -222,6 +249,19 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
           this.solicitud.sexo = sexo;
         }
       );
+  }
+
+  transformaFechaForBack(fecha) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -1);
+    if (rawDate.length < 14) {
+      let splitDate = rawDate.split("/");
+      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+      fecha = new Date((arrayDate += "T00:00:00.001Z"));
+    } else {
+      fecha = new Date(fecha);
+    }
+    return fecha;
   }
 
   transformaFecha(fecha) {
@@ -289,11 +329,29 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
       }
     );
 
+    this.sigaServices
+      .get("solicitudIncorporacion_tipoIdentificacion")
+      .subscribe(
+        result => {
+          let tipos = result.combooItems;
+          this.progressSpinner = false;
+          let identificacion = tipos.find(
+            item => item.value === this.solicitud.idTipoIdentificacion
+          );
+          this.solicitud.tipoIdentificacion = identificacion.label;
+        },
+        error => {
+          console.log(error);
+        }
+      );
+
     this.sigaServices.get("integrantes_provincias").subscribe(
       result => {
         this.provincias = result.combooItems;
         this.progressSpinner = false;
-        this.provinciaDesc = this.provincias.find(item => item.value === this.provinciaSelected );
+        this.provinciaDesc = this.provincias.find(
+          item => item.value === this.provinciaSelected
+        );
       },
       error => {
         console.log(error);
@@ -322,13 +380,7 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
         }
       );
   }
-  
-  obtenerProvinciaDesc(e) {
-    this.provinciaDesc = e.label;
-  }
-  obtenerPoblacionDesc(e) {
-    this.poblacionDesc = this.poblaciones.find(item => item.value === e.value);
-  }
+
   isValidCodigoPostal(): boolean {
     return (
       this.body.codigoPostal &&
@@ -388,7 +440,12 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.resultadosPoblaciones = "No hay resultados";
     }
   }
-
+  obtenerProvinciaDesc(e) {
+    this.provinciaDesc = e.label;
+  }
+  obtenerPoblacionDesc(e) {
+    this.poblacionDesc = this.poblaciones.find(item => item.value === e.value);
+  }
   deshabilitarDireccion(): boolean {
     if (this.paisSelected != "191") {
       return true;
@@ -419,12 +476,20 @@ para poder filtrar el dato con o sin estos caracteres*/
 
     solicitud.datosPersona = JSON.parse(JSON.stringify(this.solicitud));
     solicitud.datosPersona = JSON.parse(JSON.stringify(this.body));
+    if (this.solicitud.apellido2 == null) {
+      solicitud.datosPersona.apellido2 = "";
+    }
+    solicitud.datosPersona.tipoSolicitud = this.solicitud.tipoSolicitud;
     solicitud.datosPersona.edadesHijos = this.body.hijos;
     solicitud.datosPersona.estadoCivil = this.solicitud.idEstadoCivil;
     solicitud.datosPersona.ejerciente = this.solicitud.idEstado;
     solicitud.datosPersona.asistenciaSanitaria = this.body.idAsistenciaSanitaria;
     solicitud.datosPersona.nacionalidad = this.paisDesc.label;
     solicitud.datosPersona.NIF = this.solicitud.numeroIdentificacion;
+    solicitud.datosPersona.tipoIdentificacion = this.solicitud.idTipoIdentificacion;
+    solicitud.datosPersona.fechaNacimiento = this.transformaFechaForBack(
+      this.fechaNacimiento
+    );
     solicitud.datosDireccion = JSON.parse(JSON.stringify(this.body));
     solicitud.datosDireccion.cp = this.body.codigoPostal;
     solicitud.datosDireccion.direccion = this.body.domicilio;
@@ -436,39 +501,77 @@ para poder filtrar el dato con o sin estos caracteres*/
     solicitud.datosDireccion.pais = this.paisDesc.label;
     solicitud.datosDireccion.telefono = this.body.telefono;
 
-    solicitud.datosBancarios = JSON.parse(JSON.stringify(this.body));
-    solicitud.datosBancarios.iban = this.body.iban;
-    solicitud.datosBancarios.nCuenta = this.body.iban.substring(14, 24);
-    solicitud.datosBancarios.swift = this.solicitud.bic;
-    solicitud.datosBancarios.dc = this.solicitud.digitoControl;
-    solicitud.datosBancarios.oficina = this.body.iban.substring(8, 12);
-    solicitud.datosBancarios.entidad = this.body.iban.substring(4, 8);
-
-    solicitud.datosBeneficiario = JSON.parse(JSON.stringify(this.body));
-    solicitud.datosBeneficiario.idPoliza = this.body.idCobertura;
-    solicitud.datosBeneficiario.idTipoBeneficiario = this.body.idBeneficiario;
-
-    solicitud.datosPoliza = JSON.parse(JSON.stringify(this.body));
-    solicitud.datosPoliza.formaPago = this.pagoSelected;
-    solicitud.datosPoliza.opcionesCobertura = this.body.idCobertura;
-    solicitud.datosPoliza.idMutualista = this.body.idEstadoMutualista;
-
     if (solicitud.datosPersona.sexo == "H") {
       solicitud.datosPersona.sexo = "1";
     } else {
       solicitud.datosPersona.sexo = "2";
     }
+    this.progressSpinner = true;
     this.sigaServices
-      .post("mutualidad_solicitudPolizaProfesional", solicitud)
+      .post("mutualidad_solicitudPolizaAccuGratuitos", solicitud)
       .subscribe(
         result => {
-          let prueba = JSON.parse(result.body);
+          let resultado = JSON.parse(result.body);
+          if (resultado.pdf != null) {
+            this.showSuccess();
+            this.solicitud.duplicado = true;
+            this.solicitud.idSolicitud = resultado.idSolicitud;
+            this.sigaServices
+              .post("mutualidad_estadoSolicitud", this.solicitud)
+              .subscribe(
+                result => {
+                  let prueba = JSON.parse(result.body);
+                  this.solicitud.idSolicitudMutualidad = prueba.idSolicitud;
+                  this.solicitud.estadoMutualidad = prueba.valorRespuesta;
+                  this.progressSpinner = false;
+                },
+                error => {
+                  console.log(error);
+                  this.progressSpinner = false;
+                }
+              );
+            this.modoLectura = true;
+          } else {
+            this.showFailMensaje(resultado.valorRespuesta);
+          }
+          this.progressSpinner = false;
         },
         error => {
           console.log(error);
+          this.showFailMensaje(error.valorRespuesta);
+          this.progressSpinner = true;
         },
         () => {}
       );
+  }
+
+  showFailMensaje(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "",
+      detail: mensaje
+    });
+  }
+
+  showSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant("general.message.accion.realizada")
+    });
+  }
+
+  showFail() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "general.message.error.realiza.accion"
+      )
+    });
   }
 
   // abreCierraEstadoSolicitud() {
