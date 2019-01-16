@@ -429,6 +429,7 @@
                 [minLength]="1"
                 field="label"
                 [multiple]="true"
+                (ngModelChange)="activacionGuardarGenerales()"
                 (onKeyUp)="onKeyUp($event)"
                 (onSelect)="onSelect($event)"
                 (onUnselect)="onUnselect($event)"
