@@ -6,7 +6,9 @@ export class DatosPersonaItem {
   apellido2: String;
   sexo: String;
   profesion: String;
+  tipoSolicitud: String;
   asistenciaSanitaria: String;
+  tratamiento: String;
   ejerciente: String;
   estadoCivil: String;
   fechaNacimiento: Date;

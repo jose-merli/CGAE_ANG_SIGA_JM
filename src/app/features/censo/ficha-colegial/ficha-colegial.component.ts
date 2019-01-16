@@ -196,7 +196,8 @@ export class FichaColegialComponent implements OnInit {
   createItems: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   persistenciaColeg: DatosColegiadosItem = undefined;
   persistenciaNoCol: NoColegiadoItem = undefined;
-
+  messageNoContentRegTel:String = "";
+  messageRegtel:String;
   @ViewChild("table")
   table: DataTable;
   selectedDatos;
@@ -369,7 +370,7 @@ export class FichaColegialComponent implements OnInit {
       this.onInitCurriculares();
       this.onInitDirecciones();
       this.onInitDatosBancarios();
-      // this.onInitRegTel();
+       this.onInitRegTel();
     }
 
     // this.onInitSociedades();
@@ -447,7 +448,7 @@ export class FichaColegialComponent implements OnInit {
     ];
     this.colsRegtel = [
       {
-       field: "originalFilename",
+       field: "title",
         header: "censo.resultadosSolicitudesModificacion.literal.Nombre"
       },
       {
@@ -2856,6 +2857,7 @@ export class FichaColegialComponent implements OnInit {
     this.bodySanciones.idPersona = this.generalBody.idPersona;
     this.bodySanciones.nif = this.generalBody.nif;
     this.bodySanciones.tipoFecha = "";
+    this.bodySanciones.chkFirmeza = true;
     // this.bodySanciones.idColegios = [];
     // this.bodySanciones.idColegios.push(this.generalBody.i.idInstitucion);
 
@@ -2922,22 +2924,56 @@ export class FichaColegialComponent implements OnInit {
   }
 
   onInitRegTel(){
-    this.sigaServices
-    .postPaginado(
-      "fichaColegialRegTel_searchListDoc",
-      "?numPagina=1",
-      this.idPersona
-    )
-    .subscribe(
-      data => {
-        this.bodySearchRegTel = JSON.parse(data["body"]);
-        this.bodyRegTel= this.bodySearchRegTel.docuShareObjectVO;
-        this.progressSpinner = false;
-      },
-      err => {
-        this.progressSpinner = false;
-      }
-    );
+    this.progressSpinner=true;
+    this.messageNoContentRegTel= this.translateService.instant("aplicacion.cargando");
+    this.messageRegtel = this.messageNoContentRegTel;
+    if(this.esColegiado){
+      this.sigaServices
+      .postPaginado(
+        "fichaColegialRegTel_searchListDoc",
+        "?numPagina=1",
+        this.idPersona
+      )
+      .subscribe(
+        data => {
+          this.bodySearchRegTel = JSON.parse(data["body"]);
+          this.bodyRegTel= this.bodySearchRegTel.docuShareObjectVO;
+          if(this.bodyRegTel.length!= 0){
+            this.messageRegtel = this.bodyRegTel.length + "";
+          }else{
+            this.messageRegtel = this.translateService.instant("general.message.no.registros");
+          }
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
+    }else{
+       
+        this.sigaServices
+        .postPaginado(
+          "fichaColegialRegTel_searchListDocNoCol",
+          "?numPagina=1",
+          this.idPersona
+        )
+        .subscribe(
+          data => {
+            this.bodySearchRegTel = JSON.parse(data["body"]);
+            this.bodyRegTel= this.bodySearchRegTel.docuShareObjectVO;
+            this.progressSpinner = false;
+            if(this.bodyRegTel.length!= 0){
+              this.messageRegtel = this.bodyRegTel.length + "";
+            }else{
+              this.messageRegtel = this.translateService.instant("general.message.no.registros");
+            }
+          },
+          err => {
+            this.progressSpinner = false;
+          }
+        );
+     
+  }
 
   }
   onRowSelectedRegTel(selectedDatosRegtel){
@@ -2958,12 +2994,42 @@ export class FichaColegialComponent implements OnInit {
     this.buttonVisibleRegtelDescargar = true;
   }
   onClickAtrasRegtel(){
-    
+    this.progressSpinner=true;
     this.selectedDatosRegtel.idPersona = this.idPersona;
-    this.selectedDatosRegtel.title= this.atrasRegTel;
+    this.selectedDatosRegtel.id= this.atrasRegTel;
+    if(this.esColegiado){
     this.sigaServices
     .postPaginado(
       "fichaColegialRegTel_searchListDir",
+      "?numPagina=1",
+      this.selectedDatosRegtel
+    )
+    .subscribe(
+      data => {
+        
+        this.bodySearchRegTel = JSON.parse(data["body"]);
+        this.bodyRegTel= this.bodySearchRegTel.docuShareObjectVO;
+        this.atrasRegTel = this.bodyRegTel[0].id.substring(0, this.bodyRegTel[0].id.length - this.bodyRegTel[0].title.length);
+        if(this.atrasRegTel.length>1){
+          this.buttonVisibleRegtelAtras=true;
+        }
+        this.buttonVisibleRegtelCarpeta=true;
+        this.buttonVisibleRegtelDescargar=true;
+        if(this.bodyRegTel.length!= 0){
+          this.messageRegtel = this.bodyRegTel.length + "";
+        }else{
+          this.messageRegtel = this.translateService.instant("general.message.no.registros");
+        }
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    );
+   }else{
+    this.sigaServices
+    .postPaginado(
+      "fichaColegialRegTel_searchListDirNoCol",
       "?numPagina=1",
       this.selectedDatosRegtel
     )
@@ -2984,13 +3050,17 @@ export class FichaColegialComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
-
+   }
   }
 
   onClickCarpetaRegTel(){
+    this.progressSpinner=true;
     this.atrasRegTel = this.selectedDatosRegtel.id.substring(13
       , this.selectedDatosRegtel.id.length - this.selectedDatosRegtel.title.length)
     this.selectedDatosRegtel.idPersona = this.idPersona;
+    if(this.esColegiado){
+
+    
     this.sigaServices
     .postPaginado(
       "fichaColegialRegTel_searchListDir",
@@ -3010,28 +3080,63 @@ export class FichaColegialComponent implements OnInit {
         this.buttonVisibleRegtelCarpeta=true;
         this.buttonVisibleRegtelDescargar=true;
         this.progressSpinner = false;
+        if(this.bodyRegTel.length!= 0){
+          this.messageRegtel = this.bodyRegTel.length + "";
+        }else{
+          this.messageRegtel = this.translateService.instant("general.message.no.registros");
+        }
       },
       err => {
         this.progressSpinner = false;
       }
     );
+  }else{
+      this.sigaServices
+      .postPaginado(
+        "fichaColegialRegTel_searchListDirNoCol",
+        "?numPagina=1",
+        this.selectedDatosRegtel
+      )
+      .subscribe(
+        data => {
+          this.bodySearchRegTel = JSON.parse(data["body"]);
+          this.bodyRegTel= this.bodySearchRegTel.docuShareObjectVO;
+          if(this.atrasRegTel.length>13){
+            this.buttonVisibleRegtelAtras=true;
+          }else{
+            this.buttonVisibleRegtelAtras=false;
+          }
+          this.buttonVisibleRegtelCarpeta=true;
+          this.buttonVisibleRegtelDescargar=true;
+          this.progressSpinner = false;
+          if(this.bodyRegTel.length!= 0){
+            this.messageRegtel = this.bodyRegTel.length + "";
+          }else{
+            this.messageRegtel = this.translateService.instant("general.message.no.registros");
+          }
 
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
+    }
   }
   onClickDescargarRegTel(){
-    this.progressSpinner = false;
+    this.progressSpinner = true;
+    this.selectedDatosRegtel.idPersona = this.idPersona;
     this.sigaServices
-    .postPaginado(
+    .postDownloadFiles(
       "fichaColegialRegTel_downloadDoc",
-      "?numPagina=1",
+      
       this.selectedDatosRegtel
     )
     .subscribe(
       data => {
-        const blob = new Blob([data]);
-        saveAs(blob);
-        // this.bodySearchRegTel = JSON.parse(data["body"]);
-        // this.bodyRegTel= this.bodySearchRegTel.docuShareObjectVO;
+        const blob = new Blob([data],{ type: "application/pdf" });
+        saveAs(blob, this.selectedDatosRegtel.title + ".pdf");
         this.progressSpinner = false;
+        
       },
       err => {
         this.progressSpinner = false;

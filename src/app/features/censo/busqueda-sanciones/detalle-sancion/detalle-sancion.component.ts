@@ -53,14 +53,19 @@ export class DetalleSancionComponent implements OnInit {
   isPersona: boolean = true;
   disabledGuardar: boolean = false;
 
+  fechaMinimaFirmeza: Date;
+  fechaMaxAcuerdo: Date;
+
   constructor(
     private location: Location,
     private authenticationService: AuthenticationService,
     private sigaServices: SigaServices,
-    private router: Router
+    private router: Router,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit() {
+    this.controlFechas();
     this.getComboColegios();
     this.getComboTipoSancion();
 
@@ -121,40 +126,49 @@ export class DetalleSancionComponent implements OnInit {
     }
   }
 
+  controlFechas() {
+    this.fechaMinimaFirmeza = new Date();
+
+    this.fechaMaxAcuerdo = new Date();
+    let one_day = 1000 * 60 * 60 * 24;
+    let ayer = this.fechaMaxAcuerdo.getMilliseconds() - one_day;
+    this.fechaMaxAcuerdo.setMilliseconds(ayer);
+  }
+
   transformDates(body) {
-    if(body.fechaAcuerdoDate != null){
+    if (body.fechaAcuerdoDate != null) {
       body.fechaAcuerdoDate = new Date(body.fechaAcuerdoDate);
-    }else{
+    } else {
       body.fechaAcuerdoDate = undefined;
     }
 
-    if(body.fechaDesdeDate != null){
+    if (body.fechaDesdeDate != null) {
       body.fechaDesdeDate = new Date(body.fechaDesdeDate);
-    }else{
+    } else {
       body.fechaDesdeDate = undefined;
     }
 
-    if(body.fechaHastaDate != null){
+    if (body.fechaHastaDate != null) {
       body.fechaHastaDate = new Date(body.fechaHastaDate);
-    }else{
+    } else {
       body.fechaHastaDate = undefined;
     }
 
-    if(body.fechaFirmezaDate != null){
+    if (body.fechaFirmezaDate != null) {
       body.fechaFirmezaDate = new Date(body.fechaFirmezaDate);
-    }else{
+    } else {
       body.fechaFirmezaDate = undefined;
     }
 
-    if(body.fechaRehabilitadoDate != null){
+    if (body.fechaRehabilitadoDate != null) {
       body.fechaRehabilitadoDate = new Date(body.fechaRehabilitadoDate);
-    }else{
+    } else {
       body.fechaRehabilitadoDate = undefined;
     }
 
-    if(body.fechaArchivadaDate != null){
+    if (body.fechaArchivadaDate != null) {
       body.fechaArchivadaDate = new Date(body.fechaArchivadaDate);
-    }else{
+    } else {
       body.fechaArchivadaDate = undefined;
     }
   }
@@ -285,6 +299,12 @@ export class DetalleSancionComponent implements OnInit {
         this.disabledFechaArchivada = true;
 
         this.disabledFechaFirme = false;
+
+        this.body.fechaArchivadaDate = undefined;
+        this.body.fechaRehabilitadoDate = undefined;
+        this.body.fechaHastaDate = undefined;
+        this.body.fechaDesdeDate = undefined;
+        // this.body.chkArchivadas = false;
       }
     }
   }
@@ -302,6 +322,12 @@ export class DetalleSancionComponent implements OnInit {
         // Fecha no informada
         this.disabledPeriodoHasta = true;
         this.disabledFechaArchivada = true;
+        this.disabledRehabilitado = true;
+
+        this.body.fechaArchivadaDate = undefined;
+        this.body.fechaRehabilitadoDate = undefined;
+        this.body.fechaHastaDate = undefined;
+        // this.body.chkArchivadas = false;
       }
     }
   }
@@ -335,6 +361,7 @@ export class DetalleSancionComponent implements OnInit {
         ) {
           this.disabledFechaArchivada = true;
           this.body.fechaArchivadaDate = undefined;
+          // this.body.chkArchivadas = false;
         } else {
           this.disabledFechaArchivada = false;
         }
@@ -344,6 +371,7 @@ export class DetalleSancionComponent implements OnInit {
             this.disabledChkArchivada = false;
             this.disabledFechaArchivada = true;
             this.body.fechaArchivadaDate = undefined;
+            // this.body.chkArchivadas = false;
           } else {
             this.disabledChkArchivada = false;
             this.disabledFechaArchivada = false;
@@ -352,6 +380,9 @@ export class DetalleSancionComponent implements OnInit {
           this.disabledRehabilitado = false;
           this.disabledChkArchivada = true;
           this.disabledFechaArchivada = true;
+
+          this.body.fechaArchivadaDate = undefined;
+          // this.body.chkArchivadas = false;
         }
       }
     }
@@ -366,16 +397,56 @@ export class DetalleSancionComponent implements OnInit {
   }
 
   detectDateInput() {
-    if (this.body.fechaDesdeDate == undefined) {
+    if (this.body.fechaAcuerdoDate == undefined) {
+      this.disabledFechaFirme = true;
+      this.disabledPeriodoDesde = true;
+      this.disabledPeriodoHasta = true;
+      this.disabledFechaArchivada = true;
+      this.disabledRehabilitado = true;
+      this.disabledChkRehabilitado = true;
+      this.disabledChkArchivada = true;
+      this.disabledChkFirmeza = true;
+
+      this.body.fechaArchivadaDate = undefined;
+      this.body.fechaRehabilitadoDate = undefined;
+      this.body.fechaHastaDate = undefined;
+      this.body.fechaDesdeDate = undefined;
+      this.body.fechaFirmezaDate = undefined;
+      // this.body.chkArchivadas = false;
+    } else if (this.body.fechaFirmezaDate == undefined) {
+      this.disabledPeriodoDesde = true;
       this.disabledPeriodoHasta = true;
       this.disabledChkRehabilitado = true;
       this.disabledChkArchivada = true;
       this.disabledFechaArchivada = true;
+      this.disabledRehabilitado = true;
+
+      this.body.fechaArchivadaDate = undefined;
+      this.body.fechaRehabilitadoDate = undefined;
+      this.body.fechaHastaDate = undefined;
+      this.body.fechaDesdeDate = undefined;
+      // this.body.chkArchivadas = false;
+    } else if (this.body.fechaDesdeDate == undefined) {
+      this.disabledPeriodoHasta = true;
+      this.disabledChkRehabilitado = true;
+      this.disabledChkArchivada = true;
+      this.disabledFechaArchivada = true;
+      this.disabledRehabilitado = true;
+
+      this.body.fechaArchivadaDate = undefined;
+      this.body.fechaRehabilitadoDate = undefined;
+      this.body.fechaHastaDate = undefined;
+      // this.body.chkArchivadas = false;
     } else if (this.body.fechaHastaDate == undefined) {
       this.disabledRehabilitado = true;
       this.disabledChkRehabilitado = true;
       this.disabledChkArchivada = true;
       this.disabledFechaArchivada = true;
+
+      this.body.fechaArchivadaDate = undefined;
+      // this.body.chkArchivadas = false;
+
+      this.body.fechaRehabilitadoDate = undefined;
     } else if (this.body.fechaFirmezaDate == undefined) {
       this.disabledPeriodoHasta = true;
       this.disabledPeriodoDesde = true;
@@ -383,9 +454,18 @@ export class DetalleSancionComponent implements OnInit {
       this.disabledChkRehabilitado = true;
       this.disabledChkArchivada = true;
       this.disabledFechaArchivada = true;
+
+      this.body.fechaArchivadaDate = undefined;
+      this.body.fechaRehabilitadoDate = undefined;
+      this.body.fechaDesdeDate = undefined;
+      this.body.fechaHastaDate = undefined;
+      // this.body.chkArchivadas = false;
     } else if (this.body.fechaRehabilitadoDate == undefined) {
       this.disabledChkArchivada = true;
       this.disabledFechaArchivada = true;
+
+      this.body.fechaArchivadaDate = undefined;
+      // this.body.chkArchivadas = false;
     }
   }
 
@@ -465,6 +545,48 @@ export class DetalleSancionComponent implements OnInit {
   // Control para el botón guardar
 
   save() {
+    if (
+      (this.body.fechaFirmezaDate != null &&
+        this.body.fechaAcuerdoDate <= this.body.fechaFirmezaDate) ||
+      this.body.chkFirmeza
+    ) {
+      if (
+        this.body.fechaDesdeDate != null &&
+        this.body.fechaFirmezaDate <= this.body.fechaDesdeDate
+      ) {
+        if (
+          this.body.fechaHastaDate != null &&
+          this.body.fechaDesdeDate <= this.body.fechaHastaDate
+        ) {
+          if (
+            (this.body.fechaRehabilitadoDate != null &&
+              this.body.fechaHastaDate <= this.body.fechaRehabilitadoDate) ||
+            this.body.chkRehabilitado
+          ) {
+            this.saveSancion();
+          } else if (this.body.fechaRehabilitadoDate == null) {
+            this.saveSancion();
+          } else {
+            this.showFail("Fecha rehabilitación incorrecta");
+          }
+        } else if (this.body.fechaHastaDate == null) {
+          this.saveSancion();
+        } else {
+          this.showFail("Fecha período ejecución incorrecta");
+        }
+      } else if (this.body.fechaDesdeDate == null) {
+        this.saveSancion();
+      } else {
+        this.showFail("Fecha período ejecución incorrecta");
+      }
+    } else if (this.body.fechaFirmezaDate == null) {
+      this.saveSancion();
+    } else {
+      this.showFail("Fecha firmeza incorrecta");
+    }
+  }
+
+  saveSancion() {
     this.controlChkBox();
     if (
       sessionStorage.getItem("nuevaSancion") != null &&
@@ -480,30 +602,42 @@ export class DetalleSancionComponent implements OnInit {
 
   insertRecord() {
     // this.progressSpinner = true;
+    this.progressSpinner = true;
     this.sigaServices
       .post("busquedaSanciones_insertSanction", this.body)
       .subscribe(
-        data => {},
+        data => {
+          sessionStorage.setItem("SancionInsertada", "true");
+          this.progressSpinner = false;
+        },
         error => {
+          this.showFail("La acción no se ha realizado correctamente");
           console.log(error);
+          this.progressSpinner = false;
         },
         () => {
-          // this.progressSpinner = false;
+          this.progressSpinner = false;
           this.router.navigate(["busquedaSanciones"]);
         }
       );
   }
 
   editRecord() {
+    this.progressSpinner = true;
     this.sigaServices
       .post("busquedaSanciones_updateSanction", this.body)
       .subscribe(
-        data => {},
+        data => {
+          sessionStorage.setItem("SancionInsertada", "true");
+          this.progressSpinner = false;
+        },
         error => {
-          this.showFail("Error al actualizar");
+          this.showFail("La acción no se ha realizado correctamente");
           console.log(error);
+          this.progressSpinner = false;
         },
         () => {
+          this.progressSpinner = false;
           this.return();
         }
       );

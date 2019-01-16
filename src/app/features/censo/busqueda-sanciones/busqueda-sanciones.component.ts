@@ -33,6 +33,7 @@ export class BusquedaSancionesComponent implements OnInit {
   colegios: any[] = [];
   colegios_seleccionados: any[] = [];
 
+  msgs: any;
   es: any = esCalendar;
 
   textSelected: String = "{0} opciones seleccionadas";
@@ -93,6 +94,14 @@ export class BusquedaSancionesComponent implements OnInit {
       }
     }
 
+    if (
+      sessionStorage.getItem("SancionInsertada") != null &&
+      sessionStorage.getItem("SancionInsertada") != undefined &&
+      sessionStorage.getItem("SancionInsertada") == "true"
+    ) {
+      this.showSuccess("Operación realizada satisfactoriamente");
+      sessionStorage.removeItem("SancionInsertada");
+    }
     console.log("array", this.colegios_seleccionados);
   }
 
@@ -357,6 +366,8 @@ export class BusquedaSancionesComponent implements OnInit {
       sessionStorage.setItem("rowData", JSON.stringify(selectedDatos));
 
       this.router.navigate(["/detalleSancion"]);
+
+      sessionStorage.removeItem("nuevaSancion");
     }
   }
 
@@ -403,5 +414,23 @@ export class BusquedaSancionesComponent implements OnInit {
           this.search();
         }
       );
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: mensaje
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }

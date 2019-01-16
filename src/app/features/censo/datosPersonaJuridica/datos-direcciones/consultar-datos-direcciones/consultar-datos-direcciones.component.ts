@@ -726,10 +726,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (this.historyDisable) {
       return true;
     } else {
-      if (
-        this.codigoPostalValido &&
-        (this.body.idTipoDireccion == undefined || this.isLetrado)
-      ) {
+      if (this.codigoPostalValido && !this.isLetrado) {
         return false;
       } else {
         return true;
