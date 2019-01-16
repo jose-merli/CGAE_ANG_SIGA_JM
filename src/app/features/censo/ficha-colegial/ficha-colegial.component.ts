@@ -1468,6 +1468,25 @@ export class FichaColegialComponent implements OnInit {
     this.edadCalculada = edad;
   }
 
+  onWriteCalendar() {
+    // console.log(new Date(event));
+    var hoy = new Date();
+
+    if(this.fechaNacimiento instanceof Date){
+      var edad = hoy.getFullYear() - this.fechaNacimiento.getFullYear();
+      var m = hoy.getMonth() - this.fechaNacimiento.getMonth();
+
+      if (m < 0 || (m === 0 && hoy.getDate() < this.fechaNacimiento.getDate())) {
+        edad--;
+      }
+
+      this.edadCalculada = edad;
+
+    }else{
+      this.edadCalculada = "";
+    }
+  }
+
   calcularEdad(fecha) {
     var hoy = new Date();
     var dateParts = fecha.split("/");
@@ -1668,7 +1687,7 @@ export class FichaColegialComponent implements OnInit {
         this.item.label = event.srcElement.value;
 
         this.mensaje = this.translateService.instant(
-          "censo.datosGenerales.literal.crearEtiqueta"
+          "censo.etiquetas.literal.rango"
         );
       }
     }
@@ -1762,7 +1781,7 @@ isNotContains(event): boolean {
         this.item.label = event.label;
 
         this.mensaje = this.translateService.instant(
-          "censo.datosGenerales.literal.asociarEtiqueta"
+          "censo.etiquetas.literal.rango"
         );
       } else {
         // Si existe en el array, lo borramos para que no queden registros duplicados
@@ -3040,6 +3059,7 @@ isNotContains(event): boolean {
           this.progressSpinner = false;
         },
         err => {
+          this.messageRegtel = this.translateService.instant("general.message.no.registros");
           this.progressSpinner = false;
         }
       );
@@ -3063,6 +3083,7 @@ isNotContains(event): boolean {
             }
           },
           err => {
+            this.messageRegtel = this.translateService.instant("general.message.no.registros");
             this.progressSpinner = false;
           }
         );
@@ -3117,6 +3138,7 @@ isNotContains(event): boolean {
         this.progressSpinner = false;
       },
       err => {
+        this.messageRegtel = this.translateService.instant("general.message.no.registros");
         this.progressSpinner = false;
       }
     );
@@ -3181,6 +3203,7 @@ isNotContains(event): boolean {
         }
       },
       err => {
+        this.messageRegtel = this.translateService.instant("general.message.no.registros");
         this.progressSpinner = false;
       }
     );
@@ -3211,6 +3234,7 @@ isNotContains(event): boolean {
 
         },
         err => {
+          this.messageRegtel = this.translateService.instant("general.message.no.registros");
           this.progressSpinner = false;
         }
       );

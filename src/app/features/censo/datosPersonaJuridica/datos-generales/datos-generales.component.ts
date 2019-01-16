@@ -892,7 +892,7 @@ export class DatosGenerales implements OnInit {
         this.item.label = event.srcElement.value;
 
         this.mensaje = this.translateService.instant(
-          "censo.datosGenerales.literal.crearEtiqueta"
+          "censo.etiquetas.literal.rango"
         );
       }
     }
@@ -930,7 +930,7 @@ export class DatosGenerales implements OnInit {
         this.item.label = event.label;
 
         this.mensaje = this.translateService.instant(
-          "censo.datosGenerales.literal.asociarEtiqueta"
+          "censo.etiquetas.literal.rango"
         );
       } else {
         // Si existe en el array, lo borramos para que no queden registros duplicados
