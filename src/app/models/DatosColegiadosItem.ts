@@ -15,12 +15,15 @@ export class DatosColegiadosItem {
   estadoCivil: string;
   estadoColegial: string;
   fechaIncorporacion: Date[];
+  fechaNacimientoRango: Date[];
   categoria: string;
   residencia: string;
+  situacion: string;
   inscrito: string;
   residenteInscrito: string;
   correo: string;
   fechaNacimiento: Date;
+
   idgrupo: string[];
   idTratamiento: String;
   tipoCV: string;
@@ -42,5 +45,6 @@ export class DatosColegiadosItem {
   partidoJudicial: string;
   subtipoCV: string[];
 
+  idEstadoCivil: string;
   constructor() {}
 }

@@ -724,6 +724,8 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.tipoSolicitudSelected != undefined &&
       this.tipoColegiacionSelected != "" &&
       this.tipoColegiacionSelected != undefined &&
+      this.estadoCivilSelected != "" &&
+      this.estadoCivilSelected != undefined &&
       this.modalidadDocumentacionSelected != "" &&
       this.modalidadDocumentacionSelected != undefined &&
       this.solicitudEditar.fechaIncorporacion != null &&
@@ -878,6 +880,8 @@ para poder filtrar el dato con o sin estos caracteres*/
           if ((prueba.valorRespuesta = "1")) {
             this.solicitudEditar.idSolicitudMutualidad = prueba.idSolicitud;
             this.solicitudEditar.estadoMutualidad = prueba.valorRespuesta;
+            this.solicitudEditar.tipoIdentificacion = this.tipoIdentificacionSelected;
+            this.solicitudEditar.tipoSolicitud = this.tipoSolicitudSelected;
             sessionStorage.setItem(
               "solicitudEnviada",
               JSON.stringify(this.solicitudEditar)
@@ -897,6 +901,12 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   irSegAccidentes() {
+    this.solicitudEditar.idPais = "191";
+    this.solicitudEditar.identificador = this.solicitudEditar.numeroIdentificacion;
+    sessionStorage.setItem(
+      "solicitudEnviada",
+      JSON.stringify(this.solicitudEditar)
+    );
     this.router.navigate(["/mutualidadSeguroAccidentes"]);
   }
 

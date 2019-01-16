@@ -7,6 +7,7 @@ export class SolicitudIncorporacionItem {
   nombreSolicitud: String;
   apellidos: String;
   apellido1: String;
+  idsolicitudincorporacion: String;
   apellido2: String;
   sexo: String;
   cobertura: String;
