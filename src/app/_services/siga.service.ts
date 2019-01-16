@@ -378,6 +378,7 @@ export class SigaServices {
       "solicitudModificacion/tipoModificacion",
     solicitudModificacion_estado: "solicitudModificacion/estado",
     // Solicitud Modificacion
+    solicitudModificacion_verifyPerson: "solicitudModificacion/verifyPerson",
     // GENERAL
     solicitudModificacion_searchModificationRequest:
       "solicitudModificacion/searchModificationRequest",

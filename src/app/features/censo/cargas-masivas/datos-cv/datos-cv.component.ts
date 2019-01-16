@@ -161,7 +161,11 @@ export class DatosCvComponent implements OnInit {
             this.body.errores = data["error"];
             let mensaje = this.body.errores.message.toString();
 
-            this.showSuccess(mensaje);
+            if (data["error"].code == 200) {
+              this.showMessage("success", "Correcto", data["error"].message);
+              } else if (data["error"].code == null) {
+              this.showMessage("info", "Información", data["error"].message);
+              } 
           },
           error => {
             console.log(error);
@@ -325,6 +329,15 @@ export class DatosCvComponent implements OnInit {
       detail: mensaje
     });
   }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+    severity: severity,
+    summary: summary,
+    detail: msg
+    });
+    } 
 
   // PARA LA TABLA
   activarPaginacion() {

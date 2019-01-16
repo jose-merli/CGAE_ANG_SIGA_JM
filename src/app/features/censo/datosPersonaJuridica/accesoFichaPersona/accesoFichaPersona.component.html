@@ -69,16 +69,16 @@
                         <div class="form-group col-lg-6 col-md-6">
                             <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
                             <input [(ngModel)]="body.nombre" (ngModelChange)="activarGuardarNotarioNoExistente($event)" type="text" class="form-control"
-                                [(disabled)]="!editar" pInputText>
+                                [(disabled)]="!editar || disabledAction" pInputText>
                         </div>
                         <div class="form-group col-lg-3 col-md-6">
                             <label>{{"censo.busquedaClientes.literal.apellido1" | translate}}</label>
                             <input [(ngModel)]="body.apellido1" (ngModelChange)="activarGuardarNotarioNoExistente($event)" type="text" class="form-control"
-                                [(disabled)]="!editar" pInputText>
+                                [(disabled)]="!editar || disabledAction" pInputText>
                         </div>
                         <div class="form-group col-lg-3 col-md-6">
                             <label>{{"censo.busquedaClientes.literal.apellido2" | translate}}</label>
-                            <input [(ngModel)]="body.apellido2" type="text " class="form-control" [(disabled)]="!editar" pInputText>
+                            <input [(ngModel)]="body.apellido2" type="text " class="form-control" [(disabled)]="!editar || disabledAction" pInputText>
                         </div>
 
                     </div>
@@ -90,9 +90,9 @@
 
         <div *ngIf="openFicha" class="card-footer ">
             <div class="text-right main-button ">
-                <button (click)="desasociarPersona()" [(disabled)]="!desasociar" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate}}"></button>
-                <button (click)="guardar()" [(disabled)]="!guardarNotario" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-                <button (click)="isSearch()" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
+                <button (click)="desasociarPersona()" [(disabled)]="!desasociar || disabledAction" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate}}"></button>
+                <button (click)="guardar()" [(disabled)]="!guardarNotario || disabledAction" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                <button (click)="isSearch()" [(disabled)]="camposDesactivados || disabledAction" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
             </div>
         </div>
     </div>

@@ -83,16 +83,16 @@
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.SolicitudIncorporacion.literal.tipoIdentificacion" | translate}}</label>
-                            <input disabled type="text" class="form-control" pInputText [(ngModel)]="solicitud.tipoIdentificacion" (ngModelChange)="onChangeNifCif()">
+                            <input disabled type="text" class="form-control" pInputText [(ngModel)]="solicitud.tipoIdentificacion" >
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.consultaDatosColegiacion.literal.numIden" | translate}}</label>
-                        <input disabled type="text" class="form-control" pInputText [(ngModel)]="solicitud.numeroIdentificacion" (ngModelChange)="onChangeNifCif()">
+                        <input disabled type="text" class="form-control" pInputText [(ngModel)]="solicitud.numeroIdentificacion" >
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.consultaDatosGenerales.literal.tratamiento" | translate}}</label>
-                            <input disabled type="text" class="form-control" pInputText [(ngModel)]="solicitud.tratamiento" (ngModelChange)="onChangeNifCif()">
+                            <input disabled type="text" class="form-control" pInputText [(ngModel)]="solicitud.tratamiento" >
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
@@ -211,9 +211,9 @@
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
-                            {{"censo.consultaDirecciones.literal.poblacion" | translate}}
+                            {{"censo.consultaDirecciones.literal.poblacion" | translate}} (*)
                         </label>
-                        <p-dropdown #poblacion [disabled]="consulta || deshabilitarDireccion()" (input)="buscarPoblacion($event)" class="select-form" [(ngModel)]="poblacionSelected"
+                        <p-dropdown #poblacion [disabled]="deshabilitarDireccion()" (input)="buscarPoblacion($event)" class="select-form" [(ngModel)]="poblacionSelected"
                             [options]="poblaciones" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"  (onChange)="obtenerPoblacionDesc($event)" [emptyFilterMessage]="resultadosPoblaciones"></p-dropdown>
     
                         <!-- <input type="text" class="form-control" pInputText [(ngModel)]="body.nombrePoblacion">-->

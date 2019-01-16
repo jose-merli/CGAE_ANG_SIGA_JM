@@ -25,6 +25,7 @@ export class DatosBancariosComponent implements OnInit {
   selectMultiple: boolean = false;
   progressSpinner: boolean = false;
   historico: boolean = false;
+  disabledAction: boolean = false;
 
   msgs: Message[];
   camposDesactivados: boolean;
@@ -65,6 +66,12 @@ export class DatosBancariosComponent implements OnInit {
 
     if (sessionStorage.getItem("historicoSociedad") != null) {
       this.camposDesactivados = true;
+    }
+
+    if (sessionStorage.getItem("disabledAction") == "true") {
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
     }
 
     this.checkAcceso();

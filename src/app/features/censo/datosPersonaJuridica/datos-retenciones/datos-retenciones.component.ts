@@ -80,6 +80,7 @@ export class DatosRetencionesComponent implements OnInit {
   masFiltros: boolean = false;
   labelFiltros: string;
   progressSpinner: boolean = false;
+  disabledAction: boolean = false;
 
   suscripcionBusquedaNuevo: Subscription;
   activacionEditar: boolean;
@@ -166,6 +167,12 @@ export class DatosRetencionesComponent implements OnInit {
     // this.nuevafecha = new Date();
     let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
     this.changeSort(event);
+
+    if (sessionStorage.getItem("disabledAction") == "true") {
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
+    }
   }
 
   changeSort(event) {

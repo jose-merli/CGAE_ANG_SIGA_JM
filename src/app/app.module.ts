@@ -261,6 +261,8 @@ import { FormacionComponent } from './features/formacion/formacion.component';
 import { BusquedaCursosComponent } from './features/formacion/busqueda-cursos/busqueda-cursos.component';
 import { CargaEtiquetasComponent } from './features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component';
 import { DatosCvComponent } from './features/censo/cargas-masivas/datos-cv/datos-cv.component';
+import { CargaEtiquetasComponent2 } from './features/censo/cargaEtiquetas/cargaEtiquetas.component';
+import { DatosCVComponent2 } from './features/censo/datosCV/datosCV.component';
 import { AgendaComponent } from './features/agenda/agenda.component';
 import { SelectButtonModule, ColorPickerModule } from 'primeng/primeng';
 import { FichaCalendarioComponent } from './features/agenda/ficha-calendario/ficha-calendario.component';
@@ -493,7 +495,8 @@ registerLocaleData(es);
 		TrimPipePipe,
 		CargaEtiquetasComponent,
 		DatosCvComponent,
-
+		CargaEtiquetasComponent2,
+		DatosCVComponent2,
 		FormacionComponent,
 		BusquedaCursosComponent,
 

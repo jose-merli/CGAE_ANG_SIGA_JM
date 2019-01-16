@@ -66,6 +66,9 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
   solicitud: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
   cedeDatos: boolean;
   modoLectura: boolean = false;
+  paisDesc: any;
+  provinciaDesc: any;
+  poblacionDesc: any;
   constructor(
     private translateService: TranslateService,
     private sigaServices: SigaServices,
@@ -277,6 +280,9 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
       result => {
         this.paises = result.combooItems;
         this.progressSpinner = false;
+        this.paisDesc = this.paises.find(
+          item => item.value === this.paisSelected
+        );
       },
       error => {
         console.log(error);
@@ -287,6 +293,7 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
       result => {
         this.provincias = result.combooItems;
         this.progressSpinner = false;
+        this.provinciaDesc = this.provincias.find(item => item.value === this.provinciaSelected );
       },
       error => {
         console.log(error);
@@ -315,7 +322,13 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
         }
       );
   }
-
+  
+  obtenerProvinciaDesc(e) {
+    this.provinciaDesc = e.label;
+  }
+  obtenerPoblacionDesc(e) {
+    this.poblacionDesc = this.poblaciones.find(item => item.value === e.value);
+  }
   isValidCodigoPostal(): boolean {
     return (
       this.body.codigoPostal &&
@@ -407,32 +420,43 @@ para poder filtrar el dato con o sin estos caracteres*/
     solicitud.datosPersona = JSON.parse(JSON.stringify(this.solicitud));
     solicitud.datosPersona = JSON.parse(JSON.stringify(this.body));
     solicitud.datosPersona.edadesHijos = this.body.hijos;
+    solicitud.datosPersona.estadoCivil = this.solicitud.idEstadoCivil;
+    solicitud.datosPersona.ejerciente = this.solicitud.idEstado;
+    solicitud.datosPersona.asistenciaSanitaria = this.body.idAsistenciaSanitaria;
+    solicitud.datosPersona.nacionalidad = this.paisDesc.label;
+    solicitud.datosPersona.NIF = this.solicitud.numeroIdentificacion;
     solicitud.datosDireccion = JSON.parse(JSON.stringify(this.body));
     solicitud.datosDireccion.cp = this.body.codigoPostal;
     solicitud.datosDireccion.direccion = this.body.domicilio;
     solicitud.datosDireccion.email = this.body.correoElectronico;
-    solicitud.datosDireccion.movil = this.body.motivo;
+    solicitud.datosDireccion.movil = this.body.movil;
     solicitud.datosDireccion.num = this.body.telefono;
-    solicitud.datosDireccion.poblacion = this.body.idPoblacion;
-    solicitud.datosDireccion.provincia = this.body.idProvincia;
+    solicitud.datosDireccion.poblacion = this.poblacionDesc.label;
+    solicitud.datosDireccion.provincia = this.provinciaDesc.label;
+    solicitud.datosDireccion.pais = this.paisDesc.label;
     solicitud.datosDireccion.telefono = this.body.telefono;
 
+    solicitud.datosBancarios = JSON.parse(JSON.stringify(this.body));
     solicitud.datosBancarios.iban = this.body.iban;
-    solicitud.datosBancarios.nCuenta = this.body.cuentaBancaria;
-    solicitud.datosBancarios.swift = this.body.swift;
+    solicitud.datosBancarios.nCuenta = this.body.iban.substring(14, 24);
+    solicitud.datosBancarios.swift = this.solicitud.bic;
+    solicitud.datosBancarios.dc = this.solicitud.digitoControl;
+    solicitud.datosBancarios.oficina = this.body.iban.substring(8, 12);
     solicitud.datosBancarios.entidad = this.body.iban.substring(4, 8);
 
+    solicitud.datosBeneficiario = JSON.parse(JSON.stringify(this.body));
     solicitud.datosBeneficiario.idPoliza = this.body.idCobertura;
     solicitud.datosBeneficiario.idTipoBeneficiario = this.body.idBeneficiario;
 
-    solicitud.datosPoliza.formaPago = this.body.periodicidadPago;
+    solicitud.datosPoliza = JSON.parse(JSON.stringify(this.body));
+    solicitud.datosPoliza.formaPago = this.pagoSelected;
     solicitud.datosPoliza.opcionesCobertura = this.body.idCobertura;
     solicitud.datosPoliza.idMutualista = this.body.idEstadoMutualista;
 
     if (solicitud.datosPersona.sexo == "H") {
-      solicitud.datosPersona.sexo = "0";
-    } else {
       solicitud.datosPersona.sexo = "1";
+    } else {
+      solicitud.datosPersona.sexo = "2";
     }
     this.sigaServices
       .post("mutualidad_solicitudPolizaProfesional", solicitud)

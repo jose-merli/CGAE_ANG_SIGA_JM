@@ -282,10 +282,6 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
           if (this.comboSubtipoCV.length == 0) {
             this.noResultsSubtipos = true;
-            this.comboSubtipoCV.push({
-              label: "No hay resultados",
-              value: "0"
-            });
           } else {
             this.noResultsSubtipos = false;
           }
