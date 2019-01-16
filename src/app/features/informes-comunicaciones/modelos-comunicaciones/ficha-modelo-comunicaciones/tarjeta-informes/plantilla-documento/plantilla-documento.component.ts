@@ -3,6 +3,8 @@ import { DataTable } from "primeng/datatable";
 import { FichaPlantillasDocument } from '../../../../../../models/FichaPlantillasDocumentoItem';
 import { ConsultasSearchItem } from '../../../../../../models/ConsultasSearchItem';
 import { ModelosComunicacionesItem } from '../../../../../../models/ModelosComunicacionesItem';
+import { InformesModelosComItem } from '../../../../../../models/InformesModelosComunicacionesItem';
+
 import { SigaServices } from "./../../../../../../_services/siga.service";
 import { Location } from "@angular/common";
 import { Message, ConfirmationService } from "primeng/components/common/api";
@@ -30,6 +32,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   body: FichaPlantillasDocument = new FichaPlantillasDocument();
   consultaSearch: ConsultasSearchItem = new ConsultasSearchItem();
   modeloItem: ModelosComunicacionesItem = new ModelosComunicacionesItem();
+  informeItem: InformesModelosComItem = new InformesModelosComItem();
   consultasCombo: any[];
   consultas: any[];
   finalidad: any[];
@@ -148,12 +151,16 @@ export class PlantillaDocumentoComponent implements OnInit {
   getDatos() {
     this.getComboFormatos();
     this.getComboSufijos();
-
+    this.getConsultasDisponibles();
+    
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.modeloItem = JSON.parse(sessionStorage.getItem("modelosSearch"));
 
       this.body.idClaseComunicacion = this.modeloItem.idClaseComunicacion;
       this.body.idInstitucion = this.modeloItem.idInstitucion;
+    }
+    if(sessionStorage.getItem("modelosInformesSearch") != null){
+      this.informeItem = JSON.parse(sessionStorage.getItem("modelosInformesSearch"));
       this.getConsultasPlantilla();
     }
   }

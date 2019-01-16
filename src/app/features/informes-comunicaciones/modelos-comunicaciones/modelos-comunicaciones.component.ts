@@ -281,12 +281,8 @@ export class ModelosComunicacionesComponent implements OnInit {
   onConfirmarBorrar(dato) {
 
     if (!this.selectAll) {
-      let modelo = {
-        idModeloComunicacion: dato[0].idModeloComunicacion,
-        idInstitucion: dato[0].idInstitucion
-      }
   
-      this.sigaServices.post("modelos_borrar", modelo).subscribe(
+      this.sigaServices.post("modelos_borrar", dato).subscribe(
         data => {
           this.showSuccess('Se ha borrado correctamente');
         },
