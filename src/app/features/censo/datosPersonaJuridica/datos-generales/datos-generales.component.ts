@@ -120,6 +120,7 @@ export class DatosGenerales implements OnInit {
 
   fechaDesde: Date;
   fechaHasta: Date;
+  fechaHoy: Date = new Date();
   index: any = 0;
 
   mensaje: String = "";
@@ -1024,7 +1025,7 @@ export class DatosGenerales implements OnInit {
 
       this.updateItems.set(newItem.idGrupo, newItem);
 
-      this.etiquetasPersonaJuridicaSelecionados.push(newItem);
+      // this.etiquetasPersonaJuridicaSelecionados.push(newItem);
       this.autoComplete.multiInputEL.nativeElement.value = null;
     } else {
       let oldItem = new ComboEtiquetasItem();

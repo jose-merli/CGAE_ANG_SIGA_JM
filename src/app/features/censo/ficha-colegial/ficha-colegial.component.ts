@@ -168,13 +168,14 @@ export class FichaColegialComponent implements OnInit {
   partidoJudicialItem: DatosDireccionesItem = new DatosDireccionesItem();
   displayServicios: boolean = false;
   atrasRegTel: String="";
+  fechaHoy: Date = new Date();
   // etiquetas
   showGuardar: boolean = false;
   mensaje: String = "";
   control: boolean = false;
   checked: boolean = false;
   autocompletar: boolean = false;
-  // isCrear: boolean = false;
+  isCrear: boolean = false;
   closable: boolean = false;
   isFechaInicioCorrect: boolean = false;
   isFechaBajaCorrect: boolean = false;
@@ -962,7 +963,7 @@ export class FichaColegialComponent implements OnInit {
   closeDialogConfirmation(item) {
     this.checked = false;
 
-    if (this.esNewColegiado) {
+    if (this.isCrear) {
       // Borramos el residuo de la etiqueta
       this.autoComplete.multiInputEL.nativeElement.value = null;
     } else {
@@ -993,7 +994,7 @@ export class FichaColegialComponent implements OnInit {
   aceptDialogConfirmation(item) {
     this.checked = false;
 
-    if (this.esNewColegiado) {
+    if (this.isCrear) {
       let newItem = new ComboEtiquetasItem();
       newItem = item;
 
@@ -1609,26 +1610,30 @@ export class FichaColegialComponent implements OnInit {
   }
 
   // Evento para detectar la etiqueta de nueva creación
-  // onKeyUp(event) {
-  //   if (event.keyCode == 13) {
-  //     if (this.control) {
-  //       this.checked = true;
-  //       // this.dialog.closable = false;
-  //       // Variable controladora
-  //       this.isCrear = true;
-  //       // Variable controlador del deshabilitar fechas
-  //       //  this.calendar.readonlyInput = false;
-  //       this.historico = false;
-  //       // Rellenamos el objeto nuevo
-  //       this.item = new ComboEtiquetasItem();
-  //       this.item.idGrupo = "";
-  //       this.item.label = event.srcElement.value;
-  //       this.mensaje = this.translateService.instant(
-  //         "censo.datosGenerales.literal.crearEtiqueta"
-  //       );
-  //     }
-  //   }
-  // }
+  onKeyUp(event) {
+    if (event.keyCode == 13) {
+      if (this.control) {
+        this.checked = true;
+        this.dialog.closable = false;
+
+        // Variable controladora
+        this.isCrear = true;
+
+        // Variable controlador del deshabilitar fechas
+        //  this.calendar.readonlyInput = false;
+        this.historico = false;
+
+        // Rellenamos el objeto nuevo
+        this.item = new ComboEtiquetasItem();
+        this.item.idGrupo = "";
+        this.item.label = event.srcElement.value;
+
+        this.mensaje = this.translateService.instant(
+          "censo.datosGenerales.literal.crearEtiqueta"
+        );
+      }
+    }
+  }
 
   isNotContains(event): boolean {
     var keepGoing = true;
@@ -1648,9 +1653,10 @@ export class FichaColegialComponent implements OnInit {
     if (event) {
       if (this.isNotContains(event)) {
         this.checked = true;
-        // this.dialog.closable = false;
+        this.dialog.closable = false;
 
-        // Variable controladora
+         // Variable controladora
+         this.isCrear = false;
 
         // Variable controlador del deshabilitar fechas
         this.historico = false;
