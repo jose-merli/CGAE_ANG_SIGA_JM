@@ -432,6 +432,8 @@
                 [minLength]="1"
                 field="label"
                 [multiple]="true"
+                (ngModelChange)="activacionGuardarGenerales()"
+                (onKeyUp)="onKeyUp($event)"
                 (onSelect)="onSelect($event)"
                 (onUnselect)="onUnselect($event)"
                 [disabled]="!autocompletar || disabledAction"
@@ -2172,7 +2174,6 @@
           <p-calendar
             [monthNavigator]="true"
             [yearNavigator]="true"
-            yearRange="1930:2050"
             [(ngModel)]="item.fechaInicio"
             [locale]="es"
             [utc]="true"
@@ -2181,6 +2182,7 @@
             showIcon="true"
             (onSelect)="validateFields()"
             [(disabled)]="historico"
+            [(maxDate)]="fechaHoy"
           ></p-calendar>
         </div>
 
@@ -2197,7 +2199,6 @@
           <p-calendar
             [monthNavigator]="true"
             [yearNavigator]="true"
-            yearRange="1930:2050"
             [(ngModel)]="item.fechaBaja"
             [locale]="es"
             [utc]="true"
@@ -2206,6 +2207,7 @@
             showIcon="true"
             (onSelect)="validateFields()"
             [(disabled)]="historico"
+            [(minDate)]="fechaHoy"
           ></p-calendar>
           <div
             *ngIf="item.fechaBaja != null && !isFechaBajaCorrect && !historico"
