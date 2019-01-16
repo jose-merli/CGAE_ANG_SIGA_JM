@@ -35,14 +35,17 @@ export class SolicitudesModificacionComponent implements OnInit {
   selectAll: boolean = false;
   numSelected: number = 0;
   desactivaProcesarMultiple: boolean = false;
+  desactivarNuevo: boolean = false;
   tipo: SelectItem[];
   tipoSolGeneral: SelectItem[];
   estado: SelectItem[];
 
+  msgs: any;
   es: any = esCalendar;
 
   tipoModificacionSolGeneral: String;
   motivoSolGeneral: String;
+  resultado: String;
 
   bodySearch: SolicitudesModificacionObject = new SolicitudesModificacionObject();
   bodyMultiple: SolicitudesModificacionObject = new SolicitudesModificacionObject();
@@ -59,7 +62,8 @@ export class SolicitudesModificacionComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit() {
@@ -177,6 +181,26 @@ export class SolicitudesModificacionComponent implements OnInit {
   }
 
   // Métodos botones del filtro
+  checkIfUserExitsAsAMember() {
+    this.progressSpinner = true;
+    this.sigaServices.get("solicitudModificacion_verifyPerson").subscribe(
+      data => {
+        this.resultado = data.valor;
+
+        if (this.resultado == "existe") {
+          this.desactivarNuevo = false;
+        } else {
+          this.desactivarNuevo = true;
+        }
+
+        this.progressSpinner = false;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
   newElement() {
     this.selectedDatos = [];
     this.sigaServices.get("solicitudModificacion_tipoModificacion").subscribe(
@@ -237,6 +261,8 @@ export class SolicitudesModificacionComponent implements OnInit {
   getLetrado() {
     if (JSON.parse(sessionStorage.getItem("isLetrado")) == true) {
       this.isLetrado = true;
+      // Comprobamos si existe en la tabla cen_colegiado
+      this.checkIfUserExitsAsAMember();
     } else {
       this.isLetrado = false;
     }
@@ -282,12 +308,15 @@ export class SolicitudesModificacionComponent implements OnInit {
     this.sigaServices.post(path, this.bodyMultiple).subscribe(
       data => {
         this.progressSpinner = false;
+        this.showSuccess();
         this.search();
       },
       err => {
         this.progressSpinner = false;
+        this.showFail();
       },
       () => {
+        this.selectMultiple = false;
         this.closeDialog();
       }
     );
@@ -460,5 +489,29 @@ export class SolicitudesModificacionComponent implements OnInit {
     }
 
     return this.body.fechaDesde;
+  }
+
+  showSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant("general.message.accion.realizada")
+    });
+  }
+
+  showFail() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "general.message.error.realiza.accion"
+      )
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }
