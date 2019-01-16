@@ -644,6 +644,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   irEditarUsuario(id) {
+    console.log(id)
     if (!this.selectMultiple) {
       var ir = null;
       if (id && id.length > 0) {

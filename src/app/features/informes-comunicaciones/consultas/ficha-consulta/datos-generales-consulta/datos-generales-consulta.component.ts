@@ -284,6 +284,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
       data => {
 
         let result = JSON.parse(data["body"]);
+        this.body.idConsulta = result.message;
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         sessionStorage.removeItem("crearNuevaConsulta");
         sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));

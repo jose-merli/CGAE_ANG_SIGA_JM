@@ -65,8 +65,10 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <span *ngIf="col.field !='preseleccionado'"> {{dato[col.field]}}</span>
-              <span *ngIf="col.field=='preseleccionado'">
+              <span *ngIf="col.field !='preseleccionado' && showHistorico && dato.fechaBaja!=null" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">
+                {{dato[col.field]}}</span>
+              <span *ngIf="col.field !='preseleccionado' && !showHistorico && dato.fechaBaja==null"> {{dato[col.field]}}</span>
+              <span *ngIf="col.field=='preseleccionado' ">
                 <i class="fa fa-check"></i>
               </span>
             </td>
