@@ -1009,6 +1009,7 @@ export class FichaColegialComponent implements OnInit {
       );
 
       this.createItems.push(newItem);
+      this.activacionGuardarGenerales();
 
       this.updateItems.set(newItem.idGrupo, newItem);
 
@@ -1033,6 +1034,8 @@ export class FichaColegialComponent implements OnInit {
 
     // Dehabilitamos el guardar para los próximos
     this.isTrue = false;
+    this.activacionGuardarGenerales();
+
   }
 
   validateFinalDate(): boolean {
