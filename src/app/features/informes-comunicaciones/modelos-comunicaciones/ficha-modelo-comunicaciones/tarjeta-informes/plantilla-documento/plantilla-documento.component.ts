@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { FichaPlantillasDocument } from '../../../../../../models/FichaPlantillasDocumentoItem';
+import { SigaServices } from "./../../../../../../_services/siga.service";
 import { Location } from "@angular/common";
+import { Message, ConfirmationService } from "primeng/components/common/api";
 
 
 @Component({
@@ -29,11 +31,12 @@ export class PlantillaDocumentoComponent implements OnInit {
   tipoEjecucion: any[];
   textSelected: any;
   showHistorico: boolean = false;
+  msgs: Message[];
 
   @ViewChild('table') table: DataTable;
   selectedDatos
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private location: Location) {
+  constructor(private changeDetectorRef: ChangeDetectorRef, private location: Location, private sigaServices: SigaServices) {
 
 
   }
@@ -143,5 +146,51 @@ export class PlantillaDocumentoComponent implements OnInit {
     }
   }
 
+  getConsultas(){
+    this.sigaServices
+      .post("modelos_consultas", this.body)
+      .subscribe(
+        data => {
+          this.consultas = JSON.parse(data["body"]);
+        },
+        err => {
+          this.showFail('Error al cargar las consultas');
+          console.log(err);
+        }
+      );
+  }
 
+  getConsultasHistorico(){
+    this.sigaServices
+      .post("modelos_consultas_historico", this.body)
+      .subscribe(
+        data => {
+          this.consultas = JSON.parse(data["body"]);
+        },
+        err => {
+          this.showFail('Error al cargar las consultas');
+          console.log(err);
+        }
+      );
+  }
+
+  // Mensajes
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showInfo(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
 }

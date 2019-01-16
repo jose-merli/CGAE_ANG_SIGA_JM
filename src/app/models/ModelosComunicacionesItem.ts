@@ -1,9 +1,10 @@
 export class ModelosComunicacionesItem {
-  idClaseComunicaciones: String;
+  idModeloComunicacion: String;
+  idClaseComunicacion: String;
   nombre: String;
-  preseleccionado: String;
+  preseleccionar: String;
   visible: boolean;
-  idColegio: string;
+  idInstitucion: string;
   orden: String;
   constructor() { }
 }

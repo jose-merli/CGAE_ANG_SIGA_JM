@@ -5,6 +5,7 @@ import { TranslateService } from "./../../../../../commons/translate/translation
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
 import { InformesModelosComItem } from '../../../../../models/InformesModelosComunicacionesItem';
+import { ModelosComunicacionesItem } from '../../../../../models/ModelosComunicacionesItem';
 
 
 @Component({
@@ -30,7 +31,7 @@ export class TarjetaInformesComponent implements OnInit {
   numSelected: number = 0;
   rowsPerPage: any = [];
   body: InformesModelosComItem = new InformesModelosComItem;
-
+  modelo: ModelosComunicacionesItem = new ModelosComunicacionesItem;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -171,10 +172,21 @@ export class TarjetaInformesComponent implements OnInit {
 
   }
 
-  getDatos() {
+  getDatos(){
     if (sessionStorage.getItem("modelosSearch") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
-    }
+      this.modelo = JSON.parse(sessionStorage.getItem("modelosSearch"));
+    }    
+    this.getInformes();
+  }
+  getInformes() {
+    this.sigaServices.post("modelo_detalle_informes", this.modelo).subscribe(
+      data => {
+        this.datos = JSON.parse(data.body).plantillasDocumentos;
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   addInforme() {
