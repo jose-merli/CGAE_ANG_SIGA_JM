@@ -195,7 +195,7 @@
                 type="text"
                 [(disabled)]="isLetrado || disabledNif || disabledAction"
                 class="form-control"
-                (ngModelChange)="activacionGuardarGenerales()"
+                (ngModelChange)="compruebaDNI()"
                 pInputText
               />
               <div *ngIf="identificacionValida == false">
@@ -215,7 +215,7 @@
               <p-dropdown
                 class="select-form"
                 [options]="tipoIdentificacion"
-                [(disabled)]="isLetrado || disabledAction"
+                disabled
                 placeholder="{{'general.boton.seleccionar' | translate}}"
                 [(ngModel)]="generalBody.idTipoIdentificacion"
                 (onChange)="activacionGuardarGenerales()"
@@ -378,9 +378,10 @@
 
             <div class="form-check col-lg-6 col-md-6">
               <br />
-              <label class="form-group-label"
-                >No publicar datos de contacto (antiguo LOPD)</label
-              >
+              <!-- <label class="form-group-label"
+                >No publicar datos de contacto (antiguo LOPD)</label              > -->
+                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold'}">No publicar datos de contacto (antiguo LOPD)</span>
+
               &nbsp;&nbsp;
               <p-checkbox
                 [(disabled)]="isLetrado  || disabledAction"

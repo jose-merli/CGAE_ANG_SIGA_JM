@@ -308,14 +308,43 @@ export class FichaColegialComponent implements OnInit {
         sessionStorage.getItem("filtrosBusquedaColegiados")
       );
       //sessionStorage.removeItem("filtrosBusquedaColegiados");
-    }
-    if (sessionStorage.getItem("filtrosBusquedaNoColegiados")) {
+    }else if (sessionStorage.getItem("filtrosBusquedaNoColegiados")) {
       this.persistenciaNoCol = new NoColegiadoItem();
       this.persistenciaNoCol = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaNoColegiados")
       );
 
       // sessionStorage.removeItem("filtrosBusquedaNoColegiados");
+    }else{
+      //  LLEGA DESDE PUNTO DE MENÚ
+      this.generalBody = new FichaColegialGeneralesItem();
+      this.checkGeneralBody = new FichaColegialGeneralesItem();
+      this.generalBody.searchLoggedUser = true;
+      this.sigaServices
+      .postPaginado(
+        "busquedaColegiados_searchColegiado",
+        "?numPagina=1",
+        this.generalBody
+      )
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          let busqueda = JSON.parse(data["body"]);
+          this.generalBody = busqueda.colegiadoItem[0];
+          this.checkGeneralBody = busqueda.colegiadoItem[0];
+          this.colegialesBody = busqueda.colegiadoItem[0];
+          this.checkColegialesBody = busqueda.colegiadoItem[0];
+          this.progressSpinner = false;
+
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
     }
     if (
       sessionStorage.getItem("personaBody") != null &&
@@ -376,7 +405,7 @@ export class FichaColegialComponent implements OnInit {
     // this.onInitSociedades();
 
     // this.onInitOtrasColegiaciones();
-
+    this.compruebaDNI();
     // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
     this.colsColegiales = [
       {
@@ -909,6 +938,12 @@ export class FichaColegialComponent implements OnInit {
     this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
       n => {
         this.tipoIdentificacion = n.combooItems;
+         // 1: {label: "CIF", value: "20"}
+          // 2: {label: "NIE", value: "40"}
+          // 3: {label: "NIF", value: "10"}
+          // 4: {label: "Otro", value: "50"}
+          // 5: {label: "Pasaporte", value: "30"}
+          this.tipoIdentificacion[5].label = this.tipoIdentificacion[5].label +" / "+ this.tipoIdentificacion[4].label;
       },
       err => {
         console.log(err);
@@ -1639,17 +1674,73 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
-  isNotContains(event): boolean {
-    var keepGoing = true;
-    this.updateItems.forEach(element => {
-      if (keepGoing) {
-        if (element.idGrupo == event.value) {
-          keepGoing = false;
-        }
+  
+compruebaDNI(){
+      // modo creacion
+      this.activacionGuardarGenerales();
+
+        if (this.generalBody.nif.length > 8 ) {
+          if(this.isValidDNI(this.generalBody.nif)){
+            this.generalBody.idTipoIdentificacion = "10";
+            return true;
+          }else if(this.isValidPassport(this.generalBody.nif)){
+            this.generalBody.idTipoIdentificacion = "30";
+            return true;
+          }else if(this.isValidNIE(this.generalBody.nif)){
+            this.generalBody.idTipoIdentificacion = "40";
+            return true;
+          }else if(this.isValidCIF(this.generalBody.nif)){
+            this.generalBody.idTipoIdentificacion = "20";
+            return true;
+          }else{
+            this.generalBody.idTipoIdentificacion = "30";
+            return false;
+          }
+
+          // 1: {label: "CIF", value: "20"}
+          // 2: {label: "NIE", value: "40"}
+          // 3: {label: "NIF", value: "10"}
+          // 4: {label: "Otro", value: "50"}
+          // 5: {label: "Pasaporte", value: "30"}
+      }else{
+        this.generalBody.idTipoIdentificacion = "30";
+          return false;
       }
-    });
-    return keepGoing;
-  }
+}
+isValidPassport(dni: String): boolean {
+  return (
+    dni && typeof dni === "string" && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni)
+  );
+}
+
+isValidNIE(nie: String): boolean {
+  return (
+    nie &&
+    typeof nie === "string" &&
+    /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie)
+  );
+}
+
+isValidCIF(cif: String): boolean {
+  return (
+    cif &&
+    typeof cif === "string" &&
+    /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif)
+  );
+}
+
+isNotContains(event): boolean {
+  var keepGoing = true;
+  this.updateItems.forEach(element => {
+    if (keepGoing) {
+      if (element.idGrupo == event.value) {
+        keepGoing = false;
+      }
+    }
+  });
+
+  return keepGoing;
+}
 
   // Evento para detectar una etiqueta existente
   onSelect(event) {
