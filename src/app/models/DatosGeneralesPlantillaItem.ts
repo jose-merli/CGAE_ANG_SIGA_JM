@@ -7,5 +7,8 @@ export class DatosGeneralesPlantillaItem {
   email: String;
   sms: String;
   cuerpo: String;
+  idPlantillaEnvios: String;
+  idInstitucionDir: String;
+
   constructor() { }
 }

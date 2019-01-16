@@ -1,5 +1,9 @@
+import { DatosDireccionesItem } from './DatosDireccionesItem'
 
 export class DatosRemitentePlantillaItem {
+  idConsulta: String;
+  idPlantillaEnvios: String;
+  idTipoEnvios: String;
   idInstitucion: String;
   idEnvio: String;
   idPersona: String;
@@ -10,7 +14,7 @@ export class DatosRemitentePlantillaItem {
   fechaProgramada: Date;
   usuModificacion: String;
   descripcion: String;
-  direccion: String;
+  direccion: DatosDireccionesItem[] = [];
   idPoblacion: String;
   idProvincia: String;
   idPais: String;
@@ -22,5 +26,6 @@ export class DatosRemitentePlantillaItem {
   poblacionExtranjera: String;
   fax1: String;
   fax2: String;
+
   constructor() { }
 }

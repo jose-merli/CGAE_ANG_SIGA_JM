@@ -179,6 +179,7 @@ export class PlantillasEnvioComponent implements OnInit {
   detallePlantilla(item) {
 
     let id = item[0].id;
+    item[0].idPersona = '2';
     console.log(item)
     if (!this.selectMultiple) {
       this.router.navigate(["/fichaPlantilla"]);
@@ -192,6 +193,7 @@ export class PlantillasEnvioComponent implements OnInit {
     this.showResultados = true;
     sessionStorage.removeItem("plantillasEnvioSearch")
     sessionStorage.removeItem("filtrosPlantillas")
+    sessionStorage.removeItem("remitente")
     this.getResultados();
   }
 
@@ -223,7 +225,8 @@ export class PlantillasEnvioComponent implements OnInit {
 
   addPlantilla() {
     this.router.navigate(['/fichaPlantilla']);
-    sessionStorage.removeItem("plantillasEnvioSearch")
+    sessionStorage.removeItem("plantillasEnvioSearch");
+    sessionStorage.removeItem("remitente");
     sessionStorage.setItem("crearNuevaPlantilla", JSON.stringify("true"));
   }
 
