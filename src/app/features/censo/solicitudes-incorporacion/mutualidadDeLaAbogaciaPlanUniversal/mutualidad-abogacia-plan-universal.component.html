@@ -3,7 +3,7 @@
 <div class="header-title">
     <i class="fa fa-square"></i>
     <p>{{ "menu.censo" | translate}}
-        <i class="fa fa-angle-right"></i>{{'censo.solicitudincorporacion' | translate}}
+        <i class="fa fa-angle-right"></i>{{'pestana.fichaCliente.mutualidad.planProfesional' | translate}}
     </p>
 </div>
 
@@ -213,7 +213,7 @@
                         <label>
                             {{"censo.consultaDirecciones.literal.poblacion" | translate}} (*)
                         </label>
-                        <p-dropdown #poblacion [disabled]="deshabilitarDireccion()" (input)="buscarPoblacion($event)" class="select-form" [(ngModel)]="poblacionSelected"
+                        <p-dropdown #poblacion [disabled]="deshabilitarDireccion() || modoLectura" (input)="buscarPoblacion($event)" class="select-form" [(ngModel)]="poblacionSelected"
                             [options]="poblaciones" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"  (onChange)="obtenerPoblacionDesc($event)" [emptyFilterMessage]="resultadosPoblaciones"></p-dropdown>
     
                         <!-- <input type="text" class="form-control" pInputText [(ngModel)]="body.nombrePoblacion">-->

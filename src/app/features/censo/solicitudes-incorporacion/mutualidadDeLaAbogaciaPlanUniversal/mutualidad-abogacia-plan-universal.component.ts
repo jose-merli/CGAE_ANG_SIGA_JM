@@ -30,7 +30,7 @@ import { DropdownModule, Dropdown } from "primeng/dropdown";
 })
 export class MutualidadAbogaciaPlanUniversal implements OnInit {
   // mostrarEstadoSolicitud: boolean = false;
-  progressSpinner: boolean = false;
+  progressSpinner: boolean = true;
   datosDireccion: boolean = false;
   datosBancarios: boolean = false;
   datosPoliza: boolean = false;
@@ -82,6 +82,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
   @ViewChild("poblacion") dropdown: Dropdown;
 
   ngOnInit() {
+    this.progressSpinner = true;
     this.es = this.translateService.getCalendarLocale();
     this.solicitud = JSON.parse(sessionStorage.getItem("solicitudEnviada"));
     this.body = JSON.parse(sessionStorage.getItem("solicitudEnviada"));
@@ -104,8 +105,27 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
             resultParsed.idsolicitud != null &&
             resultParsed.idsolicitud != undefined
           ) {
-            this.solicitud = JSON.parse(result.body);
-            this.body = JSON.parse(result.body);
+            let solicitud = JSON.parse(result.body);
+            let body = JSON.parse(result.body);
+            solicitud.tipoIdentificacion = this.solicitud.tipoIdentificacion;
+            solicitud.numeroIdentificacion = this.solicitud.numeroIdentificacion;
+            solicitud.tratamiento = this.solicitud.tratamiento;
+            solicitud.idEstadoCivil = this.solicitud.idEstadoCivil;
+            solicitud.naturalDe = this.solicitud.naturalDe;
+            solicitud.idpais = this.body.idPais;
+            this.solicitud = solicitud;
+            body.idpais = this.body.idPais;
+            body.codigoPostal = this.body.codigoPostal;
+            body.idPoblacion = this.body.idPoblacion;
+            body.telefono = this.body.telefono;
+            body.correoElectronico = this.body.correoElectronico;
+            body.bic = this.body.bic;
+            body.titular = this.body.titular;
+            this.body = body;
+
+            if (this.body.hijos == undefined) {
+              this.body.hijos = [];
+            }
             this.modoLectura = true;
           } else {
             // Acceso a Web Service para saber si hay una solicitud de Mutualidad.
@@ -115,14 +135,14 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
               .post("mutualidad_estadoMutualista", this.solicitud)
               .subscribe(
                 result => {
-                  let prueba = JSON.parse(result.body);
-                  if ((prueba.idSolicitud = "0")) {
+                  let estadoMut = JSON.parse(result.body);
+                  if ((estadoMut.idSolicitud = "0")) {
                     this.modoLectura = false;
                   } else {
                     this.modoLectura = true;
-                    this.solicitud.idSolicitudMutualidad = prueba.idSolicitud;
-                    this.solicitud.estadoMutualidad = prueba.valorRespuesta;
                   }
+                  this.solicitud.idSolicitudMutualidad = estadoMut.idSolicitud;
+                  this.solicitud.estadoMutualidad = estadoMut.valorRespuesta;
                 },
                 error => {
                   console.log(error);
@@ -132,21 +152,25 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
         },
         error => {
           console.log(error);
-        }
-      );
-
-    this.paisSelected = this.solicitud.idPais;
-    this.solicitud.duplicado = true;
-    this.sigaServices
-      .post("mutualidad_estadoSolicitud", this.solicitud)
-      .subscribe(
-        result => {
-          let prueba = JSON.parse(result.body);
-          this.solicitud.idSolicitudMutualidad = prueba.idSolicitud;
-          this.solicitud.estadoMutualidad = prueba.valorRespuesta;
         },
-        error => {
-          console.log(error);
+        () => {
+          this.paisSelected = this.solicitud.idPais;
+          this.solicitud.duplicado = true;
+          this.solicitud.idSolicitud = this.solicitud.idsolicitudincorporacion;
+          this.sigaServices
+            .post("mutualidad_estadoSolicitud", this.solicitud)
+            .subscribe(
+              result => {
+                let prueba = JSON.parse(result.body);
+                this.solicitud.idSolicitudMutualidad = prueba.idSolicitud;
+                this.solicitud.estadoMutualidad = prueba.valorRespuesta;
+                this.progressSpinner = false;
+              },
+              error => {
+                console.log(error);
+                this.progressSpinner = false;
+              }
+            );
         }
       );
 
@@ -228,6 +252,19 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
       );
   }
 
+  transformaFechaForBack(fecha) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -1);
+    if (rawDate.length < 14) {
+      let splitDate = rawDate.split("/");
+      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+      fecha = new Date((arrayDate += "T00:00:00.001Z"));
+    } else {
+      fecha = new Date(fecha);
+    }
+    return fecha;
+  }
+
   transformaFecha(fecha) {
     let jsonDate = JSON.stringify(fecha);
     let rawDate = jsonDate.slice(1, -1);
@@ -292,6 +329,22 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
         console.log(error);
       }
     );
+
+    this.sigaServices
+      .get("solicitudIncorporacion_tipoIdentificacion")
+      .subscribe(
+        result => {
+          let tipos = result.combooItems;
+          this.progressSpinner = false;
+          let identificacion = tipos.find(
+            item => item.value === this.solicitud.idTipoIdentificacion
+          );
+          this.solicitud.tipoIdentificacion = identificacion.label;
+        },
+        error => {
+          console.log(error);
+        }
+      );
 
     this.sigaServices.get("integrantes_provincias").subscribe(
       result => {
@@ -424,12 +477,20 @@ para poder filtrar el dato con o sin estos caracteres*/
 
     solicitud.datosPersona = JSON.parse(JSON.stringify(this.solicitud));
     solicitud.datosPersona = JSON.parse(JSON.stringify(this.body));
+    if (this.solicitud.apellido2 == null) {
+      solicitud.datosPersona.apellido2 = "";
+    }
+    solicitud.datosPersona.tipoSolicitud = this.solicitud.tipoSolicitud;
     solicitud.datosPersona.edadesHijos = this.body.hijos;
     solicitud.datosPersona.estadoCivil = this.solicitud.idEstadoCivil;
     solicitud.datosPersona.ejerciente = this.solicitud.idEstado;
     solicitud.datosPersona.asistenciaSanitaria = this.body.idAsistenciaSanitaria;
     solicitud.datosPersona.nacionalidad = this.paisDesc.label;
     solicitud.datosPersona.NIF = this.solicitud.numeroIdentificacion;
+    solicitud.datosPersona.tipoIdentificacion = this.solicitud.idTipoIdentificacion;
+    solicitud.datosPersona.fechaNacimiento = this.transformaFechaForBack(
+      this.fechaNacimiento
+    );
     solicitud.datosDireccion = JSON.parse(JSON.stringify(this.body));
     solicitud.datosDireccion.cp = this.body.codigoPostal;
     solicitud.datosDireccion.direccion = this.body.domicilio;
@@ -463,17 +524,72 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else {
       solicitud.datosPersona.sexo = "2";
     }
+    this.progressSpinner = true;
     this.sigaServices
       .post("mutualidad_solicitudPolizaProfesional", solicitud)
       .subscribe(
         result => {
-          let prueba = JSON.parse(result.body);
+          let resultado = JSON.parse(result.body);
+          if (resultado.pdf != null) {
+            this.showSuccess();
+            this.solicitud.duplicado = true;
+            this.solicitud.idSolicitud = resultado.idSolicitud;
+            this.sigaServices
+              .post("mutualidad_estadoSolicitud", this.solicitud)
+              .subscribe(
+                result => {
+                  let prueba = JSON.parse(result.body);
+                  this.solicitud.idSolicitudMutualidad = prueba.idSolicitud;
+                  this.solicitud.estadoMutualidad = prueba.valorRespuesta;
+                  this.progressSpinner = false;
+                },
+                error => {
+                  console.log(error);
+                  this.progressSpinner = false;
+                }
+              );
+            this.modoLectura = true;
+          } else {
+            this.showFailMensaje(resultado.valorRespuesta);
+          }
+          this.progressSpinner = false;
         },
         error => {
           console.log(error);
+          this.showFailMensaje(error.valorRespuesta);
+          this.progressSpinner = true;
         },
         () => {}
       );
+  }
+
+  showFailMensaje(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "",
+      detail: mensaje
+    });
+  }
+
+  showSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant("general.message.accion.realizada")
+    });
+  }
+
+  showFail() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "general.message.error.realiza.accion"
+      )
+    });
   }
 
   // abreCierraEstadoSolicitud() {
