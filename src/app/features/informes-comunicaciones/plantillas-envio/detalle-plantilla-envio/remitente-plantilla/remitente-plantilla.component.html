@@ -49,7 +49,7 @@
         </div>
         <div class="form-group col-lg-3">
           <label>Descripción</label>
-          <textarea style="height: 85px" [(ngModel)]="remitente.motivo" pInputTextarea></textarea>
+          <textarea [disabled]="true" style="height: 85px" [(ngModel)]="remitente.descripcion" pInputTextarea></textarea>
         </div>
       </div>
       <div class="row">
@@ -75,7 +75,9 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>País</label>
-              <input [(ngModel)]="direccion.nombrePais" type="text" class="form-control" [disabled]="true" [maxLength]="99" pInputText>
+              <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="direccion.idPais" [filter]="true" filterMatchMode="contains"
+                [options]="comboPais">
+              </p-dropdown>
             </div>
 
             <div class="form-group col-lg-6 col-md-6">
@@ -86,7 +88,9 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>Provincia</label>
               <!-- (onChange)="onChangeProvincia()" -->
-              <input [(ngModel)]="direccion.nombrePais" type="text" class="form-control" [disabled]="true" [maxLength]="99" pInputText>
+              <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="direccion.idProvincia" [filter]="true" filterMatchMode="contains"
+                [options]="comboProvincia">
+              </p-dropdown>
 
             </div>
             <div class="form-group col-lg-6 col-md-6">
@@ -97,7 +101,9 @@
             <!-- *ngIf="!poblacionExtranjera" -->
             <div *ngIf="!poblacionExtranjera" class="form-group col-lg-6 col-md-6">
               <label>Población</label>
-              <input [(ngModel)]="direccion.nombrePoblacion" type="text" class="form-control" [disabled]="true" [maxLength]="99" pInputText>
+              <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="direccion.idPoblacion" [filter]="true" filterMatchMode="contains"
+                [options]="comboPoblacion">
+              </p-dropdown>
             </div>
             <div *ngIf="poblacionExtranjera" class="form-group col-lg-6 col-md-6">
               <label>Población</label>
@@ -105,7 +111,9 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Tipo dirección (*)</label>
-              <input [(ngModel)]="direccion.tipoDireccion" type="text" class="form-control" [disabled]="true" [maxLength]="99" pInputText>
+              <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="direccion.idTipoDireccion" [filter]="true" filterMatchMode="contains"
+                [options]="comboTipoDireccion">
+              </p-dropdown>
             </div>
           </div>
         </div>
@@ -119,24 +127,23 @@
               <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
                 [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both"
                 selectionMode="multiple" (onRowSelect)="navigateTo(selectedDatos)">
-                <ng-template pTemplate="colgroup" let-columns>
-                  <colgroup>
-                    <col *ngFor="let col of columns" [style.width]="col.width">
-                  </colgroup>
-                </ng-template>
+
                 <ng-template pTemplate="header" let-columns>
                   <tr>
-                    <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                    <th *ngFor="let col of columns">
                       {{col.header}}
-                      <p-sortIcon [field]="col.field"></p-sortIcon>
                     </th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
                   <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
-                    <td *ngFor="let col of columns" pEditableColumn>
+                    <td *ngFor="let col of columns">
                       <span *ngIf="col.field !='valor'">{{dato[col.field]}}</span>
-                      <input *ngIf="col.field=='valor'" [(ngModel)]="dato.valor" type="text" class="form-control" pInputText>
+                      <span *ngIf="col.field =='valor' && dato.value== 'tlf'">{{direccion.telefono}}</span>
+                      <span *ngIf="col.field =='valor' && dato.value== 'fax'">{{direccion.fax}}</span>
+                      <span *ngIf="col.field =='valor' && dato.value== 'mvl'">{{direccion.movil}}</span>
+                      <span *ngIf="col.field =='valor' && dato.value== 'email'">{{direccion.correoElectronico}}</span>
+                      <span *ngIf="col.field =='valor' && dato.label== 'web'">{{direccion.paginaWeb}}</span>
                     </td>
                   </tr>
                 </ng-template>

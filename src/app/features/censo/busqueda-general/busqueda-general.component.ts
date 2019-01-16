@@ -72,6 +72,7 @@ export class BusquedaGeneralComponent {
   colegioDisabled: boolean = false;
   bodyRemitente: any = [];
   institucionActual: string;
+  labelRemitente: string;
 
   fichasPosibles = [
     {
@@ -121,8 +122,11 @@ export class BusquedaGeneralComponent {
                 label: colegio.label,
                 value: this.institucionActual
               }];
+              this.labelRemitente = colegio.label;
             }
           }
+
+
 
           // this.colegios_seleccionados[0].label = this.institucionActual;
           this.colegioDisabled = true;

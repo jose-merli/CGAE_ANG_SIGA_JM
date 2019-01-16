@@ -51,9 +51,10 @@
                         <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
                         <!--<p-multiSelect [filter]="true" filterBy="label" [options]="colegios_rol" optionLabel="label" [defaultLabel]="textFilter"
                             styleClass="widthAll" [(ngModel)]='colegios_seleccionados' maxSelectedLabels="1" [panelStyle]="{width:'100%'}"></p-multiSelect>-->
-                        <p-multiSelect [defaultLabel]="textFilter" filterBy="label" [(ngModel)]='colegios_seleccionados' [options]="colegios_rol"
-                            optionLabel="label" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" styleClass="widthAll"
-                            [panelStyle]="{width:'100%'}"></p-multiSelect>
+                        <p-multiSelect *ngIf="!colegioDisabled" [defaultLabel]="textFilter" filterBy="label" [(ngModel)]='colegios_seleccionados'
+                            [options]="colegios_rol" optionLabel="label" [selectedItemsLabel]="textSelected" maxSelectedLabels="1"
+                            styleClass="widthAll" [panelStyle]="{width:'100%'}"></p-multiSelect>
+                        <input [disabled]="true" *ngIf="colegioDisabled" type="text" class="form-control" pInputText [(ngModel)]='labelRemitente'>
 
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
@@ -84,9 +85,10 @@
                     </div>
                     <div class="form-group col-lg-6 col-md-6">
                         <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
-                        <p-multiSelect [disabled]="colegioDisabled" filterBy="label" [options]="colegios_rol" optionLabel="label" [defaultLabel]="textFilter"
+                        <p-multiSelect *ngIf="!colegioDisabled" filterBy="label" [options]="colegios_rol" optionLabel="label" [defaultLabel]="textFilter"
                             styleClass="widthAll" [(ngModel)]='colegios_seleccionados' [selectedItemsLabel]="textSelected" maxSelectedLabels="1"
                             [panelStyle]="{width:'100%'}"></p-multiSelect>
+                        <input [disabled]="true" *ngIf="colegioDisabled" type="text" class="form-control" pInputText [(ngModel)]='labelRemitente'>
                     </div>
                 </div>
             </div>
