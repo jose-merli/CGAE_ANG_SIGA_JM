@@ -203,16 +203,16 @@
         <div class="form-group col-lg-6 col-md-6">
           <label *ngIf="historico">{{"administracion.auditoriaUsuarios.fechaDesde" | translate}}</label>
           <label *ngIf="!historico">{{"administracion.auditoriaUsuarios.fechaDesde" | translate}} (*)</label>
-          <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="item.fechaInicio" [locale]="es"
+          <p-calendar [monthNavigator]="true" [yearNavigator]="true"  [(ngModel)]="item.fechaInicio" [locale]="es"
             [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="validateFields()"
-            [(disabled)]="historico"></p-calendar>
+            [(disabled)]="historico" [(maxDate)]="fechaHoy"></p-calendar>
         </div>
 
         <div class="form-group col-lg-6 col-md-6 form-group-date">
           <label *ngIf="historico">{{"administracion.auditoriaUsuarios.fechaHasta" | translate}}</label>
           <label *ngIf="!historico">{{"administracion.auditoriaUsuarios.fechaHasta" | translate}} (*)</label>
-          <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="item.fechaBaja" [locale]="es"
-            [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="validateFields()"
+          <p-calendar [monthNavigator]="true" [yearNavigator]="true"  [(ngModel)]="item.fechaBaja" [locale]="es"
+            [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="validateFields()" [(minDate)]="fechaHoy"
             [(disabled)]="historico"></p-calendar>
           <div *ngIf="item.fechaBaja != null && !isFechaBajaCorrect && !historico">
             <label class="labelError">{{"gratuita.altaTurnos.error.fechaBajaPosteriorInicio" | translate}}</label>

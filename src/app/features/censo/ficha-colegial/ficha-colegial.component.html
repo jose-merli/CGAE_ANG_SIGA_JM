@@ -195,7 +195,7 @@
                 type="text"
                 [(disabled)]="isLetrado || disabledNif || disabledAction"
                 class="form-control"
-                (ngModelChange)="activacionGuardarGenerales()"
+                (ngModelChange)="compruebaDNI()"
                 pInputText
               />
               <div *ngIf="identificacionValida == false">
@@ -215,7 +215,7 @@
               <p-dropdown
                 class="select-form"
                 [options]="tipoIdentificacion"
-                [(disabled)]="isLetrado || disabledAction"
+                disabled
                 placeholder="{{'general.boton.seleccionar' | translate}}"
                 [(ngModel)]="generalBody.idTipoIdentificacion"
                 (onChange)="activacionGuardarGenerales()"
@@ -266,6 +266,7 @@
                 (ngModelChange)="activacionGuardarGenerales()"
                 dateFormat="dd/mm/yy"
                 [style]="{ position: 'relative', 'z-index': '1000' }"
+                [maxLength]="100"
                 type="text"
                 class="form-control"
                 pInputText
@@ -322,6 +323,7 @@
                 [monthNavigator]="true"
                 [yearNavigator]="true"
                 (onSelect)="onChangeCalendar($event)"
+                (onInput)="onWriteCalendar(fechaNacimiento)"
                 yearRange="1930:2050"
                 [locale]="es"
                 [(ngModel)]="fechaNacimiento"
@@ -356,6 +358,7 @@
                 (ngModelChange)="activacionGuardarGenerales()"
                 [(disabled)]="isLetrado  || disabledAction"
                 type="text"
+                [maxLength]="100"
                 class="form-control"
                 pInputText
               />
@@ -378,9 +381,10 @@
 
             <div class="form-check col-lg-6 col-md-6">
               <br />
-              <label class="form-group-label"
-                >No publicar datos de contacto (antiguo LOPD)</label
-              >
+              <!-- <label class="form-group-label"
+                >No publicar datos de contacto (antiguo LOPD)</label              > -->
+                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold'}">No publicar datos de contacto (antiguo LOPD)</span>
+
               &nbsp;&nbsp;
               <p-checkbox
                 [(disabled)]="isLetrado  || disabledAction"
@@ -429,6 +433,8 @@
                 [minLength]="1"
                 field="label"
                 [multiple]="true"
+                (ngModelChange)="activacionGuardarGenerales()"
+                (onKeyUp)="onKeyUp($event)"
                 (onSelect)="onSelect($event)"
                 (onUnselect)="onUnselect($event)"
                 [disabled]="!autocompletar || disabledAction"
@@ -1967,7 +1973,7 @@
   <!-- END FICHA DATOS BANCARIOS -->
 
  <!-- INICIO FICHA REGTEL -->
- <!-- <div class="card">
+ <div class="card">
   <div
     class="card-header header-ficha"
     (click)="abreCierraFicha('regtel')"
@@ -1985,7 +1991,7 @@
         <div class="d-flex justify-content-between">
           <label
           >{{ "censo.regtel.literal.numero.directorios" | translate }}
-          <span>{{ bodyRegTel.length }}</span>
+          <span>{{ messageRegtel }}</span>
         </label> 
           <i
             [ngClass]="{
@@ -2012,7 +2018,7 @@
     <div class="row">
       
       <p-dataTable
-        emptyMessage="{{ 'general.message.no.registros' | translate}}"
+        emptyMessage="{{ messageRegtel }}"
         
         [(selection)]="selectedDatosRegtel"
         [responsive]="true"
@@ -2119,7 +2125,7 @@
     </div>
   </div> 
 </div>
--->
+ 
 
 <!-- END FICHA REGTEL-->
 
@@ -2169,7 +2175,6 @@
           <p-calendar
             [monthNavigator]="true"
             [yearNavigator]="true"
-            yearRange="1930:2050"
             [(ngModel)]="item.fechaInicio"
             [locale]="es"
             [utc]="true"
@@ -2178,6 +2183,7 @@
             showIcon="true"
             (onSelect)="validateFields()"
             [(disabled)]="historico"
+            [(maxDate)]="fechaHoy"
           ></p-calendar>
         </div>
 
@@ -2194,7 +2200,6 @@
           <p-calendar
             [monthNavigator]="true"
             [yearNavigator]="true"
-            yearRange="1930:2050"
             [(ngModel)]="item.fechaBaja"
             [locale]="es"
             [utc]="true"
@@ -2203,6 +2208,7 @@
             showIcon="true"
             (onSelect)="validateFields()"
             [(disabled)]="historico"
+            [(minDate)]="fechaHoy"
           ></p-calendar>
           <div
             *ngIf="item.fechaBaja != null && !isFechaBajaCorrect && !historico"

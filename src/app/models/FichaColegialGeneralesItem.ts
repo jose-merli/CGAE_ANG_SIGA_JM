@@ -1,5 +1,6 @@
 import { ErrorItem } from "./ErrorItem";
 export class FichaColegialGeneralesItem {
+  searchLoggedUser: Boolean;
   idPersona: String;
   nif: String;
   soloNombre: String;
