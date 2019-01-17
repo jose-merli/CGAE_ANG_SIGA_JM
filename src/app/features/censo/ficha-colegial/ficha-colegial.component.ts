@@ -1894,7 +1894,7 @@ isNotContainsEtiq(event): boolean {
     this.activacionGuardarGenerales();
     if (event) {
       this.checked = true;
-      // this.dialog.closable = true;
+      this.dialog.closable = true;
 
       this.item = new ComboEtiquetasItem();
       this.item.fechaInicio = value.fechaInicio;
