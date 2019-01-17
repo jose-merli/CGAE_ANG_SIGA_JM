@@ -3,6 +3,9 @@ import { DataTable } from "primeng/datatable";
 import { FichaPlantillasDocument } from '../../../../../../models/FichaPlantillasDocumentoItem';
 import { ConsultasSearchItem } from '../../../../../../models/ConsultasSearchItem';
 import { ModelosComunicacionesItem } from '../../../../../../models/ModelosComunicacionesItem';
+import { InformesModelosComItem } from '../../../../../../models/InformesModelosComunicacionesItem';
+import { PlantillaDocumentoItem } from "../../../../../../models/PlantillaDocumentoItem";
+
 import { SigaServices } from "./../../../../../../_services/siga.service";
 import { Location } from "@angular/common";
 import { Message, ConfirmationService } from "primeng/components/common/api";
@@ -45,6 +48,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   finalidad: string;
   showDatosGenerales: boolean = true;
   showConsultas: boolean = false;
+  file: any;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -287,10 +291,50 @@ export class PlantillaDocumentoComponent implements OnInit {
       );
   }
 
-  guardarDatosGenerales() {
-    sessionStorage.removeitem("crearNuevaPlantillaDocumento")
+  uploadFile(event: any) {
+    let fileList: FileList = event.files;
+    this.file = fileList[0];
+
+    this.addFile();
   }
 
+  addFile() {
+    this.sigaServices.postSendContent("modelos_detalle_subirPlantilla", this.file).subscribe(
+      data => {   
+        let plantilla = new PlantillaDocumentoItem ();
+        plantilla.nombre = data.nombreDocumento;
+        plantilla.idioma = 'ES';
+        this.guardarDocumento(plantilla);
+      },
+      err => {
+
+        if  (err.error.error.code  ==  400) {
+          this.showFail('Formato no permitido o tamaño maximo superado');
+        }  else  {
+          this.showFail('Error al subir el documento');
+          console.log(err);
+        }
+      },
+      () => {
+      }
+    );
+  }
+
+  guardarDocumento(plantilla){
+    this.sigaServices.post("modelos_detalle_insertarPlantilla", plantilla).subscribe(
+      data => {   
+        this.showSuccess('Plantilla subida correctamente');
+        plantilla.idPlantillaDocumento = data.idPlantillaDocumento
+        this.body.plantillas.push(plantilla);
+      },
+      err => {
+        this.showFail('Error al subir el documento');
+        console.log(err);
+      },
+      () => {
+      }
+    );    
+  }
 
   // Mensajes
   showFail(mensaje: string) {

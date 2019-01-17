@@ -66,7 +66,7 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td *ngFor="let col of columns" pEditableColumn>
               <p-fileUpload *ngIf="col.field=='plantilla'" #fubauto chooseLabel="" class="edit my-0 mx-auto main-button" mode="basic" name="file"
-                auto="true" accept="image/*" (change)="uploadImage($event)" auto="true">
+                auto="true" accept=".xls,.xlsx,.doc,.docx" (change)="uploadFile($event)" auto="true">
               </p-fileUpload>
               <p-dropdown *ngIf="col.field=='idioma'" class="select-form" [options]="idiomas" [(ngModel)]="body.idIdioma" [filter]="true"
                 (ngModelChange)="onChangeIdioma()" filterBy="label"></p-dropdown>

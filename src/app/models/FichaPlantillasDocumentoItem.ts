@@ -1,9 +1,9 @@
+import { PlantillaDocumentoItem } from "./PlantillaDocumentoItem";
 export class FichaPlantillasDocument {
   idInstitucion: String;
   idClaseComunicacion: String;
   idModeloComunicacion: String;
   idPlantillaDocumento: String;
-  idPlantilla: String;
   idIdioma: String;
   idFormato: String;
   nombreFichero: String;
@@ -11,5 +11,7 @@ export class FichaPlantillasDocument {
   idConsulta: String;
   idFinalidad: String;
   idTipoEjecucion: String;
+  plantillas: PlantillaDocumentoItem[]=[];
   constructor() { }
 }
+
