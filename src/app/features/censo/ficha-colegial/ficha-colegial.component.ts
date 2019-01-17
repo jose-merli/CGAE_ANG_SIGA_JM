@@ -112,7 +112,7 @@ export class FichaColegialComponent implements OnInit {
   colsBancarios: any = [];
   colsSanciones: any = [];
   colsRegtel: any = [];
-
+  inscrito: string;
   rowsPerPage: any = [];
   tipoCuenta: any[] = [];
   selectedTipo: any[] = [];
@@ -712,6 +712,14 @@ export class FichaColegialComponent implements OnInit {
       this.isLetrado = true;
     } else {
       this.isLetrado = !this.permisos;
+    } 
+  }
+
+  getInscrito(){
+    if(this.inscritoSeleccionado == "11" || this.inscritoSeleccionado == "01"){
+      this.inscrito = "Si";
+    }else{
+      this.inscrito = "No";
     }
   }
 
@@ -2060,6 +2068,7 @@ isNotContains(event): boolean {
       }
     );
     this.searchColegiales();
+    this.getInscrito();
   }
 
   restablecerColegiales() {

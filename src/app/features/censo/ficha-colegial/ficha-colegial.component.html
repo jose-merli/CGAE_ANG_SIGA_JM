@@ -658,7 +658,7 @@
               >{{
                 "censo.fusionDuplicados.colegiaciones.inscrito" | translate
               }}
-              <span>{{ colegialesBody.inscrito }}</span>
+              <span>{{ inscrito }}</span>
             </label>
             <label
               >{{
@@ -755,22 +755,6 @@
                 [options]="comboTipoSeguro"
               ></p-dropdown>
             </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{
-                "censo.ws.literal.residenteInscrito" | translate
-              }} (*)</label>
-              <!--
-                <input [(ngModel)]="colegialesBody.residenteInscrito" type="text"  (ngModelChange)="activacionGuardarColegiales()" class="form-control" [maxLength]="100" pInputText>
-              -->
-              <p-dropdown
-                class="select-form"
-                (onChange)="activacionGuardarColegiales()"
-                [(disabled)]="isLetrado || disabledAction"
-                [(ngModel)]="inscritoSeleccionado"
-                placeholder="{{'general.boton.seleccionar' | translate}}"
-                [options]="comboResidente"
-              ></p-dropdown>
-            </div>
             <div class="form-group col-lg-3 col-md-3 form-group-date">
               <label>{{
                 "censo.consultaDatosColegiales.literal.nMutualista" | translate
@@ -790,7 +774,23 @@
                 }}</label>
               </div>
             </div>
-
+            <div class="form-group col-lg-3 col-md-3">
+              <label>{{
+                "censo.ws.literal.residenteInscrito" | translate
+              }} (*)</label>
+              <!--
+                <input [(ngModel)]="colegialesBody.residenteInscrito" type="text"  (ngModelChange)="activacionGuardarColegiales()" class="form-control" [maxLength]="100" pInputText>
+              -->
+              <p-dropdown
+                class="select-form"
+                (onChange)="activacionGuardarColegiales()"
+                (ngModelChange)="getInscrito()"
+                [(disabled)]="isLetrado || disabledAction"
+                [(ngModel)]="inscritoSeleccionado"
+                placeholder="{{'general.boton.seleccionar' | translate}}"
+                [options]="comboResidente"
+              ></p-dropdown>
+            </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{
                 "censo.consultaDatosGenerales.literal.fechaIncorporacion"
