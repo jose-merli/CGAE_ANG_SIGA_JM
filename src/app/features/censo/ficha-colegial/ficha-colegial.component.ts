@@ -3075,7 +3075,7 @@ isNotContainsEtiq(event): boolean {
     this.bodySanciones.idPersona = this.generalBody.idPersona;
     this.bodySanciones.nif = this.generalBody.nif;
     this.bodySanciones.tipoFecha = "";
-    this.bodySanciones.chkFirmeza = true;
+    this.bodySanciones.chkFirmeza = undefined;
     // this.bodySanciones.idColegios = [];
     // this.bodySanciones.idColegios.push(this.generalBody.i.idInstitucion);
 
