@@ -51,7 +51,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   rowsPerPage: any = [];
   selectAll: boolean = false;
   selectMultiple: boolean = false;
-  textFilter: String = "Elegir";
+  textFilter: string = "Seleccionar";
   buscar: boolean = false;
 
   es: any = esCalendar;
@@ -70,6 +70,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   comboProvincias: any[];
   comboPoblacion: any[];
   comboTiposDireccion: any[];
+  comboTipoCV:any [];
 
   textSelected: String = "{0} etiquetas seleccionadas";
   body: DatosColegiadosItem = new DatosColegiadosItem();
@@ -380,35 +381,45 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   onChangeCategoriaCurricular(event) {
     if (event) {
-      this.subtipoCurricular.idTipoCV = event.value;
-      this.getComboSubtipoCurricular();
+      this.getComboSubtipoCurricular(event.value);
+      this.getComboTipoCurricular(event.value);
     }
   }
 
-  getComboSubtipoCurricular() {
+  //TipoCurricular
+  getComboTipoCurricular(idTipoCV) {
     this.sigaServices
-      .postPaginado(
-        "subtipoCurricular_comboSubtipoCurricular",
-        "?numPagina=1",
-        this.subtipoCurricular
+      .getParam(
+        "busquedaColegiados_getCurricularTypeCombo",
+        "?idTipoCV=" + idTipoCV
       )
       .subscribe(
-        data => {
-          this.comboSubtipoCV = JSON.parse(data["body"]).combooItems;
-
-          if (this.comboSubtipoCV.length == 0) {
-            this.noResultsSubtipos = true;
-          } else {
-            this.noResultsSubtipos = false;
-          }
-
-          this.arregloTildesCombo(this.comboSubtipoCV);
+        n => {
+          this.comboTipoCV = n.combooItems;
+          this.arregloTildesCombo(this.comboTipoCV);
         },
-        err => {
-          console.log(err);
-        }
+        error => {},
+        () => {}
       );
   }
+
+  //SubtipoCurricular
+  getComboSubtipoCurricular(idTipoCV) {
+    this.sigaServices
+      .getParam(
+        "busquedaColegiados_getCurricularSubtypeCombo",
+        "?idTipoCV=" + idTipoCV
+      )
+      .subscribe(
+        n => {
+          this.comboSubtipoCV = n.combooItems;
+          this.arregloTildesCombo(this.comboSubtipoCV);
+        },
+        error => {},
+        () => {}
+      );
+  }
+
 
   //Busca colegiados según los filtros
   isBuscar() {
