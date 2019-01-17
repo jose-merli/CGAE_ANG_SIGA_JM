@@ -5,6 +5,7 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 import { ComunicacionesModelosComItem } from '../../../../../models/ComunicacionesModelosComunicacionesItem';
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { ModelosComunicacionesItem } from '../../../../../models/ModelosComunicacionesItem';
+import { TranslateService } from "../../../../../commons/translate/translation.service";
 
 @Component({
   selector: 'app-tarjeta-comunicaciones',
@@ -20,17 +21,27 @@ export class TarjetaComunicacionesComponent implements OnInit {
   permisosArray: any[];
   msgs: Message[];
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
-  datos: any[];
-  cols: any[];
+  datos: any = [];
+  cols: any = [];
   first: number = 0;
   selectedItem: number;
   selectAll: boolean = false;
   selectMultiple: boolean = false;
   numSelected: number = 0;
   rowsPerPage: any = [];
-  formatos: any[];
-  sufijos: any[];
+  formatos: any = [];
+  sufijos: any = [];
+  plantillas: any = [];
   body: ModelosComunicacionesItem = new ModelosComunicacionesItem();
+  tiposEnvio: any = [];
+  nuevaPlantilla: boolean = false;
+  idPlantillaEnvios: string;
+  idTipoEnvios: string;
+  porDefecto: String = 'No';
+  eliminarArray: any = [];
+  showHistorico: boolean = false;
+  datosInicial: any = [];
+
 
 
   @ViewChild('table') table: DataTable;
@@ -56,17 +67,19 @@ export class TarjetaComunicacionesComponent implements OnInit {
 
   ];
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices,
+    private confirmationService: ConfirmationService, private translateService: TranslateService) { }
 
   ngOnInit() {
     this.getDatos();
+    this.getTipoEnvios();
 
     this.selectedItem = 10;
 
     this.cols = [
-      { field: 'nombrePlantilla', header: 'Nombre' },
       { field: 'tipoEnvio', header: 'Tipo de envío' },
-      { field: 'porDefecto', header: 'Por defecto' }
+      { field: 'nombrePlantilla', header: 'Nombre' },
+      { field: 'porDefecto', header: 'Por defecto', width: '15%' }
     ];
 
     this.rowsPerPage = [
@@ -179,11 +192,21 @@ export class TarjetaComunicacionesComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
+      let service = 'modelos_detalle_plantillas';
+      if (this.showHistorico) {
+        service = 'modelos_detalle_plantillasHist';
+      }
+      this.sigaServices.post(service, this.body.idModeloComunicacion).subscribe(result => {
 
-      this.sigaServices.post("modelos_detalle_plantillas", this.body.idModeloComunicacion).subscribe(result => {
-        debugger;
         let data = JSON.parse(result.body);
         this.datos = data.plantillas;
+        this.datos.map(e => {
+          return e.guardada = true;
+        });
+        if (!this.showHistorico) {
+          this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+        }
+
       }, error => {
 
       }, () => {
@@ -193,21 +216,28 @@ export class TarjetaComunicacionesComponent implements OnInit {
   }
 
 
-  addComunicacion() {
+  guardar() {
     let nuevaPlantillaComunicacion = {
-      idModeloComunicacion: this.body.idModeloComunicacion,
-      idPlantillaEnvios: this.body.idPlantillaEnvios
+      idModelo: this.body.idModeloComunicacion,
+      idPlantillaEnvios: this.idPlantillaEnvios,
+      idInstitucion: this.body.idInstitucion,
+      porDefecto: this.porDefecto
     }
-    this.selectedDatos = [];
 
     this.sigaServices.post("modelos_detalle_guardarPlantilla", nuevaPlantillaComunicacion).subscribe(result => {
-
+      debugger;
+      this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+      this.nuevaPlantilla = false;
+      this.showSuccess('La plantilla se ha guardado correctamente');
     }, error => {
+      this.showFail('Error al guardar la plantilla');
       console.log(error);
     }, () => {
-
-    })
+      this.getDatos();
+    });
   }
+
+
 
   // Mensajes
   showFail(mensaje: string) {
@@ -229,5 +259,125 @@ export class TarjetaComunicacionesComponent implements OnInit {
     this.msgs = [];
   }
 
+  eliminar(dato) {
+
+    this.confirmationService.confirm({
+      // message: this.translateService.instant("messages.deleteConfirmation"),
+      message: '¿Está seguro de cancelar los' + dato.length + 'envíos seleccionados',
+      icon: "fa fa-trash-alt",
+      accept: () => {
+        this.confirmarEliminar(dato);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+
+  confirmarEliminar(dato) {
+    this.eliminarArray = [];
+    dato.forEach(element => {
+      let objEliminar = {
+        idModelo: this.body.idModeloComunicacion,
+        idPlantillaEnvios: element.idPlantillaEnvios,
+        idInstitucion: this.body.idInstitucion,
+      };
+      this.eliminarArray.push(objEliminar);
+    });
+    this.sigaServices.post("modelos_detalle_borrarPlantilla", this.eliminarArray).subscribe(
+      data => {
+        this.showSuccess('Se ha eliminado la plantilla correctamente');
+      },
+      err => {
+        this.showFail('Error al eliminar la plantilla');
+        console.log(err);
+      },
+      () => {
+        this.getDatos();
+      }
+    );
+  }
+
+  getTipoEnvios() {
+    this.sigaServices.get("enviosMasivos_tipo").subscribe(
+      data => {
+        this.tiposEnvio = data.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getHistorico(key) {
+    if (key == 'visible') {
+      this.showHistorico = true;
+    } else if (key == 'hidden') {
+      this.showHistorico = false;
+    }
+    this.getDatos();
+  }
+
+  onChangeTipoEnvio(e) {
+    this.idTipoEnvios = e.value;
+    this.getPlantillas();
+  }
+
+  getPlantillas() {
+    this.sigaServices.post("enviosMasivos_plantillas", this.idTipoEnvios).subscribe(
+      data => {
+        let comboPlantillas = JSON.parse(data["body"]);
+        this.plantillas = comboPlantillas.combooItems;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+      }
+    );
+  }
+
+  addPlantilla() {
+    let newPlantilla = {
+      nombrePlantilla: '',
+      tipoEnvio: '',
+      porDefecto: 'No',
+      guardada: false
+    };
+    this.idPlantillaEnvios = '';
+    this.nuevaPlantilla = true;
+    this.datos.push(newPlantilla);
+    this.datos = [... this.datos];
+  }
+
+
+
+  onChangePlantilla(e) {
+    this.idPlantillaEnvios = e.value;
+  }
+
+  onChangePorDefecto(e) {
+    debugger;
+
+    if (e == true) {
+      this.porDefecto = 'Si';
+    } else {
+      this.porDefecto = 'No';
+    }
+  }
+
+  restablecer() {
+    this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+    this.nuevaPlantilla = false;
+  }
 
 }

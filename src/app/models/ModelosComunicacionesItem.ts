@@ -7,5 +7,7 @@ export class ModelosComunicacionesItem {
   visible: boolean;
   idInstitucion: string;
   orden: String;
+  idTipoEnvios: String;
+  porDefecto: String;
   constructor() { }
 }
