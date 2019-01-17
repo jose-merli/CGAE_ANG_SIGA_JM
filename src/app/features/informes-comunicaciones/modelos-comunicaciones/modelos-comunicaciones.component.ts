@@ -137,7 +137,7 @@ export class ModelosComunicacionesComponent implements OnInit {
       }
     );
   }
-  
+
 
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
@@ -181,9 +181,9 @@ export class ModelosComunicacionesComponent implements OnInit {
   }
 
 
-  getResultados(){
+  getResultados() {
     let service = "modelos_search";
-    if(this.showHistorico){
+    if (this.showHistorico) {
       service = "modelos_search_historico";
     }
     this.sigaServices.postPaginado(service, "?numPagina=1", this.bodySearch).subscribe(
@@ -194,7 +194,7 @@ export class ModelosComunicacionesComponent implements OnInit {
         this.datos = object.modelosComunicacionItem;
       },
       err => {
-        this.showFail('Error al programar el envío');
+        this.showFail('Error al cargar resultados');
         console.log(err);
       },
       () => {
@@ -203,7 +203,7 @@ export class ModelosComunicacionesComponent implements OnInit {
     );
   }
 
-  getResultadosHistorico(){
+  getResultadosHistorico() {
     this.sigaServices.postPaginado("modelos_search_historico", "?numPagina=1", this.bodySearch).subscribe(
 
       data => {
@@ -230,7 +230,7 @@ export class ModelosComunicacionesComponent implements OnInit {
 
   getHistorico(key) {
     if (key == 'visible') {
-      this.showHistorico = true;      
+      this.showHistorico = true;
     } else if (key == 'hidden') {
       this.showHistorico = false;
     }
@@ -281,7 +281,7 @@ export class ModelosComunicacionesComponent implements OnInit {
   onConfirmarBorrar(dato) {
 
     if (!this.selectAll) {
-  
+
       this.sigaServices.post("modelos_borrar", dato).subscribe(
         data => {
           this.showSuccess('Se ha borrado correctamente');
@@ -291,7 +291,7 @@ export class ModelosComunicacionesComponent implements OnInit {
           console.log(err);
         },
         () => {
-          this.table.reset();
+          this.getResultados();
         }
       );
 
@@ -333,6 +333,7 @@ export class ModelosComunicacionesComponent implements OnInit {
     sessionStorage.removeItem("modelosSearch")
     sessionStorage.setItem("crearNuevoModelo", JSON.stringify("true"));
   }
+
 
 
 

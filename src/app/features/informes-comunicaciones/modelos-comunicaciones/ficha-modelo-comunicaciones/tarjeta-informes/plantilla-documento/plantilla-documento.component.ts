@@ -67,15 +67,17 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.textSelected = "{0} ficheros seleccionadas";
     this.firstDocs = 0;
 
-    this.getDatos();
+    // this.getDatos();
     this.busquedaIdioma();
     this.getConsultasDisponibles();
+    this.getDocumentos();
 
     this.selectedItem = 4;
 
     this.cols = [
       { field: 'consulta', header: 'Consulta' },
-      { field: 'finalidad', header: 'Finalidad' }
+      { field: 'finalidad', header: 'Finalidad' },
+      { field: 'objetivo', header: 'Objetivo' }
     ];
 
 
@@ -109,8 +111,12 @@ export class PlantillaDocumentoComponent implements OnInit {
       { field: 'idioma', header: 'idioma' }
     ]
 
-    this.datos = []
-
+    this.datos = [
+      { consulta: '', finalidad: '', objetivo: 'Destinatario', id: '1' },
+      { consulta: '', finalidad: '', objetivo: 'Condicional', id: '3' },
+      { consulta: '', finalidad: '', objetivo: 'Multidocumento', idObjetivo: '2' },
+      { consulta: '', finalidad: '', objetivo: 'Destinatario', idObjetivo: '4' },
+    ]
     // this.body.idConsulta = this.consultas[1].value;
 
   }
@@ -256,11 +262,12 @@ export class PlantillaDocumentoComponent implements OnInit {
 
 
   getConsultasDisponibles() {
+    debugger;
     this.sigaServices
-
       .post("modelos_combo_consultas", this.body)
       .subscribe(
         data => {
+
           this.consultasCombo = JSON.parse(data["body"]).combooItems;
           console.log(this.consultasCombo)
         },
@@ -271,7 +278,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       );
   }
 
-  getPlantillas(){
+  getPlantillas() {
     this.sigaServices
       .post("modelos_detalle_plantillas", this.body)
       .subscribe(
@@ -280,6 +287,21 @@ export class PlantillaDocumentoComponent implements OnInit {
         },
         err => {
           this.showFail('Error al cargar las plantillas');
+          console.log(err);
+        }
+      );
+  }
+
+  getDocumentos() {
+    this.sigaServices
+      .post('modelos_detalle_plantillas', this.body)
+      .subscribe(
+        data => {
+          debugger;
+          this.documentos = JSON.parse(data["body"]).documentoPlantillaItem;
+        },
+        err => {
+          this.showFail('Error al cargar las consultas');
           console.log(err);
         }
       );
@@ -294,7 +316,17 @@ export class PlantillaDocumentoComponent implements OnInit {
       .post(service, this.body)
       .subscribe(
         data => {
+          debugger;
           this.datos = JSON.parse(data["body"]).consultaItem;
+
+          if (this.datos == []) {
+            this.datos = [
+              { consulta: '', finalidad: '', objetivo: 'Destinatario', idObjetivo: '1' },
+              { consulta: '', finalidad: '', objetivo: 'Condicional', idObjetivo: '3' },
+              { consulta: '', finalidad: '', objetivo: 'Multidocumento', idObjetivo: '2' },
+              { consulta: '', finalidad: '', objetivo: 'Destinatario', idObjetivo: '4' },
+            ]
+          }
         },
         err => {
           this.showFail('Error al cargar las consultas');
@@ -312,17 +344,17 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   addFile() {
     this.sigaServices.postSendContent("modelos_detalle_subirPlantilla", this.file).subscribe(
-      data => {   
-        let plantilla = new PlantillaDocumentoItem ();
+      data => {
+        let plantilla = new PlantillaDocumentoItem();
         plantilla.nombreDocumento = data.nombreDocumento;
         plantilla.idioma = 'ES';
         this.guardarDocumento(plantilla);
       },
       err => {
 
-        if  (err.error.error.code  ==  400) {
+        if (err.error.error.code == 400) {
           this.showFail('Formato no permitido o tamaño maximo superado');
-        }  else  {
+        } else {
           this.showFail('Error al subir el documento');
           console.log(err);
         }
@@ -334,8 +366,9 @@ export class PlantillaDocumentoComponent implements OnInit {
   guardarDatosGenerales() {
     sessionStorage.removeItem("crearNuevaPlantillaDocumento");
     this.sigaServices.post("modelos_detalle_guardarPlantillaDoc", this.body).subscribe(
-      data => {   
+      data => {
         this.showSuccess('Plantilla guardada');
+        sessionStorage.removeItem("crearNuevaPlantillaDocumento");
       },
       err => {
         this.showFail('Error al guardar la plantilla');
@@ -343,12 +376,12 @@ export class PlantillaDocumentoComponent implements OnInit {
       },
       () => {
       }
-    ); 
+    );
   }
 
-  guardarDocumento(plantilla){
+  guardarDocumento(plantilla) {
     this.sigaServices.post("modelos_detalle_insertarPlantilla", plantilla).subscribe(
-      data => {   
+      data => {
         this.showSuccess('Plantilla subida correctamente');
         plantilla.idPlantillaDocumento = JSON.parse(data["body"]).idPlantillaDocumento;
         this.body.plantillas.push(plantilla);
@@ -359,12 +392,12 @@ export class PlantillaDocumentoComponent implements OnInit {
       },
       () => {
       }
-    );    
+    );
   }
 
-  guardarConsultas(consulta){
+  guardarConsultas(consulta) {
     this.sigaServices.post("modelos_plantilla_consultas_guardar", consulta).subscribe(
-      data => {   
+      data => {
         this.showSuccess('Consulta guardada');
       },
       err => {
@@ -373,7 +406,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       },
       () => {
       }
-    ); 
+    );
   }
 
   // Mensajes
@@ -411,7 +444,7 @@ export class PlantillaDocumentoComponent implements OnInit {
             if (!dato.idConsulta) {
               dato.idConsulta = id;
               dato.finalidad = this.finalidad;
-            } else if (dato.idConsulta && dato.idConsulta == id) {
+            } else {
               dato.finalidad = this.finalidad;
             }
           }

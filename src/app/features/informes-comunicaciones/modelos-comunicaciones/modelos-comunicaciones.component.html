@@ -1,3 +1,5 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<app-dialog></app-dialog>
 <div class="modelos-comunicaciones-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -109,7 +111,6 @@
             icon="fa fa-check" iconPos="left" label="{{'general.message.rehabilitar' | translate}}"></button>
           <button *ngIf="!showHistorico" (click)="getHistorico('visible')" pButton type="button" icon="fa fa-history" iconPos="left"
             label="{{'general.message.mostrarHistorico' | translate}}"></button>
-          <button pButton type="button" icon="fa fa-redo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
           <button *ngIf="selectedDatos && selectedDatos != ''" (click)="onDuplicar()" pButton type="button" icon="fa fa-reply-all"
             iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
         </div>
@@ -118,8 +119,7 @@
     </div>
   </div>
 </div>
-<div *ngIf="progressSpinner || loaderEtiquetas" class="overlay-spinner">
+<div *ngIf="progressSpinner" class="overlay-spinner">
   <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
   <div class="loader"></div>
-  <!-- <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl> -->
-  <app-dialog></app-dialog>
+</div>

@@ -15,7 +15,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-center mb-1">
-            <label class="mr-auto title-ficha">Datos Generales</label>
+            <label class="mr-auto title-ficha">Informes</label>
           </div>
           <div class="d-flex justify-content-between">
             <label>Formato de salida:
@@ -137,13 +137,35 @@
     </div>
   </div>
   <div class="card">
-    <div class="card-header">
-      <div (click)="onShowConsultas()" class="d-flex justify-content-start mb-1 align-items-center">
-        <p class="title-module ">Consultas
-        </p>
-        <i class="fa ml-auto" [ngClass]="{'fa-angle-up':showConsultas,'fa-angle-down':!showConsultas}"></i>
+    <div class="card-header header-ficha" (click)="onShowConsultas()">
+      <div *ngIf="!showConsultas" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fas fa-file-alt icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-center mb-1">
+            <label class="mr-auto title-ficha">Consultas</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>Nº consultas:
+              <!-- <span>{{body.nombre}}</span> -->
+            </label>
+
+            <i *ngIf="!showConsultas" class="fa fa-angle-down float-right"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="showConsultas" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-file-alt icon-ficha"></i>
+        </div>
+        <label class="title-ficha">Consultas</label>
+        <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
+
     <div *ngIf="showConsultas" class="card-body p-0">
       <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
         [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}
@@ -169,6 +191,7 @@
               <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='consulta'" [(ngModel)]="dato[col.field]" [options]="consultasCombo"
                 class="select-form"></p-dropdown>
               <span *ngIf="col.field=='finalidad' && dato.finalidad != ''">{{dato[col.field]}}</span>
+              <span *ngIf="col.field=='objetivo'">{{dato[col.field]}}</span>
             </td>
           </tr>
         </ng-template>
