@@ -20,7 +20,7 @@
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{'censo.busquedaClientesAvanzada.literal.categoriaCV' | translate}} (*)</label>
                         <br>
-                        <p-dropdown class="select-form" [(ngModel)]="body.tipoCategoriaCurricular" [options]="categoriaCurricular" [filter]="true"
+                        <p-dropdown class="select-form" [(ngModel)]="body.tipoCategoriaCurricular" placeholder="{{'general.boton.seleccionar' | translate}}"  [options]="categoriaCurricular" [filter]="true"
                             filterBy="label" (onChange)="onChangeTipoCategoriaCurricular($event)"></p-dropdown>
                     </div>
 

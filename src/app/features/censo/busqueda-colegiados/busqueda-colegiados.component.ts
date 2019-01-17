@@ -665,4 +665,12 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       )
     });
   }
+
+  isDisabledCombos() {
+    if (this.body.tipoCV != "" && this.body.tipoCV != null) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 }

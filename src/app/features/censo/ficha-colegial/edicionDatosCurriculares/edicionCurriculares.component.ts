@@ -165,7 +165,8 @@ export class EdicionCurricularesComponent implements OnInit {
     this.booleanToCertificado();
     this.activateGuardar();
     if (this.nuevo == false) {
-      this.changeCategoria();
+      this.getComboSubtipoCurricular(this.body.idTipoCv);
+      this.getComboTipoCurricular(this.body.idTipoCv);
     }
   }
   abrirFicha() {
@@ -527,6 +528,47 @@ export class EdicionCurricularesComponent implements OnInit {
     }
   }
 
+  onChangeCategoriaCurricular(event) {
+    if (event) {
+      this.getComboSubtipoCurricular(event.value);
+      this.getComboTipoCurricular(event.value);
+    }
+  }
+
+  //TipoCurricular
+  getComboTipoCurricular(idTipoCV) {
+    this.sigaServices
+      .getParam(
+        "tipoCurricular_getCurricularTypeCombo",
+        "?idTipoCV=" + idTipoCV
+      )
+      .subscribe(
+        n => {
+          this.tipoCurricularCombo = n.combooItems;
+          this.arregloTildesCombo(this.tipoCurricularCombo);
+        },
+        error => {},
+        () => {}
+      );
+  }
+
+  //SubtipoCurricular
+  getComboSubtipoCurricular(idTipoCV) {
+    this.sigaServices
+      .getParam(
+        "subtipoCurricular_getCurricularSubtypeCombo",
+        "?idTipoCV=" + idTipoCV
+      )
+      .subscribe(
+        n => {
+          this.subtipoCurricularCombo = n.combooItems;
+          this.arregloTildesCombo(this.subtipoCurricularCombo);
+        },
+        error => {},
+        () => {}
+      );
+  }
+
   changeCategoria() {
     this.tipoCurricular.idTipoCV = this.body.idTipoCv;
     this.subtipoCurricular.idTipoCV = this.body.idTipoCv;
@@ -569,6 +611,23 @@ export class EdicionCurricularesComponent implements OnInit {
       severity: "error",
       summary: "Error",
       detail: message
+    });
+  }
+
+  arregloTildesCombo(combo) {
+    combo.map(e => {
+      let accents =
+        "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+      let accentsOut =
+        "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+      let i;
+      let x;
+      for (i = 0; i < e.label.length; i++) {
+        if ((x = accents.indexOf(e.label[i])) != -1) {
+          e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+          return e.labelSinTilde;
+        }
+      }
     });
   }
 }
