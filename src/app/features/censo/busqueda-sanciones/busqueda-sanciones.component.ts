@@ -59,6 +59,8 @@ export class BusquedaSancionesComponent implements OnInit {
   body: BusquedaSancionesItem = new BusquedaSancionesItem();
   bodySearch: BusquedaSancionesObject = new BusquedaSancionesObject();
 
+  isLetrado: boolean = false;
+
   constructor(
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
@@ -110,6 +112,13 @@ export class BusquedaSancionesComponent implements OnInit {
       sessionStorage.removeItem("SancionInsertada");
     }
     console.log("array", this.colegios_seleccionados);
+
+    if (
+      sessionStorage.getItem("isLetrado") != null &&
+      sessionStorage.getItem("isLetrado") != undefined
+    ) {
+      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    }
   }
 
   getComboTipoSancion() {

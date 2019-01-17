@@ -107,7 +107,7 @@
             <div class="text-right main-button">
                 <button (click)="restore()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear'| translate}}"></button>
                 <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
-                <button (click)="newRecord()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button>
+                <button (click)="newRecord()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}" [disabled]="isLetrado" ></button>
             </div>
         </div>
     </div>
