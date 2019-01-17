@@ -98,9 +98,13 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.consulta = false;
 
       if (sessionStorage.getItem("nuevaIncorporacion")) {
+        let solicitudrecibida =JSON.parse(
+          sessionStorage.getItem("nuevaIncorporacion"));
+
         this.solicitudEditar = JSON.parse(
           sessionStorage.getItem("nuevaIncorporacion")
         );
+        
       }
       this.estadoSolicitudSelected = "20";
       this.vieneDeBusqueda = true;

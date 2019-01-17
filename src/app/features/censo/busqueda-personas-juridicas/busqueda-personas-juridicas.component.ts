@@ -82,6 +82,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   ngOnInit() {
     this.checkAcceso(); //coger tipos
     sessionStorage.removeItem("notario");
+    sessionStorage.removeItem("busquedaSociedades");
     sessionStorage.removeItem("crearnuevo");
     if (sessionStorage.getItem("busqueda") != null) {
       this.body = JSON.parse(sessionStorage.getItem("busqueda"));
@@ -412,7 +413,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   obtenerNombreIntegrantes(dato) {
-      return dato.nombresIntegrantes;
+    return dato.nombresIntegrantes;
   }
 
   paginate(event) {
@@ -550,6 +551,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         sessionStorage.setItem("historicoSociedad", "true");
       }
       sessionStorage.setItem("busqueda", JSON.stringify(this.body));
+      sessionStorage.setItem("busquedaSociedades", "true");
       sessionStorage.setItem("usuarioBody", JSON.stringify(id));
       sessionStorage.setItem(
         "privilegios",
