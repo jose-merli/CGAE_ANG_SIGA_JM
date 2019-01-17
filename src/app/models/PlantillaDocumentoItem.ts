@@ -1,6 +1,6 @@
 export class PlantillaDocumentoItem {
   idPlantillaDocumento: String;
-  nombre: String;
+  nombreDocumento: String;
   idioma: String;
   ruta: String;
   constructor() { }

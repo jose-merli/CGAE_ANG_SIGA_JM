@@ -223,7 +223,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.modeloItem = JSON.parse(sessionStorage.getItem("modelosSearch"));
-
+      this.body.idModeloComunicacion = this.modeloItem.idModeloComunicacion;
       this.body.idClaseComunicacion = this.modeloItem.idClaseComunicacion;
       this.body.idInstitucion = this.modeloItem.idInstitucion;
       this.getResultados()
@@ -302,7 +302,7 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.sigaServices.postSendContent("modelos_detalle_subirPlantilla", this.file).subscribe(
       data => {   
         let plantilla = new PlantillaDocumentoItem ();
-        plantilla.nombre = data.nombreDocumento;
+        plantilla.nombreDocumento = data.nombreDocumento;
         plantilla.idioma = 'ES';
         this.guardarDocumento(plantilla);
       },
@@ -321,13 +321,24 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
   guardarDatosGenerales() {
     sessionStorage.removeItem("crearNuevaPlantillaDocumento");
+    this.sigaServices.post("modelos_detalle_guardarPlantillaDoc", this.body).subscribe(
+      data => {   
+        this.showSuccess('Plantilla guardada');
+      },
+      err => {
+        this.showFail('Error al guardar la plantilla');
+        console.log(err);
+      },
+      () => {
+      }
+    ); 
   }
 
   guardarDocumento(plantilla){
     this.sigaServices.post("modelos_detalle_insertarPlantilla", plantilla).subscribe(
       data => {   
         this.showSuccess('Plantilla subida correctamente');
-        plantilla.idPlantillaDocumento = data.idPlantillaDocumento
+        plantilla.idPlantillaDocumento = JSON.parse(data["body"]).idPlantillaDocumento;
         this.body.plantillas.push(plantilla);
       },
       err => {
@@ -337,6 +348,20 @@ export class PlantillaDocumentoComponent implements OnInit {
       () => {
       }
     );    
+  }
+
+  guardarConsultas(consulta){
+    this.sigaServices.post("modelos_plantilla_consultas_guardar", consulta).subscribe(
+      data => {   
+        this.showSuccess('Consulta guardada');
+      },
+      err => {
+        this.showFail('Error al guardar la consulta');
+        console.log(err);
+      },
+      () => {
+      }
+    ); 
   }
 
   // Mensajes

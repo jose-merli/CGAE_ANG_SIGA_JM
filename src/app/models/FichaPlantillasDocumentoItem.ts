@@ -5,8 +5,8 @@ export class FichaPlantillasDocument {
   idModeloComunicacion: String;
   idPlantillaDocumento: String;
   idIdioma: String;
-  idFormato: String;
-  nombreFichero: String;
+  formatoSalida: String;
+  ficheroSalida: String;
   idSufijo: String[];
   idConsulta: String;
   idFinalidad: String;

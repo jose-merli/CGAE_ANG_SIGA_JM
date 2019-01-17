@@ -47,11 +47,11 @@
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>Formato de Salida</label>
-          <p-dropdown [options]="formatos" [(ngModel)]="body.idFormato" class="select-form"></p-dropdown>
+          <p-dropdown [options]="formatos" [(ngModel)]="body.formatoSalida" class="select-form"></p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>Nombre del fichero generado</label>
-          <input type="text" class="form-control" [(ngModel)]="body.nombreFichero" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.ficheroSalida" pInputText>
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>Sufijo del fichero generado</label>
@@ -88,7 +88,7 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td *ngFor="let col of columns" pEditableColumn>
               <p-fileUpload *ngIf="col.field=='plantilla'" #fubauto chooseLabel="" class="edit my-0 mx-auto main-button" mode="basic" name="file"
-                auto="true" accept=".xls,.xlsx,.doc,.docx" (change)="uploadFile($event)" auto="true">
+                auto="true" accept=".xls,.xlsx,.doc,.docx" (onSelect)="uploadFile($event)" auto="true">
               </p-fileUpload>
               <p-dropdown *ngIf="col.field=='idioma'" class="select-form" [options]="idiomas" [(ngModel)]="body.idIdioma" [filter]="true"
                 (ngModelChange)="onChangeIdioma()" filterBy="label"></p-dropdown>
