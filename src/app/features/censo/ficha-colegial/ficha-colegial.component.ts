@@ -77,7 +77,7 @@ export class FichaColegialComponent implements OnInit {
   isLetrado: boolean;
   permisos: boolean = true;
   displayAuditoria: boolean = false;
-
+  publicarDatosContacto: boolean;
   idPersona: any;
   openFicha: boolean = false;
   es: any = esCalendar;
@@ -342,6 +342,7 @@ export class FichaColegialComponent implements OnInit {
       }
 
       this.generalBody.colegiado = this.esColegiado;
+      this.checkGeneralBody.colegiado = this.esColegiado;
 
 
       // this.checkAcceso();
@@ -1355,6 +1356,11 @@ export class FichaColegialComponent implements OnInit {
     } else {
       this.generalBody.publicidad = "0";
     }
+    if (this.publicarDatosContacto == true) {
+      this.generalBody.noAparecerRedAbogacia = "1";
+    } else {
+      this.generalBody.noAparecerRedAbogacia = "0";
+    }
   }
 
   stringAComisiones() {
@@ -1372,6 +1378,11 @@ export class FichaColegialComponent implements OnInit {
       this.guiaJudicial = true;
     } else {
       this.guiaJudicial = false;
+    }
+    if (this.generalBody.noAparecerRedAbogacia == "1"){
+      this.publicarDatosContacto = true;
+    }else{
+      this.publicarDatosContacto = false;
     }
   }
 

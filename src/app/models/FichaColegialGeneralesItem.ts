@@ -29,7 +29,7 @@ export class FichaColegialGeneralesItem {
   motivo: String;
   asientoContable: String;
   partidoJudicial: any;
-  publicarDatosContacto: boolean;
+  noAparecerRedAbogacia: String;
   comisiones: String;
   grupos: any[];
   etiquetas: any[];
