@@ -440,6 +440,7 @@
                 [disabled]="!autocompletar || disabledAction"
                 [style]="{ width: '100%' }"
                 [inputStyle]="{ width: '100%' }"
+                (click)="disabledAutocomplete()"
               >
                 <ng-template
                   let-etiquetasPersonaJuridicaSelecionados

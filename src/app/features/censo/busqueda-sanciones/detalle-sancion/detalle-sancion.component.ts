@@ -202,6 +202,7 @@ export class DetalleSancionComponent implements OnInit {
               element.value
             ) {
               this.colegios.push(element);
+              this.body.idColegio = element.value;
             }
           });
         }

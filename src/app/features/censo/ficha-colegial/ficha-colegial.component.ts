@@ -369,7 +369,7 @@ export class FichaColegialComponent implements OnInit {
       }
 
       this.generalBody.colegiado = this.esColegiado;
-      this.checkGeneralBody.colegiado = this.esColegiado;
+      this.checkGeneralBody.colegiado = this.esColegiado; 
 
       // this.checkAcceso();
       this.onInitGenerales();
@@ -1067,9 +1067,11 @@ export class FichaColegialComponent implements OnInit {
       this.createItems.push(newItem);
       this.activacionGuardarGenerales();
 
-      this.updateItems.set(newItem.idGrupo, newItem);
+      this.updateItems.set(newItem.label, newItem);
 
-      // this.etiquetasPersonaJuridicaSelecionados.push(newItem);
+      if(this.isNotContainsEtiq(newItem)){
+        this.etiquetasPersonaJuridicaSelecionados.push(newItem);
+      }
       this.autoComplete.multiInputEL.nativeElement.value = null;
     } else {
       let oldItem = new ComboEtiquetasItem();
@@ -1197,11 +1199,14 @@ export class FichaColegialComponent implements OnInit {
         this.etiquetasPersonaJuridicaSelecionados.forEach(
           (valorSeleccionados: any, index: number) => {
             if (
-              valorSeleccionados.idGrupo == valorMap.idGrupo ||
-              valorSeleccionados.value == valorMap.idGrupo
+              valorSeleccionados.idGrupo == valorMap.idGrupo &&
+              valorSeleccionados.label == valorMap.label
             ) {
               finalUpdateItems.push(valorMap);
-            }
+            }else if(valorSeleccionados.value == valorMap.idGrupo &&
+              valorSeleccionados.label == valorMap.label){
+                finalUpdateItems.push(valorMap);
+              }
           }
         );
       });
@@ -1399,7 +1404,7 @@ export class FichaColegialComponent implements OnInit {
     }
     if (this.publicarDatosContacto == true) {
       this.generalBody.noAparecerRedAbogacia = "1";
-    } else {
+    } else { 
       this.generalBody.noAparecerRedAbogacia = "0";
     }
   }
@@ -1648,10 +1653,14 @@ export class FichaColegialComponent implements OnInit {
       if (event) {
         this.autocompletar = true;
       } else {
-        this.autocompletar = true;
+        this.autocompletar = false;
       }
     }
   }
+
+  disabledAutocomplete(){
+    this.autocompletar = true;
+   }
 
   // ETIQUETAS
 
@@ -1799,6 +1808,17 @@ export class FichaColegialComponent implements OnInit {
 
     return keepGoing;
   }
+
+isNotContainsEtiq(event): boolean {
+  var keepGoing = true;
+  this.etiquetasPersonaJuridicaSelecionados.forEach(element => {
+      if (element.label == event.label) {
+        keepGoing = false;
+    }
+  });
+
+  return keepGoing;
+}
 
   // Evento para detectar una etiqueta existente
   onSelect(event) {
@@ -3371,4 +3391,6 @@ export class FichaColegialComponent implements OnInit {
         }
       );
   }
+
+
 }
