@@ -58,6 +58,7 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
 
   estado: SelectItem[];
   selectedEstado: any;
+  isLetrado: boolean = false;
 
   @ViewChild("table")
   table;
@@ -86,7 +87,17 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
     if (sessionStorage.getItem("rowData") != null) {
       this.body = JSON.parse(sessionStorage.getItem("rowData"));
       console.log("BODY", this.body);
-      if (this.body.estado == "REALIZADA" || this.body.estado == "DENEGADA") {
+
+      if (
+        sessionStorage.getItem("isLetrado") != null &&
+        sessionStorage.getItem("isLetrado") != undefined
+      ) {
+        this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+      }
+      if (
+        (this.body.estado == "REALIZADA" || this.body.estado == "DENEGADA") &&
+        this.isLetrado
+      ) {
         this.disableButton = true;
       }
 

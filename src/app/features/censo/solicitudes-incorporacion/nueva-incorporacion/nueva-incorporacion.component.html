@@ -61,7 +61,7 @@
                         <div class="form-group col-lg-4 col-md-5">
                             <label>{{"censo.nuevaSolicitud.estado" | translate }}</label>
                             <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="estadoSolicitudSelected"
-                                [options]="estadosSolicitud" ></p-dropdown>
+                                [options]="estadosSolicitud" placeholder="{{'general.boton.seleccionar' | translate}}"  ></p-dropdown>
                         </div>
                         <div class="form-group col-lg-4 col-md-5">
                             <label>{{"censo.nuevaSolicitud.fechaEstado" | translate }} (*)</label>
@@ -127,17 +127,17 @@
             <div class="form-row">
                 <div class="form-group col-lg-3 col-md-4">
                     <label>{{"censo.nuevaSolicitud.solicitudDe" | translate}} (*)</label>
-                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="tipoSolicitudSelected" [options]="tiposSolicitud"
+                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="tipoSolicitudSelected" [options]="tiposSolicitud" placeholder="{{'general.boton.seleccionar' | translate}}"  
                         ></p-dropdown>
                 </div>
                 <div class="form-group col-lg-3 col-md-4">
                     <label>{{"censo.nuevaSolicitud.tipoColegiacion" | translate}} (*)</label>
-                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="tipoColegiacionSelected"
+                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="tipoColegiacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}"  
                         [options]="tipoColegiacion" ></p-dropdown>
                 </div>
                 <div class="form-group col-lg-3 col-md-4">
                     <label>{{"censo.nuevaSolicitud.modDocumentacion" | translate}} (*)</label>
-                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="modalidadDocumentacionSelected"
+                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="modalidadDocumentacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}"  
                         [options]="modalidadDocumentacion" ></p-dropdown>
                 </div>
                 <div class="form-group col-lg-3 col-md-4">
@@ -211,7 +211,7 @@
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
                         {{"censo.SolicitudIncorporacion.literal.tipoIdentificacion" | translate}} (*)</label>
-                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="tipoIdentificacionSelected"
+                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="tipoIdentificacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}"  
                         [options]="tipoIdentificacion"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
@@ -224,7 +224,7 @@
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
                         {{"censo.consultaDatosGenerales.literal.tratamiento" | translate}} (*)</label>
-                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="tratamientoSelected" [options]="tratamientos"
+                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="tratamientoSelected" [options]="tratamientos" placeholder="{{'general.boton.seleccionar' | translate}}"  
                     [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
@@ -246,13 +246,13 @@
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
                         {{"censo.busquedaClientesAvanzada.literal.sexo" | translate}}</label>
-                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="sexoSelected" [options]="comboSexo"
+                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="sexoSelected" [options]="comboSexo" placeholder="{{'general.boton.seleccionar' | translate}}"  
                         ></p-dropdown>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
                         {{"censo.consultaDatosGenerales.literal.estadoCivil" | translate}} (*)</label>
-                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="estadoCivilSelected" [options]="estadoCivil"></p-dropdown>
+                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="estadoCivilSelected" placeholder="{{'general.boton.seleccionar' | translate}}"   [options]="estadoCivil"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
@@ -323,7 +323,7 @@
                         {{"censo.datosDireccion.literal.pais2" | translate}} (*)
                     </label>
                     <p-dropdown [disabled]="consulta" placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]="paisSelected" [options]="paises"
-                         (onChange)="onChangePais($event)"></p-dropdown>
+                         placeholder="{{'general.boton.seleccionar' | translate}}"   (onChange)="onChangePais($event)"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
@@ -341,7 +341,8 @@
                     <label>
                         {{"censo.datosDireccion.literal.provincia" | translate}} (*)
                     </label>
-                    <p-dropdown  class="select-form" [(ngModel)]='provinciaSelected' [options]="provincias" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" disabled ></p-dropdown>
+                    <p-dropdown  class="select-form" [(ngModel)]='provinciaSelected' [options]="provincias" [filter]="true"  placeholder="{{'general.boton.seleccionar' | translate}}"  
+                    filterBy="label,labelSinTilde" filterMatchMode="contains" disabled ></p-dropdown>
                   
                     <!--<input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.nombreProvincia">-->
                 </div>
@@ -350,7 +351,7 @@
                         {{"censo.consultaDirecciones.literal.poblacion" | translate}}
                     </label>
                     <p-dropdown #poblacion [disabled]="consulta || deshabilitarDireccion()" (input)="buscarPoblacion($event)" class="select-form" [(ngModel)]="poblacionSelected"
-                        [options]="poblaciones" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [emptyFilterMessage]="resultadosPoblaciones"></p-dropdown>
+                       placeholder="{{'general.boton.seleccionar' | translate}}"   [options]="poblaciones" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [emptyFilterMessage]="resultadosPoblaciones"></p-dropdown>
 
                     <!-- <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.nombrePoblacion">-->
                 </div>
@@ -543,7 +544,7 @@
             pButton type="button " icon="fas fa-check" iconPos="left" label="Aprobar "></button>
         <button (click)="denegarSolicitud()" *ngIf="consulta && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30')"
             pButton type="button " icon="fas fa-times" iconPos="left" label="Denegar"></button>
-        <button (click)="SolicitarCertificado()" *ngIf="consulta" pButton type="button " icon="fas fa-certificate"
+        <button (click)="SolicitarCertificado()" *ngIf="consulta" disabled pButton type="button " icon="fas fa-certificate"
             iconPos="left" label="Solicitar certificado"></button>
     </div>
     <app-dialog></app-dialog>
