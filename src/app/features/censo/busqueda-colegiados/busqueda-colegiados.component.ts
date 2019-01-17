@@ -70,7 +70,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   comboProvincias: any[];
   comboPoblacion: any[];
   comboTiposDireccion: any[];
-  comboTipoCV:any [];
+  comboTipoCV: any[];
 
   textSelected: String = "{0} etiquetas seleccionadas";
   body: DatosColegiadosItem = new DatosColegiadosItem();
@@ -162,6 +162,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       }
 
       this.router.navigate(["/fichaColegial"]);
+    } else {
+      this.actualizaSeleccionados(this.selectedDatos);
     }
   }
 
@@ -420,7 +422,6 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       );
   }
 
-
   //Busca colegiados según los filtros
   isBuscar() {
     if (this.checkFilters()) {
@@ -664,5 +665,13 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         "cen.busqueda.error.busquedageneral"
       )
     });
+  }
+
+  isDisabledCombos() {
+    if (this.body.tipoCV != "" && this.body.tipoCV != null) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

@@ -123,14 +123,15 @@
                             [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeCategoriaCurricular($event)"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
-                        <label>Tipo Curricular</label>
+                        <label>{{"censo.tipoCurricular.descripcion.literal" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='body.subTipoCV1' [options]="comboTipoCV" placeholder="{{'general.boton.seleccionar' | translate}}"
-                        [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+                        [filter]="true" filterBy="label,labelSinTilde" emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}"
+                        [disabled]="isDisabledCombos()"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>Subtipo Curricula</label>
-                        <p-dropdown [filter]="true" filterMatchMode="contains" emptyFilterMessage="No hay resultados" styleClass="widthAll" class="select-form" 
-                        [options]="comboSubtipoCV" [placeholder]="textFilter" [(ngModel)]="body.subTipoCV2"></p-dropdown>
+                        <p-dropdown [filter]="true" filterMatchMode="contains" emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}"
+                         styleClass="widthAll" class="select-form" [options]="comboSubtipoCV" [placeholder]="textFilter" [(ngModel)]="body.subTipoCV2" [disabled]="isDisabledCombos()"></p-dropdown>
                     </div> 
                 </div>
             </div>

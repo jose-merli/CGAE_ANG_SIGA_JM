@@ -72,7 +72,7 @@ export class FichaColegialComponent implements OnInit {
   certificadosBody: FichaColegialCertificadosObject = new FichaColegialCertificadosObject();
   bodySanciones: BusquedaSancionesItem = new BusquedaSancionesItem();
   bodySearchSanciones: BusquedaSancionesObject = new BusquedaSancionesObject();
-  bodySearchRegTel: DocushareObject= new DocushareObject();
+  bodySearchRegTel: DocushareObject = new DocushareObject();
   bodyRegTel: any[] = [];
   isLetrado: boolean;
   permisos: boolean = true;
@@ -88,17 +88,20 @@ export class FichaColegialComponent implements OnInit {
   activarGuardarColegiales: boolean = false;
   selectAll: boolean = false;
   selectAllDirecciones: boolean = false;
+  selectAllCurriculares: boolean = false;
   selectAllBancarios: boolean = false;
   selectMultiple: boolean = false;
   selectMultipleDirecciones: boolean = false;
   selectMultipleBancarios: boolean = false;
- 
+  selectMultipleCurriculares: boolean = false;
+
+
   buttonVisibleRegtelAtras: boolean = true;
   buttonVisibleRegtelCarpeta: boolean = true;
   buttonVisibleRegtelDescargar: boolean = true;
- 
+
   disabledNif: boolean = false;
- 
+
   // irTurnoOficio: any;
   // irExpedientes: any;
   msgs: Message[];
@@ -120,8 +123,9 @@ export class FichaColegialComponent implements OnInit {
   numSelected: number = 0;
   numSelectedDirecciones: number = 0;
   numSelectedBancarios: number = 0;
+  numSelectedCurriculares: number = 0;
   activacionEditar: boolean = true;
-  selectedItem: number = 10;
+
   camposDesactivados: boolean = false;
   datos: any[] = [];
   datosCurriculares: any[] = [];
@@ -167,7 +171,7 @@ export class FichaColegialComponent implements OnInit {
   partidoJudicialObject: DatosDireccionesObject = new DatosDireccionesObject();
   partidoJudicialItem: DatosDireccionesItem = new DatosDireccionesItem();
   displayServicios: boolean = false;
-  atrasRegTel: String="";
+  atrasRegTel: String = "";
   fechaHoy: Date = new Date();
   // etiquetas
   showGuardar: boolean = false;
@@ -197,14 +201,37 @@ export class FichaColegialComponent implements OnInit {
   createItems: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   persistenciaColeg: DatosColegiadosItem = undefined;
   persistenciaNoCol: NoColegiadoItem = undefined;
-  messageNoContentRegTel:String = "";
-  messageRegtel:String;
-  @ViewChild("table")
-  table: DataTable;
-  selectedDatos;
+  messageNoContentRegTel: String = "";
+  messageRegtel: String;
+  
+  @ViewChild("tableCertificados")
+  tableCertificados: DataTable;
+  @ViewChild("tableSanciones")
+  tableSanciones: DataTable;
+  @ViewChild("tableSociedades")
+  tableSociedades: DataTable;
+  @ViewChild("tableCurriculares")
+  tableCurriculares: DataTable;
+  @ViewChild("tableDirecciones")
+  tableDirecciones: DataTable;
+  @ViewChild("tableBancarios")
+  tableBancarios: DataTable;
+
+  selectedDatosCertificados;
+  selectedDatosSociedades;
+  selectedDatosCurriculares;
   selectedDatosDirecciones;
   selectedDatosBancarios;
   selectedDatosSanciones;
+  selectedDatos;
+
+  selectedItemCertificados: number = 10;
+  selectedItemSanciones: number = 10;
+  selectedItemSociedades: number = 10;
+  selectedItemCurriculares: number = 10;
+  selectedItemDirecciones: number = 10;
+  selectedItemBancarios: number = 10;
+
   selectedDatosRegtel: DocushareItem;
   desactivarVolver: Boolean;
 
@@ -296,10 +323,10 @@ export class FichaColegialComponent implements OnInit {
       this.disabledNif = false;
     }
 
-    if(sessionStorage.getItem("disabledAction") == "true"){
+    if (sessionStorage.getItem("disabledAction") == "true") {
       // Es baja colegial
       this.disabledAction = true;
-    }else{
+    } else {
       this.disabledAction = false;
     }
 
@@ -311,14 +338,14 @@ export class FichaColegialComponent implements OnInit {
         sessionStorage.getItem("filtrosBusquedaColegiados")
       );
       //sessionStorage.removeItem("filtrosBusquedaColegiados");
-    }else if (sessionStorage.getItem("filtrosBusquedaNoColegiados")) {
+    } else if (sessionStorage.getItem("filtrosBusquedaNoColegiados")) {
       this.persistenciaNoCol = new NoColegiadoItem();
       this.persistenciaNoCol = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaNoColegiados")
       );
 
       // sessionStorage.removeItem("filtrosBusquedaNoColegiados");
-    }else{
+    } else {
       //  LLEGA DESDE PUNTO DE MENÚ
       this.emptyLoadFichaColegial = JSON.parse(sessionStorage.getItem("emptyLoadFichaColegial"));
       if(this.emptyLoadFichaColegial){
@@ -347,8 +374,7 @@ export class FichaColegialComponent implements OnInit {
       }
 
       this.generalBody.colegiado = this.esColegiado;
-      this.checkGeneralBody.colegiado = this.esColegiado;
-
+      this.checkGeneralBody.colegiado = this.esColegiado; 
 
       // this.checkAcceso();
       this.onInitGenerales();
@@ -358,7 +384,6 @@ export class FichaColegialComponent implements OnInit {
       this.onInitOtrasColegiaciones();
       this.searchSanciones();
       this.searchCertificados();
-      
     } else {
       if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
         this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
@@ -382,7 +407,7 @@ export class FichaColegialComponent implements OnInit {
       this.onInitCurriculares();
       this.onInitDirecciones();
       this.onInitDatosBancarios();
-       this.onInitRegTel();
+      this.onInitRegTel();
     }
 
     // this.onInitSociedades();
@@ -460,7 +485,7 @@ export class FichaColegialComponent implements OnInit {
     ];
     this.colsRegtel = [
       {
-       field: "title",
+        field: "title",
         header: "censo.resultadosSolicitudesModificacion.literal.Nombre"
       },
       {
@@ -935,12 +960,15 @@ export class FichaColegialComponent implements OnInit {
     this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
       n => {
         this.tipoIdentificacion = n.combooItems;
-         // 1: {label: "CIF", value: "20"}
-          // 2: {label: "NIE", value: "40"}
-          // 3: {label: "NIF", value: "10"}
-          // 4: {label: "Otro", value: "50"}
-          // 5: {label: "Pasaporte", value: "30"}
-          this.tipoIdentificacion[5].label = this.tipoIdentificacion[5].label +" / "+ this.tipoIdentificacion[4].label;
+        // 1: {label: "CIF", value: "20"}
+        // 2: {label: "NIE", value: "40"}
+        // 3: {label: "NIF", value: "10"}
+        // 4: {label: "Otro", value: "50"}
+        // 5: {label: "Pasaporte", value: "30"}
+        this.tipoIdentificacion[5].label =
+          this.tipoIdentificacion[5].label +
+          " / " +
+          this.tipoIdentificacion[4].label;
       },
       err => {
         console.log(err);
@@ -1043,9 +1071,11 @@ export class FichaColegialComponent implements OnInit {
       this.createItems.push(newItem);
       this.activacionGuardarGenerales();
 
-      this.updateItems.set(newItem.idGrupo, newItem);
+      this.updateItems.set(newItem.label, newItem);
 
-      // this.etiquetasPersonaJuridicaSelecionados.push(newItem);
+      if(this.isNotContainsEtiq(newItem)){
+        this.etiquetasPersonaJuridicaSelecionados.push(newItem);
+      }
       this.autoComplete.multiInputEL.nativeElement.value = null;
     } else {
       let oldItem = new ComboEtiquetasItem();
@@ -1067,7 +1097,6 @@ export class FichaColegialComponent implements OnInit {
     // Dehabilitamos el guardar para los próximos
     this.isTrue = false;
     this.activacionGuardarGenerales();
-
   }
 
   validateFinalDate(): boolean {
@@ -1174,11 +1203,14 @@ export class FichaColegialComponent implements OnInit {
         this.etiquetasPersonaJuridicaSelecionados.forEach(
           (valorSeleccionados: any, index: number) => {
             if (
-              valorSeleccionados.idGrupo == valorMap.idGrupo ||
-              valorSeleccionados.value == valorMap.idGrupo
+              valorSeleccionados.idGrupo == valorMap.idGrupo &&
+              valorSeleccionados.label == valorMap.label
             ) {
               finalUpdateItems.push(valorMap);
-            }
+            }else if(valorSeleccionados.value == valorMap.idGrupo &&
+              valorSeleccionados.label == valorMap.label){
+                finalUpdateItems.push(valorMap);
+              }
           }
         );
       });
@@ -1282,7 +1314,7 @@ export class FichaColegialComponent implements OnInit {
             this.progressSpinner = false;
             this.showSuccess();
             this.activacionEditar = true;
-
+            
           },
           error => {
             console.log(error);
@@ -1294,6 +1326,12 @@ export class FichaColegialComponent implements OnInit {
             } else {
               this.showFail();
             }
+          },
+          ()=>{
+            this.bodyDirecciones = new DatosDireccionesItem();
+            this.bodyDatosBancarios = new DatosBancariosItem();
+            sessionStorage.setItem("esNuevoNoColegiado", "false");
+            sessionStorage.setItem("personaBody", JSON.stringify(this.generalBody)); 
           }
         );
     }
@@ -1370,7 +1408,7 @@ export class FichaColegialComponent implements OnInit {
     }
     if (this.publicarDatosContacto == true) {
       this.generalBody.noAparecerRedAbogacia = "1";
-    } else {
+    } else { 
       this.generalBody.noAparecerRedAbogacia = "0";
     }
   }
@@ -1481,17 +1519,19 @@ export class FichaColegialComponent implements OnInit {
     // console.log(new Date(event));
     var hoy = new Date();
 
-    if(this.fechaNacimiento instanceof Date){
+    if (this.fechaNacimiento instanceof Date) {
       var edad = hoy.getFullYear() - this.fechaNacimiento.getFullYear();
       var m = hoy.getMonth() - this.fechaNacimiento.getMonth();
 
-      if (m < 0 || (m === 0 && hoy.getDate() < this.fechaNacimiento.getDate())) {
+      if (
+        m < 0 ||
+        (m === 0 && hoy.getDate() < this.fechaNacimiento.getDate())
+      ) {
         edad--;
       }
 
       this.edadCalculada = edad;
-
-    }else{
+    } else {
       this.edadCalculada = "";
     }
   }
@@ -1617,10 +1657,14 @@ export class FichaColegialComponent implements OnInit {
       if (event) {
         this.autocompletar = true;
       } else {
-        this.autocompletar = true;
+        this.autocompletar = false;
       }
     }
   }
+
+  disabledAutocomplete(){
+    this.autocompletar = true;
+   }
 
   // ETIQUETAS
 
@@ -1702,68 +1746,78 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
-  
-compruebaDNI(){
-      // modo creacion
-      this.activacionGuardarGenerales();
+  compruebaDNI() {
+    // modo creacion
+    this.activacionGuardarGenerales();
 
-        if (this.generalBody.nif.length > 8 ) {
-          if(this.isValidDNI(this.generalBody.nif)){
-            this.generalBody.idTipoIdentificacion = "10";
-            return true;
-          }else if(this.isValidPassport(this.generalBody.nif)){
-            this.generalBody.idTipoIdentificacion = "30";
-            return true;
-          }else if(this.isValidNIE(this.generalBody.nif)){
-            this.generalBody.idTipoIdentificacion = "40";
-            return true;
-          }else if(this.isValidCIF(this.generalBody.nif)){
-            this.generalBody.idTipoIdentificacion = "20";
-            return true;
-          }else{
-            this.generalBody.idTipoIdentificacion = "30";
-            return false;
-          }
-
-          // 1: {label: "CIF", value: "20"}
-          // 2: {label: "NIE", value: "40"}
-          // 3: {label: "NIF", value: "10"}
-          // 4: {label: "Otro", value: "50"}
-          // 5: {label: "Pasaporte", value: "30"}
-      }else{
+    if (this.generalBody.nif.length > 8) {
+      if (this.isValidDNI(this.generalBody.nif)) {
+        this.generalBody.idTipoIdentificacion = "10";
+        return true;
+      } else if (this.isValidPassport(this.generalBody.nif)) {
         this.generalBody.idTipoIdentificacion = "30";
-          return false;
+        return true;
+      } else if (this.isValidNIE(this.generalBody.nif)) {
+        this.generalBody.idTipoIdentificacion = "40";
+        return true;
+      } else if (this.isValidCIF(this.generalBody.nif)) {
+        this.generalBody.idTipoIdentificacion = "20";
+        return true;
+      } else {
+        this.generalBody.idTipoIdentificacion = "30";
+        return false;
       }
-}
-isValidPassport(dni: String): boolean {
-  return (
-    dni && typeof dni === "string" && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni)
-  );
-}
 
-isValidNIE(nie: String): boolean {
-  return (
-    nie &&
-    typeof nie === "string" &&
-    /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie)
-  );
-}
+      // 1: {label: "CIF", value: "20"}
+      // 2: {label: "NIE", value: "40"}
+      // 3: {label: "NIF", value: "10"}
+      // 4: {label: "Otro", value: "50"}
+      // 5: {label: "Pasaporte", value: "30"}
+    } else {
+      this.generalBody.idTipoIdentificacion = "30";
+      return false;
+    }
+  }
+  isValidPassport(dni: String): boolean {
+    return (
+      dni && typeof dni === "string" && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni)
+    );
+  }
 
-isValidCIF(cif: String): boolean {
-  return (
-    cif &&
-    typeof cif === "string" &&
-    /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif)
-  );
-}
+  isValidNIE(nie: String): boolean {
+    return (
+      nie &&
+      typeof nie === "string" &&
+      /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie)
+    );
+  }
 
-isNotContains(event): boolean {
+  isValidCIF(cif: String): boolean {
+    return (
+      cif &&
+      typeof cif === "string" &&
+      /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif)
+    );
+  }
+
+  isNotContains(event): boolean {
+    var keepGoing = true;
+    this.updateItems.forEach(element => {
+      if (keepGoing) {
+        if (element.idGrupo == event.value) {
+          keepGoing = false;
+        }
+      }
+    });
+
+    return keepGoing;
+  }
+
+isNotContainsEtiq(event): boolean {
   var keepGoing = true;
-  this.updateItems.forEach(element => {
-    if (keepGoing) {
-      if (element.idGrupo == event.value) {
+  this.etiquetasPersonaJuridicaSelecionados.forEach(element => {
+      if (element.label == event.label) {
         keepGoing = false;
-      }
     }
   });
 
@@ -1778,8 +1832,8 @@ isNotContains(event): boolean {
         this.checked = true;
         this.dialog.closable = false;
 
-         // Variable controladora
-         this.isCrear = false;
+        // Variable controladora
+        this.isCrear = false;
 
         // Variable controlador del deshabilitar fechas
         this.historico = false;
@@ -1844,7 +1898,7 @@ isNotContains(event): boolean {
     this.activacionGuardarGenerales();
     if (event) {
       this.checked = true;
-      // this.dialog.closable = true;
+      this.dialog.closable = true;
 
       this.item = new ComboEtiquetasItem();
       this.item.fechaInicio = value.fechaInicio;
@@ -1993,8 +2047,14 @@ isNotContains(event): boolean {
   activacionGuardarColegiales() {
     this.inscritoAItem();
     if (
-      (JSON.stringify(this.checkColegialesBody) !=
-      JSON.stringify(this.colegialesBody)) && this.colegialesBody.numColegiado != "" && this.colegialesBody.idTiposSeguro != "" && this.colegialesBody.residenteInscrito != "" && this.colegialesBody.incorporacion != null && this.colegialesBody.fechapresentacion != null && this.colegialesBody.fechaJura != null
+      JSON.stringify(this.checkColegialesBody) !=
+        JSON.stringify(this.colegialesBody) &&
+      this.colegialesBody.numColegiado != "" &&
+      this.colegialesBody.idTiposSeguro != "" &&
+      this.colegialesBody.residenteInscrito != "" &&
+      this.colegialesBody.incorporacion != null &&
+      this.colegialesBody.fechapresentacion != null &&
+      this.colegialesBody.fechaJura != null
     ) {
       this.activarGuardarColegiales = true;
     } else {
@@ -2262,6 +2322,43 @@ isNotContains(event): boolean {
     sessionStorage.setItem("usuarioBody", JSON.stringify(datos));
     this.router.navigate(["/fichaPersonaJuridica"]);
   }
+
+  onChangeRowsPerPagesCertificados(event) {
+    this.selectedItemCertificados = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tableCertificados.reset();
+  }
+
+  onChangeRowsPerPagesSanciones(event) {
+    this.selectedItemSanciones = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tableSanciones.reset();
+  }
+
+  onChangeRowsPerPagesSociedades(event) {
+    this.selectedItemSociedades = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tableSociedades.reset();
+  }
+
+  onChangeRowsPerPagesCurriculares(event) {
+    this.selectedItemCurriculares = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tableCurriculares.reset();
+  }
+
+  onChangeRowsPerPagesDirecciones(event) {
+    this.selectedItemDirecciones = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tableDirecciones.reset();
+  }
+
+  onChangeRowsPerPagesBancarios(event) {
+    this.selectedItemBancarios = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tableBancarios.reset();
+  }
+
   // FIN SOCIEDADES
   //
   //
@@ -2291,8 +2388,8 @@ isNotContains(event): boolean {
   changeSort(event) {
     this.sortF = "fechaHasta";
     this.sortO = 1;
-    if (this.table != undefined) {
-      this.table.sortField = this.sortF;
+    if (this.tableCurriculares != undefined) {
+      this.tableCurriculares.sortField = this.sortF;
       //this.table.sortOrder = this.sortO;
     }
 
@@ -2350,7 +2447,7 @@ isNotContains(event): boolean {
   }
 
   redireccionarCurriculares(dato) {
-    if (dato && dato.length < 2 && !this.selectMultiple) {
+    if (dato && dato.length < 2 && !this.selectMultipleCurriculares) {
       // enviarDatos = dato[0];
       sessionStorage.setItem("curriculo", JSON.stringify(dato));
 
@@ -2433,6 +2530,19 @@ isNotContains(event): boolean {
     }
   }
 
+
+  isSelectMultipleCurriculares() {
+    this.selectMultipleCurriculares = !this.selectMultipleCurriculares;
+    if (!this.selectMultipleCurriculares) {
+      this.numSelectedCurriculares = 0;
+      this.selectedDatosCurriculares = [];
+    } else {
+      this.selectAllCurriculares = false;
+      this.selectedDatosCurriculares = [];
+      this.numSelectedCurriculares = 0;
+    }
+  }
+
   cargarDatosCV() {
     this.historicoCV = false;
 
@@ -2494,7 +2604,7 @@ isNotContains(event): boolean {
           this.progressSpinner = false;
           this.datosDireccionesHist = JSON.parse(data["body"]);
           this.datosDirecciones = this.datosDireccionesHist.datosDireccionesItem;
-          this.table.paginator = true;
+          this.tableDirecciones.paginator = true;
         },
         err => {
           console.log(err);
@@ -2605,7 +2715,7 @@ isNotContains(event): boolean {
     sessionStorage.setItem("fichaColegial", "true");
     sessionStorage.setItem(
       "usuarioBody",
-      JSON.stringify(this.bodyDirecciones.idPersona)
+      JSON.stringify(this.generalBody.idPersona)
     );
     sessionStorage.setItem("editarDireccion", "false");
     this.router.navigate(["/consultarDatosDirecciones"]);
@@ -2619,24 +2729,20 @@ isNotContains(event): boolean {
         }
         var enviarDatos = null;
         if (dato && dato.length > 0) {
+          enviarDatos = dato[0];
+          sessionStorage.setItem("idDireccion", enviarDatos.idDireccion);
+          sessionStorage.setItem("direccion", JSON.stringify(enviarDatos));
+          sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
+          sessionStorage.setItem("fichaColegial", "true");
+          sessionStorage.removeItem("editarDireccion");
 
-          
-            enviarDatos = dato[0];
-            sessionStorage.setItem("idDireccion", enviarDatos.idDireccion);
-            sessionStorage.setItem("direccion", JSON.stringify(enviarDatos));
-            sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
-            sessionStorage.setItem("fichaColegial", "true");
-            sessionStorage.removeItem("editarDireccion");
-            
-            sessionStorage.setItem("editarDireccion", "true");
-            
-            sessionStorage.setItem("usuarioBody", JSON.stringify(this.idPersona));
-            sessionStorage.setItem(
-              "esColegiado",
-              sessionStorage.getItem("esColegiado")
-            );
-          
-          
+          sessionStorage.setItem("editarDireccion", "true");
+
+          sessionStorage.setItem("usuarioBody", JSON.stringify(this.idPersona));
+          sessionStorage.setItem(
+            "esColegiado",
+            sessionStorage.getItem("esColegiado")
+          );
         } else {
           sessionStorage.setItem("editar", "false");
         }
@@ -3048,36 +3154,41 @@ isNotContains(event): boolean {
     }
   }
 
-  onInitRegTel(){
-    this.progressSpinner=true;
-    this.messageNoContentRegTel= this.translateService.instant("aplicacion.cargando");
+  onInitRegTel() {
+    this.progressSpinner = true;
+    this.messageNoContentRegTel = this.translateService.instant(
+      "aplicacion.cargando"
+    );
     this.messageRegtel = this.messageNoContentRegTel;
-    if(this.esColegiado){
+    if (this.esColegiado) {
       this.sigaServices
-      .postPaginado(
-        "fichaColegialRegTel_searchListDoc",
-        "?numPagina=1",
-        this.idPersona
-      )
-      .subscribe(
-        data => {
-          this.bodySearchRegTel = JSON.parse(data["body"]);
-          this.bodyRegTel= this.bodySearchRegTel.docuShareObjectVO;
-          if(this.bodyRegTel.length!= 0){
-            this.messageRegtel = this.bodyRegTel.length + "";
-          }else{
-            this.messageRegtel = this.translateService.instant("general.message.no.registros");
+        .postPaginado(
+          "fichaColegialRegTel_searchListDoc",
+          "?numPagina=1",
+          this.idPersona
+        )
+        .subscribe(
+          data => {
+            this.bodySearchRegTel = JSON.parse(data["body"]);
+            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+            if (this.bodyRegTel.length != 0) {
+              this.messageRegtel = this.bodyRegTel.length + "";
+            } else {
+              this.messageRegtel = this.translateService.instant(
+                "general.message.no.registros"
+              );
+            }
+            this.progressSpinner = false;
+          },
+          err => {
+            this.messageRegtel = this.translateService.instant(
+              "general.message.no.registros"
+            );
+            this.progressSpinner = false;
           }
-          this.progressSpinner = false;
-        },
-        err => {
-          this.messageRegtel = this.translateService.instant("general.message.no.registros");
-          this.progressSpinner = false;
-        }
-      );
-    }else{
-       
-        this.sigaServices
+        );
+    } else {
+      this.sigaServices
         .postPaginado(
           "fichaColegialRegTel_searchListDocNoCol",
           "?numPagina=1",
@@ -3086,191 +3197,206 @@ isNotContains(event): boolean {
         .subscribe(
           data => {
             this.bodySearchRegTel = JSON.parse(data["body"]);
-            this.bodyRegTel= this.bodySearchRegTel.docuShareObjectVO;
+            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
             this.progressSpinner = false;
-            if(this.bodyRegTel.length!= 0){
+            if (this.bodyRegTel.length != 0) {
               this.messageRegtel = this.bodyRegTel.length + "";
-            }else{
-              this.messageRegtel = this.translateService.instant("general.message.no.registros");
+            } else {
+              this.messageRegtel = this.translateService.instant(
+                "general.message.no.registros"
+              );
             }
           },
           err => {
-            this.messageRegtel = this.translateService.instant("general.message.no.registros");
+            this.messageRegtel = this.translateService.instant(
+              "general.message.no.registros"
+            );
             this.progressSpinner = false;
           }
         );
-     
+    }
+  }
+  onRowSelectedRegTel(selectedDatosRegtel) {
+    this.selectedDatosRegtel = selectedDatosRegtel;
+    if (this.selectedDatosRegtel.tipo == "0") {
+      this.buttonVisibleRegtelCarpeta = false;
+      this.buttonVisibleRegtelDescargar = true;
+    } else {
+      this.buttonVisibleRegtelCarpeta = true;
+      this.buttonVisibleRegtelDescargar = false;
+    }
   }
 
-  }
-  onRowSelectedRegTel(selectedDatosRegtel){
-    this.selectedDatosRegtel = selectedDatosRegtel;
-    if(this.selectedDatosRegtel.tipo== "0"){
-      this.buttonVisibleRegtelCarpeta = false;
-      this.buttonVisibleRegtelDescargar =true;
-      
-    }else{
-      this.buttonVisibleRegtelCarpeta = true;
-      this.buttonVisibleRegtelDescargar =false;
-      
-    } 
-  }
-  
-  onRowDesselectedRegTel(){
+  onRowDesselectedRegTel() {
     this.buttonVisibleRegtelCarpeta = true;
     this.buttonVisibleRegtelDescargar = true;
   }
-  onClickAtrasRegtel(){
-    this.progressSpinner=true;
+  onClickAtrasRegtel() {
+    this.progressSpinner = true;
     this.selectedDatosRegtel.idPersona = this.idPersona;
-    this.selectedDatosRegtel.id= this.atrasRegTel;
-    if(this.esColegiado){
-    this.sigaServices
-    .postPaginado(
-      "fichaColegialRegTel_searchListDir",
-      "?numPagina=1",
-      this.selectedDatosRegtel
-    )
-    .subscribe(
-      data => {
-        
-        this.bodySearchRegTel = JSON.parse(data["body"]);
-        this.bodyRegTel= this.bodySearchRegTel.docuShareObjectVO;
-        this.atrasRegTel = this.bodyRegTel[0].id.substring(0, this.bodyRegTel[0].id.length - this.bodyRegTel[0].title.length);
-        if(this.atrasRegTel.length>1){
-          this.buttonVisibleRegtelAtras=true;
-        }
-        this.buttonVisibleRegtelCarpeta=true;
-        this.buttonVisibleRegtelDescargar=true;
-        if(this.bodyRegTel.length!= 0){
-          this.messageRegtel = this.bodyRegTel.length + "";
-        }else{
-          this.messageRegtel = this.translateService.instant("general.message.no.registros");
-        }
-        this.progressSpinner = false;
-      },
-      err => {
-        this.messageRegtel = this.translateService.instant("general.message.no.registros");
-        this.progressSpinner = false;
-      }
-    );
-   }else{
-    this.sigaServices
-    .postPaginado(
-      "fichaColegialRegTel_searchListDirNoCol",
-      "?numPagina=1",
-      this.selectedDatosRegtel
-    )
-    .subscribe(
-      data => {
-        
-        this.bodySearchRegTel = JSON.parse(data["body"]);
-        this.bodyRegTel= this.bodySearchRegTel.docuShareObjectVO;
-        this.atrasRegTel = this.bodyRegTel[0].id.substring(0, this.bodyRegTel[0].id.length - this.bodyRegTel[0].title.length);
-        if(this.atrasRegTel.length>1){
-          this.buttonVisibleRegtelAtras=true;
-        }
-        this.buttonVisibleRegtelCarpeta=true;
-        this.buttonVisibleRegtelDescargar=true;
-        this.progressSpinner = false;
-      },
-      err => {
-        this.progressSpinner = false;
-      }
-    );
-   }
+    this.selectedDatosRegtel.id = this.atrasRegTel;
+    if (this.esColegiado) {
+      this.sigaServices
+        .postPaginado(
+          "fichaColegialRegTel_searchListDir",
+          "?numPagina=1",
+          this.selectedDatosRegtel
+        )
+        .subscribe(
+          data => {
+            this.bodySearchRegTel = JSON.parse(data["body"]);
+            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+            this.atrasRegTel = this.bodyRegTel[0].id.substring(
+              0,
+              this.bodyRegTel[0].id.length - this.bodyRegTel[0].title.length
+            );
+            if (this.atrasRegTel.length > 1) {
+              this.buttonVisibleRegtelAtras = true;
+            }
+            this.buttonVisibleRegtelCarpeta = true;
+            this.buttonVisibleRegtelDescargar = true;
+            if (this.bodyRegTel.length != 0) {
+              this.messageRegtel = this.bodyRegTel.length + "";
+            } else {
+              this.messageRegtel = this.translateService.instant(
+                "general.message.no.registros"
+              );
+            }
+            this.progressSpinner = false;
+          },
+          err => {
+            this.messageRegtel = this.translateService.instant(
+              "general.message.no.registros"
+            );
+            this.progressSpinner = false;
+          }
+        );
+    } else {
+      this.sigaServices
+        .postPaginado(
+          "fichaColegialRegTel_searchListDirNoCol",
+          "?numPagina=1",
+          this.selectedDatosRegtel
+        )
+        .subscribe(
+          data => {
+            this.bodySearchRegTel = JSON.parse(data["body"]);
+            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+            this.atrasRegTel = this.bodyRegTel[0].id.substring(
+              0,
+              this.bodyRegTel[0].id.length - this.bodyRegTel[0].title.length
+            );
+            if (this.atrasRegTel.length > 1) {
+              this.buttonVisibleRegtelAtras = true;
+            }
+            this.buttonVisibleRegtelCarpeta = true;
+            this.buttonVisibleRegtelDescargar = true;
+            this.progressSpinner = false;
+          },
+          err => {
+            this.progressSpinner = false;
+          }
+        );
+    }
   }
 
-  onClickCarpetaRegTel(){
-    this.progressSpinner=true;
-    this.atrasRegTel = this.selectedDatosRegtel.id.substring(13
-      , this.selectedDatosRegtel.id.length - this.selectedDatosRegtel.title.length)
-    this.selectedDatosRegtel.idPersona = this.idPersona;
-    if(this.esColegiado){
-
-    
-    this.sigaServices
-    .postPaginado(
-      "fichaColegialRegTel_searchListDir",
-      "?numPagina=1",
-      this.selectedDatosRegtel
-    )
-    .subscribe(
-      data => {
-        this.bodySearchRegTel = JSON.parse(data["body"]);
-        this.bodyRegTel= this.bodySearchRegTel.docuShareObjectVO;
-        if(this.atrasRegTel.length>13){
-          this.buttonVisibleRegtelAtras=true;
-          
-        }else{
-          this.buttonVisibleRegtelAtras=false;
-        }
-        this.buttonVisibleRegtelCarpeta=true;
-        this.buttonVisibleRegtelDescargar=true;
-        this.progressSpinner = false;
-        if(this.bodyRegTel.length!= 0){
-          this.messageRegtel = this.bodyRegTel.length + "";
-        }else{
-          this.messageRegtel = this.translateService.instant("general.message.no.registros");
-        }
-      },
-      err => {
-        this.messageRegtel = this.translateService.instant("general.message.no.registros");
-        this.progressSpinner = false;
-      }
+  onClickCarpetaRegTel() {
+    this.progressSpinner = true;
+    this.atrasRegTel = this.selectedDatosRegtel.id.substring(
+      13,
+      this.selectedDatosRegtel.id.length - this.selectedDatosRegtel.title.length
     );
-  }else{
+    this.selectedDatosRegtel.idPersona = this.idPersona;
+    if (this.esColegiado) {
       this.sigaServices
-      .postPaginado(
-        "fichaColegialRegTel_searchListDirNoCol",
-        "?numPagina=1",
+        .postPaginado(
+          "fichaColegialRegTel_searchListDir",
+          "?numPagina=1",
+          this.selectedDatosRegtel
+        )
+        .subscribe(
+          data => {
+            this.bodySearchRegTel = JSON.parse(data["body"]);
+            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+            if (this.atrasRegTel.length > 13) {
+              this.buttonVisibleRegtelAtras = true;
+            } else {
+              this.buttonVisibleRegtelAtras = false;
+            }
+            this.buttonVisibleRegtelCarpeta = true;
+            this.buttonVisibleRegtelDescargar = true;
+            this.progressSpinner = false;
+            if (this.bodyRegTel.length != 0) {
+              this.messageRegtel = this.bodyRegTel.length + "";
+            } else {
+              this.messageRegtel = this.translateService.instant(
+                "general.message.no.registros"
+              );
+            }
+          },
+          err => {
+            this.messageRegtel = this.translateService.instant(
+              "general.message.no.registros"
+            );
+            this.progressSpinner = false;
+          }
+        );
+    } else {
+      this.sigaServices
+        .postPaginado(
+          "fichaColegialRegTel_searchListDirNoCol",
+          "?numPagina=1",
+          this.selectedDatosRegtel
+        )
+        .subscribe(
+          data => {
+            this.bodySearchRegTel = JSON.parse(data["body"]);
+            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+            if (this.atrasRegTel.length > 13) {
+              this.buttonVisibleRegtelAtras = true;
+            } else {
+              this.buttonVisibleRegtelAtras = false;
+            }
+            this.buttonVisibleRegtelCarpeta = true;
+            this.buttonVisibleRegtelDescargar = true;
+            this.progressSpinner = false;
+            if (this.bodyRegTel.length != 0) {
+              this.messageRegtel = this.bodyRegTel.length + "";
+            } else {
+              this.messageRegtel = this.translateService.instant(
+                "general.message.no.registros"
+              );
+            }
+          },
+          err => {
+            this.messageRegtel = this.translateService.instant(
+              "general.message.no.registros"
+            );
+            this.progressSpinner = false;
+          }
+        );
+    }
+  }
+  onClickDescargarRegTel() {
+    this.progressSpinner = true;
+    this.selectedDatosRegtel.idPersona = this.idPersona;
+    this.sigaServices
+      .postDownloadFiles(
+        "fichaColegialRegTel_downloadDoc",
+
         this.selectedDatosRegtel
       )
       .subscribe(
         data => {
-          this.bodySearchRegTel = JSON.parse(data["body"]);
-          this.bodyRegTel= this.bodySearchRegTel.docuShareObjectVO;
-          if(this.atrasRegTel.length>13){
-            this.buttonVisibleRegtelAtras=true;
-          }else{
-            this.buttonVisibleRegtelAtras=false;
-          }
-          this.buttonVisibleRegtelCarpeta=true;
-          this.buttonVisibleRegtelDescargar=true;
+          const blob = new Blob([data], { type: "application/pdf" });
+          saveAs(blob, this.selectedDatosRegtel.title + ".pdf");
           this.progressSpinner = false;
-          if(this.bodyRegTel.length!= 0){
-            this.messageRegtel = this.bodyRegTel.length + "";
-          }else{
-            this.messageRegtel = this.translateService.instant("general.message.no.registros");
-          }
-
         },
         err => {
-          this.messageRegtel = this.translateService.instant("general.message.no.registros");
           this.progressSpinner = false;
         }
       );
-    }
   }
-  onClickDescargarRegTel(){
-    this.progressSpinner = true;
-    this.selectedDatosRegtel.idPersona = this.idPersona;
-    this.sigaServices
-    .postDownloadFiles(
-      "fichaColegialRegTel_downloadDoc",
-      
-      this.selectedDatosRegtel
-    )
-    .subscribe(
-      data => {
-        const blob = new Blob([data],{ type: "application/pdf" });
-        saveAs(blob, this.selectedDatosRegtel.title + ".pdf");
-        this.progressSpinner = false;
-        
-      },
-      err => {
-        this.progressSpinner = false;
-      }
-    );
-  }
+
+
 }

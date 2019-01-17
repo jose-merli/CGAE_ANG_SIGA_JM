@@ -196,7 +196,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.usuarioBody = this.usuarioBody[0];
     }
     if (sessionStorage.getItem("idPersona")) {
-      this.idPersona = sessionStorage.getItem("idPersona");
+      this.idPersona = JSON.parse(sessionStorage.getItem("idPersona"));
     } else {
       this.idPersona = this.usuarioBody.idPersona;
     }

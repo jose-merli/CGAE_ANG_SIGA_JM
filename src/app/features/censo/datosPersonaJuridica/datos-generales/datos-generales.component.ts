@@ -474,7 +474,12 @@ export class DatosGenerales implements OnInit {
           (valorSeleccionados: any, index: number) => {
             if (
               valorSeleccionados.idGrupo == valorMap.idGrupo ||
-              valorSeleccionados.value == valorMap.idGrupo
+              valorSeleccionados.label == valorMap.label
+            ) {
+              finalUpdateItems.push(valorMap);
+            } else if (
+              valorSeleccionados.value == valorMap.idGrupo &&
+              valorSeleccionados.label == valorMap.label
             ) {
               finalUpdateItems.push(valorMap);
             }
@@ -835,9 +840,13 @@ export class DatosGenerales implements OnInit {
     if (event) {
       this.autocompletar = true;
     } else {
-      this.autocompletar = true;
+      this.autocompletar = false;
     }
   }
+
+  disabledAutocomplete(){
+    this.autocompletar = true;
+   }
 
   // ETIQUETAS
 
@@ -905,6 +914,17 @@ export class DatosGenerales implements OnInit {
         if (element.idGrupo == event.value) {
           keepGoing = false;
         }
+      }
+    });
+
+    return keepGoing;
+  }
+
+  isNotContainsEtiq(event): boolean {
+    var keepGoing = true;
+    this.etiquetasPersonaJuridicaSelecionados.forEach(element => {
+      if (element.label == event.label) {
+        keepGoing = false;
       }
     });
 
@@ -1025,7 +1045,9 @@ export class DatosGenerales implements OnInit {
 
       this.updateItems.set(newItem.idGrupo, newItem);
 
-      // this.etiquetasPersonaJuridicaSelecionados.push(newItem);
+      if (this.isNotContainsEtiq(newItem)) {
+        this.etiquetasPersonaJuridicaSelecionados.push(newItem);
+      }
       this.autoComplete.multiInputEL.nativeElement.value = null;
     } else {
       let oldItem = new ComboEtiquetasItem();
