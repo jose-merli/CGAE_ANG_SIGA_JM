@@ -497,9 +497,10 @@ export class SigaServices {
       "agendaCalendario/getEventosByIdCalendario",
 
     agendaCalendario_getCalendarios: "agendaCalendario/getCalendarios",
-    tipoCurricular_comboTipoCurricular: "tipoCurricular/comboTipoCurricular",
-    subtipoCurricular_comboSubtipoCurricular:
-      "subtipoCurricular/comboSubtipoCurricular",
+    tipoCurricular_getCurricularTypeCombo:
+      "tipoCurricular/getCurricularTypeCombo",
+    subtipoCurricular_getCurricularSubtypeCombo:
+      "subtipoCurricular/getCurricularSubtypeCombo",
     fichaDatosCurriculares_update: "fichaDatosCurriculares/update",
     fichaDatosCurriculares_insert: "/fichaDatosCurriculares/insert",
 
@@ -531,8 +532,10 @@ export class SigaServices {
       "/fichaDatosColegiales/datosColegialesUpdate",
     fichaColegialRegTel_searchListDoc: "fichaColegialRegTel/searchListDoc",
     fichaColegialRegTel_searchListDir: "fichaColegialRegTel/searchListDir",
-    fichaColegialRegTel_searchListDocNoCol: "fichaColegialRegTel/searchListDocNoCol",
-    fichaColegialRegTel_searchListDirNoCol: "fichaColegialRegTel/searchListDirNoCol",
+    fichaColegialRegTel_searchListDocNoCol:
+      "fichaColegialRegTel/searchListDocNoCol",
+    fichaColegialRegTel_searchListDirNoCol:
+      "fichaColegialRegTel/searchListDirNoCol",
     fichaColegialRegTel_downloadDoc: "fichaColegialRegTel/downloadDoc",
     usuario_cambioIdioma: "usuario/cambioIdioma",
     fichaColegialOtrasColegiaciones_getLabelColegios:
