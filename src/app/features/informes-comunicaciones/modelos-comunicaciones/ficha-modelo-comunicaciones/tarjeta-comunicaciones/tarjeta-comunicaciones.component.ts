@@ -197,7 +197,6 @@ export class TarjetaComunicacionesComponent implements OnInit {
         service = 'modelos_detalle_plantillasHist';
       }
       this.sigaServices.post(service, this.body.idModeloComunicacion).subscribe(result => {
-
         let data = JSON.parse(result.body);
         this.datos = data.plantillas;
         this.datos.map(e => {

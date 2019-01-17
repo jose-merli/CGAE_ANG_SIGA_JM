@@ -3,6 +3,9 @@ import { DataTable } from "primeng/datatable";
 import { FichaPlantillasDocument } from '../../../../../../models/FichaPlantillasDocumentoItem';
 import { ConsultasSearchItem } from '../../../../../../models/ConsultasSearchItem';
 import { ModelosComunicacionesItem } from '../../../../../../models/ModelosComunicacionesItem';
+import { InformesModelosComItem } from '../../../../../../models/InformesModelosComunicacionesItem';
+import { PlantillaDocumentoItem } from "../../../../../../models/PlantillaDocumentoItem";
+
 import { SigaServices } from "./../../../../../../_services/siga.service";
 import { Location } from "@angular/common";
 import { Message, ConfirmationService } from "primeng/components/common/api";
@@ -45,6 +48,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   finalidad: string;
   showDatosGenerales: boolean = true;
   showConsultas: boolean = false;
+  file: any;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -219,7 +223,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.modeloItem = JSON.parse(sessionStorage.getItem("modelosSearch"));
-
+      this.body.idModeloComunicacion = this.modeloItem.idModeloComunicacion;
       this.body.idClaseComunicacion = this.modeloItem.idClaseComunicacion;
       this.body.idInstitucion = this.modeloItem.idInstitucion;
       this.getResultados()
@@ -267,7 +271,19 @@ export class PlantillaDocumentoComponent implements OnInit {
       );
   }
 
-
+  getPlantillas(){
+    this.sigaServices
+      .post("modelos_detalle_plantillas", this.body)
+      .subscribe(
+        data => {
+          this.body.plantillas = JSON.parse(data["body"]).documentoPlantillaItem;
+        },
+        err => {
+          this.showFail('Error al cargar las plantillas');
+          console.log(err);
+        }
+      );
+  }
 
   getResultados() {
     let service = "modelos_plantilla_consultas";
@@ -287,10 +303,78 @@ export class PlantillaDocumentoComponent implements OnInit {
       );
   }
 
-  guardarDatosGenerales() {
-    sessionStorage.removeItem("crearNuevaPlantillaDocumento")
+  uploadFile(event: any) {
+    let fileList: FileList = event.files;
+    this.file = fileList[0];
+
+    this.addFile();
   }
 
+  addFile() {
+    this.sigaServices.postSendContent("modelos_detalle_subirPlantilla", this.file).subscribe(
+      data => {   
+        let plantilla = new PlantillaDocumentoItem ();
+        plantilla.nombreDocumento = data.nombreDocumento;
+        plantilla.idioma = 'ES';
+        this.guardarDocumento(plantilla);
+      },
+      err => {
+
+        if  (err.error.error.code  ==  400) {
+          this.showFail('Formato no permitido o tamaño maximo superado');
+        }  else  {
+          this.showFail('Error al subir el documento');
+          console.log(err);
+        }
+      },
+      () => {
+      }
+    );
+  }
+  guardarDatosGenerales() {
+    sessionStorage.removeItem("crearNuevaPlantillaDocumento");
+    this.sigaServices.post("modelos_detalle_guardarPlantillaDoc", this.body).subscribe(
+      data => {   
+        this.showSuccess('Plantilla guardada');
+      },
+      err => {
+        this.showFail('Error al guardar la plantilla');
+        console.log(err);
+      },
+      () => {
+      }
+    ); 
+  }
+
+  guardarDocumento(plantilla){
+    this.sigaServices.post("modelos_detalle_insertarPlantilla", plantilla).subscribe(
+      data => {   
+        this.showSuccess('Plantilla subida correctamente');
+        plantilla.idPlantillaDocumento = JSON.parse(data["body"]).idPlantillaDocumento;
+        this.body.plantillas.push(plantilla);
+      },
+      err => {
+        this.showFail('Error al subir el documento');
+        console.log(err);
+      },
+      () => {
+      }
+    );    
+  }
+
+  guardarConsultas(consulta){
+    this.sigaServices.post("modelos_plantilla_consultas_guardar", consulta).subscribe(
+      data => {   
+        this.showSuccess('Consulta guardada');
+      },
+      err => {
+        this.showFail('Error al guardar la consulta');
+        console.log(err);
+      },
+      () => {
+      }
+    ); 
+  }
 
   // Mensajes
   showFail(mensaje: string) {

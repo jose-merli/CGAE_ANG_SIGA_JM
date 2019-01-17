@@ -67,7 +67,7 @@ export class TarjetaInformesComponent implements OnInit {
     this.cols = [
       { field: 'idioma', header: 'Idioma' },
       // { field: 'fechaAsociacion', header: 'Fecha asociación' },
-      { field: 'ficheroSalida', header: 'Fichero salida' },
+      { field: 'nombreFicheroSalida', header: 'Fichero salida' },
       { field: 'sufijo', header: 'Sufijo' },
       { field: 'formatoSalida', header: 'Formato salida' },
       { field: 'destinatarios', header: 'Destinatarios' },
@@ -181,7 +181,7 @@ export class TarjetaInformesComponent implements OnInit {
   getInformes() {
     this.sigaServices.post("modelos_detalle_informes", this.modelo).subscribe(
       data => {
-        this.datos = JSON.parse(data.body).plantillasDocumentos;
+        this.datos = JSON.parse(data.body).plantillasModeloDocumentos;
       },
       err => {
         console.log(err);
