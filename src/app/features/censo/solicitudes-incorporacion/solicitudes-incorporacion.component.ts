@@ -75,7 +75,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
       { field: "apellidos", header: "Apellidos" },
       { field: "nombre", header: "Nombre" },
       { field: "numColegiado", header: "Nº colegiado previsto" },
-      { field: "correoElectronico", header: "Tipo Solicitud" },
+      { field: "tipoSolicitud", header: "Tipo Solicitud" },
       { field: "fechaSolicitud", header: "Fecha Solicitud" },
       { field: "estadoSolicitud", header: "Estado" },
       { field: "fechaEstado", header: "Fecha Estado" }
