@@ -1310,6 +1310,7 @@ export class FichaColegialComponent implements OnInit {
             this.progressSpinner = false;
             this.showSuccess();
             this.activacionEditar = true;
+            
           },
           error => {
             console.log(error);
@@ -1321,6 +1322,12 @@ export class FichaColegialComponent implements OnInit {
             } else {
               this.showFail();
             }
+          },
+          ()=>{
+            this.bodyDirecciones = new DatosDireccionesItem();
+            this.bodyDatosBancarios = new DatosBancariosItem();
+            sessionStorage.setItem("esNuevoNoColegiado", "false");
+            sessionStorage.setItem("personaBody", JSON.stringify(this.generalBody)); 
           }
         );
     }
@@ -1887,7 +1894,7 @@ isNotContainsEtiq(event): boolean {
     this.activacionGuardarGenerales();
     if (event) {
       this.checked = true;
-      // this.dialog.closable = true;
+      this.dialog.closable = true;
 
       this.item = new ComboEtiquetasItem();
       this.item.fechaInicio = value.fechaInicio;
@@ -2704,7 +2711,7 @@ isNotContainsEtiq(event): boolean {
     sessionStorage.setItem("fichaColegial", "true");
     sessionStorage.setItem(
       "usuarioBody",
-      JSON.stringify(this.bodyDirecciones.idPersona)
+      JSON.stringify(this.generalBody.idPersona)
     );
     sessionStorage.setItem("editarDireccion", "false");
     this.router.navigate(["/consultarDatosDirecciones"]);
