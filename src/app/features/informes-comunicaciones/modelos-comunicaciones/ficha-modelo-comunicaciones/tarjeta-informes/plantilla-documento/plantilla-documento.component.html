@@ -6,15 +6,37 @@
     </p>
   </div>
   <div class="card">
-    <div class="card-header">
-
-
-      <div class="d-flex justify-content-start mb-1 align-items-center">
-        <p class="title-module ">Datos Generales
-        </p>
-        <i (click)="onShowDatosGenerales()" class="fa ml-auto" [ngClass]="{'fa-angle-up':showDatosGenerales,'fa-angle-down':!showDatosGenerales}"></i>
+    <div class="card-header header-ficha" (click)="onShowDatosGenerales()">
+      <div *ngIf="!showDatosGenerales" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fas fa-file-alt icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-center mb-1">
+            <label class="mr-auto title-ficha">Datos Generales</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>Formato de salida:
+              <!-- <span>{{body.nombre}}</span> -->
+            </label>
+            <label>Nombre del fichero de salida:
+              <!-- <span>{{body.nombre}}</span> -->
+            </label>
+            <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="showDatosGenerales" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-file-alt icon-ficha"></i>
+        </div>
+        <label class="title-ficha">Informes</label>
+        <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
+
     <div *ngIf="showDatosGenerales" class="card-body">
 
       <div class="form-row">
@@ -116,10 +138,10 @@
   </div>
   <div class="card">
     <div class="card-header">
-      <div class="d-flex justify-content-start mb-1 align-items-center">
+      <div (click)="onShowConsultas()" class="d-flex justify-content-start mb-1 align-items-center">
         <p class="title-module ">Consultas
         </p>
-        <i (click)="onShowConsultas()" class="fa ml-auto" [ngClass]="{'fa-angle-up':showConsultas,'fa-angle-down':!showConsultas}"></i>
+        <i class="fa ml-auto" [ngClass]="{'fa-angle-up':showConsultas,'fa-angle-down':!showConsultas}"></i>
       </div>
     </div>
     <div *ngIf="showConsultas" class="card-body p-0">

@@ -66,6 +66,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
     this.cols = [
       { field: 'nombrePlantilla', header: 'Nombre' },
       { field: 'tipoEnvio', header: 'Tipo de envío' },
+      { field: 'porDefecto', header: 'Por defecto' }
     ];
 
     this.rowsPerPage = [

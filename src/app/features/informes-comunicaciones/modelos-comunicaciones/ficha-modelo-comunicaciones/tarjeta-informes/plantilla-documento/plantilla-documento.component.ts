@@ -319,6 +319,9 @@ export class PlantillaDocumentoComponent implements OnInit {
       }
     );
   }
+  guardarDatosGenerales() {
+    sessionStorage.removeItem("crearNuevaPlantillaDocumento");
+  }
 
   guardarDocumento(plantilla){
     this.sigaServices.post("modelos_detalle_insertarPlantilla", plantilla).subscribe(

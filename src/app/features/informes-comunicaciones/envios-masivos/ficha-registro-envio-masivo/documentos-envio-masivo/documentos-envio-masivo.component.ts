@@ -229,8 +229,14 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
         this.showSuccess('Se ha eliminado el documento correctamente');
       },
       err => {
-        this.showFail('Error al eliminado el envío');
-        console.log(err);
+        let error = JSON.parse(err.error);
+        if (error.code == 400) {
+          this.showInfo('Alguno/s documento/s no se han eliminado');
+        } else {
+          this.showFail('Error al eliminado el envío');
+          console.log(err);
+        }
+
       },
       () => {
         this.getDocumentos();
@@ -265,13 +271,13 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
       },
       err => {
 
-        if  (err.error.error.code  ==  400) {
+        if (err.error.error.code == 400) {
           this.showFail('Formato no permitido o tamaño maximo superado');
-        }  else  {
+        } else {
           this.showFail('Error al subir el documento');
           console.log(err);
         }
-        this.progressSpinner  =  false;
+        this.progressSpinner = false;
       },
       () => {
       }
