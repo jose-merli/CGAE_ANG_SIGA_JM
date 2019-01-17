@@ -17,6 +17,7 @@ import { OldSigaServices } from "./oldSiga.service";
 import { environment } from "../../environments/environment";
 import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
 import * as jwt_decode from "jwt-decode";
+
 @Injectable()
 export class AuthenticationService {
   private http: HttpClient;
@@ -49,6 +50,10 @@ export class AuthenticationService {
   isAutenticetedInOldSiga() {
     return sessionStorage.getItem("osAutenticated") === "true";
   }
+
+  /**
+   * Para obtener la institución del token
+   */
   getInstitucionSession() {
     let institucion: number = null;
     if (this.isAutenticated()) {
@@ -124,6 +129,7 @@ export class AuthenticationService {
   }
 
   autenticate(): Observable<any> {
+    sessionStorage.removeItem("authenticated");
     let newSigaRquest = this.newSigaLogin();
     let oldSigaRquest = this.oldSigaLogin();
 
@@ -141,28 +147,6 @@ export class AuthenticationService {
     });
   }
 
-  // autenticateDevelop(formValues): Observable<any> {
-  //     let newSigaRquest = this.newSigaDevelopLogin(formValues);
-  //     let oldSigaRquest = this.oldSigaDevelopLogin(formValues);
-
-  //     return forkJoin([oldSigaRquest, newSigaRquest]).map(
-  //         (response) => {
-  //             let newSigaResponse = response[1].headers.get("Authorization");
-  //             let oldSigaResponse = response[0].status;
-  //             if (oldSigaResponse == 200) {
-  //                 sessionStorage.setItem('osAutenticated', 'true');
-
-  //                 sessionStorage.setItem('authenticated', 'true');
-  //                 sessionStorage.setItem('Authorization', newSigaResponse);
-
-  //                 return true;
-  //             }
-
-  //         }
-  //     )
-
-  // }
-
   autenticateDevelop(formValues): Observable<any> {
     let newSigaRquest = this.newSigaDevelopLogin(formValues);
     //        let oldSigaRquest = this.oldSigaDevelopLogin(formValues);
@@ -178,19 +162,19 @@ export class AuthenticationService {
     });
 
     /*return forkJoin([oldSigaRquest, newSigaRquest]).map(
-            (response) => {
-                let newSigaResponse = response[1].headers.get("Authorization");
-                let oldSigaResponse = response[0].status;
-                if (oldSigaResponse == 200) {
-                    sessionStorage.setItem('osAutenticated', 'true');
+        (response) => {
+            let newSigaResponse = response[1].headers.get("Authorization");
+            let oldSigaResponse = response[0].status;
+            if (oldSigaResponse == 200) {
+                sessionStorage.setItem('osAutenticated', 'true');
 
-                    sessionStorage.setItem('authenticated', 'true');
-                    sessionStorage.setItem('Authorization', newSigaResponse);
+                sessionStorage.setItem('authenticated', 'true');
+                sessionStorage.setItem('Authorization', newSigaResponse);
 
-                    return true;
-                }
-
+                return true;
             }
-        )*/
+
+        }
+    )*/
   }
 }
