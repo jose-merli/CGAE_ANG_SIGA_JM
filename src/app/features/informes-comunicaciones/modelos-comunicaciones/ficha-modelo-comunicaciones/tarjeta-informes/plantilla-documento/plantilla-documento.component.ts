@@ -271,7 +271,19 @@ export class PlantillaDocumentoComponent implements OnInit {
       );
   }
 
-
+  getPlantillas(){
+    this.sigaServices
+      .post("modelos_detalle_plantillas", this.body)
+      .subscribe(
+        data => {
+          this.body.plantillas = JSON.parse(data["body"]).documentoPlantillaItem;
+        },
+        err => {
+          this.showFail('Error al cargar las plantillas');
+          console.log(err);
+        }
+      );
+  }
 
   getResultados() {
     let service = "modelos_plantilla_consultas";

@@ -180,7 +180,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
 
-      this.sigaServices.post("modelos_detalle_plantillas", this.body.idModeloComunicacion).subscribe(result => {
+      this.sigaServices.post("modelos_detalle_plantillasEnvios", this.body.idModeloComunicacion).subscribe(result => {
         debugger;
         let data = JSON.parse(result.body);
         this.datos = data.plantillas;

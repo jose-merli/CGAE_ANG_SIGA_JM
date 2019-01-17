@@ -11,6 +11,7 @@ export class FichaPlantillasDocument {
   idConsulta: String;
   idFinalidad: String;
   idTipoEjecucion: String;
+  idInforme: String;
   plantillas: PlantillaDocumentoItem[]=[];
   constructor() { }
 }
