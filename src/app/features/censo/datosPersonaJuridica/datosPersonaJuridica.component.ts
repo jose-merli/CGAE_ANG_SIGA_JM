@@ -71,11 +71,13 @@ export class DatosPersonaJuridicaComponent implements OnInit {
     this.cardService.searchNewAnnounce.next(null);
 
     if (sessionStorage.getItem("filtrosBusquedaColegiados") != undefined) {
-      this.router.navigate(["busquedaColegiados"]);
+      this.router.navigate(["fichaColegial"]);
     } else if (
       sessionStorage.getItem("filtrosBusquedaNoColegiados") != undefined
     ) {
-      this.router.navigate(["busquedaNoColegiados"]);
+      this.router.navigate(["fichaColegial"]);
+    } else if (sessionStorage.getItem("busquedaSociedades")) {
+      this.router.navigate(["searchNoColegiados"]);
     } else {
       this.location.back();
     }

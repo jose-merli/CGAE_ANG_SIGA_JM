@@ -205,6 +205,8 @@ export class FichaColegialComponent implements OnInit {
   selectedDatosBancarios;
   selectedDatosSanciones;
   selectedDatosRegtel: DocushareItem;
+  desactivarVolver: Boolean;
+
   @ViewChild("auto")
   autoComplete: AutoComplete;
 
@@ -317,34 +319,7 @@ export class FichaColegialComponent implements OnInit {
       // sessionStorage.removeItem("filtrosBusquedaNoColegiados");
     }else{
       //  LLEGA DESDE PUNTO DE MENÚ
-      this.generalBody = new FichaColegialGeneralesItem();
-      this.checkGeneralBody = new FichaColegialGeneralesItem();
-      this.generalBody.searchLoggedUser = true;
-      this.sigaServices
-      .postPaginado(
-        "busquedaColegiados_searchColegiado",
-        "?numPagina=1",
-        this.generalBody
-      )
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          let busqueda = JSON.parse(data["body"]);
-          this.generalBody = busqueda.colegiadoItem[0];
-          this.checkGeneralBody = busqueda.colegiadoItem[0];
-          this.colegialesBody = busqueda.colegiadoItem[0];
-          this.checkColegialesBody = busqueda.colegiadoItem[0];
-          this.progressSpinner = false;
-
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
-        }
-      );
+      this.desactivarVolver = true;
     }
     if (
       sessionStorage.getItem("personaBody") != null &&
