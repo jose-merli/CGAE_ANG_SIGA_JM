@@ -369,6 +369,7 @@ export class SolicitudesModificacionComponent implements OnInit {
         sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
         sessionStorage.setItem("search", JSON.stringify(this.data));
         sessionStorage.setItem("rowData", JSON.stringify(selectedDatos[0]));
+        sessionStorage.setItem("isLetrado", JSON.stringify(this.isLetrado));
         this.router.navigate(["/nuevaSolicitudesModificacion"]);
       } else {
         // abrir popup MODO CONSULTA
@@ -387,7 +388,7 @@ export class SolicitudesModificacionComponent implements OnInit {
 
         this.motivoSolGeneral = selectedDatos.motivo;
 
-        if (selectedDatos[0].estado == "PENDIENTE") {
+        if (selectedDatos[0].estado == "PENDIENTE" && !this.isLetrado) {
           this.disableButton = false;
         } else {
           this.disableButton = true;

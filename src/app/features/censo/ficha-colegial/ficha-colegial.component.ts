@@ -77,7 +77,7 @@ export class FichaColegialComponent implements OnInit {
   isLetrado: boolean;
   permisos: boolean = true;
   displayAuditoria: boolean = false;
-
+  publicarDatosContacto: boolean;
   idPersona: any;
   openFicha: boolean = false;
   es: any = esCalendar;
@@ -205,6 +205,8 @@ export class FichaColegialComponent implements OnInit {
   selectedDatosBancarios;
   selectedDatosSanciones;
   selectedDatosRegtel: DocushareItem;
+  desactivarVolver: Boolean;
+
   @ViewChild("auto")
   autoComplete: AutoComplete;
 
@@ -317,34 +319,7 @@ export class FichaColegialComponent implements OnInit {
       // sessionStorage.removeItem("filtrosBusquedaNoColegiados");
     }else{
       //  LLEGA DESDE PUNTO DE MENÚ
-      this.generalBody = new FichaColegialGeneralesItem();
-      this.checkGeneralBody = new FichaColegialGeneralesItem();
-      this.generalBody.searchLoggedUser = true;
-      this.sigaServices
-      .postPaginado(
-        "busquedaColegiados_searchColegiado",
-        "?numPagina=1",
-        this.generalBody
-      )
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          let busqueda = JSON.parse(data["body"]);
-          this.generalBody = busqueda.colegiadoItem[0];
-          this.checkGeneralBody = busqueda.colegiadoItem[0];
-          this.colegialesBody = busqueda.colegiadoItem[0];
-          this.checkColegialesBody = busqueda.colegiadoItem[0];
-          this.progressSpinner = false;
-
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
-        }
-      );
+      this.desactivarVolver = true;
     }
     if (
       sessionStorage.getItem("personaBody") != null &&
@@ -367,6 +342,7 @@ export class FichaColegialComponent implements OnInit {
       }
 
       this.generalBody.colegiado = this.esColegiado;
+      this.checkGeneralBody.colegiado = this.esColegiado;
 
 
       // this.checkAcceso();
@@ -1380,6 +1356,11 @@ export class FichaColegialComponent implements OnInit {
     } else {
       this.generalBody.publicidad = "0";
     }
+    if (this.publicarDatosContacto == true) {
+      this.generalBody.noAparecerRedAbogacia = "1";
+    } else {
+      this.generalBody.noAparecerRedAbogacia = "0";
+    }
   }
 
   stringAComisiones() {
@@ -1397,6 +1378,11 @@ export class FichaColegialComponent implements OnInit {
       this.guiaJudicial = true;
     } else {
       this.guiaJudicial = false;
+    }
+    if (this.generalBody.noAparecerRedAbogacia == "1"){
+      this.publicarDatosContacto = true;
+    }else{
+      this.publicarDatosContacto = false;
     }
   }
 
