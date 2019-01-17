@@ -288,7 +288,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   guardarDatosGenerales() {
-    sessionStorage.removeitem("crearNuevaPlantillaDocumento")
+    sessionStorage.removeItem("crearNuevaPlantillaDocumento")
   }
 
 
