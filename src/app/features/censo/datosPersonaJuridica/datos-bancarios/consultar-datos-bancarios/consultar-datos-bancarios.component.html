@@ -234,7 +234,7 @@
       <div  *ngIf="openFichaDatosMandatos && !nuevo" class="card-footer">
         <div class="text-right main-button">
           <button (click)="validarGuardarMandato()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
-            [disabled]="mandatoAnexoVacio || !permisos || disabledAction"></button>
+          [disabled]="!editarMandato || !permisos || disabledAction"></button>
         </div>
       </div>
     </div>

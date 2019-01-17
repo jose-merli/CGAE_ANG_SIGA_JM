@@ -24,7 +24,7 @@ export class BusquedaSancionesComponent implements OnInit {
   selectAll: boolean = false;
   isHistory: boolean = false;
   hideHistory: boolean = false;
-
+  disabledColegio: boolean = false;
   tipo: SelectItem[];
   tipoSancion: SelectItem[];
   estado: SelectItem[];
@@ -130,6 +130,7 @@ export class BusquedaSancionesComponent implements OnInit {
     this.sigaServices.get("busquedaPer_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
+        this.disabledColegio=false;
         if (this.authenticationService.getInstitucionSession() != "2000") {
           this.colegios = [];
           n.combooItems.forEach(element => {
@@ -138,6 +139,8 @@ export class BusquedaSancionesComponent implements OnInit {
               element.value
             ) {
               this.colegios.push(element);
+              this.disabledColegio=true;
+              this.colegios_seleccionados.push(element);
             }
           });
         }
