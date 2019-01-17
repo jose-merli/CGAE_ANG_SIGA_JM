@@ -176,12 +176,20 @@ export class SigaServices {
     busquedaNoColegiados_poblacion: "/busquedaNoColegiados/poblacion",
     busquedaNoColegiados_tipoDireccion: "/busquedaNoColegiados/tipoDireccion",
     busquedaNoColegiados_categoriaCurricular:
-      "/busquedaNoColegiados/categoriaCurricular",
+      "/busquedaColegiados/categoriaCurricular",
+    busquedaColegiados_getCurricularTypeCombo:
+      "busquedaColegiados/getCurricularTypeCombo",
+    busquedaColegiados_getCurricularSubtypeCombo:
+      "busquedaColegiados/getCurricularSubtypeCombo",
     busquedaNoColegiados_searchNoColegiado:
       "/busquedaNocolegiado/searchNoColegiado",
     busquedaNocolegiado_deleteNoColegiado:
       "/busquedaNocolegiado/deleteNoColegiado",
     busquedaNoColegiados_searchHistoric: "busquedaNocolegiado/searchHistoric",
+    busquedaNoColegiados_getCurricularTypeCombo:
+      "busquedaNoColegiados/getCurricularTypeCombo",
+    busquedaNoColegiados_getCurricularSubtypeCombo:
+      "busquedaNoColegiados/getCurricularSubtypeCombo",
     solicitudIncorporacion_tipoSolicitud:
       "/solicitudIncorporacion/tipoSolicitud",
     solicitudIncorporacion_estadoSolicitud:
@@ -489,9 +497,10 @@ export class SigaServices {
       "agendaCalendario/getEventosByIdCalendario",
 
     agendaCalendario_getCalendarios: "agendaCalendario/getCalendarios",
-    tipoCurricular_comboTipoCurricular: "tipoCurricular/comboTipoCurricular",
-    subtipoCurricular_comboSubtipoCurricular:
-      "subtipoCurricular/comboSubtipoCurricular",
+    tipoCurricular_getCurricularTypeCombo:
+      "tipoCurricular/getCurricularTypeCombo",
+    subtipoCurricular_getCurricularSubtypeCombo:
+      "subtipoCurricular/getCurricularSubtypeCombo",
     fichaDatosCurriculares_update: "fichaDatosCurriculares/update",
     fichaDatosCurriculares_insert: "/fichaDatosCurriculares/insert",
 
@@ -523,8 +532,10 @@ export class SigaServices {
       "/fichaDatosColegiales/datosColegialesUpdate",
     fichaColegialRegTel_searchListDoc: "fichaColegialRegTel/searchListDoc",
     fichaColegialRegTel_searchListDir: "fichaColegialRegTel/searchListDir",
-    fichaColegialRegTel_searchListDocNoCol: "fichaColegialRegTel/searchListDocNoCol",
-    fichaColegialRegTel_searchListDirNoCol: "fichaColegialRegTel/searchListDirNoCol",
+    fichaColegialRegTel_searchListDocNoCol:
+      "fichaColegialRegTel/searchListDocNoCol",
+    fichaColegialRegTel_searchListDirNoCol:
+      "fichaColegialRegTel/searchListDirNoCol",
     fichaColegialRegTel_downloadDoc: "fichaColegialRegTel/downloadDoc",
     usuario_cambioIdioma: "usuario/cambioIdioma",
     fichaColegialOtrasColegiaciones_getLabelColegios:

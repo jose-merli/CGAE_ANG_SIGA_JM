@@ -46,5 +46,9 @@ export class DatosColegiadosItem {
   subtipoCV: string[];
 
   idEstadoCivil: string;
+
+  subTipoCV1: string;
+  subTipoCV2: string;
+
   constructor() {}
 }

@@ -63,3 +63,7 @@
 .input-group .ui-button {
   width: 100%;
 }
+
+.inheritTable .ui-datatable-tablewrapper table {
+  table-layout: inherit !important;
+}

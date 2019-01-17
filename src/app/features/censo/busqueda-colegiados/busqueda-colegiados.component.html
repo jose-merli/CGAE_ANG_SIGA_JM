@@ -116,17 +116,22 @@
                     <div class=" form-group col-lg-3 col-md-3">
                             <label>{{ "censo.busquedaColegiados.datosGeneralesAvanzados.fechaNacimientoHasta" | translate}}</label>
                             <p-calendar [keepInvalid]="true" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy" [(ngModel)]="fechaNacimientoHastaSelect"></p-calendar>
-                        </div>
+                    </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.busquedaClientesAvanzada.literal.categoriaCV" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='body.tipoCV' [options]="comboCategoriaCurricular" placeholder="{{'general.boton.seleccionar' | translate}}"
                             [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeCategoriaCurricular($event)"></p-dropdown>
                     </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"censo.tipoCurricular.descripcion.literal" | translate}}</label>
+                        <p-dropdown class="select-form" [(ngModel)]='body.subTipoCV1' [options]="comboTipoCV" placeholder="{{'general.boton.seleccionar' | translate}}"
+                        [filter]="true" filterBy="label,labelSinTilde" emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}"
+                        [disabled]="isDisabledCombos()"></p-dropdown>
+                    </div>
                     <div class="form-group col-lg-3 col-md-3">
-                        <label>{{"censo.busquedaClientesAvanzada.literal.subtiposCV" | translate}}</label>
-                        <p-multiSelect *ngIf="!noResultsSubtipos" [disabled]="!editar" [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='body.subtipoCV' [options]="comboSubtipoCV"
-                        maxSelectedLabels="1" styleClass="widthAll"></p-multiSelect>
-                        <p-dropdown *ngIf="noResultsSubtipos" [filter]="true" filterMatchMode="contains" emptyFilterMessage="No hay resultados" styleClass="widthAll" class="select-form" [options]="comboSubtipoCV" placeholder="Elegir" [(ngModel)]="body.subtipoCV"></p-dropdown>
+                        <label>Subtipo Curricula</label>
+                        <p-dropdown [filter]="true" filterMatchMode="contains" emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}"
+                         styleClass="widthAll" class="select-form" [options]="comboSubtipoCV" [placeholder]="textFilter" [(ngModel)]="body.subTipoCV2" [disabled]="isDisabledCombos()"></p-dropdown>
                     </div> 
                 </div>
             </div>
@@ -191,7 +196,7 @@
     <!--FIN CARD-->
     <div *ngIf="buscar == true" class="card mt-3">
         <div class="card-body p-0">
-            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+            <p-dataTable styleClass="inheritTable" emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
                 [(selection)]="selectedDatos" (onRowSelect)="irEditarColegiado(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
                 pageLinks="4" dataKey="idPersona" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos"
                 [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
