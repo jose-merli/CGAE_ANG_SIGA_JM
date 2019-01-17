@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+  ViewEncapsulation
+} from "@angular/core";
 import { SelectItem } from "primeng/components/common/api";
 import { SigaServices } from "../../../_services/siga.service";
 import { esCalendar } from "../../../utils/calendar";
@@ -12,7 +18,8 @@ import { AuthenticationService } from "../../../_services/authentication.service
 @Component({
   selector: "app-busqueda-sanciones",
   templateUrl: "./busqueda-sanciones.component.html",
-  styleUrls: ["./busqueda-sanciones.component.scss"]
+  styleUrls: ["./busqueda-sanciones.component.scss"],
+  encapsulation: ViewEncapsulation.None
 })
 export class BusquedaSancionesComponent implements OnInit {
   showBusquedaLetrado: boolean = true;
@@ -121,7 +128,7 @@ export class BusquedaSancionesComponent implements OnInit {
     this.sigaServices.get("busquedaPer_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
-        this.disabledColegio=false;
+        this.disabledColegio = false;
         if (this.authenticationService.getInstitucionSession() != "2000") {
           this.colegios = [];
           n.combooItems.forEach(element => {
@@ -130,7 +137,7 @@ export class BusquedaSancionesComponent implements OnInit {
               element.value
             ) {
               this.colegios.push(element);
-              this.disabledColegio=true;
+              this.disabledColegio = true;
               this.colegios_seleccionados.push(element);
             }
           });
