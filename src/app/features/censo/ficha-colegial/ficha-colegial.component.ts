@@ -218,6 +218,8 @@ export class FichaColegialComponent implements OnInit {
   tableDirecciones: DataTable;
   @ViewChild("tableBancarios")
   tableBancarios: DataTable;
+  @ViewChild("tableColegiales")
+  tableColegiales: DataTable;
 
   selectedDatosCertificados;
   selectedDatosSociedades;
@@ -233,7 +235,8 @@ export class FichaColegialComponent implements OnInit {
   selectedItemCurriculares: number = 10;
   selectedItemDirecciones: number = 10;
   selectedItemBancarios: number = 10;
-
+  selectedItem: number = 10;
+  
   selectedDatosRegtel: DocushareItem;
   desactivarVolver: Boolean;
 

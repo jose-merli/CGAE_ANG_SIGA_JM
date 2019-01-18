@@ -874,7 +874,7 @@
         emptyMessage="{{ 'general.message.no.registros' | translate}}"
         pageLinks="4"
         [responsive]="true"
-        #table
+        #tableColegiales
         class="tabla-listado"
         [value]="datosColegiales"
         [sortOrder]="1"
@@ -908,9 +908,9 @@
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales"
-              >Mostrando registros del {{ table.first + 1 }} al
-              {{ table.first + table.rows }} de un total de
-              {{ table.totalRecords }}</label
+              >Mostrando registros del {{ tableColegiales.first + 1 }} al
+              {{ tableColegiales.first + tableColegiales.rows }} de un total de
+              {{ tableColegiales.totalRecords }}</label
             >
             <!--
               <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
