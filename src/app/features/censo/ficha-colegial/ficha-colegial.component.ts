@@ -51,6 +51,7 @@ import { BusquedaSancionesItem } from "../../../models/BusquedaSancionesItem";
 import { BusquedaSancionesObject } from "../../../models/BusquedaSancionesObject";
 import { DocushareObject } from "../../../models/DocushareObject";
 import { DocushareItem } from "../../../models/DocushareItem";
+import { FichaDatosCurricularesObject } from "../../../models/FichaDatosCurricularesObject";
 
 @Component({
   selector: "app-ficha-colegial",
@@ -187,6 +188,7 @@ export class FichaColegialComponent implements OnInit {
   historico: boolean = false;
   historicoCV: boolean = false;
   isClose: boolean = false;
+  emptyLoadFichaColegial: boolean = false;
   disabledAction: boolean = false;
   comboEtiquetas: any[];
   inscritoSeleccionado: String = "00";
@@ -202,7 +204,8 @@ export class FichaColegialComponent implements OnInit {
   persistenciaNoCol: NoColegiadoItem = undefined;
   messageNoContentRegTel: String = "";
   messageRegtel: String;
-  
+  datosCurricularesRemove: FichaDatosCurricularesObject = new FichaDatosCurricularesObject;
+
   @ViewChild("tableCertificados")
   tableCertificados: DataTable;
   @ViewChild("tableSanciones")
@@ -346,6 +349,10 @@ export class FichaColegialComponent implements OnInit {
       // sessionStorage.removeItem("filtrosBusquedaNoColegiados");
     } else {
       //  LLEGA DESDE PUNTO DE MENÚ
+      this.emptyLoadFichaColegial = JSON.parse(sessionStorage.getItem("emptyLoadFichaColegial"));
+      if(this.emptyLoadFichaColegial){
+        this.showFailDetalle("No se han podido cargar los datos porque el usuario desde el que ha inciado sesión no es colegiado");
+      }
       this.desactivarVolver = true;
     }
     if (
@@ -705,7 +712,7 @@ export class FichaColegialComponent implements OnInit {
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
 
-    if (key == "generales" && !this.activacionEditar) {
+    if(key == 'generales' && !this.activacionEditar && !this.emptyLoadFichaColegial){
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
@@ -843,7 +850,6 @@ export class FichaColegialComponent implements OnInit {
   }
 
   uploadFile(event: any) {
-    console.log("Event", event);
     // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
     let fileList: FileList = event.target.files;
 
@@ -1403,6 +1409,9 @@ export class FichaColegialComponent implements OnInit {
       this.generalBody.publicidad = "0";
     }
     if (this.publicarDatosContacto == true) {
+      this.showInfo(this.translateService.instant(
+        "menu.fichaColegial.lopd.literal"
+      ));
       this.generalBody.noAparecerRedAbogacia = "1";
     } else { 
       this.generalBody.noAparecerRedAbogacia = "0";
@@ -2392,14 +2401,14 @@ isNotContainsEtiq(event): boolean {
     // this.table.sortMultiple();
   }
 
-  deleteCurriculares() {
+  deleteCurriculares(selectedDatosCurriculares) {
     let mess = this.translateService.instant("messages.deleteConfirmation");
     let icon = "fa fa-trash-alt";
     this.confirmationService.confirm({
       message: mess,
       icon: icon,
       accept: () => {
-        this.eliminarRegistroCV();
+        this.eliminarRegistroCV(selectedDatosCurriculares);
       },
       reject: () => {
         this.msgs = [
@@ -2412,35 +2421,51 @@ isNotContainsEtiq(event): boolean {
           }
         ];
 
-        this.selectedDatos = [];
-        this.selectMultiple = false;
+        this.selectedDatosCurriculares = [];
+        this.selectMultipleCurriculares = false;
       }
     });
   }
 
-  
-  eliminarRegistroCV() {
-    for (let i in this.datosCurriculares) {
-      if (this.datosCurriculares[i].fechaHasta == null) {
+  eliminarRegistroCV(selectedDatosCurriculares) {
+        selectedDatosCurriculares.forEach(element => {
+          this.datosCurricularesRemove.fichaDatosCurricularesItem.push(element);
+        });
+
         this.sigaServices
-          .post("fichaDatosCurriculares_delete", this.datosCurriculares[i])
+          .post("fichaDatosCurriculares_delete", this.datosCurricularesRemove)
           .subscribe(
-            data => {
+            data => { 
+              if (selectedDatosCurriculares.length == 1) {
+                this.showSuccessDetalle(
+                  this.translateService.instant("messages.deleted.success")
+                );
+              } else {
+                this.showSuccessDetalle(
+                  selectedDatosCurriculares.length +
+                    " " +
+                    this.translateService.instant(
+                      "messages.deleted.selected.success"
+                    )
+                );
+              }
               this.progressSpinner = false;
-              this.searchDatosCurriculares();
             },
             err => {
               console.log(err);
+              this.progressSpinner = false;
             },
             () => {
               this.progressSpinner = false;
               this.editar = false;
-              this.selectedDatos = [];
-              this.selectMultiple = false;
+              this.selectedDatosCurriculares = [];
+              this.numSelectedCurriculares = 0;
+              this.selectMultipleCurriculares = false;
+              this.searchDatosCurriculares();
             }
           );
-      }
-    }
+      //}
+    //}
   }
 
   redireccionarCurriculares(dato) {
@@ -2892,6 +2917,7 @@ isNotContainsEtiq(event): boolean {
   }
 
   searchDatosBancarios() {
+    if(this.emptyLoadFichaColegial != true){
     this.progressSpinner = true;
     this.sigaServices
       .postPaginado(
@@ -2914,6 +2940,7 @@ isNotContainsEtiq(event): boolean {
           this.progressSpinner = false;
         }
       );
+    }
   }
 
   redireccionarDatosBancarios(dato) {
@@ -3102,7 +3129,7 @@ isNotContainsEtiq(event): boolean {
     this.bodySanciones.idPersona = this.generalBody.idPersona;
     this.bodySanciones.nif = this.generalBody.nif;
     this.bodySanciones.tipoFecha = "";
-    this.bodySanciones.chkFirmeza = true;
+    this.bodySanciones.chkFirmeza = undefined;
     // this.bodySanciones.idColegios = [];
     // this.bodySanciones.idColegios.push(this.generalBody.i.idInstitucion);
 

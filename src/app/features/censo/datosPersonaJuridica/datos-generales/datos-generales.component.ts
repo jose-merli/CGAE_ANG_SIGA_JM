@@ -473,7 +473,7 @@ export class DatosGenerales implements OnInit {
         this.etiquetasPersonaJuridicaSelecionados.forEach(
           (valorSeleccionados: any, index: number) => {
             if (
-              valorSeleccionados.idGrupo == valorMap.idGrupo ||
+              valorSeleccionados.idGrupo == valorMap.idGrupo &&
               valorSeleccionados.label == valorMap.label
             ) {
               finalUpdateItems.push(valorMap);
@@ -844,9 +844,9 @@ export class DatosGenerales implements OnInit {
     }
   }
 
-  disabledAutocomplete(){
+  disabledAutocomplete() {
     this.autocompletar = true;
-   }
+  }
 
   // ETIQUETAS
 
@@ -1043,7 +1043,7 @@ export class DatosGenerales implements OnInit {
 
       this.createItems.push(newItem);
 
-      this.updateItems.set(newItem.idGrupo, newItem);
+      this.updateItems.set(newItem.label, newItem);
 
       if (this.isNotContainsEtiq(newItem)) {
         this.etiquetasPersonaJuridicaSelecionados.push(newItem);
