@@ -1409,6 +1409,9 @@ export class FichaColegialComponent implements OnInit {
       this.generalBody.publicidad = "0";
     }
     if (this.publicarDatosContacto == true) {
+      this.showInfo(this.translateService.instant(
+        "menu.fichaColegial.lopd.literal"
+      ));
       this.generalBody.noAparecerRedAbogacia = "1";
     } else { 
       this.generalBody.noAparecerRedAbogacia = "0";

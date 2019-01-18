@@ -113,7 +113,7 @@
 
             </div>-->
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-                [(selection)]="selectedDatos" (onRowSelect)="irFichaColegial(selectedDatos)" dataKey="nif" [responsive]="true"
+                [(selection)]="selectedDatos" (onRowSelect)="irFichaColegial(selectedDatos)" [responsive]="true"
                 selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both"
                 [rows]="selectedItem" pageLinks="4">
                 <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
