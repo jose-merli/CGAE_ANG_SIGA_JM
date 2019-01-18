@@ -2277,9 +2277,9 @@ isNotContainsEtiq(event): boolean {
       );
   }
 
-  redireccionarCerts(selectedDatos) {
-    this.router.navigate(["/mantenimientoCertificados"]);
-  }
+  // redireccionarCerts(selectedDatos) {
+  //   this.router.navigate(["/mantenimientoCertificados"]);
+  // }
 
   // FIN CERTIFICADOS
   //
