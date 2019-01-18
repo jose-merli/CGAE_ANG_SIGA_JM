@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  HostListener,
+  ChangeDetectorRef
+} from "@angular/core";
 import {
   FormGroup,
   FormBuilder,
@@ -15,6 +21,10 @@ import { Message } from "primeng/components/common/api";
 import { isNumeric } from "rxjs/util/isNumeric";
 
 import { DropdownModule, Dropdown } from "primeng/dropdown";
+
+export enum KEY_CODE {
+  ENTER = 13
+}
 
 @Component({
   selector: "app-nueva-incorporacion",
@@ -98,13 +108,13 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.consulta = false;
 
       if (sessionStorage.getItem("nuevaIncorporacion")) {
-        let solicitudrecibida =JSON.parse(
-          sessionStorage.getItem("nuevaIncorporacion"));
+        let solicitudrecibida = JSON.parse(
+          sessionStorage.getItem("nuevaIncorporacion")
+        );
 
         this.solicitudEditar = JSON.parse(
           sessionStorage.getItem("nuevaIncorporacion")
         );
-        
       }
       this.estadoSolicitudSelected = "20";
       this.vieneDeBusqueda = true;
@@ -917,5 +927,13 @@ para poder filtrar el dato con o sin estos caracteres*/
   ngOnDestroy() {
     sessionStorage.removeItem("solicitudIncorporacion");
     sessionStorage.removeItem("nuevaIncorporacion");
+  }
+
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.guardar();
+    }
   }
 }

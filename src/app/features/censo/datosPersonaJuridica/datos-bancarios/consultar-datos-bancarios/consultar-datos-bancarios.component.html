@@ -269,16 +269,15 @@
         </div>
       </div>
 
-      <div *ngIf="openFichaListadoFicherosAnexos" class="card-body card-body-ficha">
+      <div *ngIf="openFichaListadoFicherosAnexos" class="card-body">
         <div *ngIf="selectMultiple == true">
-            <div class="row">
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
             [(selection)]="selectedDatos" [paginator]="activarPaginacion()" selectionMode="single" [responsive]="true" #table
             class="tabla-listado" [value]="bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem" [sortOrder]="1" (onRowSelect)="controlarEdicion()"
             [paginator]="true" paginatorPosition="both" [rows]="selectedItem" [editable]="true" pageLinks="4">
 
             <p-column field="descripcion" header="{{'general.description' | translate}}" [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-              filterMatchMode="contains"></p-column>
+              filterMatchMode="contains" [editable]="!historico"></p-column>
             <p-column field="tipo" header="{{'censo.busquedaClientesAvanzada.literal.tipoCliente' | translate}}" [sortable]="true" [filter]="true"
               filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
             <p-column field="tipoMandato" header="{{'censo.sociedades.datosBancarios.tipoMandato' | translate}}" [sortable]="true" [filter]="true"
@@ -300,8 +299,8 @@
                   <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.seleccionarFila" | translate}}</label>
               </div>
             </ng-template>
-            <p-footer>
-              <div class="text-right main-button ">
+            <p-footer *ngIf="selectedDatos && selectedDatos !=''">
+              <div class="text-right main-button">
                 <button *ngIf="selectedDatos && selectedDatos !=''"  [(disabled)]="!permisos || disabledAction" (click)="downloadAnexo(selectedDatos)" pButton type="button" icon="fa fa-download"
                   iconPos="left" label="{{ 'general.boton.download' | translate}}"></button>
                 <button *ngIf="selectedDatos && selectedDatos !=''"  [(disabled)]="!permisos || disabledAction" (click)="mostrarDialogoFirmar(selectedDatos)" pButton type="button" icon="fa fa-rupee"
@@ -312,7 +311,6 @@
               </div>
             </p-footer>
           </p-dataTable>
-        </div>
       </div>
         <div *ngIf="selectMultiple==false">
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"

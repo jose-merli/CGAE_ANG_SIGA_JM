@@ -3,7 +3,8 @@ import {
   Component,
   OnInit,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  HostListener
 } from "@angular/core";
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { DatePipe } from "../../../../../node_modules/@angular/common";
@@ -23,6 +24,10 @@ import { DatosNoColegiadosObject } from "../../../models/DatosNoColegiadosObject
 import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
 import { SigaServices } from "../../../_services/siga.service";
 import { SubtipoCurricularItem } from "../../../models/SubtipoCurricularItem";
+
+export enum KEY_CODE {
+  ENTER = 13
+}
 
 @Component({
   selector: "app-busqueda-no-colegiados",
@@ -839,4 +844,12 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       return true;
     }
   }
+
+   //búsqueda con enter
+   @HostListener("document:keypress", ["$event"])
+   onKeyPress(event: KeyboardEvent) {
+     if (event.keyCode === KEY_CODE.ENTER) {
+      this.isBuscar(false);
+     }
+   }
 }
