@@ -127,11 +127,13 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     this.getCombos();
     this.es = this.translateService.getCalendarLocale();
     // sessionStorage.removeItem("esColegiado");
-    if (sessionStorage.getItem("filtrosBusquedaNoColegiados") != null) {
+    if (
+      sessionStorage.getItem("filtrosBusquedaNoColegiadosFichaColegial") != null
+    ) {
       this.body = JSON.parse(
-        sessionStorage.getItem("filtrosBusquedaNoColegiados")
+        sessionStorage.getItem("filtrosBusquedaNoColegiadosFichaColegial")
       );
-      sessionStorage.removeItem("filtrosBusquedaNoColegiados");
+      sessionStorage.removeItem("filtrosBusquedaNoColegiadosFichaColegial");
 
       if (this.body.historico) {
         if (this.checkFiltersInit()) {

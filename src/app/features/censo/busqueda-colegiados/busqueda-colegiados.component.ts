@@ -109,11 +109,11 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     // sessionStorage.removeItem("esColegiado");
     sessionStorage.removeItem("disabledAction");
 
-    if (sessionStorage.getItem("filtrosBusquedaColegiados") != null) {
+    if (sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial") != null) {
       this.body = JSON.parse(
-        sessionStorage.getItem("filtrosBusquedaColegiados")
+        sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial")
       );
-      sessionStorage.removeItem("filtrosBusquedaColegiados");
+      sessionStorage.removeItem("filtrosBusquedaColegiadosFichaColegial");
       this.isBuscar();
     }
   }

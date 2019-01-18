@@ -338,11 +338,13 @@ export class FichaColegialComponent implements OnInit {
     // Cogemos los datos de la busqueda de Colegiados
     this.getLetrado();
     if (sessionStorage.getItem("filtrosBusquedaColegiados")) {
+      sessionStorage.removeItem("filtrosBusquedaColegiadosFichaColegial");
       this.persistenciaColeg = new DatosColegiadosItem();
       this.persistenciaColeg = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaColegiados")
       );
     } else if (sessionStorage.getItem("filtrosBusquedaNoColegiados")) {
+      sessionStorage.removeItem("filtrosBusquedaNoColegiadosFichaColegial");
       this.persistenciaNoCol = new NoColegiadoItem();
       this.persistenciaNoCol = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaNoColegiados")
@@ -354,11 +356,11 @@ export class FichaColegialComponent implements OnInit {
       this.emptyLoadFichaColegial = JSON.parse(
         sessionStorage.getItem("emptyLoadFichaColegial")
       );
-      if (this.emptyLoadFichaColegial) {
-        this.showFailDetalle(
-          "No se han podido cargar los datos porque el usuario desde el que ha inciado sesión no es colegiado"
-        );
-      }
+      // if (this.emptyLoadFichaColegial) {
+        // this.showFailDetalle(
+        //   "No se han podido cargar los datos porque el usuario desde el que ha inciado sesión no es colegiado"
+        // );
+      // }
       this.desactivarVolver = true;
     }
     if (
@@ -843,15 +845,18 @@ export class FichaColegialComponent implements OnInit {
   backTo() {
     sessionStorage.removeItem("personaBody");
     sessionStorage.removeItem("esNuevoNoColegiado");
+    sessionStorage.removeItem("filtrosBusquedaColegiados");
+    sessionStorage.removeItem("filtrosBusquedaNoColegiados");
+
     if (this.persistenciaColeg != undefined) {
       sessionStorage.setItem(
-        "filtrosBusquedaColegiados",
+        "filtrosBusquedaColegiadosFichaColegial",
         JSON.stringify(this.persistenciaColeg)
       );
     }
     if (this.persistenciaNoCol != undefined) {
       sessionStorage.setItem(
-        "filtrosBusquedaNoColegiados",
+        "filtrosBusquedaNoColegiadosFichaColegial",
         JSON.stringify(this.persistenciaNoCol)
       );
     }
