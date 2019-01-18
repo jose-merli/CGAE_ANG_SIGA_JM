@@ -51,6 +51,7 @@ import { BusquedaSancionesItem } from "../../../models/BusquedaSancionesItem";
 import { BusquedaSancionesObject } from "../../../models/BusquedaSancionesObject";
 import { DocushareObject } from "../../../models/DocushareObject";
 import { DocushareItem } from "../../../models/DocushareItem";
+import { FichaDatosCurricularesObject } from "../../../models/FichaDatosCurricularesObject";
 
 @Component({
   selector: "app-ficha-colegial",
@@ -203,7 +204,8 @@ export class FichaColegialComponent implements OnInit {
   persistenciaNoCol: NoColegiadoItem = undefined;
   messageNoContentRegTel: String = "";
   messageRegtel: String;
-  
+  datosCurricularesRemove: FichaDatosCurricularesObject = new FichaDatosCurricularesObject;
+
   @ViewChild("tableCertificados")
   tableCertificados: DataTable;
   @ViewChild("tableSanciones")
@@ -1408,6 +1410,9 @@ export class FichaColegialComponent implements OnInit {
       this.generalBody.publicidad = "0";
     }
     if (this.publicarDatosContacto == true) {
+      this.showInfo(this.translateService.instant(
+        "menu.fichaColegial.lopd.literal"
+      ));
       this.generalBody.noAparecerRedAbogacia = "1";
     } else { 
       this.generalBody.noAparecerRedAbogacia = "0";
@@ -2412,14 +2417,14 @@ isNotContainsEtiq(event): boolean {
     // this.table.sortMultiple();
   }
 
-  deleteCurriculares() {
+  deleteCurriculares(selectedDatosCurriculares) {
     let mess = this.translateService.instant("messages.deleteConfirmation");
     let icon = "fa fa-trash-alt";
     this.confirmationService.confirm({
       message: mess,
       icon: icon,
       accept: () => {
-        this.eliminarRegistroCV();
+        this.eliminarRegistroCV(selectedDatosCurriculares);
       },
       reject: () => {
         this.msgs = [
@@ -2432,34 +2437,51 @@ isNotContainsEtiq(event): boolean {
           }
         ];
 
-        this.selectedDatos = [];
-        this.selectMultiple = false;
+        this.selectedDatosCurriculares = [];
+        this.selectMultipleCurriculares = false;
       }
     });
   }
 
-  eliminarRegistroCV() {
-    for (let i in this.datosCurriculares) {
-      if (this.datosCurriculares[i].fechaHasta == null) {
+  eliminarRegistroCV(selectedDatosCurriculares) {
+        selectedDatosCurriculares.forEach(element => {
+          this.datosCurricularesRemove.fichaDatosCurricularesItem.push(element);
+        });
+
         this.sigaServices
-          .post("fichaDatosCurriculares_delete", this.datosCurriculares[i])
+          .post("fichaDatosCurriculares_delete", this.datosCurricularesRemove)
           .subscribe(
-            data => {
+            data => { 
+              if (selectedDatosCurriculares.length == 1) {
+                this.showSuccessDetalle(
+                  this.translateService.instant("messages.deleted.success")
+                );
+              } else {
+                this.showSuccessDetalle(
+                  selectedDatosCurriculares.length +
+                    " " +
+                    this.translateService.instant(
+                      "messages.deleted.selected.success"
+                    )
+                );
+              }
               this.progressSpinner = false;
-              this.searchDatosCurriculares();
             },
             err => {
               console.log(err);
+              this.progressSpinner = false;
             },
             () => {
               this.progressSpinner = false;
               this.editar = false;
-              this.selectedDatos = [];
-              this.selectMultiple = false;
+              this.selectedDatosCurriculares = [];
+              this.numSelectedCurriculares = 0;
+              this.selectMultipleCurriculares = false;
+              this.searchDatosCurriculares();
             }
           );
-      }
-    }
+      //}
+    //}
   }
 
   redireccionarCurriculares(dato) {
@@ -2476,6 +2498,7 @@ isNotContainsEtiq(event): boolean {
       sessionStorage.setItem("crearCurriculo", "false");
       this.router.navigate(["/edicionCurriculares"]);
     } else {
+      this.numSelectedCurriculares = this.selectedDatosCurriculares.length;
       sessionStorage.setItem("crearCurriculo", "true");
     }
   }
@@ -2554,6 +2577,20 @@ isNotContainsEtiq(event): boolean {
       this.selectedDatosCurriculares = [];
     } else {
       this.selectAllCurriculares = false;
+      this.selectedDatosCurriculares = [];
+      this.numSelectedCurriculares = 0;
+    }
+  }
+
+
+
+  //Opción tabla de seleccionar todas las filas
+  onChangeSelectAllCurriculares() {
+    if (this.selectAllCurriculares === true) {
+      this.selectMultipleCurriculares = false;
+      this.selectedDatosCurriculares = this.datosCurriculares;
+      this.numSelectedCurriculares =  this.datosCurriculares.length;
+    } else {
       this.selectedDatosCurriculares = [];
       this.numSelectedCurriculares = 0;
     }
@@ -2640,23 +2677,23 @@ isNotContainsEtiq(event): boolean {
   isSelectMultipleDirecciones() {
     this.selectMultipleDirecciones = !this.selectMultipleDirecciones;
     if (!this.selectMultipleDirecciones) {
-      this.numSelected = 0;
+      this.numSelectedDirecciones = 0;
       this.selectedDatosDirecciones = [];
     } else {
       this.selectAllDirecciones = false;
       this.selectedDatosDirecciones = [];
-      this.numSelected = 0;
+      this.numSelectedDirecciones = 0;
     }
   }
 
   onChangeSelectAllDirecciones(datos) {
-    if (this.selectAll === true) {
+    if (this.selectAllDirecciones === true) {
       this.numSelected = datos.length;
       this.selectMultipleDirecciones = false;
       this.selectedDatosDirecciones = datos;
     } else {
       this.selectedDatosDirecciones = [];
-      this.numSelected = 0;
+      this.numSelectedDirecciones = 0;
     }
   }
 
@@ -2691,6 +2728,10 @@ isNotContainsEtiq(event): boolean {
 
   actualizaSeleccionadosDirecciones(selectedDatos) {
     this.numSelectedDirecciones = selectedDatos.length;
+  }
+
+  actualizaSeleccionadosCurriculares(selectedDatos) {
+    this.numSelectedCurriculares = selectedDatos.length;
   }
 
   searchDirecciones() {
@@ -2820,12 +2861,12 @@ isNotContainsEtiq(event): boolean {
   isSelectMultipleBancarios() {
     this.selectMultipleBancarios = !this.selectMultipleBancarios;
     if (!this.selectMultipleBancarios) {
-      this.numSelected = 0;
+      this.numSelectedBancarios = 0;
       this.selectedDatosBancarios = [];
     } else {
       this.selectAllBancarios = false;
       this.selectedDatosBancarios = [];
-      this.numSelected = 0;
+      this.numSelectedBancarios = 0;
     }
   }
 

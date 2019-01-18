@@ -553,13 +553,16 @@ para poder filtrar el dato con o sin estos caracteres*/
             data => {
               this.progressSpinner = false;
               this.body = JSON.parse(data["body"]);
-              this.backTo();
+              //this.showSuccessAddress();
             },
             error => {
               this.bodySearch = JSON.parse(error["error"]);
               this.showFail(this.bodySearch.error.message.toString());
               console.log(error);
               this.progressSpinner = false;
+            },
+            () => {
+              this.backTo();
             }
           );
         }
@@ -847,6 +850,15 @@ para poder filtrar el dato con o sin estos caracteres*/
   showSuccess(mensaje: string) {
     this.msgs = [];
     this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showSuccessAddress() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant("general.message.accion.realizada")
+    });
   }
 
   showInfo(mensaje: string) {

@@ -11,20 +11,21 @@ import {
   FormControl
 } from "@angular/forms";
 import { esCalendar } from "../../../utils/calendar";
-import { SigaServices } from "./../../../_services/siga.service";
+import { SigaServices } from "../../../_services/siga.service";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
-import { ComboItem } from "./../../../../app/models/ComboItem";
+import { ComboItem } from "../../../models/ComboItem";
 import { Location } from "@angular/common";
-import { BusquedaFisicaItem } from "./../../../../app/models/BusquedaFisicaItem";
-import { BusquedaJuridicaItem } from "./../../../../app/models/BusquedaJuridicaItem";
-import { BusquedaJuridicaObject } from "./../../../../app/models/BusquedaJuridicaObject";
-import { BusquedaFisicaObject } from "./../../../../app/models/BusquedaFisicaObject";
+import { BusquedaFisicaItem } from "../../../models/BusquedaFisicaItem";
+import { BusquedaJuridicaItem } from "../../../models/BusquedaJuridicaItem";
+import { BusquedaJuridicaObject } from "../../../models/BusquedaJuridicaObject";
+import { BusquedaFisicaObject } from "../../../models/BusquedaFisicaObject";
 import { DatosNotarioItem } from "../../../models/DatosNotarioItem";
 import { DatosIntegrantesItem } from "../../../models/DatosIntegrantesItem";
 import { FormadorCursoItem } from "../../../models/FormadorCursoItem";
 import { SolicitudIncorporacionItem } from "../../../models/SolicitudIncorporacionItem";
+import { StringObject } from "../../../models/StringObject";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -65,6 +66,10 @@ export class BusquedaGeneralComponent {
   msgs: any[];
   selectedItem: number = 10;
   institucion: ComboItem = new ComboItem();
+  nifCif: StringObject = new StringObject();
+  continue: boolean = false;
+
+  resultado: string = "";
 
   @ViewChild("table")
   table;
@@ -130,6 +135,14 @@ export class BusquedaGeneralComponent {
     ) {
       this.isFormador = true;
       sessionStorage.setItem("toBackNewFormador", "true");
+    }
+
+    if (
+      sessionStorage.getItem("abrirSolicitudIncorporacion") != null ||
+      sessionStorage.getItem("abrirSolicitudIncorporacion") != undefined
+    ) {
+      this.isFormador = true;
+      sessionStorage.removeItem("abrirSolicitudIncorporacion");
     }
 
     this.colsFisicas = [
@@ -560,22 +573,62 @@ export class BusquedaGeneralComponent {
     } else if (sessionStorage.getItem("solicitudIncorporacion") == "true") {
       let enviar = new SolicitudIncorporacionItem();
 
-      if (id[0].numeroInstitucion != this.institucion.value) {
-        // enviar = id[0];
-        enviar.numeroIdentificacion = id[0].nif;
-        enviar.apellido1 = id[0].primerApellido;
-        enviar.nombre = id[0].nombre;
-        enviar.numColegiado = id[0].numeroColegiado;
-        enviar.idInstitucion = id[0].numeroInstitucion;
-        enviar.apellido2 = id[0].segundoApellido;
+      this.nifCif.valor = id[0].nif;
+      this.sigaServices
+        .post("solicitudModificacion_verifyPerson", this.nifCif)
+        .subscribe(
+          data => {
+            this.resultado = JSON.parse(data["body"]).valor;
 
-        sessionStorage.setItem("nuevaIncorporacion", JSON.stringify(enviar));
-        this.router.navigate(["/nuevaIncorporacion"]);
-      } else {
-        this.showFail(
-          "No se puede crear una solicitud de modificación a partir de una persona de la misma institución"
+            if (this.resultado == "existe") {
+              this.continue = false;
+            } else {
+              this.continue = true;
+            }
+
+            this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+          },
+          () => {
+            if (this.continue == true) {
+              enviar.numeroIdentificacion = id[0].nif;
+              enviar.apellido1 = id[0].primerApellido;
+              enviar.nombre = id[0].nombre;
+              enviar.numColegiado = id[0].numeroColegiado;
+              enviar.idInstitucion = id[0].numeroInstitucion;
+              enviar.apellido2 = id[0].segundoApellido;
+
+              sessionStorage.setItem(
+                "nuevaIncorporacion",
+                JSON.stringify(enviar)
+              );
+              this.router.navigate(["/nuevaIncorporacion"]);
+            } else {
+              this.showFail(
+                "No se puede crear una solicitud de modificación a partir de una persona de la misma institución"
+              );
+            }
+          }
         );
-      }
+
+      // if (id[0].numeroInstitucion != this.institucion.value) {
+      //   // enviar = id[0];
+      //   enviar.numeroIdentificacion = id[0].nif;
+      //   enviar.apellido1 = id[0].primerApellido;
+      //   enviar.nombre = id[0].nombre;
+      //   enviar.numColegiado = id[0].numeroColegiado;
+      //   enviar.idInstitucion = id[0].numeroInstitucion;
+      //   enviar.apellido2 = id[0].segundoApellido;
+
+      //   sessionStorage.setItem("nuevaIncorporacion", JSON.stringify(enviar));
+      //   this.router.navigate(["/nuevaIncorporacion"]);
+      // } else {
+      //   this.showFail(
+      //     "No se puede crear una solicitud de modificación a partir de una persona de la misma institución"
+      //   );
+      // }
     }
     // ir a ficha de formador
     else if (this.isFormador) {
@@ -583,6 +636,8 @@ export class BusquedaGeneralComponent {
       id[0].tipoIdentificacion = this.tipoCIF;
       id[0].completo = true;
       sessionStorage.removeItem("abrirFormador");
+      sessionStorage.removeItem("abrirSolicitudIncorporacion");
+
       sessionStorage.setItem("formador", JSON.stringify(id[0]));
       if (
         sessionStorage.getItem("backInscripcion") != null ||
