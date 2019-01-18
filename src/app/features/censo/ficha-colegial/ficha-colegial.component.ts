@@ -51,6 +51,7 @@ import { BusquedaSancionesItem } from "../../../models/BusquedaSancionesItem";
 import { BusquedaSancionesObject } from "../../../models/BusquedaSancionesObject";
 import { DocushareObject } from "../../../models/DocushareObject";
 import { DocushareItem } from "../../../models/DocushareItem";
+import { FichaDatosCurricularesObject } from "../../../models/FichaDatosCurricularesObject";
 
 @Component({
   selector: "app-ficha-colegial",
@@ -203,7 +204,8 @@ export class FichaColegialComponent implements OnInit {
   persistenciaNoCol: NoColegiadoItem = undefined;
   messageNoContentRegTel: String = "";
   messageRegtel: String;
-  
+  datosCurricularesRemove: FichaDatosCurricularesObject = new FichaDatosCurricularesObject;
+
   @ViewChild("tableCertificados")
   tableCertificados: DataTable;
   @ViewChild("tableSanciones")
@@ -2396,14 +2398,14 @@ isNotContainsEtiq(event): boolean {
     // this.table.sortMultiple();
   }
 
-  deleteCurriculares() {
+  deleteCurriculares(selectedDatosCurriculares) {
     let mess = this.translateService.instant("messages.deleteConfirmation");
     let icon = "fa fa-trash-alt";
     this.confirmationService.confirm({
       message: mess,
       icon: icon,
       accept: () => {
-        this.eliminarRegistroCV();
+        this.eliminarRegistroCV(selectedDatosCurriculares);
       },
       reject: () => {
         this.msgs = [
@@ -2416,34 +2418,51 @@ isNotContainsEtiq(event): boolean {
           }
         ];
 
-        this.selectedDatos = [];
-        this.selectMultiple = false;
+        this.selectedDatosCurriculares = [];
+        this.selectMultipleCurriculares = false;
       }
     });
   }
 
-  eliminarRegistroCV() {
-    for (let i in this.datosCurriculares) {
-      if (this.datosCurriculares[i].fechaHasta == null) {
+  eliminarRegistroCV(selectedDatosCurriculares) {
+        selectedDatosCurriculares.forEach(element => {
+          this.datosCurricularesRemove.fichaDatosCurricularesItem.push(element);
+        });
+
         this.sigaServices
-          .post("fichaDatosCurriculares_delete", this.datosCurriculares[i])
+          .post("fichaDatosCurriculares_delete", this.datosCurricularesRemove)
           .subscribe(
-            data => {
+            data => { 
+              if (selectedDatosCurriculares.length == 1) {
+                this.showSuccessDetalle(
+                  this.translateService.instant("messages.deleted.success")
+                );
+              } else {
+                this.showSuccessDetalle(
+                  selectedDatosCurriculares.length +
+                    " " +
+                    this.translateService.instant(
+                      "messages.deleted.selected.success"
+                    )
+                );
+              }
               this.progressSpinner = false;
-              this.searchDatosCurriculares();
             },
             err => {
               console.log(err);
+              this.progressSpinner = false;
             },
             () => {
               this.progressSpinner = false;
               this.editar = false;
-              this.selectedDatos = [];
-              this.selectMultiple = false;
+              this.selectedDatosCurriculares = [];
+              this.numSelectedCurriculares = 0;
+              this.selectMultipleCurriculares = false;
+              this.searchDatosCurriculares();
             }
           );
-      }
-    }
+      //}
+    //}
   }
 
   redireccionarCurriculares(dato) {

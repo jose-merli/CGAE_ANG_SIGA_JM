@@ -1537,7 +1537,7 @@
           <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
         -->
         <button 
-          (click)="deleteCurriculares(W)"
+          (click)="deleteCurriculares(selectedDatosCurriculares)"
           pButton
           type="button"
           [(disabled)]="!(selectedDatosCurriculares && selectedDatosCurriculares != '') || isLetrado || disabledAction"
