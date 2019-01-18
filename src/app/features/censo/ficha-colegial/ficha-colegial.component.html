@@ -1719,9 +1719,9 @@
               <div class="ml-3 selectAll">
                 <p-checkbox
                   (onChange)="
-                    onChangeSelectAllDirecciones(this.datosDirecciones)
+                    onChangeSelectAllDirecciones()
                   "
-                  [(ngModel)]="selectAll"
+                  [(ngModel)]="selectAllDirecciones"
                   binary="true"
                   label="Seleccionar todo"
                   name="groupname"
@@ -1910,8 +1910,8 @@
               >
               <div class="ml-3 selectAll">
                 <p-checkbox
-                  (onChange)="onChangeSelectAllBancarios(this.datosBancarios)"
-                  [(ngModel)]="selectAll"
+                  (onChange)="onChangeSelectAllBancarios()"
+                  [(ngModel)]="selectAllBancarios"
                   binary="true"
                   label="Seleccionar todo"
                   name="groupname"
