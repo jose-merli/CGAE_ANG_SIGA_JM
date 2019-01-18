@@ -220,6 +220,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
       idModelo: this.body.idModeloComunicacion,
       idPlantillaEnvios: this.idPlantillaEnvios,
       idInstitucion: this.body.idInstitucion,
+      idTipoEnvios: this.body.idTipoEnvios,
       porDefecto: this.porDefecto
     }
 
@@ -289,6 +290,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
         idModelo: this.body.idModeloComunicacion,
         idPlantillaEnvios: element.idPlantillaEnvios,
         idInstitucion: this.body.idInstitucion,
+        idTipoEnvios: this.body.idTipoEnvios
       };
       this.eliminarArray.push(objEliminar);
     });
