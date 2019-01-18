@@ -6,5 +6,6 @@ export class DatosGeneralesConsultaItem {
   idObjetivo: String;
   idClaseComunicacion: String;
   generica: String;
+  sentencia: String;
   constructor() { }
 }

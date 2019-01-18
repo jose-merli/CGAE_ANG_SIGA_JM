@@ -192,7 +192,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
-      let service = 'modelos_detalle_plantillas';
+      let service = 'modelos_detalle_plantillasEnvio';
       if (this.showHistorico) {
         service = 'modelos_detalle_plantillasHist';
       }
@@ -220,6 +220,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
       idModelo: this.body.idModeloComunicacion,
       idPlantillaEnvios: this.idPlantillaEnvios,
       idInstitucion: this.body.idInstitucion,
+      idTipoEnvios: this.body.idTipoEnvios,
       porDefecto: this.porDefecto
     }
 
@@ -289,6 +290,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
         idModelo: this.body.idModeloComunicacion,
         idPlantillaEnvios: element.idPlantillaEnvios,
         idInstitucion: this.body.idInstitucion,
+        idTipoEnvios: this.body.idTipoEnvios
       };
       this.eliminarArray.push(objEliminar);
     });

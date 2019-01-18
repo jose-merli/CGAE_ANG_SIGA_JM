@@ -1057,9 +1057,23 @@ p-footer .main-button{
   text-decoration: white;
 }
 
+.subir-plantilla .main-button,.subir-plantilla .ui-button{
+  background: none !important;
+  width: 100%;
+}
+
+.subir-plantilla .fa-plus {
+  color:$grey1 !important;
+  text-align: center;
+  width: 100%;
+}
+
+.subir-plantilla .fa-plus:before {
+  content: "\f093";
+}
 
 
-/**VE**/
+/**RESPONSIVE**/
 
 @media (max-width: 55em) {
   /* Default 35em */

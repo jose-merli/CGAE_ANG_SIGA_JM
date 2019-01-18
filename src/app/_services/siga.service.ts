@@ -214,6 +214,8 @@ export class SigaServices {
     modelos_detalle_guardarPlantillaDoc: 'modelos/guardarPlantillaDoc',
     modelos_detalle_insertarPlantilla: 'modelos/detalle/insertarPlantilla',
     modelos_detalle_subirPlantilla: 'modelos/detalle/subirPlantilla',
+    modelos_plantilla_consultas_guardar: 'modelos/plantilla/consultas/guardar',
+    modelos_plantilla_consultas_borrar: 'modelos/plantilla/consultas/borrar',
     plantillasEnvio_consultas: 'plantillasEnvio/consultasPlantillas',
     plantillasEnvio_borrar: 'plantillasEnvio/borrarPlantilla',
     plantillasEnvio_comboConsultas: 'plantillasEnvio/consultasDisp',
@@ -223,7 +225,8 @@ export class SigaServices {
     plantillasEnvio_desaociarConsulta: 'plantillasEnvio/desasociarConsulta',
     plantillasEnvio_detalleRemitente: 'plantillasEnvio/detalleRemitente',
     plantillasEnvio_personaDireccion: 'plantillasEnvio/personaYdirecciones',
-    plantillasEnvio_guardarRemitente: 'plantillasEnvio/guardarRemitente'
+    plantillasEnvio_guardarRemitente: 'plantillasEnvio/guardarRemitente',
+
 
   };
 
