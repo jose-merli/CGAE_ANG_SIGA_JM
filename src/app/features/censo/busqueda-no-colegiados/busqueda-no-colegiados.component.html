@@ -8,11 +8,11 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <p class="title-module"> {{ 'general.message.datos.generales' | translate }}
-                <i (click)="abrirFicha('generales')" *ngIf="!esFichaActiva('generales')" class="fa fa-angle-up float-right"></i>
-                <i (click)="cerrarFicha('generales')" *ngIf="esFichaActiva('generales')" class="fa fa-angle-down float-right"></i>
+            <p (click)="onHideDatosGenerales()" class="title-module"> {{ 'general.message.datos.generales' | translate }}
+                <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+                <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
             </p>
-            <div *ngIf="esFichaActiva('generales')" class="module vista-simple">
+            <div *ngIf="showDatosGenerales" class="module vista-simple">
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}</label>
@@ -39,11 +39,11 @@
                     </div>
                 </div>
             </div>
-            <p class="title-module">{{ "censo.consultaDatosGeneralesAvanzada.cabecera" | translate}}
-                <i (click)="abrirFicha('avanzado')" *ngIf="!esFichaActiva('avanzado')" class="fa fa-angle-down float-right"></i>
-                <i (click)="cerrarFicha('avanzado')" *ngIf="esFichaActiva('avanzado')" class="fa fa-angle-up float-right"></i>
+            <p (click)="onHideDatosGeneralesAvanzados()"  class="title-module">{{ "censo.consultaDatosGeneralesAvanzada.cabecera" | translate}}
+                <i *ngIf="showDatosGeneneralesAvanzado" class="fa fa-angle-down float-right"></i>
+                <i *ngIf="!showDatosGeneneralesAvanzado" class="fa fa-angle-up float-right"></i>
             </p>
-            <div *ngIf="esFichaActiva('avanzado')" class="module vista-avanzada">
+            <div *ngIf="showDatosGeneneralesAvanzado" class="module vista-avanzada">
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaClientesAvanzada.literal.sexo" | translate}}</label>
@@ -78,11 +78,11 @@
                     </div>
                 </div>
             </div>
-            <p class="title-module">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}
-                <i (click)="abrirFicha( 'direccion')" *ngIf="!esFichaActiva( 'direccion')" class="fa fa-angle-down float-right"></i>
-                <i (click)="cerrarFicha( 'direccion')" *ngIf="esFichaActiva( 'direccion')" class="fa fa-angle-up float-right"></i>
+            <p (click)="onHideDireccion()" class="title-module">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}
+                <i *ngIf="showDatosDireccion" class="fa fa-angle-down float-right"></i>
+                <i *ngIf="!showDatosDireccion" class="fa fa-angle-up float-right"></i>
             </p>
-            <div *ngIf="esFichaActiva( 'direccion')" class="module vista-avanzada">
+            <div *ngIf="showDatosDireccion" class="module vista-avanzada">
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaClientesAvanzada.literal.cp" | translate}}</label>

@@ -446,6 +446,10 @@ export class FichaColegialComponent implements OnInit {
 
     this.colsColegiaciones = [
       {
+        field: "institucion",
+        header: "censo.busquedaClientesAvanzada.literal.colegio"
+      },
+      {
         field: "nif",
         header: "censo.consultaDatosColegiacion.literal.numIden"
       },
@@ -2292,9 +2296,9 @@ export class FichaColegialComponent implements OnInit {
       );
   }
 
-  redireccionarCerts(selectedDatos) {
-    this.router.navigate(["/mantenimientoCertificados"]);
-  }
+  // redireccionarCerts(selectedDatos) {
+  //   this.router.navigate(["/mantenimientoCertificados"]);
+  // }
 
   // FIN CERTIFICADOS
   //

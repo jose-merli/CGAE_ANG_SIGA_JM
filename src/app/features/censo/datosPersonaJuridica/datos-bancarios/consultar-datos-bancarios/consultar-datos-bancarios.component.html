@@ -269,15 +269,15 @@
         </div>
       </div>
 
-      <div *ngIf="openFichaListadoFicherosAnexos" class="card-body">
-        <div *ngIf="selectMultiple == true">
+      <div *ngIf="openFichaListadoFicherosAnexos" class="card mt-3">
+        <div class="card-body p-0" *ngIf="selectMultiple == true">
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
             [(selection)]="selectedDatos" [paginator]="activarPaginacion()" selectionMode="single" [responsive]="true" #table
             class="tabla-listado" [value]="bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem" [sortOrder]="1" (onRowSelect)="controlarEdicion()"
             [paginator]="true" paginatorPosition="both" [rows]="selectedItem" [editable]="true" pageLinks="4">
 
             <p-column field="descripcion" header="{{'general.description' | translate}}" [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-              filterMatchMode="contains" [editable]="!historico"></p-column>
+              filterMatchMode="contains"></p-column>
             <p-column field="tipo" header="{{'censo.busquedaClientesAvanzada.literal.tipoCliente' | translate}}" [sortable]="true" [filter]="true"
               filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
             <p-column field="tipoMandato" header="{{'censo.sociedades.datosBancarios.tipoMandato' | translate}}" [sortable]="true" [filter]="true"
@@ -307,7 +307,7 @@
                   iconPos="left" label="{{ 'censo.sociedades.datosBancarios.firmar' | translate}}"></button>
                 <button *ngIf="selectedDatos && selectedDatos !=''"  [(disabled)]="!permisos || disabledAction" (click)="comunicar(selectedDatos)" pButton type="button" icon="fa fa-comment"
                   iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
-                <!-- <button *ngIf="!nuevo"  [(disabled)]="!permisos" (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button> -->
+           <!-- <button *ngIf="!nuevo"  [(disabled)]="!permisos" (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button> -->
               </div>
             </p-footer>
           </p-dataTable>
@@ -321,7 +321,7 @@
 
 
 
-            <p-column field="descripcion" header="{{ 'general.description' | translate}}" [sortable]="true" [editable]="!selectMultiple"
+            <p-column field="descripcion" header="{{ 'general.description' | translate}}" [sortable]="true" [editable]="permisos && !selectMultiple"
               [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
 
             </p-column>
