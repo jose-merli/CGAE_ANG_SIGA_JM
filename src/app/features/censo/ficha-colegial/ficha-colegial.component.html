@@ -1471,6 +1471,9 @@
           paginatorPosition="both"
           [rows]="selectedItemCurriculares"
           (onRowSelect)="redireccionarCurriculares(selectedDatosCurriculares)"
+          (onRowUnselect)="
+            actualizaSeleccionadosCurriculares(selectedDatosCurriculares)
+          "
         >
           <p-column
             *ngFor="let col of colsCurriculares"
@@ -1513,18 +1516,14 @@
                     | translate
                 }}</label
               >
+              <div class="ml-3 selectAll">
+                <p-checkbox (onChange)="onChangeSelectAllCurriculares()" [(ngModel)]="selectAllCurriculares" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
+            </div>
 
               <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultipleCurriculares}" (click)="isSelectMultipleCurriculares()">
                 <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
-              <!--
-                <div class="ml-3 selectAll">
-                  <p-checkbox (onChange)="onChangeSelectAll(this.datosCurriculares)" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo"
-                    name="groupname"></p-checkbox>
-                </div>
-                <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
-                  <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
-              -->
-            </div>
+
+              </div>
           </ng-template>
         </p-dataTable>
       </div>
@@ -1537,7 +1536,7 @@
           <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
         -->
         <button 
-          (click)="deleteCurriculares(W)"
+          (click)="deleteCurriculares(selectedDatosCurriculares)"
           pButton
           type="button"
           [(disabled)]="!(selectedDatosCurriculares && selectedDatosCurriculares != '') || isLetrado || disabledAction"
@@ -1830,7 +1829,7 @@
           [paginator]="activarPaginacionBancarios()"
           (onRowSelect)="redireccionarDatosBancarios(selectedDatosBancarios)"
           (onRowUnselect)="
-            actualizaSeleccionadosBancarios(this.selectedDatosBancarios)
+            actualizaSeleccionadosBancarios(selectedDatosBancarios)
           "
           paginatorPosition="both"
           [rows]="selectedItemBancarios"
