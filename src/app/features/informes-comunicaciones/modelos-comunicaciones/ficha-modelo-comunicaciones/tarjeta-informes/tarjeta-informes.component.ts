@@ -167,7 +167,7 @@ export class TarjetaInformesComponent implements OnInit {
     let id = dato[0].id;
     if (!this.selectMultiple) {
       this.router.navigate(['/fichaPlantillaDocumento']);
-      sessionStorage.setItem("modelosInformesSearch", JSON.stringify(this.body));
+      sessionStorage.setItem("modelosInformesSearch", JSON.stringify(dato[0]));
     }
 
   }
