@@ -5,14 +5,14 @@
     <i class="fa fa-square"></i>
     <p>
       {{ "menu.censo" | translate }} <i class="fa fa-angle-right"></i>
-      {{ "censo.solicitudModificacion.literal.titulo" | translate }}
+      {{ "menu.censo.verSolicitudesModificacion" | translate }}
     </p>
   </div>
 
   <div class="card">
     <div class="card-body">
       <p class="title-module">
-        {{ "censo.solicitudModificacion.literal.titulo" | translate }}
+        {{ "menu.censo.verSolicitudesModificacion" | translate }}
         <i
           (click)="onHideCard()"
           *ngIf="showCard"
@@ -102,8 +102,6 @@
           label="{{ 'general.boton.search' | translate}}"
         ></button>
         <button
-          *ngIf="isLetrado"
-          [(disabled)] = "desactivarNuevo"
           (click)="newElement()"
           pButton
           type="button"
@@ -160,6 +158,9 @@
                 "cargaMasivaDatosCurriculares.numRegistros.literal" | translate
               }}</label
             >
+            <!-- <div class="ml-3 selectAll">
+              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
+            </div> -->
             <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
               <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
           </div>
@@ -169,7 +170,7 @@
     <div class="card-footer">
       <div *ngIf="selectMultiple && selectedDatos.length > 0" class="text-right main-button ">
         <button
-        (click)="processMultipleRequest(selectedDatos)"
+        (click)="comprobarAuditoria()"
         pButton
         type="button"
         icon="fa fa-gears"
@@ -238,7 +239,7 @@
       <div class="text-right main-button ">
         <div *ngIf="!isNew">
           <button
-            (click)="processMultipleRequest(selectedDatos)"
+            (click)="processMultipleRequest()"
             pButton
             type="button"
             icon="fa fa-gears"
@@ -284,6 +285,29 @@
             [disabled]="validateButton()"
           ></button>
         </div>
+      </div>
+    </p-footer>
+  </p-dialog>
+ 
+  <!-- AUDITORIA -->
+  <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500"
+    [minWidth]="500">
+    <p-header class="title">
+      <label>{{"general.ventana.cgae" | translate}} -{{"censo.consultaHistorico.cabecera" | translate}}</label>
+    </p-header>
+
+    <div class="bloque col-lg-12 col-md-12">
+      <div class="row">
+        <div class="form-group col-lg-12 col-md-12">
+          <label>{{"censo.datosHistorico.literal.motivo" | translate}} (*)</label>
+          <textarea pInputTextarea [(ngModel)]="body.motivo" (ngModelChange)="comprobarCampoMotivo()"></textarea>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="text-right main-button ">
+        <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
+        <button (click)="processMultipleRequest()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
       </div>
     </p-footer>
   </p-dialog>

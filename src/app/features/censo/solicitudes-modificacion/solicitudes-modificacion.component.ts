@@ -59,6 +59,10 @@ export class SolicitudesModificacionComponent implements OnInit {
   data: any[] = [];
   selectedItem: number = 10;
 
+  mostrarAuditoria: boolean = false;
+  showGuardarAuditoria: boolean = false;
+  displayAuditoria: boolean = false;
+
   constructor(
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
@@ -96,9 +100,11 @@ export class SolicitudesModificacionComponent implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
 
       if (this.body.fechaDesde != null) {
-        this.body.fechaDesde = new Date(this.body.fechaDesde.toString());
-      } else if (this.body.fechaHasta != null) {
-        this.body.fechaHasta = new Date(this.body.fechaHasta.toString());
+        this.body.fechaDesde = new Date(this.body.fechaDesde);
+      }
+
+      if (this.body.fechaHasta != null) {
+        this.body.fechaHasta = new Date(this.body.fechaHasta);
       }
 
       if (sessionStorage.getItem("processingPerformed") == "true") {
@@ -122,6 +128,8 @@ export class SolicitudesModificacionComponent implements OnInit {
         sessionStorage.removeItem("saveFilters");
       }
     }
+
+    this.obtenerMostrarAuditoria();
   }
 
   onHideCard() {
@@ -286,9 +294,9 @@ export class SolicitudesModificacionComponent implements OnInit {
   }
 
   // PROCESS REQUEST AND DENY REQUEST
+  processMultipleRequest() {
+    this.bodyMultiple = this.selectedDatos;
 
-  processMultipleRequest(selectedDatos) {
-    this.bodyMultiple = selectedDatos;
     this.updateRequestState(
       "solicitudModificacion_processGeneralModificationRequest"
     );
@@ -307,15 +315,39 @@ export class SolicitudesModificacionComponent implements OnInit {
 
     this.sigaServices.post(path, this.bodyMultiple).subscribe(
       data => {
-        this.progressSpinner = false;
-        this.showSuccess();
-        this.search();
+        if (this.mostrarAuditoria) {
+          this.selectedDatos.forEach(element => {
+            let motivoBackup = element.motivo;
+            element.motivo = this.body.motivo;
+
+            this.sigaServices
+              .post("solicitudModificacion_insertAuditoria", element)
+              .subscribe(
+                data => {
+                  this.progressSpinner = false;
+                  this.search();
+
+                  this.showSuccess();
+                  this.search();
+                },
+                err => {
+                  this.progressSpinner = false;
+                  this.showFail();
+                },
+                () => {}
+              );
+
+            this.body.motivo = motivoBackup;
+          });
+          this.cerrarAuditoria();
+        }
       },
       err => {
         this.progressSpinner = false;
         this.showFail();
       },
       () => {
+        this.progressSpinner = false;
         this.selectMultiple = false;
         this.closeDialog();
       }
@@ -386,7 +418,7 @@ export class SolicitudesModificacionComponent implements OnInit {
           }
         ];
 
-        this.motivoSolGeneral = selectedDatos.motivo;
+        this.motivoSolGeneral = selectedDatos[0].motivo;
 
         if (selectedDatos[0].estado == "PENDIENTE" && !this.isLetrado) {
           this.disableButton = false;
@@ -396,14 +428,11 @@ export class SolicitudesModificacionComponent implements OnInit {
       }
     } else {
       if (
-        selectedDatos[selectedDatos.length - 1].especifica == "1" ||
+        // selectedDatos[selectedDatos.length - 1].especifica == "1" ||
         selectedDatos[selectedDatos.length - 1].estado != "PENDIENTE"
       ) {
         this.selectedDatos.splice(selectedDatos.length - 1, 1);
       }
-      // if (selectedDatos[selectedDatos.length - 1].estado != "PENDIENTE") {
-      //   this.selectedDatos.splice(selectedDatos.length - 1, 1);
-      // }
     }
   }
 
@@ -514,5 +543,57 @@ export class SolicitudesModificacionComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  obtenerMostrarAuditoria() {
+    let parametro = {
+      valor: "OCULTAR_MOTIVO_MODIFICACION"
+    };
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          let parametroOcultarMotivo = JSON.parse(data.body);
+          if (parametroOcultarMotivo.parametro == "S") {
+            this.mostrarAuditoria = false;
+          } else if (parametroOcultarMotivo.parametro == "N") {
+            this.mostrarAuditoria = true;
+          } else {
+            this.mostrarAuditoria = undefined;
+          }
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
+  comprobarAuditoria() {
+    // mostrar la auditoria depende de un parámetro que varía según la institución
+    this.body.motivo = undefined;
+
+    if (!this.mostrarAuditoria) {
+      this.processMultipleRequest();
+    } else {
+      this.displayAuditoria = true;
+      this.showGuardarAuditoria = false;
+    }
+  }
+
+  cerrarAuditoria() {
+    this.displayAuditoria = false;
+  }
+
+  comprobarCampoMotivo() {
+    if (
+      this.body.motivo != undefined &&
+      this.body.motivo != "" &&
+      this.body.motivo.trim() != ""
+    ) {
+      this.showGuardarAuditoria = true;
+    } else {
+      this.showGuardarAuditoria = false;
+    }
   }
 }

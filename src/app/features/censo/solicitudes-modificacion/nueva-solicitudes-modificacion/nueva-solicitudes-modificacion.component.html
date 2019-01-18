@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -218,7 +219,7 @@
         <div class="card-footer">
           <div class="text-right main-button ">
             <button
-              (click)="processRequest()"
+              (click)="comprobarAuditoria()"
               pButton
               type="button"
               icon="fa fa-gears"
@@ -251,6 +252,29 @@
       label="{{ 'general.boton.volver' | translate}}"
     ></button>
   </div>
+
+  <!-- AUDITORIA -->
+  <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500"
+    [minWidth]="500">
+    <p-header class="title">
+      <label>{{"general.ventana.cgae" | translate}} -{{"censo.consultaHistorico.cabecera" | translate}}</label>
+    </p-header>
+
+    <div class="bloque col-lg-12 col-md-12">
+      <div class="row">
+        <div class="form-group col-lg-12 col-md-12">
+          <label>{{"censo.datosHistorico.literal.motivo" | translate}} (*)</label>
+          <textarea pInputTextarea [(ngModel)]="motivoAuditoria" (ngModelChange)="comprobarCampoMotivo()"></textarea>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="text-right main-button ">
+        <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
+        <button (click)="processRequest()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
 
   <div *ngIf="progressSpinner" class="overlay-spinner ">
     <div class="loader "></div>
