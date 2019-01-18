@@ -192,7 +192,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
-      let service = 'modelos_detalle_plantillas';
+      let service = 'modelos_detalle_plantillasEnvio';
       if (this.showHistorico) {
         service = 'modelos_detalle_plantillasHist';
       }
