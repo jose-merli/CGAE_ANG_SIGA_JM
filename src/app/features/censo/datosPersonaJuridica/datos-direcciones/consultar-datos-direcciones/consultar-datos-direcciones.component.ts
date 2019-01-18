@@ -862,7 +862,6 @@ para poder filtrar el dato con o sin estos caracteres*/
   buscarPoblacion(e) {
     if (e.target.value && e.target.value !== null) {
       if (e.target.value.length >= 3) {
-        debugger;
         this.getComboPoblacion(e.target.value);
         console.log("pobl", e.target.value);
         console.log("poblac", this.comboPoblacion);
