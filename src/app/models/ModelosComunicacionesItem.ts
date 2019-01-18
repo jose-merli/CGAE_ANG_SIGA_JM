@@ -10,5 +10,6 @@ export class ModelosComunicacionesItem {
   idTipoEnvios: String;
   porDefecto: String;
   idInforme: String;
+
   constructor() { }
 }

@@ -5,10 +5,10 @@ import { ConsultasSearchItem } from '../../../../../../models/ConsultasSearchIte
 import { ModelosComunicacionesItem } from '../../../../../../models/ModelosComunicacionesItem';
 import { InformesModelosComItem } from '../../../../../../models/InformesModelosComunicacionesItem';
 import { PlantillaDocumentoItem } from "../../../../../../models/PlantillaDocumentoItem";
-
 import { SigaServices } from "./../../../../../../_services/siga.service";
 import { Location } from "@angular/common";
 import { Message, ConfirmationService } from "primeng/components/common/api";
+import { TranslateService } from "../../../../../../commons/translate/translation.service";
 
 
 @Component({
@@ -49,6 +49,10 @@ export class PlantillaDocumentoComponent implements OnInit {
   showDatosGenerales: boolean = true;
   showConsultas: boolean = false;
   file: any;
+  eliminarDisabled: boolean = false;
+  eliminarArray: any = [];
+  nuevoDocumento: boolean = false;
+  selectedIdioma: any;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -57,7 +61,8 @@ export class PlantillaDocumentoComponent implements OnInit {
   @ViewChild('tableDocs') tableDocs: DataTable;
   selectedDocs
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private location: Location, private sigaServices: SigaServices) {
+  constructor(private changeDetectorRef: ChangeDetectorRef, private location: Location, private sigaServices: SigaServices,
+    private confirmationService: ConfirmationService, private translateService: TranslateService) {
 
 
   }
@@ -67,12 +72,12 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.textSelected = "{0} ficheros seleccionadas";
     this.firstDocs = 0;
 
-    // this.getDatos();
+    this.getDatos();
     this.busquedaIdioma();
     this.getConsultasDisponibles();
     this.getDocumentos();
 
-    this.selectedItem = 4;
+    this.selectedItem = 10;
 
     this.cols = [
       { field: 'consulta', header: 'Consulta' },
@@ -107,15 +112,15 @@ export class PlantillaDocumentoComponent implements OnInit {
     ];
 
     this.colsDocumentos = [
-      { field: 'plantilla', header: 'Plantilla' },
-      { field: 'idioma', header: 'idioma' }
+      { field: 'idioma', header: 'idioma' },
+      { field: 'plantilla', header: 'Plantilla' }
     ]
 
     this.datos = [
-      { consulta: '', finalidad: '', objetivo: 'Destinatario', id: '1' },
-      { consulta: '', finalidad: '', objetivo: 'Condicional', id: '3' },
+      { consulta: '', finalidad: '', objetivo: 'Destinatario', idObjetivo: '1' },
+      { consulta: '', finalidad: '', objetivo: 'Condicional', idObjetivo: '3' },
       { consulta: '', finalidad: '', objetivo: 'Multidocumento', idObjetivo: '2' },
-      { consulta: '', finalidad: '', objetivo: 'Destinatario', idObjetivo: '4' },
+      { consulta: '', finalidad: '', objetivo: 'Datos', idObjetivo: '4' },
     ]
     // this.body.idConsulta = this.consultas[1].value;
 
@@ -184,17 +189,30 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   }
 
-  onRowSelect() {
+  onSelectConsulta(dato) {
+    console.log(dato)
     if (!this.selectMultiple) {
       this.selectedDatos = [];
+    } else if (this.selectMultiple && dato[0].idObjetivo != '4') {
+      this.eliminarDisabled = true;
+    } else if (this.selectMultiple && dato[0].idObjetivo == '4') {
+      this.eliminarDisabled = false;
     }
   }
 
+  onRowSelect(dato) {
+    if (!this.selectMultipleDocs) {
+      this.selectedDocs = [];
+    }
+  }
   addDocumento() {
     let obj = {
       plantilla: '',
       idioma: '',
+      guardada: '',
+      fileName: ''
     };
+    this.nuevoDocumento = true;
     this.documentos.push(obj);
     this.documentos = [... this.documentos];
   }
@@ -203,10 +221,12 @@ export class PlantillaDocumentoComponent implements OnInit {
   addConsulta() {
     let obj = {
       consulta: null,
-      finalidad: null
+      finalidad: null,
+      objetivo: 'Datos',
+      idObjetivo: 4
     };
     this.datos.push(obj);
-    // this.datos = [... this.datos];
+    this.datos = [... this.datos];
   }
 
 
@@ -262,12 +282,10 @@ export class PlantillaDocumentoComponent implements OnInit {
 
 
   getConsultasDisponibles() {
-    debugger;
     this.sigaServices
       .post("modelos_combo_consultas", this.body)
       .subscribe(
         data => {
-
           this.consultasCombo = JSON.parse(data["body"]).combooItems;
           console.log(this.consultasCombo)
         },
@@ -293,12 +311,16 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   getDocumentos() {
+    debugger;
     this.sigaServices
       .post('modelos_detalle_plantillas', this.body)
       .subscribe(
         data => {
-          debugger;
           this.documentos = JSON.parse(data["body"]).documentoPlantillaItem;
+          this.documentos.map(e => {
+            e.guardada = true;
+          });
+
         },
         err => {
           this.showFail('Error al cargar las consultas');
@@ -316,15 +338,14 @@ export class PlantillaDocumentoComponent implements OnInit {
       .post(service, this.body)
       .subscribe(
         data => {
-          debugger;
           this.datos = JSON.parse(data["body"]).consultaItem;
 
-          if (this.datos == []) {
+          if (this.datos.length <= 0) {
             this.datos = [
               { consulta: '', finalidad: '', objetivo: 'Destinatario', idObjetivo: '1' },
               { consulta: '', finalidad: '', objetivo: 'Condicional', idObjetivo: '3' },
               { consulta: '', finalidad: '', objetivo: 'Multidocumento', idObjetivo: '2' },
-              { consulta: '', finalidad: '', objetivo: 'Destinatario', idObjetivo: '4' },
+              { consulta: '', finalidad: '', objetivo: 'Datos', idObjetivo: '4' },
             ]
           }
         },
@@ -367,7 +388,8 @@ export class PlantillaDocumentoComponent implements OnInit {
     sessionStorage.removeItem("crearNuevaPlantillaDocumento");
     this.sigaServices.post("modelos_detalle_guardarPlantillaDoc", this.body).subscribe(
       data => {
-        this.showSuccess('Plantilla guardada');
+        this.showSuccess('La plantilla se ha guardado correctamente');
+
         sessionStorage.removeItem("crearNuevaPlantillaDocumento");
       },
       err => {
@@ -385,26 +407,62 @@ export class PlantillaDocumentoComponent implements OnInit {
         this.showSuccess('Plantilla subida correctamente');
         plantilla.idPlantillaDocumento = JSON.parse(data["body"]).idPlantillaDocumento;
         this.body.plantillas.push(plantilla);
+        this.nuevoDocumento = false;
       },
       err => {
         this.showFail('Error al subir el documento');
         console.log(err);
       },
       () => {
+        this.getDocumentos();
       }
     );
   }
 
-  guardarConsultas(consulta) {
-    this.sigaServices.post("modelos_plantilla_consultas_guardar", consulta).subscribe(
+  guardarConsultas() {
+    let destinatarios = this.datos.map(e => {
+      if (e.consulta != '' && e.idObjetivo == '1') {
+        return true;
+      } else {
+        return false;
+      };
+    })
+
+    let condicional = this.datos.map(e => {
+      if (e.consulta != '' && e.idObjetivo == '3') {
+        return true;
+      } else {
+        return false;
+      };
+    })
+
+    if (destinatarios.indexOf(true) != -1 && condicional.indexOf(true) != -1) {
+      this.guardarConsultasOk();
+    } else {
+      this.showFail('Seleccione una consulta para destinatarios y condicional');
+    }
+  }
+
+  guardarConsultasOk() {
+    this.datos.map(e => {
+      let obj = {
+        idConsulta: e.consulta,
+        idConsultaAnterior: e.consultaAnterior,
+      }
+      this.body.consultas.push(obj)
+    })
+
+
+    this.sigaServices.post("modelos_plantilla_consultas_guardar", this.body).subscribe(
       data => {
-        this.showSuccess('Consulta guardada');
+        this.showSuccess('La consulta se ha guardado correctamente');
       },
       err => {
         this.showFail('Error al guardar la consulta');
         console.log(err);
       },
       () => {
+        this.getResultados();
       }
     );
   }
@@ -429,8 +487,9 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.msgs = [];
   }
 
-  onChangeIdioma() {
-
+  onChangeIdioma(e) {
+    console.log(e)
+    this.selectedIdioma = e.value
   }
 
   getFinalidad(id) {
@@ -441,11 +500,13 @@ export class PlantillaDocumentoComponent implements OnInit {
           this.progressSpinner = false;
           this.finalidad = JSON.parse(data["body"]).finalidad;
           for (let dato of this.datos) {
-            if (!dato.idConsulta) {
-              dato.idConsulta = id;
+            if (!dato.consulta && dato.consulta == id) {
+              dato.consulta = id;
               dato.finalidad = this.finalidad;
-            } else {
+            } else if (dato.consulta && dato.consulta == id) {
               dato.finalidad = this.finalidad;
+            } else if (!dato.consulta && dato.consulta == '') {
+              this.finalidad = '';
             }
           }
           this.datos = [... this.datos];
@@ -461,7 +522,17 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   onChangeConsultas(e) {
     let id = e.value;
-    this.getFinalidad(id);
+    if (id == "") {
+      for (let dato of this.datos) {
+        if (!dato.consulta && dato.consulta == id) {
+          dato.consulta = id;
+          dato.finalidad = '';
+        }
+      }
+    } else {
+      this.getFinalidad(id);
+    }
+
     console.log(id)
   }
 
@@ -475,4 +546,57 @@ export class PlantillaDocumentoComponent implements OnInit {
     }
 
   }
+
+  eliminar(dato) {
+
+    this.confirmationService.confirm({
+      // message: this.translateService.instant("messages.deleteConfirmation"),
+      message: '¿Está seguro de cancelar los' + dato.length + 'envíos seleccionados',
+      icon: "fa fa-trash-alt",
+      accept: () => {
+        this.confirmarEliminar(dato);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+
+  confirmarEliminar(dato) {
+    this.eliminarArray = [];
+    dato.forEach(element => {
+      let objEliminar = {
+        idModeloComunicacion: this.body.idModeloComunicacion,
+        idClaseComunicacion: element.idClaseComunicacion,
+        idInstitucion: this.body.idInstitucion,
+        idConsulta: dato.idConsulta
+      };
+      this.eliminarArray.push(objEliminar);
+    });
+    this.sigaServices.post("modelos_plantilla_consultas_borrar", this.eliminarArray).subscribe(
+      data => {
+        this.showSuccess('Se ha eliminado la consulta correctamente');
+      },
+      err => {
+        this.showFail('Error al eliminar la consulta');
+        console.log(err);
+      },
+      () => {
+        this.getResultados();
+      }
+    );
+  }
+
+
+
+
 }
