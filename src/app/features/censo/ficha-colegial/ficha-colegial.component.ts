@@ -126,7 +126,7 @@ export class FichaColegialComponent implements OnInit {
   numSelectedBancarios: number = 0;
   numSelectedCurriculares: number = 0;
   activacionEditar: boolean = true;
-
+  situacionPersona: String;
   camposDesactivados: boolean = false;
   datos: any[] = [];
   datosCurriculares: any[] = [];
@@ -342,15 +342,16 @@ export class FichaColegialComponent implements OnInit {
       this.persistenciaColeg = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaColegiados")
       );
-      //sessionStorage.removeItem("filtrosBusquedaColegiados");
+
     } else if (sessionStorage.getItem("filtrosBusquedaNoColegiados")) {
       this.persistenciaNoCol = new NoColegiadoItem();
       this.persistenciaNoCol = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaNoColegiados")
       );
 
-      // sessionStorage.removeItem("filtrosBusquedaNoColegiados");
-    } else {
+    } else if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
+      this.disabledNif = true;
+    }else{
       //  LLEGA DESDE PUNTO DE MENÚ
       this.emptyLoadFichaColegial = JSON.parse(sessionStorage.getItem("emptyLoadFichaColegial"));
       if(this.emptyLoadFichaColegial){
@@ -845,10 +846,10 @@ export class FichaColegialComponent implements OnInit {
       this.router.navigate(["/busquedaColegiados"]);
     } else if (sessionStorage.getItem("esColegiado") == "false") {
       this.router.navigate(["/busquedaNoColegiados"]);
-    }
-
-    if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
+    }else if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.router.navigate(["/busquedaCensoGeneral"]);
+    }else{
+      this.location.back();
     }
   }
 
@@ -1470,6 +1471,7 @@ export class FichaColegialComponent implements OnInit {
 
   activacionGuardarGenerales() {
     this.comisionesAString();
+    this.getInscrito();
     this.generalBody.etiquetas = this.etiquetasPersonaJuridicaSelecionados;
     if (
       JSON.stringify(this.checkGeneralBody) != JSON.stringify(this.generalBody)
@@ -2052,13 +2054,25 @@ isNotContainsEtiq(event): boolean {
     }
   }
 
+  activarRestablecerColegiales(){
+    if (
+      JSON.stringify(this.checkColegialesBody) !=
+        JSON.stringify(this.colegialesBody)){
+          return true;
+        }else{
+          return false;
+        }
+  }
   activacionGuardarColegiales() {
     this.inscritoAItem();
     if (
       JSON.stringify(this.checkColegialesBody) !=
         JSON.stringify(this.colegialesBody) &&
+      this.colegialesBody.situacion != "" &&
+      this.colegialesBody.situacion != undefined &&
       this.colegialesBody.numColegiado != "" &&
       this.colegialesBody.idTiposSeguro != "" &&
+      this.colegialesBody.idTiposSeguro != undefined &&
       this.colegialesBody.residenteInscrito != "" &&
       this.colegialesBody.incorporacion != null &&
       this.colegialesBody.fechapresentacion != null &&
@@ -2092,6 +2106,7 @@ isNotContainsEtiq(event): boolean {
         return true;
       } else {
         this.colegialesBody.nMutualista = "";
+        this.checkColegialesBody.nMutualista = "";
         return false;
       }
     } else {
@@ -2141,6 +2156,7 @@ isNotContainsEtiq(event): boolean {
     );
     this.searchColegiales();
     this.getInscrito();
+    this.getSituacionPersona();
   }
 
   restablecerColegiales() {
@@ -2485,6 +2501,7 @@ isNotContainsEtiq(event): boolean {
       sessionStorage.setItem("crearCurriculo", "false");
       this.router.navigate(["/edicionCurriculares"]);
     } else {
+      this.numSelectedCurriculares = this.selectedDatosCurriculares.length;
       sessionStorage.setItem("crearCurriculo", "true");
     }
   }
@@ -2563,6 +2580,20 @@ isNotContainsEtiq(event): boolean {
       this.selectedDatosCurriculares = [];
     } else {
       this.selectAllCurriculares = false;
+      this.selectedDatosCurriculares = [];
+      this.numSelectedCurriculares = 0;
+    }
+  }
+
+
+
+  //Opción tabla de seleccionar todas las filas
+  onChangeSelectAllCurriculares() {
+    if (this.selectAllCurriculares === true) {
+      this.selectMultipleCurriculares = false;
+      this.selectedDatosCurriculares = this.datosCurriculares;
+      this.numSelectedCurriculares =  this.datosCurriculares.length;
+    } else {
       this.selectedDatosCurriculares = [];
       this.numSelectedCurriculares = 0;
     }
@@ -2649,23 +2680,23 @@ isNotContainsEtiq(event): boolean {
   isSelectMultipleDirecciones() {
     this.selectMultipleDirecciones = !this.selectMultipleDirecciones;
     if (!this.selectMultipleDirecciones) {
-      this.numSelected = 0;
+      this.numSelectedDirecciones = 0;
       this.selectedDatosDirecciones = [];
     } else {
       this.selectAllDirecciones = false;
       this.selectedDatosDirecciones = [];
-      this.numSelected = 0;
+      this.numSelectedDirecciones = 0;
     }
   }
 
   onChangeSelectAllDirecciones(datos) {
-    if (this.selectAll === true) {
+    if (this.selectAllDirecciones === true) {
       this.numSelected = datos.length;
       this.selectMultipleDirecciones = false;
       this.selectedDatosDirecciones = datos;
     } else {
       this.selectedDatosDirecciones = [];
-      this.numSelected = 0;
+      this.numSelectedDirecciones = 0;
     }
   }
 
@@ -2700,6 +2731,10 @@ isNotContainsEtiq(event): boolean {
 
   actualizaSeleccionadosDirecciones(selectedDatos) {
     this.numSelectedDirecciones = selectedDatos.length;
+  }
+
+  actualizaSeleccionadosCurriculares(selectedDatos) {
+    this.numSelectedCurriculares = selectedDatos.length;
   }
 
   searchDirecciones() {
@@ -2829,12 +2864,12 @@ isNotContainsEtiq(event): boolean {
   isSelectMultipleBancarios() {
     this.selectMultipleBancarios = !this.selectMultipleBancarios;
     if (!this.selectMultipleBancarios) {
-      this.numSelected = 0;
+      this.numSelectedBancarios = 0;
       this.selectedDatosBancarios = [];
     } else {
       this.selectAllBancarios = false;
       this.selectedDatosBancarios = [];
-      this.numSelected = 0;
+      this.numSelectedBancarios = 0;
     }
   }
 
@@ -3249,6 +3284,30 @@ isNotContainsEtiq(event): boolean {
     } else {
       this.buttonVisibleRegtelCarpeta = true;
       this.buttonVisibleRegtelDescargar = false;
+    }
+  }
+
+  getSituacionPersona(){
+    // •	Situación:
+    // o	‘Fallecido’ si está marcado como tal.
+    // o	‘No colegiado’ en caso de no estar colegiado en ningún colegio.
+    // o	‘Activo’ en caso de estar colegiado en algún colegio con estado ‘Ejerciente’ o ‘No ejerciente’.
+    // o	‘De baja’ en cualquier otro caso.
+
+//     0: {label: "Baja Colegial", value: "30"}
+// 1: {label: "Baja Por Deceso", value: "60"}
+// 2: {label: "Ejerciente", value: "20"}
+// 3: {label: "Inhabilitación", value: "40"}
+// 4: {label: "No Ejerciente", value: "10"}
+// 5: {label: "Suspensión Ejercicio", value: "50"
+    if(this.colegialesBody.situacion == "60"){
+    this.situacionPersona = "Fallecido";
+    }else if(this.colegialesBody.situacion == "20" || this.colegialesBody.situacion == "10"){
+      this.situacionPersona = "Activo";
+    }else if(this.colegialesBody.situacion != undefined){
+      this.situacionPersona = "De baja";
+    }else{
+      this.situacionPersona = "No Colegiado";
     }
   }
 
