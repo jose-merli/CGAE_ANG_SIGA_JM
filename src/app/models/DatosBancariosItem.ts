@@ -19,6 +19,7 @@ export class DatosBancariosItem {
   status: String;
   revisionCuentas: boolean;
   motivo: String;
+  denominacion: String;
 
   constructor() {}
 }

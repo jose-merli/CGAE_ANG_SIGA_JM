@@ -305,6 +305,10 @@ export class DatosBancariosComponent implements OnInit {
             )
           }
         ];
+
+        this.historico = true;
+        this.selectedDatos = [];
+        this.selectMultiple = false;
       }
     });
   }
@@ -343,6 +347,7 @@ export class DatosBancariosComponent implements OnInit {
       () => {
         this.historico = true;
         this.selectedDatos = [];
+        this.selectMultiple = false;
         this.cargarDatosBancarios();
       }
     );

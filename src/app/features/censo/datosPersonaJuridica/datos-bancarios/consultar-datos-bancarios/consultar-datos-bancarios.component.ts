@@ -307,8 +307,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   cargarModoNuevoRegistro() {
-    if (this.usuarioBody[0].denominacion != undefined) {
-      this.body.titular = this.usuarioBody[0].denominacion;
+    //if (this.usuarioBody[0].denominacion != undefined) {
+      if (this.usuarioBody.denominacion != undefined) {
+      this.body.titular = this.usuarioBody.denominacion;
     }
 
     //this.body.nifTitular = this.usuarioBody[0].nif;

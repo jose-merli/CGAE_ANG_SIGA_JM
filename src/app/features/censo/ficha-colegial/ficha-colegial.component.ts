@@ -2892,6 +2892,9 @@ isNotContainsEtiq(event): boolean {
             )
           }
         ];
+
+        this.selectedDatosBancarios = [];
+        this.selectMultipleBancarios = false;
       }
     });
   }
@@ -2924,12 +2927,13 @@ isNotContainsEtiq(event): boolean {
         }
       },
       error => {
-        console.log(error);
+        console.log(error); 
         this.progressSpinner = false;
       },
       () => {
         // this.historico = true;
         this.selectedDatosBancarios = [];
+        this.selectMultipleBancarios = false;        
         this.searchDatosBancarios();
       }
     );
@@ -2967,10 +2971,10 @@ isNotContainsEtiq(event): boolean {
       if (!this.selectMultipleBancarios) {
         var enviarDatos = null;
         if (dato && dato.length > 0) {
-          enviarDatos = dato[0];
+          enviarDatos = dato[0];    
           sessionStorage.setItem("idCuenta", dato[0].idCuenta);
           //sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
-
+ 
           if (dato[0].fechaBaja != null) {
             sessionStorage.setItem("permisos", "false");
           } else {
