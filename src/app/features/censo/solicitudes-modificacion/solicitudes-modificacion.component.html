@@ -11,15 +11,13 @@
 
   <div class="card">
     <div class="card-body">
-      <p class="title-module">
-        {{ "menu.censo.verSolicitudesModificacion" | translate }}
+      <p  (click)="onHideCard()" class="title-module">
+        {{ "censo.solicitudModificacion.literal.titulo" | translate }}
         <i
-          (click)="onHideCard()"
           *ngIf="showCard"
           class="fa fa-angle-up float-right"
         ></i>
         <i
-          (click)="onHideCard()"
           *ngIf="!showCard"
           class="fa fa-angle-down float-right"
         ></i>

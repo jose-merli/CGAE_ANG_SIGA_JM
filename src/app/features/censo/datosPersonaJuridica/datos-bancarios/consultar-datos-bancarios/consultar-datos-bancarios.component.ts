@@ -123,6 +123,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   ocultarMotivo: boolean = undefined;
 
   lengthCountryCode: Number = 0;
+  // historico:boolean = false;
 
   @ViewChild("table")
   table: DataTable;
@@ -162,6 +163,12 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     }
     sessionStorage.setItem("editarDatosBancarios", "true");
     this.textFilter = "Elegir";
+
+    // if(sessionStorage.getItem("historico") == "true"){
+    //   this.historico = true;
+    // }else{
+    //   this.historico = false;
+    // }
 
     // obtener parametro para saber si se oculta la auditoria
     let parametro = {
@@ -307,8 +314,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   cargarModoNuevoRegistro() {
-    if (this.usuarioBody[0].denominacion != undefined) {
-      this.body.titular = this.usuarioBody[0].denominacion;
+    //if (this.usuarioBody[0].denominacion != undefined) {
+      if (this.usuarioBody.denominacion != undefined) {
+      this.body.titular = this.usuarioBody.denominacion;
     }
 
     //this.body.nifTitular = this.usuarioBody[0].nif;

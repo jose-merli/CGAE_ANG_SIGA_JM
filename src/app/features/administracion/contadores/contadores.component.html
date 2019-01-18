@@ -2,38 +2,70 @@
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{ 'menu.administracion' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.administracion.contador' | translate}}</p>
+    <p>
+      {{ "menu.administracion" | translate }}
+      <i class="pl-1 fa fa-angle-right"></i
+      >{{ "menu.administracion.contador" | translate }}
+    </p>
   </div>
   <div class="card">
     <div class="card-body">
-      <p class="title-module">{{ "general.message.datos.generales" | translate}}
-        <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
-        <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+      <p (click)="onHideDatosGenerales()" class="title-module">
+        {{ "general.message.datos.generales" | translate }}
+        <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
       </p>
 
       <div *ngIf="showDatosGenerales" class="module vista-avanzada">
         <div class="form-row">
           <div class="form-group col-lg-3 col-md-3">
-            <label>{{ "menu.justiciaGratuita.maestros.procedimientos" | translate }}</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.idmodulo' [(disabled)]="editar" [options]="contadores_modo" (ngModelChange)="onChangeForm($event)"
-              [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
-
+            <label>{{
+              "menu.justiciaGratuita.maestros.procedimientos" | translate
+            }}</label>
+            <p-dropdown
+              class="select-form"
+              [(ngModel)]="body.idmodulo"
+              [(disabled)]="editar"
+              [options]="contadores_modo"
+              (ngModelChange)="onChangeForm($event)"
+              [filter]="true"
+              filterBy="label,labelSinTilde"
+            ></p-dropdown>
           </div>
           <div class="form-group col-lg-3 col-md-3">
-            <label>{{"general.boton.code" | translate}}</label>
-            <input type="text" name="NIF" class="form-control" [(ngModel)]='body.idcontador' pInputText>
+            <label>{{ "general.boton.code" | translate }}</label>
+            <input
+              type="text"
+              name="NIF"
+              class="form-control"
+              [(ngModel)]="body.idcontador"
+              pInputText
+            />
           </div>
           <div class="form-group col-lg-3 col-md-3">
-            <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
-            <input type="text" name="nombre" class="form-control" [(ngModel)]='body.nombre' pInputText>
+            <label>{{
+              "administracion.parametrosGenerales.literal.nombre" | translate
+            }}</label>
+            <input
+              type="text"
+              name="nombre"
+              class="form-control"
+              [(ngModel)]="body.nombre"
+              pInputText
+            />
           </div>
           <div class="form-group col-lg-3 col-md-3">
-            <label>{{ 'general.description' | translate}}</label>
-            <input type="text" name="descripcion" value="" class="box" class="form-control" [(ngModel)]='body.descripcion' pInputText>
+            <label>{{ "general.description" | translate }}</label>
+            <input
+              type="text"
+              name="descripcion"
+              value=""
+              class="box"
+              class="form-control"
+              [(ngModel)]="body.descripcion"
+              pInputText
+            />
           </div>
-
-
         </div>
       </div>
     </div>
@@ -41,7 +73,14 @@
       <div class="text-right main-button ">
         <div class="row">
           <div class="col-2 offset-10">
-            <button (click)="isBuscar(); selectedDatos = false" pButton type="button " icon="fa fa-search " iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+            <button
+              (click)="isBuscar(); selectedDatos = false"
+              pButton
+              type="button "
+              icon="fa fa-search "
+              iconPos="left"
+              label="{{ 'general.boton.search' | translate }}"
+            ></button>
           </div>
         </div>
       </div>
@@ -50,24 +89,52 @@
   <!--FIN CARD-->
   <div *ngIf="buscar == true" class="card mt-3">
     <div class="card-body p-0">
-
-      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-        [(selection)]="selectedDatos" (onRowSelect)="irEditarContador(selectedDatos)" dataKey="idcontador" [responsive]="true"
-        selectionMode="single" #table class="tabla-listado" [value]="datos" [sortOrder]="1" paginatorPosition="both" [rows]="selectedItem"
-        [paginator]="activarPaginacion()">
-        <p-column [style]="{'width': col.width}" *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate"
-          filterPlaceholder="{{'general.boton.search' | translate}}" [filter]="true" filterMatchMode="contains">
+      <p-dataTable
+        emptyMessage="{{ 'general.message.no.registros' | translate }}"
+        [ngClass]="{ customCursor: selectMultiple }"
+        [(selection)]="selectedDatos"
+        (onRowSelect)="irEditarContador(selectedDatos)"
+        dataKey="idcontador"
+        [responsive]="true"
+        selectionMode="single"
+        #table
+        class="tabla-listado"
+        [value]="datos"
+        [sortOrder]="1"
+        paginatorPosition="both"
+        [rows]="selectedItem"
+        [paginator]="activarPaginacion()"
+      >
+        <p-column
+          [style]="{ width: col.width }"
+          *ngFor="let col of cols"
+          [sortable]="true"
+          [field]="col.field"
+          [header]="col.header | translate"
+          filterPlaceholder="{{ 'general.boton.search' | translate }}"
+          [filter]="true"
+          filterMatchMode="contains"
+        >
         </p-column>
 
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar">
-            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-            <label>{{ "general.message.mostrar" | translate}}</label>
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-            <label>{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+            <label class="pr-3 registros-totales"
+              >Mostrando registros del {{ table.first + 1 }} al
+              {{ table.first + table.rows }} de un total de
+              {{ table.totalRecords }}</label
+            >
+            <label>{{ "general.message.mostrar" | translate }}</label>
+            <p-dropdown
+              [(ngModel)]="selectedItem"
+              [options]="rowsPerPage"
+              (onChange)="onChangeRowsPerPages($event)"
+            ></p-dropdown>
+            <label>{{
+              "cargaMasivaDatosCurriculares.numRegistros.literal" | translate
+            }}</label>
           </div>
         </ng-template>
-
       </p-dataTable>
     </div>
   </div>

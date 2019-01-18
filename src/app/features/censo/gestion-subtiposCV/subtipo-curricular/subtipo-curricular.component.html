@@ -8,9 +8,9 @@
   </div>
   <div class="card">
     <div class="card-body">
-      <p class="title-module">{{ 'censo.subtipoCurricular.descripcion.literal' | translate}}
-        <i (click)="onHideSubtipoCV()" *ngIf="showSubtipoCurricular" class="fa fa-angle-up float-right"></i>
-        <i (click)="onHideSubtipoCV()" *ngIf="!showSubtipoCurricular" class="fa fa-angle-down float-right"></i>
+      <p (click)="onHideSubtipoCV()" class="title-module">{{ 'censo.subtipoCurricular.descripcion.literal' | translate}}
+        <i *ngIf="showSubtipoCurricular" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showSubtipoCurricular" class="fa fa-angle-down float-right"></i>
       </p>
 
       <div *ngIf="showSubtipoCurricular" class="module vista-simple">

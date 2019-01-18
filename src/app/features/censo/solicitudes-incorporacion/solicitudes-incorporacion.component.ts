@@ -10,8 +10,8 @@ import {
   FormBuilder,
   FormControl,
   Validators
-} from "../../../../../node_modules/@angular/forms";
-import { Router } from "../../../../../node_modules/@angular/router";
+} from "@angular/forms";
+import { Router } from "@angular/router";
 import { SigaServices } from "../../../_services/siga.service";
 import { TranslateService } from "../../../commons/translate";
 import { SolicitudIncorporacionObject } from "../../../models/SolicitudIncorporacionObject";
@@ -27,8 +27,8 @@ export enum KEY_CODE {
   styleUrls: ["./solicitudes-incorporacion.component.scss"]
 })
 export class SolicitudesIncorporacionComponent implements OnInit {
+  showCard: boolean = true;
   es: any;
-  fichaAbierta: boolean = true;
   formBusqueda: FormGroup;
   body: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
   bodySearch: SolicitudIncorporacionObject = new SolicitudIncorporacionObject();
@@ -69,6 +69,8 @@ export class SolicitudesIncorporacionComponent implements OnInit {
 
   ngOnInit() {
     this.es = this.translateService.getCalendarLocale();
+    sessionStorage.removeItem("abrirSolicitudIncorporacion");
+
     this.cargarCombos();
     this.cols = [
       { field: "numeroIdentificacion", header: "Nº Identificación" },
@@ -171,6 +173,8 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     sessionStorage.removeItem("editedSolicitud");
     sessionStorage.setItem("consulta", "false");
     sessionStorage.setItem("solicitudIncorporacion", "true");
+    sessionStorage.setItem("abrirSolicitudIncorporacion", "true");
+
     // this.router.navigate(["/nuevaIncorporacion"]);
     this.router.navigate(["/busquedaGeneral"]);
   }
@@ -185,10 +189,6 @@ export class SolicitudesIncorporacionComponent implements OnInit {
       sessionStorage.setItem("consulta", "false");
     }
     this.router.navigate(["/nuevaIncorporacion"]);
-  }
-
-  abrirCerrarFicha() {
-    this.fichaAbierta = !this.fichaAbierta;
   }
 
   checkIdentificacion(doc: String) {
@@ -287,10 +287,15 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      this.isBuscar();
+      this.buscarSolicitudes();
     }
   }
+
   clear() {
     this.msgs = [];
+  }
+
+  onHideCard() {
+    this.showCard = !this.showCard;
   }
 }
