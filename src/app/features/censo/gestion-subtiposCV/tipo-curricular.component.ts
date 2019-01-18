@@ -3,13 +3,16 @@ import {
   Component,
   ViewChild,
   ChangeDetectorRef,
-  ElementRef
+  ElementRef,
+  HostListener
 } from "@angular/core";
 import { SigaServices } from "../../../_services/siga.service";
 import { TipoCurricularItem } from "../../../models/TipoCurricularItem";
 import { TipoCurricularObject } from "../../../models/TipoCurricularObject";
 import { TranslateService } from "../../../commons/translate/translation.service";
-
+export enum KEY_CODE {
+  ENTER = 13
+}
 @Component({
   selector: "app-tipo-curricular",
   templateUrl: "./tipo-curricular.component.html",
@@ -571,5 +574,13 @@ export class TipoCurricularComponent {
       summary: "Error",
       detail: message
     });
+  }
+
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.search();
+    }
   }
 }

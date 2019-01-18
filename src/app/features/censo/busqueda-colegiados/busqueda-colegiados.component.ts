@@ -1,30 +1,20 @@
-import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  ViewChild,
-  ChangeDetectorRef,
-  HostListener
-} from "@angular/core";
-
-import { SigaServices } from "./../../../_services/siga.service";
-import { SigaWrapper } from "../../../wrapper/wrapper.class";
+import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { Router } from "@angular/router";
-import { TranslateService } from "../../../commons/translate/translation.service";
 import { ConfirmationService } from "primeng/api";
-import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { DataTable } from "primeng/datatable";
-import { esCalendar } from "./../../../utils/calendar";
+import { FormBuilder, FormControl, FormGroup, Validators } from "../../../../../node_modules/@angular/forms";
+import { TranslateService } from "../../../commons/translate/translation.service";
 import { DatosColegiadosItem } from "../../../models/DatosColegiadosItem";
-import {
-  FormBuilder,
-  FormGroup,
-  FormControl,
-  Validators
-} from "../../../../../node_modules/@angular/forms";
 import { DatosColegiadosObject } from "../../../models/DatosColegiadosObject";
-import { TrimPipePipe } from "../../../commons/trim-pipe/trim-pipe.pipe";
 import { SubtipoCurricularItem } from "../../../models/SubtipoCurricularItem";
+import { USER_VALIDATIONS } from "../../../properties/val-properties";
+import { SigaWrapper } from "../../../wrapper/wrapper.class";
+import { esCalendar } from "./../../../utils/calendar";
+import { SigaServices } from "./../../../_services/siga.service";
+
+export enum KEY_CODE {
+  ENTER = 13
+}
 
 @Component({
   selector: "app-busqueda-colegiados",
@@ -674,4 +664,12 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       return true;
     }
   }
+
+   //búsqueda con enter
+   @HostListener("document:keypress", ["$event"])
+   onKeyPress(event: KeyboardEvent) {
+     if (event.keyCode === KEY_CODE.ENTER) {
+       this.isBuscar();
+     }
+   }
 }

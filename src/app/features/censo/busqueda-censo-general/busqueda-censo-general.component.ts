@@ -300,7 +300,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
               noColegiado.soloNombre = selectedDatos.nombre;
               noColegiado.apellidos1 = selectedDatos.primerApellido;
               noColegiado.apellidos2 = selectedDatos.segundoApellido;
-
+              sessionStorage.removeItem("disabledAction");
               this.datosNoColegiados.push(noColegiado);
               sessionStorage.setItem(
                 "personaBody",

@@ -155,21 +155,21 @@
     <div *ngIf="esFichaActiva('generales')" class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
-          <div class="img-colegiado text-center my-0 mx-auto">
+          <div class="positionUpload img-colegiado text-center my-0 mx-auto">
+              <img
+              *ngIf="existeImagen"
+              [src]="imagenPersona"
+              class="imagenCentrada"
+            />
             <i
               *ngIf="!existeImagen"
               class="fa fa-user"
               style="font-size:6.5rem;color:grey"
             ></i>
-            <img
-              *ngIf="existeImagen"
-              [src]="imagenPersona"
-              class="imagenCentrada"
-            />
             <p-fileUpload
               #fubauto
               chooseLabel=""
-              class="edit my-0 mx-auto main-button"
+              class=" edit my-0 mx-auto main-button"
               [(disabled)]="isLetrado || disabledAction"
               mode="basic"
               name="file"
@@ -467,9 +467,10 @@
           </div>
         </div>
         <!-- info adicional -->
+
         <div class="bloque col-lg-4 col-md-4">
           <div class="form-row">
-            <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
+            <!-- <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
               <label>{{
                 "censo.fichaCliente.situacion.cabecera" | translate
               }}</label>
@@ -481,7 +482,20 @@
                 placeholder="{{'general.boton.seleccionar' | translate}}"
                 [(ngModel)]="generalBody.situacion"
               ></p-dropdown>
-            </div>
+            </div> -->
+            <div class="form-group col-lg-12 col-md-12" >
+                <label>{{
+                  "censo.fichaCliente.situacion.cabecera" | translate
+                }}</label>
+                <input
+                type="text "
+                class="form-control "
+                disabled
+                [(ngModel)]="situacionPersona"
+                [maxLength]="19"
+                pInputText
+              />
+              </div>
             <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
               <label
                 >{{
@@ -725,6 +739,19 @@
       <div class="row">
         <div class="bloque col-lg-12 col-md-12 col-sm-12">
           <div class="form-row">
+              <div class="form-group col-lg-3 col-md-3" [hidden]="!esColegiado">
+                  <label>{{
+                    "censo.fichaCliente.situacion.cabecera" | translate
+                  }} (*)</label>
+                  <p-dropdown
+                    class="select-form"
+                    [options]="comboSituacion"
+                (onChange)="activacionGuardarColegiales()"
+                    [(disabled)]="isLetrado || disabledAction"
+                    placeholder="{{'general.boton.seleccionar' | translate}}"
+                    [(ngModel)]="colegialesBody.situacion"
+                  ></p-dropdown>
+                </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{
                 "censo.busquedaClientesAvanzada.literal.nColegiado" | translate
@@ -750,7 +777,6 @@
               <p-dropdown
                 class="select-form"
                 [(disabled)]="isLetrado || disabledAction"
-                (onChange)="activacionGuardarColegiales()"
                 [(ngModel)]="colegialesBody.idTiposSeguro"
                 placeholder="{{'general.boton.seleccionar' | translate}}"
                 [options]="comboTipoSeguro"
@@ -874,7 +900,7 @@
         emptyMessage="{{ 'general.message.no.registros' | translate}}"
         pageLinks="4"
         [responsive]="true"
-        #table
+        #tableColegiales
         class="tabla-listado"
         [value]="datosColegiales"
         [sortOrder]="1"
@@ -908,9 +934,9 @@
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales"
-              >Mostrando registros del {{ table.first + 1 }} al
-              {{ table.first + table.rows }} de un total de
-              {{ table.totalRecords }}</label
+              >Mostrando registros del {{ tableColegiales.first + 1 }} al
+              {{ tableColegiales.first + tableColegiales.rows }} de un total de
+              {{ tableColegiales.totalRecords }}</label
             >
             <!--
               <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
@@ -923,7 +949,7 @@
     <div *ngIf="esFichaActiva('colegiales')" class="card-footer ">
       <div class="text-right main-button ">
         <button
-          [(disabled)]="!activarGuardarColegiales || disabledAction"
+          [(disabled)]="!activarRestablecerColegiales() || disabledAction"
           (click)="restablecerColegiales()"
           pButton
           type="button"
@@ -1471,6 +1497,9 @@
           paginatorPosition="both"
           [rows]="selectedItemCurriculares"
           (onRowSelect)="redireccionarCurriculares(selectedDatosCurriculares)"
+          (onRowUnselect)="
+            actualizaSeleccionadosCurriculares(selectedDatosCurriculares)
+          "
         >
           <p-column
             *ngFor="let col of colsCurriculares"
@@ -1513,18 +1542,14 @@
                     | translate
                 }}</label
               >
+              <div class="ml-3 selectAll">
+                <p-checkbox (onChange)="onChangeSelectAllCurriculares()" [(ngModel)]="selectAllCurriculares" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
+            </div>
 
               <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultipleCurriculares}" (click)="isSelectMultipleCurriculares()">
                 <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
-              <!--
-                <div class="ml-3 selectAll">
-                  <p-checkbox (onChange)="onChangeSelectAll(this.datosCurriculares)" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo"
-                    name="groupname"></p-checkbox>
-                </div>
-                <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
-                  <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
-              -->
-            </div>
+
+              </div>
           </ng-template>
         </p-dataTable>
       </div>
@@ -1694,9 +1719,9 @@
               <div class="ml-3 selectAll">
                 <p-checkbox
                   (onChange)="
-                    onChangeSelectAllDirecciones(this.datosDirecciones)
+                    onChangeSelectAllDirecciones()
                   "
-                  [(ngModel)]="selectAll"
+                  [(ngModel)]="selectAllDirecciones"
                   binary="true"
                   label="Seleccionar todo"
                   name="groupname"
@@ -1830,7 +1855,7 @@
           [paginator]="activarPaginacionBancarios()"
           (onRowSelect)="redireccionarDatosBancarios(selectedDatosBancarios)"
           (onRowUnselect)="
-            actualizaSeleccionadosBancarios(this.selectedDatosBancarios)
+            actualizaSeleccionadosBancarios(selectedDatosBancarios)
           "
           paginatorPosition="both"
           [rows]="selectedItemBancarios"
@@ -1885,8 +1910,8 @@
               >
               <div class="ml-3 selectAll">
                 <p-checkbox
-                  (onChange)="onChangeSelectAllBancarios(this.datosBancarios)"
-                  [(ngModel)]="selectAll"
+                  (onChange)="onChangeSelectAllBancarios()"
+                  [(ngModel)]="selectAllBancarios"
                   binary="true"
                   label="Seleccionar todo"
                   name="groupname"
@@ -1963,7 +1988,7 @@
   <!-- END FICHA DATOS BANCARIOS -->
 
  <!-- INICIO FICHA REGTEL -->
- <div class="card">
+ <div class="card" [hidden]="!esRegtel">
   <div
     class="card-header header-ficha"
     (click)="abreCierraFicha('regtel')"
@@ -2118,8 +2143,37 @@
  
 
 <!-- END FICHA REGTEL-->
-
-
+ 
+    <!--MUTUALIDAD DE LA ABOGACÍA-->
+    <!-- <div *ngIf="activacionEditar" class="card">
+        <div class="card-header header-ficha">
+            <div class="form-row">
+                <div class="col-lg-1 col-md-2">
+                    <div class="img-colegiado">
+                        <i class="fas fa-link icon-ficha"></i>
+                    </div>
+                </div>
+                <div class="col-lg-11 col-md-10">
+                    <div class="d-flex justify-content-start mb-1">
+                        <label class="mr-auto title-ficha">Mutualidad de la abogacía</label>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <label>
+                            <a (click)="irPlanUniversal()">
+                                <span style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.mutualidad.planProfesional" | translate}}</span>
+                            </a>
+                        </label>
+                        <label>
+                            <a (click)="irSegAccidentes()">
+                                <span style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.mutualidad.seguroUniversal" | translate}}</span>
+                            </a>
+                        </label>
+                        <i class="float-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
 
   <div *ngIf="!desactivarVolver" class="mt-3 text-right main-button ">
     <button

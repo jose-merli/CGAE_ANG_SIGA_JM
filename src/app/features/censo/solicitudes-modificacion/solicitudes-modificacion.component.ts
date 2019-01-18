@@ -3,7 +3,8 @@ import {
   OnInit,
   ViewChild,
   ChangeDetectorRef,
-  OnDestroy
+  OnDestroy,
+  HostListener
 } from "@angular/core";
 import {
   Message,
@@ -17,6 +18,12 @@ import { TranslateService } from "../../../commons/translate/translation.service
 import { Router } from "@angular/router";
 import { SolicitudesModificacionObject } from "../../../models/SolicitudesModificacionObject";
 import { ComboItem } from "../../../models/ComboItem";
+import { StringObject } from "../../../models/StringObject";
+
+export enum KEY_CODE {
+  ENTER = 13
+}
+
 @Component({
   selector: "app-solicitudes-modificacion",
   templateUrl: "./solicitudes-modificacion.component.html",
@@ -50,6 +57,8 @@ export class SolicitudesModificacionComponent implements OnInit {
   bodySearch: SolicitudesModificacionObject = new SolicitudesModificacionObject();
   bodyMultiple: SolicitudesModificacionObject = new SolicitudesModificacionObject();
   body: SolicitudesModificacionItem = new SolicitudesModificacionItem();
+
+  nifCif: StringObject = new StringObject();
 
   @ViewChild("table")
   table;
@@ -181,24 +190,27 @@ export class SolicitudesModificacionComponent implements OnInit {
   }
 
   // Métodos botones del filtro
-  checkIfUserExitsAsAMember() {
+  checkIfUserExitsAsAMember(nifCif) {
     this.progressSpinner = true;
-    this.sigaServices.get("solicitudModificacion_verifyPerson").subscribe(
-      data => {
-        this.resultado = data.valor;
 
-        if (this.resultado == "existe") {
-          this.desactivarNuevo = false;
-        } else {
-          this.desactivarNuevo = true;
+    this.sigaServices
+      .post("solicitudModificacion_verifyPerson", nifCif)
+      .subscribe(
+        data => {
+          this.resultado = data.valor;
+
+          if (this.resultado == "existe") {
+            this.desactivarNuevo = false;
+          } else {
+            this.desactivarNuevo = true;
+          }
+
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
         }
-
-        this.progressSpinner = false;
-      },
-      err => {
-        console.log(err);
-      }
-    );
+      );
   }
 
   newElement() {
@@ -262,7 +274,8 @@ export class SolicitudesModificacionComponent implements OnInit {
     if (JSON.parse(sessionStorage.getItem("isLetrado")) == true) {
       this.isLetrado = true;
       // Comprobamos si existe en la tabla cen_colegiado
-      this.checkIfUserExitsAsAMember();
+      this.nifCif.valor = "";
+      this.checkIfUserExitsAsAMember(this.nifCif);
     } else {
       this.isLetrado = false;
     }
@@ -514,5 +527,13 @@ export class SolicitudesModificacionComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.search();
+    }
   }
 }
