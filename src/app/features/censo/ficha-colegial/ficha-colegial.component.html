@@ -1988,7 +1988,7 @@
   <!-- END FICHA DATOS BANCARIOS -->
 
  <!-- INICIO FICHA REGTEL -->
- <div class="card">
+ <div class="card" [hidden]="!esRegtel">
   <div
     class="card-header header-ficha"
     (click)="abreCierraFicha('regtel')"
