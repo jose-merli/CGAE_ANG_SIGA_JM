@@ -59,7 +59,14 @@ iframe {
   margin: 0 auto;
   border: none;
 }
+.positionUpload{
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  padding:0;
 
+}
 .mainFrameWrapper {
   height: 86vh;
   // height: 100%;

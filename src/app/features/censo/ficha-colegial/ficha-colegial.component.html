@@ -155,21 +155,21 @@
     <div *ngIf="esFichaActiva('generales')" class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
-          <div class="img-colegiado text-center my-0 mx-auto">
+          <div class="positionUpload img-colegiado text-center my-0 mx-auto">
+              <img
+              *ngIf="existeImagen"
+              [src]="imagenPersona"
+              class="imagenCentrada"
+            />
             <i
               *ngIf="!existeImagen"
               class="fa fa-user"
               style="font-size:6.5rem;color:grey"
             ></i>
-            <img
-              *ngIf="existeImagen"
-              [src]="imagenPersona"
-              class="imagenCentrada"
-            />
             <p-fileUpload
               #fubauto
               chooseLabel=""
-              class="edit my-0 mx-auto main-button"
+              class=" edit my-0 mx-auto main-button"
               [(disabled)]="isLetrado || disabledAction"
               mode="basic"
               name="file"
@@ -467,9 +467,10 @@
           </div>
         </div>
         <!-- info adicional -->
+
         <div class="bloque col-lg-4 col-md-4">
           <div class="form-row">
-            <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
+            <!-- <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
               <label>{{
                 "censo.fichaCliente.situacion.cabecera" | translate
               }}</label>
@@ -481,7 +482,20 @@
                 placeholder="{{'general.boton.seleccionar' | translate}}"
                 [(ngModel)]="generalBody.situacion"
               ></p-dropdown>
-            </div>
+            </div> -->
+            <div class="form-group col-lg-12 col-md-12" >
+                <label>{{
+                  "censo.fichaCliente.situacion.cabecera" | translate
+                }}</label>
+                <input
+                type="text "
+                class="form-control "
+                disabled
+                [(ngModel)]="situacionPersona"
+                [maxLength]="19"
+                pInputText
+              />
+              </div>
             <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
               <label
                 >{{
@@ -725,6 +739,19 @@
       <div class="row">
         <div class="bloque col-lg-12 col-md-12 col-sm-12">
           <div class="form-row">
+              <div class="form-group col-lg-3 col-md-3" [hidden]="!esColegiado">
+                  <label>{{
+                    "censo.fichaCliente.situacion.cabecera" | translate
+                  }} (*)</label>
+                  <p-dropdown
+                    class="select-form"
+                    [options]="comboSituacion"
+                (onChange)="activacionGuardarColegiales()"
+                    [(disabled)]="isLetrado || disabledAction"
+                    placeholder="{{'general.boton.seleccionar' | translate}}"
+                    [(ngModel)]="colegialesBody.situacion"
+                  ></p-dropdown>
+                </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{
                 "censo.busquedaClientesAvanzada.literal.nColegiado" | translate
@@ -750,7 +777,6 @@
               <p-dropdown
                 class="select-form"
                 [(disabled)]="isLetrado || disabledAction"
-                (onChange)="activacionGuardarColegiales()"
                 [(ngModel)]="colegialesBody.idTiposSeguro"
                 placeholder="{{'general.boton.seleccionar' | translate}}"
                 [options]="comboTipoSeguro"
@@ -923,7 +949,7 @@
     <div *ngIf="esFichaActiva('colegiales')" class="card-footer ">
       <div class="text-right main-button ">
         <button
-          [(disabled)]="!activarGuardarColegiales || disabledAction"
+          [(disabled)]="!activarRestablecerColegiales() || disabledAction"
           (click)="restablecerColegiales()"
           pButton
           type="button"
