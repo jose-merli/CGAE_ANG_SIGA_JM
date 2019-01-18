@@ -126,7 +126,7 @@ export class FichaColegialComponent implements OnInit {
   numSelectedBancarios: number = 0;
   numSelectedCurriculares: number = 0;
   activacionEditar: boolean = true;
-
+  situacionPersona: String;
   camposDesactivados: boolean = false;
   datos: any[] = [];
   datosCurriculares: any[] = [];
@@ -218,6 +218,8 @@ export class FichaColegialComponent implements OnInit {
   tableDirecciones: DataTable;
   @ViewChild("tableBancarios")
   tableBancarios: DataTable;
+  @ViewChild("tableColegiales")
+  tableColegiales: DataTable;
 
   selectedDatosCertificados;
   selectedDatosSociedades;
@@ -233,7 +235,8 @@ export class FichaColegialComponent implements OnInit {
   selectedItemCurriculares: number = 10;
   selectedItemDirecciones: number = 10;
   selectedItemBancarios: number = 10;
-
+  selectedItem: number = 10;
+  
   selectedDatosRegtel: DocushareItem;
   desactivarVolver: Boolean;
 
@@ -339,15 +342,16 @@ export class FichaColegialComponent implements OnInit {
       this.persistenciaColeg = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaColegiados")
       );
-      //sessionStorage.removeItem("filtrosBusquedaColegiados");
+
     } else if (sessionStorage.getItem("filtrosBusquedaNoColegiados")) {
       this.persistenciaNoCol = new NoColegiadoItem();
       this.persistenciaNoCol = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaNoColegiados")
       );
 
-      // sessionStorage.removeItem("filtrosBusquedaNoColegiados");
-    } else {
+    } else if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
+      this.disabledNif = true;
+    }else{
       //  LLEGA DESDE PUNTO DE MENÚ
       this.emptyLoadFichaColegial = JSON.parse(sessionStorage.getItem("emptyLoadFichaColegial"));
       if(this.emptyLoadFichaColegial){
@@ -842,10 +846,10 @@ export class FichaColegialComponent implements OnInit {
       this.router.navigate(["/busquedaColegiados"]);
     } else if (sessionStorage.getItem("esColegiado") == "false") {
       this.router.navigate(["/busquedaNoColegiados"]);
-    }
-
-    if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
+    }else if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.router.navigate(["/busquedaCensoGeneral"]);
+    }else{
+      this.location.back();
     }
   }
 
@@ -1456,6 +1460,7 @@ export class FichaColegialComponent implements OnInit {
 
   activacionGuardarGenerales() {
     this.comisionesAString();
+    this.getInscrito();
     this.generalBody.etiquetas = this.etiquetasPersonaJuridicaSelecionados;
     if (
       JSON.stringify(this.checkGeneralBody) != JSON.stringify(this.generalBody)
@@ -2038,13 +2043,25 @@ isNotContainsEtiq(event): boolean {
     }
   }
 
+  activarRestablecerColegiales(){
+    if (
+      JSON.stringify(this.checkColegialesBody) !=
+        JSON.stringify(this.colegialesBody)){
+          return true;
+        }else{
+          return false;
+        }
+  }
   activacionGuardarColegiales() {
     this.inscritoAItem();
     if (
       JSON.stringify(this.checkColegialesBody) !=
         JSON.stringify(this.colegialesBody) &&
+      this.colegialesBody.situacion != "" &&
+      this.colegialesBody.situacion != undefined &&
       this.colegialesBody.numColegiado != "" &&
       this.colegialesBody.idTiposSeguro != "" &&
+      this.colegialesBody.idTiposSeguro != undefined &&
       this.colegialesBody.residenteInscrito != "" &&
       this.colegialesBody.incorporacion != null &&
       this.colegialesBody.fechapresentacion != null &&
@@ -2078,6 +2095,7 @@ isNotContainsEtiq(event): boolean {
         return true;
       } else {
         this.colegialesBody.nMutualista = "";
+        this.checkColegialesBody.nMutualista = "";
         return false;
       }
     } else {
@@ -2127,6 +2145,7 @@ isNotContainsEtiq(event): boolean {
     );
     this.searchColegiales();
     this.getInscrito();
+    this.getSituacionPersona();
   }
 
   restablecerColegiales() {
@@ -2862,6 +2881,9 @@ isNotContainsEtiq(event): boolean {
             )
           }
         ];
+
+        this.selectedDatosBancarios = [];
+        this.selectMultipleBancarios = false;
       }
     });
   }
@@ -2894,12 +2916,13 @@ isNotContainsEtiq(event): boolean {
         }
       },
       error => {
-        console.log(error);
+        console.log(error); 
         this.progressSpinner = false;
       },
       () => {
         // this.historico = true;
         this.selectedDatosBancarios = [];
+        this.selectMultipleBancarios = false;        
         this.searchDatosBancarios();
       }
     );
@@ -2937,10 +2960,10 @@ isNotContainsEtiq(event): boolean {
       if (!this.selectMultipleBancarios) {
         var enviarDatos = null;
         if (dato && dato.length > 0) {
-          enviarDatos = dato[0];
+          enviarDatos = dato[0];    
           sessionStorage.setItem("idCuenta", dato[0].idCuenta);
           //sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
-
+ 
           if (dato[0].fechaBaja != null) {
             sessionStorage.setItem("permisos", "false");
           } else {
@@ -3256,6 +3279,30 @@ isNotContainsEtiq(event): boolean {
     } else {
       this.buttonVisibleRegtelCarpeta = true;
       this.buttonVisibleRegtelDescargar = false;
+    }
+  }
+
+  getSituacionPersona(){
+    // •	Situación:
+    // o	‘Fallecido’ si está marcado como tal.
+    // o	‘No colegiado’ en caso de no estar colegiado en ningún colegio.
+    // o	‘Activo’ en caso de estar colegiado en algún colegio con estado ‘Ejerciente’ o ‘No ejerciente’.
+    // o	‘De baja’ en cualquier otro caso.
+
+//     0: {label: "Baja Colegial", value: "30"}
+// 1: {label: "Baja Por Deceso", value: "60"}
+// 2: {label: "Ejerciente", value: "20"}
+// 3: {label: "Inhabilitación", value: "40"}
+// 4: {label: "No Ejerciente", value: "10"}
+// 5: {label: "Suspensión Ejercicio", value: "50"
+    if(this.colegialesBody.situacion == "60"){
+    this.situacionPersona = "Fallecido";
+    }else if(this.colegialesBody.situacion == "20" || this.colegialesBody.situacion == "10"){
+      this.situacionPersona = "Activo";
+    }else if(this.colegialesBody.situacion != undefined){
+      this.situacionPersona = "De baja";
+    }else{
+      this.situacionPersona = "No Colegiado";
     }
   }
 
