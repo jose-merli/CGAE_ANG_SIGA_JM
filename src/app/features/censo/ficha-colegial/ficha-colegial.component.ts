@@ -443,6 +443,10 @@ export class FichaColegialComponent implements OnInit {
 
     this.colsColegiaciones = [
       {
+        field: "institucion",
+        header: "censo.busquedaClientesAvanzada.literal.colegio"
+      },
+      {
         field: "nif",
         header: "censo.consultaDatosColegiacion.literal.numIden"
       },
