@@ -290,22 +290,6 @@
               ></p-dropdown>
             </div>
 
-            <div class="form-group col-lg-6 col-md-6">
-              <label
-                >{{
-                  "censo.consultaDatosGenerales.literal.tratamiento" | translate
-                }}
-                (*)</label
-              >
-              <p-dropdown
-                class="select-form"
-                placeholder="{{'general.boton.seleccionar' | translate}}"
-                [options]="generalTratamiento"
-                [(ngModel)]="generalBody.idTratamiento"
-                [(disabled)]="isLetrado || disabledAction"
-                (onChange)="activacionGuardarGenerales()"
-              ></p-dropdown>
-            </div>
             <!--
               <div class="form-group col-lg-6 col-md-6" [hidden]="esColegiado">
                 <label>{{"censo.consultaDatosGenerales.literal.tratamiento" | translate}} (*)</label>
@@ -339,16 +323,29 @@
               <label>{{
                 "censo.consultaDatosGenerales.literal.edad" | translate
               }}</label>
-              <input
-                [(ngModel)]="edadCalculada"
+              <input [(ngModel)]="edadCalculada"
                 (ngModelChange)="activacionGuardarGenerales()"
                 type="text"
                 class="form-control"
                 disabled
-                pInputText
-              />
+                pInputText />
             </div>
-
+            <div class="form-group col-lg-6 col-md-6">
+                <label
+                  >{{
+                    "censo.consultaDatosGenerales.literal.tratamiento" | translate
+                  }}
+                  (*)</label
+                >
+                <p-dropdown
+                  class="select-form"
+                  placeholder="{{'general.boton.seleccionar' | translate}}"
+                  [options]="generalTratamiento"
+                  [(ngModel)]="generalBody.idTratamiento"
+                  [(disabled)]="isLetrado || disabledAction"
+                  (onChange)="activacionGuardarGenerales()"
+                ></p-dropdown>
+              </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{
                 "censo.consultaDatosGenerales.literal.nacido" | translate
@@ -1718,9 +1715,9 @@
               <div class="ml-3 selectAll">
                 <p-checkbox
                   (onChange)="
-                    onChangeSelectAllDirecciones()
+                    onChangeSelectAllDirecciones(this.datosDirecciones)
                   "
-                  [(ngModel)]="selectAllDirecciones"
+                  [(ngModel)]="selectAll"
                   binary="true"
                   label="Seleccionar todo"
                   name="groupname"
@@ -1909,8 +1906,8 @@
               >
               <div class="ml-3 selectAll">
                 <p-checkbox
-                  (onChange)="onChangeSelectAllBancarios()"
-                  [(ngModel)]="selectAllBancarios"
+                  (onChange)="onChangeSelectAllBancarios(this.datosBancarios)"
+                  [(ngModel)]="selectAll"
                   binary="true"
                   label="Seleccionar todo"
                   name="groupname"
@@ -1987,7 +1984,7 @@
   <!-- END FICHA DATOS BANCARIOS -->
 
  <!-- INICIO FICHA REGTEL -->
- <div class="card">
+ <div class="card" [hidden]="!esRegtel">
   <div
     class="card-header header-ficha"
     (click)="abreCierraFicha('regtel')"
