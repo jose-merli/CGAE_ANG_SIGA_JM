@@ -870,17 +870,6 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
-  // onChangeSelectAll(datos) {
-  //   if (this.selectAll === true) {
-  //     this.numSelected = datos.length;
-  //     this.selectMultiple = false;
-  //     this.selectedDatos = datos;
-  //   } else {
-  //     this.selectedDatos = [];
-  //     this.numSelected = 0;
-  //   }
-  // }
-
   showFailUploadedImage() {
     this.msgs = [];
     this.msgs.push({
@@ -2532,9 +2521,9 @@ isNotContainsEtiq(event): boolean {
 
   onChangeSelectAll() {
     if (this.selectAll === true) {
-      this.numSelected = this.datosCurriculares.length;
+      this.numSelected = this.datos.length;
       this.selectMultiple = false;
-      this.selectedDatos = this.datosCurriculares;
+      this.selectedDatos = this.datos;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -2670,11 +2659,11 @@ isNotContainsEtiq(event): boolean {
     }
   }
 
-  onChangeSelectAllDirecciones(datos) {
+  onChangeSelectAllDirecciones() {
     if (this.selectAllDirecciones === true) {
-      this.numSelected = datos.length;
+      this.numSelectedDirecciones = this.datosDirecciones.length;
       this.selectMultipleDirecciones = false;
-      this.selectedDatosDirecciones = datos;
+      this.selectedDatosDirecciones = this.datosDirecciones;
     } else {
       this.selectedDatosDirecciones = [];
       this.numSelectedDirecciones = 0;
@@ -2831,14 +2820,14 @@ isNotContainsEtiq(event): boolean {
     this.searchDatosBancarios();
   }
 
-  onChangeSelectAllBancarios(datos) {
-    if (this.selectAll === true) {
-      this.numSelected = datos.length;
+  onChangeSelectAllBancarios() {
+    if (this.selectAllBancarios === true) {
+      this.numSelectedBancarios = this.datosBancarios.length;
       this.selectMultipleBancarios = false;
-      this.selectedDatosBancarios = datos;
+      this.selectedDatosBancarios = this.datosBancarios;
     } else {
       this.selectedDatosBancarios = [];
-      this.numSelected = 0;
+      this.numSelectedBancarios = 0;
     }
   }
 
@@ -2963,6 +2952,8 @@ isNotContainsEtiq(event): boolean {
           sessionStorage.setItem("fichaColegial", "true");
           sessionStorage.setItem("datosCuenta", JSON.stringify(dato[0]));
           sessionStorage.setItem("usuarioBody", JSON.stringify(dato[0]));
+          sessionStorage.setItem("historico", JSON.stringify(this.bodyDatosBancarios.historico));
+
         } else {
           sessionStorage.setItem("editar", "false");
         }

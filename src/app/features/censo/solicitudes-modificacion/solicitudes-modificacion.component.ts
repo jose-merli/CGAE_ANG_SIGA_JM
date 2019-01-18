@@ -3,7 +3,8 @@ import {
   OnInit,
   ViewChild,
   ChangeDetectorRef,
-  OnDestroy
+  OnDestroy,
+  HostListener
 } from "@angular/core";
 import {
   Message,
@@ -18,6 +19,11 @@ import { Router } from "@angular/router";
 import { SolicitudesModificacionObject } from "../../../models/SolicitudesModificacionObject";
 import { ComboItem } from "../../../models/ComboItem";
 import { StringObject } from "../../../models/StringObject";
+
+export enum KEY_CODE {
+  ENTER = 13
+}
+
 @Component({
   selector: "app-solicitudes-modificacion",
   templateUrl: "./solicitudes-modificacion.component.html",
@@ -521,5 +527,13 @@ export class SolicitudesModificacionComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.search();
+    }
   }
 }
