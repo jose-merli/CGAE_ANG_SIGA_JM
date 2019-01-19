@@ -55,7 +55,9 @@ export class SolicitudesModificacionComponent implements OnInit {
   resultado: String;
 
   bodySearch: SolicitudesModificacionObject = new SolicitudesModificacionObject();
-  bodyMultiple: SolicitudesModificacionObject = new SolicitudesModificacionObject();
+  bodyMultiple: any = [];
+  bodyMultipleEspecifica: any = [];
+  bodyMultipleGeneral: any = [];
   body: SolicitudesModificacionItem = new SolicitudesModificacionItem();
 
   nifCif: StringObject = new StringObject();
@@ -66,8 +68,9 @@ export class SolicitudesModificacionComponent implements OnInit {
   cols: any = [];
   rowsPerPage: any = [];
   data: any[] = [];
+  index = 0;
   selectedItem: number = 10;
-
+  especificasCorrectas: boolean = false;
   mostrarAuditoria: boolean = false;
   showGuardarAuditoria: boolean = false;
   displayAuditoria: boolean = false;
@@ -321,50 +324,203 @@ export class SolicitudesModificacionComponent implements OnInit {
       "solicitudModificacion_denyGeneralModificationRequest"
     );
   }
-
+  separatetypeBodys() {
+    this.bodyMultipleEspecifica = [];
+    this.bodyMultipleGeneral = [];
+    this.bodyMultiple.forEach(element => {
+      if (element.especifica == "1") {
+        this.bodyMultipleEspecifica.push(element);
+      } else {
+        this.bodyMultipleGeneral.push(element);
+      }
+    });
+  }
   updateRequestState(path: string) {
     this.progressSpinner = true;
     this.isSearch = true;
+    this.separatetypeBodys();
+    if (this.bodyMultipleGeneral.length > 0) {
+      this.sigaServices.post(path, this.bodyMultipleGeneral).subscribe(
+        data => {
+          if (this.mostrarAuditoria) {
+            this.selectedDatos.forEach(element => {
+              let motivoBackup = element.motivo;
+              element.motivo = this.body.motivo;
 
-    this.sigaServices.post(path, this.bodyMultiple).subscribe(
-      data => {
-        if (this.mostrarAuditoria) {
-          this.selectedDatos.forEach(element => {
-            let motivoBackup = element.motivo;
-            element.motivo = this.body.motivo;
+              this.sigaServices
+                .post("solicitudModificacion_insertAuditoria", element)
+                .subscribe(
+                  data => {
+                    this.progressSpinner = false;
+                    this.search();
 
-            this.sigaServices
-              .post("solicitudModificacion_insertAuditoria", element)
-              .subscribe(
-                data => {
-                  this.progressSpinner = false;
-                  this.search();
+                    this.showSuccess();
+                    this.search();
+                  },
+                  err => {
+                    this.progressSpinner = false;
+                    this.showFail();
+                  },
+                  () => {
+                    this.cerrarAuditoria();
+                  }
+                );
 
-                  this.showSuccess();
-                  this.search();
-                },
-                err => {
-                  this.progressSpinner = false;
-                  this.showFail();
-                },
-                () => {}
-              );
-
-            this.body.motivo = motivoBackup;
-          });
-          this.cerrarAuditoria();
+              this.body.motivo = motivoBackup;
+            });
+            this.cerrarAuditoria();
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+          this.showFail();
+        },
+        () => {
+          this.progressSpinner = false;
+          this.selectMultiple = false;
+          this.closeDialog();
         }
-      },
-      err => {
-        this.progressSpinner = false;
-        this.showFail();
-      },
-      () => {
-        this.progressSpinner = false;
-        this.selectMultiple = false;
-        this.closeDialog();
+      );
+    }
+    if (this.bodyMultipleEspecifica.length > 0) {
+      this.index = 1;
+      if (path == "solicitudModificacion_denyGeneralModificationRequest") {
+        this.bodyMultipleEspecifica.forEach(element => {
+          let pathSpecifica;
+          if (element.idTipoModificacion == "10") {
+            pathSpecifica = "solicitudModificacion_denySolModifDatosGenerales";
+          } else if (element.idTipoModificacion == "30") {
+            pathSpecifica =
+              "solicitudModificacion_denySolModifDatosDirecciones";
+          } else if (element.idTipoModificacion == "35") {
+            pathSpecifica = "solicitudModificacion_denySolModifDatosUseFoto";
+          } else if (element.idTipoModificacion == "40") {
+            pathSpecifica = "solicitudModificacion_denySolModifDatosBancarios";
+          } else if (element.idTipoModificacion == "50") {
+            pathSpecifica =
+              "solicitudModificacion_denySolModifDatosCurriculares";
+          }
+
+          this.especificasCorrectas = false;
+          this.sigaServices.post(pathSpecifica, element).subscribe(
+            data => {
+              if (this.index == this.bodyMultipleEspecifica.length) {
+                if (this.mostrarAuditoria) {
+                  let motivoBackup = element.motivo;
+                  element.motivo = this.body.motivo;
+
+                  this.sigaServices
+                    .post("solicitudModificacion_insertAuditoria", element)
+                    .subscribe(
+                      data => {
+                        this.progressSpinner = false;
+                        this.search();
+
+                        this.showSuccess();
+                        this.search();
+                      },
+                      err => {
+                        this.progressSpinner = false;
+                        this.showFail();
+                      },
+                      () => {
+                        this.cerrarAuditoria();
+                      }
+                    );
+
+                  this.body.motivo = motivoBackup;
+
+                  this.cerrarAuditoria();
+                }
+              } else {
+                this.index++;
+              }
+            },
+            err => {
+              if (this.index != this.bodyMultipleEspecifica.length) {
+                this.index++;
+              }
+            },
+            () => {
+              if (this.index == this.bodyMultipleEspecifica.length) {
+                this.progressSpinner = false;
+                this.selectMultiple = false;
+                this.closeDialog();
+                this.search();
+              }
+            }
+          );
+        });
+      } else {
+        this.index = 1;
+        this.bodyMultipleEspecifica.forEach(element => {
+          let pathSpecifica;
+          if (element.idTipoModificacion == "10") {
+            pathSpecifica =
+              "solicitudModificacion_processSolModifDatosGenerales";
+          } else if (element.idTipoModificacion == "30") {
+            pathSpecifica =
+              "solicitudModificacion_processSolModifDatosDirecciones";
+          } else if (element.idTipoModificacion == "35") {
+            pathSpecifica = "solicitudModificacion_processSolModifDatosUseFoto";
+          } else if (element.idTipoModificacion == "40") {
+            pathSpecifica =
+              "solicitudModificacion_processSolModifDatosBancarios";
+          } else if (element.idTipoModificacion == "50") {
+            pathSpecifica =
+              "solicitudModificacion_processSolModifDatosCurriculares";
+          }
+          this.especificasCorrectas = false;
+          this.sigaServices.post(pathSpecifica, element).subscribe(
+            data => {
+              if (this.index == this.bodyMultipleEspecifica.length) {
+                if (this.mostrarAuditoria) {
+                  let motivoBackup = element.motivo;
+                  element.motivo = this.body.motivo;
+
+                  this.sigaServices
+                    .post("solicitudModificacion_insertAuditoria", element)
+                    .subscribe(
+                      data => {
+                        this.progressSpinner = false;
+                        this.search();
+
+                        this.showSuccess();
+                        this.search();
+                      },
+                      err => {
+                        this.progressSpinner = false;
+                        this.showFail();
+                      },
+                      () => {
+                        this.cerrarAuditoria();
+                      }
+                    );
+
+                  this.body.motivo = motivoBackup;
+                  this.cerrarAuditoria();
+                }
+              } else {
+                this.index++;
+              }
+            },
+            err => {
+              if (this.index != this.bodyMultipleEspecifica.length) {
+                this.index++;
+              }
+            },
+            () => {
+              if (this.index == this.bodyMultipleEspecifica.length) {
+                this.progressSpinner = false;
+                this.selectMultiple = false;
+                this.closeDialog();
+                this.search();
+              }
+            }
+          );
+        });
       }
-    );
+    }
   }
 
   onChangeSelectAll() {
@@ -607,9 +763,9 @@ export class SolicitudesModificacionComponent implements OnInit {
       this.showGuardarAuditoria = true;
     } else {
       this.showGuardarAuditoria = false;
-	}
+    }
   }
-  
+
   //búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
