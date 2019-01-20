@@ -7,7 +7,7 @@ export class FichaPlantillasDocument {
   idPlantillaDocumento: String;
   idIdioma: String;
   formatoSalida: String;
-  ficheroSalida: String;
+  nombreFicheroSalida: String;
   idSufijo: String[];
   idFinalidad: String;
   idTipoEjecucion: String;

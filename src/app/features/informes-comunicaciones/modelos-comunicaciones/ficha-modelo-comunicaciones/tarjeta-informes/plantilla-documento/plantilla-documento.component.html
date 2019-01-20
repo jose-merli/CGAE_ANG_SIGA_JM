@@ -53,7 +53,7 @@
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>Nombre del fichero generado</label>
-          <input type="text" class="form-control" [(ngModel)]="body.ficheroSalida" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.nombreFicheroSalida" pInputText>
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>Sufijo del fichero generado</label>
@@ -89,12 +89,13 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td *ngFor="let col of columns" pEditableColumn>
-              <p-fileUpload *ngIf="col.field=='plantilla' && !dato.guardada" #fubauto chooseLabel="" class="subir-plantilla my-0 mx-auto main-button"
-                mode="basic" name="file" auto="true" accept=".xls,.xlsx,.doc,.docx" (onSelect)="uploadFile($event)" auto="true">
+              <p-fileUpload *ngIf="col.field=='nombreDocumento' && !dato.guardada" #fubauto chooseLabel="" class="subir-plantilla my-0 mx-auto main-button"
+                mode="basic" name="file" auto="true" accept=".xls,.xlsx,.doc,.docx" (onSelect)="uploadFile($event, dato)" auto="true">
               </p-fileUpload>
-              <p-dropdown *ngIf="col.field=='idioma' && !dato.guardada" class="select-form" [options]="idiomas" [(ngModel)]="body.idIdioma"
+              <span *ngIf="col.field=='nombreDocumento'">{{dato.nombreDocumento}}</span>
+              <p-dropdown *ngIf="col.field=='idioma' && !dato.guardada" class="select-form" [options]="idiomas" [(ngModel)]="dato.idIdioma"
                 [filter]="true" (ngModelChange)="onChangeIdioma($event)" filterBy="label"></p-dropdown>
-              <span *ngIf="col.field=='idioma' && dato.guardada">{{dato.nombre}}</span>
+              <span *ngIf="col.field=='idioma' && dato.guardada">{{dato.idioma}}</span>
             </td>
           </tr>
         </ng-template>
@@ -135,7 +136,7 @@
     <div *ngIf="showDatosGenerales" class="card-footer">
       <div class="text-right main-button">
         <button (click)="guardarDatosGenerales()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="restablecerDatosGenerales()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -191,7 +192,13 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td *ngFor="let col of columns" pEditableColumn>
-              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='consulta'" [(ngModel)]="dato[col.field]" [options]="consultasCombo"
+              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 1" [(ngModel)]="dato[col.field]" [options]="consultasComboDestinatarios"
+                class="select-form"></p-dropdown>
+              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 2" [(ngModel)]="dato[col.field]" [options]="consultasComboMulti"
+                class="select-form"></p-dropdown>
+              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 3" [(ngModel)]="dato[col.field]" [options]="consultasComboCondicional"
+                class="select-form"></p-dropdown>
+              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 4" [(ngModel)]="dato[col.field]" [options]="consultasComboDatos"
                 class="select-form"></p-dropdown>
               <span *ngIf="col.field=='finalidad' && dato.finalidad != ''">{{dato[col.field]}}</span>
               <span *ngIf="col.field=='objetivo'">{{dato[col.field]}}</span>

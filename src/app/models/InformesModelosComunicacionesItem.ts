@@ -1,11 +1,13 @@
 export class InformesModelosComItem {
   idioma: String;
-  ficheroSalida: String;
+  nombreFicheroSalida: String;
   sufijo: String;
-  formatoSAlida: String;
+  formatoSalida: String;
   destinatarios: String;
   condicion: String;
   multidocumento: String;
   datos: String;
+  idInforme: String;
+  idFormatoSalida: String;
   constructor() { }
 }
