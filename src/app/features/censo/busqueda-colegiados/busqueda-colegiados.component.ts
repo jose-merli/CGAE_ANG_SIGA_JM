@@ -1,8 +1,20 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation
+} from "@angular/core";
 import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
 import { DataTable } from "primeng/datatable";
-import { FormBuilder, FormControl, FormGroup, Validators } from "../../../../../node_modules/@angular/forms";
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators
+} from "../../../../../node_modules/@angular/forms";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { DatosColegiadosItem } from "../../../models/DatosColegiadosItem";
 import { DatosColegiadosObject } from "../../../models/DatosColegiadosObject";
@@ -108,8 +120,21 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.getCombos();
     // sessionStorage.removeItem("esColegiado");
     sessionStorage.removeItem("disabledAction");
-
-    if (sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial") != null) {
+    if (sessionStorage.getItem("fechaIncorporacionHastaSelect") != null) {
+      this.fechaIncorporacionHastaSelect = new Date(
+        JSON.parse(sessionStorage.getItem("fechaIncorporacionHastaSelect"))
+      );
+      sessionStorage.removeItem("fechaIncorporacionHastaSelect");
+    }
+    if (sessionStorage.getItem("fechaIncorporacionDesdeSelect") != null) {
+      this.fechaIncorporacionDesdeSelect = new Date(
+        JSON.parse(sessionStorage.getItem("fechaIncorporacionDesdeSelect"))
+      );
+      sessionStorage.removeItem("fechaIncorporacionDesdeSelect");
+    }
+    if (
+      sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial") != null
+    ) {
       this.body = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial")
       );
@@ -142,6 +167,26 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         "filtrosBusquedaColegiados",
         JSON.stringify(this.body)
       );
+      sessionStorage.removeItem("fechaIncorporacionDesdeSelect");
+      if (
+        this.fechaIncorporacionDesdeSelect != null ||
+        this.fechaIncorporacionDesdeSelect != undefined
+      ) {
+        sessionStorage.setItem(
+          "fechaIncorporacionDesdeSelect",
+          JSON.stringify(this.fechaIncorporacionDesdeSelect)
+        );
+      }
+      sessionStorage.removeItem("fechaIncorporacionHastaSelect");
+      if (
+        this.fechaIncorporacionHastaSelect != null ||
+        this.fechaIncorporacionHastaSelect != undefined
+      ) {
+        sessionStorage.setItem(
+          "fechaIncorporacionHastaSelect",
+          JSON.stringify(this.fechaIncorporacionHastaSelect)
+        );
+      }
       sessionStorage.setItem("personaBody", JSON.stringify(id[0]));
       console.log(id);
 
@@ -665,11 +710,11 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     }
   }
 
-   //búsqueda con enter
-   @HostListener("document:keypress", ["$event"])
-   onKeyPress(event: KeyboardEvent) {
-     if (event.keyCode === KEY_CODE.ENTER) {
-       this.isBuscar();
-     }
-   }
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.isBuscar();
+    }
+  }
 }
