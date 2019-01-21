@@ -3,7 +3,8 @@ import {
   OnInit,
   ViewChild,
   ChangeDetectorRef,
-  OnDestroy
+  OnDestroy,
+  HostListener
 } from "@angular/core";
 import {
   Message,
@@ -18,6 +19,11 @@ import { Router } from "@angular/router";
 import { SolicitudesModificacionObject } from "../../../models/SolicitudesModificacionObject";
 import { ComboItem } from "../../../models/ComboItem";
 import { StringObject } from "../../../models/StringObject";
+
+export enum KEY_CODE {
+  ENTER = 13
+}
+
 @Component({
   selector: "app-solicitudes-modificacion",
   templateUrl: "./solicitudes-modificacion.component.html",
@@ -49,7 +55,9 @@ export class SolicitudesModificacionComponent implements OnInit {
   resultado: String;
 
   bodySearch: SolicitudesModificacionObject = new SolicitudesModificacionObject();
-  bodyMultiple: SolicitudesModificacionObject = new SolicitudesModificacionObject();
+  bodyMultiple: any = [];
+  bodyMultipleEspecifica: any = [];
+  bodyMultipleGeneral: any = [];
   body: SolicitudesModificacionItem = new SolicitudesModificacionItem();
 
   nifCif: StringObject = new StringObject();
@@ -60,7 +68,12 @@ export class SolicitudesModificacionComponent implements OnInit {
   cols: any = [];
   rowsPerPage: any = [];
   data: any[] = [];
+  index = 0;
   selectedItem: number = 10;
+  especificasCorrectas: boolean = false;
+  mostrarAuditoria: boolean = false;
+  showGuardarAuditoria: boolean = false;
+  displayAuditoria: boolean = false;
 
   constructor(
     private sigaServices: SigaServices,
@@ -99,9 +112,11 @@ export class SolicitudesModificacionComponent implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
 
       if (this.body.fechaDesde != null) {
-        this.body.fechaDesde = new Date(this.body.fechaDesde.toString());
-      } else if (this.body.fechaHasta != null) {
-        this.body.fechaHasta = new Date(this.body.fechaHasta.toString());
+        this.body.fechaDesde = new Date(this.body.fechaDesde);
+      }
+
+      if (this.body.fechaHasta != null) {
+        this.body.fechaHasta = new Date(this.body.fechaHasta);
       }
 
       if (sessionStorage.getItem("processingPerformed") == "true") {
@@ -125,6 +140,8 @@ export class SolicitudesModificacionComponent implements OnInit {
         sessionStorage.removeItem("saveFilters");
       }
     }
+
+    this.obtenerMostrarAuditoria();
   }
 
   onHideCard() {
@@ -293,9 +310,9 @@ export class SolicitudesModificacionComponent implements OnInit {
   }
 
   // PROCESS REQUEST AND DENY REQUEST
+  processMultipleRequest() {
+    this.bodyMultiple = this.selectedDatos;
 
-  processMultipleRequest(selectedDatos) {
-    this.bodyMultiple = selectedDatos;
     this.updateRequestState(
       "solicitudModificacion_processGeneralModificationRequest"
     );
@@ -307,26 +324,203 @@ export class SolicitudesModificacionComponent implements OnInit {
       "solicitudModificacion_denyGeneralModificationRequest"
     );
   }
-
+  separatetypeBodys() {
+    this.bodyMultipleEspecifica = [];
+    this.bodyMultipleGeneral = [];
+    this.bodyMultiple.forEach(element => {
+      if (element.especifica == "1") {
+        this.bodyMultipleEspecifica.push(element);
+      } else {
+        this.bodyMultipleGeneral.push(element);
+      }
+    });
+  }
   updateRequestState(path: string) {
     this.progressSpinner = true;
     this.isSearch = true;
+    this.separatetypeBodys();
+    if (this.bodyMultipleGeneral.length > 0) {
+      this.sigaServices.post(path, this.bodyMultipleGeneral).subscribe(
+        data => {
+          if (this.mostrarAuditoria) {
+            this.selectedDatos.forEach(element => {
+              let motivoBackup = element.motivo;
+              element.motivo = this.body.motivo;
 
-    this.sigaServices.post(path, this.bodyMultiple).subscribe(
-      data => {
-        this.progressSpinner = false;
-        this.showSuccess();
-        this.search();
-      },
-      err => {
-        this.progressSpinner = false;
-        this.showFail();
-      },
-      () => {
-        this.selectMultiple = false;
-        this.closeDialog();
+              this.sigaServices
+                .post("solicitudModificacion_insertAuditoria", element)
+                .subscribe(
+                  data => {
+                    this.progressSpinner = false;
+                    this.search();
+
+                    this.showSuccess();
+                    this.search();
+                  },
+                  err => {
+                    this.progressSpinner = false;
+                    this.showFail();
+                  },
+                  () => {
+                    this.cerrarAuditoria();
+                  }
+                );
+
+              this.body.motivo = motivoBackup;
+            });
+            this.cerrarAuditoria();
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+          this.showFail();
+        },
+        () => {
+          this.progressSpinner = false;
+          this.selectMultiple = false;
+          this.closeDialog();
+        }
+      );
+    }
+    if (this.bodyMultipleEspecifica.length > 0) {
+      this.index = 1;
+      if (path == "solicitudModificacion_denyGeneralModificationRequest") {
+        this.bodyMultipleEspecifica.forEach(element => {
+          let pathSpecifica;
+          if (element.idTipoModificacion == "10") {
+            pathSpecifica = "solicitudModificacion_denySolModifDatosGenerales";
+          } else if (element.idTipoModificacion == "30") {
+            pathSpecifica =
+              "solicitudModificacion_denySolModifDatosDirecciones";
+          } else if (element.idTipoModificacion == "35") {
+            pathSpecifica = "solicitudModificacion_denySolModifDatosUseFoto";
+          } else if (element.idTipoModificacion == "40") {
+            pathSpecifica = "solicitudModificacion_denySolModifDatosBancarios";
+          } else if (element.idTipoModificacion == "50") {
+            pathSpecifica =
+              "solicitudModificacion_denySolModifDatosCurriculares";
+          }
+
+          this.especificasCorrectas = false;
+          this.sigaServices.post(pathSpecifica, element).subscribe(
+            data => {
+              if (this.index == this.bodyMultipleEspecifica.length) {
+                if (this.mostrarAuditoria) {
+                  let motivoBackup = element.motivo;
+                  element.motivo = this.body.motivo;
+
+                  this.sigaServices
+                    .post("solicitudModificacion_insertAuditoria", element)
+                    .subscribe(
+                      data => {
+                        this.progressSpinner = false;
+                        this.search();
+
+                        this.showSuccess();
+                        this.search();
+                      },
+                      err => {
+                        this.progressSpinner = false;
+                        this.showFail();
+                      },
+                      () => {
+                        this.cerrarAuditoria();
+                      }
+                    );
+
+                  this.body.motivo = motivoBackup;
+
+                  this.cerrarAuditoria();
+                }
+              } else {
+                this.index++;
+              }
+            },
+            err => {
+              if (this.index != this.bodyMultipleEspecifica.length) {
+                this.index++;
+              }
+            },
+            () => {
+              if (this.index == this.bodyMultipleEspecifica.length) {
+                this.progressSpinner = false;
+                this.selectMultiple = false;
+                this.closeDialog();
+                this.search();
+              }
+            }
+          );
+        });
+      } else {
+        this.index = 1;
+        this.bodyMultipleEspecifica.forEach(element => {
+          let pathSpecifica;
+          if (element.idTipoModificacion == "10") {
+            pathSpecifica =
+              "solicitudModificacion_processSolModifDatosGenerales";
+          } else if (element.idTipoModificacion == "30") {
+            pathSpecifica =
+              "solicitudModificacion_processSolModifDatosDirecciones";
+          } else if (element.idTipoModificacion == "35") {
+            pathSpecifica = "solicitudModificacion_processSolModifDatosUseFoto";
+          } else if (element.idTipoModificacion == "40") {
+            pathSpecifica =
+              "solicitudModificacion_processSolModifDatosBancarios";
+          } else if (element.idTipoModificacion == "50") {
+            pathSpecifica =
+              "solicitudModificacion_processSolModifDatosCurriculares";
+          }
+          this.especificasCorrectas = false;
+          this.sigaServices.post(pathSpecifica, element).subscribe(
+            data => {
+              if (this.index == this.bodyMultipleEspecifica.length) {
+                if (this.mostrarAuditoria) {
+                  let motivoBackup = element.motivo;
+                  element.motivo = this.body.motivo;
+
+                  this.sigaServices
+                    .post("solicitudModificacion_insertAuditoria", element)
+                    .subscribe(
+                      data => {
+                        this.progressSpinner = false;
+                        this.search();
+
+                        this.showSuccess();
+                        this.search();
+                      },
+                      err => {
+                        this.progressSpinner = false;
+                        this.showFail();
+                      },
+                      () => {
+                        this.cerrarAuditoria();
+                      }
+                    );
+
+                  this.body.motivo = motivoBackup;
+                  this.cerrarAuditoria();
+                }
+              } else {
+                this.index++;
+              }
+            },
+            err => {
+              if (this.index != this.bodyMultipleEspecifica.length) {
+                this.index++;
+              }
+            },
+            () => {
+              if (this.index == this.bodyMultipleEspecifica.length) {
+                this.progressSpinner = false;
+                this.selectMultiple = false;
+                this.closeDialog();
+                this.search();
+              }
+            }
+          );
+        });
       }
-    );
+    }
   }
 
   onChangeSelectAll() {
@@ -393,7 +587,7 @@ export class SolicitudesModificacionComponent implements OnInit {
           }
         ];
 
-        this.motivoSolGeneral = selectedDatos.motivo;
+        this.motivoSolGeneral = selectedDatos[0].motivo;
 
         if (selectedDatos[0].estado == "PENDIENTE" && !this.isLetrado) {
           this.disableButton = false;
@@ -403,14 +597,11 @@ export class SolicitudesModificacionComponent implements OnInit {
       }
     } else {
       if (
-        selectedDatos[selectedDatos.length - 1].especifica == "1" ||
+        // selectedDatos[selectedDatos.length - 1].especifica == "1" ||
         selectedDatos[selectedDatos.length - 1].estado != "PENDIENTE"
       ) {
         this.selectedDatos.splice(selectedDatos.length - 1, 1);
       }
-      // if (selectedDatos[selectedDatos.length - 1].estado != "PENDIENTE") {
-      //   this.selectedDatos.splice(selectedDatos.length - 1, 1);
-      // }
     }
   }
 
@@ -521,5 +712,65 @@ export class SolicitudesModificacionComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  obtenerMostrarAuditoria() {
+    let parametro = {
+      valor: "OCULTAR_MOTIVO_MODIFICACION"
+    };
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          let parametroOcultarMotivo = JSON.parse(data.body);
+          if (parametroOcultarMotivo.parametro == "S") {
+            this.mostrarAuditoria = false;
+          } else if (parametroOcultarMotivo.parametro == "N") {
+            this.mostrarAuditoria = true;
+          } else {
+            this.mostrarAuditoria = undefined;
+          }
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
+  comprobarAuditoria() {
+    // mostrar la auditoria depende de un parámetro que varía según la institución
+    this.body.motivo = undefined;
+
+    if (!this.mostrarAuditoria) {
+      this.processMultipleRequest();
+    } else {
+      this.displayAuditoria = true;
+      this.showGuardarAuditoria = false;
+    }
+  }
+
+  cerrarAuditoria() {
+    this.displayAuditoria = false;
+  }
+
+  comprobarCampoMotivo() {
+    if (
+      this.body.motivo != undefined &&
+      this.body.motivo != "" &&
+      this.body.motivo.trim() != ""
+    ) {
+      this.showGuardarAuditoria = true;
+    } else {
+      this.showGuardarAuditoria = false;
+    }
+  }
+
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.search();
+    }
   }
 }

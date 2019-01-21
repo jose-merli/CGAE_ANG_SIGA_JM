@@ -1,30 +1,32 @@
 import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  ViewChild,
   ChangeDetectorRef,
-  HostListener
+  Component,
+  HostListener,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation
 } from "@angular/core";
-
-import { SigaServices } from "./../../../_services/siga.service";
-import { SigaWrapper } from "../../../wrapper/wrapper.class";
 import { Router } from "@angular/router";
-import { TranslateService } from "../../../commons/translate/translation.service";
 import { ConfirmationService } from "primeng/api";
-import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { DataTable } from "primeng/datatable";
-import { esCalendar } from "./../../../utils/calendar";
-import { DatosColegiadosItem } from "../../../models/DatosColegiadosItem";
 import {
   FormBuilder,
-  FormGroup,
   FormControl,
+  FormGroup,
   Validators
 } from "../../../../../node_modules/@angular/forms";
+import { TranslateService } from "../../../commons/translate/translation.service";
+import { DatosColegiadosItem } from "../../../models/DatosColegiadosItem";
 import { DatosColegiadosObject } from "../../../models/DatosColegiadosObject";
-import { TrimPipePipe } from "../../../commons/trim-pipe/trim-pipe.pipe";
 import { SubtipoCurricularItem } from "../../../models/SubtipoCurricularItem";
+import { USER_VALIDATIONS } from "../../../properties/val-properties";
+import { SigaWrapper } from "../../../wrapper/wrapper.class";
+import { esCalendar } from "./../../../utils/calendar";
+import { SigaServices } from "./../../../_services/siga.service";
+
+export enum KEY_CODE {
+  ENTER = 13
+}
 
 @Component({
   selector: "app-busqueda-colegiados",
@@ -118,12 +120,25 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.getCombos();
     // sessionStorage.removeItem("esColegiado");
     sessionStorage.removeItem("disabledAction");
-
-    if (sessionStorage.getItem("filtrosBusquedaColegiados") != null) {
-      this.body = JSON.parse(
-        sessionStorage.getItem("filtrosBusquedaColegiados")
+    if (sessionStorage.getItem("fechaIncorporacionHastaSelect") != null) {
+      this.fechaIncorporacionHastaSelect = new Date(
+        JSON.parse(sessionStorage.getItem("fechaIncorporacionHastaSelect"))
       );
-      sessionStorage.removeItem("filtrosBusquedaColegiados");
+      sessionStorage.removeItem("fechaIncorporacionHastaSelect");
+    }
+    if (sessionStorage.getItem("fechaIncorporacionDesdeSelect") != null) {
+      this.fechaIncorporacionDesdeSelect = new Date(
+        JSON.parse(sessionStorage.getItem("fechaIncorporacionDesdeSelect"))
+      );
+      sessionStorage.removeItem("fechaIncorporacionDesdeSelect");
+    }
+    if (
+      sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial") != null
+    ) {
+      this.body = JSON.parse(
+        sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial")
+      );
+      sessionStorage.removeItem("filtrosBusquedaColegiadosFichaColegial");
       this.isBuscar();
     }
   }
@@ -152,6 +167,26 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         "filtrosBusquedaColegiados",
         JSON.stringify(this.body)
       );
+      sessionStorage.removeItem("fechaIncorporacionDesdeSelect");
+      if (
+        this.fechaIncorporacionDesdeSelect != null ||
+        this.fechaIncorporacionDesdeSelect != undefined
+      ) {
+        sessionStorage.setItem(
+          "fechaIncorporacionDesdeSelect",
+          JSON.stringify(this.fechaIncorporacionDesdeSelect)
+        );
+      }
+      sessionStorage.removeItem("fechaIncorporacionHastaSelect");
+      if (
+        this.fechaIncorporacionHastaSelect != null ||
+        this.fechaIncorporacionHastaSelect != undefined
+      ) {
+        sessionStorage.setItem(
+          "fechaIncorporacionHastaSelect",
+          JSON.stringify(this.fechaIncorporacionHastaSelect)
+        );
+      }
       sessionStorage.setItem("personaBody", JSON.stringify(id[0]));
       console.log(id);
 
@@ -672,6 +707,14 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       return false;
     } else {
       return true;
+    }
+  }
+
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.isBuscar();
     }
   }
 }

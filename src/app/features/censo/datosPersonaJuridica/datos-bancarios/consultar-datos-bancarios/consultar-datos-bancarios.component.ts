@@ -123,6 +123,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   ocultarMotivo: boolean = undefined;
 
   lengthCountryCode: Number = 0;
+  // historico:boolean = false;
 
   @ViewChild("table")
   table: DataTable;
@@ -162,6 +163,12 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     }
     sessionStorage.setItem("editarDatosBancarios", "true");
     this.textFilter = "Elegir";
+
+    // if(sessionStorage.getItem("historico") == "true"){
+    //   this.historico = true;
+    // }else{
+    //   this.historico = false;
+    // }
 
     // obtener parametro para saber si se oculta la auditoria
     let parametro = {
@@ -308,8 +315,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   cargarModoNuevoRegistro() {
     //if (this.usuarioBody[0].denominacion != undefined) {
-      if (this.usuarioBody.denominacion != undefined) {
+    if (this.usuarioBody.denominacion != undefined) {
       this.body.titular = this.usuarioBody.denominacion;
+      this.checkBody.titular = this.usuarioBody.denominacion;
     }
 
     //this.body.nifTitular = this.usuarioBody[0].nif;
@@ -322,6 +330,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   cargarDatosCuentaBancaria() {
     this.body.idPersona = this.idPersona;
     this.body.idCuenta = this.idCuenta;
+    this.checkBody.idCuenta = this.idCuenta;
+    this.checkBody.idPersona = this.idPersona;
 
     this.sigaServices
       .postPaginado("datosCuentaBancaria_search", "?numPagina=1", this.body)
@@ -354,6 +364,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         },
         () => {
           this.autogenerarDatos();
+          this.checkBody = JSON.parse(JSON.stringify(this.body));
         }
       );
   }
@@ -565,8 +576,14 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       message: "¿Desea restablecer los datos?",
       icon: "fa fa-info",
       accept: () => {
-        this.body.titular = this.usuarioBody[0].denominacion;
+        if (this.usuarioBody.denominacion != undefined) {
+          this.body.titular = this.usuarioBody.denominacion;
+        } else {
+          this.body.titular = "";
+        }
         //this.body.nifTitular = this.usuarioBody[0].nif;
+        this.ibanValido = undefined;
+        this.bicValido = undefined;
         this.body.iban = "";
         this.iban = "";
         this.body.bic = "";
@@ -577,6 +594,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
         this.nuevo = true;
         this.editar = false;
+        this.checkBody = JSON.parse(JSON.stringify(this.body));
       }
     });
   }

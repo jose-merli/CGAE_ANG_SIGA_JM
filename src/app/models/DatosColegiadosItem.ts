@@ -3,7 +3,7 @@ export class DatosColegiadosItem {
   nif: string;
   nombre: string;
   apellidos: string;
-
+  institucion: string;
   idProvincia: string;
   idPoblacion: string;
   codigoPostal: string;

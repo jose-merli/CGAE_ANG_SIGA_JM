@@ -471,6 +471,10 @@ export class SigaServices {
       "solicitudModificacionEspecifica/searchSpecificRequest",
     solicitudModificacion_searchDatosDirecciones:
       "solicitudModificacion/searchDatosDirecciones",
+
+    solicitudModificacion_insertAuditoria:
+      "solicitudModificacion/insertAuditoria",
+
     tipoCurricular_categoriaCurricular: "tipoCurricular/categoriaCurricular",
     tipoCurricular_searchTipoCurricular: "tipoCurricular/searchTipoCurricular",
     tipoCurricular_createTipoCurricular: "tipoCurricular/createTipoCurricular",
@@ -530,6 +534,7 @@ export class SigaServices {
       "busquedaPerJuridica/solicitudInsertBanksData",
     fichaDatosColegiales_datosColegialesUpdate:
       "/fichaDatosColegiales/datosColegialesUpdate",
+      fichaColegialRegTel_permisos:"fichaColegialRegTel/permisos",
     fichaColegialRegTel_searchListDoc: "fichaColegialRegTel/searchListDoc",
     fichaColegialRegTel_searchListDir: "fichaColegialRegTel/searchListDir",
     fichaColegialRegTel_searchListDocNoCol:

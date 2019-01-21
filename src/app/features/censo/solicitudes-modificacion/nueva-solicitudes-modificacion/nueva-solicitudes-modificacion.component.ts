@@ -60,6 +60,8 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
   selectedEstado: any;
   isLetrado: boolean = false;
 
+  msgs: any;
+
   @ViewChild("table")
   table;
   selectedDatos;
@@ -73,6 +75,11 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
   textBankDataTranslations: String[];
   numSelected: number = 0;
   selectedItem: number = 10;
+
+  mostrarAuditoria: boolean = false;
+  showGuardarAuditoria: boolean = false;
+  displayAuditoria: boolean = false;
+  motivoAuditoria: string;
 
   constructor(
     private location: Location,
@@ -94,10 +101,10 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
       ) {
         this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
       }
-      if (
-        (this.body.estado == "REALIZADA" || this.body.estado == "DENEGADA") &&
-        this.isLetrado
-      ) {
+
+      if (this.body.estado == "PENDIENTE" && !this.isLetrado) {
+        this.disableButton = false;
+      } else {
         this.disableButton = true;
       }
 
@@ -121,6 +128,8 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
 
       //  sessionStorage.removeItem("rowData");
     }
+
+    this.obtenerMostrarAuditoria();
   }
 
   // Métodos necesarios para la tabla
@@ -609,7 +618,28 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
 
     this.sigaServices.post(path, this.body).subscribe(
       data => {
-        this.progressSpinner = false;
+        if (this.mostrarAuditoria) {
+          let motivoBackup = this.body.motivo;
+          this.body.motivo = this.motivoAuditoria;
+
+          this.sigaServices
+            .post("solicitudModificacion_insertAuditoria", this.body)
+            .subscribe(
+              data => {
+                this.progressSpinner = false;
+                this.showSuccess();
+              },
+              err => {
+                this.progressSpinner = false;
+                this.showFail();
+              },
+              () => {
+                this.progressSpinner = false;
+              }
+            );
+
+          this.body.motivo = motivoBackup;
+        }
       },
       err => {
         this.progressSpinner = false;
@@ -631,5 +661,80 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
+  }
+
+  comprobarAuditoria() {
+    // mostrar la auditoria depende de un parámetro que varía según la institución
+
+    if (!this.mostrarAuditoria) {
+      this.processRequest();
+    } else {
+      this.displayAuditoria = true;
+      this.showGuardarAuditoria = false;
+    }
+  }
+
+  cerrarAuditoria() {
+    this.displayAuditoria = false;
+  }
+
+  comprobarCampoMotivo() {
+    if (
+      this.motivoAuditoria != undefined &&
+      this.motivoAuditoria != "" &&
+      this.motivoAuditoria.trim() != ""
+    ) {
+      this.showGuardarAuditoria = true;
+    } else {
+      this.showGuardarAuditoria = false;
+    }
+  }
+
+  showSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant("general.message.accion.realizada")
+    });
+  }
+
+  showFail() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "general.message.error.realiza.accion"
+      )
+    });
+  }
+
+  obtenerMostrarAuditoria() {
+    let parametro = {
+      valor: "OCULTAR_MOTIVO_MODIFICACION"
+    };
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          let parametroOcultarMotivo = JSON.parse(data.body);
+          if (parametroOcultarMotivo.parametro == "S") {
+            this.mostrarAuditoria = false;
+          } else if (parametroOcultarMotivo.parametro == "N") {
+            this.mostrarAuditoria = true;
+          } else {
+            this.mostrarAuditoria = undefined;
+          }
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }

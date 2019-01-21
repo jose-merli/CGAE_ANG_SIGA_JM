@@ -3,7 +3,8 @@ import {
   Component,
   OnInit,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  HostListener
 } from "@angular/core";
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { DatePipe } from "../../../../../node_modules/@angular/common";
@@ -23,6 +24,10 @@ import { DatosNoColegiadosObject } from "../../../models/DatosNoColegiadosObject
 import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
 import { SigaServices } from "../../../_services/siga.service";
 import { SubtipoCurricularItem } from "../../../models/SubtipoCurricularItem";
+
+export enum KEY_CODE {
+  ENTER = 13
+}
 
 @Component({
   selector: "app-busqueda-no-colegiados",
@@ -74,6 +79,9 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   noResultsSubtipos: boolean = true;
 
   msgs: Message[];
+  showDatosGeneneralesAvanzado: boolean = false;
+  showDatosDireccion: boolean = false;
+  showDatosGenerales: boolean = true;
 
   @ViewChild("table")
   table: DataTable;
@@ -119,11 +127,13 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     this.getCombos();
     this.es = this.translateService.getCalendarLocale();
     // sessionStorage.removeItem("esColegiado");
-    if (sessionStorage.getItem("filtrosBusquedaNoColegiados") != null) {
+    if (
+      sessionStorage.getItem("filtrosBusquedaNoColegiadosFichaColegial") != null
+    ) {
       this.body = JSON.parse(
-        sessionStorage.getItem("filtrosBusquedaNoColegiados")
+        sessionStorage.getItem("filtrosBusquedaNoColegiadosFichaColegial")
       );
-      sessionStorage.removeItem("filtrosBusquedaNoColegiados");
+      sessionStorage.removeItem("filtrosBusquedaNoColegiadosFichaColegial");
 
       if (this.body.historico) {
         if (this.checkFiltersInit()) {
@@ -137,16 +147,6 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     }
   }
 
-  abrirFicha(key) {
-    let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = true;
-  }
-
-  cerrarFicha(key) {
-    let fichaPosible = this.getFichaPosibleByKey(key);
-    fichaPosible.activa = false;
-  }
-
   getFichaPosibleByKey(key): any {
     let fichaPosible = this.fichasPosibles.filter(elto => {
       return elto.key === key;
@@ -155,11 +155,6 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       return fichaPosible[0];
     }
     return {};
-  }
-
-  esFichaActiva(key) {
-    let fichaPosible = this.getFichaPosibleByKey(key);
-    return fichaPosible.activa;
   }
 
   //Funcion que carga todos los combos de los filtros de la pantalla
@@ -838,5 +833,25 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     } else {
       return true;
     }
+  }
+
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.isBuscar(false);
+    }
+  }
+
+  onHideDatosGeneralesAvanzados() {
+    this.showDatosGeneneralesAvanzado = !this.showDatosGeneneralesAvanzado;
+  }
+
+  onHideDireccion() {
+    this.showDatosDireccion = !this.showDatosDireccion;
+  }
+
+  onHideDatosGenerales() {
+    this.showDatosGenerales = !this.showDatosGenerales;
   }
 }

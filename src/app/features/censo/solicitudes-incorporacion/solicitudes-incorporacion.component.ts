@@ -27,8 +27,8 @@ export enum KEY_CODE {
   styleUrls: ["./solicitudes-incorporacion.component.scss"]
 })
 export class SolicitudesIncorporacionComponent implements OnInit {
+  showCard: boolean = true;
   es: any;
-  fichaAbierta: boolean = true;
   formBusqueda: FormGroup;
   body: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
   bodySearch: SolicitudIncorporacionObject = new SolicitudIncorporacionObject();
@@ -191,10 +191,6 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     this.router.navigate(["/nuevaIncorporacion"]);
   }
 
-  abrirCerrarFicha() {
-    this.fichaAbierta = !this.fichaAbierta;
-  }
-
   checkIdentificacion(doc: String) {
     if (doc && doc.length > 0 && doc != undefined) {
       if (doc.length == 10) {
@@ -291,10 +287,15 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      this.isBuscar();
+      this.buscarSolicitudes();
     }
   }
+
   clear() {
     this.msgs = [];
+  }
+
+  onHideCard() {
+    this.showCard = !this.showCard;
   }
 }
