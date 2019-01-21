@@ -1072,6 +1072,26 @@ p-footer .main-button{
   content: "\f093";
 }
 
+.ui-orderlist-list-container{
+  width: 20em !important;
+}
+
+.ui-orderlist .ui-orderlist-controls{
+  height: auto !important;
+}
+.ui-orderlist .ui-orderlist-list{
+  width: 100% !important;
+  height: auto !important;
+}
+
+.pick-sufijos .ui-picklist.ui-picklist-responsive .ui-picklist-buttons button{
+  &:nth-child(2){
+    display:none !important;
+  }
+  &:nth-child(4){
+    display:none !important;
+  }
+}
 
 /**RESPONSIVE**/
 

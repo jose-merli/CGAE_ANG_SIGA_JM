@@ -292,7 +292,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
         idModelo: this.body.idModeloComunicacion,
         idPlantillaEnvios: element.idPlantillaEnvios,
         idInstitucion: this.body.idInstitucion,
-        idTipoEnvios: this.idTipoEnvios
+        idTipoEnvios: element.idTipoEnvios
       };
       this.eliminarArray.push(objEliminar);
     });
@@ -361,8 +361,6 @@ export class TarjetaComunicacionesComponent implements OnInit {
     this.datos.push(newPlantilla);
     this.datos = [... this.datos];
   }
-
-
 
   onChangePlantilla(e) {
     this.idPlantillaEnvios = e.value;

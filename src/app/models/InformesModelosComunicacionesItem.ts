@@ -9,5 +9,6 @@ export class InformesModelosComItem {
   datos: String;
   idInforme: String;
   idFormatoSalida: String;
+  sufijos: String[] = [];
   constructor() { }
 }

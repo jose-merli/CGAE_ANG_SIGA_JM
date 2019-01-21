@@ -57,8 +57,10 @@ export class PlantillaDocumentoComponent implements OnInit {
   file: any;
   eliminarDisabled: boolean = false;
   eliminarArray: any = [];
+  eliminarArrayPlantillas: any = [];
   nuevoDocumento: boolean = false;
   selectedIdioma: any;
+  selectedSufijos: any = [];
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -82,6 +84,7 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.busquedaIdioma();
     this.getConsultasDisponibles();
     this.getDocumentos();
+
 
     this.selectedItem = 10;
 
@@ -268,10 +271,16 @@ export class PlantillaDocumentoComponent implements OnInit {
       this.body.idInstitucion = this.modeloItem.idInstitucion;
     }
     if (sessionStorage.getItem("modelosInformesSearch") != null) {
+
       this.informeItem = JSON.parse(sessionStorage.getItem("modelosInformesSearch"));
       this.body.idInforme = this.informeItem.idInforme;
       this.body.nombreFicheroSalida = this.informeItem.nombreFicheroSalida;
       this.body.formatoSalida = this.informeItem.idFormatoSalida;
+      this.body.sufijos = this.informeItem.sufijos
+      if (this.body.sufijos && this.body.sufijos.length > 0) {
+        this.selectedSufijos = this.body.sufijos;
+        console.log('body', this.selectedSufijos)
+      }
     }
   }
 
@@ -279,6 +288,7 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.sigaServices.get("plantillasDoc_combo_formatos").subscribe(
       n => {
         this.formatos = n.combooItems;
+
       },
       err => {
         console.log(err);
@@ -290,6 +300,9 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.sigaServices.get("plantillasDoc_combo_sufijos").subscribe(
       n => {
         this.sufijos = n.combooItems;
+        this.getValoresSufijo();
+
+        console.log(this.sufijos)
       },
       err => {
         console.log(err);
@@ -366,7 +379,6 @@ export class PlantillaDocumentoComponent implements OnInit {
       .subscribe(
         data => {
           this.datos = JSON.parse(data["body"]).consultaItem;
-
           if (this.datos.length <= 0) {
             this.datos = [
               { idConsulta: '', finalidad: '', objetivo: 'Destinatario', idObjetivo: '1' },
@@ -374,7 +386,10 @@ export class PlantillaDocumentoComponent implements OnInit {
               { idConsulta: '', finalidad: '', objetivo: 'Multidocumento', idObjetivo: '2' },
               { idConsulta: '', finalidad: '', objetivo: 'Datos', idObjetivo: '4' },
             ]
-          }
+          };
+          this.datos.map(e => {
+            return e.idConsultaAnterior = e.idConsulta;
+          })
         },
         err => {
           this.showFail('Error al cargar las consultas');
@@ -604,6 +619,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         idModeloComunicacion: this.body.idModeloComunicacion,
         idClaseComunicacion: element.idClaseComunicacion,
         idInstitucion: this.body.idInstitucion,
+        idInforme: this.body.idInforme,
         idConsulta: dato.idConsulta
       };
       this.eliminarArray.push(objEliminar);
@@ -622,14 +638,80 @@ export class PlantillaDocumentoComponent implements OnInit {
     );
   }
 
-  onBorrar(data) {
-    data.forEach(element => {
-      let x = this.documentos.indexOf(element);
-      this.documentos.splice(x, 1);
+  eliminarPlantilla(dato) {
+    this.confirmationService.confirm({
+      // message: this.translateService.instant("messages.deleteConfirmation"),
+      message: '¿Está seguro de cancelar los' + dato.length + 'envíos seleccionados',
+      icon: "fa fa-trash-alt",
+      accept: () => {
+        this.confirmarEliminarPlantilla(dato);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
     });
-    this.body.plantillas = this.documentos;
   }
 
+  confirmarEliminarPlantilla(dato) {
+    this.eliminarArrayPlantillas = [];
+    dato.forEach(element => {
+      let objEliminar = {
+        idModeloComunicacion: this.body.idModeloComunicacion,
+        idPlantillaDocumento: element.idPlantillaDocumento,
+        idInforme: element.idInforme
+      };
+      this.eliminarArrayPlantillas.push(objEliminar);
+    });
+    this.sigaServices.post("plantillasDoc_plantillas_borrar", this.eliminarArrayPlantillas).subscribe(
+      data => {
+        this.showSuccess('Se ha eliminado la plantilla correctamente');
+      },
+      err => {
+        this.showFail('Error al eliminar la plantilla');
+        console.log(err);
+      },
+      () => {
+        this.getPlantillas();
+      }
+    );
+  }
+
+
+
+  onChangeSufijo(dato) {
+    console.log(dato);
+    this.selectedSufijos.map(e => {
+      if (e.value == "1" && dato.itemValue.value == '1') {
+        e.abr = 'A'
+      } else if (e.value == "2" && dato.itemValue.value == '2') {
+        e.abr = 'B'
+      } else if (e.value == "3" && dato.itemValue.value == '3') {
+        e.abr = 'C'
+      }
+      return e.abr;
+    })
+  }
+
+  getValoresSufijo() {
+    let valorCombo = this.sufijos.map(e => {
+      return e.value;
+    });
+    for (let sel of this.selectedSufijos) {
+      let index = valorCombo.indexOf(sel.idSufijo);
+      if (index != -1) {
+        this.sufijos.splice(1, 1);
+      }
+    }
+    this.sufijos = [... this.sufijos];
+  }
 
 
 }
