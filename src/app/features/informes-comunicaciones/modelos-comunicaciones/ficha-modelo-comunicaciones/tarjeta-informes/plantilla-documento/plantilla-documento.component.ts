@@ -255,22 +255,22 @@ export class PlantillaDocumentoComponent implements OnInit {
 
     this.getSessionStorage();
 
-    if(this.body.idInforme != undefined){
+    if (this.body.idInforme != undefined) {
       this.getResultados();
     }
   }
 
-  getSessionStorage(){
+  getSessionStorage() {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.modeloItem = JSON.parse(sessionStorage.getItem("modelosSearch"));
       this.body.idModeloComunicacion = this.modeloItem.idModeloComunicacion;
       this.body.idClaseComunicacion = this.modeloItem.idClaseComunicacion;
-      this.body.idInstitucion = this.modeloItem.idInstitucion;           
+      this.body.idInstitucion = this.modeloItem.idInstitucion;
     }
-    if(sessionStorage.getItem("modelosInformesSearch") != null){
+    if (sessionStorage.getItem("modelosInformesSearch") != null) {
       this.informeItem = JSON.parse(sessionStorage.getItem("modelosInformesSearch"));
       this.body.idInforme = this.informeItem.idInforme;
-      this.body.nombreFicheroSalida = this.informeItem.nombreFicheroSalida; 
+      this.body.nombreFicheroSalida = this.informeItem.nombreFicheroSalida;
       this.body.formatoSalida = this.informeItem.idFormatoSalida;
     }
   }
@@ -349,9 +349,9 @@ export class PlantillaDocumentoComponent implements OnInit {
       );
   }
 
-  restablecerDatosGenerales(){
-    this.getSessionStorage();    
-    if(this.body.idInforme != undefined){
+  restablecerDatosGenerales() {
+    this.getSessionStorage();
+    if (this.body.idInforme != undefined) {
       this.getResultados();
     }
   }
@@ -575,11 +575,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   eliminar(dato) {
 
-    dato.forEach(element => {
-      let x = this.datos.indexOf(element);
-      this.datos.splice(x, 1);      
-    });
-    /*this.confirmationService.confirm({
+    this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
       message: '¿Está seguro de cancelar los' + dato.length + 'envíos seleccionados',
       icon: "fa fa-trash-alt",
@@ -597,7 +593,7 @@ export class PlantillaDocumentoComponent implements OnInit {
           }
         ];
       }
-    });*/
+    });
   }
 
 
@@ -626,12 +622,12 @@ export class PlantillaDocumentoComponent implements OnInit {
     );
   }
 
-  onBorrar(data){
+  onBorrar(data) {
     data.forEach(element => {
       let x = this.documentos.indexOf(element);
-      this.documentos.splice(x, 1);      
+      this.documentos.splice(x, 1);
     });
-    this.body.plantillas = this.documentos;    
+    this.body.plantillas = this.documentos;
   }
 
 
