@@ -83,7 +83,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   //Para los mensajes de info
   msgs: Message[] = [];
 
-  activacionEditar: boolean = true;
+  activacionEditar: boolean = false;
   camposDesactivados: boolean = false;
 
   constructor(
@@ -141,6 +141,40 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
 
   ngAfterViewInit() {
     this.mySelect.ngOnInit();
+  }
+
+  //CONTROL DE PERMISOS
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "20A";
+    let derechoAcceso;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (derechoAcceso == 3) {
+          //permiso total
+          this.activacionEditar = true;
+        } else if (derechoAcceso == 2) {
+          // solo lectura
+          this.activacionEditar = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+    );
   }
 
   initSessionStorage() {
@@ -864,36 +898,6 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   //   else return true;
   // }
 
-  checkAcceso() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "120";
-    let derechoAcceso;
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisosTree = JSON.parse(data.body);
-        let permisosArray = permisosTree.permisoItems;
-        derechoAcceso = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        if (derechoAcceso == 3) {
-          this.activacionEditar = false;
-        } else if (derechoAcceso == 2) {
-          this.activacionEditar = true;
-        } else {
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
-          this.router.navigate(["/errorAcceso"]);
-        }
-      }
-    );
-  }
-
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
@@ -910,5 +914,4 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
       this.isBuscar(false);
     }
   }
-
 }
