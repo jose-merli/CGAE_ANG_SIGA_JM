@@ -3,6 +3,8 @@
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
+    <p>{{ "menu.formacion" | translate}}
+      <i class="fa fa-angle-right"> </i>{{ 'menu.formacion.buscarCursos' | translate}}</p> <i class="fa fa-angle-right"> </i>
     <p>{{ 'formacion.fichaCurso.cabecera' | translate }}</p>
   </div>
 
@@ -51,7 +53,7 @@
           </div>
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
-              <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}}(*)</label>
+              <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}} (*)</label>
               <input
                 type="text"
                 class="form-control"
@@ -62,7 +64,7 @@
               />
             </div>
             <div class="col-lg-6 col-md-6">
-              <label>{{ 'formacion.fichaCursos.datosGenerales.codigo' | translate }}(*)</label>
+              <label>{{ 'formacion.fichaCursos.datosGenerales.codigo' | translate }} (*)</label>
               <input
                 type="text"
                 class="form-control"
@@ -75,13 +77,13 @@
           </div>
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
-                <label>{{ 'formacion.fichaCursos.datosGenerales.visibilidad' | translate}}(*)</label>
+                <label>{{ 'formacion.fichaCursos.datosGenerales.visibilidad' | translate}} (*)</label>
                 <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form"
                 [disabled]="!activacionEditar" [(ngModel)]='curso.idVisibilidad' [options]="comboVisibilidad" [filter]="true" filterBy="label,labelSinTilde"
                   (onChange)="onChangeSelectVisibilidad($event)"></p-dropdown>
             </div>
             <div class="col-lg-6 col-md-6">
-                <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}(*)</label>
+                <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}} (*)</label>
                 <p-dropdown #colegio [disabled]="fieldNoEditable || !activacionEditar"  class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
                   [(ngModel)]='curso.colegio' [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeSelectColegio($event) "></p-dropdown>
             </div>
@@ -100,7 +102,7 @@
             </p-autoComplete>
             </div>
             <div class="col-lg-6 col-md-6">
-                <label>{{ 'form.busquedaCursos.literal.estado' | translate}}(*)</label>
+                <label>{{ 'form.busquedaCursos.literal.estado' | translate}} (*)</label>
                 <p-dropdown placeholder="-" class="select-form" [(ngModel)]='curso.idEstado' [options]="comboEstados"
                 [filter]="true" filterBy="label,labelSinTilde" [disabled]="fieldNoEditable || !activacionEditar"></p-dropdown>
             </div>
@@ -155,7 +157,7 @@
           </div>
           <div class="row mb-4">
               <div class="col-lg-6 col-md-6">
-                  <label>Fecha Inicio Inscripción(*)</label>
+                  <label>Fecha Inicio Inscripción (*)</label>
                   <p-calendar
                         [locale]="es"
                         [(ngModel)]="curso.fechaInscripcionDesdeDate"
@@ -166,7 +168,7 @@
                       ></p-calendar>
               </div>
               <div class="col-lg-6 col-md-6">
-                  <label>Fecha Fin Inscripción(*)</label>
+                  <label>Fecha Fin Inscripción (*)</label>
                   <p-calendar
                         [locale]="es"
                         [(ngModel)]="curso.fechaInscripcionHastaDate"
@@ -371,7 +373,6 @@
 
     <!-- Cuerpo -->
     <div class="card-body card-body-ficha" *ngIf="esFichaActiva('price')">
-      <div *ngIf="esFichaActiva('price')" class="card-body card-body-ficha">
         <div class="row">
           <p-dataTable
             emptyMessage="{{ 'general.message.no.registros' | translate}}"
@@ -389,8 +390,8 @@
             [sortOrder]="sortO"
             [paginator]="true"
             paginatorPosition="both"
-            [rows]="selectedPrices"
-          >
+            [rows]="selectedPrices">
+
             <p-column
               *ngFor="let col of colsPrices"
               [sortable]="true"
@@ -415,6 +416,7 @@
                 <p-dropdown
                   [(ngModel)]="selectedPrices"
                   [options]="rowsPerPage"
+                  (onChange)="onChangeRowsPerPagesPrices($event)"
                 ></p-dropdown>
                 <label class="pl-1">
                   {{
@@ -422,6 +424,7 @@
                       | translate
                   }}</label
                 >
+                <div class="ml-3 selectAll">
                   <p-checkbox
                     (onChange)="onChangeSelectAllPrices()"
                     [(ngModel)]="selectAllPrices"
@@ -429,13 +432,12 @@
                     label="Seleccionar todo"
                     name="groupname"
                   ></p-checkbox>
+                  </div>
                 <label
                   class="ml-3 seleccionMultiple"
                   [ngClass]="{ 'seleccion-multiple': selectMultiplePrices }"
                   (click)="
-                    isSelectMultiplePrices(); selectedDatosPrices = false
-                  "
-                >
+                    isSelectMultiplePrices(); selectedDatosPrices = false">
                   <i class="pr-2 fa fa-mouse-pointer"></i
                   >{{ "general.message.seleccion.multiple" | translate }}</label
                 >
@@ -443,19 +445,13 @@
             </ng-template>
           </p-dataTable>
         </div>
-      </div>
-      <div *ngIf="esFichaActiva('price')" class="card-footer">
-      
-      </div>
     </div>
   </div>
 
   <!-- TERJETAS FORMADORES -->
   <div class="card">
     <!-- Cabecera -->
-    <div
-      class="card-header header-ficha"
-      (click)="abreCierraFicha('formadores')">
+    <div class="card-header header-ficha" (click)="abreCierraFicha('formadores')">
       <div *ngIf="!esFichaActiva('formadores')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -481,10 +477,6 @@
 
     <!-- Cuerpo -->
     <div class="card-body card-body-ficha" *ngIf="esFichaActiva('formadores')">
-      <div
-        *ngIf="esFichaActiva('formadores')"
-        class="card-body card-body-ficha"
-      >
         <div class="row">
           <div *ngIf="(selectMultipleFormadores || selectAllFormadores || !activacionEditar) && !pressNewFormador">
             <p-dataTable
@@ -893,7 +885,7 @@
                     total de {{ tableFormadores.totalRecords }}</label
                   >
                   <label class="pr-3 numSeleccionados"
-                    >Seleccionados: {{ numSelected }}</label
+                    >Seleccionados: {{ numSelectedFormadores }}</label
                   >
                   <label>{{ "general.message.mostrar" | translate }}</label>
                   <p-dropdown
@@ -912,7 +904,6 @@
             </p-dataTable>
           </div>
         </div>
-      </div>
     </div>
     <div class="card-footer" *ngIf="esFichaActiva('formadores')">
       <div class="text-right main-button">
@@ -1067,10 +1058,6 @@
 
   <!-- Cuerpo -->
   <div class="card-body card-body-ficha" *ngIf="esFichaActiva('certificate')">
-      <div
-        *ngIf="esFichaActiva('certificate')"
-        class="card-body card-body-ficha"
-      >
         <div class="row">
           <div *ngIf="(selectMultipleCertificates || selectAllCertificates  || !activacionEditar) && !pressNewCertificate">
             <p-dataTable
@@ -1448,7 +1435,6 @@
             </p-dataTable>
           </div>
         </div>
-      </div>
     </div>
     <div class="card-footer" *ngIf="esFichaActiva('certificate')">
       <div class="text-right main-button">
@@ -1488,7 +1474,7 @@
         iconPos="left"
         label="{{ 'general.boton.guardar' | translate }}"
         [disabled]="!(editCertificate && !pressNewCertificate) || pressNewCertificate && validateCertificate()"
-      >
+      ></button>
         <button
           [disabled]="!selectedDatosCertificates != ''"
           pButton
@@ -1539,7 +1525,6 @@
 
   <!-- Cuerpo -->
   <div class="card-body card-body-ficha" *ngIf="esFichaActiva('session')">
-    <div *ngIf="esFichaActiva('session')" class="card-body card-body-ficha">
       <div class="row">
         <p-dataTable
           emptyMessage="{{ 'general.message.no.registros' | translate}}"
@@ -1590,7 +1575,7 @@
                     | translate
                 }}</label
               >
-              <div class="ml-3 selectAllNotification">
+              <div class="ml-3 selectAll">
                 <p-checkbox
                   (onChange)="onChangeSelectAllSessions()"
                   [(ngModel)]="selectAllSessions"
@@ -1613,14 +1598,13 @@
           </ng-template>
         </p-dataTable>
       </div>
-    </div>
   </div>
   <div class="card-footer" *ngIf="esFichaActiva('session')">
     <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-reply-all" (click)="duplicateSession()" [disabled]="!activacionEditar" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}" [disabled]="disabledDuplicate() || !activacionEditar" ></button>
-          <button pButton type="button" icon="fa fa-plus" (click)="newSession()" [disabled]="!activacionEditar" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
         <button pButton type="button" icon="fa fa-close" (click)="cancelSessions()" [disabled]="!activacionEditar" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"  [disabled]="!selectMultipleSessions || !activacionEditar"></button>
-    </div>
+        <button pButton type="button" icon="fa fa-reply-all" (click)="duplicateSession()" [disabled]="!activacionEditar" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}" [disabled]="disabledDuplicate() || !activacionEditar" ></button>
+        <button pButton type="button" icon="fa fa-plus" (click)="newSession()" [disabled]="!activacionEditar" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+      </div>
   </div>
 </div>
 
@@ -1651,11 +1635,10 @@
 
   <!-- Cuerpo -->
   <div class="card-body card-body-ficha" *ngIf="esFichaActiva('carga')">
-    <div *ngIf="esFichaActiva('carga')" class="card-body card-body-ficha">
       <div class="row">
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultipleCargas}"
           [(selection)]="selectedDatosCargas" pageLinks="4" dataKey="idCargaInscripcion" [responsive]="true" selectionMode="multiple" #tableCargas class="tabla-listado"
-          [value]="datosCargas" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedCargas">
+          [value]="datosCargas" [sortOrder]="sortO" (onRowSelect)="actualizaSeleccionadosCargas()" [paginator]="true" paginatorPosition="both" [rows]="selectedCargas">
           <p-column *ngFor="let col of colsCargas" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
 
@@ -1674,7 +1657,7 @@
               <label>{{ "general.message.mostrar" | translate}}</label>
               <p-dropdown [(ngModel)]="selectedCargas" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesCargas($event)"></p-dropdown>
               <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-              <div class="ml-3 selectAllNotification">
+              <div class="ml-3 selectAll">
                 <p-checkbox (onChange)="onChangeSelectAllCargas()" [(ngModel)]="selectAllCargas" binary="true" label="{{'tablas.literal.seleccionarTodo' | translate}}"
                   name="groupname"></p-checkbox>
               </div>
@@ -1685,7 +1668,6 @@
 
         </p-dataTable>
       </div>
-    </div>
   </div>
   <div class="card-footer" *ngIf="esFichaActiva('carga')">
     <div class="text-right main-button">

@@ -58,7 +58,7 @@ export class HomeComponent implements OnInit {
               "personaBody",
               JSON.stringify(this.generalBody)
             );
-            sessionStorage.setItem("esNuevoNoColegiado", JSON.stringify(false));
+            sessionStorage.setItem("esNuevoNoColegiado", JSON.stringify(true));
             sessionStorage.setItem("emptyLoadFichaColegial", "true");
             sessionStorage.setItem("esColegiado", "true");
           }

@@ -30,6 +30,7 @@ import { FichaColegialColegiacionesItem } from "./../../../../app/models/FichaCo
 import { FichaColegialColegiacionesObject } from "./../../../../app/models/FichaColegialColegiacionesObject";
 import { FichaColegialCertificadosItem } from "./../../../../app/models/FichaColegialCertificadosItem";
 import { FichaColegialCertificadosObject } from "./../../../../app/models/FichaColegialCertificadosObject";
+import { SolicitudIncorporacionItem } from "../../../models/SolicitudIncorporacionItem";
 import { FichaColegialSociedadesItem } from "./../../../../app/models/FichaColegialSociedadesItem";
 import { FichaColegialSociedadesObject } from "./../../../../app/models/FichaColegialSociedadesObject";
 import { FichaColegialEdicionCurricularesItem } from "./../../../models/FichaColegialEdicionCurricularesItem";
@@ -52,6 +53,7 @@ import { BusquedaSancionesObject } from "../../../models/BusquedaSancionesObject
 import { DocushareObject } from "../../../models/DocushareObject";
 import { DocushareItem } from "../../../models/DocushareItem";
 import { FichaDatosCurricularesObject } from "../../../models/FichaDatosCurricularesObject";
+import { DatosSolicitudMutualidadItem } from "../../../models/DatosSolicitudMutualidadItem";
 
 @Component({
   selector: "app-ficha-colegial",
@@ -74,6 +76,7 @@ export class FichaColegialComponent implements OnInit {
   bodySanciones: BusquedaSancionesItem = new BusquedaSancionesItem();
   bodySearchSanciones: BusquedaSancionesObject = new BusquedaSancionesObject();
   bodySearchRegTel: DocushareObject = new DocushareObject();
+  solicitudEditar: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
   bodyRegTel: any[] = [];
   isLetrado: boolean;
   permisos: boolean = true;
@@ -159,6 +162,8 @@ export class FichaColegialComponent implements OnInit {
   fechaNacimiento: Date;
   fechaAlta: Date;
   comisiones: boolean;
+  guiaJudicial: boolean;
+  publicidad: boolean;
   partidoJudicial: any;
   esNewColegiado: boolean = false;
   esColegiado: boolean;
@@ -191,6 +196,7 @@ export class FichaColegialComponent implements OnInit {
   disabledAction: boolean = false;
   comboEtiquetas: any[];
   inscritoSeleccionado: String = "00";
+  tratamientoDesc: String;
   updateItems: Map<String, ComboEtiquetasItem> = new Map<
     String,
     ComboEtiquetasItem
@@ -358,11 +364,10 @@ export class FichaColegialComponent implements OnInit {
       this.emptyLoadFichaColegial = JSON.parse(
         sessionStorage.getItem("emptyLoadFichaColegial")
       );
-
       // if (this.emptyLoadFichaColegial) {
-      // this.showFailDetalle(
-      //   "No se han podido cargar los datos porque el usuario desde el que ha inciado sesión no es colegiado"
-      // );
+        // this.showFailDetalle(
+        //   "No se han podido cargar los datos porque el usuario desde el que ha inciado sesión no es colegiado"
+        // );
       // }
       this.desactivarVolver = true;
     }
@@ -417,21 +422,22 @@ export class FichaColegialComponent implements OnInit {
       this.activacionEditar = true;
       this.esNewColegiado = false;
     }
-    if (
-      !this.esNewColegiado &&
-      this.generalBody.idPersona != null &&
-      this.generalBody.idPersona != undefined
-    ) {
+    if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
       this.onInitCurriculares();
       this.onInitDirecciones();
       this.onInitDatosBancarios();
       this.comprobarREGTEL();
+
     }
 
     // this.onInitSociedades();
 
     // this.onInitOtrasColegiaciones();
-    this.compruebaDNI();
+
+    if(!this.esNewColegiado){
+      this.compruebaDNI();
+    }
+
     // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
     this.colsColegiales = [
       {
@@ -824,7 +830,7 @@ export class FichaColegialComponent implements OnInit {
     this.msgs.push({
       severity: "error",
       summary: "Incorrecto",
-      detail: this.translateService.instant(mensaje)
+      detail: mensaje
     });
   }
 
@@ -882,9 +888,9 @@ export class FichaColegialComponent implements OnInit {
       this.router.navigate(["/busquedaCensoGeneral"]);
     } else if (sessionStorage.getItem("esColegiado") == "false") {
       this.router.navigate(["/busquedaNoColegiados"]);
-    } else if (sessionStorage.getItem("esColegiado") == "true") {
+    }else if (sessionStorage.getItem("esColegiado") == "true") {
       this.router.navigate(["/busquedaColegiados"]);
-    } else {
+    }else{
       this.location.back();
     }
   }
@@ -1009,6 +1015,10 @@ export class FichaColegialComponent implements OnInit {
     this.sigaServices.get("fichaColegialGenerales_tratamiento").subscribe(
       n => {
         this.generalTratamiento = n.combooItems;
+        let tratamiento = this.generalTratamiento.find(
+          item => item.value === this.generalBody.idTratamiento
+        );
+        this.tratamientoDesc = tratamiento.label;
       },
       err => {
         console.log(err);
@@ -1048,8 +1058,9 @@ export class FichaColegialComponent implements OnInit {
 
     if (this.esNewColegiado) {
       this.abreCierraFicha("generales");
-    }
+    }else{
     this.obtenerPartidoJudicial();
+    }
   }
 
   closeDialogConfirmation(item) {
@@ -1432,9 +1443,9 @@ export class FichaColegialComponent implements OnInit {
       this.generalBody.comisiones = "0";
     }
     if (this.publicarDatosContacto == true) {
-      this.showInfo(
-        this.translateService.instant("menu.fichaColegial.lopd.literal")
-      );
+      // this.showInfo(
+      //   this.translateService.instant("menu.fichaColegial.lopd.literal")
+      // );
       this.generalBody.noAparecerRedAbogacia = "1";
     } else {
       this.generalBody.noAparecerRedAbogacia = "0";
@@ -1486,7 +1497,7 @@ export class FichaColegialComponent implements OnInit {
       JSON.stringify(this.checkGeneralBody) != JSON.stringify(this.generalBody)
     ) {
       if (
-        // this.isValidDNI(this.generalBody.nif) &&
+        (this.isValidDNI(this.generalBody.nif) || this.isValidCIF(this.generalBody.nif) || this.isValidNIE(this.generalBody.nif)) &&
         this.generalBody.nif != undefined &&
         this.generalBody.idTipoIdentificacion != "" &&
         this.generalBody.idTipoIdentificacion != undefined &&
@@ -1765,9 +1776,18 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
+  activarPaginacionRegTel() {
+    if (!this.bodyRegTel || this.bodyRegTel.length == 0) return false;
+    else return true;
+  }
+
+  actualizaSeleccionadosRegTel(selectedDatos) {
+    this.numSelectedDatosRegtel = selectedDatos.length;
+  }
+  
   compruebaDNI() {
     // modo creacion
-    this.activacionGuardarGenerales();
+     this.activacionGuardarGenerales();
 
     if (this.generalBody.nif.length > 8) {
       if (this.isValidDNI(this.generalBody.nif)) {
@@ -2939,13 +2959,13 @@ export class FichaColegialComponent implements OnInit {
         }
       },
       error => {
-        console.log(error);
+        console.log(error); 
         this.progressSpinner = false;
       },
       () => {
         // this.historico = true;
         this.selectedDatosBancarios = [];
-        this.selectMultipleBancarios = false;
+        this.selectMultipleBancarios = false;        
         this.searchDatosBancarios();
       }
     );
@@ -2985,10 +3005,10 @@ export class FichaColegialComponent implements OnInit {
       if (!this.selectMultipleBancarios) {
         var enviarDatos = null;
         if (dato && dato.length > 0) {
-          enviarDatos = dato[0];
+          enviarDatos = dato[0];    
           sessionStorage.setItem("idCuenta", dato[0].idCuenta);
           //sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
-
+ 
           if (dato[0].fechaBaja != null) {
             sessionStorage.setItem("permisos", "false");
           } else {
@@ -3000,10 +3020,8 @@ export class FichaColegialComponent implements OnInit {
           sessionStorage.setItem("fichaColegial", "true");
           sessionStorage.setItem("datosCuenta", JSON.stringify(dato[0]));
           sessionStorage.setItem("usuarioBody", JSON.stringify(dato[0]));
-          sessionStorage.setItem(
-            "historico",
-            JSON.stringify(this.bodyDatosBancarios.historico)
-          );
+          sessionStorage.setItem("historico", JSON.stringify(this.bodyDatosBancarios.historico));
+
         } else {
           sessionStorage.setItem("editar", "false");
         }
@@ -3562,12 +3580,189 @@ export class FichaColegialComponent implements OnInit {
       );
   }
 
-  activarPaginacionRegTel() {
-    if (!this.bodyRegTel || this.bodyRegTel.length == 0) return false;
-    else return true;
+  // MÉTODOS PARA MUTUALIDAD DE LA ABOGACÍA
+
+  irPlanUniversal() {
+    this.arreglarFechas();
+    if(this.generalBody.nif == undefined || this.generalBody.nif == "" || this.generalBody.fechaNacimiento == undefined || this.generalBody.fechaNacimiento == null){
+      this.showFailDetalle("Asegurese de que el NIF y la fecha de nacimiento son correctos");
+    }else{
+            let mutualidadRequest = new DatosSolicitudMutualidadItem();
+            mutualidadRequest.numeroidentificador = this.generalBody.nif;
+            this.sigaServices
+            .post("mutualidad_searchSolicitud", mutualidadRequest)
+            .subscribe(
+              result => {
+                let resultParsed = JSON.parse(result.body);
+                if (
+                  resultParsed.idsolicitud != null &&
+                  resultParsed.idsolicitud != undefined
+                ) {
+                  this.arreglarFechas();
+                  this.solicitudEditar = JSON.parse(JSON.stringify(this.generalBody));
+                  this.solicitudEditar.idPais = "191";
+                  this.solicitudEditar.identificador = this.generalBody.nif;
+                  this.solicitudEditar.numeroIdentificacion = this.generalBody.nif;
+                  this.solicitudEditar.tratamiento = this.generalBody.idTratamiento;
+                  this.solicitudEditar.apellido1 = this.generalBody.apellidos1;
+                  this.solicitudEditar.apellido2 = this.generalBody.apellidos2;
+                  this.solicitudEditar.idEstadoCivil = this.generalBody.idEstadoCivil;
+                  this.solicitudEditar.estadoCivil = this.generalBody.idEstadoCivil;
+                  this.solicitudEditar.fechaNacimiento = this.generalBody.fechaNacimientoDate;
+                this.sigaServices
+                  .post("mutualidad_estadoMutualista", this.solicitudEditar)
+                  .subscribe(
+                    result => {
+                      let prueba = JSON.parse(result.body);
+                      if ((prueba.valorRespuesta == "1")) {
+                        this.solicitudEditar.idSolicitudMutualidad = prueba.idSolicitud;
+                        this.solicitudEditar.estadoMutualidad = prueba.valorRespuesta;
+                        this.solicitudEditar.tipoIdentificacion = this.generalBody.idTipoIdentificacion;
+                        sessionStorage.setItem(
+                          "solicitudEnviada",
+                          JSON.stringify(this.solicitudEditar)
+                        );
+                        this.router.navigate(["/MutualidadAbogaciaPlanUniversal"]);
+                      } else {
+                        //  this.modoLectura = true;
+                        this.showInfo(prueba.valorRespuesta);
+                      }
+                    },
+                    error => {
+                      console.log(error);
+                    }
+                  );
+                } else {
+
+                    this.arreglarFechas();
+                    this.solicitudEditar = JSON.parse(JSON.stringify(this.generalBody));
+                    this.solicitudEditar.idPais = "191";
+                    this.solicitudEditar.identificador = this.generalBody.nif;
+                    this.solicitudEditar.numeroIdentificacion = this.generalBody.nif;
+                    this.solicitudEditar.tratamiento = this.generalBody.idTratamiento;
+                    this.solicitudEditar.apellido1 = this.generalBody.apellidos1;
+                    this.solicitudEditar.apellido2 = this.generalBody.apellidos2;
+                    this.solicitudEditar.idEstadoCivil = this.generalBody.idEstadoCivil;
+                    this.solicitudEditar.estadoCivil = this.generalBody.idEstadoCivil;
+                    this.solicitudEditar.fechaNacimiento = this.generalBody.fechaNacimientoDate;
+                  this.sigaServices
+                    .post("mutualidad_estadoMutualista", this.solicitudEditar)
+                    .subscribe(
+                      result => {
+                        let prueba = JSON.parse(result.body);
+                        if ((prueba.valorRespuesta == "1")) {
+                          this.solicitudEditar.idSolicitudMutualidad = prueba.idSolicitud;
+                          this.solicitudEditar.estadoMutualidad = prueba.valorRespuesta;
+                          this.solicitudEditar.tipoIdentificacion = this.generalBody.idTipoIdentificacion;
+                          sessionStorage.setItem(
+                            "solicitudEnviada",
+                            JSON.stringify(this.solicitudEditar)
+                          );
+                          this.router.navigate(["/MutualidadAbogaciaPlanUniversal"]);
+                        } else {
+                          //  this.modoLectura = true;
+                          this.showInfo(prueba.valorRespuesta);
+                        }
+                      },
+                      error => {
+                        console.log(error);
+                      }
+                    );
+              }
+            }, error => {
+              console.log(error);
+            });            
+    }
   }
 
-  actualizaSeleccionadosRegTel(selectedDatos) {
-    this.numSelectedDatosRegtel = selectedDatos.length;
+  irSegAccidentes() {
+    this.arreglarFechas();
+    if(this.generalBody.nif == undefined || this.generalBody.nif == "" || this.generalBody.fechaNacimiento == undefined || this.generalBody.fechaNacimiento == null){
+      this.showFailDetalle("Asegurese de que el NIF y la fecha de nacimiento son correctos");
+    }else{
+            let mutualidadRequest = new DatosSolicitudMutualidadItem();
+            mutualidadRequest.numeroidentificador = this.generalBody.nif;
+            this.sigaServices
+            .post("mutualidad_searchSolicitud", mutualidadRequest)
+            .subscribe(
+              result => {
+                let resultParsed = JSON.parse(result.body);
+                if (
+                  resultParsed.idsolicitud != null &&
+                  resultParsed.idsolicitud != undefined
+                ) {
+                  this.arreglarFechas();
+                  this.solicitudEditar = JSON.parse(JSON.stringify(this.generalBody));
+                  this.solicitudEditar.idPais = "191";
+                  this.solicitudEditar.identificador = this.generalBody.nif;
+                  this.solicitudEditar.numeroIdentificacion = this.generalBody.nif;
+                  this.solicitudEditar.tratamiento = this.generalBody.idTratamiento;
+                  this.solicitudEditar.apellido1 = this.generalBody.apellidos1;
+                  this.solicitudEditar.apellido2 = this.generalBody.apellidos2;
+                  this.solicitudEditar.idEstadoCivil = this.generalBody.idEstadoCivil;
+                  this.solicitudEditar.estadoCivil = this.generalBody.idEstadoCivil;
+                  this.solicitudEditar.fechaNacimiento = this.generalBody.fechaNacimientoDate;
+                this.sigaServices
+                  .post("mutualidad_estadoMutualista", this.solicitudEditar)
+                  .subscribe(
+                    result => {
+                      let prueba = JSON.parse(result.body);
+                      if ((prueba.valorRespuesta == "1")) {
+                        this.solicitudEditar.idSolicitudMutualidad = prueba.idSolicitud;
+                        this.solicitudEditar.estadoMutualidad = prueba.valorRespuesta;
+                        this.solicitudEditar.tipoIdentificacion = this.generalBody.idTipoIdentificacion;
+                        sessionStorage.setItem(
+                          "solicitudEnviada",
+                          JSON.stringify(this.solicitudEditar)
+                        );
+                        this.router.navigate(["/mutualidadSeguroAccidentes"]);
+                      } else {
+                        //  this.modoLectura = true;
+                        this.showInfo(prueba.valorRespuesta);
+                      }
+                    },
+                    error => {
+                      console.log(error);
+                    }
+                  );
+                } else {
+                    this.arreglarFechas();
+                    this.solicitudEditar = JSON.parse(JSON.stringify(this.generalBody));
+                    this.solicitudEditar.idPais = "191";
+                    this.solicitudEditar.identificador = this.generalBody.nif;
+                    this.solicitudEditar.numeroIdentificacion = this.generalBody.nif;
+                    this.solicitudEditar.tratamiento = this.generalBody.idTratamiento;
+                    this.solicitudEditar.apellido1 = this.generalBody.apellidos1;
+                    this.solicitudEditar.apellido2 = this.generalBody.apellidos2;
+                    this.solicitudEditar.idEstadoCivil = this.generalBody.idEstadoCivil;
+                    this.solicitudEditar.estadoCivil = this.generalBody.idEstadoCivil;
+                    this.solicitudEditar.fechaNacimiento = this.generalBody.fechaNacimientoDate;
+                  this.sigaServices
+                    .post("mutualidad_estadoMutualista", this.solicitudEditar)
+                    .subscribe(
+                      result => {
+                        let prueba = JSON.parse(result.body);
+                        if ((prueba.valorRespuesta == "1")) {
+                          this.solicitudEditar.idSolicitudMutualidad = prueba.idSolicitud;
+                          this.solicitudEditar.estadoMutualidad = prueba.valorRespuesta;
+                          this.solicitudEditar.tipoIdentificacion = this.generalBody.idTipoIdentificacion;
+                          sessionStorage.setItem(
+                            "solicitudEnviada",
+                            JSON.stringify(this.solicitudEditar)
+                          );
+                          this.router.navigate(["/mutualidadSeguroAccidentes"]);
+                        } else {
+                          this.showInfo(prueba.valorRespuesta);
+                        }
+                      },
+                      error => {
+                        console.log(error);
+                      }
+                    );
+              }
+            }, error => {
+              console.log(error);
+            });            
+    }
   }
 }
