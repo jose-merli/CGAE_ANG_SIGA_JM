@@ -782,7 +782,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   isGuardarDisabled() {
-    if (this.body.formatoSalida != '' && this.body.formatoSalida != null && this.body.nombreFicheroSalida != '' && this.body.nombreFicheroSalida != null &&
+    if (this.body.idFormatoSalida != '' && this.body.idFormatoSalida != null && this.body.nombreFicheroSalida != '' && this.body.nombreFicheroSalida != null &&
       this.selectedSufijos && this.selectedSufijos.length > 0 && this.documentos && this.documentos.length > 0) {
       return false;
     } else {
