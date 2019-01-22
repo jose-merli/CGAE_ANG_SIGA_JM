@@ -228,6 +228,7 @@ export class SigaServices {
     plantillasDoc_borrar: 'plantillasDoc/borrar',
     plantillasDoc_insertarPlantilla: 'plantillasDoc/insertarPlantilla',
     plantillasDoc_subirPlantilla: 'plantillasDoc/subirPlantilla',
+    plantillasDoc_plantillas_borrar: 'plantillasDoc/borrar'
 
   };
 

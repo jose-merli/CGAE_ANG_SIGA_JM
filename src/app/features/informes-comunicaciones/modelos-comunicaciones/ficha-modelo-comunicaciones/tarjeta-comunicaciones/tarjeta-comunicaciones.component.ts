@@ -37,7 +37,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
   nuevaPlantilla: boolean = false;
   idPlantillaEnvios: string;
   idTipoEnvios: string;
-  porDefecto: String = 'No';
+  porDefecto: string = 'No';
   eliminarArray: any = [];
   showHistorico: boolean = false;
   datosInicial: any = [];
@@ -199,6 +199,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
       this.sigaServices.post(service, this.body.idModeloComunicacion).subscribe(result => {
         let data = JSON.parse(result.body);
         this.datos = data.plantillas;
+        console.log(this.datos)
         this.datos.map(e => {
           return e.guardada = true;
         });
@@ -216,11 +217,12 @@ export class TarjetaComunicacionesComponent implements OnInit {
 
 
   guardar() {
+    console.log(this.datos);
     let nuevaPlantillaComunicacion = {
       idModelo: this.body.idModeloComunicacion,
       idPlantillaEnvios: this.idPlantillaEnvios,
       idInstitucion: this.body.idInstitucion,
-      idTipoEnvios: this.body.idTipoEnvios,
+      idTipoEnvios: this.idTipoEnvios,
       porDefecto: this.porDefecto
     }
 
@@ -290,7 +292,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
         idModelo: this.body.idModeloComunicacion,
         idPlantillaEnvios: element.idPlantillaEnvios,
         idInstitucion: this.body.idInstitucion,
-        idTipoEnvios: this.body.idTipoEnvios
+        idTipoEnvios: element.idTipoEnvios
       };
       this.eliminarArray.push(objEliminar);
     });
@@ -351,7 +353,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
     let newPlantilla = {
       nombrePlantilla: '',
       tipoEnvio: '',
-      porDefecto: 'No',
+      porDefecto: null,
       guardada: false
     };
     this.idPlantillaEnvios = '';
@@ -360,15 +362,13 @@ export class TarjetaComunicacionesComponent implements OnInit {
     this.datos = [... this.datos];
   }
 
-
-
   onChangePlantilla(e) {
     this.idPlantillaEnvios = e.value;
   }
 
   onChangePorDefecto(e) {
     debugger;
-
+    console.log(e)
     if (e == true) {
       this.porDefecto = 'Si';
     } else {

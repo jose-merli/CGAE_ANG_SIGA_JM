@@ -9,6 +9,8 @@ import { MenubarModule } from "primeng/menubar";
 import { PanelMenuModule } from "primeng/panelmenu";
 import { MenuItem } from "primeng/api";
 import { DialogModule } from "primeng/dialog";
+import { OrderListModule } from 'primeng/orderlist';
+
 
 import { AuthGuard } from "./_guards/auth.guards";
 import { OldSigaServices } from "./_services/oldSiga.service";
@@ -534,7 +536,6 @@ import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicac
     InputTextModule,
     InputTextareaModule,
     CheckboxModule,
-
     RadioButtonModule,
     ConfirmDialogModule,
     ValidationModule,
@@ -554,7 +555,8 @@ import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicac
     ProgressSpinnerModule,
     FileUploadModule,
     DialogModule,
-    KeyFilterModule
+    KeyFilterModule,
+    OrderListModule
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
