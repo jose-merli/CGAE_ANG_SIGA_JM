@@ -83,14 +83,14 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   ngOnInit() {
-    //this.progressSpinner = true;
+
     this.textFilter = "Elegir";
     this.textSelected = "{0} ficheros seleccionadas";
     this.firstDocs = 0;
 
     this.getDatos();
     this.busquedaIdioma();
-    this.getConsultasDisponibles();    
+    this.getConsultasDisponibles();
 
     this.getSteps();
 
@@ -310,7 +310,8 @@ export class PlantillaDocumentoComponent implements OnInit {
   getComboSufijos() {
     this.sigaServices.get("plantillasDoc_combo_sufijos").subscribe(
       n => {
-        this.sufijos = n.combooItems;
+        debugger;
+        this.sufijos = n.sufijos;
         this.getValoresSufijo();
 
         console.log(this.sufijos)
@@ -343,6 +344,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
 
   getDocumentos() {
+    this.progressSpinner = true;
     this.sigaServices
       .post('plantillasDoc_plantillas', this.body)
       .subscribe(
@@ -377,7 +379,6 @@ export class PlantillaDocumentoComponent implements OnInit {
       .post(service, this.body)
       .subscribe(
         data => {
-          debugger;
           this.datos = JSON.parse(data["body"]).consultaItem;
 
           if (this.datos.length <= 0) {
@@ -418,11 +419,11 @@ export class PlantillaDocumentoComponent implements OnInit {
       err => {
 
         if (err.error.error.code == 400) {
-          if(err.error.error.description != null){
+          if (err.error.error.description != null) {
             this.showFail(err.error.error.description);
-          }else{
+          } else {
             this.showFail('Formato no permitido o tamaño maximo superado');
-          }          
+          }
         } else {
           this.showFail('Error al subir el documento');
           console.log(err);
@@ -435,13 +436,13 @@ export class PlantillaDocumentoComponent implements OnInit {
   guardarDatosGenerales() {
     sessionStorage.removeItem("crearNuevaPlantillaDocumento");
     this.body.sufijos = [];
-    let orden:  number = 1;
+    let orden: number = 1;
     this.selectedSufijos.forEach(element => {
       let ordenString = orden.toString();
       let objSufijo = {
-        idSufijo: element.value,
+        idSufijo: element.idSufijo,
         orden: ordenString,
-        nombreSufijo: element.label
+        nombreSufijo: element.nombreSufijo
       }
       this.body.sufijos.push(objSufijo);
       orden = orden + 1;
@@ -729,15 +730,19 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   getValoresSufijo() {
-    let valorCombo = this.sufijos.map(e => {
-      return e.value;
-    });
+    debugger;
+
     for (let sel of this.selectedSufijos) {
-      let index = valorCombo.indexOf(sel.idSufijo);
-      if (index != -1) {
-        this.sufijos.splice(1, 1);
-      }
+      this.sufijos.map(e => {
+        if (sel.idSufijo == e.idSufijo) {
+          e.idSufijo = '';
+          e.nombreSufijo = '';
+        }
+        return e.idSufijo;
+      });
+
     }
+
     this.sufijos = [... this.sufijos];
   }
 
@@ -776,6 +781,16 @@ export class PlantillaDocumentoComponent implements OnInit {
   restablecerConsultas() {
     this.datos = JSON.parse(JSON.stringify(this.datosInicial));
   }
+
+  isGuardarDisabled() {
+    if (this.body.idFormatoSalida != '' && this.body.idFormatoSalida != null && this.body.nombreFicheroSalida != '' && this.body.nombreFicheroSalida != null &&
+      this.selectedSufijos && this.selectedSufijos.length > 0 && this.documentos && this.documentos.length > 0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
 
 
 }

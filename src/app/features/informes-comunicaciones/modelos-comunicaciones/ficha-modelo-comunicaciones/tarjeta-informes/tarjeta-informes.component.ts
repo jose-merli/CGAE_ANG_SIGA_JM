@@ -180,8 +180,9 @@ export class TarjetaInformesComponent implements OnInit {
   getInformes() {
     this.sigaServices.post("modelos_detalle_informes", this.modelo).subscribe(
       data => {
+        debugger;
         this.datos = JSON.parse(data.body).plantillasModeloDocumentos;
-        console.log(this.datos)
+
       },
       err => {
         console.log(err);

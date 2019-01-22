@@ -17,6 +17,7 @@ export class FichaPlantillasDocument {
   plantillas: PlantillaDocumentoItem[] = [];
   consultas: ConsultasPlantillasInformesItem[] = [];
   sufijos: SufijoItem[] = [];
+  idFormatoSalida: String;
   constructor() { }
 }
 
