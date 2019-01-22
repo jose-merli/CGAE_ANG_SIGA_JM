@@ -345,6 +345,9 @@ export class SigaServices {
     fichaEventos_getEntryListCourse: "fichaEventos/getEntryListCourse",
     fichaEventos_searchEvent: "fichaEventos/searchEvent",
     fichaEventos_saveAssistancesCourse: "fichaEventos/saveAssistancesCourse",
+    fichaEventos_saveFormadorEvent: "fichaEventos/saveFormadorEvent",
+    fichaEventos_updateFormadorEvent: "fichaEventos/updateFormadorEvent",
+    fichaEventos_getTrainersSession: "fichaEventos/getTrainersSession",
 
     datosNotificaciones_getTypeNotifications:
       "datosNotificaciones/getTypeNotifications",

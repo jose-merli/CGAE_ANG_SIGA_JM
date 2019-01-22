@@ -317,7 +317,7 @@
     <div class="card-footer" *ngIf="esFichaActiva('formadores')">
       <div class="text-right main-button">
         <button pButton (click)="restTrainers()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="tipoAccesoLectura"></button>
-        <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+        <button pButton (click)="guardarFormadores()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>
   </div>
