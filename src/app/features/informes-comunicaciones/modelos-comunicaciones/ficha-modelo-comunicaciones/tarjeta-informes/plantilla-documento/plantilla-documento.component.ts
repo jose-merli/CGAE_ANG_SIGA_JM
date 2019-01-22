@@ -83,14 +83,14 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.progressSpinner = true;
+
     this.textFilter = "Elegir";
     this.textSelected = "{0} ficheros seleccionadas";
     this.firstDocs = 0;
 
     this.getDatos();
     this.busquedaIdioma();
-    this.getConsultasDisponibles();    
+    this.getConsultasDisponibles();
 
     this.getSteps();
 
@@ -309,7 +309,8 @@ export class PlantillaDocumentoComponent implements OnInit {
   getComboSufijos() {
     this.sigaServices.get("plantillasDoc_combo_sufijos").subscribe(
       n => {
-        this.sufijos = n.combooItems;
+        debugger;
+        this.sufijos = n.sufijos;
         this.getValoresSufijo();
 
         console.log(this.sufijos)
@@ -342,6 +343,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
 
   getDocumentos() {
+    this.progressSpinner = true;
     this.sigaServices
       .post('plantillasDoc_plantillas', this.body)
       .subscribe(
@@ -729,18 +731,18 @@ export class PlantillaDocumentoComponent implements OnInit {
   getValoresSufijo() {
     debugger;
 
-    // for (let sel of this.selectedSufijos) {
-    //   this.sufijos.map(e => {
-    //     if (sel.idSufijo == e.value) {
-    //       e.value = '';
-    //       e.label = '';
-    //     }
-    //     return e.value;
-    //   });
+    for (let sel of this.selectedSufijos) {
+      this.sufijos.map(e => {
+        if (sel.idSufijo == e.idSufijo) {
+          e.idSufijo = '';
+          e.nombreSufijo = '';
+        }
+        return e.idSufijo;
+      });
 
-    // }
+    }
 
-    // this.sufijos = [... this.sufijos];
+    this.sufijos = [... this.sufijos];
   }
 
   getSteps() {
