@@ -163,7 +163,6 @@ export class FichaCursoComponent implements OnInit {
   numCheckedTutor: number = 0;
   datosFormadoresInit = [];
   changeTutor: boolean = false;
-
   //Sesiones
   colsSessions;
   selectedItemSessions;
@@ -344,6 +343,7 @@ export class FichaCursoComponent implements OnInit {
         sessionStorage.removeItem("isSession");
 
       } else {
+        this.curso = new DatosCursosItem();
         this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
       
         if (this.curso.fechaImparticionDesde != null) {
@@ -363,7 +363,7 @@ export class FichaCursoComponent implements OnInit {
             this.curso.fechaInscripcionDesde
           );
         }
-  
+
         if (this.curso.fechaInscripcionHasta != null) {
           this.curso.fechaInscripcionHastaDate = this.arreglarFecha(
             this.curso.fechaInscripcionHasta
@@ -749,6 +749,9 @@ export class FichaCursoComponent implements OnInit {
           this.curso.codigoCurso = JSON.parse(data.body).status;
           this.getCountInscriptions();
           this.getPrices();
+          this.curso.fechaInscripcionDesde = this.curso.fechaInscripcionDesdeDate.toString();
+          this.curso.fechaInscripcionHasta = this.curso.fechaInscripcionHastaDate.toString();
+
           sessionStorage.setItem("courseCurrent",JSON.stringify(this.curso));
           sessionStorage.setItem("modoEdicionCurso", "true");
 
@@ -2964,7 +2967,12 @@ export class FichaCursoComponent implements OnInit {
 
   arreglarFecha(fecha) {
     let jsonDate = JSON.stringify(fecha);
-    let rawDate = jsonDate.slice(1, -1);
+    let rawDate;
+    if(jsonDate.length == 30){
+      rawDate = jsonDate.slice(3, -3);
+    }else{
+      rawDate = jsonDate.slice(1, -1);
+    }
     if (rawDate.length < 14) {
       let splitDate = rawDate.split("/");
       let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
