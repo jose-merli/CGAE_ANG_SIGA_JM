@@ -10,10 +10,10 @@
   <div class="card">
     <!-- Datos generales -->
     <div class="card-body">
-      <p class="title-module">{{ "censo.consultaDatosGenerales.cabecera" | translate}}
+      <p (click)="onHideDatosGenerales()" class="title-module">{{ "censo.consultaDatosGenerales.cabecera" | translate}}
           <i class="fa fa-angle-up float-right"></i>
-        <!-- <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
-        <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i> -->
+        <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
       </p>
       <div *ngIf="showDatosGenerales" class="module vista-avanzada">
         <div class="form-row">
@@ -170,28 +170,28 @@
             <!-- <button (click)="finalizarCursos()" pButton type="button" icon="fa fa-stop" iconPos="left" label="Aprobar Inscripción"
               [disabled]="selectedDatos == ''"></button> -->
               <button (click)="abrirPopUpMotivo(0)" pButton type="button" icon="fa fa-stop" iconPos="left" label="{{ 'formacion.busquedaInscripcion.aprobarInscripcion' | translate }}"
-              [disabled]="selectedDatos == ''"></button>
+              [disabled]="selectedDatos == '' || !activacionEditar"></button>
 
             <!-- Botón Cancelar Inscripción -->
             <!-- <button (click)="desanunciarCursos()" pButton type="button" icon="fa fa-bell-slash" iconPos="left" label="Cancelar Inscripción"
               [disabled]="selectedDatos == ''"></button> -->
               <button (click)="abrirPopUpMotivo(1)" pButton type="button" icon="fa fa-bell-slash" iconPos="left" label="{{ 'formacion.busquedaInscripcion.cancelarInscripcion' | translate
-              }}" [disabled]="selectedDatos == ''"></button>
+              }}" [disabled]="selectedDatos == '' || !activacionEditar"></button>
               
               <!-- Botón rechazar -->
               <button (click)="abrirPopUpMotivo(2)" pButton type="button" icon="fa fa-bell" iconPos="left" label="{{ 'formacion.busquedaInscripcion.rechazar' | translate }}"
-                [disabled]="selectedDatos == ''"></button>
+                [disabled]="selectedDatos == '' || !activacionEditar"></button>
               
                 <!-- Botón calificar -->
-              <button *ngIf="!calificacion" pButton type="button" icon="fa fa-bell" iconPos="left" (click)="onCalificacion()" label="{{ 'formacion.busquedaInscripcion.calificar' | translate }}" [disabled]="datos == ''"></button>
-              <button *ngIf="calificacion" pButton type="button" icon="far fa-save" iconPos="left" (click)="guardarCalificacion()" label="{{ 'general.boton.guardar' | translate}}" [disabled]="datos == ''"></button>
+              <button *ngIf="!calificacion" pButton type="button" icon="fa fa-bell" iconPos="left" (click)="onCalificacion()" label="{{ 'formacion.busquedaInscripcion.calificar' | translate }}" [disabled]="datos == '' || !activacionEditar"></button>
+              <button *ngIf="calificacion" pButton type="button" icon="far fa-save" iconPos="left" (click)="guardarCalificacion()" label="{{ 'general.boton.guardar' | translate}}" [disabled]="datos == '' || !activacionEditar"></button>
 
           </div>
         </p-footer>
       </p-dataTable>
     </div>
   </div>
-  <div class="text-right main-button">
+  <div *ngIf="isCurso" class="text-right main-button">
       <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
     </div>
   <!--FIN DE PRINCIPAL-->
@@ -218,7 +218,7 @@
   </div>
   <p-footer>
     <div class="text-right main-button ">
-      <button (click)="cerrarMotivo()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
+      <button (click)="cerrarMotivo()" [disabled]="!activacionEditar" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
       <button (click)="guardarAccion()" [disabled]="!showGuardar" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
     </div>
   </p-footer>
