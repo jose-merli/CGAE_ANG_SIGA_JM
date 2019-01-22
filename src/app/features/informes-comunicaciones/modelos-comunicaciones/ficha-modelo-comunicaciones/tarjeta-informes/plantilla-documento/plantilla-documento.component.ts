@@ -376,7 +376,6 @@ export class PlantillaDocumentoComponent implements OnInit {
       .post(service, this.body)
       .subscribe(
         data => {
-          debugger;
           this.datos = JSON.parse(data["body"]).consultaItem;
 
           if (this.datos.length <= 0) {
@@ -417,11 +416,11 @@ export class PlantillaDocumentoComponent implements OnInit {
       err => {
 
         if (err.error.error.code == 400) {
-          if(err.error.error.description != null){
+          if (err.error.error.description != null) {
             this.showFail(err.error.error.description);
-          }else{
+          } else {
             this.showFail('Formato no permitido o tamaño maximo superado');
-          }          
+          }
         } else {
           this.showFail('Error al subir el documento');
           console.log(err);
@@ -434,13 +433,13 @@ export class PlantillaDocumentoComponent implements OnInit {
   guardarDatosGenerales() {
     sessionStorage.removeItem("crearNuevaPlantillaDocumento");
     this.body.sufijos = [];
-    let orden:  number = 1;
+    let orden: number = 1;
     this.selectedSufijos.forEach(element => {
       let ordenString = orden.toString();
       let objSufijo = {
-        idSufijo: element.value,
+        idSufijo: element.idSufijo,
         orden: ordenString,
-        nombreSufijo: element.label
+        nombreSufijo: element.nombreSufijo
       }
       this.body.sufijos.push(objSufijo);
       orden = orden + 1;
@@ -728,16 +727,20 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   getValoresSufijo() {
-    let valorCombo = this.sufijos.map(e => {
-      return e.value;
-    });
-    for (let sel of this.selectedSufijos) {
-      let index = valorCombo.indexOf(sel.idSufijo);
-      if (index != -1) {
-        this.sufijos.splice(1, 1);
-      }
-    }
-    this.sufijos = [... this.sufijos];
+    debugger;
+
+    // for (let sel of this.selectedSufijos) {
+    //   this.sufijos.map(e => {
+    //     if (sel.idSufijo == e.value) {
+    //       e.value = '';
+    //       e.label = '';
+    //     }
+    //     return e.value;
+    //   });
+
+    // }
+
+    // this.sufijos = [... this.sufijos];
   }
 
   getSteps() {
@@ -775,6 +778,16 @@ export class PlantillaDocumentoComponent implements OnInit {
   restablecerConsultas() {
     this.datos = JSON.parse(JSON.stringify(this.datosInicial));
   }
+
+  isGuardarDisabled() {
+    if (this.body.formatoSalida != '' && this.body.formatoSalida != null && this.body.nombreFicheroSalida != '' && this.body.nombreFicheroSalida != null &&
+      this.selectedSufijos && this.selectedSufijos.length > 0 && this.documentos && this.documentos.length > 0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
 
 
 }
