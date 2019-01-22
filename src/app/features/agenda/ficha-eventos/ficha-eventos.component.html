@@ -43,7 +43,7 @@
             <div class="col-lg-6 col-md-6">
               <label>{{'agenda.fichaEventos.datosGenerales.calendario' | translate }}(*)</label>
               <p-dropdown class="select-form" [options]="comboCalendars" [filter]="true" filterBy="label,labelSinTilde" placeholder="{{'tablas.literal.seleccionar' | translate}}"
-                name="type" (ngModelChange)="onChangeSelectCalendar($event)" [(ngModel)]="newEvent.idTipoCalendario" [disabled]="isFormacionCalendar || modoEdicionEvento  || tipoAccesoLectura"></p-dropdown>
+                name="type" (ngModelChange)="onChangeSelectCalendar($event)" [(ngModel)]="newEvent.idTipoCalendario" [disabled]="modoTipoEventoInscripcion || isFormacionCalendar || modoEdicionEvento  || tipoAccesoLectura"></p-dropdown>
             </div>
             <div class="col-lg-6 col-md-6">
               <label>{{'agenda.fichaEventos.datosGenerales.tipoEvento' | translate}}</label>

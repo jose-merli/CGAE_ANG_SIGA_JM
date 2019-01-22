@@ -105,11 +105,14 @@ export class FichaCursoComponent implements OnInit {
   @ViewChild("autocompleteTopics")
   autocompleteTopics: AutoComplete;
 
+  persistenciaFichaCurso;
+
   //Generales
   valorEstadoAbierto = "0";
   valorEstadoAnunciado = "1";
   valorEstadoCancelado = "5";
   valorEstadoFinalizado = "4";
+  valorEstadoImpartido = "3";
   valorTipoInicioIncripcion = "4";
   valorTipoFinIncripcion = "5";
   valorTipoSesion = "8";
@@ -251,10 +254,15 @@ export class FichaCursoComponent implements OnInit {
       this.curso = new DatosCursosItem();
       this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
 
+      this.resultsService = this.curso.tipoServicios;
+      this.resultsTopics = this.curso.temasCombo;
+
       this.curso.idEventoInicioInscripcion = sessionStorage.getItem(
         "idEventoInicioInscripcion"
       );
       sessionStorage.removeItem("idEventoInicioInscripcion");
+      sessionStorage.removeItem("isFormacionCalendarByStartInscripcion");
+
 
       if (this.curso.idCurso != null && this.curso.idCurso != undefined) {
         this.searchCourse(this.curso.idCurso);
@@ -266,6 +274,8 @@ export class FichaCursoComponent implements OnInit {
         }
       }
 
+      sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
+
       this.arreglarFechasEvento();
       this.getMassiveLoadInscriptions();
       this.getCertificatesCourse();
@@ -275,14 +285,19 @@ export class FichaCursoComponent implements OnInit {
 
       //2.Proviene de la creacion evento Incripcion Fin
     } else if (
-      sessionStorage.getItem("isFormacionCalendarByStartInscripcion") == "false"
+      sessionStorage.getItem("isFormacionCalendarByEndInscripcion") == "true"
     ) {
       this.curso = new DatosCursosItem();
       this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
+
+      this.resultsService = this.curso.tipoServicios;
+      this.resultsTopics = this.curso.temasCombo;
+
       this.curso.idEventoFinInscripcion = sessionStorage.getItem(
         "idEventoFinInscripcion"
       );
       sessionStorage.removeItem("idEventoFinInscripcion");
+      sessionStorage.removeItem("isFormacionCalendarByEndInscripcion");
 
       if (this.curso.idCurso != null && this.curso.idCurso != undefined) {
         this.searchCourse(this.curso.idCurso);
@@ -316,8 +331,10 @@ export class FichaCursoComponent implements OnInit {
         this.configurationInformacionAdicional();
 
         sessionStorage.removeItem("codigoCursoInscripcion");
+
       } else if(sessionStorage.getItem("isSession") == "true"){
-        this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
+        this.curso.idCurso = JSON.parse(sessionStorage.getItem("idCurso"));
+        sessionStorage.removeItem("idCurso");
         this.searchCourse(this.curso.idCurso);
 
         sessionStorage.removeItem("isSession");
@@ -350,8 +367,6 @@ export class FichaCursoComponent implements OnInit {
         }
       }
 
-     
-
       if (this.curso.autovalidacionInscripcion == "1") {
         this.curso.autovalidacion = true;
       } else {
@@ -381,8 +396,27 @@ export class FichaCursoComponent implements OnInit {
       this.getMassiveLoadInscriptions();
       this.configurationInformacionAdicional();
 
-      //5. Modo nuevo
-    } else {
+      //5. Modo duplicar
+    } else if(sessionStorage.getItem("duplicarCurso") == "true"){
+      this.modoEdicion = false;
+      this.curso = new DatosCursosItem();
+      this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
+      this.curso.codigoCurso = undefined;
+      this.curso.fechaInscripcionHastaDate = undefined;
+      this.curso.fechaInscripcionDesdeDate = undefined;
+      this.curso.fechaImparticionHastaDate = undefined;
+      this.curso.fechaImparticionDesdeDate = undefined;
+      this.curso.idEstado = this.valorEstadoAbierto;
+
+      this.resultsService = this.curso.tipoServicios;
+      this.resultsTopics = this.curso.temasCombo;
+
+      sessionStorage.removeItem("duplicarCurso");
+      this.progressSpinner = false;
+
+
+     //6. Modo nuevo
+    }else {
       this.modoEdicion = false;
       this.curso = new DatosCursosItem();
       //Obligamos a que sea el curso nuevo privado
@@ -390,7 +424,16 @@ export class FichaCursoComponent implements OnInit {
       this.curso.idEstado = this.valorEstadoAbierto;
       let colegio = 1;
       this.onChangeSelectVisibilidadObligate(colegio);
+      this.progressSpinner = false;
+
     }
+
+    if (sessionStorage.getItem("filtrosBusquedaCursos")) {
+      sessionStorage.removeItem("filtrosBusquedaCursosFichaCursos");
+      this.persistenciaFichaCurso = JSON.parse(
+        sessionStorage.getItem("filtrosBusquedaCursos")
+      );
+    } 
 
     this.getNumTutor();
   }
@@ -665,6 +708,9 @@ export class FichaCursoComponent implements OnInit {
           this.curso.codigoCurso = JSON.parse(data.body).status;
           this.getCountInscriptions();
           this.getPrices();
+          sessionStorage.setItem("courseCurrent",JSON.stringify(this.curso));
+          sessionStorage.setItem("modoEdicionCurso", "true");
+
           this.showMessage(
             "success",
             "Correcto",
@@ -843,6 +889,8 @@ export class FichaCursoComponent implements OnInit {
     }
 
     this.curso.fechaInscripcionDesdeDate = event;
+    this.curso.tipoServicios = this.resultsService;
+    this.curso.temasCombo = this.resultsTopics;
     sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
     sessionStorage.setItem("isFormacionCalendarByStartInscripcion", "true");
     sessionStorage.setItem("curso", JSON.stringify(this.curso));
@@ -855,8 +903,10 @@ export class FichaCursoComponent implements OnInit {
     }
 
     this.curso.fechaInscripcionHastaDate = event;
+    this.curso.tipoServicios = this.resultsService;
+    this.curso.temasCombo = this.resultsTopics;
     sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
-    sessionStorage.setItem("isFormacionCalendarByStartInscripcion", "false");
+    sessionStorage.setItem("isFormacionCalendarByEndInscripcion", "true");
     sessionStorage.setItem("curso", JSON.stringify(this.curso));
     this.router.navigate(["/fichaEventos"]);
   }
@@ -896,6 +946,8 @@ export class FichaCursoComponent implements OnInit {
         this.getServicesCourse();
         this.getTopicsCourse();
         this.getCountInscriptions();
+
+
       },
       err => {
         this.progressSpinner = false;
@@ -1113,6 +1165,8 @@ export class FichaCursoComponent implements OnInit {
       return false;
     }
   }
+
+  
 
   //Sesiones
 
@@ -1429,8 +1483,8 @@ export class FichaCursoComponent implements OnInit {
     this.getNumTutor();
   }
 
-  actualizaSeleccionados(selectedDatos) {
-    this.numSelectedFormadores = selectedDatos.length;
+  actualizaSeleccionadosFormadores(selectedDatosFormadores) {
+    this.numSelectedFormadores = selectedDatosFormadores.length;
   }
 
   saveTrainers() {
@@ -1927,6 +1981,7 @@ export class FichaCursoComponent implements OnInit {
       .subscribe(
         data => {
           this.getSessions();
+          this.selectMultipleSessions = false;
           if (JSON.parse(data.body).error.code == null) {
             this.showMessage(
               "info",
@@ -2349,6 +2404,8 @@ export class FichaCursoComponent implements OnInit {
     this.datosCertificates = JSON.parse(
       sessionStorage.getItem("datosCertificatesInit")
     );
+
+    sessionStorage.removeItem("datosCertificatesInit");
     this.selectMultipleCertificates = false;
     this.pressNewCertificate = false;
     this.editCertificate = false;
@@ -2754,6 +2811,16 @@ export class FichaCursoComponent implements OnInit {
   }
 
   backTo() {
+
+    sessionStorage.removeItem("filtrosBusquedaCursos");
+
+    if (this.persistenciaFichaCurso != undefined) {
+      sessionStorage.setItem(
+        "filtrosBusquedaCursosFichaCursos",
+        JSON.stringify(this.persistenciaFichaCurso)
+      );
+    }
+   
     if (sessionStorage.getItem("isInscripcion") != null && sessionStorage.getItem("isInscripcion") != undefined) {
       this.router.navigate(["/buscarCursos"]);
       sessionStorage.removeItem("isInscripcion");
@@ -2857,23 +2924,24 @@ export class FichaCursoComponent implements OnInit {
   }
 
   controlBotonesEstado(button: string) {
+ 
     let estado = this.curso.idEstado;
     if (this.modoEdicion) {
 
       if (button == 'Cancelar')
-        if (estado != '4')
+        if (estado != this.valorEstadoFinalizado && estado != this.valorEstadoCancelado )
           return true;
 
       if (button == 'Finalizar')
-        if (estado == '3')
+        if (estado == this.valorEstadoImpartido)
           return true;
 
       if (button == 'Desanunciar')
-        if (estado == '1')
+        if (estado == this.valorEstadoAnunciado)
           return true;
 
       if (button == 'Anunciar')
-        if (estado == '0')
+        if (estado == this.valorEstadoAbierto)
           return true;
     }
   }

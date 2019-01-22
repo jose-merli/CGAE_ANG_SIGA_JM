@@ -374,7 +374,7 @@
             emptyMessage="{{ 'general.message.no.registros' | translate}}"
             [ngClass]="{ customCursor: selectMultiplePrices }"
             [(selection)]="selectedDatosPrices"
-            (onRowSelect)="irEditarSession(selectedDatosPrices)" 
+            (onRowSelect)="actualizaSeleccionadosPrices(selectedDatosPrices)" 
             (onRowUnselect)="actualizaSeleccionadosPrices(selectedDatosPrices)"
             pageLinks="4"
             dataKey="idPrices"
@@ -496,7 +496,7 @@
               #tableFormadores
               class="tabla-listado"
               [paginator]="true"
-              (onRowUnselect)="actualizaSeleccionados(selectedDatosFormadores)"
+              (onRowUnselect)="actualizaSeleccionadosFormadores(selectedDatosFormadores)"
               [value]="datosFormadores"
               [sortOrder]="1"
               [paginator]="true"
@@ -1102,7 +1102,8 @@
               #tableCertificates
               class="tabla-listado"
               [paginator]="true"
-              (onRowUnselect)="actualizaSeleccionadosCertificates(selectedDatosCertificates)"
+              (onRowSelect)="actualizaSeleccionadosCertificates(selectedDatosCertificates)"
+              (onRoUnselect)="actualizaSeleccionadosCertificates(selectedDatosCertificates)"
               [value]="datosCertificates"
               [sortOrder]="1"
               [paginator]="true"
@@ -1467,26 +1468,7 @@
     <div class="card-footer" *ngIf="esFichaActiva('certificate')">
       <div class="text-right main-button">
         <button
-          *ngIf="pressNewCertificate"
-          (click)="restCertificates()"
-          pButton
-          type="button"
-          icon="fa fa-ban"
-          iconPos="left"
-          label="{{'general.boton.cancel' | translate}}"
-        ></button>
-        <button
-          *ngIf="editCertificate || pressNewCertificate"
-          pButton
-          (click)="saveCertificateCourse()"
-          type="button"
-          icon="fa fa-search"
-          iconPos="left"
-          label="{{ 'general.boton.guardar' | translate }}"
-          [disabled]="pressNewCertificate && validateCertificate()"
-        ></button>
-        <button
-          *ngIf="editCertificate && !pressNewCertificate"
+          [disabled]="!(editCertificate && !pressNewCertificate)"
           pButton
           (click)="restCertificates()"
           type="button"
@@ -1495,17 +1477,16 @@
           label="{{ 'general.boton.restablecer'| translate }}"
         ></button>
         <button
-          *ngIf="!pressNewCertificate && !selectMultipleCertificates"
-          pButton
-          (click)="newCertificates()"
-          type="button"
-          icon="fa fa-plus"
-          iconPos="left"
-          label="{{ 'general.boton.new'| translate }}"
-          [disabled]="editCertificate"
-        ></button>
+        pButton
+        (click)="saveCertificateCourse()"
+        type="button"
+        icon="far fa-save"
+        iconPos="left"
+        label="{{ 'general.boton.guardar' | translate }}"
+        [disabled]="!(editCertificate && !pressNewCertificate) || pressNewCertificate && validateCertificate()"
+      ></button>       
         <button
-          *ngIf="selectMultipleCertificates"
+          [disabled]="!selectedDatosCertificates != ''"
           pButton
           (click)="deleteCertificates(selectedDatosCertificates)"
           type="button"
@@ -1513,6 +1494,15 @@
           iconPos="left"
           label="{{ 'general.boton.eliminar'| translate }}"
         ></button>
+        <button
+        [disabled]="selectMultipleCertificates || selectAllCertificates || (editCertificate && !pressNewCertificate)"
+        pButton
+        (click)="newCertificates()"
+        type="button"
+        icon="fa fa-plus"
+        iconPos="left"
+        label="{{ 'general.boton.new'| translate }}"
+      ></button>
       </div>
     </div>
 </div>
@@ -1622,8 +1612,8 @@
   <div class="card-footer" *ngIf="esFichaActiva('session')">
     <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-reply-all" (click)="duplicateSession()" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}" [disabled]="disabledDuplicate()" ></button>
-        <button pButton type="button" icon="fa fa-plus" (click)="newSession()" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-        <button pButton type="button" icon="fa fa-close" (click)="cancelSessions()"iconPos="left" label="{{ 'general.boton.cancel' | translate}}"  [disabled]="!selectMultipleSessions"></button>
+        <button pButton type="button" icon="fa fa-plus" (click)="newSession()" iconPos="left" label="{{ 'general.boton.new' | translate}}" [disabled]="selectMultipleSessions || selectAllSessions"></button>
+        <button pButton type="button" icon="fa fa-close" (click)="cancelSessions()"iconPos="left" label="{{ 'general.boton.cancel' | translate}}"  [disabled]="!selectedDatosSessions != ''"></button>
     </div>
   </div>
 </div>

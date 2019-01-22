@@ -251,6 +251,7 @@ export class SigaServices {
     busquedaCursos_search: "busquedaCursos/search",
     busquedaCursos_archivar: "busquedaCursos/archivar",
     busquedaCursos_desarchivar: "busquedaCursos/desarchivar",
+    busquedaCursos_duplicateCourse: "busquedaCursos/duplicateCourse",
     fichaCursos_getRolesTrainers: "fichaCursos/getRolesTrainers",
     fichaCursos_getTypeCostTrainers: "fichaCursos/getTypeCostTrainers",
     fichaCursos_updateTrainersCourse: "fichaCursos/updateTrainersCourse",
@@ -534,7 +535,7 @@ export class SigaServices {
       "busquedaPerJuridica/solicitudInsertBanksData",
     fichaDatosColegiales_datosColegialesUpdate:
       "/fichaDatosColegiales/datosColegialesUpdate",
-      fichaColegialRegTel_permisos:"fichaColegialRegTel/permisos",
+    fichaColegialRegTel_permisos: "fichaColegialRegTel/permisos",
     fichaColegialRegTel_searchListDoc: "fichaColegialRegTel/searchListDoc",
     fichaColegialRegTel_searchListDir: "fichaColegialRegTel/searchListDir",
     fichaColegialRegTel_searchListDocNoCol:

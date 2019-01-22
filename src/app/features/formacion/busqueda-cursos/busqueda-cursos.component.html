@@ -12,9 +12,9 @@
   <div class="card">
     <!-- Datos generales -->
     <div class="card-body">
-      <p class="title-module">{{ "censo.consultaDatosGenerales.cabecera" | translate}}
-        <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
-        <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+      <p (click)="onHideDatosGenerales()" class="title-module">{{ "censo.consultaDatosGenerales.cabecera" | translate}}
+        <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
       </p>
       <div *ngIf="showDatosGenerales" class="module vista-avanzada">
         <div class="form-row">
@@ -194,8 +194,8 @@
             <button *ngIf="modoHistorico" (click)="isBuscar(true)" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
 
             <!-- Botón duplicar -->
-            <button (click)="duplicarCursos()" pButton type="button" icon="fa fa-files-o" iconPos="left" label="{{'general.boton.duplicar' | translate}}"
-              [disabled]="selectedDatos == '' || activacionEditar"></button>
+            <button (click)="duplicateCourse()" pButton type="button" icon="fa fa-files-o" iconPos="left" label="{{'general.boton.duplicar' | translate}}"
+              [disabled]="disabledDuplicate() || activacionEditar"></button>
 
           </div>
         </p-footer>

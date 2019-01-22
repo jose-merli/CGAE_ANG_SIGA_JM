@@ -87,7 +87,6 @@ export class FichaInscripcionComponent implements OnInit {
       this.controlCertificadoAutomatico();
 
       this.searchCourse(this.inscripcion.idCurso);
-      sessionStorage.removeItem("modoEdicionInscripcion");
 
       // Se accede a la ficha de inscripcion para crearla
       // Para cargar los datos del curso nos enviaran el idCurso
@@ -263,7 +262,9 @@ export class FichaInscripcionComponent implements OnInit {
     this.inscripcion.minimaAsistencia = this.curso.minimoAsistencia;
     this.inscripcion.idInstitucion = this.curso.idInstitucion;
     // Por defecto debe aparecer como estado pendiente de aprobacion
-    this.inscripcion.idEstadoInscripcion = "1";
+    if (this.inscripcion.idEstadoInscripcion == null) {
+      this.inscripcion.idEstadoInscripcion = "1";
+    }
     this.inscripcion.fechaSolicitud = new Date();
   }
 
@@ -611,6 +612,9 @@ export class FichaInscripcionComponent implements OnInit {
 
   loadNewTrainer(newformador) {
     this.persona = newformador;
+    this.persona.apellido1 = newformador.primerApellido;
+    this.persona.apellido2 = newformador.segundoApellido;
+
     this.obtenerTiposIdentificacion();
     if (this.persona.nif != null && this.persona.nif != undefined) {
       this.guardarPersona = true;
