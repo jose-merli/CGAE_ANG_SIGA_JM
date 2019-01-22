@@ -123,6 +123,7 @@ export class FichaColegialComponent implements OnInit {
   numSelected: number = 0;
   numSelectedDirecciones: number = 0;
   numSelectedBancarios: number = 0;
+  numSelectedDatosRegtel: number = 0;
   numSelectedCurriculares: number = 0;
   activacionEditar: boolean = true;
   situacionPersona: String;
@@ -218,6 +219,8 @@ export class FichaColegialComponent implements OnInit {
   tableBancarios: DataTable;
   @ViewChild("tableColegiales")
   tableColegiales: DataTable;
+  @ViewChild("tableRegTel")
+  tableRegTel: DataTable;
 
   selectedDatosCertificados;
   selectedDatosSociedades;
@@ -233,6 +236,7 @@ export class FichaColegialComponent implements OnInit {
   selectedItemCurriculares: number = 10;
   selectedItemDirecciones: number = 10;
   selectedItemBancarios: number = 10;
+  selectedItemRegtel: number = 10;
   selectedItem: number = 10;
 
   selectedDatosRegtel: DocushareItem;
@@ -2353,6 +2357,11 @@ export class FichaColegialComponent implements OnInit {
     this.router.navigate(["/fichaPersonaJuridica"]);
   }
 
+  onChangeRowsPerPagesRegtel(event) {
+    this.selectedItemRegtel = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tableRegTel.reset();
+  }
   onChangeRowsPerPagesCertificados(event) {
     this.selectedItemCertificados = event.value;
     this.changeDetectorRef.detectChanges();
@@ -3534,6 +3543,7 @@ export class FichaColegialComponent implements OnInit {
   onClickDescargarRegTel() {
     this.progressSpinner = true;
     this.selectedDatosRegtel.idPersona = this.idPersona;
+    this.selectedDatosRegtel.fechaModificacion = undefined;
     this.sigaServices
       .postDownloadFiles(
         "fichaColegialRegTel_downloadDoc",
@@ -3550,5 +3560,14 @@ export class FichaColegialComponent implements OnInit {
           this.progressSpinner = false;
         }
       );
+  }
+
+  activarPaginacionRegTel() {
+    if (!this.bodyRegTel || this.bodyRegTel.length == 0) return false;
+    else return true;
+  }
+
+  actualizaSeleccionadosRegTel(selectedDatos) {
+    this.numSelectedDatosRegtel = selectedDatos.length;
   }
 }
