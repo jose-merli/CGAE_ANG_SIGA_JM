@@ -1,4 +1,5 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<p-growl [(value)]="msgsSteps" life="100000"></p-growl>
 <app-dialog></app-dialog>
 <div class="modelos-comunicaciones-container">
   <div class="header-title">
@@ -167,6 +168,7 @@
   </div>
   <div class="card">
     <div class="card-header header-ficha" (click)="onShowConsultas()">
+
       <div *ngIf="!showConsultas" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -195,7 +197,8 @@
       </div>
     </div>
 
-    <div *ngIf="showConsultas" class="card-body p-0">
+    <div *ngIf="showConsultas" class="card-body p-0 py-2">
+      <p-steps [model]="steps" [readonly]="false" [(activeIndex)]="activeStep"></p-steps>
       <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
         [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}
             " paginatorPosition="both" selectionMode="multiple" (onRowSelect)="onSelectConsulta(selectedDatos)">
