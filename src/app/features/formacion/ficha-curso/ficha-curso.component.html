@@ -378,7 +378,7 @@
             emptyMessage="{{ 'general.message.no.registros' | translate}}"
             [ngClass]="{ customCursor: selectMultiplePrices }"
             [(selection)]="selectedDatosPrices"
-            (onRowSelect)="irEditarSession(selectedDatosPrices)" 
+            (onRowSelect)="actualizaSeleccionadosPrices(selectedDatosPrices)" 
             (onRowUnselect)="actualizaSeleccionadosPrices(selectedDatosPrices)"
             pageLinks="4"
             dataKey="idPrices"
@@ -489,7 +489,7 @@
               #tableFormadores
               class="tabla-listado"
               [paginator]="true"
-              (onRowUnselect)="actualizaSeleccionados(selectedDatosFormadores)"
+              (onRowUnselect)="actualizaSeleccionadosFormadores(selectedDatosFormadores)"
               [value]="datosFormadores"
               [sortOrder]="1"
               [paginator]="true"
@@ -1070,7 +1070,8 @@
               #tableCertificates
               class="tabla-listado"
               [paginator]="true"
-              (onRowUnselect)="actualizaSeleccionadosCertificates(selectedDatosCertificates)"
+              (onRowSelect)="actualizaSeleccionadosCertificates(selectedDatosCertificates)"
+              (onRoUnselect)="actualizaSeleccionadosCertificates(selectedDatosCertificates)"
               [value]="datosCertificates"
               [sortOrder]="1"
               [paginator]="true"
@@ -1466,17 +1467,16 @@
           label="{{ 'general.boton.restablecer'| translate }}"
         ></button>
         <button
-          *ngIf="!pressNewCertificate && !selectMultipleCertificates"
-          pButton
-          (click)="newCertificates()"
-          type="button"
-          icon="fa fa-plus"
-          iconPos="left"
-          label="{{ 'general.boton.new'| translate }}"
-          [disabled]="editCertificate || !activacionEditar"
-        ></button>
+        pButton
+        (click)="saveCertificateCourse()"
+        type="button"
+        icon="far fa-save"
+        iconPos="left"
+        label="{{ 'general.boton.guardar' | translate }}"
+        [disabled]="!(editCertificate && !pressNewCertificate) || pressNewCertificate && validateCertificate()"
+      ></button>
         <button
-          *ngIf="selectMultipleCertificates"
+          [disabled]="!selectedDatosCertificates != ''"
           pButton
           (click)="deleteCertificates(selectedDatosCertificates)"
           type="button"
@@ -1485,6 +1485,15 @@
           [disabled]="!activacionEditar"
           label="{{ 'general.boton.eliminar'| translate }}"
         ></button>
+        <button
+        [disabled]="selectMultipleCertificates || selectAllCertificates || (editCertificate && !pressNewCertificate)"
+        pButton
+        (click)="newCertificates()"
+        type="button"
+        icon="fa fa-plus"
+        iconPos="left"
+        label="{{ 'general.boton.new'| translate }}"
+      ></button>
       </div>
     </div>
 </div>
@@ -1663,7 +1672,8 @@
   <div class="card-footer" *ngIf="esFichaActiva('carga')">
     <div class="text-right main-button">
 
-      <button pButton type="button" [disabled]="disabledOthersCargas() || !activacionEditar" (click)="autovalidateInscriptions(selectedDatosCargas)" icon="fa fa-close" iconPos="left" label="Autovalidar"></button>
+      <button pButton type="button" [disabled]="disabledDownload() || !activacionEditar" (click)="autovalidateInscriptions(selectedDatosCargas)" icon="fa fa-close" iconPos="left" label="Autovalidar"></button>
+
       <p-fileUpload mode="basic" #pUploadFile  chooseLabel="Cargar Archivo"
        class="edit my-0 mx-auto main-button" name="file" [disabled]="!activacionEditar"  accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
        (change)="getFile($event, form)"></p-fileUpload>

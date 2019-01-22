@@ -107,6 +107,8 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   calificacionEmitidaAux: String;
   activacionEditar: boolean = false;
 
+  isCurso: boolean = false;
+
   constructor(
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
@@ -140,10 +142,23 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       this.body.idCurso = JSON.parse(
         sessionStorage.getItem("cursoSelected")
       ).idCurso;
-      sessionStorage.removeItem("cursoSelected");
 
-      this.isBuscar();
+      this.isCurso = true;
+
+      if (
+        sessionStorage.getItem("datosTabla") != null &&
+        sessionStorage.getItem("datosTabla") != undefined
+      ) {
+        this.datos = JSON.parse(sessionStorage.getItem("datosTabla"));
+        this.buscar = true;
+        sessionStorage.removeItem("datosTabla");
+      } else {
+        this.isBuscar();
+      }
     }
+
+    this.selectedDatos = [];
+    sessionStorage.removeItem("modoEdicionInscripcion");
 
     if (
       sessionStorage.getItem("datosTabla") != null &&
@@ -264,7 +279,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
   getComboCertificadoEmitido() {
     this.comboCertificadoEmitido = [
-      { label: "", value: 0 },
+      { label: "Todos", value: "" },
       { label: "Sí", value: 1 },
       { label: "No", value: 2 }
     ];
@@ -273,11 +288,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   }
 
   getComboPagada() {
-    this.comboPagada = [
-      { label: "", value: 0 },
-      { label: "Sí", value: 1 },
-      { label: "No", value: 2 }
-    ];
+    this.comboPagada = [{ label: "Sí", value: 1 }, { label: "No", value: 2 }];
 
     this.arregloTildesCombo(this.comboPagada);
   }
@@ -843,7 +854,16 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   }
 
   backTo() {
-    this.location.back();
+    if (
+      sessionStorage.getItem("pantallaFichaCurso") != null &&
+      sessionStorage.getItem("pantallaFichaCurso") != undefined
+    ) {
+      this.router.navigate(["/fichaCursos"]);
+      sessionStorage.removeItem("pantallaFichaCurso");
+    } else {
+      this.location.back();
+    }
+    // this.location.back();
   }
 
   onChangeRowsPerPages(event) {
@@ -852,6 +872,9 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
     this.table.reset();
   }
 
+  onHideDatosGenerales() {
+    this.showDatosGenerales = !this.showDatosGenerales;
+  }
   //búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {

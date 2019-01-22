@@ -81,6 +81,8 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
 
   ngOnInit() {
     this.checkAcceso(); //coger tipos
+    sessionStorage.removeItem("filtrosBusquedaColegiados");
+    sessionStorage.removeItem("filtrosBusquedaNoColegiados");
     sessionStorage.removeItem("notario");
     sessionStorage.removeItem("busquedaSociedades");
     sessionStorage.removeItem("crearnuevo");

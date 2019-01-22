@@ -1034,8 +1034,8 @@ const appRoutes: Routes = [
   // Administracion
   {
     path: "catalogosMaestros",
-    component: CatalogosMaestros,
-    //component: CatalogosMaestrosComponent,
+    //component: CatalogosMaestros,
+    component: CatalogosMaestrosComponent,
     canActivate: [AuthGuard]
   },
   {

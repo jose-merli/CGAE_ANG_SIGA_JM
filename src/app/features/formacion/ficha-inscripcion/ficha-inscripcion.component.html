@@ -202,8 +202,8 @@
   
     <div *ngIf="esFichaActiva('personales')" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="actualizaPersona()" [(disabled)]="!guardarPersona || !activacionEditar" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
         <button (click)="isSearch()" [(disabled)]="!isAdministrador || !activacionEditar" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
+        <button (click)="actualizaPersona()" [(disabled)]="!guardarPersona || !activacionEditar" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -354,7 +354,7 @@
               <div class="mostrar d-flex text-right justify-content-end">
                 <label class="pr-3 registros-totales">Mostrando registros del {{ tableCertificates.first + 1 }} al {{ tableCertificates.first + tableCertificates.rows
                   }} de un total de {{ tableCertificates.totalRecords }}</label>
-                <label class="pr-3 numSeleccionados">Seleccionados: {{ numSelectedCertificates }}</label>
+                <!-- <label class="pr-3 numSeleccionados">Seleccionados: {{ numSelectedCertificates }}</label> -->
                 <label>{{ "general.message.mostrar" | translate }}</label>
                 <p-dropdown [(ngModel)]="selectedCertificates" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                 <label class="pl-1">
