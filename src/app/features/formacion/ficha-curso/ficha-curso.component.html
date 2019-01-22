@@ -25,6 +25,7 @@
               "general.message.datos.generales" | translate
             }}</label>
           </div>
+          <i class="fa fa-angle-down float-right"></i>
         </div>
       </div>
       <div
@@ -56,6 +57,7 @@
                 class="form-control"
                 pInputText
                 name="nombre"
+                [disabled]="!activacionEditar"
                 [(ngModel)]="curso.nombreCurso"
               />
             </div>
@@ -66,7 +68,7 @@
                 class="form-control"
                 pInputText
                 name="codigo"
-                [disabled]="fieldNoEditable"
+                [disabled]="fieldNoEditable || !activacionEditar"
                 [(ngModel)]="curso.codigoCurso"
               />
             </div>
@@ -75,19 +77,19 @@
             <div class="col-lg-6 col-md-6">
                 <label>{{ 'formacion.fichaCursos.datosGenerales.visibilidad' | translate}}(*)</label>
                 <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form"
-                  [(ngModel)]='curso.idVisibilidad' [options]="comboVisibilidad" [filter]="true" filterBy="label,labelSinTilde"
+                [disabled]="!activacionEditar" [(ngModel)]='curso.idVisibilidad' [options]="comboVisibilidad" [filter]="true" filterBy="label,labelSinTilde"
                   (onChange)="onChangeSelectVisibilidad($event)"></p-dropdown>
             </div>
             <div class="col-lg-6 col-md-6">
                 <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}(*)</label>
-                <p-dropdown #colegio [disabled]="fieldNoEditable"  class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
+                <p-dropdown #colegio [disabled]="fieldNoEditable || !activacionEditar"  class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
                   [(ngModel)]='curso.colegio' [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeSelectColegio($event) "></p-dropdown>
             </div>
           </div>
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
               <label>{{'censo.busquedaClientesAvanzada.literal.tipoCliente' | translate}}</label>
-              <p-autoComplete #autocompleteService [(ngModel)]="resultsService" [suggestions]="suggestService" [minLength]="1" field="label"
+              <p-autoComplete #autocompleteService [(ngModel)]="resultsService" [disabled]="!activacionEditar" [suggestions]="suggestService" [minLength]="1" field="label"
               [multiple]="true" [style]="{'width':'100%'}"  (onFocus)="filterServices($event)" (onBlur)="visiblePanelBlur($event)" (completeMethod)="filterLabelsMultiple($event)">
               <ng-template let-servicesSelecionados pTemplate="selectedItem">
                 <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
@@ -100,14 +102,14 @@
             <div class="col-lg-6 col-md-6">
                 <label>{{ 'form.busquedaCursos.literal.estado' | translate}}(*)</label>
                 <p-dropdown placeholder="-" class="select-form" [(ngModel)]='curso.idEstado' [options]="comboEstados"
-                [filter]="true" filterBy="label,labelSinTilde" [disabled]="fieldNoEditable"></p-dropdown>
+                [filter]="true" filterBy="label,labelSinTilde" [disabled]="fieldNoEditable || !activacionEditar"></p-dropdown>
             </div>
           </div>
           <div class="row mb-4">
             <div class="col-lg-12 col-md-12">
-              <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}(*)</label>
+              <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}} (*)</label>
 
-              <p-editor [(ngModel)]="curso.descripcionEstado" [style]="{'height':'150px'}" name="descripcion">
+              <p-editor #editor [(ngModel)]="curso.descripcionEstado" [readonly]="!activacionEditar" [style]="{'height':'150px'}" name="descripcion">
                 <p-header>
                     <span class="ql-formats">
                         <select class="ql-header">
@@ -159,7 +161,7 @@
                         [(ngModel)]="curso.fechaInscripcionDesdeDate"
                         dateFormat="dd/mm/yy"
                         icon="far fa-calendar-alt"
-                        showIcon="true"
+                        showIcon="true" [disabled]="!activacionEditar"
                         (onSelect)="selectStartDateInscription($event)"
                       ></p-calendar>
               </div>
@@ -170,7 +172,7 @@
                         [(ngModel)]="curso.fechaInscripcionHastaDate"
                         dateFormat="dd/mm/yy"
                         icon="far fa-calendar-alt"
-                        showIcon="true"
+                        showIcon="true" [disabled]="!activacionEditar"
                         [minDate]="curso.fechaInscripcionDesdeDate"
                         (onSelect)="selectEndDateInscription($event)"
                       ></p-calendar>
@@ -186,7 +188,7 @@
                       icon="far fa-calendar-alt"
                       showIcon="true"
                       [minDate]="curso.fechaInscripcionHastaDate"
-                      [disabled]="fieldNoEditable"
+                      [disabled]="fieldNoEditable || !activacionEditar"
                     ></p-calendar>
             </div>
             <div class="col-lg-6 col-md-6">
@@ -198,7 +200,7 @@
                       icon="far fa-calendar-alt"
                       showIcon="true"
                       [minDate]="curso.fechaImparticionDesdeDate"
-                      [disabled]="fieldNoEditable"
+                      [disabled]="fieldNoEditable || !activacionEditar"
                     ></p-calendar>
             </div>
           </div>
@@ -209,7 +211,7 @@
                 type="text"
                 class="form-control"
                 pInputText
-                name="tipo"
+                name="tipo" [disabled]="!activacionEditar"
                 [(ngModel)]="curso.plazasDisponibles"
               />
             </div>
@@ -219,7 +221,7 @@
                 type="text"
                 class="form-control"
                 pInputText
-                name="asistencia"
+                name="asistencia" [disabled]="!activacionEditar"
                 [(ngModel)]="curso.minimoAsistencia"
               />
             </div>
@@ -231,7 +233,7 @@
                 type="text"
                 class="form-control"
                 pInputText
-                name="lugar"
+                name="lugar" [disabled]="!activacionEditar"
                 [(ngModel)]="curso.lugar"
               />
             </div>
@@ -240,7 +242,7 @@
             <div class="col-lg-12 col-md-12">
               <label>Autovalidación de inscripciones</label>
               <p-checkbox
-                binary="true"
+                binary="true" [disabled]="!activacionEditar"
                 [(ngModel)]="curso.autovalidacion"
               ></p-checkbox>
             </div>
@@ -254,13 +256,13 @@
             <div class="col-lg-12 col-md-12">
               <label>{{'formacion.fichaCursos.datosGenerales.datosAdicionales.documentacionAdjunta' | translate}}</label>
               <div *ngIf="edicionDocumentoAdjunto" class="ui-inputgroup">
-                  <input type="text" class="form-control" pInputText name="adjunto" [(ngModel)]="curso.adjunto"/>
-                  <button (click)="editDocumentoAdjunto()" pButton type="button" icon="fas fa-check" class="ui-button-warn"></button>      
+                  <input type="text" class="form-control" pInputText name="adjunto" [disabled]="!activacionEditar" [(ngModel)]="curso.adjunto"/>
+                  <button (click)="editDocumentoAdjunto()" pButton type="button" icon="fas fa-check" [disabled]="!activacionEditar" class="ui-button-warn"></button>      
             </div>
             <div *ngIf="!edicionDocumentoAdjunto" class="ui-inputgroup">
                 <a *ngIf="curso.adjunto != undefined && curso.adjunto != ''" [href]="curso.adjunto" class="col-11" target="_blank">{{curso.adjunto}}</a>
                 <span *ngIf="curso.adjunto == undefined || curso.adjunto == ''" class="col-11">{{curso.adjunto}}</span>
-                <button (click)="editDocumentoAdjunto()" pButton type="button" icon="fas fa-pencil-alt" class="ui-button-warn button-edit"></button>      
+                <button (click)="editDocumentoAdjunto()" pButton type="button" icon="fas fa-pencil-alt" [disabled]="!activacionEditar" class="ui-button-warn button-edit"></button>      
           </div>
             </div>
           </div>
@@ -268,7 +270,7 @@
             <div class="col-lg-12 col-md-12">
               <label>{{ 'form.busquedaCursos.literal.temas' | translate}}</label>
               <p-autoComplete #autocompleteTopics [(ngModel)]="resultsTopics" [suggestions]="suggestTopics" [minLength]="1" field="label"
-              [multiple]="true" [style]="{'width':'100%'}"  (onFocus)="filterTopics($event)" (onBlur)="visiblePanelBlurTopics($event)" (completeMethod)="filterLabelsMultipleTopics($event)">
+              [multiple]="true" [style]="{'width':'100%'}"  (onFocus)="filterTopics($event)" (onBlur)="visiblePanelBlurTopics($event)" [disabled]="!activacionEditar" (completeMethod)="filterLabelsMultipleTopics($event)">
               <ng-template let-topicsSelecionados pTemplate="selectedItem">
                 <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
                   [ngStyle]="{'background': topicsSelecionados.color, 'margin': marginPx, 'border': bw }">
@@ -282,13 +284,13 @@
             <div class="col-lg-12 col-md-12">
                   <label>{{'formacion.fichaCursos.datosGenerales.datosAdicionales.informacionAdicional' | translate}}</label>
               <div *ngIf="edicionInformacionAdicional" class="ui-inputgroup">
-                    <input type="text" class="form-control" pInputText name="adicional" [(ngModel)]="curso.adicional"/>
-                    <button (click)="editInformacionAdicional()" pButton type="button" icon="fas  fa-check" class="ui-button-warn"></button>      
+                    <input type="text" class="form-control" pInputText name="adicional" [disabled]="!activacionEditar" [(ngModel)]="curso.adicional"/>
+                    <button (click)="editInformacionAdicional()" pButton type="button" icon="fas  fa-check" [disabled]="!activacionEditar" class="ui-button-warn"></button>      
               </div>
               <div *ngIf="!edicionInformacionAdicional" class="ui-inputgroup">
                   <a *ngIf="curso.adicional != undefined && curso.adicional != ''" [href]="curso.adicional" class="col-11" target="_blank">{{curso.adicional}}</a>
                   <span *ngIf="curso.adicional == undefined || curso.adicional == ''" class="col-11">{{curso.adicional}}</span>
-                  <button (click)="editInformacionAdicional()" pButton type="button" icon="fas fa-pencil-alt" class="ui-button-warn button-edit"></button>      
+                  <button (click)="editInformacionAdicional()" pButton type="button" icon="fas fa-pencil-alt" [disabled]="!activacionEditar" class="ui-button-warn button-edit"></button>      
             </div>
             </div>
           </div>
@@ -296,13 +298,13 @@
             <div class="col-lg-12 col-md-12">
                   <label>{{'formacion.fichaCursos.datosGenerales.datosAdicionales.encuestaSatisfaccion' | translate}}</label>
                   <div *ngIf="edicionEncuestaSatisfaccion" class="ui-inputgroup">
-                      <input type="text" class="form-control" pInputText name="encuesta" [(ngModel)]="curso.encuesta"/>
-                      <button (click)="editEncuestaSatisfaccion()" pButton type="button" icon="fas  fa-check" class="ui-button-warn"></button>      
+                      <input type="text" class="form-control" pInputText name="encuesta" [disabled]="!activacionEditar" [(ngModel)]="curso.encuesta"/>
+                      <button (click)="editEncuestaSatisfaccion()" pButton type="button" icon="fas  fa-check" [disabled]="!activacionEditar" class="ui-button-warn"></button>      
                   </div>
                   <div *ngIf="!edicionEncuestaSatisfaccion" class="ui-inputgroup">
                       <a *ngIf="curso.encuesta != undefined && curso.encuesta != ''" [href]="curso.encuesta" class="col-11" target="_blank">{{curso.encuesta}}</a>
                       <span *ngIf="curso.encuesta == undefined || curso.encuesta == ''" class="col-11">{{curso.encuesta}}</span>
-                      <button (click)="editEncuestaSatisfaccion()" pButton type="button" icon="fas fa-pencil-alt" class="ui-button-warn button-edit"></button>      
+                      <button (click)="editEncuestaSatisfaccion()" pButton type="button" icon="fas fa-pencil-alt" [disabled]="!activacionEditar" class="ui-button-warn button-edit"></button>      
                 </div>
             </div>
           </div>
@@ -334,10 +336,10 @@
 
         <!-- Botón inscripción -->
 
-        <button pButton type="button" icon="fa fa-caret-square-o-up" iconPos="left" label="Inscripción" [disabled]="!modoEdicion" (click)="irInscripcion()"></button> 
+        <button pButton type="button" icon="fa fa-caret-square-o-up" iconPos="left" label="Inscripción" [disabled]="!modoEdicion || !activacionEditar" (click)="irInscripcion()"></button> 
 
         <!-- Botón guardar -->
-        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" (click)="saveCourse()" [disabled]="validateCourse()"></button> 
+        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" (click)="saveCourse()" [disabled]="validateCourse() || !activacionEditar"></button> 
       </div>
     </div>
   </div>
@@ -354,6 +356,7 @@
           <div class="d-flex justify-content-start mt-2">
             <label class="mr-auto title-ficha">{{'formacion.fichaCurso.tarjetaPrecios.precios' | translate}}</label>
           </div>
+          <i class="fa fa-angle-down float-right"></i>
         </div>
       </div>
       <div
@@ -419,7 +422,6 @@
                       | translate
                   }}</label
                 >
-                <div class="ml-3 selectAllPrices">
                   <p-checkbox
                     (onChange)="onChangeSelectAllPrices()"
                     [(ngModel)]="selectAllPrices"
@@ -427,7 +429,6 @@
                     label="Seleccionar todo"
                     name="groupname"
                   ></p-checkbox>
-                </div>
                 <label
                   class="ml-3 seleccionMultiple"
                   [ngClass]="{ 'seleccion-multiple': selectMultiplePrices }"
@@ -454,8 +455,7 @@
     <!-- Cabecera -->
     <div
       class="card-header header-ficha"
-      (click)="abreCierraFicha('formadores')"
-    >
+      (click)="abreCierraFicha('formadores')">
       <div *ngIf="!esFichaActiva('formadores')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -466,6 +466,7 @@
           <div class="d-flex justify-content-start mt-2">
             <label class="mr-auto title-ficha">{{'agenda.fichaEventos.datosFormadores.cabecera' | translate}}</label>
           </div>
+          <i class="fa fa-angle-down float-right"></i>
         </div>
       </div>
       <div
@@ -485,7 +486,7 @@
         class="card-body card-body-ficha"
       >
         <div class="row">
-          <div *ngIf="(selectMultipleFormadores || selectAllFormadores) && !pressNewFormador">
+          <div *ngIf="(selectMultipleFormadores || selectAllFormadores || !activacionEditar) && !pressNewFormador">
             <p-dataTable
               emptyMessage="{{ 'general.message.no.registros' | translate}}"
               [ngClass]="{ customCursor: selectMultipleFormadores }"
@@ -568,7 +569,7 @@
           </div>
 
           <!-- Editar Formador -->
-          <div *ngIf="!selectMultipleFormadores && !pressNewFormador && !selectAllFormadores">
+          <div *ngIf="!selectMultipleFormadores && !pressNewFormador && !selectAllFormadores && activacionEditar">
             <p-dataTable
               emptyMessage="{{ 'general.message.no.registros' | translate}}"
               [ngClass]="{ customCursor: selectMultipleFormadores }"
@@ -823,6 +824,7 @@
                     [filter]="false"
                     placeholder="{{'general.boton.seleccionar' | translate}}"
                     name="type"
+                    [disabled]="!activacionEditar"
                     (onChange)="onChangeTutor($event, dato)"
                   ></p-dropdown>
                 </ng-template>
@@ -850,6 +852,7 @@
                     [(ngModel)]="newFormadorCourse.idTipoCoste"
                     [options]="comboTipoCoste"
                     [filter]="false"
+                    [disabled]="!activacionEditar"
                     placeholder="{{'general.boton.seleccionar' | translate}}"
                     name="type"
                   ></p-dropdown>
@@ -872,6 +875,7 @@
                     *ngIf="dato[colsFormadores[4].field] == ''"
                     [value]="dato[colsFormadores[4].field]"
                     [(ngModel)]="newFormadorCourse.tarifa"
+                    [disabled]="!activacionEditar"
                     type="text"
                     class="form-control"
                     pInputText
@@ -879,31 +883,6 @@
                 </ng-template>
               </p-column>
 
-              <!-- <p-column
-                [editable]="true"
-                [sortable]="true"
-                [field]="colsFormadores[5].field"
-                [header]="
-                  'form.busquedaCursos.literal.tutorResponsable' | translate
-                "
-                [filter]="true"
-                filterPlaceholder="{{'general.boton.search' | translate}}"
-                filterMatchMode="contains"
-              >
-                <ng-template pTemplate="body" let-dato="rowData">
-                  <p-checkbox *ngIf="dato[colsFormadores[4].field] != ''"
-                    [(ngModel)]="dato[colsFormadores[5].field]"
-                    binary="true"
-                    name="groupname" [disabled]="true"
-                  ></p-checkbox>
-                  <p-checkbox *ngIf="dato[colsFormadores[4].field] == ''"
-                  (onChange)="onChangeTutor($event, dato)"
-                  [(ngModel)]="dato[colsFormadores[5].field]"
-                  binary="true"
-                  name="groupname"
-                ></p-checkbox>
-                </ng-template>
-              </p-column> -->
 
               <ng-template pTemplate="paginatorLeft">
                 <div class="mostrar d-flex text-right justify-content-end">
@@ -953,7 +932,7 @@
           type="button"
           icon="far fa-save"
           iconPos="left"
-          [disabled]="validateTrainer()"
+          [disabled]="validateTrainer() || !activacionEditar"
           label="{{ 'general.boton.guardar' | translate }}"
         ></button>
         <button
@@ -973,7 +952,7 @@
           icon="fa fa-plus"
           iconPos="left"
           label="{{ 'general.boton.new'| translate }}"
-          [disabled]="editFormador"
+          [disabled]="editFormador || !activacionEditar"
         ></button>
         <button
           *ngIf="selectMultipleFormadores"
@@ -982,6 +961,7 @@
           type="button"
           icon="fa fa-trash-alt"
           iconPos="left"
+          [disabled]="!activacionEditar"
           label="{{ 'general.boton.eliminar'| translate }}"
         ></button>
       </div>
@@ -1070,6 +1050,7 @@
         <div class="d-flex justify-content-start mt-2">
           <label class="mr-auto title-ficha">{{'formacion.fichaInscripcion.datosCertificados.cabecera' | translate}}</label>
         </div>
+        <i class="fa fa-angle-down float-right"></i>
       </div>
     </div>
     <div
@@ -1091,7 +1072,7 @@
         class="card-body card-body-ficha"
       >
         <div class="row">
-          <div *ngIf="(selectMultipleCertificates || selectAllCertificates) && !pressNewCertificate">
+          <div *ngIf="(selectMultipleCertificates || selectAllCertificates  || !activacionEditar) && !pressNewCertificate">
             <p-dataTable
               emptyMessage="{{ 'general.message.no.registros' | translate}}"
               [ngClass]="{ customCursor: selectMultipleCertificates }"
@@ -1215,7 +1196,7 @@
           </div>
 
           <!-- Editar Certificate -->
-          <div *ngIf="!selectMultipleCertificates && !pressNewCertificate && !selectAllCertificates">
+          <div *ngIf="!selectMultipleCertificates && !pressNewCertificate && !selectAllCertificates && activacionEditar">
             <p-dataTable
               emptyMessage="{{ 'general.message.no.registros' | translate}}"
               [ngClass]="{ customCursor: selectMultipleCertificates }"
@@ -1248,6 +1229,7 @@
                     [options]="comboCertificates"
                     [filter]="false"
                     placeholder="Seleccionar"
+                    [disabled]="!activacionEditar"
                     name="type"
                     (onChange)="selectPriceModeEdit($event, dato)"
                   ></p-dropdown>
@@ -1286,6 +1268,7 @@
                     [options]="comboCalificaciones"
                     [filter]="false"
                     placeholder="Seleccionar"
+                    [disabled]="!activacionEditar"
                     name="type"
                     (onChange)="editCertificateTable($event, dato)"
                   ></p-dropdown>
@@ -1381,6 +1364,7 @@
                         [options]="comboCertificates"
                         [filter]="false"
                         placeholder="Seleccionar"
+                        [disabled]="!activacionEditar"
                         name="type"
                         (onChange)="selectPriceModeNew($event)"
                       ></p-dropdown>
@@ -1428,6 +1412,7 @@
                     [options]="comboCalificaciones"
                     [filter]="false"
                     placeholder="Seleccionar"
+                    [disabled]="!activacionEditar"
                     name="type"
                   ></p-dropdown>
                 </ng-template>
@@ -1483,7 +1468,7 @@
           icon="fa fa-search"
           iconPos="left"
           label="{{ 'general.boton.guardar' | translate }}"
-          [disabled]="pressNewCertificate && validateCertificate()"
+          [disabled]="pressNewCertificate && validateCertificate() || !activacionEditar"
         ></button>
         <button
           *ngIf="editCertificate && !pressNewCertificate"
@@ -1502,7 +1487,7 @@
           icon="fa fa-plus"
           iconPos="left"
           label="{{ 'general.boton.new'| translate }}"
-          [disabled]="editCertificate"
+          [disabled]="editCertificate || !activacionEditar"
         ></button>
         <button
           *ngIf="selectMultipleCertificates"
@@ -1511,6 +1496,7 @@
           type="button"
           icon="fa fa-trash-alt"
           iconPos="left"
+          [disabled]="!activacionEditar"
           label="{{ 'general.boton.eliminar'| translate }}"
         ></button>
       </div>
@@ -1529,6 +1515,7 @@
         <div class="d-flex justify-content-start mt-2">
           <label class="mr-auto title-ficha">{{'formacion.fichaCursos.sesiones.cabecera' | translate}}</label>
         </div>
+        <i class="fa fa-angle-down float-right"></i>
       </div>
     </div>
     <div
@@ -1621,9 +1608,9 @@
   </div>
   <div class="card-footer" *ngIf="esFichaActiva('session')">
     <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-reply-all" (click)="duplicateSession()" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}" [disabled]="disabledDuplicate()" ></button>
-        <button pButton type="button" icon="fa fa-plus" (click)="newSession()" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-        <button pButton type="button" icon="fa fa-close" (click)="cancelSessions()"iconPos="left" label="{{ 'general.boton.cancel' | translate}}"  [disabled]="!selectMultipleSessions"></button>
+        <button pButton type="button" icon="fa fa-reply-all" (click)="duplicateSession()" [disabled]="!activacionEditar" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}" [disabled]="disabledDuplicate() || !activacionEditar" ></button>
+          <button pButton type="button" icon="fa fa-plus" (click)="newSession()" [disabled]="!activacionEditar" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        <button pButton type="button" icon="fa fa-close" (click)="cancelSessions()" [disabled]="!activacionEditar" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"  [disabled]="!selectMultipleSessions || !activacionEditar"></button>
     </div>
   </div>
 </div>
@@ -1640,6 +1627,7 @@
         <div class="d-flex justify-content-start mt-2">
           <label class="mr-auto title-ficha">Carga Masiva Inscripciones</label>
         </div>
+        <i class="fa fa-angle-down float-right"></i>
       </div>
     </div>
     <div
@@ -1693,13 +1681,14 @@
   <div class="card-footer" *ngIf="esFichaActiva('carga')">
     <div class="text-right main-button">
 
-      <button pButton type="button" [disabled]="disabledDownload()" (click)="autovalidateInscriptions(selectedDatosCargas)" icon="fa fa-close" iconPos="left" label="Autovalidar"></button>
+      <button pButton type="button" [disabled]="disabledDownload() || !activacionEditar" (click)="autovalidateInscriptions(selectedDatosCargas)" icon="fa fa-close" iconPos="left" label="Autovalidar"></button>
+
       <p-fileUpload mode="basic" #pUploadFile  chooseLabel="Cargar Archivo"
-       class="edit my-0 mx-auto main-button" name="file"  accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+       class="edit my-0 mx-auto main-button" name="file" [disabled]="!activacionEditar"  accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
        (change)="getFile($event, form)"></p-fileUpload>
-      <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" iconPos="left" label="DescargarPlantilla"></button>
-      <button pButton type="button" [disabled]="disabledDownload()"(click)="downloadFile(selectedDatosCargas)" icon="fa fa-download" iconPos="left" label="DescargarFichero"></button>
-      <button pButton type="button" [disabled]="disabledOthersCargas()" (click)="deleteInscriptions(selectedDatosCargas)"icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+      <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" [disabled]="!activacionEditar" iconPos="left" label="DescargarPlantilla"></button>
+      <button pButton type="button" [disabled]="disabledDownload() || !activacionEditar"(click)="downloadFile(selectedDatosCargas)" icon="fa fa-download" iconPos="left" label="DescargarFichero"></button>
+      <button pButton type="button" [disabled]="disabledOthersCargas() || !activacionEditar" (click)="deleteInscriptions(selectedDatosCargas)"icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
      
     </div>
   </div>

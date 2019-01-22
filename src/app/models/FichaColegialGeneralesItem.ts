@@ -35,8 +35,6 @@ export class FichaColegialGeneralesItem {
   etiquetas: any[];
   fechaBajaEtiq: Date;
   fechaInicioEtiq: Date;
-  guiaJudicial: String;
-  publicidad: String;
   error: ErrorItem;
   fechaBaja: string;
   constructor() {}
