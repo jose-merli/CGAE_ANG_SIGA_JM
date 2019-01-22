@@ -1127,11 +1127,12 @@ p-footer .main-button{
 }
 
 .ui-steps{
+  position: relative;
   &:before {
   content: " ";
   border-top: 1px solid #c8c8c8;
   width: 100%;
-  top: 12%;
+  top: 25%;
   left: 0;
   display: block;
   position: absolute;

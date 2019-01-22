@@ -23,6 +23,7 @@ import { MenuItem } from 'primeng/api';
 export class PlantillaDocumentoComponent implements OnInit {
 
   datos: any = [];
+  datosInicial: any = [];
   cols: any = [];
   first: number = 0;
   firstDocs: number = 0;
@@ -82,6 +83,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.progressSpinner = true;
     this.textFilter = "Elegir";
     this.textSelected = "{0} ficheros seleccionadas";
     this.firstDocs = 0;
@@ -239,7 +241,7 @@ export class PlantillaDocumentoComponent implements OnInit {
     let obj = {
       consulta: null,
       finalidad: null,
-      objetivo: 'Datos',
+      objetivo: 'DATOS',
       idObjetivo: 4
     };
     this.datos.push(obj);
@@ -338,25 +340,13 @@ export class PlantillaDocumentoComponent implements OnInit {
       );
   }
 
-  getPlantillas() {
-    this.sigaServices
-      .post("plantillasDoc_plantillas", this.body)
-      .subscribe(
-        data => {
-          this.body.plantillas = JSON.parse(data["body"]).documentoPlantillaItem;
-        },
-        err => {
-          this.showFail('Error al cargar las plantillas');
-          console.log(err);
-        }
-      );
-  }
 
   getDocumentos() {
     this.sigaServices
       .post('plantillasDoc_plantillas', this.body)
       .subscribe(
         data => {
+          this.progressSpinner = false;
           this.documentos = JSON.parse(data["body"]).documentoPlantillaItem;
           this.documentos.map(e => {
             e.guardada = true;
@@ -386,7 +376,9 @@ export class PlantillaDocumentoComponent implements OnInit {
       .post(service, this.body)
       .subscribe(
         data => {
+          debugger;
           this.datos = JSON.parse(data["body"]).consultaItem;
+
           if (this.datos.length <= 0) {
             this.datos = [
               { idConsulta: '', finalidad: '', objetivo: 'Destinatario', idObjetivo: '1' },
@@ -397,7 +389,8 @@ export class PlantillaDocumentoComponent implements OnInit {
           };
           this.datos.map(e => {
             return e.idConsultaAnterior = e.idConsulta;
-          })
+          });
+          this.datosInicial = JSON.parse(JSON.stringify(this.datos));
         },
         err => {
           this.showFail('Error al cargar las consultas');
@@ -439,9 +432,9 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.sigaServices.post("plantillasDoc_guardar", this.body).subscribe(
       data => {
         this.showSuccess('La plantilla se ha guardado correctamente');
+        this.nuevoDocumento = false;
         this.body.idInforme = JSON.parse(data["body"]).data;
-        sessionStorage.setItem("modelosInformesSearch",JSON.stringify(this.body));
-
+        sessionStorage.setItem("modelosInformesSearch", JSON.stringify(this.body));
         sessionStorage.removeItem("crearNuevaPlantillaDocumento");
       },
       err => {
@@ -449,6 +442,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         console.log(err);
       },
       () => {
+        this.getDocumentos();
       }
     );
   }
@@ -459,7 +453,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         this.showSuccess('Plantilla subida correctamente');
         plantilla.idPlantillaDocumento = JSON.parse(data["body"]).idPlantillaDocumento;
         this.body.plantillas.push(plantilla);
-        this.nuevoDocumento = false;
+
       },
       err => {
         this.showFail('Error al subir el documento');
@@ -507,6 +501,7 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.sigaServices.post("plantillasDoc_consultas_guardar", this.body).subscribe(
       data => {
         this.showSuccess('La consulta se ha guardado correctamente');
+        this.datosInicial = JSON.parse(JSON.stringify(this.datos));
       },
       err => {
         this.showFail('Error al guardar la consulta');
@@ -607,7 +602,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   eliminar(dato) {
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
-      message: '¿Está seguro de eliminar ' + dato.length + 'consultas seleccionadas?',
+      message: '¿Está seguro de eliminar ' + dato.length + ' consultas seleccionadas?',
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarEliminar(dato);
@@ -655,7 +650,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   eliminarPlantilla(dato) {
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
-      message: '¿Está seguro de eliminar ' + dato.length + 'plantillas seleccionadas?',
+      message: '¿Está seguro de eliminar ' + dato.length + ' plantillas seleccionadas?',
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarEliminarPlantilla(dato);
@@ -694,7 +689,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         console.log(err);
       },
       () => {
-        this.getPlantillas();
+        this.getDocumentos();
       }
     );
   }
@@ -758,6 +753,10 @@ export class PlantillaDocumentoComponent implements OnInit {
       }
     }
     ];
+  }
+
+  restablecerConsultas() {
+    this.datos = JSON.parse(JSON.stringify(this.datosInicial));
   }
 
 
