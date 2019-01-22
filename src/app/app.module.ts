@@ -9,7 +9,7 @@ import { MenubarModule } from "primeng/menubar";
 import { PanelMenuModule } from "primeng/panelmenu";
 import { MenuItem } from "primeng/api";
 import { DialogModule } from "primeng/dialog";
-import { OrderListModule } from 'primeng/orderlist';
+import { StepsModule } from 'primeng/steps';
 
 
 import { AuthGuard } from "./_guards/auth.guards";
@@ -556,7 +556,7 @@ import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicac
     FileUploadModule,
     DialogModule,
     KeyFilterModule,
-    OrderListModule
+    StepsModule
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { FichaPlantillasDocument } from '../../../../../../models/FichaPlantillasDocumentoItem';
 import { ConsultasSearchItem } from '../../../../../../models/ConsultasSearchItem';
@@ -9,12 +9,15 @@ import { SigaServices } from "./../../../../../../_services/siga.service";
 import { Location } from "@angular/common";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../../commons/translate/translation.service";
+import { MenuItem } from 'primeng/api';
 
 
 @Component({
   selector: 'app-plantilla-documento',
   templateUrl: './plantilla-documento.component.html',
-  styleUrls: ['./plantilla-documento.component.scss']
+  styleUrls: ['./plantilla-documento.component.scss'],
+  encapsulation: ViewEncapsulation.None
+
 })
 
 export class PlantillaDocumentoComponent implements OnInit {
@@ -47,6 +50,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   textSelected: any;
   showHistorico: boolean = false;
   msgs: Message[];
+  msgsSteps: Message[] = [];
   documentos: any = [];
   colsDocumentos: any = [];
   idiomas: any = [];
@@ -61,6 +65,8 @@ export class PlantillaDocumentoComponent implements OnInit {
   nuevoDocumento: boolean = false;
   selectedIdioma: any;
   selectedSufijos: any = [];
+  steps: MenuItem[];
+  activeStep: number;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -84,6 +90,8 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.busquedaIdioma();
     this.getConsultasDisponibles();
     this.getDocumentos();
+
+    this.getSteps();
 
 
     this.selectedItem = 10;
@@ -524,8 +532,14 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.msgs.push({ severity: "info", summary: "", detail: mensaje });
   }
 
+  showInfoSteps(mensaje: string) {
+    this.msgsSteps.push({ severity: "info", summary: "", detail: mensaje });
+  }
+
+
   clear() {
     this.msgs = [];
+    this.msgsSteps = [];
   }
 
   onChangeIdioma(e) {
@@ -711,6 +725,38 @@ export class PlantillaDocumentoComponent implements OnInit {
       }
     }
     this.sufijos = [... this.sufijos];
+  }
+
+  getSteps() {
+    this.steps = [{
+      label: 'Datos',
+      command: (event: any) => {
+        this.activeStep = 0;
+        this.showInfoSteps('Busque y añada a continuación las consultas que necesita para obtener los datos. Pídale ayuda a su soporte si no conoce las consultas que existen.');
+      }
+    },
+    {
+      label: 'Destinatarios',
+      command: (event: any) => {
+        this.activeStep = 1;
+        this.showInfoSteps('Seleccione los destinatarios de este modelo. Esto hará que se comuniquen los documentos a las personas correspondientes en cada comunicación. Si no selecciona destinatarios, se generará un documento por cada comunicación solicitada. ');
+      }
+    },
+    {
+      label: 'Multidocumento',
+      command: (event: any) => {
+        this.activeStep = 2;
+        this.showInfoSteps('Seleccione el modo de generación de varios documentos. Además de la generación por cada destinatario del paso anterior, puede hacer que se generen varios documentos, por ejemplo, si son para que el destinatario reparta copias personalizadas para otras personas. ');
+      }
+    },
+    {
+      label: 'Condicional',
+      command: (event: any) => {
+        this.activeStep = 3;
+        this.showInfoSteps('Por último, puede seleccionar una condición para que se genere este documento al solicitar la comunicación. Esta selección se utiliza si va a incorporar varias plantillas en el mismo modelo y quiere que se use una u otra en función de una condición. Si siempre quiere que se genere, no seleccione nada. ');
+      }
+    }
+    ];
   }
 
 
