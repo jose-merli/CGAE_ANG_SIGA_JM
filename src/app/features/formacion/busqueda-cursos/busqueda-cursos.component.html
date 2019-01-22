@@ -12,9 +12,9 @@
   <div class="card">
     <!-- Datos generales -->
     <div class="card-body">
-      <p class="title-module">{{ "censo.consultaDatosGenerales.cabecera" | translate}}
-        <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
-        <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+      <p (click)="onHideDatosGenerales()" class="title-module">{{ "censo.consultaDatosGenerales.cabecera" | translate}}
+        <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
       </p>
       <div *ngIf="showDatosGenerales" class="module vista-avanzada">
         <div class="form-row">
@@ -122,10 +122,10 @@
     </div>
     <div class="card-footer">
       <div class="text-right main-button">
-        <button pButton [disabled]="" (click)="crearCurso()" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        <button (click)="changeColsAndData()" pButton type="button " icon="fa fa-eraser " iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
         <button [disabled]="!formBusqueda.valid || !formGroupPrecios.valid" (click)="isBuscar(false)" pButton type="button" icon="fa fa-search"
           iconPos="left" label="{{'general.boton.search' | translate}}"></button>
-          <button (click)="changeColsAndData()" pButton type="button " icon="fa fa-eraser " iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
+        <button pButton [disabled]="!activacionEditar" (click)="crearCurso()" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -165,27 +165,27 @@
           <div class="text-right main-button">
             <!-- Botón cancelar -->
             <button (click)="cancelarCursos()" pButton type="button" icon="fa fa-ban" iconPos="left" label="{{'general.boton.cancel' | translate}}"
-              [disabled]="selectedDatos == '' || activacionEditar"></button>
+              [disabled]="selectedDatos == '' || !activacionEditar"></button>
 
             <!-- Botón finalizar -->
-            <button (click)="finalizarCursos() || activacionEditar" pButton type="button" icon="fa fa-stop" iconPos="left" label="{{'general.boton.finalizar' | translate}}"
-              [disabled]="selectedDatos == ''"></button>
+            <button (click)="finalizarCursos()" pButton type="button" icon="fa fa-stop" iconPos="left" label="{{'general.boton.finalizar' | translate}}"
+              [disabled]="selectedDatos == '' || !activacionEditar"></button>
 
             <!-- Botón desanunciar -->
             <button (click)="desanunciarCursos()" pButton type="button" icon="fa fa-bell-slash" iconPos="left" label="{{'form.busquedaCursos.literal.boton.desanunciar' | translate}}"
-              [disabled]="selectedDatos == '' || activacionEditar"></button>
+              [disabled]="selectedDatos == '' || !activacionEditar"></button>
 
             <!-- Botón anunciar -->
             <button (click)="anunciarCursos()" pButton type="button" icon="fa fa-bell" iconPos="left" label="{{'form.busquedaCursos.literal.boton.anunciar' | translate}}"
-              [disabled]="selectedDatos == '' || activacionEditar"></button>
+              [disabled]="selectedDatos == '' || !activacionEditar"></button>
 
             <!-- Botón desarchivar -->
             <button *ngIf="!modoHistorico" (click)="desarchivarCursos()" pButton type="button" icon="fa fa-caret-square-o-up" iconPos="left"
-              label="{{'form.busquedaCursos.literal.boton.desarchivar' | translate}}" [disabled]="selectedDatos == ''"></button>
+              label="{{'form.busquedaCursos.literal.boton.desarchivar' | translate}}" [disabled]="selectedDatos == '' || !activacionEditar"></button>
 
             <!-- Botón archivar -->
             <button (click)="archivarCursos()" pButton type="button" icon="fa fa-caret-square-o-down" iconPos="left" label="{{'general.boton.archivar' | translate}}"
-              [disabled]="selectedDatos == '' || activacionEditar"></button>
+              [disabled]="selectedDatos == '' || !activacionEditar"></button>
 
             <!-- Botón ocultar histórico -->
             <button *ngIf="!modoHistorico" (click)="isBuscar(false)" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
@@ -194,8 +194,8 @@
             <button *ngIf="modoHistorico" (click)="isBuscar(true)" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
 
             <!-- Botón duplicar -->
-            <button (click)="duplicarCursos()" pButton type="button" icon="fa fa-files-o" iconPos="left" label="{{'general.boton.duplicar' | translate}}"
-              [disabled]="selectedDatos == '' || activacionEditar"></button>
+            <button (click)="duplicateCourse()" pButton type="button" icon="fa fa-files-o" iconPos="left" label="{{'general.boton.duplicar' | translate}}"
+              [disabled]="disabledDuplicate() || activacionEditar"></button>
 
           </div>
         </p-footer>

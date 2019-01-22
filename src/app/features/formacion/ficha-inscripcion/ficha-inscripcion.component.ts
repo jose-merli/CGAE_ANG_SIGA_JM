@@ -10,6 +10,7 @@ import { Router } from "@angular/router";
 import { DatosCursosItem } from "../../../models/DatosCursosItem";
 import { TranslateService } from "../../../commons/translate";
 import { PersonaObject } from "../../../models/PersonaObject";
+import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
 
 @Component({
   selector: "app-ficha-inscripcion",
@@ -43,7 +44,7 @@ export class FichaInscripcionComponent implements OnInit {
 
   rowsPerPage: any = [];
   cols;
-
+  activacionEditar: boolean = false;
   comboEstados: any[];
   comboPrecio: any[];
   comboModoPago: any[];
@@ -87,7 +88,6 @@ export class FichaInscripcionComponent implements OnInit {
       this.controlCertificadoAutomatico();
 
       this.searchCourse(this.inscripcion.idCurso);
-      sessionStorage.removeItem("modoEdicionInscripcion");
 
       // Se accede a la ficha de inscripcion para crearla
       // Para cargar los datos del curso nos enviaran el idCurso
@@ -196,6 +196,41 @@ export class FichaInscripcionComponent implements OnInit {
     }
 
     this.compruebaAdministrador();
+
+    this.checkAcceso();
+  }
+
+  // control de permisos
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "20B";
+    let derechoAcceso;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (derechoAcceso == 3) {
+          //permiso total
+          this.activacionEditar = true;
+        } else if (derechoAcceso == 2) {
+          // solo lectura
+          this.activacionEditar = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+    );
   }
 
   cargaInscripcion() {
@@ -263,7 +298,9 @@ export class FichaInscripcionComponent implements OnInit {
     this.inscripcion.minimaAsistencia = this.curso.minimoAsistencia;
     this.inscripcion.idInstitucion = this.curso.idInstitucion;
     // Por defecto debe aparecer como estado pendiente de aprobacion
-    this.inscripcion.idEstadoInscripcion = "1";
+    if (this.inscripcion.idEstadoInscripcion == null) {
+      this.inscripcion.idEstadoInscripcion = "1";
+    }
     this.inscripcion.fechaSolicitud = new Date();
   }
 
@@ -611,6 +648,9 @@ export class FichaInscripcionComponent implements OnInit {
 
   loadNewTrainer(newformador) {
     this.persona = newformador;
+    this.persona.apellido1 = newformador.primerApellido;
+    this.persona.apellido2 = newformador.segundoApellido;
+
     this.obtenerTiposIdentificacion();
     if (this.persona.nif != null && this.persona.nif != undefined) {
       this.guardarPersona = true;

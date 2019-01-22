@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewChild,
+  HostListener
+} from "@angular/core";
 import { MultiSelect } from "primeng/primeng";
 import {
   FormBuilder,
@@ -14,10 +20,15 @@ import { SigaServices } from "../../../_services/siga.service";
 import { TranslateService } from "../../../commons/translate";
 import { Router } from "@angular/router";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
+import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { DatosInscripcionObject } from "../../../models/DatosInscripcionObject";
 import { FormadorCursoItem } from "../../../models/FormadorCursoItem";
 import { Location } from "@angular/common";
+
+export enum KEY_CODE {
+  ENTER = 13
+}
 
 @Component({
   selector: "app-busqueda-inscripciones",
@@ -94,6 +105,9 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
   calificacion: boolean = false;
   calificacionEmitidaAux: String;
+  activacionEditar: boolean = false;
+
+  isCurso: boolean = false;
 
   constructor(
     private sigaServices: SigaServices,
@@ -128,10 +142,23 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       this.body.idCurso = JSON.parse(
         sessionStorage.getItem("cursoSelected")
       ).idCurso;
-      sessionStorage.removeItem("cursoSelected");
 
-      this.isBuscar();
+      this.isCurso = true;
+
+      if (
+        sessionStorage.getItem("datosTabla") != null &&
+        sessionStorage.getItem("datosTabla") != undefined
+      ) {
+        this.datos = JSON.parse(sessionStorage.getItem("datosTabla"));
+        this.buscar = true;
+        sessionStorage.removeItem("datosTabla");
+      } else {
+        this.isBuscar();
+      }
     }
+
+    this.selectedDatos = [];
+    sessionStorage.removeItem("modoEdicionInscripcion");
 
     if (
       sessionStorage.getItem("datosTabla") != null &&
@@ -141,10 +168,45 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       this.buscar = true;
       sessionStorage.removeItem("datosTabla");
     }
+
+    this.checkAcceso();
   }
 
   ngAfterViewInit() {
     this.mySelect.ngOnInit();
+  }
+
+  // control de permisos
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "20B";
+    let derechoAcceso;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (derechoAcceso == 3) {
+          //permiso total
+          this.activacionEditar = true;
+        } else if (derechoAcceso == 2) {
+          // solo lectura
+          this.activacionEditar = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+    );
   }
 
   /* INICIO IMPLEMENTACIÓN NUEVOS COMBOS */
@@ -217,7 +279,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
   getComboCertificadoEmitido() {
     this.comboCertificadoEmitido = [
-      { label: "", value: 0 },
+      { label: "Todos", value: "" },
       { label: "Sí", value: 1 },
       { label: "No", value: 2 }
     ];
@@ -226,11 +288,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   }
 
   getComboPagada() {
-    this.comboPagada = [
-      { label: "", value: 0 },
-      { label: "Sí", value: 1 },
-      { label: "No", value: 2 }
-    ];
+    this.comboPagada = [{ label: "Sí", value: 1 }, { label: "No", value: 2 }];
 
     this.arregloTildesCombo(this.comboPagada);
   }
@@ -796,12 +854,32 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   }
 
   backTo() {
-    this.location.back();
+    if (
+      sessionStorage.getItem("pantallaFichaCurso") != null &&
+      sessionStorage.getItem("pantallaFichaCurso") != undefined
+    ) {
+      this.router.navigate(["/fichaCursos"]);
+      sessionStorage.removeItem("pantallaFichaCurso");
+    } else {
+      this.location.back();
+    }
+    // this.location.back();
   }
 
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
+  }
+
+  onHideDatosGenerales() {
+    this.showDatosGenerales = !this.showDatosGenerales;
+  }
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.isBuscar();
+    }
   }
 }

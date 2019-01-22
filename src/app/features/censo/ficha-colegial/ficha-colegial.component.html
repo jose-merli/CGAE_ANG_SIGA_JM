@@ -1,10 +1,12 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-<div *ngIf="emptyLoadFichaColegial" class="info-limit d-flex justify-content-center align-items-center mb-1">
+<div *ngIf="emptyLoadFichaColegial || publicarDatosContacto" class="info-limit d-flex justify-content-center align-items-center mb-1">
     <i class="fa fa-info-circle pr-2"></i>
     <div class="d-inline-block">
         <div>
-            <span class="pr-2 text-left">No se han podido cargar los datos porque el usuario desde el que ha inciado sesión no es colegiado</span>
-        </div>
+            <span *ngIf="emptyLoadFichaColegial" class="pr-2 text-left">No se han podido cargar los datos porque el usuario desde el que ha inciado sesión no es colegiado</span>
+            <span *ngIf="publicarDatosContacto" class="pr-2 text-left">{{"menu.fichaColegial.lopd.literal" | translate}}</span>
+
+          </div>
     </div> 
 </div>
 <div class="busqueda-container">
@@ -551,32 +553,6 @@
                 [maxLength]="19"
                 pInputText
               />
-            </div>
-            <div class="form-check col-lg-6 col-md-6">
-              <br />
-              <label class="form-group-label">{{
-                "censo.consultaDatosGenerales.literal.publicidad" | translate
-              }}</label>
-              &nbsp;&nbsp;
-              <p-checkbox
-                (onChange)="activacionGuardarGenerales()"
-                [(disabled)]="!this.permisos || disabledAction"
-                [(ngModel)]="publicidad"
-                binary="true"
-              ></p-checkbox>
-            </div>
-            <div class="form-check col-lg-6 col-md-6">
-              <br />
-              <label class="form-group-label">{{
-                "censo.consultaDatosGenerales.literal.guiaJudicial" | translate
-              }}</label>
-              &nbsp;&nbsp;
-              <p-checkbox
-                (onChange)="activacionGuardarGenerales()"
-                [(ngModel)]="guiaJudicial"
-                [(disabled)]="!this.permisos || disabledAction"
-                binary="true"
-              ></p-checkbox>
             </div>
             <br />
             <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
@@ -2042,17 +2018,15 @@
         [responsive]="true"
         selectionMode="single"
         dataKey="id"
-        #table
+        #tableRegTel
         class="tabla-listado"
         [value]="bodyRegTel"
         [sortOrder]="1"
-        [paginator]="activarPaginacionBancarios()"
+        [paginator]="activarPaginacionRegTel()"
         (onRowSelect)="onRowSelectedRegTel(selectedDatosRegtel)"
-        (onRowUnselect)="
-        onRowDesselectedRegTel()
-        "
+        (onRowUnselect)=" onRowDesselectedRegTel()"
         paginatorPosition="both"
-        [rows]="selectedItem"
+        [rows]="selectedItemRegtel"
         pageLinks="4"
       >
         <p-column
@@ -2083,18 +2057,18 @@
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales"
-              >Mostrando registros del {{ table.first + 1 }} al
-              {{ table.first + table.rows }} de un total de
-              {{ table.totalRecords }}</label
+              >Mostrando registros del {{ tableRegTel.first + 1 }} al
+              {{ tableRegTel.first + tableRegTel.rows }} de un total de
+              {{ tableRegTel.totalRecords }}</label
             >
             <label class="pr-3 numSeleccionados"
-              >Seleccionados: {{ numSelectedBancarios }}</label
+              >Seleccionados: {{ numSelectedRegtel }}</label
             >
             <label>{{ "general.message.mostrar" | translate }}</label>
             <p-dropdown
-              [(ngModel)]="selectedItem"
+              [(ngModel)]="selectedItemRegtel"
               [options]="rowsPerPage"
-              (onChange)="onChangeRowsPerPages($event)"
+              (onChange)="onChangeRowsPerPagesRegtel($event)"
             ></p-dropdown>
             <label class="pl-1">
               {{
@@ -2134,7 +2108,7 @@
       (click)="onClickDescargarRegTel()"
       pButton
       type="button"
-      icon="fa fa-trash-alt"
+      icon="fa fa-download"
       iconPos="left"
       
       label="{{'formacion.fichaInscripcion.datosCertificados.descargarDocumento'  | translate}}"

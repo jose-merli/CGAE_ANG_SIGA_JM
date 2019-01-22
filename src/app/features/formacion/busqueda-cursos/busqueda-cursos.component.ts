@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  HostListener,
   OnInit,
   ViewChild,
   ViewEncapsulation
@@ -23,6 +24,10 @@ import { esCalendar } from "../../../utils/calendar";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
 import { AuthenticationService } from "../../../_services/authentication.service";
 import { SigaServices } from "../../../_services/siga.service";
+
+export enum KEY_CODE {
+  ENTER = 13
+}
 
 @Component({
   selector: "app-busqueda-cursos",
@@ -78,7 +83,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   //Para los mensajes de info
   msgs: Message[] = [];
 
-  activacionEditar: boolean = true;
+  activacionEditar: boolean = false;
   camposDesactivados: boolean = false;
 
   constructor(
@@ -122,20 +127,64 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     //Se inicialice todo desde el principio
     this.initSessionStorage();
     sessionStorage.setItem("isFormacionCalendar", "false");
-    if (sessionStorage.getItem("filtrosBusquedaCursos") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("filtrosBusquedaCursos"));
-      sessionStorage.removeItem("filtrosBusquedaCursos");
+
+    if (sessionStorage.getItem("filtrosBusquedaCursosFichaCursos") != null) {
+      this.body = JSON.parse(
+        sessionStorage.getItem("filtrosBusquedaCursosFichaCursos")
+      );
+      sessionStorage.removeItem("filtrosBusquedaCursosFichaCursos");
+
       this.isBuscar(false);
     }
+
+    // if (sessionStorage.getItem("filtrosBusquedaCursos") != null) {
+    //   this.body = JSON.parse(sessionStorage.getItem("filtrosBusquedaCursos"));
+    //   sessionStorage.removeItem("filtrosBusquedaCursos");
+    //   this.isBuscar(false);
+    // }
     this.getColsResults();
     this.filtrosTrim();
-    this.selectedDatos = "";
+    this.selectedDatos = [];
 
     this.checkAcceso();
   }
 
   ngAfterViewInit() {
     this.mySelect.ngOnInit();
+  }
+
+  //CONTROL DE PERMISOS
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "20A";
+    let derechoAcceso;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (derechoAcceso == 3) {
+          //permiso total
+          this.activacionEditar = true;
+        } else if (derechoAcceso == 2) {
+          // solo lectura
+          this.activacionEditar = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+    );
   }
 
   initSessionStorage() {
@@ -145,7 +194,10 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     sessionStorage.removeItem("formador");
     sessionStorage.removeItem("idCurso");
     sessionStorage.removeItem("isFormacionCalendarByStartInscripcion");
+    sessionStorage.removeItem("isFormacionCalendarByEndInscripcion");
     sessionStorage.removeItem("courseCurrent");
+    sessionStorage.removeItem("curso");
+    sessionStorage.removeItem("isInscripcion");
   }
 
   onHideDatosGenerales() {
@@ -362,7 +414,6 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     if (selectedDatos.length >= 1 && this.selectMultiple == false) {
       sessionStorage.setItem("modoEdicionCurso", "true");
       sessionStorage.setItem("courseCurrent", JSON.stringify(selectedDatos[0]));
-      console.log(selectedDatos);
       sessionStorage.setItem(
         "filtrosBusquedaCursos",
         JSON.stringify(this.body)
@@ -388,7 +439,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     this.cols = [
       {
         field: "visibilidad",
-        header: "form.busquedaCursos.literal.visibilidad"
+        header: "formacion.fichaCursos.datosGenerales.visibilidad"
       },
       {
         field: "codigoCurso",
@@ -444,26 +495,23 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
    * DIFERENTES ACCIONES SOBRE CURSOS
    */
 
-  duplicarCursos() {
-    this.progressSpinner = true;
+  duplicateCourse() {
+    let curso = this.selectedDatos[0];
+    curso.idCurso = undefined;
+    sessionStorage.setItem("duplicarCurso", "true");
+    sessionStorage.setItem("modoEdicionCurso", "false");
+    sessionStorage.setItem("courseCurrent", JSON.stringify(curso));
+    sessionStorage.setItem("filtrosBusquedaCursos", JSON.stringify(this.body));
+    this.router.navigate(["fichaCurso"]);
+  }
 
-    let curso = this.body;
-    curso.idCurso = null;
-
-    this.sigaServices.post("fichaCursos_saveCourse", this.body).subscribe(
-      data => {
-        this.progressSpinner = false;
-      },
-      error => {
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-
-    //Llamar al rest de duplicar curso
-    this.progressSpinner = false;
+  disabledDuplicate() {
+    if (
+      this.selectMultiple &&
+      (this.selectedDatos != null && this.selectedDatos.length == 1)
+    )
+      return false;
+    else return true;
   }
 
   archivarCursos() {
@@ -859,36 +907,6 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   //   else return true;
   // }
 
-  checkAcceso() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "120";
-    let derechoAcceso;
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisosTree = JSON.parse(data.body);
-        let permisosArray = permisosTree.permisoItems;
-        derechoAcceso = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        if (derechoAcceso == 3) {
-          this.activacionEditar = false;
-        } else if (derechoAcceso == 2) {
-          this.activacionEditar = true;
-        } else {
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
-          this.router.navigate(["/errorAcceso"]);
-        }
-      }
-    );
-  }
-
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
@@ -896,5 +914,13 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
       summary: summary,
       detail: msg
     });
+  }
+
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.isBuscar(false);
+    }
   }
 }
