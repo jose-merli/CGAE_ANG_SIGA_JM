@@ -10,6 +10,7 @@ export class DocushareItem {
   summary: String;
   originalFilename: String;
   idPersona:String;
+  parent: String;
   constructor() {}
 }
 // export enum DocuShareTipo {

@@ -357,9 +357,9 @@ export class FichaColegialComponent implements OnInit {
         sessionStorage.getItem("emptyLoadFichaColegial")
       );
       // if (this.emptyLoadFichaColegial) {
-        // this.showFailDetalle(
-        //   "No se han podido cargar los datos porque el usuario desde el que ha inciado sesión no es colegiado"
-        // );
+      // this.showFailDetalle(
+      //   "No se han podido cargar los datos porque el usuario desde el que ha inciado sesión no es colegiado"
+      // );
       // }
       this.desactivarVolver = true;
     }
@@ -414,12 +414,15 @@ export class FichaColegialComponent implements OnInit {
       this.activacionEditar = true;
       this.esNewColegiado = false;
     }
-    if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
+    if (
+      !this.esNewColegiado &&
+      this.generalBody.idPersona != null &&
+      this.generalBody.idPersona != undefined
+    ) {
       this.onInitCurriculares();
       this.onInitDirecciones();
       this.onInitDatosBancarios();
       this.comprobarREGTEL();
-
     }
 
     // this.onInitSociedades();
@@ -790,6 +793,16 @@ export class FichaColegialComponent implements OnInit {
     return fecha;
   }
 
+  arreglarFechaRegtel(fecha) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(3, -17);
+    let splitDate = rawDate.split("-");
+    let arrayDate = splitDate[2] + "/" + splitDate[1] + "/" + splitDate[0];
+    // fecha = new Date((arrayDate += "T00:00:00.001Z"));
+    // fecha = new Date(rawDate);
+    return arrayDate;
+  }
+
   onlySpaces(str) {
     let i = 0;
     var ret;
@@ -866,9 +879,9 @@ export class FichaColegialComponent implements OnInit {
       this.router.navigate(["/busquedaCensoGeneral"]);
     } else if (sessionStorage.getItem("esColegiado") == "false") {
       this.router.navigate(["/busquedaNoColegiados"]);
-    }else if (sessionStorage.getItem("esColegiado") == "true") {
+    } else if (sessionStorage.getItem("esColegiado") == "true") {
       this.router.navigate(["/busquedaColegiados"]);
-    }else{
+    } else {
       this.location.back();
     }
   }
@@ -2938,13 +2951,13 @@ export class FichaColegialComponent implements OnInit {
         }
       },
       error => {
-        console.log(error); 
+        console.log(error);
         this.progressSpinner = false;
       },
       () => {
         // this.historico = true;
         this.selectedDatosBancarios = [];
-        this.selectMultipleBancarios = false;        
+        this.selectMultipleBancarios = false;
         this.searchDatosBancarios();
       }
     );
@@ -2984,10 +2997,10 @@ export class FichaColegialComponent implements OnInit {
       if (!this.selectMultipleBancarios) {
         var enviarDatos = null;
         if (dato && dato.length > 0) {
-          enviarDatos = dato[0];    
+          enviarDatos = dato[0];
           sessionStorage.setItem("idCuenta", dato[0].idCuenta);
           //sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
- 
+
           if (dato[0].fechaBaja != null) {
             sessionStorage.setItem("permisos", "false");
           } else {
@@ -2999,8 +3012,10 @@ export class FichaColegialComponent implements OnInit {
           sessionStorage.setItem("fichaColegial", "true");
           sessionStorage.setItem("datosCuenta", JSON.stringify(dato[0]));
           sessionStorage.setItem("usuarioBody", JSON.stringify(dato[0]));
-          sessionStorage.setItem("historico", JSON.stringify(this.bodyDatosBancarios.historico));
-
+          sessionStorage.setItem(
+            "historico",
+            JSON.stringify(this.bodyDatosBancarios.historico)
+          );
         } else {
           sessionStorage.setItem("editar", "false");
         }
@@ -3239,12 +3254,12 @@ export class FichaColegialComponent implements OnInit {
     );
     this.messageRegtel = this.messageNoContentRegTel;
     this.sigaServices.get("fichaColegialRegTel_permisos").subscribe(
-      data => { 
+      data => {
         let value = data;
-        if(value){
+        if (value) {
           this.esRegtel = true;
           this.onInitRegTel();
-        }else{
+        } else {
           this.esRegtel = false;
         }
       },
@@ -3268,6 +3283,12 @@ export class FichaColegialComponent implements OnInit {
           data => {
             this.bodySearchRegTel = JSON.parse(data["body"]);
             this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+            this.bodyRegTel.forEach(element => {
+              element.fechaModificacion = this.arreglarFechaRegtel(
+                JSON.stringify(new Date(element.fechaModificacion))
+              );
+            });
             if (this.bodyRegTel.length != 0) {
               this.messageRegtel = this.bodyRegTel.length + "";
             } else {
@@ -3275,7 +3296,11 @@ export class FichaColegialComponent implements OnInit {
                 "general.message.no.registros"
               );
             }
+            if(this.bodyRegTel.length > 0){
+              this.atrasRegTel = this.bodyRegTel[0].parent;
+            }
           },
+
           err => {
             this.messageRegtel = this.translateService.instant(
               "general.message.no.registros"
@@ -3293,12 +3318,21 @@ export class FichaColegialComponent implements OnInit {
           data => {
             this.bodySearchRegTel = JSON.parse(data["body"]);
             this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+            this.bodyRegTel.forEach(element => {
+              element.fechaModificacion = this.arreglarFechaRegtel(
+                JSON.stringify(new Date(element.fechaModificacion))
+              );
+            });
             if (this.bodyRegTel.length != 0) {
               this.messageRegtel = this.bodyRegTel.length + "";
             } else {
               this.messageRegtel = this.translateService.instant(
                 "general.message.no.registros"
               );
+            }
+            if(this.bodyRegTel.length > 0){
+              this.atrasRegTel = this.bodyRegTel[0].parent;
             }
           },
           err => {
@@ -3354,7 +3388,8 @@ export class FichaColegialComponent implements OnInit {
   onClickAtrasRegtel() {
     this.progressSpinner = true;
     this.selectedDatosRegtel.idPersona = this.idPersona;
-    this.selectedDatosRegtel.id = this.atrasRegTel;
+    this.selectedDatosRegtel.id = this.selectedDatosRegtel.parent;
+    this.selectedDatosRegtel.fechaModificacion = undefined;
     if (this.esColegiado) {
       this.sigaServices
         .postPaginado(
@@ -3366,11 +3401,16 @@ export class FichaColegialComponent implements OnInit {
           data => {
             this.bodySearchRegTel = JSON.parse(data["body"]);
             this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            this.atrasRegTel = this.bodyRegTel[0].id.substring(
-              0,
-              this.bodyRegTel[0].id.length - this.bodyRegTel[0].title.length
-            );
-            if (this.atrasRegTel.length > 1) {
+
+           
+            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+            this.bodyRegTel.forEach(element => {
+              element.fechaModificacion = this.arreglarFechaRegtel(
+                JSON.stringify(new Date(element.fechaModificacion))
+              );
+            });
+            
+            if (this.atrasRegTel != "") {
               this.buttonVisibleRegtelAtras = true;
             }
             this.buttonVisibleRegtelCarpeta = true;
@@ -3401,12 +3441,15 @@ export class FichaColegialComponent implements OnInit {
         .subscribe(
           data => {
             this.bodySearchRegTel = JSON.parse(data["body"]);
+
             this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            this.atrasRegTel = this.bodyRegTel[0].id.substring(
-              0,
-              this.bodyRegTel[0].id.length - this.bodyRegTel[0].title.length
-            );
-            if (this.atrasRegTel.length > 1) {
+            this.bodyRegTel.forEach(element => {
+              element.fechaModificacion = this.arreglarFechaRegtel(
+                JSON.stringify(new Date(element.fechaModificacion))
+              );
+            });
+             
+            if (this.atrasRegTel != "") {
               this.buttonVisibleRegtelAtras = true;
             }
             this.buttonVisibleRegtelCarpeta = true;
@@ -3422,11 +3465,11 @@ export class FichaColegialComponent implements OnInit {
 
   onClickCarpetaRegTel() {
     this.progressSpinner = true;
-    this.atrasRegTel = this.selectedDatosRegtel.id.substring(
-      13,
-      this.selectedDatosRegtel.id.length - this.selectedDatosRegtel.title.length
-    );
+    if (this.atrasRegTel != this.selectedDatosRegtel.parent) {
+      this.atrasRegTel = this.selectedDatosRegtel.parent;
+    } 
     this.selectedDatosRegtel.idPersona = this.idPersona;
+    this.selectedDatosRegtel.fechaModificacion = undefined;
     if (this.esColegiado) {
       this.sigaServices
         .postPaginado(
@@ -3438,10 +3481,10 @@ export class FichaColegialComponent implements OnInit {
           data => {
             this.bodySearchRegTel = JSON.parse(data["body"]);
             this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            if (this.atrasRegTel.length > 13) {
-              this.buttonVisibleRegtelAtras = true;
-            } else {
+            if (this.atrasRegTel != "") {
               this.buttonVisibleRegtelAtras = false;
+            } else {
+              this.buttonVisibleRegtelAtras = true;
             }
             this.buttonVisibleRegtelCarpeta = true;
             this.buttonVisibleRegtelDescargar = true;
@@ -3453,6 +3496,12 @@ export class FichaColegialComponent implements OnInit {
                 "general.message.no.registros"
               );
             }
+            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+            this.bodyRegTel.forEach(element => {
+              element.fechaModificacion = this.arreglarFechaRegtel(
+                JSON.stringify(new Date(element.fechaModificacion))
+              );
+            });
           },
           err => {
             this.messageRegtel = this.translateService.instant(
@@ -3472,10 +3521,10 @@ export class FichaColegialComponent implements OnInit {
           data => {
             this.bodySearchRegTel = JSON.parse(data["body"]);
             this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            if (this.atrasRegTel.length > 13) {
-              this.buttonVisibleRegtelAtras = true;
-            } else {
+            if (this.atrasRegTel != "") {
               this.buttonVisibleRegtelAtras = false;
+            } else {
+              this.buttonVisibleRegtelAtras = true;
             }
             this.buttonVisibleRegtelCarpeta = true;
             this.buttonVisibleRegtelDescargar = true;
@@ -3487,6 +3536,12 @@ export class FichaColegialComponent implements OnInit {
                 "general.message.no.registros"
               );
             }
+            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+            this.bodyRegTel.forEach(element => {
+              element.fechaModificacion = this.arreglarFechaRegtel(
+                JSON.stringify(new Date(element.fechaModificacion))
+              );
+            });
           },
           err => {
             this.messageRegtel = this.translateService.instant(
