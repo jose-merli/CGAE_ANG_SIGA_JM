@@ -34,7 +34,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   nuevo: boolean = false;
   datosContacto: any[];
   msgs: Message[];
+  fichaMisDatos: boolean = false;
   columnasDirecciones: any = [];
+  isLetrado: boolean = true;
   usuarioBody: any[];
   comboPais: any[];
   comboPoblacion: any[];
@@ -49,6 +51,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   idPersona: String;
   textSelected: String = "{0} etiquetas seleccionadas";
   body: DatosDireccionesItem = new DatosDireccionesItem();
+  checkBody: DatosDireccionesItem = new DatosDireccionesItem();
   bodySearch: DatosDireccionesObject = new DatosDireccionesObject();
   historyDisable: boolean = false;
   bodyCodigoPostal: DatosDireccionesCodigoPostalItem = new DatosDireccionesCodigoPostalItem();
@@ -62,7 +65,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   instituciones: any;
   tooltipFechaMod: any;
   poblacionBuscada: any;
-
+  permisos: boolean = true; //true
   constructor(
     private location: Location,
     private sigaServices: SigaServices,
@@ -75,11 +78,28 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   @ViewChild("provincia")
   checkbox: Checkbox;
   ngOnInit() {
+    if (sessionStorage.getItem("permisos")) {
+      this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
+      this.historyDisable = !this.permisos;
+    }
+
+    if (sessionStorage.getItem("disabledAction") == "true") {
+      this.historyDisable = true;
+    } else {
+      this.historyDisable = false;
+    }
+
+    if (sessionStorage.getItem("isLetrado")) {
+      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    }
     if (sessionStorage.getItem("historicoDir") != null) {
       this.historyDisable = true;
       this.disableCheck = true;
     }
-
+    if (sessionStorage.getItem("fichaColegial")) {
+      this.fichaMisDatos = true;
+      sessionStorage.removeItem("fichaColegial");
+    }
     sessionStorage.setItem("editarDirecciones", "true");
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.textFilter = "Elegir";
@@ -197,6 +217,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
           console.log(err);
         }
       );
+    this.checkBody = JSON.parse(JSON.stringify(this.body));
+    this.checkBody.idPais = "191";
   }
 
   getDatosContactos() {
@@ -520,27 +542,27 @@ para poder filtrar el dato con o sin estos caracteres*/
         if (this.registroEditable) {
           this.comprobarTablaDatosContactos();
           this.comprobarCheckProvincia();
+          this.body.esColegiado = JSON.parse(
+            sessionStorage.getItem("esColegiado")
+          );
+          this.body.idPersona = JSON.parse(
+            sessionStorage.getItem("usuarioBody")
+          );
           this.body.idProvincia = this.provinciaSelecionada;
-
-          if (this.body.idPais == "191") {
-            this.body.poblacionExtranjera = "";
-          }
-          if (this.checkOtraProvincia == true) {
-            this.body.otraProvincia = "1";
-          } else {
-            this.body.otraProvincia = "0";
-          }
           this.sigaServices.post("direcciones_update", this.body).subscribe(
             data => {
               this.progressSpinner = false;
               this.body = JSON.parse(data["body"]);
-              this.backTo();
+              //this.showSuccessAddress();
             },
             error => {
               this.bodySearch = JSON.parse(error["error"]);
               this.showFail(this.bodySearch.error.message.toString());
               console.log(error);
               this.progressSpinner = false;
+            },
+            () => {
+              this.backTo();
             }
           );
         }
@@ -549,6 +571,12 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.comprobarTablaDatosContactos();
           this.comprobarCheckProvincia();
           this.body.idProvincia = this.provinciaSelecionada;
+          this.body.esColegiado = JSON.parse(
+            sessionStorage.getItem("esColegiado")
+          );
+          this.body.idPersona = JSON.parse(
+            sessionStorage.getItem("usuarioBody")
+          );
           this.body.motivo = "registro creado";
           this.sigaServices.post("direcciones_insert", this.body).subscribe(
             data => {
@@ -565,21 +593,21 @@ para poder filtrar el dato con o sin estos caracteres*/
             () => {
               // auditoria
               this.body.motivo = undefined;
+              this.progressSpinner = false;
             }
           );
         }
-      } else {
-        this.showFail("Debe de haber un tipo de Contacto seleccionado.");
       }
     }
   }
-
   duplicarRegistro() {
     this.body.idDireccion = null;
     this.nuevo = true;
     this.progressSpinner = true;
     this.comprobarTablaDatosContactos();
     this.comprobarCheckProvincia();
+    this.body.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
+    this.body.idPersona = JSON.parse(sessionStorage.getItem("usuarioBody"));
     this.sigaServices.post("direcciones_insert", this.body).subscribe(
       data => {
         this.body.idDireccion = JSON.parse(data["body"]).id;
@@ -650,22 +678,112 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
 
-  comprobarAuditoria() {
+  guardarLetrado() {
+    this.progressSpinner = true;
     // modo edicion
-    if (this.registroEditable) {
-      // mostrar la auditoria depende de un parámetro que varía según la institución
-      this.body.motivo = undefined;
+    this.comprobarTablaDatosContactos();
+    this.comprobarCheckProvincia();
+    this.body.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
+    this.body.idPersona = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    this.body.idProvincia = this.provinciaSelecionada;
+    this.sigaServices
+      .post("fichaDatosDirecciones_solicitudCreate", this.body)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.body = JSON.parse(data["body"]);
+          this.backTo();
+          this.displayAuditoria = false;
+        },
+        error => {
+          this.bodySearch = JSON.parse(error["error"]);
+          this.showGenericFail();
+          console.log(error);
+          this.progressSpinner = false;
+          this.displayAuditoria = false;
+        }
+      );
+  }
 
-      if (this.ocultarMotivo) {
-        this.guardar();
+  igualInicio() {
+    if (JSON.stringify(this.body) == JSON.stringify(this.checkBody)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  tipoDireccionDisable() {
+    if (this.historyDisable) {
+      return true;
+    } else {
+      if (this.isLetrado) {
+        return true;
       } else {
-        this.displayAuditoria = true;
-        this.showGuardarAuditoria = false;
+        return false;
       }
     }
-    // modo creacion
-    else {
-      this.guardar();
+  }
+
+  desactivaDuplicar() {
+    if (this.historyDisable) {
+      return true;
+    } else {
+      if (this.codigoPostalValido && !this.isLetrado) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
+  desactivaGuardar() {
+    this.validarCodigoPostal();
+    this.comprobarTablaDatosContactos();
+    if (this.historyDisable) {
+      return true;
+    } else {
+      if (
+        this.codigoPostalValido &&
+        (this.body.idTipoDireccion != undefined || this.isLetrado) &&
+        !this.igualInicio()
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
+  showGenericFail() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "general.message.error.realiza.accion"
+      )
+    });
+  }
+  comprobarAuditoria() {
+    // modo edicion
+    if (this.isLetrado) {
+      this.displayAuditoria = true;
+    } else {
+      if (this.registroEditable) {
+        // mostrar la auditoria depende de un parámetro que varía según la institución
+        this.body.motivo = undefined;
+        if (this.ocultarMotivo) {
+          this.guardar();
+        } else {
+          this.displayAuditoria = true;
+          this.showGuardarAuditoria = false;
+        }
+      }
+      // modo creacion
+      else {
+        this.guardar();
+      }
     }
   }
 
@@ -716,13 +834,13 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   restablecer() {
-    if (sessionStorage.getItem("direccion") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("direccion"));
-      this.body.idPersona = this.usuarioBody[0].idPersona;
-      this.provinciaSelecionada = this.body.idProvincia;
-      this.generarTabla();
-    }
+    // this.checkBody = JSON.parse()
+    this.body.idPersona = this.usuarioBody[0].idPersona;
+    this.provinciaSelecionada = this.body.idProvincia;
+    this.body = JSON.parse(JSON.stringify(this.checkBody));
+    this.generarTabla();
   }
+
   // Mensajes
   showFail(mensaje: string) {
     this.msgs = [];
@@ -734,12 +852,22 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.msgs.push({ severity: "success", summary: "", detail: mensaje });
   }
 
+  showSuccessAddress() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant("general.message.accion.realizada")
+    });
+  }
+
   showInfo(mensaje: string) {
     this.msgs = [];
     this.msgs.push({ severity: "info", summary: "", detail: mensaje });
   }
 
   backTo() {
+    sessionStorage.removeItem("direccion");
     this.location.back();
   }
 

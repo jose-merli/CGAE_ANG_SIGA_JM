@@ -15,19 +15,21 @@ import { ComisionesCargosComponent } from "./features/censo/comisiones-cargos/co
 import { SolicitudesGenericasComponent } from "./features/censo/solicitudes-genericas/solicitudes-genericas.component";
 import { SolicitudesEspecificasComponent } from "./features/censo/solicitudes-especificas/solicitudes-especificas.component";
 import { SolicitudesIncorporacionComponent } from "./features/censo/solicitudes-incorporacion/solicitudes-incorporacion.component";
-import { NuevaIncorporacionComponent } from "./features/censo/nueva-incorporacion/nueva-incorporacion.component";
+import { AlterMutuaComponent } from "./features/censo/solicitudes-incorporacion/alter-mutua/alter-mutua.component";
+import { AlterMutuaRetaComponent } from "./features/censo/solicitudes-incorporacion/alter-mutua/alterMutuaReta/alter-mutua-reta.component";
+import { AlterMutuaOfertasComponent } from "./features/censo/solicitudes-incorporacion/alter-mutua/alterMutuaOfertas/alter-mutua-ofertas.component";
+import { NuevaIncorporacionComponent } from "./features/censo/solicitudes-incorporacion/nueva-incorporacion/nueva-incorporacion.component";
 import { DocumentacionSolicitudesComponent } from "./features/censo/documentacion-solicitudes/documentacion-solicitudes.component";
 import { MantenimientoGruposFijosComponent } from "./features/censo/mantenimiento-grupos-fijos/mantenimiento-grupos-fijos.component";
 import { MantenimientoMandatosComponent } from "./features/censo/mantenimiento-mandatos/mantenimiento-mandatos.component";
 import { BusquedaSancionesComponent } from "./features/censo/busqueda-sanciones/busqueda-sanciones.component";
 import { BusquedaLetradosComponent } from "./features/censo/busqueda-letrados/busqueda-letrados.component";
 import { MantenimientoDuplicadosComponent } from "./features/censo/mantenimiento-duplicados/mantenimiento-duplicados.component";
-import { ModificacionDatosComponent } from "./features/censo/modificacion-datos/modificacion-datos.component";
 import { MediadoresComponent } from "./features/censo/mediadores/mediadores.component";
 import { CargasPeriodicasComponent } from "./features/censo/cargas-periodicas/cargas-periodicas.component";
 import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/configurar-perfil.component";
 import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
-import { GestionSubtiposCVComponent } from "./features/censo/gestion-subtiposCV/gestion-subtiposCV.component";
+import { TipoCurricularComponent } from "./features/censo/gestion-subtiposCV/tipo-curricular.component";
 import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
 import { DetalleIntegranteComponent } from "./features/censo/datosPersonaJuridica/datos-integrantes/detalleIntegrante/detalleIntegrante.component";
 import { AccesoFichaPersonaComponent } from "./features/censo/datosPersonaJuridica/accesoFichaPersona/accesoFichaPersona.component";
@@ -35,8 +37,8 @@ import { DatosBancariosComponent } from "./features/censo/datosPersonaJuridica/d
 import { ConsultarDatosBancariosComponent } from "./features/censo/datosPersonaJuridica/datos-bancarios/consultar-datos-bancarios/consultar-datos-bancarios.component";
 import { DatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/datos-direcciones.component";
 import { ConsultarDatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/consultar-datos-direcciones/consultar-datos-direcciones.component";
-import { DatosCVComponent } from "./features/censo/datosCv/datosCv.component";
-import { CargaEtiquetasComponent } from "./features/censo/cargaEtiquetas/cargaEtiquetas.component";
+import { MutualidadAbogaciaPlanUniversal } from "./features/censo/solicitudes-incorporacion/mutualidadDeLaAbogaciaPlanUniversal/mutualidad-abogacia-plan-universal.component";
+import { BusquedaCensoGeneralComponent } from './features/censo/busqueda-censo-general/busqueda-censo-general.component';
 
 //Certificados
 import { ComunicacionInterprofesionalComponent } from "./features/certificados/comunicacion-interprofesional/comunicacion-interprofesional.component";
@@ -181,10 +183,35 @@ import { GestionEntidad } from "./features/administracion/gestion-entidad/gestio
 import { BusquedaPersonasJuridicas } from "./features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component";
 import { DatosGenerales } from "./features/censo/datosPersonaJuridica/datos-generales/datos-generales.component";
 import { DatosPersonaJuridicaComponent } from "./features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
+import { MutualidadAbogaciaSeguroAccidentes } from "./features/censo/solicitudes-incorporacion/mutualidadAbogaciaSeguroAccidentes/mutualidad-abogacia-seguro-accidentes.component";
+
+// CENSO II
+import { EdicionCurricularesComponent } from "./features/censo/ficha-colegial/edicionDatosCurriculares/edicionCurriculares.component";
+
 //COOKIES
 import { PoliticaCookiesComponent } from "./features/politica-cookies/politica-cookies.component";
 //ERROR
 import { ErrorAccesoComponent } from "./commons/error/error-acceso/error-acceso.component";
+import { CargaEtiquetasComponent } from "./features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component";
+import { DatosCvComponent } from "./features/censo/cargas-masivas/datos-cv/datos-cv.component";
+import { BusquedaCursosComponent } from "./features/formacion/busqueda-cursos/busqueda-cursos.component";
+import { FichaCalendarioComponent } from "./features/agenda/ficha-calendario/ficha-calendario.component";
+import { CargasMasivasComponent } from "./features/censo/cargas-masivas/cargas-masivas.component";
+import { SubtipoCurricularComponent } from "./features/censo/gestion-subtiposCV/subtipo-curricular/subtipo-curricular.component";
+import { AgendaComponent } from "./features/agenda/agenda.component";
+import { DatosNotificacionesComponent } from "./features/agenda/datos-notificaciones/datos-notificaciones.component";
+import { FichaEventosComponent } from "./features/agenda/ficha-eventos/ficha-eventos.component";
+import { FichaCursoComponent } from "./features/formacion/ficha-curso/ficha-curso.component";
+import { DetalleSancionComponent } from "./features/censo/busqueda-sanciones/detalle-sancion/detalle-sancion.component";
+import { FichaInscripcionComponent } from "./features/formacion/ficha-inscripcion/ficha-inscripcion.component";
+import { BusquedaInscripcionesComponent } from "./features/formacion/busqueda-inscripciones/busqueda-inscripciones.component";
+import { SolicitudesModificacionComponent } from "./features/censo/solicitudes-modificacion/solicitudes-modificacion.component";
+import { NuevaSolicitudesModificacionComponent } from "./features/censo/solicitudes-modificacion/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
+// import { ComunicacionesComponent } from "./features/censo/comunicacionesCenso/comunicaciones.component";
+import { ExpedientesComponent } from "./features/censo/expedientesCenso/expedientes.component";
+import { RegtelComponent } from "./features/censo/regtel/regtel.component";
+import { TurnoOficioComponent } from "./features/censo/turnoOficioCenso/turnoOficio.component";
+import { AuditoriaComponent } from "./features/censo/auditoria/auditoria.component";
 
 //INFORMES Y COMUNICACIONES
 import { PlantillasEnvioComponent } from './features/informes-comunicaciones/plantillas-envio/plantillas-envio.component';
@@ -233,11 +260,25 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: "mutualidadSeguroAccidentes",
+    component: MutualidadAbogaciaSeguroAccidentes,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "edicionCurriculares",
+    component: EdicionCurricularesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: "editarUsuario",
     component: EditarUsuarioComponent,
     canActivate: [AuthGuard]
   },
-
+  {
+    path: "MutualidadAbogaciaPlanUniversal",
+    component: MutualidadAbogaciaPlanUniversal,
+    canActivate: [AuthGuard]
+  },
   {
     path: "searchNoColegiados",
     component: BusquedaPersonasJuridicas,
@@ -247,8 +288,8 @@ const appRoutes: Routes = [
 
   {
     path: "busquedaNoColegiados",
-    //component: BusquedaNoColegiadosComponent,
-    component: SearchNoColegiadosComponent,
+    component: BusquedaNoColegiadosComponent,
+    // component: SearchNoColegiadosComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -262,9 +303,14 @@ const appRoutes: Routes = [
     component: ComisionesCargosComponent,
     canActivate: [AuthGuard]
   },
+  // {
+  //   path: "solicitudesGenericas",
+  //   component: SolicitudesGenericasComponent,
+  //   canActivate: [AuthGuard]
+  // },
   {
-    path: "solicitudesGenericas",
-    component: SolicitudesGenericasComponent,
+    path: "solicitudesModificacion",
+    component: SolicitudesModificacionComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -277,7 +323,21 @@ const appRoutes: Routes = [
     component: SolicitudesIncorporacionComponent,
     canActivate: [AuthGuard]
   },
-
+  {
+    path: "alterMutua",
+    component: AlterMutuaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "alterMutuaReta",
+    component: AlterMutuaRetaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "alterMutuaOfertas",
+    component: AlterMutuaOfertasComponent,
+    canActivate: [AuthGuard]
+  },
   {
     path: "nuevaIncorporacion",
     component: NuevaIncorporacionComponent,
@@ -305,6 +365,11 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: "detalleSancion",
+    component: DetalleSancionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: "detalleIntegrante",
     component: DetalleIntegranteComponent,
     canActivate: [AuthGuard]
@@ -321,8 +386,8 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: "modificacionDatos",
-    component: ModificacionDatosComponent,
+    path: "nuevaSolicitudesModificacion",
+    component: NuevaSolicitudesModificacionComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -341,13 +406,19 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: "censoDocumentacion",
-    component: CensoDocumentacionComponent,
+    path: "busquedaCensoGeneral",
+    component: BusquedaCensoGeneralComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    //CensoDocumentacionComponent
+    path: "cargasMasivas",
+    component: CargasMasivasComponent,
     canActivate: [AuthGuard]
   },
   {
     path: "gestionSubtiposCV",
-    component: GestionSubtiposCVComponent,
+    component: TipoCurricularComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -377,12 +448,12 @@ const appRoutes: Routes = [
   },
   {
     path: "datosCv",
-    component: DatosCVComponent,
+    component: DatosCvComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: "cargaEtiquetas",
-    component: CargaEtiquetasComponent,
+    path: "informacionGestionSubtipoCV",
+    component: SubtipoCurricularComponent,
     canActivate: [AuthGuard]
   },
 
@@ -410,6 +481,11 @@ const appRoutes: Routes = [
   {
     path: "mantenimientoCertificados",
     component: MantenimientoCertificadosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "cargaEtiquetas",
+    component: CargaEtiquetasComponent,
     canActivate: [AuthGuard]
   },
 
@@ -892,6 +968,31 @@ const appRoutes: Routes = [
     component: NuevaConsultaExpertaComponent,
     canActivate: [AuthGuard]
   },
+  {
+    path: "comunicacionesCenso",
+    component: ComunicacionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "expedientesCenso",
+    component: ExpedientesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "regTel",
+    component: RegtelComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "turnoOficioCenso",
+    component: TurnoOficioComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "auditoria",
+    component: AuditoriaComponent,
+    canActivate: [AuthGuard]
+  },
 
   //Comunicaciones
   {
@@ -980,6 +1081,29 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
 
+  //Agenda
+
+  {
+    path: "agenda",
+    component: AgendaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "editarCalendario",
+    component: FichaCalendarioComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "editarNotificacion",
+    component: DatosNotificacionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fichaEventos",
+    component: FichaEventosComponent,
+    canActivate: [AuthGuard]
+  },
+
   // Administracion
   {
     path: "catalogosMaestros",
@@ -1063,7 +1187,28 @@ const appRoutes: Routes = [
     path: "errorAcceso",
     component: ErrorAccesoComponent
   },
-  { path: " ", redirectTo: "home" }
+  {
+    path: "buscarCursos",
+    component: BusquedaCursosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fichaCurso",
+    component: FichaCursoComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "buscarInscripciones",
+    component: BusquedaInscripcionesComponent,
+    canActivate: [AuthGuard]
+  },
 
+  {
+    path: "fichaInscripcion",
+    component: FichaInscripcionComponent,
+    canActivate: [AuthGuard]
+  },
+
+  { path: " ", redirectTo: "home" }
 ];
 export const routing = RouterModule.forRoot(appRoutes);

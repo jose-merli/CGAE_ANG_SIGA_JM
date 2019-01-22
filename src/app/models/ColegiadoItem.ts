@@ -53,5 +53,8 @@ export class ColegiadoItem {
   idTratamiento: String;
   descripcion: String;
   observaciones: String;
+
+  subTipoCV1: string;
+  subTipoCV2: string;
   constructor() {}
 }

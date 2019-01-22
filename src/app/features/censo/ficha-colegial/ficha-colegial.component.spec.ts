@@ -1,25 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { CargasComponent } from './cargas.component';
+import { FichaColegialComponent } from "./ficha-colegial.component";
 
-describe('DetalleSociedadComponent', () => {
-  let component: CargasComponent;
-  let fixture: ComponentFixture<CargasComponent>;
+describe("ConsultarDatosBancariosComponent", () => {
+  let component: FichaColegialComponent;
+  let fixture: ComponentFixture<FichaColegialComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [CargasComponent]
-    })
-      .compileComponents();
+      declarations: [FichaColegialComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CargasComponent);
+    fixture = TestBed.createComponent(FichaColegialComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

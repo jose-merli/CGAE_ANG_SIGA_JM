@@ -154,11 +154,12 @@
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
         [paginator]="activarPaginacion()" #table class="tabla-listado" [value]="datosNew" [paginator]="true" paginatorPosition="both"
         datakey="descripcion" [rows]="selectedItem" [editable]="!selectMultiple" (onEdit)="editarCompleto($event)" (onEditInit)="editar=true">
+
         <p-column [style]="{'width': '20%'}" field="codigoExt" [header]="'general.codeext' | translate" [filter]="true" filterMatchMode="contains">
           <ng-template let-col let-car="rowData" pTemplate="body">
 
             <span>{{car[col.field]}}</span>
-            <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='cdgoExt' type="text" class="form-control" (ngModelChange)="onChangeFormCdgoExt()"
+            <input *ngIf="car[col.field] == ''" [value]="car[col.field]" [(ngModel)]='cdgoExt' type="text" class="form-control" (ngModelChange)="onChangeFormCdgoExt()"
               [attr.maxlength]="10" on-focusout="cdgoEvent($event)" (onBlur)="cdgoEvent($event)" #inputCdgoExt pInputText>
           </ng-template>
         </p-column>
@@ -167,9 +168,9 @@
           <ng-template let-col let-car="rowData" pTemplate="body">
 
             <span>{{car[col.field]}}</span>
-            <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='descripcion' type="text" class="form-control"
-              (ngModelChange)="onChangeForm()" [attr.maxlength]="2000" on-focusout="descripcionEvent($event)" (onBlur)="descripcionEvent($event)"
-              #inputDesc pInputText>
+            <input *ngIf="car[col.field] == ''" [value]="car[col.field]" [(ngModel)]='descripcion' type="text" class="form-control" (ngModelChange)="onChangeForm()"
+              [attr.maxlength]="2000" on-focusout="descripcionEvent($event)" (onBlur)="descripcionEvent($event)" #inputDesc
+              pInputText>
           </ng-template>
         </p-column>
 

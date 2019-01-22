@@ -10,10 +10,18 @@
         <i class="fa fa-info-circle pr-2"></i>
         <div class="d-inline-block">
             <div>
-                <span class="pr-2 text-left">Busque la
+				<div *ngIf="!isFormador">
+					<span class="pr-2 text-left">Busque la
                     <span *ngIf="persona=='f'">persona</span>
                     <span *ngIf="persona=='j'">sociedad</span> que quiere añadir. En caso de no existir en el sistema, podrá editar los datos introducidos
                     en la siguiente pantalla de creación de no colegiado.</span>
+				</div>
+				<div *ngIf="isFormador">
+					<span class="pr-2 text-left">Busque la persona que quiere añadir. En caso de no existir en el
+												 sistema, podrá editar los datos introducidos en la pantalla anterior
+												 de creación.     
+					</span>
+				</div>
             </div>
         </div>
     </div>
@@ -22,7 +30,8 @@
             <div class="form-row">
                 <div class="col-4">
                     <p-radioButton name="person" value="f" label="Personas Fisicas" [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
-                    <p-radioButton name="person" value="j" label="Personas Juridicas" [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
+					<p-radioButton [disabled]="isFormador" name="person" value="j" label="Personas Juridicas" [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
+
                 </div>
             </div>
             <p class="title-module">{{"administracion.catalogos.titulo.datos.generales" | translate}}
@@ -107,7 +116,7 @@
 
             </div>-->
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-                [(selection)]="selectedDatos" (onRowSelect)="irFichaColegial(selectedDatos)" dataKey="nif" [responsive]="true"
+                [(selection)]="selectedDatos" (onRowSelect)="irFichaColegial(selectedDatos)" [responsive]="true"
                 selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both"
                 [rows]="selectedItem" pageLinks="4">
                 <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"

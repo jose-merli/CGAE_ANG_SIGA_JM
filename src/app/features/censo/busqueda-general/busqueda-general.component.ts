@@ -11,18 +11,22 @@ import {
   FormControl
 } from "@angular/forms";
 import { esCalendar } from "../../../utils/calendar";
-import { SigaServices } from "./../../../_services/siga.service";
+import { SigaServices } from "../../../_services/siga.service";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
-import { ComboItem } from "./../../../../app/models/ComboItem";
+import { ComboItem } from "../../../models/ComboItem";
 import { Location } from "@angular/common";
-import { BusquedaFisicaItem } from "./../../../../app/models/BusquedaFisicaItem";
-import { BusquedaJuridicaItem } from "./../../../../app/models/BusquedaJuridicaItem";
-import { BusquedaJuridicaObject } from "./../../../../app/models/BusquedaJuridicaObject";
-import { BusquedaFisicaObject } from "./../../../../app/models/BusquedaFisicaObject";
+import { BusquedaFisicaItem } from "../../../models/BusquedaFisicaItem";
+import { BusquedaJuridicaItem } from "../../../models/BusquedaJuridicaItem";
+import { BusquedaJuridicaObject } from "../../../models/BusquedaJuridicaObject";
+import { BusquedaFisicaObject } from "../../../models/BusquedaFisicaObject";
 import { DatosNotarioItem } from "../../../models/DatosNotarioItem";
 import { DatosIntegrantesItem } from "../../../models/DatosIntegrantesItem";
+import { FormadorCursoItem } from "../../../models/FormadorCursoItem";
+import { SolicitudIncorporacionItem } from "../../../models/SolicitudIncorporacionItem";
+import { StringObject } from "../../../models/StringObject";
+
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -61,10 +65,16 @@ export class BusquedaGeneralComponent {
   selectAll: boolean = false;
   msgs: any[];
   selectedItem: number = 10;
+  institucion: ComboItem = new ComboItem();
+  nifCif: StringObject = new StringObject();
+  continue: boolean = false;
+
+  resultado: string = "";
+
   @ViewChild("table")
   table;
   selectedDatos;
-  tipoCIF: String;
+  tipoCIF: string;
   newIntegrante: boolean = false;
   masFiltros: boolean = false;
   labelFiltros: string;
@@ -88,6 +98,9 @@ export class BusquedaGeneralComponent {
       activa: false
     }
   ];
+
+  isFormador: boolean = false;
+
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
   selectedTipo: any;
 
@@ -145,14 +158,33 @@ export class BusquedaGeneralComponent {
     );
 
     this.persona = "f";
+
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucion = n;
+    });
+
     if (
       sessionStorage.getItem("newIntegrante") != null ||
       sessionStorage.getItem("newIntegrante") != undefined
     ) {
       this.newIntegrante = JSON.parse(sessionStorage.getItem("newIntegrante"));
-      sessionStorage.removeItem("newIntegrante");
     }
 
+    if (
+      sessionStorage.getItem("abrirFormador") != null ||
+      sessionStorage.getItem("abrirFormador") != undefined
+    ) {
+      this.isFormador = true;
+      sessionStorage.setItem("toBackNewFormador", "true");
+    }
+
+    if (
+      sessionStorage.getItem("abrirSolicitudIncorporacion") != null ||
+      sessionStorage.getItem("abrirSolicitudIncorporacion") != undefined
+    ) {
+      this.isFormador = true;
+      sessionStorage.removeItem("abrirSolicitudIncorporacion");
+    }
 
     this.colsFisicas = [
       { field: "nif", header: "NIF/CIF" },
@@ -163,6 +195,7 @@ export class BusquedaGeneralComponent {
       { field: "situacion", header: "Estado colegial" },
       { field: "residente", header: "Residencia" }
     ];
+
     this.colsJuridicas = [
       { field: "tipo", header: "Tipo" },
       { field: "nif", header: "NIF/CIF" },
@@ -193,6 +226,19 @@ export class BusquedaGeneralComponent {
 
 
 
+    this.sigaServices.get("busquedaPer_colegio").subscribe(
+      n => {
+        this.colegios_rol = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        // this.sigaServices.get("institucionActual").subscribe(n => {
+        //   this.colegios_seleccionados.push(n);
+        // });
+      }
+    );
 
     this.checkStatusInit();
 
@@ -220,6 +266,7 @@ export class BusquedaGeneralComponent {
       this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
+
   checkTypeCIF(value: String): boolean {
     if (this.isValidDNI(value)) {
       this.tipoCIF = "10";
@@ -238,11 +285,13 @@ export class BusquedaGeneralComponent {
       return false;
     }
   }
+
   isValidPassport(dni: String): boolean {
     return (
       dni && typeof dni === "string" && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni)
     );
   }
+
   isValidNIE(nie: String): boolean {
     return (
       nie &&
@@ -250,6 +299,7 @@ export class BusquedaGeneralComponent {
       /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie)
     );
   }
+
   isValidCIF(cif: String): boolean {
     return (
       cif &&
@@ -257,6 +307,7 @@ export class BusquedaGeneralComponent {
       /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif)
     );
   }
+
   changeColsAndData() {
     if (this.persona == "f") {
       this.cols = this.colsFisicas;
@@ -280,6 +331,7 @@ export class BusquedaGeneralComponent {
       this.bodyJuridica.abreviatura = "";
     }
   }
+
   checkFilterFisic() {
     if (
       (this.bodyFisica.nombre == null ||
@@ -537,7 +589,7 @@ export class BusquedaGeneralComponent {
 
   irFichaColegial(id) {
     // ir a ficha de notario
-    if (!this.newIntegrante && sessionStorage.getItem("abrirRemitente") != 'true') {
+    if (sessionStorage.getItem("abrirNotario") == "true" && sessionStorage.getItem("abrirRemitente") != 'true') {
       if (!this.selectMultiple && !this.selectAll) {
         if (
           sessionStorage.getItem("notario") != null ||
@@ -555,7 +607,10 @@ export class BusquedaGeneralComponent {
       }
     }
     // ir a ficha de integrante
-    else if (this.newIntegrante && sessionStorage.getItem("abrirRemitente") != 'true') {
+    else if (
+      (sessionStorage.getItem("newIntegrante") != null ||
+        sessionStorage.getItem("newIntegrante") != undefined) && sessionStorage.getItem("abrirRemitente") != 'true'
+    ) {
       sessionStorage.removeItem("notario");
       sessionStorage.removeItem("abrirRemitente");
       this.checkTypeCIF(id[0].nif);
@@ -571,6 +626,97 @@ export class BusquedaGeneralComponent {
       sessionStorage.removeItem("notario");
       sessionStorage.removeItem("integrante");
       this.location.back();
+      // ir a ficha de solicitud de Incorporación
+    } else if (sessionStorage.getItem("solicitudIncorporacion") == "true" && sessionStorage.getItem("abrirRemitente") == 'true') {
+      let enviar = new SolicitudIncorporacionItem();
+
+      this.nifCif.valor = id[0].nif;
+      this.sigaServices
+        .post("solicitudModificacion_verifyPerson", this.nifCif)
+        .subscribe(
+          data => {
+            this.resultado = JSON.parse(data["body"]).valor;
+
+            if (this.resultado == "existe") {
+              this.continue = false;
+            } else {
+              this.continue = true;
+            }
+
+            this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+          },
+          () => {
+            if (this.continue == true) {
+              enviar.numeroIdentificacion = id[0].nif;
+              enviar.apellido1 = id[0].primerApellido;
+              enviar.nombre = id[0].nombre;
+              enviar.numColegiado = id[0].numeroColegiado;
+              enviar.idInstitucion = id[0].numeroInstitucion;
+              enviar.apellido2 = id[0].segundoApellido;
+
+              sessionStorage.setItem(
+                "nuevaIncorporacion",
+                JSON.stringify(enviar)
+              );
+              this.router.navigate(["/nuevaIncorporacion"]);
+            } else {
+              this.showFail(
+                "No se puede crear una solicitud de modificación a partir de una persona de la misma institución"
+              );
+            }
+          }
+        );
+
+      // if (id[0].numeroInstitucion != this.institucion.value) {
+      //   // enviar = id[0];
+      //   enviar.numeroIdentificacion = id[0].nif;
+      //   enviar.apellido1 = id[0].primerApellido;
+      //   enviar.nombre = id[0].nombre;
+      //   enviar.numColegiado = id[0].numeroColegiado;
+      //   enviar.idInstitucion = id[0].numeroInstitucion;
+      //   enviar.apellido2 = id[0].segundoApellido;
+
+      //   sessionStorage.setItem("nuevaIncorporacion", JSON.stringify(enviar));
+      //   this.router.navigate(["/nuevaIncorporacion"]);
+      // } else {
+      //   this.showFail(
+      //     "No se puede crear una solicitud de modificación a partir de una persona de la misma institución"
+      //   );
+      // }
+    }
+    // ir a ficha de formador
+    else if (this.isFormador) {
+      this.checkTypeCIF(id[0].nif);
+      id[0].tipoIdentificacion = this.tipoCIF;
+      id[0].completo = true;
+      sessionStorage.removeItem("abrirFormador");
+      sessionStorage.removeItem("abrirSolicitudIncorporacion");
+
+      sessionStorage.setItem("formador", JSON.stringify(id[0]));
+      if (
+        sessionStorage.getItem("backInscripcion") != null ||
+        sessionStorage.getItem("backInscripcion") != undefined
+      ) {
+        this.router.navigate(["/buscarInscripciones"]);
+        sessionStorage.removeItem("backInscripcion");
+      } else if (
+        sessionStorage.getItem("backFichaInscripcion") != null ||
+        sessionStorage.getItem("backFichaInscripcion") != undefined
+      ) {
+        this.router.navigate(["/fichaInscripcion"]);
+        sessionStorage.removeItem("backFichaInscripcion");
+      } else {
+        this.router.navigate(["/fichaCurso"]);
+      }
+    } else if (
+      sessionStorage.getItem("nuevaSancion") != null &&
+      sessionStorage.getItem("nuevaSancion") != undefined
+    ) {
+      sessionStorage.setItem("nSancion", JSON.stringify(id));
+      this.router.navigate(["detalleSancion"]);
     }
   }
 
@@ -607,7 +753,7 @@ export class BusquedaGeneralComponent {
       message: mess,
       icon: icon,
       accept: () => {
-        if (!this.newIntegrante) {
+        if (sessionStorage.getItem("abrirNotario") == "true") {
           let notarioNIF = new DatosNotarioItem();
           if (this.bodyFisica.nif != null || this.bodyFisica.nif != undefined) {
             notarioNIF.nif = this.bodyFisica.nif;
@@ -625,7 +771,28 @@ export class BusquedaGeneralComponent {
 
           sessionStorage.setItem("notario", JSON.stringify(notariosNEW));
           this.location.back();
-        } else {
+        } else if (sessionStorage.getItem("solicitudIncorporacion") == "true") {
+          let enviar = new SolicitudIncorporacionItem();
+          if (this.bodyFisica.nif != undefined || this.bodyFisica.nif != "") {
+            enviar.numeroIdentificacion = this.bodyFisica.nif;
+            enviar.nombre = this.bodyFisica.nombre;
+            enviar.apellido1 = this.bodyFisica.primerApellido;
+            enviar.apellido2 = this.bodyFisica.segundoApellido;
+            enviar.numColegiado = this.bodyFisica.numeroColegiado;
+            sessionStorage.setItem(
+              "nuevaIncorporacion",
+              JSON.stringify(enviar)
+            );
+            this.router.navigate(["/nuevaIncorporacion"]);
+          } else {
+            this.showFail(
+              "No se puede crear una solicitud de modificación a partir de una persona jurídica"
+            );
+          }
+        } else if (
+          sessionStorage.getItem("newIntegrante") != null ||
+          sessionStorage.getItem("newIntegrante") != undefined
+        ) {
           let integranteNew = new DatosIntegrantesItem();
           if (this.bodyFisica.nif != null || this.bodyFisica.nif != undefined) {
             integranteNew.nifCif = this.bodyFisica.nif;
@@ -658,6 +825,21 @@ export class BusquedaGeneralComponent {
           sessionStorage.removeItem("nIntegrante");
           sessionStorage.setItem("nIntegrante", JSON.stringify(integrantesNEW));
           this.router.navigate(["detalleIntegrante"]);
+        } else if (
+          sessionStorage.getItem("abrirFormador") != null ||
+          sessionStorage.getItem("abrirFormador") != undefined
+        ) {
+          let formador = new FormadorCursoItem();
+          formador.tipoIdentificacion = this.tipoCIF;
+          // formador.nif = this.bodyFisica.nif;
+          sessionStorage.removeItem("abrirFormador");
+          sessionStorage.setItem("formador", JSON.stringify(formador));
+          if (
+            sessionStorage.getItem("backFichaInscripcion") != null &&
+            sessionStorage.getItem("backFichaInscripcion")
+          )
+            this.router.navigate(["/fichaInscripcion"]);
+          else this.router.navigate(["/fichaCurso"]);
         }
       },
       reject: () => {

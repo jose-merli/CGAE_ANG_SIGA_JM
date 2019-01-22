@@ -23,7 +23,7 @@
               <span>{{body.tipo}}</span>
             </label>
             <label>{{"administracion.usuarios.literal.fechaAlta" | translate}}
-              <span>{{body.fechaAlta}}</span>
+              <span>{{body.fechaConstitucion}}</span>
             </label>
             <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}
               <span>{{body.fechaBaja}}</span>
@@ -54,7 +54,7 @@
         <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
           <div class="img-colegiado text-center my-0 mx-auto">
             <i *ngIf="!existeImagen" class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
-            <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="imagenCentrada">
+            <img *ngIf="existeImagen" [src]="imagenPersonaJuridica">
             <p-fileUpload #fubauto chooseLabel="" class="edit my-0 mx-auto main-button" mode="basic" name="file" auto="true" accept="image/*"
               (change)="uploadImage($event)" auto="true">
             </p-fileUpload>
@@ -70,14 +70,13 @@
                   styleClass="pi pi-pencil" class="main-button my-0 mx-auto edit" chooseLabel=""></p-fileUpload>
               </div>
             </div>
-
           </div>
         </div> -->
         <div class="bloque col-lg-6 col-md-5 col-sm-5">
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.fichaCliente.literal.identificacion" | translate}} (*)</label>
-              <input [(ngModel)]="body.nif" type="text" class="form-control" (ngModelChange)="onChangeForm()" [disabled]="!editar" pInputText>
+              <input [(ngModel)]="body.nif" type="text" class="form-control" (ngModelChange)="onChangeForm()" [disabled]="!editar || disabledAction" pInputText>
               <div *ngIf="identificacionValida == false">
                 <label class="labelError">{{"El cif es inválido"}}</label>
               </div>
@@ -93,8 +92,8 @@
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"administracion.usuarios.literal.fechaAlta" | translate}} (*)</label>
-              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="body.fechaAlta"
-                (ngModelChange)="onChangeForm()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(disabled)]="!editar"></p-calendar>
+              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="body.fechaConstitucion"
+                (ngModelChange)="onChangeForm()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(disabled)]="!editar || disabledAction"></p-calendar>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}</label>
@@ -105,12 +104,12 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.denominacion" | translate}} (*)</label>
-              <input [(ngModel)]="body.denominacion" type="text" class="form-control" (ngModelChange)="onChangeForm()" [(disabled)]="camposDesactivados"
+              <input [(ngModel)]="body.denominacion" type="text" class="form-control" (ngModelChange)="onChangeForm()" [(disabled)]="camposDesactivados || disabledAction"
                 [maxLength]="99" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"gratuita.definirTurnosIndex.literal.abreviatura" | translate}} (*)</label>
-              <input [(ngModel)]="body.abreviatura" type="text" class="form-control" (ngModelChange)="onChangeForm()" [(disabled)]="camposDesactivados"
+              <input [(ngModel)]="body.abreviatura" type="text" class="form-control" (ngModelChange)="onChangeForm()" [(disabled)]="camposDesactivados || disabledAction"
                 [maxLength]="100" pInputText>
             </div>
             <!--<div class="form-row p-1 col-lg-6 col-md-6">
@@ -123,7 +122,7 @@
               <div class="form-group col-lg-4 col-md-4 pr-0">
                 <input [(disabled)]="camposDesactivados" [(ngModel)]="body.contadorNumsspp" type="text" class="form-control" pInputText (input)="compruebaRegistro()">
                 <div *ngIf="contadorNoCorrecto == true">
-                  <label class="labelError">Solo números</label>
+                  <label class="labelError">{{"censo.ws.literal.soloNumeros" | translate}}</label>
                 </div>
               </div>
               <div class="form-group col-lg-4 col-md-4 pr-0">
@@ -137,25 +136,36 @@
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.fichaCliente.situacion.idiomaPref" | translate}} (*)</label>
-              <p-dropdown class="select-form" [options]="idiomas" [(disabled)]="camposDesactivados" [(ngModel)]="idiomaPreferenciaSociedad"
+              <p-dropdown class="select-form" [options]="idiomas" [(disabled)]="camposDesactivados || disabledAction" [(ngModel)]="idiomaPreferenciaSociedad"
                 [filter]="true" (ngModelChange)="onChangeForm()" filterBy="label"></p-dropdown>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
-              <input type="text " class="form-control " [(disabled)]="camposDesactivados" [(ngModel)]="body.cuentaContable" [maxLength]="20"
+              <input type="text " class="form-control " [(disabled)]="camposDesactivados || disabledAction" [(ngModel)]="body.cuentaContable" [maxLength]="20"
                 (ngModelChange)="onChangeForm()" pInputText>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.general.literal.anotaciones" | translate}}: </label>
-              <textarea pInputTextarea [(ngModel)]="body.anotaciones" [(disabled)]="camposDesactivados" (ngModelChange)="onChangeForm()"
+              <textarea pInputTextarea [(ngModel)]="body.anotaciones" [(disabled)]="camposDesactivados || disabledAction" (ngModelChange)="onChangeForm()"
                 [maxLength]="2000"></textarea>
             </div>
             <div class="form-group col-lg-12 col-md-12">
-              <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}}</label>
+              <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}}
+                <i class="fa fa-plus" style="color:grey" (click)="habilitarAutocompletar($event)"></i>
+              </label>
+
               <br>
-              <p-multiSelect [defaultLabel]="textFilter" [(disabled)]="camposDesactivados" styleClass="widthAll" [(ngModel)]='etiquetasPersonaJuridicaSelecionados'
-                [options]="comboEtiquetas" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" autoWidth="false" defaultLabel=""
-                maxSelectedLabels="1" (ngModelChange)="onChangeForm()"></p-multiSelect>
+
+              <p-autoComplete #auto [(ngModel)]="etiquetasPersonaJuridicaSelecionados" [suggestions]="comboEtiquetas" (completeMethod)="filterLabelsMultiple($event)"
+                [minLength]="1" field="label" [multiple]="true" (onKeyUp)="onKeyUp($event)" (onSelect)="onSelect($event)" (onUnselect)="onUnselect($event)"
+                [disabled]="!autocompletar || disabledAction"  (click)="disabledAutocomplete()" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}">
+                <ng-template let-etiquetasPersonaJuridicaSelecionados pTemplate="selectedItem">
+                  <div *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor != ''" class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li"
+                    [ngStyle]="{'background': etiquetasPersonaJuridicaSelecionados.backgroundColor}" (click)="onClick($event, etiquetasPersonaJuridicaSelecionados)">
+                    {{ etiquetasPersonaJuridicaSelecionados.label }}
+                  </div>
+                </ng-template>
+              </p-autoComplete>
             </div>
           </div>
         </div>
@@ -166,15 +176,59 @@
     <!--END DATOS GENERALES-->
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="restablecer()" [(disabled)]="camposDesactivados" pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button (click)="restablecer()" [(disabled)]="camposDesactivados || disabledAction" pButton type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="comprobarAuditoria()" [(disabled)]="!showGuardar" pButton type="button" icon="far fa-save" iconPos="left"
+        <button (click)="comprobarAuditoria()" [(disabled)]="!showGuardar || disabledAction" pButton type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>
 
+  <!-- CREAR ETIQUETA -->
+  <p-dialog #dialog [(visible)]="checked" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500"
+    [minWidth]="500">
+    <p-header class="title">
+      <label>{{ mensaje }}</label>
+    </p-header>
 
+    <div class="bloque col-lg-12 col-md-12">
+      <div class="row">
+
+        <!-- DESHABILITA EL FOCO  -->
+        <span class="ui-helper-hidden-accessible">
+          <input type="text" />
+        </span>
+
+        <div class="form-group col-lg-6 col-md-6">
+          <label *ngIf="historico">{{"administracion.auditoriaUsuarios.fechaDesde" | translate}}</label>
+          <label *ngIf="!historico">{{"administracion.auditoriaUsuarios.fechaDesde" | translate}} (*)</label>
+          <p-calendar [monthNavigator]="true" [yearNavigator]="true"  [(ngModel)]="item.fechaInicio" [locale]="es"
+            [utc]="true" icon="far fa-calendar-alt" yearRange="1930:2050"
+            dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="validateFields()"
+            [(disabled)]="historico" [(maxDate)]="fechaHoy"></p-calendar>
+        </div>
+
+        <div class="form-group col-lg-6 col-md-6 form-group-date">
+          <label *ngIf="historico">{{"administracion.auditoriaUsuarios.fechaHasta" | translate}}</label>
+          <label *ngIf="!historico">{{"administracion.auditoriaUsuarios.fechaHasta" | translate}} (*)</label>
+          <p-calendar [monthNavigator]="true" [yearNavigator]="true"  [(ngModel)]="item.fechaBaja" [locale]="es"
+            [utc]="true" icon="far fa-calendar-alt" yearRange="1930:2050" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="validateFields()" [(minDate)]="fechaHoy"
+            [(disabled)]="historico"></p-calendar>
+          <div *ngIf="item.fechaBaja != null && !isFechaBajaCorrect && !historico">
+            <label class="labelError">{{"gratuita.altaTurnos.error.fechaBajaPosteriorInicio" | translate}}</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p-footer *ngIf="!historico">
+      <div class="text-right main-button">
+        <button (click)="aceptDialogConfirmation(item)" pButton type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate}}"
+          [disabled]="!isTrue"></button>
+        <button (click)="closeDialogConfirmation(item)" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
 
   <!-- AUDITORIA -->
 

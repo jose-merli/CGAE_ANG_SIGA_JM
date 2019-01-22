@@ -354,8 +354,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
   confirmarCrear() {
     if (this.newCatalogo.descripcion) {
-      console.log(this.datosHist[0]);
-      console.log(this.newCatalogo);
       this.cre = new CatalogoCreateRequestDto();
       this.cre.tabla = this.newCatalogo.catalogo;
       this.cre.idRegistro = "";

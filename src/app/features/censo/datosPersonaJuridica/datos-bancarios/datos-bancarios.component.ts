@@ -26,6 +26,7 @@ export class DatosBancariosComponent implements OnInit {
   selectMultiple: boolean = false;
   progressSpinner: boolean = false;
   historico: boolean = false;
+  disabledAction: boolean = false;
 
   msgs: Message[];
   camposDesactivados: boolean;
@@ -64,7 +65,7 @@ export class DatosBancariosComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private cardService: cardService
-  ) { }
+  ) {}
 
   ngOnInit() {
     if (sessionStorage.getItem("editarDatosBancarios") == "true") {
@@ -74,6 +75,12 @@ export class DatosBancariosComponent implements OnInit {
 
     if (sessionStorage.getItem("historicoSociedad") != null) {
       this.camposDesactivados = true;
+    }
+
+    if (sessionStorage.getItem("disabledAction") == "true") {
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
     }
 
     this.checkAcceso();
@@ -185,7 +192,10 @@ export class DatosBancariosComponent implements OnInit {
           }
         } else {
           sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
           this.router.navigate(["/errorAcceso"]);
         }
       }
@@ -272,6 +282,7 @@ export class DatosBancariosComponent implements OnInit {
         if (dato && dato.length > 0) {
           enviarDatos = dato[0];
           sessionStorage.setItem("idCuenta", enviarDatos.idCuenta);
+          sessionStorage.setItem("bic", enviarDatos.bic);
           sessionStorage.setItem("editar", "true");
         } else {
           sessionStorage.setItem("editar", "false");
@@ -303,6 +314,10 @@ export class DatosBancariosComponent implements OnInit {
             )
           }
         ];
+
+        this.historico = true;
+        this.selectedDatos = [];
+        this.selectMultiple = false;
       }
     });
   }
@@ -329,8 +344,8 @@ export class DatosBancariosComponent implements OnInit {
         } else {
           this.showSuccess(
             selectedDatos.length +
-            " " +
-            this.translateService.instant("messages.deleted.selected.success")
+              " " +
+              this.translateService.instant("messages.deleted.selected.success")
           );
         }
       },
@@ -341,6 +356,7 @@ export class DatosBancariosComponent implements OnInit {
       () => {
         this.historico = true;
         this.selectedDatos = [];
+        this.selectMultiple = false;
         this.cargarDatosBancarios();
       }
     );

@@ -12,6 +12,7 @@ import {
 } from "@angular/forms";
 import { Router } from "@angular/router";
 import { cardService } from "./../../../_services/cardSearch.service";
+import { Location } from "@angular/common";
 
 // import
 @Component({
@@ -25,8 +26,9 @@ export class DatosPersonaJuridicaComponent implements OnInit {
   constructor(
     public sigaServices: OldSigaServices,
     private cardService: cardService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private location: Location
+  ) {}
 
   ngOnInit() {
     this.fichasPosibles = [
@@ -68,8 +70,18 @@ export class DatosPersonaJuridicaComponent implements OnInit {
     sessionStorage.removeItem("usuarioBody");
     this.cardService.searchNewAnnounce.next(null);
 
-    //this.location.back();
-    this.router.navigate(["searchNoColegiados"]);
+    if (sessionStorage.getItem("filtrosBusquedaColegiados") != undefined) {
+      this.router.navigate(["fichaColegial"]);
+    } else if (
+      sessionStorage.getItem("filtrosBusquedaNoColegiados") != undefined
+    ) {
+      this.router.navigate(["fichaColegial"]);
+    } else if (sessionStorage.getItem("busquedaSociedades")) {
+      this.router.navigate(["searchNoColegiados"]);
+    } else {
+      this.location.back();
+    }
+    // this.router.navigate(["searchNoColegiados"]);
   }
 
   getFichasPosibles() {

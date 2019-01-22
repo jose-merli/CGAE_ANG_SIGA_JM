@@ -976,60 +976,83 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   border-radius: 0;
 }
 
-
-.ui-growl-message-info
-   .ui-growl-item{
+.ui-growl-message-info .ui-growl-item {
   color: white !important;
-  background-color:	#33a1ff   !important;
-   }
+  background-color: #33a1ff !important;
+}
 
- .ui-growl-message-success
-   .ui-growl-item{
+.ui-growl-message-success .ui-growl-item {
   color: white !important;
-  background-color: #28a745   !important;
-   }
+  background-color: #28a745 !important;
+}
 
- .ui-growl-message-warn
-   .ui-growl-item{
+.ui-growl-message-warn .ui-growl-item {
   color: white !important;
-  background-color:	#ffc107   !important;
-   }
+  background-color: #ffc107 !important;
+}
 
- .ui-growl-message-error
-   .ui-growl-item{
+.ui-growl-message-error .ui-growl-item {
   color: white !important;
-  background-color: #dc3545   !important;
-   }
+  background-color: #dc3545 !important;
+}
+.alterMutuaInfo .ui-dialog-content{
+  overflow-y: scroll;
+  //height: 600px;
+  margin: 0 0 2.5rem 0;
+}
+.ui-growl-message-info .ui-growl-item {
+  color: white !important;
+  background-color: #33a1ff !important;
+}
 
+.ui-growl-message-success .ui-growl-item {
+  color: white !important;
+  background-color: #28a745 !important;
+}
 
-  .info-limit{
-    background:$secondary-color;
-    color: white;
-    padding: .5em .75em;
-    margin-bottom: 2px;
-    text-align: center;
-    i{
-      font-size: 1.5rem;
-    }    
+.ui-growl-message-warn .ui-growl-item {
+  color: white !important;
+  background-color: #ffc107 !important;
+}
+
+.ui-growl-message-error .ui-growl-item {
+  color: white !important;
+  background-color: #dc3545 !important;
+}
+
+.info-limit {
+  background: $secondary-color;
+  color: white;
+  padding: 0.5em 0.75em;
+  margin-bottom: 2px;
+  text-align: center;
+  i {
+    font-size: 1.5rem;
+  }
 }
 
 // #listadoInformeJustificacionDiv{
 // height: 259px !important;
 // }
 
-.content iframe{
+.content iframe {
   max-width: 1300px;
   min-width: 1000px;
 }
 
-iframe .box, iframe .button, iframe .boxCombo{
+iframe .box,
+iframe .button,
+iframe .boxCombo {
   border-radius: 0 !important;
 }
 
-
-// .botonesDetalle{
-//   position: relative !important;
-// }
+.date {
+  span.ui-calendar {
+    input.ui-inputtext.ui-widget.ui-state-default.ui-corner-all.ng-star-inserted {
+      width: 100% !important;
+    }
+  }
+}
 
 p-footer .main-button{
   padding: 0.75rem 1.25rem;
@@ -1253,27 +1276,26 @@ p-footer .main-button{
   }
 }
 @media (max-width: 1000px) {
-  .content-accesos{
+  .content-accesos {
     padding-right: 2rem !important;
     text-align: left !important;
     display: inline-block !important;
-    .btn-acceso{
+    .btn-acceso {
       display: inline-block !important;
-      p{
+      p {
         padding-top: 12px;
       }
     }
-    .main-button{
+    .main-button {
       margin-top: 1rem;
     }
   }
 }
 
-
 @media (max-width: 525px) {
   .main-button {
-    button{
-      padding:  .2em 0em !important;
+    button {
+      padding: 0.2em 0em !important;
     }
   }
 }
@@ -1295,6 +1317,21 @@ p-footer .main-button{
 .ui-dropdown.ui-state-disabled .ui-dropdown-label,
 .ui-widget:disabled {
   background-color: #e9ecef;
+}
+
+// ETIQUETAS
+
+.ui-autocomplete-multiple-container.ui-inputtext.ui-state-disabled {
+  background-color: #e9ecef;
+  width: 100%;
+}
+
+.ui-autocomplete-multiple-container.ui-inputtext {
+  width: 100%;
+}
+
+.ui-autocomplete-token-icon {
+  color: black;
 }
 
 .ui-datepicker.ui-widget .ui-datepicker-calendar td a.ui-state-active {
@@ -1337,7 +1374,27 @@ p-footer .main-button{
 .item-disabled {
   padding: 0px;
 }
-#mainWorkArea input{
-  border-radius: 0 !important;
-  -webkit-border-radius: 0px !important;
+
+.fa-warning:before,
+.fa-exclamation-triangle:before {
+  color: red;
+}
+
+.header {
+  margin-right: 12px;
+  margin-top: 3px;
+
+  #mainWorkArea input {
+    border-radius: 0 !important;
+    -webkit-border-radius: 0px !important;
+  }
+}
+
+.small-letter {
+  font-size: 13px;
+}
+
+.textarea {
+  width: 100%;
+  height: 100%;
 }

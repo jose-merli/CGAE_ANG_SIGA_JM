@@ -18,6 +18,7 @@ export class HeaderComponent implements OnInit {
   menuHide: boolean;
   showIdioma: boolean = false;
   imagenURL: any;
+  httpExit: string;
   comboIdiomas: any[];
   idiomaSelected: any;
   constructor(
@@ -69,13 +70,18 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
+
+    //this.sigaServices.get("ruta_logout").subscribe(n => {
     sessionStorage.removeItem("authenticated");
 
-    //  if (sessionStorage.getItem('loginDevelop') === 'true' ) {
-    //           sessionStorage.setItem('loginDevelop', '0');
-    //  }
-    window.location.href =
-      "http://demo.redabogacia.org/pra/accesoSeleccionaColegio/";
+    if (sessionStorage.getItem('loginDevelop') === 'true') {
+      sessionStorage.setItem('loginDevelop', '0');
+    }
+
+    this.httpExit = this.menuUser[0].rutaLogout;
+    window.location.href = this.httpExit;
+    //});
+
     // this.router.navigate(["/"]).then(result => {
     //   window.location.href =
     //     "http://demo.redabogacia.org/pra/accesoSeleccionaColegio/";

@@ -1,0 +1,20 @@
+<div id="noViewContent" class="mainFrameWrapper2">
+  <app-my-iframe url="{{ url }}"> </app-my-iframe>
+</div>
+<div class="  mainFrameWrapper main-button">
+  <br />
+  <div class="configButton">
+    <button
+      (click)="volver()"
+      pButton
+      type="button "
+      icon="fa fa-angle-left"
+      iconPos="left"
+      label="{{ 'general.boton.volver' | translate }}"
+    ></button>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

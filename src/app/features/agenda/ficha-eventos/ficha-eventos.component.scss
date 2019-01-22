@@ -1,0 +1,36 @@
+.ui-autocomplete-multiple-container.ui-inputtext {
+  background: none;
+  color: white;
+}
+
+.ui-autocomplete .ui-autocomplete-panel {
+  min-width: 0;
+  z-index: 1;
+}
+
+.ui-autocomplete-token-icon {
+  color: white !important;
+}
+
+.ui-datepicker.ui-widget {
+  padding: 0;
+  width: 100%;
+}
+
+.ui-inputtext {
+  width: 100%;
+}
+
+.ui-dropdown {
+  width: 100% !important;
+}
+
+.ui-button-text .ui-clickable {
+  width: 10%;
+}
+
+p-selectbutton.daysSelectButton {
+  .ui-button {
+    width: 10%;
+  }
+}

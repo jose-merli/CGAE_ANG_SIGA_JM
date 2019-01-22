@@ -99,6 +99,7 @@ export class DatosRegistralesComponent implements OnInit {
   suscripcionBusquedaNuevo: Subscription;
   activacionEditar: boolean;
   camposDesactivados: boolean = false;
+  disabledAction: boolean = false;
   camposObligatorios: any = [];
   isValidate: boolean;
   isNuevo: boolean;
@@ -126,6 +127,12 @@ export class DatosRegistralesComponent implements OnInit {
   ngOnInit() {
     this.checkAcceso();
     this.desactivadoGuardar();
+
+    if (sessionStorage.getItem("disabledAction") == "true") {
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
+    }
 
     this.sigaServices.get("datosRegistrales_datosContador").subscribe(
       data => {
@@ -257,7 +264,6 @@ export class DatosRegistralesComponent implements OnInit {
   }
 
   compruebaRegistro() {
-    var a = this.body.contadorNumsspp;
     if (
       Number(this.body.contadorNumsspp) &&
       !this.onlySpaces(this.body.contadorNumsspp)
@@ -306,48 +312,49 @@ export class DatosRegistralesComponent implements OnInit {
           this.personaSearch = JSON.parse(data["body"]);
           this.body = this.personaSearch.datosRegistralesItems[0];
           console.log(this.body);
-          if (this.body.identificacionReg == undefined) {
-            this.body.fechaConstitucion = null;
+          // if (this.body.identificacionReg == undefined) {
+          //   this.body.fechaConstitucion = null;
 
-            this.body.objetoSocial = "";
-            this.body.resena = "";
-            //this.body = new DatosRegistralesItem();
-            this.isNuevo = true;
-            if (this.modo == "0") {
-              this.noEditable = true;
-            } else {
-              this.noEditable = false;
-              // this.body.prefijoNumsspp = this.prefijo;
-              // this.body.sufijoNumsspp = this.sufijo;
-            }
+          //   this.body.objetoSocial = "";
+          //   this.body.resena = "";
+
+          //   //this.body = new DatosRegistralesItem();
+          //   this.isNuevo = true;
+          //   if (this.modo == "0") {
+          //     this.noEditable = true;
+          //   } else {
+          //     this.noEditable = false;
+          //     // this.body.prefijoNumsspp = this.prefijo;
+          //     // this.body.sufijoNumsspp = this.sufijo;
+          //   }
+          // } else {
+          this.isNuevo = false;
+          this.body.idPersona = this.idPersonaEditar;
+          this.fechaConstitucion = this.body.fechaConstitucion;
+          if (this.body.fechaCancelacion != null) {
+            this.fechaCancelacion = new Date(this.body.fechaCancelacion);
           } else {
-            this.isNuevo = false;
-            this.body.idPersona = this.idPersonaEditar;
-            this.fechaConstitucion = this.body.fechaConstitucion;
-            if (this.body.fechaCancelacion != null) {
-              this.fechaCancelacion = new Date(this.body.fechaCancelacion);
-            } else {
-              this.fechaCancelacion = null;
-            }
-
-            this.fechaFin = this.body.fechaFin;
-            this.fechaInscripcion = new Date(this.body.fechaInscripcion);
-
-            if (this.modificablecontador == "0") {
-              this.noEditable = true;
-            } else {
-              this.noEditable = false;
-            }
-
-            this.body.contadorNumsspp = this.fillWithCeros(
-              this.body.contadorNumsspp,
-              Number(this.longitudcontador)
-            );
-
-            this.cadenaPrefijo = this.body.prefijoNumsspp;
-            this.cadenaContador = this.body.contadorNumsspp;
-            this.cadenaSufijo = this.body.sufijoNumsspp;
+            this.fechaCancelacion = null;
           }
+
+          this.fechaFin = this.body.fechaFin;
+          this.fechaInscripcion = new Date(this.body.fechaInscripcion);
+
+          if (this.modificablecontador == "0") {
+            this.noEditable = true;
+          } else {
+            this.noEditable = false;
+          }
+
+          this.body.contadorNumsspp = this.fillWithCeros(
+            this.body.contadorNumsspp,
+            Number(this.longitudcontador)
+          );
+
+          this.cadenaPrefijo = this.body.prefijoNumsspp;
+          this.cadenaContador = this.body.contadorNumsspp;
+          this.cadenaSufijo = this.body.sufijoNumsspp;
+          //}
           if (this.body.sociedadProfesional == "1") {
             this.sociedadProfesional = true;
           } else if (this.body.sociedadProfesional == "0") {

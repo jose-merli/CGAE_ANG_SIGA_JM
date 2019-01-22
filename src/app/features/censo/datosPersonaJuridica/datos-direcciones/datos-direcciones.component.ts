@@ -47,6 +47,7 @@ export class DatosDireccionesComponent implements OnInit {
   activacionEditar: boolean;
   selectAll: boolean = false;
   progressSpinner: boolean = false;
+  disabledAction: boolean = false;
   numSelected: number = 0;
   usuarioBody: any[];
   openFicha: boolean = false;
@@ -73,7 +74,7 @@ export class DatosDireccionesComponent implements OnInit {
     private translateService: TranslateService,
     private fichasPosibles: DatosPersonaJuridicaComponent,
     private cardService: cardService
-  ) { }
+  ) {}
 
   ngOnInit() {
     if (sessionStorage.getItem("editarDirecciones") == "true") {
@@ -156,6 +157,11 @@ export class DatosDireccionesComponent implements OnInit {
     if (sessionStorage.getItem("historicoSociedad") != null) {
       this.camposDesactivados = true;
     }
+    if (sessionStorage.getItem("disabledAction") == "true") {
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
+    }
   }
   activarPaginacion() {
     if (!this.datos || this.datos.length == 0) return false;
@@ -196,7 +202,10 @@ export class DatosDireccionesComponent implements OnInit {
           }
         } else {
           sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
           this.router.navigate(["/errorAcceso"]);
         }
       }
@@ -269,7 +278,7 @@ export class DatosDireccionesComponent implements OnInit {
             console.log(err);
             this.progressSpinner = false;
           },
-          () => { }
+          () => {}
         );
     } else {
       // Sociedad no existente,
@@ -338,7 +347,7 @@ export class DatosDireccionesComponent implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => { }
+        () => {}
       );
   }
 
@@ -353,7 +362,7 @@ export class DatosDireccionesComponent implements OnInit {
     });
 
     this.sigaServices.post("direcciones_remove", datosDelete).subscribe(
-      data => { },
+      data => {},
       err => {
         console.log(err);
       },
@@ -390,12 +399,16 @@ export class DatosDireccionesComponent implements OnInit {
   comprobarValidacion() {
     let tipoDireccion = this.datos.map(dato => {
       return dato.idTipoDireccionList;
-    })
+    });
 
-    if (tipoDireccion.indexOf('3') != -1) {
+    if (tipoDireccion.indexOf("3") != -1) {
       for (let dato of this.datos) {
-        if (dato.idTipoDireccionList == "3" && (dato.codigoPostal != null || dato.codigoPostal != undefined)
-          && (dato.nombreProvincia != null || dato.nombreProvincia != undefined) && (dato.nombrePoblacion != null || dato.nombrePoblacion != undefined)) {
+        if (
+          dato.idTipoDireccionList == "3" &&
+          (dato.codigoPostal != null || dato.codigoPostal != undefined) &&
+          (dato.nombreProvincia != null || dato.nombreProvincia != undefined) &&
+          (dato.nombrePoblacion != null || dato.nombrePoblacion != undefined)
+        ) {
           this.isValidate = true;
         }
       }
@@ -406,9 +419,8 @@ export class DatosDireccionesComponent implements OnInit {
     this.cardService.newCardValidator$.subscribe(data => {
       data.map(result => {
         result.cardDirecciones = this.isValidate;
-      })
-      console.log(data)
+      });
+      console.log(data);
     });
-
   }
 }

@@ -1,0 +1,406 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000000"></p-growl>
+<div class="busqueda-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{ 'agenda.fichaEventos.cabecera' | translate }}</p>
+  </div>
+
+  <!-- FICHA DATOS GENERALES -->
+  <div class="card">
+    <!-- Cabecera -->
+    <div class="card-header header-ficha" (click)="abreCierraFicha('generales')">
+      <div *ngIf="!esFichaActiva('generales')" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-file-pdf icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mt-2">
+            <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate}}</label>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="esFichaActiva('generales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-file-pdf icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ "general.message.datos.generales" | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo-->
+    <div class="card-body card-body-ficha" *ngIf="esFichaActiva('generales')">
+      <div class="form-row mb-3">
+        <div class="bloque col-lg-7 col-md-7">
+          <div class="row mb-3">
+            <label class="ml-2">
+              <strong>{{ 'agenda.fichaEventos.datosGenerales.datosEvento.cabecera' | translate }}</strong>
+            </label>
+          </div>
+          <div class="row mb-3">
+            <div class="col-lg-6 col-md-6">
+              <label>{{'agenda.fichaEventos.datosGenerales.calendario' | translate }}(*)</label>
+              <p-dropdown class="select-form" [options]="comboCalendars" [filter]="true" filterBy="label,labelSinTilde" placeholder="{{'tablas.literal.seleccionar' | translate}}"
+                name="type" (ngModelChange)="onChangeSelectCalendar($event)" [(ngModel)]="newEvent.idTipoCalendario" [disabled]="modoTipoEventoInscripcion || isFormacionCalendar || modoEdicionEvento  || tipoAccesoLectura"></p-dropdown>
+            </div>
+            <div class="col-lg-6 col-md-6">
+              <label>{{'agenda.fichaEventos.datosGenerales.tipoEvento' | translate}}</label>
+              <p-dropdown class="select-form" [options]="comboTipoEvento" name="tipoEvento" [(ngModel)]="newEvent.idTipoEvento" placeholder="-" [disabled]="disabledTipoEvento || isFormacionCalendar || tipoAccesoLectura"></p-dropdown>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-lg-6 col-md-6">
+              <label>{{'agenda.fichaEventos.datosGenerales.titulo' | translate}}(*)</label>
+              <input type="text" class="form-control" pInputText name="titulo" [(ngModel)]="newEvent.title" [disabled]="tipoAccesoLectura">
+            </div>
+            <div *ngIf="!selectedTipoLaboral" class="col-lg-6 col-md-6">
+                <label>{{ 'form.busquedaCursos.literal.estado' | translate}}</label>
+                <p-dropdown class="select-form" [options]="comboEstados" name="estado" [(ngModel)]="newEvent.idEstadoEvento" [disabled]="tipoAccesoLectura"></p-dropdown>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div *ngIf="modoEdicionEventoByAgenda" class="col-lg-6 col-md-6">
+              <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}}(*)</label>
+                  <p-calendar [locale]="es" #fechaInicio [showTime]="true" [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.start" (onSelect)="selectInvalidDates()" [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura"></p-calendar>
+            </div>
+            <div *ngIf="!modoEdicionEventoByAgenda" class="col-lg-6 col-md-6">
+              <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}}(*)</label>
+                  <p-calendar [locale]="es" #fechaInicio [showTime]="true" [dateFormat]="'dd/mm/yy'" [minDate]="invalidDateMinEditionMode" [maxDate]="invalidDateMaxEditionMode"  [(ngModel)]="newEvent.start" (onSelect)="selectInvalidDates()" [disabled]="tipoAccesoLectura"></p-calendar>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaFin' | translate}}(*)</label>
+                <p-calendar [locale]="es" #fechaFin [showTime]="true" [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.end" [minDate]="invalidDateMin" [maxDate]="invalidDateMax" (ngModelChange)="validatorDates($event)" (onSelect)="unselectInvalidDates()"
+                [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura"></p-calendar>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div *ngIf="!selectedTipoLaboral" class="col-lg-12 col-md-12">
+              <label>{{'agenda.fichaEventos.datosGenerales.lugar' | translate}}</label>
+              <input type="text" class="form-control" pInputText name="lugar" [(ngModel)]="newEvent.lugar" [disabled]="tipoAccesoLectura">
+            </div>
+            <div *ngIf="selectedTipoLaboral" class="col-lg-12 col-md-12">
+              <label>Partido Judicial</label>
+              <p-dropdown class="select-form" [options]="comboPartidoJudicial" name="estado" [(ngModel)]="newEvent.lugar" 
+              placeholder="{{'tablas.literal.seleccionar' | translate }}" [disabled]="tipoAccesoLectura"></p-dropdown>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-lg-12 col-md-12">
+              <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
+              <input type="text" class="form-control" pInputText name="descripcion" [(ngModel)]="newEvent.descripcion" [disabled]="tipoAccesoLectura">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-lg-12 col-md-12">
+              <label>{{'agenda.fichaEventos.datosGenerales.recursos' | translate}}</label>
+              <input type="text" class="form-control" pInputText name="recursos" [(ngModel)]="newEvent.recursos" [disabled]="tipoAccesoLectura">
+            </div>
+          </div>
+        </div>
+        <div class="bloque col-lg-5 col-md-5">
+          <div class="row mb-3">
+            <label>
+              <strong> {{ 'agenda.fichaEventos.datosGenerales.datosRepeticion.cabecera' | translate }}</strong>
+            </label>
+          </div>
+          <div class="row mb-4">
+            <div class="col-lg-6 col-md-6">
+              <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}}</label>
+                  <p-calendar (click)="isCheckFechaInicioRepeticion()" [locale]="es" [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.fechaInicioRepeticion" [minDate]="newEvent.start" [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion"></p-calendar>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaFin' | translate}}</label>
+                <p-calendar (click)="isCheckFechaFinRepeticion()" [locale]="es" [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.fechaFinRepeticion" [minDate]="newEvent.fechaInicioRepeticion" [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion"></p-calendar>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-lg-12 col-md-12">
+              <div class="row">
+                  <div class="col-lg-4 col-md-4">
+                      <label>{{'agenda.fichaEventos.datosGenerales.repetirCada' | translate}}:(*)</label>
+                  </div>
+                  <div class="col-lg-8 col-md-8">
+                      <p-dropdown (onChange)="isCheckTipoRepeticion()" [options]="comboRepeatEvery" [(ngModel)]="newEvent.tipoRepeticion" placeholder="{{'tablas.literal.seleccionar' | translate }}" [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion"></p-dropdown>
+                  </div>
+              </div>           
+            </div> 
+          </div>
+          <div class="row mb-3">
+            <div *ngIf="newEvent.tipoRepeticion == 'S'" class="col-lg-12 col-md-12">
+                    <p-selectButton [options]="comboRepeatOn" multiple="multiple" [(ngModel)]="newEvent.valoresRepeticion" [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion"></p-selectButton>   
+            </div>
+            <div *ngIf="newEvent.tipoRepeticion == 'D'" class="col-lg-12 col-md-12">
+                <p-selectButton class="daysSelectButton" [options]="comboDays" multiple="multiple" [(ngModel)]="newEvent.valoresRepeticion" [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion"></p-selectButton>
+                <p class="mt-2">{{'agenda.fichaEventos.datosRepeticion.diasSeleccionados' | translate}}: <span *ngFor="let d of newEvent.valoresRepeticion">{{d}}, </span></p>
+              </div>
+          </div>
+          <div class="row mb-3">
+              <div class="col-lg-12 col-md-12">
+                <div class="ui-g-12"><p-radioButton (click)="isCheckTipoDiasRepeticion()" name="laborales" value="L" label="{{ 'fichaEventos.datosRepeticion.tipoDiasRepeticion.diasLaborales' | translate}}" [(ngModel)]="newEvent.tipoDiasRepeticion" [disabled]="disabledRadioButton()"></p-radioButton></div>
+                <div class="ui-g-12"><p-radioButton (click)="isCheckTipoDiasRepeticion()" name="festivos" value="F" label="{{ 'fichaEventos.datosRepeticion.tipoDiasRepeticion.diasFestivos' | translate}}" [(ngModel)]="newEvent.tipoDiasRepeticion" [disabled]="disabledRadioButton()"></p-radioButton></div>
+                <div class="ui-g-12"><p-radioButton (click)="isCheckTipoDiasRepeticion()" name="ambos" value="A" label="{{ 'fichaEventos.datosRepeticion.tipoDiasRepeticion.ambos' | translate}}" [(ngModel)]="newEvent.tipoDiasRepeticion" [disabled]="disabledRadioButton()"></p-radioButton></div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer" *ngIf="esFichaActiva('generales')">
+      <div class="text-right main-button">
+        <button pButton (click)="restEvent()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="tipoAccesoLectura"></button>
+        <button pButton (click)="deleteEvent()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}" [disabled]="tipoAccesoLectura"></button>
+        <button pButton (click)="saveEvent()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="validateForm() || tipoAccesoLectura"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFICACIONES-->
+  <div class="card">
+    <!-- Cabecera -->
+    <div class="card-header header-ficha" (click)="abreCierraFicha('notify')">
+      <div *ngIf="!esFichaActiva('notify')" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-bell icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mt-2">
+            <label class="mr-auto title-ficha">{{'formacion.fichaCalendario.notificaciones.cabecera' | translate}}</label>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="esFichaActiva('notify')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-bell icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{'formacion.fichaCalendario.notificaciones.cabecera' | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo-->
+    <div class="card-body card-body-ficha" *ngIf="esFichaActiva('notify')">
+      <div *ngIf="esFichaActiva('notify')" class="card-body card-body-ficha">
+        <div *ngIf="!historico" class="row">
+          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+            [(selection)]="selectedDatosNotifications" (onRowSelect)="irEditarNotificacion(selectedDatosNotifications)" (onRowUnselect)="actualizaSeleccionadosNotifications(selectedDatosNotifications)"
+            pageLinks="4" dataKey="idNotificacion" [responsive]="true" selectionMode="multiple" #tableNotifications class="tabla-listado"
+            [value]="datosNotificaciones" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedNotification">
+            <p-column *ngFor="let col of colsNotifications" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+              [filter]="true" filterMatchMode="contains">
+            </p-column>
+
+            <ng-template pTemplate="paginatorLeft">
+              <div class="mostrar d-flex text-right justify-content-end">
+                <label class="pr-3 registros-totales">Mostrando registros del {{tableNotifications.first + 1}} al {{tableNotifications.first + tableNotifications.rows}} de un total de {{tableNotifications.totalRecords}}</label>
+                <label class="pr-3 numSeleccionados">Seleccionados: {{numSelectedNotification}}</label>
+                <label>{{ "general.message.mostrar" | translate}}</label>
+                <p-dropdown [(ngModel)]="selectedNotification" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesNotifications($event)"></p-dropdown>
+                <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                <div class="ml-3 selectAllNotification">
+                  <p-checkbox (onChange)="onChangeSelectAllNotifications()" [(ngModel)]="selectAllNotifications" binary="true" label="{{'tablas.literal.seleccionarTodo' | translate}}"
+                    name="groupname"></p-checkbox>
+                </div>
+                <label class="ml-3 seleccionMultiple" [ngClass]="{'seleccion-multiple': selectMultipleNotifications}" (click)="isSelectMultipleNotifications(); selectedDatosNotifications=false">
+                  <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+              </div>
+            </ng-template>
+
+
+          </p-dataTable>
+        </div>
+        <!--HISTORICO-->
+        <div *ngIf="historico" class="row">
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+              [(selection)]="selectedDatosNotifications" (onRowSelect)="irEditarNotificacion(selectedDatosNotifications)" pageLinks="4" dataKey="idNotificacion"
+              [responsive]="true" selectionMode="multiple" #tableNotifications class="tabla-listado" [value]="datosNotificaciones" [sortOrder]="1" [paginator]="true"
+              paginatorPosition="both" [rows]="selectedNotification">
+              <p-column *ngFor="let col of colsNotifications" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+                [filter]="true" filterMatchMode="contains">
+                <ng-template let-datoH="rowData" pTemplate="body">
+                  <div *ngIf="setItalic(datoH)">
+                    <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
+                  </div>
+                  <div *ngIf="!setItalic(datoH)">
+                    <span>{{datoH[col.field]}}</span>
+                  </div>
+
+                </ng-template>
+
+              </p-column>
+
+              <ng-template pTemplate="paginatorLeft">
+                <div class="mostrar d-flex text-right justify-content-end">
+                  <label class="pr-3 registros-totales">Mostrando registros del {{tableNotifications.first + 1}} al {{tableNotifications.first + tableNotifications.rows}} de un total de {{tableNotifications.totalRecords}}</label>
+                  <label class="pr-3 numSeleccionados">Seleccionados: {{numSelectedNotification}}</label>
+                  <label>{{ "general.message.mostrar" | translate}}</label>
+                  <p-dropdown [(ngModel)]="selectedNotification" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesNotifications($event)"></p-dropdown>
+                  <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                  <div class="ml-3 selectAll">
+                    <p-checkbox (onChange)="onChangeSelectAllNotifications()" [(ngModel)]="selectAllNotifications" binary="true" label="{{'tablas.literal.seleccionarTodo' | translate}}"
+                      name="groupname"></p-checkbox>
+                  </div>
+                  <label class="ml-3 seleccionMultiple" [ngClass]="{'seleccion-multiple': selectMultipleNotifications}" (click)="isSelectMultipleNotifications(); selectedDatosNotifications=false">
+                    <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+                </div>
+              </ng-template>
+            </p-dataTable>
+        </div>
+      </div>
+      <div *ngIf="esFichaActiva('notify')" class="card-footer">
+        <div *ngIf="!historico" class="text-right main-button">
+          <button (click)="getHistoricEventNotifications(); selectedDatosNotifications=[]" pButton type="button" icon="fa fa-history" iconPos="left"
+            label="{{ 'general.message.mostrarHistorico' | translate}}" ></button>
+          <button (click)="deleteNotification(selectedDatosNotifications)" pButton type="button"
+            icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}" [disabled]="tipoAccesoLectura || !selectMultipleNotifications"></button>
+          <button pButton (click)="newNotification()" type="button" icon="fa fa-send" iconPos="left" label="{{
+                'general.boton.new' | translate }}" [disabled]="tipoAccesoLectura"></button>
+        </div>
+        <div *ngIf="historico" class="text-right main-button">
+          <button (click)="getEventNotifications()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+          <button (click)="deleteSeleccion()" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}" [disabled]="tipoAccesoLectura || historico"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- TERJETAS FORMADORES-->
+  <div class="card" *ngIf="isFormacionCalendar">
+    <!-- Cabecera -->
+    <div class="card-header header-ficha" (click)="abreCierraFicha('formadores')">
+      <div *ngIf="!esFichaActiva('formadores')" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-users icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mt-2">
+            <label class="mr-auto title-ficha">{{'agenda.fichaEventos.datosFormadores.cabecera' | translate}}</label>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="esFichaActiva('formadores')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-users icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{'agenda.fichaEventos.datosFormadores.cabecera' | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo-->
+    <div class="card-body card-body-ficha" *ngIf="esFichaActiva('formadores')">
+      <div class="row">
+        <div class="col-lg-11 col-md-11">
+          <p-autoComplete #autocomplete [(ngModel)]="results" [suggestions]="formadoresSuggest" [minLength]="1" field="nombreCompleto"
+            [multiple]="true" (onSelect)="visiblePanelOnSelect()" (onUnselect)="resetSuggestTrainers()" (onBlur)="visiblePanelBlur($event)"
+            [style]="{'width':'100%'}">
+            <ng-template let-formadoresSelecionados pTemplate="selectedItem">
+              <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
+                [ngStyle]="{'background': formadoresSelecionados.color, 'margin': marginPx, 'border': bw }">
+                {{ formadoresSelecionados.nombreCompleto }}
+              </div>
+            </ng-template>
+          </p-autoComplete>
+        </div>
+        <div class="col-lg-1 col-md-1">
+          <div class="text-left main-button">
+            <button pButton (click)="filterTrainersMultiple()" type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate }}" [disabled]="tipoAccesoLectura"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer" *ngIf="esFichaActiva('formadores')">
+      <div class="text-right main-button">
+        <button pButton (click)="restTrainers()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="tipoAccesoLectura"></button>
+        <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERJETAS ASISTENCIA-->
+  <div class="card" *ngIf="isFormacionCalendar">
+    <!-- Cabecera -->
+    <div class="card-header header-ficha" (click)="abreCierraFicha('asistencia')">
+      <div *ngIf="!esFichaActiva('asistencia')" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-list icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mt-2">
+            <label class="mr-auto title-ficha">{{'agenda.fichaEventos.datosAsistencia.asistencia' | translate}}</label>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="esFichaActiva('asistencia')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-list icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{'agenda.fichaEventos.datosAsistencia.asistencia' | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo-->
+    <div class="card-body card-body-ficha" *ngIf="esFichaActiva('asistencia')">
+      <div *ngIf="esFichaActiva('asistencia')" class="card-body card-body-ficha">
+        <div class="row">
+          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultipleAsistencia}"
+            [(selection)]="selectedDatosAsistencia" pageLinks="4" dataKey="idPersona" [responsive]="true" selectionMode="multiple"
+            #tableAsistencia class="tabla-listado" [value]="datosAsistencia" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both"
+            [rows]="selectedAsistencia">
+            <p-column *ngFor="let col of colsAsistencia" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+              [filter]="true" filterMatchMode="contains">
+
+              <ng-template *ngIf="col.field =='asistencia'" pTemplate="body" let-dato="rowData">
+                <p-dropdown class="select-form" [(ngModel)]="dato[col.field]" [options]="comboAsistencia" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate }}"
+                  name="type" [disabled]="tipoAccesoLectura" (onChange)="setAssistanceUpdate(dato)"></p-dropdown>
+              </ng-template>
+
+            </p-column>
+
+            <ng-template pTemplate="paginatorLeft">
+              <div class="mostrar d-flex text-right justify-content-end">
+                <label class="pr-3 registros-totales">Mostrando registros del {{tableAsistencia.first + 1}} al {{tableAsistencia.first + tableAsistencia.rows}}
+                  de un total de {{tableAsistencia.totalRecords}}</label>
+                <label class="pr-3 numSeleccionados">Seleccionados: {{numSelectedAsistencia}}</label>
+                <label>{{ "general.message.mostrar" | translate}}</label>
+                <p-dropdown [(ngModel)]="selectedAsistencia" [options]="rowsPerPage"></p-dropdown>
+                <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                <div class="ml-3 selectAllNotification">
+                  <p-checkbox (onChange)="onChangeSelectAllAsistencias()" [(ngModel)]="selectAllAsistencias" binary="true" label="{{'tablas.literal.seleccionarTodo' | translate}}"
+                    name="groupname"></p-checkbox>
+                </div>
+                <label class="ml-3 seleccionMultiple" [ngClass]="{'seleccion-multiple': selectMultipleAsistencia}" (click)="isSelectMultipleAsistencia(); selectedDatosAsistencia=false">
+                  <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+              </div>
+            </ng-template>
+
+
+          </p-dataTable>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer" *ngIf="esFichaActiva('asistencia')">
+      <div class="text-right main-button">
+        <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate }}" [disabled]="tipoAccesoLectura"></button>
+        <button pButton type="button" (click)="unCheckAsist()" [disabled]="!checkAsistencias || tipoAccesoLectura" icon="fa fa-times" iconPos="left" label="{{ 'agenda.fichaEventos.datosAsistencia.desmarcar' | translate }}"></button>
+        <button pButton type="button" (click)="checkAsist()" [disabled]="!checkAsistencias || tipoAccesoLectura" icon="fa fa-check" iconPos="left" label="{{'agenda.fichaEventos.datosAsistencia.marcar' | translate }}"></button>
+        <button pButton type="button" (click)="saveAssistancesCourse()" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+  <div class="text-right main-button">
+  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+</div>
+
+  <app-dialog></app-dialog>
+  <div *ngIf="progressSpinner " class="overlay-spinner ">
+    <div class="loader "></div>
+  </div>

@@ -52,6 +52,7 @@ export class DatosIntegrantesComponent implements OnInit {
   numSelected: number = 0;
   usuarioBody: any[];
   openFicha: boolean = false;
+  disabledAction: boolean = false;
   idPersona: String;
   body: DatosIntegrantesItem = new DatosIntegrantesItem();
   datosIntegrantes: DatosIntegrantesObject = new DatosIntegrantesObject();
@@ -80,6 +81,7 @@ export class DatosIntegrantesComponent implements OnInit {
 
   ngOnInit() {
     this.checkAcceso();
+    sessionStorage.removeItem("newIntegrante");
 
     // Cuando viene de la edición de un integrante
     if (sessionStorage.getItem("editarIntegrante") == "true") {
@@ -90,6 +92,12 @@ export class DatosIntegrantesComponent implements OnInit {
 
     if (sessionStorage.getItem("historicoSociedad") != null) {
       this.camposDesactivados = true;
+    }
+
+    if (sessionStorage.getItem("disabledAction") == "true") {
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
     }
 
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
