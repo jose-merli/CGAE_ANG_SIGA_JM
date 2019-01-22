@@ -2489,6 +2489,27 @@ export class FichaCursoComponent implements OnInit {
       );
   }
 
+  downloadFile(selectedDatosCargas) {
+    this.progressSpinner = true;
+    let downloadFileInscriptions = new CargaMasivaInscripcionObject();
+    downloadFileInscriptions.cargaMasivaInscripcionesItem = selectedDatosCargas;
+    this.sigaServices
+      .postDownloadFiles("fichaCursos_downloadFile", downloadFileInscriptions)
+      .subscribe(
+        data => {
+          const blob = new Blob([data], { type: "text/csv" });
+          saveAs(blob, "FicheroCargaInscripciones.xls");
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
   actualizaSeleccionadosCargas(selectedDatosCargas) {
     this.numSelectedCargas = selectedDatosCargas.length;
   }
@@ -2575,6 +2596,24 @@ export class FichaCursoComponent implements OnInit {
         );
     }
   }
+  disabledDownload() {
+    if (
+    (this.selectedDatosCargas != null && this.selectedDatosCargas.length == 1)
+    )
+    return false;
+    else return true;
+  } 
+  
+    disabledOthersCargas() {
+    if (
+    
+    (this.selectedDatosCargas != null && this.selectedDatosCargas .length > 0)
+    )
+    return false;
+    else return true;
+    } 
+ 
+
 
   isSelectMultipleCargas() {
     this.selectMultipleCargas = !this.selectMultipleCargas;

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, ViewChild,HostListener, } from "@angular/core";
 import { MultiSelect } from "primeng/primeng";
 import {
   FormBuilder,
@@ -18,6 +18,10 @@ import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { DatosInscripcionObject } from "../../../models/DatosInscripcionObject";
 import { FormadorCursoItem } from "../../../models/FormadorCursoItem";
 import { Location } from "@angular/common";
+
+export enum KEY_CODE {
+  ENTER = 13
+}
 
 @Component({
   selector: "app-busqueda-inscripciones",
@@ -803,5 +807,14 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
+  }
+
+
+    //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.isBuscar();
+    }
   }
 }
