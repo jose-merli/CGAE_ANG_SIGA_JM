@@ -427,7 +427,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     this.cols = [
       {
         field: "visibilidad",
-        header: "form.busquedaCursos.literal.visibilidad"
+        header: "formacion.fichaCursos.datosGenerales.visibilidad"
       },
       {
         field: "codigoCurso",

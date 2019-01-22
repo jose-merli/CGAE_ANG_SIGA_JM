@@ -1391,6 +1391,7 @@ export class FichaCursoComponent implements OnInit {
     } else {
       this.editFormador = true;
     }
+    this.numSelectedFormadores = this.datosFormadores.length;
   }
 
   restTrainer() {
@@ -2050,7 +2051,7 @@ export class FichaCursoComponent implements OnInit {
   }
 
   irEditarSession(id) {
-    if (id.length >= 1 && this.selectMultipleSessions == false) {
+    if (id.length >= 1 && this.selectMultipleSessions == false && this.selectMultiplePrices == false) {
       sessionStorage.setItem("modoEdicionSession", "true");
       sessionStorage.removeItem("eventoSelected");
       sessionStorage.setItem("eventoSelected", JSON.stringify(id[0]));
@@ -2058,6 +2059,8 @@ export class FichaCursoComponent implements OnInit {
       this.router.navigate(["/fichaEventos"]);
       sessionStorage.setItem("fichaAbierta", "true");
     }
+    this.numSelectedPrices = this.datosPrices.length;
+    this.numSelectedSessions = this.datosSessions.length;
   }
 
   actualizaSeleccionadosSessions(selectedDatosSessions) {
@@ -2384,6 +2387,8 @@ export class FichaCursoComponent implements OnInit {
     } else {
       this.editCertificate = true;
     }
+    this.numSelectedCertificates = this.datosCertificates.length;
+
   }
 
   restCertificates() {
