@@ -474,6 +474,10 @@ export class EdicionCurricularesComponent implements OnInit {
   }
   restablecer() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    if (this.nuevo == false) {
+      this.getComboSubtipoCurricular(this.body.idTipoCv);
+      this.getComboTipoCurricular(this.body.idTipoCv);
+    }
     this.booleanToCertificado();
     this.compruebaRegistro();
   }
@@ -532,6 +536,8 @@ export class EdicionCurricularesComponent implements OnInit {
     if (event) {
       this.getComboSubtipoCurricular(event.value);
       this.getComboTipoCurricular(event.value);
+      this.body.idTipoCvSubtipo1 = "";
+      this.body.idTipoCvSubtipo2 = "";
     }
   }
 

@@ -12,7 +12,8 @@ import { Router } from "../../../../../node_modules/@angular/router";
 import { ConfirmationService } from "../../../../../node_modules/primeng/api";
 import {
   AutoComplete,
-  Dropdown
+  Dropdown,
+  Editor
 } from "../../../../../node_modules/primeng/primeng";
 import { TranslateService } from "../../../commons/translate";
 import { CargaMasivaInscripcionObject } from "../../../models/CargaMasivaInscripcionObject";
@@ -28,6 +29,8 @@ import { SigaServices } from "../../../_services/siga.service";
 import { CertificadoCursoItem } from "../../../models/CertificadoCursoItem";
 import { CertificadoCursoObject } from "../../../models/CertificadoCursoObject";
 import { EventoObject } from "../../../models/EventoObject";
+import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
+
 
 @Component({
   selector: "app-ficha-curso",
@@ -217,7 +220,7 @@ export class FichaCursoComponent implements OnInit {
   archivoDisponible: boolean = false;
   existeArchivo: boolean = false;
   save_file: any;
-
+  activacionEditar: boolean = false;
   file: File = undefined;
 
   constructor(
@@ -243,6 +246,7 @@ export class FichaCursoComponent implements OnInit {
     this.getColsResultsCargas();
 
     sessionStorage.removeItem("isFormacionCalendar");
+    sessionStorage.removeItem("fichaCursoPermisos");
     sessionStorage.removeItem("abrirFormador");
 
     this.inscription = new DatosInscripcionItem();
@@ -436,6 +440,43 @@ export class FichaCursoComponent implements OnInit {
     } 
 
     this.getNumTutor();
+    this.checkAcceso();
+
+  }
+
+  // Control Permisos
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "20A";
+    let derechoAcceso;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (derechoAcceso == 3) {
+          //permiso total
+          this.activacionEditar = true;
+    sessionStorage.setItem("fichaCursoPermisos", JSON.stringify(this.activacionEditar));
+        } else if (derechoAcceso == 2) {
+          // solo lectura
+          this.activacionEditar = false;
+    sessionStorage.setItem("fichaCursoPermisos", JSON.stringify(this.activacionEditar));
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+    );
   }
 
   //TARJETA DATOS GENERALES
@@ -2546,6 +2587,27 @@ export class FichaCursoComponent implements OnInit {
       );
   }
 
+  downloadFile(selectedDatosCargas) {
+    this.progressSpinner = true;
+    let downloadFileInscriptions = new CargaMasivaInscripcionObject();
+    downloadFileInscriptions.cargaMasivaInscripcionesItem = selectedDatosCargas;
+    this.sigaServices
+      .postDownloadFiles("fichaCursos_downloadFile", downloadFileInscriptions)
+      .subscribe(
+        data => {
+          const blob = new Blob([data], { type: "text/csv" });
+          saveAs(blob, "FicheroCargaInscripciones.xls");
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
   actualizaSeleccionadosCargas(selectedDatosCargas) {
     this.numSelectedCargas = selectedDatosCargas.length;
   }
@@ -2632,6 +2694,24 @@ export class FichaCursoComponent implements OnInit {
         );
     }
   }
+  disabledDownload() {
+    if (
+    (this.selectedDatosCargas != null && this.selectedDatosCargas.length == 1)
+    )
+    return false;
+    else return true;
+  } 
+  
+    disabledOthersCargas() {
+    if (
+    
+    (this.selectedDatosCargas != null && this.selectedDatosCargas .length > 0)
+    )
+    return false;
+    else return true;
+    } 
+ 
+
 
   isSelectMultipleCargas() {
     this.selectMultipleCargas = !this.selectMultipleCargas;
@@ -2926,7 +3006,7 @@ export class FichaCursoComponent implements OnInit {
   controlBotonesEstado(button: string) {
  
     let estado = this.curso.idEstado;
-    if (this.modoEdicion) {
+    if (this.modoEdicion && this.activacionEditar) {
 
       if (button == 'Cancelar')
         if (estado != this.valorEstadoFinalizado && estado != this.valorEstadoCancelado )

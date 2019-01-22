@@ -64,6 +64,7 @@
           <div class="d-flex justify-content-start mt-2">
             <label class="mr-auto title-ficha">{{'formacion.fichaInscripcion.datosInscripcion.cabecera' | translate }}</label>
           </div>
+          <i class="fa fa-angle-down float-right"></i>
         </div>
       </div>
       <div *ngIf="esFichaActiva('inscripcion')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -80,7 +81,7 @@
       <div class="form-row lg-12 md-12">
         <div class="col-lg-4 col-md-4">
           <label>{{ 'censo.nuevaSolicitud.fechaSolicitud' | translate }}(*)</label>
-          <p-calendar [locale]="es" [(ngModel)]="inscripcion.fechaSolicitud" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [disabled]="modoEdicion" [minDate]="minDateFechaSolicitud"></p-calendar>
+          <p-calendar [locale]="es" [(ngModel)]="inscripcion.fechaSolicitud" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [disabled]="modoEdicion || !activacionEditar" [minDate]="minDateFechaSolicitud"></p-calendar>
         </div>
         <div class="col-lg-4 col-md-4">
           <label>{{ "censo.busquedaSolicitudesModificacion.literal.estado" | translate}}</label>
@@ -104,8 +105,8 @@
         <!-- <button pButton (click)="restEvent()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="tipoAccesoLectura"></button>
         <button pButton (click)="saveEvent()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="validateForm() || tipoAccesoLectura"></button>
        -->
-       <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="modoEdicion"></button>
-       <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="modoEdicion" (click)="guardarInscripcion()"></button>
+       <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="modoEdicion || !activacionEditar"></button>
+       <button pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="modoEdicion || !activacionEditar" (click)="guardarInscripcion()"></button>
       </div>
     </div>
   </div>
@@ -123,6 +124,7 @@
           <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha">{{"formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
           </div>
+          <i *ngIf="inscripcionInsertada || modoEdicion" class="fa fa-angle-down float-right"></i>
           <div class="d-flex justify-content-between">
             <label>{{"administracion.usuarios.literal.NIF" | translate}}
               <span>{{ persona.nif }}</span>
@@ -179,16 +181,16 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
               <input [(ngModel)]="persona.nombre" (ngModelChange)="activarGuardarNotarioNoExistente($event)" type="text" class="form-control"
-                [(disabled)]="!editar" pInputText>
+                [(disabled)]="!editar || !activacionEditar" pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-6">
               <label>{{"censo.busquedaClientes.literal.apellido1" | translate}}</label>
               <input [(ngModel)]="persona.apellido1" (ngModelChange)="activarGuardarNotarioNoExistente($event)" type="text" class="form-control"
-                [(disabled)]="!editar" pInputText>
+                [(disabled)]="!editar || !activacionEditar" pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-6">
               <label>{{"censo.busquedaClientes.literal.apellido2" | translate}}</label>
-              <input [(ngModel)]="persona.apellido2" type="text " class="form-control" [(disabled)]="!editar" pInputText>
+              <input [(ngModel)]="persona.apellido2" type="text " class="form-control" [(disabled)]="!editar || !activacionEditar" pInputText>
             </div>
   
           </div>
@@ -200,8 +202,8 @@
   
     <div *ngIf="esFichaActiva('personales')" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="isSearch()" [(disabled)]="!isAdministrador" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
-        <button (click)="actualizaPersona()" [(disabled)]="!guardarPersona" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="isSearch()" [(disabled)]="!isAdministrador || !activacionEditar" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
+        <button (click)="actualizaPersona()" [(disabled)]="!guardarPersona || !activacionEditar" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -289,6 +291,7 @@
         <div class="d-flex justify-content-start mt-2">
           <label class="mr-auto title-ficha">{{'formacion.fichaInscripcion.datosCertificados.cabecera' | translate}}</label>
         </div>
+        <i *ngIf="inscripcionInsertada || modoEdicion" class="fa fa-angle-down float-right"></i>
       </div>
     </div>
     <div *ngIf="esFichaActiva('certificado')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -364,7 +367,7 @@
 
         <div class="bloque col-lg-5 col-md-5">
           <label>Emitir certificado</label>
-          <p-checkbox name="checkCertificado" binary="true" [(ngModel)]="inscripcion.isCertificadoAutomatico" [disabled]="checkCertificadoAutomatico"></p-checkbox>
+          <p-checkbox name="checkCertificado" binary="true" [(ngModel)]="inscripcion.isCertificadoAutomatico" [disabled]="checkCertificadoAutomatico || !activacionEditar"></p-checkbox>
         </div>
       </div>
     </div>
@@ -374,8 +377,8 @@
   <div class="card-footer" *ngIf="esFichaActiva('certificado')">
 
     <div class="text-right main-button ">
-      <button pButton type="button" iconPos="left" label="Generar" [disabled]="!generarCertificado" (click)="generarSolicitudCertificado()"></button>
-      <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="checkCertificadoAutomatico" (click)="actualizarCertificado()"></button>
+      <button pButton type="button" iconPos="left" label="Generar" [disabled]="!generarCertificado || !activacionEditar" (click)="generarSolicitudCertificado()"></button>
+      <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="checkCertificadoAutomatico || !activacionEditar" (click)="actualizarCertificado()"></button>
     </div>
   </div>
 

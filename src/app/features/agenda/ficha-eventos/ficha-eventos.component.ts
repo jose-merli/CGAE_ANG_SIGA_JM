@@ -503,7 +503,11 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     if (this.newEvent.tipoAcceso == 2) {
       this.tipoAccesoLectura = true;
     } else {
-      this.tipoAccesoLectura = false;
+      if(sessionStorage.getItem("fichaCursoPermisos")){
+        this.tipoAccesoLectura = !JSON.parse(sessionStorage.getItem("fichaCursoPermisos"));
+      }else{
+        this.tipoAccesoLectura = false;
+      }
     }
   }
 

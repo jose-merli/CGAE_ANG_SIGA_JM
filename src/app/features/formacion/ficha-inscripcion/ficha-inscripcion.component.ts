@@ -10,6 +10,7 @@ import { Router } from "@angular/router";
 import { DatosCursosItem } from "../../../models/DatosCursosItem";
 import { TranslateService } from "../../../commons/translate";
 import { PersonaObject } from "../../../models/PersonaObject";
+import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
 
 @Component({
   selector: "app-ficha-inscripcion",
@@ -43,7 +44,7 @@ export class FichaInscripcionComponent implements OnInit {
 
   rowsPerPage: any = [];
   cols;
-
+  activacionEditar: boolean = false;
   comboEstados: any[];
   comboPrecio: any[];
   comboModoPago: any[];
@@ -195,6 +196,41 @@ export class FichaInscripcionComponent implements OnInit {
     }
 
     this.compruebaAdministrador();
+
+    this.checkAcceso();
+  }
+
+  // control de permisos
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "20B";
+    let derechoAcceso;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (derechoAcceso == 3) {
+          //permiso total
+          this.activacionEditar = true;
+        } else if (derechoAcceso == 2) {
+          // solo lectura
+          this.activacionEditar = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+    );
   }
 
   cargaInscripcion() {
