@@ -83,7 +83,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.textFilter = "Elegir";
     this.textSelected = "{0} ficheros seleccionadas";
     this.firstDocs = 0;
@@ -286,6 +286,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       this.body.idInforme = this.informeItem.idInforme;
       this.body.nombreFicheroSalida = this.informeItem.nombreFicheroSalida;
       this.body.formatoSalida = this.informeItem.formatoSalida;
+      this.body.idFormatoSalida = this.informeItem.idFormatoSalida;
       this.body.sufijos = this.informeItem.sufijos
       if (this.body.sufijos && this.body.sufijos.length > 0) {
         this.selectedSufijos = this.body.sufijos;
