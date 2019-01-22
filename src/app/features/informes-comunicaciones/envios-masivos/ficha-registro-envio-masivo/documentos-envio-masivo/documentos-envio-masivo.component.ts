@@ -270,9 +270,12 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
         this.guardar(data.nombreDocumento);
       },
       err => {
-
         if (err.error.error.code == 400) {
-          this.showFail('Formato no permitido o tamaño maximo superado');
+          if(err.error.error.description != null){
+            this.showFail(err.error.error.description);
+          }else{
+            this.showFail('Formato no permitido o tamaño maximo superado');
+          }
         } else {
           this.showFail('Error al subir el documento');
           console.log(err);

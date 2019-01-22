@@ -1,3 +1,4 @@
+import { SufijoItem } from "./SufijoItem";
 export class InformesModelosComItem {
   idioma: String;
   nombreFicheroSalida: String;
@@ -9,6 +10,6 @@ export class InformesModelosComItem {
   datos: String;
   idInforme: String;
   idFormatoSalida: String;
-  sufijos: String[] = [];
+  sufijos: SufijoItem[] = [];
   constructor() { }
 }

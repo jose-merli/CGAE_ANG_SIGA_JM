@@ -1,5 +1,6 @@
 import { PlantillaDocumentoItem } from "./PlantillaDocumentoItem";
 import { ConsultasPlantillasInformesItem } from "./ConsultasPlantillasInformes";
+import { SufijoItem } from "./SufijoItem";
 export class FichaPlantillasDocument {
   idInstitucion: String;
   idClaseComunicacion: String;
@@ -14,7 +15,7 @@ export class FichaPlantillasDocument {
   idInforme: String;
   plantillas: PlantillaDocumentoItem[] = [];
   consultas: ConsultasPlantillasInformesItem[] = [];
-  sufijos: String[] = [];
+  sufijos: SufijoItem[] = [];
   constructor() { }
 }
 
