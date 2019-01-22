@@ -135,8 +135,8 @@ export class PlantillaDocumentoComponent implements OnInit {
     ]
 
     this.datos = [
-      { consulta: '', finalidad: '', objetivo: 'Destinatario', idObjetivo: '1' },
       { consulta: '', finalidad: '', objetivo: 'Condicional', idObjetivo: '3' },
+      { consulta: '', finalidad: '', objetivo: 'Destinatario', idObjetivo: '1' },
       { consulta: '', finalidad: '', objetivo: 'Multidocumento', idObjetivo: '2' },
       { consulta: '', finalidad: '', objetivo: 'Datos', idObjetivo: '4' },
     ]
@@ -208,7 +208,6 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   onSelectConsulta(dato) {
-    console.log(dato)
     if (!this.selectMultiple) {
       this.selectedDatos = [];
     } else if (this.selectMultiple && dato[0].idObjetivo != '4') {
@@ -285,11 +284,10 @@ export class PlantillaDocumentoComponent implements OnInit {
       this.informeItem = JSON.parse(sessionStorage.getItem("modelosInformesSearch"));
       this.body.idInforme = this.informeItem.idInforme;
       this.body.nombreFicheroSalida = this.informeItem.nombreFicheroSalida;
-      this.body.formatoSalida = this.informeItem.formatoSalida;
+      this.body.idFormatoSalida = this.informeItem.idFormatoSalida;
       this.body.sufijos = this.informeItem.sufijos
       if (this.body.sufijos && this.body.sufijos.length > 0) {
         this.selectedSufijos = this.body.sufijos;
-        console.log('body', this.selectedSufijos)
       }
     }
   }
@@ -309,11 +307,9 @@ export class PlantillaDocumentoComponent implements OnInit {
   getComboSufijos() {
     this.sigaServices.get("plantillasDoc_combo_sufijos").subscribe(
       n => {
-        debugger;
         this.sufijos = n.sufijos;
         this.getValoresSufijo();
 
-        console.log(this.sufijos)
       },
       err => {
         console.log(err);
@@ -509,7 +505,7 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.datos.map(e => {
       let obj = {
         idConsulta: e.idConsulta,
-        idConsultaAnterior: e.consultaAnterior,
+        idConsultaAnterior: e.idConsultaAnterior,
         idObjetivo: e.idObjetivo
       }
       this.body.consultas.push(obj)
@@ -558,7 +554,6 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   onChangeIdioma(e) {
-    console.log(e)
     this.selectedIdioma = e.value
   }
 
@@ -580,7 +575,6 @@ export class PlantillaDocumentoComponent implements OnInit {
             }
           }
           this.datos = [... this.datos];
-          console.log(this.datos)
         },
         err => {
           console.log(err);
@@ -602,8 +596,6 @@ export class PlantillaDocumentoComponent implements OnInit {
     } else {
       this.getFinalidad(id);
     }
-
-    console.log(id)
   }
 
   onShowDatosGenerales() {
@@ -729,7 +721,6 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   getValoresSufijo() {
-    debugger;
 
     for (let sel of this.selectedSufijos) {
       this.sufijos.map(e => {

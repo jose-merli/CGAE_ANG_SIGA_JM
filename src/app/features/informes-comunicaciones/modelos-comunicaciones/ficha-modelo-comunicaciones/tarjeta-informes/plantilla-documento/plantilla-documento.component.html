@@ -222,7 +222,7 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td *ngFor="let col of columns" pEditableColumn>
               <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 1" [(ngModel)]="dato[col.field]"
-                [options]="consultasComboDestinatarios" class="select-form"></p-dropdown>
+                [options]="consultasComboDestinatarios" class="select-form "></p-dropdown>
               <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 2" [(ngModel)]="dato[col.field]"
                 [options]="consultasComboMulti" class="select-form"></p-dropdown>
               <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 3" [(ngModel)]="dato[col.field]"
@@ -230,7 +230,7 @@
               <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 4" [(ngModel)]="dato[col.field]"
                 [options]="consultasComboDatos" class="select-form"></p-dropdown>
               <span *ngIf="col.field=='finalidad' && dato.finalidad != ''">{{dato[col.field]}}</span>
-              <span *ngIf="col.field=='objetivo'">{{dato[col.field]}}</span>
+              <span *ngIf="col.field=='objetivo'" class="text-uppercase">{{dato[col.field]}}</span>
             </td>
           </tr>
         </ng-template>
