@@ -118,6 +118,10 @@ export class PerfilesFichaComponent implements OnInit {
 
   guardar() {
 
+    if (sessionStorage.getItem("modelosSearch") != null && this.body.idModeloComunicacion == undefined) {
+      this.body.idModeloComunicacion = JSON.parse(sessionStorage.getItem("modelosSearch")).idModeloComunicacion;
+    }
+
     let array: any[] = [];
     let arrayNoSel: any[] = [];
     this.perfilesSeleccionados.forEach(element => {

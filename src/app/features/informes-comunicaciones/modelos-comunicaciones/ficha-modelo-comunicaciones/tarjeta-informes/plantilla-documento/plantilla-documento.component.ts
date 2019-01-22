@@ -439,6 +439,8 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.sigaServices.post("plantillasDoc_guardar", this.body).subscribe(
       data => {
         this.showSuccess('La plantilla se ha guardado correctamente');
+        this.body.idInforme = JSON.parse(data["body"]).data;
+        sessionStorage.setItem("modelosInformesSearch",JSON.stringify(this.body));
 
         sessionStorage.removeItem("crearNuevaPlantillaDocumento");
       },
@@ -603,10 +605,9 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   eliminar(dato) {
-
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
-      message: '¿Está seguro de cancelar los' + dato.length + 'envíos seleccionados',
+      message: '¿Está seguro de eliminar ' + dato.length + 'consultas seleccionadas?',
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarEliminar(dato);
@@ -631,10 +632,9 @@ export class PlantillaDocumentoComponent implements OnInit {
     dato.forEach(element => {
       let objEliminar = {
         idModeloComunicacion: this.body.idModeloComunicacion,
-        idClaseComunicacion: element.idClaseComunicacion,
         idInstitucion: this.body.idInstitucion,
-        idInforme: this.body.idInforme,
-        idConsulta: dato.idConsulta
+        idConsulta: element.idConsulta,
+        idInforme: this.body.idInforme
       };
       this.eliminarArray.push(objEliminar);
     });
@@ -655,7 +655,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   eliminarPlantilla(dato) {
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
-      message: '¿Está seguro de cancelar los' + dato.length + 'envíos seleccionados',
+      message: '¿Está seguro de eliminar ' + dato.length + 'plantillas seleccionadas?',
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarEliminarPlantilla(dato);
@@ -680,6 +680,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       let objEliminar = {
         idModeloComunicacion: this.body.idModeloComunicacion,
         idPlantillaDocumento: element.idPlantillaDocumento,
+        idInstitucion: this.body.idInstitucion,
         idInforme: element.idInforme
       };
       this.eliminarArrayPlantillas.push(objEliminar);
