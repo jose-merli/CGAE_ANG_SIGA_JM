@@ -1,10 +1,12 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-<div *ngIf="emptyLoadFichaColegial" class="info-limit d-flex justify-content-center align-items-center mb-1">
+<div *ngIf="emptyLoadFichaColegial || publicarDatosContacto" class="info-limit d-flex justify-content-center align-items-center mb-1">
     <i class="fa fa-info-circle pr-2"></i>
     <div class="d-inline-block">
         <div>
-            <span class="pr-2 text-left">No se han podido cargar los datos porque el usuario desde el que ha inciado sesión no es colegiado</span>
-        </div>
+            <span *ngIf="emptyLoadFichaColegial" class="pr-2 text-left">No se han podido cargar los datos porque el usuario desde el que ha inciado sesión no es colegiado</span>
+            <span *ngIf="publicarDatosContacto" class="pr-2 text-left">{{"menu.fichaColegial.lopd.literal" | translate}}</span>
+
+          </div>
     </div> 
 </div>
 <div class="busqueda-container">

@@ -427,7 +427,11 @@ export class FichaColegialComponent implements OnInit {
     // this.onInitSociedades();
 
     // this.onInitOtrasColegiaciones();
-    this.compruebaDNI();
+
+    if(!this.esNewColegiado){
+      this.compruebaDNI();
+    }
+
     // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
     this.colsColegiales = [
       {
@@ -1044,8 +1048,9 @@ export class FichaColegialComponent implements OnInit {
 
     if (this.esNewColegiado) {
       this.abreCierraFicha("generales");
-    }
+    }else{
     this.obtenerPartidoJudicial();
+    }
   }
 
   closeDialogConfirmation(item) {
@@ -1428,9 +1433,9 @@ export class FichaColegialComponent implements OnInit {
       this.generalBody.comisiones = "0";
     }
     if (this.publicarDatosContacto == true) {
-      this.showInfo(
-        this.translateService.instant("menu.fichaColegial.lopd.literal")
-      );
+      // this.showInfo(
+      //   this.translateService.instant("menu.fichaColegial.lopd.literal")
+      // );
       this.generalBody.noAparecerRedAbogacia = "1";
     } else {
       this.generalBody.noAparecerRedAbogacia = "0";
@@ -1482,7 +1487,7 @@ export class FichaColegialComponent implements OnInit {
       JSON.stringify(this.checkGeneralBody) != JSON.stringify(this.generalBody)
     ) {
       if (
-        // this.isValidDNI(this.generalBody.nif) &&
+        (this.isValidDNI(this.generalBody.nif) || this.isValidCIF(this.generalBody.nif) || this.isValidNIE(this.generalBody.nif)) &&
         this.generalBody.nif != undefined &&
         this.generalBody.idTipoIdentificacion != "" &&
         this.generalBody.idTipoIdentificacion != undefined &&
@@ -1763,7 +1768,7 @@ export class FichaColegialComponent implements OnInit {
 
   compruebaDNI() {
     // modo creacion
-    this.activacionGuardarGenerales();
+     this.activacionGuardarGenerales();
 
     if (this.generalBody.nif.length > 8) {
       if (this.isValidDNI(this.generalBody.nif)) {

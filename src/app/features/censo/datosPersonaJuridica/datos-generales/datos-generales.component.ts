@@ -427,7 +427,16 @@ export class DatosGenerales implements OnInit {
               let respuesta = JSON.parse(data["body"]);
               this.idPersona = respuesta.id;
             },
-            error => {},
+            error => {
+              let e = JSON.parse(error["error"]).error;
+              if (e.message == "messages.censo.nifcifExiste2") {
+                this.showFail(
+                  this.translateService.instant("messages.censo.nifcifExiste2")
+                );
+                this.progressSpinner = false;
+                this.showGuardar = false;
+              }
+            },
             () => {
               sessionStorage.removeItem("crearnuevo");
               this.cerrarAuditoria();
@@ -964,9 +973,18 @@ export class DatosGenerales implements OnInit {
   }
 
   onUnselect(event) {
+    // if (event) {
+    //   this.updateItems.delete(event.value);
+    //   this.showGuardar = true;
+    // }
     if (event) {
-      this.updateItems.delete(event.value);
-      this.showGuardar = true;
+      if (event.value == undefined) {
+        this.updateItems.delete(event.idGrupo);
+        this.showGuardar = true;
+      } else {
+        this.updateItems.delete(event.value);
+        this.showGuardar = true;
+      }
     }
   }
 
@@ -983,7 +1001,7 @@ export class DatosGenerales implements OnInit {
 
       this.historico = true;
 
-      this.calendar.readonlyInput = true;
+      //this.calendar.readonlyInput = true;
     }
   }
 
