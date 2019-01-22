@@ -88,8 +88,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
     this.getDatos();
     this.busquedaIdioma();
-    this.getConsultasDisponibles();
-    this.getDocumentos();
+    this.getConsultasDisponibles();    
 
     this.getSteps();
 
@@ -266,8 +265,9 @@ export class PlantillaDocumentoComponent implements OnInit {
 
     this.getSessionStorage();
 
-    if (this.body.idInforme != undefined) {
+    if (this.body.idInforme != undefined && this.body.idInforme != null) {
       this.getResultados();
+      this.getDocumentos();
     }
   }
 
@@ -283,7 +283,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       this.informeItem = JSON.parse(sessionStorage.getItem("modelosInformesSearch"));
       this.body.idInforme = this.informeItem.idInforme;
       this.body.nombreFicheroSalida = this.informeItem.nombreFicheroSalida;
-      this.body.formatoSalida = this.informeItem.idFormatoSalida;
+      this.body.formatoSalida = this.informeItem.formatoSalida;
       this.body.sufijos = this.informeItem.sufijos
       if (this.body.sufijos && this.body.sufijos.length > 0) {
         this.selectedSufijos = this.body.sufijos;
