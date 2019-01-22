@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  HostListener,
   OnInit,
   ViewChild,
   ViewEncapsulation
@@ -23,6 +24,10 @@ import { esCalendar } from "../../../utils/calendar";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
 import { AuthenticationService } from "../../../_services/authentication.service";
 import { SigaServices } from "../../../_services/siga.service";
+
+export enum KEY_CODE {
+  ENTER = 13
+}
 
 @Component({
   selector: "app-busqueda-cursos",
@@ -897,4 +902,13 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
       detail: msg
     });
   }
+
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.isBuscar(false);
+    }
+  }
+
 }
