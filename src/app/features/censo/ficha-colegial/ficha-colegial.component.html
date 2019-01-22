@@ -552,32 +552,6 @@
                 pInputText
               />
             </div>
-            <div class="form-check col-lg-6 col-md-6">
-              <br />
-              <label class="form-group-label">{{
-                "censo.consultaDatosGenerales.literal.publicidad" | translate
-              }}</label>
-              &nbsp;&nbsp;
-              <p-checkbox
-                (onChange)="activacionGuardarGenerales()"
-                [(disabled)]="!this.permisos || disabledAction"
-                [(ngModel)]="publicidad"
-                binary="true"
-              ></p-checkbox>
-            </div>
-            <div class="form-check col-lg-6 col-md-6">
-              <br />
-              <label class="form-group-label">{{
-                "censo.consultaDatosGenerales.literal.guiaJudicial" | translate
-              }}</label>
-              &nbsp;&nbsp;
-              <p-checkbox
-                (onChange)="activacionGuardarGenerales()"
-                [(ngModel)]="guiaJudicial"
-                [(disabled)]="!this.permisos || disabledAction"
-                binary="true"
-              ></p-checkbox>
-            </div>
             <br />
             <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
               <!-- <span> -->

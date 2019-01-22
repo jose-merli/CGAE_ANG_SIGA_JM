@@ -7,7 +7,7 @@ import {
   ViewEncapsulation
 } from "@angular/core";
 import { Router } from "@angular/router";
-import { ConfirmationService } from "primeng/api";
+import { ConfirmationService, SelectItem } from "primeng/api";
 import { DataTable } from "primeng/datatable";
 import {
   FormBuilder,
@@ -23,6 +23,9 @@ import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
 import { esCalendar } from "./../../../utils/calendar";
 import { SigaServices } from "./../../../_services/siga.service";
+import { ComboSituacionResidenteItem } from "../../../models/ComboSituacionResidenteItem";
+import { ComboItem } from "../../../models/ComboColegiadoItem";
+import { ComboItemColegiado } from "../../../models/ComboItemColegiado";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -63,7 +66,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   comboEtiquetas: any[];
   comboSituacion: any[];
-  comboResidencia: any[] = [];
+  comboSituacionResidencia: ComboItemColegiado[] = [];
   comboInscrito: any[] = [];
   comboSexo: any[] = [];
   comboEstadoCivil: any[];
@@ -87,6 +90,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   selectedProvincia: any;
   selectedPoblacion: any;
   selectedTipoDireccion: any;
+  selectedSitResi: any;
   resultadosPoblaciones: any;
   historico: boolean;
 
@@ -138,8 +142,11 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       this.body = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial")
       );
+
+      // this.selectedSitResi = this.body.situacionresidente.value;
+
       sessionStorage.removeItem("filtrosBusquedaColegiadosFichaColegial");
-      this.isBuscar();
+      // Sthis.isBuscar();
     }
   }
 
@@ -312,8 +319,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   getCombos() {
     this.getComboEtiquetas();
-    this.getComboSituacion();
-    this.getComboResidencia();
+    this.getComboSituacionResidencia();
     this.getComboInscrito();
     this.getComboSexo();
     this.getComboEstadoCivil();
@@ -335,25 +341,40 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     );
   }
 
-  getComboSituacion() {
+  getComboSituacionResidencia() {
     this.sigaServices.get("busquedaColegiados_situacion").subscribe(
       n => {
         this.comboSituacion = n.combooItems;
-        this.arregloTildesCombo(this.comboSituacion);
+
+        let i = 0;
+        this.comboSituacion.forEach(element => {
+          i++;
+          this.comboSituacionResidencia.push({
+            label: element.label + " / Sí",
+            value: i + "",
+            situacion: element.value,
+            residente: "1"
+          });
+          i++;
+          this.comboSituacionResidencia.push({
+            label: element.label + " / No",
+            value: i + "",
+            situacion: element.value,
+            residente: "0"
+          });
+        });
+
+        console.log("EEEE", this.comboSituacionResidencia);
+        this.arregloTildesCombo(this.comboSituacionResidencia);
       },
       err => {
         console.log(err);
+      },
+      () => {
+        this.selectedSitResi = this.body.situacionresidente.value;
+        this.isBuscar();
       }
     );
-  }
-
-  getComboResidencia() {
-    this.comboResidencia = [
-      { label: "Sí", value: 1 },
-      { label: "No", value: 0 }
-    ];
-
-    this.arregloTildesCombo(this.comboResidencia);
   }
 
   getComboInscrito() {
@@ -487,6 +508,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       // } else {
       //   this.body.fechaNacimiento = undefined;
       // }
+      this.body.situacion = this.body.situacionresidente.situacion;
+      this.body.residencia = this.body.situacionresidente.residente;
 
       this.sigaServices
         .postPaginado(
@@ -654,8 +677,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         this.fechaIncorporacionDesdeSelect == null) &&
       (this.fechaIncorporacionHastaSelect == undefined ||
         this.fechaIncorporacionHastaSelect == null) &&
-      (this.body.situacion == undefined || this.body.situacion == null) &&
-      (this.body.residencia == undefined || this.body.residencia == null) &&
+      (this.selectedSitResi == undefined || this.selectedSitResi == null) &&
       (this.body.inscrito == undefined || this.body.inscrito == null) &&
       (this.body.sexo == undefined || this.body.sexo == null) &&
       (this.body.idEstadoCivil == undefined ||
@@ -716,5 +738,17 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     if (event.keyCode === KEY_CODE.ENTER) {
       this.isBuscar();
     }
+  }
+
+  onChangeValue(event) {
+    console.log("vento ", event);
+    this.comboSituacionResidencia.forEach(element => {
+      if (element.value == event.value) {
+        this.body.situacionresidente = element;
+      }
+    });
+    // this.selectedSitResi = this.body.situacionresidente.value;
+    //compruebastodos los elementos y buscas el que has seleccionado
+    //cuando lo encuentres----->
   }
 }

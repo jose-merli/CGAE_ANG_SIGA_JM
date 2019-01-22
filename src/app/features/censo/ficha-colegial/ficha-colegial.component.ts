@@ -158,8 +158,6 @@ export class FichaColegialComponent implements OnInit {
   fechaNacimiento: Date;
   fechaAlta: Date;
   comisiones: boolean;
-  guiaJudicial: boolean;
-  publicidad: boolean;
   partidoJudicial: any;
   esNewColegiado: boolean = false;
   esColegiado: boolean;
@@ -356,6 +354,7 @@ export class FichaColegialComponent implements OnInit {
       this.emptyLoadFichaColegial = JSON.parse(
         sessionStorage.getItem("emptyLoadFichaColegial")
       );
+
       // if (this.emptyLoadFichaColegial) {
         // this.showFailDetalle(
         //   "No se han podido cargar los datos porque el usuario desde el que ha inciado sesión no es colegiado"
@@ -1415,16 +1414,6 @@ export class FichaColegialComponent implements OnInit {
     } else {
       this.generalBody.comisiones = "0";
     }
-    if (this.guiaJudicial == true) {
-      this.generalBody.guiaJudicial = "1";
-    } else {
-      this.generalBody.guiaJudicial = "0";
-    }
-    if (this.publicidad == true) {
-      this.generalBody.publicidad = "1";
-    } else {
-      this.generalBody.publicidad = "0";
-    }
     if (this.publicarDatosContacto == true) {
       this.showInfo(
         this.translateService.instant("menu.fichaColegial.lopd.literal")
@@ -1440,16 +1429,6 @@ export class FichaColegialComponent implements OnInit {
       this.comisiones = true;
     } else {
       this.comisiones = false;
-    }
-    if (this.generalBody.publicidad == "1") {
-      this.publicidad = true;
-    } else {
-      this.publicidad = false;
-    }
-    if (this.generalBody.guiaJudicial == "1") {
-      this.guiaJudicial = true;
-    } else {
-      this.guiaJudicial = false;
     }
     if (this.generalBody.noAparecerRedAbogacia == "1") {
       this.publicarDatosContacto = true;
