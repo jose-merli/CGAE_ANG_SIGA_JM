@@ -1,3 +1,7 @@
+import { ComboEtiquetasItem } from "./ComboEtiquetasItem";
+import { ComboSituacionResidenteItem } from "./ComboSituacionResidenteItem";
+import { ComboItemColegiado } from "./ComboItemColegiado";
+
 export class DatosColegiadosItem {
   numColegiado: string;
   nif: string;
@@ -19,6 +23,8 @@ export class DatosColegiadosItem {
   categoria: string;
   residencia: string;
   situacion: string;
+  situacionResidente: string;
+  situacionresidente: ComboItemColegiado;
   inscrito: string;
   residenteInscrito: string;
   correo: string;

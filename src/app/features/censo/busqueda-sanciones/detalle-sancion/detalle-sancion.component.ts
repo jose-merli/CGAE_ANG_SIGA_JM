@@ -281,12 +281,7 @@ export class DetalleSancionComponent implements OnInit {
 
   deshabilitarFirmeza() {
     if (this.body.fechaAcuerdoDate != undefined) {
-      if (this.body.chkFirmeza == true) {
-        // Check marcado
-        this.disabledPeriodoDesde = false;
-        this.disabledFechaFirme = true;
-        this.body.fechaFirmezaDate = undefined;
-      } else if (this.body.fechaFirmezaDate != undefined) {
+      if (this.body.fechaFirmezaDate != undefined) {
         //Check desmarcado y fecha informada
         this.disabledPeriodoDesde = false;
       } else {
@@ -547,8 +542,8 @@ export class DetalleSancionComponent implements OnInit {
 
   save() {
     if (
-      (this.body.fechaFirmezaDate != null &&
-        this.body.fechaAcuerdoDate <= this.body.fechaFirmezaDate) ||
+      this.body.fechaFirmezaDate != null &&
+      this.body.fechaAcuerdoDate <= this.body.fechaFirmezaDate &&
       this.body.chkFirmeza
     ) {
       if (
