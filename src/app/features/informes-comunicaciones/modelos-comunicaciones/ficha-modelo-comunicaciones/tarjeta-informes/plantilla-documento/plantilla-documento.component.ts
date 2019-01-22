@@ -417,7 +417,11 @@ export class PlantillaDocumentoComponent implements OnInit {
       err => {
 
         if (err.error.error.code == 400) {
-          this.showFail('Formato no permitido o tamaño maximo superado');
+          if(err.error.error.description != null){
+            this.showFail(err.error.error.description);
+          }else{
+            this.showFail('Formato no permitido o tamaño maximo superado');
+          }          
         } else {
           this.showFail('Error al subir el documento');
           console.log(err);
@@ -429,6 +433,19 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
   guardarDatosGenerales() {
     sessionStorage.removeItem("crearNuevaPlantillaDocumento");
+    this.body.sufijos = [];
+    let orden:  number = 1;
+    this.selectedSufijos.forEach(element => {
+      let ordenString = orden.toString();
+      let objSufijo = {
+        idSufijo: element.value,
+        orden: ordenString,
+        nombreSufijo: element.label
+      }
+      this.body.sufijos.push(objSufijo);
+      orden = orden + 1;
+    });
+
     this.sigaServices.post("plantillasDoc_guardar", this.body).subscribe(
       data => {
         this.showSuccess('La plantilla se ha guardado correctamente');
