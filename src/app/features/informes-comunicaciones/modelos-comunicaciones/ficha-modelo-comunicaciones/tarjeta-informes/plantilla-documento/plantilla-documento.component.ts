@@ -416,6 +416,8 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.sigaServices.post("plantillasDoc_guardar", this.body).subscribe(
       data => {
         this.showSuccess('La plantilla se ha guardado correctamente');
+        this.body.idInforme = JSON.parse(data["body"]).data;
+        sessionStorage.setItem("modelosInformesSearch",JSON.stringify(this.body));
 
         sessionStorage.removeItem("crearNuevaPlantillaDocumento");
       },
@@ -574,14 +576,9 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   eliminar(dato) {
-
-    dato.forEach(element => {
-      let x = this.datos.indexOf(element);
-      this.datos.splice(x, 1);      
-    });
-    /*this.confirmationService.confirm({
+    this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
-      message: '¿Está seguro de cancelar los' + dato.length + 'envíos seleccionados',
+      message: '¿Está seguro de eliminar ' + dato.length + 'consultas seleccionadas?',
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarEliminar(dato);
@@ -597,7 +594,7 @@ export class PlantillaDocumentoComponent implements OnInit {
           }
         ];
       }
-    });*/
+    });
   }
 
 
@@ -606,9 +603,9 @@ export class PlantillaDocumentoComponent implements OnInit {
     dato.forEach(element => {
       let objEliminar = {
         idModeloComunicacion: this.body.idModeloComunicacion,
-        idClaseComunicacion: element.idClaseComunicacion,
         idInstitucion: this.body.idInstitucion,
-        idConsulta: dato.idConsulta
+        idConsulta: element.idConsulta,
+        idInforme: this.body.idInforme
       };
       this.eliminarArray.push(objEliminar);
     });
@@ -618,6 +615,54 @@ export class PlantillaDocumentoComponent implements OnInit {
       },
       err => {
         this.showFail('Error al eliminar la consulta');
+        console.log(err);
+      },
+      () => {
+        this.getResultados();
+      }
+    );
+  }
+
+  eliminarPlantilla(dato) {
+    this.confirmationService.confirm({
+      // message: this.translateService.instant("messages.deleteConfirmation"),
+      message: '¿Está seguro de eliminar ' + dato.length + 'consultas seleccionadas?',
+      icon: "fa fa-trash-alt",
+      accept: () => {
+        this.confirmarEliminarPlantilla(dato);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+
+  confirmarEliminarPlantilla(dato) {
+    this.eliminarArray = [];
+    dato.forEach(element => {
+      let objEliminar = {
+        idModeloComunicacion: this.body.idModeloComunicacion,
+        idInstitucion: this.body.idInstitucion,
+        idPlantillaDocumento: element.idPlantillaDocumento,
+        idInforme: this.body.idInforme
+      };
+      this.eliminarArray.push(objEliminar);
+    });
+    this.sigaServices.post("plantillasDoc_borrar", this.eliminarArray).subscribe(
+      data => {
+        this.showSuccess('Se ha eliminado la plantilla correctamente');
+      },
+      err => {
+        this.showFail('Error al eliminar la plantilla');
         console.log(err);
       },
       () => {

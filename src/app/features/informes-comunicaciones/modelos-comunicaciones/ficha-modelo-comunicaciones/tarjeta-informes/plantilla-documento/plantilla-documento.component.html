@@ -128,7 +128,7 @@
       <p-footer>
         <div class="text-right main-button px-0">
           <button [disabled]="nuevoDocumento" (click)="addDocumento()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button>
-          <button *ngIf="selectedDocs && selectedDocs !='' && !showHistorico" (click)="onBorrar(selectedDocs)
+          <button *ngIf="selectedDocs && selectedDocs !='' && !showHistorico" (click)="eliminarPlantilla(selectedDocs)
             " pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
         </div>
       </p-footer>

@@ -6,6 +6,7 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
 import { InformesModelosComItem } from '../../../../../models/InformesModelosComunicacionesItem';
 import { ModelosComunicacionesItem } from '../../../../../models/ModelosComunicacionesItem';
+import { Message, ConfirmationService } from "primeng/components/common/api";
 
 
 @Component({
@@ -32,6 +33,8 @@ export class TarjetaInformesComponent implements OnInit {
   rowsPerPage: any = [];
   body: InformesModelosComItem = new InformesModelosComItem;
   modelo: ModelosComunicacionesItem = new ModelosComunicacionesItem;
+  msgs: Message[];
+  eliminarArray: any[];
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -57,7 +60,8 @@ export class TarjetaInformesComponent implements OnInit {
   ];
 
   constructor(private router: Router, private translateService: TranslateService,
-    private sigaServices: SigaServices, private changeDetectorRef: ChangeDetectorRef) { }
+    private sigaServices: SigaServices, private changeDetectorRef: ChangeDetectorRef,
+    private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
 
@@ -74,11 +78,6 @@ export class TarjetaInformesComponent implements OnInit {
       { field: 'condicion', header: 'Condición' },
       { field: 'multiDocumento', header: 'Multi-documento' },
       { field: 'datos', header: 'Datos' }
-    ]
-
-    this.datos = [
-      { id: 1, idioma: 'prueba', ficheroSalida: 'prueba' }
-
     ]
   }
 
@@ -191,8 +190,76 @@ export class TarjetaInformesComponent implements OnInit {
 
   addInforme() {
     sessionStorage.setItem("crearNuevaPlantillaDocumento", 'true')
+    sessionStorage.removeItem("modelosInformesSearch");
     this.router.navigate(['/fichaPlantillaDocumento']);
   }
 
+  eliminar(dato) {
+
+    this.confirmationService.confirm({
+      // message: this.translateService.instant("messages.deleteConfirmation"),
+      message: '¿Está seguro de eliminar los' + dato.length + 'informes seleccionados',
+      icon: "fa fa-trash-alt",
+      accept: () => {
+        this.confirmarEliminar(dato);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+
+  confirmarEliminar(dato) {
+    this.eliminarArray = [];
+    dato.forEach(element => {
+      let objEliminar = {
+        idModeloComunicacion: element.idModeloComunicacion,
+        idInstitucion: element.idInstitucion,
+        idInforme: element.idInforme
+      };
+      this.eliminarArray.push(objEliminar);
+    });
+    this.sigaServices.post("modelos_detalle_informes_borrar", this.eliminarArray).subscribe(
+      data => {
+        this.showSuccess('Se ha eliminado el informe correctamente');
+      },
+      err => {
+        this.showFail('Error al eliminar el informe');
+        console.log(err);
+      },
+      () => {
+        this.getInformes();
+      }
+    );
+  }
+
+  // Mensajes
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showInfo(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
 
 }

@@ -252,7 +252,7 @@ export class ModelosComunicacionesComponent implements OnInit {
         console.log(err);
       },
       () => {
-        this.table.reset();
+        this.getResultados();
       }
     );
   }
