@@ -284,6 +284,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       this.informeItem = JSON.parse(sessionStorage.getItem("modelosInformesSearch"));
       this.body.idInforme = this.informeItem.idInforme;
       this.body.nombreFicheroSalida = this.informeItem.nombreFicheroSalida;
+      this.body.formatoSalida = this.informeItem.formatoSalida;
       this.body.idFormatoSalida = this.informeItem.idFormatoSalida;
       this.body.sufijos = this.informeItem.sufijos
       if (this.body.sufijos && this.body.sufijos.length > 0) {

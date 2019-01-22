@@ -8,6 +8,7 @@ export class FichaPlantillasDocument {
   idPlantillaDocumento: String;
   idIdioma: String;
   formatoSalida: String;
+  idFormatoSalida: String;
   nombreFicheroSalida: String;
   idSufijo: String[];
   idFinalidad: String;
@@ -16,7 +17,6 @@ export class FichaPlantillasDocument {
   plantillas: PlantillaDocumentoItem[] = [];
   consultas: ConsultasPlantillasInformesItem[] = [];
   sufijos: SufijoItem[] = [];
-  idFormatoSalida: String;
   constructor() { }
 }
 
