@@ -132,15 +132,32 @@
       <p-dataTable [editable]="true" emptyMessage="{{ 'general.message.no.registros' | translate}}" (onRowSelect)="irEditarInscripcion(selectedDatos)"
         (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos"
         pageLinks="4" dataKey="idInscripcion" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos"
-        [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" (onEditInit)="guardarCodigo($event)"
-        (onEdit)="editarCompleto($event)">
+        [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
   
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-          [filter]="true" filterMatchMode="contains" [editable]="col.field == 'calificacion'">
+          [filter]="true" filterMatchMode="contains">
 
           <!-- <ng-template let-dato="rowData" pTemplate="body">
             <label [ngClass]="{'estiloHistorico': dato.flagArchivado == 1}">{{dato[col.field]}}</label>
           </ng-template> -->
+
+        
+           <ng-template *ngIf="col.field == 'calificacion'" let-dato="rowData" pTemplate="body">
+              <label *ngIf="!calificacion">
+                  {{ dato[col.field] }}
+               </label>
+            <span *ngIf="!(dato[col.idEstadoCurso] == '3' && dato[col.idEstadoInscripcion] == '3') && calificacion">
+                 {{ dato[col.field] }}
+            </span>
+               <input *ngIf="dato[col.idEstadoCurso] == '3' && dato[col.idEstadoInscripcion] == '3' && calificacion"
+              type="text"
+              class="form-control"
+              [(ngModel)]="dato.calificacion"
+              pInputText
+              name="calificacion"
+              (input)="editarCompleto($event, dato)"
+            />
+        </ng-template>
 
         </p-column>
 

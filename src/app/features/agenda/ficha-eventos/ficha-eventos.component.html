@@ -318,7 +318,7 @@
     <div class="card-footer" *ngIf="esFichaActiva('formadores')">
       <div class="text-right main-button">
         <button pButton (click)="restTrainers()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="tipoAccesoLectura"></button>
-        <button pButton (click)="guardarFormadores()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+        <button pButton (click)="guardarFormadores()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="tipoAccesoLectura"></button>
       </div>
     </div>
   </div>
@@ -390,9 +390,9 @@
     <div class="card-footer" *ngIf="esFichaActiva('asistencia')">
       <div class="text-right main-button">
         <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate }}" [disabled]="tipoAccesoLectura"></button>
-        <button pButton type="button" (click)="unCheckAsist()" [disabled]="!checkAsistencias || tipoAccesoLectura" icon="fa fa-times" iconPos="left" label="{{ 'agenda.fichaEventos.datosAsistencia.desmarcar' | translate }}"></button>
-        <button pButton type="button" (click)="checkAsist()" [disabled]="!checkAsistencias || tipoAccesoLectura" icon="fa fa-check" iconPos="left" label="{{'agenda.fichaEventos.datosAsistencia.marcar' | translate }}"></button>
-        <button pButton type="button" (click)="saveAssistancesCourse()" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+        <button pButton type="button" (click)="unCheckAsist()" [disabled]="!checkAsistencias || tipoAccesoLectura" icon="fa fa-times" iconPos="left" label="{{ 'agenda.fichaEventos.datosAsistencia.desmarcar' | translate }}" [disabled]="tipoAccesoLectura"></button>
+        <button pButton type="button" (click)="checkAsist()" [disabled]="!checkAsistencias || tipoAccesoLectura" icon="fa fa-check" iconPos="left" label="{{'agenda.fichaEventos.datosAsistencia.marcar' | translate }}" [disabled]="tipoAccesoLectura"></button>
+        <button pButton type="button" (click)="saveAssistancesCourse()" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="tipoAccesoLectura"></button>
       </div>
     </div>
   </div>

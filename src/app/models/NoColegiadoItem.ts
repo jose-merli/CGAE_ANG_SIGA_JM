@@ -5,6 +5,7 @@ export class NoColegiadoItem {
   nif: string;
   nombre: string;
   fechaNacimiento: string;
+  fechaNacimientoDate: Date;
   correo: string;
   telefono: string;
   movil: string;

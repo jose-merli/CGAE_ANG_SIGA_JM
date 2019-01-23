@@ -258,7 +258,10 @@ export class SolicitudesModificacionComponent implements OnInit {
       this.searchRequest(
         "solicitudModificacion_searchSolModifDatosDirecciones"
       );
-    } else if (this.body.tipoModificacion == "35") {
+    } else if (
+      this.body.tipoModificacion == "35" ||
+      this.body.tipoModificacion == "60"
+    ) {
       this.searchRequest("solicitudModificacion_searchSolModifDatosUseFoto");
     } else if (this.body.tipoModificacion == "40") {
       this.searchRequest("solicitudModificacion_searchSolModifDatosBancarios");
@@ -638,6 +641,7 @@ export class SolicitudesModificacionComponent implements OnInit {
       .subscribe(
         data => {
           this.progressSpinner = false;
+          this.body.tipoModificacion = this.body.idTipoModificacion;
           this.search();
         },
         err => {

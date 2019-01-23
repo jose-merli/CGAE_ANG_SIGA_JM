@@ -44,6 +44,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   tipoAccesoLectura: boolean = false;
   selectedTipoLaboral = false;
   path: string;
+  disabledIsLetrado;
 
   es: any = esCalendar;
 
@@ -155,8 +156,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.newEvent = new EventoItem();
     this.initEvent = new EventoItem();
 
+    
     //Se comprueba de que pantalla llega y el modo Edicion/creacion
-
     //1. En caso de venir de la pantalla Agenda y en modo Edicion
     if (sessionStorage.getItem("modoEdicionEventoByAgenda") == "true") {
       //Indicamos que estamos en modo edicion
@@ -455,6 +456,13 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
       //Se comprueba el tipo de acceso que tiene el evento
       this.checkAcceso();
+
+      //Se comprueba si es letrado
+      if(sessionStorage.getItem("disabledIsLetrado") == "true"){
+        this.tipoAccesoLectura = true;
+      }else{
+        this.tipoAccesoLectura = false;
+      } 
 
       //Se guarda el evento con los valores iniciales para restablecer los valores
       this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
