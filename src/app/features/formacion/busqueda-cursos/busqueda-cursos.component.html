@@ -195,7 +195,7 @@
 
             <!-- Botón duplicar -->
             <button (click)="duplicateCourse()" pButton type="button" icon="fa fa-files-o" iconPos="left" label="{{'general.boton.duplicar' | translate}}"
-              [disabled]="disabledDuplicate() || activacionEditar"></button>
+              [disabled]="disabledDuplicate() || !activacionEditar"></button>
 
           </div>
         </p-footer>
