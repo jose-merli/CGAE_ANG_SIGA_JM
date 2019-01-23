@@ -24,8 +24,6 @@ import { CatalogoMaestroItem } from "./../../../../app/models/CatalogoMaestroIte
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { ComboItem } from "./../../../../app/models/ComboItem";
 import { Router } from "@angular/router";
-import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
-import { esCalendar } from "./../../../utils/calendar";
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -104,14 +102,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   numSelected: number = 0;
   first: number = 0;
 
-  //Diálogo de comunicación
-  showComunicar: boolean = false;
-  modelosComunicacion: any[];
-  bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
-  tiposEnvio: any[];
-  plantillas: any[];
-  datosModelos: any[];
-  colsModelos: any[];
 
 
   @ViewChild("input1") inputEl: ElementRef;
@@ -146,12 +136,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.cols2 = [{ field: "codigoExt", header: "general.codigoext" }];
     this.cols = [{ field: "descripcion", header: "general.description" }];
 
-    this.colsModelos = [
-      { field: 'modelo', header: 'Modelo' },
-      { field: 'tipoEnvio', header: 'Tipo envío' },
-      { field: 'plantillaEnvio', header: 'Plantilla Envío' },
 
-    ]
 
     this.rowsPerPage = [
       {
@@ -841,14 +826,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
 
 
-  //Diálogo de comunicación: ver y enviar servicio
-  onComunicar(dato) {
-    this.showComunicar = true;
-  }
-
-  onEnviarComunicacion() {
-    this.showComunicar = false;
-  }
 
 
 

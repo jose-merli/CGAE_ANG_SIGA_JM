@@ -2,16 +2,16 @@ import { Component, OnInit } from "@angular/core";
 import { OldSigaServices } from "../../../_services/oldSiga.service";
 
 @Component({
-  selector: "app-comunicaciones",
-  templateUrl: "./comunicaciones.component.html",
-  styleUrls: ["./comunicaciones.component.scss"]
+  selector: "app-comunicaciones-censo",
+  templateUrl: "./comunicaciones-censo.component.html",
+  styleUrls: ["./comunicaciones-censo.component.scss"]
 })
-export class ComunicacionesComponent implements OnInit {
+export class ComunicacionesCensoComponent implements OnInit {
   url;
 
   constructor(private sigaServices: OldSigaServices) {
     this.url = JSON.parse(sessionStorage.getItem("url"));
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 }

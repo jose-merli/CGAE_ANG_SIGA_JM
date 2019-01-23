@@ -66,14 +66,7 @@ export class ContadoresComponent extends SigaWrapper implements OnInit {
   idPantalla: String;
   first: number = 0;
   rowsPerPage: any = [];
-  //Diálogo de comunicación
-  showComunicar: boolean = false;
-  modelosComunicacion: any[];
-  bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
-  tiposEnvio: any[];
-  plantillas: any[];
-  datosModelos: any[];
-  colsModelos: any[];
+
 
   @ViewChild("table") table: DataTable;
   constructor(
@@ -151,13 +144,6 @@ para poder filtrar el dato con o sin estos caracteres*/
         header: "administracion.parametrosGenerales.literal.sufijo"
       }
     ];
-
-    this.colsModelos = [
-      { field: 'modelo', header: 'Modelo' },
-      { field: 'tipoEnvio', header: 'Tipo envío' },
-      { field: 'plantillaEnvio', header: 'Plantilla Envío' },
-
-    ]
 
 
     this.rowsPerPage = [
@@ -356,12 +342,4 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.msgs = [];
   }
 
-  //Diálogo de comunicación: ver y enviar servicio
-  onComunicar(dato) {
-    this.showComunicar = true;
-  }
-
-  onEnviarComunicacion() {
-    this.showComunicar = false;
-  }
 }

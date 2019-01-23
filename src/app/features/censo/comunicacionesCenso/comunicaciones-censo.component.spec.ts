@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MediadoresComponent } from './mediadores.component';
+import { ComunicacionesCensoComponent } from './comunicaciones.component';
 
 describe('MediadoresComponent', () => {
-  let component: MediadoresComponent;
-  let fixture: ComponentFixture<MediadoresComponent>;
+  let component: ComunicacionesCensoComponent;
+  let fixture: ComponentFixture<ComunicacionesCensoComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [MediadoresComponent]
+      declarations: [ComunicacionesCensoComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MediadoresComponent);
+    fixture = TestBed.createComponent(ComunicacionesCensoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

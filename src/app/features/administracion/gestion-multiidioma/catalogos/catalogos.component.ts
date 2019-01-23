@@ -62,14 +62,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
   local: String;
   es: any = esCalendar;
 
-  //Diálogo de comunicación
-  showComunicar: boolean = false;
-  modelosComunicacion: any[];
-  bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
-  tiposEnvio: any[];
-  plantillas: any[];
-  datosModelos: any[];
-  colsModelos: any[];
+
 
 
   constructor(
@@ -158,12 +151,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
       }
     ];
 
-    this.colsModelos = [
-      { field: 'modelo', header: 'Modelo' },
-      { field: 'tipoEnvio', header: 'Tipo envío' },
-      { field: 'plantillaEnvio', header: 'Plantilla Envío' },
 
-    ]
 
     this.rowsPerPage = [
       {
@@ -375,19 +363,4 @@ export class Catalogos extends SigaWrapper implements OnInit {
     this.msgs = [];
   }
 
-  //Diálogo de comunicación: ver y enviar servicio
-  onComunicar(dato) {
-    this.showComunicar = true;
-    this.getModelosComunicacion();
-  }
-
-  getModelosComunicacion() {
-    this.datosModelos = [
-      { id: '1', modelo: '', tipoEnvio: '', plantillaEnvio: '' }
-    ]
-  }
-
-  onEnviarComunicacion() {
-    this.showComunicar = false;
-  }
 }

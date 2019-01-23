@@ -207,7 +207,7 @@ import { FichaInscripcionComponent } from "./features/formacion/ficha-inscripcio
 import { BusquedaInscripcionesComponent } from "./features/formacion/busqueda-inscripciones/busqueda-inscripciones.component";
 import { SolicitudesModificacionComponent } from "./features/censo/solicitudes-modificacion/solicitudes-modificacion.component";
 import { NuevaSolicitudesModificacionComponent } from "./features/censo/solicitudes-modificacion/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component";
-// import { ComunicacionesComponent } from "./features/censo/comunicacionesCenso/comunicaciones.component";
+import { ComunicacionesCensoComponent } from "./features/censo/comunicacionesCenso/comunicaciones.component";
 import { ExpedientesComponent } from "./features/censo/expedientesCenso/expedientes.component";
 import { RegtelComponent } from "./features/censo/regtel/regtel.component";
 import { TurnoOficioComponent } from "./features/censo/turnoOficioCenso/turnoOficio.component";
@@ -970,7 +970,7 @@ const appRoutes: Routes = [
   },
   {
     path: "comunicacionesCenso",
-    component: ComunicacionesComponent,
+    component: ComunicacionesCensoComponent,
     canActivate: [AuthGuard]
   },
   {

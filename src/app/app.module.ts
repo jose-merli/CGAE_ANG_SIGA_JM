@@ -264,8 +264,8 @@ import { FormacionComponent } from './features/formacion/formacion.component';
 import { BusquedaCursosComponent } from './features/formacion/busqueda-cursos/busqueda-cursos.component';
 import { CargaEtiquetasComponent } from './features/censo/cargas-masivas/carga-etiquetas/carga-etiquetas.component';
 import { DatosCvComponent } from './features/censo/cargas-masivas/datos-cv/datos-cv.component';
-// import { CargaEtiquetasComponent2 } from './features/censo/cargaEtiquetas/cargaEtiquetas.component';
-// import { DatosCVComponent2 } from './features/censo/datosCV/datosCV.component';
+import { CargaEtiquetasComponent2 } from './features/censo/cargaEtiquetas/cargaEtiquetas.component';
+import { DatosCVComponent2 } from './features/censo/datosCV/datosCV.component';
 import { AgendaComponent } from './features/agenda/agenda.component';
 import { SelectButtonModule, ColorPickerModule } from 'primeng/primeng';
 import { FichaCalendarioComponent } from './features/agenda/ficha-calendario/ficha-calendario.component';
@@ -281,7 +281,7 @@ import { BusquedaInscripcionesComponent } from './features/formacion/busqueda-in
 import { FichaInscripcionComponent } from './features/formacion/ficha-inscripcion/ficha-inscripcion.component';
 import { SolicitudesModificacionComponent } from './features/censo/solicitudes-modificacion/solicitudes-modificacion.component';
 import { NuevaSolicitudesModificacionComponent } from './features/censo/solicitudes-modificacion/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component';
-// import { ComunicacionesComponent } from './features/censo/comunicacionesCenso/comunicaciones.component';
+import { ComunicacionesCensoComponent } from './features/censo/comunicacionesCenso/comunicaciones.component';
 import { ExpedientesComponent } from './features/censo/expedientesCenso/expedientes.component';
 import { RegtelComponent } from './features/censo/regtel/regtel.component';
 import { TurnoOficioComponent } from './features/censo/turnoOficioCenso/turnoOficio.component';
@@ -532,8 +532,8 @@ import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicac
 		TrimPipePipe,
 		CargaEtiquetasComponent,
 		DatosCvComponent,
-		// CargaEtiquetasComponent2,
-		// DatosCVComponent2,
+		CargaEtiquetasComponent2,
+		DatosCVComponent2,
 		FormacionComponent,
 		BusquedaCursosComponent,
 
@@ -581,7 +581,7 @@ import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicac
 		ModelosComunicacionesConsultaComponent,
 		PlantillasEnviosConsultasComponent,
 		ConsultaComponent,
-		ComunicacionesComponent,
+		ComunicacionesCensoComponent,
 		FichaRegistroComunicacionComponent,
 		ConfiguracionComponent,
 		ProgramacionComponent,

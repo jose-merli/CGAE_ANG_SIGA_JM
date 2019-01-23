@@ -1,8 +1,8 @@
 export class ComunicacionesSearchItem {
-  idClaseComunicaciones: String;
+  idClaseComunicacion: String;
   asunto: String;
   fechaCreacion: Date;
-  idTipoEnvio: String;
+  idTipoEnvios: String;
   idEstado: String;
   fechaProgramacion: Date;
   constructor() { }

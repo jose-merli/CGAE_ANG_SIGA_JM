@@ -72,6 +72,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   plantillas: any[];
   datosModelos: any[];
   colsModelos: any[];
+  selectMultiple: boolean = false;
 
   constructor(
     private sigaServices: SigaServices,
@@ -484,6 +485,8 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   onEnviarComunicacion() {
     this.showComunicar = false;
   }
+
+  onRowSelectModelos() { }
 
 
 }

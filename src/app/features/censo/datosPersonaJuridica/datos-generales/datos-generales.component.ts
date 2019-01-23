@@ -128,7 +128,7 @@ export class DatosGenerales implements OnInit {
   updateItems: Map<String, ComboEtiquetasItem> = new Map<
     String,
     ComboEtiquetasItem
-  >();
+    >();
 
   @ViewChild("auto")
   autoComplete: AutoComplete;
@@ -236,7 +236,7 @@ export class DatosGenerales implements OnInit {
       n => {
         this.comboIdentificacion = n.combooItems;
       },
-      error => {}
+      error => { }
     );
 
     this.comboTipo.push(this.tipoPersonaJuridica);
@@ -303,15 +303,6 @@ export class DatosGenerales implements OnInit {
       .subscribe(
         n => {
           // coger etiquetas de una persona juridica
-<<<<<<< HEAD
-          this.etiquetasPersonaJuridica = JSON.parse(n["body"]).combooItems;
-          console.log(this.etiquetasPersonaJuridica);
-          // en cada busqueda vaciamos el vector para añadir las nuevas etiquetas
-          this.etiquetasPersonaJuridicaSelecionados = [];
-          this.etiquetasPersonaJuridica.forEach((value: any, index: number) => {
-            this.etiquetasPersonaJuridicaSelecionados.push(value.value);
-          });
-=======
           this.etiquetasPersonaJuridica = JSON.parse(
             n["body"]
           ).comboEtiquetasItems;
@@ -331,7 +322,6 @@ export class DatosGenerales implements OnInit {
           );
 
           this.createItems = this.etiquetasPersonaJuridicaSelecionados;
->>>>>>> CensoII
         },
         err => {
           console.log(err);
@@ -434,22 +424,16 @@ export class DatosGenerales implements OnInit {
           .post("busquedaPerJuridica_create", this.body)
           .subscribe(
             data => {
-<<<<<<< HEAD
               this.cerrarAuditoria();
               this.showSuccess();
               let respuesta = JSON.parse(data["body"]);
               this.idPersona = respuesta.id;
               sessionStorage.removeItem("crearnuevo");
-
-=======
-              let respuesta = JSON.parse(data["body"]);
-              this.idPersona = respuesta.id;
             },
-            error => {},
+            error => { },
             () => {
               sessionStorage.removeItem("crearnuevo");
               this.cerrarAuditoria();
->>>>>>> CensoII
               let arrayPersonaJuridica = new Array<PersonaJuridicaItem>();
               this.bodyPersonaJuridica = new PersonaJuridicaItem();
               this.bodyPersonaJuridica.idPersona = this.idPersona;
@@ -459,38 +443,18 @@ export class DatosGenerales implements OnInit {
               );
               this.bodyPersonaJuridica.tipo = selectedComboTipo.label;
               arrayPersonaJuridica.push(this.bodyPersonaJuridica);
-<<<<<<< HEAD
               // arrayPersonaJuridica[0] = this.bodyPersonaJuridica;
-=======
 
->>>>>>> CensoII
               sessionStorage.setItem(
                 "usuarioBody",
                 JSON.stringify(arrayPersonaJuridica)
               );
-<<<<<<< HEAD
-=======
 
->>>>>>> CensoII
               // pasamos el idPersona creado para la nueva sociedad
               if (this.file != undefined) {
                 this.guardarImagen(this.idPersona);
               }
               this.cargarImagen(this.idPersona);
-<<<<<<< HEAD
-              this.datosGeneralesSearch();
-              this.comboTipo = [];
-              this.comboTipo.push(selectedComboTipo.label);
-              this.obtenerEtiquetasPersonaJuridicaConcreta();
-              this.editar = false;
-              this.progressSpinner = false;
-              this.cardService.searchNewAnnounce.next(this.idPersona);
-            },
-            error => {
-              console.log(error);
-              this.bodyviejo = JSON.parse(error["error"]);
-              this.showCustomFail(this.bodyviejo.error.message);
-=======
 
               this.body.idPersona = this.idPersona;
               this.obtenerEtiquetasPersonaJuridicaConcreta();
@@ -501,7 +465,6 @@ export class DatosGenerales implements OnInit {
               this.showSuccess();
               this.cardService.searchNewAnnounce.next(this.idPersona);
               this.autocompletar = false;
->>>>>>> CensoII
               this.progressSpinner = false;
             }
           );
@@ -533,7 +496,7 @@ export class DatosGenerales implements OnInit {
       this.body.motivo = "registro actualizado";
 
       this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
-        data => {},
+        data => { },
         error => {
           this.personaSearch = JSON.parse(error["error"]);
           this.showFail(JSON.stringify(this.personaSearch.error.description));

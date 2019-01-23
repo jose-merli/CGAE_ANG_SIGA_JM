@@ -46,14 +46,7 @@ export class DatosBancariosComponent implements OnInit {
   activacionEditar: boolean;
 
   suscripcionBusquedaNuevo: Subscription;
-  //Diálogo de comunicación
-  showComunicar: boolean = false;
-  modelosComunicacion: any[];
-  bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
-  tiposEnvio: any[];
-  plantillas: any[];
-  datosModelos: any[];
-  colsModelos: any[];
+
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -65,7 +58,7 @@ export class DatosBancariosComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private cardService: cardService
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (sessionStorage.getItem("editarDatosBancarios") == "true") {
@@ -344,8 +337,8 @@ export class DatosBancariosComponent implements OnInit {
         } else {
           this.showSuccess(
             selectedDatos.length +
-              " " +
-              this.translateService.instant("messages.deleted.selected.success")
+            " " +
+            this.translateService.instant("messages.deleted.selected.success")
           );
         }
       },
@@ -391,14 +384,6 @@ export class DatosBancariosComponent implements OnInit {
     this.msgs = [];
   }
 
-  //Diálogo de comunicación: ver y enviar servicio
-  onComunicar(dato) {
-    this.showComunicar = true;
-  }
-
-  onEnviarComunicacion() {
-    this.showComunicar = false;
-  }
 
 
 
