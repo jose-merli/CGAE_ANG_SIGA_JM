@@ -128,6 +128,11 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
   ngOnInit() {
     this.getCombos();
+    if (sessionStorage.getItem("courseCurrent")) {
+      let bodyPerm = JSON.parse(sessionStorage.getItem("courseCurrent"));
+      this.body.nombreCurso = bodyPerm.nombreCurso;
+      this.body.codigoCurso = bodyPerm.codigoCurso;
+    }
     if (
       (sessionStorage.getItem("formador") != null ||
         sessionStorage.getItem("formador") != undefined) &&
@@ -142,7 +147,6 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       this.body.idCurso = JSON.parse(
         sessionStorage.getItem("cursoSelected")
       ).idCurso;
-
       this.isCurso = true;
 
       if (
@@ -858,7 +862,11 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       sessionStorage.getItem("pantallaFichaCurso") != null &&
       sessionStorage.getItem("pantallaFichaCurso") != undefined
     ) {
-      this.router.navigate(["/fichaCursos"]);
+      sessionStorage.setItem(
+        "codigoCursoInscripcion",
+        JSON.stringify(this.body.idCurso)
+      );
+      this.router.navigate(["/fichaCurso"]);
       sessionStorage.removeItem("pantallaFichaCurso");
     } else {
       this.location.back();

@@ -325,6 +325,7 @@ export class FichaCursoComponent implements OnInit {
 
       //4. Viene de la ficha de inscripcion
       if (sessionStorage.getItem("isInscripcion") == "true") {
+
         this.curso = new DatosCursosItem();
         this.curso.idCurso = JSON.parse(
           sessionStorage.getItem("codigoCursoInscripcion")
@@ -334,7 +335,8 @@ export class FichaCursoComponent implements OnInit {
         this.configurationInformacionAdicional();
 
         sessionStorage.removeItem("codigoCursoInscripcion");
-
+        sessionStorage.removeItem("isInscripcion");
+        
       } else if(sessionStorage.getItem("isSession") == "true"){
         this.curso.idCurso = JSON.parse(sessionStorage.getItem("idCurso"));
         sessionStorage.removeItem("idCurso");
@@ -749,9 +751,10 @@ export class FichaCursoComponent implements OnInit {
           this.curso.codigoCurso = JSON.parse(data.body).status;
           this.getCountInscriptions();
           this.getPrices();
-          this.curso.fechaInscripcionDesde = this.curso.fechaInscripcionDesdeDate.toString();
-          this.curso.fechaInscripcionHasta = this.curso.fechaInscripcionHastaDate.toString();
-
+          // this.curso.fechaInscripcionDesde = this.curso.fechaInscripcionDesdeDate.toString();
+          // this.curso.fechaInscripcionHasta = this.curso.fechaInscripcionHastaDate.toString();
+          this.searchCourse(this.curso.idCurso); 
+           
           sessionStorage.setItem("courseCurrent",JSON.stringify(this.curso));
           sessionStorage.setItem("modoEdicionCurso", "true");
 
@@ -990,7 +993,7 @@ export class FichaCursoComponent implements OnInit {
         this.getServicesCourse();
         this.getTopicsCourse();
         this.getCountInscriptions();
-
+        sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
 
       },
       err => {
@@ -2133,6 +2136,7 @@ export class FichaCursoComponent implements OnInit {
 
   //Inscripciones
   irBusquedaInscripcciones() {
+    sessionStorage.setItem("pantallaFichaCurso", "true");
     sessionStorage.setItem("cursoSelected", JSON.stringify(this.curso));
     this.router.navigate(["/buscarInscripciones"]);
   }

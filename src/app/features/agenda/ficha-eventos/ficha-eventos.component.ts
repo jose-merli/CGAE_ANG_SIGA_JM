@@ -269,7 +269,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
 
       //limitamos tiempo de repeticion
-      this.limitTimeEvent();
+      if (this.newEvent.start != undefined && this.newEvent.end != undefined) {
+        this.limitTimeEvent();
+      }
       this.getEntryListCourse();
 
       //4. En caso de que venga notificaciones
@@ -507,9 +509,11 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     if (this.newEvent.tipoAcceso == 2) {
       this.tipoAccesoLectura = true;
     } else {
-      if(sessionStorage.getItem("fichaCursoPermisos")){
-        this.tipoAccesoLectura = !JSON.parse(sessionStorage.getItem("fichaCursoPermisos"));
-      }else{
+      if (sessionStorage.getItem("fichaCursoPermisos")) {
+        this.tipoAccesoLectura = !JSON.parse(
+          sessionStorage.getItem("fichaCursoPermisos")
+        );
+      } else {
         this.tipoAccesoLectura = false;
       }
     }
@@ -709,13 +713,11 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       (this.modoTipoEventoInscripcion && this.modoEdicionEvento) ||
       this.modoEdicionEvento
     ) {
-
-      if(this.newEvent.idEvento != null){
+      if (this.newEvent.idEvento != null) {
         url = "fichaEventos_updateEventCalendar";
-      }else{
+      } else {
         url = "fichaEventos_saveEventCalendar";
       }
-
     } else {
       url = "fichaEventos_saveEventCalendar";
     }
@@ -984,7 +986,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         } else if (
           sessionStorage.getItem("isFormacionCalendarByEndInscripcion") ==
           "true"
-        ){
+        ) {
           this.newEvent.start = new Date(curso.fechaInscripcionHastaDate);
           this.newEvent.end = new Date(curso.fechaInscripcionHastaDate);
           this.newEvent.idTipoEvento = this.valorTipoEventoFinInscripcion;
@@ -1601,14 +1603,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         "fechaEventoFinIncripcion",
         JSON.stringify(this.newEvent.start)
       );
-    } else if (
-      sessionStorage.getItem("isSession") == "true"
-    ) {
+    } else if (sessionStorage.getItem("isSession") == "true") {
       sessionStorage.setItem("modoEdicionCurso", "true");
     }
-
-
-    
 
     this.location.back();
   }
