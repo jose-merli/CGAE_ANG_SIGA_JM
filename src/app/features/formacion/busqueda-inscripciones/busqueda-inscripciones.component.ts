@@ -128,11 +128,6 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
   ngOnInit() {
     this.getCombos();
-    if (sessionStorage.getItem("courseCurrent")) {
-      let bodyPerm = JSON.parse(sessionStorage.getItem("courseCurrent"));
-      this.body.nombreCurso = bodyPerm.nombreCurso;
-      this.body.codigoCurso = bodyPerm.codigoCurso;
-    }
     if (
       (sessionStorage.getItem("formador") != null ||
         sessionStorage.getItem("formador") != undefined) &&
@@ -174,6 +169,11 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
     }
 
     this.checkAcceso();
+    if (sessionStorage.getItem("courseCurrent") && this.isCurso) {
+      let bodyPerm = JSON.parse(sessionStorage.getItem("courseCurrent"));
+      this.body.nombreCurso = bodyPerm.nombreCurso;
+      this.body.codigoCurso = bodyPerm.codigoCurso;
+    }
   }
 
   ngAfterViewInit() {
@@ -861,6 +861,8 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   }
 
   backTo() {
+    sessionStorage.removeItem("cursoSelected");
+    // sessionStorage.removeItem("courseCurrent");
     if (
       sessionStorage.getItem("pantallaFichaCurso") != null &&
       sessionStorage.getItem("pantallaFichaCurso") != undefined
@@ -872,7 +874,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       this.router.navigate(["/fichaCurso"]);
       sessionStorage.removeItem("pantallaFichaCurso");
     } else {
-      this.location.back();
+        this.location.back();
     }
     // this.location.back();
   }

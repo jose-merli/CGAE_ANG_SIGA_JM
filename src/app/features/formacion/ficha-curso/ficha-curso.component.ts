@@ -248,6 +248,7 @@ export class FichaCursoComponent implements OnInit {
     sessionStorage.removeItem("isFormacionCalendar");
     sessionStorage.removeItem("fichaCursoPermisos");
     sessionStorage.removeItem("abrirFormador");
+    sessionStorage.removeItem("cursoSelected");
 
     this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
 
@@ -1380,7 +1381,7 @@ export class FichaCursoComponent implements OnInit {
       },
       {
         field: "tarifa",
-        header: "general.boton.actualizarTarifa"
+        header: "censo.alterMutua.literal.tarifa"
       }
     ];
 
@@ -2924,7 +2925,13 @@ export class FichaCursoComponent implements OnInit {
       this.router.navigate(["/buscarCursos"]);
       sessionStorage.removeItem("isInscripcion");
     } else {
+      if (sessionStorage.getItem("rutaVolver")) {
+        this.router.navigate([
+          sessionStorage.getItem("rutaVolver")
+  ]);
+      } else {
       this.location.back();
+      }
     }
   }
 
