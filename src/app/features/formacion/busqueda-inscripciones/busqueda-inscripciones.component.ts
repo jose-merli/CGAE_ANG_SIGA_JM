@@ -142,7 +142,6 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       this.body.idCurso = JSON.parse(
         sessionStorage.getItem("cursoSelected")
       ).idCurso;
-
       this.isCurso = true;
 
       if (
@@ -170,6 +169,11 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
     }
 
     this.checkAcceso();
+    if (sessionStorage.getItem("courseCurrent") && this.isCurso) {
+      let bodyPerm = JSON.parse(sessionStorage.getItem("courseCurrent"));
+      this.body.nombreCurso = bodyPerm.nombreCurso;
+      this.body.codigoCurso = bodyPerm.codigoCurso;
+    }
   }
 
   ngAfterViewInit() {
@@ -453,7 +457,10 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       },
       {
         field: "calificacion",
-        header: "formacion.busquedaInscripcion.calificacion"
+        header: "formacion.busquedaInscripcion.calificacion",
+        idEstadoCurso: "idEstadoCurso",
+        idEstadoInscripcion: "idEstadoInscripcion"
+
       }
     ];
 
@@ -765,14 +772,14 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
     this.msgs = [];
   }
 
-  editarCompleto(event) {
+  editarCompleto(event, dato) {
     console.log(event);
     let data = event.data;
 
-    if (data.calificacion != null && data.calificacion != undefined) {
+    if (event.data != null && event.data != undefined) {
       this.datos.forEach((value: DatosInscripcionItem, key: number) => {
-        if (value.idInscripcion == data.idInscripcion) {
-          value.calificacion = data.calificacion;
+        if (value.idInscripcion == dato.idInscripcion) {
+          value.calificacion = dato.calificacion;
           value.editar = true;
         }
       });
@@ -854,14 +861,20 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   }
 
   backTo() {
+    sessionStorage.removeItem("cursoSelected");
+    // sessionStorage.removeItem("courseCurrent");
     if (
       sessionStorage.getItem("pantallaFichaCurso") != null &&
       sessionStorage.getItem("pantallaFichaCurso") != undefined
     ) {
-      this.router.navigate(["/fichaCursos"]);
+      sessionStorage.setItem(
+        "codigoCursoInscripcion",
+        JSON.stringify(this.body.idCurso)
+      );
+      this.router.navigate(["/fichaCurso"]);
       sessionStorage.removeItem("pantallaFichaCurso");
     } else {
-      this.location.back();
+        this.location.back();
     }
     // this.location.back();
   }

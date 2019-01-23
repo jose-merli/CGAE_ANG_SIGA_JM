@@ -413,6 +413,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   irEditarCurso(selectedDatos) {
     if (selectedDatos.length >= 1 && this.selectMultiple == false) {
       sessionStorage.setItem("modoEdicionCurso", "true");
+      sessionStorage.setItem("rutaVolver", "/buscarCursos");
       sessionStorage.setItem("courseCurrent", JSON.stringify(selectedDatos[0]));
       sessionStorage.setItem(
         "filtrosBusquedaCursos",

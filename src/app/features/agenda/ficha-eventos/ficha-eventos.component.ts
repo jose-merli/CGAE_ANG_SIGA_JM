@@ -44,6 +44,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   tipoAccesoLectura: boolean = false;
   selectedTipoLaboral = false;
   path: string;
+  disabledIsLetrado;
 
   es: any = esCalendar;
 
@@ -155,8 +156,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.newEvent = new EventoItem();
     this.initEvent = new EventoItem();
 
+    
     //Se comprueba de que pantalla llega y el modo Edicion/creacion
-
     //1. En caso de venir de la pantalla Agenda y en modo Edicion
     if (sessionStorage.getItem("modoEdicionEventoByAgenda") == "true") {
       //Indicamos que estamos en modo edicion
@@ -269,7 +270,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
 
       //limitamos tiempo de repeticion
-      this.limitTimeEvent();
+      if (this.newEvent.start != undefined && this.newEvent.end != undefined) {
+        this.limitTimeEvent();
+      }
       this.getEntryListCourse();
 
       //4. En caso de que venga notificaciones
@@ -454,6 +457,13 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       //Se comprueba el tipo de acceso que tiene el evento
       this.checkAcceso();
 
+      //Se comprueba si es letrado
+      if(sessionStorage.getItem("disabledIsLetrado") == "true"){
+        this.tipoAccesoLectura = true;
+      }else{
+        this.tipoAccesoLectura = false;
+      } 
+
       //Se guarda el evento con los valores iniciales para restablecer los valores
       this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
 
@@ -507,9 +517,11 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     if (this.newEvent.tipoAcceso == 2) {
       this.tipoAccesoLectura = true;
     } else {
-      if(sessionStorage.getItem("fichaCursoPermisos")){
-        this.tipoAccesoLectura = !JSON.parse(sessionStorage.getItem("fichaCursoPermisos"));
-      }else{
+      if (sessionStorage.getItem("fichaCursoPermisos")) {
+        this.tipoAccesoLectura = !JSON.parse(
+          sessionStorage.getItem("fichaCursoPermisos")
+        );
+      } else {
         this.tipoAccesoLectura = false;
       }
     }
@@ -709,13 +721,11 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       (this.modoTipoEventoInscripcion && this.modoEdicionEvento) ||
       this.modoEdicionEvento
     ) {
-
-      if(this.newEvent.idEvento != null){
+      if (this.newEvent.idEvento != null) {
         url = "fichaEventos_updateEventCalendar";
-      }else{
+      } else {
         url = "fichaEventos_saveEventCalendar";
       }
-
     } else {
       url = "fichaEventos_saveEventCalendar";
     }
@@ -984,7 +994,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         } else if (
           sessionStorage.getItem("isFormacionCalendarByEndInscripcion") ==
           "true"
-        ){
+        ) {
           this.newEvent.start = new Date(curso.fechaInscripcionHastaDate);
           this.newEvent.end = new Date(curso.fechaInscripcionHastaDate);
           this.newEvent.idTipoEvento = this.valorTipoEventoFinInscripcion;
@@ -1601,14 +1611,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         "fechaEventoFinIncripcion",
         JSON.stringify(this.newEvent.start)
       );
-    } else if (
-      sessionStorage.getItem("isSession") == "true"
-    ) {
+    } else if (sessionStorage.getItem("isSession") == "true") {
       sessionStorage.setItem("modoEdicionCurso", "true");
     }
-
-
-    
 
     this.location.back();
   }

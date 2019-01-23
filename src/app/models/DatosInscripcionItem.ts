@@ -50,5 +50,7 @@ export class DatosInscripcionItem {
   pendientes: string;
   totales: string;
 
+  idEstadoCurso: string;
+
   constructor() {}
 }
