@@ -772,14 +772,14 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
     this.msgs = [];
   }
 
-  editarCompleto(event) {
+  editarCompleto(event, dato) {
     console.log(event);
     let data = event.data;
 
-    if (data.calificacion != null && data.calificacion != undefined) {
+    if (event.data != null && event.data != undefined) {
       this.datos.forEach((value: DatosInscripcionItem, key: number) => {
-        if (value.idInscripcion == data.idInscripcion) {
-          value.calificacion = data.calificacion;
+        if (value.idInscripcion == dato.idInscripcion) {
+          value.calificacion = dato.calificacion;
           value.editar = true;
         }
       });
