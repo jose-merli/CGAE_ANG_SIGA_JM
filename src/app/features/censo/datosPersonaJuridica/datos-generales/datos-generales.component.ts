@@ -299,7 +299,7 @@ export class DatosGenerales implements OnInit {
 
   obtenerEtiquetasPersonaJuridicaConcreta() {
     this.sigaServices
-      .post("busquedaPerJuridica_etiquetasPersona", this.body)
+      .post("fichaDatosGenerales_etiquetasPersona", this.body)
       .subscribe(
         n => {
           // coger etiquetas de una persona juridica
@@ -311,6 +311,7 @@ export class DatosGenerales implements OnInit {
           this.etiquetasPersonaJuridicaSelecionados = [];
           this.etiquetasPersonaJuridica.forEach((value: any, index: number) => {
             this.etiquetasPersonaJuridicaSelecionados.push(value);
+            // this.generalBody.
           });
 
           this.etiquetasPersonaJuridicaSelecionados.forEach(
@@ -860,10 +861,27 @@ export class DatosGenerales implements OnInit {
   // ETIQUETAS
 
   filterLabelsMultiple(event) {
+    let etiquetasPuestas = [];
+    if (this.etiquetasPersonaJuridicaSelecionados) {
+      etiquetasPuestas = this.etiquetasPersonaJuridicaSelecionados;
+    }
     this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
       n => {
         // coger todas las etiquetas
-        this.comboEtiquetas = this.filterLabel(event.query, n.combooItems);
+        let etiquetasSugerencias = this.filterLabel(event.query, n.combooItems);
+
+        if (etiquetasPuestas.length > 0) {
+          this.comboEtiquetas = [];
+
+          etiquetasSugerencias.forEach(element => {
+            let find = etiquetasPuestas.find(x => x.label === element.label);
+            if (find == undefined) {
+              this.comboEtiquetas.push(element);
+            }
+          });
+        } else {
+          this.comboEtiquetas = etiquetasSugerencias;
+        }
       },
       err => {
         console.log(err);
@@ -963,20 +981,40 @@ export class DatosGenerales implements OnInit {
         );
       } else {
         // Si existe en el array, lo borramos para que no queden registros duplicados
-        this.etiquetasPersonaJuridicaSelecionados.splice(
-          this.etiquetasPersonaJuridicaSelecionados.indexOf(event),
-          1
-        );
-        this.updateItems.delete(event.value);
+        for (
+          let i = 0;
+          i < this.etiquetasPersonaJuridicaSelecionados.length;
+          i++
+        ) {
+          if (
+            this.etiquetasPersonaJuridicaSelecionados[i].idGrupo == undefined
+          ) {
+            if (
+              this.etiquetasPersonaJuridicaSelecionados[i].label == event.label
+            ) {
+              this.etiquetasPersonaJuridicaSelecionados.splice(i, 1);
+            }
+          } else {
+            if (
+              this.etiquetasPersonaJuridicaSelecionados[i].idGrupo ==
+              event.value
+            ) {
+              this.etiquetasPersonaJuridicaSelecionados.splice(i, 1);
+              this.onUnselect(event);
+            }
+          }
+        }
+        if (
+          this.updateItems.size >
+          this.etiquetasPersonaJuridicaSelecionados.length
+        ) {
+          this.updateItems.delete(event.value);
+        }
       }
     }
   }
 
   onUnselect(event) {
-    // if (event) {
-    //   this.updateItems.delete(event.value);
-    //   this.showGuardar = true;
-    // }
     if (event) {
       if (event.value == undefined) {
         this.updateItems.delete(event.idGrupo);
@@ -1000,16 +1038,24 @@ export class DatosGenerales implements OnInit {
       this.mensaje = "Histórico de fechas";
 
       this.historico = true;
-
-      //this.calendar.readonlyInput = true;
     }
   }
 
   deleteLabel(item) {
-    this.etiquetasPersonaJuridicaSelecionados.splice(
-      this.etiquetasPersonaJuridicaSelecionados.indexOf(item),
-      1
-    );
+    for (let i = 0; i < this.etiquetasPersonaJuridicaSelecionados.length; i++) {
+      if (this.etiquetasPersonaJuridicaSelecionados[i].idGrupo == undefined) {
+        if (this.etiquetasPersonaJuridicaSelecionados[i].label == item.label) {
+          this.etiquetasPersonaJuridicaSelecionados.splice(i, 1);
+        }
+      } else {
+        if (
+          this.etiquetasPersonaJuridicaSelecionados[i].idGrupo == item.value
+        ) {
+          this.etiquetasPersonaJuridicaSelecionados.splice(i, 1);
+          this.onUnselect(event);
+        }
+      }
+    }
   }
 
   closeDialogConfirmation(item) {
