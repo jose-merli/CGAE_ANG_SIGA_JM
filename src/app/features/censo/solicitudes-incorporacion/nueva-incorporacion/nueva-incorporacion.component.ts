@@ -680,38 +680,74 @@ export class NuevaIncorporacionComponent implements OnInit {
     );
   }
 
-  getLabelbyFilter(array) {
+  getLabelbyFilter(string) {
     /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
-    array.map(e => {
-      let accents =
-        "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-      let accentsOut =
-        "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-      let i;
-      let x;
-      for (i = 0; i < e.label.length; i++) {
-        if ((x = accents.indexOf(e.label[i])) != -1) {
-          e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-          return e.labelSinTilde;
-        }
+    // array.map(e => {
+    //   let accents =
+    //     "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+    //   let accentsOut =
+    //     "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+    //   let i;
+    //   let x;
+    //   for (i = 0; i < e.label.length; i++) {
+    //     if ((x = accents.indexOf(e.label[i])) != -1) {
+    //       e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+    //       return e.labelSinTilde;
+    //     }
+    //   }
+    // });
+
+    /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+para poder filtrar el dato con o sin estos caracteres*/
+    let labelSinTilde = string;
+    let accents =
+      "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+    let accentsOut =
+      "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+    let i;
+    let x;
+    for (i = 0; i < string.length; i++) {
+      if ((x = accents.indexOf(string.charAt(i))) != -1) {
+        labelSinTilde = string.replace(string.charAt(i), accentsOut[x]);
+        return labelSinTilde;
       }
-    });
+    }
+
+    return labelSinTilde;
   }
 
   getComboPoblacion(filtro: string) {
     this.progressSpinner = true;
-    let poblacionBuscada = filtro;
+    let poblacionBuscada = this.getLabelbyFilter(filtro);
     this.sigaServices
       .getParam(
         "direcciones_comboPoblacion",
-        "?idProvincia=" + this.solicitudEditar.idProvincia + "&filtro=" + filtro
+        "?idProvincia=" +
+          this.solicitudEditar.idProvincia +
+          "&filtro=" +
+          poblacionBuscada
       )
       .subscribe(
         n => {
           this.poblaciones = n.combooItems;
-          this.getLabelbyFilter(this.poblaciones);
-          this.dropdown.filterViewChild.nativeElement.value = poblacionBuscada;
+          //this.getLabelbyFilter(this.poblaciones);
+          //this.dropdown.filterViewChild.nativeElement.value = poblacionBuscada;
+
+          this.poblaciones.map(e => {
+            let accents =
+              "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+            let accentsOut =
+              "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+            let i;
+            let x;
+            for (i = 0; i < e.label.length; i++) {
+              if ((x = accents.indexOf(e.label[i])) != -1) {
+                e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+                return e.labelSinTilde;
+              }
+            }
+          });
         },
         error => {},
         () => {
