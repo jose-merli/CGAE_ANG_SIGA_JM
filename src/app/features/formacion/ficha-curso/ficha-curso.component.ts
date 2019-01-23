@@ -46,6 +46,7 @@ export class FichaCursoComponent implements OnInit {
   es: any = esCalendar;
   marginPx = "4px";
   bw = "white";
+  isLetrado;
 
   modoEdicion: boolean = false;
   fieldNoEditable: boolean = true;
@@ -247,6 +248,12 @@ export class FichaCursoComponent implements OnInit {
     sessionStorage.removeItem("isFormacionCalendar");
     sessionStorage.removeItem("fichaCursoPermisos");
     sessionStorage.removeItem("abrirFormador");
+
+    this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+
+    if(this.isLetrado){
+      sessionStorage.setItem("disabledIsLetrado", "true");
+    }
 
     this.inscription = new DatosInscripcionItem();
 

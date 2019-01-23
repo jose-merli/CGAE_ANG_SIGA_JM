@@ -1601,15 +1601,15 @@
   </div>
   <div class="card-footer" *ngIf="esFichaActiva('session')">
     <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-close" (click)="cancelSessions()" [disabled]="!activacionEditar" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"  [disabled]="!selectMultipleSessions || !activacionEditar"></button>
-        <button pButton type="button" icon="fa fa-reply-all" (click)="duplicateSession()" [disabled]="!activacionEditar" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}" [disabled]="disabledDuplicate() || !activacionEditar" ></button>
-        <button pButton type="button" icon="fa fa-plus" (click)="newSession()" [disabled]="!activacionEditar" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        <button pButton type="button" icon="fa fa-close" (click)="cancelSessions()" [disabled]="!activacionEditar || isLetrado" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"  [disabled]="!selectMultipleSessions || !activacionEditar"></button>
+        <button pButton type="button" icon="fa fa-reply-all" (click)="duplicateSession()" [disabled]="!activacionEditar || isLetrado" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}" [disabled]="disabledDuplicate() || !activacionEditar" ></button>
+        <button pButton type="button" icon="fa fa-plus" (click)="newSession()" [disabled]="!activacionEditar || isLetrado" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
       </div>
   </div>
 </div>
 
 <!-- TERJETAS CARGA MASIVA INSCRIPCIONES -->
-<div class="card">
+<div *ngIf="!isLetrado" class="card">
   <!-- Cabecera -->
   <div class="card-header header-ficha" (click)="abreCierraFicha('carga')">
     <div *ngIf="!esFichaActiva('carga')" class="form-row">
