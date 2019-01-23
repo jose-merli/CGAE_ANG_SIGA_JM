@@ -142,6 +142,20 @@
             <label [ngClass]="{'estiloHistorico': dato.flagArchivado == 1}">{{dato[col.field]}}</label>
           </ng-template> -->
 
+        
+           <!-- <ng-template *ngIf="col.field == 'calificacion'" let-dato="rowData" pTemplate="body">
+            <label *ngIf="dato[col.idEstadoCurso] != '3' && dato[col.idEstadoInscripcion] != '3'">
+                 {{ dato[col.field] }}
+              </label>
+              <input *ngIf="dato[col.idEstadoCurso] == '3' && dato[col.idEstadoInscripcion] == '3'"
+              type="text"
+              class="form-control"
+              [(ngModel)]="body.calificacion"
+              pInputText
+              name="calificacion"
+            />
+        </ng-template> -->
+
         </p-column>
 
         <ng-template pTemplate="paginatorLeft">

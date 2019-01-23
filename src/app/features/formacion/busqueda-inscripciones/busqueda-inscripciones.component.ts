@@ -457,7 +457,10 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       },
       {
         field: "calificacion",
-        header: "formacion.busquedaInscripcion.calificacion"
+        header: "formacion.busquedaInscripcion.calificacion",
+        idEstadoCurso: "idEstadoCurso",
+        idEstadoInscripcion: "idEstadoInscripcion"
+
       }
     ];
 
