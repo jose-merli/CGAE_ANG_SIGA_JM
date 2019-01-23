@@ -884,7 +884,38 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   irPlanUniversal() {
     // Acceso a Web Service para saber si hay una solicitud de Mutualidad.
-    this.solicitudEditar.idPais = "191";
+    this.solicitudEditar.idPais = this.paisSelected;
+    this.solicitudEditar.identificador = this.solicitudEditar.numeroIdentificacion;
+    this.sigaServices
+      .post("mutualidad_estadoMutualista", this.solicitudEditar)
+      .subscribe(
+        result => {
+          let prueba = JSON.parse(result.body);
+          if (prueba.valorRespuesta == "1") {
+            this.solicitudEditar.idSolicitudMutualidad = prueba.idSolicitud;
+            this.solicitudEditar.estadoMutualidad = prueba.valorRespuesta;
+            this.solicitudEditar.tipoIdentificacion = this.tipoIdentificacionSelected;
+            this.solicitudEditar.tipoSolicitud = this.tipoSolicitudSelected;
+            sessionStorage.setItem(
+              "solicitudEnviada",
+              JSON.stringify(this.solicitudEditar)
+            );
+            this.router.navigate(["/MutualidadAbogaciaPlanUniversal"]);
+          } else {
+            //  this.modoLectura = true;
+            this.showFail(
+              "El Colegiado no es apto para realizar una solicitud de Mutualidad."
+            );
+          }
+        },
+        error => {
+          console.log(error);
+        }
+      );
+  }
+
+  irSegAccidentes() {
+    this.solicitudEditar.idPais = this.paisSelected;
     this.solicitudEditar.identificador = this.solicitudEditar.numeroIdentificacion;
     this.sigaServices
       .post("mutualidad_estadoMutualista", this.solicitudEditar)
@@ -900,7 +931,7 @@ para poder filtrar el dato con o sin estos caracteres*/
               "solicitudEnviada",
               JSON.stringify(this.solicitudEditar)
             );
-            this.router.navigate(["/MutualidadAbogaciaPlanUniversal"]);
+            this.router.navigate(["/mutualidadSeguroAccidentes"]);
           } else {
             //  this.modoLectura = true;
             this.showFail(
@@ -912,16 +943,6 @@ para poder filtrar el dato con o sin estos caracteres*/
           console.log(error);
         }
       );
-  }
-
-  irSegAccidentes() {
-    this.solicitudEditar.idPais = "191";
-    this.solicitudEditar.identificador = this.solicitudEditar.numeroIdentificacion;
-    sessionStorage.setItem(
-      "solicitudEnviada",
-      JSON.stringify(this.solicitudEditar)
-    );
-    this.router.navigate(["/mutualidadSeguroAccidentes"]);
   }
 
   ngOnDestroy() {
