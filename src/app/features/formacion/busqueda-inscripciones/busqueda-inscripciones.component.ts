@@ -99,7 +99,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   datosFormadores = [];
 
   inscripcionEncontrado = new DatosInscripcionObject();
-
+ isLetrado: boolean = true;
   displayMotivo: boolean = false;
   tipoAccion: any = "";
 
@@ -129,6 +129,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   }
 
   ngOnInit() {
+    this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     this.getCombos();
     if (
       (sessionStorage.getItem("formador") != null ||

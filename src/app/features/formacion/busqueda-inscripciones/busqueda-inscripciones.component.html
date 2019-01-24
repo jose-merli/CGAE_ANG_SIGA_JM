@@ -187,21 +187,21 @@
             <!-- <button (click)="finalizarCursos()" pButton type="button" icon="fa fa-stop" iconPos="left" label="Aprobar Inscripción"
               [disabled]="selectedDatos == ''"></button> -->
               <button (click)="abrirPopUpMotivo(0)" pButton type="button" icon="fa fa-stop" iconPos="left" label="{{ 'formacion.busquedaInscripcion.aprobarInscripcion' | translate }}"
-              [disabled]="selectedDatos == '' || !activacionEditar"></button>
+              [disabled]="selectedDatos == '' || !activacionEditar || isLetrado"></button>
 
             <!-- Botón Cancelar Inscripción -->
             <!-- <button (click)="desanunciarCursos()" pButton type="button" icon="fa fa-bell-slash" iconPos="left" label="Cancelar Inscripción"
               [disabled]="selectedDatos == ''"></button> -->
               <button (click)="abrirPopUpMotivo(1)" pButton type="button" icon="fa fa-bell-slash" iconPos="left" label="{{ 'formacion.busquedaInscripcion.cancelarInscripcion' | translate
-              }}" [disabled]="selectedDatos == '' || !activacionEditar"></button>
+              }}" [disabled]="selectedDatos == '' || !activacionEditar || isLetrado"></button>
               
               <!-- Botón rechazar -->
               <button (click)="abrirPopUpMotivo(2)" pButton type="button" icon="fa fa-bell" iconPos="left" label="{{ 'formacion.busquedaInscripcion.rechazar' | translate }}"
-                [disabled]="selectedDatos == '' || !activacionEditar"></button>
+                [disabled]="selectedDatos == '' || !activacionEditar || isLetrado"></button>
               
                 <!-- Botón calificar -->
-              <button *ngIf="!calificacion" pButton type="button" icon="fa fa-bell" iconPos="left" (click)="onCalificacion()" label="{{ 'formacion.busquedaInscripcion.calificar' | translate }}" [disabled]="datos == '' || !activacionEditar"></button>
-              <button *ngIf="calificacion" pButton type="button" icon="far fa-save" iconPos="left" (click)="guardarCalificacion()" label="{{ 'general.boton.guardar' | translate}}" [disabled]="datos == '' || !activacionEditar"></button>
+              <button *ngIf="!calificacion" pButton type="button" icon="fa fa-bell" iconPos="left" (click)="onCalificacion()" label="{{ 'formacion.busquedaInscripcion.calificar' | translate }}" [disabled]="datos == '' || !activacionEditar || isLetrado"></button>
+              <button *ngIf="calificacion" pButton type="button" icon="far fa-save" iconPos="left" (click)="guardarCalificacion()" label="{{ 'general.boton.guardar' | translate}}" [disabled]="datos == '' || !activacionEditar || isLetrado"></button>
 
           </div>
         </p-footer>
