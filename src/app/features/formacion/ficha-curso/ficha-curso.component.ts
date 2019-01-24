@@ -243,12 +243,7 @@ export class FichaCursoComponent implements OnInit {
     this.getColsResultsSessions();
     this.getColsResultsCertificates();
     this.getColsResultsCargas();
-
-    sessionStorage.removeItem("isFormacionCalendar");
-    sessionStorage.removeItem("fichaCursoPermisos");
-    sessionStorage.removeItem("abrirFormador");
-    sessionStorage.removeItem("cursoSelected");
-    sessionStorage.removeItem("datosCertificatesInit");
+    this.cleanSessionStorage();
 
     this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
 
@@ -486,6 +481,19 @@ export class FichaCursoComponent implements OnInit {
         }
       }
     );
+  }
+
+  cleanSessionStorage(){
+    sessionStorage.removeItem("isFormacionCalendar");
+    sessionStorage.removeItem("fichaCursoPermisos");
+    sessionStorage.removeItem("abrirFormador");
+    sessionStorage.removeItem("cursoSelected");
+    sessionStorage.removeItem("datosCertificatesInit");
+    sessionStorage.removeItem("notificaciones");
+    sessionStorage.removeItem("sessions");
+    sessionStorage.removeItem("historico");
+    sessionStorage.removeItem("evento");
+
   }
 
   //TARJETA DATOS GENERALES
@@ -2080,7 +2088,7 @@ export class FichaCursoComponent implements OnInit {
       .post("fichaCursos_cancelSessionsCourse", sessionsCancel)
       .subscribe(
         data => {
-          this.getSessions();
+
           if (JSON.parse(data.body).error.code == null) {
             this.showMessage(
               "info",
@@ -2093,6 +2101,8 @@ export class FichaCursoComponent implements OnInit {
               "Correcto",
               "Sesiones canceladas correctamente"
             );
+            this.searchCourse(this.curso.idCurso);
+
           } else if (JSON.parse(data.body).error.code == 400) {
             this.showMessage(
               "error",
