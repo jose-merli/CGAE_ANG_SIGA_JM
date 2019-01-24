@@ -369,10 +369,10 @@
             <ng-template pTemplate="paginatorLeft">
               <div class="mostrar d-flex text-right justify-content-end">
                 <label class="pr-3 registros-totales">Mostrando registros del {{tableAsistencia.first + 1}} al {{tableAsistencia.first + tableAsistencia.rows}}
-                  de un total de {{tableAsistencia.totalRecords}}</label>
+                  de un total de {{tableAsistencia.totalRecords}}</label>  
                 <label class="pr-3 numSeleccionados">Seleccionados: {{numSelectedAsistencia}}</label>
                 <label>{{ "general.message.mostrar" | translate}}</label>
-                <p-dropdown [(ngModel)]="selectedAsistencia" [options]="rowsPerPage"></p-dropdown>
+                <p-dropdown [(ngModel)]="selectedAsistencia" [options]="rowsPerPage"  (onChange)="onChangeRowsPerPagesAsistencia($event)"></p-dropdown>
                 <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
                 <div class="ml-3 selectAll">
                   <p-checkbox (onChange)="onChangeSelectAllAsistencias()" [(ngModel)]="selectAllAsistencias" binary="true" label="{{'tablas.literal.seleccionarTodo' | translate}}"
@@ -392,7 +392,7 @@
         <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate }}" [disabled]="tipoAccesoLectura"></button>
         <button pButton type="button" (click)="unCheckAsist()" [disabled]="selectedDatosAsistencia == '' || tipoAccesoLectura" icon="fa fa-times" iconPos="left" label="{{ 'agenda.fichaEventos.datosAsistencia.desmarcar' | translate }}"></button>
         <button pButton type="button" (click)="checkAsist()" [disabled]="selectedDatosAsistencia == '' || tipoAccesoLectura" icon="fa fa-check" iconPos="left" label="{{'agenda.fichaEventos.datosAsistencia.marcar' | translate }}"></button>
-        <button pButton type="button" (click)="saveAssistancesCourse()" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="tipoAccesoLectura"></button>
+        <button pButton type="button" (click)="saveAssistancesCourse()" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="tipoAccesoLectura"></button>
       </div>
     </div>
   </div>

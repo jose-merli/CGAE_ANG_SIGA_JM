@@ -1569,8 +1569,8 @@
   </div>
   <div class="card-footer" *ngIf="esFichaActiva('session')">
     <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-close" (click)="cancelSessions()" [disabled]="!activacionEditar || isLetrado" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"  [disabled]="!selectMultipleSessions || !activacionEditar"></button>
-        <button pButton type="button" icon="fa fa-reply-all" (click)="duplicateSession()" [disabled]="!activacionEditar || isLetrado" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}" [disabled]="disabledDuplicate() || !activacionEditar" ></button>
+        <button pButton type="button" icon="fa fa-close" (click)="cancelSessions()" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"  [disabled]="selectedDatosSessions == '' || !activacionEditar"></button>
+        <button pButton type="button" icon="fa fa-reply-all" (click)="duplicateSession()" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}" [disabled]="disabledDuplicate() || !activacionEditar" ></button>
         <button pButton type="button" icon="fa fa-plus" (click)="newSession()" [disabled]="!activacionEditar || isLetrado" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
       </div>
   </div>
