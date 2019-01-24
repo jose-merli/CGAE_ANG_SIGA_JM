@@ -168,7 +168,7 @@ export class FichaCursoComponent implements OnInit {
   colsSessions;
   selectedItemSessions;
   datosSessions = [];
-  selectedDatosSessions;
+  selectedDatosSessions = [];
   selectAllSessions: any;
   selectedSessions: number = 10;
   selectMultipleSessions: boolean = false;

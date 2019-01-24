@@ -157,7 +157,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.newEvent = new EventoItem();
     this.initEvent = new EventoItem();
 
-    
     //Se comprueba de que pantalla llega y el modo Edicion/creacion
     //1. En caso de venir de la pantalla Agenda y en modo Edicion
     if (sessionStorage.getItem("modoEdicionEventoByAgenda") == "true") {
@@ -286,8 +285,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.newEvent = JSON.parse(sessionStorage.getItem("evento"));
       this.path = "notificaciones";
 
-      if(sessionStorage.getItem("historico")){
-      this.historico = JSON.parse(sessionStorage.getItem("historico"));
+      if (sessionStorage.getItem("historico")) {
+        this.historico = JSON.parse(sessionStorage.getItem("historico"));
       }
 
       if (this.historico) {
@@ -323,17 +322,16 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         );
       }
 
-      if(sessionStorage.getItem("isSession")){
+      if (sessionStorage.getItem("isSession")) {
         this.isFormacionCalendar = true;
-      }else{
+      } else {
         this.newEvent.idTipoCalendario = JSON.parse(
           sessionStorage.getItem("calendarioEdit")
         ).idTipoCalendario;
-  
+
         this.idCalendario = JSON.parse(
           sessionStorage.getItem("calendarioEdit")
         ).idCalendario;
-  
       }
 
       //Indicamos que estamos en modo edicion
@@ -467,11 +465,11 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.checkAcceso();
 
       //Se comprueba si es letrado
-      if(sessionStorage.getItem("disabledIsLetrado") == "true"){
+      if (sessionStorage.getItem("disabledIsLetrado") == "true") {
         this.tipoAccesoLectura = true;
-      }else{
+      } else {
         this.tipoAccesoLectura = false;
-      } 
+      }
 
       //Se guarda el evento con los valores iniciales para restablecer los valores
       this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
@@ -502,8 +500,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       // Cargamos los formadores para la sesion
       this.getTrainersSession();
       this.getEventNotifications();
-
-
 
       //8. Viene directo
     } else {
@@ -1036,11 +1032,10 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     );
   }
 
-
-  formadoresDistintosCheck(){
-    if(JSON.stringify(this.checkFormadores) != JSON.stringify(this.results)){
+  formadoresDistintosCheck() {
+    if (JSON.stringify(this.checkFormadores) != JSON.stringify(this.results)) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }
@@ -1115,7 +1110,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   irEditarNotificacion(id) {
-   if (id.length >= 1 && this.selectMultipleNotifications == false) {
+    if (id.length >= 1 && this.selectMultipleNotifications == false) {
       sessionStorage.setItem("modoEdicionNotify", "true");
       sessionStorage.removeItem("notifySelected");
       sessionStorage.setItem("notifySelected", JSON.stringify(id));
@@ -1128,9 +1123,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         JSON.stringify(this.datosNotificaciones)
       );
       sessionStorage.setItem("historico", JSON.stringify(this.historico));
-       sessionStorage.setItem("fichaAbierta", "true");
+      sessionStorage.setItem("fichaAbierta", "true");
       this.router.navigate(["/editarNotificacion"]);
-     
     } else {
       this.numSelectedNotification = this.selectedDatosNotifications.length;
     }
@@ -1146,13 +1140,19 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.tableNotifications.reset();
   }
 
+  onChangeRowsPerPagesAsistencia(event) {
+    this.selectedAsistencia = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tableAsistencia.reset();
+  }
+
   newNotification() {
     sessionStorage.setItem("notificacionByEvento", "true");
     sessionStorage.setItem("modoEdicionNotify", "false");
     sessionStorage.setItem("fichaAbierta", "true");
     sessionStorage.removeItem("isFormacionCalendar");
-      sessionStorage.setItem("isFormacionCalendar", "false");
-      sessionStorage.removeItem("evento");
+    sessionStorage.setItem("isFormacionCalendar", "false");
+    sessionStorage.removeItem("evento");
     sessionStorage.setItem("evento", JSON.stringify(this.newEvent));
     this.router.navigate(["/editarNotificacion"]);
   }
@@ -1320,7 +1320,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         });
       } else {
         this.formadoresSuggest = this.formadores;
-     }
+      }
 
       this.autoComplete.focusInput();
     } else {
