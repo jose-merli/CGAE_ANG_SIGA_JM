@@ -1917,14 +1917,18 @@ export class FichaCursoComponent implements OnInit {
   }
 
   validateTrainer() {
-    if (
-      this.newFormadorCourse.idTipoCoste == null ||
-      this.newFormadorCourse.tarifa == null ||
-      this.newFormadorCourse.idTipoCoste == "" ||
-      this.newFormadorCourse.tarifa == ""
-    ) {
-      return true;
-    } else {
+    if(this.newFormadorCourse != undefined){
+      if (
+        this.newFormadorCourse.idTipoCoste == null ||
+        this.newFormadorCourse.tarifa == null ||
+        this.newFormadorCourse.idTipoCoste == "" ||
+        this.newFormadorCourse.tarifa == ""
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }else{
       return false;
     }
   }
