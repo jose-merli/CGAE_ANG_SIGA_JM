@@ -278,14 +278,13 @@ export class DatosGeneralesConsultaComponent implements OnInit {
 
     this.body.generica = this.generica;
 
-    console.log(this.body)
-
     this.sigaServices.post("consultas_guardarDatosGenerales", this.body).subscribe(
       data => {
 
         let result = JSON.parse(data["body"]);
         this.body.idConsulta = result.message;
         this.body.sentencia = result.description;
+        this.body.idInstitucion = result.infoURL;
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         sessionStorage.removeItem("crearNuevaConsulta");
         sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));

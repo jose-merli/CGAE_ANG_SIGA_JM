@@ -33,6 +33,7 @@ export class ConsultaComponent implements OnInit {
   valores: any[];
   consultaEditada: boolean = false;
   camposValores: any;
+  progressSpinner: boolean = false;
 
   fichasPosibles = [
     {
@@ -204,7 +205,7 @@ export class ConsultaComponent implements OnInit {
 
   enviar() {
     let re = this.body.sentencia.match(/%%\S.*%%/g);
-
+    this.progressSpinner = true;
     if (re && re.length > 0) {
       for (let dato of this.valores) {
         this.body.sentencia = this.body.sentencia.replace("%%" + dato.clave + "%%", dato.valor);
@@ -213,13 +214,19 @@ export class ConsultaComponent implements OnInit {
     this.sigaServices
       .postDownloadFiles("consultas_ejecutarConsulta", this.body.sentencia)
       .subscribe(data => {
+        debugger;
         this.showValores = false;
         const blob = new Blob([data], { type: "application/octet-stream" });
         if (blob.size == 0) {
           this.showFail("messages.general.error.ficheroNoExiste");
         } else {
-          saveAs(data, data.nombreDocumento);
+          saveAs(data, "ResultadoConsulta.xlsx");
         }
+      }, error => {
+        console.log(error);
+        this.progressSpinner = false;
+      }, () => {
+        this.progressSpinner = false;
       });
 
   }
