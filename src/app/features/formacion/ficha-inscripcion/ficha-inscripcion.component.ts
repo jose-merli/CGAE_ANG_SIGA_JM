@@ -57,6 +57,11 @@ export class FichaInscripcionComponent implements OnInit {
 
   minDateFechaSolicitud: Date;
 
+  isLetrado: boolean = false;
+  desactivarBotones: boolean = false;
+
+  checkBody: DatosInscripcionItem = new DatosInscripcionItem();
+
   //Certificados
   @ViewChild("tableCertificates")
   tableCertificates;
@@ -117,7 +122,7 @@ export class FichaInscripcionComponent implements OnInit {
 
           this.loadNewTrainer(JSON.parse(sessionStorage.getItem("formador")));
 
-          this.modoEdicion = true;
+          // this.modoEdicion = true;
           this.inscripcionInsertada = true;
           this.isNuevoNoColegiado = true;
           this.fichasPosibles[2].activa = true;
@@ -198,6 +203,33 @@ export class FichaInscripcionComponent implements OnInit {
     this.compruebaAdministrador();
 
     this.checkAcceso();
+
+    if (
+      this.inscripcion.idInscripcion != null &&
+      this.inscripcion.idInscripcion != undefined
+    ) {
+      this.modoEdicion = true;
+    } else {
+      this.modoEdicion = false;
+    }
+
+    // Si es un colegiado y es un letrado, no podrá guardar/restablecer datos de la inscripcion/personales
+    if (
+      sessionStorage.getItem("isLetrado") != null &&
+      sessionStorage.getItem("isLetrado") != undefined
+    ) {
+      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    }
+    if (this.isLetrado && !this.modoEdicion) {
+      this.desactivarBotones = false;
+    } else if(!this.isLetrado){
+      this.desactivarBotones = false;
+    } else {
+      this.desactivarBotones = true;
+    }
+
+    // Guardamos la inscripcion para la funcioanlidad de "restablecer"
+    this.checkBody = JSON.parse(JSON.stringify(this.inscripcion));
   }
 
   // control de permisos
@@ -301,7 +333,15 @@ export class FichaInscripcionComponent implements OnInit {
     if (this.inscripcion.idEstadoInscripcion == null) {
       this.inscripcion.idEstadoInscripcion = "1";
     }
-    this.inscripcion.fechaSolicitud = new Date();
+    if (
+      this.inscripcion.fechaSolicitud == null ||
+      this.inscripcion.fechaSolicitud == undefined
+    ) {
+      this.inscripcion.fechaSolicitud = new Date();
+    }
+
+    // Guardamos la inscripcion para la funcioanlidad de "restablecer"
+    this.checkBody = JSON.parse(JSON.stringify(this.inscripcion));
   }
 
   cargaPersonaInscripcion() {
@@ -561,9 +601,7 @@ export class FichaInscripcionComponent implements OnInit {
   guardarInscripcion() {
     let url = "";
 
-    this.inscripcion.fechaSolicitudDate = this.inscripcion.fechaSolicitud;
-
-    // if (!this.modoEdicion && this.isAdministrador) {
+    // if (!this.modoEdicion && this.isAdministrador) {this.inscripcion.fechaSolicitudDate = this.inscripcion.fechaSolicitud;
     //Tendremos que hacer update
     url = "fichaInscripcion_saveInscripcion";
     // }
@@ -926,6 +964,214 @@ export class FichaInscripcionComponent implements OnInit {
           this.inscripcion.checkMinimaAsistencia = JSON.parse(data.body);
         },
         err => {
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  guardarTODO() {
+    let isSave: boolean = false;
+    // Comprobar fecha de solicitud de la inscripcion que este rellena
+    if (
+      this.inscripcion.fechaSolicitud != null &&
+      this.inscripcion.fechaSolicitud != undefined
+    ) {
+      let url = "";
+      if (
+        this.inscripcion.idInscripcion == null ||
+        this.inscripcion.idInscripcion == undefined
+      ) {
+        url = "fichaInscripcion_saveInscripcion";
+        isSave = true;
+      } else {
+        url = "fichaInscripcion_updateInscripcion";
+        isSave = false;
+      }
+
+      this.inscripcion.fechaSolicitudDate = this.inscripcion.fechaSolicitud;
+
+      // Si es una persona nueva (no existe en CEN_PERSONA, CEN_CLIENTE, CEN_NO_COLEGIADO), tendremos que crear la persona en las distintas tablas
+      if (
+        this.editar &&
+        this.persona.nombre != undefined &&
+        this.persona.apellido1
+      ) {
+        if (this.persona.apellido2 == undefined) {
+          this.persona.apellido2 = "";
+        }
+
+        // Se inserta la persona en CEN_PERSONA y CEN_CLIENTE
+        this.sigaServices
+          .post("fichaPersona_crearNotario", this.persona)
+          .subscribe(
+            data => {
+              this.persona.idPersona = JSON.parse(
+                data["body"]
+              ).combooItems[0].value;
+
+              this.progressSpinner = true;
+
+              // Se inserta en CEN_NO_COLEGIADO
+              this.sigaServices
+                .post("fichaInscripcion_guardarPersona", this.persona)
+                .subscribe(
+                  data => {
+                    // Una vez que hemos insertado la nueva persona procedemos a inserta la inscripcion con el idPersona
+                    this.inscripcion.idPersona = this.persona.idPersona;
+
+                    this.sigaServices.post(url, this.inscripcion).subscribe(
+                      data => {
+                        if (isSave) {
+                          this.inscripcion.idInscripcion = JSON.parse(
+                            data["body"]
+                          ).combooItems[0].value;
+                        } else {
+                          this.inscripcion.idInscripcion = JSON.parse(
+                            data["body"]
+                          ).id;
+                        }
+
+                        this.progressSpinner = false;
+
+                        this.inscripcionInsertada = true;
+                        this.modoEdicion = true;
+
+                        this.searcInscripcion();
+                        this.showSuccess();
+                      },
+                      err => {
+                        this.progressSpinner = false;
+                        this.showFail(
+                          "La acción no se ha realizado correctamente"
+                        );
+                        this.inscripcionInsertada = false;
+                      },
+                      () => {
+                        this.progressSpinner = false;
+                      }
+                    );
+
+                    this.progressSpinner = false;
+                    this.editar = false;
+                  },
+                  error => {
+                    this.bodySearch = JSON.parse(error["error"]);
+                    this.showFail(
+                      JSON.stringify(this.bodySearch.error.message)
+                    );
+                    console.log(error);
+
+                    this.showFail("Ha habido un error al crear el notario");
+                    this.progressSpinner = false;
+                  },
+                  () => {
+                    this.progressSpinner = false;
+                  }
+                );
+            },
+            error => {
+              console.log(error);
+              this.progressSpinner = false;
+            },
+            () => {
+              this.progressSpinner = false;
+            }
+          );
+      } else if (
+        (this.persona.idPersona != null &&
+          this.persona.idPersona != undefined) ||
+        (this.inscripcion.idPersona != null &&
+          this.inscripcion.idPersona != undefined)
+      ) {
+        // Si la persona ya existe en CEN_PERSONA, CEN_CLIENTE, CEN_NO_COLEGIADO asignaremos el idPersona a la inscripcion
+        this.inscripcion.idPersona = this.persona.idPersona;
+
+        this.sigaServices.post(url, this.inscripcion).subscribe(
+          data => {
+            if (isSave) {
+              this.inscripcion.idInscripcion = JSON.parse(
+                data["body"]
+              ).combooItems[0].value;
+            } else {
+              this.inscripcion.idInscripcion = JSON.parse(data["body"]).id;
+            }
+
+            this.progressSpinner = false;
+
+            this.inscripcionInsertada = true;
+            this.modoEdicion = true;
+
+            if (this.isLetrado) {
+              this.desactivarBotones = true;
+            }
+
+            this.searcInscripcion();
+            this.showSuccess();
+          },
+          err => {
+            this.progressSpinner = false;
+            this.showFail("La acción no se ha realizado correctamente");
+            this.inscripcionInsertada = false;
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+      } else {
+        this.showFail("Datos de la persona errónea");
+      }
+    } else {
+      this.showFail(
+        "Debe de introducir una fecha de solicitud para la inscripción"
+      );
+    }
+  }
+
+  restablecer() {
+    this.inscripcion = JSON.parse(JSON.stringify(this.checkBody));
+    this.inscripcion.fechaSolicitud = this.arreglarFecha(
+      this.inscripcion.fechaSolicitud
+    );
+  }
+
+  arreglarFecha(fecha) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate;
+    if (jsonDate.length == 30) {
+      rawDate = jsonDate.slice(3, -3);
+    } else {
+      rawDate = jsonDate.slice(1, -1);
+    }
+    if (rawDate.length < 14) {
+      let splitDate = rawDate.split("/");
+      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+      fecha = new Date((arrayDate += "T00:00:00.001Z"));
+    } else {
+      fecha = new Date(rawDate);
+    }
+
+    return fecha;
+  }
+
+  searcInscripcion() {
+    this.sigaServices
+      .post(
+        "busquedaInscripciones_selectInscripcionByPrimaryKey",
+        this.inscripcion
+      )
+      .subscribe(
+        data => {
+          this.inscripcion = JSON.parse(data["body"]);
+          this.inscripcion.fechaSolicitud = this.arreglarFecha(
+            this.inscripcion.fechaSolicitud
+          );
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
           this.progressSpinner = false;
         },
         () => {

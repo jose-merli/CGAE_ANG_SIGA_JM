@@ -379,7 +379,7 @@ export class FichaCursoComponent implements OnInit {
 
       if (this.curso.autovalidacionInscripcion == "1") {
         this.curso.autovalidacion = true;
-      } else {
+      } else if(this.curso.autovalidacionInscripcion == "0") {
         this.curso.autovalidacion = false;
       }
 
@@ -971,6 +971,12 @@ export class FichaCursoComponent implements OnInit {
         this.progressSpinner = false;
         this.curso = JSON.parse(data.body);
 
+        if (this.curso.autovalidacionInscripcion == "1") {
+          this.curso.autovalidacion = true;
+        } else if(this.curso.autovalidacionInscripcion == "0") {
+          this.curso.autovalidacion = false;
+        }
+        
         if (this.curso.fechaImparticionDesde != null) {
           this.curso.fechaImparticionDesdeDate = this.arreglarFecha(
             this.curso.fechaImparticionDesde
@@ -1912,14 +1918,18 @@ export class FichaCursoComponent implements OnInit {
   }
 
   validateTrainer() {
-    if (
-      this.newFormadorCourse.idTipoCoste == null ||
-      this.newFormadorCourse.tarifa == null ||
-      this.newFormadorCourse.idTipoCoste == "" ||
-      this.newFormadorCourse.tarifa == ""
-    ) {
-      return true;
-    } else {
+    if(this.newFormadorCourse != undefined){
+      if (
+        this.newFormadorCourse.idTipoCoste == null ||
+        this.newFormadorCourse.tarifa == null ||
+        this.newFormadorCourse.idTipoCoste == "" ||
+        this.newFormadorCourse.tarifa == ""
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }else{
       return false;
     }
   }
