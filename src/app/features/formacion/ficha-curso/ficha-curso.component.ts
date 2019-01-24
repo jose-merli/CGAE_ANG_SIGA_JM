@@ -383,7 +383,7 @@ export class FichaCursoComponent implements OnInit {
 
       if (this.curso.autovalidacionInscripcion == "1") {
         this.curso.autovalidacion = true;
-      } else {
+      } else if(this.curso.autovalidacionInscripcion == "0") {
         this.curso.autovalidacion = false;
       }
 
@@ -973,6 +973,12 @@ export class FichaCursoComponent implements OnInit {
         this.progressSpinner = false;
         this.curso = JSON.parse(data.body);
 
+        if (this.curso.autovalidacionInscripcion == "1") {
+          this.curso.autovalidacion = true;
+        } else if(this.curso.autovalidacionInscripcion == "0") {
+          this.curso.autovalidacion = false;
+        }
+        
         if (this.curso.fechaImparticionDesde != null) {
           this.curso.fechaImparticionDesdeDate = this.arreglarFecha(
             this.curso.fechaImparticionDesde
