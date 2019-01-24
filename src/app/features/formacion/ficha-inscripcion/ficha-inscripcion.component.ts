@@ -222,7 +222,7 @@ export class FichaInscripcionComponent implements OnInit {
     }
     if (this.isLetrado && !this.modoEdicion) {
       this.desactivarBotones = false;
-    } else if(!this.isLetrado){
+    } else if (!this.isLetrado && !this.modoEdicion) {
       this.desactivarBotones = false;
     } else {
       this.desactivarBotones = true;
@@ -292,6 +292,9 @@ export class FichaInscripcionComponent implements OnInit {
             if (this.isAdministrador) this.persona = new PersonaItem();
             else this.cargarPersonaNuevaInscripcion();
           }
+        }
+        if (this.modoEdicion) {
+          this.isAdministrador = false;
         }
       },
       error => {
@@ -1039,6 +1042,9 @@ export class FichaInscripcionComponent implements OnInit {
                         this.inscripcionInsertada = true;
                         this.modoEdicion = true;
 
+                        this.isAdministrador = false;
+                        this.desactivarBotones = true;
+
                         this.searcInscripcion();
                         this.showSuccess();
                       },
@@ -1104,9 +1110,8 @@ export class FichaInscripcionComponent implements OnInit {
             this.inscripcionInsertada = true;
             this.modoEdicion = true;
 
-            if (this.isLetrado) {
-              this.desactivarBotones = true;
-            }
+            this.isAdministrador = false;
+            this.desactivarBotones = true;
 
             this.searcInscripcion();
             this.showSuccess();
