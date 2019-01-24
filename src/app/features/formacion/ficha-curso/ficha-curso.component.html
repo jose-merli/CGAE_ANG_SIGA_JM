@@ -1439,26 +1439,7 @@
     <div class="card-footer" *ngIf="esFichaActiva('certificate')">
       <div class="text-right main-button">
         <button
-          *ngIf="pressNewCertificate"
-          (click)="restCertificates()"
-          pButton
-          type="button"
-          icon="fa fa-ban"
-          iconPos="left"
-          label="{{'general.boton.cancel' | translate}}"
-        ></button>
-        <button
-          *ngIf="editCertificate || pressNewCertificate"
-          pButton
-          (click)="saveCertificateCourse()"
-          type="button"
-          icon="fa fa-search"
-          iconPos="left"
-          label="{{ 'general.boton.guardar' | translate }}"
-          [disabled]="pressNewCertificate && validateCertificate() || !activacionEditar"
-        ></button>
-        <button
-          *ngIf="editCertificate && !pressNewCertificate"
+          [disabled]="!editCertificate && !pressNewCertificate"
           pButton
           (click)="restCertificates()"
           type="button"
@@ -1473,10 +1454,10 @@
         icon="far fa-save"
         iconPos="left"
         label="{{ 'general.boton.guardar' | translate }}"
-        [disabled]="!(editCertificate && !pressNewCertificate) || pressNewCertificate && validateCertificate()"
+        [disabled]="!editCertificate || (!pressNewCertificate && validateCertificate()) || !activacionEditar"
       ></button>
         <button
-          [disabled]="!selectedDatosCertificates != '' || !activacionEditar"
+          [disabled]="selectedDatosCertificates == '' || !activacionEditar"
           pButton
           (click)="deleteCertificates(selectedDatosCertificates)"
           type="button"

@@ -66,6 +66,7 @@ export class AgendaComponent implements OnInit {
     this.events = [];
     sessionStorage.removeItem("eventoEdit");
     sessionStorage.removeItem("modoEdicionEventoByAgenda");
+    sessionStorage.removeItem("sessions");
 
     this.getCalendarios();
   }
