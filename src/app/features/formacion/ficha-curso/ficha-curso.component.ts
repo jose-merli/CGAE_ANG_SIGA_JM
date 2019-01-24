@@ -136,7 +136,7 @@ export class FichaCursoComponent implements OnInit {
   colsPrices;
   selectedItemPrices;
   datosPrices = [];
-  selectedDatosPrices;
+  selectedDatosPrices = [];
   selectAllPrices: any;
   selectedPrices: number = 10;
   selectMultiplePrices: boolean = false;
@@ -147,7 +147,7 @@ export class FichaCursoComponent implements OnInit {
   colsFormadores;
   selectedItemFormadores;
   datosFormadores = [];
-  selectedDatosFormadores;
+  selectedDatosFormadores = [];
   selectAllFormadores: any;
   selectedFormadores: number = 10;
   selectMultipleFormadores: boolean = false;
@@ -182,7 +182,7 @@ export class FichaCursoComponent implements OnInit {
   colsCertificates;
   selectedItemCertificates;
   datosCertificates = [];
-  selectedDatosCertificates;
+  selectedDatosCertificates = [];
   selectAllCertificates: any;
   selectedCertificates: number = 10;
   selectMultipleCertificates: boolean = false;
@@ -210,7 +210,7 @@ export class FichaCursoComponent implements OnInit {
   colsCargas;
   selectedItemCargas;
   datosCargas = [];
-  selectedDatosCargas;
+  selectedDatosCargas = [];
   selectAllCargas: any;
   selectedCargas: number = 10;
   selectMultipleCargas: boolean = false;
@@ -248,6 +248,7 @@ export class FichaCursoComponent implements OnInit {
     sessionStorage.removeItem("fichaCursoPermisos");
     sessionStorage.removeItem("abrirFormador");
     sessionStorage.removeItem("cursoSelected");
+    sessionStorage.removeItem("datosCertificatesInit");
 
     this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
 
@@ -2461,7 +2462,6 @@ export class FichaCursoComponent implements OnInit {
       sessionStorage.getItem("datosCertificatesInit")
     );
 
-    sessionStorage.removeItem("datosCertificatesInit");
     this.selectMultipleCertificates = false;
     this.pressNewCertificate = false;
     this.editCertificate = false;
@@ -2492,6 +2492,7 @@ export class FichaCursoComponent implements OnInit {
   }
 
   validateCertificate() {
+    if(this.newCertificate != undefined){
     if (
       this.newCertificate.idCalificacion == null ||
       this.newCertificate.idProducto == null ||
@@ -2502,6 +2503,9 @@ export class FichaCursoComponent implements OnInit {
     } else {
       return false;
     }
+  }else{
+    return false;
+  }
   }
 
   //Si se edita un campo input de la tabla
