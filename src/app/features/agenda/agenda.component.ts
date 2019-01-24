@@ -197,8 +197,8 @@ export class AgendaComponent implements OnInit {
     );
     evento.tipoAcceso = event.calEvent.tipoAcceso;
 
-    if (event.calEvent.end) {
-      evento.end = event.calEvent.end;
+    if (event.calEvent.realEnd) {
+      evento.end = event.calEvent.realEnd;
     } else {
       evento.end = evento.start;
     }

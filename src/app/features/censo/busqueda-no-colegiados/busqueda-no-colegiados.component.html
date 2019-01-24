@@ -133,9 +133,16 @@
         <div class="card-body p-0">
             <p-dataTable styleClass="inheritTable" emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
                 [(selection)]="selectedDatos" (onRowSelect)="irEditarNoColegiado(selectedDatos)" pageLinks="4" dataKey="nif"
-                [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true"
+                [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="sortO" [paginator]="true"
                 paginatorPosition="both" [rows]="selectedItem">
-                <p-column *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate"  [filter]="true" filterMatchMode="contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
+                <!-- <p-column *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate"  [filter]="true" filterMatchMode="contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column> -->
+                <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate"
+                filterPlaceholder="{{'general.boton.search' | translate}}" [filter]="true" filterMatchMode="contains">
+    
+                <ng-template *ngIf="col.field == 'fechaNacimientoDate'" let-dato="rowData" pTemplate="body">
+                  <label>{{ dato.fechaNacimientoDate | date: 'dd/MM/yyyy'}}</label>
+                </ng-template>
+              </p-column>
                 <ng-template pTemplate="paginatorLeft">
                     <div class="mostrar d-flex text-right justify-content-end">
                         <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
@@ -170,21 +177,34 @@
 
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
                 [(selection)]="selectedDatos" (onRowSelect)="irEditarNoColegiado(selectedDatos)" pageLinks="4" dataKey="nif" [responsive]="true"
-                selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both"
+                selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both"
                 [rows]="selectedItem">
-                <p-column *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-                    [filter]="true" filterMatchMode="contains">
-                    <ng-template let-datoH="rowData" pTemplate="body">
-                        <div *ngIf="setItalic(datoH)">
-                            <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
-                        </div>
-                        <div *ngIf="!setItalic(datoH)">
-                            <span>{{datoH[col.field]}}</span>
-                        </div>
 
-                    </ng-template>
-
-                </p-column>
+                <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate"
+                filterPlaceholder="{{'general.boton.search' | translate}}" [filter]="true" filterMatchMode="contains">
+      
+              
+      
+                <ng-template let-datoH="rowData" pTemplate="body">
+                  <div *ngIf="setItalic(datoH)">
+                    <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
+                  </div>
+                  <div *ngIf="!setItalic(datoH)">
+                    <span>{{datoH[col.field]}}</span>
+                  </div>
+                </ng-template>
+      
+      
+                <ng-template *ngIf="col.field == 'fechaNacimientoDate'" let-dato="rowData" pTemplate="body">
+                  <div *ngIf="setItalic(dato)">
+                    <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{
+                      dato.fechaNacimientoDate | date: 'dd/MM/yyyy'}}</label>
+                  </div>
+                  <div *ngIf="!setItalic(dato)">
+                    <label>{{ dato.fechaNacimientoDate | date: 'dd/MM/yyyy'}}</label>
+                  </div>
+                </ng-template>
+              </p-column>
 
                 <ng-template pTemplate="paginatorLeft">
                     <div class="mostrar d-flex text-right justify-content-end">

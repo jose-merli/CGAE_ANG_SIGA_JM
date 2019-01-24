@@ -19,6 +19,7 @@
           <div class="d-flex justify-content-start mt-2">
             <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate}}</label>
           </div>
+          <i class="fa fa-angle-down float-right"></i>
         </div>
       </div>
       <div *ngIf="esFichaActiva('generales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -149,8 +150,8 @@
     <div class="card-footer" *ngIf="esFichaActiva('generales')">
       <div class="text-right main-button">
         <button pButton (click)="restEvent()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="tipoAccesoLectura"></button>
-        <button pButton (click)="deleteEvent()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}" [disabled]="tipoAccesoLectura"></button>
         <button pButton (click)="saveEvent()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="validateForm() || tipoAccesoLectura"></button>
+        <button pButton (click)="deleteEvent()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}" [disabled]="tipoAccesoLectura"></button>
       </div>
     </div>
   </div>
@@ -169,6 +170,7 @@
           <div class="d-flex justify-content-start mt-2">
             <label class="mr-auto title-ficha">{{'formacion.fichaCalendario.notificaciones.cabecera' | translate}}</label>
           </div>
+          <i class="fa fa-angle-down float-right"></i>
         </div>
       </div>
       <div *ngIf="esFichaActiva('notify')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -182,7 +184,6 @@
 
     <!-- Cuerpo-->
     <div class="card-body card-body-ficha" *ngIf="esFichaActiva('notify')">
-      <div *ngIf="esFichaActiva('notify')" class="card-body card-body-ficha">
         <div *ngIf="!historico" class="row">
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
             [(selection)]="selectedDatosNotifications" (onRowSelect)="irEditarNotificacion(selectedDatosNotifications)" (onRowUnselect)="actualizaSeleccionadosNotifications(selectedDatosNotifications)"
@@ -199,7 +200,7 @@
                 <label>{{ "general.message.mostrar" | translate}}</label>
                 <p-dropdown [(ngModel)]="selectedNotification" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesNotifications($event)"></p-dropdown>
                 <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-                <div class="ml-3 selectAllNotification">
+                <div class="ml-3 selectAll">
                   <p-checkbox (onChange)="onChangeSelectAllNotifications()" [(ngModel)]="selectAllNotifications" binary="true" label="{{'tablas.literal.seleccionarTodo' | translate}}"
                     name="groupname"></p-checkbox>
                 </div>
@@ -248,14 +249,13 @@
               </ng-template>
             </p-dataTable>
         </div>
-      </div>
       <div *ngIf="esFichaActiva('notify')" class="card-footer">
         <div *ngIf="!historico" class="text-right main-button">
           <button (click)="getHistoricEventNotifications(); selectedDatosNotifications=[]" pButton type="button" icon="fa fa-history" iconPos="left"
             label="{{ 'general.message.mostrarHistorico' | translate}}" ></button>
           <button (click)="deleteNotification(selectedDatosNotifications)" pButton type="button"
             icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}" [disabled]="tipoAccesoLectura || !selectMultipleNotifications"></button>
-          <button pButton (click)="newNotification()" type="button" icon="fa fa-send" iconPos="left" label="{{
+          <button pButton (click)="newNotification()" type="button" icon="fa fa-plus" iconPos="left" label="{{
                 'general.boton.new' | translate }}" [disabled]="tipoAccesoLectura"></button>
         </div>
         <div *ngIf="historico" class="text-right main-button">
@@ -281,6 +281,7 @@
           <div class="d-flex justify-content-start mt-2">
             <label class="mr-auto title-ficha">{{'agenda.fichaEventos.datosFormadores.cabecera' | translate}}</label>
           </div>
+          <i class="fa fa-angle-down float-right"></i>
         </div>
       </div>
       <div *ngIf="esFichaActiva('formadores')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -317,7 +318,7 @@
     <div class="card-footer" *ngIf="esFichaActiva('formadores')">
       <div class="text-right main-button">
         <button pButton (click)="restTrainers()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="tipoAccesoLectura"></button>
-        <button pButton (click)="guardarFormadores()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+        <button pButton (click)="guardarFormadores()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="tipoAccesoLectura"></button>
       </div>
     </div>
   </div>
@@ -336,6 +337,7 @@
           <div class="d-flex justify-content-start mt-2">
             <label class="mr-auto title-ficha">{{'agenda.fichaEventos.datosAsistencia.asistencia' | translate}}</label>
           </div>
+          <i class="fa fa-angle-down float-right"></i>
         </div>
       </div>
       <div *ngIf="esFichaActiva('asistencia')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -349,7 +351,6 @@
 
     <!-- Cuerpo-->
     <div class="card-body card-body-ficha" *ngIf="esFichaActiva('asistencia')">
-      <div *ngIf="esFichaActiva('asistencia')" class="card-body card-body-ficha">
         <div class="row">
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultipleAsistencia}"
             [(selection)]="selectedDatosAsistencia" pageLinks="4" dataKey="idPersona" [responsive]="true" selectionMode="multiple"
@@ -373,7 +374,7 @@
                 <label>{{ "general.message.mostrar" | translate}}</label>
                 <p-dropdown [(ngModel)]="selectedAsistencia" [options]="rowsPerPage"></p-dropdown>
                 <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-                <div class="ml-3 selectAllNotification">
+                <div class="ml-3 selectAll">
                   <p-checkbox (onChange)="onChangeSelectAllAsistencias()" [(ngModel)]="selectAllAsistencias" binary="true" label="{{'tablas.literal.seleccionarTodo' | translate}}"
                     name="groupname"></p-checkbox>
                 </div>
@@ -385,14 +386,13 @@
 
           </p-dataTable>
         </div>
-      </div>
     </div>
     <div class="card-footer" *ngIf="esFichaActiva('asistencia')">
       <div class="text-right main-button">
         <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate }}" [disabled]="tipoAccesoLectura"></button>
-        <button pButton type="button" (click)="unCheckAsist()" [disabled]="!checkAsistencias || tipoAccesoLectura" icon="fa fa-times" iconPos="left" label="{{ 'agenda.fichaEventos.datosAsistencia.desmarcar' | translate }}"></button>
-        <button pButton type="button" (click)="checkAsist()" [disabled]="!checkAsistencias || tipoAccesoLectura" icon="fa fa-check" iconPos="left" label="{{'agenda.fichaEventos.datosAsistencia.marcar' | translate }}"></button>
-        <button pButton type="button" (click)="saveAssistancesCourse()" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+        <button pButton type="button" (click)="unCheckAsist()" [disabled]="!checkAsistencias || tipoAccesoLectura" icon="fa fa-times" iconPos="left" label="{{ 'agenda.fichaEventos.datosAsistencia.desmarcar' | translate }}" [disabled]="tipoAccesoLectura"></button>
+        <button pButton type="button" (click)="checkAsist()" [disabled]="!checkAsistencias || tipoAccesoLectura" icon="fa fa-check" iconPos="left" label="{{'agenda.fichaEventos.datosAsistencia.marcar' | translate }}" [disabled]="tipoAccesoLectura"></button>
+        <button pButton type="button" (click)="saveAssistancesCourse()" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="tipoAccesoLectura"></button>
       </div>
     </div>
   </div>

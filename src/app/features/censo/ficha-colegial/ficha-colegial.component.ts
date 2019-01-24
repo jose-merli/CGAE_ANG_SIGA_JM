@@ -2060,24 +2060,24 @@ export class FichaColegialComponent implements OnInit {
 
   inscritoAItem() {
     if (this.inscritoSeleccionado == "01") {
-      this.colegialesBody.situacionresidente = "0";
+      this.colegialesBody.situacionResidente = "0";
       this.colegialesBody.comunitario = "1";
     } else if (this.inscritoSeleccionado == "10") {
-      this.colegialesBody.situacionresidente = "1";
+      this.colegialesBody.situacionResidente = "1";
       this.colegialesBody.comunitario = "0";
     } else if (this.inscritoSeleccionado == "11") {
-      this.colegialesBody.situacionresidente = "1";
+      this.colegialesBody.situacionResidente = "1";
       this.colegialesBody.comunitario = "1";
     } else {
-      this.colegialesBody.situacionresidente = "0";
+      this.colegialesBody.situacionResidente = "0";
       this.colegialesBody.comunitario = "0";
     }
   }
 
   itemAInscrito() {
-    if (this.colegialesBody.situacionresidente != undefined) {
+    if (this.colegialesBody.situacionResidente != undefined) {
       this.inscritoSeleccionado =
-        this.colegialesBody.situacionresidente.toString() +
+        this.colegialesBody.situacionResidente.toString() +
         "" +
         this.colegialesBody.comunitario.toString();
     }

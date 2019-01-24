@@ -338,7 +338,7 @@
 
         <!-- Botón inscripción -->
 
-        <button pButton type="button" icon="fa fa-caret-square-o-up" iconPos="left" label="Inscripción" [disabled]="!modoEdicion || !activacionEditar" (click)="irInscripcion()"></button> 
+        <button pButton type="button" icon="fa fa-caret-square-o-up" iconPos="left" label="Inscripción" [disabled]="!controlBotonesEstado('Inscripcion')" (click)="irInscripcion()"></button> 
 
         <!-- Botón guardar -->
         <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" (click)="saveCourse()" [disabled]="validateCourse() || !activacionEditar"></button> 
@@ -653,7 +653,7 @@
                 [editable]="!selectMultipleFormadores"
                 [sortable]="true"
                 [field]="colsFormadores[4].field"
-                [header]="'general.boton.actualizarTarifa' | translate"
+                [header]="'censo.alterMutua.literal.tarifa' | translate"
                 [filter]="true"
                 filterPlaceholder="{{'general.boton.search' | translate}}"
                 filterMatchMode="contains"
@@ -854,7 +854,7 @@
               <p-column
                 [sortable]="true"
                 [field]="colsFormadores[4].field"
-                [header]="'general.boton.actualizarTarifa' | translate"
+                [header]="'censo.alterMutua.literal.tarifa' | translate"
                 [filter]="true"
                 filterPlaceholder="{{'general.boton.search' | translate}}"
                 filterMatchMode="contains"
@@ -864,7 +864,7 @@
                     dato[colsFormadores[4].field]
                   }}</span>
                   <input
-                    *ngIf="dato[colsFormadores[4].field] == ''"
+                    *ngIf="dato[colsFormadores[4].field] == '' && dato[colsFormadores[4].field] != '0'"
                     [value]="dato[colsFormadores[4].field]"
                     [(ngModel)]="newFormadorCourse.tarifa"
                     [disabled]="!activacionEditar"
@@ -1601,15 +1601,15 @@
   </div>
   <div class="card-footer" *ngIf="esFichaActiva('session')">
     <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-close" (click)="cancelSessions()" [disabled]="!activacionEditar" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"  [disabled]="!selectMultipleSessions || !activacionEditar"></button>
-        <button pButton type="button" icon="fa fa-reply-all" (click)="duplicateSession()" [disabled]="!activacionEditar" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}" [disabled]="disabledDuplicate() || !activacionEditar" ></button>
-        <button pButton type="button" icon="fa fa-plus" (click)="newSession()" [disabled]="!activacionEditar" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        <button pButton type="button" icon="fa fa-close" (click)="cancelSessions()" [disabled]="!activacionEditar || isLetrado" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"  [disabled]="!selectMultipleSessions || !activacionEditar"></button>
+        <button pButton type="button" icon="fa fa-reply-all" (click)="duplicateSession()" [disabled]="!activacionEditar || isLetrado" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}" [disabled]="disabledDuplicate() || !activacionEditar" ></button>
+        <button pButton type="button" icon="fa fa-plus" (click)="newSession()" [disabled]="!activacionEditar || isLetrado" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
       </div>
   </div>
 </div>
 
 <!-- TERJETAS CARGA MASIVA INSCRIPCIONES -->
-<div class="card">
+<div *ngIf="!isLetrado" class="card">
   <!-- Cabecera -->
   <div class="card-header header-ficha" (click)="abreCierraFicha('carga')">
     <div *ngIf="!esFichaActiva('carga')" class="form-row">
