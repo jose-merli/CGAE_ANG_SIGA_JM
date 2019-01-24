@@ -649,8 +649,13 @@ export class BusquedaGeneralComponent {
         sessionStorage.getItem("backFichaInscripcion") != null ||
         sessionStorage.getItem("backFichaInscripcion") != undefined
       ) {
-        this.router.navigate(["/fichaInscripcion"]);
         sessionStorage.removeItem("backFichaInscripcion");
+        if (sessionStorage.getItem("modoEdicionInscripcion") != null) {
+          sessionStorage.removeItem("modoEdicionInscripcion");
+        }
+
+        sessionStorage.setItem("modoEdicionInscripcion", "false");
+        this.router.navigate(["/fichaInscripcion"]);
       } else {
         this.router.navigate(["/fichaCurso"]);
       }
