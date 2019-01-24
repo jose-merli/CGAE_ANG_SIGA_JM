@@ -2153,6 +2153,7 @@ export class FichaCursoComponent implements OnInit {
       sessionStorage.setItem("modoEdicionSession", "true");
       sessionStorage.removeItem("eventoSelected");
       sessionStorage.setItem("eventoSelected", JSON.stringify(id[0]));
+      sessionStorage.setItem("idCurso", this.curso.idCurso);
       sessionStorage.setItem("sessions", JSON.stringify(this.datosSessions));
       sessionStorage.setItem("isSession", "true");
       sessionStorage.setItem("fichaAbierta", "true");
@@ -3084,10 +3085,24 @@ export class FichaCursoComponent implements OnInit {
       if (button == "Anunciar")
         if (estado == this.valorEstadoAbierto) return true;
 
-      if (button == "Inscripcion")
+      if (button == "Inscripcion"){
+      if(this.controlFechaInscripcion()){
         if (estado == this.valorEstadoAnunciado || estado == this.valorEstadoEnCurso) return true;
-    }else if(this.modoEdicion && button == "Inscripcion" && this.otraInstitucion){
-      if (estado == this.valorEstadoAnunciado || estado == this.valorEstadoEnCurso) return true;
+        }else if(this.modoEdicion && button == "Inscripcion" && this.otraInstitucion){
+          if (estado == this.valorEstadoAnunciado || estado == this.valorEstadoEnCurso) return true;
+        }
+      }
+      }
+  }
+
+  controlFechaInscripcion(){
+    let fechaActual = new Date();
+    let fechaFinIncripcion = this.curso.fechaInscripcionHastaDate;
+
+    if(fechaActual <= fechaFinIncripcion){
+      return true;
+    }else{
+      return false;
     }
   }
 }

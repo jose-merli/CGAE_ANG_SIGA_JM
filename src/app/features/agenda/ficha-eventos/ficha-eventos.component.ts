@@ -754,8 +754,10 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           } else {
             this.progressSpinner = false;
             this.showSuccess();
+            this.modoEdicionEvento = true;
             this.modoEdicionEventoByAgenda = true;
             this.createEvent = true;
+            sessionStorage.setItem("evento", JSON.stringify(this.newEvent));
             //Obtenemos las notificaciones del evento del calendario especifico, dentro del id se ha guardado el idEvento creado
             if (JSON.parse(data.body).id != "") {
               let idEvento = JSON.parse(data.body).id;
@@ -1365,7 +1367,11 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   restTrainers() {
-    this.results = [];
+    if(this.checkFormadores != undefined){
+    this.results = JSON.parse(JSON.stringify(this.checkFormadores));
+    }else{
+      this.results = [];
+    }
     this.formadoresSuggest = this.formadores;
   }
 
@@ -1719,6 +1725,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       },
       () => {
         this.progressSpinner = false;
+        this.checkFormadores = JSON.parse(JSON.stringify(this.results));
       }
     );
   }
