@@ -131,7 +131,7 @@
     <div class="card-body p-0">
       <p-dataTable [editable]="true" emptyMessage="{{ 'general.message.no.registros' | translate}}" (onRowSelect)="irEditarInscripcion(selectedDatos)"
         (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos"
-        pageLinks="4" dataKey="idInscripcion" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos"
+        pageLinks="4" dataKey="idInscripcion" [responsive]="true" selectionMode="multiple" #table class="tabla-listado inheritTable" [value]="datos"
         [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
   
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"

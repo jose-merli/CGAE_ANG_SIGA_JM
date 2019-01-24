@@ -3,7 +3,8 @@ import {
   Component,
   OnInit,
   ViewChild,
-  HostListener
+  HostListener,
+  ViewEncapsulation
 } from "@angular/core";
 import { MultiSelect } from "primeng/primeng";
 import {
@@ -33,7 +34,8 @@ export enum KEY_CODE {
 @Component({
   selector: "app-busqueda-inscripciones",
   templateUrl: "./busqueda-inscripciones.component.html",
-  styleUrls: ["./busqueda-inscripciones.component.scss"]
+  styleUrls: ["./busqueda-inscripciones.component.scss"],
+  encapsulation: ViewEncapsulation.None
 })
 export class BusquedaInscripcionesComponent extends SigaWrapper
   implements OnInit {
