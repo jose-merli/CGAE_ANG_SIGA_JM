@@ -21,7 +21,6 @@ import { HistoricoUsuarioDto } from "../../../../models/HistoricoUsuarioDto";
 import { HistoricoUsuarioRequestDto } from "../../../../models/HistoricoUsuarioRequestDto";
 import { DataTable } from "primeng/datatable";
 
-import { DialogoComunicacionesItem } from "../../../../models/DialogoComunicacionItem";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -63,16 +62,6 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   volver: boolean = false;
   pButton;
   first: number = 0;
-
-  //Diálogo de comunicación
-  showComunicar: boolean = false;
-  modelosComunicacion: any[];
-  bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
-  tiposEnvio: any[];
-  plantillas: any[];
-  datosModelos: any[];
-  colsModelos: any[];
-  selectMultiple: boolean = false;
 
   constructor(
     private sigaServices: SigaServices,
@@ -145,13 +134,6 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
         header: "administracion.auditoriaUsuarios.literal.motivo"
       }
     ];
-
-    this.colsModelos = [
-      { field: 'modelo', header: 'Modelo' },
-      { field: 'tipoEnvio', header: 'Tipo envío' },
-      { field: 'plantillaEnvio', header: 'Plantilla Envío' },
-
-    ]
 
     this.rowsPerPage = [
       {
@@ -469,24 +451,6 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   clear() {
     this.msgs = [];
   }
-
-  //Diálogo de comunicación: ver y enviar servicio
-  onComunicar(dato) {
-    this.showComunicar = true;
-    this.getModelosComunicacion();
-  }
-
-  getModelosComunicacion() {
-    this.datosModelos = [
-      { id: '1', modelo: '', tipoEnvio: '', plantillaEnvio: '' }
-    ]
-  }
-
-  onEnviarComunicacion() {
-    this.showComunicar = false;
-  }
-
-  onRowSelectModelos() { }
 
 
 }

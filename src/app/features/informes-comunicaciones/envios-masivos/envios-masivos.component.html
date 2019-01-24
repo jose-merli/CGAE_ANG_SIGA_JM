@@ -72,7 +72,7 @@
               <span *ngIf="
                 col.field=='fechaCreacion'">{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
               <span *ngIf="
-                col.field=='fechaProgramada'">{{ dato[col.field] | date: 'd/M/yyyy, H:mm '}}</span>
+                col.field=='fechaProgramada' && dato.fechaProgramada!=null">{{ dato[col.field] | date: 'd/M/yyyy, H:mm '}}</span>
               <span *ngIf="
                 dato[col.field]==null ||dato[col.field]==''">-</span>
             </td>

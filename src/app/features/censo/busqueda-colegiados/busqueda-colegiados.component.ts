@@ -23,6 +23,7 @@ import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
 import { esCalendar } from "./../../../utils/calendar";
 import { SigaServices } from "./../../../_services/siga.service";
+import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -95,6 +96,21 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   fechaNacimientoHastaSelect: Date;
   fechaNacimientoDesdeSelect: Date;
 
+  //Diálogo de comunicación
+  showComunicar: boolean = false;
+  modelosComunicacion: any[];
+  bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
+  tiposEnvio: any[];
+  plantillasEnvio: any[];
+  datosModelos: any[];
+  colsModelos: any[];
+  selectMultipleComunicar: boolean = false;
+  first: number = 0;
+  currentDate: Date = new Date();
+  clasesComunicaciones: any = [];
+  currentRoute: String;
+  selectedModelos: any = [];
+
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
@@ -117,6 +133,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   selectedDatos;
 
   ngOnInit() {
+    this.currentRoute = this.router.url;
+
     this.getCombos();
     // sessionStorage.removeItem("esColegiado");
     sessionStorage.removeItem("disabledAction");
@@ -141,6 +159,15 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       sessionStorage.removeItem("filtrosBusquedaColegiadosFichaColegial");
       this.isBuscar();
     }
+
+    this.colsModelos = [
+      { field: 'modelo', header: 'Modelo' },
+      { field: 'plantillaEnvio', header: 'Plantilla Envío' },
+      { field: 'tipoEnvio', header: 'Tipo envío' }
+    ]
+
+
+
   }
 
   onHideDatosGenerales() {
@@ -251,8 +278,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           this.isDisabledPoblacion = false;
           this.comboPoblacion = n.combooItems;
         },
-        error => {},
-        () => {}
+        error => { },
+        () => { }
       );
   }
 
@@ -435,8 +462,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           this.comboTipoCV = n.combooItems;
           this.arregloTildesCombo(this.comboTipoCV);
         },
-        error => {},
-        () => {}
+        error => { },
+        () => { }
       );
   }
 
@@ -452,8 +479,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           this.comboSubtipoCV = n.combooItems;
           this.arregloTildesCombo(this.comboSubtipoCV);
         },
-        error => {},
-        () => {}
+        error => { },
+        () => { }
       );
   }
 
@@ -717,4 +744,40 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       this.isBuscar();
     }
   }
+
+
+  //Diálogo de comunicación: ver y enviar servicio
+  comunicar(dato) {
+    this.showComunicar = true;
+    this.getClasesComunicaciones();
+    this.getModelosComunicacion();
+  }
+
+  getClasesComunicaciones() {
+    let rutaClaseComunicacion = this.currentRoute.toString();
+
+    debugger;
+    this.sigaServices.post("dialogo_claseComunicaciones", rutaClaseComunicacion).subscribe(
+      data => {
+        this.clasesComunicaciones = data.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getModelosComunicacion() {
+    this.modelosComunicacion = [
+      { id: '1', modelo: '', tipoEnvio: '', plantillaEnvio: '' }
+    ]
+  }
+
+  enviarComunicacion() {
+    this.showComunicar = false;
+  }
+
+  onRowSelectModelos() { }
+
+  descargarComunicacion() { }
 }
