@@ -908,52 +908,40 @@
     <div class="card-footer" *ngIf="esFichaActiva('formadores')">
       <div class="text-right main-button">
         <button
-          *ngIf="pressNewFormador"
-          (click)="restTrainer()"
-          pButton
-          type="button"
-          icon="fa fa-ban"
-          iconPos="left"
-          label="{{'general.boton.cancel' | translate}}"
-        ></button>
+        pButton
+        (click)="restTrainer()"
+        type="button"
+        icon="fa fa-undo"
+        iconPos="left"
+        label="{{ 'general.boton.restablecer'| translate }}"
+        [disabled]="!editFormador && !pressNewFormador"
+      ></button>
         <button
-          *ngIf="editFormador || pressNewFormador"
           pButton
           (click)="saveTrainers()"
           type="button"
           icon="far fa-save"
           iconPos="left"
-          [disabled]="validateTrainer() || !activacionEditar"
+          [disabled]="((pressNewFormador  || !activacionEditar || !editFormador) && validateTrainer()) || !editFormador || !activacionEditar"
           label="{{ 'general.boton.guardar' | translate }}"
         ></button>
         <button
-          *ngIf="editFormador && !pressNewFormador"
-          pButton
-          (click)="restTrainer()"
-          type="button"
-          icon="fa fa-undo"
-          iconPos="left"
-          label="{{ 'general.boton.restablecer'| translate }}"
-        ></button>
+        pButton
+        (click)="deleteTrainer(selectedDatosFormadores)"
+        type="button"
+        icon="fa fa-trash-alt"
+        iconPos="left"
+        [disabled]="!activacionEditar || selectedDatosFormadores == ''"
+        label="{{ 'general.boton.eliminar'| translate }}"
+      ></button>
         <button
-          *ngIf="!pressNewFormador && !selectMultipleFormadores"
           pButton
           (click)="newTrainer()"
           type="button"
           icon="fa fa-plus"
           iconPos="left"
           label="{{ 'general.boton.new'| translate }}"
-          [disabled]="editFormador || !activacionEditar"
-        ></button>
-        <button
-          *ngIf="selectMultipleFormadores"
-          pButton
-          (click)="deleteTrainer(selectedDatosFormadores)"
-          type="button"
-          icon="fa fa-trash-alt"
-          iconPos="left"
-          [disabled]="!activacionEditar"
-          label="{{ 'general.boton.eliminar'| translate }}"
+          [disabled]="editFormador || !activacionEditar || pressNewFormador || selectMultipleFormadores"
         ></button>
       </div>
     </div>
@@ -1454,7 +1442,7 @@
         icon="far fa-save"
         iconPos="left"
         label="{{ 'general.boton.guardar' | translate }}"
-        [disabled]="!editCertificate || (!pressNewCertificate && validateCertificate()) || !activacionEditar"
+        [disabled]="((pressNewCertificate  || !activacionEditar || !editCertificate) && validateCertificate()) || !editCertificate || !activacionEditar"
       ></button>
         <button
           [disabled]="selectedDatosCertificates == '' || !activacionEditar"

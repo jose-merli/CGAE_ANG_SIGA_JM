@@ -1938,7 +1938,7 @@ export class FichaCursoComponent implements OnInit {
         return false;
       }
     }else{
-      return false;
+      return true;
     }
   }
 
@@ -2524,7 +2524,7 @@ export class FichaCursoComponent implements OnInit {
       return false;
     }
   }else{
-    return false;
+    return true;
   }
   }
 

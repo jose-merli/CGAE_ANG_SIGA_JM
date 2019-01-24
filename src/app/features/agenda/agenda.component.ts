@@ -189,6 +189,7 @@ export class AgendaComponent implements OnInit {
     evento.recursos = event.calEvent.recursos;
     evento.lugar = event.calEvent.lugar;
     evento.start = event.calEvent.start;
+    evento.idCurso = event.calEvent.idCurso;
     evento.fechaInicioRepeticion = event.calEvent.fechaInicioRepeticion;
     evento.fechaFinRepeticion = event.calEvent.fechaFinRepeticion;
     evento.tipoDiasRepeticion = event.calEvent.tipoDiasRepeticion;

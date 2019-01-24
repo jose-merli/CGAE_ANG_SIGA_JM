@@ -115,6 +115,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   datosFormadores: any[] = [];
   formadoresSuggest: any[] = [];
   formadores: any[] = [];
+  checkFormadores: any[] = [];
   results: any[] = [];
   backgroundColor: string;
   marginPx = "4px";
@@ -174,6 +175,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       ).idTipoCalendario;
 
       this.idCalendario = this.newEvent.idCalendario;
+      this.idCurso = this.newEvent.idCurso;
 
       this.modoEdicionEvento = true;
       this.disabledTipoEvento = true;
@@ -206,6 +208,10 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
             this.newEvent.fechaFinRepeticion
           );
         }
+
+        this.getTrainers();
+        this.getTrainersSession();
+        this.getEntryListCourse();
 
         //si no pertenece al calendario de formacion se genera el combo con solo laboral-general
       } else if (this.newEvent.idTipoCalendario == this.valorTipoGeneral) {
@@ -273,7 +279,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       if (this.newEvent.start != undefined && this.newEvent.end != undefined) {
         this.limitTimeEvent();
       }
-      this.getEntryListCourse();
 
       //4. En caso de que venga notificaciones
     } else if (sessionStorage.getItem("isNotificaciones") == "true") {
@@ -1029,6 +1034,14 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     );
   }
 
+
+  formadoresDistintosCheck(){
+    if(JSON.stringify(this.checkFormadores) != JSON.stringify(this.results)){
+      return true;
+    }else{
+      return false;
+    }
+  }
   //FUNCIONES FICHA NOTIFICACIONES
 
   getColsResults() {
@@ -1242,7 +1255,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       .subscribe(
         n => {
           this.results = n.formadoresCursoItem;
-
+          this.checkFormadores = JSON.parse(JSON.stringify(this.results));
           this.results.forEach(element => {
             if (element.color == undefined) {
               element.color = this.getRandomColor();
