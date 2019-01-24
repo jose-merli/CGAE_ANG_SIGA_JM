@@ -179,9 +179,9 @@ export class DatosNotificacionesComponent implements OnInit, OnDestroy {
   }
 
   backTo() {
-    this.location.back();
     sessionStorage.setItem("isNotificaciones", "true");
     sessionStorage.setItem("modoEdicion", "true");
+    this.location.back();
   }
 
   onChangeTemplates(event) {

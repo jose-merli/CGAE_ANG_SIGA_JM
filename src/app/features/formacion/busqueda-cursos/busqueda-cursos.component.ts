@@ -411,6 +411,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   }
 
   irEditarCurso(selectedDatos) {
+    sessionStorage.removeItem("isCancelado");
     if (selectedDatos.length >= 1 && this.selectMultiple == false) {
       if (selectedDatos[0].idEstado != "5") {
         sessionStorage.setItem("isCancelado", "false");

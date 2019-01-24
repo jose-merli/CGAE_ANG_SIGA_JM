@@ -1454,7 +1454,7 @@
           label="{{ 'general.boton.eliminar'| translate }}"
         ></button>
         <button
-        [disabled]="selectMultipleCertificates || selectAllCertificates || (editCertificate && !pressNewCertificate)"
+        [disabled]="selectMultipleCertificates || selectAllCertificates || (editCertificate && !pressNewCertificate) || !activacionEditar"
         pButton
         (click)="newCertificates()"
         type="button"
@@ -1640,10 +1640,10 @@
   <div class="card-footer" *ngIf="esFichaActiva('carga')">
     <div class="text-right main-button">
 
-      <button pButton type="button" [disabled]="disabledDownload() || !activacionEditar" (click)="autovalidateInscriptions(selectedDatosCargas)" icon="fa fa-close" iconPos="left" label="Autovalidar"></button>
+      <button pButton type="button" [disabled]="disabledDownload() || !activacionEditar" (click)="autovalidateInscriptions(selectedDatosCargas)" icon="fa fa-check" iconPos="left" label="Autovalidar"></button>
 
-      <p-fileUpload mode="basic" #pUploadFile  chooseLabel="Cargar Archivo"
-       class="edit my-0 mx-auto main-button" name="file" [disabled]="!activacionEditar"  accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      <p-fileUpload mode="basic" #pUploadFile  [(disabled)]="!activacionEditar"   chooseLabel="Cargar Archivo"
+       class="edit my-0 mx-auto main-button" name="file" accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
        (change)="getFile($event, form)"></p-fileUpload>
       <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" [disabled]="!activacionEditar" iconPos="left" label="DescargarPlantilla"></button>
       <button pButton type="button" [disabled]="disabledDownload() || !activacionEditar"(click)="downloadFile(selectedDatosCargas)" icon="fa fa-download" iconPos="left" label="DescargarFichero"></button>

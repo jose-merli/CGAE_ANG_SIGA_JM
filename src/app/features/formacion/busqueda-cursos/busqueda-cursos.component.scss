@@ -3,3 +3,7 @@
   font-weight: bold !important;
   text-decoration: line-through !important;
 }
+
+.inheritTable .ui-datatable-tablewrapper table {
+  table-layout: inherit !important;
+}
