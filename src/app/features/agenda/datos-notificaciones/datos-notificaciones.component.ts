@@ -64,6 +64,7 @@ export class DatosNotificacionesComponent implements OnInit, OnDestroy {
 
       this.notification = new NotificacionEventoItem();
       this.notification.idEvento = this.evento.idEvento;
+      this.notification.idTipoCuando = "1";
     } else {
       this.modoEdicion = false;
       this.notification = new NotificacionEventoItem();

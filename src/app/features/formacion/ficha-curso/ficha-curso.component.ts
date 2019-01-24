@@ -464,17 +464,17 @@ export class FichaCursoComponent implements OnInit {
         if (derechoAcceso == 3) {
           //permiso total
           this.activacionEditar = true;
-          sessionStorage.setItem(
-            "fichaCursoPermisos",
-            JSON.stringify(this.activacionEditar)
-          );
+
+          if(sessionStorage.getItem("isCancelado")=="true"){
+            this.activacionEditar=false;
+          }
+          sessionStorage.removeItem("isCancelado");
+          sessionStorage.setItem("fichaCursoPermisos", JSON.stringify(this.activacionEditar));
         } else if (derechoAcceso == 2) {
           // solo lectura
           this.activacionEditar = false;
-          sessionStorage.setItem(
-            "fichaCursoPermisos",
-            JSON.stringify(this.activacionEditar)
-          );
+          sessionStorage.setItem("fichaCursoPermisos", JSON.stringify(this.activacionEditar));
+
         } else {
           sessionStorage.setItem("codError", "403");
           sessionStorage.setItem(

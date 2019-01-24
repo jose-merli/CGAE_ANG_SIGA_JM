@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, HostListener } from "@angular/core";
 import { SigaServices } from "../../../_services/siga.service";
 import { Location } from "@angular/common";
 import { BusquedaFisicaItem } from "../../../models/BusquedaFisicaItem";
@@ -12,6 +12,10 @@ import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
 import { TranslateService } from "../../../commons/translate";
 import { ConfirmationService } from "../../../../../node_modules/primeng/primeng";
 import { FichaColegialGeneralesItem } from "../../../models/FichaColegialGeneralesItem";
+
+export enum KEY_CODE {
+  ENTER = 13
+}
 
 @Component({
   selector: "app-busqueda-censo-general",
@@ -366,6 +370,14 @@ export class BusquedaCensoGeneralComponent implements OnInit {
       return false;
     } else {
       return true;
+    }
+  }
+
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.isBuscar();
     }
   }
 }

@@ -680,38 +680,74 @@ export class NuevaIncorporacionComponent implements OnInit {
     );
   }
 
-  getLabelbyFilter(array) {
+  getLabelbyFilter(string) {
     /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
-    array.map(e => {
-      let accents =
-        "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-      let accentsOut =
-        "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-      let i;
-      let x;
-      for (i = 0; i < e.label.length; i++) {
-        if ((x = accents.indexOf(e.label[i])) != -1) {
-          e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-          return e.labelSinTilde;
-        }
+    // array.map(e => {
+    //   let accents =
+    //     "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+    //   let accentsOut =
+    //     "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+    //   let i;
+    //   let x;
+    //   for (i = 0; i < e.label.length; i++) {
+    //     if ((x = accents.indexOf(e.label[i])) != -1) {
+    //       e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+    //       return e.labelSinTilde;
+    //     }
+    //   }
+    // });
+
+    /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+para poder filtrar el dato con o sin estos caracteres*/
+    let labelSinTilde = string;
+    let accents =
+      "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+    let accentsOut =
+      "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+    let i;
+    let x;
+    for (i = 0; i < string.length; i++) {
+      if ((x = accents.indexOf(string.charAt(i))) != -1) {
+        labelSinTilde = string.replace(string.charAt(i), accentsOut[x]);
+        return labelSinTilde;
       }
-    });
+    }
+
+    return labelSinTilde;
   }
 
   getComboPoblacion(filtro: string) {
     this.progressSpinner = true;
-    let poblacionBuscada = filtro;
+    let poblacionBuscada = this.getLabelbyFilter(filtro);
     this.sigaServices
       .getParam(
         "direcciones_comboPoblacion",
-        "?idProvincia=" + this.solicitudEditar.idProvincia + "&filtro=" + filtro
+        "?idProvincia=" +
+          this.solicitudEditar.idProvincia +
+          "&filtro=" +
+          poblacionBuscada
       )
       .subscribe(
         n => {
           this.poblaciones = n.combooItems;
-          this.getLabelbyFilter(this.poblaciones);
-          this.dropdown.filterViewChild.nativeElement.value = poblacionBuscada;
+          //this.getLabelbyFilter(this.poblaciones);
+          //this.dropdown.filterViewChild.nativeElement.value = poblacionBuscada;
+
+          this.poblaciones.map(e => {
+            let accents =
+              "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+            let accentsOut =
+              "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+            let i;
+            let x;
+            for (i = 0; i < e.label.length; i++) {
+              if ((x = accents.indexOf(e.label[i])) != -1) {
+                e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+                return e.labelSinTilde;
+              }
+            }
+          });
         },
         error => {},
         () => {
@@ -884,7 +920,38 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   irPlanUniversal() {
     // Acceso a Web Service para saber si hay una solicitud de Mutualidad.
-    this.solicitudEditar.idPais = "191";
+    this.solicitudEditar.idPais = this.paisSelected;
+    this.solicitudEditar.identificador = this.solicitudEditar.numeroIdentificacion;
+    this.sigaServices
+      .post("mutualidad_estadoMutualista", this.solicitudEditar)
+      .subscribe(
+        result => {
+          let prueba = JSON.parse(result.body);
+          if (prueba.valorRespuesta == "1") {
+            this.solicitudEditar.idSolicitudMutualidad = prueba.idSolicitud;
+            this.solicitudEditar.estadoMutualidad = prueba.valorRespuesta;
+            this.solicitudEditar.tipoIdentificacion = this.tipoIdentificacionSelected;
+            this.solicitudEditar.tipoSolicitud = this.tipoSolicitudSelected;
+            sessionStorage.setItem(
+              "solicitudEnviada",
+              JSON.stringify(this.solicitudEditar)
+            );
+            this.router.navigate(["/MutualidadAbogaciaPlanUniversal"]);
+          } else {
+            //  this.modoLectura = true;
+            this.showFail(
+              "El Colegiado no es apto para realizar una solicitud de Mutualidad."
+            );
+          }
+        },
+        error => {
+          console.log(error);
+        }
+      );
+  }
+
+  irSegAccidentes() {
+    this.solicitudEditar.idPais = this.paisSelected;
     this.solicitudEditar.identificador = this.solicitudEditar.numeroIdentificacion;
     this.sigaServices
       .post("mutualidad_estadoMutualista", this.solicitudEditar)
@@ -900,7 +967,7 @@ para poder filtrar el dato con o sin estos caracteres*/
               "solicitudEnviada",
               JSON.stringify(this.solicitudEditar)
             );
-            this.router.navigate(["/MutualidadAbogaciaPlanUniversal"]);
+            this.router.navigate(["/mutualidadSeguroAccidentes"]);
           } else {
             //  this.modoLectura = true;
             this.showFail(
@@ -912,16 +979,6 @@ para poder filtrar el dato con o sin estos caracteres*/
           console.log(error);
         }
       );
-  }
-
-  irSegAccidentes() {
-    this.solicitudEditar.idPais = "191";
-    this.solicitudEditar.identificador = this.solicitudEditar.numeroIdentificacion;
-    sessionStorage.setItem(
-      "solicitudEnviada",
-      JSON.stringify(this.solicitudEditar)
-    );
-    this.router.navigate(["/mutualidadSeguroAccidentes"]);
   }
 
   ngOnDestroy() {

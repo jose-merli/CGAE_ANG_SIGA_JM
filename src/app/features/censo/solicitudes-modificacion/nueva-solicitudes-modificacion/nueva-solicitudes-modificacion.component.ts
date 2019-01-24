@@ -112,7 +112,10 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
         // Llamar a los dos servicios y a un getTabla distinto
         this.getTranslationsForAddresses();
         this.getSolModAddresses(this.body);
-      } else if (this.body.idTipoModificacion == "35") {
+      } else if (
+        this.body.idTipoModificacion == "35" ||
+        this.body.idTipoModificacion == "60"
+      ) {
         this.getTranslationsForPhoto();
         this.getSolModPhoto(this.body);
       } else if (this.body.idTipoModificacion == "10") {
@@ -576,7 +579,8 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
       this.updateRequestState(
         "solicitudModificacion_processSolModifDatosDirecciones"
       );
-    } else if (this.body.idTipoModificacion == "35") {
+    } else if (this.body.idTipoModificacion == "35"  ||
+    this.body.idTipoModificacion == "60") {
       this.updateRequestState(
         "solicitudModificacion_processSolModifDatosUseFoto"
       );
@@ -600,7 +604,8 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
       this.updateRequestState(
         "solicitudModificacion_denySolModifDatosDirecciones"
       );
-    } else if (this.body.idTipoModificacion == "35") {
+    } else if (this.body.idTipoModificacion == "35"  ||
+    this.body.idTipoModificacion == "60") {
       this.updateRequestState("solicitudModificacion_denySolModifDatosUseFoto");
     } else if (this.body.idTipoModificacion == "40") {
       this.updateRequestState(
