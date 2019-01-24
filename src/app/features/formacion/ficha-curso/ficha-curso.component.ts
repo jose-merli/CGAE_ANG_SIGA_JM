@@ -1720,11 +1720,11 @@ export class FichaCursoComponent implements OnInit {
           this.selectMultipleFormadores = false;
         },
         err => {
-          this.showFail(
-            this.translateService.instant(
-              "general.message.error.realiza.accion"
-            )
-          );
+        this.showMessage(
+              "error",
+              "Incorrecto",
+              JSON.parse(err.error).error.description
+            );
           this.progressSpinner = false;
         },
         () => {
