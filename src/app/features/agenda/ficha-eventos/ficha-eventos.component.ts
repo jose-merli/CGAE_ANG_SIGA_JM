@@ -318,7 +318,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         );
       }
 
-      if(sessionStorage.getItem("sessions")){
+      if(sessionStorage.getItem("isSession")){
         this.isFormacionCalendar = true;
       }else{
         this.newEvent.idTipoCalendario = JSON.parse(
@@ -1100,18 +1100,22 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   irEditarNotificacion(id) {
-    if (id.length >= 1 && this.selectMultipleNotifications == false) {
+   if (id.length >= 1 && this.selectMultipleNotifications == false) {
       sessionStorage.setItem("modoEdicionNotify", "true");
       sessionStorage.removeItem("notifySelected");
       sessionStorage.setItem("notifySelected", JSON.stringify(id));
+      sessionStorage.removeItem("isFormacionCalendar");
+      sessionStorage.setItem("isFormacionCalendar", "false");
+      sessionStorage.removeItem("evento");
       sessionStorage.setItem("evento", JSON.stringify(this.newEvent));
       sessionStorage.setItem(
         "notificaciones",
         JSON.stringify(this.datosNotificaciones)
       );
       sessionStorage.setItem("historico", JSON.stringify(this.historico));
+       sessionStorage.setItem("fichaAbierta", "true");
       this.router.navigate(["/editarNotificacion"]);
-      sessionStorage.setItem("fichaAbierta", "true");
+     
     } else {
       this.numSelectedNotification = this.selectedDatosNotifications.length;
     }
@@ -1131,6 +1135,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     sessionStorage.setItem("notificacionByEvento", "true");
     sessionStorage.setItem("modoEdicionNotify", "false");
     sessionStorage.setItem("fichaAbierta", "true");
+    sessionStorage.removeItem("isFormacionCalendar");
+      sessionStorage.setItem("isFormacionCalendar", "false");
+      sessionStorage.removeItem("evento");
     sessionStorage.setItem("evento", JSON.stringify(this.newEvent));
     this.router.navigate(["/editarNotificacion"]);
   }
@@ -1298,7 +1305,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         });
       } else {
         this.formadoresSuggest = this.formadores;
-      }
+     }
 
       this.autoComplete.focusInput();
     } else {

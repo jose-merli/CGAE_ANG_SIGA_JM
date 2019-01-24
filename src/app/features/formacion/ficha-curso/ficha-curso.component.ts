@@ -1506,7 +1506,7 @@ export class FichaCursoComponent implements OnInit {
 
   newTrainer() {
     sessionStorage.setItem("abrirFormador", "true");
-    this.router.navigate(["/busquedaGeneral"]);
+   
     this.pressNewFormador = true;
     this.modoEdicionFormador = false;
     this.editFormador = true;
@@ -1529,6 +1529,7 @@ export class FichaCursoComponent implements OnInit {
       "datosFormadores",
       JSON.stringify(this.datosFormadores)
     );
+    this.router.navigate(["/busquedaGeneral"]);
   }
 
   loadNewTrainer(newformador) {
@@ -2153,8 +2154,10 @@ export class FichaCursoComponent implements OnInit {
       sessionStorage.removeItem("eventoSelected");
       sessionStorage.setItem("eventoSelected", JSON.stringify(id[0]));
       sessionStorage.setItem("sessions", JSON.stringify(this.datosSessions));
-      this.router.navigate(["/fichaEventos"]);
+      sessionStorage.setItem("isSession", "true");
       sessionStorage.setItem("fichaAbierta", "true");
+      this.router.navigate(["/fichaEventos"]);
+     
     }
     this.numSelectedPrices = this.datosPrices.length;
     this.numSelectedSessions = this.datosSessions.length;
@@ -2951,8 +2954,9 @@ export class FichaCursoComponent implements OnInit {
       sessionStorage.getItem("isInscripcion") != null &&
       sessionStorage.getItem("isInscripcion") != undefined
     ) {
-      this.router.navigate(["/buscarCursos"]);
       sessionStorage.removeItem("isInscripcion");
+      this.router.navigate(["/buscarCursos"]);
+     
     } else {
       if (sessionStorage.getItem("rutaVolver")) {
         this.router.navigate([sessionStorage.getItem("rutaVolver")]);
