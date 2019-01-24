@@ -136,7 +136,7 @@ export class FichaCursoComponent implements OnInit {
   colsPrices;
   selectedItemPrices;
   datosPrices = [];
-  selectedDatosPrices;
+  selectedDatosPrices = [];
   selectAllPrices: any;
   selectedPrices: number = 10;
   selectMultiplePrices: boolean = false;
@@ -147,7 +147,7 @@ export class FichaCursoComponent implements OnInit {
   colsFormadores;
   selectedItemFormadores;
   datosFormadores = [];
-  selectedDatosFormadores;
+  selectedDatosFormadores = [];
   selectAllFormadores: any;
   selectedFormadores: number = 10;
   selectMultipleFormadores: boolean = false;
@@ -182,7 +182,7 @@ export class FichaCursoComponent implements OnInit {
   colsCertificates;
   selectedItemCertificates;
   datosCertificates = [];
-  selectedDatosCertificates;
+  selectedDatosCertificates = [];
   selectAllCertificates: any;
   selectedCertificates: number = 10;
   selectMultipleCertificates: boolean = false;
@@ -210,7 +210,7 @@ export class FichaCursoComponent implements OnInit {
   colsCargas;
   selectedItemCargas;
   datosCargas = [];
-  selectedDatosCargas;
+  selectedDatosCargas = [];
   selectAllCargas: any;
   selectedCargas: number = 10;
   selectMultipleCargas: boolean = false;
@@ -220,6 +220,7 @@ export class FichaCursoComponent implements OnInit {
   existeArchivo: boolean = false;
   save_file: any;
   activacionEditar: boolean = false;
+  otraInstitucion: boolean = false;
   file: File = undefined;
 
   constructor(
@@ -243,11 +244,7 @@ export class FichaCursoComponent implements OnInit {
     this.getColsResultsSessions();
     this.getColsResultsCertificates();
     this.getColsResultsCargas();
-
-    sessionStorage.removeItem("isFormacionCalendar");
-    sessionStorage.removeItem("fichaCursoPermisos");
-    sessionStorage.removeItem("abrirFormador");
-    sessionStorage.removeItem("cursoSelected");
+    this.cleanSessionStorage();
 
     this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
 
@@ -468,7 +465,6 @@ export class FichaCursoComponent implements OnInit {
           if(sessionStorage.getItem("isCancelado")=="true"){
             this.activacionEditar=false;
           }
-          sessionStorage.removeItem("isCancelado");
           sessionStorage.setItem("fichaCursoPermisos", JSON.stringify(this.activacionEditar));
         } else if (derechoAcceso == 2) {
           // solo lectura
@@ -483,8 +479,22 @@ export class FichaCursoComponent implements OnInit {
           );
           this.router.navigate(["/errorAcceso"]);
         }
+    this.compruebaInstitucionCurso();
       }
     );
+  }
+
+  cleanSessionStorage(){
+    sessionStorage.removeItem("isFormacionCalendar");
+    sessionStorage.removeItem("fichaCursoPermisos");
+    sessionStorage.removeItem("abrirFormador");
+    sessionStorage.removeItem("cursoSelected");
+    sessionStorage.removeItem("datosCertificatesInit");
+    sessionStorage.removeItem("notificaciones");
+    sessionStorage.removeItem("sessions");
+    sessionStorage.removeItem("historico");
+    sessionStorage.removeItem("evento");
+
   }
 
   //TARJETA DATOS GENERALES
@@ -1011,6 +1021,7 @@ export class FichaCursoComponent implements OnInit {
       },
       () => {
         this.progressSpinner = false;
+        this.compruebaInstitucionCurso();
       }
     );
   }
@@ -1437,6 +1448,15 @@ export class FichaCursoComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  compruebaInstitucionCurso(){
+    let institucionPersona = this.authenticationService.getInstitucionSession();
+    let institucionCurso = this.curso.idInstitucion;
+    if((institucionPersona != institucionCurso && institucionCurso != undefined) || this.isLetrado ){
+        this.activacionEditar = false;
+        this.otraInstitucion = true;
+    }
   }
 
   getComboTipoCoste() {
@@ -1917,14 +1937,18 @@ export class FichaCursoComponent implements OnInit {
   }
 
   validateTrainer() {
-    if (
-      this.newFormadorCourse.idTipoCoste == null ||
-      this.newFormadorCourse.tarifa == null ||
-      this.newFormadorCourse.idTipoCoste == "" ||
-      this.newFormadorCourse.tarifa == ""
-    ) {
-      return true;
-    } else {
+    if(this.newFormadorCourse != undefined){
+      if (
+        this.newFormadorCourse.idTipoCoste == null ||
+        this.newFormadorCourse.tarifa == null ||
+        this.newFormadorCourse.idTipoCoste == "" ||
+        this.newFormadorCourse.tarifa == ""
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }else{
       return false;
     }
   }
@@ -2075,7 +2099,7 @@ export class FichaCursoComponent implements OnInit {
       .post("fichaCursos_cancelSessionsCourse", sessionsCancel)
       .subscribe(
         data => {
-          this.getSessions();
+
           if (JSON.parse(data.body).error.code == null) {
             this.showMessage(
               "info",
@@ -2088,6 +2112,8 @@ export class FichaCursoComponent implements OnInit {
               "Correcto",
               "Sesiones canceladas correctamente"
             );
+            this.searchCourse(this.curso.idCurso);
+
           } else if (JSON.parse(data.body).error.code == 400) {
             this.showMessage(
               "error",
@@ -2146,9 +2172,11 @@ export class FichaCursoComponent implements OnInit {
 
   //Inscripciones
   irBusquedaInscripcciones() {
-    sessionStorage.setItem("pantallaFichaCurso", "true");
-    sessionStorage.setItem("cursoSelected", JSON.stringify(this.curso));
-    this.router.navigate(["/buscarInscripciones"]);
+    if(!this.otraInstitucion){
+      sessionStorage.setItem("pantallaFichaCurso", "true");
+      sessionStorage.setItem("cursoSelected", JSON.stringify(this.curso));
+      this.router.navigate(["/buscarInscripciones"]);
+    }
   }
 
   getCountInscriptions() {
@@ -2467,7 +2495,6 @@ export class FichaCursoComponent implements OnInit {
       sessionStorage.getItem("datosCertificatesInit")
     );
 
-    sessionStorage.removeItem("datosCertificatesInit");
     this.selectMultipleCertificates = false;
     this.pressNewCertificate = false;
     this.editCertificate = false;
@@ -2498,6 +2525,7 @@ export class FichaCursoComponent implements OnInit {
   }
 
   validateCertificate() {
+    if(this.newCertificate != undefined){
     if (
       this.newCertificate.idCalificacion == null ||
       this.newCertificate.idProducto == null ||
@@ -2508,6 +2536,9 @@ export class FichaCursoComponent implements OnInit {
     } else {
       return false;
     }
+  }else{
+    return false;
+  }
   }
 
   //Si se edita un campo input de la tabla
@@ -3051,6 +3082,8 @@ export class FichaCursoComponent implements OnInit {
 
       if (button == "Inscripcion")
         if (estado == this.valorEstadoAnunciado || estado == this.valorEstadoEnCurso) return true;
+    }else if(this.modoEdicion && button == "Inscripcion" && this.otraInstitucion){
+      if (estado == this.valorEstadoAnunciado || estado == this.valorEstadoEnCurso) return true;
     }
   }
 }

@@ -96,7 +96,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   valorTipoEventoSesion = "8";
 
   //Notificaciones
-  selectedDatosNotifications;
+  selectedDatosNotifications = [];
   selectMultipleNotifications: boolean = false;
   selectAllNotifications: any;
   datosNotificaciones = [];
@@ -126,7 +126,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   colsAsistencia;
   fichasPosibles;
   datosAsistencia = [];
-  selectedDatosAsistencia;
+  selectedDatosAsistencia = [];
   selectAllAsistencias: any;
   selectedAsistencia: number = 10;
   selectMultipleAsistencia: boolean = false;
@@ -279,17 +279,16 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     } else if (sessionStorage.getItem("isNotificaciones") == "true") {
       //Se deja la pantalla tal como estaba
       this.newEvent = JSON.parse(sessionStorage.getItem("evento"));
-      sessionStorage.removeItem("evento");
       this.path = "notificaciones";
 
+      if(sessionStorage.getItem("historico")){
       this.historico = JSON.parse(sessionStorage.getItem("historico"));
-      sessionStorage.removeItem("historico");
+      }
 
       if (this.historico) {
         this.datosNotificaciones = JSON.parse(
           sessionStorage.getItem("notificaciones")
         );
-        sessionStorage.removeItem("notificaciones");
       } else {
         this.getEventNotifications();
       }
@@ -319,13 +318,18 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         );
       }
 
-      this.newEvent.idTipoCalendario = JSON.parse(
-        sessionStorage.getItem("calendarioEdit")
-      ).idTipoCalendario;
-
-      this.idCalendario = JSON.parse(
-        sessionStorage.getItem("calendarioEdit")
-      ).idCalendario;
+      if(sessionStorage.getItem("sessions")){
+        this.isFormacionCalendar = true;
+      }else{
+        this.newEvent.idTipoCalendario = JSON.parse(
+          sessionStorage.getItem("calendarioEdit")
+        ).idTipoCalendario;
+  
+        this.idCalendario = JSON.parse(
+          sessionStorage.getItem("calendarioEdit")
+        ).idCalendario;
+  
+      }
 
       //Indicamos que estamos en modo edicion
       this.modoEdicionEventoByAgenda = true;
@@ -492,6 +496,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
       // Cargamos los formadores para la sesion
       this.getTrainersSession();
+      this.getEventNotifications();
+
+
 
       //8. Viene directo
     } else {
@@ -1105,6 +1112,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       sessionStorage.setItem("historico", JSON.stringify(this.historico));
       this.router.navigate(["/editarNotificacion"]);
       sessionStorage.setItem("fichaAbierta", "true");
+    } else {
+      this.numSelectedNotification = this.selectedDatosNotifications.length;
     }
   }
 

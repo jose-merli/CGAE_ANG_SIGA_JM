@@ -118,14 +118,15 @@
                 [rows]="selectedItem" pageLinks="4">
                 <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                     filterMatchMode="contains"></p-column>
-                <ng-template pTemplate="paginatorLeft">
-                    <div class="mostrar">
-                        <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                        <label>Mostrar</label>
-                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                        <label> registros</label>
-                    </div>
-                </ng-template>
+                    <ng-template pTemplate="paginatorLeft">
+                            <div class="mostrar d-flex text-right justify-content-end">
+                              <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                              <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+                              <label>{{ "general.message.mostrar" | translate}}</label>
+                              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                              <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                            </div>
+                          </ng-template>
                 <p-footer *ngIf="selectedDatos && selectedDatos != ''">
                     <div class="text-right main-button">
                         <button pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate}}"></button>

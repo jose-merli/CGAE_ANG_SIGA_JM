@@ -307,6 +307,7 @@ export class SigaServices {
     busquedaInscripciones_searchPersona: "busquedaInscripciones/searchPersona",
     busquedaInscripciones_isAdministrador:
       "busquedaInscripciones/isAdministrador",
+    busquedaInscripciones_selectInscripcionByPrimaryKey: "busquedaInscripciones/selectInscripcionByPrimaryKey",
     fichaInscripcion_searchCourse: "fichaInscripcion/searchCourse",
     fichaInscripcion_saveInscripcion: "fichaInscripcion/saveInscripcion",
     fichaInscripcion_updateInscripcion: "fichaInscripcion/updateInscripcion",
