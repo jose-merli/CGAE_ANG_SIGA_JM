@@ -165,27 +165,27 @@
           <div class="text-right main-button">
             <!-- Botón cancelar -->
             <button (click)="cancelarCursos()" pButton type="button" icon="fa fa-ban" iconPos="left" label="{{'general.boton.cancel' | translate}}"
-              [disabled]="selectedDatos == '' || !activacionEditar"></button>
+              [disabled]="selectedDatos == '' || !activacionEditar || isLetrado"></button>
 
             <!-- Botón finalizar -->
             <button (click)="finalizarCursos()" pButton type="button" icon="fa fa-stop" iconPos="left" label="{{'general.boton.finalizar' | translate}}"
-              [disabled]="selectedDatos == '' || !activacionEditar"></button>
+              [disabled]="selectedDatos == '' || !activacionEditar || isLetrado"></button>
 
             <!-- Botón desanunciar -->
             <button (click)="desanunciarCursos()" pButton type="button" icon="fa fa-bell-slash" iconPos="left" label="{{'form.busquedaCursos.literal.boton.desanunciar' | translate}}"
-              [disabled]="selectedDatos == '' || !activacionEditar"></button>
+              [disabled]="selectedDatos == '' || !activacionEditar || isLetrado"></button>
 
             <!-- Botón anunciar -->
             <button (click)="anunciarCursos()" pButton type="button" icon="fa fa-bell" iconPos="left" label="{{'form.busquedaCursos.literal.boton.anunciar' | translate}}"
-              [disabled]="selectedDatos == '' || !activacionEditar"></button>
+              [disabled]="selectedDatos == '' || !activacionEditar || isLetrado"></button>
 
             <!-- Botón desarchivar -->
             <button *ngIf="!modoHistorico" (click)="desarchivarCursos()" pButton type="button" icon="fa fa-caret-square-o-up" iconPos="left"
-              label="{{'form.busquedaCursos.literal.boton.desarchivar' | translate}}" [disabled]="selectedDatos == '' || !activacionEditar"></button>
+              label="{{'form.busquedaCursos.literal.boton.desarchivar' | translate}}" [disabled]="selectedDatos == '' || !activacionEditar || isLetrado"></button>
 
             <!-- Botón archivar -->
             <button (click)="archivarCursos()" pButton type="button" icon="fa fa-caret-square-o-down" iconPos="left" label="{{'general.boton.archivar' | translate}}"
-              [disabled]="selectedDatos == '' || !activacionEditar"></button>
+              [disabled]="selectedDatos == '' || !activacionEditar || isLetrado"></button>
 
             <!-- Botón ocultar histórico -->
             <button *ngIf="!modoHistorico" (click)="isBuscar(false)" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
@@ -195,7 +195,7 @@
 
             <!-- Botón duplicar -->
             <button (click)="duplicateCourse()" pButton type="button" icon="fa fa-files-o" iconPos="left" label="{{'general.boton.duplicar' | translate}}"
-              [disabled]="disabledDuplicate() || !activacionEditar"></button>
+              [disabled]="disabledDuplicate() || !activacionEditar || isLetrado"></button>
 
           </div>
         </p-footer>

@@ -165,6 +165,7 @@ export class FichaCursoComponent implements OnInit {
   datosFormadoresInit = [];
   changeTutor: boolean = false;
   //Sesiones
+  sesionesExistentes: String = "Número de sesiones: 0";
   colsSessions;
   selectedItemSessions;
   datosSessions = [];
@@ -1457,6 +1458,10 @@ export class FichaCursoComponent implements OnInit {
         this.activacionEditar = false;
         this.otraInstitucion = true;
     }
+    // Cargamos el tooltip de número de sesiones (minimo asistencia) aquí para asegurarnos de que se realiza tras la búsqueda.
+    if(this.curso.numeroSesiones != null && this.curso.numeroSesiones != undefined){
+      this.sesionesExistentes = "Número de sesiones: " + this.curso.numeroSesiones;
+    } 
   }
 
   getComboTipoCoste() {
