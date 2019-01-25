@@ -13,8 +13,9 @@
             <label class="mr-auto title-ficha">Modelos de comunicaciones </label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>Modelo:
-              <!-- <span>{{body.nombre}}</span> -->
+            <label>Nº Modelos de comunicación:
+              <span *ngIf="datos">{{datos.length}}</span>
+              <span *ngIf="!datos">0</span>
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
           </div>

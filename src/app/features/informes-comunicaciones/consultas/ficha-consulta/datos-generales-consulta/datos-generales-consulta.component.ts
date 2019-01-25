@@ -68,8 +68,9 @@ export class DatosGeneralesConsultaComponent implements OnInit {
 
   ngOnInit() {
 
-    this.getDatos();
+
     this.getInstitucion();
+    this.getDatos();
     this.getClasesComunicaciones();
     this.getObjetivos();
     this.getModulos();
@@ -134,9 +135,16 @@ export class DatosGeneralesConsultaComponent implements OnInit {
 
 
   getInstitucion() {
+
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
-    });
+      if (this.institucionActual != '2000' && sessionStorage.getItem("crearNuevaConsulta") != null) {
+        this.generica = 'N';
+      }
+    },
+      err => {
+        console.log(err);
+      }, );
   }
 
   getIdioma() {
@@ -258,6 +266,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   }
 
   getDatos() {
+
     if (sessionStorage.getItem("consultasSearch") != null) {
       this.editar = true;
       this.body = JSON.parse(sessionStorage.getItem("consultasSearch"));

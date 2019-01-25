@@ -10,6 +10,8 @@ export class DatosRemitentePlantillaItem {
   nombre: String;
   apellido1: String;
   apellido2: String;
+  primerApellido: String;
+  segundoApellido: String;
   fechaModificacion: Date;
   fechaProgramada: Date;
   usuModificacion: String;

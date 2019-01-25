@@ -41,6 +41,7 @@ export class ConsultasComponent implements OnInit {
   duplicarArray: any[];
   selectedInstitucion: any;
   institucionActual: any;
+  eliminar: boolean = false;
 
 
 
@@ -72,7 +73,7 @@ export class ConsultasComponent implements OnInit {
       { field: 'modulo', header: 'Módulo' },
       { field: 'nombre', header: 'Nombre' },
       { field: 'objetivo', header: 'Objetivo' },
-      { field: 'clasesComunicacion', header: 'Clases de comunicaciones' },
+      { field: 'claseComunicacion', header: 'Clases de comunicaciones' },
       { field: 'generica', header: 'Genérica' }
     ];
 
@@ -226,7 +227,7 @@ export class ConsultasComponent implements OnInit {
       }
       this.duplicarArray.push(objDuplicar);
     });
-    this.sigaServices.post("consultas_borrar", this.duplicarArray).subscribe(
+    this.sigaServices.post("consultas_duplicar", this.duplicarArray).subscribe(
       data => {
         this.showSuccess('Se ha duplicado la consulta correctamente');
       },
@@ -322,6 +323,13 @@ export class ConsultasComponent implements OnInit {
       } else {
         this.selectedDatos = [];
         this.showInfo('No puede editarse la consulta')
+      }
+    } else {
+      if ((this.selectedInstitucion == this.institucionActual && dato[0].generica == "No") ||
+        (this.institucionActual == 2000 && dato[0].generica == "Si")) {
+        this.eliminar = true;
+      } else {
+        this.eliminar = false;
       }
     }
   }

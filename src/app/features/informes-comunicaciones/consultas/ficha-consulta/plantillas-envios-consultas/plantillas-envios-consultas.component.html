@@ -13,11 +13,9 @@
             <label class="mr-auto title-ficha">Plantillas de envíos</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>Idioma:
-              <!-- <span>{{body.nombre}}</span> -->
-            </label>
-            <label>Nombre del fichero de salida:
-              <!-- <span>{{body.nombre}}</span> -->
+            <label>Nº plantillas de envío:
+              <span *ngIf="datos">{{datos.length}}</span>
+              <span *ngIf="!datos">0</span>
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
           </div>

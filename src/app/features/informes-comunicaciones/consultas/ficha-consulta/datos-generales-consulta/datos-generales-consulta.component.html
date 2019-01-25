@@ -15,10 +15,10 @@
           </div>
           <div class="d-flex justify-content-between">
             <label>Módulo:
-              <!-- <span>{{body.nombre}}</span> -->
+              <span>{{body.modulo}}</span>
             </label>
             <label>Nombre:
-              <!-- <span>{{body.nombre}}</span> -->
+              <span>{{body.nombre}}</span>
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
           </div>
@@ -53,9 +53,9 @@
             </div>
             <div class="form-group col-lg-2 col-md-2">
               <label class="d-block">Genérica</label>
-              <p-radioButton [disabled]="editar && institucionActual != 2000 " class="mr-2 mt-auto" name="groupname" value="S" [(ngModel)]="generica"
+              <p-radioButton [disabled]="institucionActual != 2000 " class="mr-2 mt-auto" name="groupname" value="S" [(ngModel)]="generica"
                 label="Sí"></p-radioButton>
-              <p-radioButton [disabled]="editar && institucionActual != 2000 " name="groupname" value="N" [(ngModel)]="generica" label="No"></p-radioButton>
+              <p-radioButton [disabled]="institucionActual != 2000 " name="groupname" value="N" [(ngModel)]="generica" label="No"></p-radioButton>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Clases de comunicaciones *</label>
