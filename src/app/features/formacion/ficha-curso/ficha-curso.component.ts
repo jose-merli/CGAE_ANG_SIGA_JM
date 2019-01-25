@@ -347,7 +347,8 @@ export class FichaCursoComponent implements OnInit {
         sessionStorage.removeItem("isSession");
       } else {
         this.curso = new DatosCursosItem();
-        this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
+        this.curso.idCurso = JSON.parse(sessionStorage.getItem("courseCurrent")).idCurso;
+        this.searchCourse(this.curso.idCurso);
 
         if (this.curso.fechaImparticionDesde != null) {
           this.curso.fechaImparticionDesdeDate = this.arreglarFecha(
