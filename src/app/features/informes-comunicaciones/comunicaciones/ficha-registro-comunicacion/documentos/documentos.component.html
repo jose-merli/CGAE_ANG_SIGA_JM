@@ -72,22 +72,15 @@
             <label>{{"general.message.mostrar" | translate}}</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-            <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar
-                  todo" name="groupname"></p-checkbox>
-            </div>
-            <label class="ml-3 seleccionMultiple" [ngClass]="{ ' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
-              <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label>
+
+
           </div>
         </ng-template>
       </p-table>
     </div>
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button">
-        <!-- <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button> -->
-        <p-fileUpload #fubauto chooseLabel="Nuevo" name="file" mode="basic" accept=".pdf,.doc,.docx" multiple="multiple" (onSelect)="uploadFile($event)"
-          auto="true">
-        </p-fileUpload>
+
         <button (click)="eliminar(selectedDatos)" *ngIf="selectedDatos && selectedDatos !=''" pButton type="button" icon="far fa-times-circle"
           iconPos="left" label="Eliminar"></button>
       </div>

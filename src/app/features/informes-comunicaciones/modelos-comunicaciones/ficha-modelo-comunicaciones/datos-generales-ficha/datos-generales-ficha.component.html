@@ -42,7 +42,7 @@
               <p-dropdown [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion" class="select-form"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
+              <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}} *</label>
               <input type="text" class="form-control" [(ngModel)]="body.nombre" pInputText>
             </div>
 
@@ -62,7 +62,7 @@
               <p-radioButton name="groupname" value="NO" [(ngModel)]="body.preseleccionar" label="No"></p-radioButton>
             </div>
             <!-- <div class="form-group col-lg-2 col-md-2">
-              <label class="d-block">Visible</label>
+              <label class="d-block">Visible *</label>
               <p-radioButton class="mr-2" name="groupname" value="true" [(ngModel)]="body.visible" label="Sí"></p-radioButton>
               <p-radioButton name="groupname" value="false" [(ngModel)]="body.visible" label="No"></p-radioButton>
             </div> -->

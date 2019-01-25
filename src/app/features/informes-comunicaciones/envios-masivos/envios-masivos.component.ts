@@ -250,10 +250,10 @@ export class EnviosMasivosComponent implements OnInit {
     });
     this.sigaServices.post("enviosMasivos_cancelar", this.eliminarArray).subscribe(
       data => {
-        this.showSuccess('Se ha calcelado el envío correctamente');
+        this.showSuccess('Se ha cancelado el envío correctamente');
       },
       err => {
-        this.showFail('Error al calcelar el envío');
+        this.showFail('Error al cancelar el envío');
         console.log(err);
       },
       () => {
