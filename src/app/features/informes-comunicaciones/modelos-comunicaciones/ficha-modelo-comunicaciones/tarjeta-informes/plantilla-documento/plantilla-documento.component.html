@@ -115,10 +115,11 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td *ngFor="let col of columns" pEditableColumn>
-              <p-fileUpload *ngIf="col.field=='nombreDocumento' && !dato.guardada" #fubauto chooseLabel="" class="subir-plantilla my-0 mx-auto main-button"
-                mode="basic" name="file" auto="true" accept=".xls,.xlsx,.doc,.docx" (onSelect)="uploadFile($event, dato)" auto="true">
+              <p-fileUpload *ngIf="col.field=='nombreDocumento' && !dato.guardada && dato.nombreDocumento ==''" #fubauto chooseLabel=""
+                class="subir-plantilla my-0 mx-auto main-button" mode="basic" name="file" auto="true" accept=".xls,.xlsx,.doc,.docx"
+                (onSelect)="uploadFile($event, dato)" auto="true">
               </p-fileUpload>
-              <span *ngIf="col.field=='nombreDocumento'">{{dato.nombreDocumento}}</span>
+              <span class="d-block text-centerk" *ngIf="col.field=='nombreDocumento' && dato.nombreDocumento !=''">{{dato.nombreDocumento}}</span>
               <p-dropdown *ngIf="col.field=='idioma' && !dato.guardada" class="select-form" [options]="idiomas" [(ngModel)]="dato.idIdioma"
                 [filter]="true" (ngModelChange)="onChangeIdioma($event)" filterBy="label"></p-dropdown>
               <span *ngIf="col.field=='idioma' && dato.guardada">{{dato.idioma}}</span>

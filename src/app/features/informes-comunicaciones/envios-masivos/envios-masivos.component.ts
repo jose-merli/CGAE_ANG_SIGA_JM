@@ -273,6 +273,7 @@ export class EnviosMasivosComponent implements OnInit {
 
   navigateTo(dato) {
     this.estado = dato[0].idEstado;
+    console.log(dato)
     if (!this.selectMultiple && this.estado == 4) {
       // this.body.estado = dato[0].estado;
       this.router.navigate(['/fichaRegistroEnvioMasivo']);

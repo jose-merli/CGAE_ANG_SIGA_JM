@@ -70,6 +70,7 @@ export class BusquedaGeneralComponent {
   continue: boolean = false;
 
   resultado: string = "";
+  remitente:boolean=false;
 
   @ViewChild("table")
   table;
@@ -128,6 +129,7 @@ export class BusquedaGeneralComponent {
         this.colegios_rol = n.combooItems;
         if (sessionStorage.getItem("abrirRemitente") == 'true') {
           this.bodyRemitente = sessionStorage.getItem("plantillasEnvioSearch");
+          this.remitente = true;
 
           for (let colegio of this.colegios_rol) {
             if (colegio.value == this.institucionActual) {

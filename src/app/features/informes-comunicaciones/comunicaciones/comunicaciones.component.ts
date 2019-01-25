@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, HostListener } from '@angular/core';
 import { DataTable } from "primeng/datatable";
-import { EnviosMasivosItem } from '../../../models/ComunicacionesItem';
-import { ComunicacionesSearchItem } from '../../../models/ComunicacionesSearchItem';
-import { ComunicacionesObject } from '../../../models/ComunicacionesObject';
+import { EnviosMasivosItem } from './../../../models/ComunicacionesItem';
+import { ComunicacionesSearchItem } from './../../../models/ComunicacionesSearchItem';
+import { ComunicacionesObject } from './../../../models/ComunicacionesObject';
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { SigaServices } from "./../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";

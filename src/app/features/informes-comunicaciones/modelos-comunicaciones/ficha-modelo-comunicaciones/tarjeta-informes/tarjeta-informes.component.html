@@ -14,11 +14,8 @@
             <label class="mr-auto title-ficha">Informes</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>Idioma:
-              <!-- <span>{{body.nombre}}</span> -->
-            </label>
-            <label>Nombre del fichero de salida:
-              <!-- <span>{{body.nombre}}</span> -->
+            <label>Nº Informes:
+              <span *ngIf="datos">{{datos.length}}</span>
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
           </div>

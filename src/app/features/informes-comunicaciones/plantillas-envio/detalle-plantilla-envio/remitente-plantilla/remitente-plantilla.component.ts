@@ -40,6 +40,7 @@ export class RemitentePlantillaComponent implements OnInit {
   comboPoblacion: any = [];
   comboTipoDireccion: any = [];
   poblacionBuscada: any = [];
+  progressSpinner: boolean = false;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -185,7 +186,7 @@ export class RemitentePlantillaComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("plantillasEnvioSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("plantillasEnvioSearch"));
-
+      this.progressSpinner = true;
       if (sessionStorage.getItem("remitente") != null) {
         this.body.idPersona = JSON.parse(sessionStorage.getItem("remitente")).idPersona;
         this.openFicha = true;
@@ -214,6 +215,7 @@ export class RemitentePlantillaComponent implements OnInit {
       .post("plantillasEnvio_detalleRemitente", objRemitente)
       .subscribe(
         data => {
+          this.progressSpinner = false;
           this.remitente = JSON.parse(data["body"]);
           this.direccion = this.remitente.direccion[0];
           this.showComboDirecciones = false;
@@ -226,6 +228,7 @@ export class RemitentePlantillaComponent implements OnInit {
         },
         err => {
           console.log(err);
+          this.progressSpinner = false;
         },
         () => { }
       );
@@ -239,7 +242,7 @@ export class RemitentePlantillaComponent implements OnInit {
       .subscribe(
         data => {
           this.remitente = JSON.parse(data["body"]);
-
+          this.progressSpinner = false;
           this.direcciones = this.remitente.direccion;
           this.comboDirecciones = [];
           this.remitenteInicial = JSON.parse(sessionStorage.getItem("remitenteInicial"));
@@ -268,6 +271,7 @@ export class RemitentePlantillaComponent implements OnInit {
         },
         err => {
           console.log(err);
+          this.progressSpinner = false;
         },
         () => { }
       );
