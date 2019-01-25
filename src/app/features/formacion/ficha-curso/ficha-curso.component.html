@@ -165,6 +165,7 @@
                         icon="far fa-calendar-alt"
                         showIcon="true" [disabled]="!activacionEditar"
                         (onSelect)="selectStartDateInscription($event)"
+                        [maxDate]="curso.fechaInscripcionHastaDate"
                       ></p-calendar>
               </div>
               <div class="col-lg-6 col-md-6">
@@ -218,7 +219,13 @@
               />
             </div>
             <div class="col-lg-6 col-md-6">
-              <label>{{ 'formacion.fichaCursos.datosDeGestion.minimoAsistencia' | translate }}</label>
+              <label>{{ 'formacion.fichaCursos.datosDeGestion.minimoAsistencia' | translate }}</label> 
+              <i
+              class="fa fa-question"
+              [pTooltip]="sesionesExistentes"
+              tooltipPosition="bottom"
+            ></i>
+
               <input
                 type="text"
                 class="form-control"
@@ -227,6 +234,7 @@
                 [(ngModel)]="curso.minimoAsistencia"
               />
             </div>
+            <!-- numero Sesiones  numeroSesiones-->
           </div>
           <div class="row mb-4">
             <div class="col-lg-12 col-md-12">
