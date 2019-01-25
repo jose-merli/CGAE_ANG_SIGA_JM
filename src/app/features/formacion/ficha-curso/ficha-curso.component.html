@@ -1201,7 +1201,7 @@
               <ng-template pTemplate="body" let-dato="rowData">
                   <p-dropdown #dropdownCertificate
                     class="select-form"
-                    [(ngModel)]="dato[colsCertificates[0].field]"
+                    [(ngModel)]="dato[colsCertificates[0].fieldClave]"
                     [options]="comboCertificates"
                     [filter]="false"
                     placeholder="Seleccionar"
@@ -1336,7 +1336,7 @@
                       <p-dropdown
                         *ngIf="dato[colsCertificates[0].field] == ''"
                         class="select-form"
-                        [(ngModel)]="newCertificate.idProducto"
+                        [(ngModel)]="newCertificate.clave"
                         [options]="comboCertificates"
                         [filter]="false"
                         placeholder="Seleccionar"
@@ -1345,7 +1345,7 @@
                         (onChange)="selectPriceModeNew($event)"
                       ></p-dropdown>
                 </ng-template>
-              </p-column>
+              </p-column> 
 
               <p-column
                 [sortable]="true"
