@@ -42,7 +42,7 @@
           </div>
           <div class="row mb-3">
             <div class="col-lg-6 col-md-6">
-              <label>{{'agenda.fichaEventos.datosGenerales.calendario' | translate }}(*)</label>
+              <label>{{'agenda.fichaEventos.datosGenerales.calendario' | translate }} (*)</label>
               <p-dropdown class="select-form" [options]="comboCalendars" [filter]="true" filterBy="label,labelSinTilde" placeholder="{{'tablas.literal.seleccionar' | translate}}"
                 name="type" (ngModelChange)="onChangeSelectCalendar($event)" [(ngModel)]="newEvent.idTipoCalendario" [disabled]="modoTipoEventoInscripcion || isFormacionCalendar || modoEdicionEvento  || tipoAccesoLectura"></p-dropdown>
             </div>
@@ -53,7 +53,7 @@
           </div>
           <div class="row mb-3">
             <div class="col-lg-6 col-md-6">
-              <label>{{'agenda.fichaEventos.datosGenerales.titulo' | translate}}(*)</label>
+              <label>{{'agenda.fichaEventos.datosGenerales.titulo' | translate}} (*)</label>
               <input type="text" class="form-control" pInputText name="titulo" [(ngModel)]="newEvent.title" [disabled]="tipoAccesoLectura">
             </div>
             <div *ngIf="!selectedTipoLaboral" class="col-lg-6 col-md-6">
@@ -63,15 +63,15 @@
           </div>
           <div class="row mb-3">
             <div *ngIf="modoEdicionEventoByAgenda" class="col-lg-6 col-md-6">
-              <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}}(*)</label>
+              <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}} (*)</label>
                   <p-calendar [locale]="es" #fechaInicio [showTime]="true" [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.start" (onSelect)="selectInvalidDates()" [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura"></p-calendar>
             </div>
             <div *ngIf="!modoEdicionEventoByAgenda" class="col-lg-6 col-md-6">
-              <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}}(*)</label>
+              <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}} (*)</label>
                   <p-calendar [locale]="es" #fechaInicio [showTime]="true" [dateFormat]="'dd/mm/yy'" [minDate]="invalidDateMinEditionMode" [maxDate]="invalidDateMaxEditionMode"  [(ngModel)]="newEvent.start" (onSelect)="selectInvalidDates()" [disabled]="tipoAccesoLectura"></p-calendar>
             </div>
             <div class="col-lg-6 col-md-6">
-                <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaFin' | translate}}(*)</label>
+                <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaFin' | translate}} (*)</label>
                 <p-calendar [locale]="es" #fechaFin [showTime]="true" [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.end" [minDate]="invalidDateMin" [maxDate]="invalidDateMax" (ngModelChange)="validatorDates($event)" (onSelect)="unselectInvalidDates()"
                 [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura"></p-calendar>
             </div>
@@ -108,11 +108,11 @@
           </div>
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
-              <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}}</label>
+              <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}} (*)</label>
                   <p-calendar (click)="isCheckFechaInicioRepeticion()" [locale]="es" [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.fechaInicioRepeticion" [minDate]="newEvent.start" [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion"></p-calendar>
             </div>
             <div class="col-lg-6 col-md-6">
-                <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaFin' | translate}}</label>
+                <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaFin' | translate}} (*)</label>
                 <p-calendar (click)="isCheckFechaFinRepeticion()" [locale]="es" [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.fechaFinRepeticion" [minDate]="newEvent.fechaInicioRepeticion" [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion"></p-calendar>
             </div>
           </div>
@@ -120,7 +120,7 @@
             <div class="col-lg-12 col-md-12">
               <div class="row">
                   <div class="col-lg-4 col-md-4">
-                      <label>{{'agenda.fichaEventos.datosGenerales.repetirCada' | translate}}:(*)</label>
+                      <label>{{'agenda.fichaEventos.datosGenerales.repetirCada' | translate}}: (*)</label>
                   </div>
                   <div class="col-lg-8 col-md-8">
                       <p-dropdown (onChange)="isCheckTipoRepeticion()" [options]="comboRepeatEvery" [(ngModel)]="newEvent.tipoRepeticion" placeholder="{{'tablas.literal.seleccionar' | translate }}" [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion"></p-dropdown>
