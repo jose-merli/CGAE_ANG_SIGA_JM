@@ -227,7 +227,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       plantilla: '',
       idioma: '',
       guardada: '',
-      fileName: ''
+      nombreDocumento: ''
     };
     this.nuevoDocumento = true;
     this.documentos.push(obj);
@@ -468,12 +468,13 @@ export class PlantillaDocumentoComponent implements OnInit {
         this.showSuccess('Plantilla subida correctamente');
         plantilla.idPlantillaDocumento = JSON.parse(data["body"]).idPlantillaDocumento;
         this.body.plantillas.push(plantilla);
-
+        this.documentos = this.body.plantillas;
+        this.documentos = [... this.documentos];
       },
       err => {
         this.showFail('Error al subir el documento');
         console.log(err);
-      }
+      },
     );
   }
 

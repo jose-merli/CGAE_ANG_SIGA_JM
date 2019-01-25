@@ -623,9 +623,9 @@ export class SigaServices {
     //Diálogo comunicación
     dialogo_claseComunicaciones: 'DialogoComunicacion/clasesComunicacion',
     dialogo_fechaProgramada: 'DialogoComunicacion/fechaProgramada',
-    dialogo_modelosComunicacion: 'DialogoComunicacion/modelosComunicacion',
+    dialogo_modelosComunicacion: 'DialogoComunicacion/modelosSearch',
     dialogo_plantillasEnvio: 'DialogoComunicacion/pantillasEnvio',
-    dialogo_tipoEnvios: 'DialogoComunicacion/tipoEnvios',
+    dialogo_tipoEnvios: 'DialogoComunicacion/tiposEnvioModelo',
     dialogo_enviar: 'DialogoComunicacion/enviar',
     dialogo_descargar: 'DialogoComunicacion/descargar',
   };

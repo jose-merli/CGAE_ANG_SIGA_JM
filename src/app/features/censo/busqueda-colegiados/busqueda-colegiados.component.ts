@@ -110,6 +110,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   clasesComunicaciones: any = [];
   currentRoute: String;
   selectedModelos: any = [];
+  idClasesComunicacionArray: string[] = [];
 
   constructor(
     private sigaServices: SigaServices,
@@ -750,16 +751,20 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   comunicar(dato) {
     this.showComunicar = true;
     this.getClasesComunicaciones();
-    this.getModelosComunicacion();
+    this.getFechaProgramada(dato.idInstutucion);
+    console.log(dato)
+  }
+
+  onHideComunicar() {
+    this.showComunicar = false;
+    this.bodyComunicacion.idClaseComunicacion = [];
   }
 
   getClasesComunicaciones() {
     let rutaClaseComunicacion = this.currentRoute.toString();
-
-    debugger;
     this.sigaServices.post("dialogo_claseComunicaciones", rutaClaseComunicacion).subscribe(
       data => {
-        this.clasesComunicaciones = data.combooItems;
+        this.clasesComunicaciones = JSON.parse(data['body']).combooItems;
       },
       err => {
         console.log(err);
@@ -767,10 +772,57 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     );
   }
 
+  onChangeClaseComunicacion() {
+    this.getModelosComunicacion();
+  }
+
   getModelosComunicacion() {
-    this.modelosComunicacion = [
-      { id: '1', modelo: '', tipoEnvio: '', plantillaEnvio: '' }
-    ]
+    debugger;
+
+    this.idClasesComunicacionArray = [];
+    this.bodyComunicacion.idClaseComunicacion.forEach(element => {
+      let idClaseComunicacion = element.value;
+      this.idClasesComunicacionArray.push(idClaseComunicacion)
+    });
+
+    this.sigaServices.post("dialogo_modelosComunicacion", this.idClasesComunicacionArray).subscribe(
+      data => {
+        this.modelosComunicacion = JSON.parse(data['body']).modeloItems;
+        this.modelosComunicacion.forEach(element => {
+          this.plantillasEnvio = element.plantillaEnvios;
+        });
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getFechaProgramada(idInstution) {
+    this.sigaServices.post("dialogo_plantillasEnvio", idInstution).subscribe(
+      data => {
+
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+
+  onChangePlantillaEnvio() {
+    this.getTipoEnvios();
+  }
+
+  getTipoEnvios() {
+    this.sigaServices.post("dialogo_tipoEnvios", this.bodyComunicacion.idPlantillasEnvio).subscribe(
+      data => {
+        this.tiposEnvio = JSON.parse(data['body']);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   enviarComunicacion() {

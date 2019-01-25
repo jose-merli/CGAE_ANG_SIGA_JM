@@ -1,27 +1,32 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
-    <div class="header-title">
+    <div *ngIf="!remitente" class="header-title">
         <i class="fa fa-square"></i>
         <p>{{"menu.censo" | translate}}
             <i class="fa fa-angle-right"> </i> {{ 'menu.censo.buscarSociedades' | translate}}
+            <i class="pl-1 fa fa-angle-right"></i>{{"censo.busquedaClientes.Colegiados.titulo" | translate}}</p>
+    </div>
+    <div *ngIf="remitente" class="header-title">
+        <i class="fa fa-square"></i>
+        <p>{{'menu.enviosAGrupos' | translate}}
+            <i class="fa fa-angle-right"> </i>{{ 'enviosMasivos.literal.titulo' | translate}}
             <i class="pl-1 fa fa-angle-right"></i>{{"censo.busquedaClientes.Colegiados.titulo" | translate}}</p>
     </div>
     <div class="info-limit d-flex justify-content-center align-items-center mb-1">
         <i class="fa fa-info-circle pr-2"></i>
         <div class="d-inline-block">
             <div>
-				<div *ngIf="!isFormador">
-					<span class="pr-2 text-left">Busque la
-                    <span *ngIf="persona=='f'">persona</span>
-                    <span *ngIf="persona=='j'">sociedad</span> que quiere añadir. En caso de no existir en el sistema, podrá editar los datos introducidos
-                    en la siguiente pantalla de creación de no colegiado.</span>
-				</div>
-				<div *ngIf="isFormador">
-					<span class="pr-2 text-left">Busque la persona que quiere añadir. En caso de no existir en el
-												 sistema, podrá editar los datos introducidos en la pantalla anterior
-												 de creación.     
-					</span>
-				</div>
+                <div *ngIf="!isFormador">
+                    <span class="pr-2 text-left">Busque la
+                        <span *ngIf="persona=='f'">persona</span>
+                        <span *ngIf="persona=='j'">sociedad</span> que quiere añadir. En caso de no existir en el sistema, podrá editar los datos introducidos
+                        en la siguiente pantalla de creación de no colegiado.</span>
+                </div>
+                <div *ngIf="isFormador">
+                    <span class="pr-2 text-left">Busque la persona que quiere añadir. En caso de no existir en el sistema, podrá editar los datos introducidos
+                        en la pantalla anterior de creación.
+                    </span>
+                </div>
             </div>
         </div>
     </div>
@@ -30,7 +35,7 @@
             <div class="form-row">
                 <div class="col-4">
                     <p-radioButton name="person" value="f" label="Personas Fisicas" [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
-					<p-radioButton [disabled]="isFormador" name="person" value="j" label="Personas Juridicas" [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
+                    <p-radioButton [disabled]="isFormador" name="person" value="j" label="Personas Juridicas" [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
 
                 </div>
             </div>
@@ -116,9 +121,9 @@
 
             </div>-->
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-                [(selection)]="selectedDatos" (onRowSelect)="irFichaColegial(selectedDatos)" [responsive]="true"
-                selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both"
-                [rows]="selectedItem" pageLinks="4">
+                [(selection)]="selectedDatos" (onRowSelect)="irFichaColegial(selectedDatos)" [responsive]="true" selectionMode="multiple"
+                #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem"
+                pageLinks="4">
                 <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                     filterMatchMode="contains"></p-column>
                 <ng-template pTemplate="paginatorLeft">

@@ -1,5 +1,5 @@
 export class DialogoComunicacionesItem {
-  idClaseComunicacion: String[];
+  idClaseComunicacion: any[];
   nombre: String;
   idTipoEnvios: String;
   tipoEnvio: String;

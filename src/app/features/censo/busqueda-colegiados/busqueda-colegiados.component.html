@@ -245,15 +245,17 @@
 </div>
 
 <!-- DIÁLOGO DE COMUNICACIÓN -->
-<p-dialog [(visible)]="showComunicar" responsive="true" [draggable]="false" modal="modal" resizable="false" [width]="700">
+<p-dialog (onHide)="onHideComunicar()" [(visible)]="showComunicar" responsive="true" [draggable]="false" modal="modal" resizable="false"
+    [width]="700">
     <p-header class="title">
         <label>Selección del modelo de comunicacion</label>
     </p-header>
     <div class="form-row">
         <div class="form-group col-lg-6 col-md-6">
             <label>Clases de comunicacion</label>
-            <p-multiSelect filterBy="label" [options]="clasesComunicaciones" optionLabel="label" styleClass="widthAll" [(ngModel)]='bodyComunicacion.idClaseComunicacion'
-                maxSelectedLabels="1" [panelStyle]="{width:'100%'}" defaultLabel="Seleccionar"></p-multiSelect>
+            <p-multiSelect filterBy="label" [options]="clasesComunicaciones" dataKey="value" optionLabel="label" styleClass="widthAll"
+                [(ngModel)]='bodyComunicacion.idClaseComunicacion' maxSelectedLabels="1" [panelStyle]="{width:'100%'}" defaultLabel="Seleccionar"
+                (onChange)="onChangeClaseComunicacion()"></p-multiSelect>
         </div>
         <div class="form-group col-lg-6 col-md-6">
             <label>Fecha programada</label>
@@ -284,9 +286,9 @@
                         <p-tableCheckbox [value]="dato"></p-tableCheckbox>
                     </td>
                     <td *ngFor="let col of columns" pEditableColumn>
-                        <span *ngIf="col.field == 'tipoEnvio'">{{dato[col.field]}}</span>
-                        <!-- <p-dropdown *ngIf="col.field == 'tipoEnvio'" [(ngModel)]="dato[col.field]" disabled [options]="tiposEnvio" class="select-form"></p-dropdown> -->
-                        <p-dropdown *ngIf="col.field == 'plantillaEnvio'" [(ngModel)]="dato[col.field]" [options]="plantillasEnvio" class="select-form"></p-dropdown>
+                        <!-- <span *ngIf="col.field == 'tipoEnvio'">{{dato[col.field]}}</span> -->
+                        <p-dropdown *ngIf="col.field == 'tipoEnvio'" [(ngModel)]="dato[col.field]" disabled [options]="tiposEnvio" class="select-form"></p-dropdown>
+                        <p-dropdown *ngIf="col.field == 'plantillaEnvio'" [(ngModel)]="dato[col.field]" [options]="dato.plantillaEnvios" class="select-form"></p-dropdown>
                         <span *ngIf="col.field=='modelo'">{{dato[col.field]}}</span>
                     </td>
                 </tr>
