@@ -356,7 +356,10 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
       if (curso.idCurso != undefined && curso.idCurso != null) {
         this.idCurso = curso.idCurso;
+        curso.idTipoEvento = this.valorTipoEventoInicioInscripcion;
         this.searchEvent(curso);
+        //Indicamos que el evento ya esta creado para que pueda acceder a todas las tarjetas
+        this.createEvent = true;
       } else {
         this.newEvent = new EventoItem();
         //Obligamos a que sea tipo calendario formacion
@@ -405,7 +408,10 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
       if (curso.idCurso != undefined && curso.idCurso != null) {
         this.idCurso = curso.idCurso;
+        curso.idTipoEvento = this.valorTipoEventoFinInscripcion;
         this.searchEvent(curso);
+        //Indicamos que el evento ya esta creado para que pueda acceder a todas las tarjetas
+        this.createEvent = true;
       } else {
         this.newEvent = new EventoItem();
         //Obligamos a que sea tipo calendario formacion
@@ -1367,9 +1373,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   restTrainers() {
-    if(this.checkFormadores != undefined){
-    this.results = JSON.parse(JSON.stringify(this.checkFormadores));
-    }else{
+    if (this.checkFormadores != undefined) {
+      this.results = JSON.parse(JSON.stringify(this.checkFormadores));
+    } else {
       this.results = [];
     }
     this.formadoresSuggest = this.formadores;

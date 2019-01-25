@@ -165,6 +165,7 @@
                         icon="far fa-calendar-alt"
                         showIcon="true" [disabled]="!activacionEditar"
                         (onSelect)="selectStartDateInscription($event)"
+                        [maxDate]="curso.fechaInscripcionHastaDate"
                       ></p-calendar>
               </div>
               <div class="col-lg-6 col-md-6">
@@ -1208,7 +1209,7 @@
               <ng-template pTemplate="body" let-dato="rowData">
                   <p-dropdown #dropdownCertificate
                     class="select-form"
-                    [(ngModel)]="dato[colsCertificates[0].field]"
+                    [(ngModel)]="dato[colsCertificates[0].fieldClave]"
                     [options]="comboCertificates"
                     [filter]="false"
                     placeholder="Seleccionar"
@@ -1343,7 +1344,7 @@
                       <p-dropdown
                         *ngIf="dato[colsCertificates[0].field] == ''"
                         class="select-form"
-                        [(ngModel)]="newCertificate.idProducto"
+                        [(ngModel)]="newCertificate.clave"
                         [options]="comboCertificates"
                         [filter]="false"
                         placeholder="Seleccionar"
@@ -1352,7 +1353,7 @@
                         (onChange)="selectPriceModeNew($event)"
                       ></p-dropdown>
                 </ng-template>
-              </p-column>
+              </p-column> 
 
               <p-column
                 [sortable]="true"

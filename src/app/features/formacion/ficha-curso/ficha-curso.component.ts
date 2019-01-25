@@ -347,7 +347,8 @@ export class FichaCursoComponent implements OnInit {
         sessionStorage.removeItem("isSession");
       } else {
         this.curso = new DatosCursosItem();
-        this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
+        this.curso.idCurso = JSON.parse(sessionStorage.getItem("courseCurrent")).idCurso;
+        this.searchCourse(this.curso.idCurso);
 
         if (this.curso.fechaImparticionDesde != null) {
           this.curso.fechaImparticionDesdeDate = this.arreglarFecha(
@@ -2218,6 +2219,7 @@ export class FichaCursoComponent implements OnInit {
     this.colsCertificates = [
       {
         field: "idProducto",
+        fieldClave: "clave",
         header: "menu.certificados",
         value: "nombreCertificado"
       },
@@ -2313,13 +2315,14 @@ export class FichaCursoComponent implements OnInit {
     this.newCertificate.idProductoInstitucion =
       certificado.idProductoInstitucion;
     this.newCertificate.idTipoProducto = certificado.idTipoProducto;
+    this.newCertificate.idProducto = certificado.idProducto;
   }
 
   selectPriceModeEdit(event, dato) {
     let certificado = this.comboCertificates.find(x => x.value === event.value);
 
     let idCertificate = this.datosCertificates.findIndex(
-      x => x.idProducto === event.value
+      x => x.clave === event.value
     );
 
     if (idCertificate != -1) {
@@ -2330,9 +2333,8 @@ export class FichaCursoComponent implements OnInit {
         certificado.idTipoProducto;
       this.datosCertificates[idCertificate].nombreCertificado =
         certificado.descripcion;
-      certificado.idTipoProducto;
-      this.datosCertificates[idCertificate].idTipoProducto =
-        certificado.idTipoProducto;
+      this.datosCertificates[idCertificate].idProducto =
+        certificado.idProducto;
     }
 
     this.editCertificateTable(event, dato);
