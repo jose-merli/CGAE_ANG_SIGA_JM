@@ -393,9 +393,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.getEntryListCourse();
       }
 
-      if(sessionStorage.getItem("courseCurrent")){
+      if (sessionStorage.getItem("courseCurrent")) {
         let curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
-        if(curso.idEstado != 2 && curso.idEstado != 3){
+        if (curso.idEstado != 2 && curso.idEstado != 3) {
           this.blockAsistencia = true;
         }
       }
@@ -451,9 +451,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.getEntryListCourse();
       }
 
-      if(sessionStorage.getItem("courseCurrent")){
+      if (sessionStorage.getItem("courseCurrent")) {
         let curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
-        if(curso.idEstado != 2 && curso.idEstado != 3){
+        if (curso.idEstado != 2 && curso.idEstado != 3) {
           this.blockAsistencia = true;
         }
       }
@@ -515,9 +515,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       // Cargamos los formadores para la sesion
       this.getTrainersSession();
       this.getEventNotifications();
-      if(sessionStorage.getItem("courseCurrent")){
+      if (sessionStorage.getItem("courseCurrent")) {
         let curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
-        if(curso.idEstado != 2 && curso.idEstado != 3){
+        if (curso.idEstado != 2 && curso.idEstado != 3) {
           this.blockAsistencia = true;
         }
       }
@@ -613,8 +613,12 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.sigaServices.get("fichaEventos_getEventStates").subscribe(
       n => {
         this.comboEstados = n.combooItems;
-        if(this.newEvent.idEstadoEvento == undefined || this.newEvent.idEstadoEvento == null || this.newEvent.idEstadoEvento == ''){
-          this.newEvent.idEstadoEvento = this.comboEstados[0].value ;
+        if (
+          this.newEvent.idEstadoEvento == undefined ||
+          this.newEvent.idEstadoEvento == null ||
+          this.newEvent.idEstadoEvento == ""
+        ) {
+          this.newEvent.idEstadoEvento = this.comboEstados[0].value;
         }
       },
       err => {
@@ -918,12 +922,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       !(
         this.newEvent.idTipoCalendario == null ||
         this.newEvent.idTipoCalendario == undefined ||
-        this.newEvent.fechaInicioRepeticion == null ||
-        this.newEvent.fechaInicioRepeticion == undefined ||
-        this.newEvent.fechaFinRepeticion == null ||
-        this.newEvent.fechaFinRepeticion == undefined ||
-        this.newEvent.tipoRepeticion == null ||
-        this.newEvent.tipoRepeticion == undefined ||
         this.newEvent.title == null ||
         this.newEvent.title == undefined ||
         this.newEvent.start == null ||
