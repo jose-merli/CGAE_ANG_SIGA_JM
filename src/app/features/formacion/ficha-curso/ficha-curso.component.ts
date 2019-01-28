@@ -400,7 +400,11 @@ export class FichaCursoComponent implements OnInit {
       this.getServicesCourse();
       this.getCertificatesCourse();
       this.getTopicsCourse();
-      this.getSessions();
+
+      if(this.curso.idInstitucion != null || this.curso.idInstitucion != undefined){
+        this.getSessions();
+      }
+
       this.getCountInscriptions();
       this.getMassiveLoadInscriptions();
       this.configurationInformacionAdicional();
@@ -2227,6 +2231,7 @@ export class FichaCursoComponent implements OnInit {
     this.colsCertificates = [
       {
         field: "idProducto",
+        fieldClave: "clave",
         header: "menu.certificados",
         value: "nombreCertificado"
       },
@@ -2322,13 +2327,14 @@ export class FichaCursoComponent implements OnInit {
     this.newCertificate.idProductoInstitucion =
       certificado.idProductoInstitucion;
     this.newCertificate.idTipoProducto = certificado.idTipoProducto;
+    this.newCertificate.idProducto = certificado.idProducto;
   }
 
   selectPriceModeEdit(event, dato) {
     let certificado = this.comboCertificates.find(x => x.value === event.value);
 
     let idCertificate = this.datosCertificates.findIndex(
-      x => x.idProducto === event.value
+      x => x.clave === event.value
     );
 
     if (idCertificate != -1) {
@@ -2339,9 +2345,8 @@ export class FichaCursoComponent implements OnInit {
         certificado.idTipoProducto;
       this.datosCertificates[idCertificate].nombreCertificado =
         certificado.descripcion;
-      certificado.idTipoProducto;
-      this.datosCertificates[idCertificate].idTipoProducto =
-        certificado.idTipoProducto;
+      this.datosCertificates[idCertificate].idProducto =
+        certificado.idProducto;
     }
 
     this.editCertificateTable(event, dato);
@@ -3099,15 +3104,20 @@ export class FichaCursoComponent implements OnInit {
       if (button == "Anunciar")
         if (estado == this.valorEstadoAbierto) return true;
 
-      if (button == "Inscripcion"){
-      if(this.controlFechaInscripcion()){
-        if (estado == this.valorEstadoAnunciado || estado == this.valorEstadoEnCurso) return true;
-        }else if(this.modoEdicion && button == "Inscripcion" && this.otraInstitucion){
+      if (button == "Inscripcion") {
+        if (this.controlFechaInscripcion()) {
+          if (estado == this.valorEstadoAnunciado || estado == this.valorEstadoEnCurso) return true;
+        } else if (this.modoEdicion && button == "Inscripcion" && this.otraInstitucion) {
           if (estado == this.valorEstadoAnunciado || estado == this.valorEstadoEnCurso) return true;
         }
       }
+    } else if (this.otraInstitucion && this.modoEdicion && button == "Inscripcion") { // Solo debería de entrar en el caso de ser el botón de inscripcion, para controlar la casuística de entrar desde otro colegio
+      if (this.controlFechaInscripcion()) {
+        if (estado == this.valorEstadoAnunciado || estado == this.valorEstadoEnCurso) return true;
       }
+    }
   }
+
 
   controlFechaInscripcion(){
     let fechaActual = new Date();

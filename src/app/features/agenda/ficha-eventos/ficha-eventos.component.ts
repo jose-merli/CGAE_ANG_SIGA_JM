@@ -43,6 +43,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   modoTipoEventoInscripcion: boolean = false;
   idCalendario;
   tipoAccesoLectura: boolean = false;
+  blockAsistencia: boolean = false;
   selectedTipoLaboral = false;
   path: string;
   disabledIsLetrado;
@@ -149,11 +150,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.getComboEstado();
-    this.getComboTipoEvento();
-    this.getCombosRepeats();
     this.getColsResults();
-    this.getComboAsistencia();
     this.getFichasPosibles();
     this.getColsResultsAsistencia();
 
@@ -399,6 +396,12 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.getEntryListCourse();
       }
 
+      if (sessionStorage.getItem("courseCurrent")) {
+        let curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
+        if (curso.idEstado != 2 && curso.idEstado != 3) {
+          this.blockAsistencia = true;
+        }
+      }
       //6. En caso de que venga de creacion de nuevo curso, crear el evento fin de inscripcion
     } else if (
       sessionStorage.getItem("isFormacionCalendarByEndInscripcion") == "true"
@@ -451,6 +454,12 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.getEntryListCourse();
       }
 
+      if (sessionStorage.getItem("courseCurrent")) {
+        let curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
+        if (curso.idEstado != 2 && curso.idEstado != 3) {
+          this.blockAsistencia = true;
+        }
+      }
       //7. Viene en modo edicion sesion
     } else if (sessionStorage.getItem("modoEdicionSession") == "true") {
       //Inficamos que estamos en modo edicion
@@ -509,7 +518,12 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       // Cargamos los formadores para la sesion
       this.getTrainersSession();
       this.getEventNotifications();
-
+      if (sessionStorage.getItem("courseCurrent")) {
+        let curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
+        if (curso.idEstado != 2 && curso.idEstado != 3) {
+          this.blockAsistencia = true;
+        }
+      }
       //8. Viene directo
     } else {
       this.isFormacionCalendar = false;
@@ -521,6 +535,11 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
       this.getComboCalendar();
     }
+
+    this.getComboEstado();
+    this.getComboTipoEvento();
+    this.getComboAsistencia();
+    this.getCombosRepeats();
   }
 
   ngOnDestroy() {
@@ -597,7 +616,13 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.sigaServices.get("fichaEventos_getEventStates").subscribe(
       n => {
         this.comboEstados = n.combooItems;
-        this.newEvent.idEstadoEvento = this.comboEstados[0].value;
+        if (
+          this.newEvent.idEstadoEvento == undefined ||
+          this.newEvent.idEstadoEvento == null ||
+          this.newEvent.idEstadoEvento == ""
+        ) {
+          this.newEvent.idEstadoEvento = this.comboEstados[0].value;
+        }
       },
       err => {
         console.log(err);

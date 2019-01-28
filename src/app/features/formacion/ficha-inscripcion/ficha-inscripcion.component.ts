@@ -565,6 +565,10 @@ export class FichaInscripcionComponent implements OnInit {
     );
     sessionStorage.setItem("isInscripcion", JSON.stringify(true));
     sessionStorage.setItem("modoEdicionCurso", JSON.stringify(true));
+
+    sessionStorage.removeItem("modoEdicionInscripcion");
+    sessionStorage.removeItem("pantallaListaInscripciones");
+    
     this.router.navigate(["/fichaCurso"]);
   }
 
