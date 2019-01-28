@@ -394,6 +394,8 @@ export class FichaCursoComponent implements OnInit {
         this.loadNewTrainer(JSON.parse(sessionStorage.getItem("formador")));
       } else {
         this.getTrainers();
+        sessionStorage.removeItem("toBackNewFormador");
+
       }
 
       this.getPrices();
@@ -501,7 +503,6 @@ export class FichaCursoComponent implements OnInit {
     sessionStorage.removeItem("sessions");
     sessionStorage.removeItem("historico");
     sessionStorage.removeItem("evento");
-    sessionStorage.removeItem("toBackNewFormador");
 
   }
 
