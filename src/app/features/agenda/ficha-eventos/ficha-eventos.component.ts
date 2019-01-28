@@ -147,11 +147,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.getComboEstado();
-    this.getComboTipoEvento();
-    this.getCombosRepeats();
     this.getColsResults();
-    this.getComboAsistencia();
     this.getFichasPosibles();
     this.getColsResultsAsistencia();
 
@@ -536,6 +532,11 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
       this.getComboCalendar();
     }
+
+    this.getComboEstado();
+    this.getComboTipoEvento();
+    this.getComboAsistencia();
+    this.getCombosRepeats();
   }
 
   ngOnDestroy() {
@@ -612,7 +613,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.sigaServices.get("fichaEventos_getEventStates").subscribe(
       n => {
         this.comboEstados = n.combooItems;
-        this.newEvent.idEstadoEvento = this.comboEstados[0].value;
+        if(this.newEvent.idEstadoEvento == undefined || this.newEvent.idEstadoEvento == null || this.newEvent.idEstadoEvento == ''){
+          this.newEvent.idEstadoEvento = this.comboEstados[0].value ;
+        }
       },
       err => {
         console.log(err);
