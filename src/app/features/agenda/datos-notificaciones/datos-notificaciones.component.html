@@ -35,7 +35,8 @@
                   >{{
                     "formacion.datosNotificaciones.tipoNotificacion.cabecera"
                       | translate
-                  }}(*)</label
+                  }}
+                  (*)</label
                 >
                 <p-dropdown
                   class="select-form"
@@ -43,7 +44,7 @@
                   [options]="comboNotifyType"
                   [filter]="true"
                   filterBy="label,labelSinTilde"
-                  placeholder="{{'general.boton.seleccionar' | translate}}"
+                  placeholder="{{ 'general.boton.seleccionar' | translate }}"
                   name="type"
                   [disabled]="tipoAccesoLectura || notificationLowDate"
                 ></p-dropdown>
@@ -52,7 +53,7 @@
             <div class="row">
               <div class="col-lg-6 col-md-6">
                 <label
-                  >{{ "menu.facturacion.plantillas" | translate }}(*)</label
+                  >{{ "menu.facturacion.plantillas" | translate }} (*)</label
                 >
                 <p-dropdown
                   class="select-form"
@@ -60,7 +61,7 @@
                   [(ngModel)]="selectedTemplate"
                   [filter]="false"
                   name="idPlantilla"
-                  placeholder="{{'general.boton.seleccionar' | translate}}"
+                  placeholder="{{ 'general.boton.seleccionar' | translate }}"
                   (onChange)="onChangeTemplates($event)"
                   [disabled]="tipoAccesoLectura || notificationLowDate"
                 ></p-dropdown>
@@ -69,7 +70,8 @@
                 <label
                   >{{
                     "envios.plantillas.literal.tipoenvio" | translate
-                  }}(*)</label
+                  }}
+                  (*)</label
                 >
                 <input
                   type="text"
@@ -97,10 +99,11 @@
                 <label
                   >{{
                     "certificados.mantenimiento.literal.valor" | translate
-                  }}(*)</label
+                  }}
+                  (*)</label
                 >
                 <input
-                  type="text"
+                  type="number"
                   class="form-control"
                   [(ngModel)]="notification.cuando"
                   pInputText
@@ -114,7 +117,8 @@
                   >{{
                     "formacion.datosNotificaciones.unidadMedida.literal"
                       | translate
-                  }}(*)</label
+                  }}
+                  (*)</label
                 >
                 <p-dropdown
                   class="select-form"
@@ -122,7 +126,7 @@
                   [options]="comboMeasureUnit"
                   [filter]="true"
                   filterBy="label,labelSinTilde"
-                  placeholder="{{'general.boton.seleccionar' | translate}}"
+                  placeholder="{{ 'general.boton.seleccionar' | translate }}"
                   name="idUnidadMedida"
                   [disabled]="tipoAccesoLectura || notificationLowDate"
                 ></p-dropdown>
@@ -147,30 +151,29 @@
           </div>
         </div>
       </div>
-      <br />
-      <div class="card-footer ">
-        <div class="text-right main-button ">
-          <button
-            pButton
-            (click)="restNotification()"
-            type="button"
-            icon="fa fa-undo"
-            iconPos="left"
-            label="{{ 'general.boton.restablecer' | translate}}"
-            [disabled]="tipoAccesoLectura || notificationLowDate"
-          ></button>
-          <button
-            pButton
-            (click)="saveNotification()"
-            [disabled]="
-              validateForm() || tipoAccesoLectura || notificationLowDate
-            "
-            type="button"
-            icon="far fa-save"
-            iconPos="left"
-            label="{{ 'general.boton.guardar' | translate}}"
-          ></button>
-        </div>
+    </div>
+    <div class="card-footer">
+      <div class="text-right main-button">
+        <button
+          pButton
+          (click)="restNotification()"
+          type="button"
+          icon="fa fa-undo"
+          iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate }}"
+          [disabled]="tipoAccesoLectura || notificationLowDate"
+        ></button>
+        <button
+          pButton
+          (click)="saveNotification()"
+          [disabled]="
+            validateForm() || tipoAccesoLectura || notificationLowDate
+          "
+          type="button"
+          icon="far fa-save"
+          iconPos="left"
+          label="{{ 'general.boton.guardar' | translate }}"
+        ></button>
       </div>
     </div>
   </div>
@@ -181,7 +184,7 @@
       type="button "
       icon="fa fa-angle-left"
       iconPos="left"
-      label="{{ 'general.boton.volver' | translate}}"
+      label="{{ 'general.boton.volver' | translate }}"
     ></button>
   </div>
 </div>
