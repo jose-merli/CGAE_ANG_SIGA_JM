@@ -399,7 +399,11 @@ export class FichaCursoComponent implements OnInit {
       this.getServicesCourse();
       this.getCertificatesCourse();
       this.getTopicsCourse();
-      this.getSessions();
+
+      if(this.curso.idInstitucion != null || this.curso.idInstitucion != undefined){
+        this.getSessions();
+      }
+
       this.getCountInscriptions();
       this.getMassiveLoadInscriptions();
       this.configurationInformacionAdicional();
