@@ -20,7 +20,7 @@ export class DocumentosComponent implements OnInit {
   first: number = 0;
   selectedItem: number;
   selectAll: boolean = false;
-  selectMultiple: boolean = false;
+
   numSelected: number = 0;
   rowsPerPage: any = [];
   body: DocComunicacionesItem = new DocComunicacionesItem();
@@ -133,21 +133,11 @@ export class DocumentosComponent implements OnInit {
     this.table.reset();
   }
 
-  isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    } else {
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    }
-  }
+
 
   onChangeSelectAll() {
     if (this.selectAll === true) {
-      this.selectMultiple = false;
+
       this.selectedDatos = this.datos;
       this.numSelected = this.datos.length;
     } else {
@@ -247,9 +237,9 @@ export class DocumentosComponent implements OnInit {
   }
 
   navigateTo(dato) {
-    if (!this.selectMultiple) {
-      this.downloadDocumento(dato)
-    }
+
+    this.downloadDocumento(dato)
+
   }
 
   addFile() {

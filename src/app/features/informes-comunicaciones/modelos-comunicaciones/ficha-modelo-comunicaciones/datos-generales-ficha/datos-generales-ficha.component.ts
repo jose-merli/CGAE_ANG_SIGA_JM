@@ -45,6 +45,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   ngOnInit() {
     this.getClasesComunicaciones();
     this.getComboColegios();
+    this.body.preseleccionar = 'SI';
     this.getDatos();
 
   }
@@ -101,18 +102,21 @@ export class DatosGeneralesFichaComponent implements OnInit {
 
   getDatos() {
     if (sessionStorage.getItem("modelosSearch") != null) {
+      this.body.preseleccionar = 'SI';
       this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
       this.bodyInicial = JSON.parse(sessionStorage.getItem("modelosSearch"));
+
     }
   }
 
   guardar() {
-    sessionStorage.removeItem("crearNuevoModelo");
+    
     this.sigaServices.post("modelos_detalle_datosGenerales", this.body).subscribe(
       data => {
         this.showSuccess("Datos generales guardados correctamente");
         this.body.idModeloComunicacion = JSON.parse(data.body).data;
         sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
+        sessionStorage.removeItem("crearNuevoModelo");
       },
       err => {
         console.log(err);
