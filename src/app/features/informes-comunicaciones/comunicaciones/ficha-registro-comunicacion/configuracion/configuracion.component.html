@@ -47,19 +47,20 @@
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label>Clase de comunicaciones</label>
-              <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="body.claseComunicacion" pInputText>
+              <p-dropdown (onChange)="onChangeClase()" [disabled]="editar" [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion"
+                class="select-form"></p-dropdown>
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label>Modelo de comunicaciones</label>
-              <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="body.modeloComunicacion" pInputText>
+              <p-dropdown [disabled]="editar" [options]="modelosComunicacion" [(ngModel)]="body.idModeloComunicacion" class="select-form"></p-dropdown>
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">Tipo de envío *</label>
-              <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="tipoEnvio" pInputText>
+              <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="body.idTipoEnvios" pInputText>
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">Plantilla de envío *</label>
-              <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="plantilla" pInputText>
+              <p-dropdown [disabled]="editar" [options]="plantillas" [(ngModel)]="body.idPlantillasEnvio" class="select-form"></p-dropdown>
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">Descripción *</label>

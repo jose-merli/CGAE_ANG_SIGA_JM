@@ -27,6 +27,7 @@ export class ModelosComunicacionesConsultaComponent implements OnInit {
   numSelected: number = 0;
   rowsPerPage: any = [];
   body: ModelosComConsultasItem = new ModelosComConsultasItem();
+  editar: boolean = false;
 
 
   @ViewChild('table') table: DataTable;
@@ -58,11 +59,18 @@ export class ModelosComunicacionesConsultaComponent implements OnInit {
 
     this.getDatos();
 
+    if (sessionStorage.getItem("consultasSearch") == null) {
+      this.editar = false;
+    } else {
+      this.editar = true;
+    }
+
     this.selectedItem = 10;
 
     this.cols = [
       { field: 'modelo', header: 'Modelo' },
     ]
+
 
 
   }

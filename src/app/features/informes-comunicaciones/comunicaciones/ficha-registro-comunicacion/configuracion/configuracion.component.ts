@@ -27,6 +27,8 @@ export class ConfiguracionComponent implements OnInit {
   editar: boolean = false;
   tipoEnvio: string;
   plantilla: string;
+  modelosComunicacion: any = [];
+  arrayClases: any = [];
 
 
   fichasPosibles = [
@@ -61,6 +63,7 @@ export class ConfiguracionComponent implements OnInit {
 
     this.getDatos();
     this.getClasesComunicaciones();
+    this.getModelosComunicacion();
     this.getTipoEnvios()
 
   }
@@ -110,7 +113,12 @@ export class ConfiguracionComponent implements OnInit {
     this.getPlantillas();
   }
 
+  onChangeClase() {
+    this.getModelosComunicacion();
+  }
+
   getPlantillas() {
+    debugger;
     this.sigaServices.post("enviosMasivos_plantillas", this.body.idTipoEnvios).subscribe(
       data => {
         let comboPlantillas = JSON.parse(data["body"]);
@@ -172,6 +180,18 @@ export class ConfiguracionComponent implements OnInit {
 
   }
 
+
+  getModelosComunicacion() {
+
+    this.sigaServices.post("dialogo_modelosComunicacion", this.body.idClaseComunicacion).subscribe(
+      data => {
+        this.modelosComunicacion = JSON.parse(data['body']).modeloItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
 
   getClasesComunicaciones() {
     this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(

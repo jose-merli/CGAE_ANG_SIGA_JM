@@ -322,6 +322,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
 
   getConsultasDisponibles() {
+    debugger;
     this.sigaServices
       .post("plantillasDoc_combo_consultas", this.body)
       .subscribe(

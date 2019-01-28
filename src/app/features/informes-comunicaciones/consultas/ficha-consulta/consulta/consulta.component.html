@@ -33,28 +33,30 @@
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div *ngIf="showAyuda" class="ayuda-consulta">
         <i (click)="onShowAyuda()" class="fa fa-close float-right cursor-pointer"></i>
-        <p>Las consultas de tipo "Facturación" o "Envío a Grupos" tienen las siguientes restricciones: No puede incorporar solicitudes
-          de criterios dinámicos por interfaz. Para las consultas de tipo "Facturación" los siguientes campos son obligatorios:
-          IDINSTITUCION , IDPERSONA. Para las consultas de tipo "Envío a Grupos": IDINSTITUCION, IDPERSONA, CODIGOPOSTAL,
-          CORREOELECTRONICO, DOMICILIO, MOVIL, FAX1, FAX1, IDPAIS, IDPROVINCIA, IDPOBLACION. 14. Las consultas de tipo "Envío
-          a Grupos" tiene las siguientes restricciones: Las consultas listas para envíos han de llevar la tabla CEN_CLIENTE
-          y CEN_DIRECCIONES sin alias. NO se debe añadir condiciones para filtrar la dirección, ya que eso se hace automáticamente.
-          15. Se han añadido los nuevos operadores =,!=,IS NULL,LIKE al formato de los criterios TEXTO. A estos operadores
-          se añaden cuando el formato sea NUMERO, </p>
+        <p class="mb-2">
+          <strong>NORMATIVA DE USO</strong>
+        </p>
+        <p *ngFor=" let texto of ayuda" class="mb-2">
+          {{texto.texto}}
+        </p>
       </div>
-      <div class="form-row">
+      <div class=" form-row">
         <div class="form-group col-lg-12 col-md-12">
           <label>Cuerpo</label>
           <i (click)="onShowAyuda()" class="fa fa-info-circle ml-1 cursor-pointer"></i>
-          <textarea (input)="onChangeConsulta()" pInputTextarea autoResize="autoResize" style="height:250px" [(ngModel)]="body.sentencia"></textarea>
+          <textarea (input)="onChangeConsulta()" pInputTextarea autoResize="autoResize" style="height:250px
+         " [(ngModel)]="body.sentencia"></textarea>
         </div>
       </div>
     </div>
-    <div *ngIf="openFicha" class="card-footer ">
-      <div class="text-right main-button ">
-        <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button [disabled]="isButtonDisabled()" (click)="ejecutar()" pButton type="button" icon="fas fa-play" iconPos="left" label="{{ 'general.boton.ejecutar' | translate}}"></button>
+    <div *ngIf="openFicha" class="card-footer">
+      <div class="text-right main-button">
+        <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{
+          'general.boton.guardar' | translate}}"></button>
+        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{
+          'general.boton.restablecer' | translate}}"></button>
+        <button [disabled]="isButtonDisabled()" (click)="ejecutar()" pButton type="button" icon="fas fa-play
+         " iconPos="left" label="{{ 'general.boton.ejecutar' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -63,7 +65,8 @@
 
 
 
-<p-dialog [(visible)]="showValores" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+<p-dialog [(visible)]="showValores" responsive="true" [draggable]="false" modal="modal" resizable="false
+         " [minWidth]="500">
   <p-header>
     <label>Valores</label>
   </p-header>
@@ -78,9 +81,11 @@
     </div>
   </div>
   <p-footer>
-    <div class="text-right main-button ">
-      <!-- <button (click)="ejecutar()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button> -->
-      <button (click)="enviar()" pButton type="button" icon="fa fa-save " iconPos="left" label="{{'general.boton.guardar' | translate}}"></button>
+    <div class="text-right main-button">
+      <!-- <button (click)="ejecutar()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{
+          'general.boton.cancel' | translate}}"></button> -->
+      <button (click)="enviar()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{
+          'general.boton.guardar' | translate}}"></button>
     </div>
   </p-footer>
 </p-dialog>
