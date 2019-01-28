@@ -1615,7 +1615,7 @@
       <div class="row">
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultipleCargas}"
           [(selection)]="selectedDatosCargas" pageLinks="4" dataKey="idCargaInscripcion" [responsive]="true" selectionMode="multiple" #tableCargas class="tabla-listado"
-          [value]="datosCargas" [sortOrder]="sortO" (onRowSelect)="actualizaSeleccionadosCargas()" [paginator]="true" paginatorPosition="both" [rows]="selectedCargas">
+          [value]="datosCargas" [sortOrder]="sortO" (onRowSelect)="actualizaSeleccionadosCargas(selectedDatosCargas)" (onRowUnselect)="actualizaSeleccionadosCargas(selectedDatosCargas)" [paginator]="true" paginatorPosition="both" [rows]="selectedCargas">
           <p-column *ngFor="let col of colsCargas" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
 
