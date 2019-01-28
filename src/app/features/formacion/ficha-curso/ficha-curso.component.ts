@@ -303,6 +303,7 @@ export class FichaCursoComponent implements OnInit {
       this.curso.idEventoFinInscripcion = sessionStorage.getItem(
         "idEventoFinInscripcion"
       );
+      
       sessionStorage.removeItem("idEventoFinInscripcion");
       sessionStorage.removeItem("isFormacionCalendarByEndInscripcion");
 
@@ -496,6 +497,7 @@ export class FichaCursoComponent implements OnInit {
     sessionStorage.removeItem("sessions");
     sessionStorage.removeItem("historico");
     sessionStorage.removeItem("evento");
+    sessionStorage.removeItem("toBackNewFormador");
 
   }
 
@@ -2166,8 +2168,8 @@ export class FichaCursoComponent implements OnInit {
       this.router.navigate(["/fichaEventos"]);
      
     }
-    this.numSelectedPrices = this.datosPrices.length;
-    this.numSelectedSessions = this.datosSessions.length;
+    this.numSelectedPrices = this.selectedDatosPrices.length;
+    this.numSelectedSessions = this.selectedDatosSessions.length;
   }
 
   actualizaSeleccionadosSessions(selectedDatosSessions) {
@@ -2178,6 +2180,12 @@ export class FichaCursoComponent implements OnInit {
     this.selectedSessions = event.value;
     this.changeDetectorRef.detectChanges();
     this.tableSessions.reset();
+  }
+
+  onChangeRowsPerPagesFormadores(event) {
+    this.selectedFormadores = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tableFormadores.reset();
   }
 
   //Inscripciones
