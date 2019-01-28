@@ -542,6 +542,10 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.getCombosRepeats();
   }
 
+  ngAfterViewInit() {
+    window.scrollTo(0, 0);
+  }
+
   ngOnDestroy() {
     //Se eliminan las variables de la sessionStorage
     sessionStorage.removeItem("modoEdicionEventoByAgenda");

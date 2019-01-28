@@ -452,6 +452,10 @@ export class FichaCursoComponent implements OnInit {
     this.checkAcceso();
   }
 
+  ngAfterViewInit() {
+    window.scrollTo(0, 0);
+ }
+ 
   // Control Permisos
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
