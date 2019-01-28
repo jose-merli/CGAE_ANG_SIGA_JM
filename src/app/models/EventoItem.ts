@@ -32,5 +32,7 @@ export class EventoItem {
   fechaHoraInicio: string;
   fechaHoraFin: string;
 
+  formadores: string;
+
   constructor() {}
 }
