@@ -788,7 +788,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           if (url == "fichaEventos_updateEventCalendar") {
             this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
             this.progressSpinner = false;
-            this.showSuccess();
           } else {
             // this.progressSpinner = false;
             // this.showSuccess();
@@ -811,6 +810,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
               this.getEventNotifications();
             }
           }
+          this.showSuccess();
         }
       },
       err => {
