@@ -26,6 +26,7 @@ import { SigaServices } from "../../../_services/siga.service";
 import { AsistenciaEventoObject } from "../../../models/AsistenciaEventoObject";
 import { DatosPersonaEventoItem } from "../../../models/DatosPersonaEventoItem";
 import { DatosPersonaEventoObject } from "../../../models/DatosPersonaEventoObject";
+import { DatosCursosItem } from "../../../models/DatosCursosItem";
 
 @Component({
   selector: "app-ficha-eventos",
@@ -65,6 +66,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   fechaFin: Calendar;
 
   //Generales
+  curso: DatosCursosItem = new DatosCursosItem();
   disabledTipoEvento: boolean = false;
   comboCalendars;
   comboTipoEvento;
@@ -95,6 +97,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   valorTipoEventoInicioInscripcion = "4";
   valorTipoEventoFinInscripcion = "5";
   valorTipoEventoSesion = "8";
+  valorEstadoEventoPlanificado = "1";
 
   //Notificaciones
   selectedDatosNotifications = [];
@@ -759,6 +762,10 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   saveEvent() {
     let url = "";
 
+    if(this.newEvent.idEstadoEvento == null){
+      this.newEvent.idEstadoEvento = this.valorEstadoEventoPlanificado;
+    }
+
     if (
       sessionStorage.getItem("modoEdicionEventoByAgenda") == "true" ||
       (this.modoTipoEventoInscripcion && this.modoEdicionEvento) ||
@@ -783,12 +790,19 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
             this.progressSpinner = false;
             this.showSuccess();
           } else {
-            this.progressSpinner = false;
-            this.showSuccess();
+            // this.progressSpinner = false;
+            // this.showSuccess();
             this.modoEdicionEvento = true;
             this.modoEdicionEventoByAgenda = true;
             this.createEvent = true;
             sessionStorage.setItem("evento", JSON.stringify(this.newEvent));
+            this.curso = JSON.parse(sessionStorage.getItem("curso"));
+            if(JSON.parse(sessionStorage.getItem("isFormacionCalendarByStartInscripcion"))) {
+              this.curso.idEventoInicioInscripcion = JSON.parse(data.body).id;
+            }else if(JSON.parse(sessionStorage.getItem("isFormacionCalendarByEndInscripcion"))){
+              this.curso.idEventoFinInscripcion = JSON.parse(data.body).id;
+            }
+            this.saveCourse();
             //Obtenemos las notificaciones del evento del calendario especifico, dentro del id se ha guardado el idEvento creado
             if (JSON.parse(data.body).id != "") {
               let idEvento = JSON.parse(data.body).id;
@@ -807,7 +821,21 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       }
     );
   }
-
+  saveCourse(){
+    
+    this.sigaServices.post("fichaCursos_updateCourse", this.curso).subscribe(
+      data => {
+        this.showSuccess();
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
   restEvent() {
     this.newEvent = JSON.parse(JSON.stringify(this.initEvent));
     this.newEvent.start = new Date(this.newEvent.start);
@@ -1050,6 +1078,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
         //Cargamos los tipo de calendarios que existen
         this.getComboCalendar();
+        this.getEventNotifications();
+
 
         //Inficamos que estamos en modo edicion
         this.modoEdicionEvento = true;

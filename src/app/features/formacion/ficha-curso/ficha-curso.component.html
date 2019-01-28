@@ -497,6 +497,7 @@
               #tableFormadores
               class="tabla-listado"
               [paginator]="true"
+              (onRowSelect)="actualizaSeleccionadosFormadores(selectedDatosFormadores)"
               (onRowUnselect)="actualizaSeleccionadosFormadores(selectedDatosFormadores)"
               [value]="datosFormadores"
               [sortOrder]="1"
@@ -531,7 +532,7 @@
                   <p-dropdown
                     [(ngModel)]="selectedFormadores"
                     [options]="rowsPerPage"
-                    (onChange)="onChangeRowsPerPages($event)"
+                    (onChange)="onChangeRowsPerPagesFormadores($event)"
                   ></p-dropdown>
                   <label class="pl-1">
                     {{
@@ -704,7 +705,7 @@
                   <p-dropdown
                     [(ngModel)]="selectedFormadores"
                     [options]="rowsPerPage"
-                    (onChange)="onChangeRowsPerPages($event)"
+                    (onChange)="onChangeRowsPerPagesFormadores($event)"
                   ></p-dropdown>
                   <label class="pl-1">
                     {{
@@ -899,7 +900,7 @@
                   <p-dropdown
                     [(ngModel)]="selectedItem"
                     [options]="rowsPerPage"
-                    (onChange)="onChangeRowsPerPages($event)"
+                    (onChange)="onChangeRowsPerPagesFormadores($event)"
                   ></p-dropdown>
                   <label class="pl-1">
                     {{
