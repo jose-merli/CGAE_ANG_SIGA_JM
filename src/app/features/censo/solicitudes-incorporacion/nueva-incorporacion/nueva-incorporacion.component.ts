@@ -920,6 +920,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   irPlanUniversal() {
     // Acceso a Web Service para saber si hay una solicitud de Mutualidad.
+    this.progressSpinner = true;
     this.solicitudEditar.idPais = this.paisSelected;
     this.solicitudEditar.identificador = this.solicitudEditar.numeroIdentificacion;
     this.sigaServices
@@ -936,12 +937,12 @@ para poder filtrar el dato con o sin estos caracteres*/
               "solicitudEnviada",
               JSON.stringify(this.solicitudEditar)
             );
+            this.progressSpinner = false;
             this.router.navigate(["/MutualidadAbogaciaPlanUniversal"]);
           } else {
             //  this.modoLectura = true;
-            this.showFail(
-              "El Colegiado no es apto para realizar una solicitud de Mutualidad."
-            );
+            this.progressSpinner = false;
+            this.showInfo(prueba.valorRespuesta);
           }
         },
         error => {
@@ -951,6 +952,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   irSegAccidentes() {
+    this.progressSpinner = true;
     this.solicitudEditar.idPais = this.paisSelected;
     this.solicitudEditar.identificador = this.solicitudEditar.numeroIdentificacion;
     this.sigaServices
@@ -958,7 +960,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       .subscribe(
         result => {
           let prueba = JSON.parse(result.body);
-          if ((prueba.valorRespuesta = "1")) {
+          if (prueba.valorRespuesta == "1") {
             this.solicitudEditar.idSolicitudMutualidad = prueba.idSolicitud;
             this.solicitudEditar.estadoMutualidad = prueba.valorRespuesta;
             this.solicitudEditar.tipoIdentificacion = this.tipoIdentificacionSelected;
@@ -967,12 +969,12 @@ para poder filtrar el dato con o sin estos caracteres*/
               "solicitudEnviada",
               JSON.stringify(this.solicitudEditar)
             );
+            this.progressSpinner = false;
             this.router.navigate(["/mutualidadSeguroAccidentes"]);
           } else {
             //  this.modoLectura = true;
-            this.showFail(
-              "El Colegiado no es eligible para la solicitud de Mutualidad."
-            );
+            this.progressSpinner = false;
+            this.showInfo(prueba.valorRespuesta);
           }
         },
         error => {
