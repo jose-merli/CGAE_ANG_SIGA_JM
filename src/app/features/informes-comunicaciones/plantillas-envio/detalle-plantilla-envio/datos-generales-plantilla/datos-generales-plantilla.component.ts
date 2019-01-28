@@ -137,7 +137,6 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
       .postPaginado("plantillasEnvio_guardarDatosGenerales", "?numPagina=1", this.body)
       .subscribe(
         data => {
-          debugger;
           let result = JSON.parse(data["body"]);
           this.body.idPlantillaEnvios = result.message;
           sessionStorage.setItem("plantillasEnvioSearch", JSON.stringify(this.body));

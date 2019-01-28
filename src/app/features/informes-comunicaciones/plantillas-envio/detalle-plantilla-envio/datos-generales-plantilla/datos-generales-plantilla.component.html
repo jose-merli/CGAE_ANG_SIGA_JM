@@ -14,7 +14,9 @@
             <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label></label>
+            <label>Nombre:
+              <span>{{body.nombre}}</span>
+            </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
