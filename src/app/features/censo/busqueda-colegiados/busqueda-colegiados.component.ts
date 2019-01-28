@@ -777,7 +777,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   getModelosComunicacion() {
-    debugger;
+
 
     this.idClasesComunicacionArray = [];
     this.bodyComunicacion.idClaseComunicacion.forEach(element => {

@@ -194,7 +194,7 @@ export class RemitentePlantillaComponent implements OnInit {
         this.remitente = JSON.parse(sessionStorage.getItem("remitente"));
         this.openFicha = true;
         if (this.body.idPersona != null && this.body.idPersona != '') {
-          debugger;
+
           sessionStorage.removeItem("abrirNotario");
           this.getPersonaDireccion();
         }
@@ -219,7 +219,7 @@ export class RemitentePlantillaComponent implements OnInit {
       .post("plantillasEnvio_detalleRemitente", objRemitente)
       .subscribe(
         data => {
-          debugger;
+
           this.progressSpinner = false;
           this.remitente = JSON.parse(data["body"]);
           this.direccion = this.remitente.direccion[0];
@@ -246,7 +246,7 @@ export class RemitentePlantillaComponent implements OnInit {
       .post("plantillasEnvio_personaDireccion", this.body.idPersona)
       .subscribe(
         data => {
-          debugger;
+
           this.remitente = JSON.parse(data["body"]);
           this.progressSpinner = false;
           this.direcciones = this.remitente.direccion;

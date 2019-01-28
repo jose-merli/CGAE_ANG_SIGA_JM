@@ -227,7 +227,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
     }
 
     this.sigaServices.post("modelos_detalle_guardarPlantilla", nuevaPlantillaComunicacion).subscribe(result => {
-      debugger;
+
       this.datosInicial = JSON.parse(JSON.stringify(this.datos));
       this.nuevaPlantilla = false;
       this.showSuccess('La plantilla se ha guardado correctamente');
@@ -367,7 +367,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
   }
 
   onChangePorDefecto(e) {
-    debugger;
+
     console.log(e)
     if (e == true) {
       this.porDefecto = 'Si';

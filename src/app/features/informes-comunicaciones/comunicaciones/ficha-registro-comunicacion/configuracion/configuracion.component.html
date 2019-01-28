@@ -20,9 +20,6 @@
             <label>Modelo de comunicaciones:
               <span>{{body.modeloComunicacion}}</span>
             </label>
-            <label>Tipo de envío:
-              <span>{{body.tipoEnvio}}</span>
-            </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
@@ -56,7 +53,7 @@
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">Tipo de envío *</label>
-              <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="body.idTipoEnvios" pInputText>
+              <p-dropdown [disabled]="editar" [options]="tipoEnvios" [(ngModel)]="body.idTipoEnvios" class="select-form"></p-dropdown>
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">Plantilla de envío *</label>

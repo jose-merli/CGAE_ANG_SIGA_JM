@@ -150,7 +150,7 @@ export class ModelosComunicacionesConsultaComponent implements OnInit {
   getResultados() {
     this.sigaServices.post("consultas_listadoModelos", this.body).subscribe(
       data => {
-        debugger;
+        
         this.datos = JSON.parse(data["body"]).listadoModelos;
         this.body = this.datos[0];
       },

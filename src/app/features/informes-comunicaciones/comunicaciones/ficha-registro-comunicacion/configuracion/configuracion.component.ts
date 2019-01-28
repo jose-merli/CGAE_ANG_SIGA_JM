@@ -89,25 +89,20 @@ export class ConfiguracionComponent implements OnInit {
   }
 
 
+
   getTipoEnvios() {
+    debugger;
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
         this.tipoEnvios = data.combooItems;
-
-        this.tipoEnvios.map(e => {
-          if (this.body.idTipoEnvios == e.value) {
-            this.tipoEnvio = e.label;
-          }
-        })
-
+        console.log(this.tipoEnvios)
       },
       err => {
         console.log(err);
-      },
-      () => {
       }
     );
   }
+
 
   onChangeTipoEnvio() {
     this.getPlantillas();
@@ -118,7 +113,7 @@ export class ConfiguracionComponent implements OnInit {
   }
 
   getPlantillas() {
-    debugger;
+
     this.sigaServices.post("enviosMasivos_plantillas", this.body.idTipoEnvios).subscribe(
       data => {
         let comboPlantillas = JSON.parse(data["body"]);
@@ -182,8 +177,11 @@ export class ConfiguracionComponent implements OnInit {
 
 
   getModelosComunicacion() {
+    this.arrayClases = [];
 
-    this.sigaServices.post("dialogo_modelosComunicacion", this.body.idClaseComunicacion).subscribe(
+    this.arrayClases.push(this.body.idClaseComunicacion);
+
+    this.sigaServices.post("dialogo_modelosComunicacion", this.arrayClases).subscribe(
       data => {
         this.modelosComunicacion = JSON.parse(data['body']).modeloItems;
       },

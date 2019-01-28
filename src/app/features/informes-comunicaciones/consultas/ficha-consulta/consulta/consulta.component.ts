@@ -216,7 +216,6 @@ export class ConsultaComponent implements OnInit {
     this.sigaServices
       .postDownloadFiles("consultas_ejecutarConsulta", this.body.sentencia)
       .subscribe(data => {
-        debugger;
         this.showValores = false;
         const blob = new Blob([data], { type: "application/octet-stream" });
         if (blob.size == 0) {

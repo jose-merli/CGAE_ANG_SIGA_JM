@@ -27,6 +27,7 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
   numSelected: number = 0;
   rowsPerPage: any = [];
   body: PlantillasConsultasItem = new PlantillasConsultasItem();
+  editar: boolean = false;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -52,6 +53,13 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
   ngOnInit() {
 
     this.getDatos();
+
+
+    if (sessionStorage.getItem("consultasSearch") == null) {
+      this.editar = false;
+    } else {
+      this.editar = true;
+    }
 
     this.selectedItem = 10;
 
