@@ -350,7 +350,7 @@ export class ConsultasPlantillasComponent implements OnInit {
           this.progressSpinner = false;
           this.finalidad = JSON.parse(data["body"]).finalidad;
           for (let dato of this.datos) {
-            if (!dato.idConsulta) {
+            if (!dato.idConsulta && dato.idConsulta == id) {
               dato.idConsulta = id;
               dato.finalidad = this.finalidad;
             } else if (dato.idConsulta && dato.idConsulta == id) {

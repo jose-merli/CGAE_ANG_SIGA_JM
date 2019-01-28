@@ -51,8 +51,8 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td *ngFor="let col of columns" pEditableColumn>
-              <p-dropdown *ngIf="col.field=='nombre' && !dato.asociada" [(ngModel)]="dato[col.field]" [options]="consultas" class="select-form"
-                (onChange)="onChangeConsultas($event)" dataKey="label"></p-dropdown>
+              <p-dropdown [filter]="true" filterBy="label" *ngIf="col.field=='nombre' && !dato.asociada" [(ngModel)]="dato.idConsulta"
+                [options]="consultas" class="select-form" (onChange)="onChangeConsultas($event)" dataKey="label"></p-dropdown>
               <span *ngIf="col.field=='nombre' && dato.asociada">{{dato.nombre}}</span>
               <span *ngIf="col.field=='finalidad' && dato.finalidad != ''">{{dato.finalidad}}</span>
             </td>
@@ -97,7 +97,7 @@
       <div class="text-right main-button">
         <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{
                 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="goNuevaConsulta()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{
+        <button (click)="goNuevaConsulta()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{
                   'general.boton.new' | translate}}"></button>
         <!-- <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button> -->
       </div>
