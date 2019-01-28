@@ -808,6 +808,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
               let idEvento = JSON.parse(data.body).id;
               this.newEvent.idEvento = idEvento;
               this.getEventNotifications();
+              this.getTrainers();
             }
           }
           this.showSuccess();

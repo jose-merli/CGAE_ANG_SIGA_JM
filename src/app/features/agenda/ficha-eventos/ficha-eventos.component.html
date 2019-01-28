@@ -318,7 +318,7 @@
     <div class="card-footer" *ngIf="esFichaActiva('formadores')">
       <div class="text-right main-button">
         <button pButton (click)="restTrainers()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="tipoAccesoLectura || !formadoresDistintosCheck()"></button>
-        <button pButton (click)="guardarFormadores()" type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="tipoAccesoLectura || !formadoresDistintosCheck()"></button>
+        <button pButton (click)="guardarFormadores()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="tipoAccesoLectura || !formadoresDistintosCheck()"></button>
       </div>
     </div>
   </div>
@@ -392,7 +392,7 @@
         <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate }}" [disabled]="tipoAccesoLectura || blockAsistencia"></button>
         <button pButton type="button" (click)="unCheckAsist()" [disabled]="selectedDatosAsistencia == '' || tipoAccesoLectura || blockAsistencia" icon="fa fa-times" iconPos="left" label="{{ 'agenda.fichaEventos.datosAsistencia.desmarcar' | translate }}"></button>
         <button pButton type="button" (click)="checkAsist()" [disabled]="selectedDatosAsistencia == '' || tipoAccesoLectura || blockAsistencia" icon="fa fa-check" iconPos="left" label="{{'agenda.fichaEventos.datosAsistencia.marcar' | translate }}"></button>
-        <button pButton type="button" (click)="saveAssistancesCourse()" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="tipoAccesoLectura || blockAsistencia"></button>
+        <button pButton type="button" (click)="saveAssistancesCourse()" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="tipoAccesoLectura || blockAsistencia"></button>
       </div>
     </div>
   </div>
