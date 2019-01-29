@@ -1,3 +1,9 @@
 .inheritTable .ui-datatable-tablewrapper table {
   table-layout: inherit !important;
 }
+
+.paddingInput {
+  padding: 0.25em 1em;
+  box-shadow: none !important;
+  border-color: #c6c7c8 !important;
+}

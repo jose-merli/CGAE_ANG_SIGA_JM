@@ -151,11 +151,13 @@
             </span>
                <input *ngIf="dato[col.idEstadoCurso] == '3' && dato[col.idEstadoInscripcion] == '3' && calificacion"
               type="text"
-              class="form-control"
+              class="form-control paddingInput"
               [(ngModel)]="dato.calificacion"
-              pInputText
-              name="calificacion"
               (input)="editarCompleto($event, dato)"
+              name="calificacion"
+              type="number"
+              min="0" 
+              max="10"
             />
         </ng-template>
 

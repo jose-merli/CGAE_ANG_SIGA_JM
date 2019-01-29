@@ -1,4 +1,4 @@
-<p-growl [(value)]="msgs" (onHover)="clear()" life="30000000"></p-growl>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -185,7 +185,7 @@
     <!-- Cuerpo-->
     <div class="card-body card-body-ficha" *ngIf="esFichaActiva('notify')">
         <div *ngIf="!historico" class="row">
-          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultipleNotifications}"
             [(selection)]="selectedDatosNotifications" (onRowSelect)="irEditarNotificacion(selectedDatosNotifications)" (onRowUnselect)="actualizaSeleccionadosNotifications(selectedDatosNotifications)"
             pageLinks="4" dataKey="idNotificacion" [responsive]="true" selectionMode="multiple" #tableNotifications class="tabla-listado"
             [value]="datosNotificaciones" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedNotification">
@@ -214,7 +214,7 @@
         </div>
         <!--HISTORICO-->
         <div *ngIf="historico" class="row">
-            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultipleNotifications}"
               [(selection)]="selectedDatosNotifications" (onRowSelect)="irEditarNotificacion(selectedDatosNotifications)" pageLinks="4" dataKey="idNotificacion"
               [responsive]="true" selectionMode="multiple" #tableNotifications class="tabla-listado" [value]="datosNotificaciones" [sortOrder]="1" [paginator]="true"
               paginatorPosition="both" [rows]="selectedNotification">
@@ -323,7 +323,7 @@
     </div>
   </div>
 
-  <!-- TERJETAS ASISTENCIA-->
+  <!-- TARJETAS ASISTENCIA-->
   <div class="card" *ngIf="isFormacionCalendar">
     <!-- Cabecera -->
     <div class="card-header header-ficha" (click)="abreCierraFicha('asistencia')">

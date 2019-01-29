@@ -99,7 +99,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   datosFormadores = [];
 
   inscripcionEncontrado = new DatosInscripcionObject();
- isLetrado: boolean = true;
+  isLetrado: boolean = true;
   displayMotivo: boolean = false;
   tipoAccion: any = "";
 
@@ -463,7 +463,6 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
         header: "formacion.busquedaInscripcion.calificacion",
         idEstadoCurso: "idEstadoCurso",
         idEstadoInscripcion: "idEstadoInscripcion"
-
       }
     ];
 
@@ -777,11 +776,19 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
   editarCompleto(event, dato) {
     console.log(event);
-    let data = event.data;
+    let data = event;
 
-    if (event.data != null && event.data != undefined) {
+    if (data != null && data != undefined) {
       this.datos.forEach((value: DatosInscripcionItem, key: number) => {
         if (value.idInscripcion == dato.idInscripcion) {
+          let CALIFICACION_REX = /^([0-9]{1})(\.\d{1,2})?$|10$/;
+          if (
+            !CALIFICACION_REX.test(value.calificacion) &&
+            value.calificacion != null
+          ) {
+            event.currentTarget.value = "10";
+            dato.calificacion = 10;
+          }
           value.calificacion = dato.calificacion;
           value.editar = true;
         }
@@ -800,41 +807,36 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
     this.progressSpinner = true;
     this.datos.forEach((value: DatosInscripcionItem, key: number) => {
       if (value.editar) {
+        // value.calificacion = value.calificacion.replace(",", ".");
         if (
-          value.calificacion != null &&
-          value.calificacion != undefined &&
-          value.calificacion != ""
+          CALIFICACION_REX.test(value.calificacion) ||
+          value.calificacion == null
         ) {
-          value.calificacion = value.calificacion.replace(",", ".");
-          if (CALIFICACION_REX.test(value.calificacion)) {
-            this.sigaServices
-              .post("busquedaInscripciones_updateCalificacion", value)
-              .subscribe(
-                data => {
-                  this.showMessageCalificacion(
-                    "Calificacion actualizada correctamente",
-                    "success"
-                  );
-                  this.progressSpinner = false;
-                  value.editar = false;
-                  // this.isBuscar();
-                },
-                error => {
-                  this.showMessageCalificacion("Ha ocurrido un error", "error");
-                  this.onCalificacion();
-                  this.progressSpinner = false;
-                }
-              );
-          } else {
-            this.onCalificacion();
-            this.showMessageCalificacion(
-              "Se ha introducido una calificacion de manera incorrecta",
-              "error"
+          this.sigaServices
+            .post("busquedaInscripciones_updateCalificacion", value)
+            .subscribe(
+              data => {
+                this.showMessageCalificacion(
+                  "Calificacion actualizada correctamente",
+                  "success"
+                );
+                this.progressSpinner = false;
+                value.editar = false;
+                this.isBuscar();
+              },
+              error => {
+                this.showMessageCalificacion("Ha ocurrido un error", "error");
+                this.onCalificacion();
+                this.progressSpinner = false;
+              }
             );
-            this.progressSpinner = false;
-          }
         } else {
-          value.editar = false;
+          this.onCalificacion();
+          this.showMessageCalificacion(
+            "Se ha introducido una calificacion de manera incorrecta",
+            "error"
+          );
+          this.progressSpinner = false;
         }
       }
     });
@@ -877,7 +879,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       this.router.navigate(["/fichaCurso"]);
       sessionStorage.removeItem("pantallaFichaCurso");
     } else {
-        this.location.back();
+      this.location.back();
     }
     // this.location.back();
   }
@@ -891,11 +893,14 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
+
   //búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      this.isBuscar();
+      if (!this.displayMotivo) {
+        this.isBuscar();
+      }
     }
   }
 }
