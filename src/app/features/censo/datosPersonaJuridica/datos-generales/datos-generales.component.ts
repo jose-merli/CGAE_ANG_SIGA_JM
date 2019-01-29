@@ -128,7 +128,7 @@ export class DatosGenerales implements OnInit {
   updateItems: Map<String, ComboEtiquetasItem> = new Map<
     String,
     ComboEtiquetasItem
-    >();
+  >();
 
   @ViewChild("auto")
   autoComplete: AutoComplete;
@@ -236,7 +236,7 @@ export class DatosGenerales implements OnInit {
       n => {
         this.comboIdentificacion = n.combooItems;
       },
-      error => { }
+      error => {}
     );
 
     this.comboTipo.push(this.tipoPersonaJuridica);
@@ -299,7 +299,7 @@ export class DatosGenerales implements OnInit {
 
   obtenerEtiquetasPersonaJuridicaConcreta() {
     this.sigaServices
-      .post("busquedaPerJuridica_etiquetasPersona", this.body)
+      .post("fichaDatosGenerales_etiquetasPersona", this.body)
       .subscribe(
         n => {
           // coger etiquetas de una persona juridica
@@ -311,6 +311,7 @@ export class DatosGenerales implements OnInit {
           this.etiquetasPersonaJuridicaSelecionados = [];
           this.etiquetasPersonaJuridica.forEach((value: any, index: number) => {
             this.etiquetasPersonaJuridicaSelecionados.push(value);
+            // this.generalBody.
           });
 
           this.etiquetasPersonaJuridicaSelecionados.forEach(
@@ -424,13 +425,19 @@ export class DatosGenerales implements OnInit {
           .post("busquedaPerJuridica_create", this.body)
           .subscribe(
             data => {
-              this.cerrarAuditoria();
-              this.showSuccess();
               let respuesta = JSON.parse(data["body"]);
               this.idPersona = respuesta.id;
-              sessionStorage.removeItem("crearnuevo");
             },
-            error => { },
+            error => {
+              let e = JSON.parse(error["error"]).error;
+              if (e.message == "messages.censo.nifcifExiste2") {
+                this.showFail(
+                  this.translateService.instant("messages.censo.nifcifExiste2")
+                );
+                this.progressSpinner = false;
+                this.showGuardar = false;
+              }
+            },
             () => {
               sessionStorage.removeItem("crearnuevo");
               this.cerrarAuditoria();
@@ -443,7 +450,6 @@ export class DatosGenerales implements OnInit {
               );
               this.bodyPersonaJuridica.tipo = selectedComboTipo.label;
               arrayPersonaJuridica.push(this.bodyPersonaJuridica);
-              // arrayPersonaJuridica[0] = this.bodyPersonaJuridica;
 
               sessionStorage.setItem(
                 "usuarioBody",
@@ -496,7 +502,7 @@ export class DatosGenerales implements OnInit {
       this.body.motivo = "registro actualizado";
 
       this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
-        data => { },
+        data => {},
         error => {
           this.personaSearch = JSON.parse(error["error"]);
           this.showFail(JSON.stringify(this.personaSearch.error.description));
@@ -855,10 +861,27 @@ export class DatosGenerales implements OnInit {
   // ETIQUETAS
 
   filterLabelsMultiple(event) {
+    let etiquetasPuestas = [];
+    if (this.etiquetasPersonaJuridicaSelecionados) {
+      etiquetasPuestas = this.etiquetasPersonaJuridicaSelecionados;
+    }
     this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
       n => {
         // coger todas las etiquetas
-        this.comboEtiquetas = this.filterLabel(event.query, n.combooItems);
+        let etiquetasSugerencias = this.filterLabel(event.query, n.combooItems);
+
+        if (etiquetasPuestas.length > 0) {
+          this.comboEtiquetas = [];
+
+          etiquetasSugerencias.forEach(element => {
+            let find = etiquetasPuestas.find(x => x.label === element.label);
+            if (find == undefined) {
+              this.comboEtiquetas.push(element);
+            }
+          });
+        } else {
+          this.comboEtiquetas = etiquetasSugerencias;
+        }
       },
       err => {
         console.log(err);
@@ -958,19 +981,48 @@ export class DatosGenerales implements OnInit {
         );
       } else {
         // Si existe en el array, lo borramos para que no queden registros duplicados
-        this.etiquetasPersonaJuridicaSelecionados.splice(
-          this.etiquetasPersonaJuridicaSelecionados.indexOf(event),
-          1
-        );
-        this.updateItems.delete(event.value);
+        for (
+          let i = 0;
+          i < this.etiquetasPersonaJuridicaSelecionados.length;
+          i++
+        ) {
+          if (
+            this.etiquetasPersonaJuridicaSelecionados[i].idGrupo == undefined
+          ) {
+            if (
+              this.etiquetasPersonaJuridicaSelecionados[i].label == event.label
+            ) {
+              this.etiquetasPersonaJuridicaSelecionados.splice(i, 1);
+            }
+          } else {
+            if (
+              this.etiquetasPersonaJuridicaSelecionados[i].idGrupo ==
+              event.value
+            ) {
+              this.etiquetasPersonaJuridicaSelecionados.splice(i, 1);
+              this.onUnselect(event);
+            }
+          }
+        }
+        if (
+          this.updateItems.size >
+          this.etiquetasPersonaJuridicaSelecionados.length
+        ) {
+          this.updateItems.delete(event.value);
+        }
       }
     }
   }
 
   onUnselect(event) {
     if (event) {
-      this.updateItems.delete(event.value);
-      this.showGuardar = true;
+      if (event.value == undefined) {
+        this.updateItems.delete(event.idGrupo);
+        this.showGuardar = true;
+      } else {
+        this.updateItems.delete(event.value);
+        this.showGuardar = true;
+      }
     }
   }
 
@@ -986,16 +1038,24 @@ export class DatosGenerales implements OnInit {
       this.mensaje = "Histórico de fechas";
 
       this.historico = true;
-
-      this.calendar.readonlyInput = true;
     }
   }
 
   deleteLabel(item) {
-    this.etiquetasPersonaJuridicaSelecionados.splice(
-      this.etiquetasPersonaJuridicaSelecionados.indexOf(item),
-      1
-    );
+    for (let i = 0; i < this.etiquetasPersonaJuridicaSelecionados.length; i++) {
+      if (this.etiquetasPersonaJuridicaSelecionados[i].idGrupo == undefined) {
+        if (this.etiquetasPersonaJuridicaSelecionados[i].label == item.label) {
+          this.etiquetasPersonaJuridicaSelecionados.splice(i, 1);
+        }
+      } else {
+        if (
+          this.etiquetasPersonaJuridicaSelecionados[i].idGrupo == item.value
+        ) {
+          this.etiquetasPersonaJuridicaSelecionados.splice(i, 1);
+          this.onUnselect(event);
+        }
+      }
+    }
   }
 
   closeDialogConfirmation(item) {

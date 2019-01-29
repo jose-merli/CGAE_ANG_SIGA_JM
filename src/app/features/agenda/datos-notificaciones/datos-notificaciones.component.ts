@@ -64,6 +64,7 @@ export class DatosNotificacionesComponent implements OnInit, OnDestroy {
 
       this.notification = new NotificacionEventoItem();
       this.notification.idEvento = this.evento.idEvento;
+      this.notification.idTipoCuando = "1";
     } else {
       this.modoEdicion = false;
       this.notification = new NotificacionEventoItem();
@@ -178,9 +179,9 @@ export class DatosNotificacionesComponent implements OnInit, OnDestroy {
   }
 
   backTo() {
-    this.location.back();
     sessionStorage.setItem("isNotificaciones", "true");
     sessionStorage.setItem("modoEdicion", "true");
+    this.location.back();
   }
 
   onChangeTemplates(event) {

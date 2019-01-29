@@ -80,8 +80,8 @@
         <button (click)="cargarHistorico()" *ngIf="!historico" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
         <button *ngIf="selectedDatos && selectedDatos != '' && !historico" (click)="confirmarEliminar(selectedDatos)" pButton type="button"
           icon="fa fa-trash-alt" iconPos="left" [(disabled)]="camposDesactivados || disabledAction" label="{{'general.boton.eliminar'  | translate}}"></button>
-        <button (click)="redireccionar(selectedDatos)" [(disabled)]="camposDesactivados || disabledAction" pButton type="button"
-          icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        <button (click)="redireccionar(selectedDatos)" [(disabled)]="camposDesactivados || disabledAction" pButton type="button" icon="fa fa-plus"
+          iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
       </div>
     </div>
   </div>

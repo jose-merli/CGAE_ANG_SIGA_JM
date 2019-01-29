@@ -307,6 +307,8 @@ export class SigaServices {
     busquedaInscripciones_searchPersona: "busquedaInscripciones/searchPersona",
     busquedaInscripciones_isAdministrador:
       "busquedaInscripciones/isAdministrador",
+    busquedaInscripciones_selectInscripcionByPrimaryKey: "busquedaInscripciones/selectInscripcionByPrimaryKey",
+
     fichaInscripcion_searchCourse: "fichaInscripcion/searchCourse",
     fichaInscripcion_saveInscripcion: "fichaInscripcion/saveInscripcion",
     fichaInscripcion_updateInscripcion: "fichaInscripcion/updateInscripcion",
@@ -347,6 +349,10 @@ export class SigaServices {
     fichaEventos_getEntryListCourse: "fichaEventos/getEntryListCourse",
     fichaEventos_searchEvent: "fichaEventos/searchEvent",
     fichaEventos_saveAssistancesCourse: "fichaEventos/saveAssistancesCourse",
+    fichaEventos_saveFormadorEvent: "fichaEventos/saveFormadorEvent",
+    fichaEventos_updateFormadorEvent: "fichaEventos/updateFormadorEvent",
+    fichaEventos_getTrainersSession: "fichaEventos/getTrainersSession",
+
 
     datosNotificaciones_getTypeNotifications:
       "datosNotificaciones/getTypeNotifications",
