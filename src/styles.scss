@@ -992,6 +992,7 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
 }
 
 .ui-growl-message-error .ui-growl-item {
+
   color: white !important;
   background-color: #dc3545 !important;
 }
@@ -1002,6 +1003,7 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
 }
 .ui-growl-message-info .ui-growl-item {
   color: white !important;
+
   background-color: #33a1ff !important;
 }
 
@@ -1053,6 +1055,7 @@ iframe .boxCombo {
     }
   }
 }
+
 
 p-footer .main-button{
   padding: 0.75rem 1.25rem;
@@ -1169,6 +1172,7 @@ p-footer .main-button{
 .ui-steps .ui-steps-item.ui-state-highlight .ui-menuitem-link .ui-steps-title{
   color: $grey1;
 }
+
 
 .ui-steps .ui-steps-item.ui-state-highlight .ui-menuitem-link .ui-steps-number{
   background-color: $secondary-color;

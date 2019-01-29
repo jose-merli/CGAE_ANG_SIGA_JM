@@ -126,6 +126,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   lengthCountryCode: Number = 0;
   // historico:boolean = false;
 
+
   @ViewChild("table")
   table: DataTable;
   selectedDatos;

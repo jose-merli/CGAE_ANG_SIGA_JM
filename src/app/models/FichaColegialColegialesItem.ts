@@ -17,7 +17,7 @@ export class FichaColegialColegialesItem {
   descripcion: String;
   observaciones: String;
   estadoColegial: String;
-  situacionresidente: String;
+  situacionResidente: String;
   comunitario: String;
   constructor() {}
 }

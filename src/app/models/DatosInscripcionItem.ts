@@ -43,12 +43,14 @@ export class DatosInscripcionItem {
 
   editar: boolean;
   flagArchivado: number;
-
+  numeroSesiones: number;
   canceladas: string;
   aprobadas: string;
   rechazadas: string;
   pendientes: string;
   totales: string;
+
+  idEstadoCurso: string;
 
   constructor() {}
 }

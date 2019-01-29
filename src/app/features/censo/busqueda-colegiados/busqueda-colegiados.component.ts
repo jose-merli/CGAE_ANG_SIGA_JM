@@ -1,38 +1,26 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  HostListener,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation
-} from "@angular/core";
-import { Router } from "@angular/router";
-import { ConfirmationService } from "primeng/api";
-import { DataTable } from "primeng/datatable";
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators
-} from "../../../../../node_modules/@angular/forms";
-import { TranslateService } from "../../../commons/translate/translation.service";
-import { DatosColegiadosItem } from "../../../models/DatosColegiadosItem";
-import { DatosColegiadosObject } from "../../../models/DatosColegiadosObject";
-import { SubtipoCurricularItem } from "../../../models/SubtipoCurricularItem";
-import { USER_VALIDATIONS } from "../../../properties/val-properties";
-import { SigaWrapper } from "../../../wrapper/wrapper.class";
-import { esCalendar } from "./../../../utils/calendar";
-import { SigaServices } from "./../../../_services/siga.service";
-import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
+import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
+import { ConfirmationService } from 'primeng/api';
+import { DataTable } from 'primeng/datatable';
+import { FormBuilder, FormControl, FormGroup, Validators } from '../../../../../node_modules/@angular/forms';
+import { TranslateService } from '../../../commons/translate/translation.service';
+import { DatosColegiadosItem } from '../../../models/DatosColegiadosItem';
+import { DatosColegiadosObject } from '../../../models/DatosColegiadosObject';
+import { SubtipoCurricularItem } from '../../../models/SubtipoCurricularItem';
+import { USER_VALIDATIONS } from '../../../properties/val-properties';
+import { SigaWrapper } from '../../../wrapper/wrapper.class';
+import { esCalendar } from './../../../utils/calendar';
+import { SigaServices } from './../../../_services/siga.service';
+import { DialogoComunicacionesItem } from '../../../models/DialogoComunicacionItem';
 
 export enum KEY_CODE {
   ENTER = 13
 }
 
 @Component({
-  selector: "app-busqueda-colegiados",
-  templateUrl: "./busqueda-colegiados.component.html",
-  styleUrls: ["./busqueda-colegiados.component.scss"],
+  selector: 'app-busqueda-colegiados',
+  templateUrl: './busqueda-colegiados.component.html',
+  styleUrls: ['./busqueda-colegiados.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
