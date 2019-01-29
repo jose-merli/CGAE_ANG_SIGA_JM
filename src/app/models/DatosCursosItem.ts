@@ -3,6 +3,7 @@ import { ComboItem } from "./ComboItem";
 export class DatosCursosItem {
   idCurso: string;
   visibilidad: string;
+  numeroSesiones: number;
   idVisibilidad: string;
   colegio: string;
   codigoCurso: string;

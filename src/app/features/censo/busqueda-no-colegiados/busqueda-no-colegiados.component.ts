@@ -49,7 +49,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   comboSexo: any;
   progressSpinner: boolean = false;
   resultadosPoblaciones: any;
-
+  sortO: number = 1;
   editar: boolean = true;
   textFilter: String = "Seleccionar";
   body: NoColegiadoItem = new NoColegiadoItem();
@@ -448,7 +448,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
             this.noColegiadoSearch = JSON.parse(data["body"]);
             this.datos = this.noColegiadoSearch.noColegiadoItem;
             this.convertirStringADate(this.datos);
-            // this.table.paginator = true;
+            this.table.paginator = true;
           },
           err => {
             console.log(err);
@@ -588,12 +588,17 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   convertirStringADate(datos) {
     datos.forEach(element => {
       if (element.fechaNacimiento == "" || element.fechaNacimiento == null) {
-        element.fechaNacimiento = null;
+        element.fechaNacimientoDate = null;
       } else {
-        var year = element.fechaNacimiento.slice(0, 4);
-        var month = element.fechaNacimiento.slice(5, 7);
-        var day = element.fechaNacimiento.slice(8, 10);
-        element.fechaNacimiento = "";
+        var posIni = element.fechaNacimiento.indexOf("-");
+        var posFin = element.fechaNacimiento.lastIndexOf("-");
+        var year = element.fechaNacimiento.substring(posIni, 0);
+        var day = element.fechaNacimiento.substring(
+          posFin + 1,
+          element.fechaNacimiento.length - 11
+        );
+        var month = element.fechaNacimiento.substring(posIni + 1, posFin);
+        element.fechaNacimientoDate = new Date(year, month, day);
         element.fechaNacimiento = day + "/" + month + "/" + year;
       }
     });
@@ -641,7 +646,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         header: "administracion.parametrosGenerales.literal.nombre"
       },
       {
-        field: "fechaNacimiento",
+        field: "fechaNacimientoDate",
         header: "censo.consultaDatosColegiacion.literal.fechaNac"
       },
       { field: "correo", header: "censo.datosDireccion.literal.correo" },

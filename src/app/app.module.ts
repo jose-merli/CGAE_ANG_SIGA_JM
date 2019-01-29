@@ -13,6 +13,7 @@ import { registerLocaleData } from '@angular/common';
 import { DialogModule } from "primeng/dialog";
 import { StepsModule } from 'primeng/steps';
 
+
 import { AuthGuard } from './_guards/auth.guards';
 import { OldSigaServices } from './_services/oldSiga.service';
 import { SigaServices } from './_services/siga.service';
@@ -40,6 +41,7 @@ import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { TreeModule } from 'primeng/tree';
 //PRIMENG
+
 import { DropdownModule } from "primeng/dropdown";
 import { ButtonModule } from "primeng/button";
 import { DataTableModule } from "primeng/datatable";
@@ -62,6 +64,7 @@ import { EditorModule } from "primeng/editor";
 import { PickListModule } from "primeng/picklist";
 import { FileUploadModule } from "primeng/fileupload";
 import { KeyFilterModule } from 'primeng/keyfilter';
+
 
 // Modulo de censo
 import { SearchColegiadosComponent } from './features/censo/search-colegiados/search-colegiados.component';
@@ -282,12 +285,14 @@ import { FichaInscripcionComponent } from './features/formacion/ficha-inscripcio
 import { SolicitudesModificacionComponent } from './features/censo/solicitudes-modificacion/solicitudes-modificacion.component';
 import { NuevaSolicitudesModificacionComponent } from './features/censo/solicitudes-modificacion/nueva-solicitudes-modificacion/nueva-solicitudes-modificacion.component';
 import { ComunicacionesCensoComponent } from './features/censo/comunicacionesCenso/comunicaciones.component';
+
 import { ExpedientesComponent } from './features/censo/expedientesCenso/expedientes.component';
 import { RegtelComponent } from './features/censo/regtel/regtel.component';
 import { TurnoOficioComponent } from './features/censo/turnoOficioCenso/turnoOficio.component';
 import { BusquedaCensoGeneralComponent } from './features/censo/busqueda-censo-general/busqueda-censo-general.component';
 
 registerLocaleData(es);
+
 
 
 //INFORMES Y COMUNICACIONES
@@ -597,6 +602,7 @@ import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicac
 		DatosGeneralesPlantillaComponent,
 		ConsultasPlantillasComponent,
 		PerfilesFichaComponent,
+
 		AgendaComponent,
 		FichaCalendarioComponent,
 		CargasMasivasComponent,
@@ -630,12 +636,16 @@ import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicac
 		InputTextModule,
 		InputTextareaModule,
 		CheckboxModule,
+
 		RadioButtonModule,
 		ConfirmDialogModule,
 		ValidationModule,
 		GrowlModule,
 		CommonModule,
 		CalendarModule,
+
+		ScheduleModule,
+
 		AutoCompleteModule,
 		TooltipModule,
 		ListboxModule,
@@ -649,9 +659,11 @@ import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicac
 		ProgressSpinnerModule,
 		FileUploadModule,
 		DialogModule,
+
 		KeyFilterModule,
 		StepsModule,
-		ScheduleModule,
+
+
 		SelectButtonModule,
 		ColorPickerModule,
 		EditorModule
@@ -661,6 +673,9 @@ import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicac
 		TranslateService,
 		ImagePipe,
 		DatePipe,
+
+		TrimPipePipe,
+
 		OldSigaServices,
 		SigaServices,
 		cardService,
@@ -668,7 +683,9 @@ import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicac
 		MessageService,
 		AuthenticationService,
 		ConfirmationService,
+
 		TrimPipePipe,
+
 		AuthGuard,
 		{
 			provide: APP_BASE_HREF,
@@ -682,7 +699,8 @@ import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicac
 		CookieService,
 		{ provide: LOCALE_ID, useValue: 'es-ES' }
 	],
+
 	bootstrap: [AppComponent]
 
 })
-export class AppModule { }
+export class AppModule {}

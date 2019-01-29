@@ -105,15 +105,15 @@
         <!-- <button pButton (click)="restEvent()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="tipoAccesoLectura"></button>
         <button pButton (click)="saveEvent()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="validateForm() || tipoAccesoLectura"></button>
        -->
-       <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="modoEdicion || !activacionEditar"></button>
-       <button pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="modoEdicion || !activacionEditar" (click)="guardarInscripcion()"></button>
+       <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="!activacionEditar || desactivarBotones" (click)="restablecer()"></button>
+       <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="!activacionEditar || desactivarBotones" (click)="guardarTODO()"></button>
       </div>
     </div>
   </div>
 
   <!-- TERJETAS PERSONAKES-->
   <div class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFichaPersonal('personales')">
+    <div class="card-header header-ficha" (click)="abreCierraFicha('personales')">
       <div *ngIf="!esFichaActiva('personales')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -203,7 +203,7 @@
     <div *ngIf="esFichaActiva('personales')" class="card-footer ">
       <div class="text-right main-button ">
         <button (click)="isSearch()" [(disabled)]="!isAdministrador || !activacionEditar" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
-        <button (click)="actualizaPersona()" [(disabled)]="!guardarPersona || !activacionEditar" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <!-- <button (click)="actualizaPersona()" [(disabled)]="!guardarPersona || !activacionEditar" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button> -->
       </div>
     </div>
   </div>

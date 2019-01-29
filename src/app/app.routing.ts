@@ -971,6 +971,7 @@ const appRoutes: Routes = [
   {
     path: "comunicacionesCenso",
     component: ComunicacionesCensoComponent,
+
     canActivate: [AuthGuard]
   },
   {
@@ -1078,6 +1079,29 @@ const appRoutes: Routes = [
   {
     path: 'fichaRegistroEnvioMasivo',
     component: FichaRegistroEnvioMasivoComponent,
+    canActivate: [AuthGuard]
+  },
+
+  //Agenda
+
+  {
+    path: "agenda",
+    component: AgendaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "editarCalendario",
+    component: FichaCalendarioComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "editarNotificacion",
+    component: DatosNotificacionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fichaEventos",
+    component: FichaEventosComponent,
     canActivate: [AuthGuard]
   },
 

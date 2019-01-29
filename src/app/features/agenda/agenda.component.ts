@@ -66,6 +66,7 @@ export class AgendaComponent implements OnInit {
     this.events = [];
     sessionStorage.removeItem("eventoEdit");
     sessionStorage.removeItem("modoEdicionEventoByAgenda");
+    sessionStorage.removeItem("sessions");
 
     this.getCalendarios();
   }
@@ -188,6 +189,7 @@ export class AgendaComponent implements OnInit {
     evento.recursos = event.calEvent.recursos;
     evento.lugar = event.calEvent.lugar;
     evento.start = event.calEvent.start;
+    evento.idCurso = event.calEvent.idCurso;
     evento.fechaInicioRepeticion = event.calEvent.fechaInicioRepeticion;
     evento.fechaFinRepeticion = event.calEvent.fechaFinRepeticion;
     evento.tipoDiasRepeticion = event.calEvent.tipoDiasRepeticion;
@@ -197,8 +199,8 @@ export class AgendaComponent implements OnInit {
     );
     evento.tipoAcceso = event.calEvent.tipoAcceso;
 
-    if (event.calEvent.end) {
-      evento.end = event.calEvent.end;
+    if (event.calEvent.realEnd) {
+      evento.end = event.calEvent.realEnd;
     } else {
       evento.end = evento.start;
     }

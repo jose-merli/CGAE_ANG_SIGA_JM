@@ -56,6 +56,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
 
   editar: boolean = true;
 
+  isLetrado: boolean = true;
   //para p-multiselect de temas
   literalMultiselect = "Seleccionar";
   textSelected: String = "{0} etiquetas seleccionadas";
@@ -122,6 +123,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   mySelect: MultiSelect;
 
   ngOnInit() {
+    this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     this.getCombos();
     //Se elimina las variables en la sesion storage para que cuando se busque un nuevo curso
     //Se inicialice todo desde el principio
@@ -411,8 +413,17 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   }
 
   irEditarCurso(selectedDatos) {
+    sessionStorage.removeItem("isCancelado");
     if (selectedDatos.length >= 1 && this.selectMultiple == false) {
+      if (selectedDatos[0].idEstado != "5") {
+        sessionStorage.setItem("isCancelado", "false");
+      } else {
+        sessionStorage.setItem("isCancelado", "true");
+      }
+
       sessionStorage.setItem("modoEdicionCurso", "true");
+
+      sessionStorage.setItem("rutaVolver", "/buscarCursos");
       sessionStorage.setItem("courseCurrent", JSON.stringify(selectedDatos[0]));
       sessionStorage.setItem(
         "filtrosBusquedaCursos",
