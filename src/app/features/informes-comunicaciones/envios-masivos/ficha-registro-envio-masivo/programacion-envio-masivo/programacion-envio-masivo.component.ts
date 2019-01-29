@@ -141,7 +141,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
       fechaProgramada: new Date(this.body.fechaProgramada),
       idEstado: this.body.idEstado,
       idTipoEnvios: this.body.idTipoEnvios,
-      idPlantillasEnvio: this.body.idPlantillasEnvio,
+      idPlantillaEnvios: this.body.idPlantillaEnvios,
       descripcion: this.body.descripcion
 
     }

@@ -5,6 +5,6 @@ export class DialogoComunicacionesItem {
   tipoEnvio: String;
   id: String;
   fechaProgramacion: Date;
-  idPlantillasEnvio: String;
+  idPlantillaEnvios: String;
   constructor() { }
 }

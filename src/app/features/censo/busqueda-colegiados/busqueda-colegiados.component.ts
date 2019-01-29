@@ -815,7 +815,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   getTipoEnvios() {
-    this.sigaServices.post("dialogo_tipoEnvios", this.bodyComunicacion.idPlantillasEnvio).subscribe(
+    this.sigaServices.post("dialogo_tipoEnvios", this.bodyComunicacion.idPlantillaEnvios).subscribe(
       data => {
         this.tiposEnvio = JSON.parse(data['body']);
       },

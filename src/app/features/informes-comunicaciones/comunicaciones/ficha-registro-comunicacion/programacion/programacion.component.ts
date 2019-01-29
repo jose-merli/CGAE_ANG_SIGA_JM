@@ -153,8 +153,8 @@ export class ProgramacionComponent implements OnInit {
       idInstitucion: this.body.idInstitucion,
       fechaProgramada: new Date(this.body.fechaProgramada),
       idEstado: this.body.idEstado,
-      idTipoEnvio: this.body.idTipoEnvio,
-      idPlantillasEnvio: this.body.idPlantillasEnvio,
+      idTipoEnvios: this.body.idTipoEnvios,
+      idPlantillaEnvios: this.body.idPlantillaEnvios,
       descripcion: this.body.descripcion
 
     }

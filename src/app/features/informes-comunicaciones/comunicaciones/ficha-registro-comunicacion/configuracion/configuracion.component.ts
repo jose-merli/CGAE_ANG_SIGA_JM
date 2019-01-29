@@ -119,13 +119,13 @@ export class ConfiguracionComponent implements OnInit {
         let comboPlantillas = JSON.parse(data["body"]);
         this.plantillas = comboPlantillas.combooItems;
         this.plantillas.map(e => {
-          if (this.body.idPlantillasEnvio == e.value) {
+          if (this.body.idPlantillaEnvios == e.value) {
             this.plantilla = e.label;
           }
         })
 
         if (this.editar) {
-          this.body.idPlantillasEnvio = this.body.idPlantillasEnvio.toString();
+          this.body.idPlantillaEnvios = this.body.idPlantillaEnvios.toString();
         }
 
       },

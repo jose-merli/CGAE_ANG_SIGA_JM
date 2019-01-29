@@ -114,7 +114,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
         this.plantillas = comboPlantillas.combooItems;
 
         if (this.editar) {
-          this.body.idPlantillasEnvio = this.body.idPlantillasEnvio.toString();
+          this.body.idPlantillaEnvios = this.body.idPlantillaEnvios.toString();
         }
 
         console.log(this.plantillas)
@@ -255,8 +255,8 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
 
 
   isGuardarDisabled() {
-    if (this.body.idTipoEnvios != '' && this.body.idTipoEnvios != null && this.body.idPlantillasEnvio != ''
-      && this.body.idPlantillasEnvio != null && this.body.descripcion != '' && this.body.descripcion != null) {
+    if (this.body.idTipoEnvios != '' && this.body.idTipoEnvios != null && this.body.idPlantillaEnvios != ''
+      && this.body.idPlantillaEnvios != null && this.body.descripcion != '' && this.body.descripcion != null) {
       return false;
     }
     return true;

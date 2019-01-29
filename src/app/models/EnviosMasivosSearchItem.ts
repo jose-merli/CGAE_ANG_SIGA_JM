@@ -1,6 +1,6 @@
 export class EnviosMasivosSearchItem {
   descripcion: String;
-  idTipoEnvio: String;
+  idTipoEnvios: String;
   fechaCreacion: Date;
   fechaProgramacion: Date;
   idEstado: String;

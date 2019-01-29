@@ -3,9 +3,9 @@ export class ProgComunicacionItem {
   idInstitucion: String;
   idEnvio: String;
   fechaCreacion: Date;
-  idPlantillasEnvio: String;
+  idPlantillaEnvios: String;
   idEstado: String;
-  idTipoEnvio: String;
+  idTipoEnvios: String;
   nombrePlantilla: String;
   fechaProgramada: Date;
   fechaBaja: Date;

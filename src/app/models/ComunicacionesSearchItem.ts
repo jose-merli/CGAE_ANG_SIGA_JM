@@ -5,6 +5,6 @@ export class ComunicacionesSearchItem {
   idTipoEnvios: String;
   idEstado: String;
   fechaProgramacion: Date;
-  idPlantillasEnvio: String;
+  idPlantillaEnvios: String;
   constructor() { }
 }
