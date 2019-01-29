@@ -801,19 +801,17 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
               )
             ) {
               this.curso.idEventoInicioInscripcion = JSON.parse(data.body).id;
-            } else if (
-              JSON.parse(
-                sessionStorage.getItem("isFormacionCalendarByEndInscripcion")
-              )
-            ) {
+              this.saveCourse();
+            }else if(JSON.parse(sessionStorage.getItem("isFormacionCalendarByEndInscripcion"))){
               this.curso.idEventoFinInscripcion = JSON.parse(data.body).id;
+              this.saveCourse();
             }
-            this.saveCourse();
             //Obtenemos las notificaciones del evento del calendario especifico, dentro del id se ha guardado el idEvento creado
             if (JSON.parse(data.body).id != "") {
               let idEvento = JSON.parse(data.body).id;
               this.newEvent.idEvento = idEvento;
               this.getEventNotifications();
+              this.getTrainers();
             }
 
             //Si estamos en un evento de sesión se carga los formadores
