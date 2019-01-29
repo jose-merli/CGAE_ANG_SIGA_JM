@@ -91,11 +91,9 @@ export class ConfiguracionComponent implements OnInit {
 
 
   getTipoEnvios() {
-    debugger;
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
         this.tipoEnvios = data.combooItems;
-        console.log(this.tipoEnvios)
       },
       err => {
         console.log(err);

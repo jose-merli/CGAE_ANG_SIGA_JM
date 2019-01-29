@@ -140,8 +140,7 @@
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
         <button (click)="cancelar()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
-        <button pButton type="button" icon="fas fa-share-square" iconPos="left" label="{{ 'general.boton.reenviar' | translate}}"></button>
-        <button *ngIf="editar" (click)="duplicar()" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
+        <button *ngIf="editar" (click)="duplicar()" pButton type="button" icon="fas fa-share-square" iconPos="left" label="{{ 'general.boton.reenviar' | translate}}"></button>
       </div>
     </div>
   </div>

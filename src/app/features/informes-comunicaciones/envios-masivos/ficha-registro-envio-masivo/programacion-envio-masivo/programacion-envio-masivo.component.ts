@@ -119,8 +119,11 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
       this.body.fechaCreacion = this.body.fechaCreacion ? new Date(this.body.fechaCreacion) : null;
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
-    this.body.fechaProgramada = this.body.fechaProgramada ? new Date(this.body.fechaProgramada) : null;
-    this.body.fechaCreacion = this.body.fechaCreacion ? new Date(this.body.fechaCreacion) : null;
+    // else if (sessionStorage.getItem("crearNuevoEnvio") == null) {
+    //   this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
+    //   this.body.fechaProgramada = this.body.fechaProgramada ? new Date(this.body.fechaProgramada) : null;
+    //   this.body.fechaCreacion = this.body.fechaCreacion;
+    // }
 
   }
 

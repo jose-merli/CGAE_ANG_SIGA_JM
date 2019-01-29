@@ -217,7 +217,10 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
         this.body.idEstado = '4';
         let result = JSON.parse(data["body"]);
         this.body.idEnvio = result.description;
-        this.body.fechaCreacion = result.message;
+
+        if (sessionStorage.getItem("crearNuevoEnvio") != null) {
+          this.body.fechaCreacion = new Date();
+        }
         console.log(this.body.fechaCreacion);
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         sessionStorage.removeItem("crearNuevoEnvio");
