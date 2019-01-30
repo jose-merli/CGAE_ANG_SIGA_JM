@@ -60,13 +60,17 @@ export class EnviosMasivosComponent implements OnInit {
   ngOnInit() {
 
     sessionStorage.removeItem("crearNuevoEnvio")
-
+    if (sessionStorage.getItem("ComunicacionDuplicada") != null) {
+      this.buscar();
+      sessionStorage.removeItem("ComunicacionDuplicada");
+    }
     if (sessionStorage.getItem("filtros") != null) {
       this.bodySearch = JSON.parse(sessionStorage.getItem("filtros"));
       this.bodySearch.fechaCreacion = this.bodySearch.fechaCreacion ? new Date(this.bodySearch.fechaCreacion) : null;
       this.bodySearch.fechaProgramacion = this.bodySearch.fechaProgramacion ? new Date(this.bodySearch.fechaProgramacion) : null;
       this.buscar();
     }
+
 
     this.getTipoEnvios();
     this.getEstadosEnvios();
@@ -181,7 +185,14 @@ export class EnviosMasivosComponent implements OnInit {
     this.progressSpinner = true;
     sessionStorage.removeItem("enviosMasivosSearch");
     sessionStorage.removeItem("filtros");
-    this.getResultados();
+    debugger;
+    if (sessionStorage.getItem("ComunicacionDuplicada") != null) {
+      this.getResultadosComunicacionDuplicada();
+      this.showSuccess('Se ha duplicado el envío correctamente');
+    } else {
+      this.getResultados();
+    }
+
   }
 
   getResultados() {
@@ -203,6 +214,33 @@ export class EnviosMasivosComponent implements OnInit {
         },
         () => { }
       );
+  }
+  getResultadosComunicacionDuplicada() {
+    {
+      // let body: EnviosMasivosSearchItem;
+      // body.fechaCreacion = new Date();
+      this.bodySearch = new EnviosMasivosSearchItem();
+      this.bodySearch.fechaCreacion = new Date();
+      debugger;
+      this.sigaServices
+        .postPaginado("enviosMasivos_search", "?numPagina=1", this.bodySearch)
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.searchEnviosMasivos = JSON.parse(data["body"]);
+            this.datos = this.searchEnviosMasivos.enviosMasivosItem;
+            this.datos.forEach(element => {
+              element.fechaProgramada = new Date(element.fechaProgramada);
+              element.fechaCreacion = new Date(element.fechaCreacion);
+            });
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => { }
+        );
+    }
   }
 
   isButtonDisabled() {
