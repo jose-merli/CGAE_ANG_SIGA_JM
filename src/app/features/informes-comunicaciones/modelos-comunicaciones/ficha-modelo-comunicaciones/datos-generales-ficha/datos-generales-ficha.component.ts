@@ -24,6 +24,8 @@ export class DatosGeneralesFichaComponent implements OnInit {
   bodyInicial: DatosGeneralesFicha = new DatosGeneralesFicha;
   body: DatosGeneralesFicha = new DatosGeneralesFicha;
   msgs: Message[];
+  preseleccionar: any = [];
+  visible: any = [];
 
   fichasPosibles = [
     {
@@ -44,9 +46,22 @@ export class DatosGeneralesFichaComponent implements OnInit {
 
   ngOnInit() {
 
+
+    this.preseleccionar = [
+      { label: '', value: '' },
+      { label: 'Sí', value: 'SI' },
+      { label: 'No', value: 'NO' }
+    ];
+
+    this.visible = [
+      { label: '', value: '' },
+      { label: 'Sí', value: 'SI' },
+      { label: 'No', value: 'NO' }
+    ];
+
+
     this.getClasesComunicaciones();
     this.getComboColegios();
-    this.body.preseleccionar = 'SI';
     this.getDatos();
 
   }
@@ -103,7 +118,6 @@ export class DatosGeneralesFichaComponent implements OnInit {
 
   getDatos() {
     if (sessionStorage.getItem("modelosSearch") != null) {
-      this.body.preseleccionar = 'SI';
       this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
       this.bodyInicial = JSON.parse(sessionStorage.getItem("modelosSearch"));
 

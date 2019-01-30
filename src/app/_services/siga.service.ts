@@ -601,6 +601,7 @@ export class SigaServices {
     modelos_detalle_plantillasHist: 'modelos/detalle/plantillasEnvioHist',
     modelos_detalle_borrarPlantilla: 'modelos/detalle/borrarPlantillaEnvio',
     modelos_detalle_guardarPlantilla: 'modelos/detalle/guardarPlantillaEnvio',
+    modelos_colegio: 'modelos/colegiosModelo',
 
     plantillasEnvio_consultas: 'plantillasEnvio/consultasPlantillas',
     plantillasEnvio_borrar: 'plantillasEnvio/borrarPlantilla',

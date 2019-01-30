@@ -26,15 +26,15 @@
         </div>
         <div class="form-group col-lg-2 col-md-2">
           <label class="d-block">Preseleccionado</label>
-          <p-radioButton (onClick)="onChangeRadio('s')" class="mr-2" name="groupname" value="SI" [(ngModel)]="bodySearch.preseleccionar"
+          <p-dropdown [options]="preseleccionar" [(ngModel)]="bodySearch.preseleccionar" class="select-form"></p-dropdown>
+          <!-- <p-radioButton (onClick)="onChangeRadio('s')" class="mr-2" name="groupname" value="SI" [(ngModel)]="bodySearch.preseleccionar"
             label="Sí"></p-radioButton>
-          <p-radioButton (onClick)="onChangeRadio('n')" name="groupname" value="NO" [(ngModel)]="bodySearch.preseleccionar" label="No"></p-radioButton>
+          <p-radioButton (onClick)="onChangeRadio('n')" name="groupname" value="NO" [(ngModel)]="bodySearch.preseleccionar" label="No"></p-radioButton> -->
         </div>
-        <!-- <div class="form-group col-lg-2 col-md-2">
+        <div class="form-group col-lg-2 col-md-2">
           <label class="d-block">Visible</label>
-          <p-radioButton class="mr-2" name="groupname" value="true" [(ngModel)]="body.visible" label="Sí"></p-radioButton>
-          <p-radioButton name="groupname" value="false" [(ngModel)]="body.visible" label="No"></p-radioButton>
-        </div> -->
+          <p-dropdown [options]="visible" [(ngModel)]="bodySearch.visible" class="select-form"></p-dropdown>
+        </div>
 
       </div>
     </div>
@@ -119,7 +119,7 @@
          " pButton type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.message.rehabilitar' | translate}}"></button>
           <button *ngIf="!showHistorico" (click)="getHistorico( 'visible')" pButton type="button" icon="fa fa-history
          " iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
-          <button *ngIf="selectedDatos && selectedDatos !=''" (click)="onDuplicar()" pButton type="button" icon="fa
+          <button *ngIf="selectedDatos && selectedDatos !=''" (click)="onDuplicar(selectedDatos)" pButton type="button" icon="fa
           fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
         </div>
       </p-footer>

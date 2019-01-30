@@ -145,7 +145,7 @@ export class ConsultasComponent implements OnInit {
           console.log(err);
         }),
 
-      this.sigaServices.get("consultas_claseComunicaciones").subscribe(
+      this.sigaServices.post("consultas_claseComunicaciones", this.bodySearch.idModulo).subscribe(
         data => {
           this.clasesComunicaciones = data.combooItems;
         },

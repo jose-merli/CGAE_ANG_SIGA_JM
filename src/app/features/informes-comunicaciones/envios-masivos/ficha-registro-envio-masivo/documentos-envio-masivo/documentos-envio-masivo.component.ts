@@ -271,9 +271,9 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
       },
       err => {
         if (err.error.error.code == 400) {
-          if(err.error.error.description != null){
+          if (err.error.error.description != null) {
             this.showFail(err.error.error.description);
-          }else{
+          } else {
             this.showFail('Formato no permitido o tamaño maximo superado');
           }
         } else {

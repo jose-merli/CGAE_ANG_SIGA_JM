@@ -36,6 +36,8 @@ export class ModelosComunicacionesComponent implements OnInit {
   clasesComunicaciones: any[];
   progressSpinner: boolean = false;
   institucionActual: string;
+  preseleccionar: any = [];
+  visible: any = [];
 
 
   @ViewChild('table') table: DataTable;
@@ -50,7 +52,7 @@ export class ModelosComunicacionesComponent implements OnInit {
 
     this.getInstitucion();
 
-    this.bodySearch.preseleccionar = null;
+
 
     sessionStorage.removeItem("crearNuevoModelo");
 
@@ -64,6 +66,19 @@ export class ModelosComunicacionesComponent implements OnInit {
     this.getComboColegios();
     this.getComboClases();
     // this.body.visible = true;
+
+    this.preseleccionar = [
+      { label: '', value: '' },
+      { label: 'Sí', value: 'SI' },
+      { label: 'No', value: 'NO' }
+    ]
+
+    this.visible = [
+      { label: '', value: '' },
+      { label: 'Sí', value: 'SI' },
+      { label: 'No', value: 'NO' }
+    ]
+
 
 
 
@@ -119,29 +134,22 @@ export class ModelosComunicacionesComponent implements OnInit {
 
 
   getComboColegios() {
-    this.sigaServices.get("busquedaPer_colegio").subscribe(
+    this.sigaServices.get("modelos_colegio").subscribe(
       n => {
 
         this.colegios = n.combooItems;
-
-
         this.colegios.unshift({ label: '', value: '' });
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-   para poder filtrar el dato con o sin estos caracteres*/
-        this.colegios.map(e => {
-          let accents =
-            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-          let accentsOut =
-            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
+
+        for (let e of this.colegios) {
+          if (e.value == this.institucionActual) {
+            this.bodySearch.idInstitucion = e.value;
+          } else if (e.value == '2000') {
+            e.label = 'POR DEFECTO';
           }
-        });
+
+
+        }
+
       },
       err => {
         console.log(err);
@@ -265,7 +273,7 @@ export class ModelosComunicacionesComponent implements OnInit {
     });
   }
 
-  onDuplicar() {
+  onDuplicar(dato) {
     let modelo = {
       idModeloComunicacion: this.selectedDatos[0].idModeloComunicacion,
       idInstitucion: this.selectedDatos[0].idInstitucion
@@ -274,6 +282,9 @@ export class ModelosComunicacionesComponent implements OnInit {
     this.sigaServices.post("modelos_duplicar", modelo).subscribe(
       data => {
         this.showSuccess('Se ha duplicado correctamente');
+        this.router.navigate(['/fichaModeloComunicaciones']);
+        sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
+        sessionStorage.setItem("filtrosModelos", JSON.stringify(this.bodySearch));
       },
       err => {
         this.showFail('Error al duplicar el modelo');
@@ -366,14 +377,6 @@ export class ModelosComunicacionesComponent implements OnInit {
     this.bodySearch = new ModelosComunicacionesItem();
   }
 
-  onChangeRadio(key) {
-    debugger;
-    if (key == 's' && this.bodySearch.preseleccionar == 'SI') {
-      this.bodySearch.preseleccionar = null;
-    } else if (key == 'n' && this.bodySearch.preseleccionar == 'NO') {
-      this.bodySearch.preseleccionar = null;
-    }
-  }
 
 
 }
