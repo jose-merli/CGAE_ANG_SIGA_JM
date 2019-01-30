@@ -9,7 +9,7 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-center mb-1">
+          <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha">Destinatarios</label>
           </div>
           <div class="d-flex justify-content-between">
@@ -42,7 +42,7 @@
               </div>
             </div>
             <div class="col-lg-11 col-md-10">
-              <div class="d-flex justify-content-center mb-1">
+              <div class="d-flex justify-content-start mb-1">
                 <label class="mr-auto title-ficha">Destinatario</label>
               </div>
               <div class="d-flex justify-content-between">
@@ -74,8 +74,7 @@
               <div class="form-row d-flex align-items-center">
                 <div class="form-group col-lg-4 col-md-4">
                   <label>Identificación (*)</label>
-                  <input type="text" class="form-control" [(ngModel)]="destinatario.nifcif" [attr.maxlength]="20"
-                    [disabled]="true" pInputText>
+                  <input type="text" class="form-control" [(ngModel)]="destinatario.nifcif" [attr.maxlength]="20" [disabled]="true" pInputText>
                 </div>
                 <div class="form-group col-lg-4 col-md-4">
                   <i (click)="navigateTo() " class="fas fa-redo mr-4"></i>
@@ -84,18 +83,15 @@
               <div class="form-row">
                 <div class="form-group col-lg-4 col-md-4">
                   <label>Nombre</label>
-                  <input [(ngModel)]="destinatario.nombre" type="text" class="form-control" [disabled]="true"
-                    pInputText>
+                  <input [(ngModel)]="destinatario.nombre" type="text" class="form-control" [disabled]="true" pInputText>
                 </div>
                 <div class="form-group col-lg-34 col-md-4">
                   <label>Primer apellido</label>
-                  <input [(ngModel)]="destinatario.apellidos1" type="text" class="form-control" [disabled]="true"
-                    pInputText>
+                  <input [(ngModel)]="destinatario.apellidos1" type="text" class="form-control" [disabled]="true" pInputText>
                 </div>
                 <div class="form-group col-lg-4 col-md-4">
                   <label>Segundo apellido</label>
-                  <input [(ngModel)]="destinatario.apellidos2" type="text " class="form-control" [disabled]="true"
-                    pInputText>
+                  <input [(ngModel)]="destinatario.apellidos2" type="text " class="form-control" [disabled]="true" pInputText>
                 </div>
               </div>
             </div>

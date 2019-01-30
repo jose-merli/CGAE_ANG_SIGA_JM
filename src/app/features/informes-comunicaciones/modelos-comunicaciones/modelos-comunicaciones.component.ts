@@ -51,7 +51,10 @@ export class ModelosComunicacionesComponent implements OnInit {
 
 
     this.getInstitucion();
+    this.getComboColegios();
     this.bodySearch.visible = 1;
+
+
 
 
 
@@ -64,7 +67,7 @@ export class ModelosComunicacionesComponent implements OnInit {
 
 
     this.selectedItem = 10;
-    this.getComboColegios();
+
     this.getComboClases();
     // this.body.visible = true;
 
@@ -138,9 +141,6 @@ export class ModelosComunicacionesComponent implements OnInit {
         this.colegios = n.combooItems;
         this.colegios.unshift({ label: '', value: '' });
         for (let e of this.colegios) {
-          if (e.value == this.institucionActual) {
-            this.bodySearch.idInstitucion = e.value;
-          }
           if (e.value == '2000') {
             e.label = 'POR DEFECTO';
           }
@@ -265,6 +265,7 @@ export class ModelosComunicacionesComponent implements OnInit {
   getInstitucion() {
     this.sigaServices.get('institucionActual').subscribe((n) => {
       this.institucionActual = n.value;
+      this.bodySearch.idInstitucion = this.institucionActual;
     });
   }
 

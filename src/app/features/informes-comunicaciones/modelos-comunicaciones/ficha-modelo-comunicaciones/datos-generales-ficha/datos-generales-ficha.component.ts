@@ -64,6 +64,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
     ];
 
     this.getInstitucion()
+
     this.getClasesComunicaciones();
     this.getComboColegios();
     this.getDatos();
@@ -147,6 +148,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   getInstitucion() {
     this.sigaServices.get('institucionActual').subscribe((n) => {
       this.institucionActual = n.value;
+      this.body.idInstitucion = this.institucionActual;
     });
   }
 
@@ -157,12 +159,10 @@ export class DatosGeneralesFichaComponent implements OnInit {
         this.colegios = n.combooItems;
         this.colegios.unshift({ label: '', value: '' });
         for (let e of this.colegios) {
-          if (e.value == this.institucionActual) {
-            this.body.idInstitucion = e.value;
-          }
           if (e.value == '2000') {
             e.label = 'POR DEFECTO';
           }
+
         }
 
       },
