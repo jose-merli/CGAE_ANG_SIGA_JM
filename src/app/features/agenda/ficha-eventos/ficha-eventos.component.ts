@@ -762,7 +762,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   saveEvent() {
     let url = "";
 
-    if(this.newEvent.idEstadoEvento == null){
+    if (this.newEvent.idEstadoEvento == null) {
       this.newEvent.idEstadoEvento = this.valorEstadoEventoPlanificado;
     }
 
@@ -785,21 +785,23 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         if (JSON.parse(data.body).error.description != null) {
           this.showUnSuccessBBDD();
         } else {
+          this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
+
           if (url == "fichaEventos_updateEventCalendar") {
-            this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
             this.progressSpinner = false;
-            this.showSuccess();
           } else {
-            // this.progressSpinner = false;
-            // this.showSuccess();
             this.modoEdicionEvento = true;
             this.modoEdicionEventoByAgenda = true;
             this.createEvent = true;
             sessionStorage.setItem("evento", JSON.stringify(this.newEvent));
             this.curso = JSON.parse(sessionStorage.getItem("curso"));
-            if(JSON.parse(sessionStorage.getItem("isFormacionCalendarByStartInscripcion"))) {
+            if (
+              JSON.parse(
+                sessionStorage.getItem("isFormacionCalendarByStartInscripcion")
+              )
+            ) {
               this.curso.idEventoInicioInscripcion = JSON.parse(data.body).id;
-            this.saveCourse();
+              this.saveCourse();
             }else if(JSON.parse(sessionStorage.getItem("isFormacionCalendarByEndInscripcion"))){
               this.curso.idEventoFinInscripcion = JSON.parse(data.body).id;
               this.saveCourse();
@@ -810,7 +812,15 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
               this.newEvent.idEvento = idEvento;
               this.getEventNotifications();
             }
+
+            //Si estamos en un evento de sesión se carga los formadores
+            if (this.isFormacionCalendar) {
+              this.getTrainers();
+              this.getEntryListCourse();
+            }
           }
+          this.showSuccess();
+
         }
       },
       err => {
@@ -822,8 +832,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       }
     );
   }
-  saveCourse(){
-    
+  saveCourse() {
     this.sigaServices.post("fichaCursos_updateCourse", this.curso).subscribe(
       data => {
         this.showSuccess();
@@ -837,6 +846,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       }
     );
   }
+
   restEvent() {
     this.newEvent = JSON.parse(JSON.stringify(this.initEvent));
     this.newEvent.start = new Date(this.newEvent.start);
@@ -921,8 +931,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.sigaServices.post("fichaEventos_deleteEvent", eventoDTO).subscribe(
           data => {
             this.progressSpinner = false;
-            this.backTo();
             this.showSuccess();
+            this.backTo();
           },
           err => {
             this.progressSpinner = false;
@@ -1055,8 +1065,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         } else {
           this.newEvent = new EventoItem();
         }
-        //Obligamos a que sea el tipo de calendario formacion
-        this.newEvent.idTipoCalendario = this.valorTipoFormacion;
 
         if (
           sessionStorage.getItem("isFormacionCalendarByStartInscripcion") ==
@@ -1065,6 +1073,20 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.newEvent.start = new Date(curso.fechaInscripcionDesdeDate);
           this.newEvent.end = new Date(curso.fechaInscripcionDesdeDate);
           this.newEvent.idTipoEvento = this.valorTipoEventoInicioInscripcion;
+
+          //Indicamos que el limite que puede durar el evento
+          this.invalidDateMin = new Date(
+            JSON.parse(JSON.stringify(this.newEvent.start))
+          );
+          this.invalidDateMax = new Date(
+            JSON.parse(JSON.stringify(this.newEvent.start))
+          );
+
+          this.invalidDateMin.setHours(this.newEvent.start.getHours());
+          this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
+          this.invalidDateMax.setHours(this.newEvent.start.getHours());
+          this.invalidDateMax.setMinutes(59);
+
         } else if (
           sessionStorage.getItem("isFormacionCalendarByEndInscripcion") ==
           "true"
@@ -1072,15 +1094,31 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.newEvent.start = new Date(curso.fechaInscripcionHastaDate);
           this.newEvent.end = new Date(curso.fechaInscripcionHastaDate);
           this.newEvent.idTipoEvento = this.valorTipoEventoFinInscripcion;
+
+          //Indicamos que el limite que puede durar el evento
+          this.invalidDateMin = new Date(
+            JSON.parse(JSON.stringify(this.newEvent.start))
+          );
+          this.invalidDateMax = new Date(
+            JSON.parse(JSON.stringify(this.newEvent.start))
+          );
+
+          this.invalidDateMin.setHours(this.newEvent.start.getHours());
+          this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
+          this.invalidDateMax.setHours(this.newEvent.start.getHours());
+          this.invalidDateMax.setMinutes(59);
         }
 
         //Carga los formadores que pertenecen al curso que se va a crear el evento
-        this.getTrainers();
+        if (this.isFormacionCalendar) {
+          this.getTrainers();
+             //Obligamos a que sea el tipo de calendario formacion
+        this.newEvent.idTipoCalendario = this.valorTipoFormacion;
+        }
 
         //Cargamos los tipo de calendarios que existen
         this.getComboCalendar();
         this.getEventNotifications();
-
 
         //Inficamos que estamos en modo edicion
         this.modoEdicionEvento = true;
@@ -1753,16 +1791,16 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
     if (this.results.length == 0) {
       let personaEvento: DatosPersonaEventoItem = new DatosPersonaEventoItem();
-      personaEvento.idEvento = this.initEvent.idEvento;
+      personaEvento.idEvento = this.newEvent.idEvento;
 
       this.listaPersonaEvento.push(personaEvento);
     } else {
       this.results.forEach(element => {
         let personaEvento: DatosPersonaEventoItem = new DatosPersonaEventoItem();
 
-        personaEvento.idEvento = this.initEvent.idEvento;
+        personaEvento.idEvento = this.newEvent.idEvento;
         personaEvento.idPersona = element.idPersona;
-        personaEvento.idInstitucion = this.initEvent.idInstitucion;
+        personaEvento.idInstitucion = this.newEvent.idInstitucion;
 
         this.listaPersonaEvento.push(personaEvento);
       });
