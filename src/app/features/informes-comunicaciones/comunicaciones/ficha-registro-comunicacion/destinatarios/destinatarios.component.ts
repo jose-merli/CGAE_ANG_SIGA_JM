@@ -15,7 +15,7 @@ export class DestinatariosComponent implements OnInit {
   body: DestinatariosEnviosMasivosItem = new DestinatariosEnviosMasivosItem();
   grupos: any[];
   openDestinatario: boolean;
-  destinatarios: any[];
+  destinatarios: any = [];
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -55,7 +55,10 @@ export class DestinatariosComponent implements OnInit {
   }
 
   abreCierraFicha() {
-    this.openFicha = !this.openFicha;
+    if (this.destinatarios.length > 0) {
+      this.openFicha = !this.openFicha;
+    }
+
   }
 
   esFichaActiva(key) {
@@ -121,7 +124,7 @@ export class DestinatariosComponent implements OnInit {
           console.log(err);
         },
 
-    );
+      );
 
   }
 

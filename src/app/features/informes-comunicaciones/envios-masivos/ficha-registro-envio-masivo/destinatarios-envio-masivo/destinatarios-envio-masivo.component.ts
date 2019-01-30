@@ -112,7 +112,7 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
           console.log(err);
         },
 
-    );
+      );
   }
 
 
@@ -195,7 +195,7 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
     this.getSeleccionadas();
   }
 
-
-
-
+  restablecer() {
+    this.getDatos();
+  }
 }

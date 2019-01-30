@@ -3,6 +3,7 @@ import { ConfigComunicacionItem } from '../../../../../models/ConfiguracionComun
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-configuracion',
@@ -55,7 +56,8 @@ export class ConfiguracionComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -179,9 +181,10 @@ export class ConfiguracionComponent implements OnInit {
 
     this.arrayClases.push(this.body.idClaseComunicacion);
 
-    this.sigaServices.post("dialogo_modelosComunicacion", this.arrayClases).subscribe(
+    this.sigaServices.post("comunicaciones_modelosComunicacion", this.arrayClases).subscribe(
       data => {
-        this.modelosComunicacion = JSON.parse(data['body']).modeloItems;
+        let result = JSON.parse(data['body']);
+        this.modelosComunicacion = result.combooItems;
       },
       err => {
         console.log(err);
@@ -252,7 +255,9 @@ export class ConfiguracionComponent implements OnInit {
   duplicar() {
     this.sigaServices.post("enviosMasivos_duplicar", this.body).subscribe(
       data => {
-        this.showSuccess('Se ha duplicado el envío correctamente');
+        //this.showSuccess('Se ha duplicado el envío correctamente');
+        sessionStorage.setItem("ComunicacionDuplicada", "true");
+        this.router.navigate(["enviosMasivos"]);
       },
       err => {
         this.showFail('Error al duplicar el envío');
