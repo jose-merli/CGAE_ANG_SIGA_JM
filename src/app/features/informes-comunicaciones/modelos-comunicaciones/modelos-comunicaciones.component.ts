@@ -9,8 +9,6 @@ export enum KEY_CODE {
   ENTER = 13
 }
 
-
-
 @Component({
   selector: 'app-modelos-comunicaciones',
   templateUrl: './modelos-comunicaciones.component.html',
@@ -37,6 +35,7 @@ export class ModelosComunicacionesComponent implements OnInit {
   msgs: Message[];
   clasesComunicaciones: any[];
   progressSpinner: boolean = false;
+  institucionActual: string;
 
 
   @ViewChild('table') table: DataTable;
@@ -48,7 +47,10 @@ export class ModelosComunicacionesComponent implements OnInit {
 
   ngOnInit() {
 
-    this.bodySearch.preseleccionar = 'SI';
+
+    this.getInstitucion();
+
+    this.bodySearch.preseleccionar = null;
 
     sessionStorage.removeItem("crearNuevoModelo");
 
@@ -119,7 +121,27 @@ export class ModelosComunicacionesComponent implements OnInit {
   getComboColegios() {
     this.sigaServices.get("busquedaPer_colegio").subscribe(
       n => {
+
         this.colegios = n.combooItems;
+
+
+        this.colegios.unshift({ label: '', value: '' });
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+   para poder filtrar el dato con o sin estos caracteres*/
+        this.colegios.map(e => {
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
       },
       err => {
         console.log(err);
@@ -237,6 +259,12 @@ export class ModelosComunicacionesComponent implements OnInit {
     this.getResultados();
   }
 
+  getInstitucion() {
+    this.sigaServices.get('institucionActual').subscribe((n) => {
+      this.institucionActual = n.value;
+    });
+  }
+
   onDuplicar() {
     let modelo = {
       idModeloComunicacion: this.selectedDatos[0].idModeloComunicacion,
@@ -334,9 +362,18 @@ export class ModelosComunicacionesComponent implements OnInit {
     sessionStorage.setItem("crearNuevoModelo", JSON.stringify("true"));
   }
 
+  limpiar() {
+    this.bodySearch = new ModelosComunicacionesItem();
+  }
 
-
-
+  onChangeRadio(key) {
+    debugger;
+    if (key == 's' && this.bodySearch.preseleccionar == 'SI') {
+      this.bodySearch.preseleccionar = null;
+    } else if (key == 'n' && this.bodySearch.preseleccionar == 'NO') {
+      this.bodySearch.preseleccionar = null;
+    }
+  }
 
 
 }

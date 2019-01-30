@@ -349,4 +349,11 @@ export class ConsultasComponent implements OnInit {
     return true;
   }
 
+  limpiar() {
+    this.bodySearch = new ConsultasSearchItem();
+    this.bodySearch.generica = 'S'
+  }
+
+
+
 }

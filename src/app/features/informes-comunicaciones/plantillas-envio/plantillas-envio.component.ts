@@ -320,5 +320,7 @@ función para que no cargue primero las etiquetas de los idiomas*/
     );
   }
 
-
+  limpiar() {
+    this.bodySearch = new PlantillaEnvioSearchItem();
+  }
 }

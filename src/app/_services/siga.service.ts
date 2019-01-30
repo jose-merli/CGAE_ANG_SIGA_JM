@@ -596,7 +596,7 @@ export class SigaServices {
     modelos_detalle_perfilesModelo: 'modelos/detalle/perfilesModelo',
     modelos_detalle_guardarPerfiles: 'modelos/detalle/guardarPerfiles',
     modelos_detalle_informes: 'modelos/detalle/informes',
-    modelo_detalle_informes: 'modelos/detalle/informes',
+    modelos_detalle_informes_borrar: 'modelos/detalle/informes/borrar',
     modelos_detalle_plantillasEnvio: 'modelos/detalle/plantillasEnvio',
     modelos_detalle_plantillasHist: 'modelos/detalle/plantillasEnvioHist',
     modelos_detalle_borrarPlantilla: 'modelos/detalle/borrarPlantillaEnvio',

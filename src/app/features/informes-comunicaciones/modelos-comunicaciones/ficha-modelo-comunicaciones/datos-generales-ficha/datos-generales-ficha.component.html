@@ -50,7 +50,7 @@
           <div class="form-row d-flex align-items-end">
             <div class="form-group col-lg-6 col-md-6">
               <label>Colegio *</label>
-              <p-dropdown [options]="colegios" [(ngModel)]="body.idInstitucion" class="select-form"></p-dropdown>
+              <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [options]="colegios" [(ngModel)]="body.idInstitucion" class="select-form"></p-dropdown>
             </div>
             <div class="form-group col-lg-1 col-md-1">
               <label>Orden *</label>

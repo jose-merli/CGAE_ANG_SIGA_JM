@@ -208,6 +208,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   onSelectConsulta(dato) {
+    console.log(dato)
     if (!this.selectMultiple) {
       this.selectedDatos = [];
     } else if (this.selectMultiple && dato[0].idObjetivo != '4') {
@@ -377,7 +378,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       .subscribe(
         data => {
           this.datos = JSON.parse(data["body"]).consultaItem;
-
+          debugger;
           if (this.datos.length <= 0) {
             this.datos = [
               { idConsulta: '', finalidad: '', objetivo: 'Destinatario', idObjetivo: '1' },
@@ -385,7 +386,30 @@ export class PlantillaDocumentoComponent implements OnInit {
               { idConsulta: '', finalidad: '', objetivo: 'Multidocumento', idObjetivo: '2' },
               { idConsulta: '', finalidad: '', objetivo: 'Datos', idObjetivo: '4' },
             ]
-          };
+          } else {
+            let multidocumento = this.datos.map(e => {
+              if (e.idObjetivo == '2') {
+                return true;
+              } else {
+                return false;
+              }
+            })
+
+            let datos = this.datos.map(e => {
+              if (e.idObjetivo == '4') {
+                return true;
+              } else {
+                return false;
+              }
+            })
+            if (multidocumento.indexOf(true) == -1) {
+              this.datos.push({ idConsulta: '', finalidad: '', objetivo: 'Multidocumento', idObjetivo: '2' })
+            }
+            if (datos.indexOf(true) == -1) {
+              this.datos.push({ idConsulta: '', finalidad: '', objetivo: 'Datos', idObjetivo: '4' })
+            }
+          }
+
           this.datos.map(e => {
             return e.idConsultaAnterior = e.idConsulta;
           });

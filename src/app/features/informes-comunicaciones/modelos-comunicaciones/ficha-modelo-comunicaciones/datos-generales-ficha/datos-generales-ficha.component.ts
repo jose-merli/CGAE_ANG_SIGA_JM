@@ -43,6 +43,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices) { }
 
   ngOnInit() {
+
     this.getClasesComunicaciones();
     this.getComboColegios();
     this.body.preseleccionar = 'SI';
@@ -110,7 +111,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   }
 
   guardar() {
-    
+
     this.sigaServices.post("modelos_detalle_datosGenerales", this.body).subscribe(
       data => {
         this.showSuccess("Datos generales guardados correctamente");
@@ -129,6 +130,24 @@ export class DatosGeneralesFichaComponent implements OnInit {
     this.sigaServices.get("busquedaPer_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
+        this.colegios.unshift({ label: '', value: '' });
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+   para poder filtrar el dato con o sin estos caracteres*/
+        this.colegios.map(e => {
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
+
       },
       err => {
         console.log(err);
