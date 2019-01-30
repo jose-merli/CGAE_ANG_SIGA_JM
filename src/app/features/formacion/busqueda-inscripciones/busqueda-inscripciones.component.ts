@@ -151,8 +151,14 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
         sessionStorage.getItem("datosTabla") != null &&
         sessionStorage.getItem("datosTabla") != undefined
       ) {
-        this.datos = JSON.parse(sessionStorage.getItem("datosTabla"));
+        // this.datos = JSON.parse(sessionStorage.getItem("datosTabla"));
         this.buscar = true;
+        this.body = JSON.parse(
+          sessionStorage.getItem("filtrosBusquedaInscripciones")
+        );
+        this.isBuscar();
+
+        sessionStorage.removeItem("filtrosBusquedaInscripciones");
         sessionStorage.removeItem("datosTabla");
       } else {
         this.isBuscar();
@@ -166,8 +172,14 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       sessionStorage.getItem("datosTabla") != null &&
       sessionStorage.getItem("datosTabla") != undefined
     ) {
-      this.datos = JSON.parse(sessionStorage.getItem("datosTabla"));
+      // this.datos = JSON.parse(sessionStorage.getItem("datosTabla"));
       this.buscar = true;
+      this.body = JSON.parse(
+        sessionStorage.getItem("filtrosBusquedaInscripciones")
+      );
+      this.isBuscar();
+
+      sessionStorage.removeItem("filtrosBusquedaInscripciones");
       sessionStorage.removeItem("datosTabla");
     }
 
@@ -855,6 +867,10 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       console.log(selectedDatos);
       sessionStorage.setItem("pantallaListaInscripciones", "true");
       sessionStorage.setItem("datosTabla", JSON.stringify(this.datos));
+      sessionStorage.setItem(
+        "filtrosBusquedaInscripciones",
+        JSON.stringify(this.body)
+      );
       this.router.navigate(["/fichaInscripcion"]);
     } else {
       this.numSelected = this.selectedDatos.length;

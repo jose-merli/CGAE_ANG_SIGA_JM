@@ -811,12 +811,12 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
               let idEvento = JSON.parse(data.body).id;
               this.newEvent.idEvento = idEvento;
               this.getEventNotifications();
-              this.getTrainers();
             }
 
             //Si estamos en un evento de sesión se carga los formadores
             if (this.isFormacionCalendar) {
               this.getTrainers();
+              this.getEntryListCourse();
             }
           }
           this.showSuccess();
@@ -931,8 +931,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.sigaServices.post("fichaEventos_deleteEvent", eventoDTO).subscribe(
           data => {
             this.progressSpinner = false;
-            this.backTo();
             this.showSuccess();
+            this.backTo();
           },
           err => {
             this.progressSpinner = false;
