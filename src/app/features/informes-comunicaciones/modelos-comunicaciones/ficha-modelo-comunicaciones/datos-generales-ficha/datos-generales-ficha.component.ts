@@ -1,19 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
 import { TranslateService } from "./../../../../../commons/translate/translation.service";
 import { SigaServices } from "./../../../../../_services/siga.service";
-import { DatosGeneralesFicha } from '../../../../../models/DatosGeneralesFichaItem';
+import { DatosGeneralesFicha } from "../../../../../models/DatosGeneralesFichaItem";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 
 @Component({
-  selector: 'app-datos-generales-ficha',
-  templateUrl: './datos-generales-ficha.component.html',
-  styleUrls: ['./datos-generales-ficha.component.scss']
+  selector: "app-datos-generales-ficha",
+  templateUrl: "./datos-generales-ficha.component.html",
+  styleUrls: ["./datos-generales-ficha.component.scss"]
 })
 export class DatosGeneralesFichaComponent implements OnInit {
-
-  openFicha: boolean = false;
+  openFicha: boolean = true;
   activacionEditar: boolean = true;
   derechoAcceso: any;
   permisos: any;
@@ -21,8 +20,8 @@ export class DatosGeneralesFichaComponent implements OnInit {
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   clasesComunicaciones: any[];
   colegios: any[];
-  bodyInicial: DatosGeneralesFicha = new DatosGeneralesFicha;
-  body: DatosGeneralesFicha = new DatosGeneralesFicha;
+  bodyInicial: DatosGeneralesFicha = new DatosGeneralesFicha();
+  body: DatosGeneralesFicha = new DatosGeneralesFicha();
   msgs: Message[];
   preseleccionar: any = [];
   visible: any = [];
@@ -30,7 +29,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   fichasPosibles = [
     {
       key: "generales",
-      activa: false
+      activa: true
     },
     {
       key: "informes",
@@ -42,7 +41,11 @@ export class DatosGeneralesFichaComponent implements OnInit {
     }
   ];
 
-  constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices) { }
+  constructor(
+    private router: Router,
+    private translateService: TranslateService,
+    private sigaServices: SigaServices
+  ) { }
 
   ngOnInit() {
 
@@ -63,7 +66,6 @@ export class DatosGeneralesFichaComponent implements OnInit {
     this.getClasesComunicaciones();
     this.getComboColegios();
     this.getDatos();
-
   }
 
   abreCierraFicha() {
@@ -88,7 +90,6 @@ export class DatosGeneralesFichaComponent implements OnInit {
     }
     return {};
   }
-
 
   checkAcceso() {
     this.controlAcceso = new ControlAccesoDto();
@@ -120,7 +121,6 @@ export class DatosGeneralesFichaComponent implements OnInit {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
       this.bodyInicial = JSON.parse(sessionStorage.getItem("modelosSearch"));
-
     }
   }
 
@@ -202,5 +202,4 @@ export class DatosGeneralesFichaComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-
 }

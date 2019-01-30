@@ -375,6 +375,7 @@ export class ModelosComunicacionesComponent implements OnInit {
 
   limpiar() {
     this.bodySearch = new ModelosComunicacionesItem();
+    this.datos = [];
   }
 
 

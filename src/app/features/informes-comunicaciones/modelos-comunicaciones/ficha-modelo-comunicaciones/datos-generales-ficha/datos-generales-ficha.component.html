@@ -10,15 +10,16 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-center mb-1">
-            <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate}}</label>
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate }}
+            </label>
           </div>
           <div class="d-flex justify-content-between">
             <label>Clase comunicación:
-              <span>{{body.claseComunicacion}}</span>
+              <span>{{ body.claseComunicacion }}</span>
             </label>
             <label>Nombre:
-              <span>{{body.nombre}}</span>
+              <span>{{ body.nombre }}</span>
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
           </div>
@@ -28,7 +29,8 @@
         <div class="img-colegiado">
           <i class="fas fa-align-left icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{ "general.message.datos.generales" | translate}}</label>
+        <label class="title-ficha">{{ "general.message.datos.generales" | translate }}
+        </label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -42,19 +44,19 @@
               <p-dropdown [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion" class="select-form"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}} *</label>
-              <input type="text" class="form-control" [(ngModel)]="body.nombre" pInputText>
+              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }} *
+              </label>
+              <input type="text" class="form-control" [(ngModel)]="body.nombre" pInputText />
             </div>
-
           </div>
           <div class="form-row d-flex align-items-end">
             <div class="form-group col-lg-6 col-md-6">
               <label>Colegio *</label>
-              <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [options]="colegios" [(ngModel)]="body.idInstitucion" class="select-form"></p-dropdown>
+              <p-dropdown [options]="colegios" [(ngModel)]="body.idInstitucion" class="select-form"></p-dropdown>
             </div>
             <div class="form-group col-lg-1 col-md-1">
               <label>Orden *</label>
-              <input type="text" class="form-control" [(ngModel)]="body.orden" pInputText>
+              <input type="text" class="form-control" [(ngModel)]="body.orden" pInputText />
             </div>
             <div class="form-group col-lg-2 col-md-3">
               <label class="d-block">Preseleccionado</label>
@@ -82,12 +84,10 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
+        <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>
-
   </div>
   <!--END DATOS GENERALES-->
-
 </div>

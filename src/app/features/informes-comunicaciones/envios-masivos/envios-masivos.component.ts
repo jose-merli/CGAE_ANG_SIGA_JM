@@ -368,6 +368,7 @@ export class EnviosMasivosComponent implements OnInit {
 
   limpiar() {
     this.bodySearch = new EnviosMasivosSearchItem();
+    this.datos = [];
   }
 
 
