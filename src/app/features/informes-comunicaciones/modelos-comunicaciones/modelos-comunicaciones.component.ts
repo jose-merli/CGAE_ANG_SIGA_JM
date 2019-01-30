@@ -75,11 +75,9 @@ export class ModelosComunicacionesComponent implements OnInit {
 
     this.visible = [
       { label: '', value: '' },
-      { label: 'Sí', value: 'SI' },
-      { label: 'No', value: 'NO' }
+      { label: 'Sí', value: '1' },
+      { label: 'No', value: '0' }
     ]
-
-
 
 
     this.cols = [
