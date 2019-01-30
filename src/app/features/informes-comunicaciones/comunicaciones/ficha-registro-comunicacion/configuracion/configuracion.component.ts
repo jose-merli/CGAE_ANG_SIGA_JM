@@ -179,9 +179,10 @@ export class ConfiguracionComponent implements OnInit {
 
     this.arrayClases.push(this.body.idClaseComunicacion);
 
-    this.sigaServices.post("dialogo_modelosComunicacion", this.arrayClases).subscribe(
+    this.sigaServices.post("comunicaciones_modelosComunicacion", this.arrayClases).subscribe(
       data => {
-        this.modelosComunicacion = JSON.parse(data['body']).modeloItems;
+        let result = JSON.parse(data['body']);
+        this.modelosComunicacion = result.combooItems;
       },
       err => {
         console.log(err);

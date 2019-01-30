@@ -574,6 +574,7 @@ export class SigaServices {
     consultas_comboObjetivos: 'consultas/objetivo',
     consultas_comboModulos: 'consultas/modulo',
     comunicaciones_claseComunicaciones: 'comunicaciones/clasesComunicacion',
+    comunicaciones_modelosComunicacion: 'comunicaciones/modelosComunicacion',
     comunicaciones_search: 'comunicaciones/search',
     comunicaciones_guardarConf: 'comunicaciones/detalle/configuracion',
     comunicaciones_destinatarios: 'comunicaciones/detalle/destinatarios',
