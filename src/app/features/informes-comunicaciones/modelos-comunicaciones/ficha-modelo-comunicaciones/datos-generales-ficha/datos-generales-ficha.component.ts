@@ -25,6 +25,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   msgs: Message[];
   preseleccionar: any = [];
   visible: any = [];
+  institucionActual: any = [];
 
   fichasPosibles = [
     {
@@ -58,11 +59,11 @@ export class DatosGeneralesFichaComponent implements OnInit {
 
     this.visible = [
       { label: '', value: '' },
-      { label: 'Sí', value: '1' },
-      { label: 'No', value: '0' }
+      { label: 'Sí', value: 1 },
+      { label: 'No', value: 0 }
     ];
 
-
+    this.getInstitucion()
     this.getClasesComunicaciones();
     this.getComboColegios();
     this.getDatos();
@@ -121,6 +122,8 @@ export class DatosGeneralesFichaComponent implements OnInit {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
       this.bodyInicial = JSON.parse(sessionStorage.getItem("modelosSearch"));
+    } else {
+      this.body.visible = 1;
     }
   }
 
@@ -140,27 +143,27 @@ export class DatosGeneralesFichaComponent implements OnInit {
     );
   }
 
+
+  getInstitucion() {
+    this.sigaServices.get('institucionActual').subscribe((n) => {
+      this.institucionActual = n.value;
+    });
+  }
+
+
   getComboColegios() {
-    this.sigaServices.get("busquedaPer_colegio").subscribe(
+    this.sigaServices.get("modelos_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
         this.colegios.unshift({ label: '', value: '' });
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-   para poder filtrar el dato con o sin estos caracteres*/
-        this.colegios.map(e => {
-          let accents =
-            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-          let accentsOut =
-            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
+        for (let e of this.colegios) {
+          if (e.value == this.institucionActual) {
+            this.body.idInstitucion = e.value;
           }
-        });
+          if (e.value == '2000') {
+            e.label = 'POR DEFECTO';
+          }
+        }
 
       },
       err => {

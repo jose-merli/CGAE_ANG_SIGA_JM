@@ -3,7 +3,7 @@ export class DatosGeneralesFicha {
   idModeloComunicacion: String;
   nombre: String;
   preseleccionar: String;
-  visible: boolean;
+  visible: number;
   idInstitucion: string;
   orden: String;
   descripcion: String;

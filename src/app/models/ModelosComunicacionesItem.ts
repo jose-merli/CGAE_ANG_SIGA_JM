@@ -4,7 +4,7 @@ export class ModelosComunicacionesItem {
   idPlantillaEnvios: String;
   nombre: String;
   preseleccionar: String;
-  visible: String;
+  visible: number;
   idInstitucion: string;
   orden: String;
   idTipoEnvios: String;

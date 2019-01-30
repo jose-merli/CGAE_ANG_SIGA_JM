@@ -51,6 +51,7 @@ export class ModelosComunicacionesComponent implements OnInit {
 
 
     this.getInstitucion();
+    this.bodySearch.visible = 1;
 
 
 
@@ -75,8 +76,8 @@ export class ModelosComunicacionesComponent implements OnInit {
 
     this.visible = [
       { label: '', value: '' },
-      { label: 'Sí', value: '1' },
-      { label: 'No', value: '0' }
+      { label: 'Sí', value: 1 },
+      { label: 'No', value: 0 }
     ]
 
 
@@ -134,20 +135,16 @@ export class ModelosComunicacionesComponent implements OnInit {
   getComboColegios() {
     this.sigaServices.get("modelos_colegio").subscribe(
       n => {
-
         this.colegios = n.combooItems;
         this.colegios.unshift({ label: '', value: '' });
-
         for (let e of this.colegios) {
           if (e.value == this.institucionActual) {
             this.bodySearch.idInstitucion = e.value;
-          } else if (e.value == '2000') {
+          }
+          if (e.value == '2000') {
             e.label = 'POR DEFECTO';
           }
-
-
         }
-
       },
       err => {
         console.log(err);
