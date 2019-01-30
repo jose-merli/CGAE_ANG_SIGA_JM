@@ -251,8 +251,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           this.isDisabledPoblacion = false;
           this.comboPoblacion = n.combooItems;
         },
-        error => {},
-        () => {}
+        error => { },
+        () => { }
       );
   }
 
@@ -435,8 +435,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           this.comboTipoCV = n.combooItems;
           this.arregloTildesCombo(this.comboTipoCV);
         },
-        error => {},
-        () => {}
+        error => { },
+        () => { }
       );
   }
 
@@ -452,8 +452,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           this.comboSubtipoCV = n.combooItems;
           this.arregloTildesCombo(this.comboSubtipoCV);
         },
-        error => {},
-        () => {}
+        error => { },
+        () => { }
       );
   }
 
@@ -577,7 +577,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       },
       {
         field: "residenteInscrito",
-        header: "censo.busquedaClientes.noResidente"
+        header: "censo.ws.literal.residenteInscrito"
       },
       {
         field: "fechaNacimiento",

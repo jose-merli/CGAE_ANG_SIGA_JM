@@ -40,6 +40,7 @@ export class SolicitudesModificacionComponent implements OnInit {
   progressSpinner: boolean = false;
   selectMultiple: boolean = false;
   selectAll: boolean = false;
+  showSelectAll: boolean = false;
   numSelected: number = 0;
   desactivaProcesarMultiple: boolean = false;
   desactivarNuevo: boolean = false;
@@ -80,7 +81,7 @@ export class SolicitudesModificacionComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   ngOnInit() {
     // Comprobamos si es colegiado o no
@@ -244,6 +245,13 @@ export class SolicitudesModificacionComponent implements OnInit {
   // SEARCH
   search() {
     // Vamos a guardar los filtros para cuando vuelva
+    if (this.body.estado == "10") {
+      this.showSelectAll = true;
+      this.selectAll = false;
+    } else {
+      this.showSelectAll = false;
+      this.selectAll = false;
+    }
     if (
       (this.body.tipoModificacion == null &&
         this.body.tipoModificacion == undefined) ||
