@@ -185,7 +185,6 @@ export class EnviosMasivosComponent implements OnInit {
     this.progressSpinner = true;
     sessionStorage.removeItem("enviosMasivosSearch");
     sessionStorage.removeItem("filtros");
-    debugger;
     if (sessionStorage.getItem("ComunicacionDuplicada") != null) {
       this.getResultadosComunicacionDuplicada();
       this.showSuccess('Se ha duplicado el envío correctamente');
@@ -217,11 +216,8 @@ export class EnviosMasivosComponent implements OnInit {
   }
   getResultadosComunicacionDuplicada() {
     {
-      // let body: EnviosMasivosSearchItem;
-      // body.fechaCreacion = new Date();
       this.bodySearch = new EnviosMasivosSearchItem();
       this.bodySearch.fechaCreacion = new Date();
-      debugger;
       this.sigaServices
         .postPaginado("enviosMasivos_search", "?numPagina=1", this.bodySearch)
         .subscribe(
