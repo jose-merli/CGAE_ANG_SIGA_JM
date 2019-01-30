@@ -1,18 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Location } from "@angular/common";
 
 @Component({
-  selector: 'app-ficha-modelo-comunicaciones',
-  templateUrl: './ficha-modelo-comunicaciones.component.html',
-  styleUrls: ['./ficha-modelo-comunicaciones.component.scss']
+  selector: "app-ficha-modelo-comunicaciones",
+  templateUrl: "./ficha-modelo-comunicaciones.component.html",
+  styleUrls: ["./ficha-modelo-comunicaciones.component.scss"]
 })
 export class FichaModeloComunicacionesComponent implements OnInit {
-
   idModelo: string;
   fichasPosibles: any[];
 
-  constructor(private activatedRoute: ActivatedRoute, private location: Location) { }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private location: Location
+  ) {}
 
   ngOnInit() {
     this.idModelo = this.activatedRoute.snapshot.params["id"];
@@ -20,7 +22,7 @@ export class FichaModeloComunicacionesComponent implements OnInit {
     this.fichasPosibles = [
       {
         key: "generales",
-        activa: false
+        activa: true
       },
       {
         key: "perfiles",
@@ -33,14 +35,11 @@ export class FichaModeloComunicacionesComponent implements OnInit {
       {
         key: "comunicacion",
         activa: false
-      },
-
+      }
     ];
   }
 
   backTo() {
     this.location.back();
   }
-
-
 }
