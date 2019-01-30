@@ -352,6 +352,7 @@ función para que no cargue primero las etiquetas de los idiomas*/
 
   limpiar() {
     this.bodySearch = new ComunicacionesSearchItem();
+    this.datos = [];
   }
 
 
