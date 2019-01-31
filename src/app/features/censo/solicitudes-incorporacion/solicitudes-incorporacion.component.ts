@@ -183,7 +183,11 @@ export class SolicitudesIncorporacionComponent implements OnInit {
       var enviarDatos = null;
       enviarDatos = item[0];
       sessionStorage.setItem("editedSolicitud", JSON.stringify(enviarDatos));
-      sessionStorage.setItem("consulta", "true");
+      if  (enviarDatos.estadoSolicitud  ==  "Pendiente aprobación") {
+        sessionStorage.setItem("consulta",  "false");
+      }  else  {
+        sessionStorage.setItem("consulta",  "true");
+      }
       sessionStorage.setItem("filtros", JSON.stringify(this.body));
     } else {
       sessionStorage.setItem("consulta", "false");
@@ -238,7 +242,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
 

@@ -303,6 +303,7 @@ export class FichaCursoComponent implements OnInit {
       this.curso.idEventoFinInscripcion = sessionStorage.getItem(
         "idEventoFinInscripcion"
       );
+      
       sessionStorage.removeItem("idEventoFinInscripcion");
       sessionStorage.removeItem("isFormacionCalendarByEndInscripcion");
 
@@ -393,13 +394,19 @@ export class FichaCursoComponent implements OnInit {
         this.loadNewTrainer(JSON.parse(sessionStorage.getItem("formador")));
       } else {
         this.getTrainers();
+        sessionStorage.removeItem("toBackNewFormador");
+
       }
 
       this.getPrices();
       this.getServicesCourse();
       this.getCertificatesCourse();
       this.getTopicsCourse();
-      this.getSessions();
+
+      if(this.curso.idInstitucion != null || this.curso.idInstitucion != undefined){
+        this.getSessions();
+      }
+
       this.getCountInscriptions();
       this.getMassiveLoadInscriptions();
       this.configurationInformacionAdicional();
@@ -445,6 +452,10 @@ export class FichaCursoComponent implements OnInit {
     this.checkAcceso();
   }
 
+  ngAfterViewInit() {
+    window.scrollTo(0, 0);
+ }
+ 
   // Control Permisos
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
@@ -1684,20 +1695,20 @@ export class FichaCursoComponent implements OnInit {
 
   //Funciones que controlan los formadores editados
   //Si se edita un campo input de la tabla
-  editFormadorTable(event) {
+  editFormadorTable(event, data) {
     this.editFormador = true;
     this.modoEdicionFormador = true;
 
     let idFindFormador = this.formadoresUpdate.findIndex(
-      x => x.idPersona === event.data.idPersona && x.idRol === event.data.idRol
+      x => x.idPersona === data.idPersona && x.idRol === data.idRol
     );
 
     if (idFindFormador == -1) {
-      this.addTrainerUpdateList(idFindFormador, event.data);
+      this.addTrainerUpdateList(idFindFormador, data);
     } else {
       let id = this.datosFormadores.findIndex(
         x =>
-          x.idPersona === event.data.idPersona && x.idRol === event.data.idRol
+          x.idPersona === data.idPersona && x.idRol === data.idRol
       );
 
       this.formadoresUpdate[idFindFormador] = this.datosFormadores[id];
@@ -2166,8 +2177,8 @@ export class FichaCursoComponent implements OnInit {
       this.router.navigate(["/fichaEventos"]);
      
     }
-    this.numSelectedPrices = this.datosPrices.length;
-    this.numSelectedSessions = this.datosSessions.length;
+    this.numSelectedPrices = this.selectedDatosPrices.length;
+    this.numSelectedSessions = this.selectedDatosSessions.length;
   }
 
   actualizaSeleccionadosSessions(selectedDatosSessions) {
@@ -2178,6 +2189,12 @@ export class FichaCursoComponent implements OnInit {
     this.selectedSessions = event.value;
     this.changeDetectorRef.detectChanges();
     this.tableSessions.reset();
+  }
+
+  onChangeRowsPerPagesFormadores(event) {
+    this.selectedFormadores = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tableFormadores.reset();
   }
 
   //Inscripciones

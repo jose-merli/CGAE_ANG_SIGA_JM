@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef, ViewEncapsulation } from "@angular/core";
 import { SigaServices } from "../../../_services/siga.service";
 import { DatosInscripcionItem } from "../../../models/DatosInscripcionItem";
 import { esCalendar } from "../../../utils/calendar";
@@ -15,7 +15,8 @@ import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
 @Component({
   selector: "app-ficha-inscripcion",
   templateUrl: "./ficha-inscripcion.component.html",
-  styleUrls: ["./ficha-inscripcion.component.scss"]
+  styleUrls: ["./ficha-inscripcion.component.scss"],
+  encapsulation: ViewEncapsulation.None
 })
 export class FichaInscripcionComponent implements OnInit {
   historico: boolean = false;
@@ -565,6 +566,10 @@ export class FichaInscripcionComponent implements OnInit {
     );
     sessionStorage.setItem("isInscripcion", JSON.stringify(true));
     sessionStorage.setItem("modoEdicionCurso", JSON.stringify(true));
+
+    sessionStorage.removeItem("modoEdicionInscripcion");
+    sessionStorage.removeItem("pantallaListaInscripciones");
+    
     this.router.navigate(["/fichaCurso"]);
   }
 

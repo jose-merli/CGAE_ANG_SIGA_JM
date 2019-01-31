@@ -113,8 +113,8 @@
                         <p-calendar [keepInvalid]="true" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy" [(ngModel)]="fechaNacimientoDesdeSelect"></p-calendar>
                     </div>
                     <div class=" form-group col-lg-3 col-md-3">
-                            <label>{{ "censo.busquedaColegiados.datosGeneralesAvanzados.fechaNacimientoHasta" | translate}}</label>
-                            <p-calendar [keepInvalid]="true" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy" [(ngModel)]="fechaNacimientoHastaSelect"></p-calendar>
+                        <label>{{ "censo.busquedaColegiados.datosGeneralesAvanzados.fechaNacimientoHasta" | translate}}</label>
+                        <p-calendar [keepInvalid]="true" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy" [(ngModel)]="fechaNacimientoHastaSelect"></p-calendar>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.busquedaClientesAvanzada.literal.categoriaCV" | translate}}</label>
@@ -123,15 +123,16 @@
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.tipoCurricular.descripcion.literal" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='body.subTipoCV1' [options]="comboTipoCV"  emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}" placeholder="{{'general.boton.seleccionar' | translate}}"
-                        [filter]="true" filterBy="label,labelSinTilde" 
-                        [disabled]="isDisabledCombos()"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.subTipoCV1' [options]="comboTipoCV" emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}"
+                            placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" filterBy="label,labelSinTilde"
+                            [disabled]="isDisabledCombos()"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{'censo.subtipoCurricular.descripcion.literal' | translate}}</label>
                         <p-dropdown [filter]="true" filterMatchMode="contains" emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}"
-                         styleClass="widthAll" class="select-form" [options]="comboSubtipoCV" [placeholder]="textFilter" [(ngModel)]="body.subTipoCV2" [disabled]="isDisabledCombos()"></p-dropdown>
-                    </div> 
+                            styleClass="widthAll" class="select-form" [options]="comboSubtipoCV" [placeholder]="textFilter" [(ngModel)]="body.subTipoCV2"
+                            [disabled]="isDisabledCombos()"></p-dropdown>
+                    </div>
                 </div>
             </div>
             <!-- Dirección -->
@@ -184,7 +185,7 @@
         </div>
         <div class="card-footer">
             <div class="text-right main-button">
-                <button (click)="isLimpiar()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate}}"></button>
+                <button (click)="isLimpiar()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"  label="{{ 'general.boton.clear' | translate}}"></button>
                 <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
 
             </div>
@@ -215,7 +216,7 @@
                             <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
 
                     </div>
-               </ng-template>
+                </ng-template>
 
                 <!-- <p-footer>
                     <div class="text-right main-button">
@@ -224,16 +225,16 @@
             </p-dataTable>
 
         </div>
-        
-    <div *ngIf="buscar == true" class="card-footer">
-        <div class="text-right main-button ">
-            <!-- <button (click)="isCancelar()" [disabled]="!isEditable" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button> -->
-            <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.comunicar' | translate }}"
-                disabled></button>
-            <!-- <button (click)="isCrear()" [disabled]="isEditable" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button> -->
 
+        <div *ngIf="buscar == true" class="card-footer">
+            <div class="text-right main-button ">
+                <!-- <button (click)="isCancelar()" [disabled]="!isEditable" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button> -->
+                <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.comunicar' | translate }}"
+                    disabled></button>
+                <!-- <button (click)="isCrear()" [disabled]="isEditable" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button> -->
+
+            </div>
         </div>
-      </div>
 
     </div>
     <!--FIN DE PRINCIPAL-->

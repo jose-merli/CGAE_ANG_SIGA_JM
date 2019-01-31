@@ -8,6 +8,7 @@ export class FichaColegialColegialesItem {
   fechapresentacion: Date;
   fechaJura: Date;
   fechaTitulacion: Date;
+  fechaEstadoStr: String;
 
   incorporacionDate: Date;
   fechapresentacionDate: Date;
