@@ -120,7 +120,7 @@ export class DatosGenerales implements OnInit {
 
   fechaDesde: Date;
   fechaHasta: Date;
-  fechaHoy: Date = new Date();
+  fechaHoy: Date;
   index: any = 0;
 
   mensaje: String = "";
@@ -128,7 +128,7 @@ export class DatosGenerales implements OnInit {
   updateItems: Map<String, ComboEtiquetasItem> = new Map<
     String,
     ComboEtiquetasItem
-  >();
+    >();
 
   @ViewChild("auto")
   autoComplete: AutoComplete;
@@ -236,7 +236,7 @@ export class DatosGenerales implements OnInit {
       n => {
         this.comboIdentificacion = n.combooItems;
       },
-      error => {}
+      error => { }
     );
 
     this.comboTipo.push(this.tipoPersonaJuridica);
@@ -502,7 +502,7 @@ export class DatosGenerales implements OnInit {
       this.body.motivo = "registro actualizado";
 
       this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
-        data => {},
+        data => { },
         error => {
           this.personaSearch = JSON.parse(error["error"]);
           this.showFail(JSON.stringify(this.personaSearch.error.description));
@@ -1078,16 +1078,32 @@ export class DatosGenerales implements OnInit {
   validateFields() {
     if (
       this.item.fechaInicio != undefined &&
-      this.item.fechaInicio != null &&
-      this.item.fechaBaja != undefined &&
-      this.item.fechaBaja != null &&
-      this.validateFinalDate() == true
+      this.item.fechaInicio != null
+      // this.item.fechaBaja != undefined &&
+      // this.item.fechaBaja != null &&
+      // this.validateFinalDate() == true
     ) {
+      this.fechaHoy = this.transformaFecha(this.item.fechaInicio);
       this.isTrue = true;
     } else {
       this.isTrue = false;
     }
   }
+
+  transformaFecha(fecha) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -1);
+    if (rawDate.length < 14) {
+      let splitDate = rawDate.split("/");
+      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+      fecha = new Date((arrayDate += "T00:00:00.001Z"));
+    } else {
+      fecha = new Date(fecha);
+    }
+    return fecha;
+  }
+
+
 
   aceptDialogConfirmation(item) {
     this.checked = false;
@@ -1163,6 +1179,21 @@ export class DatosGenerales implements OnInit {
     }
 
     return this.isFechaBajaCorrect;
+  }
+
+
+  onBlur(event) {
+    if  (event.target.value  !=  ""  &&  !this.autoComplete.panelVisible) {
+      this.checked  =  true;
+      this.isCrear  =  true;
+      this.item  =  new  ComboEtiquetasItem();
+      this.item.idGrupo  =  "";
+      this.item.label  =  event.srcElement.value;
+
+      this.mensaje  =  this.translateService.instant(
+        "censo.etiquetas.literal.rango"
+      );
+    }
   }
 
   ngAfterViewChecked() {

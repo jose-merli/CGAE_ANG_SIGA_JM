@@ -593,7 +593,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       },
       {
         field: "residenteInscrito",
-        header: "censo.busquedaClientes.noResidente"
+        header: "censo.ws.literal.residenteInscrito"
       },
       {
         field: "fechaNacimiento",

@@ -76,7 +76,8 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.fichaCliente.literal.identificacion" | translate}} (*)</label>
-              <input [(ngModel)]="body.nif" type="text" class="form-control" (ngModelChange)="onChangeForm()" [disabled]="!editar || disabledAction" pInputText>
+              <input [(ngModel)]="body.nif" type="text" class="form-control" (ngModelChange)="onChangeForm()" [disabled]="!editar || disabledAction"
+                pInputText>
               <div *ngIf="identificacionValida == false">
                 <label class="labelError">{{"El cif es inválido"}}</label>
               </div>
@@ -141,8 +142,8 @@
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
-              <input type="text " class="form-control " [(disabled)]="camposDesactivados || disabledAction" [(ngModel)]="body.cuentaContable" [maxLength]="20"
-                (ngModelChange)="onChangeForm()" pInputText>
+              <input type="text " class="form-control " [(disabled)]="camposDesactivados || disabledAction" [(ngModel)]="body.cuentaContable"
+                [maxLength]="20" (ngModelChange)="onChangeForm()" pInputText>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.general.literal.anotaciones" | translate}}: </label>
@@ -157,8 +158,9 @@
               <br>
 
               <p-autoComplete #auto [(ngModel)]="etiquetasPersonaJuridicaSelecionados" [suggestions]="comboEtiquetas" (completeMethod)="filterLabelsMultiple($event)"
-                [minLength]="1" field="label" [multiple]="true" (onKeyUp)="onKeyUp($event)" (onSelect)="onSelect($event)" (onUnselect)="onUnselect($event)"
-                [disabled]="!autocompletar || disabledAction"  (click)="disabledAutocomplete()" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}">
+                [minLength]="1" field="label" [multiple]="true" (onBlur)="onBlur($event)" (onKeyUp)="onKeyUp($event)" (onSelect)="onSelect($event)"
+                (onUnselect)="onUnselect($event)" [disabled]="!autocompletar || disabledAction" (click)="disabledAutocomplete()"
+                [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}">
                 <ng-template let-etiquetasPersonaJuridicaSelecionados pTemplate="selectedItem">
                   <div *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor != ''" class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li"
                     [ngStyle]="{'background': etiquetasPersonaJuridicaSelecionados.backgroundColor}" (click)="onClick($event, etiquetasPersonaJuridicaSelecionados)">
@@ -176,10 +178,10 @@
     <!--END DATOS GENERALES-->
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="restablecer()" [(disabled)]="camposDesactivados || disabledAction" pButton type="button" icon="fa fa-undo" iconPos="left"
-          label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="comprobarAuditoria()" [(disabled)]="!showGuardar || disabledAction" pButton type="button" icon="far fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="restablecer()" [(disabled)]="camposDesactivados || disabledAction" pButton type="button" icon="fa fa-undo"
+          iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="comprobarAuditoria()" [(disabled)]="!showGuardar || disabledAction" pButton type="button" icon="far fa-save"
+          iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -202,21 +204,20 @@
         <div class="form-group col-lg-6 col-md-6">
           <label *ngIf="historico">{{"administracion.auditoriaUsuarios.fechaDesde" | translate}}</label>
           <label *ngIf="!historico">{{"administracion.auditoriaUsuarios.fechaDesde" | translate}} (*)</label>
-          <p-calendar [monthNavigator]="true" [yearNavigator]="true"  [(ngModel)]="item.fechaInicio" [locale]="es"
-            [utc]="true" icon="far fa-calendar-alt" yearRange="1930:2050"
-            dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="validateFields()"
-            [(disabled)]="historico" [(maxDate)]="fechaHoy"></p-calendar>
+          <p-calendar [monthNavigator]="true" [yearNavigator]="true" [(ngModel)]="item.fechaInicio" [locale]="es" [utc]="true" icon="far fa-calendar-alt"
+            yearRange="1930:2050" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="validateFields()" [(disabled)]="historico"></p-calendar>
         </div>
 
         <div class="form-group col-lg-6 col-md-6 form-group-date">
           <label *ngIf="historico">{{"administracion.auditoriaUsuarios.fechaHasta" | translate}}</label>
-          <label *ngIf="!historico">{{"administracion.auditoriaUsuarios.fechaHasta" | translate}} (*)</label>
-          <p-calendar [monthNavigator]="true" [yearNavigator]="true"  [(ngModel)]="item.fechaBaja" [locale]="es"
-            [utc]="true" icon="far fa-calendar-alt" yearRange="1930:2050" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="validateFields()" [(minDate)]="fechaHoy"
+          <label *ngIf="!historico">{{"administracion.auditoriaUsuarios.fechaHasta" | translate}}
+          </label>
+          <p-calendar [monthNavigator]="true" [yearNavigator]="true" [(ngModel)]="item.fechaBaja" [locale]="es" [utc]="true" icon="far fa-calendar-alt"
+            yearRange="1930:2050" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="validateFields()" [(minDate)]="fechaHoy"
             [(disabled)]="historico"></p-calendar>
-          <div *ngIf="item.fechaBaja != null && !isFechaBajaCorrect && !historico">
+          <!-- <div *ngIf="item.fechaBaja != null && !isFechaBajaCorrect && !historico">
             <label class="labelError">{{"gratuita.altaTurnos.error.fechaBajaPosteriorInicio" | translate}}</label>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

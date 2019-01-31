@@ -1,30 +1,79 @@
-<div class="menu-censo" [ngClass]="{'closedMenu':closeMenu === true, 'openedMenu':closeMenu === false}">
+<div
+  class="menu-censo"
+  [ngClass]="{
+    closedMenu: closeMenu === true,
+    openedMenu: closeMenu === false
+  }"
+>
   <div class="container-fluid">
     <div class="col-items">
       <ul *ngIf="!showChild" class="nav navbar-nav d-flex">
-
-        <li [ngClass]="{'config':opcion.idClass==='config', 'catalogos':opcion.idClass==='catalogos', 'adm':opcion.idClass==='adm', 'plantillas':opcion.idClass==='plantillas','menu-item-active': isRoute(opcion.routerLink) }"
-          *ngFor="let opcion of items" (click)="viewChild(opcion.items, opcion.label) || navigateTo(opcion.routerLink)">{{opcion.label | translate}}
+        <li
+          [ngClass]="{
+            config: opcion.idClass === 'config',
+            catalogos: opcion.idClass === 'catalogos',
+            adm: opcion.idClass === 'adm',
+            plantillas: opcion.idClass === 'plantillas',
+            'menu-item-active': isRoute(opcion.routerLink)
+          }"
+          *ngFor="let opcion of items"
+          (click)="
+            viewChild(opcion.items, opcion.label) ||
+              navigateTo(opcion.routerLink)
+          "
+        >
+          {{ opcion.label | translate }}
           <i *ngIf="opcion.items" class="fa fa-angle-right float-right"></i>
         </li>
-
       </ul>
       <ul *ngIf="showChild" class="nav navbar-nav ">
         <li (click)="backMenu()" class="breadCrumbMenu">
-          <i class="fa fa-arrow-left mr-2"></i>INICIO</li>
-        <li class="title-section">{{selectedLabel | translate}} </li>
+          <i class="fa fa-arrow-left mr-2"></i>INICIO
+        </li>
+        <li class="title-section">{{ selectedLabel | translate }}</li>
         <div *ngFor="let opcion of selectedItem">
-          <div (click)="viewChildOfChild(opcion.items, opcion.label) || navigateTo(opcion.routerLink)">
-            <li class="itemChild" [ngClass]="{'menu-item-active': isRoute(opcion.routerLink) }">
-              {{opcion.label | translate}}
-              <i class="fa float-right" [ngClass]="{'fa-angle-down': (opcion.items && showChildOfChild == false) || (opcion.items && opcion.items !== selectedItemOfChild),'fa-angle-up': opcion.items && opcion.items == selectedItemOfChild && showChildOfChild != false}"></i>
+          <div
+            (click)="
+              viewChildOfChild(opcion.items, opcion.label) ||
+                navigateTo(opcion.routerLink)
+            "
+          >
+            <li
+              class="itemChild"
+              [ngClass]="{ 'menu-item-active': isRoute(opcion.routerLink) }"
+            >
+              {{ opcion.label | translate }}
+              <i
+                class="fa float-right"
+                [ngClass]="{
+                  'fa-angle-down':
+                    (opcion.items && showChildOfChild == false) ||
+                    (opcion.items && opcion.items !== selectedItemOfChild),
+                  'fa-angle-up':
+                    opcion.items &&
+                    opcion.items == selectedItemOfChild &&
+                    showChildOfChild != false
+                }"
+              ></i>
             </li>
           </div>
           <div *ngFor="let opcionChild of selectedItemOfChild">
             <div (click)="navigateTo(opcionChild.routerLink)">
-              <li class="itemChildOfChild" *ngIf="selectedItemOfChild == opcion.items && showChildOfChild == true" [ngClass]="{'menu-item-active': isRoute(opcionChild.routerLink)}">
-                {{opcionChild.label | translate}}
-                <i *ngIf="opcionChild.items" class="fa fa-angle-right float-right"></i>
+              <li
+                class="itemChildOfChild"
+                *ngIf="
+                  selectedItemOfChild == opcion.items &&
+                  showChildOfChild == true
+                "
+                [ngClass]="{
+                  'menu-item-active': isRoute(opcionChild.routerLink)
+                }"
+              >
+                {{ opcionChild.label | translate }}
+                <i
+                  *ngIf="opcionChild.items"
+                  class="fa fa-angle-right float-right"
+                ></i>
               </li>
             </div>
           </div>
@@ -45,13 +94,39 @@
       <p-panelMenu [model]="items"></p-panelMenu>
     </div>-->
     <div (click)="onCloseMenu()" class="px-2 menu-arrow">
-      <div *ngIf="closeMenu === false" class="icono-menu-flecha">
+      <div
+        (click)="onCloseMenu()"
+        *ngIf="closeMenu === false"
+        class="icono-menu-flecha"
+      >
         <i class="fa fa-times"></i>
       </div>
-      <div *ngIf="closeMenu === true" class="icono-menu">
+      <div
+        (click)="onFixedMenu()"
+        *ngIf="closeMenu === false && bloquedMenu === true"
+        class="icono-menu"
+      >
+        <i class="fas fa-thumbtack"></i>
+      </div>
+      <div
+        (click)="onFixedMenu()"
+        *ngIf="closeMenu === false && bloquedMenu === false"
+        class="icono-menu iconFixed "
+      >
+        <i class="fas fa-thumbtack"></i>
+      </div>
+
+      <div
+        
+        *ngIf="closeMenu === true"
+        class="icono-menu "
+      >
         <i class="fa fa-bars"></i>
       </div>
     </div>
-
   </div>
+</div>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
+  <div class="loader"></div>
 </div>

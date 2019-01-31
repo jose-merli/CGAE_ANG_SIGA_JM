@@ -211,9 +211,9 @@
             <div class="col-lg-6 col-md-6">
                 <label>{{ 'formacion.fichaCursos.datosDeGestion.plazasDisponibles' | translate}}</label>
                 <input
-                type="text"
-                class="form-control"
-                pInputText
+                class="form-control paddingInput"
+                type="number"
+                min="0"
                 name="tipo" [disabled]="!activacionEditar"
                 [(ngModel)]="curso.plazasDisponibles"
               />
@@ -227,9 +227,9 @@
             ></i>
 
               <input
-                type="text"
-                class="form-control"
-                pInputText
+                class="form-control paddingInput"
+                type="number"
+                min="0"
                 name="asistencia" [disabled]="!activacionEditar"
                 [(ngModel)]="curso.minimoAsistencia"
               />
@@ -583,7 +583,6 @@
               [(selection)]="selectedDatosFormadores"
               [rows]="selectedFormadores"
               [editable]="!selectMultipleFormadores"
-              (onEdit)="editFormadorTable($event)"
             >
               <p-column
                 [sortable]="true"
@@ -659,15 +658,24 @@
               </p-column>
 
               <p-column
-                [editable]="!selectMultipleFormadores"
-                [sortable]="true"
-                [field]="colsFormadores[4].field"
-                [header]="'censo.alterMutua.literal.tarifa' | translate"
-                [filter]="true"
-                filterPlaceholder="{{'general.boton.search' | translate}}"
-                filterMatchMode="contains"
-              >
-              </p-column>
+              [sortable]="true"
+              [field]="colsFormadores[4].field"
+              [header]="'censo.alterMutua.literal.tarifa' | translate"
+              [filter]="true"
+              filterPlaceholder="{{'general.boton.search' | translate}}"
+              filterMatchMode="contains"
+            >
+              <ng-template let-col let-dato="rowData" pTemplate="body">
+                <input
+                (ngModelChange)="editFormadorTable($event, dato)"
+                  [value]="dato[colsFormadores[4].field]"
+                  [(ngModel)]="dato[colsFormadores[4].field]"
+                  class="form-control paddingInputTable"
+                  type="number"
+                  min="0"
+                />
+              </ng-template>
+            </p-column>
 
               <!-- <p-column
                 [editable]="false"
@@ -877,9 +885,9 @@
                     [value]="dato[colsFormadores[4].field]"
                     [(ngModel)]="newFormadorCourse.tarifa"
                     [disabled]="!activacionEditar"
-                    type="text"
-                    class="form-control"
-                    pInputText
+                    class="form-control paddingInputTable"
+                    type="number"
+                    min="0"
                   />
                 </ng-template>
               </p-column>
@@ -1651,7 +1659,7 @@
 
       <button pButton type="button" [disabled]="disabledDownload() || !activacionEditar" (click)="autovalidateInscriptions(selectedDatosCargas)" icon="fa fa-check" iconPos="left" label="Autovalidar"></button>
 
-      <p-fileUpload mode="basic" #pUploadFile  [disabled]="!activacionEditar || !controlFechaInscripcion()"   chooseLabel="Cargar Archivo"
+      <p-fileUpload mode="basic" #pUploadFile [ngClass]="{'disabledOpacity': !controlBotonesEstado('Inscripcion')}" [disabled]="!controlBotonesEstado('Inscripcion')"   chooseLabel="Cargar Archivo"
        class="edit my-0 mx-auto main-button" name="file" accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
        (change)="getFile($event, form)"></p-fileUpload>
       <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" [disabled]="!activacionEditar" iconPos="left" label="DescargarPlantilla"></button>

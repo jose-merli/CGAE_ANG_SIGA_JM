@@ -16,24 +16,21 @@
             <div class="form-row">
                 <div class="form-group col-lg-3 col-md-3">
                     <label>{{'censo.solicitudincorporacion.tipoSolicitud' | translate}}</label>
-                    <p-dropdown class="select-form" [options]="tiposSolicitud" placeholder="{{'general.boton.seleccionar' | translate}}"
-                     [(ngModel)]="body.tipoSolicitud"></p-dropdown>
+                    <p-dropdown class="select-form" [options]="tiposSolicitud" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.tipoSolicitud"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>{{'censo.solicitudincorporacion.estadoSolicitud' | translate}}</label>
-                    <p-dropdown class="select-form" [options]="estadosSolicitud"  placeholder="{{'general.boton.seleccionar' | translate}}" 
-                    [(ngModel)]="body.estadoSolicitud"></p-dropdown>
+                    <p-dropdown class="select-form" [options]="estadosSolicitud" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.estadoSolicitud"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>{{'censo.solicitudincorporacion.fechaDesde' | translate}} (*)</label>
-                    <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"
-                        [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="body.fechaDesde"
-                        [formControl]="formBusqueda.controls['fechaDesde']"></p-calendar>
+                    <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true" icon="far fa-calendar-alt"
+                        dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="body.fechaDesde" [formControl]="formBusqueda.controls['fechaDesde']"></p-calendar>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>{{'censo.solicitudincorporacion.fechaHasta' | translate}}</label>
-                    <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"
-                        [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="body.fechaHasta"></p-calendar>
+                    <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true" icon="far fa-calendar-alt"
+                        dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="body.fechaHasta"></p-calendar>
 
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
@@ -70,25 +67,22 @@
 <div *ngIf="buscar == true" class="card mt-3">
     <div class="card-body p-0">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-            [(selection)]="selectedDatos" [responsive]="true" selectionMode="multiple" #table class="tabla-listado"
-            [value]="datos" [sortOrder]="1" [paginator]="activarPaginacion()" (onRowSelect)="irDetalleSolicitud(selectedDatos)"
-            (onRowUnselect)="actualizaSeleccionados(selectedDatos)" paginatorPosition="both" [rows]="selectedItem"
-            pageLinks="4">
-            <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header"
-                filterPlaceholder="{{'general.boton.search' | translate}}" [filter]="true" filterMatchMode="contains">
+            [(selection)]="selectedDatos" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos"
+            [sortOrder]="1" [paginator]="activarPaginacion()" (onRowSelect)="irDetalleSolicitud(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+            paginatorPosition="both" [rows]="selectedItem" pageLinks="4">
+            <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="{{'general.boton.search' | translate}}"
+                [filter]="true" filterMatchMode="contains">
                 <ng-template let-datoH="rowData" pTemplate="body">
                     <div>
                         <span *ngIf="col.field !== 'fechaEstado' && col.field !== 'fechaSolicitud' ">{{datoH[col.field]}}</span>
-                        <span *ngIf="(col.field == 'fechaEstado' && col.field.fechaEstado !==null) || (col.field == 'fechaSolicitud' && col.field.fechaSolicitud !==null)">{{datoH[col.field]
-                            | date: 'dd/MM/yyyy'}}
+                        <span *ngIf="(col.field == 'fechaEstado' && col.field.fechaEstado !==null) || (col.field == 'fechaSolicitud' && col.field.fechaSolicitud !==null)">{{datoH[col.field] | date: 'dd/MM/yyyy'}}
                         </span>
                     </div>
                 </ng-template>
             </p-column>
             <ng-template pTemplate="paginatorLeft">
                 <div class="mostrar d-flex text-right justify-content-end">
-                    <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first
-                        + table.rows}} de un total de {{table.totalRecords}}</label>
+                    <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
                     <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
                     <label>{{ "general.message.mostrar" | translate}}</label>
                     <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
