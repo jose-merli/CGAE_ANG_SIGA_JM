@@ -1,209 +1,203 @@
 @import "../../../sass/variables.scss";
 
+.menu-censo {
+  height: 100%;
+  padding-top: 7rem;
 
-    .menu-censo{
+  .container-fluid {
+    padding: 0;
+    height: 100%;
+    display: flex;
+    box-shadow: 0 0 2px $grey4;
+    border-left: none;
+    background: white;
+    .col-items {
+      padding: 0;
+      width: 20em;
+      position: relative;
+      flex-grow: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+
+      .ui-state-default {
+        border: none;
+      }
+      ul {
         height: 100%;
-        padding-top: 7rem;   
-          
-        .container-fluid{
-            padding:0;
-            height: 100%;
-            display: flex;
-            box-shadow: 0 0 2px $grey4;
-            border-left: none;
-            background: white;  
-                .col-items{
-                    padding:0;
-                    width: 20em;
-                    position: relative;
-                    flex-grow: 1;
-                    overflow-y:auto;
-                    overflow-x: hidden;
-                   
-                    .ui-state-default{
-                        border: none;
-                        
-                    }
-                    ul{
-                        height: 100%;
-                        flex-wrap: nowrap;
-               
-                        li{
-                            padding: 1rem;
-                            width: 20rem;
-                            margin: 0 ;
-                            font-family: $general-font;
-                            font-size: .95rem;
-                            border-bottom: 1px solid $lightGrey;
-                            &:hover{
-                                color: white;
-                                transition: all .2s;
-                                cursor: pointer; 
-                                background: $primary-color-op;
-                            }
-                        }
-                        
+        flex-wrap: nowrap;
 
-                        .adm{                
-                            width: 100%;                        
-                        }
-
-                        .config{
-                            margin-top:auto;
-                            cursor: initial;
-                            &:hover{
-                                background: white;
-                                color: $grey1;
-                            }
-                            &:before{
-                                content: '\f013';
-                                font-family: FontAwesome;
-                                font-size: 1rem;
-                            }
-
-                        }
-
-                        .catalogos{                           
-                            width: 100%;
-                        }
-
-                        .plantillas{
-                            position:absolute;
-                            bottom: 0;
-                            width: 100%;
-                        }
-                        .menu-item-active{
-                            color: white;
-                            background:  $primary-color;
-                        }
-
-                        .breadCrumbMenu{                            
-                                font-size: .9rem;
-                                text-transform: uppercase;
-                                color: $secondary-color;
-                        }
-
-                        .title-section{
-                            color: $secondary-color;
-                            font-size: .9rem;
-                        }
-                        .itemChild{
-                            padding-left: 2.2rem;
-                            // padding-right: 2rem;
-                        }
-                        .itemChildOfChild{
-                            padding: 1rem .5rem;
-                            padding-left: 3.45rem;                            
-                        }
-
-
-                    }
-                }
-                .menu-arrow{
-                    padding:0;
-                    border-left: 1px solid $lightGrey;
-                    text-align: center;   
-                    flex-grow: 1;                 
-                    i{                      
-                        margin: .5em auto;   
-                        color: $grey1;       
-                        cursor: pointer;              
-                    }
-                }
-            
-        }    
-        
-    }
-
-    // body .ui-panelmenu {
-    //     .ui-panelmenu-header{
-    //         // border: none;
-    //         border-bottom: 1px solid $grey4;
-    //     }
-    //       .ui-panelmenu-panel{
-    //             border: none;  
-    //         &:last-child{
-    //              border: none;  
-    //         } 
-    //     }
-        
-    // }
-    .closedMenu{
-        margin-left: -20em;
-        transition: all 1s;
-    }
-
-    
-    .openedMenu{
-        margin-left: 0;
-        transition: all 1s;
-    }
-
-
-    @media screen and (max-width: 1300px){
-        .menu-censo .container-fluid .col-items ul li{
-            padding: .6rem;                   
+        li {
+          padding: 1rem;
+          width: 20rem;
+          margin: 0;
+          font-family: $general-font;
+          font-size: 0.95rem;
+          border-bottom: 1px solid $lightGrey;
+          &:hover {
+            color: white;
+            transition: all 0.2s;
+            cursor: pointer;
+            background: $primary-color-op;
+          }
         }
 
-    }
-
-    @media screen and (max-width: 1250px){
-        .menu-censo{
-            height: 100%;
-            position: fixed;
-            z-index: 100;
-            .col-items{
-                padding:0;
-            }
-
-        }
-    //     .openedMenu{
-    //         margin-left: -20em;
-    //         transition: all 1s;
-    //     }
-    //      .closedMenu{
-    //         margin-left: 0;
-    //         transition: all 1s;
-    //     }
-
-    //     .icono-menu{
-    //         :before{
-    //             content: "\f00D"
-    //         }
-    //     }
-
-    //     .icono-menu-flecha{
-    //         :before{
-    //             content: "\f0C9"
-    //         }
-    //     }
-
-    }
-
-
-    @media screen and (max-width: 768px){
-         .menu-censo{
-            padding-top: 7rem;
-         }
-    }
-
-    @media screen and (max-width: 525px){
-         .menu-censo{    
-             padding-top: 9rem;
-            .container-fluid{
-                .col-items{
-                    padding:0;
-                    width: 18em;
-                }
-            }
-        }
-        .closedMenu{
-            margin-left: -18em;
+        .adm {
+          width: 100%;
         }
 
-        // .openedMenu{
-        //     margin-left: -18em;
-        // }
-      
+        .config {
+          margin-top: auto;
+          cursor: initial;
+          &:hover {
+            background: white;
+            color: $grey1;
+          }
+          &:before {
+            content: "\f013";
+            font-family: FontAwesome;
+            font-size: 1rem;
+          }
+        }
+
+        .catalogos {
+          width: 100%;
+        }
+
+        .plantillas {
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+        }
+        .menu-item-active {
+          color: white;
+          background: $primary-color;
+        }
+
+        .breadCrumbMenu {
+          font-size: 0.9rem;
+          text-transform: uppercase;
+          color: $secondary-color;
+        }
+
+        .title-section {
+          color: $secondary-color;
+          font-size: 0.9rem;
+        }
+        .itemChild {
+          padding-left: 2.2rem;
+          // padding-right: 2rem;
+        }
+        .itemChildOfChild {
+          padding: 1rem 0.5rem;
+          padding-left: 3.45rem;
+        }
+      }
     }
-    
+    .menu-arrow {
+      padding: 0;
+      border-left: 1px solid $lightGrey;
+      text-align: center;
+      flex-grow: 1;
+      i {
+        margin: 0.5em auto;
+        color: $grey1;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+// body .ui-panelmenu {
+//     .ui-panelmenu-header{
+//         // border: none;
+//         border-bottom: 1px solid $grey4;
+//     }
+//       .ui-panelmenu-panel{
+//             border: none;
+//         &:last-child{
+//              border: none;
+//         }
+//     }
+
+// }
+.closedMenu {
+  margin-left: -20em;
+  transition: all 1s;
+}
+.iconFixed {
+  -moz-transform: rotate(25deg);
+  -webkit-transform: rotate(25deg);
+  -o-transform: rotate(25deg);
+  -ms-transform: rotate(25deg);
+  transform: rotate(25deg);
+}
+.iconFixed i {
+  color: #c3c3c3 !important;
+}
+
+.openedMenu {
+  margin-left: 0;
+  transition: all 1s;
+}
+
+@media screen and (max-width: 1300px) {
+  .menu-censo .container-fluid .col-items ul li {
+    padding: 0.6rem;
+  }
+}
+
+@media screen and (max-width: 1250px) {
+  .menu-censo {
+    height: 100%;
+    position: fixed;
+    z-index: 100;
+    .col-items {
+      padding: 0;
+    }
+  }
+  //     .openedMenu{
+  //         margin-left: -20em;
+  //         transition: all 1s;
+  //     }
+  //      .closedMenu{
+  //         margin-left: 0;
+  //         transition: all 1s;
+  //     }
+
+  //     .icono-menu{
+  //         :before{
+  //             content: "\f00D"
+  //         }
+  //     }
+
+  //     .icono-menu-flecha{
+  //         :before{
+  //             content: "\f0C9"
+  //         }
+  //     }
+}
+
+@media screen and (max-width: 768px) {
+  .menu-censo {
+    padding-top: 7rem;
+  }
+}
+
+@media screen and (max-width: 525px) {
+  .menu-censo {
+    padding-top: 9rem;
+    .container-fluid {
+      .col-items {
+        padding: 0;
+        width: 18em;
+      }
+    }
+  }
+  .closedMenu {
+    margin-left: -18em;
+  }
+
+  // .openedMenu{
+  //     margin-left: -18em;
+  // }
+}

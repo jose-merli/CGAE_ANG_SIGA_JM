@@ -14,6 +14,7 @@ import { SigaServices } from "../../_services/siga.service";
 export class MenuComponent implements OnInit {
   items: MenuItem[];
   closeMenu: boolean = false;
+  bloquedMenu: boolean = false;
   showChild: boolean = false;
   selectedItem: any;
   selectedLabel: any;
@@ -21,26 +22,38 @@ export class MenuComponent implements OnInit {
   selectedItemOfChild: any;
   selectedLabelOfChild: any;
   encontrado: boolean;
+  progressSpinner: boolean = false;
 
   constructor(
     private router: Router,
     private sigaServices: SigaServices,
     private translateService: TranslateService
-  ) { }
+  ) {}
 
   // TODO: Revisar si tiene sentido que las rutas las devuelva el back
   //o revisar si se pude instanciar el router de forma dinámica al arrancar el angular
   ngOnInit() {
-    this.sigaServices.get("menu").subscribe(response => {
-      this.items = response.menuItems;
-      return this.items;
+    this.progressSpinner = true;
+    this.sigaServices.get("diccionarios").subscribe(response => {
+      response.DiccionarioItems;
+      this.sigaServices.get("menu").subscribe(response => {
+        this.progressSpinner = false;
+        this.items = response.menuItems;
+        return this.items;
+      });
     });
   }
 
   onCloseMenu() {
-    this.closeMenu = !this.closeMenu;
-    this.sigaServices.notifyMenuToggled();
-    console.log(this.closeMenu);
+    if (!this.bloquedMenu) {
+      this.closeMenu = !this.closeMenu;
+      this.sigaServices.notifyMenuToggled();
+      console.log(this.closeMenu);
+    }
+  }
+
+  onFixedMenu() {
+    this.bloquedMenu = !this.bloquedMenu;
   }
 
   isRoute(ruta) {
@@ -52,11 +65,15 @@ export class MenuComponent implements OnInit {
     }
     return currentRoute === ruta || this.encontrado;
   }
+  isCargado(key: string): boolean {
+    return key != this.translateService.instant(key);
+  }
 
   navigateTo(ruta) {
     if (ruta !== " ") {
       if (ruta !== "opcionMenu" && ruta !== "permisos") {
-        this.closeMenu = !this.closeMenu;
+        // this.closeMenu = !this.closeMenu;
+        this.onCloseMenu();
         this.router.navigate([ruta]);
       }
 
@@ -78,6 +95,7 @@ export class MenuComponent implements OnInit {
   }
 
   viewChildOfChild(items, label) {
+    this.showChildOfChild = false;
     if (items) {
       this.showChildOfChild = !this.showChildOfChild;
       this.selectedItemOfChild = items;
@@ -93,6 +111,4 @@ export class MenuComponent implements OnInit {
   backMenuChild() {
     this.showChildOfChild = false;
   }
-
-
 }
