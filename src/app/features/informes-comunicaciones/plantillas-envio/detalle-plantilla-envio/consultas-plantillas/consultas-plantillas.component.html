@@ -87,9 +87,9 @@
             iconPos="left" label="{{ 'general.message.deseleccionar' | translate}}"></button>
           <button [disabled]="nuevaConsulta" (click)="addConsulta()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Añadir"></button>
           <button *ngIf="selectedDatos && selectedDatos.length == 1" (click)="asociar(selectedDatos)" pButton type="button" icon="fa fa-arrows-alt-h"
-            iconPos="left" label="asociar"></button>
+            iconPos="left" label="{{ 'general.message.guardar' | translate}}"></button>
           <button *ngIf="selectedDatos && selectedDatos !=''" (click)="desasociar(selectedDatos)" pButton type="button" icon="fa fa-exchange-alt"
-            iconPos="left" label="Desasociar"></button>
+            iconPos="left" label="{{ 'general.message.cancek' | translate}}"></button>
         </div>
       </p-footer>
     </div>

@@ -2,8 +2,8 @@
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p>{{'menu.informesYcomunicaciones' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>{{'menu.informesYcomunicaciones.plantillasEnvio' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>Ficha plantillas de envío
+      <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.informesYcomunicaciones.plantillasEnvio' | translate}}
+      <i class="pl-1 fa fa-angle-right"></i>Ficha Plantillas Envío
     </p>
   </div>
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
