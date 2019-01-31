@@ -315,6 +315,7 @@ export class EnviosMasivosComponent implements OnInit {
       sessionStorage.setItem("filtros", JSON.stringify(this.bodySearch));
     } else if (!this.selectMultiple && this.estado != 4) {
       this.showInfo('El envío está en proceso, no puede editarse')
+      this.selectedDatos = [];
     }
   }
 
