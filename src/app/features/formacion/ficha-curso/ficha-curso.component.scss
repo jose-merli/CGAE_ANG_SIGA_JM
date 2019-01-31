@@ -23,3 +23,20 @@
     font-size: 0.8rem;
   }
 }
+
+.paddingInputTable {
+  padding: 0.25em 1em;
+  box-shadow: none !important;
+  border-color: #c6c7c8 !important;
+}
+
+.paddingInput {
+  padding: 0.2em 0.6em;
+  font-size: 14px;
+  box-shadow: none !important;
+  border-color: #c6c7c8 !important;
+}
+
+.disabledOpacity {
+  opacity: 0.6 !important;
+}

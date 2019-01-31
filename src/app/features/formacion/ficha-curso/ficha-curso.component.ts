@@ -1695,20 +1695,20 @@ export class FichaCursoComponent implements OnInit {
 
   //Funciones que controlan los formadores editados
   //Si se edita un campo input de la tabla
-  editFormadorTable(event) {
+  editFormadorTable(event, data) {
     this.editFormador = true;
     this.modoEdicionFormador = true;
 
     let idFindFormador = this.formadoresUpdate.findIndex(
-      x => x.idPersona === event.data.idPersona && x.idRol === event.data.idRol
+      x => x.idPersona === data.idPersona && x.idRol === data.idRol
     );
 
     if (idFindFormador == -1) {
-      this.addTrainerUpdateList(idFindFormador, event.data);
+      this.addTrainerUpdateList(idFindFormador, data);
     } else {
       let id = this.datosFormadores.findIndex(
         x =>
-          x.idPersona === event.data.idPersona && x.idRol === event.data.idRol
+          x.idPersona === data.idPersona && x.idRol === data.idRol
       );
 
       this.formadoresUpdate[idFindFormador] = this.datosFormadores[id];
