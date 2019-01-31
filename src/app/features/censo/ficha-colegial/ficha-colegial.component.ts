@@ -2111,6 +2111,20 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
+  onBlur(event) {
+    if (event.target.value != "" && !this.autoComplete.panelVisible) {
+      this.checked = true;
+      this.isCrear = true;
+      this.item = new ComboEtiquetasItem();
+      this.item.idGrupo = "";
+      this.item.label = event.srcElement.value;
+      
+      this.mensaje = this.translateService.instant(
+      "censo.etiquetas.literal.rango"
+      );
+      }
+    } 
+    
   pasarFechas() {
     this.colegialesBody.incorporacionDate = this.arreglarFecha(
       this.colegialesBody.incorporacion

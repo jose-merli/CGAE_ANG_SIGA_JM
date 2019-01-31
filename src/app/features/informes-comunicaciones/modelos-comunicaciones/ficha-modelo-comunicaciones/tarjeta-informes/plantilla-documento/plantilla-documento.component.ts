@@ -68,6 +68,10 @@ export class PlantillaDocumentoComponent implements OnInit {
   selectedSufijos: any = [];
   steps: MenuItem[];
   activeStep: number;
+  bodyInicial: any = [];
+  sufijosInicial: any = [];
+  selectedSufijosInicial: any = [];
+  docsInicial: any = [];
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -290,8 +294,11 @@ export class PlantillaDocumentoComponent implements OnInit {
       this.body.sufijos = this.informeItem.sufijos
       if (this.body.sufijos && this.body.sufijos.length > 0) {
         this.selectedSufijos = this.body.sufijos;
+        this.selectedSufijosInicial = JSON.parse(JSON.stringify(this.selectedSufijos));
       }
     }
+
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
   }
 
   getComboFormatos() {
@@ -311,7 +318,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       n => {
         this.sufijos = n.sufijos;
         this.getValoresSufijo();
-
+        this.sufijosInicial = JSON.parse(JSON.stringify(this.sufijos));
       },
       err => {
         console.log(err);
@@ -353,6 +360,7 @@ export class PlantillaDocumentoComponent implements OnInit {
             e.guardada = true;
           });
           this.body.plantillas = JSON.parse(JSON.stringify(this.documentos));
+          this.docsInicial = JSON.parse(JSON.stringify(this.documentos));
         },
         err => {
           this.showFail('Error al cargar las consultas');
@@ -362,10 +370,13 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   restablecerDatosGenerales() {
-    this.getSessionStorage();
-    if (this.body.idInforme != undefined) {
-      this.getResultados();
-    }
+    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.sufijos = JSON.parse(JSON.stringify(this.sufijosInicial));
+    this.selectedSufijos = JSON.parse(JSON.stringify(this.selectedSufijosInicial));
+    this.documentos = JSON.parse(JSON.stringify(this.docsInicial));
+
+    this.body.consultas = this.datos;
+    this.nuevoDocumento = false;
   }
 
   getResultados() {
@@ -378,7 +389,6 @@ export class PlantillaDocumentoComponent implements OnInit {
       .subscribe(
         data => {
           this.datos = JSON.parse(data["body"]).consultaItem;
-          debugger;
           if (this.datos.length <= 0) {
             this.datos = [
               { idConsulta: '', finalidad: '', objetivo: 'Destinatario', idObjetivo: '1' },
@@ -476,6 +486,10 @@ export class PlantillaDocumentoComponent implements OnInit {
         this.body.idInforme = JSON.parse(data["body"]).data;
         sessionStorage.setItem("modelosInformesSearch", JSON.stringify(this.body));
         sessionStorage.removeItem("crearNuevaPlantillaDocumento");
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        this.sufijosInicial = JSON.parse(JSON.stringify(this.sufijos));
+        this.selectedSufijosInicial = JSON.parse(JSON.stringify(this.selectedSufijos));
+        this.docsInicial = JSON.parse(JSON.stringify(this.documentos));
       },
       err => {
         this.showFail('Error al guardar la plantilla');
@@ -485,6 +499,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         this.getDocumentos();
       }
     );
+
   }
 
   guardarDocumento(plantilla) {
@@ -495,6 +510,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         this.body.plantillas.push(plantilla);
         this.documentos = this.body.plantillas;
         this.documentos = [... this.documentos];
+
       },
       err => {
         this.showFail('Error al subir el documento');
@@ -797,6 +813,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   restablecerConsultas() {
     this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+
   }
 
   isGuardarDisabled() {

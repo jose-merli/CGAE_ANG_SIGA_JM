@@ -54,7 +54,7 @@
       <div class="text-right main-button ">
         <button (click)="restore()" pButton type="button" icon="fas fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
         <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
-        <button (click)="newElement()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        <button (click)="newElement()" pButton type="button" icon="fa fa-plus" [disabled]="!isLetrado" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -68,7 +68,6 @@
         <p-column *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true" filterMatchMode="contains">
         </p-column>
-
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales">Mostrando registros del {{ table.first + 1 }} al {{ table.first + table.rows }} de un total de {{ table.totalRecords
