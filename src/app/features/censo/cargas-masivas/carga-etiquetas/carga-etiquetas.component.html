@@ -24,9 +24,8 @@
         <div class="form-group col-lg-3 col-md-3">
           <label>{{"censo.sociedades.datosBancarios.adjuntar" | translate}}</label>
           <br>
-          <p-fileUpload mode="basic" #pUploadFile  chooseLabel="{{ 'censo.sociedades.datosBancarios.seleccionarArchivo' | translate}}"
-             class="edit my-0 mx-auto main-button" name="file"  accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-             (change)="getFile($event, form)" (click)="changeDisabledButton()" (onClear)="changeDisabledButton()"></p-fileUpload>
+          <p-fileUpload #pUploadFile chooseLabel="{{ 'censo.sociedades.datosBancarios.seleccionarArchivo' | translate}}" name="file" mode="basic" accept=".xls" 
+           class="edit my-0 mx-auto main-button" (onSelect)="getFile($event)" auto="true"> </p-fileUpload>
         </div>
 
       </div>

@@ -400,7 +400,8 @@
         <div class="form-group col-lg-12 col-md-12">
           <label>{{"censo.sociedades.datosBancarios.adjuntar" | translate}}</label>
           <br>
-          <p-fileUpload #fubauto mode="basic" name="file"  [(disabled)]="!permisos || disabledAction" (change)="uploadFile($event)" auto="true" chooseLabel="{{ 'censo.sociedades.datosBancarios.seleccionarArchivo' | translate}}"></p-fileUpload>
+          <p-fileUpload #fubauto mode="basic" name="file"  [(disabled)]="!permisos || disabledAction" (onSelect)="uploadFile($event)" auto="true" 
+          chooseLabel="{{ 'censo.sociedades.datosBancarios.seleccionarArchivo' | translate}}" ></p-fileUpload>
         </div>
       </div>
     </div>

@@ -138,7 +138,7 @@
             <img *ngIf="existeImagen" [src]="imagenPersona" class="imagenCentrada" />
             <i *ngIf="!existeImagen" class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
             <p-fileUpload #fubauto chooseLabel="" class=" edit my-0 mx-auto main-button" [(disabled)]="isLetrado || disabledAction" mode="basic"
-              name="file" auto="true" accept="image/*" (change)="uploadImage($event)" auto="true">
+              name="file" auto="true" accept="image/*" (onSelect)="uploadImage($event)" auto="true">
             </p-fileUpload>
           </div>
         </div>

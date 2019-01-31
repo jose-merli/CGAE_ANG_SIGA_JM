@@ -131,6 +131,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   table: DataTable;
   selectedDatos;
 
+  @ViewChild("fubauto") fubauto;
+
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
   constructor(
@@ -1217,9 +1219,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         },
         error => {
           this.bodyDatosBancariosAnexoSearch = JSON.parse(error["error"]);
-          this.showFail(
-            this.bodyDatosBancariosAnexoSearch.error.message.toString()
-          );
+          // this.showFail(
+          //   this.bodyDatosBancariosAnexoSearch.error.message.toString()
+          // );
           console.log(error);
           this.progressSpinner = false;
         }
@@ -1512,6 +1514,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       () => {
         this.selectedProductoServicio = [];
         this.comboProductoServicio = [];
+        this.fubauto.chooseLabel = "Seleccionar Archivo";
 
         this.cargarDatosAnexos();
       }
@@ -1613,7 +1616,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   uploadFile(event: any) {
     console.log("Event", event);
     // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
-    let fileList: FileList = event.target.files;
+    let fileList: FileList = event.files;
 
     let nombreCompletoArchivo = fileList[0].name;
     let extensionArchivo = nombreCompletoArchivo.substring(
@@ -1629,6 +1632,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     } else {
       // se almacena el archivo para habilitar boton guardar
       this.file = fileList[0];
+      this.fubauto.chooseLabel = nombreCompletoArchivo;
     }
   }
 

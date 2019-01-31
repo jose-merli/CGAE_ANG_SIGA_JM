@@ -22,7 +22,7 @@
                         <label>{{'administracion.confInterfaz.logotipo' | translate}}</label>
                         <br>
                         <div class="ui-inputgroup">
-                            <p-fileUpload #fubauto mode="basic" name="file" accept="image/*" (change)="uploadImage($event)" auto="true" chooseLabel="{{'administracion.gestionEntidad.buscarLogotipo' | translate}}">
+                            <p-fileUpload #fubauto mode="basic" name="file" accept="image/*" (onSelect)="uploadImage($event)" auto="true" chooseLabel="{{'administracion.gestionEntidad.buscarLogotipo' | translate}}">
                             </p-fileUpload>
                             <div *ngIf="archivoDisponible">
                                 <input type="text" pInputText disabled="true" [(ngModel)]="nombreImagen" />
