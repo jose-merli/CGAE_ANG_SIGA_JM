@@ -122,6 +122,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 
 	isSelectMultiple() {
 		this.selectMultiple = !this.selectMultiple;
+		this.nuevaConsulta = false;
 		if (!this.selectMultiple) {
 			this.selectedDatos = [];
 			this.numSelected = 0;
@@ -146,10 +147,9 @@ export class ConsultasPlantillasComponent implements OnInit {
 	navigateTo(dato) {
 		let idConsulta = dato[0].idConsulta;
 		console.log(dato);
-		if (!this.selectMultiple && idConsulta) {
+		if (!this.selectMultiple && idConsulta && !this.nuevaConsulta) {
 			sessionStorage.setItem('consultaPlantillaSearch', JSON.stringify(dato[0]));
 			this.router.navigate([ '/fichaConsulta' ]);
-
 		}
 	}
 
