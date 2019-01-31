@@ -90,8 +90,7 @@
         </div>
         <div class="col-lg-2 col-md-2">
           <label>{{ 'formacion.busquedaInscripcion.calificacion' | translate }}</label>
-          <input class="form-control" name="calificacion" [(ngModel)]='inscripcion.calificacion' [disabled]="true" type="number" min="0"
-          >
+          <input class="form-control" name="calificacion" [(ngModel)]='inscripcion.calificacion' [disabled]="true" type="text" pInputText>
         </div>
       </div>
       <div class="form-row lg-12 md-12" style="margin-top: 10px">

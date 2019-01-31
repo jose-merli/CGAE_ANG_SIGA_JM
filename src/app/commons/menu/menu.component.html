@@ -94,11 +94,7 @@
       <p-panelMenu [model]="items"></p-panelMenu>
     </div>-->
     <div (click)="onCloseMenu()" class="px-2 menu-arrow">
-      <div
-        (click)="onCloseMenu()"
-        *ngIf="closeMenu === false"
-        class="icono-menu-flecha"
-      >
+      <div *ngIf="closeMenu === false" class="icono-menu-flecha">
         <i class="fa fa-times"></i>
       </div>
       <div
@@ -116,11 +112,7 @@
         <i class="fas fa-thumbtack"></i>
       </div>
 
-      <div
-        
-        *ngIf="closeMenu === true"
-        class="icono-menu "
-      >
+      <div *ngIf="closeMenu === true" class="icono-menu ">
         <i class="fa fa-bars"></i>
       </div>
     </div>

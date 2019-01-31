@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, ViewEncapsulation } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+  ViewEncapsulation
+} from "@angular/core";
 import { SigaServices } from "../../../_services/siga.service";
 import { DatosInscripcionItem } from "../../../models/DatosInscripcionItem";
 import { esCalendar } from "../../../utils/calendar";
@@ -569,7 +575,7 @@ export class FichaInscripcionComponent implements OnInit {
 
     sessionStorage.removeItem("modoEdicionInscripcion");
     sessionStorage.removeItem("pantallaListaInscripciones");
-    
+
     this.router.navigate(["/fichaCurso"]);
   }
 
@@ -651,9 +657,7 @@ export class FichaInscripcionComponent implements OnInit {
     this.msgs.push({
       severity: "error",
       summary: "Información",
-      detail: this.translateService.instant(
-        "Ya se ha realizado una solicitud de certificado previa"
-      )
+      detail: "Ya se ha realizado una solicitud de certificado previa"
     });
   }
 
