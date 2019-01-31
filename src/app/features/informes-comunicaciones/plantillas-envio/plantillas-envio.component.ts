@@ -68,16 +68,18 @@ export class PlantillasEnvioComponent implements OnInit {
       { field: "descripcion", header: "Descripción" }
     ];
 
-    if (sessionStorage.getItem("filtrosPlantillas") != null) {
-      this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosPlantillas"));
-      this.buscar();
-    }
-
     this.configTabla();
     this.getTipoEnvios();
     this.getInstitucion();
 
     // this.comboTipoEnvio = [{ label: '', value: '' }, { label: 'SMS', value: '1' }, { label: 'email', value: '2' }, { label: 'carta', value: '3' }]
+  }
+
+  ngAfterViewInit() {
+    if (sessionStorage.getItem("filtrosPlantillas") != null) {
+      this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosPlantillas"));
+      this.buscar();
+    }
   }
 
   getInstitucion() {
@@ -212,10 +214,14 @@ export class PlantillasEnvioComponent implements OnInit {
   }
 
   addPlantilla() {
-    this.router.navigate(["/fichaPlantilla"]);
+    sessionStorage.setItem(
+      "filtrosPlantillas",
+      JSON.stringify(this.bodySearch)
+    );
     sessionStorage.removeItem("plantillasEnvioSearch");
     sessionStorage.removeItem("remitente");
     sessionStorage.setItem("crearNuevaPlantilla", JSON.stringify("true"));
+    this.router.navigate(["/fichaPlantilla"]);
   }
 
   getTipoEnvios() {
