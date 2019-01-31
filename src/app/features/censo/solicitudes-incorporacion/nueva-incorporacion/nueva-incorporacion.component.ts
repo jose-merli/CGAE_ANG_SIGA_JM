@@ -40,6 +40,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   fichaBancaria: boolean = false;
   es: any;
   solicitudEditar: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
+  checkSolicitudInicio: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
   progressSpinner: boolean = false;
   comboSexo: any;
   tiposSolicitud: any[];
@@ -87,7 +88,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     private location: Location,
     private formBuilder: FormBuilder,
     private router: Router
-  ) {}
+  ) { }
 
   @ViewChild("poblacion")
   dropdown: Dropdown;
@@ -100,6 +101,9 @@ export class NuevaIncorporacionComponent implements OnInit {
 
     if (sessionStorage.getItem("consulta") == "true") {
       this.solicitudEditar = JSON.parse(
+        sessionStorage.getItem("editedSolicitud")
+      );
+      this.checkSolicitudInicio = JSON.parse(
         sessionStorage.getItem("editedSolicitud")
       );
       this.consulta = true;
@@ -115,6 +119,17 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.solicitudEditar = JSON.parse(
           sessionStorage.getItem("nuevaIncorporacion")
         );
+        this.checkSolicitudInicio = JSON.parse(
+          sessionStorage.getItem("nuevaIncorporacion")
+        );
+      } else {
+        this.solicitudEditar = JSON.parse(
+          sessionStorage.getItem("editedSolicitud")
+        );
+        this.checkSolicitudInicio = JSON.parse(
+          sessionStorage.getItem("editedSolicitud")
+        );
+        this.tratarDatos();
       }
       this.estadoSolicitudSelected = "20";
       this.vieneDeBusqueda = true;
@@ -122,7 +137,10 @@ export class NuevaIncorporacionComponent implements OnInit {
     }
     if (this.isValidIBAN()) {
       this.recuperarBicBanco();
+      this.checkSolicitudInicio = JSON.parse(JSON.stringify(this.solicitudEditar)
+      );
     }
+    this.onChangeNColegiado();
   }
 
   cargarCombos() {
@@ -467,6 +485,8 @@ export class NuevaIncorporacionComponent implements OnInit {
 
           this.solicitudEditar.banco = bodyBancoBic.banco;
           this.solicitudEditar.bic = bodyBancoBic.bic;
+          this.checkSolicitudInicio.banco = bodyBancoBic.banco;
+          this.checkSolicitudInicio.bic = bodyBancoBic.bic;
         },
         error => {
           // let bodyBancoBicSearch = JSON.parse(error["error"]);
@@ -724,9 +744,9 @@ para poder filtrar el dato con o sin estos caracteres*/
       .getParam(
         "direcciones_comboPoblacion",
         "?idProvincia=" +
-          this.solicitudEditar.idProvincia +
-          "&filtro=" +
-          poblacionBuscada
+        this.solicitudEditar.idProvincia +
+        "&filtro=" +
+        poblacionBuscada
       )
       .subscribe(
         n => {
@@ -749,7 +769,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             }
           });
         },
-        error => {},
+        error => { },
         () => {
           // this.isDisabledPoblacion = false;
           this.progressSpinner = false;
@@ -758,62 +778,70 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   isGuardar(): boolean {
-    if (
-      this.checkIdentificacion(this.solicitudEditar.numeroIdentificacion) &&
-      (this.isValidIBAN() ||
-        this.solicitudEditar.iban == "" ||
-        this.solicitudEditar.iban == undefined) &&
-      this.provinciaSelected != "" &&
-      this.estadoSolicitudSelected != "" &&
-      this.estadoSolicitudSelected != undefined &&
-      this.solicitudEditar.fechaEstado != null &&
-      this.solicitudEditar.fechaEstado != undefined &&
-      this.solicitudEditar.fechaSolicitud != null &&
-      this.solicitudEditar.fechaSolicitud != undefined &&
-      this.tipoSolicitudSelected != "" &&
-      this.tipoSolicitudSelected != undefined &&
-      this.tipoColegiacionSelected != "" &&
-      this.tipoColegiacionSelected != undefined &&
-      this.estadoCivilSelected != "" &&
-      this.estadoCivilSelected != undefined &&
-      this.modalidadDocumentacionSelected != "" &&
-      this.modalidadDocumentacionSelected != undefined &&
-      this.solicitudEditar.fechaIncorporacion != null &&
-      this.solicitudEditar.fechaIncorporacion != undefined &&
-      this.solicitudEditar.numColegiado != null &&
-      this.solicitudEditar.numColegiado != undefined &&
-      this.numColegiadoDisponible &&
-      this.tipoIdentificacionSelected != "" &&
-      this.tipoIdentificacionSelected != undefined &&
-      this.solicitudEditar.numeroIdentificacion != null &&
-      this.solicitudEditar.numeroIdentificacion != undefined &&
-      this.tratamientoSelected != "" &&
-      this.tratamientoSelected != undefined &&
-      this.solicitudEditar.nombre != null &&
-      this.solicitudEditar.nombre != undefined &&
-      this.solicitudEditar.apellido1 != null &&
-      this.solicitudEditar.apellido1 != undefined &&
-      this.solicitudEditar.fechaNacimiento != null &&
-      this.solicitudEditar.fechaNacimiento != undefined &&
-      this.paisSelected != undefined &&
-      this.solicitudEditar.domicilio != null &&
-      this.solicitudEditar.domicilio != undefined &&
-      this.isValidCodigoPostal() &&
-      this.solicitudEditar.codigoPostal != null &&
-      this.solicitudEditar.codigoPostal != undefined &&
-      this.solicitudEditar.telefono1 != null &&
-      this.solicitudEditar.telefono1 != undefined &&
-      this.solicitudEditar.correoElectronico != null &&
-      this.solicitudEditar.correoElectronico != undefined &&
-      this.solicitudEditar.titular != null &&
-      this.solicitudEditar.titular != undefined &&
-      this.solicitudEditar.iban != null &&
-      this.solicitudEditar.iban != undefined
-    ) {
-      return true;
+    if (JSON.stringify(this.checkSolicitudInicio) != JSON.stringify(this.solicitudEditar)) {
+      if (
+        this.checkIdentificacion(this.solicitudEditar.numeroIdentificacion) &&
+        (this.isValidIBAN() ||
+          this.solicitudEditar.iban == "" ||
+          this.solicitudEditar.iban == undefined) &&
+        this.provinciaSelected != "" &&
+        this.estadoSolicitudSelected != "" &&
+        this.estadoSolicitudSelected != undefined &&
+        this.solicitudEditar.fechaEstado != null &&
+        this.solicitudEditar.fechaEstado != undefined &&
+        this.solicitudEditar.fechaSolicitud != null &&
+        this.solicitudEditar.fechaSolicitud != undefined &&
+        this.tipoSolicitudSelected != "" &&
+        this.tipoSolicitudSelected != undefined &&
+        this.tipoColegiacionSelected != "" &&
+        this.tipoColegiacionSelected != undefined &&
+        this.estadoCivilSelected != "" &&
+        this.estadoCivilSelected != undefined &&
+        this.modalidadDocumentacionSelected != "" &&
+        this.modalidadDocumentacionSelected != undefined &&
+        this.solicitudEditar.fechaIncorporacion != null &&
+        this.solicitudEditar.fechaIncorporacion != undefined &&
+        // ((this.solicitudEditar.numColegiado != null &&
+        //   this.solicitudEditar.numColegiado != undefined &&
+        this.numColegiadoDisponible != false &&
+        // (this.solicitudEditar.numColegiado == null ||
+        //   (this.solicitudEditar.numColegiado == "" &&
+        // this.numColegiadoDisponible != undefined &&
+        this.tipoIdentificacionSelected != "" &&
+        this.tipoIdentificacionSelected != undefined &&
+        this.solicitudEditar.numeroIdentificacion != null &&
+        this.solicitudEditar.numeroIdentificacion != undefined &&
+        this.tratamientoSelected != "" &&
+        this.tratamientoSelected != undefined &&
+        this.solicitudEditar.nombre != null &&
+        this.solicitudEditar.nombre != undefined &&
+        this.solicitudEditar.apellido1 != null &&
+        this.solicitudEditar.apellido1 != undefined &&
+        this.solicitudEditar.fechaNacimiento != null &&
+        this.solicitudEditar.fechaNacimiento != undefined &&
+        this.paisSelected != undefined &&
+        this.solicitudEditar.domicilio != null &&
+        this.solicitudEditar.domicilio != undefined &&
+        this.isValidCodigoPostal() &&
+        this.solicitudEditar.codigoPostal != null &&
+        this.solicitudEditar.codigoPostal != undefined &&
+        this.solicitudEditar.telefono1 != null &&
+        this.solicitudEditar.telefono1 != undefined &&
+        this.solicitudEditar.correoElectronico != null &&
+        this.solicitudEditar.correoElectronico != undefined &&
+        this.solicitudEditar.titular != null &&
+        this.solicitudEditar.titular != undefined &&
+        this.solicitudEditar.iban != null &&
+        this.solicitudEditar.iban != undefined
+      ) {
+        return true;
+      } else {
+        return false;
+      }
     } else {
       return false;
     }
+
   }
 
   abreCierraFichaColegiacion() {
@@ -879,7 +907,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
 
@@ -992,7 +1020,9 @@ para poder filtrar el dato con o sin estos caracteres*/
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      this.guardar();
+      if (this.isGuardar()) {
+        this.guardar();
+      }
     }
   }
 }
