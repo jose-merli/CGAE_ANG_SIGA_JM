@@ -151,8 +151,11 @@ export class ConsultasPlantillasComponent implements OnInit {
 			sessionStorage.setItem('consultasSearch', JSON.stringify(dato[0]));
 			this.router.navigate(['/fichaConsulta']);
 		}
+		this.numSelected = this.selectedDatos.length;
 	}
-
+	actualizaSeleccionados(selectedDatos) {
+		this.numSelected = selectedDatos.length;
+	} 
 	abreCierraFicha() {
 		if (sessionStorage.getItem('crearNuevaPlantilla') == null) {
 			this.openFicha = !this.openFicha;
