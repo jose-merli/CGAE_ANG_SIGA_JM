@@ -61,6 +61,7 @@ export class ConsultasComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    sessionStorage.removeItem("consultasSearch");
     this.bodySearch.generica = "S";
 
     this.getInstitucion();

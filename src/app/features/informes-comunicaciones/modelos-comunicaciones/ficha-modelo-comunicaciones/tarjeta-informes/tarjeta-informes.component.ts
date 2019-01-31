@@ -224,7 +224,7 @@ export class TarjetaInformesComponent implements OnInit {
     dato.forEach(element => {
       let objEliminar = {
         idModeloComunicacion: this.modelo.idModeloComunicacion,
-        idInstitucion: element.idInstitucion,
+        idInstitucion: this.modelo.idInstitucion,
         idInforme: element.idInforme
       };
       this.eliminarArray.push(objEliminar);

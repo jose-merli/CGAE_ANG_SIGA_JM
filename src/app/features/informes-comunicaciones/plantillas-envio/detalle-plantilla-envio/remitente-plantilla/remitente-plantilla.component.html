@@ -62,7 +62,8 @@
             </div>
             <div *ngIf="showComboDirecciones" class="form-group col-lg-12 col-md-12">
               <label>Direcciones:</label>
-              <p-dropdown (onChange)="onChangeDireccion($event)" class="select-form" [(ngModel)]="body.idDireccion" [filter]="true" filterMatchMode="contains"
+              <p-dropdown (onChange)="onChangeDireccion($event)" placeholder="{{'general.boton.seleccionar' | translate}}" 
+                    class="select-form" [(ngModel)]="body.idDireccion" [filter]="true" filterMatchMode="contains"
                 [options]="comboDirecciones">
               </p-dropdown>
             </div>
@@ -75,7 +76,8 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>País</label>
-              <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="direccion.idPais" [filter]="true" filterMatchMode="contains"
+              <p-dropdown [disabled]="true" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" 
+                  [(ngModel)]="direccion.idPais" [filter]="true" filterMatchMode="contains"
                 [options]="comboPais">
               </p-dropdown>
             </div>
@@ -88,7 +90,8 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>Provincia</label>
               <!-- (onChange)="onChangeProvincia()" -->
-              <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="direccion.idProvincia" [filter]="true" filterMatchMode="contains"
+              <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="direccion.idProvincia" placeholder="{{'general.boton.seleccionar' | translate}}"
+                 [filter]="true" filterMatchMode="contains"
                 [options]="comboProvincia">
               </p-dropdown>
 
@@ -101,7 +104,8 @@
             <!-- *ngIf="!poblacionExtranjera" -->
             <div *ngIf="!poblacionExtranjera" class="form-group col-lg-6 col-md-6">
               <label>Población</label>
-              <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="direccion.idPoblacion" [filter]="true" filterMatchMode="contains"
+              <p-dropdown [disabled]="true" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" 
+                [(ngModel)]="direccion.idPoblacion" [filter]="true" filterMatchMode="contains"
                 [options]="comboPoblacion">
               </p-dropdown>
             </div>
@@ -111,7 +115,8 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Tipo dirección (*)</label>
-              <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="direccion.idTipoDireccion" [filter]="true" filterMatchMode="contains"
+              <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="direccion.idTipoDireccion" placeholder="{{'general.boton.seleccionar' | translate}}" 
+                [filter]="true" filterMatchMode="contains"
                 [options]="comboTipoDireccion">
               </p-dropdown>
             </div>
