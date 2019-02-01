@@ -157,7 +157,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
     this.sigaServices.get("modelos_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
-        this.colegios.unshift({ label: '', value: '' });
+        this.colegios.unshift({ label: 'Seleccionar', value: '' });
         for (let e of this.colegios) {
           if (e.value == '2000') {
             e.label = 'POR DEFECTO';
@@ -176,6 +176,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
     this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
       data => {
         this.clasesComunicaciones = data.combooItems;
+        this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
       },
       err => {
         console.log(err);

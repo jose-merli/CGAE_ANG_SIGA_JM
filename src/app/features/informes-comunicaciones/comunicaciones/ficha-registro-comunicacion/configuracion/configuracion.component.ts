@@ -96,7 +96,7 @@ export class ConfiguracionComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
         this.tipoEnvios = data.combooItems;
-        this.tipoEnvios.unshift({ label: '', value: '' });
+        this.tipoEnvios.unshift({ label: 'Seleccionar', value: '' });
       },
       err => {
         console.log(err);
@@ -197,6 +197,7 @@ export class ConfiguracionComponent implements OnInit {
     this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
       data => {
         this.clasesComunicaciones = data.combooItems;
+        this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
 
       },
       err => {

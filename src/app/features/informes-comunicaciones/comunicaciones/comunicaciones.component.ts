@@ -132,7 +132,7 @@ export class ComunicacionesComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
         this.tiposEnvio = data.combooItems;
-        this.tiposEnvio.unshift({ label: '', value: '' });
+        this.tiposEnvio.unshift({ label: 'Seleccionar', value: '' });
       },
       err => {
         console.log(err);
@@ -145,6 +145,7 @@ export class ComunicacionesComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_estado").subscribe(
       data => {
         this.estados = data.combooItems;
+        this.estados.unshift({ label: 'Seleccionar', value: '' });
       },
       err => {
         console.log(err);
@@ -158,6 +159,7 @@ export class ComunicacionesComponent implements OnInit {
     this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
       data => {
         this.clasesComunicaciones = data.combooItems;
+        this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
       },
       err => {
         console.log(err);

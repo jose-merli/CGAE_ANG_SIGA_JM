@@ -753,6 +753,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.sigaServices.post("dialogo_claseComunicaciones", rutaClaseComunicacion).subscribe(
       data => {
         this.clasesComunicaciones = JSON.parse(data['body']).combooItems;
+        this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
       },
       err => {
         console.log(err);
@@ -806,7 +807,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.sigaServices.post("dialogo_tipoEnvios", this.bodyComunicacion.idPlantillaEnvios).subscribe(
       data => {
         this.tiposEnvio = JSON.parse(data['body']);
-        this.tiposEnvio.unshift({ label: '', value: '' });
+        this.tiposEnvio.unshift({ label: 'Seleccionar', value: '' });
       },
       err => {
         console.log(err);
