@@ -96,6 +96,7 @@ export class ConfiguracionComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
         this.tipoEnvios = data.combooItems;
+        this.tipoEnvios.unshift({ label: '', value: '' });
       },
       err => {
         console.log(err);

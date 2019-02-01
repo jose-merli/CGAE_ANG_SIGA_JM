@@ -21,7 +21,10 @@ export enum KEY_CODE {
 @Component({
   selector: "app-plantillas-envio",
   templateUrl: "./plantillas-envio.component.html",
-  styleUrls: ["./plantillas-envio.component.scss"]
+  styleUrls: ["./plantillas-envio.component.scss"],
+  host: {
+    "(document:keypress)": "onKeyPress($event)"
+  },
 })
 export class PlantillasEnvioComponent implements OnInit {
   fichaBusqueda: boolean = true;
@@ -57,7 +60,7 @@ export class PlantillasEnvioComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     sessionStorage.removeItem("crearNuevaPlantilla");
@@ -127,7 +130,7 @@ export class PlantillasEnvioComponent implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {}
+        () => { }
       );
   }
 
@@ -228,23 +231,8 @@ export class PlantillasEnvioComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       n => {
         this.tiposEnvio = n.combooItems;
+        this.tiposEnvio.unshift({ label: '', value: '' });
 
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-      para poder filtrar el dato con o sin estos caracteres*/
-        this.tiposEnvio.map(e => {
-          let accents =
-            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-          let accentsOut =
-            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
       },
       err => {
         console.log(err);

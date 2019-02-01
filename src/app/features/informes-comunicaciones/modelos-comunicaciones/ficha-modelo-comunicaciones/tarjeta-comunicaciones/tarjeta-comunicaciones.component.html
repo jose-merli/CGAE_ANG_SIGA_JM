@@ -54,16 +54,15 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td *ngFor="let col of columns" pEditableColumn>
-              <p-dropdown *ngIf="col.field=='nombrePlantilla' && !dato.fhaBaja" [(ngModel)]="dato[col.field]" [options]="plantillas" class="select-form"
-                (onChange)="onChangePeclantilla($event)" dataKey="label"></p-dropdown>
-              <p-dropdown [disabled]="tiposEnvio && tiposEnvio.length == 0" *ngIf="col.field=='tipoEnvio' && !dato.fechaBaja" [(ngModel)]="dato[col.field]"
-                [options]="tiposEnvio" class="select-form" (onChange)="onChangeTipoEnvio($event)" dataKey="label"></p-dropdown>
+              <p-dropdown *ngIf="col.field=='nombrePlantilla' && !dato.fechaBaja" [(ngModel)]="dato[col.field]" [options]="plantillas"
+                class="select-form" (onChange)="onChangePlantilla($event)" dataKey="label"></p-dropdown>
               <span *ngIf="col.field=='nombrePlantilla' && !dato.selected && dato.fechaBaja" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
               <!-- <span *ngIf="col.field=='nombrePlantilla' && !dato.selected && !dato.fechaBaja && dato.nueva">{{dato[col.field]}}</span> -->
-              <span *ngIf="col.field=='tipoEnvio' && !dato.selected && dato.fechaBaja" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
-              <!-- <span *ngIf="col.field=='tipoEnvio' && !dato.selected && !dato.fechaBaja && dato.nueva">{{dato[col.field]}}</span> -->
+              <span *ngIf="col.field=='tipoEnvio' && dato.fechaBaja" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+              <span *ngIf="col.field=='tipoEnvio' && !dato.fechaBaja ">{{dato[col.field]}}</span>
               <span *ngIf="col.field=='porDefecto'">
-                <p-checkbox (onChange)="onChangePorDefecto($event)" [disabled]="dato.guardada" value='Si' [(ngModel)]='dato[col.field]'></p-checkbox>
+                <p-checkbox (onChange)="onChangePorDefecto($event)" value='Si' [(ngModel)]='porDefecto'></p-checkbox>
+                <!-- <p-radioButton value="Si" [(ngModel)]="dato[col.field]" (click)="onChangePorDefecto($event)"></p-radioButton> -->
               </span>
             </td>
           </tr>
@@ -95,7 +94,7 @@
       <div class="text-right main-button ">
         <button *ngIf="showHistorico" (click)="getHistorico('hidden')" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
         <button *ngIf="!showHistorico" (click)="getHistorico('visible')" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-        <button (click)="addPlantilla()" [disabled]="nuevaPlantilla" pButton type="button" icon="fa fa-plus  " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        <button (click)="addPlantilla()" pButton type="button" icon="fa fa-plus  " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
         <button (click)="eliminar(selectedDatos)" *ngIf="selectedDatos && selectedDatos != ''" pButton type="button" icon="fa fa-trash-alt"
           iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
         <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>

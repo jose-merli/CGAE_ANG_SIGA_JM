@@ -123,6 +123,7 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       n => {
         this.tiposEnvio = n.combooItems;
+        this.tiposEnvio.unshift({ label: '', value: '' });
 
       },
       err => {

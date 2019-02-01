@@ -217,8 +217,11 @@ export class PlantillaDocumentoComponent implements OnInit {
       this.selectedDatos = [];
     } else if (this.selectMultiple && dato[0].idObjetivo != '4') {
       this.eliminarDisabled = true;
-    } else if (this.selectMultiple && dato[0].idObjetivo == '4' && (dato[0].idConsulta != '' || dato[0].idConsulta != null)) {
+    } else if (this.selectMultiple && dato[0].idObjetivo == '4' && dato[0].idConsulta != '' && dato[0].idConsulta != null) {
       this.eliminarDisabled = false;
+    }
+    else if (this.selectMultiple && dato[0].idObjetivo == '4' && (dato[0].idConsulta == '' || dato[0].idConsulta == null)) {
+      this.eliminarDisabled = true;
     }
   }
 
@@ -412,11 +415,31 @@ export class PlantillaDocumentoComponent implements OnInit {
                 return false;
               }
             })
+            let dest = this.datos.map(e => {
+              if (e.idObjetivo == '1') {
+                return true;
+              } else {
+                return false;
+              }
+            })
+            let condicional = this.datos.map(e => {
+              if (e.idObjetivo == '3') {
+                return true;
+              } else {
+                return false;
+              }
+            })
             if (multidocumento.indexOf(true) == -1) {
               this.datos.push({ idConsulta: '', finalidad: '', objetivo: 'Multidocumento', idObjetivo: '2' })
             }
             if (datos.indexOf(true) == -1) {
               this.datos.push({ idConsulta: '', finalidad: '', objetivo: 'Datos', idObjetivo: '4' })
+            }
+            if (dest.indexOf(true) == -1) {
+              this.datos.push({ idConsulta: '', finalidad: '', objetivo: 'Destinatario', idObjetivo: '1' })
+            }
+            if (condicional.indexOf(true) == -1) {
+              this.datos.push({ idConsulta: '', finalidad: '', objetivo: 'Condicional', idObjetivo: '3' })
             }
           }
 
@@ -689,6 +712,7 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.sigaServices.post("plantillasDoc_consultas_borrar", this.eliminarArray).subscribe(
       data => {
         this.showSuccess('Se ha eliminado la consulta correctamente');
+        this.selectedDatos = [];
       },
       err => {
         this.showFail('Error al eliminar la consulta');

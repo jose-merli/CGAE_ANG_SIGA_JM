@@ -8,6 +8,7 @@ import { ModelosComunicacionesItem } from '../../../../../models/ModelosComunica
 import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { Identifiers } from '@angular/compiler';
 
+
 @Component({
   selector: 'app-tarjeta-comunicaciones',
   templateUrl: './tarjeta-comunicaciones.component.html',
@@ -225,14 +226,15 @@ export class TarjetaComunicacionesComponent implements OnInit {
 
 
   guardar(dato) {
+    debugger;
     let nuevaPlantillaComunicacion = {
       idModelo: this.body.idModeloComunicacion,
-      idPlantillaEnvios: dato[0].idPlantillaEnvios,
+      idPlantillaEnvios: dato[0].nombrePlantilla,
       idAntiguaPlantillaEnvios: dato[0].idAntiguaPlantillaEnvios,
       idInstitucion: this.body.idInstitucion,
       idTipoEnvios: dato[0].idTipoEnvios,
       idAntiguaTipoEnvios: dato[0].idAntiguaTipoEnvios,
-      porDefecto: dato[0].porDefecto
+      porDefecto: this.porDefecto
     }
 
     this.sigaServices.post("modelos_detalle_guardarPlantilla", nuevaPlantillaComunicacion).subscribe(result => {
@@ -240,6 +242,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
       this.datosInicial = JSON.parse(JSON.stringify(this.datos));
       this.nuevaPlantilla = false;
       this.showSuccess('La plantilla se ha guardado correctamente');
+      this.selectedDatos = [];
     }, error => {
       this.showFail('Error al guardar la plantilla');
       console.log(error);
@@ -322,11 +325,14 @@ export class TarjetaComunicacionesComponent implements OnInit {
   }
 
   getTipoEnvios(idPlantillaEnvios) {
-    this.sigaServices.post("dialogo_tipoEnvios", idPlantillaEnvios).subscribe(
+    this.sigaServices.post("modelos_detalle_tipoEnvioPlantilla", idPlantillaEnvios).subscribe(
       data => {
+        debugger;
         for (let dato of this.datos) {
-          if (dato.idPlantillaEnvios == idPlantillaEnvios) {
-            this.tiposEnvio = data.combooItems;
+          if (dato.nombrePlantilla == idPlantillaEnvios) {
+            dato.tipoEnvio = JSON.parse(data['body']).tipoEnvio;
+            dato.idTipoEnvios = JSON.parse(data['body']).idTipoEnvios;
+
           }
         }
 
@@ -351,10 +357,11 @@ export class TarjetaComunicacionesComponent implements OnInit {
   }
 
   getPlantillas() {
-    this.sigaServices.get("enviosMasivos_plantillas").subscribe(
+    this.sigaServices.get("modelos_detalle_plantillasComunicacion").subscribe(
       data => {
-        let comboPlantillas = JSON.parse(data["body"]);
-        this.plantillas = comboPlantillas.combooItems;
+        debugger;
+        this.plantillas = data.combooItems;
+        this.plantillas.unshift({ label: '', value: '' })
       },
       err => {
         console.log(err);
@@ -368,6 +375,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
     let newPlantilla = {
       nombrePlantilla: '',
       tipoEnvio: '',
+      idTipoEnvios: '',
       porDefecto: null,
       nueva: true
     };
@@ -378,7 +386,8 @@ export class TarjetaComunicacionesComponent implements OnInit {
   }
 
   onChangePlantilla(e) {
-    this.getTipoEnvios(e.value);
+    let idPlantillaEnvios = e.value;
+    this.getTipoEnvios(idPlantillaEnvios);
   }
 
   onChangePorDefecto(e) {

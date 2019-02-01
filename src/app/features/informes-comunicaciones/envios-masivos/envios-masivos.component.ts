@@ -17,7 +17,10 @@ export enum KEY_CODE {
 @Component({
   selector: 'app-envios-masivos',
   templateUrl: './envios-masivos.component.html',
-  styleUrls: ['./envios-masivos.component.scss']
+  styleUrls: ['./envios-masivos.component.scss'],
+  host: {
+    "(document:keypress)": "onKeyPress($event)"
+  },
 })
 export class EnviosMasivosComponent implements OnInit {
 
@@ -110,6 +113,7 @@ export class EnviosMasivosComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
         this.tiposEnvio = data.combooItems;
+        this.tiposEnvio.unshift({ label: '', value: '' });
       },
       err => {
         console.log(err);

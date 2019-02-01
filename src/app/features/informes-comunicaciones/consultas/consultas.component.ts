@@ -21,7 +21,10 @@ export enum KEY_CODE {
 @Component({
   selector: "app-consultas",
   templateUrl: "./consultas.component.html",
-  styleUrls: ["./consultas.component.scss"]
+  styleUrls: ["./consultas.component.scss"],
+  host: {
+    "(document:keypress)": "onKeyPress($event)"
+  },
 })
 export class ConsultasComponent implements OnInit {
   body: ConsultasItem = new ConsultasItem();
