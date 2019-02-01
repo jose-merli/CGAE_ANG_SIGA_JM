@@ -49,6 +49,7 @@ export class EnviosMasivosComponent implements OnInit {
   currentDate: Date = new Date();
   estado: any;
   loaderEtiquetas: boolean = false;
+  fichaBusqueda: boolean = false;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -376,7 +377,9 @@ export class EnviosMasivosComponent implements OnInit {
     this.datos = [];
   }
 
-
+  abreCierraFicha() {
+    this.fichaBusqueda = !this.fichaBusqueda;
+  }
 
 
 }

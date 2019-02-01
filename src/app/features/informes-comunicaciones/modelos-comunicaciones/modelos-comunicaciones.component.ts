@@ -38,6 +38,7 @@ export class ModelosComunicacionesComponent implements OnInit {
   institucionActual: string;
   preseleccionar: any = [];
   visible: any = [];
+  fichaBusqueda: boolean = false;
 
 
   @ViewChild('table') table: DataTable;
@@ -372,6 +373,10 @@ export class ModelosComunicacionesComponent implements OnInit {
   limpiar() {
     this.bodySearch = new ModelosComunicacionesItem();
     this.datos = [];
+  }
+
+  abreCierraFicha() {
+    this.fichaBusqueda = !this.fichaBusqueda;
   }
 
 
