@@ -217,7 +217,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       this.selectedDatos = [];
     } else if (this.selectMultiple && dato[0].idObjetivo != '4') {
       this.eliminarDisabled = true;
-    } else if (this.selectMultiple && dato[0].idObjetivo == '4') {
+    } else if (this.selectMultiple && dato[0].idObjetivo == '4' && (dato[0].idConsulta != '' || dato[0].idConsulta != null)) {
       this.eliminarDisabled = false;
     }
   }

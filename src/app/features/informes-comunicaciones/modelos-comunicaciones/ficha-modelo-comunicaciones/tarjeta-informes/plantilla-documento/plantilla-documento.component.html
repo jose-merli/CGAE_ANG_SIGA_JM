@@ -222,17 +222,19 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td *ngFor="let col of columns" pEditableColumn>
-              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 1" [(ngModel)]="dato[col.field]"
-                [options]="consultasComboDestinatarios" class="select-form "></p-dropdown>
-              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 2" [(ngModel)]="dato[col.field]"
-                [options]="consultasComboMulti" class="select-form"></p-dropdown>
-              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 3" [(ngModel)]="dato[col.field]"
-                [options]="consultasComboCondicional" class="select-form"></p-dropdown>
-              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 4" [(ngModel)]="dato[col.field]"
-                [options]="consultasComboDatos" class="select-form"></p-dropdown>
+              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 1 && !dato.fechaBaja"
+                [(ngModel)]="dato[col.field]" [options]="consultasComboDestinatarios" class="select-form "></p-dropdown>
+              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 2  && !dato.fechaBaja"
+                [(ngModel)]="dato[col.field]" [options]="consultasComboMulti" class="select-form"></p-dropdown>
+              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 3  && !dato.fechaBaja"
+                [(ngModel)]="dato[col.field]" [options]="consultasComboCondicional" class="select-form"></p-dropdown>
+              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 4  && !dato.fechaBaja"
+                [(ngModel)]="dato[col.field]" [options]="consultasComboDatos" class="select-form"></p-dropdown>
               <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" *ngIf="col.field=='finalidad' && dato.finalidad != '' && dato.fechaBaja">{{dato[col.field]}}</span>
               <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" *ngIf="col.field=='objetivo' && dato.fechaBaja"
                 class="text-uppercase">{{dato[col.field]}}</span>
+              <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" *ngIf="col.field=='idConsulta' && dato.fechaBaja"
+                class="text-uppercase">{{dato.descripcion}}</span>
               <span *ngIf="col.field=='finalidad' && dato.finalidad != '' && !dato.fechaBaja">{{dato[col.field]}}</span>
               <span *ngIf="col.field=='objetivo' && !dato.fechaBaja" class="text-uppercase">{{dato[col.field]}}</span>
             </td>
