@@ -13,8 +13,11 @@
             <label class="mr-auto title-ficha">Configuración Perfiles</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>
-              <!-- <span>{{body.nombre}}</span> -->
+            <label>Nº etiquetas existentes:
+              <span *ngIf="perfilesNoSeleccionados">{{perfilesNoSeleccionados.length}}</span>
+            </label>
+            <label>Nº etiquetas seleccionadas:
+              <span *ngIf="perfilesSeleccionados">{{perfilesSeleccionados.length}}</span>
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
           </div>

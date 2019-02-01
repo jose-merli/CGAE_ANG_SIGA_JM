@@ -288,8 +288,10 @@
                     </td>
                     <td *ngFor="let col of columns" pEditableColumn>
                         <!-- <span *ngIf="col.field == 'tipoEnvio'">{{dato[col.field]}}</span> -->
-                        <p-dropdown *ngIf="col.field == 'tipoEnvio'" [(ngModel)]="dato[col.field]" disabled [options]="tiposEnvio" class="select-form"></p-dropdown>
-                        <p-dropdown *ngIf="col.field == 'plantillaEnvio'" [(ngModel)]="dato[col.field]" [options]="dato.plantillaEnvios" class="select-form"></p-dropdown>
+                        <p-dropdown [filter]="true" filterBy="label,labelSinTilde" *ngIf="col.field == 'tipoEnvio'" [(ngModel)]="dato[col.field]"
+                            disabled [options]="tiposEnvio" class="select-form"></p-dropdown>
+                        <p-dropdown [filter]="true" filterBy="label,labelSinTilde" *ngIf="col.field == 'plantillaEnvio'" [(ngModel)]="dato[col.field]"
+                            [options]="dato.plantillaEnvios" class="select-form"></p-dropdown>
                         <span *ngIf="col.field=='modelo'">{{dato[col.field]}}</span>
                     </td>
                 </tr>

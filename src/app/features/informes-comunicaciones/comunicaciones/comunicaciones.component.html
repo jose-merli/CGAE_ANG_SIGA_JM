@@ -35,12 +35,13 @@
       <div class="form-row d-flex align-items-end">
         <div class="form-group col-lg-4 col-md-4">
           <label>{{'comunicaciones.literal.claseComunicaciones' | translate}}</label>
-          <p-dropdown [options]="clasesComunicaciones" [(ngModel)]="bodySearch.idClaseComunicacion" class="select-form"></p-dropdown>
+          <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [options]="clasesComunicaciones" [(ngModel)]="bodySearch.idClaseComunicacion"
+            class="select-form"></p-dropdown>
         </div>
 
         <div class="form-group col-lg-4 col-md-4">
           <label>{{'enviosMasivos.literal.tipoEnvio' | translate}}</label>
-          <p-dropdown [options]="tiposEnvio" [(ngModel)]="bodySearch.idTipoEnvios" class="select-form"></p-dropdown>
+          <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [options]="tiposEnvio" [(ngModel)]="bodySearch.idTipoEnvios" class="select-form"></p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>{{'enviosMasivos.literal.estado' | translate}}</label>

@@ -21,7 +21,8 @@
           </div>
           <div class="form-group col-lg-4 col-md-4">
             <label>Tipo de envío</label>
-            <p-dropdown class="select-form" [options]="tiposEnvio" [(ngModel)]="bodySearch.idTipoEnvios" placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
+            <p-dropdown [filter]="true" filterBy="label,labelSinTilde" class="select-form" [options]="tiposEnvio" [(ngModel)]="bodySearch.idTipoEnvios"
+              placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
           </div>
         </div>
       </div>
