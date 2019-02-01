@@ -3,8 +3,8 @@
 <div *ngIf="isCargado('menu.enviosAGrupos')" class="plantillas-envio-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{'menu.comunicaciones' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>Búsqueda plantillas de envío
+    <p>{{'menu.informesYcomunicaciones' | translate}}
+      <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.informesYcomunicaciones.plantillasEnvio' | translate}}
     </p>
   </div>
   <div class="card">
@@ -21,14 +21,14 @@
           </div>
           <div class="form-group col-lg-4 col-md-4">
             <label>Tipo de envío</label>
-            <p-dropdown class="select-form" [options]="tiposEnvio" [(ngModel)]="bodySearch.idTipoEnvios" dataKey="value"></p-dropdown>
+            <p-dropdown class="select-form" [options]="tiposEnvio" [(ngModel)]="bodySearch.idTipoEnvios" placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
           </div>
         </div>
       </div>
     </div>
     <div class="card-footer">
       <div class="text-right main-button">
-        <button (click)="limpiar()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
+        <button (click)="limpiar()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
         <button (click)="buscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
         <button (click)="addPlantilla()" pButton type="button" icon="fa fa-plus " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
       </div>
@@ -38,7 +38,7 @@
     <div class="card-body p-0">
       <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
         [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple"
-        paginatorPosition="both" (onRowSelect)="detallePlantilla(selectedDatos)"  (onRowUnselect)="actualizaSeleccionados(selectedDatos)">
+        paginatorPosition="both" (onRowSelect)="detallePlantilla(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
             <col *ngFor="let col of columns" [style.width]="col.width">
@@ -85,8 +85,7 @@
       </p-table>
       <p-footer>
         <div class="text-right main-button">
-          <button *ngIf="selectedDatos && selectedDatos != ''" (click)="isSelectMultiple()" pButton type="button" icon="fa fa-check"
-            iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
+
           <button *ngIf="selectedDatos && selectedDatos != ''" (click)="eliminar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt"
             iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
         </div>

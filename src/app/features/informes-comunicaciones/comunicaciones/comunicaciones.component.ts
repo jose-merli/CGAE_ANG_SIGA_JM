@@ -73,11 +73,11 @@ export class ComunicacionesComponent implements OnInit {
     this.getClasesComunicaciones();
 
     this.cols = [
-      { field: 'clasesComunicaciones', header: 'Clases de comunicaciones' },
+      { field: 'claseComunicaciones', header: 'Clases de comunicaciones' },
       { field: 'descripcion', header: 'Descripción' },
       { field: 'fechaCreacion', header: 'Fecha creación' },
       { field: 'fechaProgramada', header: 'Fecha programación' },
-      { field: 'tipoEnvio', header: 'Forma envío' },
+      { field: 'tipoEnvio', header: 'Tipo envío' },
       { field: 'estadoEnvio', header: 'Estado' }
     ];
 
