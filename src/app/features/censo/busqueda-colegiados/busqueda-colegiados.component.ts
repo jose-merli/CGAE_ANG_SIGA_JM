@@ -176,6 +176,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   irEditarColegiado(id) {
+    sessionStorage.setItem("esNuevoNoColegiado",  JSON.stringify(false));
     if (id.length >= 1 && this.selectMultiple == false) {
       sessionStorage.removeItem("personaBody");
       sessionStorage.setItem("esColegiado", "true");
@@ -753,6 +754,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.sigaServices.post("dialogo_claseComunicaciones", rutaClaseComunicacion).subscribe(
       data => {
         this.clasesComunicaciones = JSON.parse(data['body']).combooItems;
+        this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
       },
       err => {
         console.log(err);
@@ -806,6 +808,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.sigaServices.post("dialogo_tipoEnvios", this.bodyComunicacion.idPlantillaEnvios).subscribe(
       data => {
         this.tiposEnvio = JSON.parse(data['body']);
+        this.tiposEnvio.unshift({ label: 'Seleccionar', value: '' });
       },
       err => {
         console.log(err);

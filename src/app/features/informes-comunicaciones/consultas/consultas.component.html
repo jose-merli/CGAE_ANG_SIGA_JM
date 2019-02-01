@@ -9,6 +9,10 @@
   </div>
   <div class="card">
     <div class="card-body">
+      <p class="title-module"> {{'general.message.datos.generales' | translate }}
+        <i (click)="abreCierraFicha()" *ngIf="fichaBusqueda" class="fa fa-angle-up float-right"></i>
+        <i (click)="abreCierraFicha()" *ngIf="!fichaBusqueda" class="fa fa-angle-down float-right"></i>
+      </p>
       <div class="form-row">
         <div class="form-group col-lg-4 col-md-4">
           <label>Módulo *</label>

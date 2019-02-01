@@ -15,7 +15,10 @@ export enum KEY_CODE {
 @Component({
 	selector: 'app-plantillas-envio',
 	templateUrl: './plantillas-envio.component.html',
-	styleUrls: [ './plantillas-envio.component.scss' ]
+	styleUrls: ['./plantillas-envio.component.scss'],
+	host: {
+		"(document:keypress)": "onKeyPress($event)"
+	},
 })
 export class PlantillasEnvioComponent implements OnInit {
 	fichaBusqueda: boolean = true;
@@ -51,7 +54,7 @@ export class PlantillasEnvioComponent implements OnInit {
 		private changeDetectorRef: ChangeDetectorRef,
 		private confirmationService: ConfirmationService,
 		private router: Router
-	) {}
+	) { }
 
 	ngOnInit() {
 		sessionStorage.removeItem('crearNuevaPlantilla');
@@ -119,7 +122,7 @@ export class PlantillasEnvioComponent implements OnInit {
 				console.log(err);
 				this.progressSpinner = false;
 			},
-			() => {}
+			() => { }
 		);
 	}
 
@@ -159,7 +162,7 @@ export class PlantillasEnvioComponent implements OnInit {
 
 		sessionStorage.setItem('crearNuevaPlantilla', 'false');
 		if (!this.selectMultiple) {
-			this.router.navigate([ '/fichaPlantilla' ]);
+			this.router.navigate(['/fichaPlantilla']);
 			sessionStorage.setItem('plantillasEnvioSearch', JSON.stringify(item[0]));
 			sessionStorage.setItem('filtrosPlantillas', JSON.stringify(this.bodySearch));
 		} else {
@@ -209,7 +212,7 @@ export class PlantillasEnvioComponent implements OnInit {
 		sessionStorage.removeItem('plantillasEnvioSearch');
 		sessionStorage.removeItem('remitente');
 		sessionStorage.setItem('crearNuevaPlantilla', 'true');
-		this.router.navigate([ '/fichaPlantilla' ]);
+		this.router.navigate(['/fichaPlantilla']);
 	}
 
 	getTipoEnvios() {
@@ -299,7 +302,7 @@ función para que no cargue primero las etiquetas de los idiomas*/
 	}
 
 	//búsqueda con enter
-	@HostListener('document:keypress', [ '$event' ])
+	@HostListener('document:keypress', ['$event'])
 	onKeyPress(event: KeyboardEvent) {
 		if (event.keyCode === KEY_CODE.ENTER) {
 			this.buscar();

@@ -21,7 +21,10 @@ export enum KEY_CODE {
 @Component({
   selector: "app-consultas",
   templateUrl: "./consultas.component.html",
-  styleUrls: ["./consultas.component.scss"]
+  styleUrls: ["./consultas.component.scss"],
+  host: {
+    "(document:keypress)": "onKeyPress($event)"
+  },
 })
 export class ConsultasComponent implements OnInit {
   body: ConsultasItem = new ConsultasItem();
@@ -46,7 +49,7 @@ export class ConsultasComponent implements OnInit {
   selectedInstitucion: any;
   institucionActual: any;
   eliminar: boolean = false;
-
+  fichaBusqueda: boolean = false;
   comboGenerica: any = [];
 
   @ViewChild("table") table: DataTable;
@@ -362,6 +365,7 @@ export class ConsultasComponent implements OnInit {
       .subscribe(
         data => {
           this.clasesComunicaciones = data.combooItems;
+          this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
         },
         err => {
           console.log(err);
@@ -375,5 +379,9 @@ export class ConsultasComponent implements OnInit {
       { label: "Sí", value: "S" },
       { label: "No", value: "N" }
     ];
+  }
+
+  abreCierraFicha() {
+    this.fichaBusqueda = !this.fichaBusqueda;
   }
 }

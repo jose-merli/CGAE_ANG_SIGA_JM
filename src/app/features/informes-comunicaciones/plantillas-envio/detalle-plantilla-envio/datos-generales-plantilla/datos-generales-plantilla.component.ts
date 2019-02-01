@@ -6,7 +6,7 @@ import { Message, ConfirmationService } from 'primeng/components/common/api';
 @Component({
 	selector: 'app-datos-generales-plantilla',
 	templateUrl: './datos-generales-plantilla.component.html',
-	styleUrls: [ './datos-generales-plantilla.component.scss' ]
+	styleUrls: ['./datos-generales-plantilla.component.scss']
 })
 export class DatosGeneralesPlantillaComponent implements OnInit {
 	openFicha: boolean = false;
@@ -33,7 +33,7 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
 		}
 	];
 
-	constructor(private sigaServices: SigaServices) {}
+	constructor(private sigaServices: SigaServices) { }
 
 	ngOnInit() {
 		this.getTipoEnvios();
@@ -114,6 +114,7 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
 		this.sigaServices.get('enviosMasivos_tipo').subscribe(
 			(n) => {
 				this.tiposEnvio = n.combooItems;
+				this.tiposEnvio.unshift({ label: 'Seleccionar', value: '' });
 			},
 			(err) => {
 				console.log(err);
@@ -136,7 +137,7 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
 				console.log(err);
 				this.showFail('Error al guardar la plantilla');
 			},
-			() => {}
+			() => { }
 		);
 	}
 

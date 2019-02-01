@@ -17,7 +17,10 @@ export enum KEY_CODE {
 @Component({
   selector: 'app-envios-masivos',
   templateUrl: './envios-masivos.component.html',
-  styleUrls: ['./envios-masivos.component.scss']
+  styleUrls: ['./envios-masivos.component.scss'],
+  host: {
+    "(document:keypress)": "onKeyPress($event)"
+  },
 })
 export class EnviosMasivosComponent implements OnInit {
 
@@ -46,6 +49,7 @@ export class EnviosMasivosComponent implements OnInit {
   currentDate: Date = new Date();
   estado: any;
   loaderEtiquetas: boolean = false;
+  fichaBusqueda: boolean = false;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -110,6 +114,7 @@ export class EnviosMasivosComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
         this.tiposEnvio = data.combooItems;
+        this.tiposEnvio.unshift({ label: 'Seleccionar', value: '' });
       },
       err => {
         console.log(err);
@@ -121,6 +126,7 @@ export class EnviosMasivosComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_estado").subscribe(
       data => {
         this.estados = data.combooItems;
+        this.estados.unshift({ label: 'Seleccionar', value: '' });
         console.log(this.estados)
       },
       err => {
@@ -372,7 +378,9 @@ export class EnviosMasivosComponent implements OnInit {
     this.datos = [];
   }
 
-
+  abreCierraFicha() {
+    this.fichaBusqueda = !this.fichaBusqueda;
+  }
 
 
 }

@@ -156,7 +156,7 @@ export class SolicitudesModificacionComponent implements OnInit {
         header: "censo.busquedaSolicitudesModificacion.literal.estado"
       },
       {
-        field: "idSolicitud",
+        field: "numIdSolicitud",
         header: "censo.resultadosSolicitudesModificacion.literal.idSolicitud"
       },
       {

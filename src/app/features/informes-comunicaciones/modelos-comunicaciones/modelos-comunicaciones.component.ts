@@ -38,6 +38,7 @@ export class ModelosComunicacionesComponent implements OnInit {
   institucionActual: string;
   preseleccionar: any = [];
   visible: any = [];
+  fichaBusqueda: boolean = false;
 
 
   @ViewChild('table') table: DataTable;
@@ -139,7 +140,7 @@ export class ModelosComunicacionesComponent implements OnInit {
     this.sigaServices.get("modelos_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
-        this.colegios.unshift({ label: '', value: '' });
+        this.colegios.unshift({ label: 'Seleccionar', value: '' });
         for (let e of this.colegios) {
           if (e.value == '2000') {
             e.label = 'POR DEFECTO';
@@ -156,6 +157,7 @@ export class ModelosComunicacionesComponent implements OnInit {
     this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
       n => {
         this.clasesComunicaciones = n.combooItems;
+        this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
       },
       err => {
         console.log(err);
@@ -352,8 +354,8 @@ export class ModelosComunicacionesComponent implements OnInit {
   navigateTo(dato) {
     let id = dato[0].id;
     this.body = dato[0];
-    console.log(dato)
-    if (!this.selectMultiple) {
+    console.log(dato);
+    if (!this.selectMultiple && !dato[0].fechaBaja) {
       this.router.navigate(['/fichaModeloComunicaciones']);
       sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
       sessionStorage.setItem("filtrosModelos", JSON.stringify(this.bodySearch));
@@ -372,6 +374,10 @@ export class ModelosComunicacionesComponent implements OnInit {
   limpiar() {
     this.bodySearch = new ModelosComunicacionesItem();
     this.datos = [];
+  }
+
+  abreCierraFicha() {
+    this.fichaBusqueda = !this.fichaBusqueda;
   }
 
 

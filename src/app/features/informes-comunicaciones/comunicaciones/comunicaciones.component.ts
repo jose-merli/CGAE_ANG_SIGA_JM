@@ -17,7 +17,10 @@ export enum KEY_CODE {
 @Component({
   selector: 'app-comunicaciones',
   templateUrl: './comunicaciones.component.html',
-  styleUrls: ['./comunicaciones.component.scss']
+  styleUrls: ['./comunicaciones.component.scss'],
+  host: {
+    "(document:keypress)": "onKeyPress($event)"
+  },
 })
 export class ComunicacionesComponent implements OnInit {
   body: EnviosMasivosItem = new EnviosMasivosItem();
@@ -44,6 +47,7 @@ export class ComunicacionesComponent implements OnInit {
   estado: number;
   currentDate: Date = new Date();
   loaderEtiquetas: boolean = false;
+  fichaBusqueda: boolean = false;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -129,6 +133,7 @@ export class ComunicacionesComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
         this.tiposEnvio = data.combooItems;
+        this.tiposEnvio.unshift({ label: 'Seleccionar', value: '' });
       },
       err => {
         console.log(err);
@@ -141,6 +146,7 @@ export class ComunicacionesComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_estado").subscribe(
       data => {
         this.estados = data.combooItems;
+        this.estados.unshift({ label: 'Seleccionar', value: '' });
       },
       err => {
         console.log(err);
@@ -154,6 +160,7 @@ export class ComunicacionesComponent implements OnInit {
     this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
       data => {
         this.clasesComunicaciones = data.combooItems;
+        this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
       },
       err => {
         console.log(err);
@@ -355,7 +362,9 @@ función para que no cargue primero las etiquetas de los idiomas*/
     this.datos = [];
   }
 
-
+  abreCierraFicha() {
+    this.fichaBusqueda = !this.fichaBusqueda;
+  }
 
 
 }

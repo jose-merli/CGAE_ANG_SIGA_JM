@@ -33,7 +33,7 @@ export class ProgramacionComponent implements OnInit {
   msgs: Message[];
   arrayProgramar: any[];
   currentDate: Date = new Date();
-  estados: string;
+  estados: any = [];
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -179,6 +179,7 @@ export class ProgramacionComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_estado").subscribe(
       data => {
         this.estados = data.combooItems;
+        this.estados.unshift({ label: 'Seleccionar', value: '' });
       },
       err => {
         console.log(err);
