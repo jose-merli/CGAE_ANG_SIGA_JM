@@ -187,11 +187,12 @@ export class TarjetaComunicacionesComponent implements OnInit {
   }
 
   onRowSelect(dato) {
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-    } else {
-      return dato[0].selected = true;
-    }
+    // if (!this.selectMultiple) {
+    //   this.selectedDatos = [];
+    // } else {
+    //   return dato[0].selected = true;
+    // }
+    return dato[0].selected = true;
   }
   onRowUnSelect(dato) {
     if (this.selectMultiple && !dato[0].nueva) {
@@ -208,7 +209,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
       }
 
       this.sigaServices.post(service, this.body.idModeloComunicacion).subscribe(result => {
-        
+
         let data = JSON.parse(result.body);
         this.datos = data.plantillas;
         console.log(this.datos)
@@ -237,7 +238,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
       idInstitucion: this.body.idInstitucion,
       idTipoEnvios: dato[0].idTipoEnvios,
       idAntiguaTipoEnvios: dato[0].idAntiguaTipoEnvios,
-      porDefecto: this.porDefecto
+      porDefecto: dato[0].porDefecto
     }
 
     this.sigaServices.post("modelos_detalle_guardarPlantilla", nuevaPlantillaComunicacion).subscribe(result => {
@@ -316,6 +317,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
     this.sigaServices.post("modelos_detalle_borrarPlantilla", this.eliminarArray).subscribe(
       data => {
         this.showSuccess('Se ha eliminado la plantilla correctamente');
+        this.selectedDatos = [];
       },
       err => {
         this.showFail('Error al eliminar la plantilla');
@@ -403,13 +405,31 @@ export class TarjetaComunicacionesComponent implements OnInit {
 
   }
 
-  onChangePorDefecto(e) {
+  // onChangePorDefecto(e) {
 
-    console.log(e)
-    if (e == true) {
-      this.porDefecto = 'Si';
+  //   console.log(e)
+  //   if (e == true) {
+  //     this.porDefecto = 'Si';
+  //   } else {
+  //     this.porDefecto = 'No';
+  //   }
+  // }
+  onChangePorDefecto(e, dato) {
+    console.log(e, dato)
+    if (dato.fechaBaja == null || dato.fechaBaja == "") {
+      if (e == true) {
+        this.datos.forEach(element => {
+          if (element.fechaBaja == null || element.fechaBaja == "") {
+            if (element != dato) {
+              element.porDefecto = 'No';
+            } else {
+              element.porDefecto = 'Si';
+            }
+          }
+        });
+      }
     } else {
-      this.porDefecto = 'No';
+      dato.porDefecto = "No";
     }
   }
 
