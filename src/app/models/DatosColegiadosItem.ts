@@ -14,7 +14,7 @@ export class DatosColegiadosItem {
   telefono: string;
   movil: string;
   tipoDireccion: string;
-
+  numberColegiado: number;
   sexo: string;
   estadoCivil: string;
   estadoColegial: string;
@@ -56,5 +56,5 @@ export class DatosColegiadosItem {
   subTipoCV1: string;
   subTipoCV2: string;
 
-  constructor() {}
+  constructor() { }
 }

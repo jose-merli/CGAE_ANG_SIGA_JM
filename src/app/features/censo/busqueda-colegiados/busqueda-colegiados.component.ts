@@ -584,7 +584,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         header: "administracion.parametrosGenerales.literal.nombre"
       },
       {
-        field: "numColegiado",
+        field: "numberColegiado",
         header: "censo.busquedaClientesAvanzada.literal.nColegiado"
       },
       {
