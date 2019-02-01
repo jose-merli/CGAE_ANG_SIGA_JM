@@ -47,6 +47,7 @@ export class ComunicacionesComponent implements OnInit {
   estado: number;
   currentDate: Date = new Date();
   loaderEtiquetas: boolean = false;
+  fichaBusqueda: boolean = false;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -361,7 +362,9 @@ función para que no cargue primero las etiquetas de los idiomas*/
     this.datos = [];
   }
 
-
+  abreCierraFicha() {
+    this.fichaBusqueda = !this.fichaBusqueda;
+  }
 
 
 }

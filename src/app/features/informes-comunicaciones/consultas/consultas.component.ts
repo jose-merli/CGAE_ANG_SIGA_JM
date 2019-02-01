@@ -49,7 +49,7 @@ export class ConsultasComponent implements OnInit {
   selectedInstitucion: any;
   institucionActual: any;
   eliminar: boolean = false;
-
+  fichaBusqueda: boolean = false;
   comboGenerica: any = [];
 
   @ViewChild("table") table: DataTable;
@@ -379,5 +379,9 @@ export class ConsultasComponent implements OnInit {
       { label: "Sí", value: "S" },
       { label: "No", value: "N" }
     ];
+  }
+
+  abreCierraFicha() {
+    this.fichaBusqueda = !this.fichaBusqueda;
   }
 }
