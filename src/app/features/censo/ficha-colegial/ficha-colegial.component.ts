@@ -2112,19 +2112,19 @@ export class FichaColegialComponent implements OnInit {
   }
 
   onBlur(event) {
-    if (event.target.value != "" && !this.autoComplete.panelVisible) {
-      this.checked = true;
-      this.isCrear = true;
-      this.item = new ComboEtiquetasItem();
-      this.item.idGrupo = "";
-      this.item.label = event.srcElement.value;
-      
-      this.mensaje = this.translateService.instant(
-      "censo.etiquetas.literal.rango"
+    if  (event.target.value  !=  ""  &&  !this.autoComplete.panelVisible) {
+      this.checked  =  true;
+      this.isCrear  =  true;
+      this.item  =  new  ComboEtiquetasItem();
+      this.item.idGrupo  =  "";
+      this.item.label  =  event.srcElement.value;
+
+      this.mensaje  =  this.translateService.instant(
+        "censo.etiquetas.literal.rango"
       );
-      }
-    } 
-    
+    }
+  }
+
   pasarFechas() {
     this.colegialesBody.incorporacionDate = this.arreglarFecha(
       this.colegialesBody.incorporacion
@@ -3390,7 +3390,11 @@ export class FichaColegialComponent implements OnInit {
       this.colegialesBody.situacion == "20" ||
       this.colegialesBody.situacion == "10"
     ) {
-      this.situacionPersona = "Activo";
+      if (this.colegialesBody.comunitario == "1") {
+        this.situacionPersona = "Abogado Inscrito";
+      } else {
+        this.situacionPersona = "Activo";
+      }
     } else if (this.colegialesBody.situacion != undefined) {
       this.situacionPersona = "De baja";
     } else {

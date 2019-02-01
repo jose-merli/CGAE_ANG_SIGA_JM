@@ -134,7 +134,7 @@ export class PlantillaDocumentoComponent implements OnInit {
     ];
 
     this.colsDocumentos = [
-      { field: 'idioma', header: 'idioma' },
+      { field: 'idioma', header: 'Idioma' },
       { field: 'nombreDocumento', header: 'Plantilla' }
     ]
 
