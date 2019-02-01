@@ -4,7 +4,7 @@ export class SolicitudesModificacionItem {
   fechaHasta: Date;
   fechaModificacion: Date;
   valor: String;
-
+  numIdSolicitud: Number;
   especifica: String;
   idSolicitud: String;
   motivo: String;
@@ -17,5 +17,5 @@ export class SolicitudesModificacionItem {
   numColegiado: String;
   codigo: String;
 
-  constructor() {}
+  constructor() { }
 }
