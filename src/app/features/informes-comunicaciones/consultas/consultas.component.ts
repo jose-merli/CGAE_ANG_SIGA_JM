@@ -365,6 +365,7 @@ export class ConsultasComponent implements OnInit {
       .subscribe(
         data => {
           this.clasesComunicaciones = data.combooItems;
+          this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
         },
         err => {
           console.log(err);

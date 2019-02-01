@@ -162,6 +162,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
       data => {
         this.clasesComunicaciones = data.combooItems;
+        this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
       },
       err => {
         console.log(err);

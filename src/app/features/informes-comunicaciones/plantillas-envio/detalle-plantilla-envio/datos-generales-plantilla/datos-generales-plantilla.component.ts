@@ -114,7 +114,7 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
 		this.sigaServices.get('enviosMasivos_tipo').subscribe(
 			(n) => {
 				this.tiposEnvio = n.combooItems;
-				this.tiposEnvio.unshift({ label: '', value: '' });
+				this.tiposEnvio.unshift({ label: 'Seleccionar', value: '' });
 			},
 			(err) => {
 				console.log(err);

@@ -14,7 +14,12 @@
             <label class="mr-auto title-ficha">Remitente</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label></label>
+            <label>Nombre:
+              <span>{{remitente.nombre}}</span>
+            </label>
+            <label>Apellidos:
+              <span>{{remitente.apellido1}} {{remitente.apellido2}} </span>
+            </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
@@ -62,9 +67,8 @@
             </div>
             <div *ngIf="showComboDirecciones" class="form-group col-lg-12 col-md-12">
               <label>Direcciones:</label>
-              <p-dropdown (onChange)="onChangeDireccion($event)" placeholder="{{'general.boton.seleccionar' | translate}}" 
-                    class="select-form" [(ngModel)]="body.idDireccion" [filter]="true" filterMatchMode="contains"
-                [options]="comboDirecciones">
+              <p-dropdown (onChange)="onChangeDireccion($event)" placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form"
+                [(ngModel)]="body.idDireccion" [filter]="true" filterMatchMode="contains" [options]="comboDirecciones">
               </p-dropdown>
             </div>
             <div class="form-group col-lg-12 col-md-12">
@@ -76,9 +80,8 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>País</label>
-              <p-dropdown [disabled]="true" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" 
-                  [(ngModel)]="direccion.idPais" [filter]="true" filterMatchMode="contains"
-                [options]="comboPais">
+              <p-dropdown [disabled]="true" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="direccion.idPais"
+                [filter]="true" filterMatchMode="contains" [options]="comboPais">
               </p-dropdown>
             </div>
 
@@ -91,8 +94,7 @@
               <label>Provincia</label>
               <!-- (onChange)="onChangeProvincia()" -->
               <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="direccion.idProvincia" placeholder="{{'general.boton.seleccionar' | translate}}"
-                 [filter]="true" filterMatchMode="contains"
-                [options]="comboProvincia">
+                [filter]="true" filterMatchMode="contains" [options]="comboProvincia">
               </p-dropdown>
 
             </div>
@@ -104,9 +106,8 @@
             <!-- *ngIf="!poblacionExtranjera" -->
             <div *ngIf="!poblacionExtranjera" class="form-group col-lg-6 col-md-6">
               <label>Población</label>
-              <p-dropdown [disabled]="true" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" 
-                [(ngModel)]="direccion.idPoblacion" [filter]="true" filterMatchMode="contains"
-                [options]="comboPoblacion">
+              <p-dropdown [disabled]="true" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="direccion.idPoblacion"
+                [filter]="true" filterMatchMode="contains" [options]="comboPoblacion">
               </p-dropdown>
             </div>
             <div *ngIf="poblacionExtranjera" class="form-group col-lg-6 col-md-6">
@@ -115,9 +116,8 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Tipo dirección (*)</label>
-              <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="direccion.idTipoDireccion" placeholder="{{'general.boton.seleccionar' | translate}}" 
-                [filter]="true" filterMatchMode="contains"
-                [options]="comboTipoDireccion">
+              <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="direccion.idTipoDireccion" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [filter]="true" filterMatchMode="contains" [options]="comboTipoDireccion">
               </p-dropdown>
             </div>
           </div>
@@ -129,7 +129,7 @@
               <label style="text-align:center; font-weight: bold;">Datos contacto</label>
             </div>
             <div class="form-group col-lg-12 col-md-12">
-              <p-table [value]="datos" [columns]="cols"  [responsive]="true" #table class="tabla-listado"       [first]="first"           >
+              <p-table [value]="datos" [columns]="cols" [responsive]="true" #table class="tabla-listado" [first]="first">
 
                 <ng-template pTemplate="header" let-columns>
                   <tr>
