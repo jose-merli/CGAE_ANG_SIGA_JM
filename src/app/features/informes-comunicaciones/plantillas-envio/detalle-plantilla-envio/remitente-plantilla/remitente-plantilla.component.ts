@@ -1,376 +1,420 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { DatosRemitentePlantillaItem } from '../../../../../models/DatosRemitentePlantillaItem';
-import { SigaServices } from './../../../../../_services/siga.service';
-import { DataTable } from 'primeng/datatable';
-import { PlantillaEnvioItem } from '../../../../../models/PlantillaEnvioItem';
-import { Router } from '@angular/router';
-import { Message, ConfirmationService } from 'primeng/components/common/api';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { DatosRemitentePlantillaItem } from "../../../../../models/DatosRemitentePlantillaItem";
+import { SigaServices } from "./../../../../../_services/siga.service";
+import { DataTable } from "primeng/datatable";
+import { PlantillaEnvioItem } from "../../../../../models/PlantillaEnvioItem";
+import { Router } from "@angular/router";
+import { Message, ConfirmationService } from "primeng/components/common/api";
 
 @Component({
-	selector: 'app-remitente-plantilla',
-	templateUrl: './remitente-plantilla.component.html',
-	styleUrls: [ './remitente-plantilla.component.scss' ]
+  selector: "app-remitente-plantilla",
+  templateUrl: "./remitente-plantilla.component.html",
+  styleUrls: ["./remitente-plantilla.component.scss"]
 })
 export class RemitentePlantillaComponent implements OnInit {
-	openFicha: boolean = false;
-	activacionEditar: boolean = true;
-	body: PlantillaEnvioItem = new PlantillaEnvioItem();
-	tiposEnvio: any[];
-	datos: any[];
-	cols: any[];
-	first: number = 0;
-	selectedItem: number;
-	selectAll: boolean = false;
-	selectMultiple: boolean = false;
-	numSelected: number = 0;
-	rowsPerPage: any = [];
-	remitente: DatosRemitentePlantillaItem = new DatosRemitentePlantillaItem();
-	remitenteInicial: DatosRemitentePlantillaItem = new DatosRemitentePlantillaItem();
-	direcciones: any = [];
-	direccionesInicial: any = [];
-	institucionActual: string;
-	showComboDirecciones: boolean = false;
-	comboDirecciones: any = [];
-	idDireccion: string;
-	direccion: any = [];
-	contactos: any = [];
-	msgs: Message[];
-	comboPais: any = [];
-	comboProvincia: any = [];
-	comboPoblacion: any = [];
-	comboTipoDireccion: any = [];
-	poblacionBuscada: any = [];
-	progressSpinner: boolean = false;
+  openFicha: boolean = false;
+  activacionEditar: boolean = true;
+  body: PlantillaEnvioItem = new PlantillaEnvioItem();
+  tiposEnvio: any[];
+  datos: any[];
+  cols: any[];
+  first: number = 0;
+  selectedItem: number;
+  selectAll: boolean = false;
+  selectMultiple: boolean = false;
+  numSelected: number = 0;
+  rowsPerPage: any = [];
+  remitente: DatosRemitentePlantillaItem = new DatosRemitentePlantillaItem();
+  remitenteInicial: DatosRemitentePlantillaItem = new DatosRemitentePlantillaItem();
+  direcciones: any = [];
+  direccionesInicial: any = [];
+  institucionActual: string;
+  showComboDirecciones: boolean = false;
+  comboDirecciones: any = [];
+  idDireccion: string;
+  direccion: any = [];
+  contactos: any = [];
+  msgs: Message[];
+  comboPais: any = [];
+  comboProvincia: any = [];
+  comboPoblacion: any = [];
+  comboTipoDireccion: any = [];
+  poblacionBuscada: any = [];
+  progressSpinner: boolean = false;
 
-	@ViewChild('table') table: DataTable;
-	selectedDatos;
+  @ViewChild("table") table: DataTable;
+  selectedDatos;
 
-	fichasPosibles = [
-		{
-			key: 'generales',
-			activa: false
-		},
-		{
-			key: 'consultas',
-			activa: false
-		},
-		{
-			key: 'remitente',
-			activa: false
-		}
-	];
+  fichasPosibles = [
+    {
+      key: "generales",
+      activa: false
+    },
+    {
+      key: "consultas",
+      activa: false
+    },
+    {
+      key: "remitente",
+      activa: false
+    }
+  ];
 
-	constructor(
-		private router: Router,
-		private changeDetectorRef: ChangeDetectorRef,
-		private sigaServices: SigaServices
-	) {}
+  constructor(
+    private router: Router,
+    private changeDetectorRef: ChangeDetectorRef,
+    private sigaServices: SigaServices
+  ) {}
 
-	ngOnInit() {
-		this.getDatos();
-		this.getInstitucion();
-		this.getComboPais();
-		this.getComboProvincias();
+  ngOnInit() {
+    this.getDatos();
+    this.getInstitucion();
+    this.getComboPais();
+    this.getComboProvincias();
 
-		this.selectedItem = 5;
+    this.selectedItem = 5;
 
-		this.cols = [ { field: 'tipo', header: 'Tipo' }, { field: 'valor', header: 'Valor' } ];
+    this.cols = [
+      { field: "tipo", header: "Tipo" },
+      { field: "valor", header: "Valor" }
+    ];
 
-		this.datos = [
-			{ tipo: 'Teléfono', value: 'tlf', valor: '' },
-			{ tipo: 'Fax', value: 'fax', valor: '' },
-			{ tipo: 'Móvil', value: 'mvl', valor: '' },
-			{ tipo: 'Correo electrónico', value: 'email', valor: '' },
-			{ tipo: 'Página web', value: 'web', valor: '' }
-		];
+    this.datos = [
+      { tipo: "Teléfono", value: "tlf", valor: "" },
+      { tipo: "Fax", value: "fax", valor: "" },
+      { tipo: "Móvil", value: "mvl", valor: "" },
+      { tipo: "Correo electrónico", value: "email", valor: "" },
+      { tipo: "Página web", value: "web", valor: "" }
+    ];
 
-		this.comboDirecciones = [
-			{
-				label: 'seleccione..',
-				value: null
-			}
-		];
+    this.comboDirecciones = [
+      {
+        label: "seleccione..",
+        value: null
+      }
+    ];
 
-		// this.body.idTipoEnvio = this.tiposEnvio[1].value;
-	}
+    // this.body.idTipoEnvio = this.tiposEnvio[1].value;
+  }
 
-	abreCierraFicha() {
-		if ((sessionStorage.getItem('crearNuevaPlantilla') == null || sessionStorage.getItem('crearNuevaPlantilla') == undefined )|| sessionStorage.getItem('crearNuevaPlantilla') == 'false') {
-			this.openFicha = !this.openFicha;
-			if (this.openFicha) {
-				this.getDatos();
-			}
-		}
-	}
+  abreCierraFicha() {
+    if (
+      sessionStorage.getItem("crearNuevaPlantilla") == null ||
+      sessionStorage.getItem("crearNuevaPlantilla") == undefined ||
+      sessionStorage.getItem("crearNuevaPlantilla") == "false"
+    ) {
+      this.openFicha = !this.openFicha;
+      if (this.openFicha) {
+        this.getDatos();
+      }
+    }
+  }
 
-	esFichaActiva(key) {
-		let fichaPosible = this.getFichaPosibleByKey(key);
-		return fichaPosible.activa;
-	}
+  esFichaActiva(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    return fichaPosible.activa;
+  }
 
-	getFichaPosibleByKey(key): any {
-		let fichaPosible = this.fichasPosibles.filter((elto) => {
-			return elto.key === key;
-		});
-		if (fichaPosible && fichaPosible.length) {
-			return fichaPosible[0];
-		}
-		return {};
-	}
+  getFichaPosibleByKey(key): any {
+    let fichaPosible = this.fichasPosibles.filter(elto => {
+      return elto.key === key;
+    });
+    if (fichaPosible && fichaPosible.length) {
+      return fichaPosible[0];
+    }
+    return {};
+  }
 
-	onChangeRowsPerPages(event) {
-		this.selectedItem = event.value;
-		this.changeDetectorRef.detectChanges();
-		this.table.reset();
-	}
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
 
-	isValidCodigoPostal(): boolean {
-		return (
-			this.remitente.codigoPostal &&
-			typeof this.remitente.codigoPostal === 'string' &&
-			/^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(this.remitente.codigoPostal)
-		);
-	}
+  isValidCodigoPostal(): boolean {
+    return (
+      this.remitente.codigoPostal &&
+      typeof this.remitente.codigoPostal === "string" &&
+      /^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(
+        this.remitente.codigoPostal
+      )
+    );
+  }
 
-	isSelectMultiple() {
-		this.selectMultiple = !this.selectMultiple;
-		if (!this.selectMultiple) {
-			this.selectedDatos = [];
-			this.numSelected = 0;
-		} else {
-			this.selectAll = false;
-			this.selectedDatos = [];
-			this.numSelected = 0;
-		}
-	}
+  isSelectMultiple() {
+    this.selectMultiple = !this.selectMultiple;
+    if (!this.selectMultiple) {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    } else {
+      this.selectAll = false;
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
 
-	onChangeSelectAll() {
-		if (this.selectAll === true) {
-			this.selectMultiple = false;
-			this.selectedDatos = this.datos;
-			this.numSelected = this.datos.length;
-		} else {
-			this.selectedDatos = [];
-			this.numSelected = 0;
-		}
-	}
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.selectMultiple = false;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
 
-	getInstitucion() {
-		this.sigaServices.get('institucionActual').subscribe((n) => {
-			this.institucionActual = n.value;
-		});
-	}
+  getInstitucion() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
+  }
 
-	getDatos() {
-		if (sessionStorage.getItem('plantillasEnvioSearch') != null) {
-			this.body = JSON.parse(sessionStorage.getItem('plantillasEnvioSearch'));
-			this.progressSpinner = true;
-			if (sessionStorage.getItem('remitente') != null) {
-				this.body.idPersona = JSON.parse(sessionStorage.getItem('remitente')).idPersona;
-				this.remitente = JSON.parse(sessionStorage.getItem('remitente'));
-				this.openFicha = true;
-				if (this.body.idPersona != null && this.body.idPersona != '') {
-					sessionStorage.removeItem('abrirNotario');
-					this.getPersonaDireccion();
-				}
-			} else {
-				this.getResultados();
-			}
-		}
-	}
+  getDatos() {
+    if (sessionStorage.getItem("plantillasEnvioSearch") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("plantillasEnvioSearch"));
+      this.progressSpinner = true;
+      if (sessionStorage.getItem("remitente") != null) {
+        this.body.idPersona = JSON.parse(
+          sessionStorage.getItem("remitente")
+        ).idPersona;
+        this.remitente = JSON.parse(sessionStorage.getItem("remitente"));
+        this.openFicha = true;
+        if (this.body.idPersona != null && this.body.idPersona != "") {
+          sessionStorage.removeItem("abrirNotario");
+          this.getPersonaDireccion();
+        }
+      } else {
+        this.getResultados();
+      }
+    }
+  }
 
-	getResultados() {
-		let objRemitente = {
-			idTipoEnvios: this.body.idTipoEnvios,
-			idPlantillaEnvios: this.body.idPlantillaEnvios
-		};
-		//llamar al servicio de busqueda
-		this.sigaServices.post('plantillasEnvio_detalleRemitente', objRemitente).subscribe(
-			(data) => {
-				this.progressSpinner = false;
-				this.remitente = JSON.parse(data['body']);
-				this.direccion = this.remitente.direccion[0];
-				this.showComboDirecciones = false;
-				this.remitenteInicial = JSON.parse(JSON.stringify(this.remitente));
+  getResultados() {
+    let objRemitente = {
+      idTipoEnvios: this.body.idTipoEnvios,
+      idPlantillaEnvios: this.body.idPlantillaEnvios
+    };
+    //llamar al servicio de busqueda
+    this.sigaServices
+      .post("plantillasEnvio_detalleRemitente", objRemitente)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.remitente = JSON.parse(data["body"]);
 
-				console.log(this.direccion);
-				let filtro = '';
-				this.getComboPoblacionInicial(filtro);
-			},
-			(err) => {
-				console.log(err);
-				this.progressSpinner = false;
-			},
-			() => {}
-		);
-	}
-	getPersonaDireccion() {
-		//llamar al servicio de busqueda
-		this.sigaServices.post('plantillasEnvio_personaDireccion', this.body.idPersona).subscribe(
-			(data) => {
-				this.remitente = JSON.parse(data['body']);
-				this.progressSpinner = false;
-				this.direcciones = this.remitente.direccion;
-				this.comboDirecciones = [];
-				this.remitenteInicial = JSON.parse(sessionStorage.getItem('remitenteInicial'));
+          if (
+            (this.remitente.direccion != null ||
+              this.remitente.direccion != undefined) &&
+            this.remitente.direccion.length >= 1
+          ) {
+            this.direccion = this.remitente.direccion[0];
+          }
 
-				if (this.direcciones && this.direcciones.length >= 1) {
-					if (this.direcciones.length > 1) {
-						this.showComboDirecciones = true;
-						this.direcciones.map((direccion) => {
-							this.comboDirecciones.push({ label: direccion.domicilio, value: direccion.idDireccion });
-							this.direccion = this.remitente.direccion[0];
-						});
-					} else {
-						this.showComboDirecciones = false;
-						this.direccion = this.remitente.direccion[0];
-					}
+          this.showComboDirecciones = false;
+          this.remitenteInicial = JSON.parse(JSON.stringify(this.remitente));
+          this.direccionesInicial = JSON.parse(JSON.stringify(this.direccion));
 
-					console.log(this.direccion);
-					let filtro = '';
-					this.getComboPoblacionInicial(filtro);
-				}
-				// this.direcciones = this.remitente.direccion;
-			},
-			(err) => {
-				console.log(err);
-				this.progressSpinner = false;
-			},
-			() => {}
-		);
-	}
+          let filtro = "";
+          this.getComboPoblacionInicial(filtro);
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {}
+      );
+  }
+  getPersonaDireccion() {
+    //llamar al servicio de busqueda
+    this.sigaServices
+      .post("plantillasEnvio_personaDireccion", this.body.idPersona)
+      .subscribe(
+        data => {
+          this.remitente = JSON.parse(data["body"]);
+          this.progressSpinner = false;
+          this.direcciones = this.remitente.direccion;
+          this.comboDirecciones = [];
+          this.remitenteInicial = JSON.parse(
+            sessionStorage.getItem("remitenteInicial")
+          );
 
-	buscar() {
-		sessionStorage.setItem('abrirRemitente', 'true');
-		sessionStorage.setItem('remitenteInicial', JSON.stringify(this.remitenteInicial));
-		this.router.navigate([ '/busquedaGeneral' ]);
-		if (this.direcciones && this.direcciones.length >= 1) {
-			if (this.direcciones.length > 1) {
-				this.showComboDirecciones = true;
-				this.direcciones.map((direccion) => {
-					this.comboDirecciones.push({ label: direccion.domicilio, value: direccion.idDireccion });
-				});
-			} else {
-				this.showComboDirecciones = false;
-				this.direccion = this.remitente.direccion[0];
-			}
-		}
-	}
+          if (this.direcciones && this.direcciones.length >= 1) {
+            if (this.direcciones.length > 1) {
+              this.showComboDirecciones = true;
+              this.direcciones.map(direccion => {
+                this.comboDirecciones.push({
+                  label: direccion.domicilio,
+                  value: direccion.idDireccion
+                });
+                this.direccion = this.remitente.direccion[0];
+              });
+            } else {
+              this.showComboDirecciones = false;
+              this.direccion = this.remitente.direccion[0];
+            }
 
-	onChangeDireccion(e) {
-		let idDireccion = e.value;
-		for (let direccion of this.direcciones) {
-			if (idDireccion == direccion.idDireccion) {
-				direccion.idDireccion = idDireccion;
-				this.direccion = direccion;
-			}
-		}
-	}
+            console.log(this.direccion);
+            let filtro = "";
+            this.getComboPoblacionInicial(filtro);
+          }
+          // this.direcciones = this.remitente.direccion;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {}
+      );
+  }
 
-	getComboPais() {
-		this.sigaServices.get('direcciones_comboPais').subscribe(
-			(n) => {
-				this.comboPais = n.combooItems;
-			},
-			(error) => {}
-		);
-	}
+  buscar() {
+    sessionStorage.setItem("abrirRemitente", "true");
+    sessionStorage.setItem(
+      "remitenteInicial",
+      JSON.stringify(this.remitenteInicial)
+    );
+    this.router.navigate(["/busquedaGeneral"]);
+    if (this.direcciones && this.direcciones.length >= 1) {
+      if (this.direcciones.length > 1) {
+        this.showComboDirecciones = true;
+        this.direcciones.map(direccion => {
+          this.comboDirecciones.push({
+            label: direccion.domicilio,
+            value: direccion.idDireccion
+          });
+        });
+      } else {
+        this.showComboDirecciones = false;
+        this.direccion = this.remitente.direccion[0];
+      }
+    }
+  }
 
-	getComboProvincias() {
-		this.sigaServices.get('integrantes_provincias').subscribe(
-			(n) => {
-				this.comboProvincia = n.combooItems;
-			},
-			(err) => {
-				console.log(err);
-			}
-		);
-	}
+  onChangeDireccion(e) {
+    let idDireccion = e.value;
+    for (let direccion of this.direcciones) {
+      if (idDireccion == direccion.idDireccion) {
+        direccion.idDireccion = idDireccion;
+        this.direccion = direccion;
+      }
+    }
+  }
 
-	getComboPoblacionInicial(filtro) {
-		filtro = '';
-		this.poblacionBuscada = filtro;
+  getComboPais() {
+    this.sigaServices.get("direcciones_comboPais").subscribe(
+      n => {
+        this.comboPais = n.combooItems;
+      },
+      error => {}
+    );
+  }
 
-		this.sigaServices
-			.getParam(
-				'direcciones_comboPoblacion',
-				'?idProvincia=' + this.direccion.idProvincia + '&filtro=' + this.poblacionBuscada
-			)
-			.subscribe(
-				(n) => {
-					this.comboPoblacion = n.combooItems;
-				},
-				(error) => {}
-			);
-	}
+  getComboProvincias() {
+    this.sigaServices.get("integrantes_provincias").subscribe(
+      n => {
+        this.comboProvincia = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
 
-	getComboTipoDireccion() {
-		this.sigaServices.get('direcciones_comboTipoDireccion').subscribe(
-			(n) => {
-				this.comboTipoDireccion = n.combooItems;
-			},
-			(error) => {}
-		);
-	}
+  getComboPoblacionInicial(filtro) {
+    filtro = "";
+    this.poblacionBuscada = filtro;
 
-	// Mensajes
-	showFail(mensaje: string) {
-		this.msgs = [];
-		this.msgs.push({ severity: 'error', summary: '', detail: mensaje });
-	}
+    this.sigaServices
+      .getParam(
+        "direcciones_comboPoblacion",
+        "?idProvincia=" +
+          this.direccion.idProvincia +
+          "&filtro=" +
+          this.poblacionBuscada
+      )
+      .subscribe(
+        n => {
+          this.comboPoblacion = n.combooItems;
+        },
+        error => {}
+      );
+  }
 
-	showSuccess(mensaje: string) {
-		this.msgs = [];
-		this.msgs.push({ severity: 'success', summary: '', detail: mensaje });
-	}
+  getComboTipoDireccion() {
+    this.sigaServices.get("direcciones_comboTipoDireccion").subscribe(
+      n => {
+        this.comboTipoDireccion = n.combooItems;
+      },
+      error => {}
+    );
+  }
 
-	showInfo(mensaje: string) {
-		this.msgs = [];
-		this.msgs.push({ severity: 'info', summary: '', detail: mensaje });
-	}
+  // Mensajes
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
 
-	clear() {
-		this.msgs = [];
-	}
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
 
-	guardar() {
-		let objGuardar = {
-			idPersona: this.body.idPersona,
-			idDireccion: this.direccion.idDireccion,
-			idPlantillaEnvios: this.body.idPlantillaEnvios,
-			idTipoEnvios: this.body.idTipoEnvios
-		};
+  showInfo(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+  }
 
-		this.sigaServices.post('plantillasEnvio_guardarRemitente', objGuardar).subscribe(
-			(data) => {
-				// this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-				this.remitenteInicial = JSON.parse(JSON.stringify(this.remitente));
-				sessionStorage.removeItem('remitente');
-				sessionStorage.removeItem('remitenteInicial');
-				this.showSuccess('Se ha guardado la plantilla correctamente');
-			},
-			(err) => {
-				console.log(err);
-				this.showFail('Error al guardar la plantilla');
-			},
-			() => {}
-		);
-	}
+  clear() {
+    this.msgs = [];
+  }
 
-	restablecer() {
-		this.remitente = JSON.parse(JSON.stringify(this.remitenteInicial));
-		this.direcciones = this.remitente.direccion;
-		if (this.direcciones && this.direcciones.length >= 1) {
-			if (this.direcciones.length > 1) {
-				this.showComboDirecciones = true;
-				this.direcciones.map((direccion) => {
-					this.comboDirecciones.push({ label: direccion.domicilio, value: direccion.idDireccion });
-					this.direccion = this.remitente.direccion[0];
-				});
-			} else {
-				this.showComboDirecciones = false;
-				this.direccion = this.remitente.direccion[0];
-			}
-		}
-	}
+  guardar() {
+    let objGuardar = {
+      idPersona: this.body.idPersona,
+      idDireccion: this.direccion.idDireccion,
+      idPlantillaEnvios: this.body.idPlantillaEnvios,
+      idTipoEnvios: this.body.idTipoEnvios
+    };
+
+    this.sigaServices
+      .post("plantillasEnvio_guardarRemitente", objGuardar)
+      .subscribe(
+        data => {
+          // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          this.remitenteInicial = JSON.parse(JSON.stringify(this.remitente));
+          sessionStorage.removeItem("remitente");
+          sessionStorage.removeItem("remitenteInicial");
+          this.showSuccess("Se ha guardado la plantilla correctamente");
+        },
+        err => {
+          console.log(err);
+          this.showFail("Error al guardar la plantilla");
+        },
+        () => {}
+      );
+  }
+
+  restablecer() {
+    this.remitente = JSON.parse(JSON.stringify(this.remitenteInicial));
+    this.direccion = JSON.parse(JSON.stringify(this.direccionesInicial));
+
+    this.direcciones = this.remitente.direccion;
+    if (this.direcciones && this.direcciones.length >= 1) {
+      if (this.direcciones.length > 1) {
+        this.showComboDirecciones = true;
+        this.direcciones.map(direccion => {
+          this.comboDirecciones.push({
+            label: direccion.domicilio,
+            value: direccion.idDireccion
+          });
+          this.direccion = this.remitente.direccion[0];
+        });
+      } else {
+        this.showComboDirecciones = false;
+        this.direccion = this.remitente.direccion[0];
+      }
+    }
+  }
 }

@@ -489,8 +489,7 @@
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" pageLinks="4" [responsive]="true" #tableColegiales
         class="tabla-listado" [value]="datosColegiales" [sortOrder]="1" [paginator]="activarPaginacionColegial()" paginatorPosition="both"
         [rows]="selectedItem">
-        <p-column *ngFor="let col of colsColegiales" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-          [filter]="true" filterMatchMode="contains">
+        <p-column *ngFor="let col of colsColegiales" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}">
           <ng-template let-datoH="rowData" pTemplate="body">
             <span *ngIf="setItalic(datoH)" [ngStyle]="{
                 'font-style': 'italic',
@@ -1312,8 +1311,7 @@
 
 <!-- AUDITORIA -->
 
-<p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500"
-  [minWidth]="500">
+<p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
   <p-header class="title">
     <label>{{ "general.ventana.cgae" | translate }} -{{ "censo.consultaHistorico.cabecera" | translate }}
     </label>
