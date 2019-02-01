@@ -353,8 +353,8 @@ export class ModelosComunicacionesComponent implements OnInit {
   navigateTo(dato) {
     let id = dato[0].id;
     this.body = dato[0];
-    console.log(dato)
-    if (!this.selectMultiple) {
+    console.log(dato);
+    if (!this.selectMultiple && !dato[0].fechaBaja) {
       this.router.navigate(['/fichaModeloComunicaciones']);
       sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
       sessionStorage.setItem("filtrosModelos", JSON.stringify(this.bodySearch));
