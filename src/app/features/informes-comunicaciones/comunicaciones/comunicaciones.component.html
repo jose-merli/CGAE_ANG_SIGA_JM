@@ -97,7 +97,8 @@
         <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">Seleccionados: {{selectedDatos.length}}</label>
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">Seleccionados: 0</label>
             <label>{{"general.message.mostrar" | translate}}</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
@@ -111,7 +112,7 @@
       </p-table>
       <div *ngIf="selectedDatos && selectedDatos != ''" class="card-footer">
         <div class="text-right main-button">
-          <button (click)="isSelectMultiple()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
+
           <button *ngIf="estado && (estado == 3 || estado == 6)" pButton type="button" icon="fas fa-sign-in-alt" iconPos="left" label="{{ 'general.boton.enviar' |
           translate}}"></button>
           <button *ngIf="estado && (estado == 4 || estado == 5)" (click)="onShowProgamar(selectedDatos)" pButton type="button" icon="fas fa-cog"

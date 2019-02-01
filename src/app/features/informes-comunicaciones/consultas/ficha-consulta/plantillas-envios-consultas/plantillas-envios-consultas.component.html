@@ -66,8 +66,7 @@
         <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
-            <label>{{"general.message.mostrar" | translate}}</label>
+
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
           </div>
