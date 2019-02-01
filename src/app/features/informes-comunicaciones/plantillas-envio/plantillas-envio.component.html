@@ -8,10 +8,10 @@
     </p>
   </div>
   <div class="card">
-    <div class="card-body">
-      <p class="title-module"> {{'general.message.datos.generales' | translate }}
-        <i (click)="abreCierraFicha()" *ngIf="fichaBusqueda" class="fa fa-angle-up float-right"></i>
-        <i (click)="abreCierraFicha()" *ngIf="!fichaBusqueda" class="fa fa-angle-down float-right"></i>
+    <div class="card-body" >
+      <p class="title-module" (click)="abreCierraFicha()"> {{'general.message.datos.generales' | translate }}
+        <i  *ngIf="fichaBusqueda" class="fa fa-angle-up float-right"></i>
+        <i  *ngIf="!fichaBusqueda" class="fa fa-angle-down float-right"></i>
       </p>
       <div *ngIf="fichaBusqueda" class="module vista-simple">
         <div class="form-row">
