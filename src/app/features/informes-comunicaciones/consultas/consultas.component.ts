@@ -137,6 +137,7 @@ export class ConsultasComponent implements OnInit {
     this.sigaServices.get("consultas_comboObjetivos").subscribe(
       data => {
         this.objetivos = data.combooItems;
+        this.objetivos.unshift({ label: 'Seleccionar', value: '' });
       },
       err => {
         console.log(err);
@@ -145,6 +146,7 @@ export class ConsultasComponent implements OnInit {
       this.sigaServices.get("consultas_comboModulos").subscribe(
         data => {
           this.modulos = data.combooItems;
+          this.modulos.unshift({ label: 'Seleccionar', value: '' });
           /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
     para poder filtrar el dato con o sin estos caracteres*/
           this.modulos.map((e) => {
@@ -167,6 +169,7 @@ export class ConsultasComponent implements OnInit {
       this.sigaServices.get("consultas_claseComunicaciones").subscribe(
         data => {
           this.clasesComunicaciones = data.combooItems;
+          this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
         },
         err => {
           console.log(err);
