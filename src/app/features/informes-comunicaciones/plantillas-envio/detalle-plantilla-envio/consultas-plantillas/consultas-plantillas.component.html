@@ -83,13 +83,11 @@
       </p-table>
       <p-footer>
         <div class="text-right main-button">
-          <button *ngIf="selectedDatos && selectedDatos !=''" (click)="isSelectMultiple()" pButton type="button" icon="fa fa-check"
-            iconPos="left" label="{{ 'general.message.deseleccionar' | translate}}"></button>
           <button [disabled]="nuevaConsulta" (click)="addConsulta()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Añadir"></button>
-          <button *ngIf="selectedDatos && selectedDatos.length == 1" (click)="asociar(selectedDatos)" pButton type="button" icon="fa fa-arrows-alt-h"
-            iconPos="left" label="{{ 'general.message.guardar' | translate}}"></button>
-          <button *ngIf="selectedDatos && selectedDatos !=''" (click)="desasociar(selectedDatos)" pButton type="button" icon="fa fa-exchange-alt"
-            iconPos="left" label="{{ 'general.message.cancek' | translate}}"></button>
+          <button *ngIf="selectedDatos && selectedDatos.length == 1" (click)="asociar(selectedDatos)" pButton type="button" icon="far fa-save"
+            iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+          <button *ngIf="selectedDatos && selectedDatos !=''" (click)="desasociar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt"
+            iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
         </div>
       </p-footer>
     </div>

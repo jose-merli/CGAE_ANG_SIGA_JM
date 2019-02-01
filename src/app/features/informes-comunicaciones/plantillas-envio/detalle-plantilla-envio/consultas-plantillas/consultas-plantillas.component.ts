@@ -11,7 +11,7 @@ import { TranslateService } from '../../../../../commons/translate/translation.s
 @Component({
 	selector: 'app-consultas-plantillas',
 	templateUrl: './consultas-plantillas.component.html',
-	styleUrls: ['./consultas-plantillas.component.scss']
+	styleUrls: [ './consultas-plantillas.component.scss' ]
 })
 export class ConsultasPlantillasComponent implements OnInit {
 	datos: any[];
@@ -61,16 +61,16 @@ export class ConsultasPlantillasComponent implements OnInit {
 		private sigaServices: SigaServices,
 		private confirmationService: ConfirmationService,
 		private translateService: TranslateService
-	) { }
+	) {}
 
 	ngOnInit() {
 		// this.getDatos();
-		sessionStorage.removeItem("consultasSearch");
+		sessionStorage.removeItem('consultasSearch');
 		this.textFilter = 'Elegir';
 
 		this.selectedItem = 10;
 
-		this.cols = [{ field: 'nombre', header: 'Nombre' }, { field: 'finalidad', header: 'Finalidad' }];
+		this.cols = [ { field: 'nombre', header: 'Nombre' }, { field: 'finalidad', header: 'Finalidad' } ];
 
 		this.rowsPerPage = [
 			{
@@ -150,15 +150,15 @@ export class ConsultasPlantillasComponent implements OnInit {
 		if (!this.selectMultiple && idConsulta && !this.nuevaConsulta) {
 			debugger;
 			sessionStorage.setItem('consultasSearch', JSON.stringify(dato[0]));
-			this.router.navigate(['/fichaConsulta']);
+			this.router.navigate([ '/fichaConsulta' ]);
 		}
 		this.numSelected = this.selectedDatos.length;
 	}
 	actualizaSeleccionados(selectedDatos) {
-		this.numSelected = selectedDatos.length;
-	} 
+		this.numSelected = selectedDatos.length;
+	}
 	abreCierraFicha() {
-		if (sessionStorage.getItem('crearNuevaPlantilla') == null) {
+		if ((sessionStorage.getItem('crearNuevaPlantilla') == null || sessionStorage.getItem('crearNuevaPlantilla') == undefined )|| sessionStorage.getItem('crearNuevaPlantilla') == 'false') {
 			this.openFicha = !this.openFicha;
 			if (this.openFicha) {
 				this.getDatos();
@@ -192,7 +192,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 		this.nuevaConsulta = true;
 
 		this.datos.push(objNewConsulta);
-		this.datos = [...this.datos];
+		this.datos = [ ...this.datos ];
 		this.selectedDatos = [];
 	}
 
@@ -221,7 +221,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 				console.log(err);
 				this.progressSpinner = false;
 			},
-			() => { }
+			() => {}
 		);
 	}
 
@@ -235,7 +235,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 				console.log(err);
 				this.progressSpinner = false;
 			},
-			() => { }
+			() => {}
 		);
 	}
 
@@ -313,7 +313,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 	}
 
 	goNuevaConsulta() {
-		this.router.navigate(['/fichaConsulta']);
+		this.router.navigate([ '/fichaConsulta' ]);
 		sessionStorage.setItem('nuevaConsultaPlantillaEnvios', JSON.stringify(this.body));
 	}
 
@@ -330,14 +330,14 @@ export class ConsultasPlantillasComponent implements OnInit {
 						dato.finalidad = this.finalidad;
 					}
 				}
-				this.datos = [...this.datos];
+				this.datos = [ ...this.datos ];
 				console.log(this.datos);
 			},
 			(err) => {
 				console.log(err);
 				this.progressSpinner = false;
 			},
-			() => { }
+			() => {}
 		);
 	}
 }

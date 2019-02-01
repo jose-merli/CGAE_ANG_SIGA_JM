@@ -98,6 +98,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   valorTipoEventoFinInscripcion = "5";
   valorTipoEventoSesion = "8";
   valorEstadoEventoPlanificado = "1";
+  valorEstadoEventoCancelado = "3";
+  valorEstadoEventoCumplido = "2";
 
   //Notificaciones
   selectedDatosNotifications = [];
@@ -783,7 +785,13 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.sigaServices.post(url, this.newEvent).subscribe(
       data => {
         if (JSON.parse(data.body).error.description != null) {
-          this.showUnSuccessBBDD();
+          this.showMessage(
+            "error",
+            "Incorrecto",
+            JSON.parse(data.body).error.description
+          );
+
+          this.newEvent.idEstadoEvento = JSON.parse(JSON.stringify(this.initEvent)).idEstadoEvento;
         } else {
           this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
 
@@ -832,6 +840,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       }
     );
   }
+
   saveCourse() {
     this.sigaServices.post("fichaCursos_updateCourse", this.curso).subscribe(
       data => {
@@ -932,7 +941,11 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           data => {
             this.progressSpinner = false;
             this.showSuccess();
-            this.backTo();
+            
+            setTimeout(() => {
+              this.backTo();
+            }, 2000);
+           
           },
           err => {
             this.progressSpinner = false;
@@ -1833,4 +1846,14 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       }
     );
   }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
 }
