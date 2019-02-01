@@ -73,13 +73,14 @@ export class TarjetaComunicacionesComponent implements OnInit {
     private confirmationService: ConfirmationService, private translateService: TranslateService) { }
 
   ngOnInit() {
+
     this.getDatos();
     this.getPlantillas();
 
     this.selectedItem = 10;
 
     this.cols = [
-      { field: 'nombrePlantilla', header: 'Nombre' },
+      { field: 'idPlantillaEnvios', header: 'Nombre' },
       { field: 'tipoEnvio', header: 'Tipo de envío' },
       { field: 'porDefecto', header: 'Por defecto', width: '15%' }
     ];
@@ -205,7 +206,9 @@ export class TarjetaComunicacionesComponent implements OnInit {
       if (this.showHistorico) {
         service = 'modelos_detalle_plantillasHist';
       }
+
       this.sigaServices.post(service, this.body.idModeloComunicacion).subscribe(result => {
+        
         let data = JSON.parse(result.body);
         this.datos = data.plantillas;
         console.log(this.datos)
@@ -226,10 +229,10 @@ export class TarjetaComunicacionesComponent implements OnInit {
 
 
   guardar(dato) {
-    debugger;
+
     let nuevaPlantillaComunicacion = {
       idModelo: this.body.idModeloComunicacion,
-      idPlantillaEnvios: dato[0].nombrePlantilla,
+      idPlantillaEnvios: dato[0].idPlantillaEnvios,
       idAntiguaPlantillaEnvios: dato[0].idAntiguaPlantillaEnvios,
       idInstitucion: this.body.idInstitucion,
       idTipoEnvios: dato[0].idTipoEnvios,
@@ -327,9 +330,9 @@ export class TarjetaComunicacionesComponent implements OnInit {
   getTipoEnvios(idPlantillaEnvios) {
     this.sigaServices.post("modelos_detalle_tipoEnvioPlantilla", idPlantillaEnvios).subscribe(
       data => {
-        debugger;
+
         for (let dato of this.datos) {
-          if (dato.nombrePlantilla == idPlantillaEnvios) {
+          if (dato.idPlantillaEnvios == idPlantillaEnvios) {
             dato.tipoEnvio = JSON.parse(data['body']).tipoEnvio;
             dato.idTipoEnvios = JSON.parse(data['body']).idTipoEnvios;
 
@@ -359,9 +362,9 @@ export class TarjetaComunicacionesComponent implements OnInit {
   getPlantillas() {
     this.sigaServices.get("modelos_detalle_plantillasComunicacion").subscribe(
       data => {
-        debugger;
+
         this.plantillas = data.combooItems;
-        this.plantillas.unshift({ label: '', value: '' })
+        this.plantillas.unshift({ label: 'Seleccionar', value: '' })
       },
       err => {
         console.log(err);
@@ -373,7 +376,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
 
   addPlantilla() {
     let newPlantilla = {
-      nombrePlantilla: '',
+      idPlantillaEnvios: '',
       tipoEnvio: '',
       idTipoEnvios: '',
       porDefecto: null,
@@ -387,7 +390,17 @@ export class TarjetaComunicacionesComponent implements OnInit {
 
   onChangePlantilla(e) {
     let idPlantillaEnvios = e.value;
-    this.getTipoEnvios(idPlantillaEnvios);
+    if (idPlantillaEnvios == "") {
+      for (let dato of this.datos) {
+        if (!dato.idPlantillaEnvios && dato.idPlantillaEnvios == idPlantillaEnvios) {
+          dato.idPlantillaEnvios = idPlantillaEnvios;
+          dato.tipoEnvio = '';
+        }
+      }
+    } else {
+      this.getTipoEnvios(idPlantillaEnvios);
+    }
+
   }
 
   onChangePorDefecto(e) {
