@@ -6,6 +6,8 @@ import { ComunicacionesModelosComItem } from '../../../../../models/Comunicacion
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { ModelosComunicacionesItem } from '../../../../../models/ModelosComunicacionesItem';
 import { TranslateService } from "../../../../../commons/translate/translation.service";
+import { Identifiers } from '@angular/compiler';
+
 
 @Component({
   selector: 'app-tarjeta-comunicaciones',
@@ -72,13 +74,13 @@ export class TarjetaComunicacionesComponent implements OnInit {
 
   ngOnInit() {
     this.getDatos();
-    this.getTipoEnvios();
+    this.getPlantillas();
 
     this.selectedItem = 10;
 
     this.cols = [
-      { field: 'tipoEnvio', header: 'Tipo de envío' },
       { field: 'nombrePlantilla', header: 'Nombre' },
+      { field: 'tipoEnvio', header: 'Tipo de envío' },
       { field: 'porDefecto', header: 'Por defecto', width: '15%' }
     ];
 
@@ -183,9 +185,16 @@ export class TarjetaComunicacionesComponent implements OnInit {
     }
   }
 
-  onRowSelect() {
+  onRowSelect(dato) {
     if (!this.selectMultiple) {
       this.selectedDatos = [];
+    } else {
+      return dato[0].selected = true;
+    }
+  }
+  onRowUnSelect(dato) {
+    if (this.selectMultiple && !dato[0].nueva) {
+      return dato[0].selected = false;
     }
   }
 
@@ -201,7 +210,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
         this.datos = data.plantillas;
         console.log(this.datos)
         this.datos.map(e => {
-          return e.guardada = true;
+          return e.nueva = false, e.idAntiguaPlantillaEnvios = e.idPlantillaEnvios, e.idAntiguaTipoEnvios = e.idTipoEnvios;
         });
         if (!this.showHistorico) {
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
@@ -216,13 +225,15 @@ export class TarjetaComunicacionesComponent implements OnInit {
   }
 
 
-  guardar() {
-    console.log(this.datos);
+  guardar(dato) {
+    debugger;
     let nuevaPlantillaComunicacion = {
       idModelo: this.body.idModeloComunicacion,
-      idPlantillaEnvios: this.idPlantillaEnvios,
+      idPlantillaEnvios: dato[0].nombrePlantilla,
+      idAntiguaPlantillaEnvios: dato[0].idAntiguaPlantillaEnvios,
       idInstitucion: this.body.idInstitucion,
-      idTipoEnvios: this.idTipoEnvios,
+      idTipoEnvios: dato[0].idTipoEnvios,
+      idAntiguaTipoEnvios: dato[0].idAntiguaTipoEnvios,
       porDefecto: this.porDefecto
     }
 
@@ -231,6 +242,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
       this.datosInicial = JSON.parse(JSON.stringify(this.datos));
       this.nuevaPlantilla = false;
       this.showSuccess('La plantilla se ha guardado correctamente');
+      this.selectedDatos = [];
     }, error => {
       this.showFail('Error al guardar la plantilla');
       console.log(error);
@@ -292,7 +304,9 @@ export class TarjetaComunicacionesComponent implements OnInit {
         idModelo: this.body.idModeloComunicacion,
         idPlantillaEnvios: element.idPlantillaEnvios,
         idInstitucion: this.body.idInstitucion,
-        idTipoEnvios: element.idTipoEnvios
+        idTipoEnvios: element.idTipoEnvios,
+        idAntiguaPlantillaEnvios: element.idAntiguaPlantillaEnvios,
+        idAntiguaTipoEnvios: element.idAntiguaTipoEnvios
       };
       this.eliminarArray.push(objEliminar);
     });
@@ -310,10 +324,18 @@ export class TarjetaComunicacionesComponent implements OnInit {
     );
   }
 
-  getTipoEnvios() {
-    this.sigaServices.get("enviosMasivos_tipo").subscribe(
+  getTipoEnvios(idPlantillaEnvios) {
+    this.sigaServices.post("modelos_detalle_tipoEnvioPlantilla", idPlantillaEnvios).subscribe(
       data => {
-        this.tiposEnvio = data.combooItems;
+        debugger;
+        for (let dato of this.datos) {
+          if (dato.nombrePlantilla == idPlantillaEnvios) {
+            dato.tipoEnvio = JSON.parse(data['body']).tipoEnvio;
+            dato.idTipoEnvios = JSON.parse(data['body']).idTipoEnvios;
+
+          }
+        }
+
       },
       err => {
         console.log(err);
@@ -331,15 +353,15 @@ export class TarjetaComunicacionesComponent implements OnInit {
   }
 
   onChangeTipoEnvio(e) {
-    this.idTipoEnvios = e.value;
-    this.getPlantillas();
+
   }
 
   getPlantillas() {
-    this.sigaServices.post("enviosMasivos_plantillas", this.idTipoEnvios).subscribe(
+    this.sigaServices.get("modelos_detalle_plantillasComunicacion").subscribe(
       data => {
-        let comboPlantillas = JSON.parse(data["body"]);
-        this.plantillas = comboPlantillas.combooItems;
+        debugger;
+        this.plantillas = data.combooItems;
+        this.plantillas.unshift({ label: '', value: '' })
       },
       err => {
         console.log(err);
@@ -353,8 +375,9 @@ export class TarjetaComunicacionesComponent implements OnInit {
     let newPlantilla = {
       nombrePlantilla: '',
       tipoEnvio: '',
+      idTipoEnvios: '',
       porDefecto: null,
-      guardada: false
+      nueva: true
     };
     this.idPlantillaEnvios = '';
     this.nuevaPlantilla = true;
@@ -363,7 +386,8 @@ export class TarjetaComunicacionesComponent implements OnInit {
   }
 
   onChangePlantilla(e) {
-    this.idPlantillaEnvios = e.value;
+    let idPlantillaEnvios = e.value;
+    this.getTipoEnvios(idPlantillaEnvios);
   }
 
   onChangePorDefecto(e) {

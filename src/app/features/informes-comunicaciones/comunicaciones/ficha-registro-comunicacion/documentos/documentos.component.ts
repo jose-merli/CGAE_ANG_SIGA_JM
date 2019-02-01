@@ -64,6 +64,24 @@ export class DocumentosComponent implements OnInit {
 
     this.selectedItem = 10;
     this.getDatos();
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
     this.cols = [
       { field: 'nombreDocumento', header: 'Nombre del documento' },
       { field: 'pathDocumento', header: 'Enlace de descarga' }

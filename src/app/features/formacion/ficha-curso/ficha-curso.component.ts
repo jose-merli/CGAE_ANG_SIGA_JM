@@ -2127,7 +2127,7 @@ export class FichaCursoComponent implements OnInit {
             this.showMessage(
               "success",
               "Correcto",
-              "Sesiones canceladas correctamente"
+              JSON.parse(data.body).error.description
             );
             this.searchCourse(this.curso.idCurso);
 
@@ -2138,6 +2138,10 @@ export class FichaCursoComponent implements OnInit {
               JSON.parse(data.body).error.description
             );
           }
+
+          this.getSessions();
+          this.selectMultipleSessions = false;
+          this.selectedDatosSessions = [];
         },
         err => {
           this.progressSpinner = false;

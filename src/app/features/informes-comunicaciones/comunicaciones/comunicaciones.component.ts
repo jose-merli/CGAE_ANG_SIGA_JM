@@ -17,7 +17,10 @@ export enum KEY_CODE {
 @Component({
   selector: 'app-comunicaciones',
   templateUrl: './comunicaciones.component.html',
-  styleUrls: ['./comunicaciones.component.scss']
+  styleUrls: ['./comunicaciones.component.scss'],
+  host: {
+    "(document:keypress)": "onKeyPress($event)"
+  },
 })
 export class ComunicacionesComponent implements OnInit {
   body: EnviosMasivosItem = new EnviosMasivosItem();
@@ -129,6 +132,7 @@ export class ComunicacionesComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
         this.tiposEnvio = data.combooItems;
+        this.tiposEnvio.unshift({ label: '', value: '' });
       },
       err => {
         console.log(err);
