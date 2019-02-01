@@ -65,7 +65,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 
 	ngOnInit() {
 		// this.getDatos();
-
+		sessionStorage.removeItem("consultasSearch");
 		this.textFilter = 'Elegir';
 
 		this.selectedItem = 10;
@@ -148,11 +148,15 @@ export class ConsultasPlantillasComponent implements OnInit {
 		let idConsulta = dato[0].idConsulta;
 		console.log(dato);
 		if (!this.selectMultiple && idConsulta && !this.nuevaConsulta) {
+			debugger;
 			sessionStorage.setItem('consultasSearch', JSON.stringify(dato[0]));
 			this.router.navigate(['/fichaConsulta']);
 		}
+		this.numSelected = this.selectedDatos.length;
 	}
-
+	actualizaSeleccionados(selectedDatos) {
+		this.numSelected = selectedDatos.length;
+	} 
 	abreCierraFicha() {
 		if (sessionStorage.getItem('crearNuevaPlantilla') == null) {
 			this.openFicha = !this.openFicha;

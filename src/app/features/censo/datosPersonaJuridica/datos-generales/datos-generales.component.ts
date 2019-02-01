@@ -591,7 +591,7 @@ export class DatosGenerales implements OnInit {
 
   uploadImage(event: any) {
     // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
-    let fileList: FileList = event.target.files;
+    let fileList: FileList = event.files;
 
     let nombreCompletoArchivo = fileList[0].name;
     let extensionArchivo = nombreCompletoArchivo.substring(

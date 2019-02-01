@@ -55,9 +55,11 @@ export class ConsultaComponent implements OnInit {
     private sigaServices: SigaServices, private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
+
     this.getDatos();
     this.getAyuda();
     this.valores = [];
+
   }
 
   // Mensajes

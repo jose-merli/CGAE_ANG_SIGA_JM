@@ -48,6 +48,9 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   formBusqueda: FormGroup;
   buscar: boolean = false;
 
+  disabledCalificar: boolean = false;
+  valorEstadoCursoFinalizado = "4";
+
   //para p-multiselect de temas
   literalMultiselect = "Seleccionar";
   textSelected: String = "{0} etiquetas seleccionadas";
@@ -188,6 +191,12 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       let bodyPerm = JSON.parse(sessionStorage.getItem("courseCurrent"));
       this.body.nombreCurso = bodyPerm.nombreCurso;
       this.body.codigoCurso = bodyPerm.codigoCurso;
+
+      if (bodyPerm.idEstado == this.valorEstadoCursoFinalizado) {
+        this.disabledCalificar = true;
+      } else {
+        this.disabledCalificar = false;
+      }
     }
   }
 
