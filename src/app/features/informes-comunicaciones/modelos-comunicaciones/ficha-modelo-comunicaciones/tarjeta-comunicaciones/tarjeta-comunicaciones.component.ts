@@ -381,7 +381,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
       idPlantillaEnvios: '',
       tipoEnvio: '',
       idTipoEnvios: '',
-      porDefecto: null,
+      porDefecto: 'No',
       nueva: true
     };
     this.idPlantillaEnvios = '';

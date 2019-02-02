@@ -55,33 +55,15 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td *ngFor="let col of columns" pEditableColumn>
-              <!-- <p-dropdown *ngIf="col.field=='idPlantillaEnvios'" [(ngModel)]="dato[col.field]" [options]="plantillas" class="select-form"
-                (onChange)="onChangePlantilla($event)"></p-dropdown>
-              <span *ngIf="col.field=='idPlantillaEnvios' && dato.fechaBaja" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
-              <span *ngIf="col.field=='nombrePlantilla' && !dato.selected && !dato.fechaBaja && dato.nueva">{{dato[col.field]}}</span> -->
-              <!-- <span *ngIf="col.field=='tipoEnvio' && dato.fechaBaja" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
-              <span *ngIf="col.field=='tipoEnvio' && !dato.fechaBaja ">{{dato[col.field]}}</span>
-              <span *ngIf="col.field=='porDefecto'">
-                <p-checkbox (onChange)="onChangePorDefecto($event)" value='Si' [(ngModel)]='porDefecto'></p-checkbox> -->
-              <!-- <p-radioButton value="Si" [(ngModel)]="porDefecto" (click)="onChangePorDefecto($event)"></p-radioButton> -->
               <p-dropdown *ngIf="col.field=='idPlantillaEnvios' && !dato.fechaBaja" [(ngModel)]="dato[col.field]"
                 [options]="plantillas" class="select-form" (onChange)="onChangePlantilla($event)"></p-dropdown>
               <p-dropdown *ngIf="col.field=='idPlantillaEnvios' && dato.fechaBaja" [(ngModel)]="dato[col.field]"
                 [options]="plantillas" class="select-form" [disabled]="true" (onChange)="onChangePlantilla($event)"></p-dropdown>
-              <!-- <span *ngIf="col.field=='idPlantillaEnvios' && dato.fechaBaja" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span> -->
-              <!-- <span *ngIf="col.field=='nombrePlantilla' && !dato.selected && !dato.fechaBaja && dato.nueva">{ serve {dato[col.field]}}</span> -->
               <span *ngIf="col.field=='tipoEnvio' && dato.fechaBaja" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
               <span *ngIf="col.field=='tipoEnvio' && !dato.fechaBaja ">{{dato[col.field]}}</span>
               <span *ngIf="col.field=='porDefecto'">
-                <p-checkbox (onChange)="onChangePorDefecto($event, dato)" value='Si'  [(ngModel)]='dato.porDefecto'></p-checkbox>
-                <!-- <p-checkbox (onChange)="onChangePorDefecto($event)" value='Si' [(ngModel)]='porDefecto'></p-checkbox> -->
-                <!-- <p-radioButton value="Si" [(ngModel)]="dato[col.field]" (click)="onChangePorDefecto($event)"></p-radioButton> -->
+              <p-checkbox (onChange)="onChangePorDefecto($event, dato)" value='Si'  [(ngModel)]='dato.porDefecto'></p-checkbox>
               </span>
-              <!-- <span *ngIf="col.field=='porDefecto' && dato.porDefecto == null">
-                <p-checkbox (onChange)="onChangePorDefecto($event, dato)" value='Si' [(ngModel)]='porDefecto'></p-checkbox>
-                <p-checkbox (onChange)="onChangePorDefecto($event)" value='Si' [(ngModel)]='porDefecto'></p-checkbox> -->
-              <!-- <p-radioButton value="Si" [(ngModel)]="dato[col.field]" (click)="onChangePorDefecto($event)"></p-radioButton> 
-              </span> -->
             </td>
           </tr>
         </ng-template>
