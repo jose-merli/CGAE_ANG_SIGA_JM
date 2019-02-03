@@ -539,9 +539,9 @@
         <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
         <button (click)="guardar()" *ngIf="!consulta" [disabled]="!isGuardar()" pButton type="button " icon="fa fa-save" iconPos="left"
             label="Guardar"></button>
-        <button (click)="aprobarSolicitud()" *ngIf="consulta && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30')"
+        <button (click)="aprobarSolicitud()" *ngIf="!consulta && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30')"
             pButton type="button " icon="fas fa-check" iconPos="left" label="Aprobar "></button>
-        <button (click)="denegarSolicitud()" *ngIf="consulta && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30')"
+        <button (click)="denegarSolicitud()" *ngIf="!consulta && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30')"
             pButton type="button " icon="fas fa-times" iconPos="left" label="Denegar"></button>
         <button (click)="SolicitarCertificado()" *ngIf="consulta" disabled pButton type="button " icon="fas fa-certificate" iconPos="left"
             label="Solicitar certificado"></button>
