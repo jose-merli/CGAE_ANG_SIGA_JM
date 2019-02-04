@@ -304,8 +304,10 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      this.buscarSolicitudes();
-    }
+			if (!(this.body.fechaDesde === undefined || this.body.fechaDesde === null)) {
+				this.buscarSolicitudes();
+			}
+		}
   }
 
   clear() {
