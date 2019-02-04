@@ -64,6 +64,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   tipoColegiacionSelected: String;
   msgs: Message[] = [];
   consulta: boolean = false;
+  pendienteAprobacion: boolean = false;
   resultadosPoblaciones: String;
   modalidadDocumentacionSelected: String;
   tipoIdentificacionSelected: String;
@@ -79,6 +80,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   dniDisponible: boolean;
   vieneDeBusqueda: boolean = false;
   solicitarMutualidad: boolean = true;
+  isLetrado: boolean = true;
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
   constructor(
@@ -94,11 +96,17 @@ export class NuevaIncorporacionComponent implements OnInit {
   dropdown: Dropdown;
 
   ngOnInit() {
+    if (sessionStorage.getItem("isLetrado")) {
+      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    }
     this.solicitudEditar = new SolicitudIncorporacionItem();
     this.progressSpinner = true;
     this.es = this.translateService.getCalendarLocale();
     this.cargarCombos();
-
+    if (JSON.parse(sessionStorage.getItem("pendienteAprobacion")) == true) {
+      this.pendienteAprobacion = true;
+      sessionStorage.removeItem("pendienteAprobacion");
+    }
     if (sessionStorage.getItem("consulta") == "true") {
       this.solicitudEditar = JSON.parse(
         sessionStorage.getItem("editedSolicitud")
@@ -779,7 +787,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   isGuardar(): boolean {
-    if (JSON.stringify(this.checkSolicitudInicio) != JSON.stringify(this.solicitudEditar)) {
+    if (JSON.stringify(this.checkSolicitudInicio) != JSON.stringify(this.solicitudEditar) && !this.isLetrado) {
       if (
         this.checkIdentificacion(this.solicitudEditar.numeroIdentificacion) &&
         (this.isValidIBAN() ||
