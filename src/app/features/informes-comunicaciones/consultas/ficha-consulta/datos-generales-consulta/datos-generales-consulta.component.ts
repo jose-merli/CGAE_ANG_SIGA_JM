@@ -162,6 +162,23 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
       data => {
         this.clasesComunicaciones = data.combooItems;
+        this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+para poder filtrar el dato con o sin estos caracteres*/
+        this.clasesComunicaciones.map(e => {
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
       },
       err => {
         console.log(err);
@@ -173,6 +190,20 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     this.sigaServices.get("consultas_comboModulos").subscribe(
       data => {
         this.modulos = data.combooItems;
+        	/*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+      para poder filtrar el dato con o sin estos caracteres*/
+				this.modulos.map((e) => {
+					let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+					let accentsOut = 'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz';
+					let i;
+					let x;
+					for (i = 0; i < e.label.length; i++) {
+						if ((x = accents.indexOf(e.label[i])) != -1) {
+							e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+							return e.labelSinTilde;
+						}
+					}
+				});
       },
       err => {
         console.log(err);

@@ -71,7 +71,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     private sigaServices: SigaServices,
     public datepipe: DatePipe,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   @ViewChild("input2")
   dropdown: Dropdown;
@@ -255,8 +255,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
           }
         });
       },
-      error => {},
-      () => {}
+      error => { },
+      () => { }
     );
   }
 
@@ -287,9 +287,9 @@ para poder filtrar el dato con o sin estos caracteres*/
       .getParam(
         "direcciones_comboPoblacion",
         "?idProvincia=" +
-          this.body.idProvincia +
-          "&filtro=" +
-          this.poblacionBuscada
+        this.body.idProvincia +
+        "&filtro=" +
+        this.poblacionBuscada
       )
       .subscribe(
         n => {
@@ -314,7 +314,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
           console.log("poblac1", this.comboPoblacion);
         },
-        error => {},
+        error => { },
         () => {
           // this.isDisabledPoblacion = false;
           this.progressSpinner = false;
@@ -352,7 +352,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         n => {
           this.comboPoblacion = n.combooItems;
         },
-        error => {},
+        error => { },
         () => {
           // this.isDisabledPoblacion = false;
           this.progressSpinner = false;
@@ -364,7 +364,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       n => {
         this.comboPais = n.combooItems;
       },
-      error => {},
+      error => { },
       () => {
         // modo edicion
         if (this.body.idPais != undefined) {
@@ -384,7 +384,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       n => {
         this.comboTipoDireccion = n.combooItems;
       },
-      error => {}
+      error => { }
     );
   }
 
@@ -838,6 +838,11 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.body.idPersona = this.usuarioBody[0].idPersona;
     this.provinciaSelecionada = this.body.idProvincia;
     this.body = JSON.parse(JSON.stringify(this.checkBody));
+    this.comboPoblacion  =  [];
+    this.comboPoblacion.push({
+      label:  this.body.nombrePoblacion,
+      value:  this.body.idPoblacion
+    });
     this.generarTabla();
   }
 

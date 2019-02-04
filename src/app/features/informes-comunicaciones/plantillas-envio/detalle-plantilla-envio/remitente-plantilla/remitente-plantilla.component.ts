@@ -1,15 +1,15 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { DatosRemitentePlantillaItem } from '../../../../../models/DatosRemitentePlantillaItem';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { DatosRemitentePlantillaItem } from "../../../../../models/DatosRemitentePlantillaItem";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
-import { PlantillaEnvioItem } from '../../../../../models/PlantillaEnvioItem';
+import { PlantillaEnvioItem } from "../../../../../models/PlantillaEnvioItem";
 import { Router } from "@angular/router";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 
 @Component({
-  selector: 'app-remitente-plantilla',
-  templateUrl: './remitente-plantilla.component.html',
-  styleUrls: ['./remitente-plantilla.component.scss']
+  selector: "app-remitente-plantilla",
+  templateUrl: "./remitente-plantilla.component.html",
+  styleUrls: ["./remitente-plantilla.component.scss"]
 })
 export class RemitentePlantillaComponent implements OnInit {
   openFicha: boolean = false;
@@ -42,9 +42,8 @@ export class RemitentePlantillaComponent implements OnInit {
   poblacionBuscada: any = [];
   progressSpinner: boolean = false;
 
-  @ViewChild('table') table: DataTable;
-  selectedDatos
-
+  @ViewChild("table") table: DataTable;
+  selectedDatos;
 
   fichasPosibles = [
     {
@@ -58,23 +57,16 @@ export class RemitentePlantillaComponent implements OnInit {
     {
       key: "remitente",
       activa: false
-    },
-
+    }
   ];
-
 
   constructor(
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices
-  ) {
-
-
-
-  }
+  ) {}
 
   ngOnInit() {
-
     this.getDatos();
     this.getInstitucion();
     this.getComboPais();
@@ -83,41 +75,40 @@ export class RemitentePlantillaComponent implements OnInit {
     this.selectedItem = 5;
 
     this.cols = [
-      { field: 'tipo', header: 'Tipo' },
-      { field: 'valor', header: 'Valor' }
-    ]
+      { field: "tipo", header: "Tipo" },
+      { field: "valor", header: "Valor" }
+    ];
 
     this.datos = [
-      { tipo: 'Teléfono', value: 'tlf', valor: '' },
-      { tipo: 'Fax', value: 'fax', valor: '' },
-      { tipo: 'Móvil', value: 'mvl', valor: '' },
-      { tipo: 'Correo electrónico', value: 'email', valor: '' },
-      { tipo: 'Página web', value: 'web', valor: '' },
-    ]
+      { tipo: "Teléfono", value: "tlf", valor: "" },
+      { tipo: "Fax", value: "fax", valor: "" },
+      { tipo: "Móvil", value: "mvl", valor: "" },
+      { tipo: "Correo electrónico", value: "email", valor: "" },
+      { tipo: "Página web", value: "web", valor: "" }
+    ];
 
     this.comboDirecciones = [
       {
-        label: 'seleccione..', value: null
-      },
-    ]
-
-
-
+        label: "seleccione..",
+        value: null
+      }
+    ];
 
     // this.body.idTipoEnvio = this.tiposEnvio[1].value;
   }
 
   abreCierraFicha() {
-    if (sessionStorage.getItem("crearNuevaPlantilla") == null) {
+    if (
+      sessionStorage.getItem("crearNuevaPlantilla") == null ||
+      sessionStorage.getItem("crearNuevaPlantilla") == undefined ||
+      sessionStorage.getItem("crearNuevaPlantilla") == "false"
+    ) {
       this.openFicha = !this.openFicha;
       if (this.openFicha) {
         this.getDatos();
       }
     }
-
   }
-
-
 
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
@@ -134,24 +125,21 @@ export class RemitentePlantillaComponent implements OnInit {
     return {};
   }
 
-
-
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
   }
 
-
   isValidCodigoPostal(): boolean {
     return (
       this.remitente.codigoPostal &&
       typeof this.remitente.codigoPostal === "string" &&
-      /^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(this.remitente.codigoPostal)
+      /^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(
+        this.remitente.codigoPostal
+      )
     );
   }
-
-
 
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
@@ -176,132 +164,130 @@ export class RemitentePlantillaComponent implements OnInit {
     }
   }
 
-
   getInstitucion() {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
     });
   }
 
-
-
   getDatos() {
     if (sessionStorage.getItem("plantillasEnvioSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("plantillasEnvioSearch"));
       this.progressSpinner = true;
       if (sessionStorage.getItem("remitente") != null) {
-        this.body.idPersona = JSON.parse(sessionStorage.getItem("remitente")).idPersona;
+        this.body.idPersona = JSON.parse(
+          sessionStorage.getItem("remitente")
+        ).idPersona;
         this.remitente = JSON.parse(sessionStorage.getItem("remitente"));
         this.openFicha = true;
-        if (this.body.idPersona != null && this.body.idPersona != '') {
-
+        if (this.body.idPersona != null && this.body.idPersona != "") {
           sessionStorage.removeItem("abrirNotario");
           this.getPersonaDireccion();
         }
-      }
-      else {
+      } else {
         this.getResultados();
       }
-
     }
-
-
   }
 
   getResultados() {
-
     let objRemitente = {
       idTipoEnvios: this.body.idTipoEnvios,
       idPlantillaEnvios: this.body.idPlantillaEnvios
-    }
+    };
     //llamar al servicio de busqueda
     this.sigaServices
       .post("plantillasEnvio_detalleRemitente", objRemitente)
       .subscribe(
         data => {
-
           this.progressSpinner = false;
           this.remitente = JSON.parse(data["body"]);
-          this.direccion = this.remitente.direccion[0];
+
+          if (
+            (this.remitente.direccion != null ||
+              this.remitente.direccion != undefined) &&
+            this.remitente.direccion.length >= 1
+          ) {
+            this.direccion = this.remitente.direccion[0];
+          }
+
           this.showComboDirecciones = false;
           this.remitenteInicial = JSON.parse(JSON.stringify(this.remitente));
+          this.direccionesInicial = JSON.parse(JSON.stringify(this.direccion));
 
-          console.log(this.direccion)
-          let filtro = '';
+          let filtro = "";
           this.getComboPoblacionInicial(filtro);
-
         },
         err => {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => { }
+        () => {}
       );
-
   }
   getPersonaDireccion() {
-
     //llamar al servicio de busqueda
     this.sigaServices
       .post("plantillasEnvio_personaDireccion", this.body.idPersona)
       .subscribe(
         data => {
-
           this.remitente = JSON.parse(data["body"]);
           this.progressSpinner = false;
           this.direcciones = this.remitente.direccion;
           this.comboDirecciones = [];
-          this.remitenteInicial = JSON.parse(sessionStorage.getItem("remitenteInicial"));
+          this.remitenteInicial = JSON.parse(
+            sessionStorage.getItem("remitenteInicial")
+          );
 
           if (this.direcciones && this.direcciones.length >= 1) {
             if (this.direcciones.length > 1) {
               this.showComboDirecciones = true;
               this.direcciones.map(direccion => {
-                this.comboDirecciones.push({ label: direccion.domicilio, value: direccion.idDireccion });
+                this.comboDirecciones.push({
+                  label: direccion.domicilio,
+                  value: direccion.idDireccion
+                });
                 this.direccion = this.remitente.direccion[0];
-              })
-
+              });
             } else {
               this.showComboDirecciones = false;
               this.direccion = this.remitente.direccion[0];
             }
 
-            console.log(this.direccion)
-            let filtro = '';
+            console.log(this.direccion);
+            let filtro = "";
             this.getComboPoblacionInicial(filtro);
-
-
           }
           // this.direcciones = this.remitente.direccion;
-
         },
         err => {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => { }
+        () => {}
       );
-
   }
 
   buscar() {
     sessionStorage.setItem("abrirRemitente", "true");
-    sessionStorage.setItem("remitenteInicial", JSON.stringify(this.remitenteInicial));
+    sessionStorage.setItem(
+      "remitenteInicial",
+      JSON.stringify(this.remitenteInicial)
+    );
     this.router.navigate(["/busquedaGeneral"]);
     if (this.direcciones && this.direcciones.length >= 1) {
       if (this.direcciones.length > 1) {
         this.showComboDirecciones = true;
         this.direcciones.map(direccion => {
-          this.comboDirecciones.push({ label: direccion.domicilio, value: direccion.idDireccion });
-        })
+          this.comboDirecciones.push({
+            label: direccion.domicilio,
+            value: direccion.idDireccion
+          });
+        });
       } else {
         this.showComboDirecciones = false;
         this.direccion = this.remitente.direccion[0];
       }
-
-
-
-
     }
   }
 
@@ -311,10 +297,8 @@ export class RemitentePlantillaComponent implements OnInit {
       if (idDireccion == direccion.idDireccion) {
         direccion.idDireccion = idDireccion;
         this.direccion = direccion;
-
       }
     }
-
   }
 
   getComboPais() {
@@ -322,10 +306,9 @@ export class RemitentePlantillaComponent implements OnInit {
       n => {
         this.comboPais = n.combooItems;
       },
-      error => { },
+      error => {}
     );
   }
-
 
   getComboProvincias() {
     this.sigaServices.get("integrantes_provincias").subscribe(
@@ -339,24 +322,23 @@ export class RemitentePlantillaComponent implements OnInit {
   }
 
   getComboPoblacionInicial(filtro) {
-    filtro = '';
+    filtro = "";
     this.poblacionBuscada = filtro;
 
     this.sigaServices
       .getParam(
         "direcciones_comboPoblacion",
         "?idProvincia=" +
-        this.direccion.idProvincia +
-        "&filtro=" +
-        this.poblacionBuscada
+          this.direccion.idProvincia +
+          "&filtro=" +
+          this.poblacionBuscada
       )
       .subscribe(
         n => {
           this.comboPoblacion = n.combooItems;
         },
-        error => { },
-
-    );
+        error => {}
+      );
   }
 
   getComboTipoDireccion() {
@@ -364,10 +346,9 @@ export class RemitentePlantillaComponent implements OnInit {
       n => {
         this.comboTipoDireccion = n.combooItems;
       },
-      error => { }
+      error => {}
     );
   }
-
 
   // Mensajes
   showFail(mensaje: string) {
@@ -390,13 +371,12 @@ export class RemitentePlantillaComponent implements OnInit {
   }
 
   guardar() {
-
     let objGuardar = {
       idPersona: this.body.idPersona,
       idDireccion: this.direccion.idDireccion,
       idPlantillaEnvios: this.body.idPlantillaEnvios,
       idTipoEnvios: this.body.idTipoEnvios
-    }
+    };
 
     this.sigaServices
       .post("plantillasEnvio_guardarRemitente", objGuardar)
@@ -406,34 +386,35 @@ export class RemitentePlantillaComponent implements OnInit {
           this.remitenteInicial = JSON.parse(JSON.stringify(this.remitente));
           sessionStorage.removeItem("remitente");
           sessionStorage.removeItem("remitenteInicial");
-          this.showSuccess('Se ha guardado la plantilla correctamente');
-
+          this.showSuccess("Se ha guardado la plantilla correctamente");
         },
         err => {
           console.log(err);
-          this.showFail('Error al guardar la plantilla');
+          this.showFail("Error al guardar la plantilla");
         },
-        () => { }
+        () => {}
       );
-
-
   }
 
   restablecer() {
     this.remitente = JSON.parse(JSON.stringify(this.remitenteInicial));
+    this.direccion = JSON.parse(JSON.stringify(this.direccionesInicial));
+
     this.direcciones = this.remitente.direccion;
     if (this.direcciones && this.direcciones.length >= 1) {
       if (this.direcciones.length > 1) {
         this.showComboDirecciones = true;
         this.direcciones.map(direccion => {
-          this.comboDirecciones.push({ label: direccion.domicilio, value: direccion.idDireccion });
+          this.comboDirecciones.push({
+            label: direccion.domicilio,
+            value: direccion.idDireccion
+          });
           this.direccion = this.remitente.direccion[0];
-        })
+        });
       } else {
         this.showComboDirecciones = false;
         this.direccion = this.remitente.direccion[0];
       }
     }
   }
-
 }

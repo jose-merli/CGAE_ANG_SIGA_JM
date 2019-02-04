@@ -154,7 +154,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       { field: 'plantillaEnvio', header: 'Plantilla Envío' },
       { field: 'tipoEnvio', header: 'Tipo envío' }
     ]
-
+    if (this.body.tipoCV != undefined) {
+      this.getComboSubtipoCurricular(this.body.tipoCV);
+      this.getComboTipoCurricular(this.body.tipoCV);
+    }
 
 
   }
@@ -176,6 +179,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   irEditarColegiado(id) {
+    sessionStorage.setItem("esNuevoNoColegiado", JSON.stringify(false));
     if (id.length >= 1 && this.selectMultiple == false) {
       sessionStorage.removeItem("personaBody");
       sessionStorage.setItem("esColegiado", "true");
@@ -753,6 +757,23 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.sigaServices.post("dialogo_claseComunicaciones", rutaClaseComunicacion).subscribe(
       data => {
         this.clasesComunicaciones = JSON.parse(data['body']).combooItems;
+        this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+para poder filtrar el dato con o sin estos caracteres*/
+        this.clasesComunicaciones.map(e => {
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
       },
       err => {
         console.log(err);
@@ -806,6 +827,23 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.sigaServices.post("dialogo_tipoEnvios", this.bodyComunicacion.idPlantillaEnvios).subscribe(
       data => {
         this.tiposEnvio = JSON.parse(data['body']);
+        this.tiposEnvio.unshift({ label: 'Seleccionar', value: '' });
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+para poder filtrar el dato con o sin estos caracteres*/
+        this.tiposEnvio.map(e => {
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
       },
       err => {
         console.log(err);

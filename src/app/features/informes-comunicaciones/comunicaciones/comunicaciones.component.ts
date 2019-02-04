@@ -17,7 +17,10 @@ export enum KEY_CODE {
 @Component({
   selector: 'app-comunicaciones',
   templateUrl: './comunicaciones.component.html',
-  styleUrls: ['./comunicaciones.component.scss']
+  styleUrls: ['./comunicaciones.component.scss'],
+  host: {
+    "(document:keypress)": "onKeyPress($event)"
+  },
 })
 export class ComunicacionesComponent implements OnInit {
   body: EnviosMasivosItem = new EnviosMasivosItem();
@@ -44,6 +47,7 @@ export class ComunicacionesComponent implements OnInit {
   estado: number;
   currentDate: Date = new Date();
   loaderEtiquetas: boolean = false;
+  fichaBusqueda: boolean = false;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -129,6 +133,23 @@ export class ComunicacionesComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
         this.tiposEnvio = data.combooItems;
+        this.tiposEnvio.unshift({ label: 'Seleccionar', value: '' });
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+para poder filtrar el dato con o sin estos caracteres*/
+        this.tiposEnvio.map(e => {
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
       },
       err => {
         console.log(err);
@@ -141,6 +162,7 @@ export class ComunicacionesComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_estado").subscribe(
       data => {
         this.estados = data.combooItems;
+        this.estados.unshift({ label: 'Seleccionar', value: '' });
       },
       err => {
         console.log(err);
@@ -154,6 +176,23 @@ export class ComunicacionesComponent implements OnInit {
     this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
       data => {
         this.clasesComunicaciones = data.combooItems;
+        this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+para poder filtrar el dato con o sin estos caracteres*/
+        this.clasesComunicaciones.map(e => {
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
       },
       err => {
         console.log(err);
@@ -286,7 +325,7 @@ export class ComunicacionesComponent implements OnInit {
   //búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
-    if (event.keyCode === KEY_CODE.ENTER) {
+    if (event.keyCode === KEY_CODE.ENTER && this.bodySearch.fechaCreacion != null) {
       this.buscar();
     }
   }
@@ -355,7 +394,9 @@ función para que no cargue primero las etiquetas de los idiomas*/
     this.datos = [];
   }
 
-
+  abreCierraFicha() {
+    this.fichaBusqueda = !this.fichaBusqueda;
+  }
 
 
 }

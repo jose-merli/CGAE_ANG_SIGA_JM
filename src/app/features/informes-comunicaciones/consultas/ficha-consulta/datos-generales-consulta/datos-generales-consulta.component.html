@@ -59,7 +59,8 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Clases de comunicaciones *</label>
-              <p-dropdown [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion" class="select-form"></p-dropdown>
+              <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion"
+                class="select-form"></p-dropdown>
             </div>
           </div>
         </div>

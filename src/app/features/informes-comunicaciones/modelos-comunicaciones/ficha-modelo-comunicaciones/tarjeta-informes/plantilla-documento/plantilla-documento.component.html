@@ -4,8 +4,9 @@
 <div class="modelos-comunicaciones-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{'menu.comunicaciones' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>Plantillas Documentos
+    <p>{{'menu.informesYcomunicaciones' | translate}}
+      <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.informesYcomunicaciones.modelosComunicacion' | translate}}
+      <i class="pl-1 fa fa-angle-right"></i>Ficha Plantilla Documento
     </p>
   </div>
   <div class="card">
@@ -137,7 +138,8 @@
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales">Mostrando registros del {{tableDocs.first + 1}} al {{tableDocs.first + tableDocs.rows}} de un total de {{tableDocs.totalRecords}}
             </label>
-            <label *ngIf="selectedDocs && selectedDocs != ''" class="pr-3 numSeleccionados">Seleccionados: {{selectedDocs.length}}</label>
+            <label *ngIf="selectedDocs && selectedDocs != ''" class="pr-3 numSeleccionados">Seleccionados: {{selectedDocs.length}}
+            </label>
             <label *ngIf="!selectedDocs" class="pr-3 numSeleccionados">Seleccionados: 0</label>
             <label>{{"general.message.mostrar" | translate}}</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
@@ -162,9 +164,9 @@
     </div>
     <div *ngIf="showDatosGenerales" class="card-footer">
       <div class="text-right main-button">
+        <button (click)="restablecerDatosGenerales()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button (click)="guardarDatosGenerales()" [disabled]="isGuardarDisabled()" pButton type="button" icon="fa fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button (click)="restablecerDatosGenerales()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -183,7 +185,7 @@
           </div>
           <div class="d-flex justify-content-between">
             <label>Nº consultas:
-              <!-- <span>{{body.nombre}}</span> -->
+              <span *ngIf="datos">{{datos.length}}</span>
             </label>
 
             <i *ngIf="!showConsultas" class="fa fa-angle-down float-right"></i>
@@ -222,17 +224,19 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td *ngFor="let col of columns" pEditableColumn>
-              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 1" [(ngModel)]="dato[col.field]"
-                [options]="consultasComboDestinatarios" class="select-form "></p-dropdown>
-              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 2" [(ngModel)]="dato[col.field]"
-                [options]="consultasComboMulti" class="select-form"></p-dropdown>
-              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 3" [(ngModel)]="dato[col.field]"
-                [options]="consultasComboCondicional" class="select-form"></p-dropdown>
-              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 4" [(ngModel)]="dato[col.field]"
-                [options]="consultasComboDatos" class="select-form"></p-dropdown>
+              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 1 && !dato.fechaBaja"
+                [(ngModel)]="dato[col.field]" [options]="consultasComboDestinatarios" class="select-form "></p-dropdown>
+              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 2  && !dato.fechaBaja"
+                [(ngModel)]="dato[col.field]" [options]="consultasComboMulti" class="select-form"></p-dropdown>
+              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 3  && !dato.fechaBaja"
+                [(ngModel)]="dato[col.field]" [options]="consultasComboCondicional" class="select-form"></p-dropdown>
+              <p-dropdown (onChange)="onChangeConsultas($event)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 4  && !dato.fechaBaja"
+                [(ngModel)]="dato[col.field]" [options]="consultasComboDatos" class="select-form"></p-dropdown>
               <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" *ngIf="col.field=='finalidad' && dato.finalidad != '' && dato.fechaBaja">{{dato[col.field]}}</span>
               <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" *ngIf="col.field=='objetivo' && dato.fechaBaja"
                 class="text-uppercase">{{dato[col.field]}}</span>
+              <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" *ngIf="col.field=='idConsulta' && dato.fechaBaja"
+                class="text-uppercase">{{dato.descripcion}}</span>
               <span *ngIf="col.field=='finalidad' && dato.finalidad != '' && !dato.fechaBaja">{{dato[col.field]}}</span>
               <span *ngIf="col.field=='objetivo' && !dato.fechaBaja" class="text-uppercase">{{dato[col.field]}}</span>
             </td>
@@ -263,17 +267,15 @@
       </p-table>
       <p-footer>
         <div class="text-right main-button">
+          <button (click)="restablecerConsultas()" pButton type="button" icon=" fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+          <button *ngIf="showHistorico" (click)="getHistorico('hidden')" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+          <button *ngIf="!showHistorico" (click)="getHistorico('visible')" pButton type="button" icon="fa fa-history" iconPos="left"
+            label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
           <button (click)="guardarConsultas()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-          <button *ngIf="selectedDatos && selectedDatos !=''" (click)="isSelectMultiple()" pButton type="button
-               " icon="fa fa-check" iconPos="left" label="{{ 'general.message.deseleccionar' | translate}}"></button>
-          <button (click)="addConsulta()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{
-                'general.boton.new' | translate}}"></button>
           <button [disabled]="eliminarDisabled" *ngIf="selectedDatos && selectedDatos !='' && !showHistorico" (click)="eliminar(selectedDatos)"
             pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-          <button *ngIf="showHistorico" (click)="getHistorico('hidden')" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
-          <button (click)="restablecerConsultas()" pButton type="button" icon=" fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-          <button *ngIf="!showHistorico" (click)="getHistorico('visible')" pButton type="button" icon="fa fa-history
-               " iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+          <button (click)="addConsulta()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button>
+
 
         </div>
       </p-footer>

@@ -9,10 +9,15 @@
   </div>
   <div class="card">
     <div class="card-body">
+      <p class="title-module"> {{'general.message.datos.generales' | translate }}
+        <i (click)="abreCierraFicha()" *ngIf="fichaBusqueda" class="fa fa-angle-up float-right"></i>
+        <i (click)="abreCierraFicha()" *ngIf="!fichaBusqueda" class="fa fa-angle-down float-right"></i>
+      </p>
       <div class="form-row">
         <div class="form-group col-lg-4 col-md-4">
           <label>Clase comunicaciones</label>
-          <p-dropdown [options]="clasesComunicaciones" [(ngModel)]="bodySearch.idClaseComunicacion" class="select-form"></p-dropdown>
+          <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [options]="clasesComunicaciones" [(ngModel)]="bodySearch.idClaseComunicacion"
+            class="select-form"></p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>

@@ -157,7 +157,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
     this.sigaServices.get("modelos_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
-        this.colegios.unshift({ label: '', value: '' });
+        this.colegios.unshift({ label: 'Seleccionar', value: '' });
         for (let e of this.colegios) {
           if (e.value == '2000') {
             e.label = 'POR DEFECTO';
@@ -176,6 +176,23 @@ export class DatosGeneralesFichaComponent implements OnInit {
     this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
       data => {
         this.clasesComunicaciones = data.combooItems;
+        this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+para poder filtrar el dato con o sin estos caracteres*/
+        this.clasesComunicaciones.map(e => {
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
       },
       err => {
         console.log(err);

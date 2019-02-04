@@ -169,6 +169,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_estado").subscribe(
       data => {
         this.estados = data.combooItems;
+        this.estados.unshift({ label: 'Seleccionar', value: '' });
         console.log(this.estados)
       },
       err => {

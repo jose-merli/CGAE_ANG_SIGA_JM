@@ -9,28 +9,31 @@
   </div>
   <div class="card">
     <div class="card-body">
+      <p class="title-module"> {{'general.message.datos.generales' | translate }}
+        <i (click)="abreCierraFicha()" *ngIf="fichaBusqueda" class="fa fa-angle-up float-right"></i>
+        <i (click)="abreCierraFicha()" *ngIf="!fichaBusqueda" class="fa fa-angle-down float-right"></i>
+      </p>
       <div class="form-row">
-
         <div class="form-group col-lg-4 col-md-4">
           <label>{{'enviosMasivos.literal.descripcion' | translate}}</label>
           <input type="text" class="form-control" [(ngModel)]="bodySearch.descripcion" pInputText>
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>{{'enviosMasivos.literal.fechaCreacion' | translate}} *</label>
-          <p-calendar [locale]="es" [(ngModel)]="bodySearch.fechaCreacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
-            [utc]="true"></p-calendar>
+          <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="bodySearch.fechaCreacion"
+            dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true"></p-calendar>
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>{{'enviosMasivos.literal.fechaProgramacion' | translate}}</label>
-          <p-calendar [locale]="es" [(ngModel)]="bodySearch.fechaProgramacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
-            [utc]="true"></p-calendar>
+          <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="bodySearch.fechaProgramacion"
+            dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true"></p-calendar>
         </div>
       </div>
       <div class="form-row d-flex align-items-end">
 
         <div class="form-group col-lg-4 col-md-4">
           <label>{{'enviosMasivos.literal.tipoEnvio' | translate}}</label>
-          <p-dropdown [options]="tiposEnvio" [(ngModel)]="bodySearch.idTipoEnvios" class="select-form"></p-dropdown>
+          <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [options]="tiposEnvio" [(ngModel)]="bodySearch.idTipoEnvios" class="select-form"></p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>{{'enviosMasivos.literal.estado' | translate}}</label>
@@ -127,8 +130,8 @@
   <div class="form-row">
     <div class="form-group col-lg-12 col-md-12">
       <label>{{"envio.programar" | translate}}</label>
-      <p-calendar [locale]="es" showTime="true" [minDate]="currentDate" [(ngModel)]="bodyProgramar.fechaProgramada" dateFormat="dd/mm/yy"
-        icon="far fa-calendar-alt" showIcon="true" [utc]="true"></p-calendar>
+      <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" showTime="true" [minDate]="currentDate"
+        [(ngModel)]="bodyProgramar.fechaProgramada" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true"></p-calendar>
     </div>
   </div>
   <p-footer>

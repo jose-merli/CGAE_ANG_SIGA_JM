@@ -1204,6 +1204,14 @@ export class FichaColegialComponent implements OnInit {
     this.displayAuditoria = false;
   }
 
+  disabledAutocomplete() {
+    if (!this.isLetrado) {
+      this.autocompletar  =  true;
+    } else {
+      this.autocompletar  =  false;
+    }
+  }
+
   comprobarAuditoria() {
     // modo creación
 
@@ -1494,7 +1502,7 @@ export class FichaColegialComponent implements OnInit {
       JSON.stringify(this.checkGeneralBody) != JSON.stringify(this.generalBody)
     ) {
       if (
-        (this.isValidDNI(this.generalBody.nif) || this.isValidCIF(this.generalBody.nif) || this.isValidNIE(this.generalBody.nif)) &&
+        this.generalBody.nif != "" &&
         this.generalBody.nif != undefined &&
         this.generalBody.idTipoIdentificacion != "" &&
         this.generalBody.idTipoIdentificacion != undefined &&
@@ -1689,9 +1697,9 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
-  disabledAutocomplete() {
-    this.autocompletar = true;
-  }
+  // disabledAutocomplete() {
+  //   this.autocompletar = true;
+  // }
 
   // ETIQUETAS
 
@@ -1786,33 +1794,33 @@ export class FichaColegialComponent implements OnInit {
     // modo creacion
     this.activacionGuardarGenerales();
 
-    if (this.generalBody.nif.length > 8) {
-      if (this.isValidDNI(this.generalBody.nif)) {
-        this.generalBody.idTipoIdentificacion = "10";
-        return true;
-      } else if (this.isValidPassport(this.generalBody.nif)) {
-        this.generalBody.idTipoIdentificacion = "30";
-        return true;
-      } else if (this.isValidNIE(this.generalBody.nif)) {
-        this.generalBody.idTipoIdentificacion = "40";
-        return true;
-      } else if (this.isValidCIF(this.generalBody.nif)) {
-        this.generalBody.idTipoIdentificacion = "20";
-        return true;
-      } else {
-        this.generalBody.idTipoIdentificacion = "30";
-        return false;
-      }
-
-      // 1: {label: "CIF", value: "20"}
-      // 2: {label: "NIE", value: "40"}
-      // 3: {label: "NIF", value: "10"}
-      // 4: {label: "Otro", value: "50"}
-      // 5: {label: "Pasaporte", value: "30"}
+    // if (this.generalBody.nif.length > 8) {
+    if (this.isValidDNI(this.generalBody.nif)) {
+      this.generalBody.idTipoIdentificacion = "10";
+      return true;
+    } else if (this.isValidPassport(this.generalBody.nif)) {
+      this.generalBody.idTipoIdentificacion = "30";
+      return true;
+    } else if (this.isValidNIE(this.generalBody.nif)) {
+      this.generalBody.idTipoIdentificacion = "40";
+      return true;
+    } else if (this.isValidCIF(this.generalBody.nif)) {
+      this.generalBody.idTipoIdentificacion = "20";
+      return true;
     } else {
       this.generalBody.idTipoIdentificacion = "30";
-      return false;
+      return true;
     }
+
+    // 1: {label: "CIF", value: "20"}
+    // 2: {label: "NIE", value: "40"}
+    // 3: {label: "NIF", value: "10"}
+    // 4: {label: "Otro", value: "50"}
+    // 5: {label: "Pasaporte", value: "30"}
+    // } else {
+    //   this.generalBody.idTipoIdentificacion = "30";
+    //   return false;
+    // }
   }
   isValidPassport(dni: String): boolean {
     return (
@@ -2098,8 +2106,8 @@ export class FichaColegialComponent implements OnInit {
       this.colegialesBody.situacion != "" &&
       this.colegialesBody.situacion != undefined &&
       this.colegialesBody.numColegiado != "" &&
-      this.colegialesBody.idTiposSeguro != "" &&
-      this.colegialesBody.idTiposSeguro != undefined &&
+      // this.colegialesBody.idTiposSeguro != "" &&
+      // this.colegialesBody.idTiposSeguro != undefined &&
       this.colegialesBody.residenteInscrito != "" &&
       this.colegialesBody.incorporacion != null &&
       this.colegialesBody.fechapresentacion != null &&
@@ -2112,19 +2120,20 @@ export class FichaColegialComponent implements OnInit {
   }
 
   onBlur(event) {
-    if (event.target.value != "" && !this.autoComplete.panelVisible) {
-      this.checked = true;
-      this.isCrear = true;
-      this.item = new ComboEtiquetasItem();
-      this.item.idGrupo = "";
-      this.item.label = event.srcElement.value;
-      
-      this.mensaje = this.translateService.instant(
-      "censo.etiquetas.literal.rango"
+    if (event.target.value != "" && !this.autoComplete.panelVisible) {
+      this.historico = false;
+      this.checked = true;
+      this.isCrear = true;
+      this.item = new ComboEtiquetasItem();
+      this.item.idGrupo = "";
+      this.item.label = event.srcElement.value;
+
+      this.mensaje = this.translateService.instant(
+        "censo.etiquetas.literal.rango"
       );
-      }
-    } 
-    
+    }
+  }
+
   pasarFechas() {
     this.colegialesBody.incorporacionDate = this.arreglarFecha(
       this.colegialesBody.incorporacion
@@ -3390,7 +3399,11 @@ export class FichaColegialComponent implements OnInit {
       this.colegialesBody.situacion == "20" ||
       this.colegialesBody.situacion == "10"
     ) {
-      this.situacionPersona = "Activo";
+      if (this.colegialesBody.comunitario == "1") {
+        this.situacionPersona = "Abogado Inscrito";
+      } else {
+        this.situacionPersona = "Activo";
+      }
     } else if (this.colegialesBody.situacion != undefined) {
       this.situacionPersona = "De baja";
     } else {
