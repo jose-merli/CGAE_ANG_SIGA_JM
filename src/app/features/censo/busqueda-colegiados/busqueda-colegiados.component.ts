@@ -154,7 +154,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       { field: 'plantillaEnvio', header: 'Plantilla Envío' },
       { field: 'tipoEnvio', header: 'Tipo envío' }
     ]
-
+    if (this.body.tipoCV != undefined) {
+      this.getComboSubtipoCurricular(this.body.tipoCV);
+      this.getComboTipoCurricular(this.body.tipoCV);
+    }
 
 
   }
@@ -176,7 +179,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   irEditarColegiado(id) {
-    sessionStorage.setItem("esNuevoNoColegiado",  JSON.stringify(false));
+    sessionStorage.setItem("esNuevoNoColegiado", JSON.stringify(false));
     if (id.length >= 1 && this.selectMultiple == false) {
       sessionStorage.removeItem("personaBody");
       sessionStorage.setItem("esColegiado", "true");
