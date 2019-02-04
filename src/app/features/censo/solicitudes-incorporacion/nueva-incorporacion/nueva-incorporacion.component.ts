@@ -209,10 +209,19 @@ export class NuevaIncorporacionComponent implements OnInit {
     );
 
     this.sigaServices
-      .get("solicitudIncorporacion_tipoIdentificacion")
+      .get("fichaPersona_tipoIdentificacionCombo")
       .subscribe(
         result => {
           this.tipoIdentificacion = result.combooItems;
+          // 1: {label: "CIF", value: "20"}
+          // 2: {label: "NIE", value: "40"}
+          // 3: {label: "NIF", value: "10"}
+          // 4: {label: "Otro", value: "50"}
+          // 5: {label: "Pasaporte", value: "30"}
+          this.tipoIdentificacion[5].label =
+            this.tipoIdentificacion[5].label +
+            " / " +
+            this.tipoIdentificacion[4].label;
           this.progressSpinner = false;
         },
         error => {
@@ -287,11 +296,11 @@ export class NuevaIncorporacionComponent implements OnInit {
     }
 
     if (this.solicitudEditar.abonoCargo != null) {
-      if (this.solicitudEditar.abonoCargo.indexOf("T") > 0) {
+      if (this.solicitudEditar.abonoCargo == "T") {
         this.cargo = true;
         this.abono = true;
       } else {
-        if (this.solicitudEditar.abonoCargo.indexOf("C") > 0) {
+        if (this.solicitudEditar.abonoCargo == "C") {
           this.cargo = true;
         } else {
           this.abono = true;
@@ -422,6 +431,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   }
 
   onChangeNifCif() {
+    this.compruebaDNI();
     if (this.checkIdentificacion(this.solicitudEditar.numeroIdentificacion)) {
       this.sigaServices
         .post("solicitudIncorporacion_searchNifExistente", this.solicitudEditar)
@@ -595,6 +605,26 @@ export class NuevaIncorporacionComponent implements OnInit {
 
   SolicitarCertificado() {
     //TODO
+  }
+
+  onChangeCargo() {
+    if (this.cargo == true && this.abono == true) {
+      this.solicitudEditar.abonoCargo = "T";
+    } else {
+      if (this.cargo == true) {
+        this.solicitudEditar.abonoCargo = "C";
+      } else {
+        this.solicitudEditar.abonoCargo = "A";
+      }
+    }
+  }
+
+  onChangeAbonoSJCS() {
+    if (this.abonoJCS == true) {
+      this.solicitudEditar.abonoJCS = "1";
+    } else {
+      this.solicitudEditar.abonoJCS = "0";
+    }
   }
 
   guardar() {
@@ -786,14 +816,66 @@ para poder filtrar el dato con o sin estos caracteres*/
       );
   }
 
+
+  compruebaDNI() {
+    // if (this.generalBody.nif.length > 8) {
+    if (this.isValidDNI(this.solicitudEditar.numeroIdentificacion)) {
+      this.solicitudEditar.idTipoIdentificacion = "10";
+      this.tipoIdentificacionSelected = "10";
+      return true;
+    } else if (this.isValidPassport(this.solicitudEditar.numeroIdentificacion)) {
+      this.solicitudEditar.idTipoIdentificacion = "30";
+      this.tipoIdentificacionSelected = "30";
+      return true;
+    } else if (this.isValidNIE(this.solicitudEditar.numeroIdentificacion)) {
+      this.solicitudEditar.idTipoIdentificacion = "40";
+      this.tipoIdentificacionSelected = "40";
+      return true;
+    } else if (this.isValidCIF(this.solicitudEditar.numeroIdentificacion)) {
+      this.solicitudEditar.idTipoIdentificacion = "20";
+      this.tipoIdentificacionSelected = "20";
+      return true;
+    } else if (this.solicitudEditar.numeroIdentificacion != undefined && this.solicitudEditar.numeroIdentificacion != null && this.solicitudEditar.numeroIdentificacion != "") {
+      this.solicitudEditar.idTipoIdentificacion = "30";
+      this.tipoIdentificacionSelected = "30";
+      return true;
+    } else {
+      return false;
+    }
+    // 1: {label: "CIF", value: "20"}
+    // 2: {label: "NIE", value: "40"}
+    // 3: {label: "NIF", value: "10"}
+    // 4: {label: "Otro", value: "50"}
+    // 5: {label: "Pasaporte", value: "30"}
+    // } else {
+    //   this.generalBody.idTipoIdentificacion = "30";
+    //   return false;
+    // }
+  }
+
+  onChangeResidente() {
+    if (this.residente == true) {
+      this.solicitudEditar.residente = "1";
+    } else {
+      this.solicitudEditar.residente = "0";
+    }
+  }
+
   isGuardar(): boolean {
+    this.solicitudEditar.idTratamiento = this.tratamientoSelected;
+    this.solicitudEditar.idEstadoCivil = this.estadoCivilSelected;
+    this.solicitudEditar.idPais = this.paisSelected;
+    this.solicitudEditar.sexo = this.sexoSelected;
+    this.solicitudEditar.idTipo = this.tipoSolicitudSelected;
+    this.solicitudEditar.idTipoColegiacion = this.tipoColegiacionSelected;
+    this.solicitudEditar.idModalidadDocumentacion = this.modalidadDocumentacionSelected;
     if (JSON.stringify(this.checkSolicitudInicio) != JSON.stringify(this.solicitudEditar) && !this.isLetrado) {
       if (
-        this.checkIdentificacion(this.solicitudEditar.numeroIdentificacion) &&
+        this.compruebaDNI() &&
         (this.isValidIBAN() ||
           this.solicitudEditar.iban == "" ||
           this.solicitudEditar.iban == undefined) &&
-        this.provinciaSelected != "" &&
+        // this.provinciaSelected != "" &&
         this.estadoSolicitudSelected != "" &&
         this.estadoSolicitudSelected != undefined &&
         this.solicitudEditar.fechaEstado != null &&
@@ -810,12 +892,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.modalidadDocumentacionSelected != undefined &&
         this.solicitudEditar.fechaIncorporacion != null &&
         this.solicitudEditar.fechaIncorporacion != undefined &&
-        // ((this.solicitudEditar.numColegiado != null &&
-        //   this.solicitudEditar.numColegiado != undefined &&
         this.numColegiadoDisponible != false &&
-        // (this.solicitudEditar.numColegiado == null ||
-        //   (this.solicitudEditar.numColegiado == "" &&
-        // this.numColegiadoDisponible != undefined &&
         this.tipoIdentificacionSelected != "" &&
         this.tipoIdentificacionSelected != undefined &&
         this.solicitudEditar.numeroIdentificacion != null &&
@@ -907,6 +984,14 @@ para poder filtrar el dato con o sin estos caracteres*/
       nie &&
       typeof nie === "string" &&
       /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie)
+    );
+  }
+
+  isValidCIF(cif: String): boolean {
+    return (
+      cif &&
+      typeof cif === "string" &&
+      /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif)
     );
   }
 

@@ -154,7 +154,8 @@
                 </div>
                 <div class="form-group col-lg-2 col-md-2">
                     <br>
-                    <p-checkbox [disabled]="consulta" binary="true" label="{{'censo.ws.literal.residente' | translate}}" [(ngModel)]="residente"></p-checkbox>
+                    <p-checkbox [disabled]="consulta" binary="true" label="{{'censo.ws.literal.residente' | translate}}" (onChange)="onChangeResidente()"
+                        [(ngModel)]="residente"></p-checkbox>
                 </div>
             </div>
         </div>
@@ -206,15 +207,15 @@
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
                         {{"censo.SolicitudIncorporacion.literal.tipoIdentificacion" | translate}} (*)</label>
-                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="tipoIdentificacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}"
+                    <p-dropdown disabled class="select-form" [(ngModel)]="tipoIdentificacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}"
                         [options]="tipoIdentificacion"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>{{"censo.consultaDatosColegiacion.literal.numIden" | translate}} (*)</label>
                     <input [disabled]="consulta" type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.numeroIdentificacion"
                         (ngModelChange)="onChangeNifCif()">
-                    <small class="input-error" *ngIf="!checkIdentificacion(solicitudEditar.numeroIdentificacion) && solicitudEditar.numeroIdentificacion 
-                     && solicitudEditar.numeroIdentificacion.length > 0">Documento no válido</small>
+                    <!-- <small class="input-error" *ngIf="!checkIdentificacion(solicitudEditar.numeroIdentificacion) && solicitudEditar.numeroIdentificacion 
+                     && solicitudEditar.numeroIdentificacion.length > 0">Documento no válido</small> -->
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
@@ -346,9 +347,11 @@
                     <label>
                         {{"censo.consultaDirecciones.literal.poblacion" | translate}}
                     </label>
-                    <p-dropdown #poblacion [disabled]="consulta || deshabilitarDireccion()" (input)="buscarPoblacion($event)" class="select-form"
-                        [(ngModel)]="poblacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="poblaciones"
-                        [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [emptyFilterMessage]="resultadosPoblaciones"></p-dropdown>
+                    <input *ngIf="consulta" disabled [(ngModel)]="solicitudEditar.nombrePoblacion" type="text" class="form-control" pInputText>
+
+                    <p-dropdown *ngIf="!consulta" #poblacion [disabled]="consulta || deshabilitarDireccion()" (input)="buscarPoblacion($event)"
+                        class="select-form" [(ngModel)]="poblacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}"
+                        [options]="poblaciones" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [emptyFilterMessage]="resultadosPoblaciones"></p-dropdown>
 
                     <!-- <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.nombrePoblacion">-->
                 </div>
@@ -465,15 +468,15 @@
 
                 <div class="form-group col-lg-3 col-md-2">
                     <br>
-                    <p-checkbox [disabled]="consulta" binary="true" label="Cargo" [(ngModel)]="cargo"></p-checkbox>
+                    <p-checkbox [disabled]="consulta" (onChange)="onChangeCargo()" binary="true" label="Cargo" [(ngModel)]="cargo"></p-checkbox>
                 </div>
                 <div class="form-group col-lg-3 col-md-2">
                     <br>
-                    <p-checkbox [disabled]="consulta" binary="true" label="Abono" [(ngModel)]="abono"></p-checkbox>
+                    <p-checkbox [disabled]="consulta" (onChange)="onChangeCargo()" binary="true" label="Abono" [(ngModel)]="abono"></p-checkbox>
                 </div>
                 <div class="form-group col-lg-3 col-md-2">
                     <br>
-                    <p-checkbox [disabled]="consulta" binary="true" label="Cuenta SJCS" [(ngModel)]="abonoJCS"></p-checkbox>
+                    <p-checkbox [disabled]="consulta" (onChange)="onChangeAbonoSJCS()" binary="true" label="Cuenta SJCS" [(ngModel)]="abonoJCS"></p-checkbox>
                 </div>
             </div>
         </div>
