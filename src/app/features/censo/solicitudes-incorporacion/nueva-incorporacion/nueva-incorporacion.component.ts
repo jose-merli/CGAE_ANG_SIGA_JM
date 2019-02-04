@@ -646,6 +646,7 @@ export class NuevaIncorporacionComponent implements OnInit {
               detail: "Solicitud guardada correctamente."
             }
           ];
+          sessionStorage.setItem("solicitudInsertadaConExito", "true");
           this.router.navigate(["/solicitudesIncorporacion"]);
         },
         error => {
