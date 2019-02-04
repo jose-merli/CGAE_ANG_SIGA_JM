@@ -2121,6 +2121,7 @@ export class FichaColegialComponent implements OnInit {
 
   onBlur(event) {
     if (event.target.value != "" && !this.autoComplete.panelVisible) {
+      this.historico = false;
       this.checked = true;
       this.isCrear = true;
       this.item = new ComboEtiquetasItem();
