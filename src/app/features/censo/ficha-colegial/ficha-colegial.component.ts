@@ -1204,6 +1204,14 @@ export class FichaColegialComponent implements OnInit {
     this.displayAuditoria = false;
   }
 
+  disabledAutocomplete() {
+    if (!this.isLetrado) {
+      this.autocompletar  =  true;
+    } else {
+      this.autocompletar  =  false;
+    }
+  }
+
   comprobarAuditoria() {
     // modo creación
 
@@ -1689,9 +1697,9 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
-  disabledAutocomplete() {
-    this.autocompletar = true;
-  }
+  // disabledAutocomplete() {
+  //   this.autocompletar = true;
+  // }
 
   // ETIQUETAS
 

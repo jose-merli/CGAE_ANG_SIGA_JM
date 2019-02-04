@@ -24,7 +24,7 @@ export enum KEY_CODE {
 @Component({
 	selector: 'app-busqueda-general',
 	templateUrl: './busqueda-general.component.html',
-	styleUrls: [ './busqueda-general.component.scss' ]
+	styleUrls: ['./busqueda-general.component.scss']
 })
 export class BusquedaGeneralComponent {
 	formBusqueda: FormGroup;
@@ -230,7 +230,7 @@ export class BusquedaGeneralComponent {
 			(n) => {
 				this.comboIdentificacion = n.combooItems;
 			},
-			(error) => {}
+			(error) => { }
 		);
 	}
 
@@ -545,7 +545,7 @@ export class BusquedaGeneralComponent {
 
 				sessionStorage.setItem('notario', JSON.stringify(id));
 				//this.location.back();
-				this.router.navigate([ 'fichaPersonaJuridica' ]);
+				this.router.navigate(['fichaPersonaJuridica']);
 			}
 		} else if (
 			(sessionStorage.getItem('newIntegrante') != null || sessionStorage.getItem('newIntegrante') != undefined) &&
@@ -560,7 +560,7 @@ export class BusquedaGeneralComponent {
 			id[0].completo = true;
 			sessionStorage.removeItem('nIntegrante');
 			sessionStorage.setItem('nIntegrante', JSON.stringify(id));
-			this.router.navigate([ 'detalleIntegrante' ]);
+			this.router.navigate(['detalleIntegrante']);
 		} else if (sessionStorage.getItem('abrirRemitente') == 'true') {
 			sessionStorage.setItem('remitente', JSON.stringify(id[0]));
 			sessionStorage.removeItem('abrirRemitente');
@@ -570,7 +570,7 @@ export class BusquedaGeneralComponent {
 			// ir a ficha de solicitud de Incorporación
 		} else if (
 			sessionStorage.getItem('solicitudIncorporacion') == 'true' &&
-			sessionStorage.getItem('abrirRemitente') == 'true'
+			sessionStorage.getItem('abrirRemitente') != 'true'
 		) {
 			let enviar = new SolicitudIncorporacionItem();
 
@@ -600,7 +600,7 @@ export class BusquedaGeneralComponent {
 						enviar.apellido2 = id[0].segundoApellido;
 
 						sessionStorage.setItem('nuevaIncorporacion', JSON.stringify(enviar));
-						this.router.navigate([ '/nuevaIncorporacion' ]);
+						this.router.navigate(['/nuevaIncorporacion']);
 					} else {
 						this.showFail(
 							'No se puede crear una solicitud de modificación a partir de una persona de la misma institución'
@@ -609,22 +609,6 @@ export class BusquedaGeneralComponent {
 				}
 			);
 
-			// if (id[0].numeroInstitucion != this.institucion.value) {
-			//   // enviar = id[0];
-			//   enviar.numeroIdentificacion = id[0].nif;
-			//   enviar.apellido1 = id[0].primerApellido;
-			//   enviar.nombre = id[0].nombre;
-			//   enviar.numColegiado = id[0].numeroColegiado;
-			//   enviar.idInstitucion = id[0].numeroInstitucion;
-			//   enviar.apellido2 = id[0].segundoApellido;
-
-			//   sessionStorage.setItem("nuevaIncorporacion", JSON.stringify(enviar));
-			//   this.router.navigate(["/nuevaIncorporacion"]);
-			// } else {
-			//   this.showFail(
-			//     "No se puede crear una solicitud de modificación a partir de una persona de la misma institución"
-			//   );
-			// }
 		} else if (this.isFormador) {
 			// ir a ficha de formador
 			this.checkTypeCIF(id[0].nif);
@@ -638,7 +622,7 @@ export class BusquedaGeneralComponent {
 				sessionStorage.getItem('backInscripcion') != null ||
 				sessionStorage.getItem('backInscripcion') != undefined
 			) {
-				this.router.navigate([ '/buscarInscripciones' ]);
+				this.router.navigate(['/buscarInscripciones']);
 				sessionStorage.removeItem('backInscripcion');
 			} else if (
 				sessionStorage.getItem('backFichaInscripcion') != null ||
@@ -650,16 +634,16 @@ export class BusquedaGeneralComponent {
 				}
 
 				sessionStorage.setItem('modoEdicionInscripcion', 'false');
-				this.router.navigate([ '/fichaInscripcion' ]);
+				this.router.navigate(['/fichaInscripcion']);
 			} else {
-				this.router.navigate([ '/fichaCurso' ]);
+				this.router.navigate(['/fichaCurso']);
 			}
 		} else if (
 			sessionStorage.getItem('nuevaSancion') != null &&
 			sessionStorage.getItem('nuevaSancion') != undefined
 		) {
 			sessionStorage.setItem('nSancion', JSON.stringify(id));
-			this.router.navigate([ 'detalleSancion' ]);
+			this.router.navigate(['detalleSancion']);
 		}
 	}
 
@@ -721,7 +705,7 @@ export class BusquedaGeneralComponent {
 						enviar.apellido2 = this.bodyFisica.segundoApellido;
 						enviar.numColegiado = this.bodyFisica.numeroColegiado;
 						sessionStorage.setItem('nuevaIncorporacion', JSON.stringify(enviar));
-						this.router.navigate([ '/nuevaIncorporacion' ]);
+						this.router.navigate(['/nuevaIncorporacion']);
 					} else {
 						this.showFail(
 							'No se puede crear una solicitud de modificación a partir de una persona jurídica'
@@ -761,7 +745,7 @@ export class BusquedaGeneralComponent {
 
 					sessionStorage.removeItem('nIntegrante');
 					sessionStorage.setItem('nIntegrante', JSON.stringify(integrantesNEW));
-					this.router.navigate([ 'detalleIntegrante' ]);
+					this.router.navigate(['detalleIntegrante']);
 				} else if (
 					sessionStorage.getItem('abrirFormador') != null ||
 					sessionStorage.getItem('abrirFormador') != undefined
@@ -775,8 +759,8 @@ export class BusquedaGeneralComponent {
 						sessionStorage.getItem('backFichaInscripcion') != null &&
 						sessionStorage.getItem('backFichaInscripcion')
 					)
-						this.router.navigate([ '/fichaInscripcion' ]);
-					else this.router.navigate([ '/fichaCurso' ]);
+						this.router.navigate(['/fichaInscripcion']);
+					else this.router.navigate(['/fichaCurso']);
 				}
 			},
 			reject: () => {
@@ -867,7 +851,7 @@ export class BusquedaGeneralComponent {
 	}
 
 	//búsqueda con enter
-	@HostListener('document:keypress', [ '$event' ])
+	@HostListener('document:keypress', ['$event'])
 	onKeyPress(event: KeyboardEvent) {
 		if (event.keyCode === KEY_CODE.ENTER) {
 			this.isBuscar();
