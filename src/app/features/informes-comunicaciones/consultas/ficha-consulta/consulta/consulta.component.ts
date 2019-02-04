@@ -254,8 +254,8 @@ export class ConsultaComponent implements OnInit {
             }
             element.valores.unshift(empty);
           }
-          if(element.operacion == "OPERACION"){
-            element.operacion = this.operadoresNumero[0];
+          if(element.operacion == "OPERADOR"){
+            element.operacion = this.operadoresNumero[0].value;
           }   
         });  
         this.showValores = true;
@@ -284,9 +284,19 @@ export class ConsultaComponent implements OnInit {
   }
 
   enviar() {
-    this.progressSpinner = true;
+    this.progressSpinner = true;   
 
-    this.body.camposDinamicos = this.valores;
+    this.body.camposDinamicos = JSON.parse(JSON.stringify(this.valores));
+
+    this.body.camposDinamicos.forEach(element => {
+      if(element.valor != undefined && typeof element.valor == "object"){
+        element.valor = element.valor.ID;
+      }
+      if(element.ayuda == null || element.ayuda == "undefined"){
+        element.ayuda = "-1";
+      }
+    }); 
+
     this.sigaServices
       .postDownloadFiles("consultas_ejecutarConsulta", this.body)
       .subscribe(data => {
