@@ -199,7 +199,7 @@ export class TarjetaInformesComponent implements OnInit {
 
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
-      message: '¿Está seguro de eliminar los' + dato.length + 'informes seleccionados',
+      message: this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.mensajeEliminar') + ' ' + dato.length + ' ' + this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.informesSeleccionados'),
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarEliminar(dato);
@@ -231,10 +231,10 @@ export class TarjetaInformesComponent implements OnInit {
     });
     this.sigaServices.post("modelos_detalle_informes_borrar", this.eliminarArray).subscribe(
       data => {
-        this.showSuccess('Se ha eliminado el informe correctamente');
+        this.showSuccess(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.correctInformeEliminado'));
       },
       err => {
-        this.showFail('Error al eliminar el informe');
+        this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.errorInformeEliminado'));
         console.log(err);
       },
       () => {

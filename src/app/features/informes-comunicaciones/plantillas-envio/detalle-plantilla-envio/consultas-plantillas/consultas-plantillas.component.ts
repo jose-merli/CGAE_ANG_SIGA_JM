@@ -70,7 +70,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 
 		this.selectedItem = 10;
 
-		this.cols = [ { field: 'nombre', header: 'Nombre' }, { field: 'finalidad', header: 'Finalidad' } ];
+		this.cols = [ { field: 'nombre', header: 'administracion.parametrosGenerales.literal.nombre' }, { field: 'finalidad', header: 'informesycomunicaciones.plantillasenvio.ficha.finalidad' } ];
 
 		this.rowsPerPage = [
 			{
@@ -255,12 +255,12 @@ export class ConsultasPlantillasComponent implements OnInit {
 		this.sigaServices.post('plantillasEnvio_asociarConsulta', objAsociar).subscribe(
 			(data) => {
 				this.nuevaConsulta = false;
-				this.showSuccess('La consulta ha sido asociada correctamente');
+				this.showSuccess(this.translateService.instant('informesycomunicaciones.plantillasenvio.ficha.correctAsociar'));
 			},
 			(err) => {
 				console.log(err);
 				this.progressSpinner = false;
-				this.showFail('Error al asociar la consulta');
+				this.showFail(this.translateService.instant('informesycomunicaciones.plantillasenvio.ficha.errorAsociar'));
 			},
 			() => {
 				this.getResultados();
@@ -271,7 +271,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 	desasociar(dato) {
 		this.confirmationService.confirm({
 			// message: this.translateService.instant("messages.deleteConfirmation"),
-			message: '¿Está seguro de desasociar las consultas seleccionadas?',
+			message: this.translateService.instant('informesycomunicaciones.plantillasenvio.ficha.mensajeDesasociar'),
 			icon: 'fa fa-trash-alt',
 			accept: () => {
 				this.confirmarDesasociar(dato);
@@ -300,10 +300,10 @@ export class ConsultasPlantillasComponent implements OnInit {
 		});
 		this.sigaServices.post('plantillasEnvio_desaociarConsulta', this.eliminarArray).subscribe(
 			(data) => {
-				this.showSuccess('Se ha desasociado la plantilla correctamente');
+				this.showSuccess(this.translateService.instant('informesycomunicaciones.plantillasenvio.ficha.correctDesasociar'));
 			},
 			(err) => {
-				this.showFail('Error al desasociar la plantilla');
+				this.showFail(this.translateService.instant('informesycomunicaciones.plantillasenvio.ficha.errorDesasociar'));
 				console.log(err);
 			},
 			() => {
