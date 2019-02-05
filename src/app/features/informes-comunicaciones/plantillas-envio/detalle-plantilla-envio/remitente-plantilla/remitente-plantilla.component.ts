@@ -5,6 +5,7 @@ import { DataTable } from "primeng/datatable";
 import { PlantillaEnvioItem } from "../../../../../models/PlantillaEnvioItem";
 import { Router } from "@angular/router";
 import { Message, ConfirmationService } from "primeng/components/common/api";
+import { TranslateService } from "../../../../../commons/translate/translation.service";
 
 @Component({
   selector: "app-remitente-plantilla",
@@ -63,7 +64,8 @@ export class RemitentePlantillaComponent implements OnInit {
   constructor(
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit() {
@@ -75,8 +77,8 @@ export class RemitentePlantillaComponent implements OnInit {
     this.selectedItem = 5;
 
     this.cols = [
-      { field: "tipo", header: "Tipo" },
-      { field: "valor", header: "Valor" }
+      { field: "tipo", header: "censo.consultaDatosGenerales.literal.tipoCliente" },
+      { field: "valor", header: "administracion.parametrosGenerales.literal.valor" }
     ];
 
     this.datos = [
@@ -386,11 +388,11 @@ export class RemitentePlantillaComponent implements OnInit {
           this.remitenteInicial = JSON.parse(JSON.stringify(this.remitente));
           sessionStorage.removeItem("remitente");
           sessionStorage.removeItem("remitenteInicial");
-          this.showSuccess("Se ha guardado la plantilla correctamente");
+          this.showSuccess(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaGuardada'));
         },
         err => {
           console.log(err);
-          this.showFail("Error al guardar la plantilla");
+          this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaGuardada'));
         },
         () => {}
       );

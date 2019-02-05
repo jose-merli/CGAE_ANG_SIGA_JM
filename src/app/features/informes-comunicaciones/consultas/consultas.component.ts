@@ -24,7 +24,7 @@ export enum KEY_CODE {
   styleUrls: ["./consultas.component.scss"],
   host: {
     "(document:keypress)": "onKeyPress($event)"
-  },
+  }
 })
 export class ConsultasComponent implements OnInit {
   body: ConsultasItem = new ConsultasItem();
@@ -61,7 +61,7 @@ export class ConsultasComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     sessionStorage.removeItem("consultasSearch");
@@ -80,11 +80,26 @@ export class ConsultasComponent implements OnInit {
     this.selectedItem = 10;
 
     this.cols = [
-      { field: "modulo", header: "Módulo" },
-      { field: "nombre", header: "Nombre" },
-      { field: "objetivo", header: "Objetivo" },
-      { field: "claseComunicacion", header: "Clases de comunicaciones" },
-      { field: "generica", header: "Genérica" }
+      {
+        field: "modulo",
+        header: "administracion.parametrosGenerales.literal.modulo"
+      },
+      {
+        field: "nombre",
+        header: "administracion.parametrosGenerales.literal.nombre"
+      },
+      {
+        field: "objetivo",
+        header: "informesycomunicaciones.consultas.objetivo"
+      },
+      {
+        field: "claseComunicacion",
+        header: "comunicaciones.literal.claseComunicaciones"
+      },
+      {
+        field: "generica",
+        header: "informesycomunicaciones.consultas.generica"
+      }
     ];
 
     this.rowsPerPage = [
@@ -137,7 +152,7 @@ export class ConsultasComponent implements OnInit {
     this.sigaServices.get("consultas_comboObjetivos").subscribe(
       data => {
         this.objetivos = data.combooItems;
-        this.objetivos.unshift({ label: 'Seleccionar', value: '' });
+        this.objetivos.unshift({ label: "Seleccionar", value: "" });
       },
       err => {
         console.log(err);
@@ -146,12 +161,14 @@ export class ConsultasComponent implements OnInit {
       this.sigaServices.get("consultas_comboModulos").subscribe(
         data => {
           this.modulos = data.combooItems;
-          this.modulos.unshift({ label: 'Seleccionar', value: '' });
+          this.modulos.unshift({ label: "Seleccionar", value: "" });
           /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
     para poder filtrar el dato con o sin estos caracteres*/
-          this.modulos.map((e) => {
-            let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-            let accentsOut = 'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz';
+          this.modulos.map(e => {
+            let accents =
+              "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+            let accentsOut =
+              "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
             let i;
             let x;
             for (i = 0; i < e.label.length; i++) {
@@ -169,7 +186,10 @@ export class ConsultasComponent implements OnInit {
       this.sigaServices.get("consultas_claseComunicaciones").subscribe(
         data => {
           this.clasesComunicaciones = data.combooItems;
-          this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
+          this.clasesComunicaciones.unshift({
+            label: "Seleccionar",
+            value: ""
+          });
         },
         err => {
           console.log(err);
@@ -248,10 +268,18 @@ export class ConsultasComponent implements OnInit {
     });
     this.sigaServices.post("consultas_duplicar", this.duplicarArray).subscribe(
       data => {
-        this.showSuccess("Se ha duplicado la consulta correctamente");
+        this.showSuccess(
+          this.translateService.instant(
+            "informesycomunicaciones.modelosdecomunicacion.correctDuplicado"
+          )
+        );
       },
       err => {
-        this.showFail("Error al duplicado la consulta");
+        this.showFail(
+          this.translateService.instant(
+            "informesycomunicaciones.consultas.errorDuplicado"
+          )
+        );
         console.log(err);
       },
       () => {
@@ -265,7 +293,15 @@ export class ConsultasComponent implements OnInit {
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
       message:
-        "¿Está seguro de cancelar los" + dato.length + "envíos seleccionados",
+        this.translateService.instant(
+          "informesycomunicaciones.consultas.mensajeSeguroCancelar"
+        ) +
+        " " +
+        dato.length +
+        " " +
+        this.translateService.instant(
+          "informesycomunicaciones.consultas.enviosSeleccionados"
+        ),
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarCancelar(dato);
@@ -297,13 +333,25 @@ export class ConsultasComponent implements OnInit {
       data => {
         let noBorrar = JSON.parse(data["body"]).message;
         if (noBorrar == "noBorrar") {
-          this.showInfo("No puede eliminarse la consulta");
+          this.showInfo(
+            this.translateService.instant(
+              "informesycomunicaciones.consultas.noEliminaConsulta"
+            )
+          );
         } else {
-          this.showSuccess("Se ha eliminado la consulta correctamente");
+          this.showSuccess(
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaEliminado"
+            )
+          );
         }
       },
       err => {
-        this.showFail("Error al eliminar la consulta");
+        this.showFail(
+          this.translateService.instant(
+            "informesycomunicaciones.consultas.errorEliminarConsulta"
+          )
+        );
         console.log(err);
       },
       () => {
@@ -316,7 +364,11 @@ export class ConsultasComponent implements OnInit {
   //búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
-    if (event.keyCode === KEY_CODE.ENTER && this.bodySearch.idModulo != null && this.bodySearch.idModulo != "") {
+    if (
+      event.keyCode === KEY_CODE.ENTER &&
+      this.bodySearch.idModulo != null &&
+      this.bodySearch.idModulo != ""
+    ) {
       this.buscar();
     }
   }
@@ -339,7 +391,11 @@ export class ConsultasComponent implements OnInit {
         );
       } else {
         this.selectedDatos = [];
-        this.showInfo("No puede editarse la consulta");
+        this.showInfo(
+          this.translateService.instant(
+            "informesycomunicaciones.consultas.noPuedeEditarConsulta"
+          )
+        );
       }
     } else {
       if (
@@ -370,7 +426,7 @@ export class ConsultasComponent implements OnInit {
   limpiar() {
     this.bodySearch = new ConsultasSearchItem();
     this.datos = [];
-    this.bodySearch.generica = 'S'
+    this.bodySearch.generica = "S";
   }
 
   cargaComboClaseCom(newVal) {
@@ -382,7 +438,10 @@ export class ConsultasComponent implements OnInit {
       .subscribe(
         data => {
           this.clasesComunicaciones = data.combooItems;
-          this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
+          this.clasesComunicaciones.unshift({
+            label: "Seleccionar",
+            value: ""
+          });
           /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
           this.clasesComunicaciones.map(e => {

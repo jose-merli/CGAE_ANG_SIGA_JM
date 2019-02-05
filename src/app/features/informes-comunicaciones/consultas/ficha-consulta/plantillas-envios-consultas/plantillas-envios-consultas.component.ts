@@ -1,16 +1,15 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
 import { TranslateService } from "./../../../../../commons/translate/translation.service";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
-import { PlantillasConsultasItem } from '../../../../../models/PlantillasConsultasItem';
-
+import { PlantillasConsultasItem } from "../../../../../models/PlantillasConsultasItem";
 
 @Component({
-  selector: 'app-plantillas-envios-consultas',
-  templateUrl: './plantillas-envios-consultas.component.html',
-  styleUrls: ['./plantillas-envios-consultas.component.scss']
+  selector: "app-plantillas-envios-consultas",
+  templateUrl: "./plantillas-envios-consultas.component.html",
+  styleUrls: ["./plantillas-envios-consultas.component.scss"]
 })
 export class PlantillasEnviosConsultasComponent implements OnInit {
   openFicha: boolean = false;
@@ -29,8 +28,8 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
   body: PlantillasConsultasItem = new PlantillasConsultasItem();
   editar: boolean = false;
 
-  @ViewChild('table') table: DataTable;
-  selectedDatos
+  @ViewChild("table") table: DataTable;
+  selectedDatos;
 
   fichasPosibles = [
     {
@@ -47,13 +46,15 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
     }
   ];
 
-  constructor(private router: Router, private translateService: TranslateService,
-    private sigaServices: SigaServices, private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(
+    private router: Router,
+    private translateService: TranslateService,
+    private sigaServices: SigaServices,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
-
     this.getDatos();
-
 
     if (sessionStorage.getItem("consultasSearch") == null) {
       this.editar = false;
@@ -81,9 +82,11 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
     this.selectedItem = 10;
 
     this.cols = [
-      { field: 'plantilla', header: 'Plantilla' },
-    ]
-
+      {
+        field: "plantilla",
+        header: "informesycomunicaciones.consultas.ficha.plantilla"
+      }
+    ];
   }
 
   abreCierraFicha() {
@@ -108,7 +111,6 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
     }
     return {};
   }
-
 
   checkAcceso() {
     this.controlAcceso = new ControlAccesoDto();
@@ -163,7 +165,7 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
       },
       err => {
         console.log(err);
-      });
-
+      }
+    );
   }
 }
