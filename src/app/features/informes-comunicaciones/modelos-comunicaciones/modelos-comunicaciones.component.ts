@@ -1,26 +1,31 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, HostListener } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+  HostListener
+} from "@angular/core";
 import { DataTable } from "primeng/datatable";
-import { ModelosComunicacionesItem } from '../../../models/ModelosComunicacionesItem';
+import { ModelosComunicacionesItem } from "../../../models/ModelosComunicacionesItem";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { SigaServices } from "./../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
-import { Router } from '@angular/router';
+import { Router } from "@angular/router";
 export enum KEY_CODE {
   ENTER = 13
 }
 
 @Component({
-  selector: 'app-modelos-comunicaciones',
-  templateUrl: './modelos-comunicaciones.component.html',
-  styleUrls: ['./modelos-comunicaciones.component.scss'],
+  selector: "app-modelos-comunicaciones",
+  templateUrl: "./modelos-comunicaciones.component.html",
+  styleUrls: ["./modelos-comunicaciones.component.scss"],
   host: {
     "(document:keypress)": "onKeyPress($event)"
-  },
+  }
 })
 export class ModelosComunicacionesComponent implements OnInit {
-
-  body: ModelosComunicacionesItem = new ModelosComunicacionesItem;
-  bodySearch: ModelosComunicacionesItem = new ModelosComunicacionesItem;
+  body: ModelosComunicacionesItem = new ModelosComunicacionesItem();
+  bodySearch: ModelosComunicacionesItem = new ModelosComunicacionesItem();
   colegios: any[];
   datos: any[];
   cols: any[];
@@ -40,24 +45,21 @@ export class ModelosComunicacionesComponent implements OnInit {
   visible: any = [];
   fichaBusqueda: boolean = false;
 
+  @ViewChild("table") table: DataTable;
+  selectedDatos;
 
-  @ViewChild('table') table: DataTable;
-  selectedDatos
-
-
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef,
-    private confirmationService: ConfirmationService, private router: Router) { }
+  constructor(
+    private sigaServices: SigaServices,
+    private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private confirmationService: ConfirmationService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-
-
     this.getInstitucion();
     this.getComboColegios();
     this.bodySearch.visible = 1;
-
-
-
-
 
     sessionStorage.removeItem("crearNuevoModelo");
 
@@ -66,31 +68,29 @@ export class ModelosComunicacionesComponent implements OnInit {
       this.buscar();
     }
 
-
     this.selectedItem = 10;
 
     this.getComboClases();
     // this.body.visible = true;
 
     this.preseleccionar = [
-      { label: '', value: '' },
-      { label: 'Sí', value: 'SI' },
-      { label: 'No', value: 'NO' }
-    ]
+      { label: "", value: "" },
+      { label: "Sí", value: "SI" },
+      { label: "No", value: "NO" }
+    ];
 
     this.visible = [
-      { label: '', value: '' },
-      { label: 'Sí', value: 1 },
-      { label: 'No', value: 0 }
-    ]
-
+      { label: "", value: "" },
+      { label: "Sí", value: 1 },
+      { label: "No", value: 0 }
+    ];
 
     this.cols = [
-      { field: 'claseComunicacion', header: 'Clase comunicación' },
-      { field: 'nombre', header: 'Nombre' },
-      { field: 'institucion', header: 'Institución' },
-      { field: 'orden', header: 'Orden' },
-      { field: 'preseleccionar', header: 'Preseleccionado', width: '20%' }
+      { field: "claseComunicacion", header: "Clase comunicación" },
+      { field: "nombre", header: "Nombre" },
+      { field: "institucion", header: "Institución" },
+      { field: "orden", header: "Orden" },
+      { field: "preseleccionar", header: "Preseleccionado", width: "20%" }
     ];
 
     this.rowsPerPage = [
@@ -111,8 +111,6 @@ export class ModelosComunicacionesComponent implements OnInit {
         value: 40
       }
     ];
-
-
   }
 
   // Mensajes
@@ -135,15 +133,14 @@ export class ModelosComunicacionesComponent implements OnInit {
     this.msgs = [];
   }
 
-
   getComboColegios() {
     this.sigaServices.get("modelos_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
-        this.colegios.unshift({ label: 'Seleccionar', value: '' });
+        this.colegios.unshift({ label: "Seleccionar", value: "" });
         for (let e of this.colegios) {
-          if (e.value == '2000') {
-            e.label = 'POR DEFECTO';
+          if (e.value == "2000") {
+            e.label = "POR DEFECTO";
           }
         }
       },
@@ -157,7 +154,7 @@ export class ModelosComunicacionesComponent implements OnInit {
     this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
       n => {
         this.clasesComunicaciones = n.combooItems;
-        this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
+        this.clasesComunicaciones.unshift({ label: "Seleccionar", value: "" });
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.clasesComunicaciones.map(e => {
@@ -181,13 +178,11 @@ para poder filtrar el dato con o sin estos caracteres*/
     );
   }
 
-
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
   }
-
 
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
@@ -212,76 +207,76 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
 
-
   buscar() {
     this.showResultados = true;
     this.selectMultiple = false;
     this.selectedDatos = "";
     this.progressSpinner = true;
-    sessionStorage.removeItem("modelosSearch")
+    sessionStorage.removeItem("modelosSearch");
     sessionStorage.removeItem("filtrosModelos");
     this.getResultados();
   }
-
 
   getResultados() {
     let service = "modelos_search";
     if (this.showHistorico) {
       service = "modelos_search_historico";
     }
-    this.sigaServices.postPaginado(service, "?numPagina=1", this.bodySearch).subscribe(
-
-      data => {
-        this.progressSpinner = false;
-        let object = JSON.parse(data["body"]);
-        this.datos = object.modelosComunicacionItem;
-      },
-      err => {
-        this.showFail('Error al cargar resultados');
-        console.log(err);
-      },
-      () => {
-        this.table.reset();
-      }
-    );
+    this.sigaServices
+      .postPaginado(service, "?numPagina=1", this.bodySearch)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          let object = JSON.parse(data["body"]);
+          this.datos = object.modelosComunicacionItem;
+        },
+        err => {
+          this.showFail("Error al cargar resultados");
+          console.log(err);
+        },
+        () => {
+          this.table.reset();
+        }
+      );
   }
 
   getResultadosHistorico() {
-    this.sigaServices.postPaginado("modelos_search_historico", "?numPagina=1", this.bodySearch).subscribe(
-
-      data => {
-        this.progressSpinner = false;
-        let object = JSON.parse(data["body"]);
-        this.datos = object.modelosComunicacionItem;
-      },
-      err => {
-        this.showFail('Error al programar el envío');
-        console.log(err);
-      },
-      () => {
-        this.table.reset();
-      }
-    );
+    this.sigaServices
+      .postPaginado("modelos_search_historico", "?numPagina=1", this.bodySearch)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          let object = JSON.parse(data["body"]);
+          this.datos = object.modelosComunicacionItem;
+        },
+        err => {
+          this.showFail("Error al programar el envío");
+          console.log(err);
+        },
+        () => {
+          this.table.reset();
+        }
+      );
   }
 
   isButtonDisabled() {
-    if (this.body.nombre != '' && this.body.nombre != null) {
+    if (this.body.nombre != "" && this.body.nombre != null) {
       return false;
     }
     return true;
   }
 
   getHistorico(key) {
-    if (key == 'visible') {
+    if (key == "visible") {
       this.showHistorico = true;
-    } else if (key == 'hidden') {
+    } else if (key == "hidden") {
       this.showHistorico = false;
     }
     this.getResultados();
   }
 
   getInstitucion() {
-    this.sigaServices.get('institucionActual').subscribe((n) => {
+    this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
       this.bodySearch.idInstitucion = this.institucionActual;
     });
@@ -291,17 +286,20 @@ para poder filtrar el dato con o sin estos caracteres*/
     let modelo = {
       idModeloComunicacion: this.selectedDatos[0].idModeloComunicacion,
       idInstitucion: this.selectedDatos[0].idInstitucion
-    }
+    };
 
     this.sigaServices.post("modelos_duplicar", modelo).subscribe(
       data => {
-        this.showSuccess('Se ha duplicado correctamente');
-        this.router.navigate(['/fichaModeloComunicaciones']);
+        this.showSuccess("Se ha duplicado correctamente");
+        this.router.navigate(["/fichaModeloComunicaciones"]);
         sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
-        sessionStorage.setItem("filtrosModelos", JSON.stringify(this.bodySearch));
+        sessionStorage.setItem(
+          "filtrosModelos",
+          JSON.stringify(this.bodySearch)
+        );
       },
       err => {
-        this.showFail('Error al duplicar el modelo');
+        this.showFail("Error al duplicar el modelo");
         console.log(err);
       },
       () => {
@@ -332,15 +330,13 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onConfirmarBorrar(dato) {
-
     if (!this.selectAll) {
-
       this.sigaServices.post("modelos_borrar", dato).subscribe(
         data => {
-          this.showSuccess('Se ha borrado correctamente');
+          this.showSuccess("Se ha borrado correctamente");
         },
         err => {
-          this.showFail('Error al borrado el modelo');
+          this.showFail("Error al borrado el modelo");
           console.log(err);
         },
         () => {
@@ -352,10 +348,10 @@ para poder filtrar el dato con o sin estos caracteres*/
       //this.datos.splice(x, 1);
       this.selectedDatos = [];
       this.selectMultiple = false;
-      this.showSuccess('Se ha eliminado el modelo correctamente')
+      this.showSuccess("Se ha eliminado el modelo correctamente");
     } else {
       this.selectedDatos = [];
-      this.showSuccess('Se han eliminado los destinatarios correctamente')
+      this.showSuccess("Se han eliminado los destinatarios correctamente");
     }
   }
 
@@ -371,19 +367,21 @@ para poder filtrar el dato con o sin estos caracteres*/
     let id = dato[0].id;
     this.body = dato[0];
     console.log(dato);
-    if (!this.selectMultiple && !dato[0].fechaBaja) {
-      this.router.navigate(['/fichaModeloComunicaciones']);
+    if (!this.selectMultiple) {
+      if (dato[0].fechaBaja) {
+        sessionStorage.setItem("soloLectura", "true");
+      } else {
+        sessionStorage.setItem("soloLectura", "false");
+      }
+      this.router.navigate(["/fichaModeloComunicaciones"]);
       sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
       sessionStorage.setItem("filtrosModelos", JSON.stringify(this.bodySearch));
     }
-
   }
 
-
-
   addModelo() {
-    this.router.navigate(['/fichaModeloComunicaciones']);
-    sessionStorage.removeItem("modelosSearch")
+    this.router.navigate(["/fichaModeloComunicaciones"]);
+    sessionStorage.removeItem("modelosSearch");
     sessionStorage.setItem("crearNuevoModelo", JSON.stringify("true"));
   }
 
@@ -395,7 +393,4 @@ para poder filtrar el dato con o sin estos caracteres*/
   abreCierraFicha() {
     this.fichaBusqueda = !this.fichaBusqueda;
   }
-
-
-
 }

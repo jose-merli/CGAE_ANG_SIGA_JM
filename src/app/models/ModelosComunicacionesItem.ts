@@ -6,10 +6,10 @@ export class ModelosComunicacionesItem {
   preseleccionar: String;
   visible: number;
   idInstitucion: string;
-  orden: String;
+  orden: number;
   idTipoEnvios: String;
   porDefecto: String;
   idInforme: String;
 
-  constructor() { }
+  constructor() {}
 }
