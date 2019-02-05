@@ -81,7 +81,8 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
     this.selectedItem = 10;
 
     this.cols = [
-      { field: 'plantilla', header: 'Plantilla' },
+      { field: 'nombre', header: 'Plantilla' },
+      { field: 'tipoEnvio', header: 'Tipo de envío' }
     ]
 
   }
@@ -144,8 +145,8 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
 
   navigateTo(dato) {
     let id = dato[0].id;
-
-    // this.router.navigate(['/fichaModeloComunicaciones', id]);
+    this.router.navigate(['/fichaPlantilla']);
+    sessionStorage.setItem('plantillasEnvioSearch', JSON.stringify(dato[0]));
   }
 
   getDatos() {

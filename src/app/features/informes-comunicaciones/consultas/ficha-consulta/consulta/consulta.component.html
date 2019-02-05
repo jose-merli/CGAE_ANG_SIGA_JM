@@ -51,9 +51,9 @@
     </div>
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button">
-        <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"></button>
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
-        <button [disabled]="isButtonDisabled()" (click)="obtenerParametros()" pButton type="button" icon="fas fa-play" iconPos="left" label="{{ 'general.boton.ejecutar' | translate}}"></button>
+        <button [disabled]="!editable" (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"></button>
+        <button [disabled]="!editable" (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
+        <button (click)="obtenerParametros()" pButton type="button" icon="fas fa-play" iconPos="left" label="{{ 'general.boton.ejecutar' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -88,7 +88,7 @@
       <!-- <button (click)="ejecutar()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{
           'general.boton.cancel' | translate}}"></button> -->
       <button (click)="enviar()" [disabled]="!validarCamposDinamicos()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{
-          'general.boton.guardar' | translate}}"></button>
+          'general.boton.ejecutar' | translate}}"></button>
     </div>
   </p-footer>
 </p-dialog>

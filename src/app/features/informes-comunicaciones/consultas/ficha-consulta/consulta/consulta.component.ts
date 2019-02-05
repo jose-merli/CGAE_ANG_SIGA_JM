@@ -40,6 +40,7 @@ export class ConsultaComponent implements OnInit {
   es: any =esCalendar;
   operadoresTexto: any [];
   operadoresNumero: any [];
+  editable: boolean = false;
 
   fichasPosibles = [
     {
@@ -61,6 +62,10 @@ export class ConsultaComponent implements OnInit {
 
   ngOnInit() {
 
+    if(sessionStorage.getItem("consultaEditable") == "S" || sessionStorage.getItem("crearNuevaConsulta")){
+      this.editable = true;
+    }
+    
     this.getDatos();
     this.getAyuda();
     this.valores = [];
