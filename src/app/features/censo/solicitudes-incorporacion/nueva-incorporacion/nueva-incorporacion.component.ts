@@ -537,6 +537,9 @@ export class NuevaIncorporacionComponent implements OnInit {
   }
 
   aprobarSolicitud() {
+    if (this.isGuardar()) {
+      this.guardar(false);
+    }
     this.progressSpinner = true;
     this.sigaServices
       .post(
@@ -569,6 +572,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         }
       );
   }
+
   denegarSolicitud() {
     this.progressSpinner = true;
 
@@ -627,7 +631,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     }
   }
 
-  guardar() {
+  guardar(back) {
     this.progressSpinner = true;
 
     this.solicitudEditar.idEstado = this.estadoSolicitudSelected;
@@ -684,8 +688,10 @@ export class NuevaIncorporacionComponent implements OnInit {
               detail: "Solicitud guardada correctamente."
             }
           ];
-          sessionStorage.setItem("solicitudInsertadaConExito", "true");
-          this.router.navigate(["/solicitudesIncorporacion"]);
+          if (back == true) {
+            sessionStorage.setItem("solicitudInsertadaConExito", "true");
+            this.router.navigate(["/solicitudesIncorporacion"]);
+          }
         },
         error => {
           this.progressSpinner = false;
@@ -1115,7 +1121,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
       if (this.isGuardar()) {
-        this.guardar();
+        this.guardar(true);
       }
     }
   }

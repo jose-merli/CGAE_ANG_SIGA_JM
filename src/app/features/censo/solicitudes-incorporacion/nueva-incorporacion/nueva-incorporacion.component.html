@@ -540,7 +540,7 @@
 
     <div class="mt-3 text-right main-button ">
         <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
-        <button (click)="guardar()" *ngIf="!consulta" [disabled]="!isGuardar()" pButton type="button " icon="fa fa-save" iconPos="left"
+        <button (click)="guardar(true)" *ngIf="!consulta" [disabled]="!isGuardar()" pButton type="button " icon="fa fa-save" iconPos="left"
             label="Guardar"></button>
         <button (click)="aprobarSolicitud()" [disabled]="isLetrado" *ngIf="(consulta || pendienteAprobacion) && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30')"
             pButton type="button " icon="fas fa-check" iconPos="left" label="Aprobar "></button>
