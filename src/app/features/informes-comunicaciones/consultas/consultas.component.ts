@@ -61,22 +61,23 @@ export class ConsultasComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     sessionStorage.removeItem("consultasSearch");
-    this.bodySearch.generica = "S";
-
     this.getInstitucion();
 
     sessionStorage.removeItem("crearNuevaConsulta");
 
+    this.getCombos();
+
     if (sessionStorage.getItem("filtrosConsulta") != null) {
       this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosConsulta"));
       this.buscar();
+    } else {
+      this.bodySearch.generica = "N";
     }
 
-    this.getCombos();
     this.selectedItem = 10;
 
     this.cols = [
@@ -182,21 +183,16 @@ export class ConsultasComponent implements OnInit {
         err => {
           console.log(err);
         }
-      ),
-      this.sigaServices.get("consultas_claseComunicaciones").subscribe(
-        data => {
-          this.clasesComunicaciones = data.combooItems;
-          this.clasesComunicaciones.unshift({
-            label: "Seleccionar",
-            value: ""
-          });
-        },
-        err => {
-          console.log(err);
-        }
       );
 
-    this.getComboCertificadoEmitido();
+    if (this.bodySearch.idModulo != undefined && this.bodySearch.idModulo != "") {
+      this.cargaComboClaseCom(null);
+    } else {
+      this.clasesComunicaciones = [];
+      this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
+    }
+
+    this.getComboGenerica();
   }
 
   RowsPerPages(event) {
@@ -383,19 +379,16 @@ export class ConsultasComponent implements OnInit {
           dato[0].generica == "No") ||
         (this.institucionActual == 2000 && dato[0].generica == "Si")
       ) {
+        sessionStorage.setItem("consultaEditable", "S");
+        sessionStorage.setItem("consultasSearch", JSON.stringify(dato[0]));
+        sessionStorage.setItem("filtrosConsulta", JSON.stringify(this.bodySearch));
+        this.router.navigate(["/fichaConsulta"]);
+
+      } else {
+        sessionStorage.setItem("consultaEditable", "N");
         this.router.navigate(["/fichaConsulta"]);
         sessionStorage.setItem("consultasSearch", JSON.stringify(dato[0]));
-        sessionStorage.setItem(
-          "filtrosConsulta",
-          JSON.stringify(this.bodySearch)
-        );
-      } else {
-        this.selectedDatos = [];
-        this.showInfo(
-          this.translateService.instant(
-            "informesycomunicaciones.consultas.noPuedeEditarConsulta"
-          )
-        );
+        sessionStorage.setItem("filtrosConsulta", JSON.stringify(this.bodySearch));
       }
     } else {
       if (
@@ -429,11 +422,14 @@ export class ConsultasComponent implements OnInit {
     this.bodySearch.generica = "S";
   }
 
-  cargaComboClaseCom(newVal) {
+  cargaComboClaseCom(event) {
+    if (event != null) {
+      this.bodySearch.idModulo = event.value;
+    }
     this.sigaServices
       .getParam(
         "consultas_claseComunicacionesByModulo",
-        "?idModulo=" + newVal.value
+        "?idModulo=" + this.bodySearch.idModulo
       )
       .subscribe(
         data => {
@@ -465,9 +461,9 @@ para poder filtrar el dato con o sin estos caracteres*/
       );
   }
 
-  getComboCertificadoEmitido() {
+  getComboGenerica() {
     this.comboGenerica = [
-      { label: "", value: "" },
+      { label: "Seleccionar", value: "" },
       { label: "Sí", value: "S" },
       { label: "No", value: "N" }
     ];

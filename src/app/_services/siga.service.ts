@@ -587,6 +587,7 @@ export class SigaServices {
     consultas_listadoModelos: 'consultas/modelosconsulta',
     consultas_ejecutarConsulta: 'consultas/ejecutarConsulta',
     consultas_duplicar: 'consultas/duplicarConsulta',
+    consultas_obtenerCamposDinamicos: 'consultas/obtenerCamposDinamicos',
     plantillasEnvio_search: 'plantillasEnvio/plantillasEnvioSearch',
     plantillasEnvio_guardarDatosGenerales: 'plantillasEnvio/datosGenerales',
     modelos_search: 'modelos/search',
@@ -634,12 +635,14 @@ export class SigaServices {
 
     //Diálogo comunicación
     dialogo_claseComunicaciones: 'DialogoComunicacion/clasesComunicacion',
+    dialogo_claseComunicacion: 'DialogoComunicacion/claseComunicacion',
     dialogo_fechaProgramada: 'DialogoComunicacion/fechaProgramada',
     dialogo_modelosComunicacion: 'DialogoComunicacion/modelosSearch',
-    dialogo_plantillasEnvio: 'DialogoComunicacion/pantillasEnvio',
+    dialogo_plantillasEnvio: 'DialogoComunicacion/plantillasEnvio',
     dialogo_tipoEnvios: 'DialogoComunicacion/tiposEnvioModelo',
     dialogo_enviar: 'DialogoComunicacion/enviar',
     dialogo_descargar: 'DialogoComunicacion/descargar',
+    dialogo_keys: 'DialogoComunicacion/keys'
   };
 
   private menuToggled = new Subject<any>();
