@@ -463,6 +463,8 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.isDisabledPoblacion = false;
         if (value != this.body.idProvincia) {
           this.body.idProvincia = this.provinciaSelecionada;
+          this.body.idPoblacion = "";
+          this.comboPoblacion = [];
           this.isDisabledProvincia = true;
           if (this.historyDisable == true) {
             this.isDisabledPoblacion = true;
@@ -479,12 +481,8 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
   onChangeProvincia() {
-    if (this.checkOtraProvincia == false) {
-      this.body.idPoblacion = "";
-      this.comboPoblacion = [];
-    } else {
-      this.body.idPoblacion = "";
-    }
+    this.body.idPoblacion = "";
+    this.comboPoblacion = [];
   }
   onChangeOtherProvincia(event) {
     if (event) {
@@ -838,12 +836,13 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.body.idPersona = this.usuarioBody[0].idPersona;
     this.provinciaSelecionada = this.body.idProvincia;
     this.body = JSON.parse(JSON.stringify(this.checkBody));
-    this.comboPoblacion  =  [];
+    this.comboPoblacion = [];
     this.comboPoblacion.push({
-      label:  this.body.nombrePoblacion,
-      value:  this.body.idPoblacion
+      label: this.body.nombrePoblacion,
+      value: this.body.idPoblacion
     });
     this.generarTabla();
+    this.onChangeCodigoPostal();
   }
 
   // Mensajes
