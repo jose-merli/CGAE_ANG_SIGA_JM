@@ -34,6 +34,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   institucionActual: any;
   msgs: Message[];
   generica: string;
+  editable: boolean = false;
 
 
   @ViewChild('table') table: DataTable;
@@ -68,6 +69,9 @@ export class DatosGeneralesConsultaComponent implements OnInit {
 
   ngOnInit() {
 
+    if(sessionStorage.getItem("consultaEditable") == "S" || sessionStorage.getItem("crearNuevaConsulta")){
+      this.editable = true;
+    }
 
     this.getInstitucion();
     this.getDatos();
@@ -159,31 +163,48 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   }
 
   getClasesComunicaciones() {
-    this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
-      data => {
-        this.clasesComunicaciones = data.combooItems;
-        this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+    if(this.body.idModulo != undefined && this.body.idModulo != ""){
+      this.cargaComboClaseCom(null);
+    }else{
+      this.clasesComunicaciones = [];
+      this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
+    } 
+  }
+
+  cargaComboClaseCom(event) {
+    if(event != null){
+      this.body.idModulo = event.value;
+    }
+    this.sigaServices
+      .getParam(
+        "consultas_claseComunicacionesByModulo",
+        "?idModulo=" + this.body.idModulo
+      )
+      .subscribe(
+        data => {
+          this.clasesComunicaciones = data.combooItems;
+          this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
+          /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
-        this.clasesComunicaciones.map(e => {
-          let accents =
-            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-          let accentsOut =
-            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
+          this.clasesComunicaciones.map(e => {
+            let accents =
+              "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+            let accentsOut =
+              "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+            let i;
+            let x;
+            for (i = 0; i < e.label.length; i++) {
+              if ((x = accents.indexOf(e.label[i])) != -1) {
+                e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+                return e.labelSinTilde;
+              }
             }
-          }
-        });
-      },
-      err => {
-        console.log(err);
-      }
-    );
+          });
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 
   getModulos() {
@@ -327,6 +348,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.body.idInstitucion = result.infoURL;
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         sessionStorage.removeItem("crearNuevaConsulta");
+        sessionStorage.setItem("consultaEditable", "S");
         sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
         this.showSuccess('Se ha guardado la consulta correctamente');
       },

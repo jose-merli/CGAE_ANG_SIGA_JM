@@ -39,7 +39,7 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>Módulo *</label>
-              <p-dropdown [options]="modulos" [(ngModel)]="body.idModulo" class="select-form"></p-dropdown>
+              <p-dropdown [options]="modulos" [(ngModel)]="body.idModulo" class="select-form" (onChange)="cargaComboClaseCom($event)"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Nombre *</label>
@@ -58,7 +58,7 @@
               <p-radioButton [disabled]="institucionActual != 2000 " name="groupname" value="N" [(ngModel)]="generica" label="No"></p-radioButton>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>Clases de comunicaciones *</label>
+              <label>Clases de comunicaciones</label>
               <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion"
                 class="select-form"></p-dropdown>
             </div>
@@ -76,8 +76,8 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button [disabled]="!editable || isButtonDisabled()" (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button [disabled]="!editable || isButtonDisabled()" (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
       </div>
     </div>
   </div>
