@@ -14,8 +14,6 @@ export class FichaConsultaComponent implements OnInit {
 	constructor(private activatedRoute: ActivatedRoute, private location: Location) {}
 
 	ngOnInit() {
-		this.idModelo = this.activatedRoute.snapshot.params['idConsulta'];
-
 		this.fichasPosibles = [
 			{
 				key: 'generales',
