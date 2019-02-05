@@ -347,11 +347,9 @@
                     <label>
                         {{"censo.consultaDirecciones.literal.poblacion" | translate}}
                     </label>
-                    <input *ngIf="consulta" disabled [(ngModel)]="solicitudEditar.nombrePoblacion" type="text" class="form-control" pInputText>
-
-                    <p-dropdown *ngIf="!consulta" #poblacion [disabled]="consulta || deshabilitarDireccion()" (input)="buscarPoblacion($event)"
-                        class="select-form" [(ngModel)]="poblacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}"
-                        [options]="poblaciones" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [emptyFilterMessage]="resultadosPoblaciones"></p-dropdown>
+                    <p-dropdown #poblacion [disabled]="consulta || deshabilitarDireccion()" (input)="buscarPoblacion($event)" class="select-form"
+                        [(ngModel)]="poblacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="poblaciones"
+                        [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [emptyFilterMessage]="resultadosPoblaciones"></p-dropdown>
 
                     <!-- <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.nombrePoblacion">-->
                 </div>
