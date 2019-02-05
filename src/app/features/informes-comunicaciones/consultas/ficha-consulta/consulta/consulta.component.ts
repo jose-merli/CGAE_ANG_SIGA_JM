@@ -220,7 +220,8 @@ export class ConsultaComponent implements OnInit {
 
       },
       err => {
-        this.showFail('Error al guardar la consulta');
+        let error = JSON.parse(err.error);
+        this.showFail('Error al guardar la consulta: ' + error.message);
         console.log(err);
       },
       () => {
@@ -264,7 +265,9 @@ export class ConsultaComponent implements OnInit {
           }   
         });  
         this.showValores = true;
-      } 
+      }else{
+        this.enviar();
+      }
 
       console.log(this.valores);
     }, error => {
@@ -293,14 +296,16 @@ export class ConsultaComponent implements OnInit {
 
     this.body.camposDinamicos = JSON.parse(JSON.stringify(this.valores));
 
-    this.body.camposDinamicos.forEach(element => {
-      if(element.valor != undefined && typeof element.valor == "object"){
-        element.valor = element.valor.ID;
-      }
-      if(element.ayuda == null || element.ayuda == "undefined"){
-        element.ayuda = "-1";
-      }
-    }); 
+    if(this.body.camposDinamicos != null && typeof this.body.camposDinamicos != "undefined"){
+      this.body.camposDinamicos.forEach(element => {
+        if(element.valor != undefined && typeof element.valor == "object"){
+          element.valor = element.valor.ID;
+        }
+        if(element.ayuda == null || element.ayuda == "undefined"){
+          element.ayuda = "-1";
+        }
+      }); 
+    }    
 
     this.sigaServices
       .postDownloadFiles("consultas_ejecutarConsulta", this.body)
