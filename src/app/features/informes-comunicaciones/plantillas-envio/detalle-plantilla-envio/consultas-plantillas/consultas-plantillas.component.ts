@@ -35,6 +35,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 	eliminarArray: any[];
 	msgs: Message[];
 	finalidad: string;
+	institucionActual: any;
 
 	@ViewChild('table') table: DataTable;
 	selectedDatos;
@@ -65,7 +66,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 
 	ngOnInit() {
 		// this.getDatos();
-		sessionStorage.removeItem('consultasSearch');
+		//sessionStorage.removeItem('consultasSearch');
 		this.textFilter = 'Elegir';
 
 		this.selectedItem = 10;
@@ -144,11 +145,21 @@ export class ConsultasPlantillasComponent implements OnInit {
 		}
 	}
 
+	getInstitucion() {
+		this.sigaServices.get("institucionActual").subscribe(n => {
+		  this.institucionActual = n.value;
+		});
+	  }
+
 	navigateTo(dato) {
 		let idConsulta = dato[0].idConsulta;
 		console.log(dato);
 		if (!this.selectMultiple && idConsulta && !this.nuevaConsulta) {
-			debugger;
+			if ((dato[0].generica == "No") ||  (this.institucionActual == 2000 && dato[0].generica == "Si")) {
+				sessionStorage.setItem("consultaEditable", "S");				
+			}else{
+				sessionStorage.setItem("consultaEditable", "N");
+			}
 			sessionStorage.setItem('consultasSearch', JSON.stringify(dato[0]));
 			this.router.navigate([ '/fichaConsulta' ]);
 		}

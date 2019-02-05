@@ -51,7 +51,7 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
     private translateService: TranslateService,
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getDatos();
@@ -82,11 +82,10 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
     this.selectedItem = 10;
 
     this.cols = [
-      {
-        field: "plantilla",
-        header: "informesycomunicaciones.consultas.ficha.plantilla"
-      }
-    ];
+      { field: 'nombre', header: "informesycomunicaciones.consultas.ficha.plantilla" },
+      { field: 'tipoEnvio', header: "informesycomunicaciones.consultas.ficha.tipoenvio" }
+    ]
+
   }
 
   abreCierraFicha() {
@@ -146,8 +145,8 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
 
   navigateTo(dato) {
     let id = dato[0].id;
-
-    // this.router.navigate(['/fichaModeloComunicaciones', id]);
+    this.router.navigate(['/fichaPlantilla']);
+    sessionStorage.setItem('plantillasEnvioSearch', JSON.stringify(dato[0]));
   }
 
   getDatos() {

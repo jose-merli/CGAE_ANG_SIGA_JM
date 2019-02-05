@@ -5,8 +5,10 @@ import { TranslateService } from "./../../../../../commons/translate/translation
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
 import { ConsultaConsultasItem } from '../../../../../models/ConsultaConsultasItem';
+import { CampoDinamicoItem } from '../../../../../models/CampoDinamicoItem';
 import { Message } from "primeng/components/common/api";
 import { saveAs } from "file-saver/FileSaver";
+import { esCalendar } from "../../../../../utils/calendar";
 
 
 
@@ -30,11 +32,15 @@ export class ConsultaComponent implements OnInit {
   bodyInicial: ConsultaConsultasItem = new ConsultaConsultasItem();
   saltoLinea: string = '';
   msgs: Message[];
-  valores: any[];
+  valores: CampoDinamicoItem[];
   consultaEditada: boolean = false;
   camposValores: any;
   progressSpinner: boolean = false;
   ayuda: any = [];
+  es: any =esCalendar;
+  operadoresTexto: any [];
+  operadoresNumero: any [];
+  editable: boolean = false;
 
   fichasPosibles = [
     {
@@ -56,10 +62,63 @@ export class ConsultaComponent implements OnInit {
 
   ngOnInit() {
 
+    if(sessionStorage.getItem("consultaEditable") == "S" || sessionStorage.getItem("crearNuevaConsulta")){
+      this.editable = true;
+    }
+    
     this.getDatos();
     this.getAyuda();
     this.valores = [];
 
+    this.operadoresTexto = [
+      {
+        label: '=',
+        value: '='
+      },
+      {
+        label: '!=',
+        value: '!='
+      },
+      {
+        label: 'IS NULL',
+        value: 'IS NULL'
+      },
+      {
+        label: 'LIKE',
+        value: 'LIKE'
+      }
+    ];
+
+    this.operadoresNumero = [
+      {
+        label: '=',
+        value: '='
+      },
+      {
+        label: '!=',
+        value: '!='
+      },
+      {
+        label: '>',
+        value: '>'
+      },
+      {
+        label: '>=',
+        value: '>='
+      },
+      {
+        label: '<',
+        value: '<'
+      },
+      {
+        label: '<=',
+        value: '<='
+      },
+      {
+        label: 'IS NULL',
+        value: 'IS NULL'
+      }
+    ]
   }
 
   // Mensajes
@@ -161,7 +220,8 @@ export class ConsultaComponent implements OnInit {
 
       },
       err => {
-        this.showFail('Error al guardar la consulta');
+        let error = JSON.parse(err.error);
+        this.showFail('Error al guardar la consulta: ' + error.message);
         console.log(err);
       },
       () => {
@@ -173,24 +233,48 @@ export class ConsultaComponent implements OnInit {
 
   ejecutar() {
 
-    this.valores = [];
-
-    let re = this.body.sentencia.match(/%%\S.*%%/g);
-
-    if (re && re.length > 0) {
-      re.map(element => {
-        let valores = element.replace('%%', '');
-        valores = valores.substring(0, valores.length - 2);
-        this.valores.push({ clave: valores, valor: '' });
-      });
-
-      this.showValores = true;
-    } else {
-      this.enviar();
-    }
+    this.valores = [];  
 
   }
 
+  
+  obtenerParametros(){
+    let consulta = {
+      idClaseComunicacion: this.body.idClaseComunicacion,
+      sentencia: this.body.sentencia
+    };
+
+    this.sigaServices.post("consultas_obtenerCamposDinamicos", consulta)
+    .subscribe(data => {
+      console.log(data);
+      this.valores = JSON.parse(data.body).camposDinamicos;      
+      if(this.valores != undefined && this.valores != null && this.valores.length > 0){
+        this.valores.forEach(element => {
+          if(element.valorDefecto != undefined && element.valorDefecto != null){
+            element.valor = element.valorDefecto;
+          }  
+          if(element.valores != undefined && element.valores != null){
+            let empty={
+              ID:0,
+              DESCRIPCION: 'Seleccione una opción...'
+            }
+            element.valores.unshift(empty);
+          }
+          if(element.operacion == "OPERADOR"){
+            element.operacion = this.operadoresNumero[0].value;
+          }   
+        });  
+        this.showValores = true;
+      }else{
+        this.enviar();
+      }
+
+      console.log(this.valores);
+    }, error => {
+      console.log(error);
+      this.showFail("Error al obtener los parámetros dinámicos disponibles")
+    });
+  }
 
   isButtonDisabled() {
     if (this.consultaEditada) {
@@ -208,15 +292,23 @@ export class ConsultaComponent implements OnInit {
   }
 
   enviar() {
-    let re = this.body.sentencia.match(/%%\S.*%%/g);
-    this.progressSpinner = true;
-    if (re && re.length > 0) {
-      for (let dato of this.valores) {
-        this.body.sentencia = this.body.sentencia.replace("%%" + dato.clave + "%%", dato.valor);
-      }
-    }
+    this.progressSpinner = true;   
+
+    this.body.camposDinamicos = JSON.parse(JSON.stringify(this.valores));
+
+    if(this.body.camposDinamicos != null && typeof this.body.camposDinamicos != "undefined"){
+      this.body.camposDinamicos.forEach(element => {
+        if(element.valor != undefined && typeof element.valor == "object"){
+          element.valor = element.valor.ID;
+        }
+        if(element.ayuda == null || element.ayuda == "undefined"){
+          element.ayuda = "-1";
+        }
+      }); 
+    }    
+
     this.sigaServices
-      .postDownloadFiles("consultas_ejecutarConsulta", this.body.sentencia)
+      .postDownloadFiles("consultas_ejecutarConsulta", this.body)
       .subscribe(data => {
         this.showValores = false;
         const blob = new Blob([data], { type: "application/octet-stream" });
@@ -228,12 +320,30 @@ export class ConsultaComponent implements OnInit {
       }, error => {
         console.log(error);
         this.progressSpinner = false;
+        this.showFail("Error al ejecutar la consulta");
       }, () => {
         this.progressSpinner = false;
       });
 
   }
 
+  validarCamposDinamicos(){
+    let valido = true;
+    this.valores.forEach(element => {
+      if(valido){
+        if(!element.valorNulo){
+          if(element.valor != undefined && element.valor != null && element.valor != ""){
+            valido = true;
+          }else{
+            valido = false;
+          }
+        }else{
+          valido=true;
+        }
+      }     
+    });
+    return valido;
+  }
 
   getAyuda() {
     this.ayuda = [
