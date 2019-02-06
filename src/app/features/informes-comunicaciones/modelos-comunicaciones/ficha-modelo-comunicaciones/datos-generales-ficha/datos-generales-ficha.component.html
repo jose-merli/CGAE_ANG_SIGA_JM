@@ -11,33 +11,25 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha"
-              >{{ "general.message.datos.generales" | translate }}
+            <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate }}
             </label>
           </div>
           <div class="d-flex justify-content-between">
-            <label
-              >{{
-                "informesycomunicaciones.modelosdecomunicacion.ficha.claseComunicacion"
-                  | translate
-              }}: <span>{{ body.claseComunicacion }}</span>
+            <label>{{ "informesycomunicaciones.modelosdecomunicacion.ficha.claseComunicacion" | translate }}:
+              <span>{{ body.claseComunicacion }}</span>
             </label>
-            <label
-              >Nombre: <span>{{ body.nombre }}</span>
+            <label>Nombre:
+              <span>{{ body.nombre }}</span>
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
-      <div
-        *ngIf="openFicha"
-        class=" header-ficha-open d-flex justify-content-start align-items-center"
-      >
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
           <i class="fas fa-align-left icon-ficha"></i>
         </div>
-        <label class="title-ficha"
-          >{{ "general.message.datos.generales" | translate }}
+        <label class="title-ficha">{{ "general.message.datos.generales" | translate }}
         </label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
@@ -48,87 +40,40 @@
         <div class="col-lg-9 col-md-9">
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
-              <label
-                >{{
-                  "informesycomunicaciones.modelosdecomunicacion.clasecomunicaciones"
-                    | translate
-                }}
-                *</label
-              >
-              <p-dropdown
-                [filter]="true"
-                filterBy="label,labelSinTilde"
-                [options]="clasesComunicaciones"
-                [(ngModel)]="body.idClaseComunicacion"
-                class="select-form"
-              ></p-dropdown>
+              <label>{{ "informesycomunicaciones.modelosdecomunicacion.clasecomunicaciones" | translate }} *
+              </label>
+              <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion"
+                class="select-form"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label
-                >{{
-                  "administracion.parametrosGenerales.literal.nombre"
-                    | translate
-                }}
-                *
+              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }} *
               </label>
-              <input
-                type="text"
-                class="form-control"
-                [(ngModel)]="body.nombre"
-                pInputText
-              />
+              <input type="text" class="form-control" [(ngModel)]="body.nombre" pInputText />
             </div>
           </div>
           <div class="form-row d-flex align-items-end">
             <div class="form-group col-lg-6 col-md-6">
-              <label
-                >{{
-                  "censo.busquedaClientesAvanzada.literal.colegio" | translate
-                }}
-                *</label
-              >
-              <p-dropdown
-                [options]="colegios"
-                [(ngModel)]="body.idInstitucion"
-                class="select-form"
-              ></p-dropdown>
+              <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }} *
+              </label>
+              <p-dropdown [options]="colegios" [(ngModel)]="body.idInstitucion" class="select-form"></p-dropdown>
             </div>
             <div class="form-group col-lg-1 col-md-1">
-              <label
-                >{{
-                  "administracion.informes.literal.orden" | translate
-                }}
-                *</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                [(ngModel)]="body.orden"
-                pInputText
-              />
+              <label>{{ "administracion.informes.literal.orden" | translate }} *
+              </label>
+              <input type="text" class="form-control" [(ngModel)]="body.orden" pInputText />
             </div>
             <div class="form-group col-lg-2 col-md-3">
-              <label class="d-block">{{
-                "administracion.informes.literal.preseleccionado" | translate
-              }}</label>
-              <p-dropdown
-                [options]="preseleccionar"
-                [(ngModel)]="body.preseleccionar"
-                class="select-form"
-              ></p-dropdown>
+              <label class="d-block">{{ "administracion.informes.literal.preseleccionado" | translate }}
+              </label>
+              <p-dropdown [options]="preseleccionar" [(ngModel)]="body.preseleccionar" class="select-form"></p-dropdown>
               <!-- <p-radioButton class="mr-2" name="groupname" value="SI" [(ngModel)]="body.preseleccionar" label="Sí"></p-radioButton>
               <p-radioButton name="groupname" value="NO" [(ngModel)]="body.preseleccionar" label="No"></p-radioButton> -->
             </div>
 
             <div class="form-group col-lg-2 col-md-2">
-              <label class="d-block">{{
-                "administracion.informes.literal.visible" | translate
-              }}</label>
-              <p-dropdown
-                [options]="visible"
-                [(ngModel)]="body.visible"
-                class="select-form"
-              ></p-dropdown>
+              <label class="d-block">{{ "administracion.informes.literal.visible" | translate }}
+              </label>
+              <p-dropdown [options]="visible" [(ngModel)]="body.visible" class="select-form"></p-dropdown>
             </div>
           </div>
         </div>
@@ -136,12 +81,7 @@
           <div class="form-row d-flex align-items-start">
             <div class="form-group col-lg-12 col-md-12">
               <label>{{ "general.description" | translate }}</label>
-              <textarea
-                style="height:95px"
-                autoResize="autoResize"
-                [(ngModel)]="body.descripcion"
-                pInputTextarea
-              ></textarea>
+              <textarea style="height:95px" autoResize="autoResize" [(ngModel)]="body.descripcion" pInputTextarea></textarea>
             </div>
           </div>
         </div>
@@ -149,22 +89,8 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button
-          (click)="restablecer()"
-          pButton
-          type="button"
-          icon="fa fa-undo"
-          iconPos="left"
-          label="{{ 'general.boton.restablecer' | translate }}"
-        ></button>
-        <button
-          (click)="guardar()"
-          pButton
-          type="button"
-          icon="far fa-save"
-          iconPos="left"
-          label="{{ 'general.boton.guardar' | translate }}"
-        ></button>
+        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
+        <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>
   </div>

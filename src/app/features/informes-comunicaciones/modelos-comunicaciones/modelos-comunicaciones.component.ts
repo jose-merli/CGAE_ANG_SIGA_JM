@@ -54,7 +54,7 @@ export class ModelosComunicacionesComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getInstitucion();

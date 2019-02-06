@@ -21,6 +21,7 @@ export class PerfilesFichaComponent implements OnInit {
   perfilesSeleccionadosInicial: any[];
   perfilesNoSeleccionadosInicial: any[];
   progressSpinner: boolean = false;
+  soloLectura: boolean = false;
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -48,7 +49,7 @@ export class PerfilesFichaComponent implements OnInit {
     // private router: Router,
     private translateService: TranslateService,
     private sigaServices: SigaServices
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getDatos();

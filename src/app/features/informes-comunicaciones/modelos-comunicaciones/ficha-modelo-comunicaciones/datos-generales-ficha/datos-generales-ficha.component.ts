@@ -26,6 +26,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   preseleccionar: any = [];
   visible: any = [];
   institucionActual: any = [];
+  soloLectura: boolean = false;
 
   fichasPosibles = [
     {
@@ -46,7 +47,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
     private router: Router,
     private translateService: TranslateService,
     private sigaServices: SigaServices
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.preseleccionar = [
@@ -66,6 +67,14 @@ export class DatosGeneralesFichaComponent implements OnInit {
     this.getClasesComunicaciones();
     this.getComboColegios();
     this.getDatos();
+
+    if (
+      sessionStorage.getItem("soloLectura") != null &&
+      sessionStorage.getItem("soloLectura") != undefined &&
+      sessionStorage.getItem("soloLectura") == "true"
+    ) {
+      this.soloLectura = true;
+    }
   }
 
   abreCierraFicha() {
@@ -224,5 +233,11 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   clear() {
     this.msgs = [];
+  }
+
+  editarCompleto(event, dato) {
+    if (dato != null && dato != undefined && (dato < 0 || dato > 999)) {
+      event.currentTarget.value = "";
+    }
   }
 }

@@ -94,15 +94,15 @@
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
         <button *ngIf="showHistorico" (click)="getHistorico('hidden')" pButton type="button" icon="fa fa-undo" iconPos="left"
-          label="{{'general.message.ocultarHistorico' | translate}}"></button>
+          label="{{'general.message.ocultarHistorico' | translate}}" [disabled] = 'soloLectura'></button>
         <button *ngIf="!showHistorico" (click)="getHistorico('visible')" pButton type="button" icon="fa fa-undo"
-          iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-        <button (click)="addPlantilla()" pButton type="button" icon="fa fa-plus  " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+          iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}" [disabled] = 'soloLectura'></button>
+        <button (click)="addPlantilla()" pButton type="button" icon="fa fa-plus  " iconPos="left" label="{{ 'general.boton.new' | translate}}" [disabled] = 'soloLectura'></button>
         <button (click)="eliminar(selectedDatos)" *ngIf="selectedDatos && selectedDatos != ''" pButton type="button"
-          icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+          icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}" [disabled] = 'soloLectura'></button>
+        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}" [disabled] = 'soloLectura'></button>
         <button [disabled]="!idTipoEnvios && (!selectedDatos || selectedDatos.length != 1)" (click)="guardar(selectedDatos)"
-          pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+          pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" [disabled] = 'soloLectura'></button>
       </div>
     </div>
   </div>

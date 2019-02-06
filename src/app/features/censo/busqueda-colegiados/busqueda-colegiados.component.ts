@@ -853,6 +853,14 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   enviarComunicacion() {
     this.showComunicar = false;
+    this.sigaServices.get("dialogo_envioTest").subscribe(
+      data => {
+        console.log(data);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   onRowSelectModelos() { }

@@ -41,6 +41,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
   eliminarArray: any = [];
   showHistorico: boolean = false;
   datosInicial: any = [];
+  soloLectura: boolean = false;
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -69,7 +70,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getDatos();
@@ -109,6 +110,14 @@ export class TarjetaComunicacionesComponent implements OnInit {
         value: 40
       }
     ];
+
+    if (
+      sessionStorage.getItem("soloLectura") != null &&
+      sessionStorage.getItem("soloLectura") != undefined &&
+      sessionStorage.getItem("soloLectura") == "true"
+    ) {
+      this.soloLectura = true;
+    }
   }
 
   abreCierraFicha() {
@@ -228,8 +237,8 @@ export class TarjetaComunicacionesComponent implements OnInit {
             this.datosInicial = JSON.parse(JSON.stringify(this.datos));
           }
         },
-        error => {},
-        () => {}
+        error => { },
+        () => { }
       );
     }
   }
@@ -384,7 +393,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
     this.getDatos();
   }
 
-  onChangeTipoEnvio(e) {}
+  onChangeTipoEnvio(e) { }
 
   getPlantillas() {
     this.sigaServices.get("modelos_detalle_plantillasComunicacion").subscribe(
@@ -395,7 +404,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
       err => {
         console.log(err);
       },
-      () => {}
+      () => { }
     );
   }
 
