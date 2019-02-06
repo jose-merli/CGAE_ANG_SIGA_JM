@@ -532,6 +532,8 @@ export class SigaServices {
       "fichaDatosCurriculares/solicitudUpdate",
     fichaDatosDirecciones_solicitudCreate:
       "fichaDatosDirecciones/solicitudCreate",
+    fichaDatosDirecciones_solicitudUpdate:
+      "fichaDatosDirecciones/solicitudUpdate",
     fichaDatosGenerales_datosGeneralesSolicitudModificación:
       "/fichaDatosGenerales/datosGeneralesSolicitudModificación",
     personaJuridica_solicitudUploadFotografia:

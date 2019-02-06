@@ -441,7 +441,7 @@ export class FichaColegialComponent implements OnInit {
     // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
     this.colsColegiales = [
       {
-        field: "fechaEstadoStr",
+        field: "fechaEstado",
         header: "censo.nuevaSolicitud.fechaEstado"
       },
       {

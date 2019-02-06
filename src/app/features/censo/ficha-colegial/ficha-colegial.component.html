@@ -498,6 +498,10 @@
               }">{{ datoH[col.field] }}</span>
             <span *ngIf="!setItalic(datoH)">{{ datoH[col.field] }}</span>
           </ng-template>
+
+          <ng-template *ngIf="col.field == 'fechaEstado'" let-dato="rowData" pTemplate="body">
+            <label>{{ dato.fechaEstado | date: 'dd/MM/yyyy'}}</label>
+          </ng-template>
         </p-column>
 
         <ng-template pTemplate="paginatorLeft">
