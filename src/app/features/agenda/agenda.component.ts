@@ -58,7 +58,8 @@ export class AgendaComponent implements OnInit {
         center: "title",
         right: "month,agendaWeek,agendaDay",
         locale: "es"
-      }
+      },
+      editable: false
     };
 
     this.calendarioSchedule.timezone = "local";

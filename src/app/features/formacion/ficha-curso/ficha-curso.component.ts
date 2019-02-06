@@ -3119,10 +3119,17 @@ export class FichaCursoComponent implements OnInit {
           if (estado == this.valorEstadoAnunciado || estado == this.valorEstadoEnCurso) return true;
         }
       }
-    } else if (this.otraInstitucion && this.modoEdicion && button == "Inscripcion") { // Solo debería de entrar en el caso de ser el botón de inscripcion, para controlar la casuística de entrar desde otro colegio
+
+      if (button == "DescargarPlantilla")
+        return true;
+
+      // Solo debería de entrar en el caso de ser el botón de inscripcion, para controlar la casuística de entrar desde otro colegio
+    } else if (this.otraInstitucion && this.modoEdicion && button == "Inscripcion") { 
       if (this.controlFechaInscripcion()) {
         if (estado == this.valorEstadoAnunciado || estado == this.valorEstadoEnCurso) return true;
       }
+    } else if (this.otraInstitucion && this.modoEdicion && button == "DescargarPlantilla") { 
+        return true;
     }
   }
 

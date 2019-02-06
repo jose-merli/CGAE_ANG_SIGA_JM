@@ -1204,6 +1204,14 @@ export class FichaColegialComponent implements OnInit {
     this.displayAuditoria = false;
   }
 
+  disabledAutocomplete() {
+    if (!this.isLetrado) {
+      this.autocompletar  =  true;
+    } else {
+      this.autocompletar  =  false;
+    }
+  }
+
   comprobarAuditoria() {
     // modo creación
 
@@ -1689,9 +1697,9 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
-  disabledAutocomplete() {
-    this.autocompletar = true;
-  }
+  // disabledAutocomplete() {
+  //   this.autocompletar = true;
+  // }
 
   // ETIQUETAS
 
@@ -2113,6 +2121,7 @@ export class FichaColegialComponent implements OnInit {
 
   onBlur(event) {
     if (event.target.value != "" && !this.autoComplete.panelVisible) {
+      this.historico = false;
       this.checked = true;
       this.isCrear = true;
       this.item = new ComboEtiquetasItem();

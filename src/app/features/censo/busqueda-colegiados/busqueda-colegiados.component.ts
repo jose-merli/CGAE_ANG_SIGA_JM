@@ -154,7 +154,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       { field: 'plantillaEnvio', header: 'Plantilla Envío' },
       { field: 'tipoEnvio', header: 'Tipo envío' }
     ]
-
+    if (this.body.tipoCV != undefined) {
+      this.getComboSubtipoCurricular(this.body.tipoCV);
+      this.getComboTipoCurricular(this.body.tipoCV);
+    }
 
 
   }

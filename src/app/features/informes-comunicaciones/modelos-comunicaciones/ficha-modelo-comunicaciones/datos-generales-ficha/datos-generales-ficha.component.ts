@@ -26,6 +26,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   preseleccionar: any = [];
   visible: any = [];
   institucionActual: any = [];
+  soloLectura: boolean = false;
 
   fichasPosibles = [
     {
@@ -46,28 +47,34 @@ export class DatosGeneralesFichaComponent implements OnInit {
     private router: Router,
     private translateService: TranslateService,
     private sigaServices: SigaServices
-  ) { }
+  ) {}
 
   ngOnInit() {
-
-
     this.preseleccionar = [
-      { label: '', value: '' },
-      { label: 'Sí', value: 'SI' },
-      { label: 'No', value: 'NO' }
+      { label: "", value: "" },
+      { label: "Sí", value: "SI" },
+      { label: "No", value: "NO" }
     ];
 
     this.visible = [
-      { label: '', value: '' },
-      { label: 'Sí', value: 1 },
-      { label: 'No', value: 0 }
+      { label: "", value: "" },
+      { label: "Sí", value: 1 },
+      { label: "No", value: 0 }
     ];
 
-    this.getInstitucion()
+    this.getInstitucion();
 
     this.getClasesComunicaciones();
     this.getComboColegios();
     this.getDatos();
+
+    if (
+      sessionStorage.getItem("soloLectura") != null &&
+      sessionStorage.getItem("soloLectura") != undefined &&
+      sessionStorage.getItem("soloLectura") == "true"
+    ) {
+      this.soloLectura = true;
+    }
   }
 
   abreCierraFicha() {
@@ -129,42 +136,39 @@ export class DatosGeneralesFichaComponent implements OnInit {
   }
 
   guardar() {
-
-    this.sigaServices.post("modelos_detalle_datosGenerales", this.body).subscribe(
-      data => {
-        this.showSuccess("Datos generales guardados correctamente");
-        this.body.idModeloComunicacion = JSON.parse(data.body).data;
-        sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
-        sessionStorage.removeItem("crearNuevoModelo");
-      },
-      err => {
-        console.log(err);
-        this.showFail("Error al guardar los datos generales");
-      }
-    );
+    this.sigaServices
+      .post("modelos_detalle_datosGenerales", this.body)
+      .subscribe(
+        data => {
+          this.showSuccess("Datos generales guardados correctamente");
+          this.body.idModeloComunicacion = JSON.parse(data.body).data;
+          sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
+          sessionStorage.removeItem("crearNuevoModelo");
+        },
+        err => {
+          console.log(err);
+          this.showFail("Error al guardar los datos generales");
+        }
+      );
   }
 
-
   getInstitucion() {
-    this.sigaServices.get('institucionActual').subscribe((n) => {
+    this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
       this.body.idInstitucion = this.institucionActual;
     });
   }
 
-
   getComboColegios() {
     this.sigaServices.get("modelos_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
-        this.colegios.unshift({ label: 'Seleccionar', value: '' });
+        this.colegios.unshift({ label: "Seleccionar", value: "" });
         for (let e of this.colegios) {
-          if (e.value == '2000') {
-            e.label = 'POR DEFECTO';
+          if (e.value == "2000") {
+            e.label = "POR DEFECTO";
           }
-
         }
-
       },
       err => {
         console.log(err);
@@ -176,7 +180,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
     this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
       data => {
         this.clasesComunicaciones = data.combooItems;
-        this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
+        this.clasesComunicaciones.unshift({ label: "Seleccionar", value: "" });
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.clasesComunicaciones.map(e => {
@@ -221,5 +225,11 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   clear() {
     this.msgs = [];
+  }
+
+  editarCompleto(event, dato) {
+    if (dato != null && dato != undefined && (dato < 0 || dato > 999)) {
+      event.currentTarget.value = "";
+    }
   }
 }
