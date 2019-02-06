@@ -60,9 +60,9 @@ export class PlantillasEnvioComponent implements OnInit {
 		sessionStorage.removeItem('crearNuevaPlantilla');
 
 		this.cols = [
-			{ field: 'nombre', header: 'Nombre', width: '25%' },
-			{ field: 'tipoEnvio', header: 'Tipo de envío', width: '25%' },
-			{ field: 'descripcion', header: 'Descripción' }
+			{ field: 'nombre', header: 'administracion.parametrosGenerales.literal.nombre', width: '25%' },
+			{ field: 'tipoEnvio', header: 'enviosMasivos.literal.tipoEnvio', width: '25%' },
+			{ field: 'descripcion', header: 'enviosMasivos.literal.descripcion' }
 		];
 
 		this.configTabla();
@@ -260,7 +260,7 @@ función para que no cargue primero las etiquetas de los idiomas*/
 	eliminar(dato) {
 		this.confirmationService.confirm({
 			// message: this.translateService.instant("messages.deleteConfirmation"),
-			message: '¿Está seguro de eliminar los envíos seleccionados?',
+			message: this.translateService.instant('informesycomunicaciones.plantillasenvio.eliminarMensaje'),
 			icon: 'fa fa-trash-alt',
 			accept: () => {
 				this.confirmarEliminar(dato);
@@ -289,10 +289,10 @@ función para que no cargue primero las etiquetas de los idiomas*/
 		});
 		this.sigaServices.post('plantillasEnvio_borrar', this.eliminarArray).subscribe(
 			(data) => {
-				this.showSuccess('Se ha eliminado la plantilla correctamente');
+				this.showSuccess(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaEliminado'));
 			},
 			(err) => {
-				this.showFail('Error al eliminar la plantilla');
+				this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaEliminado'));
 				console.log(err);
 			},
 			() => {

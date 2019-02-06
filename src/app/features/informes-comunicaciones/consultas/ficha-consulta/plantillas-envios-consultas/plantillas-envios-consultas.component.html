@@ -10,65 +10,127 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">Plantillas de envíos</label>
+            <label class="mr-auto title-ficha">{{
+              "informesycomunicaciones.consultas.ficha.plantillasEnvio"
+                | translate
+            }}</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>Nº plantillas de envío:
-              <span *ngIf="datos">{{datos.length}}</span>
+            <label
+              >{{
+                "informesycomunicaciones.consultas.ficha.numPlantillasEnvio"
+                  | translate
+              }}: <span *ngIf="datos">{{ datos.length }}</span>
               <span *ngIf="!datos">0</span>
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+      <div
+        *ngIf="openFicha"
+        class=" header-ficha-open d-flex justify-content-start align-items-center"
+      >
         <div class="img-colegiado">
           <i class="fas fa-file-alt icon-ficha"></i>
         </div>
-        <label class="title-ficha">Plantillas de envíos</label>
+        <label class="title-ficha">{{
+          "informesycomunicaciones.consultas.ficha.plantillasEnvio" | translate
+        }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <!--cuerpo datos generales-->
     <div *ngIf="openFicha" class="px-0 card-body card-body-ficha">
-      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
-        [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both"
-        selectionMode="multiple" (onRowSelect)="navigateTo(selectedDatos)">
+      <p-table
+        [value]="datos"
+        [columns]="cols"
+        [(selection)]="selectedDatos"
+        [responsive]="true"
+        #table
+        class="tabla-listado"
+        [paginator]="true"
+        [rows]="selectedItem"
+        [first]="first"
+        [ngClass]="{ customCursor: selectMultiple }"
+        paginatorPosition="both"
+        selectionMode="multiple"
+        (onRowSelect)="navigateTo(selectedDatos)"
+      >
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
-            <col *ngFor="let col of columns" [style.width]="col.width">
+            <col *ngFor="let col of columns" [style.width]="col.width" />
           </colgroup>
         </ng-template>
         <ng-template pTemplate="header" let-columns>
           <tr>
-            <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-              {{col.header}}
+            <th
+              *ngFor="let col of columns"
+              [ngSwitch]="col.field"
+              [pSortableColumn]="col.field"
+            >
+              {{ col.header | translate }}
               <p-sortIcon [field]="col.field"></p-sortIcon>
-              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
-                      col.field, 'contains')">
+              <input
+                pDroppable="false"
+                (click)="$event.stopPropagation()"
+                *ngSwitchCase="col.field"
+                pInputText
+                type="text"
+                (input)="
+                  table.filter($event.target.value, col.field, 'contains')
+                "
+              />
             </th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+        <ng-template
+          pTemplate="body"
+          let-dato
+          let-columns="columns"
+          let-rowIndex="rowIndex"
+        >
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <span> {{dato[col.field]}}</span>
+              <span> {{ dato[col.field] }}</span>
             </td>
           </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage" let-columns>
           <tr>
             <td [attr.colspan]="columns.length">
-              No hay resultados.
+              {{
+                "censo.busquedaClientesAvanzada.literal.sinResultados"
+                  | translate
+              }}.
             </td>
           </tr>
         </ng-template>
         <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+            <label class="pr-3 registros-totales"
+              >{{
+                "informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros"
+                  | translate
+              }}
+              {{ table.first + 1 }} al {{ table.first + table.rows }}
+              {{
+                "informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe"
+                  | translate
+              }}
+              {{ table.totalRecords }}</label
+            >
 
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+            <p-dropdown
+              [(ngModel)]="selectedItem"
+              [options]="rowsPerPage"
+              (onChange)="onChangeRowsPerPages($event)"
+            ></p-dropdown>
+            <label class="pl-1">
+              {{
+                "cargaMasivaDatosCurriculares.numRegistros.literal" | translate
+              }}</label
+            >
           </div>
         </ng-template>
       </p-table>

@@ -11,7 +11,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">Plantillas Documentos</label>
+            <label class="mr-auto title-ficha">{{'informesycomunicaciones.modelosdecomunicacion.ficha.plantillaDocumentos' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label>Nº Informes:
@@ -25,7 +25,7 @@
         <div class="img-colegiado">
           <i class="fas fa-file-alt icon-ficha"></i>
         </div>
-        <label class="title-ficha">Plantillas Documentos</label>
+        <label class="title-ficha">{{'informesycomunicaciones.modelosdecomunicacion.ficha.plantillaDocumentos' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -65,14 +65,14 @@
         <ng-template pTemplate="emptymessage" let-columns>
           <tr>
             <td [attr.colspan]="columns.length">
-              No hay resultados.
+              {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}.
             </td>
           </tr>
         </ng-template>
         <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+            <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: {{numSelected}}</label>
             <label>{{"general.message.mostrar" | translate}}</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>

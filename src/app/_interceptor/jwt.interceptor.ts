@@ -35,20 +35,20 @@ export class JwtInterceptor implements HttpInterceptor {
 		// console.log("Sending request with new header now ...");
 		//Llamamos al SigaClassique para mantener la sesión
 
-		// this.oldSigaMantener().subscribe(
-		//     response => {
-		//         // console.log("salida del servicio para mantener la sesion de siga Classique");
-		//     },
-		//     error => {
-		//         if (error.status == 403) {
-		//             let codError = error.status;
+		this.oldSigaMantener().subscribe(
+			response => {
+				// console.log("salida del servicio para mantener la sesion de siga Classique");
+			},
+			error => {
+				if (error.status == 403) {
+					let codError = error.status;
 
-		//             sessionStorage.setItem("codError", codError);
-		//             sessionStorage.setItem("descError", "Imposible validar el certificado");
-		//             this.router.navigate(["/errorAcceso"]);
-		//         }
-		//     }
-		// );
+					sessionStorage.setItem("codError", codError);
+					sessionStorage.setItem("descError", "Imposible validar el certificado");
+					this.router.navigate(["/errorAcceso"]);
+				}
+			}
+		);
 
 		//send the newly created request
 		return next.handle(authReq).catch((error, caught) => {
@@ -74,7 +74,7 @@ export class JwtInterceptor implements HttpInterceptor {
 	oldSigaMantener(): Observable<any> {
 		let oldSigaRquest = this.oldSigaMantenerSesion();
 
-		return forkJoin([ oldSigaRquest ]).map((response) => {
+		return forkJoin([oldSigaRquest]).map((response) => {
 			let oldSigaResponse = response[0].status;
 			if (oldSigaResponse == 200) {
 				return true;
