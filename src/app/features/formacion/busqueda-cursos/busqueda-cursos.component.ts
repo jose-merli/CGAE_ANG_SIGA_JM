@@ -152,7 +152,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.mySelect.ngOnInit();
+    // this.mySelect.ngOnInit();
   }
 
   //CONTROL DE PERMISOS
@@ -353,38 +353,38 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
         console.log(err);
       },
       () => {
-        // this.mySelect.onFilter = function(event) {
-        //   this.visibleOptions = [];
-        //   if (this.copiaSg == undefined) {
-        //     this.copiaSg = [];
-        //     this.copiaSg = this.options;
-        //   } else {
-        //     this.options = this.copiaSg;
-        //   }
-        //   this.options.forEach(element => {
-        //     if (
-        //       element.label.toLowerCase().indexOf(event.currentTarget.value) >=
-        //       0
-        //     ) {
-        //       this.visibleOptions.push(element);
-        //     } else if (
-        //       element.labelSinTilde != undefined &&
-        //       element.labelSinTilde
-        //         .toLowerCase()
-        //         .indexOf(event.currentTarget.value) != -1
-        //     ) {
-        //       this.visibleOptions.push(element);
-        //     }
-        //   });
-        //   this.filtered = true;
-        //   this.filtered = true;
-        //   if (this.visibleOptions.length != 0) {
-        //     this.options = this.visibleOptions;
-        //   }
-        //   if (event.currentTarget.value == "") {
-        //     this.options = this.copiaSg;
-        //   }
-        // };
+        this.mySelect.onFilter = function(event) {
+          this.visibleOptions = [];
+          if (this.copiaSg == undefined) {
+            this.copiaSg = [];
+            this.copiaSg = this.options;
+          } else {
+            this.options = this.copiaSg;
+          }
+          this.options.forEach(element => {
+            if (
+              element.label.toLowerCase().indexOf(event.currentTarget.value) >=
+              0
+            ) {
+              this.visibleOptions.push(element);
+            } else if (
+              element.labelSinTilde != undefined &&
+              element.labelSinTilde
+                .toLowerCase()
+                .indexOf(event.currentTarget.value) != -1
+            ) {
+              this.visibleOptions.push(element);
+            }
+          });
+          this.filtered = true;
+          this.filtered = true;
+          if (this.visibleOptions.length != 0) {
+            this.options = this.visibleOptions;
+          }
+          if (event.currentTarget.value == "") {
+            this.options = this.copiaSg;
+          }
+        };
       }
     );
   }
