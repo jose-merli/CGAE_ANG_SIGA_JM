@@ -642,7 +642,8 @@ export class SigaServices {
     dialogo_tipoEnvios: 'DialogoComunicacion/tiposEnvioModelo',
     dialogo_enviar: 'DialogoComunicacion/enviar',
     dialogo_descargar: 'DialogoComunicacion/descargar',
-    dialogo_keys: 'DialogoComunicacion/keys'
+    dialogo_keys: 'DialogoComunicacion/keys',
+    dialogo_envioTest: 'DialogoComunicacion/envioTest'
   };
 
   private menuToggled = new Subject<any>();

@@ -176,7 +176,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   irEditarColegiado(id) {
-    sessionStorage.setItem("esNuevoNoColegiado",  JSON.stringify(false));
+    sessionStorage.setItem("esNuevoNoColegiado", JSON.stringify(false));
     if (id.length >= 1 && this.selectMultiple == false) {
       sessionStorage.removeItem("personaBody");
       sessionStorage.setItem("esColegiado", "true");
@@ -850,6 +850,14 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   enviarComunicacion() {
     this.showComunicar = false;
+    this.sigaServices.get("dialogo_envioTest").subscribe(
+      data => {
+        console.log(data);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   onRowSelectModelos() { }
