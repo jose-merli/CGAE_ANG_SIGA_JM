@@ -104,7 +104,7 @@
             <label>{{ 'form.busquedaCursos.literal.nombreApellidosFormador' | translate}}</label>
             <input [formControl]="formBusqueda.controls['nombreApellidosFormador']" type="text" class="form-control" pInputText [(ngModel)]="body.nombreApellidosFormador">
             <small class="input-error" *ngIf="!formBusqueda.controls['nombreApellidosFormador'].pristine && formBusqueda.controls['nombreApellidosFormador'].status == 'INVALID'">
-              Debe tener como mínimo tres carácteres</small>
+              {{ 'formacion.busquedaCursos.controlFiltros.minimoCaracteres' | translate }}</small>
           </div>
 
           <div class="form-group col-lg-3 col-md-3">

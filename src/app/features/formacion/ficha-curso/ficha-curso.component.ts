@@ -1597,7 +1597,7 @@ export class FichaCursoComponent implements OnInit {
       this.sigaServiceSaveTrainer(url, formador);
     } else {
       if (this.numCheckedTutor == 1 && this.newFormadorCourse.idRol == "1") {
-        mess = "¿Estás seguro que desea cambiar el tutor del curso?";
+        mess = this.translateService.instant("formacion.fichaCurso.formadores.confirmacion.cambiarTutor");
 
         let icon = "fa fa-edit";
         this.confirmationService.confirm({
@@ -1781,7 +1781,7 @@ export class FichaCursoComponent implements OnInit {
         this.modoEdicionFormador) ||
       (this.numCheckedTutor == 1 && event == "1" && this.modoEdicionFormador)
     ) {
-      mess = "¿Estás seguro que desea cambiar el tutor del curso?";
+      mess = this.translateService.instant("formacion.fichaCurso.formadores.confirmacion.cambiarTutor");
 
       let icon = "fa fa-edit";
       this.confirmationService.confirm({
@@ -2087,7 +2087,7 @@ export class FichaCursoComponent implements OnInit {
             this.showMessage(
               "success",
               "Correcto",
-              "Sesión duplicada correctamente"
+              this.translateService.instant("formacion.fichaCurso.sesiones.duplicadas.correctamente")
             );
           } else if (JSON.parse(data.body).error.code == 400) {
             this.showMessage(
@@ -2453,7 +2453,7 @@ export class FichaCursoComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          this.showFail("La acción no se ha realizado correctamente");
+          this.showFail(this.translateService.instant("general.message.error.realiza.accion"));
         },
         () => {
           this.progressSpinner = false;
@@ -2464,7 +2464,7 @@ export class FichaCursoComponent implements OnInit {
       this.showMessage(
         "info",
         "Información",
-        "No puede existir certificados con la misma calificación"
+        this.translateService.instant("formacion.mensaje.fichaCurso.certificados.misma.calificacion")
       );
     }
   }
@@ -2504,7 +2504,7 @@ export class FichaCursoComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          this.showFail("La acción no se ha realizado correctamente");
+          this.showFail(this.translateService.instant("general.message.error.realiza.accion"));
         },
         () => {
           this.progressSpinner = false;
@@ -2733,7 +2733,7 @@ export class FichaCursoComponent implements OnInit {
       this.showMessage(
         "info",
         "Información",
-        "La extensión del fichero no es correcta."
+        this.translateService.instant("formacion.mensaje.extesion.fichero.erronea")
       );   
     
     } else {
@@ -2766,7 +2766,7 @@ export class FichaCursoComponent implements OnInit {
           },
           error => {
             console.log(error);
-            this.showFail("Error en la subida del fichero.");
+            this.showFail(this.translateService.instant("formacion.mensaje.subida.fichero.erronea"));
             this.progressSpinner = false;
           },
           () => {

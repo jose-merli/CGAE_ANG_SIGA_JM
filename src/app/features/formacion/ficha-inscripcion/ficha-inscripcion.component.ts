@@ -634,7 +634,7 @@ export class FichaInscripcionComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        this.showFail("La acción no se ha realizado correctamente");
+        this.showFail(this.translateService.instant("general.message.error.realiza.accion"));
         this.inscripcionInsertada = false;
       },
       () => {
@@ -729,7 +729,7 @@ export class FichaInscripcionComponent implements OnInit {
           },
           err => {
             this.progressSpinner = false;
-            this.showFail("La acción no se ha realizado correctamente");
+            this.showFail(this.translateService.instant("general.message.error.realiza.accion"));
             this.inscripcionInsertada = false;
           },
           () => {
@@ -765,7 +765,7 @@ export class FichaInscripcionComponent implements OnInit {
                   },
                   err => {
                     this.progressSpinner = false;
-                    this.showFail("La acción no se ha realizado correctamente");
+                    this.showFail(this.translateService.instant("general.message.error.realiza.accion"));
                     this.inscripcionInsertada = false;
                   },
                   () => {
@@ -924,7 +924,7 @@ export class FichaInscripcionComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          this.showFail("La acción no se ha realizado correctamente");
+          this.showFail(this.translateService.instant("general.message.error.realiza.accion"));
           this.inscripcionInsertada = false;
         },
         () => {
@@ -956,7 +956,7 @@ export class FichaInscripcionComponent implements OnInit {
           },
           err => {
             this.progressSpinner = false;
-            this.showFail("La acción no se ha realizado correctamente");
+            this.showFail(this.translateService.instant("general.message.error.realiza.accion"));
             this.inscripcionInsertada = false;
           },
           () => {
@@ -1060,7 +1060,7 @@ export class FichaInscripcionComponent implements OnInit {
                       err => {
                         this.progressSpinner = false;
                         this.showFail(
-                          "La acción no se ha realizado correctamente"
+                          this.translateService.instant("general.message.error.realiza.accion")
                         );
                         this.inscripcionInsertada = false;
                       },
@@ -1127,7 +1127,7 @@ export class FichaInscripcionComponent implements OnInit {
           },
           err => {
             this.progressSpinner = false;
-            this.showFail("La acción no se ha realizado correctamente");
+            this.showFail(this.translateService.instant("general.message.error.realiza.accion"));
             this.inscripcionInsertada = false;
           },
           () => {
@@ -1135,7 +1135,7 @@ export class FichaInscripcionComponent implements OnInit {
           }
         );
       } else {
-        this.showFail("Datos de la persona errónea");
+        this.showFail(this.translateService.instant("formacion.mensaje.persona.erronea"));
       }
     } else {
       this.showFail(
