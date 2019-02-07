@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 import { DataTable } from "primeng/datatable";
-import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
-import { SigaServices } from "./../../../../../_services/siga.service";
+import { ControlAccesoDto } from "../../../../../models/ControlAccesoDto";
+import { SigaServices } from "../../../../../_services/siga.service";
 import { ComunicacionesModelosComItem } from "../../../../../models/ComunicacionesModelosComunicacionesItem";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { ModelosComunicacionesItem } from "../../../../../models/ModelosComunicacionesItem";
@@ -37,11 +37,15 @@ export class TarjetaComunicacionesComponent implements OnInit {
   nuevaPlantilla: boolean = false;
   idPlantillaEnvios: string;
   idTipoEnvios: string;
-  porDefecto: string = "No";
+  porDefecto: boolean = false;
   eliminarArray: any = [];
   showHistorico: boolean = false;
   datosInicial: any = [];
+
   soloLectura: boolean = false;
+  isNuevo: boolean = false;
+  isGuardar: boolean = false;
+  progressSpinner: boolean = false;
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -205,12 +209,15 @@ export class TarjetaComunicacionesComponent implements OnInit {
     // } else {
     //   return dato[0].selected = true;
     // }
+    this.numSelected = this.selectedDatos.length;
     return (dato[0].selected = true);
   }
   onRowUnSelect(dato) {
-    if (this.selectMultiple && !dato[0].nueva) {
-      return (dato[0].selected = false);
-    }
+    this.numSelected = this.selectedDatos.length;
+
+    // if (this.selectMultiple && !dato[0].nueva) {
+    //   return (dato[0].selected = false);
+    // }
   }
 
   getDatos() {
@@ -227,6 +234,11 @@ export class TarjetaComunicacionesComponent implements OnInit {
           this.datos = data.plantillas;
           console.log(this.datos);
           this.datos.map(e => {
+            if (e.porDefecto == "Si") {
+              e.porDefecto = true;
+            } else {
+              e.porDefecto = false;
+            }
             return (
               (e.nueva = false),
               (e.idAntiguaPlantillaEnvios = e.idPlantillaEnvios),
@@ -244,18 +256,23 @@ export class TarjetaComunicacionesComponent implements OnInit {
   }
 
   guardar(dato) {
-    let nuevaPlantillaComunicacion = {
-      idModelo: this.body.idModeloComunicacion,
-      idPlantillaEnvios: dato[0].idPlantillaEnvios,
-      idAntiguaPlantillaEnvios: dato[0].idAntiguaPlantillaEnvios,
-      idInstitucion: this.body.idInstitucion,
-      idTipoEnvios: dato[0].idTipoEnvios,
-      idAntiguaTipoEnvios: dato[0].idAntiguaTipoEnvios,
-      porDefecto: dato[0].porDefecto
-    };
+    this.progressSpinner = true;
+    let datosAux = JSON.parse(JSON.stringify(this.datos));
+
+    datosAux.forEach(element => {
+      if (element.porDefecto == true) {
+        element.porDefecto = "Si";
+      } else {
+        element.porDefecto = "No";
+      }
+
+      if (element.nueva) {
+        element.idModeloComunicacion = this.body.idModeloComunicacion;
+      }
+    });
 
     this.sigaServices
-      .post("modelos_detalle_guardarPlantilla", nuevaPlantillaComunicacion)
+      .post("modelos_detalle_guardarPlantilla", datosAux)
       .subscribe(
         result => {
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
@@ -266,6 +283,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
             )
           );
           this.selectedDatos = [];
+          this.progressSpinner = false;
         },
         error => {
           this.showFail(
@@ -277,8 +295,12 @@ export class TarjetaComunicacionesComponent implements OnInit {
         },
         () => {
           this.getDatos();
+          this.progressSpinner = false;
         }
       );
+
+    this.isNuevo = !this.isNuevo;
+    this.selectMultiple = false;
   }
 
   // Mensajes
@@ -333,13 +355,19 @@ export class TarjetaComunicacionesComponent implements OnInit {
   confirmarEliminar(dato) {
     this.eliminarArray = [];
     dato.forEach(element => {
+      if (element.porDefecto == true) {
+        element.porDefecto = "Si";
+      } else {
+        element.porDefecto = "No";
+      }
       let objEliminar = {
         idModelo: this.body.idModeloComunicacion,
         idPlantillaEnvios: element.idPlantillaEnvios,
         idInstitucion: this.body.idInstitucion,
         idTipoEnvios: element.idTipoEnvios,
         idAntiguaPlantillaEnvios: element.idAntiguaPlantillaEnvios,
-        idAntiguaTipoEnvios: element.idAntiguaTipoEnvios
+        idAntiguaTipoEnvios: element.idAntiguaTipoEnvios,
+        porDefecto: element.porDefecto
       };
       this.eliminarArray.push(objEliminar);
     });
@@ -364,6 +392,8 @@ export class TarjetaComunicacionesComponent implements OnInit {
           this.getDatos();
         }
       );
+
+    this.selectMultiple = false;
   }
 
   getTipoEnvios(idPlantillaEnvios) {
@@ -399,7 +429,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
     this.sigaServices.get("modelos_detalle_plantillasComunicacion").subscribe(
       data => {
         this.plantillas = data.combooItems;
-        this.plantillas.unshift({ label: "Seleccionar", value: "" });
+        // this.plantillas.unshift({ label: "Seleccionar", value: "" });
       },
       err => {
         console.log(err);
@@ -413,13 +443,20 @@ export class TarjetaComunicacionesComponent implements OnInit {
       idPlantillaEnvios: "",
       tipoEnvio: "",
       idTipoEnvios: "",
-      porDefecto: "No",
+      porDefecto: false,
       nueva: true
     };
     this.idPlantillaEnvios = "";
     this.nuevaPlantilla = true;
     this.datos.push(newPlantilla);
     this.datos = [...this.datos];
+
+    // Controlamos que solo se puedan añadir filas de una en una, una vez guardada la anterior
+    this.isNuevo = !this.isNuevo;
+    this.isGuardar = true;
+
+    this.selectedDatos = [];
+    this.selectMultiple = false;
   }
 
   onChangePlantilla(e) {
@@ -434,9 +471,14 @@ export class TarjetaComunicacionesComponent implements OnInit {
           dato.tipoEnvio = "";
         }
       }
+
+      this.isGuardar = true;
     } else {
       this.getTipoEnvios(idPlantillaEnvios);
+      this.isGuardar = false;
     }
+
+    this.selectedDatos = [];
   }
 
   // onChangePorDefecto(e) {
@@ -455,20 +497,26 @@ export class TarjetaComunicacionesComponent implements OnInit {
         this.datos.forEach(element => {
           if (element.fechaBaja == null || element.fechaBaja == "") {
             if (element != dato) {
-              element.porDefecto = "No";
+              element.porDefecto = false;
             } else {
-              element.porDefecto = "Si";
+              element.porDefecto = true;
             }
           }
         });
       }
     } else {
-      dato.porDefecto = "No";
+      dato.porDefecto = false;
     }
+
+    this.selectedDatos = [];
   }
 
   restablecer() {
     this.datos = JSON.parse(JSON.stringify(this.datosInicial));
     this.nuevaPlantilla = false;
+    this.isNuevo = false;
+    this.selectMultiple = false;
+    this.selectedDatos = [];
+    this.numSelected = 0;
   }
 }

@@ -1,10 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
-import { TranslateService } from "./../../../../../commons/translate/translation.service";
-import { SigaServices } from "./../../../../../_services/siga.service";
+import { ControlAccesoDto } from "../../../../../models/ControlAccesoDto";
+import { TranslateService } from "../../../../../commons/translate/translation.service";
+import { SigaServices } from "../../../../../_services/siga.service";
 import { DatosGeneralesFicha } from "../../../../../models/DatosGeneralesFichaItem";
 import { Message, ConfirmationService } from "primeng/components/common/api";
+import { InputMaskModule } from "primeng/inputmask";
+import { isNumber } from "util";
 
 @Component({
   selector: "app-datos-generales-ficha",
@@ -236,7 +238,11 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   editarCompleto(event, dato) {
-    if (dato != null && dato != undefined && (dato < 0 || dato > 999)) {
+    if (isNumber(dato)) {
+      if (dato != null && dato != undefined && (dato < 0 || dato > 999)) {
+        event.currentTarget.value = "";
+      }
+    } else {
       event.currentTarget.value = "";
     }
   }
