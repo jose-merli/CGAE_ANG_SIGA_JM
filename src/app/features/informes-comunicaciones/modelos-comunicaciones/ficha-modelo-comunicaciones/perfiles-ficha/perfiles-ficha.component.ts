@@ -1,16 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
-import { ModelosComunicacionesItem } from '../../../../../models/ModelosComunicacionesItem';
+import { ModelosComunicacionesItem } from "../../../../../models/ModelosComunicacionesItem";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 
 @Component({
-  selector: 'app-perfiles-ficha',
-  templateUrl: './perfiles-ficha.component.html',
-  styleUrls: ['./perfiles-ficha.component.scss']
+  selector: "app-perfiles-ficha",
+  templateUrl: "./perfiles-ficha.component.html",
+  styleUrls: ["./perfiles-ficha.component.scss"]
 })
 export class PerfilesFichaComponent implements OnInit {
-
   openFicha: boolean = false;
   openDestinatario: boolean;
   perfilesSeleccionados: any[];
@@ -21,10 +20,10 @@ export class PerfilesFichaComponent implements OnInit {
   perfilesSeleccionadosInicial: any[];
   perfilesNoSeleccionadosInicial: any[];
   progressSpinner: boolean = false;
+  soloLectura: boolean = false;
 
-
-  @ViewChild('table') table: DataTable;
-  selectedDatos
+  @ViewChild("table") table: DataTable;
+  selectedDatos;
 
   fichasPosibles = [
     {
@@ -42,22 +41,26 @@ export class PerfilesFichaComponent implements OnInit {
     {
       key: "comunicacion",
       activa: false
-    },
-
+    }
   ];
 
   constructor(
     // private router: Router,
     // private translateService: TranslateService,
     private sigaServices: SigaServices
-  ) { }
+  ) {}
 
   ngOnInit() {
-
     this.getDatos();
 
+    if (
+      sessionStorage.getItem("soloLectura") != null &&
+      sessionStorage.getItem("soloLectura") != undefined &&
+      sessionStorage.getItem("soloLectura") == "true"
+    ) {
+      this.soloLectura = true;
+    }
   }
-
 
   // Mensajes
   showFail(mensaje: string) {
@@ -81,21 +84,21 @@ export class PerfilesFichaComponent implements OnInit {
 
   getPerfilesExtistentes() {
     this.progressSpinner = true;
-    this.sigaServices
-      .get("modelos_detalle_perfiles")
-      .subscribe(
-        n => {
-          // coger etiquetas de una persona juridica
-          this.perfilesNoSeleccionados = n.combooItems;
-          this.perfilesNoSeleccionadosInicial = JSON.parse(JSON.stringify(this.perfilesNoSeleccionados));
-        },
-        err => {
-          console.log(err);
-        },
-        () => {
-          this.progressSpinner = false;
-        }
-      );
+    this.sigaServices.get("modelos_detalle_perfiles").subscribe(
+      n => {
+        // coger etiquetas de una persona juridica
+        this.perfilesNoSeleccionados = n.combooItems;
+        this.perfilesNoSeleccionadosInicial = JSON.parse(
+          JSON.stringify(this.perfilesNoSeleccionados)
+        );
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   getPerfilesSeleccionados() {
@@ -105,60 +108,62 @@ export class PerfilesFichaComponent implements OnInit {
         n => {
           // coger etiquetas de una persona juridica
           this.perfilesSeleccionados = JSON.parse(n["body"]).combooItems;
-          this.perfilesSeleccionadosInicial = JSON.parse(JSON.stringify(this.perfilesSeleccionados));
-
+          this.perfilesSeleccionadosInicial = JSON.parse(
+            JSON.stringify(this.perfilesSeleccionados)
+          );
         },
         err => {
           console.log(err);
-        },
-
-    );
+        }
+      );
   }
 
-
   guardar() {
-
-    if (sessionStorage.getItem("modelosSearch") != null && this.body.idModeloComunicacion == undefined) {
-      this.body.idModeloComunicacion = JSON.parse(sessionStorage.getItem("modelosSearch")).idModeloComunicacion;
+    if (
+      sessionStorage.getItem("modelosSearch") != null &&
+      this.body.idModeloComunicacion == undefined
+    ) {
+      this.body.idModeloComunicacion = JSON.parse(
+        sessionStorage.getItem("modelosSearch")
+      ).idModeloComunicacion;
     }
 
     let array: any[] = [];
     let arrayNoSel: any[] = [];
     this.perfilesSeleccionados.forEach(element => {
-      array.push(element.value)
+      array.push(element.value);
     });
     this.perfilesNoSeleccionados.forEach(element => {
-      arrayNoSel.push(element.value)
+      arrayNoSel.push(element.value);
     });
 
     let objPerfiles = {
       perfilesSeleccionados: array,
       perfilesNoSeleccionados: arrayNoSel,
       idModeloComunicacion: this.body.idModeloComunicacion
-    }
+    };
 
     this.sigaServices
       .post("modelos_detalle_guardarPerfiles", objPerfiles)
       .subscribe(
         n => {
-          this.showSuccess('Se han guardado los perfiles correctamente');
-          this.perfilesSeleccionadosInicial = JSON.parse(JSON.stringify(this.perfilesSeleccionados));
-          this.perfilesNoSeleccionadosInicial = JSON.parse(JSON.stringify(this.perfilesNoSeleccionados));
+          this.showSuccess("Se han guardado los perfiles correctamente");
+          this.perfilesSeleccionadosInicial = JSON.parse(
+            JSON.stringify(this.perfilesSeleccionados)
+          );
+          this.perfilesNoSeleccionadosInicial = JSON.parse(
+            JSON.stringify(this.perfilesNoSeleccionados)
+          );
         },
         err => {
-          this.showFail('Error al guardar los perfiles');
+          this.showFail("Error al guardar los perfiles");
           console.log(err);
-
         },
         () => {
           this.progressSpinner = false;
         }
       );
-
   }
-
-
-
 
   abreCierraFicha() {
     if (sessionStorage.getItem("crearNuevoModelo") == null) {
@@ -189,7 +194,6 @@ export class PerfilesFichaComponent implements OnInit {
   }
 
   getDatos() {
-
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
       this.getPerfilesSeleccionados();
@@ -198,9 +202,7 @@ export class PerfilesFichaComponent implements OnInit {
     this.getPerfilesSeleccionados();
   }
 
-  restablecer(){
+  restablecer() {
     this.getDatos();
   }
-
-
 }

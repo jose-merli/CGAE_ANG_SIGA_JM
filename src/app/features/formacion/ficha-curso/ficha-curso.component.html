@@ -1662,7 +1662,7 @@
       <p-fileUpload #pUploadFile chooseLabel="Cargar Archivo" name="file" mode="basic" accept=".xls" multiple="multiple" (onSelect)="getFile($event)"
       auto="true" [disabled]="!controlBotonesEstado('Inscripcion')"> </p-fileUpload>
 
-      <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" [disabled]="!activacionEditar" iconPos="left" label="DescargarPlantilla"></button>
+      <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" [disabled]="!controlBotonesEstado('DescargarPlantilla')" iconPos="left" label="DescargarPlantilla"></button>
       <button pButton type="button" [disabled]="disabledDownload() || !activacionEditar"(click)="downloadFile(selectedDatosCargas)" icon="fa fa-download" iconPos="left" label="DescargarFichero"></button>
       <button pButton type="button" [disabled]="disabledOthersCargas() || !activacionEditar" (click)="deleteInscriptions(selectedDatosCargas)"icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
      

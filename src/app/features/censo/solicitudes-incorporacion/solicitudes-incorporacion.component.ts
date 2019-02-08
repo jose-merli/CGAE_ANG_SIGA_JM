@@ -71,6 +71,10 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     this.es = this.translateService.getCalendarLocale();
     sessionStorage.removeItem("abrirSolicitudIncorporacion");
 
+    if (sessionStorage.getItem("solicitudInsertadaConExito")) {
+      this.showSuccess();
+      sessionStorage.removeItem("solicitudInsertadaConExito");
+    }
     this.cargarCombos();
     this.cols = [
       { field: "numeroIdentificacion", header: "Nº Identificación" },
@@ -183,10 +187,11 @@ export class SolicitudesIncorporacionComponent implements OnInit {
       var enviarDatos = null;
       enviarDatos = item[0];
       sessionStorage.setItem("editedSolicitud", JSON.stringify(enviarDatos));
-      if  (enviarDatos.estadoSolicitud  ==  "Pendiente aprobación") {
-        sessionStorage.setItem("consulta",  "false");
-      }  else  {
-        sessionStorage.setItem("consulta",  "true");
+      if (enviarDatos.estadoSolicitud == "Pendiente aprobación") {
+        sessionStorage.setItem("consulta", "false");
+        sessionStorage.setItem("pendienteAprobacion", "true");
+      } else {
+        sessionStorage.setItem("consulta", "true");
       }
       sessionStorage.setItem("filtros", JSON.stringify(this.body));
     } else {
@@ -226,6 +231,15 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     return (
       dni && typeof dni === "string" && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni)
     );
+  }
+
+  showSuccess() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant("general.message.accion.realizada")
+    });
   }
 
   isValidNIE(nie: String): boolean {
@@ -291,8 +305,10 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      this.buscarSolicitudes();
-    }
+			if (!(this.body.fechaDesde === undefined || this.body.fechaDesde === null)) {
+				this.buscarSolicitudes();
+			}
+		}
   }
 
   clear() {

@@ -142,6 +142,11 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       sessionStorage.removeItem("filtrosBusquedaColegiadosFichaColegial");
       this.isBuscar();
     }
+
+    if (this.body.tipoCV != undefined) {
+      this.getComboSubtipoCurricular(this.body.tipoCV);
+      this.getComboTipoCurricular(this.body.tipoCV);
+    }
   }
 
   onHideDatosGenerales() {
@@ -161,7 +166,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   irEditarColegiado(id) {
-    sessionStorage.setItem("esNuevoNoColegiado",  JSON.stringify(false));
+    sessionStorage.setItem("esNuevoNoColegiado", JSON.stringify(false));
     if (id.length >= 1 && this.selectMultiple == false) {
       sessionStorage.removeItem("personaBody");
       sessionStorage.setItem("esColegiado", "true");
@@ -770,52 +775,6 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         console.log(err);
       }
     );    
-  }
-
-
-  descargarComunicacion() { 
-    /*this.getKeysClaseComunicacion();
-    
-    let datosSeleccionados = [];
-    this.selectedDatos.forEach(element => {
-      let keysValues = [];
-      this.keys.forEach(key =>{
-        keysValues.push(element.get(key));
-      })
-      datosSeleccionados.push(keysValues);
-    });*/
- 
-    let datosSeleccionados = [];
-    let par = [2001,2000000359];
-    let par2 = [2001,2000000745];
-
-    datosSeleccionados.push(par);
-    datosSeleccionados.push(par2);
-
-
-    let modelos = [];
-    let modelo = {
-      idModeloComunicacion:61
-    }
-    modelos.push(modelo);
-
-    let datos = {
-      idClaseComunicacion: 1,
-      modelos: modelos,
-      selectedDatos: datosSeleccionados,
-      idInstitucion: 2001
-    }
-
-    this.sigaServices.post("dialogo_descargar", datos).subscribe(
-      data => {
-        let resultado = JSON.parse(data['body']);
-      },
-      err => {
-        console.log(err);
-      }
-    );
-
-
-
+  
   }
 }

@@ -643,7 +643,8 @@ export class SigaServices {
     dialogo_enviar: 'dialogoComunicacion/enviar',
     dialogo_descargar: 'dialogoComunicacion/descargar',
     dialogo_keys: 'dialogoComunicacion/keys',
-    dialogo_obtenerCamposDinamicos: 'dialogoComunicacion/obtenerCamposDinamicos'
+    dialogo_obtenerCamposDinamicos: 'dialogoComunicacion/obtenerCamposDinamicos',
+    dialogo_envioTest: 'DialogoComunicacion/envioTest'
   };
 
   private menuToggled = new Subject<any>();

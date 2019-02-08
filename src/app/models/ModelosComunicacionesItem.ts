@@ -1,4 +1,4 @@
-import { PlantillaEnvioItem } from './PlantillaEnvioItem';
+import { PlantillaEnvioItem } from "./PlantillaEnvioItem";
 export class ModelosComunicacionesItem {
   idModeloComunicacion: String;
   idClaseComunicacion: String;
@@ -7,10 +7,10 @@ export class ModelosComunicacionesItem {
   preseleccionar: String;
   visible: number;
   idInstitucion: string;
-  orden: String;
+  orden: number;
   idTipoEnvios: String;
   porDefecto: String;
   idInforme: String;
   plantillas: any;
-  constructor() { }
+  constructor() {}
 }

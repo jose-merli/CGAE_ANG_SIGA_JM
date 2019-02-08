@@ -14,14 +14,17 @@
             <label class="mr-auto title-ficha">Plantillas Documentos</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>Nº Informes:
-              <span *ngIf="datos">{{datos.length}}</span>
+            <label
+              >Nº Informes: <span *ngIf="datos">{{ datos.length }}</span>
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+      <div
+        *ngIf="openFicha"
+        class=" header-ficha-open d-flex justify-content-start align-items-center"
+      >
         <div class="img-colegiado">
           <i class="fas fa-file-alt icon-ficha"></i>
         </div>
@@ -31,32 +34,68 @@
     </div>
     <!--cuerpo datos generales-->
     <div *ngIf="openFicha" class="px-0 card-body card-body-ficha">
-      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
-        [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple"
-        paginatorPosition="both" (onRowSelect)="navigateTo(selectedDatos)">
+      <p-table
+        [value]="datos"
+        [columns]="cols"
+        [(selection)]="selectedDatos"
+        [responsive]="true"
+        #table
+        class="tabla-listado"
+        [paginator]="true"
+        [rows]="selectedItem"
+        [first]="first"
+        [ngClass]="{ customCursor: selectMultiple }"
+        selectionMode="multiple"
+        paginatorPosition="both"
+        (onRowSelect)="navigateTo(selectedDatos)"
+        (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+      >
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
-            <col *ngFor="let col of columns" [style.width]="col.width">
+            <col *ngFor="let col of columns" [style.width]="col.width" />
           </colgroup>
         </ng-template>
         <ng-template pTemplate="header" let-columns>
           <tr>
-            <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-              {{col.header}}
+            <th
+              *ngFor="let col of columns"
+              [ngSwitch]="col.field"
+              [pSortableColumn]="col.field"
+            >
+              {{ col.header }}
               <p-sortIcon [field]="col.field"></p-sortIcon>
-              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
-                      col.field, 'contains')">
+              <input
+                pDroppable="false"
+                (click)="$event.stopPropagation()"
+                *ngSwitchCase="col.field"
+                pInputText
+                type="text"
+                (input)="
+                  table.filter($event.target.value, col.field, 'contains')
+                "
+              />
             </th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+        <ng-template
+          pTemplate="body"
+          let-dato
+          let-columns="columns"
+          let-rowIndex="rowIndex"
+        >
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <span *ngIf="col.field !='preseleccionado'"> {{dato[col.field]}}</span>
-              <div *ngIf="col.field =='sufijo'">
-                <span class="mb-2 d-block" *ngFor="let sufijo of dato.sufijos">{{sufijo.nombreSufijo}}</span>
+              <span *ngIf="col.field != 'preseleccionado'">
+                {{ dato[col.field] }}</span
+              >
+              <div *ngIf="col.field == 'sufijo'">
+                <span
+                  class="mb-2 d-block"
+                  *ngFor="let sufijo of dato.sufijos"
+                  >{{ sufijo.nombreSufijo }}</span
+                >
               </div>
-              <span *ngIf="col.field=='preseleccionado'">
+              <span *ngIf="col.field == 'preseleccionado'">
                 <i class="fa fa-check"></i>
               </span>
             </td>
@@ -64,36 +103,74 @@
         </ng-template>
         <ng-template pTemplate="emptymessage" let-columns>
           <tr>
-            <td [attr.colspan]="columns.length">
-              No hay resultados.
-            </td>
+            <td [attr.colspan]="columns.length">No hay resultados.</td>
           </tr>
         </ng-template>
         <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
-            <label>{{"general.message.mostrar" | translate}}</label>
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+            <label class="pr-3 registros-totales"
+              >Mostrando registros del {{ table.first + 1 }} al
+              {{ table.first + table.rows }} de un total de
+              {{ table.totalRecords }}</label
+            >
+            <label class="pr-3 numSeleccionados"
+              >Seleccionados: {{ numSelected }}</label
+            >
+            <label>{{ "general.message.mostrar" | translate }}</label>
+            <p-dropdown
+              [(ngModel)]="selectedItem"
+              [options]="rowsPerPage"
+              (onChange)="onChangeRowsPerPages($event)"
+            ></p-dropdown>
+            <label class="pl-1">
+              {{
+                "cargaMasivaDatosCurriculares.numRegistros.literal" | translate
+              }}</label
+            >
             <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
+              <p-checkbox
+                (onChange)="onChangeSelectAll()"
+                [(ngModel)]="selectAll"
+                binary="true"
+                label="Seleccionar todo"
+                name="groupname"
+              ></p-checkbox>
             </div>
-            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
-              <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label>
+            <label
+              class="ml-3 seleccionMultiple"
+              [ngClass]="{ ' seleccion-multiple': selectMultiple }"
+              (click)="isSelectMultiple()"
+            >
+              <i class="pr-2 fa fa-mouse-pointer"></i
+              >{{ "general.message.seleccion.multiple" | translate }}</label
+            >
           </div>
         </ng-template>
       </p-table>
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button *ngIf="selectedDatos && selectedDatos != ''" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"
-          (click)="eliminar(selectedDatos)"></button>
-        <button (click)="addInforme()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        <button
+          *ngIf="selectedDatos && selectedDatos != ''"
+          pButton
+          type="button"
+          icon="fa fa-trash-alt"
+          iconPos="left"
+          label="{{ 'general.boton.eliminar' | translate }}"
+          (click)="eliminar(selectedDatos)"
+          [disabled]="soloLectura"
+        ></button>
+        <button
+          (click)="addInforme()"
+          pButton
+          type="button"
+          icon="fa fa-plus"
+          iconPos="left"
+          label="{{ 'general.boton.new' | translate }}"
+          [disabled]="soloLectura"
+        ></button>
       </div>
     </div>
-
   </div>
   <!--END TARJETA INFORMES-->
-
 </div>
