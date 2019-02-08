@@ -2759,15 +2759,38 @@ export class FichaColegialComponent implements OnInit {
     let datosDelete = [];
     selectedItem.forEach((value: DatosDireccionesItem, key: number) => {
       value.idPersona = this.idPersona;
-      datosDelete.push(value);
+
+      if(value.idTipoDireccion.includes("2")){
+        if(JSON.parse(sessionStorage.getItem("numDespacho")) > 1){
+          if(!(value.idTipoDireccion.includes("3") || value.idTipoDireccion.includes("9") || value.idTipoDireccion.includes("8") || value.idTipoDireccion.includes("6"))){
+            datosDelete.push(value);
+          }
+        }
+      } else {
+        if(!(value.idTipoDireccion.includes("3") || value.idTipoDireccion.includes("9") || value.idTipoDireccion.includes("8") || value.idTipoDireccion.includes("6"))){
+          datosDelete.push(value);
+        }
+      }
+    
     });
 
+    this.borrarDireccion(datosDelete);
+
+    
+  }
+
+  borrarDireccion(datosDelete){
     this.sigaServices.post("direcciones_remove", datosDelete).subscribe(
       data => {
         this.progressSpinner = false;
+        this.showSuccess();
       },
       err => {
         this.progressSpinner = false;
+        this.showInfo("No se puede eliminar una dirección con tipo CensoWeb, Traspaso, Facturación, Guardia o Despacho");
+        this.selectMultipleDirecciones = false;
+        this.selectAllDirecciones = false;
+        this.numSelectedDirecciones = 0;
         console.log(err);
       },
       () => {
@@ -2776,6 +2799,8 @@ export class FichaColegialComponent implements OnInit {
         // this.dniCorrecto = null;
         // this.disabledRadio = false;
         this.selectMultipleDirecciones = false;
+        this.numSelectedDirecciones = 0;
+        this.selectAllDirecciones = false;
         this.searchDirecciones();
       }
     );
@@ -2805,6 +2830,18 @@ export class FichaColegialComponent implements OnInit {
           data => {
             this.searchDireccionIdPersona = JSON.parse(data["body"]);
             this.datosDirecciones = this.searchDireccionIdPersona.datosDireccionesItem;
+            let contador = 0;
+            this.datosDirecciones.forEach(element => {
+              let numDespacho = element.idTipoDireccion.find(
+                item => item == '2'
+              );
+  
+              if (numDespacho != undefined) {
+                contador = contador + 1;
+              }
+            });
+            sessionStorage.setItem("numDespacho", JSON.stringify(contador));
+
             this.progressSpinner = false;
           },
           err => {
@@ -2830,6 +2867,8 @@ export class FichaColegialComponent implements OnInit {
       JSON.stringify(this.generalBody.idPersona)
     );
     sessionStorage.setItem("editarDireccion", "false");
+    // CAMBIO INCIDENCIA DIRECCIONES
+    //sessionStorage.setItem("numDirecciones", JSON.stringify(this.datosDirecciones.length));
     this.router.navigate(["/consultarDatosDirecciones"]);
   }
 
