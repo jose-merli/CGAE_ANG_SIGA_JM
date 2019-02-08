@@ -225,6 +225,7 @@ import { ComunicacionesComponent } from './features/informes-comunicaciones/comu
 import { FichaRegistroComunicacionComponent } from './features/informes-comunicaciones/comunicaciones/ficha-registro-comunicacion/ficha-registro-comunicacion.component';
 import { EnviosMasivosComponent } from './features/informes-comunicaciones/envios-masivos/envios-masivos.component';
 import { FichaRegistroEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/ficha-registro-envio-masivo.component';
+import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component';
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -1230,6 +1231,12 @@ const appRoutes: Routes = [
   {
     path: "fichaInscripcion",
     component: FichaInscripcionComponent,
+    canActivate: [AuthGuard]
+  },
+
+  {
+    path: "dialogoComunicaciones",
+    component: DialogoComunicacionesComponent,
     canActivate: [AuthGuard]
   },
 

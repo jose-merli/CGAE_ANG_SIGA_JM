@@ -634,15 +634,16 @@ export class SigaServices {
     plantillasDoc_plantillas_borrar: 'plantillasDoc/borrar',
 
     //Diálogo comunicación
-    dialogo_claseComunicaciones: 'DialogoComunicacion/clasesComunicacion',
-    dialogo_claseComunicacion: 'DialogoComunicacion/claseComunicacion',
-    dialogo_fechaProgramada: 'DialogoComunicacion/fechaProgramada',
-    dialogo_modelosComunicacion: 'DialogoComunicacion/modelosSearch',
-    dialogo_plantillasEnvio: 'DialogoComunicacion/plantillasEnvio',
-    dialogo_tipoEnvios: 'DialogoComunicacion/tiposEnvioModelo',
-    dialogo_enviar: 'DialogoComunicacion/enviar',
-    dialogo_descargar: 'DialogoComunicacion/descargar',
-    dialogo_keys: 'DialogoComunicacion/keys'
+    dialogo_claseComunicaciones: 'dialogoComunicacion/clasesComunicacion',
+    dialogo_claseComunicacion: 'dialogoComunicacion/claseComunicacion',
+    dialogo_fechaProgramada: 'dialogoComunicacion/fechaProgramada',
+    dialogo_modelosComunicacion: 'dialogoComunicacion/modelosSearch',
+    dialogo_plantillasEnvio: 'dialogoComunicacion/plantillasEnvio',
+    dialogo_tipoEnvios: 'dialogoComunicacion/tipoEnvios',
+    dialogo_enviar: 'dialogoComunicacion/enviar',
+    dialogo_descargar: 'dialogoComunicacion/descargar',
+    dialogo_keys: 'dialogoComunicacion/keys',
+    dialogo_obtenerCamposDinamicos: 'dialogoComunicacion/obtenerCamposDinamicos'
   };
 
   private menuToggled = new Subject<any>();
