@@ -1,4 +1,5 @@
 import { ErrorItem } from "./ErrorItem";
+import { ComboItem } from "./ComboItem";
 export class FichaColegialGeneralesItem {
   searchLoggedUser: Boolean;
   idPersona: String;
@@ -37,5 +38,8 @@ export class FichaColegialGeneralesItem {
   fechaInicioEtiq: Date;
   error: ErrorItem;
   fechaBaja: string;
+  temasCombo: ComboItem[];
+  temas: string[];
+  
   constructor() {}
 }
