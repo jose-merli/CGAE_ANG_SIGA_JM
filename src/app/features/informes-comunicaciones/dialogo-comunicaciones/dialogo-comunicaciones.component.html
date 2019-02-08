@@ -1,110 +1,115 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="dialogo-comunicaciones-container">
-  <div class="header-title">
-    <i class="fa fa-square"></i>
-    <p>{{'menu.dialogoComunicaciones' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.dialogoComunicaciones' | translate}}
-    </p>
-  </div>
-  <div class="card">
-    <div class="card-body">
-        <div class="form-row">
-            <div class="form-group col-lg-6 col-md-6">
-                <label>Fecha programada</label>
-                <p-calendar [minDate]="currentDate" showTime="true" [locale]="es" [(ngModel)]="bodyComunicacion.fechaProgramacion" dateFormat="dd/mm/yy"
-                    icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+    <div class="header-title">
+        <i class="fa fa-square"></i>
+        <p>{{'menu.dialogoComunicaciones' | translate}}
+            <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.dialogoComunicaciones' | translate}}
+        </p>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="form-row">
+                <div class="form-group col-lg-6 col-md-6">
+                    <label>Fecha programada</label>
+                    <p-calendar [minDate]="currentDate" showTime="true" [locale]="es" [(ngModel)]="bodyComunicacion.fechaProgramacion" dateFormat="dd/mm/yy"
+                        icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                </div>
+                <p-table [value]="modelosComunicacion" [columns]="colsModelos" [(selection)]="selectedModelos" [responsive]="true" #tableModelos
+                    class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultipleComunicar}"
+                    paginatorPosition="both" (onRowSelect)="onRowSelectModelos()">
+                    <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                            <col *ngFor="let col of columns" [style.width]="col.width">
+                        </colgroup>
+                    </ng-template>
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th style="width: 3em">
+                                <!-- <p-tableHeaderCheckbox></p-tableHeaderCheckbox> -->
+                            </th>
+                            <th *ngFor="let col of columns">
+                                {{col.header}}
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-dato let-columns="columns">
+                        <tr [pSelectableRow]="dato">
+                            <td>
+                                <p-tableCheckbox [value]="dato"></p-tableCheckbox>
+                            </td>
+                            <td *ngFor="let col of columns" pEditableColumn>
+                                <!-- <span *ngIf="col.field == 'tipoEnvio'">{{dato[col.field]}}</span> -->
+                                <p-dropdown [filter]="true" filterBy="label,labelSinTilde" *ngIf="col.field == 'plantillas'" [(ngModel)]="dato.idPlantillaEnvio"
+                                    [options]="dato.plantillas" class="select-form" (onChange)="onChangePlantillaEnvio(dato)"></p-dropdown>
+                                <span *ngIf="col.field=='nombre'">{{dato[col.field]}}</span>
+                                <span *ngIf="col.field=='tipoEnvio'">{{dato[col.field]}}</span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td [attr.colspan]="columns.length +1">
+                                No hay resultados.
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="paginatorleft">
+                        <div class="mostrar d-flex text-right justify-content-end">
+                            <label class="pr-3 registros-totales">Mostrando registros del {{tableModelos.first + 1}} al {{tableModelos.first + tableModelos.rows}}
+                                de un total de {{tableModelos.totalRecords}}</label>
+                        </div>
+                    </ng-template>
+                </p-table>
             </div>
-            <p-table [value]="modelosComunicacion" [columns]="colsModelos" [(selection)]="selectedModelos" [responsive]="true" #tableModelos
-                class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultipleComunicar}"
-                paginatorPosition="both" (onRowSelect)="onRowSelectModelos()">
-                <ng-template pTemplate="colgroup" let-columns>
-                    <colgroup>
-                        <col *ngFor="let col of columns" [style.width]="col.width">
-                    </colgroup>
-                </ng-template>
-                <ng-template pTemplate="header" let-columns>
-                    <tr>
-                        <th style="width: 3em">
-                            <!-- <p-tableHeaderCheckbox></p-tableHeaderCheckbox> -->
-                        </th>
-                        <th *ngFor="let col of columns">
-                            {{col.header}}
-                        </th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-dato let-columns="columns">
-                    <tr [pSelectableRow]="dato">
-                        <td>
-                            <p-tableCheckbox [value]="dato"></p-tableCheckbox>
-                        </td>
-                        <td *ngFor="let col of columns" pEditableColumn>
-                            <!-- <span *ngIf="col.field == 'tipoEnvio'">{{dato[col.field]}}</span> -->
-                            <p-dropdown [filter]="true" filterBy="label,labelSinTilde" *ngIf="col.field == 'plantillas'" [(ngModel)]="dato.idPlantillaEnvio"
-                                [options]="dato.plantillas" class="select-form" (onChange)="onChangePlantillaEnvio(dato)"></p-dropdown>
-                            <span *ngIf="col.field=='nombre'">{{dato[col.field]}}</span>
-                            <span *ngIf="col.field=='tipoEnvio'">{{dato[col.field]}}</span>
-                        </td>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="emptymessage" let-columns>
-                    <tr>
-                        <td [attr.colspan]="columns.length +1">
-                            No hay resultados.
-                        </td>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="paginatorleft">
-                    <div class="mostrar d-flex text-right justify-content-end">
-                        <label class="pr-3 registros-totales">Mostrando registros del {{tableModelos.first + 1}} al {{tableModelos.first + tableModelos.rows}} de un
-                            total de {{tableModelos.totalRecords}}</label>
-                    </div>
-                </ng-template>
-            </p-table>
         </div>
-    </div>  
-    <div class="card-footer">
-        <div class="text-left main-button ">
-            <button (click)="obtenerCamposDinamicos('descargar')" pButton type="button" icon="fa fa-file" iconPos="left" label="{{'general.boton.descargar' | translate }}"></button>
+        <div class="card-footer">
+            <div class="text-left main-button ">
+                <button (click)="obtenerCamposDinamicos('descargar')" pButton type="button" icon="fa fa-file" iconPos="left" label="{{'general.boton.descargar' | translate }}"></button>
+            </div>
+            <div class="text-right main-button ">
+                <button (click)="obtenerCamposDinamicos('comunicar')" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
+                <button pButton type="button" icon="fa fa-angle-left" iconPos="left" label="Volver"></button>
+            </div>
         </div>
-        <div class="text-right main-button ">
-            <button (click)="obtenerCamposDinamicos('comunicar')" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
-            <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="Volver"></button>
-        </div>
-    </div>  
-  </div>  
+    </div>
 </div>
 
 <p-dialog [(visible)]="showValores" responsive="true" [draggable]="false" modal="modal" resizable="true" [minWidth]="500">
-  <p-header>
-    <label>Valores</label>
-  </p-header>
-  <div *ngIf="valores">
-    <div class="form-row mt-3" *ngFor="let dato of valores">
-      <div class="form-group col-lg-3 col-md-3">
-        <label class="mr-2">{{dato.campo}} </label>
-      </div>
-      <div class="form-group col-lg-3 col-md-3">
-        <p-dropdown *ngIf="dato.tipoDato=='N' || dato.tipoDato=='D' || dato.tipoDato=='MV'" [options]="operadoresNumero" [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
-        <p-dropdown *ngIf="dato.tipoDato=='A'" [options]="operadoresTexto" [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
-      </div>
-      <div class="form-group col-lg-6 col-md-6">
-        <input *ngIf="dato.tipoDato=='A' || dato.tipoDato=='N'" type="text" class="form-control" [(ngModel)]="dato.valor" pInputText>
-        <p-calendar *ngIf="dato.tipoDato=='D' || dato.tipoDato=='X'" [locale]="es" [(ngModel)]="dato.valor" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
-        <p-dropdown *ngIf="dato.tipoDato=='MV' || dato.tipoDato=='E'" [options]="dato.valores" [(ngModel)]="dato.valor" class="select-form" optionLabel="DESCRIPCION"></p-dropdown>
-      </div>
+    <p-header>
+        <label>Valores</label>
+    </p-header>
+    <div *ngIf="valores">
+        <div class="form-row mt-3" *ngFor="let dato of valores">
+            <div class="form-group col-lg-3 col-md-3">
+                <label class="mr-2">{{dato.campo}} </label>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <p-dropdown *ngIf="dato.tipoDato=='N' || dato.tipoDato=='D' || dato.tipoDato=='MV'" [options]="operadoresNumero" [(ngModel)]="dato.operacion"
+                    class="select-form"></p-dropdown>
+                <p-dropdown *ngIf="dato.tipoDato=='A'" [options]="operadoresTexto" [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+                <input *ngIf="dato.tipoDato=='A' || dato.tipoDato=='N'" type="text" class="form-control" [(ngModel)]="dato.valor" pInputText>
+                <p-calendar *ngIf="dato.tipoDato=='D' || dato.tipoDato=='X'" [locale]="es" [(ngModel)]="dato.valor" dateFormat="dd/mm/yy"
+                    icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                <p-dropdown *ngIf="dato.tipoDato=='MV' || dato.tipoDato=='E'" [options]="dato.valores" [(ngModel)]="dato.valor" class="select-form"
+                    optionLabel="DESCRIPCION"></p-dropdown>
+            </div>
+        </div>
     </div>
-  </div>
-  <p-footer>
-    <div class="text-right main-button">
-      <!-- <button (click)="ejecutar()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{
+    <p-footer>
+        <div class="text-right main-button">
+            <!-- <button (click)="ejecutar()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{
           'general.boton.cancel' | translate}}"></button> -->
-      <button *ngIf="comunicar" (click)="enviarComunicacion()" [disabled]="!validarCamposDinamicos()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.enviar' | translate}}"></button>
-      <button *ngIf="!comunicar" (click)="descargarComunicacion()" [disabled]="!validarCamposDinamicos()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.descargar' | translate}}"></button>
-    </div>
-  </p-footer>
+            <button *ngIf="comunicar" (click)="enviarComunicacion()" [disabled]="!validarCamposDinamicos()" pButton type="button" icon="fa fa-save"
+                iconPos="left" label="{{ 'general.boton.enviar' | translate}}"></button>
+            <button *ngIf="!comunicar" (click)="descargarComunicacion()" [disabled]="!validarCamposDinamicos()" pButton type="button"
+                icon="fa fa-save" iconPos="left" label="{{ 'general.boton.descargar' | translate}}"></button>
+        </div>
+    </p-footer>
 </p-dialog>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
-  <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
-  <div class="loader"></div>
+    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+    <div class="loader"></div>
 </div>

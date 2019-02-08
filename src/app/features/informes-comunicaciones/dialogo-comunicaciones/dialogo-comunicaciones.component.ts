@@ -352,7 +352,5 @@ export class DialogoComunicacionesComponent implements OnInit {
     this.msgs = [];
   }
 
-  backTo() {
-    this.location.back();
-  }
+
 }
