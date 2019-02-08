@@ -256,6 +256,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices.get("consultas_comboObjetivos").subscribe(
       data => {
         this.objetivos = data.combooItems;
+        this.objetivos.unshift({ label: 'Seleccionar', value: '' });
       },
       err => {
         console.log(err);
@@ -382,16 +383,8 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   isButtonDisabled() {
-    if (
-      this.body.idModulo != null &&
-      this.body.idModulo != "" &&
-      this.body.idClaseComunicacion != null &&
-      this.body.idClaseComunicacion != "" &&
-      this.body.idObjetivo != null &&
-      this.body.idObjetivo != "" &&
-      this.body.nombre != null &&
-      this.body.nombre != ""
-    ) {
+    if (this.body.idModulo != null && this.body.idModulo != ''
+      && this.body.idObjetivo != null && this.body.idObjetivo != '' && this.body.nombre != null && this.body.nombre != '') {
       return false;
     }
     return true;
