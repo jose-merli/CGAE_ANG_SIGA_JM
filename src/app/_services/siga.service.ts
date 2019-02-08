@@ -705,9 +705,9 @@ export class SigaServices {
     return this.httpbackend
       .get(
         environment.newSigaUrl +
-          this.endpoints[service] +
-          "?institucion=" +
-          institucion
+        this.endpoints[service] +
+        "?institucion=" +
+        institucion
       )
       .map(response => {
         return response;
