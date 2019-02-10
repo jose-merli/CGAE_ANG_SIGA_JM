@@ -43,8 +43,10 @@ export class DialogoComunicacionesComponent implements OnInit {
   comunicar: boolean = false;
   idInstitucion: String;
   datosSeleccionados: any [];
-  maxNumModelos: number;
+  maxNumModelos: number = 20;
   progressSpinner: boolean = false;
+  rutaComunicacion: String;
+  fechaProgramada: Date;
 
   constructor(public sigaServices: SigaServices, private translateService: TranslateService) {
   }
@@ -55,7 +57,8 @@ export class DialogoComunicacionesComponent implements OnInit {
 
     this.getClaseComunicaciones();
     this.getInstitucion();
-    //this.getFechaProgramada(dato.idInstutucion);
+    this.getMaxNumeroModelos();
+    this.getFechaProgramada();
 
     this.valores = [];
 
@@ -117,8 +120,8 @@ export class DialogoComunicacionesComponent implements OnInit {
   }
 
   getClaseComunicaciones() {
-    let rutaClaseComunicacion = sessionStorage.getItem("rutaComunicacion");
-    this.sigaServices.post("dialogo_claseComunicacion", rutaClaseComunicacion).subscribe(
+    this.rutaComunicacion = sessionStorage.getItem("rutaComunicacion");
+    this.sigaServices.post("dialogo_claseComunicacion", this.rutaComunicacion).subscribe(
       data => {
         this.idClaseComunicacion = JSON.parse(data['body']).clasesComunicaciones[0].idClaseComunicacion;
         this.getModelosComunicacion();
@@ -147,18 +150,6 @@ export class DialogoComunicacionesComponent implements OnInit {
       }
     );
   }
-
-  getFechaProgramada(idInstution) {
-    this.sigaServices.post("dialogo_plantillasEnvio", idInstution).subscribe(
-      data => {
-
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
 
   onChangePlantillaEnvio(dato) {
     this.getTipoEnvios(dato);
@@ -225,7 +216,16 @@ export class DialogoComunicacionesComponent implements OnInit {
     console.log(this.listaConsultas);
   }
 
-  onRowSelectModelos() { }
+  onRowSelectModelos(event) {
+    event.data.selected = true;
+    return event.data;
+  }
+
+
+  onUnRowSelectModelos(event) {
+    event.data.selected=false;
+    return event.data;
+  }
 
   getKeysClaseComunicacion(){
     this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
@@ -296,7 +296,8 @@ export class DialogoComunicacionesComponent implements OnInit {
         modelos: this.bodyComunicacion.modelos,
         selectedDatos: this.datosSeleccionados,
         idInstitucion: this.idInstitucion,
-        consultas: this.listaConsultas
+        consultas: this.listaConsultas,
+        rutaComunicacion: this.rutaComunicacion
       }
 
       this.sigaServices
@@ -330,6 +331,16 @@ export class DialogoComunicacionesComponent implements OnInit {
     this.sigaServices.get("dialogo_maxModelos").subscribe(n => {
       this.maxNumModelos = n.value;
     });
+  }
+
+  getFechaProgramada() {
+    this.sigaServices.get("dialogo_fechaProgramada").subscribe(n => {
+        this.bodyComunicacion.fechaProgramacion = new Date(n.fecha);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   // Mensajes

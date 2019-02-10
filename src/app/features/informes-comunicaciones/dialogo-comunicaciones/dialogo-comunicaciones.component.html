@@ -16,7 +16,7 @@
             </div>
             <p-table [value]="modelosComunicacion" [columns]="colsModelos" [(selection)]="selectedModelos" [responsive]="true" #tableModelos
                 class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultipleComunicar}"
-                paginatorPosition="both" (onRowSelect)="onRowSelectModelos()">
+                paginatorPosition="both" (onRowSelect)="onRowSelectModelos($event)" (onRowUnselect)="onUnRowSelectModelos($event)">
                 <ng-template pTemplate="colgroup" let-columns>
                     <colgroup>
                         <col *ngFor="let col of columns" [style.width]="col.width">
@@ -35,7 +35,7 @@
                 <ng-template pTemplate="body" let-dato let-columns="columns">
                     <tr [pSelectableRow]="dato">
                         <td>
-                            <p-tableCheckbox [value]="dato"></p-tableCheckbox>
+                            <p-tableCheckbox [value]="dato" [disabled]="selectedModelos.length >= maxNumModelos && !dato.selected"></p-tableCheckbox>
                         </td>
                         <td *ngFor="let col of columns" pEditableColumn>
                             <!-- <span *ngIf="col.field == 'tipoEnvio'">{{dato[col.field]}}</span> -->
@@ -63,11 +63,9 @@
         </div>
     </div>  
     <div class="card-footer">
-        <div class="text-left main-button ">
-            <button (click)="obtenerCamposDinamicos('descargar')" pButton type="button" icon="fa fa-file" iconPos="left" label="{{'general.boton.descargar' | translate }}"></button>
-        </div>
         <div class="text-right main-button ">
-            <button (click)="obtenerCamposDinamicos('comunicar')" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
+            <button (click)="obtenerCamposDinamicos('comunicar')" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'dialogo.boton.comunicar' | translate }}"></button>
+            <button (click)="obtenerCamposDinamicos('descargar')" pButton type="button" icon="fa fa-file" iconPos="left" label="{{'dialogo.boton.descargar' | translate }}"></button>
             <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="Volver"></button>
         </div>
     </div>  
@@ -80,7 +78,7 @@
   </p-header>
   <div *ngIf="valores">
     <div class="form-row mt-3" *ngFor="let dato of valores">
-      <div class="form-group col-lg-3 col-md-3">
+      <div class="form-group col-lg-6 col-md-6">
         <label class="mr-2">{{dato.campo}} </label>
       </div>
       <div class="form-group col-lg-3 col-md-3">
@@ -98,13 +96,12 @@
     <div class="text-right main-button">
       <!-- <button (click)="ejecutar()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{
           'general.boton.cancel' | translate}}"></button> -->
-      <button *ngIf="comunicar" (click)="enviarComunicacion()" [disabled]="!validarCamposDinamicos()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.enviar' | translate}}"></button>
-      <button *ngIf="!comunicar" (click)="descargarComunicacion()" [disabled]="!validarCamposDinamicos()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.descargar' | translate}}"></button>
+      <button *ngIf="comunicar" (click)="enviarComunicacion()" [disabled]="!validarCamposDinamicos()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'dialogo.boton.enviar' | translate}}"></button>
+      <button *ngIf="!comunicar" (click)="descargarComunicacion()" [disabled]="!validarCamposDinamicos()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'dialogo.boton.descargar' | translate}}"></button>
     </div>
   </p-footer>
 </p-dialog>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
-  <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
   <div class="loader"></div>
 </div>
