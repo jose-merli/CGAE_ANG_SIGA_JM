@@ -8,7 +8,7 @@ import {
 import { DataTable } from "primeng/datatable";
 import { ModelosComunicacionesItem } from "../../../models/ModelosComunicacionesItem";
 import { TranslateService } from "../../../commons/translate/translation.service";
-import { SigaServices } from "./../../../_services/siga.service";
+import { SigaServices } from "../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { Router } from "@angular/router";
 export enum KEY_CODE {
@@ -348,11 +348,59 @@ para poder filtrar el dato con o sin estos caracteres*/
       //this.datos.splice(x, 1);
       this.selectedDatos = [];
       this.selectMultiple = false;
-      this.showSuccess("Se ha eliminado el modelo correctamente");
     } else {
       this.selectedDatos = [];
-      this.showSuccess("Se han eliminado los destinatarios correctamente");
     }
+  }
+
+  rehabilitar(dato) {
+    this.confirmationService.confirm({
+      message: this.translateService.instant(
+        "general.message.confirmar.rehabilitacion"
+      ),
+      icon: "fa fa-check",
+      accept: () => {
+        this.confirmarRehabilitar(dato);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  confirmarRehabilitar(dato) {
+    this.progressSpinner = true;
+    this.sigaServices.post("modelos_rehabilitar", dato).subscribe(
+      data => {
+        this.progressSpinner = false;
+        this.showSuccess(
+          this.translateService.instant("general.message.rehabilitado")
+        );
+      },
+      err => {
+        this.showFail(
+          this.translateService.instant("general.message.error.rehabilitado")
+        );
+        console.log(err);
+      },
+      () => {
+        this.getResultados();
+        this.progressSpinner = false;
+      }
+    );
+
+    //let x = this.datos.indexOf(dato);
+    //this.datos.splice(x, 1);
+    this.selectedDatos = [];
+    this.selectMultiple = false;
   }
 
   //búsqueda con enter
