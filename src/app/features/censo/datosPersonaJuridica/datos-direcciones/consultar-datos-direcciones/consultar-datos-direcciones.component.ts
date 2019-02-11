@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 
 import { Location, DatePipe } from "@angular/common";
 
@@ -70,7 +70,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     private location: Location,
     private sigaServices: SigaServices,
     public datepipe: DatePipe,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   @ViewChild("input2")
@@ -106,6 +107,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     this.textFilter = "Elegir";
     this.getComboProvincia();
     this.getComboPais();
+
     this.getComboTipoDireccion();
 
     this.registroEditable = JSON.parse(
@@ -115,6 +117,14 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.nuevo = false;
     } else {
       this.nuevo = true;
+      // CAMBIO INCIDENCIA DIRECCIONES
+      // this.body = new DatosDireccionesItem();
+      // this.body.idTipoDireccion = [];
+      // if (JSON.parse(sessionStorage.getItem("numDirecciones")) == 0) {
+      //   this.body.idTipoDireccion.push("3");
+      //   this.body.idTipoDireccion.push("8");
+      //   this.body.idTipoDireccion.push("9");
+      //}
     }
     if (sessionStorage.getItem("direccion") != null) {
       this.body = JSON.parse(sessionStorage.getItem("direccion"));
@@ -221,6 +231,10 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     this.checkBody = JSON.parse(JSON.stringify(this.body));
     this.checkBody.idPais = "191";
     this.progressSpinner = false;
+  }
+
+  ngAfterViewChecked() {
+    this.changeDetectorRef.detectChanges();
   }
 
   getDatosContactos() {
@@ -753,6 +767,36 @@ para poder filtrar el dato con o sin estos caracteres*/
       } else {
         return true;
       }
+    }
+  }
+
+  onChangeTipoDireccion(event) {
+    if (
+      event.itemValue == "3" ||
+      event.itemValue == "9" ||
+      event.itemValue == "8" ||
+      event.itemValue == "6"
+    ) {
+      if (this.checkBody != undefined && this.body != undefined) {
+        if (
+          this.checkBody.idTipoDireccion.includes(event.itemValue) &&
+          !this.body.idTipoDireccion.includes(event.itemValue)
+        ) {
+          this.showInfo(
+            "El tipo de dirección es única, no se puede desasignar"
+          );
+          this.body.idTipoDireccion.push(event.itemValue);
+        }
+      }
+    } else if (
+      this.checkBody != undefined &&
+      this.body != undefined &&
+      event.itemValue == "2" &&
+      sessionStorage.getItem("numDespacho") === "1" &&
+      this.checkBody.idTipoDireccion.includes(event.itemValue)
+    ) {
+      this.showInfo("Una dirección al menos deberá contener un tipo despacho");
+      this.body.idTipoDireccion.push(event.itemValue);
     }
   }
 

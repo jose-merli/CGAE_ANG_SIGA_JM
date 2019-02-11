@@ -337,6 +337,22 @@
               </div>
               &nbsp;&nbsp;
             </div>
+
+            <div class="form-group col-lg-12 col-md-12">
+              <div>
+                <label>{{ 'form.busquedaCursos.literal.temas' | translate}}</label>
+                <p-autoComplete #autocompleteTopics [(ngModel)]="resultsTopics" [suggestions]="suggestTopics" [minLength]="1" field="label"
+                [multiple]="true" [style]="{'width':'100%'}" (onFocus)="filterTopics($event)" (onBlur)="visiblePanelBlurTopics($event)" [(disabled)]="isLetrado  || disabledAction" (completeMethod)="filterLabelsMultipleTopics($event)" [(ngModel)]="resultsTopics" >
+                <ng-template let-topicsSelecionados pTemplate="selectedItem">
+                  <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
+                    [ngStyle]="{'background': topicsSelecionados.color, 'margin': marginPx, 'border': bw }">
+                    {{ topicsSelecionados.label }}
+                  </div>
+                </ng-template>
+              </p-autoComplete>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -347,7 +363,7 @@
       <div class="text-right main-button ">
         <button (click)="restablecerGenerales()" [disabled]="!activacionRestablecerGenerales() || !this.permisos || disabledAction"
           pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button *ngIf="!isLetrado" (click)="generalesGuardar()" [(disabled)]="!activarGuardarGenerales || !this.permisos || disabledAction"
+        <button *ngIf="!isLetrado" (click)="generalesGuardar()" [disabled]="!this.permisos || disabledAction || !activacionGuardarGenerales()"
           pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
         <button *ngIf="isLetrado" (click)="comprobarAuditoria()" [(disabled)]="!activarGuardarGenerales || !this.permisos || disabledAction"
           pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
