@@ -72,13 +72,14 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     public datepipe: DatePipe,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   @ViewChild("input2")
   dropdown: Dropdown;
   @ViewChild("provincia")
   checkbox: Checkbox;
   ngOnInit() {
+    this.progressSpinner = true;
     if (sessionStorage.getItem("permisos")) {
       this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
       this.historyDisable = !this.permisos;
@@ -229,6 +230,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       );
     this.checkBody = JSON.parse(JSON.stringify(this.body));
     this.checkBody.idPais = "191";
+    this.progressSpinner = false;
   }
 
   ngAfterViewChecked() {
@@ -269,8 +271,10 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
           }
         });
       },
-      error => {},
-      () => {}
+      error => { },
+      () => {
+        this.progressSpinner = false;
+      }
     );
   }
 
@@ -301,9 +305,9 @@ para poder filtrar el dato con o sin estos caracteres*/
       .getParam(
         "direcciones_comboPoblacion",
         "?idProvincia=" +
-          this.body.idProvincia +
-          "&filtro=" +
-          this.poblacionBuscada
+        this.body.idProvincia +
+        "&filtro=" +
+        this.poblacionBuscada
       )
       .subscribe(
         n => {
@@ -328,10 +332,9 @@ para poder filtrar el dato con o sin estos caracteres*/
 
           console.log("poblac1", this.comboPoblacion);
         },
-        error => {},
+        error => { },
         () => {
           // this.isDisabledPoblacion = false;
-          this.progressSpinner = false;
         }
       );
   }
@@ -366,10 +369,9 @@ para poder filtrar el dato con o sin estos caracteres*/
         n => {
           this.comboPoblacion = n.combooItems;
         },
-        error => {},
+        error => { },
         () => {
           // this.isDisabledPoblacion = false;
-          this.progressSpinner = false;
         }
       );
   }
@@ -378,7 +380,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       n => {
         this.comboPais = n.combooItems;
       },
-      error => {},
+      error => { },
       () => {
         // modo edicion
         if (this.body.idPais != undefined) {
@@ -390,6 +392,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.body.idPais = this.comboPais[0].value;
           this.onChangePais();
         }
+        this.progressSpinner = false;
       }
     );
   }
@@ -398,7 +401,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       n => {
         this.comboTipoDireccion = n.combooItems;
       },
-      error => {}
+      error => { }
     );
   }
 

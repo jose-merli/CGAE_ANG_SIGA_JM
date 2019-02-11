@@ -1220,9 +1220,9 @@ export class FichaColegialComponent implements OnInit {
 
   disabledAutocomplete() {
     if (!this.isLetrado) {
-      this.autocompletar  =  true;
+      this.autocompletar = true;
     } else {
-      this.autocompletar  =  false;
+      this.autocompletar = false;
     }
   }
 
@@ -1519,7 +1519,7 @@ export class FichaColegialComponent implements OnInit {
     }
 
     if (
-      JSON.stringify(this.checkGeneralBody) != JSON.stringify(this.generalBody)
+      (JSON.stringify(this.checkGeneralBody) != JSON.stringify(this.generalBody)) || this.file != undefined
     ) {
       if (
         this.generalBody.nif != "" &&
