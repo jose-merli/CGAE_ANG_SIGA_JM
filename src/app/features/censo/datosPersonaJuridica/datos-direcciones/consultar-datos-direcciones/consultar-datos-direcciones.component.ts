@@ -78,6 +78,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   @ViewChild("provincia")
   checkbox: Checkbox;
   ngOnInit() {
+    this.progressSpinner = true;
     if (sessionStorage.getItem("permisos")) {
       this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
       this.historyDisable = !this.permisos;
@@ -219,6 +220,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       );
     this.checkBody = JSON.parse(JSON.stringify(this.body));
     this.checkBody.idPais = "191";
+    this.progressSpinner = false;
   }
 
   getDatosContactos() {
@@ -256,7 +258,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         });
       },
       error => { },
-      () => { }
+      () => {
+        this.progressSpinner = false;
+      }
     );
   }
 
@@ -317,7 +321,6 @@ para poder filtrar el dato con o sin estos caracteres*/
         error => { },
         () => {
           // this.isDisabledPoblacion = false;
-          this.progressSpinner = false;
         }
       );
   }
@@ -355,7 +358,6 @@ para poder filtrar el dato con o sin estos caracteres*/
         error => { },
         () => {
           // this.isDisabledPoblacion = false;
-          this.progressSpinner = false;
         }
       );
   }
@@ -376,6 +378,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.body.idPais = this.comboPais[0].value;
           this.onChangePais();
         }
+        this.progressSpinner = false;
       }
     );
   }

@@ -144,6 +144,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.progressSpinner = true;
     if (sessionStorage.getItem("permisos")) {
       this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
     }
@@ -256,6 +257,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     ];
 
     this.editar = JSON.parse(sessionStorage.getItem("editar"));
+    this.progressSpinner = false;
+
   }
 
   downloadAnexo(dato) {
@@ -341,7 +344,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       .postPaginado("datosCuentaBancaria_search", "?numPagina=1", this.body)
       .subscribe(
         data => {
-          this.progressSpinner = false;
           this.bodySearch = JSON.parse(data["body"]);
           this.body = this.bodySearch.datosBancariosItem[0];
           this.checkBody = JSON.parse(
@@ -369,6 +371,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         () => {
           this.autogenerarDatos();
           this.checkBody = JSON.parse(JSON.stringify(this.body));
+          this.progressSpinner = false;
         }
       );
   }
@@ -400,7 +403,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     //this.body.motivo = "registro creado";
     this.sigaServices.post("datosCuentaBancaria_insert", this.body).subscribe(
       data => {
-        this.progressSpinner = false;
         this.body = JSON.parse(data["body"]);
         this.showSuccess("Se han guardado correctamente los datos");
         sessionStorage.setItem("editar", "true");
@@ -417,7 +419,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.eliminarItem();
         }
 
-        this.progressSpinner = false;
       },
       () => {
         if (this.ocultarMotivo == false) {
@@ -429,6 +430,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.registroEditable = "true";
 
         this.cargarModoEdicion();
+        this.progressSpinner = false;
+
       }
     );
   }
@@ -777,7 +780,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         data => {
           this.lengthCountryCode = JSON.parse(data["body"]);
         },
-        error => {},
+        error => { },
         () => {
           if (this.isValidIbanExt()) {
             this.ibanValido = true;
@@ -799,9 +802,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
                 } else {
                   if (
                     this.body.bic.charAt(4) !=
-                      this.iban.substring(0, 2).charAt(0) &&
+                    this.iban.substring(0, 2).charAt(0) &&
                     this.body.bic.charAt(5) !=
-                      this.iban.substring(0, 2).charAt(1)
+                    this.iban.substring(0, 2).charAt(1)
                   ) {
                     this.body.bic = "";
                   }
