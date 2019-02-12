@@ -7,6 +7,7 @@ import { esCalendar } from './../../../utils/calendar';
 import { ConsultaConsultasItem } from '../../../models/ConsultaConsultasItem';
 import { CampoDinamicoItem } from '../../../models/CampoDinamicoItem';
 import { saveAs } from "file-saver/FileSaver";
+import { Location } from "@angular/common";
 import { typeSourceSpan } from '@angular/compiler';
 
 @Component({
@@ -46,7 +47,7 @@ export class DialogoComunicacionesComponent implements OnInit {
   maxNumModelos: number;
   progressSpinner: boolean = false;
 
-  constructor(public sigaServices: SigaServices, private translateService: TranslateService) {
+  constructor(public sigaServices: SigaServices, private translateService: TranslateService, private location: Location) {
   }
 
   ngOnInit() {
@@ -353,4 +354,7 @@ export class DialogoComunicacionesComponent implements OnInit {
   }
 
 
+  backTo() {
+    this.location.back();
+  }
 }
