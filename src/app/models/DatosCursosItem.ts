@@ -46,5 +46,7 @@ export class DatosCursosItem {
   idTipoEvento: string;
   idInstitucion: string;
 
+  aviso: string;
+
   constructor() {}
 }

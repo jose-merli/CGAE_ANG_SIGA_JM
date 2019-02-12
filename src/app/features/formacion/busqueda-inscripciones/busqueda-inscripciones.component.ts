@@ -6,7 +6,7 @@ import {
   HostListener,
   ViewEncapsulation
 } from "@angular/core";
-import { MultiSelect } from "primeng/primeng";
+import { MultiSelect, ConfirmationService } from "primeng/primeng";
 import {
   FormBuilder,
   FormControl,
@@ -121,7 +121,8 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
     private authenticationService: AuthenticationService,
     private translateService: TranslateService,
     private location: Location,
-    private router: Router
+    private router: Router,
+    private confirmationService: ConfirmationService
   ) {
     super(USER_VALIDATIONS);
     this.formBusqueda = this.formBuilder.group({
@@ -650,8 +651,40 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   }
 
   guardarAccion() {
-    this.progressSpinner = true;
+    let mess = "";
+    mess =
+      "¿Desea enviar un aviso a los incritos que fueron rechazados o cancelados de que existen plazas disponibles?";
+    let icon = "fa fa-edit";
+
+    if (this.tipoAccion == 2 || this.tipoAccion == 1) {
+      this.confirmationService.confirm({
+        message: mess,
+        icon: icon,
+        accept: () => {
+          //Enviar aviso por parametro
+          this.callAction();
+        },
+        reject: () => {
+          this.msgs = [
+            {
+              severity: "info",
+              summary: this.translateService.instant(
+                "general.message.cancelado"
+              ),
+              detail: "Aviso cancelado"
+            }
+          ];
+          this.callAction();
+        }
+      });
+    } else {
+      this.callAction();
+    }
+  }
+
+  callAction() {
     this.selectedDatos[0].motivo = this.body.motivo;
+    this.progressSpinner = true;
     this.sigaServices
       .post("busquedaInscripciones_updateEstado", this.selectedDatos)
       .subscribe(

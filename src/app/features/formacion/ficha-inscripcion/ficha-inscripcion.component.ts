@@ -395,21 +395,23 @@ export class FichaInscripcionComponent implements OnInit {
 
   getComboPrecio() {
     this.comboPrecio = [
-      { label: "Pago Total", value: 0 },
-      { label: "Pago Plazos", value: 1 }
+      { label: this.translateService.instant("formacion.fichaInscripcion.precio.pagoTotal"), value: 0 },
+      { label: this.translateService.instant("formacion.fichaInscripcion.precio.pagoPlazos"), value: 1 }
     ];
 
     this.arregloTildesCombo(this.comboPrecio);
   }
 
   getComboModoPago() {
-    this.comboModoPago = [
-      { label: "Domiciliación", value: 0 },
-      { label: "Contado", value: 1 },
-      { label: "Transferencia", value: 2 }
-    ];
-
-    this.arregloTildesCombo(this.comboPrecio);
+    this.sigaServices.get("fichaInscripcion/getPaymentMode").subscribe(
+      n => {
+        this.comboModoPago = n.combooItems;
+        this.arregloTildesCombo(this.comboModoPago);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   //FUNCIONES GENERALES
@@ -634,7 +636,9 @@ export class FichaInscripcionComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        this.showFail(this.translateService.instant("general.message.error.realiza.accion"));
+        this.showFail(
+          this.translateService.instant("general.message.error.realiza.accion")
+        );
         this.inscripcionInsertada = false;
       },
       () => {
@@ -647,7 +651,7 @@ export class FichaInscripcionComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "success",
-      summary: "Correcto",
+      summary: this.translateService.instant("general.message.correct"),
       detail: this.translateService.instant("general.message.accion.realizada")
     });
   }
@@ -656,8 +660,10 @@ export class FichaInscripcionComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Información",
-      detail: "Ya se ha realizado una solicitud de certificado previa"
+      summary: this.translateService.instant("general.message.informacion"),
+      detail: this.translateService.instant(
+        "formacion.mensaje.solicitud.certificado.previa"
+      )
     });
   }
 
@@ -665,7 +671,7 @@ export class FichaInscripcionComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Información",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: msg
     });
   }
@@ -729,7 +735,11 @@ export class FichaInscripcionComponent implements OnInit {
           },
           err => {
             this.progressSpinner = false;
-            this.showFail(this.translateService.instant("general.message.error.realiza.accion"));
+            this.showFail(
+              this.translateService.instant(
+                "general.message.error.realiza.accion"
+              )
+            );
             this.inscripcionInsertada = false;
           },
           () => {
@@ -765,7 +775,11 @@ export class FichaInscripcionComponent implements OnInit {
                   },
                   err => {
                     this.progressSpinner = false;
-                    this.showFail(this.translateService.instant("general.message.error.realiza.accion"));
+                    this.showFail(
+                      this.translateService.instant(
+                        "general.message.error.realiza.accion"
+                      )
+                    );
                     this.inscripcionInsertada = false;
                   },
                   () => {
@@ -778,7 +792,6 @@ export class FichaInscripcionComponent implements OnInit {
               this.showFail(JSON.stringify(this.bodySearch.error.message));
               console.log(error);
 
-              this.showFail("Ha habido un error al crear el notario");
               this.progressSpinner = false;
             },
             () => {
@@ -924,7 +937,11 @@ export class FichaInscripcionComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          this.showFail(this.translateService.instant("general.message.error.realiza.accion"));
+          this.showFail(
+            this.translateService.instant(
+              "general.message.error.realiza.accion"
+            )
+          );
           this.inscripcionInsertada = false;
         },
         () => {
@@ -956,7 +973,11 @@ export class FichaInscripcionComponent implements OnInit {
           },
           err => {
             this.progressSpinner = false;
-            this.showFail(this.translateService.instant("general.message.error.realiza.accion"));
+            this.showFail(
+              this.translateService.instant(
+                "general.message.error.realiza.accion"
+              )
+            );
             this.inscripcionInsertada = false;
           },
           () => {
@@ -1060,7 +1081,9 @@ export class FichaInscripcionComponent implements OnInit {
                       err => {
                         this.progressSpinner = false;
                         this.showFail(
-                          this.translateService.instant("general.message.error.realiza.accion")
+                          this.translateService.instant(
+                            "general.message.error.realiza.accion"
+                          )
                         );
                         this.inscripcionInsertada = false;
                       },
@@ -1077,9 +1100,6 @@ export class FichaInscripcionComponent implements OnInit {
                     this.showFail(
                       JSON.stringify(this.bodySearch.error.message)
                     );
-                    console.log(error);
-
-                    this.showFail("Ha habido un error al crear el notario");
                     this.progressSpinner = false;
                   },
                   () => {
@@ -1127,7 +1147,11 @@ export class FichaInscripcionComponent implements OnInit {
           },
           err => {
             this.progressSpinner = false;
-            this.showFail(this.translateService.instant("general.message.error.realiza.accion"));
+            this.showFail(
+              this.translateService.instant(
+                "general.message.error.realiza.accion"
+              )
+            );
             this.inscripcionInsertada = false;
           },
           () => {
@@ -1135,11 +1159,15 @@ export class FichaInscripcionComponent implements OnInit {
           }
         );
       } else {
-        this.showFail(this.translateService.instant("formacion.mensaje.persona.erronea"));
+        this.showFail(
+          this.translateService.instant("formacion.mensaje.persona.erronea")
+        );
       }
     } else {
       this.showFail(
-        "Debe de introducir una fecha de solicitud para la inscripción"
+        this.translateService.instant(
+          "formacion.mensaje.obligatorio.introducir.fechaSolicitud"
+        )
       );
     }
   }
