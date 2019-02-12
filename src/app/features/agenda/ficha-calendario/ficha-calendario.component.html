@@ -2,7 +2,7 @@
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{'menu.agenda' | translate}}</p>
+    <p>{{'menu.agenda' | translate}} > {{ 'agenda.fichaCalendario.cabecera' | translate }}</p>
   </div>
 
   <!-- FICHA DATOS GENERALES -->
@@ -118,15 +118,6 @@
               <div (click)="onChangeAcceso('sinAsignar')" class="mr-3 btn-acceso sin-asignar d-flex align-items-center">
                 <p>Sin asignar ({{sinAsignar}})</p>
               </div>
-              <!-- <div (click)="onChangeAcceso('total')" class="btn-acceso acceso-total d-flex align-items-center">
-                <p>{{'agenda.fichaCalendario.configuracionPerfiles.accesoTotal' | translate}}</p>
-              </div>
-              <div (click)="onChangeAcceso('lectura')" class="mr-3 btn-acceso solo-lectura d-flex align-items-center">
-                <p>{{'agenda.fichaCalendario.configuracionPerfiles.soloLectura' | translate}}</p>
-              </div>
-              <div (click)="onChangeAcceso('sinAsignar')" class="mr-3 btn-acceso sin-asignar d-flex align-items-center">
-                <p>{{'agenda.fichaCalendario.configuracionPerfiles.sinAsignar' | translate}}</p>
-              </div> -->
               <div class="ml-auto main-button d-flex">
                 <button pButton type="button" icon="fa fa-undo" iconPos="left" (click)="restablecerPermisos()" label="{{'general.boton.restablecer' | translate}}"></button>
                 <button class="mr-2" pButton type="button" icon="far fa-save" iconPos="left" (click)="savePermisos()" label="{{ 'general.boton.guardar' | translate}}"></button>

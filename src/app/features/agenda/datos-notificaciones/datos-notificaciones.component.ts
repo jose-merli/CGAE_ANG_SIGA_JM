@@ -31,6 +31,7 @@ export class DatosNotificacionesComponent implements OnInit, OnDestroy {
   progressSpinner: boolean = false;
   disabledTypeSend: boolean = false;
   disabledSave: boolean = true;
+  isEventoCumplidoOrCancelado: boolean = false;
 
   constructor(private sigaServices: SigaServices, private location: Location) {}
 
@@ -57,6 +58,14 @@ export class DatosNotificacionesComponent implements OnInit, OnDestroy {
       } else {
         this.notificationLowDate = false;
       }
+
+      if (sessionStorage.getItem("isEventoCumplido") == "true") {
+        this.isEventoCumplidoOrCancelado = true;
+      } else {
+        this.isEventoCumplidoOrCancelado = false;
+      }
+
+      sessionStorage.removeItem("isEventoCumplido");
 
       this.generateEvent();
     } else if (sessionStorage.getItem("notificacionByEvento") == "true") {
