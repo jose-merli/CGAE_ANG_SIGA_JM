@@ -615,7 +615,25 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
     }
   }
+
+
   duplicarRegistro() {
+    let tipoDireccion = [];
+    if (
+      this.body.idTipoDireccion != null &&
+      this.body.idTipoDireccion != undefined &&
+      this.body.idTipoDireccion.length > 0
+    ) {
+      this.body.idTipoDireccion.forEach(element => {
+        if (element != "3" && element != "8" && element != "6" && element != "9") {
+          let i = this.body.idTipoDireccion.findIndex(
+            x => x === element
+          );
+          tipoDireccion.push(element);
+        }
+      });
+    }
+    this.body.idTipoDireccion = tipoDireccion;
     this.body.idDireccion = null;
     this.nuevo = true;
     this.progressSpinner = true;
@@ -636,6 +654,8 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
     );
   }
+
+
   comprobarCheckProvincia() {
     if (this.checkOtraProvincia) {
       this.body.otraProvincia = "1";
