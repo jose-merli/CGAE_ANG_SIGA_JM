@@ -894,8 +894,6 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.tipoSolicitudSelected != undefined &&
         this.tipoColegiacionSelected != "" &&
         this.tipoColegiacionSelected != undefined &&
-        this.estadoCivilSelected != "" &&
-        this.estadoCivilSelected != undefined &&
         this.modalidadDocumentacionSelected != "" &&
         this.modalidadDocumentacionSelected != undefined &&
         this.solicitudEditar.fechaIncorporacion != null &&

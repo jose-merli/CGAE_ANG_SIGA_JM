@@ -51,6 +51,7 @@ export class FichaCursoComponent implements OnInit {
   fieldNoEditable: boolean = true;
   progressSpinner: boolean = false;
   curso: DatosCursosItem = new DatosCursosItem();
+  initCurso: DatosCursosItem;
 
   // COMBOS
   comboVisibilidad: any[];
@@ -165,7 +166,7 @@ export class FichaCursoComponent implements OnInit {
   datosFormadoresInit = [];
   changeTutor: boolean = false;
   //Sesiones
-  sesionesExistentes: String = "Número de sesiones: 0";
+  sesionesExistentes: String = this.translateService.instant("formacion.fichaCurso.numero.sesiones") + ": 0";
   colsSessions;
   selectedItemSessions;
   datosSessions = [];
@@ -302,7 +303,7 @@ export class FichaCursoComponent implements OnInit {
       this.curso.idEventoFinInscripcion = sessionStorage.getItem(
         "idEventoFinInscripcion"
       );
-      
+
       sessionStorage.removeItem("idEventoFinInscripcion");
       sessionStorage.removeItem("isFormacionCalendarByEndInscripcion");
 
@@ -347,7 +348,9 @@ export class FichaCursoComponent implements OnInit {
         sessionStorage.removeItem("isSession");
       } else {
         this.curso = new DatosCursosItem();
-        this.curso.idCurso = JSON.parse(sessionStorage.getItem("courseCurrent")).idCurso;
+        this.curso.idCurso = JSON.parse(
+          sessionStorage.getItem("courseCurrent")
+        ).idCurso;
         this.searchCourse(this.curso.idCurso);
 
         if (this.curso.fechaImparticionDesde != null) {
@@ -377,7 +380,7 @@ export class FichaCursoComponent implements OnInit {
 
       if (this.curso.autovalidacionInscripcion == "1") {
         this.curso.autovalidacion = true;
-      } else if(this.curso.autovalidacionInscripcion == "0") {
+      } else if (this.curso.autovalidacionInscripcion == "0") {
         this.curso.autovalidacion = false;
       }
 
@@ -394,7 +397,6 @@ export class FichaCursoComponent implements OnInit {
       } else {
         this.getTrainers();
         sessionStorage.removeItem("toBackNewFormador");
-
       }
 
       this.getPrices();
@@ -402,7 +404,10 @@ export class FichaCursoComponent implements OnInit {
       this.getCertificatesCourse();
       this.getTopicsCourse();
 
-      if(this.curso.idInstitucion != null || this.curso.idInstitucion != undefined){
+      if (
+        this.curso.idInstitucion != null ||
+        this.curso.idInstitucion != undefined
+      ) {
         this.getSessions();
       }
 
@@ -453,8 +458,8 @@ export class FichaCursoComponent implements OnInit {
 
   ngAfterViewInit() {
     window.scrollTo(0, 0);
- }
- 
+  }
+
   // Control Permisos
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
@@ -474,15 +479,20 @@ export class FichaCursoComponent implements OnInit {
           //permiso total
           this.activacionEditar = true;
 
-          if(sessionStorage.getItem("isCancelado")=="true"){
-            this.activacionEditar=false;
+          if (sessionStorage.getItem("isCancelado") == "true") {
+            this.activacionEditar = false;
           }
-          sessionStorage.setItem("fichaCursoPermisos", JSON.stringify(this.activacionEditar));
+          sessionStorage.setItem(
+            "fichaCursoPermisos",
+            JSON.stringify(this.activacionEditar)
+          );
         } else if (derechoAcceso == 2) {
           // solo lectura
           this.activacionEditar = false;
-          sessionStorage.setItem("fichaCursoPermisos", JSON.stringify(this.activacionEditar));
-
+          sessionStorage.setItem(
+            "fichaCursoPermisos",
+            JSON.stringify(this.activacionEditar)
+          );
         } else {
           sessionStorage.setItem("codError", "403");
           sessionStorage.setItem(
@@ -491,12 +501,12 @@ export class FichaCursoComponent implements OnInit {
           );
           this.router.navigate(["/errorAcceso"]);
         }
-    this.compruebaInstitucionCurso();
+        this.compruebaInstitucionCurso();
       }
     );
   }
 
-  cleanSessionStorage(){
+  cleanSessionStorage() {
     sessionStorage.removeItem("isFormacionCalendar");
     sessionStorage.removeItem("fichaCursoPermisos");
     sessionStorage.removeItem("abrirFormador");
@@ -506,7 +516,6 @@ export class FichaCursoComponent implements OnInit {
     sessionStorage.removeItem("sessions");
     sessionStorage.removeItem("historico");
     sessionStorage.removeItem("evento");
-
   }
 
   //TARJETA DATOS GENERALES
@@ -765,11 +774,39 @@ export class FichaCursoComponent implements OnInit {
     if (this.modoEdicion) {
       //Enviamos al back todos los formadores editados
       url = "fichaCursos_updateCourse";
+
+      if (this.curso.idEstado != this.valorEstadoAbierto) {
+        let mess = "¿Desea enviar un aviso del cambio realizado?";
+
+        let icon = "fa fa-edit";
+        this.confirmationService.confirm({
+          message: mess,
+          icon: icon,
+          accept: () => {
+            this.callSaveCourse(url);
+          },
+          reject: () => {
+            this.msgs = [
+              {
+                severity: "info",
+                summary: this.translateService.instant(
+                  "general.message.cancelado"
+                ),
+                detail: "Aviso cancelado"
+              }
+            ];
+            this.callSaveCourse(url);
+          }
+        });
+      }
     } else {
       //Mapeamos el formador que queremos insertar nuevo
       url = "fichaCursos_saveCourse";
+      this.callSaveCourse(url);
     }
+  }
 
+  callSaveCourse(url) {
     this.sigaServices.post(url, this.curso).subscribe(
       data => {
         this.progressSpinner = false;
@@ -788,25 +825,67 @@ export class FichaCursoComponent implements OnInit {
 
           this.showMessage(
             "success",
-            "Correcto",
-            JSON.parse(data.body).error.description
+            this.translateService.instant("general.message.correct"),
+            this.translateService.instant("formacion.mensaje.guardar.curso.correcto")
           );
           this.modoEdicion = true;
         } else {
-          this.showSuccess();
+          this.showMessage(
+            "success",
+            this.translateService.instant("general.message.correct"),
+            this.translateService.instant("formacion.mensaje.modificar.curso.correcto")
+          );
           this.modoEdicion = true;
-        }
 
+          if (this.initCurso.plazasDisponibles < this.curso.plazasDisponibles) {
+            this.curso.aviso = "3";
+            this.notifyAvailablePlaces();
+          } else {
+            this.curso.aviso = undefined;
+          }
+        }
         this.configurationInformacionAdicional();
       },
       err => {
         this.progressSpinner = false;
-        this.showFail("La acción no se ha realizado correctamente");
+        this.showFail(
+          this.translateService.instant("general.message.error.realiza.accion")
+        );
       },
       () => {
         this.progressSpinner = false;
       }
     );
+  }
+
+  notifyAvailablePlaces() {
+    let mess =
+      "¿Desea enviar un aviso a los incritos que fueron rechazados o cancelados de que existen plazas disponibles?";
+
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        //Realizar el aviso
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Guai",
+            detail: "Guai"
+          }
+        ];
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: this.translateService.instant("general.message.cancelado"),
+            detail: "Aviso cancelado"
+          }
+        ];
+      }
+    });
   }
 
   announceCourse() {
@@ -829,8 +908,8 @@ export class FichaCursoComponent implements OnInit {
     } else {
       this.showMessage(
         "info",
-        "Información",
-        "El curso debe tener el estado abierto para ser anunciado"
+        this.translateService.instant("general.message.informacion"),
+        this.translateService.instant("formacion.mensaje.curso.anunciado")
       );
     }
   }
@@ -855,13 +934,38 @@ export class FichaCursoComponent implements OnInit {
     } else {
       this.showMessage(
         "info",
-        "Información",
-        "El curso debe tener el estado anunciado para ser desanunciado"
+        this.translateService.instant("general.message.informacion"),
+        this.translateService.instant("formacion.mensaje.curso.desanunciado")
       );
     }
   }
 
   cancelCourse() {
+    let mess =
+      "¿Desea comunicar a todos los inscritos la cancelación del curso?";
+
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.curso.aviso = "1";
+        this.callCancelCourse();
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: this.translateService.instant("general.message.cancelado"),
+            detail: "Aviso cancelado"
+          }
+        ];
+        this.callCancelCourse();
+      }
+    });
+  }
+
+  callCancelCourse() {
     let cursoDTO = new DatosCursosObject();
     cursoDTO.cursoItem = [];
     cursoDTO.cursoItem.push(this.curso);
@@ -870,17 +974,17 @@ export class FichaCursoComponent implements OnInit {
       data => {
         this.progressSpinner = false;
         this.curso.idEstado = this.valorEstadoCancelado;
-
+        this.curso.aviso = undefined;
         if (JSON.parse(data.body).error.code == null) {
           this.showMessage(
             "info",
-            "Información",
+            this.translateService.instant("general.message.informacion"),
             JSON.parse(data.body).error.description
           );
         } else if (JSON.parse(data.body).error.code == 200) {
           this.showMessage(
             "success",
-            "Correcto",
+            this.translateService.instant("general.message.correct"),
             JSON.parse(data.body).error.description
           );
           this.getSessions();
@@ -888,7 +992,7 @@ export class FichaCursoComponent implements OnInit {
         } else if (JSON.parse(data.body).error.code == 400) {
           this.showMessage(
             "error",
-            "Incorrecto",
+            this.translateService.instant("general.message.incorrect"),
             JSON.parse(data.body).error.description
           );
         }
@@ -900,8 +1004,9 @@ export class FichaCursoComponent implements OnInit {
   }
 
   finishCourse() {
-    let mess =
-      "A continuación se actualizarán la ficha de los alumnos con las calificaciones obtenidas y se les emitirán los certificados correspondientes. ¿Desea continuar?";
+    let mess = this.translateService.instant(
+      "formacion.mensaje.finalizar.curso"
+    );
 
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
@@ -919,13 +1024,13 @@ export class FichaCursoComponent implements OnInit {
             if (JSON.parse(data.body).error.code == null) {
               this.showMessage(
                 "info",
-                "Información",
+                this.translateService.instant("general.message.informacion"),
                 JSON.parse(data.body).error.description
               );
             } else if (JSON.parse(data.body).error.code == 200) {
               this.showMessage(
                 "success",
-                "Correcto",
+                this.translateService.instant("general.message.correct"),
                 JSON.parse(data.body).error.description
               );
 
@@ -933,7 +1038,7 @@ export class FichaCursoComponent implements OnInit {
             } else if (JSON.parse(data.body).error.code == 400) {
               this.showMessage(
                 "error",
-                "Incorrecto",
+                this.translateService.instant("general.message.incorrect"),
                 JSON.parse(data.body).error.description
               );
             }
@@ -947,7 +1052,7 @@ export class FichaCursoComponent implements OnInit {
         this.msgs = [
           {
             severity: "info",
-            summary: "Cancel",
+            summary: this.translateService.instant("general.message.cancelado"),
             detail: this.translateService.instant(
               "general.message.accion.cancelada"
             )
@@ -994,10 +1099,10 @@ export class FichaCursoComponent implements OnInit {
 
         if (this.curso.autovalidacionInscripcion == "1") {
           this.curso.autovalidacion = true;
-        } else if(this.curso.autovalidacionInscripcion == "0") {
+        } else if (this.curso.autovalidacionInscripcion == "0") {
           this.curso.autovalidacion = false;
         }
-        
+
         if (this.curso.fechaImparticionDesde != null) {
           this.curso.fechaImparticionDesdeDate = this.arreglarFecha(
             this.curso.fechaImparticionDesde
@@ -1026,6 +1131,7 @@ export class FichaCursoComponent implements OnInit {
         this.getServicesCourse();
         this.getTopicsCourse();
         this.getCountInscriptions();
+        this.initCurso = JSON.parse(JSON.stringify(this.curso));
         sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
       },
       err => {
@@ -1204,8 +1310,10 @@ export class FichaCursoComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "info",
-      summary: "Información",
-      detail: "No hay servicios definidos para este curso."
+      summary: this.translateService.instant("general.message.informacion"),
+      detail: this.translateService.instant(
+        "formacion.mensaje.noexiste.servicios.curso"
+      )
     });
   }
 
@@ -1462,17 +1570,25 @@ export class FichaCursoComponent implements OnInit {
     );
   }
 
-  compruebaInstitucionCurso(){
+  compruebaInstitucionCurso() {
     let institucionPersona = this.authenticationService.getInstitucionSession();
     let institucionCurso = this.curso.idInstitucion;
-    if((institucionPersona != institucionCurso && institucionCurso != undefined) || this.isLetrado ){
-        this.activacionEditar = false;
-        this.otraInstitucion = true;
+    if (
+      (institucionPersona != institucionCurso &&
+        institucionCurso != undefined) ||
+      this.isLetrado
+    ) {
+      this.activacionEditar = false;
+      this.otraInstitucion = true;
     }
     // Cargamos el tooltip de número de sesiones (minimo asistencia) aquí para asegurarnos de que se realiza tras la búsqueda.
-    if(this.curso.numeroSesiones != null && this.curso.numeroSesiones != undefined){
-      this.sesionesExistentes = "Número de sesiones: " + this.curso.numeroSesiones;
-    } 
+    if (
+      this.curso.numeroSesiones != null &&
+      this.curso.numeroSesiones != undefined
+    ) {
+      this.sesionesExistentes =
+        "Número de sesiones: " + this.curso.numeroSesiones;
+    }
   }
 
   getComboTipoCoste() {
@@ -1522,7 +1638,7 @@ export class FichaCursoComponent implements OnInit {
 
   newTrainer() {
     sessionStorage.setItem("abrirFormador", "true");
-   
+
     this.pressNewFormador = true;
     this.modoEdicionFormador = false;
     this.editFormador = true;
@@ -1597,7 +1713,9 @@ export class FichaCursoComponent implements OnInit {
       this.sigaServiceSaveTrainer(url, formador);
     } else {
       if (this.numCheckedTutor == 1 && this.newFormadorCourse.idRol == "1") {
-        mess = "¿Estás seguro que desea cambiar el tutor del curso?";
+        mess = this.translateService.instant(
+          "formacion.fichaCurso.formadores.confirmacion.cambiarTutor"
+        );
 
         let icon = "fa fa-edit";
         this.confirmationService.confirm({
@@ -1633,7 +1751,9 @@ export class FichaCursoComponent implements OnInit {
             this.msgs = [
               {
                 severity: "info",
-                summary: "Cancel",
+                summary: this.translateService.instant(
+                  "general.message.cancelado"
+                ),
                 detail: this.translateService.instant(
                   "general.message.accion.cancelada"
                 )
@@ -1706,8 +1826,7 @@ export class FichaCursoComponent implements OnInit {
       this.addTrainerUpdateList(idFindFormador, data);
     } else {
       let id = this.datosFormadores.findIndex(
-        x =>
-          x.idPersona === data.idPersona && x.idRol === data.idRol
+        x => x.idPersona === data.idPersona && x.idRol === data.idRol
       );
 
       this.formadoresUpdate[idFindFormador] = this.datosFormadores[id];
@@ -1757,11 +1876,11 @@ export class FichaCursoComponent implements OnInit {
           this.selectMultipleFormadores = false;
         },
         err => {
-        this.showMessage(
-              "error",
-              "Incorrecto",
-              JSON.parse(err.error).error.description
-            );
+          this.showMessage(
+            "error",
+            this.translateService.instant("general.message.incorrect"),
+            JSON.parse(err.error).error.description
+          );
           this.progressSpinner = false;
         },
         () => {
@@ -1781,7 +1900,9 @@ export class FichaCursoComponent implements OnInit {
         this.modoEdicionFormador) ||
       (this.numCheckedTutor == 1 && event == "1" && this.modoEdicionFormador)
     ) {
-      mess = "¿Estás seguro que desea cambiar el tutor del curso?";
+      mess = this.translateService.instant(
+        "formacion.fichaCurso.formadores.confirmacion.cambiarTutor"
+      );
 
       let icon = "fa fa-edit";
       this.confirmationService.confirm({
@@ -1875,7 +1996,9 @@ export class FichaCursoComponent implements OnInit {
           this.msgs = [
             {
               severity: "info",
-              summary: "Cancel",
+              summary: this.translateService.instant(
+                "general.message.cancelado"
+              ),
               detail: this.translateService.instant(
                 "general.message.accion.cancelada"
               )
@@ -1954,7 +2077,7 @@ export class FichaCursoComponent implements OnInit {
   }
 
   validateTrainer() {
-    if(this.newFormadorCourse != undefined){
+    if (this.newFormadorCourse != undefined) {
       if (
         this.newFormadorCourse.idTipoCoste == null ||
         this.newFormadorCourse.tarifa == null ||
@@ -1965,7 +2088,7 @@ export class FichaCursoComponent implements OnInit {
       } else {
         return false;
       }
-    }else{
+    } else {
       return true;
     }
   }
@@ -2080,19 +2203,21 @@ export class FichaCursoComponent implements OnInit {
           if (JSON.parse(data.body).error.code == null) {
             this.showMessage(
               "info",
-              "Información",
+              this.translateService.instant("general.message.informacion"),
               JSON.parse(data.body).error.description
             );
           } else if (JSON.parse(data.body).error.code == 200) {
             this.showMessage(
               "success",
-              "Correcto",
-              "Sesión duplicada correctamente"
+              this.translateService.instant("general.message.correct"),
+              this.translateService.instant(
+                "formacion.fichaCurso.sesiones.duplicadas.correctamente"
+              )
             );
           } else if (JSON.parse(data.body).error.code == 400) {
             this.showMessage(
               "error",
-              "Incorrecto",
+              this.translateService.instant("general.message.incorrect"),
               JSON.parse(data.body).error.description
             );
           }
@@ -2107,51 +2232,80 @@ export class FichaCursoComponent implements OnInit {
   }
 
   cancelSessions() {
+    let mess = "";
+
+    if (this.selectedDatosSessions.length > 1) {
+      mess = "¿Desea comunicar la cancelación de las sesiones?";
+    } else {
+      mess = "¿Desea comunicar la cancelación de la sesión?";
+    }
+
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.curso.aviso = "4";
+        this.callCancelSession();
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: this.translateService.instant("general.message.cancelado"),
+            detail: "Aviso cancelado"
+          }
+        ];
+        this.callCancelSession();
+      }
+    }); 
+
+  }
+
+  callCancelSession(){
+
     this.progressSpinner = true;
 
     let sessionsCancel = new EventoObject();
     sessionsCancel.eventos = this.selectedDatosSessions;
 
+    //Pasar aviso guardo en this.curso.aviso = "4" por parametro
     this.sigaServices
-      .post("fichaCursos_cancelSessionsCourse", sessionsCancel)
-      .subscribe(
-        data => {
-
-          if (JSON.parse(data.body).error.code == null) {
-            this.showMessage(
-              "info",
-              "Información",
-              JSON.parse(data.body).error.description
-            );
-          } else if (JSON.parse(data.body).error.code == 200) {
-            this.showMessage(
-              "success",
-              "Correcto",
-              JSON.parse(data.body).error.description
-            );
-            this.searchCourse(this.curso.idCurso);
-
-          } else if (JSON.parse(data.body).error.code == 400) {
-            this.showMessage(
-              "error",
-              "Incorrecto",
-              JSON.parse(data.body).error.description
-            );
-          }
-
-          this.getSessions();
-          this.selectMultipleSessions = false;
-          this.selectedDatosSessions = [];
-        },
-        err => {
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
+    .post("fichaCursos_cancelSessionsCourse", sessionsCancel)
+    .subscribe(
+      data => {
+        if (JSON.parse(data.body).error.code == null) {
+          this.showMessage(
+            "info",
+            this.translateService.instant("general.message.informacion"),
+            JSON.parse(data.body).error.description
+          );
+        } else if (JSON.parse(data.body).error.code == 200) {
+          this.showMessage(
+            "success",
+            this.translateService.instant("general.message.correct"),
+            JSON.parse(data.body).error.description
+          );
+          this.searchCourse(this.curso.idCurso);
+        } else if (JSON.parse(data.body).error.code == 400) {
+          this.showMessage(
+            "error",
+            this.translateService.instant("general.message.incorrect"),
+            JSON.parse(data.body).error.description
+          );
         }
-      );
 
-    this.progressSpinner = false;
+        this.getSessions();
+        this.selectMultipleSessions = false;
+        this.selectedDatosSessions = [];
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   disabledDuplicate() {
@@ -2178,7 +2332,6 @@ export class FichaCursoComponent implements OnInit {
       sessionStorage.setItem("isSession", "true");
       sessionStorage.setItem("fichaAbierta", "true");
       this.router.navigate(["/fichaEventos"]);
-     
     }
     this.numSelectedPrices = this.selectedDatosPrices.length;
     this.numSelectedSessions = this.selectedDatosSessions.length;
@@ -2202,7 +2355,7 @@ export class FichaCursoComponent implements OnInit {
 
   //Inscripciones
   irBusquedaInscripcciones() {
-    if(!this.otraInstitucion){
+    if (!this.otraInstitucion) {
       sessionStorage.setItem("pantallaFichaCurso", "true");
       sessionStorage.setItem("cursoSelected", JSON.stringify(this.curso));
       this.router.navigate(["/buscarInscripciones"]);
@@ -2353,8 +2506,7 @@ export class FichaCursoComponent implements OnInit {
         certificado.idTipoProducto;
       this.datosCertificates[idCertificate].nombreCertificado =
         certificado.descripcion;
-      this.datosCertificates[idCertificate].idProducto =
-        certificado.idProducto;
+      this.datosCertificates[idCertificate].idProducto = certificado.idProducto;
     }
 
     this.editCertificateTable(event, dato);
@@ -2432,13 +2584,13 @@ export class FichaCursoComponent implements OnInit {
           if (JSON.parse(data.body).error.code == null) {
             this.showMessage(
               "info",
-              "Información",
+              this.translateService.instant("general.message.informacion"),
               JSON.parse(data.body).error.description
             );
           } else if (JSON.parse(data.body).error.code == 200) {
             this.showMessage(
               "success",
-              "Correcto",
+              this.translateService.instant("general.message.correct"),
               JSON.parse(data.body).error.description
             );
             this.getSessions();
@@ -2446,14 +2598,18 @@ export class FichaCursoComponent implements OnInit {
           } else if (JSON.parse(data.body).error.code == 400) {
             this.showMessage(
               "error",
-              "Incorrecto",
+              this.translateService.instant("general.message.incorrect"),
               JSON.parse(data.body).error.description
             );
           }
         },
         err => {
           this.progressSpinner = false;
-          this.showFail("La acción no se ha realizado correctamente");
+          this.showFail(
+            this.translateService.instant(
+              "general.message.error.realiza.accion"
+            )
+          );
         },
         () => {
           this.progressSpinner = false;
@@ -2463,8 +2619,10 @@ export class FichaCursoComponent implements OnInit {
       this.editCertificate = true;
       this.showMessage(
         "info",
-        "Información",
-        "No puede existir certificados con la misma calificación"
+        this.translateService.instant("general.message.informacion"),
+        this.translateService.instant(
+          "formacion.mensaje.fichaCurso.certificados.misma.calificacion"
+        )
       );
     }
   }
@@ -2483,13 +2641,13 @@ export class FichaCursoComponent implements OnInit {
           if (JSON.parse(data.body).error.code == null) {
             this.showMessage(
               "info",
-              "Información",
+              this.translateService.instant("general.message.informacion"),
               JSON.parse(data.body).error.description
             );
           } else if (JSON.parse(data.body).error.code == 200) {
             this.showMessage(
               "success",
-              "Correcto",
+              this.translateService.instant("general.message.correct"),
               JSON.parse(data.body).error.description
             );
             this.getSessions();
@@ -2497,14 +2655,18 @@ export class FichaCursoComponent implements OnInit {
           } else if (JSON.parse(data.body).error.code == 400) {
             this.showMessage(
               "error",
-              "Incorrecto",
+              this.translateService.instant("general.message.incorrect"),
               JSON.parse(data.body).error.description
             );
           }
         },
         err => {
           this.progressSpinner = false;
-          this.showFail("La acción no se ha realizado correctamente");
+          this.showFail(
+            this.translateService.instant(
+              "general.message.error.realiza.accion"
+            )
+          );
         },
         () => {
           this.progressSpinner = false;
@@ -2556,20 +2718,20 @@ export class FichaCursoComponent implements OnInit {
   }
 
   validateCertificate() {
-    if(this.newCertificate != undefined){
-    if (
-      this.newCertificate.idCalificacion == null ||
-      this.newCertificate.idProducto == null ||
-      this.newCertificate.idCalificacion == "" ||
-      this.newCertificate.idProducto == ""
-    ) {
-      return true;
+    if (this.newCertificate != undefined) {
+      if (
+        this.newCertificate.idCalificacion == null ||
+        this.newCertificate.idProducto == null ||
+        this.newCertificate.idCalificacion == "" ||
+        this.newCertificate.idProducto == ""
+      ) {
+        return true;
+      } else {
+        return false;
+      }
     } else {
-      return false;
+      return true;
     }
-  }else{
-    return true;
-  }
   }
 
   //Si se edita un campo input de la tabla
@@ -2726,16 +2888,16 @@ export class FichaCursoComponent implements OnInit {
       extensionArchivo.trim() == "" ||
       !/\.(xls)$/i.test(extensionArchivo.trim().toUpperCase())
     ) {
-
       this.file = undefined;
       this.archivoDisponible = false;
       this.existeArchivo = false;
       this.showMessage(
         "info",
-        "Información",
-        "La extensión del fichero no es correcta."
-      );   
-    
+        this.translateService.instant("general.message.informacion"),
+        this.translateService.instant(
+          "formacion.mensaje.extesion.fichero.erronea"
+        )
+      );
     } else {
       // se almacena el archivo para habilitar boton guardar
       this.file = fileList[0];
@@ -2766,7 +2928,11 @@ export class FichaCursoComponent implements OnInit {
           },
           error => {
             console.log(error);
-            this.showFail("Error en la subida del fichero.");
+            this.showFail(
+              this.translateService.instant(
+                "formacion.mensaje.subida.fichero.erronea"
+              )
+            );
             this.progressSpinner = false;
           },
           () => {
@@ -2819,19 +2985,19 @@ export class FichaCursoComponent implements OnInit {
           if (JSON.parse(data.body).error.code == null) {
             this.showMessage(
               "info",
-              "Información",
+              this.translateService.instant("general.message.informacion"),
               JSON.parse(data.body).error.description
             );
           } else if (JSON.parse(data.body).error.code == 200) {
             this.showMessage(
               "success",
-              "Correcto",
+              this.translateService.instant("general.message.correct"),
               JSON.parse(data.body).error.description
             );
           } else if (JSON.parse(data.body).error.code == 400) {
             this.showMessage(
               "error",
-              "Incorrecto",
+              this.translateService.instant("general.message.incorrect"),
               JSON.parse(data.body).error.description
             );
           }
@@ -2871,19 +3037,19 @@ export class FichaCursoComponent implements OnInit {
           if (JSON.parse(data.body).error.code == null) {
             this.showMessage(
               "info",
-              "Información",
+              this.translateService.instant("general.message.informacion"),
               JSON.parse(data.body).error.description
             );
           } else if (JSON.parse(data.body).error.code == 200) {
             this.showMessage(
               "success",
-              "Correcto",
+              this.translateService.instant("general.message.correct"),
               JSON.parse(data.body).error.description
             );
           } else if (JSON.parse(data.body).error.code == 400) {
             this.showMessage(
               "error",
-              "Incorrecto",
+              this.translateService.instant("general.message.incorrect"),
               JSON.parse(data.body).error.description
             );
           }
@@ -2984,7 +3150,6 @@ export class FichaCursoComponent implements OnInit {
     ) {
       sessionStorage.removeItem("isInscripcion");
       this.router.navigate(["/buscarCursos"]);
-     
     } else {
       if (sessionStorage.getItem("rutaVolver")) {
         this.router.navigate([sessionStorage.getItem("rutaVolver")]);
@@ -3029,7 +3194,7 @@ export class FichaCursoComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "success",
-      summary: "Correcto",
+      summary: this.translateService.instant("general.message.correct"),
       detail: this.translateService.instant("general.message.accion.realizada")
     });
   }
@@ -3038,7 +3203,7 @@ export class FichaCursoComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "success",
-      summary: "Correcto",
+      summary: this.translateService.instant("general.message.correct"),
       detail: this.translateService.instant("general.message.accion.realizada")
     });
   }
@@ -3066,20 +3231,11 @@ export class FichaCursoComponent implements OnInit {
     return fecha;
   }
 
-  showInfo(message: string) {
-    this.msgs = [];
-    this.msgs.push({
-      severity: "info",
-      summary: "Error",
-      detail: message
-    });
-  }
-
   showFail(mensaje: string) {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: mensaje
     });
   }
@@ -3114,33 +3270,55 @@ export class FichaCursoComponent implements OnInit {
 
       if (button == "Inscripcion") {
         if (this.controlFechaInscripcion()) {
-          if (estado == this.valorEstadoAnunciado || estado == this.valorEstadoEnCurso) return true;
-        } else if (this.modoEdicion && button == "Inscripcion" && this.otraInstitucion) {
-          if (estado == this.valorEstadoAnunciado || estado == this.valorEstadoEnCurso) return true;
+          if (
+            estado == this.valorEstadoAnunciado ||
+            estado == this.valorEstadoEnCurso
+          )
+            return true;
+        } else if (
+          this.modoEdicion &&
+          button == "Inscripcion" &&
+          this.otraInstitucion
+        ) {
+          if (
+            estado == this.valorEstadoAnunciado ||
+            estado == this.valorEstadoEnCurso
+          )
+            return true;
         }
       }
 
-      if (button == "DescargarPlantilla")
-        return true;
+      if (button == "DescargarPlantilla") return true;
 
       // Solo debería de entrar en el caso de ser el botón de inscripcion, para controlar la casuística de entrar desde otro colegio
-    } else if (this.otraInstitucion && this.modoEdicion && button == "Inscripcion") { 
+    } else if (
+      this.otraInstitucion &&
+      this.modoEdicion &&
+      button == "Inscripcion"
+    ) {
       if (this.controlFechaInscripcion()) {
-        if (estado == this.valorEstadoAnunciado || estado == this.valorEstadoEnCurso) return true;
+        if (
+          estado == this.valorEstadoAnunciado ||
+          estado == this.valorEstadoEnCurso
+        )
+          return true;
       }
-    } else if (this.otraInstitucion && this.modoEdicion && button == "DescargarPlantilla") { 
-        return true;
+    } else if (
+      this.otraInstitucion &&
+      this.modoEdicion &&
+      button == "DescargarPlantilla"
+    ) {
+      return true;
     }
   }
 
-
-  controlFechaInscripcion(){
+  controlFechaInscripcion() {
     let fechaActual = new Date();
     let fechaFinIncripcion = this.curso.fechaInscripcionHastaDate;
 
-    if(fechaActual <= fechaFinIncripcion){
+    if (fechaActual <= fechaFinIncripcion) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }

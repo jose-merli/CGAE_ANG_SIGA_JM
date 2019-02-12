@@ -211,6 +211,8 @@ export class FichaColegialComponent implements OnInit {
   messageRegtel: String;
   datosCurricularesRemove: FichaDatosCurricularesObject = new FichaDatosCurricularesObject();
 
+  @ViewChild("autocompleteTopics")
+  autocompleteTopics: AutoComplete;
   @ViewChild("tableCertificados")
   tableCertificados: DataTable;
   @ViewChild("tableSanciones")
@@ -247,6 +249,14 @@ export class FichaColegialComponent implements OnInit {
 
   selectedDatosRegtel: DocushareItem;
   desactivarVolver: Boolean;
+
+  comboTopics: any[] = [];
+  comboService: any[] = [];
+  suggestService: any[] = [];
+  suggestTopics: any[] = [];
+  resultsService: any[] = [];
+  resultsTopics: any[] = [];
+  backgroundColor;
 
   @ViewChild("auto")
   autoComplete: AutoComplete;
@@ -441,7 +451,7 @@ export class FichaColegialComponent implements OnInit {
     // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
     this.colsColegiales = [
       {
-        field: "fechaEstadoStr",
+        field: "fechaEstado",
         header: "censo.nuevaSolicitud.fechaEstado"
       },
       {
@@ -983,8 +993,10 @@ export class FichaColegialComponent implements OnInit {
   onInitGenerales() {
     // this.activacionGuardarGenerales();
     this.etiquetasPersonaJuridicaSelecionados = this.generalBody.etiquetas;
+    // this.checkGeneralBody.etiquetas = JSON.parse(JSON.stringify(this.generalBody.etiquetas));
     if (!this.esNewColegiado) {
       this.obtenerEtiquetasPersonaJuridicaConcreta();
+      this.getTopicsCourse();
       this.cargarImagen(this.idPersona);
       this.stringAComisiones();
       this.fechaNacimiento = this.generalBody.fechaNacimiento;
@@ -1057,6 +1069,8 @@ export class FichaColegialComponent implements OnInit {
     } else {
       this.obtenerPartidoJudicial();
     }
+
+    this.getComboTemas();
   }
 
   closeDialogConfirmation(item) {
@@ -1206,9 +1220,9 @@ export class FichaColegialComponent implements OnInit {
 
   disabledAutocomplete() {
     if (!this.isLetrado) {
-      this.autocompletar  =  true;
+      this.autocompletar = true;
     } else {
-      this.autocompletar  =  false;
+      this.autocompletar = false;
     }
   }
 
@@ -1234,6 +1248,7 @@ export class FichaColegialComponent implements OnInit {
     this.arreglarFechas();
     this.comisionesAString();
     this.generalBody.etiquetas = [];
+    this.generalBody.temasCombo = this.resultsTopics;
     // this.generalBody.grupos = this.etiquetasPersonaJuridicaSelecionados.values;
     for (let i in this.etiquetasPersonaJuridicaSelecionados) {
       this.generalBody.etiquetas[i] = this.etiquetasPersonaJuridicaSelecionados[
@@ -1498,8 +1513,13 @@ export class FichaColegialComponent implements OnInit {
     this.comisionesAString();
     this.getInscrito();
     this.generalBody.etiquetas = this.etiquetasPersonaJuridicaSelecionados;
+
+    if (JSON.parse(JSON.stringify(this.resultsTopics)) != undefined && JSON.parse(JSON.stringify(this.resultsTopics)) != null && JSON.parse(JSON.stringify(this.resultsTopics)).length > 0) {
+      this.generalBody.temasCombo = JSON.parse(JSON.stringify(this.resultsTopics));
+    }
+
     if (
-      JSON.stringify(this.checkGeneralBody) != JSON.stringify(this.generalBody)
+      (JSON.stringify(this.checkGeneralBody) != JSON.stringify(this.generalBody)) || this.file != undefined
     ) {
       if (
         this.generalBody.nif != "" &&
@@ -1521,6 +1541,8 @@ export class FichaColegialComponent implements OnInit {
     } else {
       this.activarGuardarGenerales = false;
     }
+
+    return this.activarGuardarGenerales;
   }
 
   activacionRestablecerGenerales() {
@@ -1601,6 +1623,7 @@ export class FichaColegialComponent implements OnInit {
       this.obtenerEtiquetasPersonaJuridicaConcreta();
       this.stringAComisiones();
       this.activacionGuardarGenerales();
+      this.resultsTopics = JSON.parse(JSON.stringify(this.checkGeneralBody.temasCombo));
     }
   }
 
@@ -2009,6 +2032,7 @@ export class FichaColegialComponent implements OnInit {
           );
 
           this.createItems = this.etiquetasPersonaJuridicaSelecionados;
+          this.checkGeneralBody.etiquetas = JSON.parse(JSON.stringify(this.etiquetasPersonaJuridicaSelecionados));
         },
         err => {
           console.log(err);
@@ -2277,7 +2301,7 @@ export class FichaColegialComponent implements OnInit {
       .postPaginado(
         "fichaColegialOtrasColegiaciones_searchOtherCollegues",
         "?numPagina=1",
-        this.idPersona
+        this.generalBody.nif
       )
       .subscribe(
         data => {
@@ -2759,15 +2783,38 @@ export class FichaColegialComponent implements OnInit {
     let datosDelete = [];
     selectedItem.forEach((value: DatosDireccionesItem, key: number) => {
       value.idPersona = this.idPersona;
-      datosDelete.push(value);
+
+      if (value.idTipoDireccion.includes("2")) {
+        if (JSON.parse(sessionStorage.getItem("numDespacho")) > 1) {
+          if (!(value.idTipoDireccion.includes("3") || value.idTipoDireccion.includes("9") || value.idTipoDireccion.includes("8") || value.idTipoDireccion.includes("6"))) {
+            datosDelete.push(value);
+          }
+        }
+      } else {
+        if (!(value.idTipoDireccion.includes("3") || value.idTipoDireccion.includes("9") || value.idTipoDireccion.includes("8") || value.idTipoDireccion.includes("6"))) {
+          datosDelete.push(value);
+        }
+      }
+
     });
 
+    this.borrarDireccion(datosDelete);
+
+
+  }
+
+  borrarDireccion(datosDelete) {
     this.sigaServices.post("direcciones_remove", datosDelete).subscribe(
       data => {
         this.progressSpinner = false;
+        this.showSuccess();
       },
       err => {
         this.progressSpinner = false;
+        this.showInfo("No se puede eliminar una dirección con tipo CensoWeb, Traspaso, Facturación, Guardia o Despacho");
+        this.selectMultipleDirecciones = false;
+        this.selectAllDirecciones = false;
+        this.numSelectedDirecciones = 0;
         console.log(err);
       },
       () => {
@@ -2776,6 +2823,8 @@ export class FichaColegialComponent implements OnInit {
         // this.dniCorrecto = null;
         // this.disabledRadio = false;
         this.selectMultipleDirecciones = false;
+        this.numSelectedDirecciones = 0;
+        this.selectAllDirecciones = false;
         this.searchDirecciones();
       }
     );
@@ -2805,6 +2854,18 @@ export class FichaColegialComponent implements OnInit {
           data => {
             this.searchDireccionIdPersona = JSON.parse(data["body"]);
             this.datosDirecciones = this.searchDireccionIdPersona.datosDireccionesItem;
+            let contador = 0;
+            this.datosDirecciones.forEach(element => {
+              let numDespacho = element.idTipoDireccion.find(
+                item => item == '2'
+              );
+
+              if (numDespacho != undefined) {
+                contador = contador + 1;
+              }
+            });
+            sessionStorage.setItem("numDespacho", JSON.stringify(contador));
+
             this.progressSpinner = false;
           },
           err => {
@@ -2830,6 +2891,8 @@ export class FichaColegialComponent implements OnInit {
       JSON.stringify(this.generalBody.idPersona)
     );
     sessionStorage.setItem("editarDireccion", "false");
+    // CAMBIO INCIDENCIA DIRECCIONES
+    //sessionStorage.setItem("numDirecciones", JSON.stringify(this.datosDirecciones.length));
     this.router.navigate(["/consultarDatosDirecciones"]);
   }
 
@@ -3788,5 +3851,148 @@ export class FichaColegialComponent implements OnInit {
             console.log(error);
           });
     }
+  }
+
+  filterTopics(event) {
+    if (
+      this.comboTopics.length > 0 &&
+      this.comboTopics.length != this.resultsTopics.length
+    ) {
+      if (this.resultsTopics.length > 0) {
+        this.suggestTopics = [];
+
+        this.comboTopics.forEach(element => {
+          let findTopic = this.resultsTopics.find(
+            x => x.value === element.value
+          );
+          if (findTopic == undefined) {
+            this.suggestTopics.push(element);
+          }
+        });
+
+        this.resultsTopics.forEach(e => {
+          if (e.color == undefined) {
+            e.color = this.getRandomColor();
+          }
+        });
+
+      } else {
+        this.suggestTopics = JSON.parse(JSON.stringify(this.comboTopics));
+      }
+      this.autocompleteTopics.suggestionsUpdated = true;
+      this.autocompleteTopics.panelVisible = true;
+      this.autocompleteTopics.focusInput();
+    } else {
+      if (this.autocompleteTopics.highlightOption != undefined) {
+        this.resultsTopics.forEach(e => {
+          if (e.color == undefined) {
+            e.color = this.getRandomColor();
+          }
+        });
+      }
+
+      this.autocompleteTopics.panelVisible = false;
+      this.autocompleteTopics.focusInput();
+
+    }
+    this.generalBody.temasCombo = JSON.parse(JSON.stringify(this.resultsTopics));
+    this.activacionGuardarGenerales();
+  }
+
+  getRandomColor() {
+    var color = Math.floor(0x1000000 * Math.random()).toString(16);
+    return "#" + ("000000" + color).slice(-6);
+  }
+
+  visiblePanelBlurTopics(event) {
+    if (this.autocompleteTopics.highlightOption != undefined) {
+      this.autocompleteTopics.highlightOption.color = this.getRandomColor();
+      this.resultsTopics.push(this.autocompleteTopics.highlightOption);
+      this.autocompleteTopics.highlightOption = undefined;
+    }
+    this.autocompleteTopics.panelVisible = false;
+    this.activacionGuardarGenerales();
+  }
+
+  filterLabelsMultipleTopics(event) {
+    let query = event.query;
+    this.suggestTopics = [];
+
+    this.comboTopics.forEach(element => {
+      if (element.label.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        let findTopic = this.resultsTopics.find(x => x.value === element.value);
+        if (findTopic == undefined) {
+          this.suggestTopics.push(element);
+        }
+      }
+    });
+
+    this.resultsTopics.forEach(e => {
+      if (e.color == undefined) {
+        e.color = this.getRandomColor();
+      }
+    });
+  }
+
+  getTopicsCourse() {
+    this.progressSpinner = true;
+    this.sigaServices
+      .getParam(
+        "fichaCursos_getTopicsSpecificPerson",
+        "?idPersona=" + this.generalBody.idPersona
+      )
+      .subscribe(
+        n => {
+          this.resultsTopics = n.combooItems;
+
+          this.resultsTopics.forEach(e => {
+            if (e.color == undefined) {
+              e.color = this.getRandomColor();
+            }
+          });
+
+          this.generalBody.temasCombo = JSON.parse(JSON.stringify(this.resultsTopics));
+          this.checkGeneralBody.temasCombo = JSON.parse(JSON.stringify(this.resultsTopics));
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  getComboTemas() {
+    this.backgroundColor = this.getRandomColor();
+    // obtener colegios
+    this.sigaServices.get("fichaCursos_getTopicsCourse").subscribe(
+      n => {
+        this.comboTopics = n.combooItems;
+        this.arregloTildesCombo(this.comboTopics);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  arregloTildesCombo(combo) {
+    combo.map(e => {
+      let accents =
+        "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+      let accentsOut =
+        "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+      let i;
+      let x;
+      for (i = 0; i < e.label.length; i++) {
+        if ((x = accents.indexOf(e.label[i])) != -1) {
+          e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+          return e.labelSinTilde;
+        }
+      }
+    });
   }
 }

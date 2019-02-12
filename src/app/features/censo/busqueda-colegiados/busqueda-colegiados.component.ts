@@ -506,6 +506,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
             this.progressSpinner = false;
             this.colegiadoSearch = JSON.parse(data["body"]);
             this.datos = this.colegiadoSearch.colegiadoItem;
+            this.convertirStringADate(this.datos);
             this.table.paginator = true;
             this.body.fechaIncorporacion = [];
           },
@@ -518,6 +519,24 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           }
         );
     }
+  }
+
+  convertirStringADate(datos) {
+    datos.forEach(element => {
+      if (element.fechaNacimiento == "" || element.fechaNacimiento == null) {
+        element.fechaNacimientoDate = null;
+      } else {
+        var posIni = element.fechaNacimiento.indexOf("/");
+        var posFin = element.fechaNacimiento.lastIndexOf("/");
+        var year = element.fechaNacimiento.substring(posFin + 1);
+        var day = element.fechaNacimiento.substring(
+          0, posIni
+        );
+        var month = element.fechaNacimiento.substring(posIni + 1, posFin);
+        element.fechaNacimientoDate = new Date(year, month, day);
+        element.fechaNacimiento = day + "/" + month + "/" + year;
+      }
+    });
   }
 
   isLimpiar() {
@@ -587,7 +606,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         header: "censo.busquedaClientes.noResidente"
       },
       {
-        field: "fechaNacimiento",
+        field: "fechaNacimientoDate",
         header: "censo.consultaDatosColegiacion.literal.fechaNac"
       },
       {
