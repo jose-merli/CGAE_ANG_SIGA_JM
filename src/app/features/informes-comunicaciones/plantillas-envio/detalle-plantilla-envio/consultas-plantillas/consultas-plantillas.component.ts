@@ -11,7 +11,7 @@ import { TranslateService } from '../../../../../commons/translate/translation.s
 @Component({
 	selector: 'app-consultas-plantillas',
 	templateUrl: './consultas-plantillas.component.html',
-	styleUrls: [ './consultas-plantillas.component.scss' ]
+	styleUrls: ['./consultas-plantillas.component.scss']
 })
 export class ConsultasPlantillasComponent implements OnInit {
 	datos: any[];
@@ -35,6 +35,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 	eliminarArray: any[];
 	msgs: Message[];
 	finalidad: string;
+	objetivo: string;
 	institucionActual: any;
 
 	@ViewChild('table') table: DataTable;
@@ -62,7 +63,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 		private sigaServices: SigaServices,
 		private confirmationService: ConfirmationService,
 		private translateService: TranslateService
-	) {}
+	) { }
 
 	ngOnInit() {
 		// this.getDatos();
@@ -71,7 +72,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 
 		this.selectedItem = 10;
 
-		this.cols = [ { field: 'nombre', header: 'Nombre' }, { field: 'finalidad', header: 'Finalidad' } ];
+		this.cols = [{ field: 'nombre', header: 'Nombre' }, { field: 'objetivo', header: 'Objetivo' }, { field: 'finalidad', header: 'Finalidad' }];
 
 		this.rowsPerPage = [
 			{
@@ -147,21 +148,21 @@ export class ConsultasPlantillasComponent implements OnInit {
 
 	getInstitucion() {
 		this.sigaServices.get("institucionActual").subscribe(n => {
-		  this.institucionActual = n.value;
+			this.institucionActual = n.value;
 		});
-	  }
+	}
 
 	navigateTo(dato) {
 		let idConsulta = dato[0].idConsulta;
 		console.log(dato);
 		if (!this.selectMultiple && idConsulta && !this.nuevaConsulta) {
-			if ((dato[0].generica == "No") ||  (this.institucionActual == 2000 && dato[0].generica == "Si")) {
-				sessionStorage.setItem("consultaEditable", "S");				
-			}else{
+			if ((dato[0].generica == "No") || (this.institucionActual == 2000 && dato[0].generica == "Si")) {
+				sessionStorage.setItem("consultaEditable", "S");
+			} else {
 				sessionStorage.setItem("consultaEditable", "N");
 			}
 			sessionStorage.setItem('consultasSearch', JSON.stringify(dato[0]));
-			this.router.navigate([ '/fichaConsulta' ]);
+			this.router.navigate(['/fichaConsulta']);
 		}
 		this.numSelected = this.selectedDatos.length;
 	}
@@ -169,7 +170,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 		this.numSelected = selectedDatos.length;
 	}
 	abreCierraFicha() {
-		if ((sessionStorage.getItem('crearNuevaPlantilla') == null || sessionStorage.getItem('crearNuevaPlantilla') == undefined )|| sessionStorage.getItem('crearNuevaPlantilla') == 'false') {
+		if ((sessionStorage.getItem('crearNuevaPlantilla') == null || sessionStorage.getItem('crearNuevaPlantilla') == undefined) || sessionStorage.getItem('crearNuevaPlantilla') == 'false') {
 			this.openFicha = !this.openFicha;
 			if (this.openFicha) {
 				this.getDatos();
@@ -203,7 +204,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 		this.nuevaConsulta = true;
 
 		this.datos.push(objNewConsulta);
-		this.datos = [ ...this.datos ];
+		this.datos = [...this.datos];
 		this.selectedDatos = [];
 	}
 
@@ -232,7 +233,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 				console.log(err);
 				this.progressSpinner = false;
 			},
-			() => {}
+			() => { }
 		);
 	}
 
@@ -246,7 +247,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 				console.log(err);
 				this.progressSpinner = false;
 			},
-			() => {}
+			() => { }
 		);
 	}
 
@@ -324,7 +325,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 	}
 
 	goNuevaConsulta() {
-		this.router.navigate([ '/fichaConsulta' ]);
+		this.router.navigate(['/fichaConsulta']);
 		sessionStorage.setItem('nuevaConsultaPlantillaEnvios', JSON.stringify(this.body));
 	}
 
@@ -333,22 +334,25 @@ export class ConsultasPlantillasComponent implements OnInit {
 			(data) => {
 				this.progressSpinner = false;
 				this.finalidad = JSON.parse(data['body']).finalidad;
+				this.objetivo = JSON.parse(data['body']).objetivo;
 				for (let dato of this.datos) {
 					if (!dato.idConsulta && dato.idConsulta == id) {
 						dato.idConsulta = id;
 						dato.finalidad = this.finalidad;
+						dato.objetivo = this.objetivo;
 					} else if (dato.idConsulta && dato.idConsulta == id) {
 						dato.finalidad = this.finalidad;
+						dato.objetivo = this.objetivo;
 					}
 				}
-				this.datos = [ ...this.datos ];
+				this.datos = [...this.datos];
 				console.log(this.datos);
 			},
 			(err) => {
 				console.log(err);
 				this.progressSpinner = false;
 			},
-			() => {}
+			() => { }
 		);
 	}
 }
