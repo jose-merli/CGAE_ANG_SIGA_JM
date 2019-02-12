@@ -210,7 +210,7 @@ export class FichaColegialComponent implements OnInit {
   messageNoContentRegTel: String = "";
   messageRegtel: String;
   datosCurricularesRemove: FichaDatosCurricularesObject = new FichaDatosCurricularesObject();
-  
+
   @ViewChild("autocompleteTopics")
   autocompleteTopics: AutoComplete;
   @ViewChild("tableCertificados")
@@ -1514,7 +1514,7 @@ export class FichaColegialComponent implements OnInit {
     this.getInscrito();
     this.generalBody.etiquetas = this.etiquetasPersonaJuridicaSelecionados;
 
-    if(JSON.parse(JSON.stringify(this.resultsTopics)) != undefined && JSON.parse(JSON.stringify(this.resultsTopics)) != null && JSON.parse(JSON.stringify(this.resultsTopics)).length > 0){
+    if (JSON.parse(JSON.stringify(this.resultsTopics)) != undefined && JSON.parse(JSON.stringify(this.resultsTopics)) != null && JSON.parse(JSON.stringify(this.resultsTopics)).length > 0) {
       this.generalBody.temasCombo = JSON.parse(JSON.stringify(this.resultsTopics));
     }
 
@@ -2301,7 +2301,7 @@ export class FichaColegialComponent implements OnInit {
       .postPaginado(
         "fichaColegialOtrasColegiaciones_searchOtherCollegues",
         "?numPagina=1",
-        this.idPersona
+        this.generalBody.nif
       )
       .subscribe(
         data => {
@@ -2784,26 +2784,26 @@ export class FichaColegialComponent implements OnInit {
     selectedItem.forEach((value: DatosDireccionesItem, key: number) => {
       value.idPersona = this.idPersona;
 
-      if(value.idTipoDireccion.includes("2")){
-        if(JSON.parse(sessionStorage.getItem("numDespacho")) > 1){
-          if(!(value.idTipoDireccion.includes("3") || value.idTipoDireccion.includes("9") || value.idTipoDireccion.includes("8") || value.idTipoDireccion.includes("6"))){
+      if (value.idTipoDireccion.includes("2")) {
+        if (JSON.parse(sessionStorage.getItem("numDespacho")) > 1) {
+          if (!(value.idTipoDireccion.includes("3") || value.idTipoDireccion.includes("9") || value.idTipoDireccion.includes("8") || value.idTipoDireccion.includes("6"))) {
             datosDelete.push(value);
           }
         }
       } else {
-        if(!(value.idTipoDireccion.includes("3") || value.idTipoDireccion.includes("9") || value.idTipoDireccion.includes("8") || value.idTipoDireccion.includes("6"))){
+        if (!(value.idTipoDireccion.includes("3") || value.idTipoDireccion.includes("9") || value.idTipoDireccion.includes("8") || value.idTipoDireccion.includes("6"))) {
           datosDelete.push(value);
         }
       }
-    
+
     });
 
     this.borrarDireccion(datosDelete);
 
-    
+
   }
 
-  borrarDireccion(datosDelete){
+  borrarDireccion(datosDelete) {
     this.sigaServices.post("direcciones_remove", datosDelete).subscribe(
       data => {
         this.progressSpinner = false;
@@ -2859,7 +2859,7 @@ export class FichaColegialComponent implements OnInit {
               let numDespacho = element.idTipoDireccion.find(
                 item => item == '2'
               );
-  
+
               if (numDespacho != undefined) {
                 contador = contador + 1;
               }
@@ -3875,7 +3875,7 @@ export class FichaColegialComponent implements OnInit {
             e.color = this.getRandomColor();
           }
         });
-        
+
       } else {
         this.suggestTopics = JSON.parse(JSON.stringify(this.comboTopics));
       }
@@ -3893,7 +3893,7 @@ export class FichaColegialComponent implements OnInit {
 
       this.autocompleteTopics.panelVisible = false;
       this.autocompleteTopics.focusInput();
-      
+
     }
     this.generalBody.temasCombo = JSON.parse(JSON.stringify(this.resultsTopics));
     this.activacionGuardarGenerales();
