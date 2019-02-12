@@ -431,7 +431,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
         this.cargarModoEdicion();
         this.progressSpinner = false;
-
+        this.cargarDatosCuentaBancaria();
       }
     );
   }
@@ -535,6 +535,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
               this.idCuenta = this.body.idCuenta;
               this.cargarDatosMandatos();
               this.cargarDatosAnexos();
+              this.cargarDatosCuentaBancaria();
             }
           );
       }
@@ -654,7 +655,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
             this.body.bic = this.bodyBancoBic.bic;
             this.iban = this.body.iban.replace(/\s/g, "");
 
-            this.editar = false;
+            // this.editar = false;
           },
           error => {
             this.bodyBancoBicSearch = JSON.parse(error["error"]);
