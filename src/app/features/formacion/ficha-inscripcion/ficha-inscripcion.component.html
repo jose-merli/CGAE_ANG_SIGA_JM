@@ -34,7 +34,7 @@
             <span>{{ curso.fechaImparticionHasta }}</span>
   
             <label>{{ 'form.busquedaCursos.literal.temas' | translate }}</label>
-            <span>{{ curso.temas }}</span>
+            <span>{{ curso.numTemas }}</span>
   
             <label>{{ 'formacion.busquedaInscripcion.estadoCurso' | translate }}</label>
             <span>{{ curso.estado }}</span>
@@ -43,11 +43,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Cuerpo-->
-    <!-- <div class="card-body card-body-ficha" *ngIf="esFichaActiva('curso')">
-      
-    </div> -->
   </div>
 
   <!-- FICHA DATOS INSCRIPCION -->

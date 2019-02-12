@@ -47,6 +47,7 @@ export class DatosCursosItem {
   idInstitucion: string;
 
   aviso: string;
+  numTemas: string;
 
   constructor() {}
 }

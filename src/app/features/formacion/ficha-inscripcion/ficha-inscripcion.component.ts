@@ -395,8 +395,18 @@ export class FichaInscripcionComponent implements OnInit {
 
   getComboPrecio() {
     this.comboPrecio = [
-      { label: this.translateService.instant("formacion.fichaInscripcion.precio.pagoTotal"), value: 0 },
-      { label: this.translateService.instant("formacion.fichaInscripcion.precio.pagoPlazos"), value: 1 }
+      {
+        label: this.translateService.instant(
+          "formacion.fichaInscripcion.precio.pagoTotal"
+        ),
+        value: 0
+      },
+      {
+        label: this.translateService.instant(
+          "formacion.fichaInscripcion.precio.pagoPlazos"
+        ),
+        value: 1
+      }
     ];
 
     this.arregloTildesCombo(this.comboPrecio);
