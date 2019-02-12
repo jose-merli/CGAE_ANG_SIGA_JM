@@ -871,7 +871,9 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
             .subscribe(
               data => {
                 this.showMessageCalificacion(
-                  "Calificacion actualizada correctamente",
+                  this.translateService.instant(
+                    "formacion.mensaje.actualizar.calificacion.correctamente"
+                  ),
                   "success"
                 );
                 this.progressSpinner = false;
@@ -879,7 +881,12 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
                 this.isBuscar();
               },
               error => {
-                this.showMessageCalificacion("Ha ocurrido un error", "error");
+                this.showMessageCalificacion(
+                  this.translateService.instant(
+                    "formacion.mensaje.general.mensaje.error"
+                  ),
+                  "error"
+                );
                 this.onCalificacion();
                 this.progressSpinner = false;
               }
@@ -887,7 +894,9 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
         } else {
           this.onCalificacion();
           this.showMessageCalificacion(
-            "Se ha introducido una calificacion de manera incorrecta",
+            this.translateService.instant(
+              "formacion.mensaje.general.calificacion.errorea"
+            ),
             "error"
           );
           this.progressSpinner = false;

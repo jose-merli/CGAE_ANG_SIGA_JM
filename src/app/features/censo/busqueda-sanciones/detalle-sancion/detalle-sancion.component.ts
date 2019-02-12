@@ -65,6 +65,7 @@ export class DetalleSancionComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    sessionStorage.removeItem("nuevaSancion");
     this.controlFechas();
     this.getComboColegios();
     this.getComboTipoSancion();
@@ -229,6 +230,7 @@ export class DetalleSancionComponent implements OnInit {
 
   return() {
     sessionStorage.removeItem("rowData");
+    sessionStorage.removeItem("nuevaSancion");
     sessionStorage.setItem("back", "true");
     this.location.back();
   }

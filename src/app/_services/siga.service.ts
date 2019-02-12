@@ -204,6 +204,7 @@ export class SigaServices {
     fichaColegialGenerales_tratamiento: "fichaDatosGenerales/tratamiento",
     fichaColegialGenerales_estadoCivil: "fichaDatosGenerales/estadoCivil",
     fichaColegialGenerales_pais: "fichaDatosColegiales/pais",
+    fichaColegialGenerales_temas: "fichaDatosGenerales/getTopicsSpecificPerson",
     fichaDatosCurriculares_search: "fichaDatosCurriculares/search",
     solicitudIncorporacion_tratamiento: "solicitudIncorporacion/tratamiento",
     solicitudIncorporacion_estadoCivil: "solicitudIncorporacion/estadoCivil",
@@ -294,6 +295,7 @@ export class SigaServices {
       "fichaCursos/autovalidateInscriptionsCourse",
     fichaCursos_getTopicsCourse: "fichaCursos/getTopicsCourse",
     fichaCursos_getTopicsSpecificCourse: "fichaCursos/getTopicsSpecificCourse",
+    fichaCursos_getTopicsSpecificPerson: "fichaCursos/getTopicsSpecificPerson",
     fichaCursos_getCodeCourse: "fichaCursos/getCodeCourse",
 
     busquedaInscripciones_estadosInscripciones:
