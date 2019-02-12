@@ -208,7 +208,43 @@ export class DialogoComunicacionesComponent implements OnInit {
   }
 
   enviarComunicacion() {
-    console.log(this.listaConsultas);
+    this.progressSpinner = true;
+
+    this.valores.forEach(element => {
+      if(element.valor != null && typeof element.valor == "object"){
+        element.valor = element.valor.ID;
+      }     
+    });
+
+    if(this.datosSeleccionados != null && this.datosSeleccionados != undefined){      
+      let datos = {
+        idClaseComunicacion: this.idClaseComunicacion,
+        modelos: this.bodyComunicacion.modelos,
+        selectedDatos: this.datosSeleccionados,
+        idInstitucion: this.idInstitucion,
+        consultas: this.listaConsultas,
+        rutaComunicacion: this.rutaComunicacion,
+        fechaProgramada: this.bodyComunicacion.fechaProgramacion
+      }
+
+      this.sigaServices
+      .post("dialogo_generarEnvios", datos)
+      .subscribe(
+        data => {
+          this.showSuccess("Envios generados");
+        },
+        err => {
+          console.log(err);
+          this.showFail("Error al generar los envios");
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+    }else{
+      this.showFail("No se ha seleccionado nigún dato");
+    }
   }
   
 
@@ -255,33 +291,9 @@ export class DialogoComunicacionesComponent implements OnInit {
     });
     return valido;
   }
-
+  
   descargarComunicacion() { 
-    /*this.getKeysClaseComunicacion();
     
-    let datosSeleccionados = [];
-    this.selectedDatos.forEach(element => {
-      let keysValues = [];
-      this.keys.forEach(key =>{
-        keysValues.push(element.get(key));
-      })
-      datosSeleccionados.push(keysValues);
-    });*/
- 
-    /*let datosSeleccionados = [];
-    let par = [2001,2000000359];
-    let par2 = [2001,2000000745];
-
-    datosSeleccionados.push(par);
-    datosSeleccionados.push(par2);
-
-
-    let modelos = [];
-    let modelo = {
-      idModeloComunicacion:61
-    }
-    modelos.push(modelo);*/    
-
     this.progressSpinner = true;
 
     this.valores.forEach(element => {

@@ -647,6 +647,7 @@ export class SigaServices {
     dialogo_tipoEnvios: 'dialogoComunicacion/tipoEnvios',
     dialogo_enviar: 'dialogoComunicacion/enviar',
     dialogo_descargar: 'dialogoComunicacion/descargar',
+    dialogo_generarEnvios: 'dialogoComunicacion/generarEnvios',
     dialogo_keys: 'dialogoComunicacion/keys',
     dialogo_obtenerCamposDinamicos: 'dialogoComunicacion/obtenerCamposDinamicos',
     dialogo_envioTest: 'dialogoComunicacion/envioTest',
