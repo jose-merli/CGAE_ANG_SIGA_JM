@@ -66,10 +66,9 @@
 
 
             <div class="d-flex justify-content-end main-button">
-                <button [disabled]="selectedModelos.length = 0" (click)="obtenerCamposDinamicos('descargar')" class="mr-auto" pButton type="button"
+                <button [disabled]="selectedModelos.length == 0" (click)="obtenerCamposDinamicos('descargar')" class="mr-auto" pButton type="button"
                     icon="fa fa-file" iconPos="left" label="{{'general.boton.descargar' | translate }}"></button>
-
-                <button [disabled]="selectedModelos.length = 0" (click)="obtenerCamposDinamicos('comunicar')" pButton type="button" icon="fa fa-send"
+                <button [disabled]="selectedModelos.length == 0" (click)="obtenerCamposDinamicos('comunicar')" pButton type="button" icon="fa fa-send"
                     iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
                 <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="Volver"></button>
             </div>
