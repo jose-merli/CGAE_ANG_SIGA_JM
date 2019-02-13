@@ -792,33 +792,34 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     ) {
       if (this.newEvent.idEvento != null) {
         url = "fichaEventos_updateEventCalendar";
+        this.callSaveEvent(url);
+        
+        // if (this.newEvent.idEstadoEvento == this.valorEstadoEventoPlanificado) {
+        //   let mess = "¿Desea enviar un aviso del cambio realizado?";
 
-        if (this.newEvent.idEstadoEvento == this.valorEstadoEventoPlanificado) {
-          let mess = "¿Desea enviar un aviso del cambio realizado?";
-
-          let icon = "fa fa-edit";
-          this.confirmationService.confirm({
-            message: mess,
-            icon: icon,
-            accept: () => {
-              this.callSaveEvent(url);
-            },
-            reject: () => {
-              this.msgs = [
-                {
-                  severity: "info",
-                  summary: this.translateService.instant(
-                    "general.message.cancelado"
-                  ),
-                  detail: "Aviso cancelado"
-                }
-              ];
-              this.callSaveEvent(url);
-            }
-          });
-        }else{
-          this.callSaveEvent(url);
-        }
+        //   let icon = "fa fa-edit";
+        //   this.confirmationService.confirm({
+        //     message: mess,
+        //     icon: icon,
+        //     accept: () => {
+        //       this.callSaveEvent(url);
+        //     },
+        //     reject: () => {
+        //       this.msgs = [
+        //         {
+        //           severity: "info",
+        //           summary: this.translateService.instant(
+        //             "general.message.cancelado"
+        //           ),
+        //           detail: "Aviso cancelado"
+        //         }
+        //       ];
+        //       this.callSaveEvent(url);
+        //     }
+        //   });
+        // }else{
+        //   this.callSaveEvent(url);
+        // }
       } else {
         url = "fichaEventos_saveEventCalendar";
         this.callSaveEvent(url);
