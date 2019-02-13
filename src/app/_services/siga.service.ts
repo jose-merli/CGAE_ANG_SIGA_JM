@@ -653,8 +653,10 @@ export class SigaServices {
 
   private menuToggled = new Subject<any>();
   private iframeRemove = new Subject<any>();
+  private consultasRefresh = new Subject<any>();
   menuToggled$ = this.menuToggled.asObservable();
   iframeRemove$ = this.iframeRemove.asObservable();
+  consultasRefresh$ = this.consultasRefresh.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -871,6 +873,10 @@ export class SigaServices {
 
   notifyMenuToggled() {
     this.menuToggled.next();
+  }
+
+  notifyRefreshConsulta(){
+    this.consultasRefresh.next();
   }
 
   postSendContentAndParameter(

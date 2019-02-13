@@ -137,7 +137,7 @@ export class ModelosComunicacionesComponent implements OnInit {
     this.sigaServices.get("modelos_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
-        this.colegios.unshift({ label: "Seleccionar", value: "" });
+        this.colegios.unshift({ label: "", value: "" });
         for (let e of this.colegios) {
           if (e.value == "2000") {
             e.label = "POR DEFECTO";
@@ -154,7 +154,7 @@ export class ModelosComunicacionesComponent implements OnInit {
     this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
       n => {
         this.clasesComunicaciones = n.combooItems;
-        this.clasesComunicaciones.unshift({ label: "Seleccionar", value: "" });
+        this.clasesComunicaciones.unshift({ label: "", value: "" });
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.clasesComunicaciones.map(e => {

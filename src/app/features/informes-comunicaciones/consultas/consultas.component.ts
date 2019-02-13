@@ -68,15 +68,13 @@ export class ConsultasComponent implements OnInit {
     this.getInstitucion();
 
     sessionStorage.removeItem("crearNuevaConsulta");
-
+    
+    this.getComboGenerica();
     this.getCombos();
 
-    if (sessionStorage.getItem("filtrosConsulta") != null) {
-      this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosConsulta"));
-      this.buscar();
-    }else{
-      this.bodySearch.generica = "N";
-    }
+    setTimeout(() => {
+      this.recuperarBusqueda();
+    }, 1);
     
     this.selectedItem = 10;
 
@@ -106,6 +104,15 @@ export class ConsultasComponent implements OnInit {
         value: 40
       }
     ];
+  }
+
+  recuperarBusqueda(){
+    if (sessionStorage.getItem("filtrosConsulta") != null) {
+      this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosConsulta"));
+      this.buscar();
+    }else{
+      this.bodySearch.generica = "N";
+    }
   }
 
   getInstitucion() {
@@ -138,7 +145,7 @@ export class ConsultasComponent implements OnInit {
     this.sigaServices.get("consultas_comboObjetivos").subscribe(
       data => {
         this.objetivos = data.combooItems;
-        this.objetivos.unshift({ label: 'Seleccionar', value: '' });
+        this.objetivos.unshift({ label: '', value: '' });
       },
       err => {
         console.log(err);
@@ -147,7 +154,7 @@ export class ConsultasComponent implements OnInit {
       this.sigaServices.get("consultas_comboModulos").subscribe(
         data => {
           this.modulos = data.combooItems;
-          this.modulos.unshift({ label: 'Seleccionar', value: '' });
+          this.modulos.unshift({ label: '', value: '' });
           /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
     para poder filtrar el dato con o sin estos caracteres*/
           this.modulos.map((e) => {
@@ -161,21 +168,20 @@ export class ConsultasComponent implements OnInit {
                 return e.labelSinTilde;
               }
             }
-          });
+
+            if(this.bodySearch.idModulo != undefined && this.bodySearch.idModulo != ""){
+              this.cargaComboClaseCom(null);
+            }else{
+              this.clasesComunicaciones = [];
+              this.clasesComunicaciones.unshift({ label: '', value: '' });
+            }           
+          });          
         },
         err => {
           console.log(err);
         }
-      );
-    
-      if(this.bodySearch.idModulo != undefined && this.bodySearch.idModulo != ""){
-        this.cargaComboClaseCom(null);
-      }else{
-        this.clasesComunicaciones = [];
-        this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
-      }  
+      );      
 
-    this.getComboGenerica();
   }
 
   RowsPerPages(event) {
@@ -264,7 +270,7 @@ export class ConsultasComponent implements OnInit {
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
       message:
-        "¿Está seguro de cancelar los" + dato.length + "envíos seleccionados",
+        "¿Está seguro de eliminar las " + dato.length + " consultas seleccionadas",
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarCancelar(dato);
@@ -385,7 +391,7 @@ export class ConsultasComponent implements OnInit {
       .subscribe(
         data => {
           this.clasesComunicaciones = data.combooItems;
-          this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
+          this.clasesComunicaciones.unshift({ label: '', value: '' });
           /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
           this.clasesComunicaciones.map(e => {
@@ -411,7 +417,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   getComboGenerica() {
     this.comboGenerica = [
-      { label: "Seleccionar", value: "" },
+      { label: "", value: "" },
       { label: "Sí", value: "S" },
       { label: "No", value: "N" }
     ];   

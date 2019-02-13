@@ -219,7 +219,7 @@ export class PlantillasEnvioComponent implements OnInit {
 		this.sigaServices.get('enviosMasivos_tipo').subscribe(
 			(n) => {
 				this.tiposEnvio = n.combooItems;
-				this.tiposEnvio.unshift({ label: 'Seleccionar', value: '' })
+				this.tiposEnvio.unshift({ label: '', value: '' })
 
 				/*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
       para poder filtrar el dato con o sin estos caracteres*/
