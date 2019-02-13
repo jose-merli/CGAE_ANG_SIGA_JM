@@ -62,6 +62,10 @@ export class ConsultaComponent implements OnInit {
 
   ngOnInit() {
 
+    this.sigaServices.consultasRefresh$.subscribe(() => {
+      this.getDatos();
+    });
+
     if(sessionStorage.getItem("consultaEditable") == "S" || sessionStorage.getItem("crearNuevaConsulta")){
       this.editable = true;
     }
@@ -426,9 +430,21 @@ export class ConsultaComponent implements OnInit {
 
       },
       {
-        texto: "17.Se ha añadido la cláusula NULO para los operadores. La notación será %%OPERADOR%% %%CRITERIO%% NULO 'VALOR'. Donde valor es 'SI' y 'NO'. En caso que no exista será 'NO'. En el caso de que exista la cláusula DEFECTO debe ir siempre detrás de ella. En caso de que admita nulos no será obligatorio dar ningún valor al criterio dinámico en la pantalla de criterios dinámicos y filtrará como IS NULL"
+        texto: "17. Se ha añadido la cláusula NULO para los operadores. La notación será %%OPERADOR%% %%CRITERIO%% NULO 'VALOR'. Donde valor es 'SI' y 'NO'. En caso que no exista será 'NO'. En el caso de que exista la cláusula DEFECTO debe ir siempre detrás de ella. En caso de que admita nulos no será obligatorio dar ningún valor al criterio dinámico en la pantalla de criterios dinámicos y filtrará como IS NULL"
 
       },
+      {
+        texto: "18. Si la consulta pertenece a una clase de comunicación será obligatorio introducir en la etiqueta <WHERE> de la consulta las claves asociadas a dicha clase de comunicación." +
+              "Informes genéricos de censo: %%IDPERSONA%%, %%IDINSTITUCION%%. " +
+              "Informes de sanciones de letrados: %%IDPERSONA%%, %%IDINSTITUCION%%, %%IDSANCION%%. " +
+              "Plantilla de Orden de domiciliación de adeudo directo SEPA: %%IDPERSONA%%, %%IDINSTITUCION%%, %%IDCUENTA%%, %%IDMANDATO%%. " +
+              "Plantilla de Anexo a la Orden de domiciliación de adeudo directo SEPA: %%IDPERSONA%%, %%IDINSTITUCION%%, %%IDCUENTA%%, %%IDMANDATO%%, %%IDANEXO%%."
+
+      },
+      {
+        texto: "19. Es obligatorio introducir en la etiqueta <WHERE> la clave %%IDINSTITUCION%%."
+
+      }
 
     ]
   }

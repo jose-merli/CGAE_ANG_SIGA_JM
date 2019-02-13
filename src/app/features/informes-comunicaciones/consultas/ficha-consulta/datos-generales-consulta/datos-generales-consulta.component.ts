@@ -6,6 +6,7 @@ import { Location } from "@angular/common";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { Subject } from "rxjs/Subject";
 
 @Component({
   selector: "app-datos-generales-consulta",
@@ -13,7 +14,9 @@ import { TranslateService } from '../../../../../commons/translate/translation.s
   styleUrls: ["./datos-generales-consulta.component.scss"]
 })
 export class DatosGeneralesConsultaComponent implements OnInit {
-  openFicha: boolean = false;
+
+
+  openFicha: boolean = true;
   editar: boolean;
   datos: any[];
   cols: any[];
@@ -57,6 +60,9 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     }
   ];
 
+  private consultasRefresh = new Subject<any>();
+  consultasRefresh$ = this.consultasRefresh.asObservable();
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private location: Location,
@@ -72,9 +78,9 @@ export class DatosGeneralesConsultaComponent implements OnInit {
 
     this.getInstitucion();
     this.getDatos();
+    this.getModulos();
     this.getClasesComunicaciones();
     this.getObjetivos();
-    this.getModulos();
 
     this.selectedItem = 4;
 
@@ -201,7 +207,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
       .subscribe(
         data => {
           this.clasesComunicaciones = data.combooItems;
-          this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
+          this.clasesComunicaciones.unshift({ label: '', value: '' });
           /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
           this.clasesComunicaciones.map(e => {
@@ -229,13 +235,12 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices.get("consultas_comboModulos").subscribe(
       data => {
         this.modulos = data.combooItems;
+        this.modulos.unshift({ label: '', value: '' });
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-      para poder filtrar el dato con o sin estos caracteres*/
-        this.modulos.map(e => {
-          let accents =
-            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-          let accentsOut =
-            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+    para poder filtrar el dato con o sin estos caracteres*/
+        this.modulos.map((e) => {
+          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+          let accentsOut = 'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz';
           let i;
           let x;
           for (i = 0; i < e.label.length; i++) {
@@ -245,6 +250,9 @@ para poder filtrar el dato con o sin estos caracteres*/
             }
           }
         });
+        if (this.body.idModulo == 'undefined' || this.body.idModulo == null || this.body.idModulo == "") {
+          this.body.idModulo = this.modulos[0].value;
+        }
       },
       err => {
         console.log(err);
@@ -256,7 +264,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices.get("consultas_comboObjetivos").subscribe(
       data => {
         this.objetivos = data.combooItems;
-        this.objetivos.unshift({ label: 'Seleccionar', value: '' });
+        this.objetivos.unshift({ label: '', value: '' });
       },
       err => {
         console.log(err);
@@ -364,8 +372,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         sessionStorage.setItem("consultaEditable", "S");
         sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
         this.showSuccess(this.translateService.instant('informesycomunicaciones.consultas.ficha.correctGuardadoConsulta'));
-
-
+        this.sigaServices.notifyRefreshConsulta();
       },
       err => {
         this.showFail(this.translateService.instant('informesycomunicaciones.consultas.ficha.errorGuardadoConsulta'));
@@ -383,7 +390,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   isButtonDisabled() {
-    if (this.body.idModulo != null && this.body.idModulo != ''
+    if (this.body.idModulo != null && this.body.idModulo != '' && this.body.descripcion != null && this.body.descripcion != ''
       && this.body.idObjetivo != null && this.body.idObjetivo != '' && this.body.nombre != null && this.body.nombre != '') {
       return false;
     }

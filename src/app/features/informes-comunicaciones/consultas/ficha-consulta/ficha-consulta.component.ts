@@ -17,6 +17,10 @@ export class FichaConsultaComponent implements OnInit {
 		this.fichasPosibles = [
 			{
 				key: 'generales',
+				activa: true
+			},
+			{
+				key: 'consultas',
 				activa: false
 			},
 			{
@@ -25,10 +29,6 @@ export class FichaConsultaComponent implements OnInit {
 			},
 			{
 				key: 'plantillas',
-				activa: false
-			},
-			{
-				key: 'consultas',
 				activa: false
 			}
 		];
