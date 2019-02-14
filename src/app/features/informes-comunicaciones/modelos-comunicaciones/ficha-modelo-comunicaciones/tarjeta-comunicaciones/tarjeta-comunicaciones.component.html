@@ -101,8 +101,7 @@
         <button (click)="eliminar(selectedDatos)" *ngIf="selectedDatos && selectedDatos != ''" pButton type="button"
           icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}" [disabled] = 'soloLectura || selectedDatos.length == 0'></button>
         <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}" [disabled] = 'soloLectura'></button>
-        <button [disabled]="!idTipoEnvios && (datos == null || datos.length == 0)" (click)="guardar(selectedDatos)"
-          pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" [disabled] = "(soloLectura || isGuardar) || (datos == null || datos.length == 0)"></button>
+        <button (click)="guardar(selectedDatos)" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" [disabled] = "(soloLectura || isGuardar) || (datos == null || datos.length == 0) || showHistorico"></button>
       </div>
     </div>
   </div>

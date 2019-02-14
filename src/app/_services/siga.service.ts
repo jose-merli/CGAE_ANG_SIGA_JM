@@ -603,6 +603,7 @@ export class SigaServices {
     modelos_borrar: "modelos/borrar",
     modelos_rehabilitar: "modelos/rehabilitar",
     modelos_detalle_datosGenerales: "modelos/detalle/datosGenerales",
+    modelos_detalle_datosGeneralesComprobarNom: "modelos/detalle/datosGenerales/comprobarNom",
     modelos_detalle_perfiles: "modelos/detalle/perfiles",
     modelos_detalle_perfilesModelo: "modelos/detalle/perfilesModelo",
     modelos_detalle_guardarPerfiles: "modelos/detalle/guardarPerfiles",

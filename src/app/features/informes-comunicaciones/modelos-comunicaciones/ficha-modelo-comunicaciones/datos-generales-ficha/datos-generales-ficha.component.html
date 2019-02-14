@@ -43,7 +43,7 @@
               <label>{{ "informesycomunicaciones.modelosdecomunicacion.clasecomunicaciones" | translate }} *
               </label>
               <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion"
-                class="select-form" [disabled] = 'soloLectura'></p-dropdown>
+                class="select-form" [disabled] = 'soloLectura || isEdicion'></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }} *

@@ -74,7 +74,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.getDatos();
@@ -249,8 +249,8 @@ export class TarjetaComunicacionesComponent implements OnInit {
             this.datosInicial = JSON.parse(JSON.stringify(this.datos));
           }
         },
-        error => { },
-        () => { }
+        error => {},
+        () => {}
       );
     }
   }
@@ -286,6 +286,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
           this.progressSpinner = false;
         },
         error => {
+          this.progressSpinner = false;
           this.showFail(
             this.translateService.instant(
               "informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaGuardada"
@@ -299,7 +300,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
         }
       );
 
-    this.isNuevo = !this.isNuevo;
+    this.isNuevo = false;
     this.selectMultiple = false;
   }
 
@@ -333,7 +334,9 @@ export class TarjetaComunicacionesComponent implements OnInit {
         " " +
         dato.length +
         " " +
-        "informesycomunicaciones.modelosdecomunicacion.ficha.informesSeleccionados",
+        this.translateService.instant(
+          "informesycomunicaciones.modelosdecomunicacion.ficha.informesSeleccionados"
+        ),
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarEliminar(dato);
@@ -353,6 +356,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
   }
 
   confirmarEliminar(dato) {
+    this.progressSpinner = true;
     this.eliminarArray = [];
     dato.forEach(element => {
       if (element.porDefecto == true) {
@@ -361,7 +365,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
         element.porDefecto = "No";
       }
       let objEliminar = {
-        idModelo: this.body.idModeloComunicacion,
+        idModeloComunicacion: this.body.idModeloComunicacion,
         idPlantillaEnvios: element.idPlantillaEnvios,
         idInstitucion: this.body.idInstitucion,
         idTipoEnvios: element.idTipoEnvios,
@@ -375,12 +379,16 @@ export class TarjetaComunicacionesComponent implements OnInit {
       .post("modelos_detalle_borrarPlantilla", this.eliminarArray)
       .subscribe(
         data => {
-          this.showSuccess(this.translateService.instant(
-            "informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaEliminado"
-          ));
+          this.progressSpinner = false;
+          this.showSuccess(
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaEliminado"
+            )
+          );
           this.selectedDatos = [];
         },
         err => {
+          this.progressSpinner = false;
           this.showFail(
             this.translateService.instant(
               "informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaEliminado"
@@ -390,6 +398,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
         },
         () => {
           this.getDatos();
+          this.progressSpinner = false;
         }
       );
 
@@ -423,7 +432,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
     this.getDatos();
   }
 
-  onChangeTipoEnvio(e) { }
+  onChangeTipoEnvio(e) {}
 
   getPlantillas() {
     this.sigaServices.get("modelos_detalle_plantillasComunicacion").subscribe(
@@ -434,7 +443,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
       err => {
         console.log(err);
       },
-      () => { }
+      () => {}
     );
   }
 
@@ -506,6 +515,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
       }
     } else {
       dato.porDefecto = false;
+      e = false;
     }
 
     this.selectedDatos = [];
@@ -518,5 +528,6 @@ export class TarjetaComunicacionesComponent implements OnInit {
     this.selectMultiple = false;
     this.selectedDatos = [];
     this.numSelected = 0;
+    this.showHistorico = false;
   }
 }

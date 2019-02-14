@@ -29,6 +29,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   visible: any = [];
   institucionActual: any = [];
   soloLectura: boolean = false;
+  isEdicion: boolean = false;
 
   fichasPosibles = [
     {
@@ -49,7 +50,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
     private router: Router,
     private translateService: TranslateService,
     private sigaServices: SigaServices
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.preseleccionar = [
@@ -132,6 +133,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
       this.bodyInicial = JSON.parse(sessionStorage.getItem("modelosSearch"));
+      this.isEdicion = true;
     } else {
       this.body.visible = 1;
     }
@@ -139,17 +141,44 @@ export class DatosGeneralesFichaComponent implements OnInit {
 
   guardar() {
     this.sigaServices
-      .post("modelos_detalle_datosGenerales", this.body)
+      .post("modelos_detalle_datosGeneralesComprobarNom", this.body)
       .subscribe(
         data => {
-          this.showSuccess(
-            this.translateService.instant(
-              "informesycomunicaciones.modelosdecomunicacion.ficha.correctGuardado"
-            )
-          );
-          this.body.idModeloComunicacion = JSON.parse(data.body).data;
-          sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
-          sessionStorage.removeItem("crearNuevoModelo");
+          let existe = data.body;
+
+          if (existe == "false") {
+            this.sigaServices
+              .post("modelos_detalle_datosGenerales", this.body)
+              .subscribe(
+                data => {
+                  this.showSuccess(
+                    this.translateService.instant(
+                      "informesycomunicaciones.modelosdecomunicacion.ficha.correctGuardado"
+                    )
+                  );
+                  this.body.idModeloComunicacion = JSON.parse(data.body).data;
+                  sessionStorage.setItem(
+                    "modelosSearch",
+                    JSON.stringify(this.body)
+                  );
+                  sessionStorage.removeItem("crearNuevoModelo");
+                },
+                err => {
+                  console.log(err);
+                  this.showFail(
+                    this.translateService.instant(
+                      "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
+                    )
+                  );
+                }
+              );
+          } else {
+            this.showFail(
+              this.translateService.instant(
+                "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.nombreDuplicado"
+              )
+            );
+          }
         },
         err => {
           console.log(err);

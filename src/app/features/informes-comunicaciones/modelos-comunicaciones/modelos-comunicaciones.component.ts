@@ -306,6 +306,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   onDuplicar(dato) {
     this.progressSpinner = true;
+
     let modelo = {
       idModeloComunicacion: this.selectedDatos[0].idModeloComunicacion,
       idInstitucion: this.selectedDatos[0].idInstitucion
