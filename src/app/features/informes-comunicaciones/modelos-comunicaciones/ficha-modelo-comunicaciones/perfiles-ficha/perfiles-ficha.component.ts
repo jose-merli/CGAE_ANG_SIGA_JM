@@ -21,7 +21,8 @@ export class PerfilesFichaComponent implements OnInit {
   perfilesNoSeleccionadosInicial: any[];
   progressSpinner: boolean = false;
   soloLectura: boolean = false;
-
+  editar: boolean = true;
+  
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -52,6 +53,10 @@ export class PerfilesFichaComponent implements OnInit {
 
   ngOnInit() {
     this.getDatos();
+
+    this.sigaServices.deshabilitarEditar$.subscribe(() => {
+      this.editar = false;
+    });
 
     if (
       sessionStorage.getItem("soloLectura") != null &&

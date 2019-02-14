@@ -158,7 +158,7 @@
           iconPos="left"
           label="{{ 'general.boton.eliminar' | translate }}"
           (click)="eliminar(selectedDatos)"
-          [disabled]="soloLectura"
+          [disabled]="soloLectura || !editar"
         ></button>
         <button
           (click)="addInforme()"
@@ -167,7 +167,7 @@
           icon="fa fa-plus"
           iconPos="left"
           label="{{ 'general.boton.new' | translate }}"
-          [disabled]="soloLectura"
+          [disabled]="soloLectura || !editar"
         ></button>
       </div>
     </div>

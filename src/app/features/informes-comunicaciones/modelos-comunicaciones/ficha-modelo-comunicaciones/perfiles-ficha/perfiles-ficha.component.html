@@ -71,7 +71,7 @@
           icon="fa fa-undo"
           iconPos="left"
           label="{{ 'general.boton.restablecer' | translate }}"
-          [disabled]="soloLectura"
+          [disabled]="soloLectura || !editar"
         ></button>
         <button
           (click)="guardar()"
@@ -80,7 +80,7 @@
           icon="far fa-save"
           iconPos="left"
           label="{{ 'general.boton.guardar' | translate }}"
-          [disabled]="soloLectura"
+          [disabled]="soloLectura || !editar"
         ></button>
       </div>
     </div>
