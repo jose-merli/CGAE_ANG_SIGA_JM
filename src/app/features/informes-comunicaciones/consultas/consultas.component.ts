@@ -243,25 +243,17 @@ export class ConsultasComponent implements OnInit {
   }
 
   duplicar(dato) {
-    this.duplicarArray = [];
-    dato.forEach(element => {
-      let objDuplicar = {
-        idConsulta: element.idConsulta,
-        idInstitucion: element.idInstitucion
-      };
-      this.duplicarArray.push(objDuplicar);
-    });
-    this.sigaServices.post("consultas_duplicar", this.duplicarArray).subscribe(
+
+    this.sigaServices.post("consultas_duplicar", dato[0]).subscribe(
       data => {
         this.showSuccess("Se ha duplicado la consulta correctamente");
+        sessionStorage.setItem("consultasSearch", JSON.stringify(JSON.parse(data["body"]).consultaItem));
+        sessionStorage.setItem("filtrosConsulta", JSON.stringify(this.bodySearch));
+        this.router.navigate(["/fichaConsulta"]);
       },
       err => {
         this.showFail("Error al duplicado la consulta");
         console.log(err);
-      },
-      () => {
-        this.table.reset();
-        this.buscar();
       }
     );
   }
@@ -270,7 +262,7 @@ export class ConsultasComponent implements OnInit {
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
       message:
-        "¿Está seguro de eliminar las " + dato.length + " consultas seleccionadas",
+        "¿Está seguro de eliminar las " + dato.length + " consultas seleccionadas?",
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarCancelar(dato);
@@ -336,13 +328,11 @@ export class ConsultasComponent implements OnInit {
           dato[0].generica == "No") ||
         (this.institucionActual == 2000 && dato[0].generica == "Si")
       ) {
-        sessionStorage.setItem("consultaEditable", "S");
         sessionStorage.setItem("consultasSearch", JSON.stringify(dato[0]));
         sessionStorage.setItem("filtrosConsulta", JSON.stringify(this.bodySearch));
         this.router.navigate(["/fichaConsulta"]);
         
       } else {
-        sessionStorage.setItem("consultaEditable", "N");
         this.router.navigate(["/fichaConsulta"]);
         sessionStorage.setItem("consultasSearch", JSON.stringify(dato[0]));
         sessionStorage.setItem("filtrosConsulta", JSON.stringify(this.bodySearch));

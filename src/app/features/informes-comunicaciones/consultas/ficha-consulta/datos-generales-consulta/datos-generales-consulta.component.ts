@@ -35,7 +35,6 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   institucionActual: any;
   msgs: Message[];
   generica: string;
-  editable: boolean = false;
 
 
   @ViewChild('table') table: DataTable;
@@ -71,11 +70,6 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    if(sessionStorage.getItem("consultaEditable") == "S" || sessionStorage.getItem("crearNuevaConsulta")){
-      this.editable = true;
-    }
-
     this.getInstitucion();
     this.getDatos();    
     this.getModulos();
@@ -148,6 +142,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
       if (this.institucionActual != '2000' && sessionStorage.getItem("crearNuevaConsulta") != null) {
         this.generica = 'N';
       }
+      this.habilitarBotones();
     },
       err => {
         console.log(err);
@@ -326,9 +321,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   getDatos() {
-
     if (sessionStorage.getItem("consultasSearch") != null) {
-      this.editar = true;
       this.body = JSON.parse(sessionStorage.getItem("consultasSearch"));
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       if (this.body.generica == "Si") {
@@ -337,11 +330,21 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.generica = "N"
       }
     } else {
-      this.editar = false;
+      this.editar = true;
       this.generica = "S";
-    }
+    }   
   }
 
+  habilitarBotones(){
+    if(this.institucionActual != '2000' && this.body.generica == "Si"){
+      this.editar = false;
+    }else{
+      this.editar = true;
+    }
+    if(this.editar == false){
+      this.sigaServices.notifyRefreshEditar();
+    }
+  }
 
   guardar() {
 
@@ -387,7 +390,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onChangeObjetivo() {
-    sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
+    //sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
   }
 
 

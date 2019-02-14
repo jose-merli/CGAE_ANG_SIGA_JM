@@ -90,7 +90,8 @@ export class ModelosComunicacionesComponent implements OnInit {
       { field: "nombre", header: "Nombre" },
       { field: "institucion", header: "Institución" },
       { field: "orden", header: "Orden" },
-      { field: "preseleccionar", header: "Preseleccionado", width: "20%" }
+      { field: "preseleccionar", header: "Preseleccionado", width: "20%" },
+      { field: "porDefecto", header: "Por defecto"}
     ];
 
     this.rowsPerPage = [
@@ -138,11 +139,16 @@ export class ModelosComunicacionesComponent implements OnInit {
       n => {
         this.colegios = n.combooItems;
         this.colegios.unshift({ label: "", value: "" });
-        for (let e of this.colegios) {
-          if (e.value == "2000") {
-            e.label = "POR DEFECTO";
+        if(this.institucionActual != "2000"){
+          for (let e of this.colegios) {
+            if (e.value == "2000") {
+              e.value = "0";
+              e.label = "POR DEFECTO";
+            }
           }
-        }
+        }else{
+          this.colegios.unshift({ label: "POR DEFECTO", value: "0" });
+        }    
       },
       err => {
         console.log(err);
