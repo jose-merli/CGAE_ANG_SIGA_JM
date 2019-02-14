@@ -40,7 +40,7 @@ export class ConsultaComponent implements OnInit {
   es: any =esCalendar;
   operadoresTexto: any [];
   operadoresNumero: any [];
-  editable: boolean = false;
+  editar: boolean = true;
 
   fichasPosibles = [
     {
@@ -66,9 +66,9 @@ export class ConsultaComponent implements OnInit {
       this.getDatos();
     });
 
-    if(sessionStorage.getItem("consultaEditable") == "S" || sessionStorage.getItem("crearNuevaConsulta")){
-      this.editable = true;
-    }
+    this.sigaServices.deshabilitarEditar$.subscribe(() => {
+      this.editar = false;
+    });
     
     this.getDatos();
     this.getAyuda();
@@ -443,6 +443,11 @@ export class ConsultaComponent implements OnInit {
       },
       {
         texto: "19. Es obligatorio introducir en la etiqueta <WHERE> la clave %%IDINSTITUCION%%."
+
+      },
+      {
+        texto: "20. Si el objetivo de la consulta es 'DESTINATARIOS' se debe añadir dentro de la etiqueta <SELECT> los siguientes campos:"+
+              "IDINSTITUCION, IDPERSONA, CODIGOPOSTAL, CORREOELECTRONICO, DOMICILIO, MOVIL, FAX1, FAX2, IDPAIS, IDPROVINCIA, IDPOBLACION"
 
       }
 

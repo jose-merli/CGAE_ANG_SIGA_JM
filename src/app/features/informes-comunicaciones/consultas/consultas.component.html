@@ -117,7 +117,7 @@
 
           <button (click)="borrar(selectedDatos)" *ngIf="selectedDatos && selectedDatos != ''" pButton type=" button" icon="fa fa-trash-alt"
             iconPos="left" label="{{ 'general.boton.eliminar' | translate}}" [disabled]="!eliminar"></button>
-          <button *ngIf="selectedDatos && selectedDatos !=''" (click)="duplicar(selectedDatos)" pButton type="button" icon="fa
+          <button *ngIf="selectedDatos && selectedDatos !='' && selectedDatos.length == 1" (click)="duplicar(selectedDatos)" pButton type="button" icon="fa
             fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
         </div>
       </p-footer>
