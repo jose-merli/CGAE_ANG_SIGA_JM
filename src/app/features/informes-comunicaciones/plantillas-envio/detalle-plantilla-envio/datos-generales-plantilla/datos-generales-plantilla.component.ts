@@ -10,7 +10,7 @@ import { TranslateService } from "../../../../../commons/translate/translation.s
   styleUrls: ["./datos-generales-plantilla.component.scss"]
 })
 export class DatosGeneralesPlantillaComponent implements OnInit {
-  openFicha: boolean = false;
+  openFicha: boolean = true;
   activacionEditar: boolean = true;
   body: DatosGeneralesPlantillaItem = new DatosGeneralesPlantillaItem();
   bodyInicial: DatosGeneralesPlantillaItem = new DatosGeneralesPlantillaItem();
@@ -22,7 +22,7 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
   fichasPosibles = [
     {
       key: "generales",
-      activa: false
+      activa: true
     },
     {
       key: "consultas",

@@ -86,7 +86,7 @@
       </p-table>
       <p-footer>
         <div class="text-right main-button">
-          <button [disabled]="nuevaConsulta || selectedDatos !=''" (click)="addConsulta()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Añadir"></button>
+          <button [disabled]="nuevaConsulta || selectMultiple || selectAll" (click)="addConsulta()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Añadir"></button>
           <button [disabled]="!nuevaConsulta" (click)="asociar()" pButton type="button" icon="far fa-save"
             iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
           <button [disabled]="selectedDatos ==''" (click)="desasociar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt"
