@@ -46,6 +46,7 @@ export class EnviosMasivosComponent implements OnInit {
   programarArray: any[];
   bodySearch: EnviosMasivosSearchItem = new EnviosMasivosSearchItem();
   eliminarArray: any[];
+  enviosArray: any[];
   currentDate: Date = new Date();
   estado: any;
   loaderEtiquetas: boolean = false;
@@ -292,6 +293,32 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
     });
   }
+
+
+  enviar(dato) {
+
+    this.enviosArray = [];
+
+    dato.forEach(element => {
+      let objEnviar = {
+        idEnvio: element.idEnvio
+      };
+      this.enviosArray.push(objEnviar);
+    });
+
+    this.sigaServices.post("enviosMasivos_enviar", this.enviosArray).subscribe(
+      data => {
+        this.showSuccess('Se ha lanzado el envio correctamente');
+      },
+      err => {
+        this.showFail('Error al procesar el envio');
+        console.log(err);
+      },
+      () => {
+      }
+    );
+  }
+
 
 
   confirmarCancelar(dato) {

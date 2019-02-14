@@ -554,6 +554,7 @@ export class SigaServices {
     fichaColegialOtrasColegiaciones_getLabelColegios:
       "fichaColegialOtrasColegiaciones/getLabelColegios",
     enviosMasivos: "enviosMasivos/enviosMasivos",
+    enviosMasivos_enviar: "enviosMasivos/enviar",
     enviosMasivos_search: "enviosMasivos/search",
     enviosMasivos_estado: "enviosMasivos/estadoEnvios",
     enviosMasivos_tipo: "enviosMasivos/tipoEnvios",
