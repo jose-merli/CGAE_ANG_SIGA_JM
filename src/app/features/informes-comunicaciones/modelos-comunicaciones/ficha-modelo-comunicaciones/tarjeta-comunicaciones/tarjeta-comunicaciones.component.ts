@@ -46,7 +46,8 @@ export class TarjetaComunicacionesComponent implements OnInit {
   isNuevo: boolean = false;
   isGuardar: boolean = false;
   progressSpinner: boolean = false;
-
+  editar: boolean = true;
+  
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -79,6 +80,10 @@ export class TarjetaComunicacionesComponent implements OnInit {
   ngOnInit() {
     this.getDatos();
     this.getPlantillas();
+
+    this.sigaServices.deshabilitarEditar$.subscribe(() => {
+      this.editar = false;
+    });
 
     this.selectedItem = 10;
 

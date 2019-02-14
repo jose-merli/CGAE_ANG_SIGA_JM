@@ -58,15 +58,11 @@ export class ModelosComunicacionesComponent implements OnInit {
 
   ngOnInit() {
     this.getInstitucion();
-    this.getComboColegios();
     this.bodySearch.visible = 1;
 
     sessionStorage.removeItem("crearNuevoModelo");
 
-    if (sessionStorage.getItem("filtrosModelos") != null) {
-      this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosModelos"));
-      this.buscar();
-    }
+
 
     this.selectedItem = 10;
 
@@ -138,7 +134,6 @@ export class ModelosComunicacionesComponent implements OnInit {
     this.sigaServices.get("modelos_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
-        this.colegios.unshift({ label: "", value: "" });
         if (this.institucionActual != "2000") {
           for (let e of this.colegios) {
             if (e.value == "2000") {
@@ -149,6 +144,8 @@ export class ModelosComunicacionesComponent implements OnInit {
         } else {
           this.colegios.unshift({ label: "POR DEFECTO", value: "0" });
         }
+
+        this.colegios.unshift({ label: "", value: "" });
       },
       err => {
         console.log(err);
@@ -292,7 +289,13 @@ para poder filtrar el dato con o sin estos caracteres*/
   getInstitucion() {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
-      this.bodySearch.idInstitucion = this.institucionActual;
+      if (sessionStorage.getItem("filtrosModelos") == null) {
+        this.bodySearch.idInstitucion = this.institucionActual;
+      } else if (sessionStorage.getItem("filtrosModelos") != null) {
+        this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosModelos"));
+        this.buscar();
+      }
+      this.getComboColegios();
     });
   }
 

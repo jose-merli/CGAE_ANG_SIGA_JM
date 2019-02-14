@@ -34,6 +34,7 @@ export class TarjetaInformesComponent implements OnInit {
   msgs: Message[];
   eliminarArray: any[];
   soloLectura: boolean = false;
+  editar: boolean = true;
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -67,6 +68,10 @@ export class TarjetaInformesComponent implements OnInit {
 
   ngOnInit() {
     this.getDatos();
+
+    this.sigaServices.deshabilitarEditar$.subscribe(() => {
+      this.editar = false;
+    });
 
     this.selectedItem = 10;
     this.cols = [
@@ -201,9 +206,10 @@ export class TarjetaInformesComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.modelo = JSON.parse(sessionStorage.getItem("modelosSearch"));
-    }
-    this.getInformes();
+      this.getInformes();
+    }    
   }
+
   getInformes() {
     this.sigaServices.post("modelos_detalle_informes", this.modelo).subscribe(
       data => {

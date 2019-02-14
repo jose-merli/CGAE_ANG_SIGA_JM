@@ -29,7 +29,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   visible: any = [];
   institucionActual: any = [];
   soloLectura: boolean = false;
-  isEdicion: boolean = false;
+  editar: boolean = true;
 
   fichasPosibles = [
     {
@@ -50,7 +50,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
     private router: Router,
     private translateService: TranslateService,
     private sigaServices: SigaServices
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.preseleccionar = [
@@ -68,8 +68,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
     this.getInstitucion();
 
     this.getClasesComunicaciones();
-    this.getComboColegios();
-    this.getDatos();
+
 
     if (
       sessionStorage.getItem("soloLectura") != null &&
@@ -133,7 +132,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
       this.bodyInicial = JSON.parse(sessionStorage.getItem("modelosSearch"));
-      this.isEdicion = true;
+      this.habilitarBotones();
     } else {
       this.body.visible = 1;
     }
@@ -195,30 +194,44 @@ export class DatosGeneralesFichaComponent implements OnInit {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
       this.body.idInstitucion = this.institucionActual;
+      this.getComboColegios();
+      this.getDatos();
     });
+  }
+
+  habilitarBotones() {
+    if (this.institucionActual != '2000' && this.body.porDefecto == "SI") {
+      this.editar = false;
+    } else {
+      this.editar = true;
+    }
+
+    if (this.editar == false) {
+      this.colegios = [];
+      this.colegios.unshift({ label: "POR DEFECTO", value: "0" });
+      this.sigaServices.notifyRefreshEditar();
+    }
+
+    if (this.body.porDefecto == "SI") {
+      this.body.idInstitucion = "0";
+    }
   }
 
   getComboColegios() {
     this.sigaServices.get("modelos_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
-        this.colegios.unshift({ label: "", value: "" });
-        if(this.institucionActual != "2000"){
+        if (this.institucionActual != "2000") {
           for (let e of this.colegios) {
             if (e.value == "2000") {
               let x = this.colegios.indexOf(e);
-              this.colegios.splice(x,1);
+              this.colegios.splice(x, 1);
             }
           }
-        }else{
-          for (let e of this.colegios) {
-            if (e.value == "2000") {
-              e.label = "POR DEFECTO";
-              e.value = "0";
-            }
-          }
+        } else {
+          this.colegios.unshift({ label: "POR DEFECTO", value: "0" });
         }
-        
+        this.colegios.unshift({ label: "", value: "" });
       },
       err => {
         console.log(err);
