@@ -62,7 +62,7 @@ export class ModelosComunicacionesComponent implements OnInit {
 
     sessionStorage.removeItem("crearNuevoModelo");
 
-
+    sessionStorage.removeItem("soloLectura");
 
     this.selectedItem = 10;
 
