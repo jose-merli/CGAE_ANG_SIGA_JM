@@ -54,7 +54,7 @@ export class ModelosComunicacionesComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.getInstitucion();
@@ -305,6 +305,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onDuplicar(dato) {
+    this.progressSpinner = true;
     let modelo = {
       idModeloComunicacion: this.selectedDatos[0].idModeloComunicacion,
       idInstitucion: this.selectedDatos[0].idInstitucion
@@ -313,23 +314,30 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices.post("modelos_duplicar", modelo).subscribe(
       data => {
         this.showSuccess(
-          "informesycomunicaciones.modelosdecomunicacion.correctDuplicado"
+          this.translateService.instant(
+            "informesycomunicaciones.modelosdecomunicacion.correctDuplicado"
+          )
         );
-        this.router.navigate(["/fichaModeloComunicaciones"]);
-        sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
-        sessionStorage.setItem(
-          "filtrosModelos",
-          JSON.stringify(this.bodySearch)
-        );
+        // this.router.navigate(["/fichaModeloComunicaciones"]);
+        // sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
+        // sessionStorage.setItem(
+        //   "filtrosModelos",
+        //   JSON.stringify(this.bodySearch)
+        // );
+        this.progressSpinner = false;
       },
       err => {
         this.showFail(
-          "informesycomunicaciones.modelosdecomunicacion.errorDuplicado"
+          this.translateService.instant(
+            "informesycomunicaciones.modelosdecomunicacion.errorDuplicado"
+          )
         );
         console.log(err);
+        this.progressSpinner = false;
       },
       () => {
         this.getResultados();
+        this.progressSpinner = false;
       }
     );
   }
@@ -367,7 +375,9 @@ para poder filtrar el dato con o sin estos caracteres*/
         },
         err => {
           this.showFail(
-            "informesycomunicaciones.modelosdecomunicacion.errorBorrado"
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.errorBorrado"
+            )
           );
           console.log(err);
         },
@@ -457,7 +467,11 @@ para poder filtrar el dato con o sin estos caracteres*/
     let id = dato[0].id;
     this.body = dato[0];
     console.log(dato);
-    if (!this.selectMultiple && !dato[0].fechaBaja) {
+    if (!this.selectMultiple) {
+      if (dato[0].fechaBaja) {
+        sessionStorage.setItem("soloLectura", "true");
+      }
+
       this.router.navigate(["/fichaModeloComunicaciones"]);
       sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
       sessionStorage.setItem("filtrosModelos", JSON.stringify(this.bodySearch));
