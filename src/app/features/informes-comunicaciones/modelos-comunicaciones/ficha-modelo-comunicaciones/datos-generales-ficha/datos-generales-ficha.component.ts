@@ -50,7 +50,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
     private router: Router,
     private translateService: TranslateService,
     private sigaServices: SigaServices
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.preseleccionar = [
@@ -68,7 +68,6 @@ export class DatosGeneralesFichaComponent implements OnInit {
     this.getInstitucion();
 
     this.getClasesComunicaciones();
-
 
     if (
       sessionStorage.getItem("soloLectura") != null &&
@@ -139,55 +138,80 @@ export class DatosGeneralesFichaComponent implements OnInit {
   }
 
   guardar() {
-    this.sigaServices
-      .post("modelos_detalle_datosGeneralesComprobarNom", this.body)
-      .subscribe(
-        data => {
-          let existe = data.body;
+    if (this.bodyInicial.nombre != this.body.nombre) {
+      this.sigaServices
+        .post("modelos_detalle_datosGeneralesComprobarNom", this.body)
+        .subscribe(
+          data => {
+            let existe = data.body;
 
-          if (existe == "false") {
-            this.sigaServices
-              .post("modelos_detalle_datosGenerales", this.body)
-              .subscribe(
-                data => {
-                  this.showSuccess(
-                    this.translateService.instant(
-                      "informesycomunicaciones.modelosdecomunicacion.ficha.correctGuardado"
-                    )
-                  );
-                  this.body.idModeloComunicacion = JSON.parse(data.body).data;
-                  sessionStorage.setItem(
-                    "modelosSearch",
-                    JSON.stringify(this.body)
-                  );
-                  sessionStorage.removeItem("crearNuevoModelo");
-                },
-                err => {
-                  console.log(err);
-                  this.showFail(
-                    this.translateService.instant(
-                      "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
-                    )
-                  );
-                }
+            if (existe == "false") {
+              this.sigaServices
+                .post("modelos_detalle_datosGenerales", this.body)
+                .subscribe(
+                  data => {
+                    this.showSuccess(
+                      this.translateService.instant(
+                        "informesycomunicaciones.modelosdecomunicacion.ficha.correctGuardado"
+                      )
+                    );
+                    this.body.idModeloComunicacion = JSON.parse(data.body).data;
+                    sessionStorage.setItem(
+                      "modelosSearch",
+                      JSON.stringify(this.body)
+                    );
+                    sessionStorage.removeItem("crearNuevoModelo");
+                  },
+                  err => {
+                    console.log(err);
+                    this.showFail(
+                      this.translateService.instant(
+                        "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
+                      )
+                    );
+                  }
+                );
+            } else {
+              this.showFail(
+                this.translateService.instant(
+                  "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.nombreDuplicado"
+                )
               );
-          } else {
+            }
+          },
+          err => {
+            console.log(err);
             this.showFail(
               this.translateService.instant(
-                "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.nombreDuplicado"
+                "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
               )
             );
           }
-        },
-        err => {
-          console.log(err);
-          this.showFail(
-            this.translateService.instant(
-              "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
-            )
-          );
-        }
-      );
+        );
+    } else {
+      this.sigaServices
+        .post("modelos_detalle_datosGenerales", this.body)
+        .subscribe(
+          data => {
+            this.showSuccess(
+              this.translateService.instant(
+                "informesycomunicaciones.modelosdecomunicacion.ficha.correctGuardado"
+              )
+            );
+            this.body.idModeloComunicacion = JSON.parse(data.body).data;
+            sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
+            sessionStorage.removeItem("crearNuevoModelo");
+          },
+          err => {
+            console.log(err);
+            this.showFail(
+              this.translateService.instant(
+                "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
+              )
+            );
+          }
+        );
+    }
   }
 
   getInstitucion() {
@@ -200,7 +224,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   }
 
   habilitarBotones() {
-    if (this.institucionActual != '2000' && this.body.porDefecto == "SI") {
+    if (this.institucionActual != "2000" && this.body.porDefecto == "SI") {
       this.editar = false;
     } else {
       this.editar = true;

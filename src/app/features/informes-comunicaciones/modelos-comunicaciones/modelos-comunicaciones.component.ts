@@ -54,7 +54,7 @@ export class ModelosComunicacionesComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.getInstitucion();
@@ -82,12 +82,30 @@ export class ModelosComunicacionesComponent implements OnInit {
     ];
 
     this.cols = [
-      { field: "claseComunicacion", header: "Clase comunicación" },
-      { field: "nombre", header: "Nombre" },
-      { field: "institucion", header: "Institución" },
-      { field: "orden", header: "Orden" },
-      { field: "preseleccionar", header: "Preseleccionado", width: "20%" },
-      { field: "porDefecto", header: "Por defecto" }
+      {
+        field: "claseComunicacion",
+        header:
+          "informesycomunicaciones.modelosdecomunicacion.clasecomunicaciones"
+      },
+      {
+        field: "nombre",
+        header: "administracion.parametrosGenerales.literal.nombre"
+      },
+      {
+        field: "institucion",
+        header: "censo.busquedaClientesAvanzada.literal.colegio"
+      },
+      { field: "orden", header: "administracion.informes.literal.orden" },
+      {
+        field: "preseleccionar",
+        header: "administracion.informes.literal.preseleccionado",
+        width: "ng e20%"
+      },
+
+      {
+        field: "porDefecto",
+        header: "informesycomunicaciones.modelosdecomunicacion.ficha.porDefecto"
+      }
     ];
 
     this.rowsPerPage = [
