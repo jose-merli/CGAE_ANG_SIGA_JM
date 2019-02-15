@@ -67,8 +67,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
 
     this.getInstitucion();
 
-    this.getClasesComunicaciones(); 
-    
+    this.getClasesComunicaciones();
 
     if (
       sessionStorage.getItem("soloLectura") != null &&
@@ -164,20 +163,20 @@ export class DatosGeneralesFichaComponent implements OnInit {
     });
   }
 
-  habilitarBotones(){
-    if(this.institucionActual != '2000' && this.body.porDefecto == "SI"){
+  habilitarBotones() {
+    if (this.institucionActual != "2000" && this.body.porDefecto == "SI") {
       this.editar = false;
-    }else{
+    } else {
       this.editar = true;
     }
-    
-    if(this.editar == false){
+
+    if (this.editar == false) {
       this.colegios = [];
       this.colegios.unshift({ label: "POR DEFECTO", value: "0" });
       this.sigaServices.notifyRefreshEditar();
     }
 
-    if(this.body.porDefecto == "SI"){
+    if (this.body.porDefecto == "SI") {
       this.body.idInstitucion = "0";
     }
   }
@@ -185,18 +184,18 @@ export class DatosGeneralesFichaComponent implements OnInit {
   getComboColegios() {
     this.sigaServices.get("modelos_colegio").subscribe(
       n => {
-        this.colegios = n.combooItems;        
-        if(this.institucionActual != "2000"){
+        this.colegios = n.combooItems;
+        if (this.institucionActual != "2000") {
           for (let e of this.colegios) {
             if (e.value == "2000") {
               let x = this.colegios.indexOf(e);
-              this.colegios.splice(x,1);
+              this.colegios.splice(x, 1);
             }
           }
-        }else{
+        } else {
           this.colegios.unshift({ label: "POR DEFECTO", value: "0" });
         }
-        this.colegios.unshift({ label: "", value: "" });        
+        this.colegios.unshift({ label: "", value: "" });
       },
       err => {
         console.log(err);
@@ -256,7 +255,8 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   editarCompleto(event, dato) {
-    if (isNumber(dato)) {
+    let NUMBER_REGEX = /^\d{1,3}$/;
+    if (NUMBER_REGEX.test(dato)) {
       if (dato != null && dato != undefined && (dato < 0 || dato > 999)) {
         event.currentTarget.value = "";
       }
