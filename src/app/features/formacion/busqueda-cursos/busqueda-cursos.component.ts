@@ -58,8 +58,12 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
 
   isLetrado: boolean = true;
   //para p-multiselect de temas
-  literalMultiselect = "Seleccionar";
-  textSelected: String = "{0} etiquetas seleccionadas";
+  literalMultiselect = this.translateService.instant(
+    "tablas.literal.seleccionar"
+  );
+  textSelected: String = this.translateService.instant(
+    "general.mensaje.0.etiquetas.seleccionadas"
+  );
   selectedTemas: any[] = [];
 
   // COMBOS
@@ -152,7 +156,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.mySelect.ngOnInit();
+    // this.mySelect.ngOnInit();
   }
 
   //CONTROL DE PERMISOS
@@ -353,38 +357,38 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
         console.log(err);
       },
       () => {
-        // this.mySelect.onFilter = function(event) {
-        //   this.visibleOptions = [];
-        //   if (this.copiaSg == undefined) {
-        //     this.copiaSg = [];
-        //     this.copiaSg = this.options;
-        //   } else {
-        //     this.options = this.copiaSg;
-        //   }
-        //   this.options.forEach(element => {
-        //     if (
-        //       element.label.toLowerCase().indexOf(event.currentTarget.value) >=
-        //       0
-        //     ) {
-        //       this.visibleOptions.push(element);
-        //     } else if (
-        //       element.labelSinTilde != undefined &&
-        //       element.labelSinTilde
-        //         .toLowerCase()
-        //         .indexOf(event.currentTarget.value) != -1
-        //     ) {
-        //       this.visibleOptions.push(element);
-        //     }
-        //   });
-        //   this.filtered = true;
-        //   this.filtered = true;
-        //   if (this.visibleOptions.length != 0) {
-        //     this.options = this.visibleOptions;
-        //   }
-        //   if (event.currentTarget.value == "") {
-        //     this.options = this.copiaSg;
-        //   }
-        // };
+        this.mySelect.onFilter = function(event) {
+          this.visibleOptions = [];
+          if (this.copiaSg == undefined) {
+            this.copiaSg = [];
+            this.copiaSg = this.options;
+          } else {
+            this.options = this.copiaSg;
+          }
+          this.options.forEach(element => {
+            if (
+              element.label.toLowerCase().indexOf(event.currentTarget.value) >=
+              0
+            ) {
+              this.visibleOptions.push(element);
+            } else if (
+              element.labelSinTilde != undefined &&
+              element.labelSinTilde
+                .toLowerCase()
+                .indexOf(event.currentTarget.value) != -1
+            ) {
+              this.visibleOptions.push(element);
+            }
+          });
+          this.filtered = true;
+          this.filtered = true;
+          if (this.visibleOptions.length != 0) {
+            this.options = this.visibleOptions;
+          }
+          if (event.currentTarget.value == "") {
+            this.options = this.copiaSg;
+          }
+        };
       }
     );
   }
@@ -635,19 +639,19 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
         if (JSON.parse(data.body).error.code == null) {
           this.showMessage(
             "info",
-            "Información",
+            this.translateService.instant("general.message.informacion"),
             JSON.parse(data.body).error.description
           );
         } else if (JSON.parse(data.body).error.code == 200) {
           this.showMessage(
             "success",
-            "Correcto",
+            this.translateService.instant("general.message.correct"),
             JSON.parse(data.body).error.description
           );
         } else if (JSON.parse(data.body).error.code == 400) {
           this.showMessage(
             "error",
-            "Incorrecto",
+            this.translateService.instant("general.message.incorrect"),
             JSON.parse(data.body).error.description
           );
         }
@@ -670,19 +674,19 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
         if (JSON.parse(data.body).error.code == null) {
           this.showMessage(
             "info",
-            "Información",
+            this.translateService.instant("general.message.informacion"),
             JSON.parse(data.body).error.description
           );
         } else if (JSON.parse(data.body).error.code == 200) {
           this.showMessage(
             "success",
-            "Correcto",
+            this.translateService.instant("general.message.correct"),
             JSON.parse(data.body).error.description
           );
         } else if (JSON.parse(data.body).error.code == 400) {
           this.showMessage(
             "error",
-            "Incorrecto",
+            this.translateService.instant("general.message.incorrect"),
             JSON.parse(data.body).error.description
           );
         }
@@ -694,8 +698,9 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   }
 
   finalizarCursos() {
-    let mess =
-      "A continuación se actualizarán la ficha de los alumnos con las calificaciones obtenidas y se les emitirán los certificados correspondientes. ¿Desea continuar?";
+    let mess = this.translateService.instant(
+      "formacion.finalizar.curso.emitir.certificados"
+    );
 
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
@@ -714,19 +719,20 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
             if (JSON.parse(data.body).error.code == null) {
               this.showMessage(
                 "info",
-                "Información",
+                this.translateService.instant("general.message.informacion"),
                 JSON.parse(data.body).error.description
               );
             } else if (JSON.parse(data.body).error.code == 200) {
               this.showMessage(
                 "success",
-                "Correcto",
+                this.translateService.instant("general.message.correct"),
+
                 JSON.parse(data.body).error.description
               );
             } else if (JSON.parse(data.body).error.code == 400) {
               this.showMessage(
                 "error",
-                "Incorrecto",
+                this.translateService.instant("general.message.incorrect"),
                 JSON.parse(data.body).error.description
               );
             }
@@ -740,7 +746,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
         this.msgs = [
           {
             severity: "info",
-            summary: "Cancel",
+            summary: this.translateService.instant("general.message.cancelado"),
             detail: this.translateService.instant(
               "general.message.accion.cancelada"
             )
@@ -751,6 +757,36 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   }
 
   cancelarCursos() {
+    this.callCancelarCursos();
+    // let mess = "";
+
+    // if (this.selectedDatos.length > 1) {
+    //   mess = "¿Desea comunicar la cancelación de los cursos?";
+    // } else {
+    //   mess = "¿Desea comunicar la cancelación del curso?";
+    // }
+
+    // let icon = "fa fa-edit";
+    // this.confirmationService.confirm({
+    //   message: mess,
+    //   icon: icon,
+    //   accept: () => {
+    //     this.callCancelarCursos();
+    //   },
+    //   reject: () => {
+    //     this.msgs = [
+    //       {
+    //         severity: "info",
+    //         summary: this.translateService.instant("general.message.cancelado"),
+    //         detail: "Aviso cancelado"
+    //       }
+    //     ];
+    //     this.callCancelarCursos();
+    //   }
+    // });
+  }
+
+  callCancelarCursos() {
     let cursoDTO = new DatosCursosObject();
     cursoDTO.cursoItem = [];
     cursoDTO.cursoItem = this.selectedDatos;
@@ -762,19 +798,19 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
         if (JSON.parse(data.body).error.code == null) {
           this.showMessage(
             "info",
-            "Información",
+            this.translateService.instant("general.message.informacion"),
             JSON.parse(data.body).error.description
           );
         } else if (JSON.parse(data.body).error.code == 200) {
           this.showMessage(
             "success",
-            "Correcto",
+            this.translateService.instant("general.message.correct"),
             JSON.parse(data.body).error.description
           );
         } else if (JSON.parse(data.body).error.code == 400) {
           this.showMessage(
             "error",
-            "Incorrecto",
+            this.translateService.instant("general.message.incorrect"),
             JSON.parse(data.body).error.description
           );
         }
@@ -802,7 +838,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "info",
-      summary: "Info",
+      summary: this.translateService.instant("general.message.informacion"),
       detail: numCursos + " " + this.translateService.instant(mensaje)
     });
   }

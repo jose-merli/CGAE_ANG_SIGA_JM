@@ -12,10 +12,10 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">Consultas</label>
+            <label class="mr-auto title-ficha">{{'menu.informesYcomunicaciones.consultas' | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>Nº Consultas:
+            <label>{{'informesycomunicaciones.plantillasenvio.ficha.numConsultas' | translate}}:
               <span *ngIf="datos">{{datos.length}}</span>
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
@@ -26,7 +26,7 @@
         <div class="img-colegiado">
           <i class="fas fa-comment-alt icon-ficha"></i>
         </div>
-        <label class="title-ficha">Consultas</label>
+        <label class="title-ficha">{{'menu.consultas' | translate}}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -44,7 +44,7 @@
         <ng-template pTemplate="header" let-columns>
           <tr>
             <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-              {{col.header}}
+              {{col.header | translate}}
               <p-sortIcon [field]="col.field"></p-sortIcon>
               <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
                 type="text" (input)="table.filter($event.target.value,
@@ -55,9 +55,9 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td *ngFor="let col of columns" pEditableColumn>
-              <p-dropdown [filter]="true" filterBy="label" *ngIf="col.field=='nombre' && !dato.asociada"
-                [(ngModel)]="dato.idConsulta" [options]="consultas" class="select-form"
-                (onChange)="onChangeConsultas($event)" dataKey="label"></p-dropdown>
+              <p-dropdown [filter]="true" filterBy="label" *ngIf="col.field=='nombre' && !dato.asociada" [(ngModel)]="dato.idConsulta"
+                [options]="consultas" class="select-form" (onChange)="onChangeConsultas($event)" dataKey="label" [emptyFilterMessage]="resultadosConsultas"
+                (input)="buscarConsultas($event)"></p-dropdown>
               <span *ngIf="col.field=='nombre' && dato.asociada">{{dato.nombre}}</span>
               <span *ngIf="col.field=='finalidad' && dato.finalidad != ''">{{dato.finalidad}}</span>
               <span *ngIf="col.field=='objetivo' && dato.objetivo != ''">{{dato.objetivo}}</span>
@@ -67,15 +67,14 @@
         <ng-template pTemplate="emptymessage" let-columns>
           <tr>
             <td [attr.colspan]="columns.length">
-              No hay resultados.
+              {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}.
             </td>
           </tr>
         </ng-template>
         <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al
-              {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al {{table.first + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+            <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: {{numSelected}}</label>
             <label>{{"general.message.mostrar" | translate}}</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
             </p-dropdown>
@@ -92,12 +91,11 @@
       </p-table>
       <p-footer>
         <div class="text-right main-button">
-          <button [disabled]="nuevaConsulta" (click)="addConsulta()" pButton type="button" icon="fa fa-plus"
-            iconPos="left" label="Añadir"></button>
-          <button *ngIf="selectedDatos && selectedDatos.length == 1" (click)="asociar(selectedDatos)" pButton
-            type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
-          <button *ngIf="selectedDatos && selectedDatos !=''" (click)="desasociar(selectedDatos)" pButton type="button"
-            icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
+          <button [disabled]="nuevaConsulta || selectMultiple || selectAll" (click)="addConsulta()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Añadir"></button>
+          <button [disabled]="!nuevaConsulta" (click)="asociar()" pButton type="button" icon="far fa-save"
+            iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+          <button [disabled]="selectedDatos ==''" (click)="desasociar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt"
+            iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
         </div>
       </p-footer>
     </div>

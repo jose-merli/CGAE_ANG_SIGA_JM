@@ -5,16 +5,18 @@ import { DestinatariosItem } from '../../../../../models/DestinatariosItem';
 import { Location } from "@angular/common";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
+import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { Subject } from "rxjs/Subject";
 
 @Component({
-  selector: 'app-datos-generales-consulta',
-  templateUrl: './datos-generales-consulta.component.html',
-  styleUrls: ['./datos-generales-consulta.component.scss']
+  selector: "app-datos-generales-consulta",
+  templateUrl: "./datos-generales-consulta.component.html",
+  styleUrls: ["./datos-generales-consulta.component.scss"]
 })
 export class DatosGeneralesConsultaComponent implements OnInit {
 
 
-  openFicha: boolean = false;
+  openFicha: boolean = true;
   editar: boolean;
   datos: any[];
   cols: any[];
@@ -34,12 +36,9 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   institucionActual: any;
   msgs: Message[];
   generica: string;
-  editable: boolean = false;
 
-
-  @ViewChild('table') table: DataTable;
-  selectedDatos
-
+  @ViewChild("table") table: DataTable;
+  selectedDatos;
 
   fichasPosibles = [
     {
@@ -60,40 +59,56 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     }
   ];
 
+  private consultasRefresh = new Subject<any>();
+  consultasRefresh$ = this.consultasRefresh.asObservable();
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private location: Location, private sigaServices: SigaServices) {
-
-
-
-  }
+  constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    private location: Location,
+    private sigaServices: SigaServices,
+    private translateService: TranslateService
+  ) { }
 
   ngOnInit() {
-
-    if(sessionStorage.getItem("consultaEditable") == "S" || sessionStorage.getItem("crearNuevaConsulta")){
-      this.editable = true;
-    }
-
     this.getInstitucion();
     this.getDatos();
+    this.getModulos();
     this.getClasesComunicaciones();
     this.getObjetivos();
-    this.getModulos();
 
     this.selectedItem = 4;
 
     this.getIdioma();
 
     this.cols = [
-      { field: 'consulta', header: 'Consulta' },
-      { field: 'finalidad', header: 'Finalidad' },
-      { field: 'tipoEjecucion', header: 'Tipo de ejecución' }
+      {
+        field: "consulta",
+        header: "informesycomunicaciones.consultas.ficha.consulta"
+      },
+      {
+        field: "finalidad",
+        header: "informesycomunicaciones.plantillasenvio.ficha.finalidad"
+      },
+      {
+        field: "tipoEjecucion",
+        header: "informesycomunicaciones.consultas.ficha.tipoEjecucion"
+      }
     ];
 
     this.datos = [
-      { id: '1', consulta: 'prueba', finalidad: 'prueba', tipoEjecucion: 'prueba' },
-      { id: '2', consulta: 'prueba', finalidad: 'prueba', tipoEjecucion: 'prueba' }
+      {
+        id: "1",
+        consulta: "prueba",
+        finalidad: "prueba",
+        tipoEjecucion: "prueba"
+      },
+      {
+        id: "2",
+        consulta: "prueba",
+        finalidad: "prueba",
+        tipoEjecucion: "prueba"
+      }
     ];
-
 
     this.rowsPerPage = [
       {
@@ -137,7 +152,6 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     this.msgs = [];
   }
 
-
   getInstitucion() {
 
     this.sigaServices.get("institucionActual").subscribe(n => {
@@ -145,10 +159,12 @@ export class DatosGeneralesConsultaComponent implements OnInit {
       if (this.institucionActual != '2000' && sessionStorage.getItem("crearNuevaConsulta") != null) {
         this.generica = 'N';
       }
+      this.habilitarBotones();
     },
       err => {
         console.log(err);
-      }, );
+      }
+    );
   }
 
   getIdioma() {
@@ -163,16 +179,16 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   }
 
   getClasesComunicaciones() {
-    if(this.body.idModulo != undefined && this.body.idModulo != ""){
+    if (this.body.idModulo != undefined && this.body.idModulo != "") {
       this.cargaComboClaseCom(null);
-    }else{
+    } else {
       this.clasesComunicaciones = [];
       this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
-    } 
+    }
   }
 
   cargaComboClaseCom(event) {
-    if(event != null){
+    if (event != null) {
       this.body.idModulo = event.value;
     }
     this.sigaServices
@@ -183,7 +199,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
       .subscribe(
         data => {
           this.clasesComunicaciones = data.combooItems;
-          this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
+          this.clasesComunicaciones.unshift({ label: '', value: '' });
           /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
           this.clasesComunicaciones.map(e => {
@@ -211,20 +227,24 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices.get("consultas_comboModulos").subscribe(
       data => {
         this.modulos = data.combooItems;
-        	/*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-      para poder filtrar el dato con o sin estos caracteres*/
-				this.modulos.map((e) => {
-					let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-					let accentsOut = 'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz';
-					let i;
-					let x;
-					for (i = 0; i < e.label.length; i++) {
-						if ((x = accents.indexOf(e.label[i])) != -1) {
-							e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-							return e.labelSinTilde;
-						}
-					}
-				});
+        this.modulos.unshift({ label: '', value: '' });
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+    para poder filtrar el dato con o sin estos caracteres*/
+        this.modulos.map((e) => {
+          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+          let accentsOut = 'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz';
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
+        if (this.body.idModulo == 'undefined' || this.body.idModulo == null || this.body.idModulo == "") {
+          this.body.idModulo = this.modulos[0].value;
+        }
       },
       err => {
         console.log(err);
@@ -236,7 +256,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices.get("consultas_comboObjetivos").subscribe(
       data => {
         this.objetivos = data.combooItems;
-        this.objetivos.unshift({ label: 'Seleccionar', value: '' });
+        this.objetivos.unshift({ label: '', value: '' });
       },
       err => {
         console.log(err);
@@ -247,7 +267,6 @@ para poder filtrar el dato con o sin estos caracteres*/
   abreCierraFicha() {
     // fichaPosible.activa = !fichaPosible.activa;
     this.openFicha = !this.openFicha;
-
   }
 
   esFichaActiva(key) {
@@ -265,14 +284,11 @@ para poder filtrar el dato con o sin estos caracteres*/
     return {};
   }
 
-
-
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
   }
-
 
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
@@ -310,34 +326,40 @@ para poder filtrar el dato con o sin estos caracteres*/
       tipoEjecucion: null
     };
     this.datos.push(obj);
-    this.datos = [... this.datos];
+    this.datos = [...this.datos];
   }
-
 
   backTo() {
     this.location.back();
   }
 
   getDatos() {
-
     if (sessionStorage.getItem("consultasSearch") != null) {
-      this.editar = true;
       this.body = JSON.parse(sessionStorage.getItem("consultasSearch"));
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       if (this.body.generica == "Si") {
-        this.generica = "S"
+        this.generica = "S";
       } else {
-        this.generica = "N"
+        this.generica = "N";
       }
     } else {
-      this.editar = false;
+      this.editar = true;
       this.generica = "S";
     }
   }
 
+  habilitarBotones() {
+    if (this.institucionActual != '2000' && this.body.generica == "Si") {
+      this.editar = false;
+    } else {
+      this.editar = true;
+    }
+    if (this.editar == false) {
+      this.sigaServices.notifyRefreshEditar();
+    }
+  }
 
   guardar() {
-
     this.body.generica = this.generica;
 
     this.sigaServices.post("consultas_guardarDatosGenerales", this.body).subscribe(
@@ -351,10 +373,11 @@ para poder filtrar el dato con o sin estos caracteres*/
         sessionStorage.removeItem("crearNuevaConsulta");
         sessionStorage.setItem("consultaEditable", "S");
         sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
-        this.showSuccess('Se ha guardado la consulta correctamente');
+        this.showSuccess(this.translateService.instant('informesycomunicaciones.consultas.ficha.correctGuardadoConsulta'));
+        this.sigaServices.notifyRefreshConsulta();
       },
       err => {
-        this.showFail('Error al guardar la consulta');
+        this.showFail(this.translateService.instant('informesycomunicaciones.consultas.ficha.errorGuardadoConsulta'));
         console.log(err);
       },
       () => {
@@ -363,15 +386,13 @@ para poder filtrar el dato con o sin estos caracteres*/
     );
   }
 
-
   restablecer() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    this.body.generica = 'S';
+    this.body.generica = "S";
   }
 
-
   isButtonDisabled() {
-    if (this.body.idModulo != null && this.body.idModulo != '' 
+    if (this.body.idModulo != null && this.body.idModulo != '' && this.body.descripcion != null && this.body.descripcion != ''
       && this.body.idObjetivo != null && this.body.idObjetivo != '' && this.body.nombre != null && this.body.nombre != '') {
       return false;
     }
@@ -379,9 +400,6 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onChangeObjetivo() {
-    sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
+    //sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
   }
-
-
-
 }

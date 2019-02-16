@@ -28,7 +28,8 @@ export class DatosColegiadosItem {
   inscrito: string;
   residenteInscrito: string;
   correo: string;
-  fechaNacimiento: Date;
+  fechaNacimiento: string;
+  fechaNacimientoDate: Date;
 
   idgrupo: string[];
   idTratamiento: String;
@@ -56,5 +57,5 @@ export class DatosColegiadosItem {
   subTipoCV1: string;
   subTipoCV2: string;
 
-  constructor() { }
+  constructor() {}
 }

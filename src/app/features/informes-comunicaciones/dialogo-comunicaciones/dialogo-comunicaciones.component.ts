@@ -7,6 +7,7 @@ import { esCalendar } from './../../../utils/calendar';
 import { ConsultaConsultasItem } from '../../../models/ConsultaConsultasItem';
 import { CampoDinamicoItem } from '../../../models/CampoDinamicoItem';
 import { saveAs } from "file-saver/FileSaver";
+import { Location } from "@angular/common";
 import { typeSourceSpan } from '@angular/compiler';
 
 @Component({
@@ -20,7 +21,7 @@ export class DialogoComunicacionesComponent implements OnInit {
   selectedItem: number = 10;
   //Diálogo de comunicación
   showComunicar: boolean = false;
-  modelosComunicacion: ModelosComunicacionesItem [] = [];
+  modelosComunicacion: ModelosComunicacionesItem[] = [];
   bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
   tiposEnvio: any[];
   plantillasEnvio: any[];
@@ -33,12 +34,12 @@ export class DialogoComunicacionesComponent implements OnInit {
   currentRoute: String;
   selectedModelos: any = [];
   idClaseComunicacion: String;
-  keys: String []= [];
+  keys: String[] = [];
   es: any = esCalendar;
   showValores: boolean = false;
   valores: CampoDinamicoItem[];
-  operadoresTexto: any [];
-  operadoresNumero: any [];
+  operadoresTexto: any[];
+  operadoresNumero: any[];
   listaConsultas: ConsultaConsultasItem[];
   comunicar: boolean = false;
   idInstitucion: String;
@@ -48,10 +49,10 @@ export class DialogoComunicacionesComponent implements OnInit {
   rutaComunicacion: String;
   fechaProgramada: Date;
 
-  constructor(public sigaServices: SigaServices, private translateService: TranslateService) {
+  constructor(public sigaServices: SigaServices, private translateService: TranslateService, private location: Location) {
   }
 
-  ngOnInit() {  
+  ngOnInit() {
 
     this.datosSeleccionados = JSON.parse(sessionStorage.getItem("datosComunicar"));
 
@@ -141,9 +142,6 @@ export class DialogoComunicacionesComponent implements OnInit {
     this.sigaServices.post("dialogo_modelosComunicacion", this.idClaseComunicacion).subscribe(
       data => {
         this.modelosComunicacion = JSON.parse(data['body']).modelosComunicacionItems;
-        this.modelosComunicacion.forEach(element => {
-          element.plantillas = element.plantillas;
-        });
       },
       err => {
         console.log(err);
@@ -168,7 +166,7 @@ export class DialogoComunicacionesComponent implements OnInit {
     );
   }
 
-  obtenerCamposDinamicos(accion){
+  obtenerCamposDinamicos(accion) {
     this.bodyComunicacion.modelos = this.selectedModelos;
     this.bodyComunicacion.idClaseComunicacion = this.idClaseComunicacion;
 
@@ -178,28 +176,28 @@ export class DialogoComunicacionesComponent implements OnInit {
         this.valores = [];
         this.listaConsultas = JSON.parse(data['body']).consultaItem;
         this.listaConsultas.forEach(element => {
-          if(element.camposDinamicos != null){
+          if (element.camposDinamicos != null) {
             element.camposDinamicos.forEach(campo => {
               this.valores.push(campo);
             });
-          }         
+          }
         })
 
-        if(accion == "comunicar"){
-          this.comunicar = true;          
-        }else{
+        if (accion == "comunicar") {
+          this.comunicar = true;
+        } else {
           this.comunicar = false;
         }
 
-        if(this.valores.length > 0){
+        if (this.valores.length > 0) {
           this.showValores = true;
-        }else{
-          if(this.comunicar){
+        } else {
+          if (this.comunicar) {
             this.enviarComunicacion();
-          }else{
+          } else {
             this.descargarComunicacion();
           }
-        }        
+        }
       },
       err => {
         console.log(err);
@@ -246,9 +244,9 @@ export class DialogoComunicacionesComponent implements OnInit {
       this.showFail("No se ha seleccionado nigún dato");
     }
   }
-  
 
-  enviar(){
+
+  enviar() {
     console.log(this.listaConsultas);
   }
 
@@ -263,7 +261,7 @@ export class DialogoComunicacionesComponent implements OnInit {
     return event.data;
   }
 
-  getKeysClaseComunicacion(){
+  getKeysClaseComunicacion() {
     this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
       data => {
         this.keys = JSON.parse(data['body']);
@@ -274,20 +272,20 @@ export class DialogoComunicacionesComponent implements OnInit {
     );
   }
 
-  validarCamposDinamicos(){
+  validarCamposDinamicos() {
     let valido = true;
     this.valores.forEach(element => {
-      if(valido){
-        if(!element.valorNulo){
-          if(element.valor != undefined && element.valor != null && element.valor != ""){
+      if (valido) {
+        if (!element.valorNulo) {
+          if (element.valor != undefined && element.valor != null && element.valor != "") {
             valido = true;
-          }else{
+          } else {
             valido = false;
           }
-        }else{
-          valido=true;
+        } else {
+          valido = true;
         }
-      }     
+      }
     });
     return valido;
   }
@@ -297,12 +295,12 @@ export class DialogoComunicacionesComponent implements OnInit {
     this.progressSpinner = true;
 
     this.valores.forEach(element => {
-      if(element.valor != null && typeof element.valor == "object"){
+      if (element.valor != null && typeof element.valor == "object") {
         element.valor = element.valor.ID;
-      }     
+      }
     });
 
-    if(this.datosSeleccionados != null && this.datosSeleccionados != undefined){      
+    if (this.datosSeleccionados != null && this.datosSeleccionados != undefined) {
       let datos = {
         idClaseComunicacion: this.idClaseComunicacion,
         modelos: this.bodyComunicacion.modelos,
@@ -313,22 +311,22 @@ export class DialogoComunicacionesComponent implements OnInit {
       }
 
       this.sigaServices
-      .postDownloadFiles("dialogo_descargar", datos)
-      .subscribe(
-        data => {
-          const blob = new Blob([data], { type: "text/csv" });
-          saveAs(blob, "Documentos.zip");
-          this.progressSpinner = false;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
-        }
-      );
-    }else{
+        .postDownloadFiles("dialogo_descargar", datos)
+        .subscribe(
+          data => {
+            const blob = new Blob([data], { type: "text/csv" });
+            saveAs(blob, "Documentos.zip");
+            this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+    } else {
       this.showFail("No se ha seleccionado nigún dato");
     }
   }
@@ -373,5 +371,10 @@ export class DialogoComunicacionesComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+
+  backTo() {
+    this.location.back();
   }
 }

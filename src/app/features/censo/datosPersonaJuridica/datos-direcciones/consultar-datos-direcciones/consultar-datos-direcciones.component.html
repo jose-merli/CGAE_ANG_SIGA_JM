@@ -70,13 +70,13 @@
               <div class="form-group col-lg-12 col-md-12">
                 <label>
                   {{"censo.consultaDirecciones.literal.direccion" | translate}}
-              </label>
+                </label>
                 <input [(ngModel)]="body.domicilio" type="text" class="form-control" [(disabled)]="historyDisable " [maxLength]="99" pInputText>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>
                   {{"censo.datosDireccion.literal.pais2" | translate}}
-              </label>
+                </label>
                 <p-dropdown class="select-form" [(ngModel)]="body.idPais" [filter]="true" filterMatchMode="contains" [options]="comboPais"
                   [(disabled)]="historyDisable " (onChange)="onChangePais()">
                 </p-dropdown>
@@ -85,7 +85,7 @@
               <div class="form-group col-lg-6 col-md-6">
                 <label>
                   {{"censo.ws.literal.codigopostal" | translate}} (*)
-              </label>
+                </label>
                 <input [(ngModel)]="body.codigoPostal" type="text" class="form-control" [(disabled)]="isDisabledCodigoPostal " [maxLength]="5"
                   (ngModelChange)="onChangeCodigoPostal()" pInputText>
               </div>
@@ -93,10 +93,10 @@
               <div class="form-group col-lg-6 col-md-6">
                 <label>
                   {{"censo.datosDireccion.literal.provincia" | translate}}
-              </label>
-                <!-- (onChange)="onChangeProvincia()" -->
-                <p-dropdown class="select-form" [(ngModel)]='provinciaSelecionada' [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"
-                  [(disabled)]="isDisabledProvincia " [options]="comboProvincia">
+                </label>
+                <!--  -->
+                <p-dropdown class="select-form" [(ngModel)]='provinciaSelecionada' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
+                  filterMatchMode="contains" [(disabled)]="isDisabledProvincia " [options]="comboProvincia">
                 </p-dropdown>
               </div>
 
@@ -114,11 +114,12 @@
               <div *ngIf="!poblacionExtranjera" class="form-group col-lg-6 col-md-6">
                 <label>
                   {{"censo.consultaDirecciones.literal.poblacion" | translate}}
-              </label>
+                </label>
                 <p-dropdown #input2 class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true" filterBy="label,labelSinTilde" [(disabled)]="isDisabledPoblacion "
-                  [options]="comboPoblacion" (input)="buscarPoblacion($event)" [emptyFilterMessage]="resultadosPoblaciones" id="dropdown">
+                  [options]="comboPoblacion" (input)="buscarPoblacion($event)" [emptyFilterMessage]="resultadosPoblaciones"
+                  id="dropdown">
                 </p-dropdown>
-                 
+
               </div>
 
               <div *ngIf="poblacionExtranjera" class="form-group col-lg-6 col-md-6">
@@ -129,7 +130,7 @@
               <div class="form-group col-lg-6 col-md-6">
                 <label>Tipo dirección (*)</label>
                 <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='body.idTipoDireccion' [options]="comboTipoDireccion"
-                  [selectedItemsLabel]="textSelected" maxSelectedLabels="1" maxSelectedLabels="1" [disabled]="tipoDireccionDisable() "></p-multiSelect>
+                  [selectedItemsLabel]="textSelected" maxSelectedLabels="1" maxSelectedLabels="1" [disabled]="tipoDireccionDisable() " (onChange)="onChangeTipoDireccion($event)"></p-multiSelect>
               </div>
             </div>
           </div>
@@ -168,16 +169,16 @@
         <div class="text-right main-button ">
           <button *ngIf="nuevo == false" (click)="duplicarRegistro()" pButton type="button" [disabled]="desactivaDuplicar()" icon="fa fa-reply-all"
             iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
-         
+
           <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="igualInicio()" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        
+
           <button *ngIf="!isLetrado" (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar()"
             label="{{ 'general.boton.guardar' | translate}}"></button>
-          
+
           <button *ngIf="isLetrado" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar()"
             label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
-            
-<!-- <button *ngIf="isLetrado && nuevo" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar()"
+
+          <!-- <button *ngIf="isLetrado && nuevo" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar()"
             label="{{ 'general.boton.solicitarNuevo' | translate}}"></button> -->
         </div>
       </div>
@@ -210,7 +211,8 @@
   <p-footer>
     <div class="text-right main-button ">
       <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
-      <button (click)="guardarLetrado()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+      <button (click)="guardarLetrado()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left"
+        label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
 
     </div>
   </p-footer>

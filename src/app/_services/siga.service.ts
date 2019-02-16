@@ -204,6 +204,7 @@ export class SigaServices {
     fichaColegialGenerales_tratamiento: "fichaDatosGenerales/tratamiento",
     fichaColegialGenerales_estadoCivil: "fichaDatosGenerales/estadoCivil",
     fichaColegialGenerales_pais: "fichaDatosColegiales/pais",
+    fichaColegialGenerales_temas: "fichaDatosGenerales/getTopicsSpecificPerson",
     fichaDatosCurriculares_search: "fichaDatosCurriculares/search",
     solicitudIncorporacion_tratamiento: "solicitudIncorporacion/tratamiento",
     solicitudIncorporacion_estadoCivil: "solicitudIncorporacion/estadoCivil",
@@ -294,6 +295,7 @@ export class SigaServices {
       "fichaCursos/autovalidateInscriptionsCourse",
     fichaCursos_getTopicsCourse: "fichaCursos/getTopicsCourse",
     fichaCursos_getTopicsSpecificCourse: "fichaCursos/getTopicsSpecificCourse",
+    fichaCursos_getTopicsSpecificPerson: "fichaCursos/getTopicsSpecificPerson",
     fichaCursos_getCodeCourse: "fichaCursos/getCodeCourse",
 
     busquedaInscripciones_estadosInscripciones:
@@ -532,6 +534,8 @@ export class SigaServices {
       "fichaDatosCurriculares/solicitudUpdate",
     fichaDatosDirecciones_solicitudCreate:
       "fichaDatosDirecciones/solicitudCreate",
+    fichaDatosDirecciones_solicitudUpdate:
+      "fichaDatosDirecciones/solicitudUpdate",
     fichaDatosGenerales_datosGeneralesSolicitudModificación:
       "/fichaDatosGenerales/datosGeneralesSolicitudModificación",
     personaJuridica_solicitudUploadFotografia:
@@ -600,6 +604,7 @@ export class SigaServices {
     modelos_borrar: "modelos/borrar",
     modelos_rehabilitar: "modelos/rehabilitar",
     modelos_detalle_datosGenerales: "modelos/detalle/datosGenerales",
+    modelos_detalle_datosGeneralesComprobarNom: "modelos/detalle/datosGenerales/comprobarNom",
     modelos_detalle_perfiles: "modelos/detalle/perfiles",
     modelos_detalle_perfilesModelo: "modelos/detalle/perfilesModelo",
     modelos_detalle_guardarPerfiles: "modelos/detalle/guardarPerfiles",
@@ -657,8 +662,12 @@ export class SigaServices {
 
   private menuToggled = new Subject<any>();
   private iframeRemove = new Subject<any>();
+  private consultasRefresh = new Subject<any>();
+  private deshabilitarEditar = new Subject<any>();
   menuToggled$ = this.menuToggled.asObservable();
   iframeRemove$ = this.iframeRemove.asObservable();
+  consultasRefresh$ = this.consultasRefresh.asObservable();
+  deshabilitarEditar$ = this.deshabilitarEditar.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -875,6 +884,14 @@ export class SigaServices {
 
   notifyMenuToggled() {
     this.menuToggled.next();
+  }
+
+  notifyRefreshConsulta(){
+    this.consultasRefresh.next();
+  }
+
+  notifyRefreshEditar(){
+    this.deshabilitarEditar.next();
   }
 
   postSendContentAndParameter(

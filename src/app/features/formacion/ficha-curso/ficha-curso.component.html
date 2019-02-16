@@ -4,8 +4,8 @@
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p>{{ "menu.formacion" | translate}}
-      <i class="fa fa-angle-right"> </i>{{ 'menu.formacion.buscarCursos' | translate}}</p> <i class="fa fa-angle-right"> </i>
-    <p>{{ 'formacion.fichaCurso.cabecera' | translate }}</p>
+      <i class="fa fa-angle-right"> </i>{{ 'menu.formacion.buscarCursos' | translate}}</p>
+    <p> &nbsp; <i class="fa fa-angle-right"> </i>{{ 'formacion.fichaCurso.cabecera' | translate }}</p>
   </div>
 
   <!-- TARJETA DATOS GENERALES -->
@@ -157,7 +157,7 @@
           </div>
           <div class="row mb-4">
               <div class="col-lg-6 col-md-6">
-                  <label>Fecha Inicio Inscripción (*)</label>
+                  <label>{{ 'formacion.fichaCurso.datosGenerales.fechaInicioInscripcion' | translate }} (*)</label>
                   <p-calendar
                         [locale]="es"
                         [(ngModel)]="curso.fechaInscripcionDesdeDate"
@@ -169,7 +169,7 @@
                       ></p-calendar>
               </div>
               <div class="col-lg-6 col-md-6">
-                  <label>Fecha Fin Inscripción (*)</label>
+                  <label>{{ 'formacion.fichaCurso.datosGenerales.fechaFinInscripcion' | translate }} (*)</label>
                   <p-calendar
                         [locale]="es"
                         [(ngModel)]="curso.fechaInscripcionHastaDate"
@@ -183,7 +183,7 @@
           </div>
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
-                <label>Fecha Inicio Impartición</label>
+                <label>{{ 'formacion.fichaCurso.datosGenerales.fechaInicioImparticion' | translate }}</label>
                 <p-calendar
                       [locale]="es"
                       [(ngModel)]="curso.fechaImparticionDesdeDate"
@@ -195,7 +195,7 @@
                     ></p-calendar>
             </div>
             <div class="col-lg-6 col-md-6">
-                <label>Fecha Fin Impartición</label>
+                <label>{{ 'formacion.fichaCurso.datosGenerales.fechaFinImparticion' | translate }}</label>
                 <p-calendar
                       [locale]="es"
                       [(ngModel)]="curso.fechaImparticionHastaDate"
@@ -250,7 +250,7 @@
           </div>
           <div class="row mb-4">
             <div class="col-lg-12 col-md-12">
-              <label>Autovalidación de inscripciones</label>
+              <label>{{ 'formacion.fichaCurso.datosGenerales.autovalidacionInscripciones' | translate }}</label>
               <p-checkbox
                 binary="true" [disabled]="!activacionEditar"
                 [(ngModel)]="curso.autovalidacion"
@@ -346,7 +346,7 @@
 
         <!-- Botón inscripción -->
 
-        <button pButton type="button" icon="fa fa-caret-square-o-up" iconPos="left" label="Inscripción" [disabled]="!controlBotonesEstado('Inscripcion')" (click)="irInscripcion()"></button> 
+        <button pButton type="button" icon="fa fa-caret-square-o-up" iconPos="left" label="{{ 'formacion.fichaCurso.boton.inscripcion' | translate }}" [disabled]="!controlBotonesEstado('Inscripcion')" (click)="irInscripcion()"></button> 
 
         <!-- Botón guardar -->
         <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" (click)="saveCourse()" [disabled]="validateCourse() || !activacionEditar"></button> 
@@ -437,7 +437,7 @@
                     (onChange)="onChangeSelectAllPrices()"
                     [(ngModel)]="selectAllPrices"
                     binary="true"
-                    label="Seleccionar todo"
+                    label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                     name="groupname"
                   ></p-checkbox>
                   </div>
@@ -545,7 +545,7 @@
                       (onChange)="onChangeSelectAllFormadores()"
                       [(ngModel)]="selectAllFormadores"
                       binary="true"
-                      label="Seleccionar todo"
+                      label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                       name="groupname"
                     ></p-checkbox>
                   </div>
@@ -726,7 +726,7 @@
                       (onChange)="onChangeSelectAllFormadores($event)"
                       [(ngModel)]="selectAllFormadores"
                       binary="true"
-                      label="Seleccionar todo"
+                      label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                       name="groupname"
                     ></p-checkbox>
                   </div>
@@ -980,7 +980,7 @@
     <div class="col-lg-11 col-md-10">
       <div class="d-flex justify-content-start mt-2">
         <label class="mr-auto title-ficha">
-          Inscripciones
+         {{ 'formacion.fichaCurso.inscripciones.cabecera' | translate }}
         </label>
       </div>
     </div>
@@ -999,28 +999,28 @@
       <div class="col-lg-11 col-md-10">
         <div class="d-flex justify-content-start mb-1">
           <label class="mr-auto title-ficha">
-            Inscripciones
+            {{ 'formacion.fichaCurso.inscripciones.cabecera' | translate }}
           </label>
         </div>
         <div class="d-flex justify-content-between col-lg-7">
           <label
-            >Pendientes:
+            >{{ 'formacion.fichaCurso.inscripciones.pendientes' | translate }}:
             <span>{{ inscription.pendientes }}</span>
           </label>
           <label
-            >Aprobadas:
+            >{{ 'formacion.fichaCurso.inscripciones.aprobadas' | translate }}:
              <span>{{ inscription.aprobadas }}</span>
           </label>
           <label
-            >Rechazadas:
+            >{{ 'formacion.fichaCurso.inscripciones.rechazadas' | translate }}:
             <span>{{ inscription.rechazadas }}</span>
           </label>
           <label
-            >Canceladas:
+            >{{ 'formacion.fichaCurso.inscripciones.canceladas' | translate }}:
             <span>{{ inscription.canceladas }}</span>
           </label>
           <label
-            >Plazas Totales:
+            >{{ 'formacion.fichaCurso.inscripciones.plazasTotales' | translate }}:
              <span>{{ curso.plazasDisponibles }}</span>
           </label>
         </div>
@@ -1164,7 +1164,7 @@
                       (onChange)="onChangeSelectAllCertificates()"
                       [(ngModel)]="selectAllCertificates"
                       binary="true"
-                      label="Seleccionar todo"
+                      label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                       name="groupname"
                     ></p-checkbox>
                   </div>
@@ -1221,7 +1221,7 @@
                     [(ngModel)]="dato[colsCertificates[0].fieldClave]"
                     [options]="comboCertificates"
                     [filter]="false"
-                    placeholder="Seleccionar"
+                    placeholder="{{'tablas.literal.seleccionar' | translate}}"
                     [disabled]="!activacionEditar"
                     name="type"
                     (onChange)="selectPriceModeEdit($event, dato)"
@@ -1260,7 +1260,7 @@
                     [(ngModel)]="dato[colsCertificates[2].field]"
                     [options]="comboCalificaciones"
                     [filter]="false"
-                    placeholder="Seleccionar"
+                    placeholder="{{'tablas.literal.seleccionar' | translate}}"
                     [disabled]="!activacionEditar"
                     name="type"
                     (onChange)="editCertificateTable($event, dato)"
@@ -1296,7 +1296,7 @@
                       (onChange)="onChangeSelectAllCertificates($event)"
                       [(ngModel)]="selectAllCertificates"
                       binary="true"
-                      label="Seleccionar todo"
+                      label="{{ 'tablas.literal.seleccionarTodo' | translate}}"
                       name="groupname"
                     ></p-checkbox>
                   </div>
@@ -1356,7 +1356,7 @@
                         [(ngModel)]="newCertificate.clave"
                         [options]="comboCertificates"
                         [filter]="false"
-                        placeholder="Seleccionar"
+                        placeholder="{{'tablas.literal.seleccionar' | translate}}"
                         [disabled]="!activacionEditar"
                         name="type"
                         (onChange)="selectPriceModeNew($event)"
@@ -1404,7 +1404,7 @@
                     [(ngModel)]="newCertificate.idCalificacion"
                     [options]="comboCalificaciones"
                     [filter]="false"
-                    placeholder="Seleccionar"
+                    placeholder="{{'tablas.literal.seleccionar' | translate}}"
                     [disabled]="!activacionEditar"
                     name="type"
                   ></p-dropdown>
@@ -1565,7 +1565,7 @@
                   (onChange)="onChangeSelectAllSessions()"
                   [(ngModel)]="selectAllSessions"
                   binary="true"
-                  label="Seleccionar todo"
+                  label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                   name="groupname"
                 ></p-checkbox>
               </div>
@@ -1603,7 +1603,7 @@
       </div>
       <div class="col-lg-11 col-md-10">
         <div class="d-flex justify-content-start mt-2">
-          <label class="mr-auto title-ficha">Carga Masiva Inscripciones</label>
+          <label class="mr-auto title-ficha">{{ 'formacion.fichaCurso.cargaMasivaInscripciones.cabecera' | translate }}</label>
         </div>
         <i class="fa fa-angle-down float-right"></i>
       </div>
@@ -1613,7 +1613,7 @@
       class=" header-ficha-open d-flex justify-content-start align-items-center"
     >
       <div class="img-colegiado"><i class="fa fa-upload icon-ficha"></i></div>
-      <label class="title-ficha">Carga Masiva Inscripciones</label>
+      <label class="title-ficha">{{ 'formacion.fichaCurso.cargaMasivaInscripciones.cabecera' | translate }}</label>
       <i class="fa fa-angle-up ml-auto"></i>
     </div>
   </div>
@@ -1657,14 +1657,14 @@
   <div class="card-footer" *ngIf="esFichaActiva('carga')">
     <div class="text-right main-button">
 
-      <button pButton type="button" [disabled]="disabledDownload() || !activacionEditar" (click)="autovalidateInscriptions(selectedDatosCargas)" icon="fa fa-check" iconPos="left" label="Autovalidar"></button>
+      <button pButton type="button" [disabled]="disabledDownload() || !activacionEditar" (click)="autovalidateInscriptions(selectedDatosCargas)" icon="fa fa-check" iconPos="left" label="{{ 'formacion.boton.autovalidar' | translate }}"></button>
 
-      <p-fileUpload #pUploadFile chooseLabel="Cargar Archivo" name="file" mode="basic" accept=".xls" multiple="multiple" (onSelect)="getFile($event)"
+      <p-fileUpload #pUploadFile chooseLabel="{{ 'general.boton.cargar.archivo' | translate }}" name="file" mode="basic" accept=".xls" multiple="multiple" (onSelect)="getFile($event)"
       auto="true" [disabled]="!controlBotonesEstado('Inscripcion')"> </p-fileUpload>
 
-      <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" [disabled]="!controlBotonesEstado('DescargarPlantilla')" iconPos="left" label="DescargarPlantilla"></button>
-      <button pButton type="button" [disabled]="disabledDownload() || !activacionEditar"(click)="downloadFile(selectedDatosCargas)" icon="fa fa-download" iconPos="left" label="DescargarFichero"></button>
-      <button pButton type="button" [disabled]="disabledOthersCargas() || !activacionEditar" (click)="deleteInscriptions(selectedDatosCargas)"icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+      <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" [disabled]="!controlBotonesEstado('DescargarPlantilla')" iconPos="left" label="{{ 'general.boton.descargar.plantilla' | translate }}"></button>
+      <button pButton type="button" [disabled]="disabledDownload() || !activacionEditar"(click)="downloadFile(selectedDatosCargas)" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.descargar.fichero' | translate }}"></button>
+      <button pButton type="button" [disabled]="disabledOthersCargas() || !activacionEditar" (click)="deleteInscriptions(selectedDatosCargas)"icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
      
     </div>
   </div>

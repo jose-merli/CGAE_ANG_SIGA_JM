@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 
 import { Location, DatePipe } from "@angular/common";
 
@@ -70,7 +70,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     private location: Location,
     private sigaServices: SigaServices,
     public datepipe: DatePipe,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   @ViewChild("input2")
@@ -78,6 +79,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   @ViewChild("provincia")
   checkbox: Checkbox;
   ngOnInit() {
+    this.progressSpinner = true;
     if (sessionStorage.getItem("permisos")) {
       this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
       this.historyDisable = !this.permisos;
@@ -105,6 +107,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     this.textFilter = "Elegir";
     this.getComboProvincia();
     this.getComboPais();
+
     this.getComboTipoDireccion();
 
     this.registroEditable = JSON.parse(
@@ -114,6 +117,14 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       this.nuevo = false;
     } else {
       this.nuevo = true;
+      // CAMBIO INCIDENCIA DIRECCIONES
+      // this.body = new DatosDireccionesItem();
+      // this.body.idTipoDireccion = [];
+      // if (JSON.parse(sessionStorage.getItem("numDirecciones")) == 0) {
+      //   this.body.idTipoDireccion.push("3");
+      //   this.body.idTipoDireccion.push("8");
+      //   this.body.idTipoDireccion.push("9");
+      //}
     }
     if (sessionStorage.getItem("direccion") != null) {
       this.body = JSON.parse(sessionStorage.getItem("direccion"));
@@ -219,6 +230,11 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       );
     this.checkBody = JSON.parse(JSON.stringify(this.body));
     this.checkBody.idPais = "191";
+    this.progressSpinner = false;
+  }
+
+  ngAfterViewChecked() {
+    this.changeDetectorRef.detectChanges();
   }
 
   getDatosContactos() {
@@ -256,7 +272,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         });
       },
       error => { },
-      () => { }
+      () => {
+        this.progressSpinner = false;
+      }
     );
   }
 
@@ -317,7 +335,6 @@ para poder filtrar el dato con o sin estos caracteres*/
         error => { },
         () => {
           // this.isDisabledPoblacion = false;
-          this.progressSpinner = false;
         }
       );
   }
@@ -355,7 +372,6 @@ para poder filtrar el dato con o sin estos caracteres*/
         error => { },
         () => {
           // this.isDisabledPoblacion = false;
-          this.progressSpinner = false;
         }
       );
   }
@@ -376,6 +392,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.body.idPais = this.comboPais[0].value;
           this.onChangePais();
         }
+        this.progressSpinner = false;
       }
     );
   }
@@ -463,6 +480,8 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.isDisabledPoblacion = false;
         if (value != this.body.idProvincia) {
           this.body.idProvincia = this.provinciaSelecionada;
+          this.body.idPoblacion = "";
+          this.comboPoblacion = [];
           this.isDisabledProvincia = true;
           if (this.historyDisable == true) {
             this.isDisabledPoblacion = true;
@@ -479,12 +498,8 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
   onChangeProvincia() {
-    if (this.checkOtraProvincia == false) {
-      this.body.idPoblacion = "";
-      this.comboPoblacion = [];
-    } else {
-      this.body.idPoblacion = "";
-    }
+    this.body.idPoblacion = "";
+    this.comboPoblacion = [];
   }
   onChangeOtherProvincia(event) {
     if (event) {
@@ -600,7 +615,25 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
     }
   }
+
+
   duplicarRegistro() {
+    let tipoDireccion = [];
+    if (
+      this.body.idTipoDireccion != null &&
+      this.body.idTipoDireccion != undefined &&
+      this.body.idTipoDireccion.length > 0
+    ) {
+      this.body.idTipoDireccion.forEach(element => {
+        if (element != "3" && element != "8" && element != "6" && element != "9") {
+          let i = this.body.idTipoDireccion.findIndex(
+            x => x === element
+          );
+          tipoDireccion.push(element);
+        }
+      });
+    }
+    this.body.idTipoDireccion = tipoDireccion;
     this.body.idDireccion = null;
     this.nuevo = true;
     this.progressSpinner = true;
@@ -621,6 +654,8 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
     );
   }
+
+
   comprobarCheckProvincia() {
     if (this.checkOtraProvincia) {
       this.body.otraProvincia = "1";
@@ -755,6 +790,36 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
 
+  onChangeTipoDireccion(event) {
+    if (
+      event.itemValue == "3" ||
+      event.itemValue == "9" ||
+      event.itemValue == "8" ||
+      event.itemValue == "6"
+    ) {
+      if (this.checkBody != undefined && this.body != undefined) {
+        if (
+          this.checkBody.idTipoDireccion.includes(event.itemValue) &&
+          !this.body.idTipoDireccion.includes(event.itemValue)
+        ) {
+          this.showInfo(
+            "El tipo de dirección es única, no se puede desasignar"
+          );
+          this.body.idTipoDireccion.push(event.itemValue);
+        }
+      }
+    } else if (
+      this.checkBody != undefined &&
+      this.body != undefined &&
+      event.itemValue == "2" &&
+      sessionStorage.getItem("numDespacho") === "1" &&
+      this.checkBody.idTipoDireccion.includes(event.itemValue)
+    ) {
+      this.showInfo("Una dirección al menos deberá contener un tipo despacho");
+      this.body.idTipoDireccion.push(event.itemValue);
+    }
+  }
+
   showGenericFail() {
     this.msgs = [];
     this.msgs.push({
@@ -838,12 +903,13 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.body.idPersona = this.usuarioBody[0].idPersona;
     this.provinciaSelecionada = this.body.idProvincia;
     this.body = JSON.parse(JSON.stringify(this.checkBody));
-    this.comboPoblacion  =  [];
+    this.comboPoblacion = [];
     this.comboPoblacion.push({
-      label:  this.body.nombrePoblacion,
-      value:  this.body.idPoblacion
+      label: this.body.nombrePoblacion,
+      value: this.body.idPoblacion
     });
     this.generarTabla();
+    this.onChangeCodigoPostal();
   }
 
   // Mensajes

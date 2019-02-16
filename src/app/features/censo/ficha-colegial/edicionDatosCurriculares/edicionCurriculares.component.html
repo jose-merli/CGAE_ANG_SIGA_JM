@@ -48,36 +48,40 @@
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{"censo.busquedaClientesAvanzada.literal.categoriaCV" | translate}} (*)</label>
                 <br>
-                <p-dropdown class="select-form" [(ngModel)]='body.idTipoCv' placeholder="{{'general.boton.seleccionar' | translate}}" emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}" [filter]="true" filterMatchMode="contains"
-                  [options]="categoriaCurricular" [(disabled)]="!permisos" (onChange)="onChangeCategoriaCurricular($event)">
+                <p-dropdown class="select-form" [(ngModel)]='body.idTipoCv' placeholder="{{'general.boton.seleccionar' | translate}}" emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}"
+                  [filter]="true" filterMatchMode="contains" [options]="categoriaCurricular" [(disabled)]="!permisos" (onChange)="onChangeCategoriaCurricular($event)">
                 </p-dropdown>
               </div>
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{"censo.tipoCurricular.descripcion.literal" | translate}}</label>
                 <br>
-                <p-dropdown [disabled]="isDisabledCombos() || !permisos" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idTipoCvSubtipo1'
-                  [filter]="true" filterMatchMode="contains" [options]="tipoCurricularCombo" emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}">
+                <p-dropdown [disabled]="isDisabledCombos() || !permisos" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
+                  [(ngModel)]='body.idTipoCvSubtipo1' [filter]="true" filterMatchMode="contains" [options]="tipoCurricularCombo"
+                  emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}">
                 </p-dropdown>
               </div>
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{"censo.busquedaClientesAvanzada.literal.subtiposCV" | translate}}</label>
                 <br>
-                <p-dropdown [disabled]="isDisabledCombos() || !permisos" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idTipoCvSubtipo2'
-                  [filter]="true" filterMatchMode="contains" [options]="subtipoCurricularCombo" emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}">
+                <p-dropdown [disabled]="isDisabledCombos() || !permisos" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
+                  [(ngModel)]='body.idTipoCvSubtipo2' [filter]="true" filterMatchMode="contains" [options]="subtipoCurricularCombo"
+                  emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}">
                 </p-dropdown>
               </div>
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{"administracion.auditoriaUsuarios.fechaDesde" | translate}} (*)</label>
-                <p-calendar [locale]="es" [(ngModel)]="body.fechaDesde" [(disabled)]="!permisos" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                <p-calendar [locale]="es" [(ngModel)]="body.fechaDesde" [(disabled)]="!permisos" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
+                  showIcon="true"></p-calendar>
               </div>
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{"administracion.auditoriaUsuarios.fechaHasta" | translate}}</label>
-                <p-calendar [locale]="es" [(ngModel)]="body.fechaHasta" [(disabled)]="!permisos" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                <p-calendar [locale]="es" [(ngModel)]="body.fechaHasta" [(disabled)]="!permisos" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
+                  showIcon="true"></p-calendar>
               </div>
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{"censo.datosCV.literal.creditos" | translate}}</label>
-                <input [(ngModel)]="body.creditos" (ngModelChange)="compruebaRegistro()" [disabled]="isLetrado || !permisos" type="text" class="form-control" [maxLength]="5"
-                  pInputText>
+                <input [(ngModel)]="body.creditos" (ngModelChange)="compruebaRegistro()" [disabled]="isLetrado || !permisos" type="text"
+                  class="form-control" [maxLength]="5" pInputText>
                 <div *ngIf="creditosIncorrecto == true">
                   <label class="labelError">{{"censo.ws.literal.soloNumeros" | translate}}</label>
                 </div>
@@ -92,7 +96,8 @@
 
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{"censo.consultaDatosCV.literal.fechaVerificacion" | translate}}</label>
-                <p-calendar [locale]="es" [(ngModel)]="body.fechaMovimiento" [disabled]="isLetrado || !permisos" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                <p-calendar [locale]="es" [(ngModel)]="body.fechaMovimiento" [disabled]="isLetrado || !permisos" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
+                  showIcon="true"></p-calendar>
 
               </div>
               <div class="form-group col-lg-3 col-md-3">
@@ -104,18 +109,22 @@
 
         </div>
         <br>
-        <div class="card-footer ">
-          <div class="text-right main-button ">
-            <button *ngIf="nuevo == false" (click)="duplicarRegistro()" pButton type="button" [disabled]="!activateDuplicar() || !permisos" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
-            <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="!activateRestablecer() || !permisos"
-              label="{{ 'general.boton.restablecer' | translate}}"></button>
-            <button *ngIf="isLetrado == false" (click)="guardarCv()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar() || !permisos" label="{{ 'general.boton.guardar' | translate}}"></button>
-            <button *ngIf="solicitaModificacion()" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar() || !permisos" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
-            <button *ngIf="solicitaCreacion()" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar() || !permisos" label="{{ 'general.boton.solicitarNuevo' | translate}}"></button>
-            <!-- <button *ngIf="solicitaCreacion()" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" disabled label="{{ 'general.boton.solicitarModificacion' | translate}}"></button> -->
-          </div>
+      </div>
+      <div class="card-footer ">
+        <div class="text-right main-button ">
+          <button *ngIf="!nuevo" (click)="duplicarRegistro()" pButton type="button" [disabled]="!activateDuplicar() || !permisos || isLetrado"
+            icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
+          <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="!activateRestablecer() || !permisos"
+            label="{{ 'general.boton.restablecer' | translate}}"></button>
+          <button *ngIf="isLetrado == false" (click)="guardarCv()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar() || !permisos"
+            label="{{ 'general.boton.guardar' | translate}}"></button>
+          <button *ngIf="solicitaModificacion()" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left"
+            [disabled]="!activateGuardar() || !permisos" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
+          <button *ngIf="solicitaCreacion()" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left"
+            [disabled]="!activateGuardar() || !permisos" label="{{ 'general.boton.solicitarNuevo' | translate}}"></button>
+          <!-- <button *ngIf="solicitaCreacion()" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" disabled label="{{ 'general.boton.solicitarModificacion' | translate}}"></button> -->
         </div>
-      </div> 
+      </div>
     </div>
   </div>
 
@@ -145,7 +154,8 @@
   <p-footer>
     <div class="text-right main-button ">
       <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
-      <button (click)="solicitudGuardarCv()" [(disabled)]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+      <button (click)="solicitudGuardarCv()" [(disabled)]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left"
+        label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
 
     </div>
   </p-footer>

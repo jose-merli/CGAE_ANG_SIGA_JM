@@ -46,7 +46,8 @@ export class TarjetaComunicacionesComponent implements OnInit {
   isNuevo: boolean = false;
   isGuardar: boolean = false;
   progressSpinner: boolean = false;
-
+  editar: boolean = true;
+  
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -80,12 +81,24 @@ export class TarjetaComunicacionesComponent implements OnInit {
     this.getDatos();
     this.getPlantillas();
 
+    this.sigaServices.deshabilitarEditar$.subscribe(() => {
+      this.editar = false;
+    });
+
     this.selectedItem = 10;
 
     this.cols = [
-      { field: "idPlantillaEnvios", header: "Nombre" },
-      { field: "tipoEnvio", header: "Tipo de envío" },
-      { field: "porDefecto", header: "Por defecto", width: "15%" }
+      {
+        field: "idPlantillaEnvios",
+        header: "administracion.parametrosGenerales.literal.nombre"
+      },
+      { field: "tipoEnvio", header: "enviosMasivos.literal.tipoEnvio" },
+      {
+        field: "porDefecto",
+        header:
+          "informesycomunicaciones.modelosdecomunicacion.ficha.porDefecto",
+        width: "15%"
+      }
     ];
 
     this.rowsPerPage = [
@@ -269,12 +282,21 @@ export class TarjetaComunicacionesComponent implements OnInit {
         result => {
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
           this.nuevaPlantilla = false;
-          this.showSuccess("La plantilla se ha guardado correctamente");
+          this.showSuccess(
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaGuardada"
+            )
+          );
           this.selectedDatos = [];
           this.progressSpinner = false;
         },
         error => {
-          this.showFail("Error al guardar la plantilla");
+          this.progressSpinner = false;
+          this.showFail(
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaGuardada"
+            )
+          );
           console.log(error);
         },
         () => {
@@ -283,7 +305,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
         }
       );
 
-    this.isNuevo = !this.isNuevo;
+    this.isNuevo = false;
     this.selectMultiple = false;
   }
 
@@ -311,7 +333,15 @@ export class TarjetaComunicacionesComponent implements OnInit {
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
       message:
-        "¿Está seguro de cancelar los" + dato.length + "envíos seleccionados",
+        this.translateService.instant(
+          "informesycomunicaciones.modelosdecomunicacion.ficha.mensajeEliminar"
+        ) +
+        " " +
+        dato.length +
+        " " +
+        this.translateService.instant(
+          "informesycomunicaciones.modelosdecomunicacion.ficha.informesSeleccionados"
+        ),
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarEliminar(dato);
@@ -331,6 +361,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
   }
 
   confirmarEliminar(dato) {
+    this.progressSpinner = true;
     this.eliminarArray = [];
     dato.forEach(element => {
       if (element.porDefecto == true) {
@@ -339,7 +370,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
         element.porDefecto = "No";
       }
       let objEliminar = {
-        idModelo: this.body.idModeloComunicacion,
+        idModeloComunicacion: this.body.idModeloComunicacion,
         idPlantillaEnvios: element.idPlantillaEnvios,
         idInstitucion: this.body.idInstitucion,
         idTipoEnvios: element.idTipoEnvios,
@@ -353,15 +384,26 @@ export class TarjetaComunicacionesComponent implements OnInit {
       .post("modelos_detalle_borrarPlantilla", this.eliminarArray)
       .subscribe(
         data => {
-          this.showSuccess("Se ha eliminado la plantilla correctamente");
+          this.progressSpinner = false;
+          this.showSuccess(
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaEliminado"
+            )
+          );
           this.selectedDatos = [];
         },
         err => {
-          this.showFail("Error al eliminar la plantilla");
+          this.progressSpinner = false;
+          this.showFail(
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaEliminado"
+            )
+          );
           console.log(err);
         },
         () => {
           this.getDatos();
+          this.progressSpinner = false;
         }
       );
 
@@ -478,6 +520,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
       }
     } else {
       dato.porDefecto = false;
+      e = false;
     }
 
     this.selectedDatos = [];
@@ -490,5 +533,6 @@ export class TarjetaComunicacionesComponent implements OnInit {
     this.selectMultiple = false;
     this.selectedDatos = [];
     this.numSelected = 0;
+    this.showHistorico = false;
   }
 }

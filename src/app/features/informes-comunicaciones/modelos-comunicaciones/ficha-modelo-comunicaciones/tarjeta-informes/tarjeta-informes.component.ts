@@ -34,6 +34,7 @@ export class TarjetaInformesComponent implements OnInit {
   msgs: Message[];
   eliminarArray: any[];
   soloLectura: boolean = false;
+  editar: boolean = true;
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -63,10 +64,14 @@ export class TarjetaInformesComponent implements OnInit {
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getDatos();
+
+    this.sigaServices.deshabilitarEditar$.subscribe(() => {
+      this.editar = false;
+    });
 
     this.selectedItem = 10;
     this.cols = [
@@ -201,9 +206,10 @@ export class TarjetaInformesComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.modelo = JSON.parse(sessionStorage.getItem("modelosSearch"));
-    }
-    this.getInformes();
+      this.getInformes();
+    }    
   }
+
   getInformes() {
     this.sigaServices.post("modelos_detalle_informes", this.modelo).subscribe(
       data => {
@@ -224,8 +230,7 @@ export class TarjetaInformesComponent implements OnInit {
   eliminar(dato) {
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
-      message:
-        "¿Está seguro de eliminar los" + dato.length + "informes seleccionados",
+      message: this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.mensajeEliminar') + ' ' + dato.length + ' ' + this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.informesSeleccionados'),
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarEliminar(dato);
@@ -254,20 +259,18 @@ export class TarjetaInformesComponent implements OnInit {
       };
       this.eliminarArray.push(objEliminar);
     });
-    this.sigaServices
-      .post("modelos_detalle_informes_borrar", this.eliminarArray)
-      .subscribe(
-        data => {
-          this.showSuccess("Se ha eliminado el informe correctamente");
-        },
-        err => {
-          this.showFail("Error al eliminar el informe");
-          console.log(err);
-        },
-        () => {
-          this.getInformes();
-        }
-      );
+    this.sigaServices.post("modelos_detalle_informes_borrar", this.eliminarArray).subscribe(
+      data => {
+        this.showSuccess(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.correctInformeEliminado'));
+      },
+      err => {
+        this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.errorInformeEliminado'));
+        console.log(err);
+      },
+      () => {
+        this.getInformes();
+      }
+    );
   }
 
   // Mensajes
