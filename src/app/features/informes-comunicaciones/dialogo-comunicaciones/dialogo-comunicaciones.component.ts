@@ -221,7 +221,7 @@ export class DialogoComunicacionesComponent implements OnInit {
         selectedDatos: this.datosSeleccionados,
         idInstitucion: this.idInstitucion,
         consultas: this.listaConsultas,
-        rutaComunicacion: this.rutaComunicacion,
+        ruta: this.rutaComunicacion,
         fechaProgramada: this.bodyComunicacion.fechaProgramacion
       }
 
@@ -307,7 +307,7 @@ export class DialogoComunicacionesComponent implements OnInit {
         selectedDatos: this.datosSeleccionados,
         idInstitucion: this.idInstitucion,
         consultas: this.listaConsultas,
-        rutaComunicacion: this.rutaComunicacion
+        ruta: this.rutaComunicacion
       }
 
       this.sigaServices
