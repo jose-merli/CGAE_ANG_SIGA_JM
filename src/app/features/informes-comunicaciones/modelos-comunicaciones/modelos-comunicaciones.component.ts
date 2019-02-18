@@ -62,8 +62,6 @@ export class ModelosComunicacionesComponent implements OnInit {
 
     sessionStorage.removeItem("crearNuevoModelo");
 
-    
-
     this.selectedItem = 10;
 
     this.getComboClases();
@@ -87,7 +85,7 @@ export class ModelosComunicacionesComponent implements OnInit {
       { field: "institucion", header: "Institución" },
       { field: "orden", header: "Orden" },
       { field: "preseleccionar", header: "Preseleccionado", width: "20%" },
-      { field: "porDefecto", header: "Por defecto"}
+      { field: "porDefecto", header: "Por defecto" }
     ];
 
     this.rowsPerPage = [
@@ -134,18 +132,18 @@ export class ModelosComunicacionesComponent implements OnInit {
     this.sigaServices.get("modelos_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
-        if(this.institucionActual != "2000"){
+        if (this.institucionActual != "2000") {
           for (let e of this.colegios) {
             if (e.value == "2000") {
               e.value = "0";
               e.label = "POR DEFECTO";
             }
           }
-        }else{
+        } else {
           this.colegios.unshift({ label: "POR DEFECTO", value: "0" });
         }
-        
-        this.colegios.unshift({ label: "", value: "" }); 
+
+        this.colegios.unshift({ label: "", value: "" });
       },
       err => {
         console.log(err);
@@ -281,9 +279,9 @@ para poder filtrar el dato con o sin estos caracteres*/
   getInstitucion() {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
-      if(sessionStorage.getItem("filtrosModelos") == null){
+      if (sessionStorage.getItem("filtrosModelos") == null) {
         this.bodySearch.idInstitucion = this.institucionActual;
-      }else if (sessionStorage.getItem("filtrosModelos") != null) {
+      } else if (sessionStorage.getItem("filtrosModelos") != null) {
         this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosModelos"));
         this.buscar();
       }
@@ -292,6 +290,8 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onDuplicar(dato) {
+    this.progressSpinner = true;
+
     let modelo = {
       idModeloComunicacion: this.selectedDatos[0].idModeloComunicacion,
       idInstitucion: this.selectedDatos[0].idInstitucion
@@ -299,20 +299,64 @@ para poder filtrar el dato con o sin estos caracteres*/
 
     this.sigaServices.post("modelos_duplicar", modelo).subscribe(
       data => {
-        this.showSuccess("Se ha duplicado correctamente");
-        this.router.navigate(["/fichaModeloComunicaciones"]);
-        sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
-        sessionStorage.setItem(
-          "filtrosModelos",
-          JSON.stringify(this.bodySearch)
-        );
+        let idDuplicado = data.body;
+
+        if (idDuplicado != null && idDuplicado != undefined) {
+          this.sigaServices.post("modelos_searchModelo", idDuplicado).subscribe(
+            data => {
+              let modeloComunicacion: ModelosComunicacionesItem = new ModelosComunicacionesItem();
+              modeloComunicacion = JSON.parse(data["body"]);
+
+              this.progressSpinner = false;
+              sessionStorage.setItem(
+                "modelosSearch",
+                JSON.stringify(modeloComunicacion)
+              );
+              sessionStorage.setItem(
+                "filtrosModelos",
+                JSON.stringify(this.bodySearch)
+              );
+              this.router.navigate(["/fichaModeloComunicaciones"]);
+            },
+            err => {
+              this.showFail(
+                this.translateService.instant(
+                  "informesycomunicaciones.modelosdecomunicacion.errorDuplicado"
+                )
+              );
+              console.log(err);
+              this.progressSpinner = false;
+            },
+            () => {
+              this.progressSpinner = false;
+            }
+          );
+        } else {
+          this.showFail(
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.errorDuplicado"
+            )
+          );
+        }
+        // this.showSuccess(
+        //   this.translateService.instant(
+        //     "informesycomunicaciones.modelosdecomunicacion.correctDuplicado"
+        //   )
+        // );
+
+        this.progressSpinner = false;
       },
       err => {
-        this.showFail("Error al duplicar el modelo");
+        this.showFail(
+          this.translateService.instant(
+            "informesycomunicaciones.modelosdecomunicacion.errorDuplicado"
+          )
+        );
         console.log(err);
+        this.progressSpinner = false;
       },
       () => {
-        this.getResultados();
+        this.progressSpinner = false;
       }
     );
   }

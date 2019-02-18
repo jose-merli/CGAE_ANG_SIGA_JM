@@ -594,6 +594,7 @@ export class SigaServices {
     plantillasEnvio_search: "plantillasEnvio/plantillasEnvioSearch",
     plantillasEnvio_guardarDatosGenerales: "plantillasEnvio/datosGenerales",
     modelos_search: "modelos/search",
+    modelos_searchModelo: "modelos/searchModelo",
     modelos_search_historico: "modelos/search/historico",
     modelos_duplicar: "modelos/duplicar",
     modelos_borrar: "modelos/borrar",
