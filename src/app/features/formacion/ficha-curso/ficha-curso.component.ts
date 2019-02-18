@@ -274,6 +274,9 @@ export class FichaCursoComponent implements OnInit {
       if (this.curso.idCurso != null && this.curso.idCurso != undefined) {
         this.searchCourse(this.curso.idCurso);
         this.modoEdicion = true;
+        this.getMassiveLoadInscriptions();
+        this.getCertificatesCourse();
+        this.getPrices();
       } else {
         //Si no se ha guardado el evento limpiamos la fecha introducida
         if (this.curso.idEventoInicioInscripcion == "undefined") {
@@ -282,13 +285,10 @@ export class FichaCursoComponent implements OnInit {
       }
 
       sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
-
-      this.arreglarFechasEvento();
-      this.getMassiveLoadInscriptions();
-      this.getCertificatesCourse();
       this.configurationInformacionAdicional();
-      this.getPrices();
-      this.getSessions();
+      this.arreglarFechasEvento();
+      this.progressSpinner = false;
+     
 
       //2.Proviene de la creacion evento Incripcion Fin
     } else if (
@@ -310,6 +310,9 @@ export class FichaCursoComponent implements OnInit {
       if (this.curso.idCurso != null && this.curso.idCurso != undefined) {
         this.searchCourse(this.curso.idCurso);
         this.modoEdicion = true;
+        this.getCertificatesCourse();
+        this.getMassiveLoadInscriptions();
+        this.getPrices();
       } else {
         //Si no se ha guardado el evento limpiamos la fecha introducida
         if (this.curso.idEventoFinInscripcion == "undefined") {
@@ -318,11 +321,9 @@ export class FichaCursoComponent implements OnInit {
       }
 
       this.arreglarFechasEvento();
-      this.getMassiveLoadInscriptions();
-      this.getCertificatesCourse();
-      this.getPrices();
-      this.getSessions();
       this.configurationInformacionAdicional();
+      this.progressSpinner = false;
+
 
       //3. Estamos en modo edicion
     } else if (sessionStorage.getItem("modoEdicionCurso") == "true") {
@@ -550,6 +551,9 @@ export class FichaCursoComponent implements OnInit {
     } else {
       this.edicionEncuestaSatisfaccion = true;
     }
+
+    this.progressSpinner = false;
+
   }
 
   getCombosDatosGenerales() {

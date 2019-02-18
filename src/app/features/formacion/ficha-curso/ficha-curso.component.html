@@ -166,6 +166,7 @@
                         showIcon="true" [disabled]="!activacionEditar"
                         (onSelect)="selectStartDateInscription($event)"
                         [maxDate]="curso.fechaInscripcionHastaDate"
+                        [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050"
                       ></p-calendar>
               </div>
               <div class="col-lg-6 col-md-6">
@@ -178,6 +179,7 @@
                         showIcon="true" [disabled]="!activacionEditar"
                         [minDate]="curso.fechaInscripcionDesdeDate"
                         (onSelect)="selectEndDateInscription($event)"
+                        [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050"
                       ></p-calendar>
               </div>
           </div>
@@ -192,6 +194,7 @@
                       showIcon="true"
                       [minDate]="curso.fechaInscripcionHastaDate"
                       [disabled]="fieldNoEditable || !activacionEditar"
+                      [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050"
                     ></p-calendar>
             </div>
             <div class="col-lg-6 col-md-6">
@@ -204,6 +207,7 @@
                       showIcon="true"
                       [minDate]="curso.fechaImparticionDesdeDate"
                       [disabled]="fieldNoEditable || !activacionEditar"
+                      [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050"
                     ></p-calendar>
             </div>
           </div>
@@ -325,7 +329,7 @@
       <div class="text-right main-button">
         <!-- Botón cancelar -->
         
-          <button (click)="cancelCourse()" pButton type="button" icon="fa fa-ban" iconPos="left" label="{{'general.boton.cancel' | translate}}"
+          <button (click)="cancelCourse()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{'general.boton.cancel' | translate}}"
            [disabled]="!controlBotonesEstado('Cancelar')"></button>
 
         <!-- Botón finalizar -->

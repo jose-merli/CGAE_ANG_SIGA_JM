@@ -76,7 +76,9 @@
       <div class="form-row lg-12 md-12">
         <div class="col-lg-4 col-md-4">
           <label>{{ 'censo.nuevaSolicitud.fechaSolicitud' | translate }}(*)</label>
-          <p-calendar [locale]="es" [(ngModel)]="inscripcion.fechaSolicitud" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [disabled]="modoEdicion || !activacionEditar" [minDate]="minDateFechaSolicitud"></p-calendar>
+          <p-calendar [locale]="es" [(ngModel)]="inscripcion.fechaSolicitud" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" 
+          [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050"
+          [disabled]="modoEdicion || !activacionEditar" [minDate]="minDateFechaSolicitud"></p-calendar>
         </div>
         <div class="col-lg-4 col-md-4">
           <label>{{ "censo.busquedaSolicitudesModificacion.literal.estado" | translate}}</label>

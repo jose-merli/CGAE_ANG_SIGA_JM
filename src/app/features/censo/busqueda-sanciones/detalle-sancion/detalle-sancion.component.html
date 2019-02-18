@@ -121,6 +121,7 @@
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaAcuerdoDate"
                   [(maxDate)]="fechaMaxAcuerdo"
+                  [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050"
                 ></p-calendar>
               </div>
               <div class="form-group col-lg-6 col-md-6">
@@ -142,6 +143,7 @@
                   [(ngModel)]="body.fechaFirmezaDate"
                   [(minDate)]="body.fechaAcuerdoDate"
                   [(maxDate)]="fechaMinimaFirmeza"
+                  [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050"
                 ></p-calendar>
               </div>
 
@@ -174,6 +176,7 @@
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaDesdeDate"
                   [(minDate)]="body.fechaFirmezaDate"
+                  [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050"
                 ></p-calendar>
               </div>
 
@@ -190,6 +193,7 @@
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaHastaDate"
                   [(minDate)]="body.fechaDesdeDate"
+                  [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050"
                 ></p-calendar>
               </div>
               <div class="form-group col-lg-6 col-md-6">
@@ -209,6 +213,7 @@
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaRehabilitadoDate"
                   [(minDate)]="body.fechaHastaDate" 
+                  [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050"
                 ></p-calendar>
               </div>
 
@@ -244,6 +249,7 @@
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaArchivadaDate"
                   [(minDate)]="body.fechaRehabilitadoDate"
+                  [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050"
                 ></p-calendar>
               </div>
               <div class="form-group col-lg-6 col-md-6">

@@ -330,6 +330,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       if (sessionStorage.getItem("isSession")) {
         this.isFormacionCalendar = true;
       } else {
+
+        if(sessionStorage.getItem("calendarioEdit") != undefined){
         this.newEvent.idTipoCalendario = JSON.parse(
           sessionStorage.getItem("calendarioEdit")
         ).idTipoCalendario;
@@ -337,6 +339,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.idCalendario = JSON.parse(
           sessionStorage.getItem("calendarioEdit")
         ).idCalendario;
+      }
       }
 
       //Indicamos que estamos en modo edicion
@@ -364,8 +367,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.idCurso = curso.idCurso;
         curso.idTipoEvento = this.valorTipoEventoInicioInscripcion;
         this.searchEvent(curso);
-        //Indicamos que el evento ya esta creado para que pueda acceder a todas las tarjetas
-        this.createEvent = true;
 
       } else {
         this.newEvent = new EventoItem();
@@ -385,7 +386,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
         this.invalidDateMin.setHours(this.newEvent.start.getHours());
         this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
-        this.invalidDateMax.setHours(this.newEvent.start.getHours());
+        this.invalidDateMax.setHours(23);
         this.invalidDateMax.setMinutes(59);
 
         //Cargamos los tipo de calendarios que existen
@@ -400,7 +401,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         //Se guarda el evento con los valores iniciales para restablecer los valores
         this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
 
-        this.getEntryListCourse();
       }
 
       if (sessionStorage.getItem("courseCurrent")) {
@@ -423,8 +423,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.idCurso = curso.idCurso;
         curso.idTipoEvento = this.valorTipoEventoFinInscripcion;
         this.searchEvent(curso);
-        //Indicamos que el evento ya esta creado para que pueda acceder a todas las tarjetas
-        this.createEvent = true;
+
       } else {
         this.newEvent = new EventoItem();
         //Obligamos a que sea tipo calendario formacion
@@ -443,7 +442,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
         this.invalidDateMin.setHours(this.newEvent.start.getHours());
         this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
-        this.invalidDateMax.setHours(this.newEvent.start.getHours());
+        this.invalidDateMax.setHours(23);
         this.invalidDateMax.setMinutes(59);
 
         //Cargamos los tipo de calendarios que existen
@@ -458,7 +457,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         //Se guarda el evento con los valores iniciales para restablecer los valores
         this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
 
-        this.getEntryListCourse();
       }
 
       if (sessionStorage.getItem("courseCurrent")) {
@@ -579,7 +577,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   checkIsEventoCumplidoOrCancelado(){
-    if(this.newEvent.idEstadoEvento != this.valorEstadoEventoPlanificado){
+    if(this.newEvent.idEstadoEvento != undefined && this.newEvent.idEstadoEvento != this.valorEstadoEventoPlanificado){
       this.isEventoCumplidoOrCancelado = true;
     }else{
       this.isEventoCumplidoOrCancelado = false;
@@ -948,6 +946,13 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
     this.invalidDateMax.setHours(23);
     this.invalidDateMax.setMinutes(59);
+
+    if (this.newEvent.end == undefined) {
+      this.newEvent.end = new Date(
+        JSON.parse(JSON.stringify(this.newEvent.start))
+      );
+    }
+
     if (this.newEvent.end < this.newEvent.start) {
       this.newEvent.end = new Date(
         JSON.parse(JSON.stringify(this.newEvent.start))
@@ -1130,8 +1135,18 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         if (n.body != "") {
           this.newEvent = JSON.parse(n.body);
           this.newEvent.idCurso = this.idCurso;
+          this.getEventNotifications();
+         //Inficamos que estamos en modo edicion
+          this.modoEdicionEvento = true;
+          //Ya esta creado el evento
+          this.createEvent = true;
+
         } else {
           this.newEvent = new EventoItem();
+          this.createEvent = false;
+          this.getComboCalendar();
+
+
         }
 
         if (
@@ -1141,6 +1156,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.newEvent.start = new Date(curso.fechaInscripcionDesdeDate);
           this.newEvent.end = new Date(curso.fechaInscripcionDesdeDate);
           this.newEvent.idTipoEvento = this.valorTipoEventoInicioInscripcion;
+          this.newEvent.idTipoCalendario = this.valorTipoFormacion;
 
           //Indicamos que el limite que puede durar el evento
           this.invalidDateMin = new Date(
@@ -1152,7 +1168,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
           this.invalidDateMin.setHours(this.newEvent.start.getHours());
           this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
-          this.invalidDateMax.setHours(this.newEvent.start.getHours());
+          this.invalidDateMax.setHours(23);
           this.invalidDateMax.setMinutes(59);
         } else if (
           sessionStorage.getItem("isFormacionCalendarByEndInscripcion") ==
@@ -1161,6 +1177,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.newEvent.start = new Date(curso.fechaInscripcionHastaDate);
           this.newEvent.end = new Date(curso.fechaInscripcionHastaDate);
           this.newEvent.idTipoEvento = this.valorTipoEventoFinInscripcion;
+          this.newEvent.idTipoCalendario = this.valorTipoFormacion;
 
           //Indicamos que el limite que puede durar el evento
           this.invalidDateMin = new Date(
@@ -1172,7 +1189,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
           this.invalidDateMin.setHours(this.newEvent.start.getHours());
           this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
-          this.invalidDateMax.setHours(this.newEvent.start.getHours());
+          this.invalidDateMax.setHours(23);
           this.invalidDateMax.setMinutes(59);
         }
 
@@ -1184,12 +1201,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         }
         //Cargamos los tipo de calendarios que existen
         this.getComboCalendar();
-        this.getEventNotifications();
 
-        //Inficamos que estamos en modo edicion
-        this.modoEdicionEvento = true;
-
-       this.checkIsEventoCumplidoOrCancelado();
+        this.checkIsEventoCumplidoOrCancelado();
 
         //Se guarda el evento con los valores iniciales para restablecer los valores
         this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
