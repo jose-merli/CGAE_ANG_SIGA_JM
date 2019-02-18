@@ -414,7 +414,8 @@
                     <ng-template let-col let-car="rowData" pTemplate="body">
                         <span *ngIf="car[col.field] != ''">{{car[col.field] | date: 'dd/MM/yyyy'}}</span>
                         <p-calendar *ngIf="car[col.field] == undefined" [(ngModel)]="datosFamiliar.fechaNacimiento"
-                            dateFormat="dd/mm/yy" [utc]="true" [locale]="es" [showIcon]="true">
+                            dateFormat="dd/mm/yy" [utc]="true" [locale]="es" [showIcon]="true"
+                            [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050">
                         </p-calendar>
                     </ng-template>
 
@@ -561,7 +562,8 @@
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span *ngIf="car[col.field] != ''">{{car[col.field] | date: 'dd/MM/yyyy'}}</span>
                             <p-calendar *ngIf="car[col.field] == undefined" [(ngModel)]="datosHeredero.fechaNacimiento"
-                                dateFormat="dd/mm/yy" [utc]="true" [locale]="es" [showIcon]="true">
+                                dateFormat="dd/mm/yy" [utc]="true" [locale]="es" [showIcon]="true"
+                                [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050">
                             </p-calendar>
                         </ng-template>
 

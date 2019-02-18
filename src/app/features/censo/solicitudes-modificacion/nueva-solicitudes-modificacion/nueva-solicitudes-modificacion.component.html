@@ -58,7 +58,7 @@
             <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}
             </label>
             <p-calendar [keepInvalid]="true" selectionMode="range" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy"
-              [(ngModel)]="body.fechaAlta" [disabled]="true"></p-calendar>
+              [(ngModel)]="body.fechaAlta" [disabled]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050"></p-calendar>
           </div>
         </div>
 

@@ -64,17 +64,23 @@
           <div class="row mb-3">
             <div *ngIf="modoEdicionEventoByAgenda" class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}} (*)</label>
-                  <p-calendar [locale]="es" #fechaInicio [showTime]="true" [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.start" (onSelect)="selectInvalidDates()" [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || isEventoCumplidoOrCancelado"></p-calendar>
+                  <p-calendar icon="far fa-calendar-alt" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" #fechaInicio [showTime]="true"
+                   [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.start" (onSelect)="selectInvalidDates()" showIcon="true"
+                   [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || isEventoCumplidoOrCancelado"></p-calendar>
             </div>
             <div *ngIf="!modoEdicionEventoByAgenda" class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}} (*)</label>
-                  <p-calendar [locale]="es" #fechaInicio [showTime]="true" [dateFormat]="'dd/mm/yy'" [minDate]="invalidDateMinEditionMode" [maxDate]="invalidDateMaxEditionMode"  [(ngModel)]="newEvent.start" (onSelect)="selectInvalidDates()" 
+                  <p-calendar  icon="far fa-calendar-alt" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" #fechaInicio [showTime]="true"
+                   [dateFormat]="'dd/mm/yy'" [minDate]="invalidDateMinEditionMode" [maxDate]="invalidDateMaxEditionMode"  
+                   [(ngModel)]="newEvent.start" (onSelect)="selectInvalidDates()" showIcon="true"
                   [disabled]="tipoAccesoLectura || modoSesionEdicionEvento || isEventoCumplidoOrCancelado" (ngModelChange)="validatorDates($event)"></p-calendar>
             </div>
             <div class="col-lg-6 col-md-6">
                 <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaFin' | translate}} (*)</label>
-                <p-calendar [locale]="es" #fechaFin [showTime]="true" [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.end" [minDate]="invalidDateMin" [maxDate]="invalidDateMax" (onBlur)="validatorDates($event)" (onSelect)="unselectInvalidDates()"
-                [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || modoSesionEdicionEvento || isEventoCumplidoOrCancelado"></p-calendar>
+                <p-calendar icon="far fa-calendar-alt" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" #fechaFin [showTime]="true"
+                 [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.end" [minDate]="invalidDateMin" [maxDate]="invalidDateMax" 
+                 (onBlur)="validatorDates($event)" (onSelect)="unselectInvalidDates()" showIcon="true" 
+                 [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || modoSesionEdicionEvento || isEventoCumplidoOrCancelado"></p-calendar>
             </div>
           </div>
           <div class="row mb-3">
@@ -110,11 +116,15 @@
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}} (*)</label>
-                  <p-calendar (click)="isCheckFechaInicioRepeticion()" [locale]="es" [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.fechaInicioRepeticion" [minDate]="newEvent.start" [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"></p-calendar>
+                  <p-calendar (click)="isCheckFechaInicioRepeticion()" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" icon="far fa-calendar-alt" 
+                  [locale]="es" [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.fechaInicioRepeticion" [minDate]="newEvent.start"  showIcon="true"
+                  [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"></p-calendar>
             </div>
             <div class="col-lg-6 col-md-6">
                 <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaFin' | translate}} (*)</label>
-                <p-calendar (click)="isCheckFechaFinRepeticion()" [locale]="es" [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.fechaFinRepeticion" [minDate]="newEvent.fechaInicioRepeticion" [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"></p-calendar>
+                <p-calendar (click)="isCheckFechaFinRepeticion()" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" icon="far fa-calendar-alt"
+                [locale]="es" [dateFormat]="'dd/mm/yy'" [(ngModel)]="newEvent.fechaFinRepeticion" [minDate]="newEvent.fechaInicioRepeticion" showIcon="true"
+                 [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"></p-calendar>
             </div>
           </div>
           <div class="row mb-3">
@@ -152,7 +162,7 @@
       <div class="text-right main-button">
         <button pButton (click)="restEvent()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado"></button>
         <button pButton (click)="saveEvent()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="validateForm() || tipoAccesoLectura || isEventoCumplidoOrCancelado"></button>
-        <button pButton (click)="deleteEvent()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado"></button>
+        <button pButton (click)="deleteEvent()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado || !modoEdicionEvento"></button>
       </div>
     </div>
   </div>

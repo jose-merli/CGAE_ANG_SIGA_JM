@@ -651,35 +651,36 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   }
 
   guardarAccion() {
-    let mess = "";
-    mess =
-      "¿Desea enviar un aviso a los incritos que fueron rechazados o cancelados de que existen plazas disponibles?";
-    let icon = "fa fa-edit";
+    this.callAction();
+    // let mess = "";
+    // mess =
+    //   "¿Desea enviar un aviso a los incritos que fueron rechazados o cancelados de que existen plazas disponibles?";
+    // let icon = "fa fa-edit";
 
-    if (this.tipoAccion == 2 || this.tipoAccion == 1) {
-      this.confirmationService.confirm({
-        message: mess,
-        icon: icon,
-        accept: () => {
-          //Enviar aviso por parametro
-          this.callAction();
-        },
-        reject: () => {
-          this.msgs = [
-            {
-              severity: "info",
-              summary: this.translateService.instant(
-                "general.message.cancelado"
-              ),
-              detail: "Aviso cancelado"
-            }
-          ];
-          this.callAction();
-        }
-      });
-    } else {
-      this.callAction();
-    }
+    // if (this.tipoAccion == 2 || this.tipoAccion == 1) {
+    //   this.confirmationService.confirm({
+    //     message: mess,
+    //     icon: icon,
+    //     accept: () => {
+    //       //Enviar aviso por parametro
+    //       this.callAction();
+    //     },
+    //     reject: () => {
+    //       this.msgs = [
+    //         {
+    //           severity: "info",
+    //           summary: this.translateService.instant(
+    //             "general.message.cancelado"
+    //           ),
+    //           detail: "Aviso cancelado"
+    //         }
+    //       ];
+    //       this.callAction();
+    //     }
+    //   });
+    // } else {
+    //   this.callAction();
+    // }
   }
 
   callAction() {

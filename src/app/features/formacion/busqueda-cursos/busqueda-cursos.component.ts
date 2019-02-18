@@ -723,32 +723,33 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   }
 
   cancelarCursos() {
-    let mess = "";
+    this.callCancelarCursos();
+    // let mess = "";
 
-    if (this.selectedDatos.length > 1) {
-      mess = "¿Desea comunicar la cancelación de los cursos?";
-    } else {
-      mess = "¿Desea comunicar la cancelación del curso?";
-    }
+    // if (this.selectedDatos.length > 1) {
+    //   mess = "¿Desea comunicar la cancelación de los cursos?";
+    // } else {
+    //   mess = "¿Desea comunicar la cancelación del curso?";
+    // }
 
-    let icon = "fa fa-edit";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.callCancelarCursos();
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: this.translateService.instant("general.message.cancelado"),
-            detail: "Aviso cancelado"
-          }
-        ];
-        this.callCancelarCursos();
-      }
-    });
+    // let icon = "fa fa-edit";
+    // this.confirmationService.confirm({
+    //   message: mess,
+    //   icon: icon,
+    //   accept: () => {
+    //     this.callCancelarCursos();
+    //   },
+    //   reject: () => {
+    //     this.msgs = [
+    //       {
+    //         severity: "info",
+    //         summary: this.translateService.instant("general.message.cancelado"),
+    //         detail: "Aviso cancelado"
+    //       }
+    //     ];
+    //     this.callCancelarCursos();
+    //   }
+    // });
   }
 
   callCancelarCursos() {

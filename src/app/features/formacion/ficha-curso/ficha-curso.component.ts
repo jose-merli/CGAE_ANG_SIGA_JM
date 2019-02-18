@@ -274,6 +274,9 @@ export class FichaCursoComponent implements OnInit {
       if (this.curso.idCurso != null && this.curso.idCurso != undefined) {
         this.searchCourse(this.curso.idCurso);
         this.modoEdicion = true;
+        this.getMassiveLoadInscriptions();
+        this.getCertificatesCourse();
+        this.getPrices();
       } else {
         //Si no se ha guardado el evento limpiamos la fecha introducida
         if (this.curso.idEventoInicioInscripcion == "undefined") {
@@ -282,13 +285,10 @@ export class FichaCursoComponent implements OnInit {
       }
 
       sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
-
-      this.arreglarFechasEvento();
-      this.getMassiveLoadInscriptions();
-      this.getCertificatesCourse();
       this.configurationInformacionAdicional();
-      this.getPrices();
-      this.getSessions();
+      this.arreglarFechasEvento();
+      this.progressSpinner = false;
+     
 
       //2.Proviene de la creacion evento Incripcion Fin
     } else if (
@@ -310,6 +310,9 @@ export class FichaCursoComponent implements OnInit {
       if (this.curso.idCurso != null && this.curso.idCurso != undefined) {
         this.searchCourse(this.curso.idCurso);
         this.modoEdicion = true;
+        this.getCertificatesCourse();
+        this.getMassiveLoadInscriptions();
+        this.getPrices();
       } else {
         //Si no se ha guardado el evento limpiamos la fecha introducida
         if (this.curso.idEventoFinInscripcion == "undefined") {
@@ -318,11 +321,9 @@ export class FichaCursoComponent implements OnInit {
       }
 
       this.arreglarFechasEvento();
-      this.getMassiveLoadInscriptions();
-      this.getCertificatesCourse();
-      this.getPrices();
-      this.getSessions();
       this.configurationInformacionAdicional();
+      this.progressSpinner = false;
+
 
       //3. Estamos en modo edicion
     } else if (sessionStorage.getItem("modoEdicionCurso") == "true") {
@@ -550,6 +551,9 @@ export class FichaCursoComponent implements OnInit {
     } else {
       this.edicionEncuestaSatisfaccion = true;
     }
+
+    this.progressSpinner = false;
+
   }
 
   getCombosDatosGenerales() {
@@ -776,28 +780,31 @@ export class FichaCursoComponent implements OnInit {
       url = "fichaCursos_updateCourse";
 
       if (this.curso.idEstado != this.valorEstadoAbierto) {
-        let mess = "¿Desea enviar un aviso del cambio realizado?";
+        this.callSaveCourse(url);
+        // let mess = "¿Desea enviar un aviso del cambio realizado?";
 
-        let icon = "fa fa-edit";
-        this.confirmationService.confirm({
-          message: mess,
-          icon: icon,
-          accept: () => {
-            this.callSaveCourse(url);
-          },
-          reject: () => {
-            this.msgs = [
-              {
-                severity: "info",
-                summary: this.translateService.instant(
-                  "general.message.cancelado"
-                ),
-                detail: "Aviso cancelado"
-              }
-            ];
-            this.callSaveCourse(url);
-          }
-        });
+        // let icon = "fa fa-edit";
+        // this.confirmationService.confirm({
+        //   message: mess,
+        //   icon: icon,
+        //   accept: () => {
+        //     this.callSaveCourse(url);
+        //   },
+        //   reject: () => {
+        //     this.msgs = [
+        //       {
+        //         severity: "info",
+        //         summary: this.translateService.instant(
+        //           "general.message.cancelado"
+        //         ),
+        //         detail: "Aviso cancelado"
+        //       }
+        //     ];
+        //     this.callSaveCourse(url);
+        //   }
+        // });
+      }else{
+        this.callSaveCourse(url);
       }
     } else {
       //Mapeamos el formador que queremos insertar nuevo
@@ -837,12 +844,12 @@ export class FichaCursoComponent implements OnInit {
           );
           this.modoEdicion = true;
 
-          if (this.initCurso.plazasDisponibles < this.curso.plazasDisponibles) {
-            this.curso.aviso = "3";
-            this.notifyAvailablePlaces();
-          } else {
-            this.curso.aviso = undefined;
-          }
+          // if (this.initCurso.plazasDisponibles < this.curso.plazasDisponibles) {
+          //   this.curso.aviso = "3";
+          //   this.notifyAvailablePlaces();
+          // } else {
+          //   this.curso.aviso = undefined;
+          // }
         }
         this.configurationInformacionAdicional();
       },
@@ -859,33 +866,33 @@ export class FichaCursoComponent implements OnInit {
   }
 
   notifyAvailablePlaces() {
-    let mess =
-      "¿Desea enviar un aviso a los incritos que fueron rechazados o cancelados de que existen plazas disponibles?";
+    // let mess =
+    //   "¿Desea enviar un aviso a los incritos que fueron rechazados o cancelados de que existen plazas disponibles?";
 
-    let icon = "fa fa-edit";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        //Realizar el aviso
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Guai",
-            detail: "Guai"
-          }
-        ];
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: this.translateService.instant("general.message.cancelado"),
-            detail: "Aviso cancelado"
-          }
-        ];
-      }
-    });
+    // let icon = "fa fa-edit";
+    // this.confirmationService.confirm({
+    //   message: mess,
+    //   icon: icon,
+    //   accept: () => {
+    //     //Realizar el aviso
+    //     this.msgs = [
+    //       {
+    //         severity: "info",
+    //         summary: "Guai",
+    //         detail: "Guai"
+    //       }
+    //     ];
+    //   },
+    //   reject: () => {
+    //     this.msgs = [
+    //       {
+    //         severity: "info",
+    //         summary: this.translateService.instant("general.message.cancelado"),
+    //         detail: "Aviso cancelado"
+    //       }
+    //     ];
+    //   }
+    // });
   }
 
   announceCourse() {
@@ -941,28 +948,29 @@ export class FichaCursoComponent implements OnInit {
   }
 
   cancelCourse() {
-    let mess =
-      "¿Desea comunicar a todos los inscritos la cancelación del curso?";
+    this.callCancelCourse();
+    // let mess =
+    //   "¿Desea comunicar a todos los inscritos la cancelación del curso?";
 
-    let icon = "fa fa-edit";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.curso.aviso = "1";
-        this.callCancelCourse();
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: this.translateService.instant("general.message.cancelado"),
-            detail: "Aviso cancelado"
-          }
-        ];
-        this.callCancelCourse();
-      }
-    });
+    // let icon = "fa fa-edit";
+    // this.confirmationService.confirm({
+    //   message: mess,
+    //   icon: icon,
+    //   accept: () => {
+    //     this.curso.aviso = "1";
+    //     this.callCancelCourse();
+    //   },
+    //   reject: () => {
+    //     this.msgs = [
+    //       {
+    //         severity: "info",
+    //         summary: this.translateService.instant("general.message.cancelado"),
+    //         detail: "Aviso cancelado"
+    //       }
+    //     ];
+    //     this.callCancelCourse();
+    //   }
+    // });
   }
 
   callCancelCourse() {
@@ -974,7 +982,7 @@ export class FichaCursoComponent implements OnInit {
       data => {
         this.progressSpinner = false;
         this.curso.idEstado = this.valorEstadoCancelado;
-        this.curso.aviso = undefined;
+        // this.curso.aviso = undefined;
         if (JSON.parse(data.body).error.code == null) {
           this.showMessage(
             "info",
@@ -2232,33 +2240,36 @@ export class FichaCursoComponent implements OnInit {
   }
 
   cancelSessions() {
-    let mess = "";
 
-    if (this.selectedDatosSessions.length > 1) {
-      mess = "¿Desea comunicar la cancelación de las sesiones?";
-    } else {
-      mess = "¿Desea comunicar la cancelación de la sesión?";
-    }
+    this.callCancelSession();
 
-    let icon = "fa fa-edit";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.curso.aviso = "4";
-        this.callCancelSession();
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: this.translateService.instant("general.message.cancelado"),
-            detail: "Aviso cancelado"
-          }
-        ];
-        this.callCancelSession();
-      }
-    }); 
+    // let mess = "";
+
+    // if (this.selectedDatosSessions.length > 1) {
+    //   mess = "¿Desea comunicar la cancelación de las sesiones?";
+    // } else {
+    //   mess = "¿Desea comunicar la cancelación de la sesión?";
+    // }
+
+    // let icon = "fa fa-edit";
+    // this.confirmationService.confirm({
+    //   message: mess,
+    //   icon: icon,
+    //   accept: () => {
+    //     this.curso.aviso = "4";
+    //     this.callCancelSession();
+    //   },
+    //   reject: () => {
+    //     this.msgs = [
+    //       {
+    //         severity: "info",
+    //         summary: this.translateService.instant("general.message.cancelado"),
+    //         detail: "Aviso cancelado"
+    //       }
+    //     ];
+    //     this.callCancelSession();
+    //   }
+    // }); 
 
   }
 
