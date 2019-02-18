@@ -11,7 +11,7 @@ import { Location } from "@angular/common";
 import { typeSourceSpan } from '@angular/compiler';
 
 @Component({
-  selector: 'app-dialogo-comunicaciones',
+  selector: 'app-dialogo-comunicaciones', 
   templateUrl: './dialogo-comunicaciones.component.html',
   styleUrls: ['./dialogo-comunicaciones.component.scss'],
 
