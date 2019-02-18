@@ -414,6 +414,8 @@ export class SigaServices {
     solicitudModificacion_denySolModif: "solicitudModificacion/denySolModif",
     solicitudModificacion_searchSolModifDatosBancarios:
       "solicitudModificacion/searchSolModifDatosBancarios",
+    solicitudModificacion_searchSolModifDatosCambiarFoto:
+      "solicitudModificacion/searchSolModifDatosCambiarFoto",
     solicitudModificacion_searchDatosBancariosDetail:
       "solicitudModificacion/searchDatosBancariosDetail",
     solicitudModificacion_searchSolModifDatosBancariosDetail:
@@ -463,6 +465,8 @@ export class SigaServices {
       "solicitudModificacion/denySolModifDatosGenerales",
     solicitudModificacion_searchSolModifDatosGeneralesDetail:
       "solicitudModificacion/searchSolModifDatosGeneralesDetail",
+    solicitudModificacion_searchSolModifDatosCambiarFotoDetail:
+      "solicitudModificacion/searchSolModifDatosCambiarFotoDetail",
     solicitudModificacion_searchDatosGeneralesDetail:
       "solicitudModificacion/searchDatosGeneralesDetail",
     // FOTO
@@ -474,14 +478,16 @@ export class SigaServices {
       "solicitudModificacion/searchSolModifDatosUseFotoDetail",
     solicitudModificacion_processSolModifDatosUseFoto:
       "solicitudModificacion/processSolModifDatosUseFoto",
+    solicitudModificacion_processSolModifDatosCambiarFoto:
+      "solicitudModificacion/processSolModifDatosCambiarFoto",
     solicitudModificacion_denySolModifDatosUseFoto:
       "solicitudModificacion/denySolModifDatosUseFoto",
-
+    solicitudModificacion_denySolModifDatosCambiarFoto:
+      "solicitudModificacion/denySolModifDatosCambiarFoto",
     solicitudModificacionEspecifica_searchSpecificRequest:
       "solicitudModificacionEspecifica/searchSpecificRequest",
     solicitudModificacion_searchDatosDirecciones:
       "solicitudModificacion/searchDatosDirecciones",
-
     solicitudModificacion_insertAuditoria:
       "solicitudModificacion/insertAuditoria",
 

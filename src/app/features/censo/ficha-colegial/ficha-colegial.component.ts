@@ -98,7 +98,7 @@ export class FichaColegialComponent implements OnInit {
   selectMultipleDirecciones: boolean = false;
   selectMultipleBancarios: boolean = false;
   selectMultipleCurriculares: boolean = false;
-
+  solicitudModificacionMens: string;
   buttonVisibleRegtelAtras: boolean = true;
   buttonVisibleRegtelCarpeta: boolean = true;
   buttonVisibleRegtelDescargar: boolean = true;
@@ -351,6 +351,11 @@ export class FichaColegialComponent implements OnInit {
       this.disabledAction = true;
     } else {
       this.disabledAction = false;
+    }
+
+    if (sessionStorage.getItem("solimodifMensaje")) {
+      this.solicitudModificacionMens = sessionStorage.getItem("solimodifMensaje");
+      sessionStorage.removeItem("solimodifMensaje");
     }
 
     // Cogemos los datos de la busqueda de Colegiados
@@ -1417,44 +1422,54 @@ export class FichaColegialComponent implements OnInit {
 
   solicitarModificacionGenerales() {
     // fichaDatosGenerales_datosGeneralesSolicitudModificación
-    this.comisionesAString();
-    this.sigaServices
-      .post(
-        "fichaDatosGenerales_datosGeneralesSolicitudModificación",
-        this.generalBody
-      )
-      .subscribe(
-        data => {
-          // sessionStorage.removeItem("personaBody");
-          sessionStorage.setItem(
-            "personaBody",
-            JSON.stringify(this.generalBody)
-          );
-          this.checkGeneralBody = new FichaColegialGeneralesItem();
-          if (this.file != undefined) {
-            this.solicitudGuardarImagen(this.idPersona);
+    if (JSON.stringify(this.generalBody) == JSON.stringify(this.checkGeneralBody)) {
+      if (this.file != undefined) {
+        this.solicitudGuardarImagen(this.idPersona);
+      }
+    } else {
+      this.comisionesAString();
+      this.sigaServices
+        .post(
+          "fichaDatosGenerales_datosGeneralesSolicitudModificación",
+          this.generalBody
+        )
+        .subscribe(
+          data => {
+            // sessionStorage.removeItem("personaBody");
+            sessionStorage.setItem(
+              "personaBody",
+              JSON.stringify(this.generalBody)
+            );
+            this.checkGeneralBody = new FichaColegialGeneralesItem();
+            if (this.file != undefined) {
+              this.solicitudGuardarImagen(this.idPersona);
+            }
+            if (data.error.description != "") {
+              this.solicitudModificacionMens = data.error.description;
+            }
+            this.checkGeneralBody = JSON.parse(JSON.stringify(this.generalBody));
+            this.activacionGuardarGenerales();
+            this.progressSpinner = false;
+            this.cerrarAuditoria();
+            this.showSuccess();
+          },
+          error => {
+            console.log(error);
+            this.progressSpinner = false;
+            this.activacionGuardarGenerales();
+            this.cerrarAuditoria();
+            this.generalError = JSON.parse(error["error"]);
+            if (this.generalError.error.message.toString()) {
+              this.showFailDetalle(this.generalError.error.message.toString());
+            } else {
+              this.showFail();
+            }
           }
-          this.checkGeneralBody = JSON.parse(JSON.stringify(this.generalBody));
-          this.activacionGuardarGenerales();
-          this.progressSpinner = false;
-          this.cerrarAuditoria();
-          this.showSuccess();
-        },
-        error => {
-          console.log(error);
-          this.progressSpinner = false;
-          this.activacionGuardarGenerales();
-          this.cerrarAuditoria();
-          this.generalError = JSON.parse(error["error"]);
-          if (this.generalError.error.message.toString()) {
-            this.showFailDetalle(this.generalError.error.message.toString());
-          } else {
-            this.showFail();
-          }
-        }
-        // EVENTO PARA ACTIVAR GUARDAR AL BORRAR UNA ETIQUETA
-      );
+          // EVENTO PARA ACTIVAR GUARDAR AL BORRAR UNA ETIQUETA
+        );
+    }
   }
+
 
   comisionesAString() {
     if (this.comisiones == true) {
@@ -1700,8 +1715,11 @@ export class FichaColegialComponent implements OnInit {
       .subscribe(
         data => {
           this.file = undefined;
-          this.cargarImagen(this.idPersona);
           this.progressSpinner = false;
+          if (data.error.description != "") {
+            this.solicitudModificacionMens = data.error.description;
+          }
+          this.activacionGuardarGenerales();
         },
         error => {
           console.log(error);

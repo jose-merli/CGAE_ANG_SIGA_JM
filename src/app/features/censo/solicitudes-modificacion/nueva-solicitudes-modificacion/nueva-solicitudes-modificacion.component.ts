@@ -14,9 +14,12 @@ import { SoliModiDireccionesItem } from "../../../../models/SoliModiDireccionesI
 import { SoliModTableItem } from "../../../../models/SoliModiTableItem";
 import { TranslateService } from "../../../../commons/translate/translation.service";
 import { SoliModifFotoItem } from "../../../../models/SoliModifFotoItem";
+import { SoliModifFotoChangeItem } from "../../../../models/SoliModifFotoChangeItem";
 import { SoliModifDatosBasicosItem } from "../../../../models/SoliModifDatosBasicosItem";
 import { SolModifDatosCurricularesItem } from "../../../../models/SolModifDatosCurricularesItem";
 import { SolModifDatosBancariosItem } from "../../../../models/SolModifDatosBancariosItem";
+import { DomSanitizer } from "./../../../../../../node_modules/@angular/platform-browser";
+import { DatosGeneralesItem } from "../../../../models/DatosGeneralesItem";
 
 @Component({
   selector: "app-nueva-solicitudes-modificacion",
@@ -31,9 +34,13 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
   bodySoliModDirecciones: SoliModiDireccionesItem = new SoliModiDireccionesItem();
   bodyDirecciones: SoliModiDireccionesItem = new SoliModiDireccionesItem();
 
-  // FOTO
+  // CHECK FOTO
   bodySolModiFoto: SoliModifFotoItem = new SoliModifFotoItem();
   bodyFoto: SoliModifFotoItem = new SoliModifFotoItem();
+
+  // FOTO CAMBIO
+  bodySolModiChangeFoto: SoliModifFotoChangeItem = new SoliModifFotoChangeItem();
+  bodyChangeFoto: SoliModifFotoChangeItem = new SoliModifFotoChangeItem();
 
   //DATOS BÁSICOS
   bodySolDatosBasicos: SoliModifDatosBasicosItem = new SoliModifDatosBasicosItem();
@@ -59,7 +66,7 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
   estado: SelectItem[];
   selectedEstado: any;
   isLetrado: boolean = false;
-
+  imagenAnterior: any;
   msgs: any;
 
   @ViewChild("table")
@@ -80,13 +87,14 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
   showGuardarAuditoria: boolean = false;
   displayAuditoria: boolean = false;
   motivoAuditoria: string;
-
+  solicitudFoto: boolean = false;
   constructor(
     private location: Location,
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
-    private translateService: TranslateService
-  ) {}
+    private translateService: TranslateService,
+    private sanitizer: DomSanitizer
+  ) { }
 
   ngOnInit() {
     this.getDataTable();
@@ -113,11 +121,17 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
         this.getTranslationsForAddresses();
         this.getSolModAddresses(this.body);
       } else if (
-        this.body.idTipoModificacion == "35" ||
-        this.body.idTipoModificacion == "60"
+        this.body.idTipoModificacion == "35"
       ) {
         this.getTranslationsForPhoto();
         this.getSolModPhoto(this.body);
+      } else if (
+        this.body.idTipoModificacion == "60"
+      ) {
+        this.solicitudFoto = true;
+        // solicitudModificacion_searchSolModifDatosCambiarFotoDetail
+        this.getTranslationsForPhoto();
+        this.getSolModChangePhoto(this.body);
       } else if (this.body.idTipoModificacion == "10") {
         this.getTranslationsForBasicData();
         this.getSolModBasicData(this.body);
@@ -200,7 +214,7 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
           this.bodySoliModDirecciones = JSON.parse(data["body"]);
           console.log("SOL DIR", this.bodySoliModDirecciones);
         },
-        err => {},
+        err => { },
         () => {
           this.body.codigo = this.bodySoliModDirecciones.idDireccion;
           this.body.idPersona = this.bodySoliModDirecciones.idPersona;
@@ -221,7 +235,7 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
           this.bodyDirecciones = JSON.parse(data["body"]);
           console.log("DIR", this.bodyDirecciones);
         },
-        err => {},
+        err => { },
         () => {
           this.data = [
             {
@@ -303,12 +317,50 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
           this.bodySolModiFoto = JSON.parse(data["body"]);
           console.log("SOL FOTO", this.bodySolModiFoto);
         },
-        err => {},
+        err => { },
         () => {
           this.body.idPersona = this.bodySolModiFoto.idPersona;
           this.getPhotoRequest(this.body);
         }
       );
+  }
+
+  getTranslationsForChangePhoto() {
+    this.textPhotoTranslations = [
+      "solicitudModificacion.especifica.exportarFoto.literal"
+    ];
+  }
+
+  getSolModChangePhoto(idSolicitud) {
+    let datosParaImagen: DatosGeneralesItem = new DatosGeneralesItem();
+    datosParaImagen.idPersona = idSolicitud.idPersona;
+
+    this.sigaServices
+      .postDownloadFiles("personaJuridica_cargarFotografia", datosParaImagen)
+      .subscribe(data => {
+        const blob = new Blob([data], { type: "text/csv" });
+        if (blob.size == 0) {
+        } else {
+          let urlCreator = window.URL;
+          this.imagenAnterior = this.sanitizer.bypassSecurityTrustUrl(
+            urlCreator.createObjectURL(blob)
+          );
+        }
+      });
+
+    this.sigaServices
+      .postDownloadFiles("solicitudModificacion_searchSolModifDatosCambiarFotoDetail", idSolicitud)
+      .subscribe(data => {
+        const blob = new Blob([data], { type: "text/csv" });
+        if (blob.size == 0) {
+        } else {
+          let urlCreator = window.URL;
+          this.bodySolModiChangeFoto.fotografia = this.sanitizer.bypassSecurityTrustUrl(
+            urlCreator.createObjectURL(blob)
+          );
+        }
+      });
+
   }
 
   getPhotoRequest(body) {
@@ -323,7 +375,7 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
           this.bodyFoto = JSON.parse(data["body"]);
           console.log("FOTO", this.bodyFoto);
         },
-        err => {},
+        err => { },
         () => {
           this.data = [
             {
@@ -355,7 +407,7 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
           this.bodySolDatosBasicos = JSON.parse(data["body"]);
           console.log("SOL BASICOS", this.bodySolDatosBasicos);
         },
-        err => {},
+        err => { },
         () => {
           this.body.idPersona = this.bodySolDatosBasicos.idPersona;
           this.getBasicDataRequest(this.body);
@@ -375,7 +427,7 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
           this.bodyDatosBasicos = JSON.parse(data["body"]);
           console.log("DATOS BASICOS", this.bodyDatosBasicos);
         },
-        err => {},
+        err => { },
         () => {
           this.data = [
             {
@@ -412,7 +464,7 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
           this.bodySolDatosCV = JSON.parse(data["body"]);
           console.log("SOL CV", this.bodySolDatosCV);
         },
-        err => {},
+        err => { },
         () => {
           this.body.idPersona = this.bodySolDatosCV.idPersona;
           this.body.codigo = this.bodySolDatosCV.idCv;
@@ -433,7 +485,7 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
           this.bodyDatosCV = JSON.parse(data["body"]);
           console.log("DATOS CV", this.bodyDatosCV);
         },
-        err => {},
+        err => { },
         () => {
           this.data = [
             {
@@ -496,7 +548,7 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
           this.bodySolDatosBancarios = JSON.parse(data["body"]);
           console.log("SOL BANCARIOS", this.bodySolDatosBancarios);
         },
-        err => {},
+        err => { },
         () => {
           this.body.idPersona = this.bodySolDatosBancarios.idPersona;
           this.body.codigo = this.bodySolDatosBancarios.idCuenta;
@@ -517,7 +569,7 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
           this.bodyDatosBancarios = JSON.parse(data["body"]);
           console.log("DATOS BANCARIOS", this.bodyDatosBancarios);
         },
-        err => {},
+        err => { },
         () => {
           this.data = [
             {
@@ -579,10 +631,13 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
       this.updateRequestState(
         "solicitudModificacion_processSolModifDatosDirecciones"
       );
-    } else if (this.body.idTipoModificacion == "35"  ||
-    this.body.idTipoModificacion == "60") {
+    } else if (this.body.idTipoModificacion == "35") {
       this.updateRequestState(
         "solicitudModificacion_processSolModifDatosUseFoto"
+      );
+    } else if (this.body.idTipoModificacion == "60") {
+      this.updateRequestState(
+        "solicitudModificacion_processSolModifDatosCambiarFoto"
       );
     } else if (this.body.idTipoModificacion == "40") {
       this.updateRequestState(
@@ -604,9 +659,10 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
       this.updateRequestState(
         "solicitudModificacion_denySolModifDatosDirecciones"
       );
-    } else if (this.body.idTipoModificacion == "35"  ||
-    this.body.idTipoModificacion == "60") {
+    } else if (this.body.idTipoModificacion == "35") {
       this.updateRequestState("solicitudModificacion_denySolModifDatosUseFoto");
+    } else if (this.body.idTipoModificacion == "60") {
+      this.updateRequestState("solicitudModificacion_denySolModifDatosCambiarFoto");
     } else if (this.body.idTipoModificacion == "40") {
       this.updateRequestState(
         "solicitudModificacion_denySolModifDatosBancarios"
@@ -618,9 +674,9 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
     }
   }
 
+
   updateRequestState(path: string) {
     this.progressSpinner = true;
-
     this.sigaServices.post(path, this.body).subscribe(
       data => {
         if (this.mostrarAuditoria) {

@@ -727,8 +727,12 @@ para poder filtrar el dato con o sin estos caracteres*/
         data => {
           this.progressSpinner = false;
           this.body = JSON.parse(data["body"]);
-          this.backTo();
+          let err = JSON.parse(data["body"]);
           this.displayAuditoria = false;
+          if (err.error.description != "") {
+            sessionStorage.setItem("solimodifMensaje", err.error.description);
+          }
+          this.backTo();
         },
         error => {
           this.bodySearch = JSON.parse(error["error"]);

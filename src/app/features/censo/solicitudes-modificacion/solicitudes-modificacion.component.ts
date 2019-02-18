@@ -263,14 +263,11 @@ export class SolicitudesModificacionComponent implements OnInit {
     } else if (this.body.tipoModificacion == "20") {
       this.searchRequest("solicitudModificacion_searchSolModif");
     } else if (this.body.tipoModificacion == "30") {
-      this.searchRequest(
-        "solicitudModificacion_searchSolModifDatosDirecciones"
-      );
-    } else if (
-      this.body.tipoModificacion == "35" ||
-      this.body.tipoModificacion == "60"
-    ) {
+      this.searchRequest("solicitudModificacion_searchSolModifDatosDirecciones");
+    } else if (this.body.tipoModificacion == "35") {
       this.searchRequest("solicitudModificacion_searchSolModifDatosUseFoto");
+    } else if (this.body.tipoModificacion == "60") {
+      this.searchRequest("solicitudModificacion_searchSolModifDatosCambiarFoto");
     } else if (this.body.tipoModificacion == "40") {
       this.searchRequest("solicitudModificacion_searchSolModifDatosBancarios");
     } else if (this.body.tipoModificacion == "50") {

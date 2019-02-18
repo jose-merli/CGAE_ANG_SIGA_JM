@@ -459,9 +459,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         data => {
           this.progressSpinner = false;
           this.body = JSON.parse(data["body"]);
-
           this.showSuccess("Se ha presentado correctamente la solicitud");
+
           sessionStorage.setItem("editar", "true");
+          let err = JSON.parse(data["body"]);
+          if (err.error.description != "") {
+            sessionStorage.setItem("solimodifMensaje", err.error.description);
+          }
         },
         error => {
           this.bodySearch = JSON.parse(error["error"]);
