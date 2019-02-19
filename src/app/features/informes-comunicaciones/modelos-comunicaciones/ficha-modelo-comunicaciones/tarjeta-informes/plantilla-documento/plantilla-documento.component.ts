@@ -88,7 +88,7 @@ export class PlantillaDocumentoComponent implements OnInit {
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.textFilter = "Elegir";
@@ -105,8 +105,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
     this.cols = [
       { field: "objetivo", header: "Objetivo" },
-      { field: "idConsulta", header: "Consulta" },
-      { field: "finalidad", header: "Finalidad" }
+      { field: "idConsulta", header: "Consulta" }
     ];
 
     this.consultas = [
@@ -581,11 +580,11 @@ export class PlantillaDocumentoComponent implements OnInit {
             console.log(err);
           }
         },
-        () => {}
+        () => { }
       );
   }
   guardarDatosGenerales() {
-    sessionStorage.removeItem("crearNuevaPlantillaDocumento");
+
     this.body.sufijos = [];
     let orden: number = 1;
     this.selectedSufijos.forEach(element => {
@@ -748,7 +747,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         console.log(err);
         this.progressSpinner = false;
       },
-      () => {}
+      () => { }
     );
   }
 
@@ -771,6 +770,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   onShowConsultas() {
+    debugger;
     if (sessionStorage.getItem("crearNuevaPlantillaDocumento") == null) {
       this.showConsultas = !this.showConsultas;
     }

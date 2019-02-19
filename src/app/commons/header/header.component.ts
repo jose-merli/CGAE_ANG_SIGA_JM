@@ -44,7 +44,6 @@ export class HeaderComponent implements OnInit {
     this.sigaServices.get("etiquetas_lenguajeFiltrado").subscribe(
       n => {
         this.comboIdiomas = n.combooItems;
-        console.log(this.comboIdiomas);
       },
       err => {
         console.log(err);

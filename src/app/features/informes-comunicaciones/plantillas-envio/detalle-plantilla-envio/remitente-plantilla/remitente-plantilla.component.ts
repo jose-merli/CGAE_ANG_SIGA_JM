@@ -66,7 +66,7 @@ export class RemitentePlantillaComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getDatos();
@@ -230,7 +230,7 @@ export class RemitentePlantillaComponent implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {}
+        () => { }
       );
   }
   getPersonaDireccion() {
@@ -273,7 +273,7 @@ export class RemitentePlantillaComponent implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {}
+        () => { }
       );
   }
 
@@ -315,7 +315,7 @@ export class RemitentePlantillaComponent implements OnInit {
       n => {
         this.comboPais = n.combooItems;
       },
-      error => {}
+      error => { }
     );
   }
 
@@ -338,15 +338,15 @@ export class RemitentePlantillaComponent implements OnInit {
       .getParam(
         "direcciones_comboPoblacion",
         "?idProvincia=" +
-          this.direccion.idProvincia +
-          "&filtro=" +
-          this.poblacionBuscada
+        this.direccion.idProvincia +
+        "&filtro=" +
+        this.poblacionBuscada
       )
       .subscribe(
         n => {
           this.comboPoblacion = n.combooItems;
         },
-        error => {}
+        error => { }
       );
   }
 
@@ -355,7 +355,7 @@ export class RemitentePlantillaComponent implements OnInit {
       n => {
         this.comboTipoDireccion = n.combooItems;
       },
-      error => {}
+      error => { }
     );
   }
 
@@ -384,7 +384,8 @@ export class RemitentePlantillaComponent implements OnInit {
       idPersona: this.body.idPersona,
       idDireccion: this.direccion.idDireccion,
       idPlantillaEnvios: this.body.idPlantillaEnvios,
-      idTipoEnvios: this.body.idTipoEnvios
+      idTipoEnvios: this.body.idTipoEnvios,
+      descripcion: this.remitente.descripcion
     };
 
     this.sigaServices
@@ -409,7 +410,7 @@ export class RemitentePlantillaComponent implements OnInit {
             )
           );
         },
-        () => {}
+        () => { }
       );
   }
 
