@@ -75,15 +75,15 @@ export class TarjetaInformesComponent implements OnInit {
 
     this.selectedItem = 10;
     this.cols = [
-      { field: "idioma", header: "Idioma" },
+      { field: "idioma", header: "censo.usuario.labelIdioma" },
       // { field: 'fechaAsociacion', header: 'Fecha asociación' },
-      { field: "nombreFicheroSalida", header: "Fichero salida" },
-      { field: "sufijo", header: "Sufijo" },
-      { field: "formatoSalida", header: "Formato salida" },
-      { field: "destinatarios", header: "Destinatarios" },
-      { field: "condicion", header: "Condición" },
-      { field: "multiDocumento", header: "Multi-documento" },
-      { field: "datos", header: "Datos" }
+      { field: "nombreFicheroSalida", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.ficheroSalida" },
+      { field: "sufijo", header: "administracion.parametrosGenerales.literal.sufijo" },
+      { field: "formatoSalida", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.formatoSalida" },
+      { field: "destinatarios", header: "enviosMasivos.literal.destinatarios" },
+      { field: "condicion", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.condicion" },
+      { field: "multiDocumento", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.multiDocumento" },
+      { field: "datos", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.datos" }
     ];
 
     this.rowsPerPage = [

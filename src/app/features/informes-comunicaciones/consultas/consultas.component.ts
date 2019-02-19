@@ -61,7 +61,7 @@ export class ConsultasComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     sessionStorage.removeItem("consultasSearch");
@@ -160,7 +160,7 @@ export class ConsultasComponent implements OnInit {
     this.sigaServices.get("consultas_comboObjetivos").subscribe(
       data => {
         this.objetivos = data.combooItems;
-        this.objetivos.unshift({ label: '', value: '' });
+        this.objetivos.unshift({ label: "", value: "" });
       },
       err => {
         console.log(err);
@@ -169,7 +169,7 @@ export class ConsultasComponent implements OnInit {
       this.sigaServices.get("consultas_comboModulos").subscribe(
         data => {
           this.modulos = data.combooItems;
-          this.modulos.unshift({ label: '', value: '' });
+          this.modulos.unshift({ label: "", value: "" });
           /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
     para poder filtrar el dato con o sin estos caracteres*/
           this.modulos.map(e => {
@@ -186,11 +186,14 @@ export class ConsultasComponent implements OnInit {
               }
             }
 
-            if (this.bodySearch.idModulo != undefined && this.bodySearch.idModulo != "") {
+            if (
+              this.bodySearch.idModulo != undefined &&
+              this.bodySearch.idModulo != ""
+            ) {
               this.cargaComboClaseCom(null);
             } else {
               this.clasesComunicaciones = [];
-              this.clasesComunicaciones.unshift({ label: '', value: '' });
+              this.clasesComunicaciones.unshift({ label: "", value: "" });
             }
           });
         },
@@ -198,7 +201,6 @@ export class ConsultasComponent implements OnInit {
           console.log(err);
         }
       );
-
   }
 
   RowsPerPages(event) {
@@ -260,12 +262,21 @@ export class ConsultasComponent implements OnInit {
   }
 
   duplicar(dato) {
-
     this.sigaServices.post("consultas_duplicar", dato[0]).subscribe(
       data => {
-        this.showSuccess("Se ha duplicado la consulta correctamente");
-        sessionStorage.setItem("consultasSearch", JSON.stringify(JSON.parse(data["body"]).consultaItem));
-        sessionStorage.setItem("filtrosConsulta", JSON.stringify(this.bodySearch));
+        this.showSuccess(
+          this.translateService.instant(
+            "informesycomunicaciones.modelosdecomunicacion.correctDuplicado"
+          )
+        );
+        sessionStorage.setItem(
+          "consultasSearch",
+          JSON.stringify(JSON.parse(data["body"]).consultaItem)
+        );
+        sessionStorage.setItem(
+          "filtrosConsulta",
+          JSON.stringify(this.bodySearch)
+        );
         this.router.navigate(["/fichaConsulta"]);
       },
       err => {
@@ -283,7 +294,12 @@ export class ConsultasComponent implements OnInit {
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
       message:
-        "¿Está seguro de eliminar las " + dato.length + " consultas seleccionadas?",
+        this.translateService.instant("messages.deleteConfirmation.much") +
+        dato.length +
+        this.translateService.instant(
+          "menu.informesYcomunicaciones.consultas"
+        ) +
+        "?",
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarCancelar(dato);
@@ -366,13 +382,18 @@ export class ConsultasComponent implements OnInit {
         (this.institucionActual == 2000 && dato[0].generica == "Si")
       ) {
         sessionStorage.setItem("consultasSearch", JSON.stringify(dato[0]));
-        sessionStorage.setItem("filtrosConsulta", JSON.stringify(this.bodySearch));
+        sessionStorage.setItem(
+          "filtrosConsulta",
+          JSON.stringify(this.bodySearch)
+        );
         this.router.navigate(["/fichaConsulta"]);
-
       } else {
         this.router.navigate(["/fichaConsulta"]);
         sessionStorage.setItem("consultasSearch", JSON.stringify(dato[0]));
-        sessionStorage.setItem("filtrosConsulta", JSON.stringify(this.bodySearch));
+        sessionStorage.setItem(
+          "filtrosConsulta",
+          JSON.stringify(this.bodySearch)
+        );
       }
     } else {
       if (
@@ -418,7 +439,7 @@ export class ConsultasComponent implements OnInit {
       .subscribe(
         data => {
           this.clasesComunicaciones = data.combooItems;
-          this.clasesComunicaciones.unshift({ label: '', value: '' });
+          this.clasesComunicaciones.unshift({ label: "", value: "" });
           /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
           this.clasesComunicaciones.map(e => {

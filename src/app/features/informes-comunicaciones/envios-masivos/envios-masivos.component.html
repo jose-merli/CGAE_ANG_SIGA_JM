@@ -63,7 +63,7 @@
         <ng-template pTemplate="header" let-columns>
           <tr>
             <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-              {{col.header}}
+              {{col.header | translate }}
               <p-sortIcon [field]="col.field"></p-sortIcon>
               <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
                           col.field, 'contains')">
@@ -87,13 +87,13 @@
         <ng-template pTemplate="emptymessage" let-columns>
           <tr>
             <td [attr.colspan]="columns.length">
-              No hay resultados.
+              {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}.
             </td>
           </tr>
         </ng-template>
         <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{table.first + 1}} al {{table.first + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
             <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">Seleccionados: {{selectedDatos.length}}</label>
             <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">Seleccionados: 0</label>
             <label>{{"general.message.mostrar" | translate}}</label>
@@ -125,7 +125,7 @@
 
 <p-dialog [(visible)]="showProgramar" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="400">
   <p-header class="title">
-    <label>Programar</label>
+    <label>{{'general.boton.programar' | translate }}</label>
   </p-header>
   <div class="form-row">
     <div class="form-group col-lg-12 col-md-12">
