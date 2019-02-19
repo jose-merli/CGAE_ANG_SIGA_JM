@@ -5,6 +5,7 @@ export class SolicitudIncorporacionItem {
   numeroIdentificacion: String;
   identificador: String;
   nombreSolicitud: String;
+  nombrePoblacion: String;
   apellidos: String;
   apellido1: String;
   idsolicitudincorporacion: String;
@@ -51,7 +52,6 @@ export class SolicitudIncorporacionItem {
   codigoPostal: String;
   idPoblacion: String;
   idProvincia: String;
-  nombrePoblacion: String;
   nombreProvincia: String;
   titular: String;
   iban: String;
@@ -64,5 +64,5 @@ export class SolicitudIncorporacionItem {
   banco: String;
   idInstitucion: String;
 
-  constructor() {}
+  constructor() { }
 }

@@ -12,6 +12,7 @@ import { SigaWrapper } from '../../../wrapper/wrapper.class';
 import { esCalendar } from './../../../utils/calendar';
 import { SigaServices } from './../../../_services/siga.service';
 import { DialogoComunicacionesItem } from '../../../models/DialogoComunicacionItem';
+import { ModelosComunicacionesItem } from '../../../models/ModelosComunicacionesItem';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -85,20 +86,13 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   fechaNacimientoDesdeSelect: Date;
 
   //Diálogo de comunicación
-  showComunicar: boolean = false;
-  modelosComunicacion: any[];
-  bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
-  tiposEnvio: any[];
-  plantillasEnvio: any[];
-  datosModelos: any[];
-  colsModelos: any[];
-  selectMultipleComunicar: boolean = false;
-  first: number = 0;
-  currentDate: Date = new Date();
+  bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();  
+  first: number = 0;  
   clasesComunicaciones: any = [];
-  currentRoute: String;
-  selectedModelos: any = [];
+  currentRoute: String;  
   idClasesComunicacionArray: string[] = [];
+  idClaseComunicacion: String;
+  keys: any []= [];
 
   constructor(
     private sigaServices: SigaServices,
@@ -149,17 +143,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       this.isBuscar();
     }
 
-    this.colsModelos = [
-      { field: 'modelo', header: 'Modelo' },
-      { field: 'plantillaEnvio', header: 'Plantilla Envío' },
-      { field: 'tipoEnvio', header: 'Tipo envío' }
-    ]
     if (this.body.tipoCV != undefined) {
       this.getComboSubtipoCurricular(this.body.tipoCV);
       this.getComboTipoCurricular(this.body.tipoCV);
     }
-
-
   }
 
   onHideDatosGenerales() {
@@ -519,6 +506,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
             this.progressSpinner = false;
             this.colegiadoSearch = JSON.parse(data["body"]);
             this.datos = this.colegiadoSearch.colegiadoItem;
+            this.convertirStringADate(this.datos);
             this.table.paginator = true;
             this.body.fechaIncorporacion = [];
           },
@@ -531,6 +519,24 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           }
         );
     }
+  }
+
+  convertirStringADate(datos) {
+    datos.forEach(element => {
+      if (element.fechaNacimiento == "" || element.fechaNacimiento == null) {
+        element.fechaNacimientoDate = null;
+      } else {
+        var posIni = element.fechaNacimiento.indexOf("/");
+        var posFin = element.fechaNacimiento.lastIndexOf("/");
+        var year = element.fechaNacimiento.substring(posFin + 1);
+        var day = element.fechaNacimiento.substring(
+          0, posIni
+        );
+        var month = element.fechaNacimiento.substring(posIni + 1, posFin);
+        element.fechaNacimientoDate = new Date(year, month, day);
+        element.fechaNacimiento = day + "/" + month + "/" + year;
+      }
+    });
   }
 
   isLimpiar() {
@@ -588,7 +594,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         header: "administracion.parametrosGenerales.literal.nombre"
       },
       {
-        field: "numberColegiado",
+        field: "numColegiado",
         header: "censo.busquedaClientesAvanzada.literal.nColegiado"
       },
       {
@@ -597,10 +603,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       },
       {
         field: "residenteInscrito",
-        header: "censo.ws.literal.residenteInscrito"
+        header: "censo.busquedaClientes.noResidente"
       },
       {
-        field: "fechaNacimiento",
+        field: "fechaNacimientoDate",
         header: "censo.consultaDatosColegiacion.literal.fechaNac"
       },
       {
@@ -738,132 +744,56 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     }
   }
 
-
-  //Diálogo de comunicación: ver y enviar servicio
-  comunicar(dato) {
-    this.showComunicar = true;
-    this.getClasesComunicaciones();
-    this.getFechaProgramada(dato.idInstutucion);
-    console.log(dato)
-  }
-
-  onHideComunicar() {
-    this.showComunicar = false;
-    this.bodyComunicacion.idClaseComunicacion = [];
-  }
-
-  getClasesComunicaciones() {
-    let rutaClaseComunicacion = this.currentRoute.toString();
-    this.sigaServices.post("dialogo_claseComunicaciones", rutaClaseComunicacion).subscribe(
-      data => {
-        this.clasesComunicaciones = JSON.parse(data['body']).combooItems;
-        this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-para poder filtrar el dato con o sin estos caracteres*/
-        this.clasesComunicaciones.map(e => {
-          let accents =
-            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-          let accentsOut =
-            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
-  onChangeClaseComunicacion() {
-    this.getModelosComunicacion();
-  }
-
-  getModelosComunicacion() {
-
-
-    this.idClasesComunicacionArray = [];
-    this.bodyComunicacion.idClaseComunicacion.forEach(element => {
-      let idClaseComunicacion = element.value;
-      this.idClasesComunicacionArray.push(idClaseComunicacion)
-    });
-
-    this.sigaServices.post("dialogo_modelosComunicacion", this.idClasesComunicacionArray).subscribe(
-      data => {
-        this.modelosComunicacion = JSON.parse(data['body']).modeloItems;
-        this.modelosComunicacion.forEach(element => {
-          this.plantillasEnvio = element.plantillaEnvios;
-        });
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
-  getFechaProgramada(idInstution) {
-    this.sigaServices.post("dialogo_plantillasEnvio", idInstution).subscribe(
-      data => {
-
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
-
-  onChangePlantillaEnvio() {
-    this.getTipoEnvios();
-  }
-
-  getTipoEnvios() {
-    this.sigaServices.post("dialogo_tipoEnvios", this.bodyComunicacion.idPlantillaEnvios).subscribe(
-      data => {
-        this.tiposEnvio = JSON.parse(data['body']);
-        this.tiposEnvio.unshift({ label: 'Seleccionar', value: '' });
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-para poder filtrar el dato con o sin estos caracteres*/
-        this.tiposEnvio.map(e => {
-          let accents =
-            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-          let accentsOut =
-            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
-  enviarComunicacion() {
-    this.showComunicar = false;
-    this.sigaServices.get("dialogo_envioTest").subscribe(
-      data => {
-        console.log(data);
-      },
-      err => {
-        console.log(err);
-      }
-    );
+  navigateComunicar(dato){
+    sessionStorage.setItem("rutaComunicacion",this.currentRoute.toString());
+    this.getDatosComunicar();    
   }
 
   onRowSelectModelos() { }
 
-  descargarComunicacion() { }
+  getKeysClaseComunicacion(){
+    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
+      data => {
+        this.keys = JSON.parse(data['body']);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getDatosComunicar(){
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+
+    this.sigaServices.post("dialogo_claseComunicacion", rutaClaseComunicacion).subscribe(
+      data => {
+        this.idClaseComunicacion = JSON.parse(data['body']).clasesComunicaciones[0].idClaseComunicacion;
+        this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
+          data => {
+            this.keys = JSON.parse(data['body']).keysItem;
+            this.selectedDatos.forEach(element => {
+              let keysValues = [];
+              this.keys.forEach(key =>{
+                if(element[key.nombre] != undefined){
+                  keysValues.push(element[key.nombre]);
+                }            
+              })
+              datosSeleccionados.push(keysValues);
+            });
+    
+            sessionStorage.setItem("datosComunicar", JSON.stringify(datosSeleccionados));
+            this.router.navigate(["/dialogoComunicaciones"]);
+          },
+          err => {
+            console.log(err);
+          }
+        );   
+      },
+      err => {
+        console.log(err);
+      }
+    );    
+  
+  }
 }

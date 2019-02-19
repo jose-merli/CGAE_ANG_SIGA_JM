@@ -24,7 +24,7 @@ export enum KEY_CODE {
   styleUrls: ["./consultas.component.scss"],
   host: {
     "(document:keypress)": "onKeyPress($event)"
-  },
+  }
 })
 export class ConsultasComponent implements OnInit {
   body: ConsultasItem = new ConsultasItem();
@@ -61,29 +61,44 @@ export class ConsultasComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     sessionStorage.removeItem("consultasSearch");
     this.getInstitucion();
 
     sessionStorage.removeItem("crearNuevaConsulta");
-    
+
     this.getComboGenerica();
     this.getCombos();
 
     setTimeout(() => {
       this.recuperarBusqueda();
     }, 1);
-    
+
     this.selectedItem = 10;
 
     this.cols = [
-      { field: "modulo", header: "Módulo" },
-      { field: "nombre", header: "Nombre" },
-      { field: "objetivo", header: "Objetivo" },
-      { field: "claseComunicacion", header: "Clases de comunicaciones" },
-      { field: "generica", header: "Genérica" }
+      {
+        field: "modulo",
+        header: "administracion.parametrosGenerales.literal.modulo"
+      },
+      {
+        field: "nombre",
+        header: "administracion.parametrosGenerales.literal.nombre"
+      },
+      {
+        field: "objetivo",
+        header: "informesycomunicaciones.consultas.objetivo"
+      },
+      {
+        field: "claseComunicacion",
+        header: "comunicaciones.literal.claseComunicaciones"
+      },
+      {
+        field: "generica",
+        header: "informesycomunicaciones.consultas.generica"
+      }
     ];
 
     this.rowsPerPage = [
@@ -106,11 +121,11 @@ export class ConsultasComponent implements OnInit {
     ];
   }
 
-  recuperarBusqueda(){
+  recuperarBusqueda() {
     if (sessionStorage.getItem("filtrosConsulta") != null) {
       this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosConsulta"));
       this.buscar();
-    }else{
+    } else {
       this.bodySearch.generica = "N";
     }
   }
@@ -145,7 +160,7 @@ export class ConsultasComponent implements OnInit {
     this.sigaServices.get("consultas_comboObjetivos").subscribe(
       data => {
         this.objetivos = data.combooItems;
-        this.objetivos.unshift({ label: '', value: '' });
+        this.objetivos.unshift({ label: "", value: "" });
       },
       err => {
         console.log(err);
@@ -154,12 +169,14 @@ export class ConsultasComponent implements OnInit {
       this.sigaServices.get("consultas_comboModulos").subscribe(
         data => {
           this.modulos = data.combooItems;
-          this.modulos.unshift({ label: '', value: '' });
+          this.modulos.unshift({ label: "", value: "" });
           /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
     para poder filtrar el dato con o sin estos caracteres*/
-          this.modulos.map((e) => {
-            let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-            let accentsOut = 'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz';
+          this.modulos.map(e => {
+            let accents =
+              "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+            let accentsOut =
+              "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
             let i;
             let x;
             for (i = 0; i < e.label.length; i++) {
@@ -169,19 +186,21 @@ export class ConsultasComponent implements OnInit {
               }
             }
 
-            if(this.bodySearch.idModulo != undefined && this.bodySearch.idModulo != ""){
+            if (
+              this.bodySearch.idModulo != undefined &&
+              this.bodySearch.idModulo != ""
+            ) {
               this.cargaComboClaseCom(null);
-            }else{
+            } else {
               this.clasesComunicaciones = [];
-              this.clasesComunicaciones.unshift({ label: '', value: '' });
-            }           
-          });          
+              this.clasesComunicaciones.unshift({ label: "", value: "" });
+            }
+          });
         },
         err => {
           console.log(err);
         }
-      );      
-
+      );
   }
 
   RowsPerPages(event) {
@@ -243,16 +262,29 @@ export class ConsultasComponent implements OnInit {
   }
 
   duplicar(dato) {
-
     this.sigaServices.post("consultas_duplicar", dato[0]).subscribe(
       data => {
-        this.showSuccess("Se ha duplicado la consulta correctamente");
-        sessionStorage.setItem("consultasSearch", JSON.stringify(JSON.parse(data["body"]).consultaItem));
-        sessionStorage.setItem("filtrosConsulta", JSON.stringify(this.bodySearch));
+        this.showSuccess(
+          this.translateService.instant(
+            "informesycomunicaciones.modelosdecomunicacion.correctDuplicado"
+          )
+        );
+        sessionStorage.setItem(
+          "consultasSearch",
+          JSON.stringify(JSON.parse(data["body"]).consultaItem)
+        );
+        sessionStorage.setItem(
+          "filtrosConsulta",
+          JSON.stringify(this.bodySearch)
+        );
         this.router.navigate(["/fichaConsulta"]);
       },
       err => {
-        this.showFail("Error al duplicado la consulta");
+        this.showFail(
+          this.translateService.instant(
+            "informesycomunicaciones.consultas.errorDuplicado"
+          )
+        );
         console.log(err);
       }
     );
@@ -262,7 +294,12 @@ export class ConsultasComponent implements OnInit {
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
       message:
-        "¿Está seguro de eliminar las " + dato.length + " consultas seleccionadas?",
+        this.translateService.instant("messages.deleteConfirmation.much") +
+        dato.length +
+        this.translateService.instant(
+          "menu.informesYcomunicaciones.consultas"
+        ) +
+        "?",
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarCancelar(dato);
@@ -294,13 +331,25 @@ export class ConsultasComponent implements OnInit {
       data => {
         let noBorrar = JSON.parse(data["body"]).message;
         if (noBorrar == "noBorrar") {
-          this.showInfo("No puede eliminarse la consulta");
+          this.showInfo(
+            this.translateService.instant(
+              "informesycomunicaciones.consultas.noEliminaConsulta"
+            )
+          );
         } else {
-          this.showSuccess("Se ha eliminado la consulta correctamente");
+          this.showSuccess(
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaEliminado"
+            )
+          );
         }
       },
       err => {
-        this.showFail("Error al eliminar la consulta");
+        this.showFail(
+          this.translateService.instant(
+            "informesycomunicaciones.consultas.errorEliminarConsulta"
+          )
+        );
         console.log(err);
       },
       () => {
@@ -313,7 +362,11 @@ export class ConsultasComponent implements OnInit {
   //búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
-    if (event.keyCode === KEY_CODE.ENTER && this.bodySearch.idModulo != null && this.bodySearch.idModulo != "") {
+    if (
+      event.keyCode === KEY_CODE.ENTER &&
+      this.bodySearch.idModulo != null &&
+      this.bodySearch.idModulo != ""
+    ) {
       this.buscar();
     }
   }
@@ -329,13 +382,18 @@ export class ConsultasComponent implements OnInit {
         (this.institucionActual == 2000 && dato[0].generica == "Si")
       ) {
         sessionStorage.setItem("consultasSearch", JSON.stringify(dato[0]));
-        sessionStorage.setItem("filtrosConsulta", JSON.stringify(this.bodySearch));
+        sessionStorage.setItem(
+          "filtrosConsulta",
+          JSON.stringify(this.bodySearch)
+        );
         this.router.navigate(["/fichaConsulta"]);
-        
       } else {
         this.router.navigate(["/fichaConsulta"]);
         sessionStorage.setItem("consultasSearch", JSON.stringify(dato[0]));
-        sessionStorage.setItem("filtrosConsulta", JSON.stringify(this.bodySearch));
+        sessionStorage.setItem(
+          "filtrosConsulta",
+          JSON.stringify(this.bodySearch)
+        );
       }
     } else {
       if (
@@ -366,11 +424,11 @@ export class ConsultasComponent implements OnInit {
   limpiar() {
     this.bodySearch = new ConsultasSearchItem();
     this.datos = [];
-    this.bodySearch.generica = 'S'
+    this.bodySearch.generica = "S";
   }
 
   cargaComboClaseCom(event) {
-    if(event != null){
+    if (event != null) {
       this.bodySearch.idModulo = event.value;
     }
     this.sigaServices
@@ -381,7 +439,7 @@ export class ConsultasComponent implements OnInit {
       .subscribe(
         data => {
           this.clasesComunicaciones = data.combooItems;
-          this.clasesComunicaciones.unshift({ label: '', value: '' });
+          this.clasesComunicaciones.unshift({ label: "", value: "" });
           /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
           this.clasesComunicaciones.map(e => {
@@ -410,7 +468,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       { label: "", value: "" },
       { label: "Sí", value: "S" },
       { label: "No", value: "N" }
-    ];   
+    ];
   }
 
   abreCierraFicha() {

@@ -204,6 +204,7 @@ export class SigaServices {
     fichaColegialGenerales_tratamiento: "fichaDatosGenerales/tratamiento",
     fichaColegialGenerales_estadoCivil: "fichaDatosGenerales/estadoCivil",
     fichaColegialGenerales_pais: "fichaDatosColegiales/pais",
+    fichaColegialGenerales_temas: "fichaDatosGenerales/getTopicsSpecificPerson",
     fichaDatosCurriculares_search: "fichaDatosCurriculares/search",
     solicitudIncorporacion_tratamiento: "solicitudIncorporacion/tratamiento",
     solicitudIncorporacion_estadoCivil: "solicitudIncorporacion/estadoCivil",
@@ -294,6 +295,7 @@ export class SigaServices {
       "fichaCursos/autovalidateInscriptionsCourse",
     fichaCursos_getTopicsCourse: "fichaCursos/getTopicsCourse",
     fichaCursos_getTopicsSpecificCourse: "fichaCursos/getTopicsSpecificCourse",
+    fichaCursos_getTopicsSpecificPerson: "fichaCursos/getTopicsSpecificPerson",
     fichaCursos_getCodeCourse: "fichaCursos/getCodeCourse",
 
     busquedaInscripciones_estadosInscripciones:
@@ -532,6 +534,8 @@ export class SigaServices {
       "fichaDatosCurriculares/solicitudUpdate",
     fichaDatosDirecciones_solicitudCreate:
       "fichaDatosDirecciones/solicitudCreate",
+    fichaDatosDirecciones_solicitudUpdate:
+      "fichaDatosDirecciones/solicitudUpdate",
     fichaDatosGenerales_datosGeneralesSolicitudModificación:
       "/fichaDatosGenerales/datosGeneralesSolicitudModificación",
     personaJuridica_solicitudUploadFotografia:
@@ -554,6 +558,7 @@ export class SigaServices {
     fichaColegialOtrasColegiaciones_getLabelColegios:
       "fichaColegialOtrasColegiaciones/getLabelColegios",
     enviosMasivos: "enviosMasivos/enviosMasivos",
+    enviosMasivos_enviar: "enviosMasivos/enviar",
     enviosMasivos_search: "enviosMasivos/search",
     enviosMasivos_estado: "enviosMasivos/estadoEnvios",
     enviosMasivos_tipo: "enviosMasivos/tipoEnvios",
@@ -600,6 +605,7 @@ export class SigaServices {
     modelos_borrar: "modelos/borrar",
     modelos_rehabilitar: "modelos/rehabilitar",
     modelos_detalle_datosGenerales: "modelos/detalle/datosGenerales",
+    modelos_detalle_datosGeneralesComprobarNom: "modelos/detalle/datosGenerales/comprobarNom",
     modelos_detalle_perfiles: "modelos/detalle/perfiles",
     modelos_detalle_perfilesModelo: "modelos/detalle/perfilesModelo",
     modelos_detalle_guardarPerfiles: "modelos/detalle/guardarPerfiles",
@@ -640,16 +646,19 @@ export class SigaServices {
     plantillasDoc_plantillas_borrar: "plantillasDoc/borrar",
 
     //Diálogo comunicación
-    dialogo_claseComunicaciones: 'DialogoComunicacion/clasesComunicacion',
-    dialogo_claseComunicacion: 'DialogoComunicacion/claseComunicacion',
-    dialogo_fechaProgramada: 'DialogoComunicacion/fechaProgramada',
-    dialogo_modelosComunicacion: 'DialogoComunicacion/modelosSearch',
-    dialogo_plantillasEnvio: 'DialogoComunicacion/plantillasEnvio',
-    dialogo_tipoEnvios: 'DialogoComunicacion/tiposEnvioModelo',
-    dialogo_enviar: 'DialogoComunicacion/enviar',
-    dialogo_descargar: 'DialogoComunicacion/descargar',
-    dialogo_keys: 'DialogoComunicacion/keys',
-    dialogo_envioTest: 'DialogoComunicacion/envioTest'
+    dialogo_claseComunicaciones: 'dialogoComunicacion/clasesComunicacion',
+    dialogo_claseComunicacion: 'dialogoComunicacion/claseComunicacion',
+    dialogo_fechaProgramada: 'dialogoComunicacion/fechaProgramada',
+    dialogo_modelosComunicacion: 'dialogoComunicacion/modelosSearch',
+    dialogo_plantillasEnvio: 'dialogoComunicacion/plantillasEnvio',
+    dialogo_tipoEnvios: 'dialogoComunicacion/tipoEnvios',
+    dialogo_enviar: 'dialogoComunicacion/enviar',
+    dialogo_descargar: 'dialogoComunicacion/descargar',
+    dialogo_generarEnvios: 'dialogoComunicacion/generarEnvios',
+    dialogo_keys: 'dialogoComunicacion/keys',
+    dialogo_obtenerCamposDinamicos: 'dialogoComunicacion/obtenerCamposDinamicos',
+    dialogo_envioTest: 'dialogoComunicacion/envioTest',
+    dialogo_maxModelos: 'dialogoComunicacion/maxModelos'
   };
 
   private menuToggled = new Subject<any>();

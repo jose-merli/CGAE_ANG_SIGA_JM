@@ -3,6 +3,7 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
 import { ModelosComunicacionesItem } from "../../../../../models/ModelosComunicacionesItem";
 import { Message, ConfirmationService } from "primeng/components/common/api";
+import { TranslateService } from "../../../../../commons/translate/translation.service";
 
 @Component({
   selector: "app-perfiles-ficha",
@@ -47,7 +48,7 @@ export class PerfilesFichaComponent implements OnInit {
 
   constructor(
     // private router: Router,
-    // private translateService: TranslateService,
+    private translateService: TranslateService,
     private sigaServices: SigaServices
   ) {}
 
@@ -152,7 +153,11 @@ export class PerfilesFichaComponent implements OnInit {
       .post("modelos_detalle_guardarPerfiles", objPerfiles)
       .subscribe(
         n => {
-          this.showSuccess("Se han guardado los perfiles correctamente");
+          this.showSuccess(
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.ficha.correctGuardadoPerfiles"
+            )
+          );
           this.perfilesSeleccionadosInicial = JSON.parse(
             JSON.stringify(this.perfilesSeleccionados)
           );
@@ -161,7 +166,11 @@ export class PerfilesFichaComponent implements OnInit {
           );
         },
         err => {
-          this.showFail("Error al guardar los perfiles");
+          this.showFail(
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardadoPerfiles"
+            )
+          );
           console.log(err);
         },
         () => {

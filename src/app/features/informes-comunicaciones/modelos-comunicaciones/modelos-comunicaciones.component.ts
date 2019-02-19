@@ -54,13 +54,14 @@ export class ModelosComunicacionesComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getInstitucion();
     this.bodySearch.visible = 1;
 
     sessionStorage.removeItem("crearNuevoModelo");
+    sessionStorage.removeItem("soloLectura");
 
     this.selectedItem = 10;
 
@@ -80,12 +81,30 @@ export class ModelosComunicacionesComponent implements OnInit {
     ];
 
     this.cols = [
-      { field: "claseComunicacion", header: "Clase comunicación" },
-      { field: "nombre", header: "Nombre" },
-      { field: "institucion", header: "Institución" },
-      { field: "orden", header: "Orden" },
-      { field: "preseleccionar", header: "Preseleccionado", width: "20%" },
-      { field: "porDefecto", header: "Por defecto" }
+      {
+        field: "claseComunicacion",
+        header:
+          "informesycomunicaciones.modelosdecomunicacion.clasecomunicaciones"
+      },
+      {
+        field: "nombre",
+        header: "administracion.parametrosGenerales.literal.nombre"
+      },
+      {
+        field: "institucion",
+        header: "censo.busquedaClientesAvanzada.literal.colegio"
+      },
+      { field: "orden", header: "administracion.informes.literal.orden" },
+      {
+        field: "preseleccionar",
+        header: "administracion.informes.literal.preseleccionado",
+        width: "ng e20%"
+      },
+
+      {
+        field: "porDefecto",
+        header: "informesycomunicaciones.modelosdecomunicacion.ficha.porDefecto"
+      }
     ];
 
     this.rowsPerPage = [
@@ -232,7 +251,11 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.datos = object.modelosComunicacionItem;
         },
         err => {
-          this.showFail("Error al cargar resultados");
+          this.showFail(
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.errorResultados"
+            )
+          );
           console.log(err);
         },
         () => {
@@ -251,7 +274,11 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.datos = object.modelosComunicacionItem;
         },
         err => {
-          this.showFail("Error al programar el envío");
+          this.showFail(
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.errorEnvio"
+            )
+          );
           console.log(err);
         },
         () => {
@@ -338,12 +365,6 @@ para poder filtrar el dato con o sin estos caracteres*/
             )
           );
         }
-        // this.showSuccess(
-        //   this.translateService.instant(
-        //     "informesycomunicaciones.modelosdecomunicacion.correctDuplicado"
-        //   )
-        // );
-
         this.progressSpinner = false;
       },
       err => {
@@ -356,6 +377,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.progressSpinner = false;
       },
       () => {
+        this.getResultados();
         this.progressSpinner = false;
       }
     );
@@ -386,10 +408,18 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (!this.selectAll) {
       this.sigaServices.post("modelos_borrar", dato).subscribe(
         data => {
-          this.showSuccess("Se ha borrado correctamente");
+          this.showSuccess(
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.correctBorrado"
+            )
+          );
         },
         err => {
-          this.showFail("Error al borrado el modelo");
+          this.showFail(
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.errorBorrado"
+            )
+          );
           console.log(err);
         },
         () => {
@@ -401,8 +431,18 @@ para poder filtrar el dato con o sin estos caracteres*/
       //this.datos.splice(x, 1);
       this.selectedDatos = [];
       this.selectMultiple = false;
+      this.showSuccess(
+        this.translateService.instant(
+          "informesycomunicaciones.modelosdecomunicacion.correctBorrado"
+        )
+      );
     } else {
       this.selectedDatos = [];
+      this.showSuccess(
+        this.translateService.instant(
+          "informesycomunicaciones.modelosdecomunicacion.correctEliminadoDestinatarios"
+        )
+      );
     }
   }
 
@@ -471,9 +511,8 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (!this.selectMultiple) {
       if (dato[0].fechaBaja) {
         sessionStorage.setItem("soloLectura", "true");
-      } else {
-        sessionStorage.setItem("soloLectura", "false");
       }
+
       this.router.navigate(["/fichaModeloComunicaciones"]);
       sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
       sessionStorage.setItem("filtrosModelos", JSON.stringify(this.bodySearch));

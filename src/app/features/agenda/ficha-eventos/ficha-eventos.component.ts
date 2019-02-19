@@ -41,6 +41,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   modoEdicionEventoByAgenda: boolean = false;
   modoEdicionEvento: boolean = false;
   modoTipoEventoInscripcion: boolean = false;
+  modoSesionEdicionEvento: boolean = false;
+  isEventoCumplidoOrCancelado: boolean = false;
   idCalendario;
   tipoAccesoLectura: boolean = false;
   blockAsistencia: boolean = false;
@@ -244,6 +246,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       }
 
       this.getEventNotifications();
+      this.checkIsEventoCumplidoOrCancelado();
 
       //2. En caso de venir de agenda pero en modo creación
     } else if (sessionStorage.getItem("modoEdicionEventoByAgenda") == "false") {
@@ -341,6 +344,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.modoEdicionEvento = true;
       //Se comprueba el tipo de acceso que tiene el evento
       this.checkAcceso();
+      this.checkIsEventoCumplidoOrCancelado();
 
       //Se guarda el evento con los valores iniciales para restablecer los valores
       this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
@@ -362,6 +366,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.searchEvent(curso);
         //Indicamos que el evento ya esta creado para que pueda acceder a todas las tarjetas
         this.createEvent = true;
+
       } else {
         this.newEvent = new EventoItem();
         //Obligamos a que sea tipo calendario formacion
@@ -466,6 +471,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     } else if (sessionStorage.getItem("modoEdicionSession") == "true") {
       //Inficamos que estamos en modo edicion
       this.modoEdicionEvento = true;
+      this.modoSesionEdicionEvento = true;
       this.isFormacionCalendar = true;
       //Indicamos que el evento ya esta creado para que pueda acceder a todas las tarjetas
       this.createEvent = true;
@@ -526,6 +532,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.blockAsistencia = true;
         }
       }
+
+      this.checkIsEventoCumplidoOrCancelado();
+      
       //8. Viene directo
     } else {
       this.isFormacionCalendar = false;
@@ -569,6 +578,14 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     }
   }
 
+  checkIsEventoCumplidoOrCancelado(){
+    if(this.newEvent.idEstadoEvento != this.valorEstadoEventoPlanificado){
+      this.isEventoCumplidoOrCancelado = true;
+    }else{
+      this.isEventoCumplidoOrCancelado = false;
+    }
+  }
+
   newModeConfiguration() {
     //Blindeamos el evento recibido de la pantalla agenda
     this.newEvent = JSON.parse(sessionStorage.getItem("eventoEdit"));
@@ -601,7 +618,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     );
     this.invalidDateMin.setHours(this.newEvent.start.getHours());
     this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
-    this.invalidDateMax.setHours(this.newEvent.start.getHours());
+    this.invalidDateMax.setHours(23);
     this.invalidDateMax.setMinutes(59);
 
     this.invalidDateMinEditionMode = new Date(
@@ -775,23 +792,57 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     ) {
       if (this.newEvent.idEvento != null) {
         url = "fichaEventos_updateEventCalendar";
+        this.callSaveEvent(url);
+        
+        // if (this.newEvent.idEstadoEvento == this.valorEstadoEventoPlanificado) {
+        //   let mess = "¿Desea enviar un aviso del cambio realizado?";
+
+        //   let icon = "fa fa-edit";
+        //   this.confirmationService.confirm({
+        //     message: mess,
+        //     icon: icon,
+        //     accept: () => {
+        //       this.callSaveEvent(url);
+        //     },
+        //     reject: () => {
+        //       this.msgs = [
+        //         {
+        //           severity: "info",
+        //           summary: this.translateService.instant(
+        //             "general.message.cancelado"
+        //           ),
+        //           detail: "Aviso cancelado"
+        //         }
+        //       ];
+        //       this.callSaveEvent(url);
+        //     }
+        //   });
+        // }else{
+        //   this.callSaveEvent(url);
+        // }
       } else {
         url = "fichaEventos_saveEventCalendar";
+        this.callSaveEvent(url);
       }
     } else {
       url = "fichaEventos_saveEventCalendar";
+      this.callSaveEvent(url);
     }
+  }
 
+  callSaveEvent(url) {
     this.sigaServices.post(url, this.newEvent).subscribe(
       data => {
         if (JSON.parse(data.body).error.description != null) {
           this.showMessage(
             "error",
-            "Incorrecto",
+            this.translateService.instant("general.message.incorrect"),
             JSON.parse(data.body).error.description
           );
 
-          this.newEvent.idEstadoEvento = JSON.parse(JSON.stringify(this.initEvent)).idEstadoEvento;
+          this.newEvent.idEstadoEvento = JSON.parse(
+            JSON.stringify(this.initEvent)
+          ).idEstadoEvento;
         } else {
           this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
 
@@ -810,7 +861,11 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
             ) {
               this.curso.idEventoInicioInscripcion = JSON.parse(data.body).id;
               this.saveCourse();
-            }else if(JSON.parse(sessionStorage.getItem("isFormacionCalendarByEndInscripcion"))){
+            } else if (
+              JSON.parse(
+                sessionStorage.getItem("isFormacionCalendarByEndInscripcion")
+              )
+            ) {
               this.curso.idEventoFinInscripcion = JSON.parse(data.body).id;
               this.saveCourse();
             }
@@ -828,7 +883,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
             }
           }
           this.showSuccess();
-
         }
       },
       err => {
@@ -894,9 +948,11 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
     this.invalidDateMax.setHours(23);
     this.invalidDateMax.setMinutes(59);
-    this.newEvent.end = new Date(
-      JSON.parse(JSON.stringify(this.newEvent.start))
-    );
+    if (this.newEvent.end < this.newEvent.start) {
+      this.newEvent.end = new Date(
+        JSON.parse(JSON.stringify(this.newEvent.start))
+      );
+    }
   }
 
   validatorDates(event) {
@@ -926,7 +982,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   deleteEvent() {
-    let mess = "¿Estás seguro que desea eliminar este evento?";
+    let mess = this.translateService.instant("eventos.mensaje.eliminar.evento");
 
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
@@ -941,11 +997,10 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           data => {
             this.progressSpinner = false;
             this.showSuccess();
-            
+
             setTimeout(() => {
               this.backTo();
             }, 2000);
-           
           },
           err => {
             this.progressSpinner = false;
@@ -960,7 +1015,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.msgs = [
           {
             severity: "info",
-            summary: "Cancel",
+            summary: this.translateService.instant("general.message.cancelado"),
             detail: this.translateService.instant(
               "general.message.accion.cancelada"
             )
@@ -1099,7 +1154,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
           this.invalidDateMax.setHours(this.newEvent.start.getHours());
           this.invalidDateMax.setMinutes(59);
-
         } else if (
           sessionStorage.getItem("isFormacionCalendarByEndInscripcion") ==
           "true"
@@ -1125,16 +1179,17 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         //Carga los formadores que pertenecen al curso que se va a crear el evento
         if (this.isFormacionCalendar) {
           this.getTrainers();
-             //Obligamos a que sea el tipo de calendario formacion
-        this.newEvent.idTipoCalendario = this.valorTipoFormacion;
+          //Obligamos a que sea el tipo de calendario formacion
+          this.newEvent.idTipoCalendario = this.valorTipoFormacion;
         }
-
         //Cargamos los tipo de calendarios que existen
         this.getComboCalendar();
         this.getEventNotifications();
 
         //Inficamos que estamos en modo edicion
         this.modoEdicionEvento = true;
+
+       this.checkIsEventoCumplidoOrCancelado();
 
         //Se guarda el evento con los valores iniciales para restablecer los valores
         this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
@@ -1241,6 +1296,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       );
       sessionStorage.setItem("historico", JSON.stringify(this.historico));
       sessionStorage.setItem("fichaAbierta", "true");
+      sessionStorage.setItem("isEventoCumplido", JSON.stringify(this.isEventoCumplidoOrCancelado));
       this.router.navigate(["/editarNotificacion"]);
     } else {
       this.numSelectedNotification = this.selectedDatosNotifications.length;
@@ -1299,12 +1355,15 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   deleteNotification(selectedDatos) {
-    let mess: string;
+    let mess = "";
     if (selectedDatos.length > 1) {
-      mess =
-        "¿Está seguro que desea eliminar las notificaciones seleccionadas?";
+      mess = this.translateService.instant(
+        "eventos.mensaje.eliminar.notificaciones"
+      );
     } else {
-      mess = "¿Está seguro que desea eliminar la notificación seleccionada?";
+      mess = this.translateService.instant(
+        "eventos.mensaje.eliminar.notificacion"
+      );
     }
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
@@ -1325,6 +1384,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
               this.progressSpinner = false;
               this.getEventNotifications();
               this.selectMultipleNotifications = false;
+              this.selectAllNotifications = false;
+              this.selectedDatosNotifications = [];
             },
             err => {
               this.progressSpinner = false;
@@ -1338,7 +1399,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.msgs = [
           {
             severity: "info",
-            summary: "Cancel",
+            summary: this.translateService.instant("general.message.cancelado"),
             detail: this.translateService.instant(
               "general.message.accion.cancelada"
             )
@@ -1478,8 +1539,10 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.msgs = [];
     this.msgs.push({
       severity: "info",
-      summary: "Información",
-      detail: "No hay formadores para este curso."
+      summary: this.translateService.instant("general.message.informacion"),
+      detail: this.translateService.instant(
+        "formacion.mensaje.noexiste.formadores.curso"
+      )
     });
   }
 
@@ -1774,8 +1837,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.msgs = [];
     this.msgs.push({
       severity: "success",
-      summary: "Correcto",
-      detail: "Acción realizada correctamente"
+      summary: this.translateService.instant("general.message.correct"),
+      detail: this.translateService.instant("general.message.accion.realizada")
     });
   }
 
@@ -1783,8 +1846,10 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
-      detail: "Acción no realizada correctamente"
+      summary: this.translateService.instant("general.message.incorrect"),
+      detail: this.translateService.instant(
+        "general.message.error.realiza.accion"
+      )
     });
   }
 
@@ -1792,8 +1857,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
-      detail: "Se ha producido un error en BBDD contacte con su administrador"
+      summary: this.translateService.instant("general.message.incorrect"),
+      detail: this.translateService.instant("general.mensaje.error.bbdd")
     });
   }
 
@@ -1855,5 +1920,4 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       detail: msg
     });
   }
-
 }

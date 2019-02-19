@@ -138,20 +138,80 @@ export class DatosGeneralesFichaComponent implements OnInit {
   }
 
   guardar() {
-    this.sigaServices
-      .post("modelos_detalle_datosGenerales", this.body)
-      .subscribe(
-        data => {
-          this.showSuccess("Datos generales guardados correctamente");
-          this.body.idModeloComunicacion = JSON.parse(data.body).data;
-          sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
-          sessionStorage.removeItem("crearNuevoModelo");
-        },
-        err => {
-          console.log(err);
-          this.showFail("Error al guardar los datos generales");
-        }
-      );
+    if (this.bodyInicial.nombre != this.body.nombre) {
+      this.sigaServices
+        .post("modelos_detalle_datosGeneralesComprobarNom", this.body)
+        .subscribe(
+          data => {
+            let existe = data.body;
+
+            if (existe == "false") {
+              this.sigaServices
+                .post("modelos_detalle_datosGenerales", this.body)
+                .subscribe(
+                  data => {
+                    this.showSuccess(
+                      this.translateService.instant(
+                        "informesycomunicaciones.modelosdecomunicacion.ficha.correctGuardado"
+                      )
+                    );
+                    this.body.idModeloComunicacion = JSON.parse(data.body).data;
+                    sessionStorage.setItem(
+                      "modelosSearch",
+                      JSON.stringify(this.body)
+                    );
+                    sessionStorage.removeItem("crearNuevoModelo");
+                  },
+                  err => {
+                    console.log(err);
+                    this.showFail(
+                      this.translateService.instant(
+                        "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
+                      )
+                    );
+                  }
+                );
+            } else {
+              this.showFail(
+                this.translateService.instant(
+                  "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.nombreDuplicado"
+                )
+              );
+            }
+          },
+          err => {
+            console.log(err);
+            this.showFail(
+              this.translateService.instant(
+                "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
+              )
+            );
+          }
+        );
+    } else {
+      this.sigaServices
+        .post("modelos_detalle_datosGenerales", this.body)
+        .subscribe(
+          data => {
+            this.showSuccess(
+              this.translateService.instant(
+                "informesycomunicaciones.modelosdecomunicacion.ficha.correctGuardado"
+              )
+            );
+            this.body.idModeloComunicacion = JSON.parse(data.body).data;
+            sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
+            sessionStorage.removeItem("crearNuevoModelo");
+          },
+          err => {
+            console.log(err);
+            this.showFail(
+              this.translateService.instant(
+                "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
+              )
+            );
+          }
+        );
+    }
   }
 
   getInstitucion() {

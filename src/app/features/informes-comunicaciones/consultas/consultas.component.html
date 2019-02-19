@@ -15,7 +15,7 @@
       </p>
       <div class="form-row">
         <div class="form-group col-lg-4 col-md-4">
-          <label>Módulo *</label>
+          <label>{{'administracion.parametrosGenerales.literal.modulo' | translate}} *</label>
           <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [options]="modulos" [(ngModel)]="bodySearch.idModulo" class="select-form"
             (onChange)="cargaComboClaseCom($event)"></p-dropdown>
         </div>
@@ -24,23 +24,23 @@
           <input type="text" class="form-control" [(ngModel)]="bodySearch.nombre" pInputText>
         </div>
         <div class="form-group col-lg-4 col-md-4">
-          <label>Descripción</label>
+          <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
           <input type="text" class="form-control" [(ngModel)]="bodySearch.descripcion" pInputText>
         </div>
       </div>
       <div class="form-row d-flex align-items-end">
 
         <div class="form-group col-lg-4 col-md-4">
-          <label>Objetivo</label>
+          <label>{{'informesycomunicaciones.consultas.objetivo' | translate}}</label>
           <p-dropdown [options]="objetivos" [(ngModel)]="bodySearch.idObjetivo" class="select-form"></p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-4">
-          <label>Clase de comunicaciones</label>
+          <label>{{'comunicaciones.literal.claseComunicaciones' | translate}}</label>
           <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [options]="clasesComunicaciones" [(ngModel)]="bodySearch.idClaseComunicacion"
             class="select-form"></p-dropdown>
         </div>
         <div class="form-group col-lg-2 col-md-3">
-          <label class="d-block">Genérica</label>
+          <label class="d-block">{{'informesycomunicaciones.consultas.generica' | translate}}</label>
           <!-- <p-radioButton class="mr-2" name="groupname" value="S" [(ngModel)]="bodySearch.generica" label="Sí"></p-radioButton>
           <p-radioButton name="groupname" value="N" [(ngModel)]="bodySearch.generica" label="No"></p-radioButton> -->
           <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]='bodySearch.generica'
@@ -72,7 +72,7 @@
         <ng-template pTemplate="header" let-columns>
           <tr>
             <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-              {{col.header}}
+              {{col.header | translate}}
               <p-sortIcon [field]="col.field"></p-sortIcon>
               <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
                         col.field, 'contains')">
@@ -92,13 +92,13 @@
         <ng-template pTemplate="emptymessage" let-columns>
           <tr>
             <td [attr.colspan]="columns.length">
-              No hay resultados.
+              {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}.
             </td>
           </tr>
         </ng-template>
         <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{table.first + 1}} al {{table.first + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
             <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">Seleccionados: {{selectedDatos.length}}</label>
             <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">Seleccionados: 0</label>
             <label>{{"general.message.mostrar" | translate}}</label>

@@ -35,41 +35,47 @@
     <!--cuerpo datos generales-->
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div class="row">
-        <div class="bloque" [ngClass]="{'col-lg-12':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-6':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+        <div class="bloque"
+          [ngClass]="{'col-lg-12':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-6':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
           <div class="form-row">
             <div class="form-group col-lg-12">
               <label>
                 <strong>{{'enviosMasivos.literal.configComunicacion' | translate}}</strong>
               </label>
             </div>
-            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+            <div class="form-group"
+              [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">{{'enviosMasivos.literal.tipoEnvio' | translate}} *</label>
-              <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [disabled]="editar" (onChange)="onChangeTipoEnvio()" [options]="tipoEnvios"
-                [(ngModel)]="body.idTipoEnvios" class="select-form"></p-dropdown>
+              <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [disabled]="editar"
+                (onChange)="onChangeTipoEnvio()" [options]="tipoEnvios" [(ngModel)]="body.idTipoEnvios"
+                class="select-form"></p-dropdown>
             </div>
-            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+            <div class="form-group"
+              [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">{{'enviosMasivos.literal.plantillasEnvio' | translate}} *</label>
-              <p-dropdown [disabled]="(plantillas && plantillas.length <= 0) || editar" [options]="plantillas" [(ngModel)]="body.idPlantillaEnvios"
-                dataKey="value" class="select-form"></p-dropdown>
+              <p-dropdown [disabled]="(plantillas && plantillas.length <= 0) || editar" [options]="plantillas"
+                [(ngModel)]="body.idPlantillaEnvios" dataKey="value" class="select-form"></p-dropdown>
             </div>
-            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+            <div class="form-group"
+              [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">{{'enviosMasivos.literal.descripcion' | translate}} *</label>
               <input type="text" class="form-control" [(ngModel)]="body.descripcion" pInputText>
             </div>
           </div>
         </div>
 
-        <div *ngIf="body.idTipoEnvios== '1' || body.idTipoEnvios== '4' || body.idTipoEnvios== '5'" class="col-lg-6 col-md-12">
+        <div *ngIf="body.idTipoEnvios== '1' || body.idTipoEnvios== '4' || body.idTipoEnvios== '5'"
+          class="col-lg-6 col-md-12">
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
               <label *ngIf="body.idTipoEnvios=='1'">
                 <strong>{{'enviosMasivos.literal.datosCorreo' | translate}}</strong>
               </label>
               <label *ngIf="body.idTipoEnvios=='4'">
-                <strong>Datos de SMS</strong>
+              <strong>{{'informesycomunicaciones.plantillasenvio.ficha.datosSMS' | translate}}</strong>
               </label>
               <label *ngIf="body.idTipoEnvios=='5'">
-                <strong>Datos de Buro SMS</strong>
+                <strong>{{'informesycomunicaciones.plantillasenvio.ficha.datosBuroSMS' | translate }}</strong>
               </label>
             </div>
             <div *ngIf="body.idTipoEnvios=='1'" class="form-group col-lg-12 col-md-12">
@@ -124,7 +130,8 @@
             </div>
             <div *ngIf="body.idTipoEnvios=='4' || body.idTipoEnvios=='5'" class="form-group col-lg-12 col-md-12">
               <label>{{'enviosMasivos.literal.cuerpo' | translate}}</label>
-              <textarea style="height:140px" pInputTextarea autoResize="autoResize" [(ngModel)]="body.cuerpo" maxlength="160"></textarea>
+              <textarea style="height:140px" pInputTextarea autoResize="autoResize" [(ngModel)]="body.cuerpo"
+                maxlength="160"></textarea>
             </div>
           </div>
         </div>
@@ -133,11 +140,16 @@
     </div>
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button">
-        <button *ngIf="editar" (click)="cancelar()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button pButton type="button" icon="fas fa-share-square" iconPos="left" label="{{ 'general.boton.reenviar' | translate}}"></button>
-        <button *ngIf="editar" (click)="duplicar()" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
-        <button (click)="guardar()" [disabled]="isGuardarDisabled()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button *ngIf="editar" (click)="cancelar()" pButton type="button" icon="fa fa-close" iconPos="left"
+          label="{{ 'general.boton.cancel' | translate}}"></button>
+        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button pButton type="button" (click)="enviar()" icon="fas fa-share-square" iconPos="left"
+          label="{{ 'general.boton.reenviar' | translate}}"></button>
+        <button *ngIf="editar" (click)="duplicar()" pButton type="button" icon="fa fa-reply-all" iconPos="left"
+          label="{{ 'general.boton.duplicar' | translate}}"></button>
+        <button (click)="guardar()" [disabled]="isGuardarDisabled()" pButton type="button" icon="far fa-save"
+          iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

@@ -64,7 +64,7 @@ export class TarjetaInformesComponent implements OnInit {
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getDatos();
@@ -75,15 +75,15 @@ export class TarjetaInformesComponent implements OnInit {
 
     this.selectedItem = 10;
     this.cols = [
-      { field: "idioma", header: "Idioma" },
+      { field: "idioma", header: "censo.usuario.labelIdioma" },
       // { field: 'fechaAsociacion', header: 'Fecha asociación' },
-      { field: "nombreFicheroSalida", header: "Fichero salida" },
-      { field: "sufijo", header: "Sufijo" },
-      { field: "formatoSalida", header: "Formato salida" },
-      { field: "destinatarios", header: "Destinatarios" },
-      { field: "condicion", header: "Condición" },
-      { field: "multiDocumento", header: "Multi-documento" },
-      { field: "datos", header: "Datos" }
+      { field: "nombreFicheroSalida", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.ficheroSalida" },
+      { field: "sufijo", header: "administracion.parametrosGenerales.literal.sufijo" },
+      { field: "formatoSalida", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.formatoSalida" },
+      { field: "destinatarios", header: "enviosMasivos.literal.destinatarios" },
+      { field: "condicion", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.condicion" },
+      { field: "multiDocumento", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.multiDocumento" },
+      { field: "datos", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.datos" }
     ];
 
     this.rowsPerPage = [
@@ -230,8 +230,7 @@ export class TarjetaInformesComponent implements OnInit {
   eliminar(dato) {
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
-      message:
-        "¿Está seguro de eliminar los" + dato.length + "informes seleccionados",
+      message: this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.mensajeEliminar') + ' ' + dato.length + ' ' + this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.informesSeleccionados'),
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarEliminar(dato);
@@ -260,20 +259,18 @@ export class TarjetaInformesComponent implements OnInit {
       };
       this.eliminarArray.push(objEliminar);
     });
-    this.sigaServices
-      .post("modelos_detalle_informes_borrar", this.eliminarArray)
-      .subscribe(
-        data => {
-          this.showSuccess("Se ha eliminado el informe correctamente");
-        },
-        err => {
-          this.showFail("Error al eliminar el informe");
-          console.log(err);
-        },
-        () => {
-          this.getInformes();
-        }
-      );
+    this.sigaServices.post("modelos_detalle_informes_borrar", this.eliminarArray).subscribe(
+      data => {
+        this.showSuccess(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.correctInformeEliminado'));
+      },
+      err => {
+        this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.errorInformeEliminado'));
+        console.log(err);
+      },
+      () => {
+        this.getInformes();
+      }
+    );
   }
 
   // Mensajes

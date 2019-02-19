@@ -124,6 +124,27 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.getPlantillas();
   }
 
+
+  enviar() {
+    let envios = [];
+    let objEnvio = {
+      idEnvio: this.body.idEnvio
+    };
+    envios.push(objEnvio);
+
+    this.sigaServices.post("enviosMasivos_enviar", envios).subscribe(
+      data => {
+        this.showSuccess('Se ha lanzado el envio correctamente');
+      },
+      err => {
+        this.showFail('Error al procesar el envio');
+        console.log(err);
+      },
+      () => {
+      }
+    );
+  }
+
   getPlantillas() {
     this.sigaServices.post("enviosMasivos_plantillas", this.body.idTipoEnvios).subscribe(
       data => {
@@ -185,7 +206,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
-      message: '¿Está seguro de cancelar el envío?',
+      message: this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.seguroCancelarEnvio"),
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarCancelar();
@@ -215,10 +236,10 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.eliminarArray.push(objCancelar);
     this.sigaServices.post("enviosMasivos_cancelar", this.eliminarArray).subscribe(
       data => {
-        this.showSuccess('Se ha cancelado el envío correctamente');
+        this.showSuccess(this.translateService.instant("informesycomunicaciones.enviosMasivos.cancelCorrect"));
       },
       err => {
-        this.showFail('Error al cancelar el envío');
+        this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorCancelarEnvio"));
         console.log(err);
       },
       () => {
@@ -242,10 +263,10 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         sessionStorage.removeItem("crearNuevoEnvio");
         sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(this.body));
-        this.showSuccess('Se ha guardado el envío correctamente');
+        this.showSuccess(this.translateService.instant("informesycomunicaciones.enviosMasivos.ficha.envioCorrect"));
       },
       err => {
-        this.showFail('Error al guardar el envío');
+        this.showFail(this.translateService.instant("informesycomunicaciones.enviosMasivos.ficha.envioError"));
         console.log(err);
       },
       () => {
@@ -264,10 +285,10 @@ para poder filtrar el dato con o sin estos caracteres*/
   duplicar() {
     this.sigaServices.post("enviosMasivos_duplicar", this.body).subscribe(
       data => {
-        this.showSuccess('Se ha duplicado el envío correctamente');
+        this.showSuccess(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.correctDuplicado"));
       },
       err => {
-        this.showFail('Error al duplicar el envío');
+        this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorDuplicarEnvio"));
         console.log(err);
       }
     );

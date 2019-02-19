@@ -46,7 +46,7 @@
                   filterBy="label,labelSinTilde"
                   placeholder="{{ 'general.boton.seleccionar' | translate }}"
                   name="type"
-                  [disabled]="tipoAccesoLectura || notificationLowDate"
+                  [disabled]="tipoAccesoLectura || notificationLowDate || isEventoCumplidoOrCancelado"
                 ></p-dropdown>
               </div>
             </div>
@@ -63,7 +63,7 @@
                   name="idPlantilla"
                   placeholder="{{ 'general.boton.seleccionar' | translate }}"
                   (onChange)="onChangeTemplates($event)"
-                  [disabled]="tipoAccesoLectura || notificationLowDate"
+                  [disabled]="tipoAccesoLectura || notificationLowDate || isEventoCumplidoOrCancelado"
                 ></p-dropdown>
               </div>
               <div class="col-lg-6 col-md-6">
@@ -110,7 +110,7 @@
                   pInputText
                   [(ngModel)]="notification.cuando"
                   name="cuando"
-                  [disabled]="tipoAccesoLectura || notificationLowDate"
+                  [disabled]="tipoAccesoLectura || notificationLowDate || isEventoCumplidoOrCancelado"
                 />
               </div>
               <div class="col-lg-6 col-md-6">
@@ -129,7 +129,7 @@
                   filterBy="label,labelSinTilde"
                   placeholder="{{ 'general.boton.seleccionar' | translate }}"
                   name="idUnidadMedida"
-                  [disabled]="tipoAccesoLectura || notificationLowDate"
+                  [disabled]="tipoAccesoLectura || notificationLowDate || isEventoCumplidoOrCancelado"
                 ></p-dropdown>
               </div>
             </div>
@@ -145,7 +145,7 @@
                   [(ngModel)]="notification.idTipoCuando"
                   [filter]="false"
                   name="idTipoCuando"
-                  [disabled]="tipoAccesoLectura || notificationLowDate"
+                  [disabled]="tipoAccesoLectura || notificationLowDate || isEventoCumplidoOrCancelado"
                 ></p-dropdown>
               </div>
             </div>
@@ -162,13 +162,13 @@
           icon="fa fa-undo"
           iconPos="left"
           label="{{ 'general.boton.restablecer' | translate }}"
-          [disabled]="tipoAccesoLectura || notificationLowDate"
+          [disabled]="tipoAccesoLectura || notificationLowDate || isEventoCumplidoOrCancelado"
         ></button>
         <button
           pButton
           (click)="saveNotification()"
           [disabled]="
-            validateForm() || tipoAccesoLectura || notificationLowDate
+            validateForm() || tipoAccesoLectura || notificationLowDate || isEventoCumplidoOrCancelado
           "
           type="button"
           icon="far fa-save"
