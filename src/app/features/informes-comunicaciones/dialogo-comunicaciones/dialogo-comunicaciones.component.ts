@@ -11,7 +11,7 @@ import { Location } from "@angular/common";
 import { typeSourceSpan } from '@angular/compiler';
 
 @Component({
-  selector: 'app-dialogo-comunicaciones',
+  selector: 'app-dialogo-comunicaciones', 
   templateUrl: './dialogo-comunicaciones.component.html',
   styleUrls: ['./dialogo-comunicaciones.component.scss'],
 
@@ -43,9 +43,11 @@ export class DialogoComunicacionesComponent implements OnInit {
   listaConsultas: ConsultaConsultasItem[];
   comunicar: boolean = false;
   idInstitucion: String;
-  datosSeleccionados: any[];
-  maxNumModelos: number;
+  datosSeleccionados: any [];
+  maxNumModelos: number = 20;
   progressSpinner: boolean = false;
+  rutaComunicacion: String;
+  fechaProgramada: Date;
 
   constructor(public sigaServices: SigaServices, private translateService: TranslateService, private location: Location) {
   }
@@ -56,7 +58,8 @@ export class DialogoComunicacionesComponent implements OnInit {
 
     this.getClaseComunicaciones();
     this.getInstitucion();
-    //this.getFechaProgramada(dato.idInstutucion);
+    this.getMaxNumeroModelos();
+    this.getFechaProgramada();
 
     this.valores = [];
 
@@ -118,8 +121,8 @@ export class DialogoComunicacionesComponent implements OnInit {
   }
 
   getClaseComunicaciones() {
-    let rutaClaseComunicacion = sessionStorage.getItem("rutaComunicacion");
-    this.sigaServices.post("dialogo_claseComunicacion", rutaClaseComunicacion).subscribe(
+    this.rutaComunicacion = sessionStorage.getItem("rutaComunicacion");
+    this.sigaServices.post("dialogo_claseComunicacion", this.rutaComunicacion).subscribe(
       data => {
         this.idClaseComunicacion = JSON.parse(data['body']).clasesComunicaciones[0].idClaseComunicacion;
         this.getModelosComunicacion();
@@ -139,27 +142,12 @@ export class DialogoComunicacionesComponent implements OnInit {
     this.sigaServices.post("dialogo_modelosComunicacion", this.idClaseComunicacion).subscribe(
       data => {
         this.modelosComunicacion = JSON.parse(data['body']).modelosComunicacionItems;
-        this.modelosComunicacion.forEach(element => {
-          element.plantillas = element.plantillas;
-        });
       },
       err => {
         console.log(err);
       }
     );
   }
-
-  getFechaProgramada(idInstution) {
-    this.sigaServices.post("dialogo_plantillasEnvio", idInstution).subscribe(
-      data => {
-
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
 
   onChangePlantillaEnvio(dato) {
     this.getTipoEnvios(dato);
@@ -218,7 +206,43 @@ export class DialogoComunicacionesComponent implements OnInit {
   }
 
   enviarComunicacion() {
-    console.log(this.listaConsultas);
+    this.progressSpinner = true;
+
+    this.valores.forEach(element => {
+      if(element.valor != null && typeof element.valor == "object"){
+        element.valor = element.valor.ID;
+      }     
+    });
+
+    if(this.datosSeleccionados != null && this.datosSeleccionados != undefined){      
+      let datos = {
+        idClaseComunicacion: this.idClaseComunicacion,
+        modelos: this.bodyComunicacion.modelos,
+        selectedDatos: this.datosSeleccionados,
+        idInstitucion: this.idInstitucion,
+        consultas: this.listaConsultas,
+        ruta: this.rutaComunicacion,
+        fechaProgramada: this.bodyComunicacion.fechaProgramacion
+      }
+
+      this.sigaServices
+      .post("dialogo_generarEnvios", datos)
+      .subscribe(
+        data => {
+          this.showSuccess("Envios generados");
+        },
+        err => {
+          console.log(err);
+          this.showFail("Error al generar los envios");
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+    }else{
+      this.showFail("No se ha seleccionado nigún dato");
+    }
   }
 
 
@@ -226,7 +250,16 @@ export class DialogoComunicacionesComponent implements OnInit {
     console.log(this.listaConsultas);
   }
 
-  onRowSelectModelos() { }
+  onRowSelectModelos(event) {
+    event.data.selected = true;
+    return event.data;
+  }
+
+
+  onUnRowSelectModelos(event) {
+    event.data.selected=false;
+    return event.data;
+  }
 
   getKeysClaseComunicacion() {
     this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
@@ -256,33 +289,9 @@ export class DialogoComunicacionesComponent implements OnInit {
     });
     return valido;
   }
-
-  descargarComunicacion() {
-    /*this.getKeysClaseComunicacion();
+  
+  descargarComunicacion() { 
     
-    let datosSeleccionados = [];
-    this.selectedDatos.forEach(element => {
-      let keysValues = [];
-      this.keys.forEach(key =>{
-        keysValues.push(element.get(key));
-      })
-      datosSeleccionados.push(keysValues);
-    });*/
-
-    /*let datosSeleccionados = [];
-    let par = [2001,2000000359];
-    let par2 = [2001,2000000745];
-
-    datosSeleccionados.push(par);
-    datosSeleccionados.push(par2);
-
-
-    let modelos = [];
-    let modelo = {
-      idModeloComunicacion:61
-    }
-    modelos.push(modelo);*/
-
     this.progressSpinner = true;
 
     this.valores.forEach(element => {
@@ -297,7 +306,8 @@ export class DialogoComunicacionesComponent implements OnInit {
         modelos: this.bodyComunicacion.modelos,
         selectedDatos: this.datosSeleccionados,
         idInstitucion: this.idInstitucion,
-        consultas: this.listaConsultas
+        consultas: this.listaConsultas,
+        ruta: this.rutaComunicacion
       }
 
       this.sigaServices
@@ -331,6 +341,16 @@ export class DialogoComunicacionesComponent implements OnInit {
     this.sigaServices.get("dialogo_maxModelos").subscribe(n => {
       this.maxNumModelos = n.value;
     });
+  }
+
+  getFechaProgramada() {
+    this.sigaServices.get("dialogo_fechaProgramada").subscribe(n => {
+        this.bodyComunicacion.fechaProgramacion = new Date(n.fecha);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   // Mensajes

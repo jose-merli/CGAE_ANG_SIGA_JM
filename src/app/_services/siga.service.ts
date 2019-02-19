@@ -558,6 +558,7 @@ export class SigaServices {
     fichaColegialOtrasColegiaciones_getLabelColegios:
       "fichaColegialOtrasColegiaciones/getLabelColegios",
     enviosMasivos: "enviosMasivos/enviosMasivos",
+    enviosMasivos_enviar: "enviosMasivos/enviar",
     enviosMasivos_search: "enviosMasivos/search",
     enviosMasivos_estado: "enviosMasivos/estadoEnvios",
     enviosMasivos_tipo: "enviosMasivos/tipoEnvios",
@@ -652,9 +653,11 @@ export class SigaServices {
     dialogo_tipoEnvios: 'dialogoComunicacion/tipoEnvios',
     dialogo_enviar: 'dialogoComunicacion/enviar',
     dialogo_descargar: 'dialogoComunicacion/descargar',
+    dialogo_generarEnvios: 'dialogoComunicacion/generarEnvios',
     dialogo_keys: 'dialogoComunicacion/keys',
     dialogo_obtenerCamposDinamicos: 'dialogoComunicacion/obtenerCamposDinamicos',
-    dialogo_envioTest: 'DialogoComunicacion/envioTest'
+    dialogo_envioTest: 'dialogoComunicacion/envioTest',
+    dialogo_maxModelos: 'dialogoComunicacion/maxModelos'
   };
 
   private menuToggled = new Subject<any>();
