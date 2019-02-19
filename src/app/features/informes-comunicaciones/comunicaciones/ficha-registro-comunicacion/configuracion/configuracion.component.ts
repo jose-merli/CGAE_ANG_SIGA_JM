@@ -1,17 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { ConfigComunicacionItem } from '../../../../../models/ConfiguracionComunicacionItem';
+import { Component, OnInit } from "@angular/core";
+import { ConfigComunicacionItem } from "../../../../../models/ConfiguracionComunicacionItem";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { Router } from "@angular/router";
 
 @Component({
-  selector: 'app-configuracion',
-  templateUrl: './configuracion.component.html',
-  styleUrls: ['./configuracion.component.scss']
+  selector: "app-configuracion",
+  templateUrl: "./configuracion.component.html",
+  styleUrls: ["./configuracion.component.scss"]
 })
 export class ConfiguracionComponent implements OnInit {
-
   openFicha: boolean = false;
   activacionEditar: boolean = true;
   datos: any[];
@@ -31,7 +30,6 @@ export class ConfiguracionComponent implements OnInit {
   modelosComunicacion: any = [];
   arrayClases: any = [];
 
-
   fichasPosibles = [
     {
       key: "configuracion",
@@ -48,26 +46,21 @@ export class ConfiguracionComponent implements OnInit {
     {
       key: "documentos",
       activa: false
-    },
-
+    }
   ];
-
 
   constructor(
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
-
-
     this.getDatos();
     this.getClasesComunicaciones();
     this.getModelosComunicacion();
-    this.getTipoEnvios()
-
+    this.getTipoEnvios();
   }
 
   // Mensajes
@@ -90,13 +83,11 @@ export class ConfiguracionComponent implements OnInit {
     this.msgs = [];
   }
 
-
-
   getTipoEnvios() {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
         this.tipoEnvios = data.combooItems;
-        this.tipoEnvios.unshift({ label: 'Seleccionar', value: '' });
+        this.tipoEnvios.unshift({ label: "Seleccionar", value: "" });
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.tipoEnvios.map(e => {
@@ -120,7 +111,6 @@ para poder filtrar el dato con o sin estos caracteres*/
     );
   }
 
-
   onChangeTipoEnvio() {
     this.getPlantillas();
   }
@@ -130,31 +120,28 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   getPlantillas() {
+    this.sigaServices
+      .post("enviosMasivos_plantillas", this.body.idTipoEnvios)
+      .subscribe(
+        data => {
+          let comboPlantillas = JSON.parse(data["body"]);
+          this.plantillas = comboPlantillas.combooItems;
+          this.plantillas.map(e => {
+            if (this.body.idPlantillaEnvios == e.value) {
+              this.plantilla = e.label;
+            }
+          });
 
-    this.sigaServices.post("enviosMasivos_plantillas", this.body.idTipoEnvios).subscribe(
-      data => {
-        let comboPlantillas = JSON.parse(data["body"]);
-        this.plantillas = comboPlantillas.combooItems;
-        this.plantillas.map(e => {
-          if (this.body.idPlantillaEnvios == e.value) {
-            this.plantilla = e.label;
+          if (this.editar) {
+            this.body.idPlantillaEnvios = this.body.idPlantillaEnvios.toString();
           }
-        })
-
-        if (this.editar) {
-          this.body.idPlantillaEnvios = this.body.idPlantillaEnvios.toString();
-        }
-
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-      }
-    );
+        },
+        err => {
+          console.log(err);
+        },
+        () => {}
+      );
   }
-
-
 
   abreCierraFicha() {
     // let fichaPosible = this.getFichaPosibleByKey(key);
@@ -179,8 +166,6 @@ para poder filtrar el dato con o sin estos caracteres*/
     return {};
   }
 
-
-
   getDatos() {
     if (sessionStorage.getItem("comunicacionesSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("comunicacionesSearch"));
@@ -189,31 +174,31 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else {
       this.editar = false;
     }
-
   }
-
 
   getModelosComunicacion() {
     this.arrayClases = [];
 
     this.arrayClases.push(this.body.idClaseComunicacion);
 
-    this.sigaServices.post("comunicaciones_modelosComunicacion", this.arrayClases).subscribe(
-      data => {
-        let result = JSON.parse(data['body']);
-        this.modelosComunicacion = result.combooItems;
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    this.sigaServices
+      .post("comunicaciones_modelosComunicacion", this.arrayClases)
+      .subscribe(
+        data => {
+          let result = JSON.parse(data["body"]);
+          this.modelosComunicacion = result.combooItems;
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 
   getClasesComunicaciones() {
     this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
       data => {
         this.clasesComunicaciones = data.combooItems;
-        this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
+        this.clasesComunicaciones.unshift({ label: "Seleccionar", value: "" });
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.clasesComunicaciones.map(e => {
@@ -230,7 +215,6 @@ para poder filtrar el dato con o sin estos caracteres*/
             }
           }
         });
-
       },
       err => {
         console.log(err);
@@ -238,12 +222,12 @@ para poder filtrar el dato con o sin estos caracteres*/
     );
   }
 
-
   cancelar() {
-
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
-      message: '¿Está seguro de cancelar el envío?',
+      message: this.translateService.instant(
+        "informesycomunicaciones.comunicaciones.mensaje.seguroCancelarEnvio"
+      ),
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarCancelar();
@@ -252,7 +236,9 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.msgs = [
           {
             severity: "info",
-            summary: "info",
+            summary: this.translateService.instant(
+              "general.message.informacion"
+            ),
             detail: this.translateService.instant(
               "general.message.accion.cancelada"
             )
@@ -262,7 +248,6 @@ para poder filtrar el dato con o sin estos caracteres*/
     });
   }
 
-
   confirmarCancelar() {
     this.eliminarArray = [];
     let objCancelar = {
@@ -271,20 +256,27 @@ para poder filtrar el dato con o sin estos caracteres*/
       fechaProgramacion: new Date(this.body.fechaProgramada)
     };
     this.eliminarArray.push(objCancelar);
-    this.sigaServices.post("enviosMasivos_cancelar", this.eliminarArray).subscribe(
-      data => {
-        this.showSuccess('Se ha cancelado el envío correctamente');
-      },
-      err => {
-        this.showFail('Error al cancelar el envío');
-        console.log(err);
-      },
-      () => {
-
-      }
-    );
+    this.sigaServices
+      .post("enviosMasivos_cancelar", this.eliminarArray)
+      .subscribe(
+        data => {
+          this.showSuccess(
+            this.translateService.instant(
+              "informesycomunicaciones.comunicaciones.mensaje.envioCanceladoCorrectamente"
+            )
+          );
+        },
+        err => {
+          this.showFail(
+            this.translateService.instant(
+              "informesycomunicaciones.comunicaciones.mensaje.errorCancelarEnvio"
+            )
+          );
+          console.log(err);
+        },
+        () => {}
+      );
   }
-
 
   duplicar() {
     this.sigaServices.post("enviosMasivos_duplicar", this.body).subscribe(
@@ -294,11 +286,13 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.router.navigate(["enviosMasivos"]);
       },
       err => {
-        this.showFail('Error al duplicar el envío');
+        this.showFail(
+          this.translateService.instant(
+            "informesycomunicaciones.comunicaciones.mensaje.errorDuplicarEnvio"
+          )
+        );
         console.log(err);
       }
     );
   }
-
-
 }

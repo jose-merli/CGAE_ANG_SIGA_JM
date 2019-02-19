@@ -1,19 +1,17 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
-import { DocComunicacionesItem } from '../../../../../models/DocumentosComunicacionesItem';
+import { DocComunicacionesItem } from "../../../../../models/DocumentosComunicacionesItem";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { saveAs } from "file-saver/FileSaver";
 
 @Component({
-  selector: 'app-documentos',
-  templateUrl: './documentos.component.html',
-  styleUrls: ['./documentos.component.scss']
+  selector: "app-documentos",
+  templateUrl: "./documentos.component.html",
+  styleUrls: ["./documentos.component.scss"]
 })
 export class DocumentosComponent implements OnInit {
-
-
   openFicha: boolean = false;
   datos: any[];
   cols: any[];
@@ -29,8 +27,8 @@ export class DocumentosComponent implements OnInit {
   eliminarArray: any[];
   progressSpinner: boolean = false;
 
-  @ViewChild('table') table: DataTable;
-  selectedDatos
+  @ViewChild("table") table: DataTable;
+  selectedDatos;
 
   fichasPosibles = [
     {
@@ -48,8 +46,7 @@ export class DocumentosComponent implements OnInit {
     {
       key: "documentos",
       activa: false
-    },
-
+    }
   ];
 
   constructor(
@@ -58,10 +55,9 @@ export class DocumentosComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
-
     this.selectedItem = 10;
     this.getDatos();
     this.rowsPerPage = [
@@ -83,10 +79,9 @@ export class DocumentosComponent implements OnInit {
       }
     ];
     this.cols = [
-      { field: 'nombreDocumento', header: 'Nombre del documento' },
-      { field: 'pathDocumento', header: 'Enlace de descarga' }
-    ]
-
+      { field: "nombreDocumento", header: "Nombre del documento" },
+      { field: "pathDocumento", header: "Enlace de descarga" }
+    ];
   }
 
   getDatos() {
@@ -94,7 +89,6 @@ export class DocumentosComponent implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("comunicacionesSearch"));
       this.getDocumentos();
     }
-
   }
 
   // Mensajes
@@ -124,13 +118,11 @@ export class DocumentosComponent implements OnInit {
         this.getDatos();
       }
     }
-
   }
 
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
-
   }
 
   getFichaPosibleByKey(key): any {
@@ -143,19 +135,14 @@ export class DocumentosComponent implements OnInit {
     return {};
   }
 
-
-
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
   }
 
-
-
   onChangeSelectAll() {
     if (this.selectAll === true) {
-
       this.selectedDatos = this.datos;
       this.numSelected = this.datos.length;
     } else {
@@ -166,22 +153,23 @@ export class DocumentosComponent implements OnInit {
 
   getDocumentos() {
     this.progressSpinner = true;
-    this.sigaServices.post("enviosMasivos_documentos", this.body.idEnvio).subscribe(
-      data => {
-        let datos = JSON.parse(data["body"]);
-        this.datos = datos.documentoEnvioItem;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
+    this.sigaServices
+      .post("enviosMasivos_documentos", this.body.idEnvio)
+      .subscribe(
+        data => {
+          let datos = JSON.parse(data["body"]);
+          this.datos = datos.documentoEnvioItem;
+        },
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
   }
 
   downloadDocumento(dato) {
-
     let objDownload = {
       rutaDocumento: dato[0].pathDocumento,
       nombreDocumento: dato[0].nombreDocumento
@@ -192,7 +180,11 @@ export class DocumentosComponent implements OnInit {
       .subscribe(data => {
         const blob = new Blob([data], { type: "application/octet-stream" });
         if (blob.size == 0) {
-          this.showFail("messages.general.error.ficheroNoExiste");
+          this.showFail(
+            this.translateService.instant(
+              "messages.general.error.ficheroNoExiste"
+            )
+          );
         } else {
           saveAs(data, dato[0].nombreDocumento);
         }
@@ -201,10 +193,11 @@ export class DocumentosComponent implements OnInit {
   }
 
   eliminar(dato) {
-
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
-      message: '¿Está seguro de eliminar los documentos?',
+      message: this.translateService.instant(
+        "informesycomunicaciones.comunicaciones.mensaje.seguroEliminarDocumentos"
+      ),
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarEliminar(dato);
@@ -213,7 +206,9 @@ export class DocumentosComponent implements OnInit {
         this.msgs = [
           {
             severity: "info",
-            summary: "info",
+            summary: this.translateService.instant(
+              "general.message.informacion"
+            ),
             detail: this.translateService.instant(
               "general.message.accion.cancelada"
             )
@@ -232,19 +227,29 @@ export class DocumentosComponent implements OnInit {
       };
       this.eliminarArray.push(objEliminar);
     });
-    this.sigaServices.post("enviosMasivos_borrarDocumento", this.eliminarArray).subscribe(
-      data => {
-        this.showSuccess('Se ha eliminado el documento correctamente');
-      },
-      err => {
-        this.showFail('Error al eliminado el envío');
-        console.log(err);
-      },
-      () => {
-        this.getDocumentos();
-        this.table.reset();
-      }
-    );
+    this.sigaServices
+      .post("enviosMasivos_borrarDocumento", this.eliminarArray)
+      .subscribe(
+        data => {
+          this.showSuccess(
+            this.translateService.instant(
+              "informesycomunicaciones.comunicaciones.mensaje.eliminadoDocumentoCorrectamente"
+            )
+          );
+        },
+        err => {
+          this.showFail(
+            this.translateService.instant(
+              "informesycomunicaciones.comunicaciones.mensaje.errorEliminadoEnvio"
+            )
+          );
+          console.log(err);
+        },
+        () => {
+          this.getDocumentos();
+          this.table.reset();
+        }
+      );
   }
 
   uploadFile(event: any) {
@@ -255,35 +260,39 @@ export class DocumentosComponent implements OnInit {
   }
 
   navigateTo(dato) {
-
-    this.downloadDocumento(dato)
-
+    this.downloadDocumento(dato);
   }
 
   addFile() {
-
     this.progressSpinner = true;
 
-    this.sigaServices.postSendContent("enviosMasivos_subirDocumento", this.file).subscribe(
-      data => {
+    this.sigaServices
+      .postSendContent("enviosMasivos_subirDocumento", this.file)
+      .subscribe(
+        data => {
+          this.body.pathDocumento = data.rutaDocumento;
 
-        this.body.pathDocumento = data.rutaDocumento;
-
-        this.guardar(data.nombreDocumento);
-      },
-      err => {
-
-        if (err.error.error.code == 400) {
-          this.showFail('Formato no permitido o tamaño maximo superado');
-        } else {
-          this.showFail('Error al subir el documento');
-          console.log(err);
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-      }
-    );
+          this.guardar(data.nombreDocumento);
+        },
+        err => {
+          if (err.error.error.code == 400) {
+            this.showFail(
+              this.translateService.instant(
+                "informesycomunicaciones.comunicaciones.mensaje.formatoNoPermitido"
+              )
+            );
+          } else {
+            this.showFail(
+              this.translateService.instant(
+                "informesycomunicaciones.comunicaciones.mensaje.errorSubirDocumento"
+              )
+            );
+            console.log(err);
+          }
+          this.progressSpinner = false;
+        },
+        () => {}
+      );
   }
 
   guardar(nombreDocumento) {
@@ -291,13 +300,21 @@ export class DocumentosComponent implements OnInit {
       idEnvio: this.body.idEnvio,
       rutaDocumento: this.body.pathDocumento,
       nombreDocumento: nombreDocumento
-    }
+    };
     this.sigaServices.post("enviosMasivos_guardarDocumento", objDoc).subscribe(
       data => {
-        this.showSuccess('Se ha subido el documento correctamente');
+        this.showSuccess(
+          this.translateService.instant(
+            "informesycomunicaciones.comunicaciones.mensaje.subidoDocumentoCorrectamente"
+          )
+        );
       },
       err => {
-        this.showFail('Error al guardar el documento');
+        this.showFail(
+          this.translateService.instant(
+            "informesycomunicaciones.comunicaciones.mensaje.errorGuardarDocumento"
+          )
+        );
         console.log(err);
       },
       () => {
@@ -305,6 +322,4 @@ export class DocumentosComponent implements OnInit {
       }
     );
   }
-
-
 }

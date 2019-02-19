@@ -1,26 +1,32 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, HostListener } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+  HostListener
+} from "@angular/core";
 import { DataTable } from "primeng/datatable";
-import { EnviosMasivosItem } from './../../../models/ComunicacionesItem';
-import { ComunicacionesSearchItem } from './../../../models/ComunicacionesSearchItem';
-import { ComunicacionesObject } from './../../../models/ComunicacionesObject';
+import { EnviosMasivosItem } from "./../../../models/ComunicacionesItem";
+import { ComunicacionesSearchItem } from "./../../../models/ComunicacionesSearchItem";
+import { ComunicacionesObject } from "./../../../models/ComunicacionesObject";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { SigaServices } from "./../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
-import { Router } from '@angular/router';
+import { Router } from "@angular/router";
 import { esCalendar } from "../../../utils/calendar";
-import { ProgramarItem } from '../../../models/ProgramarItem';
+import { ProgramarItem } from "../../../models/ProgramarItem";
 
 export enum KEY_CODE {
   ENTER = 13
 }
 
 @Component({
-  selector: 'app-comunicaciones',
-  templateUrl: './comunicaciones.component.html',
-  styleUrls: ['./comunicaciones.component.scss'],
+  selector: "app-comunicaciones",
+  templateUrl: "./comunicaciones.component.html",
+  styleUrls: ["./comunicaciones.component.scss"],
   host: {
     "(document:keypress)": "onKeyPress($event)"
-  },
+  }
 })
 export class ComunicacionesComponent implements OnInit {
   body: EnviosMasivosItem = new EnviosMasivosItem();
@@ -49,26 +55,30 @@ export class ComunicacionesComponent implements OnInit {
   loaderEtiquetas: boolean = false;
   fichaBusqueda: boolean = false;
 
-  @ViewChild('table') table: DataTable;
-  selectedDatos
-
+  @ViewChild("table") table: DataTable;
+  selectedDatos;
 
   constructor(
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
-    private router: Router) { }
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.selectedItem = 10;
 
-    sessionStorage.removeItem("crearNuevaCom")
+    sessionStorage.removeItem("crearNuevaCom");
 
     if (sessionStorage.getItem("filtrosCom") != null) {
       this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosCom"));
-      this.bodySearch.fechaCreacion = this.bodySearch.fechaCreacion ? new Date(this.bodySearch.fechaCreacion) : null;
-      this.bodySearch.fechaProgramacion = this.bodySearch.fechaProgramacion ? new Date(this.bodySearch.fechaProgramacion) : null;
+      this.bodySearch.fechaCreacion = this.bodySearch.fechaCreacion
+        ? new Date(this.bodySearch.fechaCreacion)
+        : null;
+      this.bodySearch.fechaProgramacion = this.bodySearch.fechaProgramacion
+        ? new Date(this.bodySearch.fechaProgramacion)
+        : null;
       this.buscar();
     }
 
@@ -77,14 +87,13 @@ export class ComunicacionesComponent implements OnInit {
     this.getClasesComunicaciones();
 
     this.cols = [
-      { field: 'claseComunicaciones', header: 'Clases de comunicaciones' },
-      { field: 'descripcion', header: 'Descripción' },
-      { field: 'fechaCreacion', header: 'Fecha creación' },
-      { field: 'fechaProgramada', header: 'Fecha programación' },
-      { field: 'tipoEnvio', header: 'Tipo envío' },
-      { field: 'estadoEnvio', header: 'Estado' }
+      { field: "claseComunicaciones", header: "Clases de comunicaciones" },
+      { field: "descripcion", header: "Descripción" },
+      { field: "fechaCreacion", header: "Fecha creación" },
+      { field: "fechaProgramada", header: "Fecha programación" },
+      { field: "tipoEnvio", header: "Tipo envío" },
+      { field: "estadoEnvio", header: "Estado" }
     ];
-
 
     this.rowsPerPage = [
       {
@@ -104,8 +113,6 @@ export class ComunicacionesComponent implements OnInit {
         value: 40
       }
     ];
-
-
   }
 
   // Mensajes
@@ -128,12 +135,11 @@ export class ComunicacionesComponent implements OnInit {
     this.msgs = [];
   }
 
-
   getTipoEnvios() {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
         this.tiposEnvio = data.combooItems;
-        this.tiposEnvio.unshift({ label: 'Seleccionar', value: '' });
+        this.tiposEnvio.unshift({ label: "Seleccionar", value: "" });
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.tiposEnvio.map(e => {
@@ -157,12 +163,11 @@ para poder filtrar el dato con o sin estos caracteres*/
     );
   }
 
-
   getEstadosEnvios() {
     this.sigaServices.get("enviosMasivos_estado").subscribe(
       data => {
         this.estados = data.combooItems;
-        this.estados.unshift({ label: 'Seleccionar', value: '' });
+        this.estados.unshift({ label: "Seleccionar", value: "" });
       },
       err => {
         console.log(err);
@@ -170,13 +175,11 @@ para poder filtrar el dato con o sin estos caracteres*/
     );
   }
 
-
-
   getClasesComunicaciones() {
     this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
       data => {
         this.clasesComunicaciones = data.combooItems;
-        this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
+        this.clasesComunicaciones.unshift({ label: "Seleccionar", value: "" });
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.clasesComunicaciones.map(e => {
@@ -205,7 +208,6 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.changeDetectorRef.detectChanges();
     this.table.reset();
   }
-
 
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
@@ -236,11 +238,9 @@ para poder filtrar el dato con o sin estos caracteres*/
     sessionStorage.removeItem("comunicacionesSearch");
     sessionStorage.removeItem("filtrosCom");
     this.getResultados();
-
   }
 
   getResultados() {
-
     this.sigaServices
       .postPaginado("comunicaciones_search", "?numPagina=1", this.bodySearch)
       .subscribe(
@@ -249,7 +249,9 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.searchComunicaciones = JSON.parse(data["body"]);
           this.datos = this.searchComunicaciones.enviosMasivosItem;
           this.datos.forEach(element => {
-            element.fechaProgramada = element.fechaProgramada ? new Date(element.fechaProgramada) : null;
+            element.fechaProgramada = element.fechaProgramada
+              ? new Date(element.fechaProgramada)
+              : null;
             element.fechaCreacion = new Date(element.fechaCreacion);
           });
         },
@@ -263,9 +265,6 @@ para poder filtrar el dato con o sin estos caracteres*/
       );
   }
 
-
-
-
   isButtonDisabled() {
     if (this.bodySearch.fechaCreacion != null) {
       return false;
@@ -274,10 +273,10 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   cancelar(dato) {
-
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
-      message: '¿Está seguro de cancelar los' + dato.length + 'envíos seleccionados',
+      message:
+        "¿Está seguro de cancelar los" + dato.length + "envíos seleccionados",
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarCancelar(dato);
@@ -296,7 +295,6 @@ para poder filtrar el dato con o sin estos caracteres*/
     });
   }
 
-
   confirmarCancelar(dato) {
     this.eliminarArray = [];
     dato.forEach(element => {
@@ -307,42 +305,45 @@ para poder filtrar el dato con o sin estos caracteres*/
       };
       this.eliminarArray.push(objEliminar);
     });
-    this.sigaServices.post("enviosMasivos_cancelar", this.eliminarArray).subscribe(
-      data => {
-        this.showSuccess('Se ha calcelado el envío correctamente');
-      },
-      err => {
-        this.showFail('Error al calcelar el envío');
-        console.log(err);
-      },
-      () => {
-        this.buscar();
-        this.table.reset();
-      }
-    );
+    this.sigaServices
+      .post("enviosMasivos_cancelar", this.eliminarArray)
+      .subscribe(
+        data => {
+          this.showSuccess("Se ha calcelado el envío correctamente");
+        },
+        err => {
+          this.showFail("Error al calcelar el envío");
+          console.log(err);
+        },
+        () => {
+          this.buscar();
+          this.table.reset();
+        }
+      );
   }
 
   //búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
-    if (event.keyCode === KEY_CODE.ENTER && this.bodySearch.fechaCreacion != null) {
+    if (
+      event.keyCode === KEY_CODE.ENTER &&
+      this.bodySearch.fechaCreacion != null
+    ) {
       this.buscar();
     }
   }
 
-
   programar(dato) {
     this.showProgramar = false;
     dato.forEach(element => {
-      element.fechaProgramada = new Date(this.bodyProgramar.fechaProgramada)
+      element.fechaProgramada = new Date(this.bodyProgramar.fechaProgramada);
     });
     this.sigaServices.post("enviosMasivos_programar", dato).subscribe(
-
       data => {
-        this.showSuccess('Se ha programado el envío correctamente');
+        this.showSuccess("Se ha programado el envío correctamente");
       },
       err => {
-        this.showFail('Error al programar el envío');
+        this.showFail("Error al programar el envío");
         console.log(err);
       },
       () => {
@@ -352,19 +353,15 @@ para poder filtrar el dato con o sin estos caracteres*/
     );
   }
 
-
-
-
-
   navigateTo(dato) {
     this.estado = dato[0].idEstado;
     if (!this.selectMultiple && this.estado == 4) {
       // this.body.estado = dato[0].estado;
-      this.router.navigate(['/fichaRegistroComunicacion']);
+      this.router.navigate(["/fichaRegistroComunicacion"]);
       sessionStorage.setItem("comunicacionesSearch", JSON.stringify(dato[0]));
       sessionStorage.setItem("filtrosCom", JSON.stringify(this.bodySearch));
     } else if (!this.selectMultiple && this.estado != 4) {
-      this.showInfo('La comunicación está en proceso, no puede editarse')
+      this.showInfo("La comunicación está en proceso, no puede editarse");
     }
   }
 
@@ -382,11 +379,10 @@ función para que no cargue primero las etiquetas de los idiomas*/
   isCargado(key) {
     if (key != this.translateService.instant(key)) {
       this.loaderEtiquetas = false;
-      return key
+      return key;
     } else {
       this.loaderEtiquetas = true;
     }
-
   }
 
   limpiar() {
@@ -397,6 +393,4 @@ función para que no cargue primero las etiquetas de los idiomas*/
   abreCierraFicha() {
     this.fichaBusqueda = !this.fichaBusqueda;
   }
-
-
 }

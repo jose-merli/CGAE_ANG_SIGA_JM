@@ -10,48 +10,87 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">Documentos</label>
+            <label class="mr-auto title-ficha">{{
+              " enviosMasivos.literal.documentos" | translate
+            }}</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>Documentos:
-              <span *ngIf="datos">{{datos.length}}</span>
+            <label
+              >{{ " enviosMasivos.literal.documentos" | translate }}:
+              <span *ngIf="datos">{{ datos.length }}</span>
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+      <div
+        *ngIf="openFicha"
+        class=" header-ficha-open d-flex justify-content-start align-items-center"
+      >
         <div class="img-colegiado">
           <i class="fas fa-file icon-ficha"></i>
         </div>
-        <label class="title-ficha">Documentos</label>
+        <label class="title-ficha">{{
+          " enviosMasivos.literal.documentos" | translate
+        }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <!--tarjetas doc-->
     <div *ngIf="openFicha" class=" card-body card-body-ficha">
-      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
-        [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple"
-        paginatorPosition="both" (onRowSelect)="navigateTo(selectedDatos)">
+      <p-table
+        [value]="datos"
+        [columns]="cols"
+        [(selection)]="selectedDatos"
+        [responsive]="true"
+        #table
+        class="tabla-listado"
+        [paginator]="true"
+        [rows]="selectedItem"
+        [first]="first"
+        [ngClass]="{ customCursor: selectMultiple }"
+        selectionMode="multiple"
+        paginatorPosition="both"
+        (onRowSelect)="navigateTo(selectedDatos)"
+      >
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
-            <col *ngFor="let col of columns" [style.width]="col.width">
+            <col *ngFor="let col of columns" [style.width]="col.width" />
           </colgroup>
         </ng-template>
         <ng-template pTemplate="header" let-columns>
           <tr>
-            <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-              {{col.header}}
+            <th
+              *ngFor="let col of columns"
+              [ngSwitch]="col.field"
+              [pSortableColumn]="col.field"
+            >
+              {{ col.header }}
               <p-sortIcon [field]="col.field"></p-sortIcon>
-              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
-                      col.field, 'contains')">
+              <input
+                pDroppable="false"
+                (click)="$event.stopPropagation()"
+                *ngSwitchCase="col.field"
+                pInputText
+                type="text"
+                (input)="
+                  table.filter($event.target.value, col.field, 'contains')
+                "
+              />
             </th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+        <ng-template
+          pTemplate="body"
+          let-dato
+          let-columns="columns"
+          let-rowIndex="rowIndex"
+        >
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <span *ngIf="col.field != 'pathDocumento'"> {{dato[col.field]}}</span>
+              <span *ngIf="col.field != 'pathDocumento'">
+                {{ dato[col.field] }}</span
+              >
               <span *ngIf="col.field == 'pathDocumento'">
                 <i class="fa fa-download"></i>
               </span>
@@ -61,35 +100,56 @@
         <ng-template pTemplate="emptymessage" let-columns>
           <tr>
             <td [attr.colspan]="columns.length">
-              No hay resultados.
+              {{
+                "censo.busquedaClientesAvanzada.literal.sinResultados"
+                  | translate
+              }}
             </td>
           </tr>
         </ng-template>
         <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">Seleccionados: {{selectedDatos.length}}</label>
+            <label class="pr-3 registros-totales"
+              >Mostrando registros del {{ table.first + 1 }} al
+              {{ table.first + table.rows }} de un total de
+              {{ table.totalRecords }}</label
+            >
+            <label
+              class="pr-3 numSeleccionados"
+              *ngIf="selectedDatos && selectedDatos.length > 0"
+              >Seleccionados: {{ selectedDatos.length }}</label
+            >
 
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-
-
-
+            <p-dropdown
+              [(ngModel)]="selectedItem"
+              [options]="rowsPerPage"
+              (onChange)="onChangeRowsPerPages($event)"
+            ></p-dropdown>
+            <label class="pl-1">
+              {{
+                "cargaMasivaDatosCurriculares.numRegistros.literal" | translate
+              }}</label
+            >
           </div>
         </ng-template>
       </p-table>
     </div>
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button">
-        <button (click)="eliminar(selectedDatos)" *ngIf="selectedDatos && selectedDatos !=''" pButton type="button" icon="far fa-times-circle"
-          iconPos="left" label="Eliminar"></button>
+        <button
+          (click)="eliminar(selectedDatos)"
+          *ngIf="selectedDatos && selectedDatos != ''"
+          pButton
+          type="button"
+          icon="far fa-times-circle"
+          iconPos="left"
+          label="Eliminar"
+        ></button>
       </div>
     </div>
   </div>
 </div>
 
-
-
-<div *ngIf="progressSpinner " class="overlay-spinner">
+<div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader "></div>
 </div>
