@@ -85,7 +85,7 @@ export class ModelosComunicacionesConsultaComponent implements OnInit {
     this.selectedItem = 10;
 
     this.cols = [
-      { field: 'modelo', header: 'Modelo' },
+      { field: 'nombre', header: 'Modelo' },
     ]
 
 
@@ -152,8 +152,9 @@ export class ModelosComunicacionesConsultaComponent implements OnInit {
 
   navigateTo(dato) {
     let id = dato[0].id;
-
-    this.router.navigate(['/fichaModeloComunicaciones', id]);
+    sessionStorage.setItem("modelosSearch", JSON.stringify(dato[0]));
+    this.router.navigate(['/fichaModeloComunicaciones']);
+    
   }
 
   getDatos() {

@@ -128,7 +128,7 @@ export class DatosGenerales implements OnInit {
   updateItems: Map<String, ComboEtiquetasItem> = new Map<
     String,
     ComboEtiquetasItem
-    >();
+  >();
 
   @ViewChild("auto")
   autoComplete: AutoComplete;
@@ -236,7 +236,7 @@ export class DatosGenerales implements OnInit {
       n => {
         this.comboIdentificacion = n.combooItems;
       },
-      error => { }
+      error => {}
     );
 
     this.comboTipo.push(this.tipoPersonaJuridica);
@@ -502,7 +502,7 @@ export class DatosGenerales implements OnInit {
       this.body.motivo = "registro actualizado";
 
       this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
-        data => { },
+        data => {},
         error => {
           this.personaSearch = JSON.parse(error["error"]);
           this.showFail(JSON.stringify(this.personaSearch.error.description));
@@ -911,26 +911,7 @@ export class DatosGenerales implements OnInit {
   // Evento para detectar la etiqueta de nueva creación
   onKeyUp(event) {
     if (event.keyCode == 13) {
-      if (this.control) {
-        this.checked = true;
-        this.dialog.closable = false;
-
-        // Variable controladora
-        this.isCrear = true;
-
-        // Variable controlador del deshabilitar fechas
-        //  this.calendar.readonlyInput = false;
-        this.historico = false;
-
-        // Rellenamos el objeto nuevo
-        this.item = new ComboEtiquetasItem();
-        this.item.idGrupo = "";
-        this.item.label = event.srcElement.value;
-
-        this.mensaje = this.translateService.instant(
-          "censo.etiquetas.literal.rango"
-        );
-      }
+      event.currentTarget.value = "";
     }
   }
 
@@ -962,12 +943,6 @@ export class DatosGenerales implements OnInit {
   onSelect(event) {
     if (event) {
       if (this.isNotContains(event)) {
-        this.checked = true;
-        this.dialog.closable = false;
-
-        // Variable controladora
-        this.isCrear = false;
-
         // Variable controlador del deshabilitar fechas
         this.historico = false;
 
@@ -976,9 +951,30 @@ export class DatosGenerales implements OnInit {
         this.item.idGrupo = event.value;
         this.item.label = event.label;
 
-        this.mensaje = this.translateService.instant(
-          "censo.etiquetas.literal.rango"
-        );
+        // this.mensaje = this.translateService.instant(
+        //   "censo.etiquetas.literal.rango"
+        // );
+
+        this.createItems.push(this.item);
+        this.updateItems.set(this.item.idGrupo, this.item);
+
+        if (
+          this.body.abreviatura != "" &&
+          this.body.abreviatura != undefined &&
+          !this.onlySpaces(this.body.abreviatura) &&
+          this.body.nif != "" &&
+          this.body.nif != undefined &&
+          !this.onlySpaces(this.body.nif) &&
+          this.body.denominacion != "" &&
+          this.body.denominacion != undefined &&
+          !this.onlySpaces(this.body.denominacion) &&
+          this.body.fechaConstitucion != undefined &&
+          !this.onlySpaces(this.body.nif) &&
+          this.idiomaPreferenciaSociedad != "" &&
+          this.idiomaPreferenciaSociedad != undefined
+        ) {
+          this.showGuardar = true;
+        }
       } else {
         // Si existe en el array, lo borramos para que no queden registros duplicados
         for (
@@ -1026,21 +1022,6 @@ export class DatosGenerales implements OnInit {
     }
   }
 
-  onClick(event, value) {
-    if (event) {
-      this.checked = true;
-      this.dialog.closable = true;
-
-      this.item = new ComboEtiquetasItem();
-      this.item.fechaInicio = value.fechaInicio;
-      this.item.fechaBaja = value.fechaBaja;
-
-      this.mensaje = "Histórico de fechas";
-
-      this.historico = true;
-    }
-  }
-
   deleteLabel(item) {
     for (let i = 0; i < this.etiquetasPersonaJuridicaSelecionados.length; i++) {
       if (this.etiquetasPersonaJuridicaSelecionados[i].idGrupo == undefined) {
@@ -1059,20 +1040,18 @@ export class DatosGenerales implements OnInit {
   }
 
   closeDialogConfirmation(item) {
-    this.checked = false;
-
-    if (this.isCrear) {
-      // Borramos el residuo de la etiqueta
-      this.autoComplete.multiInputEL.nativeElement.value = null;
-    } else {
-      // Borramos el residuo de la etiqueta vieja
-      this.deleteLabel(item);
-    }
-
-    // Borramos las fechas
-    this.item = new ComboEtiquetasItem();
-    this.item.fechaInicio = null;
-    this.item.fechaBaja = null;
+    // this.checked = false;
+    // if (this.isCrear) {
+    //   // Borramos el residuo de la etiqueta
+    //   this.autoComplete.multiInputEL.nativeElement.value = null;
+    // } else {
+    //   // Borramos el residuo de la etiqueta vieja
+    //   this.deleteLabel(item);
+    // }
+    // // Borramos las fechas
+    // this.item = new ComboEtiquetasItem();
+    // this.item.fechaInicio = null;
+    // this.item.fechaBaja = null;
   }
 
   validateFields() {
@@ -1103,70 +1082,59 @@ export class DatosGenerales implements OnInit {
     return fecha;
   }
 
-
-
   aceptDialogConfirmation(item) {
-    this.checked = false;
-
-    if (this.isCrear) {
-      let newItem = new ComboEtiquetasItem();
-      newItem = item;
-
-      newItem.fechaInicio = this.datepipe.transform(
-        newItem.fechaInicio,
-        "dd/MM/yyyy"
-      );
-      newItem.fechaBaja = this.datepipe.transform(
-        newItem.fechaBaja,
-        "dd/MM/yyyy"
-      );
-
-      this.createItems.push(newItem);
-
-      this.updateItems.set(newItem.label, newItem);
-
-      if (this.isNotContainsEtiq(newItem)) {
-        this.etiquetasPersonaJuridicaSelecionados.push(newItem);
-      }
-      this.autoComplete.multiInputEL.nativeElement.value = null;
-    } else {
-      let oldItem = new ComboEtiquetasItem();
-      oldItem = item;
-      oldItem.fechaInicio = this.datepipe.transform(
-        oldItem.fechaInicio,
-        "dd/MM/yyyy"
-      );
-      oldItem.fechaBaja = this.datepipe.transform(
-        oldItem.fechaBaja,
-        "dd/MM/yyyy"
-      );
-
-      this.createItems.push(oldItem);
-
-      this.updateItems.set(oldItem.idGrupo, oldItem);
-    }
-
-    // Dehabilitamos el guardar para los próximos
-    this.isTrue = false;
-
-    // Habilitamos el botón guardar, dado que se ha detectado un cambio
-    if (
-      this.body.abreviatura != "" &&
-      this.body.abreviatura != undefined &&
-      !this.onlySpaces(this.body.abreviatura) &&
-      this.body.nif != "" &&
-      this.body.nif != undefined &&
-      !this.onlySpaces(this.body.nif) &&
-      this.body.denominacion != "" &&
-      this.body.denominacion != undefined &&
-      !this.onlySpaces(this.body.denominacion) &&
-      this.body.fechaConstitucion != undefined &&
-      !this.onlySpaces(this.body.nif) &&
-      this.idiomaPreferenciaSociedad != "" &&
-      this.idiomaPreferenciaSociedad != undefined
-    ) {
-      this.showGuardar = true;
-    }
+    // this.checked = false;
+    // if (this.isCrear) {
+    //   let newItem = new ComboEtiquetasItem();
+    //   newItem = item;
+    //   newItem.fechaInicio = this.datepipe.transform(
+    //     newItem.fechaInicio,
+    //     "dd/MM/yyyy"
+    //   );
+    //   newItem.fechaBaja = this.datepipe.transform(
+    //     newItem.fechaBaja,
+    //     "dd/MM/yyyy"
+    //   );
+    //   this.createItems.push(newItem);
+    //   this.updateItems.set(newItem.label, newItem);
+    //   if (this.isNotContainsEtiq(newItem)) {
+    //     this.etiquetasPersonaJuridicaSelecionados.push(newItem);
+    //   }
+    //   this.autoComplete.multiInputEL.nativeElement.value = null;
+    // } else {
+    //   let oldItem = new ComboEtiquetasItem();
+    //   oldItem = item;
+    //   oldItem.fechaInicio = this.datepipe.transform(
+    //     oldItem.fechaInicio,
+    //     "dd/MM/yyyy"
+    //   );
+    //   oldItem.fechaBaja = this.datepipe.transform(
+    //     oldItem.fechaBaja,
+    //     "dd/MM/yyyy"
+    //   );
+    //   this.createItems.push(oldItem);
+    //   this.updateItems.set(oldItem.idGrupo, oldItem);
+    // }
+    // // Dehabilitamos el guardar para los próximos
+    // this.isTrue = false;
+    // // Habilitamos el botón guardar, dado que se ha detectado un cambio
+    // if (
+    //   this.body.abreviatura != "" &&
+    //   this.body.abreviatura != undefined &&
+    //   !this.onlySpaces(this.body.abreviatura) &&
+    //   this.body.nif != "" &&
+    //   this.body.nif != undefined &&
+    //   !this.onlySpaces(this.body.nif) &&
+    //   this.body.denominacion != "" &&
+    //   this.body.denominacion != undefined &&
+    //   !this.onlySpaces(this.body.denominacion) &&
+    //   this.body.fechaConstitucion != undefined &&
+    //   !this.onlySpaces(this.body.nif) &&
+    //   this.idiomaPreferenciaSociedad != "" &&
+    //   this.idiomaPreferenciaSociedad != undefined
+    // ) {
+    //   this.showGuardar = true;
+    // }
   }
 
   validateFinalDate(): boolean {
@@ -1181,19 +1149,8 @@ export class DatosGenerales implements OnInit {
     return this.isFechaBajaCorrect;
   }
 
-
   onBlur(event) {
-    if  (event.target.value  !=  ""  &&  !this.autoComplete.panelVisible) {
-      this.checked  =  true;
-      this.isCrear  =  true;
-      this.item  =  new  ComboEtiquetasItem();
-      this.item.idGrupo  =  "";
-      this.item.label  =  event.srcElement.value;
-
-      this.mensaje  =  this.translateService.instant(
-        "censo.etiquetas.literal.rango"
-      );
-    }
+    event.currentTarget.value = "";
   }
 
   ngAfterViewChecked() {

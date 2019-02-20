@@ -1,21 +1,19 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
 import { TranslateService } from "./../../../../../commons/translate/translation.service";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
-import { InformesModelosComItem } from '../../../../../models/InformesModelosComunicacionesItem';
-import { ModelosComunicacionesItem } from '../../../../../models/ModelosComunicacionesItem';
+import { InformesModelosComItem } from "../../../../../models/InformesModelosComunicacionesItem";
+import { ModelosComunicacionesItem } from "../../../../../models/ModelosComunicacionesItem";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 
-
 @Component({
-  selector: 'app-tarjeta-informes',
-  templateUrl: './tarjeta-informes.component.html',
-  styleUrls: ['./tarjeta-informes.component.scss']
+  selector: "app-tarjeta-informes",
+  templateUrl: "./tarjeta-informes.component.html",
+  styleUrls: ["./tarjeta-informes.component.scss"]
 })
 export class TarjetaInformesComponent implements OnInit {
-
   openFicha: boolean = false;
   activacionEditar: boolean = true;
   derechoAcceso: any;
@@ -31,13 +29,15 @@ export class TarjetaInformesComponent implements OnInit {
   selectMultiple: boolean = false;
   numSelected: number = 0;
   rowsPerPage: any = [];
-  body: InformesModelosComItem = new InformesModelosComItem;
-  modelo: ModelosComunicacionesItem = new ModelosComunicacionesItem;
+  body: InformesModelosComItem = new InformesModelosComItem();
+  modelo: ModelosComunicacionesItem = new ModelosComunicacionesItem();
   msgs: Message[];
   eliminarArray: any[];
+  soloLectura: boolean = false;
+  editar: boolean = true;
 
-  @ViewChild('table') table: DataTable;
-  selectedDatos
+  @ViewChild("table") table: DataTable;
+  selectedDatos;
 
   fichasPosibles = [
     {
@@ -55,30 +55,63 @@ export class TarjetaInformesComponent implements OnInit {
     {
       key: "comunicacion",
       activa: false
-    },
-
+    }
   ];
 
-  constructor(private router: Router, private translateService: TranslateService,
-    private sigaServices: SigaServices, private changeDetectorRef: ChangeDetectorRef,
-    private confirmationService: ConfirmationService) { }
+  constructor(
+    private router: Router,
+    private translateService: TranslateService,
+    private sigaServices: SigaServices,
+    private changeDetectorRef: ChangeDetectorRef,
+    private confirmationService: ConfirmationService
+  ) { }
 
   ngOnInit() {
-
     this.getDatos();
+
+    this.sigaServices.deshabilitarEditar$.subscribe(() => {
+      this.editar = false;
+    });
 
     this.selectedItem = 10;
     this.cols = [
-      { field: 'idioma', header: 'Idioma' },
+      { field: "idioma", header: "censo.usuario.labelIdioma" },
       // { field: 'fechaAsociacion', header: 'Fecha asociación' },
-      { field: 'nombreFicheroSalida', header: 'Fichero salida' },
-      { field: 'sufijo', header: 'Sufijo' },
-      { field: 'formatoSalida', header: 'Formato salida' },
-      { field: 'destinatarios', header: 'Destinatarios' },
-      { field: 'condicion', header: 'Condición' },
-      { field: 'multiDocumento', header: 'Multi-documento' },
-      { field: 'datos', header: 'Datos' }
-    ]
+      { field: "nombreFicheroSalida", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.ficheroSalida" },
+      { field: "sufijo", header: "administracion.parametrosGenerales.literal.sufijo" },
+      { field: "formatoSalida", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.formatoSalida" },
+      { field: "destinatarios", header: "enviosMasivos.literal.destinatarios" },
+      { field: "condicion", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.condicion" },
+      { field: "multiDocumento", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.multiDocumento" },
+      { field: "datos", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.datos" }
+    ];
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
+
+    if (
+      sessionStorage.getItem("soloLectura") != null &&
+      sessionStorage.getItem("soloLectura") != undefined &&
+      sessionStorage.getItem("soloLectura") == "true"
+    ) {
+      this.soloLectura = true;
+    }
   }
 
   abreCierraFicha() {
@@ -104,7 +137,6 @@ export class TarjetaInformesComponent implements OnInit {
     }
     return {};
   }
-
 
   checkAcceso() {
     this.controlAcceso = new ControlAccesoDto();
@@ -138,7 +170,6 @@ export class TarjetaInformesComponent implements OnInit {
     this.table.reset();
   }
 
-
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
     if (!this.selectMultiple) {
@@ -164,24 +195,25 @@ export class TarjetaInformesComponent implements OnInit {
 
   navigateTo(dato) {
     let id = dato[0].id;
-    if (!this.selectMultiple) {
-      this.router.navigate(['/fichaPlantillaDocumento']);
+    if (!this.selectMultiple && !this.soloLectura) {
+      this.router.navigate(["/fichaPlantillaDocumento"]);
       sessionStorage.setItem("modelosInformesSearch", JSON.stringify(dato[0]));
+    } else {
+      this.numSelected = this.selectedDatos.length;
     }
-
   }
 
   getDatos() {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.modelo = JSON.parse(sessionStorage.getItem("modelosSearch"));
-    }
-    this.getInformes();
+      this.getInformes();
+    }    
   }
+
   getInformes() {
     this.sigaServices.post("modelos_detalle_informes", this.modelo).subscribe(
       data => {
         this.datos = JSON.parse(data.body).plantillasModeloDocumentos;
-
       },
       err => {
         console.log(err);
@@ -190,16 +222,15 @@ export class TarjetaInformesComponent implements OnInit {
   }
 
   addInforme() {
-    sessionStorage.setItem("crearNuevaPlantillaDocumento", 'true')
+    sessionStorage.setItem("crearNuevaPlantillaDocumento", "true");
     sessionStorage.removeItem("modelosInformesSearch");
-    this.router.navigate(['/fichaPlantillaDocumento']);
+    this.router.navigate(["/fichaPlantillaDocumento"]);
   }
 
   eliminar(dato) {
-
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
-      message: '¿Está seguro de eliminar los' + dato.length + 'informes seleccionados',
+      message: this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.mensajeEliminar') + ' ' + dato.length + ' ' + this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.informesSeleccionados'),
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarEliminar(dato);
@@ -218,7 +249,6 @@ export class TarjetaInformesComponent implements OnInit {
     });
   }
 
-
   confirmarEliminar(dato) {
     this.eliminarArray = [];
     dato.forEach(element => {
@@ -231,10 +261,10 @@ export class TarjetaInformesComponent implements OnInit {
     });
     this.sigaServices.post("modelos_detalle_informes_borrar", this.eliminarArray).subscribe(
       data => {
-        this.showSuccess('Se ha eliminado el informe correctamente');
+        this.showSuccess(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.correctInformeEliminado'));
       },
       err => {
-        this.showFail('Error al eliminar el informe');
+        this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.errorInformeEliminado'));
         console.log(err);
       },
       () => {
@@ -263,4 +293,7 @@ export class TarjetaInformesComponent implements OnInit {
     this.msgs = [];
   }
 
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
 }
