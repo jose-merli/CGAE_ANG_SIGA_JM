@@ -59,13 +59,12 @@ iframe {
   margin: 0 auto;
   border: none;
 }
-.positionUpload{
+.positionUpload {
   position: absolute;
   top: 0;
   right: 0;
   margin: 0;
-  padding:0;
-
+  padding: 0;
 }
 .mainFrameWrapper {
   height: 86vh;
@@ -94,4 +93,8 @@ iframe {
   .mainFrameWrapper {
     height: 81vh;
   }
+}
+
+span .ui-autocomplete-token-icon {
+  margin-right: 4px;
 }
