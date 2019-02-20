@@ -1,5 +1,5 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-<p-growl [(value)]="msgsSteps" life="100000"></p-growl>
+<p-growl [(value)]="msgsSteps" (onHover)="clear()" life="100000"></p-growl>
 <app-dialog></app-dialog>
 <div class="modelos-comunicaciones-container">
   <div class="header-title">
@@ -51,7 +51,7 @@
         </div>
         <div class="form-group col-lg-6 col-md-6">
           <label>Formato de Salida</label>
-          <p-dropdown [options]="formatos" [(ngModel)]="body.idFormatoSalida" class="select-form"></p-dropdown>
+          <p-dropdown [options]="formatos" [(ngModel)]="body.idFormatoSalida" class="select-form" (onChange)="changeFormato()"></p-dropdown>
         </div>
         <div class="form-group col-lg-6 col-md-6">
           <label>Nombre del fichero generado</label>
@@ -118,7 +118,7 @@
             <td *ngFor="let col of columns" pEditableColumn>
               <p-fileUpload [disabled]="!dato.idIdioma" *ngIf="col.field=='nombreDocumento' && !dato.guardada && dato.nombreDocumento ==''"
                 #fubauto chooseLabel="" class="subir-plantilla my-0 mx-auto main-button" mode="basic" name="file" auto="true"
-                accept=".xls,.xlsx,.doc,.docx" (onSelect)="uploadFile($event, dato)" auto="true">
+                [accept]="formatoAccept" (onSelect)="uploadFile($event, dato)" auto="true">
               </p-fileUpload>
               <span class="d-block text-center" *ngIf="col.field=='nombreDocumento' && dato.nombreDocumento !=''">{{dato.nombreDocumento}}</span>
               <p-dropdown *ngIf="col.field=='idioma' && !dato.guardada" class="select-form" [options]="idiomas" [(ngModel)]="dato.idIdioma"

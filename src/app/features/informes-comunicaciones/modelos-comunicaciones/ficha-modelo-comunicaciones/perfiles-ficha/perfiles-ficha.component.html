@@ -10,14 +10,17 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">Configuración Perfiles</label>
+            <label class="mr-auto title-ficha">{{ "informesycomunicaciones.modelosdecomunicacion.ficha.configuracionPerfiles" | translate }}
+            </label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>Nº etiquetas existentes:
-              <span *ngIf="perfilesNoSeleccionados">{{perfilesNoSeleccionados.length}}</span>
+            <label>{{ "informesycomunicaciones.modelosdecomunicacion.ficha.etiquetasExistentes" | translate }}:
+              <span *ngIf="perfilesNoSeleccionados">{{ perfilesNoSeleccionados.length }}
+              </span>
             </label>
-            <label>Nº etiquetas seleccionadas:
-              <span *ngIf="perfilesSeleccionados">{{perfilesSeleccionados.length}}</span>
+            <label>{{ "informesycomunicaciones.modelosdecomunicacion.ficha.etiquetasSeleccionadas" | translate }}:
+              <span *ngIf="perfilesSeleccionados">{{ perfilesSeleccionados.length }}
+              </span>
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
           </div>
@@ -27,7 +30,8 @@
         <div class="img-colegiado">
           <i class="fas fa-users icon-ficha"></i>
         </div>
-        <label class="title-ficha">Configuración Perfiles</label>
+        <label class="title-ficha">{{ "informesycomunicaciones.modelosdecomunicacion.ficha.configuracionPerfiles" | translate }}
+        </label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -35,22 +39,24 @@
     <div *ngIf="openFicha" class=" card-body card-body-ficha">
       <p-pickList [source]="perfilesNoSeleccionados" [target]="perfilesSeleccionados" sourceHeader="Perfiles con acceso" targetHeader="Perfiles sin acceso"
         [responsive]="true" filterBy="label" dragdrop="true" dragdropScope="perfilesSeleccionados" sourceFilterPlaceholder="Buscar perfil"
-        targetFilterPlaceholder="Buscar perfil" [showSourceControls]="false" [showTargetControls]="false" [sourceStyle]="{ 'height': '300px'} "
-        [targetStyle]="{ 'height': '300px'} " disabled>
+        targetFilterPlaceholder="Buscar perfil" [showSourceControls]="false" [showTargetControls]="false" [sourceStyle]="{ height: '300px' }"
+        [targetStyle]="{ height: '300px' }" disabled>
         <ng-template let-item pTemplate="item">
-          <div>{{item.label}}</div>
+          <div>{{ item.label }}</div>
         </ng-template>
       </p-pickList>
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"
+          [disabled]="soloLectura || !editar"></button>
+        <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"
+          [disabled]="soloLectura || !editar"></button>
       </div>
     </div>
   </div>
 </div>
 
-<div *ngIf="progressSpinner " class="overlay-spinner">
+<div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader "></div>
 </div>

@@ -4,7 +4,11 @@
 
 @font-face {
   font-family: abogacia;
-  src:  url("./assets/fonts/Servicios-REDABOGACIA-Regular.ttf") format("truetype");
+  src: url("./assets/fonts/Servicios-REDABOGACIA-Regular.eot");
+  src:  url("./assets/fonts/Servicios-REDABOGACIA-Regular.eot?#iefix")
+  format("embedded-opentype"),
+  url("./assets/fonts/Servicios-REDABOGACIA-Regular.woff") format("woff"),
+  url("./assets/fonts/Servicios-REDABOGACIA-Regular.ttf") format("truetype");
 }
 
 @font-face {

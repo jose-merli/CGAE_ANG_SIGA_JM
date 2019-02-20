@@ -7,5 +7,6 @@ export class DatosGeneralesFicha {
   idInstitucion: string;
   orden: String;
   descripcion: String;
+  porDefecto: String;
   constructor() { }
 }
