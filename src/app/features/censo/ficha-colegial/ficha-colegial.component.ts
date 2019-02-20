@@ -3689,9 +3689,10 @@ export class FichaColegialComponent implements OnInit {
 
   irPlanUniversal() {
     this.arreglarFechas();
-    if (this.generalBody.nif == undefined || this.generalBody.nif == "" || this.generalBody.fechaNacimiento == undefined || this.generalBody.fechaNacimiento == null) {
+    if (this.generalBody.nif == undefined || this.generalBody.nif == "" || this.generalBody.fechaNacimientoDate == undefined || this.generalBody.fechaNacimientoDate == null) {
       this.showFailDetalle("Asegurese de que el NIF y la fecha de nacimiento son correctos");
     } else {
+      this.progressSpinner = true;
       let mutualidadRequest = new DatosSolicitudMutualidadItem();
       mutualidadRequest.numeroidentificador = this.generalBody.nif;
       this.sigaServices
@@ -3732,13 +3733,15 @@ export class FichaColegialComponent implements OnInit {
                       //  this.modoLectura = true;
                       this.showInfo(prueba.valorRespuesta);
                     }
+                    this.progressSpinner = false;
                   },
                   error => {
                     console.log(error);
+                  }, () => {
+                    this.progressSpinner = false;
                   }
                 );
             } else {
-
               this.arreglarFechas();
               this.solicitudEditar = JSON.parse(JSON.stringify(this.generalBody));
               this.solicitudEditar.idPais = "191";
@@ -3771,18 +3774,23 @@ export class FichaColegialComponent implements OnInit {
                   },
                   error => {
                     console.log(error);
+                  }, () => {
+                    this.progressSpinner = false;
                   }
                 );
             }
           }, error => {
             console.log(error);
-          });
+          }, () => {
+            this.progressSpinner = false;
+          }
+        );
     }
   }
 
   irSegAccidentes() {
     this.arreglarFechas();
-    if (this.generalBody.nif == undefined || this.generalBody.nif == "" || this.generalBody.fechaNacimiento == undefined || this.generalBody.fechaNacimiento == null) {
+    if (this.generalBody.nif == undefined || this.generalBody.nif == "" || this.generalBody.fechaNacimientoDate == undefined || this.generalBody.fechaNacimientoDate == null) {
       this.showFailDetalle("Asegurese de que el NIF y la fecha de nacimiento son correctos");
     } else {
       let mutualidadRequest = new DatosSolicitudMutualidadItem();
