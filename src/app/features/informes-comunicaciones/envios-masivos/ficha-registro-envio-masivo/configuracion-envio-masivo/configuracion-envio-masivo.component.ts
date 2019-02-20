@@ -3,6 +3,7 @@ import { ConfigEnviosMasivosItem } from '../../../../../models/ConfiguracionEnvi
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
+import { truncate } from 'fs';
 
 @Component({
   selector: 'app-configuracion-envio-masivo',
@@ -192,9 +193,11 @@ para poder filtrar el dato con o sin estos caracteres*/
   getDatos() {
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
-      this.editar = true;
       this.getPlantillas();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+      if (this.bodyInicial.idEstado != '1' && this.bodyInicial.idEstado != '4') {
+        this.editar = true;
+      }
     } else {
       this.editar = false;
     }

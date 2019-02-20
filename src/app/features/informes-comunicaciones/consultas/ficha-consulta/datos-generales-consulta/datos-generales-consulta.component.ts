@@ -156,8 +156,11 @@ export class DatosGeneralesConsultaComponent implements OnInit {
 
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
-      if (this.institucionActual != '2000' && sessionStorage.getItem("crearNuevaConsulta") != null) {
-        this.generica = 'N';
+      if (sessionStorage.getItem("crearNuevaConsulta") != null) {
+        if (this.institucionActual != '2000')
+          this.generica = 'N';
+        else
+          this.generica = 'S';
       }
       this.habilitarBotones();
     },
@@ -344,7 +347,6 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
     } else {
       this.editar = true;
-      this.generica = "S";
     }
   }
 

@@ -6,5 +6,6 @@ export class DocumentosEnviosMasivosItem {
   pathDocumento: String;
   fechaModificacion: Date;
   usuModificacion: String;
+  idEstado: String;
   constructor() { }
 }

@@ -21,6 +21,7 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
   seleccionadasInicial: any[];
   noSeleccionadasInicial: any[];
   progressSpinner: boolean = false;
+  noEditar: boolean = false;
 
 
   @ViewChild('table') table: DataTable;
@@ -191,6 +192,9 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
       this.getSeleccionadas();
       this.getExtistentes();
+      if (this.body.idEstado != '1' && this.body.idEstado != '4') {
+        this.noEditar = true;
+      }
     }
     this.getSeleccionadas();
   }

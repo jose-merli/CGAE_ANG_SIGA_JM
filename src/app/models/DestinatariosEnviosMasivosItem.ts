@@ -5,6 +5,7 @@ export class DestinatariosEnviosMasivosItem {
   apellidos1: String;
   apellidos2: String;
   nifcif: String;
+  idEstado: String;
 
   constructor() { }
 }
