@@ -206,6 +206,11 @@
                     <ng-template *ngIf="col.field == 'fechaNacimientoDate'" let-dato="rowData" pTemplate="body">
                         <label>{{ dato.fechaNacimientoDate | date: 'dd/MM/yyyy'}}</label>
                     </ng-template>
+
+                    <ng-template *ngIf="col.field == 'noAparecerRedAbogacia'" let-dato="rowData" pTemplate="body">
+                        <label *ngIf="dato.noAparecerRedAbogacia == undefined || dato.noAparecerRedAbogacia == null || dato.noAparecerRedAbogacia == '0'" >No</label>
+                        <label *ngIf="dato.noAparecerRedAbogacia == '1'" >Si</label>
+                    </ng-template>
                 </p-column>
 
                 <ng-template pTemplate="paginatorLeft">

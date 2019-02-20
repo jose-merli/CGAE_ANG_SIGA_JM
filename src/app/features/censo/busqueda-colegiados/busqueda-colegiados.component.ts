@@ -633,6 +633,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       {
         field: "movil",
         header: "censo.datosDireccion.literal.movil"
+      },
+      {
+        field: "noAparecerRedAbogacia",
+        header: "censo.busquedaColegial.lopd"
       }
     ];
 

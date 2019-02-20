@@ -96,6 +96,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   dropdown: Dropdown;
 
   ngOnInit() {
+
     if (sessionStorage.getItem("isLetrado")) {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     }
@@ -143,6 +144,18 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.vieneDeBusqueda = true;
       this.dniDisponible = false;
     }
+
+    if(this.solicitudEditar.apellido2 != undefined){
+      this.solicitudEditar.apellidos = this.solicitudEditar.apellido1 + " " + this.solicitudEditar.apellido2; 
+    }else{
+      this.solicitudEditar.apellidos = this.solicitudEditar.apellido1;
+    }
+
+    // Se añade cambio de que aparezca po defecto el nombre del colegiado como titular de los datos bancarios
+    if (this.solicitudEditar.titular == null || this.solicitudEditar.titular == undefined || this.solicitudEditar.titular == "") {
+      this.solicitudEditar.titular = this.solicitudEditar.nombre + " " + this.solicitudEditar.apellidos;
+    }
+    
     if (this.isValidIBAN()) {
       this.recuperarBicBanco();
       this.checkSolicitudInicio = JSON.parse(JSON.stringify(this.solicitudEditar)
