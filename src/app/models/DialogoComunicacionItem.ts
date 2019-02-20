@@ -1,10 +1,11 @@
 export class DialogoComunicacionesItem {
-  idClaseComunicacion: any[];
+  idClaseComunicacion: String;
   nombre: String;
   idTipoEnvios: String;
   tipoEnvio: String;
   id: String;
   fechaProgramacion: Date;
   idPlantillaEnvios: String;
+  modelos: any [];
   constructor() { }
 }

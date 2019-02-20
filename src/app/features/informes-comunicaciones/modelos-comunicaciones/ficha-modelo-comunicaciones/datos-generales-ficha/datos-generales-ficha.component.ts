@@ -1,10 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
-import { TranslateService } from "./../../../../../commons/translate/translation.service";
-import { SigaServices } from "./../../../../../_services/siga.service";
+import { ControlAccesoDto } from "../../../../../models/ControlAccesoDto";
+import { TranslateService } from "../../../../../commons/translate/translation.service";
+import { SigaServices } from "../../../../../_services/siga.service";
 import { DatosGeneralesFicha } from "../../../../../models/DatosGeneralesFichaItem";
 import { Message, ConfirmationService } from "primeng/components/common/api";
+import { InputMaskModule } from "primeng/inputmask";
+import { isNumber } from "util";
 
 @Component({
   selector: "app-datos-generales-ficha",
@@ -26,6 +28,8 @@ export class DatosGeneralesFichaComponent implements OnInit {
   preseleccionar: any = [];
   visible: any = [];
   institucionActual: any = [];
+  soloLectura: boolean = false;
+  editar: boolean = true;
 
   fichasPosibles = [
     {
@@ -46,28 +50,32 @@ export class DatosGeneralesFichaComponent implements OnInit {
     private router: Router,
     private translateService: TranslateService,
     private sigaServices: SigaServices
-  ) { }
+  ) {}
 
   ngOnInit() {
-
-
     this.preseleccionar = [
-      { label: '', value: '' },
-      { label: 'Sí', value: 'SI' },
-      { label: 'No', value: 'NO' }
+      { label: "", value: "" },
+      { label: "Sí", value: "SI" },
+      { label: "No", value: "NO" }
     ];
 
     this.visible = [
-      { label: '', value: '' },
-      { label: 'Sí', value: 1 },
-      { label: 'No', value: 0 }
+      { label: "", value: "" },
+      { label: "Sí", value: 1 },
+      { label: "No", value: 0 }
     ];
 
-    this.getInstitucion()
+    this.getInstitucion();
 
     this.getClasesComunicaciones();
-    this.getComboColegios();
-    this.getDatos();
+
+    if (
+      sessionStorage.getItem("soloLectura") != null &&
+      sessionStorage.getItem("soloLectura") != undefined &&
+      sessionStorage.getItem("soloLectura") == "true"
+    ) {
+      this.soloLectura = true;
+    }
   }
 
   abreCierraFicha() {
@@ -123,48 +131,131 @@ export class DatosGeneralesFichaComponent implements OnInit {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
       this.bodyInicial = JSON.parse(sessionStorage.getItem("modelosSearch"));
+      this.habilitarBotones();
     } else {
       this.body.visible = 1;
     }
   }
 
   guardar() {
+    if (this.bodyInicial.nombre != this.body.nombre) {
+      this.sigaServices
+        .post("modelos_detalle_datosGeneralesComprobarNom", this.body)
+        .subscribe(
+          data => {
+            let existe = data.body;
 
-    this.sigaServices.post("modelos_detalle_datosGenerales", this.body).subscribe(
-      data => {
-        this.showSuccess("Datos generales guardados correctamente");
-        this.body.idModeloComunicacion = JSON.parse(data.body).data;
-        sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
-        sessionStorage.removeItem("crearNuevoModelo");
-      },
-      err => {
-        console.log(err);
-        this.showFail("Error al guardar los datos generales");
-      }
-    );
+            if (existe == "false") {
+              this.sigaServices
+                .post("modelos_detalle_datosGenerales", this.body)
+                .subscribe(
+                  data => {
+                    this.showSuccess(
+                      this.translateService.instant(
+                        "informesycomunicaciones.modelosdecomunicacion.ficha.correctGuardado"
+                      )
+                    );
+                    this.body.idModeloComunicacion = JSON.parse(data.body).data;
+                    sessionStorage.setItem(
+                      "modelosSearch",
+                      JSON.stringify(this.body)
+                    );
+                    sessionStorage.removeItem("crearNuevoModelo");
+                  },
+                  err => {
+                    console.log(err);
+                    this.showFail(
+                      this.translateService.instant(
+                        "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
+                      )
+                    );
+                  }
+                );
+            } else {
+              this.showFail(
+                this.translateService.instant(
+                  "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.nombreDuplicado"
+                )
+              );
+            }
+          },
+          err => {
+            console.log(err);
+            this.showFail(
+              this.translateService.instant(
+                "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
+              )
+            );
+          }
+        );
+    } else {
+      this.sigaServices
+        .post("modelos_detalle_datosGenerales", this.body)
+        .subscribe(
+          data => {
+            this.showSuccess(
+              this.translateService.instant(
+                "informesycomunicaciones.modelosdecomunicacion.ficha.correctGuardado"
+              )
+            );
+            this.body.idModeloComunicacion = JSON.parse(data.body).data;
+            sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
+            sessionStorage.removeItem("crearNuevoModelo");
+          },
+          err => {
+            console.log(err);
+            this.showFail(
+              this.translateService.instant(
+                "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
+              )
+            );
+          }
+        );
+    }
   }
 
-
   getInstitucion() {
-    this.sigaServices.get('institucionActual').subscribe((n) => {
+    this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
       this.body.idInstitucion = this.institucionActual;
+      this.getComboColegios();
+      this.getDatos();
     });
   }
 
+  habilitarBotones() {
+    if (this.institucionActual != "2000" && this.body.porDefecto == "SI") {
+      this.editar = false;
+    } else {
+      this.editar = true;
+    }
+
+    if (this.editar == false) {
+      this.colegios = [];
+      this.colegios.unshift({ label: "POR DEFECTO", value: "0" });
+      this.sigaServices.notifyRefreshEditar();
+    }
+
+    if (this.body.porDefecto == "SI") {
+      this.body.idInstitucion = "0";
+    }
+  }
 
   getComboColegios() {
     this.sigaServices.get("modelos_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
-        this.colegios.unshift({ label: 'Seleccionar', value: '' });
-        for (let e of this.colegios) {
-          if (e.value == '2000') {
-            e.label = 'POR DEFECTO';
+        if (this.institucionActual != "2000") {
+          for (let e of this.colegios) {
+            if (e.value == "2000") {
+              let x = this.colegios.indexOf(e);
+              this.colegios.splice(x, 1);
+            }
           }
-
+        } else {
+          this.colegios.unshift({ label: "POR DEFECTO", value: "0" });
         }
-
+        this.colegios.unshift({ label: "", value: "" });
       },
       err => {
         console.log(err);
@@ -176,7 +267,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
     this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
       data => {
         this.clasesComunicaciones = data.combooItems;
-        this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
+        this.clasesComunicaciones.unshift({ label: "", value: "" });
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.clasesComunicaciones.map(e => {
@@ -221,5 +312,15 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   clear() {
     this.msgs = [];
+  }
+
+  editarCompleto(event, dato) {
+    if (isNumber(dato)) {
+      if (dato != null && dato != undefined && (dato < 0 || dato > 999)) {
+        event.currentTarget.value = "";
+      }
+    } else {
+      event.currentTarget.value = "";
+    }
   }
 }

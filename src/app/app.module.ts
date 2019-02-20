@@ -326,7 +326,7 @@ import { ConfiguracionEnvioMasivoComponent } from './features/informes-comunicac
 import { ProgramacionEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/programacion-envio-masivo/programacion-envio-masivo.component'
 import { DocumentosEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/documentos-envio-masivo/documentos-envio-masivo.component'
 import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/destinatarios-envio-masivo/destinatarios-envio-masivo.component'
-
+import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component'
 
 @NgModule({
 	declarations: [
@@ -602,6 +602,7 @@ import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicac
 		DatosGeneralesPlantillaComponent,
 		ConsultasPlantillasComponent,
 		PerfilesFichaComponent,
+		DialogoComunicacionesComponent,
 
 		AgendaComponent,
 		FichaCalendarioComponent,

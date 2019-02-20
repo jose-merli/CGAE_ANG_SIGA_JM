@@ -14,10 +14,10 @@
             <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>Módulo:
+            <label>{{'administracion.parametrosGenerales.literal.modulo' | translate}}:
               <span>{{body.modulo}}</span>
             </label>
-            <label>Nombre:
+            <label>{{'administracion.parametrosGenerales.literal.nombre' | translate}}:
               <span>{{body.nombre}}</span>
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
@@ -38,27 +38,27 @@
         <div class="col-lg-8 col-md-8">
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
-              <label>Módulo *</label>
-              <p-dropdown [options]="modulos" [(ngModel)]="body.idModulo" class="select-form"></p-dropdown>
+              <label>{{'administracion.parametrosGenerales.literal.modulo' | translate}} *</label>
+              <p-dropdown [options]="modulos" [(ngModel)]="body.idModulo" class="select-form" (onChange)="cargaComboClaseCom($event)"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>Nombre *</label>
+              <label>{{'administracion.parametrosGenerales.literal.nombre' | translate}} *</label>
               <input type="text" class="form-control" [(ngModel)]="body.nombre" pInputText>
             </div>
           </div>
           <div class="form-row d-flex align-items-start">
             <div class="form-group col-lg-4 col-md-4">
-              <label>Objetivo *</label>
+              <label>{{'informesycomunicaciones.consultas.objetivo' | translate}} *</label>
               <p-dropdown (onChange)="onChangeObjetivo()" [options]="objetivos" [(ngModel)]="body.idObjetivo" class="select-form"></p-dropdown>
             </div>
             <div class="form-group col-lg-2 col-md-2">
-              <label class="d-block">Genérica</label>
+              <label class="d-block">{{'informesycomunicaciones.consultas.generica' | translate}}</label>
               <p-radioButton [disabled]="institucionActual != 2000 " class="mr-2 mt-auto" name="groupname" value="S" [(ngModel)]="generica"
                 label="Sí"></p-radioButton>
               <p-radioButton [disabled]="institucionActual != 2000 " name="groupname" value="N" [(ngModel)]="generica" label="No"></p-radioButton>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>Clases de comunicaciones *</label>
+              <label>Clases de comunicaciones</label>
               <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion"
                 class="select-form"></p-dropdown>
             </div>
@@ -67,7 +67,7 @@
         <div class="col-lg-4 col-md-4 pl-0">
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
-              <label>Descripción *</label>
+              <label>{{'general.description' | translate}} *</label>
               <textarea pInputTextarea style="height:90px" autoResize="autoResize" [(ngModel)]="body.descripcion"></textarea>
             </div>
           </div>
@@ -76,8 +76,10 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button [disabled]="!editar || isButtonDisabled()" (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button [disabled]="!editar || isButtonDisabled()" (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

@@ -1,16 +1,17 @@
 <div class="consultas-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{'menu.informesYcomunicaciones' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.informesYcomunicaciones.consultas' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>Ficha consultas
+    <p>
+      {{ "menu.informesYcomunicaciones" | translate }}
+      <i class="pl-1 fa fa-angle-right"></i>{{ "menu.informesYcomunicaciones.consultas" | translate }}
+      <i class="pl-1 fa fa-angle-right"></i>{{ "informesycomunicaciones.consultas.ficha.fichaConsulta" | translate }}
     </p>
   </div>
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
     <app-datos-generales-consulta *ngSwitchCase="'generales'"></app-datos-generales-consulta>
+    <app-consulta *ngSwitchCase="'consultas'"></app-consulta>
     <app-modelos-comunicaciones-consulta *ngSwitchCase="'modelos'"></app-modelos-comunicaciones-consulta>
     <app-plantillas-envios-consultas *ngSwitchCase="'plantillas'"></app-plantillas-envios-consultas>
-    <app-consulta *ngSwitchCase="'consultas'"></app-consulta>
   </div>
 </div>
 <div class="mt-3 text-right main-button ">

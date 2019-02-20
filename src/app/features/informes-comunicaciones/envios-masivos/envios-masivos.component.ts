@@ -1,13 +1,19 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, HostListener } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+  HostListener
+} from "@angular/core";
 import { DataTable } from "primeng/datatable";
-import { EnviosMasivosItem } from '../../../models/EnviosMasivosItem';
-import { EnviosMasivosSearchItem } from '../../../models/EnviosMasivosSearchItem';
-import { EnviosMasivosObject } from '../../../models/EnviosMasivosObject';
-import { ProgramarItem } from '../../../models/ProgramarItem';
+import { EnviosMasivosItem } from "../../../models/EnviosMasivosItem";
+import { EnviosMasivosSearchItem } from "../../../models/EnviosMasivosSearchItem";
+import { EnviosMasivosObject } from "../../../models/EnviosMasivosObject";
+import { ProgramarItem } from "../../../models/ProgramarItem";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { SigaServices } from "./../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
-import { Router } from '@angular/router';
+import { Router } from "@angular/router";
 import { esCalendar } from "../../../utils/calendar";
 
 export enum KEY_CODE {
@@ -15,15 +21,14 @@ export enum KEY_CODE {
 }
 
 @Component({
-  selector: 'app-envios-masivos',
-  templateUrl: './envios-masivos.component.html',
-  styleUrls: ['./envios-masivos.component.scss'],
+  selector: "app-envios-masivos",
+  templateUrl: "./envios-masivos.component.html",
+  styleUrls: ["./envios-masivos.component.scss"],
   host: {
     "(document:keypress)": "onKeyPress($event)"
-  },
+  }
 })
 export class EnviosMasivosComponent implements OnInit {
-
   body: EnviosMasivosItem = new EnviosMasivosItem();
   datos: any[];
   cols: any[];
@@ -46,35 +51,39 @@ export class EnviosMasivosComponent implements OnInit {
   programarArray: any[];
   bodySearch: EnviosMasivosSearchItem = new EnviosMasivosSearchItem();
   eliminarArray: any[];
+  enviosArray: any[];
   currentDate: Date = new Date();
   estado: any;
   loaderEtiquetas: boolean = false;
   fichaBusqueda: boolean = false;
 
-  @ViewChild('table') table: DataTable;
-  selectedDatos
+  @ViewChild("table") table: DataTable;
+  selectedDatos;
 
   constructor(
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
-    private router: Router) { }
+    private router: Router
+  ) {}
 
   ngOnInit() {
-
-    sessionStorage.removeItem("crearNuevoEnvio")
+    sessionStorage.removeItem("crearNuevoEnvio");
     if (sessionStorage.getItem("ComunicacionDuplicada") != null) {
       this.buscar();
       sessionStorage.removeItem("ComunicacionDuplicada");
     }
     if (sessionStorage.getItem("filtros") != null) {
       this.bodySearch = JSON.parse(sessionStorage.getItem("filtros"));
-      this.bodySearch.fechaCreacion = this.bodySearch.fechaCreacion ? new Date(this.bodySearch.fechaCreacion) : null;
-      this.bodySearch.fechaProgramacion = this.bodySearch.fechaProgramacion ? new Date(this.bodySearch.fechaProgramacion) : null;
+      this.bodySearch.fechaCreacion = this.bodySearch.fechaCreacion
+        ? new Date(this.bodySearch.fechaCreacion)
+        : null;
+      this.bodySearch.fechaProgramacion = this.bodySearch.fechaProgramacion
+        ? new Date(this.bodySearch.fechaProgramacion)
+        : null;
       this.buscar();
     }
-
 
     this.getTipoEnvios();
     this.getEstadosEnvios();
@@ -82,11 +91,23 @@ export class EnviosMasivosComponent implements OnInit {
     this.selectedItem = 10;
 
     this.cols = [
-      { field: 'descripcion', header: 'Descripción' },
-      { field: 'fechaCreacion', header: 'Fecha creación' },
-      { field: 'fechaProgramada', header: 'Fecha programación' },
-      { field: 'tipoEnvio', header: 'Forma envío' },
-      { field: 'estadoEnvio', header: 'Estado' }
+      {
+        field: "descripcion",
+        header: "administracion.parametrosGenerales.literal.descripcion"
+      },
+      {
+        field: "fechaCreacion",
+        header: "informesycomunicaciones.enviosMasivos.fechaCreacion"
+      },
+      {
+        field: "fechaProgramada",
+        header: "enviosMasivos.literal.fechaProgramacion"
+      },
+      {
+        field: "tipoEnvio",
+        header: "informesycomunicaciones.enviosMasivos.formaEnvio"
+      },
+      { field: "estadoEnvio", header: "enviosMasivos.literal.estado" }
     ];
 
     this.rowsPerPage = [
@@ -107,14 +128,13 @@ export class EnviosMasivosComponent implements OnInit {
         value: 40
       }
     ];
-
   }
 
   getTipoEnvios() {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
         this.tiposEnvio = data.combooItems;
-        this.tiposEnvio.unshift({ label: 'Seleccionar', value: '' });
+        this.tiposEnvio.unshift({ label: "Seleccionar", value: "" });
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.tiposEnvio.map(e => {
@@ -142,8 +162,8 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices.get("enviosMasivos_estado").subscribe(
       data => {
         this.estados = data.combooItems;
-        this.estados.unshift({ label: 'Seleccionar', value: '' });
-        console.log(this.estados)
+        this.estados.unshift({ label: "Seleccionar", value: "" });
+        console.log(this.estados);
       },
       err => {
         console.log(err);
@@ -209,11 +229,14 @@ para poder filtrar el dato con o sin estos caracteres*/
     sessionStorage.removeItem("filtros");
     if (sessionStorage.getItem("ComunicacionDuplicada") != null) {
       this.getResultadosComunicacionDuplicada();
-      this.showSuccess('Se ha duplicado el envío correctamente');
+      this.showSuccess(
+        this.translateService.instant(
+          "informesycomunicaciones.modelosdecomunicacion.correctDuplicado"
+        )
+      );
     } else {
       this.getResultados();
     }
-
   }
 
   getResultados() {
@@ -233,7 +256,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           console.log(err);
           this.progressSpinner = false;
         },
-        () => { }
+        () => {}
       );
   }
   getResultadosComunicacionDuplicada() {
@@ -256,7 +279,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             console.log(err);
             this.progressSpinner = false;
           },
-          () => { }
+          () => {}
         );
     }
   }
@@ -268,13 +291,17 @@ para poder filtrar el dato con o sin estos caracteres*/
     return true;
   }
 
-
-
   cancelar(dato) {
-
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
-      message: '¿Está seguro de cancelar los' + dato.length + 'envíos seleccionados',
+      message:
+        this.translateService.instant(
+          "informesycomunicaciones.consultas.mensajeSeguroCancelar"
+        ) +
+        dato.length +
+        this.translateService.instant(
+          "informesycomunicaciones.consultas.enviosSeleccionados"
+        ),
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarCancelar(dato);
@@ -293,6 +320,27 @@ para poder filtrar el dato con o sin estos caracteres*/
     });
   }
 
+  enviar(dato) {
+    this.enviosArray = [];
+
+    dato.forEach(element => {
+      let objEnviar = {
+        idEnvio: element.idEnvio
+      };
+      this.enviosArray.push(objEnviar);
+    });
+
+    this.sigaServices.post("enviosMasivos_enviar", this.enviosArray).subscribe(
+      data => {
+        this.showSuccess("Se ha lanzado el envio correctamente");
+      },
+      err => {
+        this.showFail("Error al procesar el envio");
+        console.log(err);
+      },
+      () => {}
+    );
+  }
 
   confirmarCancelar(dato) {
     this.eliminarArray = [];
@@ -304,39 +352,56 @@ para poder filtrar el dato con o sin estos caracteres*/
       };
       this.eliminarArray.push(objEliminar);
     });
-    this.sigaServices.post("enviosMasivos_cancelar", this.eliminarArray).subscribe(
-      data => {
-        this.showSuccess('Se ha cancelado el envío correctamente');
-      },
-      err => {
-        this.showFail('Error al cancelar el envío');
-        console.log(err);
-      },
-      () => {
-        this.buscar();
-        this.table.reset();
-      }
-    );
+    this.sigaServices
+      .post("enviosMasivos_cancelar", this.eliminarArray)
+      .subscribe(
+        data => {
+          this.showSuccess(
+            this.translateService.instant(
+              "informesycomunicaciones.enviosMasivos.cancelCorrect"
+            )
+          );
+        },
+        err => {
+          this.showFail(
+            this.translateService.instant(
+              "informesycomunicaciones.comunicaciones.mensaje.errorCancelarEnvio"
+            )
+          );
+          console.log(err);
+        },
+        () => {
+          this.buscar();
+          this.table.reset();
+        }
+      );
   }
 
   //búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
-    if (event.keyCode === KEY_CODE.ENTER && this.bodySearch.fechaCreacion != null) {
+    if (
+      event.keyCode === KEY_CODE.ENTER &&
+      this.bodySearch.fechaCreacion != null
+    ) {
       this.buscar();
     }
   }
 
   navigateTo(dato) {
     this.estado = dato[0].idEstado;
-    console.log(dato)
+    console.log(dato);
     if (!this.selectMultiple && this.estado == 4) {
       // this.body.estado = dato[0].estado;
-      this.router.navigate(['/fichaRegistroEnvioMasivo']);
+      this.router.navigate(["/fichaRegistroEnvioMasivo"]);
       sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(dato[0]));
       sessionStorage.setItem("filtros", JSON.stringify(this.bodySearch));
     } else if (!this.selectMultiple && this.estado != 4) {
-      this.showInfo('El envío está en proceso, no puede editarse')
+      this.showInfo(
+        this.translateService.instant(
+          "informesycomunicaciones.enviosMasivos.envioProcess"
+        )
+      );
       this.selectedDatos = [];
     }
   }
@@ -352,15 +417,22 @@ para poder filtrar el dato con o sin estos caracteres*/
   programar(dato) {
     this.showProgramar = false;
     dato.forEach(element => {
-      element.fechaProgramada = new Date(this.bodyProgramar.fechaProgramada)
+      element.fechaProgramada = new Date(this.bodyProgramar.fechaProgramada);
     });
     this.sigaServices.post("enviosMasivos_programar", dato).subscribe(
-
       data => {
-        this.showSuccess('Se ha programado el envío correctamente');
+        this.showSuccess(
+          this.translateService.instant(
+            "informesycomunicaciones.enviosMasivos.programCorrect"
+          )
+        );
       },
       err => {
-        this.showFail('Error al programar el envío');
+        this.showFail(
+          this.translateService.instant(
+            "informesycomunicaciones.modelosdecomunicacion.errorEnvio"
+          )
+        );
         console.log(err);
       },
       () => {
@@ -371,8 +443,8 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   addEnvio() {
-    this.router.navigate(['/fichaRegistroEnvioMasivo']);
-    sessionStorage.removeItem("enviosMasivosSearch")
+    this.router.navigate(["/fichaRegistroEnvioMasivo"]);
+    sessionStorage.removeItem("enviosMasivosSearch");
     sessionStorage.setItem("crearNuevoEnvio", JSON.stringify("true"));
   }
 
@@ -382,11 +454,10 @@ para poder filtrar el dato con o sin estos caracteres*/
   isCargado(key) {
     if (key != this.translateService.instant(key)) {
       this.loaderEtiquetas = false;
-      return key
+      return key;
     } else {
       this.loaderEtiquetas = true;
     }
-
   }
 
   limpiar() {
@@ -397,8 +468,4 @@ para poder filtrar el dato con o sin estos caracteres*/
   abreCierraFicha() {
     this.fichaBusqueda = !this.fichaBusqueda;
   }
-
-
 }
-
-

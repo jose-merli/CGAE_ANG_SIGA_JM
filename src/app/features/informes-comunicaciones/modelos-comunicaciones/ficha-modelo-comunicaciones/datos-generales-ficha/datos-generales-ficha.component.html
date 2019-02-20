@@ -15,10 +15,10 @@
             </label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>Clase comunicación:
+            <label>{{ "informesycomunicaciones.modelosdecomunicacion.ficha.claseComunicacion" | translate }}:
               <span>{{ body.claseComunicacion }}</span>
             </label>
-            <label>Nombre:
+            <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}:
               <span>{{ body.nombre }}</span>
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
@@ -40,44 +40,49 @@
         <div class="col-lg-9 col-md-9">
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
-              <label>Clase comunicaciones *</label>
+              <label>{{ "informesycomunicaciones.modelosdecomunicacion.clasecomunicaciones" | translate }} *
+              </label>
               <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion"
-                class="select-form"></p-dropdown>
+                class="select-form" [disabled]='soloLectura || isEdicion'></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }} *
               </label>
-              <input type="text" class="form-control" [(ngModel)]="body.nombre" pInputText />
+              <input type="text" class="form-control" [(ngModel)]="body.nombre" pInputText [disabled]='soloLectura' />
             </div>
           </div>
           <div class="form-row d-flex align-items-end">
             <div class="form-group col-lg-6 col-md-6">
-              <label>Colegio *</label>
-              <p-dropdown [options]="colegios" [(ngModel)]="body.idInstitucion" class="select-form"></p-dropdown>
+              <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }} *</label>
+              <p-dropdown *ngIf="editar" [options]="colegios" [(ngModel)]="body.idInstitucion" class="select-form" [disabled]='soloLectura'></p-dropdown>
+              <input *ngIf="!editar" type="text" class="form-control" value="POR DEFECTO" pInputText [disabled]='true' />
             </div>
             <div class="form-group col-lg-1 col-md-1">
-              <label>Orden *</label>
-              <input type="text" class="form-control" [(ngModel)]="body.orden" pInputText />
+              <label>{{ "administracion.informes.literal.orden" | translate }} *
+              </label>
+              <input type="number" class="form-control" min="0" max="999" [(ngModel)]="body.orden" pInputText [disabled]='soloLectura'
+                (input)='editarCompleto($event,body.orden)' />
             </div>
             <div class="form-group col-lg-2 col-md-3">
-              <label class="d-block">Preseleccionado</label>
-              <p-dropdown [options]="preseleccionar" [(ngModel)]="body.preseleccionar" class="select-form"></p-dropdown>
+              <label class="d-block">{{ "administracion.informes.literal.preseleccionado" | translate }}
+              </label>
+              <p-dropdown [options]="preseleccionar" [(ngModel)]="body.preseleccionar" class="select-form" [disabled]='soloLectura'></p-dropdown>
               <!-- <p-radioButton class="mr-2" name="groupname" value="SI" [(ngModel)]="body.preseleccionar" label="Sí"></p-radioButton>
               <p-radioButton name="groupname" value="NO" [(ngModel)]="body.preseleccionar" label="No"></p-radioButton> -->
             </div>
 
             <div class="form-group col-lg-2 col-md-2">
-              <label class="d-block">Visible</label>
-              <p-dropdown [options]="visible" [(ngModel)]="body.visible" class="select-form"></p-dropdown>
+              <label class="d-block">{{ "administracion.informes.literal.visible" | translate }}
+              </label>
+              <p-dropdown [options]="visible" [(ngModel)]="body.visible" class="select-form" [disabled]='soloLectura'></p-dropdown>
             </div>
-
           </div>
         </div>
         <div class="col-lg-3 col-md-3">
           <div class="form-row d-flex align-items-start">
             <div class="form-group col-lg-12 col-md-12">
-              <label>Descripción</label>
-              <textarea style="height:95px" autoResize="autoResize" [(ngModel)]="body.descripcion" pInputTextarea></textarea>
+              <label>{{ "general.description" | translate }}</label>
+              <textarea style="height:95px" autoResize="autoResize" [(ngModel)]="body.descripcion" pInputTextarea [disabled]='soloLectura'></textarea>
             </div>
           </div>
         </div>
@@ -85,8 +90,10 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
-        <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"
+          [disabled]='soloLectura || !editar'></button>
+        <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"
+          [disabled]='soloLectura || !editar'></button>
       </div>
     </div>
   </div>
