@@ -27,6 +27,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   file: File = undefined;
   eliminarArray: any[];
   progressSpinner: boolean = false;
+  noEditar: boolean = false;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -94,6 +95,9 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
+      if (this.body.idEstado != '1' && this.body.idEstado != '4') {
+        this.noEditar = true;
+      }
       this.getDocumentos();
     }
 
