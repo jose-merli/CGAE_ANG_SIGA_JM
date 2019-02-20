@@ -1079,20 +1079,20 @@ export class FichaColegialComponent implements OnInit {
   }
 
   closeDialogConfirmation(item) {
-    this.checked = false;
+    // this.checked = false;
 
-    if (this.isCrear) {
-      // Borramos el residuo de la etiqueta
-      this.autoComplete.multiInputEL.nativeElement.value = null;
-    } else {
-      // Borramos el residuo de la etiqueta vieja
-      this.deleteLabel(item);
-    }
+    // if (this.isCrear) {
+    //   // Borramos el residuo de la etiqueta
+    //   this.autoComplete.multiInputEL.nativeElement.value = null;
+    // } else {
+    //   // Borramos el residuo de la etiqueta vieja
+    //   this.deleteLabel(item);
+    // }
 
-    // Borramos las fechas
-    this.item = new ComboEtiquetasItem();
-    this.item.fechaInicio = null;
-    this.item.fechaBaja = null;
+    // // Borramos las fechas
+    // this.item = new ComboEtiquetasItem();
+    // this.item.fechaInicio = null;
+    // this.item.fechaBaja = null;
   }
 
   validateFields() {
@@ -1111,50 +1111,50 @@ export class FichaColegialComponent implements OnInit {
   }
 
   aceptDialogConfirmation(item) {
-    this.checked = false;
+    // this.checked = false;
 
-    if (this.isCrear) {
-      let newItem = new ComboEtiquetasItem();
-      newItem = item;
+    // if (this.isCrear) {
+    //   let newItem = new ComboEtiquetasItem();
+    //   newItem = item;
 
-      newItem.fechaInicio = this.datepipe.transform(
-        newItem.fechaInicio,
-        "dd/MM/yyyy"
-      );
-      newItem.fechaBaja = this.datepipe.transform(
-        newItem.fechaBaja,
-        "dd/MM/yyyy"
-      );
+    //   newItem.fechaInicio = this.datepipe.transform(
+    //     newItem.fechaInicio,
+    //     "dd/MM/yyyy"
+    //   );
+    //   newItem.fechaBaja = this.datepipe.transform(
+    //     newItem.fechaBaja,
+    //     "dd/MM/yyyy"
+    //   );
 
-      this.createItems.push(newItem);
-      this.activacionGuardarGenerales();
+    //   this.createItems.push(newItem);
+    //   this.activacionGuardarGenerales();
 
-      this.updateItems.set(newItem.label, newItem);
+    //   this.updateItems.set(newItem.label, newItem);
 
-      if (this.isNotContainsEtiq(newItem)) {
-        this.etiquetasPersonaJuridicaSelecionados.push(newItem);
-      }
-      this.autoComplete.multiInputEL.nativeElement.value = null;
-    } else {
-      let oldItem = new ComboEtiquetasItem();
-      oldItem = item;
-      oldItem.fechaInicio = this.datepipe.transform(
-        oldItem.fechaInicio,
-        "dd/MM/yyyy"
-      );
-      oldItem.fechaBaja = this.datepipe.transform(
-        oldItem.fechaBaja,
-        "dd/MM/yyyy"
-      );
+    //   if (this.isNotContainsEtiq(newItem)) {
+    //     this.etiquetasPersonaJuridicaSelecionados.push(newItem);
+    //   }
+    //   this.autoComplete.multiInputEL.nativeElement.value = null;
+    // } else {
+    //   let oldItem = new ComboEtiquetasItem();
+    //   oldItem = item;
+    //   oldItem.fechaInicio = this.datepipe.transform(
+    //     oldItem.fechaInicio,
+    //     "dd/MM/yyyy"
+    //   );
+    //   oldItem.fechaBaja = this.datepipe.transform(
+    //     oldItem.fechaBaja,
+    //     "dd/MM/yyyy"
+    //   );
 
-      this.createItems.push(oldItem);
+    //   this.createItems.push(oldItem);
 
-      this.updateItems.set(oldItem.idGrupo, oldItem);
-    }
+    //   this.updateItems.set(oldItem.idGrupo, oldItem);
+    // }
 
-    // Dehabilitamos el guardar para los próximos
-    this.isTrue = false;
-    this.activacionGuardarGenerales();
+    // // Dehabilitamos el guardar para los próximos
+    // this.isTrue = false;
+    // this.activacionGuardarGenerales();
   }
 
   validateFinalDate(): boolean {
@@ -1799,27 +1799,9 @@ export class FichaColegialComponent implements OnInit {
   // Evento para detectar la etiqueta de nueva creación
   onKeyUp(event) {
     if (event.keyCode == 13) {
-      if (this.control) {
-        this.checked = true;
-        this.dialog.closable = false;
-
-        // Variable controladora
-        this.isCrear = true;
-
-        // Variable controlador del deshabilitar fechas
-        //  this.calendar.readonlyInput = false;
-        this.historico = false;
-
-        // Rellenamos el objeto nuevo
-        this.item = new ComboEtiquetasItem();
-        this.item.idGrupo = "";
-        this.item.label = event.srcElement.value;
-
-        this.mensaje = this.translateService.instant(
-          "censo.etiquetas.literal.rango"
-        );
-      }
+      event.currentTarget.value = "";
     }
+    
   }
 
   activarPaginacionRegTel() {
@@ -1914,23 +1896,21 @@ export class FichaColegialComponent implements OnInit {
     this.activacionGuardarGenerales();
     if (event) {
       if (this.isNotContains(event)) {
-        this.checked = true;
-        this.dialog.closable = false;
 
         // Variable controladora
         this.isCrear = false;
-
-        // Variable controlador del deshabilitar fechas
-        this.historico = false;
 
         // Rellenamos los valores de la etiqueta
         this.item = new ComboEtiquetasItem();
         this.item.idGrupo = event.value;
         this.item.label = event.label;
 
-        this.mensaje = this.translateService.instant(
-          "censo.etiquetas.literal.rango"
-        );
+        // this.mensaje = this.translateService.instant(
+        //   "censo.etiquetas.literal.rango"
+        // );
+        this.createItems.push(this.item);
+        this.updateItems.set(this.item.idGrupo, this.item);
+
       } else {
         // Si existe en el array, lo borramos para que no queden registros duplicados
         for (
@@ -1976,24 +1956,6 @@ export class FichaColegialComponent implements OnInit {
         this.updateItems.delete(event.value);
         this.showGuardar = true;
       }
-    }
-  }
-
-  onClick(event, value) {
-    this.activacionGuardarGenerales();
-    if (event) {
-      this.checked = true;
-      this.dialog.closable = true;
-
-      this.item = new ComboEtiquetasItem();
-      this.item.fechaInicio = value.fechaInicio;
-      this.item.fechaBaja = value.fechaBaja;
-
-      this.mensaje = "Histórico de fechas";
-
-      this.historico = true;
-
-      // this.calendar.readonlyInput = true;
     }
   }
 
@@ -2162,18 +2124,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   onBlur(event) {
-    if (event.target.value != "" && !this.autoComplete.panelVisible) {
-      this.historico = false;
-      this.checked = true;
-      this.isCrear = true;
-      this.item = new ComboEtiquetasItem();
-      this.item.idGrupo = "";
-      this.item.label = event.srcElement.value;
-
-      this.mensaje = this.translateService.instant(
-        "censo.etiquetas.literal.rango"
-      );
-    }
+    event.currentTarget.value = "";
   }
 
   pasarFechas() {

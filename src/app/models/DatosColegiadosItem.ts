@@ -57,5 +57,7 @@ export class DatosColegiadosItem {
   subTipoCV1: string;
   subTipoCV2: string;
 
+  noAparecerRedAbogacia: string;
+
   constructor() {}
 }

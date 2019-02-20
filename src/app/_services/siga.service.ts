@@ -309,7 +309,8 @@ export class SigaServices {
     busquedaInscripciones_searchPersona: "busquedaInscripciones/searchPersona",
     busquedaInscripciones_isAdministrador:
       "busquedaInscripciones/isAdministrador",
-    busquedaInscripciones_selectInscripcionByPrimaryKey: "busquedaInscripciones/selectInscripcionByPrimaryKey",
+    busquedaInscripciones_selectInscripcionByPrimaryKey:
+      "busquedaInscripciones/selectInscripcionByPrimaryKey",
 
     fichaInscripcion_searchCourse: "fichaInscripcion/searchCourse",
     fichaInscripcion_saveInscripcion: "fichaInscripcion/saveInscripcion",
@@ -354,7 +355,6 @@ export class SigaServices {
     fichaEventos_saveFormadorEvent: "fichaEventos/saveFormadorEvent",
     fichaEventos_updateFormadorEvent: "fichaEventos/updateFormadorEvent",
     fichaEventos_getTrainersSession: "fichaEventos/getTrainersSession",
-
 
     datosNotificaciones_getTypeNotifications:
       "datosNotificaciones/getTypeNotifications",
@@ -563,99 +563,117 @@ export class SigaServices {
     usuario_cambioIdioma: "usuario/cambioIdioma",
     fichaColegialOtrasColegiaciones_getLabelColegios:
       "fichaColegialOtrasColegiaciones/getLabelColegios",
-    enviosMasivos: 'enviosMasivos/enviosMasivos',
-    enviosMasivos_search: 'enviosMasivos/search',
-    enviosMasivos_estado: 'enviosMasivos/estadoEnvios',
-    enviosMasivos_tipo: 'enviosMasivos/tipoEnvios',
-    enviosMasivos_programar: 'enviosMasivos/programarEnvio',
-    enviosMasivos_cancelar: 'enviosMasivos/cancelarEnvio',
-    enviosMasivos_plantillas: 'enviosMasivos/detalle/plantillas',
-    enviosMasivos_guardarConf: 'enviosMasivos/detalle/guardarConfiguracion',
-    enviosMasivos_documentos: 'enviosMasivos/detalle/documentosEnvio',
-    enviosMasivos_duplicar: 'enviosMasivos/detalle/duplicarEnvio ',
-    enviosMasivos_etiquetas: 'enviosMasivos/detalle/etiquetas',
-    enviosMasivos_etiquetasEnvio: 'enviosMasivos/detalle/etiquetasEnvio ',
-    enviosMasivos_guardarEtiquetas: 'enviosMasivos/detalle/guardarEtiquetas',
-    enviosMasivos_subirDocumento: 'enviosMasivos/detalle/subirDocumento',
-    consultas_claseComunicaciones: 'consultas/claseComunicacion',
-    consultas_claseComunicacionesByModulo: 'consultas/claseComunicacionByModulo',
-    enviosMasivos_guardarDocumento: 'enviosMasivos/detalle/guardarDocumentoEnvio',
-    enviosMasivos_borrarDocumento: 'enviosMasivos/detalle/borrarDocumentoEnvio',
-    enviosMasivos_descargarDocumento: 'enviosMasivos/detalle/descargarDocumento',
-    consultas_comboObjetivos: 'consultas/objetivo',
-    consultas_comboModulos: 'consultas/modulo',
-    comunicaciones_claseComunicaciones: 'comunicaciones/clasesComunicacion',
-    comunicaciones_modelosComunicacion: 'comunicaciones/modelosComunicacion',
-    comunicaciones_search: 'comunicaciones/search',
-    comunicaciones_guardarConf: 'comunicaciones/detalle/configuracion',
-    comunicaciones_destinatarios: 'comunicaciones/detalle/destinatarios',
-    consultas_search: 'consultas/search',
-    consultas_borrar: 'consultas/borrarConsulta',
-    consultas_listadoPlantillas: 'consultas/plantillasconsulta',
-    consultas_guardarDatosGenerales: 'consultas/confGeneral',
-    consultas_guardarConsulta: 'consultas/confConsulta',
-    consultas_listadoModelos: 'consultas/modelosconsulta',
-    consultas_ejecutarConsulta: 'consultas/ejecutarConsulta',
-    consultas_duplicar: 'consultas/duplicarConsulta',
-    plantillasEnvio_search: 'plantillasEnvio/plantillasEnvioSearch',
-    plantillasEnvio_guardarDatosGenerales: 'plantillasEnvio/datosGenerales',
-    modelos_search: 'modelos/search',
-    modelos_search_historico: 'modelos/search/historico',
-    modelos_duplicar: 'modelos/duplicar',
-    modelos_borrar: 'modelos/borrar',
-    modelos_detalle_datosGenerales: 'modelos/detalle/datosGenerales',
-    modelos_detalle_perfiles: 'modelos/detalle/perfiles',
-    modelos_detalle_perfilesModelo: 'modelos/detalle/perfilesModelo',
-    modelos_detalle_guardarPerfiles: 'modelos/detalle/guardarPerfiles',
-    modelos_detalle_informes: 'modelos/detalle/informes',
-    modelos_detalle_informes_borrar: 'modelos/detalle/informes/borrar',
-    modelos_detalle_plantillasEnvio: 'modelos/detalle/plantillasEnvio',
-    modelos_detalle_plantillasHist: 'modelos/detalle/plantillasEnvioHist',
-    modelos_detalle_borrarPlantilla: 'modelos/detalle/borrarPlantillaEnvio',
-    modelos_detalle_guardarPlantilla: 'modelos/detalle/guardarPlantillaEnvio',
-    modelos_colegio: 'modelos/colegiosModelo',
-    modelos_detalle_plantillasComunicacion: 'modelos/detalle/plantillasComunicacion',
-    modelos_detalle_tipoEnvioPlantilla: 'modelos/detalle/tipoEnvioPlantilla',
+    enviosMasivos: "enviosMasivos/enviosMasivos",
+    enviosMasivos_enviar: "enviosMasivos/enviar",
+    enviosMasivos_search: "enviosMasivos/search",
+    enviosMasivos_estado: "enviosMasivos/estadoEnvios",
+    enviosMasivos_tipo: "enviosMasivos/tipoEnvios",
+    enviosMasivos_programar: "enviosMasivos/programarEnvio",
+    enviosMasivos_cancelar: "enviosMasivos/cancelarEnvio",
+    enviosMasivos_plantillas: "enviosMasivos/detalle/plantillas",
+    enviosMasivos_guardarConf: "enviosMasivos/detalle/guardarConfiguracion",
+    enviosMasivos_documentos: "enviosMasivos/detalle/documentosEnvio",
+    enviosMasivos_duplicar: "enviosMasivos/detalle/duplicarEnvio ",
+    enviosMasivos_etiquetas: "enviosMasivos/detalle/etiquetas",
+    enviosMasivos_etiquetasEnvio: "enviosMasivos/detalle/etiquetasEnvio ",
+    enviosMasivos_guardarEtiquetas: "enviosMasivos/detalle/guardarEtiquetas",
+    enviosMasivos_subirDocumento: "enviosMasivos/detalle/subirDocumento",
+    consultas_claseComunicaciones: "consultas/claseComunicacion",
+    consultas_claseComunicacionesByModulo:
+      "consultas/claseComunicacionByModulo",
+    enviosMasivos_guardarDocumento:
+      "enviosMasivos/detalle/guardarDocumentoEnvio",
+    enviosMasivos_borrarDocumento: "enviosMasivos/detalle/borrarDocumentoEnvio",
+    enviosMasivos_descargarDocumento:
+      "enviosMasivos/detalle/descargarDocumento",
+    consultas_comboObjetivos: "consultas/objetivo",
+    consultas_comboModulos: "consultas/modulo",
+    comunicaciones_claseComunicaciones: "comunicaciones/clasesComunicacion",
+    comunicaciones_modelosComunicacion: "comunicaciones/modelosComunicacion",
+    comunicaciones_search: "comunicaciones/search",
+    comunicaciones_guardarConf: "comunicaciones/detalle/configuracion",
+    comunicaciones_destinatarios: "comunicaciones/detalle/destinatarios",
+    consultas_search: "consultas/search",
+    consultas_borrar: "consultas/borrarConsulta",
+    consultas_listadoPlantillas: "consultas/plantillasconsulta",
+    consultas_guardarDatosGenerales: "consultas/confGeneral",
+    consultas_guardarConsulta: "consultas/confConsulta",
+    consultas_listadoModelos: "consultas/modelosconsulta",
+    consultas_ejecutarConsulta: "consultas/ejecutarConsulta",
+    consultas_duplicar: "consultas/duplicarConsulta",
+    consultas_obtenerCamposDinamicos: "consultas/obtenerCamposDinamicos",
+    plantillasEnvio_search: "plantillasEnvio/plantillasEnvioSearch",
+    plantillasEnvio_guardarDatosGenerales: "plantillasEnvio/datosGenerales",
+    modelos_search: "modelos/search",
+    modelos_search_historico: "modelos/search/historico",
+    modelos_duplicar: "modelos/duplicar",
+    modelos_borrar: "modelos/borrar",
+    modelos_rehabilitar: "modelos/rehabilitar",
+    modelos_detalle_datosGenerales: "modelos/detalle/datosGenerales",
+    modelos_detalle_datosGeneralesComprobarNom: "modelos/detalle/datosGenerales/comprobarNom",
+    modelos_detalle_perfiles: "modelos/detalle/perfiles",
+    modelos_detalle_perfilesModelo: "modelos/detalle/perfilesModelo",
+    modelos_detalle_guardarPerfiles: "modelos/detalle/guardarPerfiles",
+    modelos_detalle_informes: "modelos/detalle/informes",
+    modelos_detalle_informes_borrar: "modelos/detalle/informes/borrar",
+    modelos_detalle_plantillasEnvio: "modelos/detalle/plantillasEnvio",
+    modelos_detalle_plantillasHist: "modelos/detalle/plantillasEnvioHist",
+    modelos_detalle_borrarPlantilla: "modelos/detalle/borrarPlantillaEnvio",
+    modelos_detalle_guardarPlantilla: "modelos/detalle/guardarPlantillaEnvio",
+    modelos_colegio: "modelos/colegiosModelo",
+    modelos_detalle_plantillasComunicacion:
+      "modelos/detalle/plantillasComunicacion",
+    modelos_detalle_tipoEnvioPlantilla: "modelos/detalle/tipoEnvioPlantilla",
 
-    plantillasEnvio_consultas: 'plantillasEnvio/consultasPlantillas',
-    plantillasEnvio_borrar: 'plantillasEnvio/borrarPlantilla',
-    plantillasEnvio_comboConsultas: 'plantillasEnvio/consultasDisp',
-    plantillasEnvio_finalidadConsulta: 'plantillasEnvio/finalidadConsulta',
-    plantillasEnvio_asociarConsulta: 'plantillasEnvio/asociarConsulta',
+    plantillasEnvio_consultas: "plantillasEnvio/consultasPlantillas",
+    plantillasEnvio_borrar: "plantillasEnvio/borrarPlantilla",
+    plantillasEnvio_comboConsultas: "plantillasEnvio/consultasDisp",
+    plantillasEnvio_finalidadConsulta: "plantillasEnvio/finalidadConsulta",
+    plantillasEnvio_asociarConsulta: "plantillasEnvio/asociarConsulta",
 
-    plantillasEnvio_desaociarConsulta: 'plantillasEnvio/desasociarConsulta',
-    plantillasEnvio_detalleRemitente: 'plantillasEnvio/detalleRemitente',
-    plantillasEnvio_personaDireccion: 'plantillasEnvio/personaYdirecciones',
-    plantillasEnvio_guardarRemitente: 'plantillasEnvio/guardarRemitente',
+    plantillasEnvio_desaociarConsulta: "plantillasEnvio/desasociarConsulta",
+    plantillasEnvio_detalleRemitente: "plantillasEnvio/detalleRemitente",
+    plantillasEnvio_personaDireccion: "plantillasEnvio/personaYdirecciones",
+    plantillasEnvio_guardarRemitente: "plantillasEnvio/guardarRemitente",
 
-    plantillasDoc_combo_consultas: 'plantillasDoc/combo/consultas',
-    plantillasDoc_combo_formatos: 'plantillasDoc/combo/formatos',
-    plantillasDoc_combo_sufijos: 'plantillasDoc/combo/sufijos',
-    plantillasDoc_consultas_guardar: 'plantillasDoc/consultas/guardar',
-    plantillasDoc_consultas_borrar: 'plantillasDoc/consultas/borrar',
-    plantillasDoc_consultas: 'plantillasDoc/consultas',
-    plantillasDoc_consultas_historico: 'plantillasDoc/consultas/historico',
-    plantillasDoc_plantillas: 'plantillasDoc/plantillas',
-    plantillasDoc_guardar: 'plantillasDoc/guardar',
-    plantillasDoc_borrar: 'plantillasDoc/borrar',
-    plantillasDoc_insertarPlantilla: 'plantillasDoc/insertarPlantilla',
-    plantillasDoc_subirPlantilla: 'plantillasDoc/subirPlantilla',
-    plantillasDoc_plantillas_borrar: 'plantillasDoc/borrar',
+    plantillasDoc_combo_consultas: "plantillasDoc/combo/consultas",
+    plantillasDoc_combo_formatos: "plantillasDoc/combo/formatos",
+    plantillasDoc_combo_sufijos: "plantillasDoc/combo/sufijos",
+    plantillasDoc_consultas_guardar: "plantillasDoc/consultas/guardar",
+    plantillasDoc_consultas_borrar: "plantillasDoc/consultas/borrar",
+    plantillasDoc_consultas: "plantillasDoc/consultas",
+    plantillasDoc_consultas_historico: "plantillasDoc/consultas/historico",
+    plantillasDoc_plantillas: "plantillasDoc/plantillas",
+    plantillasDoc_guardar: "plantillasDoc/guardar",
+    plantillasDoc_borrar: "plantillasDoc/borrar",
+    plantillasDoc_insertarPlantilla: "plantillasDoc/insertarPlantilla",
+    plantillasDoc_subirPlantilla: "plantillasDoc/subirPlantilla",
+    plantillasDoc_plantillas_borrar: "plantillasDoc/borrar",
 
     //Diálogo comunicación
-    dialogo_claseComunicaciones: 'DialogoComunicacion/clasesComunicacion',
-    dialogo_fechaProgramada: 'DialogoComunicacion/fechaProgramada',
-    dialogo_modelosComunicacion: 'DialogoComunicacion/modelosSearch',
-    dialogo_plantillasEnvio: 'DialogoComunicacion/pantillasEnvio',
-    dialogo_tipoEnvios: 'DialogoComunicacion/tiposEnvioModelo',
-    dialogo_enviar: 'DialogoComunicacion/enviar',
-    dialogo_descargar: 'DialogoComunicacion/descargar',
+    dialogo_claseComunicaciones: 'dialogoComunicacion/clasesComunicacion',
+    dialogo_claseComunicacion: 'dialogoComunicacion/claseComunicacion',
+    dialogo_fechaProgramada: 'dialogoComunicacion/fechaProgramada',
+    dialogo_modelosComunicacion: 'dialogoComunicacion/modelosSearch',
+    dialogo_plantillasEnvio: 'dialogoComunicacion/plantillasEnvio',
+    dialogo_tipoEnvios: 'dialogoComunicacion/tipoEnvios',
+    dialogo_enviar: 'dialogoComunicacion/enviar',
+    dialogo_descargar: 'dialogoComunicacion/descargar',
+    dialogo_generarEnvios: 'dialogoComunicacion/generarEnvios',
+    dialogo_keys: 'dialogoComunicacion/keys',
+    dialogo_obtenerCamposDinamicos: 'dialogoComunicacion/obtenerCamposDinamicos',
+    dialogo_envioTest: 'dialogoComunicacion/envioTest',
+    dialogo_maxModelos: 'dialogoComunicacion/maxModelos'
   };
 
   private menuToggled = new Subject<any>();
   private iframeRemove = new Subject<any>();
+  private consultasRefresh = new Subject<any>();
+  private deshabilitarEditar = new Subject<any>();
   menuToggled$ = this.menuToggled.asObservable();
   iframeRemove$ = this.iframeRemove.asObservable();
+  consultasRefresh$ = this.consultasRefresh.asObservable();
+  deshabilitarEditar$ = this.deshabilitarEditar.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -872,6 +890,14 @@ export class SigaServices {
 
   notifyMenuToggled() {
     this.menuToggled.next();
+  }
+
+  notifyRefreshConsulta(){
+    this.consultasRefresh.next();
+  }
+
+  notifyRefreshEditar(){
+    this.deshabilitarEditar.next();
   }
 
   postSendContentAndParameter(
