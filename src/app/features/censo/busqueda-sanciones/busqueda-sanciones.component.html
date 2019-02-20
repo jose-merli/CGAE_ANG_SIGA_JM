@@ -146,6 +146,7 @@
                       <button *ngIf="!hideHistory" (click)="historico()" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
                       <button *ngIf="hideHistory" (click)="hideHistory = false; isHistory = false; search()" pButton type="button" icon="fa fa-undo " iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
                       <button *ngIf="selectedDatos && selectedDatos != ''" (click)="updateRegistry(selectedDatos)" pButton type="button" icon="	fa fa-undo " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+                      <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
                     </div>
                   </p-footer>
 

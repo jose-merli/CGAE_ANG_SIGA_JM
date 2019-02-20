@@ -72,24 +72,26 @@
     </div>
 </div>
 
-<p-dialog [(visible)]="showValores" responsive="true" [draggable]="false" modal="modal" resizable="true" [minWidth]="500">
+<p-dialog [(visible)]="showValores" responsive="true" [draggable]="false" modal="modal" resizable="true" [minWidth]="600">
   <p-header>
     <label>Valores</label>
   </p-header>
   <div *ngIf="valores">
     <div class="form-row mt-3" *ngFor="let dato of valores">
-      <div class="form-group col-lg-6 col-md-6">
-        <input [disabled] = "true" type="text" class="form-control" [(ngModel)]="dato.campo" pInputText>
-      </div>
-      <div class="form-group col-lg-3 col-md-3">
-        <p-dropdown *ngIf="dato.tipoDato=='N' || dato.tipoDato=='D' || dato.tipoDato=='MV'" [options]="operadoresNumero" [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
-        <p-dropdown *ngIf="dato.tipoDato=='A'" [options]="operadoresTexto" [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
-      </div>
-      <div class="form-group col-lg-6 col-md-6">
-        <input *ngIf="dato.tipoDato=='A' || dato.tipoDato=='N'" type="text" class="form-control" [(ngModel)]="dato.valor" pInputText>
-        <p-calendar *ngIf="dato.tipoDato=='D' || dato.tipoDato=='X'" [locale]="es" [(ngModel)]="dato.valor" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
-        <p-dropdown *ngIf="dato.tipoDato=='MV' || dato.tipoDato=='E'" [options]="dato.valores" [(ngModel)]="dato.valor" class="select-form" optionLabel="DESCRIPCION"></p-dropdown>
-      </div>
+        <div class="row">
+            <div class="form-group col-lg-5 col-md-5">
+                <input [disabled] = "true" type="text" class="form-control" [(ngModel)]="dato.campo" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <p-dropdown *ngIf="dato.tipoDato=='N' || dato.tipoDato=='D' || dato.tipoDato=='MV'" [options]="operadoresNumero" [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
+                <p-dropdown *ngIf="dato.tipoDato=='A'" [options]="operadoresTexto" [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-4 col-md-4">
+                <input *ngIf="dato.tipoDato=='A' || dato.tipoDato=='N'" type="text" class="form-control" [(ngModel)]="dato.valor" pInputText>
+                <p-calendar *ngIf="dato.tipoDato=='D' || dato.tipoDato=='X'" [locale]="es" [(ngModel)]="dato.valor" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                <p-dropdown *ngIf="dato.tipoDato=='MV' || dato.tipoDato=='E'" [options]="dato.valores" [(ngModel)]="dato.valor" class="select-form" optionLabel="DESCRIPCION"></p-dropdown>
+            </div>
+        </div>        
     </div>
     <p-footer>
         <div class="text-right main-button">

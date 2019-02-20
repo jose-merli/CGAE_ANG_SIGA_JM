@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { OldSigaServices } from '../../../_services/oldSiga.service'
 
 @Component({
-  selector: 'app-datosCv',
-  templateUrl: './datosCv.component.html',
-  styleUrls: ['./datosCv.component.scss']
+  selector: 'app-datosCV',
+  templateUrl: './datosCV.component.html',
+  styleUrls: ['./datosCV.component.scss']
 })
 export class DatosCVComponent2 {
 

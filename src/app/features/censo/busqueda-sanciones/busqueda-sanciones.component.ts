@@ -61,6 +61,10 @@ export class BusquedaSancionesComponent implements OnInit {
 
   isLetrado: boolean = false;
 
+  currentRoute: String;  
+  idClaseComunicacion: String;
+  keys: any []= [];
+
   constructor(
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
@@ -451,5 +455,45 @@ export class BusquedaSancionesComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  navigateComunicar(dato){
+    sessionStorage.setItem("rutaComunicacion",this.currentRoute.toString());
+    this.getDatosComunicar();    
+  }
+  
+  getDatosComunicar(){
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+
+    this.sigaServices.post("dialogo_claseComunicacion", rutaClaseComunicacion).subscribe(
+      data => {
+        this.idClaseComunicacion = JSON.parse(data['body']).clasesComunicaciones[0].idClaseComunicacion;
+        this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
+          data => {
+            this.keys = JSON.parse(data['body']).keysItem;
+            this.selectedDatos.forEach(element => {
+              let keysValues = [];
+              this.keys.forEach(key =>{
+                if(element[key.nombre] != undefined){
+                  keysValues.push(element[key.nombre]);
+                }            
+              })
+              datosSeleccionados.push(keysValues);
+            });
+    
+            sessionStorage.setItem("datosComunicar", JSON.stringify(datosSeleccionados));
+            this.router.navigate(["/dialogoComunicaciones"]);
+          },
+          err => {
+            console.log(err);
+          }
+        );   
+      },
+      err => {
+        console.log(err);
+      }
+    );    
+  
   }
 }

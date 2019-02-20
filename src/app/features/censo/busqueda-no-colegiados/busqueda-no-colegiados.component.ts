@@ -87,6 +87,10 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   table: DataTable;
   selectedDatos;
 
+  currentRoute: String;  
+  idClaseComunicacion: String;
+  keys: any []= [];
+
   fichasPosibles = [
     {
       key: "generales",
@@ -858,5 +862,45 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
+  }
+
+  navigateComunicar(dato){
+    sessionStorage.setItem("rutaComunicacion",this.currentRoute.toString());
+    this.getDatosComunicar();    
+  }
+  
+  getDatosComunicar(){
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+
+    this.sigaServices.post("dialogo_claseComunicacion", rutaClaseComunicacion).subscribe(
+      data => {
+        this.idClaseComunicacion = JSON.parse(data['body']).clasesComunicaciones[0].idClaseComunicacion;
+        this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
+          data => {
+            this.keys = JSON.parse(data['body']).keysItem;
+            this.selectedDatos.forEach(element => {
+              let keysValues = [];
+              this.keys.forEach(key =>{
+                if(element[key.nombre] != undefined){
+                  keysValues.push(element[key.nombre]);
+                }            
+              })
+              datosSeleccionados.push(keysValues);
+            });
+    
+            sessionStorage.setItem("datosComunicar", JSON.stringify(datosSeleccionados));
+            this.router.navigate(["/dialogoComunicaciones"]);
+          },
+          err => {
+            console.log(err);
+          }
+        );   
+      },
+      err => {
+        console.log(err);
+      }
+    );    
+  
   }
 }
