@@ -12,6 +12,7 @@ import { DatosMandatosObject } from "./../../../../../../app/models/DatosMandato
 import { DatosBancariosSearchAnexosItem } from "./../../../../../../app/models/DatosBancariosSearchAnexosItem";
 import { DatosBancariosAnexoObject } from "./../../../../../../app/models/DatosBancariosAnexoObject";
 import { SigaServices } from "./../../../../../_services/siga.service";
+import { Router } from '@angular/router';
 //import "rxjs/Rx";
 import { saveAs } from "file-saver/FileSaver";
 import { IfObservable } from "../../../../../../../node_modules/rxjs/observable/IfObservable";
@@ -93,6 +94,11 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   selectedProductoServicio: any = {};
   datosPrevios: any = {};
 
+
+  currentRoute: String;
+  idClaseComunicacion: String;
+  keys: any[] = [];
+
   numSelected: number = 0;
   selectedItem: number = 10;
 
@@ -139,8 +145,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {}
+    private changeDetectorRef: ChangeDetectorRef,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     this.progressSpinner = true;
@@ -682,7 +689,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
   checkTypeCIF(value: String): boolean {
@@ -790,7 +797,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         data => {
           this.lengthCountryCode = JSON.parse(data["body"]);
         },
-        error => {},
+        error => { },
         () => {
           if (this.isValidIbanExt()) {
             this.ibanValido = true;
@@ -812,9 +819,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
                 } else {
                   if (
                     this.body.bic.charAt(4) !=
-                      this.iban.substring(0, 2).charAt(0) &&
+                    this.iban.substring(0, 2).charAt(0) &&
                     this.body.bic.charAt(5) !=
-                      this.iban.substring(0, 2).charAt(1)
+                    this.iban.substring(0, 2).charAt(1)
                   ) {
                     this.body.bic = "";
                   }
@@ -1083,7 +1090,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   filtrarItemsComboEsquema(comboEsquema, buscarElemento) {
-    return comboEsquema.filter(function(obj) {
+    return comboEsquema.filter(function (obj) {
       return obj.value == buscarElemento;
     });
   }
@@ -1218,7 +1225,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.progressSpinner = false;
           this.bodyDatosBancariosAnexoSearch = JSON.parse(data["body"]);
           this.bodyDatosBancariosAnexo = this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem[0];
-
+          debugger;
           if (this.bodyDatosBancariosAnexo == undefined) {
             this.bodyDatosBancariosAnexo = new DatosBancariosSearchAnexosItem();
             this.mandatoAnexoVacio = true;
@@ -1573,6 +1580,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           }
         }
       );
+
     }
   }
 
@@ -1664,7 +1672,68 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   //Diálogo de comunicación: ver y enviar servicio
   onComunicar(dato) {
-    this.showComunicar = true;
+
+    let distinto = false;
+    let anexo = dato[0].idAnexo;
+    dato.forEach(element => {
+      if (anexo == null) {
+        if (element.idAnexo != null) {
+          if (!distinto)
+            distinto = true;
+        }
+      } else {
+        if (element.idAnexo == null) {
+          if (!distinto)
+            distinto = true;
+        }
+      }
+    });
+
+
+    if (!distinto) {
+      sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+      this.getDatosComunicar();
+
+    } else {
+      this.showInfo('Solo se puede comunicar un mismo tipo de mandato');
+    }
+  }
+
+
+
+  getDatosComunicar() {
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+
+    this.sigaServices.post("dialogo_claseComunicacion", rutaClaseComunicacion).subscribe(
+      data => {
+        this.idClaseComunicacion = JSON.parse(data['body']).clasesComunicaciones[0].idClaseComunicacion;
+        this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
+          data => {
+            this.keys = JSON.parse(data['body']).keysItem;
+            this.selectedDatos.forEach(element => {
+              let keysValues = [];
+              this.keys.forEach(key => {
+                if (element[key.nombre] != undefined) {
+                  keysValues.push(element[key.nombre]);
+                }
+              })
+              datosSeleccionados.push(keysValues);
+            });
+
+            sessionStorage.setItem("datosComunicar", JSON.stringify(datosSeleccionados));
+            this.router.navigate(["/dialogoComunicaciones"]);
+          },
+          err => {
+            console.log(err);
+          }
+        );
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
   }
 
   onEnviarComunicacion() {
