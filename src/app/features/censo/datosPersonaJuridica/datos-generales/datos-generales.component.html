@@ -163,7 +163,7 @@
                 [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}">
                 <ng-template let-etiquetasPersonaJuridicaSelecionados pTemplate="selectedItem">
                   <div *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor != ''" class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li"
-                    [ngStyle]="{'background': etiquetasPersonaJuridicaSelecionados.backgroundColor}" (click)="onClick($event, etiquetasPersonaJuridicaSelecionados)">
+                    [ngStyle]="{'background': etiquetasPersonaJuridicaSelecionados.backgroundColor}">
                     {{ etiquetasPersonaJuridicaSelecionados.label }}
                   </div>
                 </ng-template>
