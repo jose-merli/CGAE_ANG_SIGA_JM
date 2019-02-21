@@ -40,5 +40,8 @@ export class NoColegiadoItem {
 
   subtipoCV: string[];
   tipoCV: string;
+
+  colegio: string[];
+
   constructor() {}
 }

@@ -58,6 +58,7 @@ export class DatosColegiadosItem {
   subTipoCV2: string;
 
   noAparecerRedAbogacia: string;
+  colegio: string[];
 
   constructor() {}
 }
