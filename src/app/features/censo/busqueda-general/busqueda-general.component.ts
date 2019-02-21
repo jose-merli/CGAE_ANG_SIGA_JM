@@ -970,6 +970,7 @@ export class BusquedaGeneralComponent {
 
   navigateComunicar(dato){
     sessionStorage.setItem("rutaComunicacion",this.currentRoute.toString());
+    sessionStorage.setItem("idModulo",'3');
     this.getDatosComunicar();    
   }
   

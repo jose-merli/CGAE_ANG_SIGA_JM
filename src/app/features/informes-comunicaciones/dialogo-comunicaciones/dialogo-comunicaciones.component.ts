@@ -11,7 +11,7 @@ import { Location } from "@angular/common";
 import { typeSourceSpan } from '@angular/compiler';
 
 @Component({
-  selector: 'app-dialogo-comunicaciones', 
+  selector: 'app-dialogo-comunicaciones',
   templateUrl: './dialogo-comunicaciones.component.html',
   styleUrls: ['./dialogo-comunicaciones.component.scss'],
 
@@ -34,6 +34,7 @@ export class DialogoComunicacionesComponent implements OnInit {
   currentRoute: String;
   selectedModelos: any = [];
   idClaseComunicacion: String;
+  idModulo: String;
   keys: String[] = [];
   es: any = esCalendar;
   showValores: boolean = false;
@@ -43,7 +44,7 @@ export class DialogoComunicacionesComponent implements OnInit {
   listaConsultas: ConsultaConsultasItem[];
   comunicar: boolean = false;
   idInstitucion: String;
-  datosSeleccionados: any [];
+  datosSeleccionados: any[];
   maxNumModelos: number = 20;
   progressSpinner: boolean = false;
   rutaComunicacion: String;
@@ -139,7 +140,13 @@ export class DialogoComunicacionesComponent implements OnInit {
 
   getModelosComunicacion() {
 
-    this.sigaServices.post("dialogo_modelosComunicacion", this.idClaseComunicacion).subscribe(
+    this.idModulo = sessionStorage.getItem('idModulo');
+    let modeloSearch = {
+      idModulo: this.idModulo,
+      idClaseComunicacion: this.idClaseComunicacion
+    }
+
+    this.sigaServices.post("dialogo_modelosComunicacion", modeloSearch).subscribe(
       data => {
         this.modelosComunicacion = JSON.parse(data['body']).modelosComunicacionItems;
       },
@@ -209,12 +216,12 @@ export class DialogoComunicacionesComponent implements OnInit {
     this.progressSpinner = true;
 
     this.valores.forEach(element => {
-      if(element.valor != null && typeof element.valor == "object"){
+      if (element.valor != null && typeof element.valor == "object") {
         element.valor = element.valor.ID;
-      }     
+      }
     });
 
-    if(this.datosSeleccionados != null && this.datosSeleccionados != undefined){      
+    if (this.datosSeleccionados != null && this.datosSeleccionados != undefined) {
       let datos = {
         idClaseComunicacion: this.idClaseComunicacion,
         modelos: this.bodyComunicacion.modelos,
@@ -226,21 +233,21 @@ export class DialogoComunicacionesComponent implements OnInit {
       }
 
       this.sigaServices
-      .post("dialogo_generarEnvios", datos)
-      .subscribe(
-        data => {
-          this.showSuccess("Envios generados");
-        },
-        err => {
-          console.log(err);
-          this.showFail("Error al generar los envios");
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
-        }
-      );
-    }else{
+        .post("dialogo_generarEnvios", datos)
+        .subscribe(
+          data => {
+            this.showSuccess("Envios generados");
+          },
+          err => {
+            console.log(err);
+            this.showFail("Error al generar los envios");
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+    } else {
       this.showFail("No se ha seleccionado nigún dato");
     }
   }
@@ -257,7 +264,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 
 
   onUnRowSelectModelos(event) {
-    event.data.selected=false;
+    event.data.selected = false;
     return event.data;
   }
 
@@ -289,9 +296,9 @@ export class DialogoComunicacionesComponent implements OnInit {
     });
     return valido;
   }
-  
-  descargarComunicacion() { 
-    
+
+  descargarComunicacion() {
+
     this.progressSpinner = true;
 
     this.valores.forEach(element => {
@@ -345,8 +352,8 @@ export class DialogoComunicacionesComponent implements OnInit {
 
   getFechaProgramada() {
     this.sigaServices.get("dialogo_fechaProgramada").subscribe(n => {
-        this.bodyComunicacion.fechaProgramacion = new Date(n.fecha);
-      },
+      this.bodyComunicacion.fechaProgramacion = new Date(n.fecha);
+    },
       err => {
         console.log(err);
       }

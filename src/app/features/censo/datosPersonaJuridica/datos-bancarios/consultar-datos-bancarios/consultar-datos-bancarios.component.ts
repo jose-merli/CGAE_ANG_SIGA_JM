@@ -1696,7 +1696,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
     if (!distinto) {
       sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString() + tipo);
+      //IDMODULO de CENSO es 3
+      sessionStorage.setItem("idModulo", '3');
       this.getDatosComunicar(tipo);
+
 
     } else {
       this.showInfo('Solo se puede comunicar un mismo tipo de mandato');
