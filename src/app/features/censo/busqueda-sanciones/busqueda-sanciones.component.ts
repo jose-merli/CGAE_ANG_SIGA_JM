@@ -73,6 +73,7 @@ export class BusquedaSancionesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.currentRoute = this.router.url;
     this.getComboTipoSancion();
     this.getDataDatesType();
 

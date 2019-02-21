@@ -139,7 +139,7 @@
                 <p-footer *ngIf="selectedDatos && selectedDatos != ''">
                     <div class="text-right main-button">
                         <button pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate}}"></button>
-                        <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
+                        <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)" pButton type="button" icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
                     </div>
                 </p-footer>
             </p-dataTable>

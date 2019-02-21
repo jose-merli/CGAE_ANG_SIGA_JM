@@ -65,8 +65,8 @@
     </div>  
     <div class="card-footer">
         <div class="text-right main-button ">
-            <button (click)="obtenerCamposDinamicos('comunicar')" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'dialogo.boton.comunicar' | translate }}"></button>
-            <button (click)="obtenerCamposDinamicos('descargar')" pButton type="button" icon="fa fa-file" iconPos="left" label="{{'dialogo.boton.descargar' | translate }}"></button>
+            <button (click)="obtenerCamposDinamicos('comunicar')" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.enviar' | translate }}"></button>
+            <button (click)="obtenerCamposDinamicos('descargar')" pButton type="button" icon="fa fa-file" iconPos="left" label="{{'general.boton.descargar' | translate }}"></button>
             <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="Volver"></button>
         </div>
     </div>
@@ -97,8 +97,8 @@
         <div class="text-right main-button">
             <!-- <button (click)="ejecutar()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{
           'general.boton.cancel' | translate}}"></button> -->
-            <button *ngIf="comunicar" (click)="enviarComunicacion()" [disabled]="!validarCamposDinamicos()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'dialogo.boton.enviar' | translate}}"></button>
-            <button *ngIf="!comunicar" (click)="descargarComunicacion()" [disabled]="!validarCamposDinamicos()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'dialogo.boton.descargar' | translate}}"></button>
+            <button *ngIf="comunicar" (click)="enviarComunicacion()" [disabled]="!validarCamposDinamicos()" pButton type="button" icon="fa fa-send" iconPos="left" label="{{ 'general.boton.enviar' | translate}}"></button>
+            <button *ngIf="!comunicar" (click)="descargarComunicacion()" [disabled]="!validarCamposDinamicos()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.descargar' | translate}}"></button>
         </div>
     </p-footer>
   </div>

@@ -317,7 +317,7 @@
                   pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate}}"></button>
                 <button *ngIf="selectedDatos && selectedDatos !=''" [(disabled)]="!permisos || disabledAction" (click)="mostrarDialogoFirmar(selectedDatos)"
                   pButton type="button" icon="fa fa-rupee" iconPos="left" label="{{ 'censo.sociedades.datosBancarios.firmar' | translate}}"></button>
-                <button *ngIf="selectedDatos && selectedDatos !=''" [(disabled)]="!permisos || disabledAction" (click)="comunicar(selectedDatos)"
+                <button *ngIf="selectedDatos && selectedDatos !=''" [(disabled)]="!permisos || disabledAction" (click)="onComunicar(selectedDatos)"
                   pButton type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
                 <!-- <button *ngIf="!nuevo"  [(disabled)]="!permisos" (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button> -->
               </div>

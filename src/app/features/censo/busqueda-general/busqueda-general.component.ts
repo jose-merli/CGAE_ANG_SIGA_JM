@@ -127,6 +127,7 @@ export class BusquedaGeneralComponent {
   }
 
   ngOnInit() {
+    this.currentRoute = this.router.url;
     this.getInstitucion();
     this.sigaServices.get("busquedaPer_colegio").subscribe(
       n => {

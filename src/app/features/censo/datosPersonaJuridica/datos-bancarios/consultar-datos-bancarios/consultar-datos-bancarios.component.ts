@@ -1673,15 +1673,19 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   //Diálogo de comunicación: ver y enviar servicio
   onComunicar(dato) {
 
+    let tipo = "";
+
     let distinto = false;
     let anexo = dato[0].idAnexo;
     dato.forEach(element => {
       if (anexo == null) {
+        tipo = "Orden";
         if (element.idAnexo != null) {
           if (!distinto)
             distinto = true;
         }
       } else {
+        tipo = "Anexo";
         if (element.idAnexo == null) {
           if (!distinto)
             distinto = true;
@@ -1691,8 +1695,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
 
     if (!distinto) {
-      sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
-      this.getDatosComunicar();
+      sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString() + tipo);
+      this.getDatosComunicar(tipo);
 
     } else {
       this.showInfo('Solo se puede comunicar un mismo tipo de mandato');
@@ -1701,9 +1705,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
 
 
-  getDatosComunicar() {
+  getDatosComunicar(tipo) {
     let datosSeleccionados = [];
-    let rutaClaseComunicacion = this.currentRoute.toString();
+    let rutaClaseComunicacion = this.currentRoute.toString() + tipo;
 
     this.sigaServices.post("dialogo_claseComunicacion", rutaClaseComunicacion).subscribe(
       data => {

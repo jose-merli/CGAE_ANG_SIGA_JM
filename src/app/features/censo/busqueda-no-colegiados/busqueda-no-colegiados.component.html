@@ -161,11 +161,10 @@
                 </ng-template>
                 <p-footer>
                     <div class="text-right main-button">
-                        <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-send" iconPos="left" label="{{ 'general.boton.comunicar' | translate }}"
-                            disabled></button>
                         <button (click)="isBuscar(true)" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
                         <button (click)="deleteSeleccion(selectedDatos)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"
                             [disabled]="selectedDatos == ''"></button>
+                            <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)" pButton type="button" icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
                         <!-- <button (click)="isCrear()" [disabled]="isEditable" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button> -->
                     </div>
                 </p-footer>
@@ -224,12 +223,9 @@
 
                 <p-footer>
                     <div class="text-right main-button">
-                        <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-send" iconPos="left" label="{{ 'general.boton.comunicar' | translate }}"
-                            disabled></button>
                         <button (click)="isBuscar(false)" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
                         <button (click)="deleteSeleccion()" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"
-                            disabled></button>
-                        <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
+                            disabled></button>                       
                     </div>
                 </p-footer>
             </p-dataTable>

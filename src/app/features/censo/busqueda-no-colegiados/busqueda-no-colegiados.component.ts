@@ -123,6 +123,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.currentRoute = this.router.url;
     sessionStorage.removeItem("busquedaCensoGeneral");
     sessionStorage.removeItem("disabledAction");
 
