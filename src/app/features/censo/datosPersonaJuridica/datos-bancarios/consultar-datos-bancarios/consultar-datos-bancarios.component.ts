@@ -151,6 +151,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   ngOnInit() {
     this.progressSpinner = true;
+    this.currentRoute = this.router.url;
     if (sessionStorage.getItem("permisos")) {
       this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
     }
@@ -266,7 +267,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.progressSpinner = false;
   }
 
-  downloadAnexo(dato) {
+  downloadAnexo(selectedDatos) {
+    let dato = selectedDatos[0];
     let filename;
 
     this.sigaServices
@@ -1365,7 +1367,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   // Operaciones editar/firmar
 
-  mostrarDialogoFirmar(dato) {
+  mostrarDialogoFirmar(selectedDatos) {
+    let dato = selectedDatos[0];
+
     this.displayFirmar = true;
 
     this.bodyDatosBancariosAnexo.idPersona = this.idPersona;
@@ -1677,21 +1681,31 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
     let distinto = false;
     let anexo = dato[0].idAnexo;
-    dato.forEach(element => {
+
+    if(dato.length == 1){
+      distinto = false;
       if (anexo == null) {
         tipo = "Orden";
-        if (element.idAnexo != null) {
-          if (!distinto)
-            distinto = true;
-        }
-      } else {
+      }else{
         tipo = "Anexo";
-        if (element.idAnexo == null) {
-          if (!distinto)
-            distinto = true;
-        }
       }
-    });
+    }else{
+      dato.forEach(element => {
+        if (anexo == null) {
+          tipo = "Orden";
+          if (element.idAnexo != null) {
+            if (!distinto)
+              distinto = true;
+          }
+        } else {
+          tipo = "Anexo";
+          if (element.idAnexo == null) {
+            if (!distinto)
+              distinto = true;
+          }
+        }
+      });
+    }  
 
 
     if (!distinto) {
