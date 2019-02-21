@@ -207,7 +207,6 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   //Funcion que carga combo del campo sexo
   getComboSexo() {
     this.comboSexo = [
-      { label: "", value: null },
       { label: "Hombre", value: "H" },
       { label: "Mujer", value: "M" }
     ];
@@ -311,9 +310,11 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   //Tipo Curricular
   onChangeCategoriaCurricular(event) {
-    if (event) {
-      this.getComboTipoCurricular(event.value);
-      this.getComboSubtipoCurricular(event.value);
+    if (event.value != null) {
+      if (event) {
+        this.getComboTipoCurricular(event.value);
+        this.getComboSubtipoCurricular(event.value);
+      }
     }
   }
 

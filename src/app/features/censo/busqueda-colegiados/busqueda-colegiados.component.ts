@@ -473,9 +473,11 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   onChangeCategoriaCurricular(event) {
-    if (event) {
-      this.getComboSubtipoCurricular(event.value);
-      this.getComboTipoCurricular(event.value);
+    if (event.value != null) {
+      if (event) {
+        this.getComboSubtipoCurricular(event.value);
+        this.getComboTipoCurricular(event.value);
+      }
     }
   }
 
