@@ -640,6 +640,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   getColsResults() {
     this.cols = [
       {
+        field: "colegioResultado",
+        header: "censo.busquedaClientesAvanzada.literal.colegio"
+      },
+      {
         field: "nif",
         header: "censo.consultaDatosColegiacion.literal.numIden"
       },

@@ -229,6 +229,8 @@ export class FichaColegialComponent implements OnInit {
   tableColegiales: DataTable;
   @ViewChild("tableRegTel")
   tableRegTel: DataTable;
+  @ViewChild("tableColegiaciones")
+  tableColegiaciones: DataTable;
 
   selectedDatosCertificados;
   selectedDatosSociedades;
@@ -245,6 +247,7 @@ export class FichaColegialComponent implements OnInit {
   selectedItemDirecciones: number = 10;
   selectedItemBancarios: number = 10;
   selectedItemRegtel: number = 10;
+  selectedItemColegiaciones: number = 10;
   selectedItem: number = 10;
 
   selectedDatosRegtel: DocushareItem;
@@ -477,14 +480,6 @@ export class FichaColegialComponent implements OnInit {
       {
         field: "institucion",
         header: "censo.busquedaClientesAvanzada.literal.colegio"
-      },
-      {
-        field: "nif",
-        header: "censo.consultaDatosColegiacion.literal.numIden"
-      },
-      {
-        field: "nombre",
-        header: "administracion.usuarios.literal.nombre"
       },
       {
         field: "numColegiado",
@@ -2429,6 +2424,12 @@ export class FichaColegialComponent implements OnInit {
     this.selectedItemBancarios = event.value;
     this.changeDetectorRef.detectChanges();
     this.tableBancarios.reset();
+  }
+
+  onChangeRowsPerPagesColegiaciones(event) {
+    this.selectedItemColegiaciones = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tableColegiaciones.reset();
   }
 
   // FIN SOCIEDADES

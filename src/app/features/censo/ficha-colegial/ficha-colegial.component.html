@@ -582,8 +582,8 @@
     <div *ngIf="esFichaActiva('colegiaciones')" class="card-body card-body-ficha">
       <div class="row">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" pageLinks="4" dataKey="movil" [responsive]="true"
-          #table class="tabla-listado" [value]="datosColegiaciones" [sortOrder]="1" [paginator]="activarPaginacionOtrasColegiaciones()"
-          paginatorPosition="both" [rows]="selectedItem">
+          #tableColegiaciones class="tabla-listado" [value]="datosColegiaciones" [sortOrder]="1" [paginator]="activarPaginacionOtrasColegiaciones()"
+          paginatorPosition="both" [rows]="selectedItemColegiaciones">
           <p-column *ngFor="let col of colsColegiaciones" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
             <ng-template let-datoH="rowData" pTemplate="body">
@@ -598,14 +598,14 @@
 
           <ng-template pTemplate="paginatorLeft">
             <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">Mostrando registros del {{ table.first + 1 }} al {{ table.first + table.rows }} de un total de {{ table.totalRecords
+              <label class="pr-3 registros-totales">Mostrando registros del {{ tableColegiaciones.first + 1 }} al {{ tableColegiaciones.first + tableColegiaciones.rows }} de un total de {{ tableColegiaciones.totalRecords
                 }}
               </label>
               <!--
                 <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
               -->
               <label>{{ "general.message.mostrar" | translate }}</label>
-              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+              <p-dropdown [(ngModel)]="selectedItemColegiaciones" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesColegiaciones($event)"></p-dropdown>
               <label class="pl-1">
                 {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
               </label>
