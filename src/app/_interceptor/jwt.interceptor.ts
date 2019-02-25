@@ -59,7 +59,7 @@ export class JwtInterceptor implements HttpInterceptor {
             return Observable.throw(error);
         }) as any;
     }
-    oldSigaMantenerSesion(): Observable<any> {
+    /*oldSigaMantenerSesion(): Observable<any> {
         let headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded'
         });
@@ -80,5 +80,5 @@ export class JwtInterceptor implements HttpInterceptor {
                 return true;
             }
         });
-    }
+    }*/
 }
