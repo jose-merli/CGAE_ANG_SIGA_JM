@@ -487,4 +487,34 @@ para poder filtrar el dato con o sin estos caracteres*/
   abreCierraFicha() {
     this.fichaBusqueda = !this.fichaBusqueda;
   }
+
+  duplicar(dato) {
+    let datoDuplicar = {
+      idEnvio: dato[0].idEnvio,
+      idTipoEnvios: dato[0].idTipoEnvios,
+      idPlantillaEnvios: dato[0].idPlantillaEnvios
+    }
+
+    this.sigaServices.post("enviosMasivos_duplicar", datoDuplicar).subscribe(
+      data => {
+        this.showSuccess(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.correctDuplicado"));
+        
+        let datoDuplicado = JSON.parse(data["body"]).enviosMasivosItem;
+        datoDuplicado.forEach(element => {
+          if (element.fechaProgramada != null) {
+            element.fechaProgramada = new Date(element.fechaProgramada);
+          }
+          element.fechaCreacion = new Date(element.fechaCreacion);
+        });
+
+        this.router.navigate(["/fichaRegistroEnvioMasivo"]);
+        sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(datoDuplicado[0]));
+        sessionStorage.setItem("filtros", JSON.stringify(this.bodySearch));
+      },
+      err => {
+        this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorDuplicarEnvio"));
+        console.log(err);
+      }
+    );
+  }
 }
