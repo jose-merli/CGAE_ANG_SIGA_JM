@@ -37,9 +37,9 @@ export class ConsultaComponent implements OnInit {
   camposValores: any;
   progressSpinner: boolean = false;
   ayuda: any = [];
-  es: any =esCalendar;
-  operadoresTexto: any [];
-  operadoresNumero: any [];
+  es: any = esCalendar;
+  operadoresTexto: any[];
+  operadoresNumero: any[];
   editar: boolean = true;
 
   fichasPosibles = [
@@ -69,7 +69,7 @@ export class ConsultaComponent implements OnInit {
     this.sigaServices.deshabilitarEditar$.subscribe(() => {
       this.editar = false;
     });
-    
+
     this.getDatos();
     this.getAyuda();
     this.valores = [];
@@ -237,47 +237,47 @@ export class ConsultaComponent implements OnInit {
 
   ejecutar() {
 
-    this.valores = [];  
+    this.valores = [];
 
   }
 
-  
-  obtenerParametros(){
+
+  obtenerParametros() {
     let consulta = {
       idClaseComunicacion: this.body.idClaseComunicacion,
       sentencia: this.body.sentencia
     };
 
     this.sigaServices.post("consultas_obtenerCamposDinamicos", consulta)
-    .subscribe(data => {
-      console.log(data);
-      this.valores = JSON.parse(data.body).camposDinamicos;      
-      if(this.valores != undefined && this.valores != null && this.valores.length > 0){
-        this.valores.forEach(element => {
-          if(element.valorDefecto != undefined && element.valorDefecto != null){
-            element.valor = element.valorDefecto;
-          }  
-          if(element.valores != undefined && element.valores != null){
-            let empty={
-              ID:0,
-              DESCRIPCION: 'Seleccione una opción...'
+      .subscribe(data => {
+        console.log(data);
+        this.valores = JSON.parse(data.body).camposDinamicos;
+        if (this.valores != undefined && this.valores != null && this.valores.length > 0) {
+          this.valores.forEach(element => {
+            if (element.valorDefecto != undefined && element.valorDefecto != null) {
+              element.valor = element.valorDefecto;
             }
-            element.valores.unshift(empty);
-          }
-          if(element.operacion == "OPERADOR"){
-            element.operacion = this.operadoresNumero[0].value;
-          }   
-        });  
-        this.showValores = true;
-      }else{
-        this.enviar();
-      }
+            if (element.valores != undefined && element.valores != null) {
+              let empty = {
+                ID: 0,
+                DESCRIPCION: 'Seleccione una opción...'
+              }
+              element.valores.unshift(empty);
+            }
+            if (element.operacion == "OPERADOR") {
+              element.operacion = this.operadoresNumero[0].value;
+            }
+          });
+          this.showValores = true;
+        } else {
+          this.enviar();
+        }
 
-      console.log(this.valores);
-    }, error => {
-      console.log(error);
-      this.showFail("Error al obtener los parámetros dinámicos disponibles")
-    });
+        console.log(this.valores);
+      }, error => {
+        console.log(error);
+        this.showFail("Error al obtener los parámetros dinámicos disponibles")
+      });
   }
 
   isButtonDisabled() {
@@ -296,28 +296,29 @@ export class ConsultaComponent implements OnInit {
   }
 
   enviar() {
-    this.progressSpinner = true;   
+    this.progressSpinner = true;
 
     this.body.camposDinamicos = JSON.parse(JSON.stringify(this.valores));
 
-    if(this.body.camposDinamicos != null && typeof this.body.camposDinamicos != "undefined"){
+    if (this.body.camposDinamicos != null && typeof this.body.camposDinamicos != "undefined") {
       this.body.camposDinamicos.forEach(element => {
-        if(element.valor != undefined && typeof element.valor == "object"){
+        if (element.valor != undefined && typeof element.valor == "object") {
           element.valor = element.valor.ID;
         }
-        if(element.ayuda == null || element.ayuda == "undefined"){
+        if (element.ayuda == null || element.ayuda == "undefined") {
           element.ayuda = "-1";
         }
-      }); 
-    }    
+      });
+    }
 
     this.sigaServices
       .postDownloadFiles("consultas_ejecutarConsulta", this.body)
       .subscribe(data => {
+        debugger;
         this.showValores = false;
         const blob = new Blob([data], { type: "application/octet-stream" });
-        if (blob.size == 0) {
-          this.showFail("messages.general.error.ficheroNoExiste");
+        if (blob.size == 0 || data == null) {
+          this.showInfo("La consulta no devuelve resultados");
         } else {
           saveAs(data, "ResultadoConsulta.xlsx");
         }
@@ -331,20 +332,20 @@ export class ConsultaComponent implements OnInit {
 
   }
 
-  validarCamposDinamicos(){
+  validarCamposDinamicos() {
     let valido = true;
     this.valores.forEach(element => {
-      if(valido){
-        if(!element.valorNulo){
-          if(element.valor != undefined && element.valor != null && element.valor != ""){
+      if (valido) {
+        if (!element.valorNulo) {
+          if (element.valor != undefined && element.valor != null && element.valor != "") {
             valido = true;
-          }else{
+          } else {
             valido = false;
           }
-        }else{
-          valido=true;
+        } else {
+          valido = true;
         }
-      }     
+      }
     });
     return valido;
   }
@@ -435,10 +436,10 @@ export class ConsultaComponent implements OnInit {
       },
       {
         texto: "18. Si la consulta pertenece a una clase de comunicación será obligatorio introducir en la etiqueta <WHERE> de la consulta las claves asociadas a dicha clase de comunicación." +
-              "Informes genéricos de censo: %%IDPERSONA%%, %%IDINSTITUCION%%. " +
-              "Informes de sanciones de letrados: %%IDPERSONA%%, %%IDINSTITUCION%%, %%IDSANCION%%. " +
-              "Plantilla de Orden de domiciliación de adeudo directo SEPA: %%IDPERSONA%%, %%IDINSTITUCION%%, %%IDCUENTA%%, %%IDMANDATO%%. " +
-              "Plantilla de Anexo a la Orden de domiciliación de adeudo directo SEPA: %%IDPERSONA%%, %%IDINSTITUCION%%, %%IDCUENTA%%, %%IDMANDATO%%, %%IDANEXO%%."
+          "Informes genéricos de censo: %%IDPERSONA%%, %%IDINSTITUCION%%. " +
+          "Informes de sanciones de letrados: %%IDPERSONA%%, %%IDINSTITUCION%%, %%IDSANCION%%. " +
+          "Plantilla de Orden de domiciliación de adeudo directo SEPA: %%IDPERSONA%%, %%IDINSTITUCION%%, %%IDCUENTA%%, %%IDMANDATO%%. " +
+          "Plantilla de Anexo a la Orden de domiciliación de adeudo directo SEPA: %%IDPERSONA%%, %%IDINSTITUCION%%, %%IDCUENTA%%, %%IDMANDATO%%, %%IDANEXO%%."
 
       },
       {
@@ -446,8 +447,8 @@ export class ConsultaComponent implements OnInit {
 
       },
       {
-        texto: "20. Si el objetivo de la consulta es 'DESTINATARIOS' se debe añadir dentro de la etiqueta <SELECT> los siguientes campos:"+
-              "IDINSTITUCION, IDPERSONA, CODIGOPOSTAL, CORREOELECTRONICO, DOMICILIO, MOVIL, FAX1, FAX2, IDPAIS, IDPROVINCIA, IDPOBLACION"
+        texto: "20. Si el objetivo de la consulta es 'DESTINATARIOS' se debe añadir dentro de la etiqueta <SELECT> los siguientes campos:" +
+          "IDINSTITUCION, IDPERSONA, CODIGOPOSTAL, CORREOELECTRONICO, DOMICILIO, MOVIL, FAX1, FAX2, IDPAIS, IDPROVINCIA, IDPOBLACION"
 
       }
 

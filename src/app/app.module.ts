@@ -24,6 +24,7 @@ import { HeaderGestionEntidadService } from './_services/headerGestionEntidad.se
 import { AuthenticationService } from './_services/authentication.service';
 import { JwtInterceptor } from './_interceptor/jwt.interceptor';
 
+
 // Componentes comunes
 import { routing } from './app.routing';
 import { environment } from '../environments/environment';
@@ -60,10 +61,11 @@ import { CalendarModule } from "primeng/calendar";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { TooltipModule } from "primeng/tooltip";
 import { ChipsModule } from "primeng/chips";
-import { EditorModule } from "primeng/editor";
+//import { EditorModule } from "primeng/editor";
 import { PickListModule } from "primeng/picklist";
 import { FileUploadModule } from "primeng/fileupload";
 import { KeyFilterModule } from 'primeng/keyfilter';
+import { EditorModule } from '@tinymce/tinymce-angular';
 
 
 // Modulo de censo
@@ -704,4 +706,4 @@ import { DialogoComunicacionesComponent } from './features/informes-comunicacion
 	bootstrap: [AppComponent]
 
 })
-export class AppModule {}
+export class AppModule { }
