@@ -224,6 +224,16 @@ export class FichaCursoComponent implements OnInit {
   otraInstitucion: boolean = false;
   file: File = undefined;
 
+
+  editorConfig: any = {
+    selector: 'textarea',
+    plugins: "autoresize pagebreak table save charmap media contextmenu paste directionality noneditable visualchars nonbreaking spellchecker template searchreplace lists link image insertdatetime textcolor code hr",
+    toolbar: "newdocument | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify formatselect fontselect fontsizeselect | cut copy paste pastetext | searchreplace | bullist numlist | indent blockquote | undo redo | link unlink image code | insertdatetime preview | forecolor backcolor",
+    menubar: false,
+    autoresize_on_init: true,
+    statusbar: false
+  };
+
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
@@ -233,7 +243,7 @@ export class FichaCursoComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private changeDetectorRef: ChangeDetectorRef,
     private domSanitizer: DomSanitizer
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.progressSpinner = true;
@@ -799,7 +809,7 @@ export class FichaCursoComponent implements OnInit {
         //     this.callSaveCourse(url);
         //   }
         // });
-      }else{
+      } else {
         this.callSaveCourse(url);
       }
     } else {
@@ -2269,7 +2279,7 @@ export class FichaCursoComponent implements OnInit {
 
   }
 
-  callCancelSession(){
+  callCancelSession() {
 
     this.progressSpinner = true;
 
@@ -2278,41 +2288,41 @@ export class FichaCursoComponent implements OnInit {
 
     //Pasar aviso guardo en this.curso.aviso = "4" por parametro
     this.sigaServices
-    .post("fichaCursos_cancelSessionsCourse", sessionsCancel)
-    .subscribe(
-      data => {
-        if (JSON.parse(data.body).error.code == null) {
-          this.showMessage(
-            "info",
-            this.translateService.instant("general.message.informacion"),
-            JSON.parse(data.body).error.description
-          );
-        } else if (JSON.parse(data.body).error.code == 200) {
-          this.showMessage(
-            "success",
-            this.translateService.instant("general.message.correct"),
-            JSON.parse(data.body).error.description
-          );
-          this.searchCourse(this.curso.idCurso);
-        } else if (JSON.parse(data.body).error.code == 400) {
-          this.showMessage(
-            "error",
-            this.translateService.instant("general.message.incorrect"),
-            JSON.parse(data.body).error.description
-          );
-        }
+      .post("fichaCursos_cancelSessionsCourse", sessionsCancel)
+      .subscribe(
+        data => {
+          if (JSON.parse(data.body).error.code == null) {
+            this.showMessage(
+              "info",
+              this.translateService.instant("general.message.informacion"),
+              JSON.parse(data.body).error.description
+            );
+          } else if (JSON.parse(data.body).error.code == 200) {
+            this.showMessage(
+              "success",
+              this.translateService.instant("general.message.correct"),
+              JSON.parse(data.body).error.description
+            );
+            this.searchCourse(this.curso.idCurso);
+          } else if (JSON.parse(data.body).error.code == 400) {
+            this.showMessage(
+              "error",
+              this.translateService.instant("general.message.incorrect"),
+              JSON.parse(data.body).error.description
+            );
+          }
 
-        this.getSessions();
-        this.selectMultipleSessions = false;
-        this.selectedDatosSessions = [];
-      },
-      err => {
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
+          this.getSessions();
+          this.selectMultipleSessions = false;
+          this.selectedDatosSessions = [];
+        },
+        err => {
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
   }
 
   disabledDuplicate() {

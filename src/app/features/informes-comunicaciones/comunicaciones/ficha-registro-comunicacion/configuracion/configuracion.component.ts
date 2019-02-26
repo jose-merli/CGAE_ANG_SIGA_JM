@@ -30,6 +30,15 @@ export class ConfiguracionComponent implements OnInit {
   modelosComunicacion: any = [];
   arrayClases: any = [];
 
+  editorConfig: any = {
+    selector: 'textarea',
+    plugins: "autoresize pagebreak table save charmap media contextmenu paste directionality noneditable visualchars nonbreaking spellchecker template searchreplace lists link image insertdatetime textcolor code hr",
+    toolbar: "newdocument | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify formatselect fontselect fontsizeselect | cut copy paste pastetext | searchreplace | bullist numlist | indent blockquote | undo redo | link unlink image code | insertdatetime preview | forecolor backcolor",
+    menubar: false,
+    autoresize_on_init: true,
+    statusbar: false
+  };
+
   fichasPosibles = [
     {
       key: "configuracion",
@@ -54,7 +63,7 @@ export class ConfiguracionComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getDatos();
@@ -139,7 +148,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         err => {
           console.log(err);
         },
-        () => {}
+        () => { }
       );
   }
 
@@ -274,7 +283,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           );
           console.log(err);
         },
-        () => {}
+        () => { }
       );
   }
 

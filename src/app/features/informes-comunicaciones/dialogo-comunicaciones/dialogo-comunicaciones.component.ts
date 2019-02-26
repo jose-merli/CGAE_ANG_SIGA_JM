@@ -331,10 +331,11 @@ export class DialogoComunicacionesComponent implements OnInit {
           },
           () => {
             this.progressSpinner = false;
+
           }
         );
     } else {
-      this.showFail("No se ha seleccionado nigún dato");
+      this.showFail("No se ha seleccionado ningún dato.");
     }
   }
 
