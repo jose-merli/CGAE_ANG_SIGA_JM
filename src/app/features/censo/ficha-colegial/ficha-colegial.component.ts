@@ -3061,14 +3061,13 @@ export class FichaColegialComponent implements OnInit {
   redireccionarDatosBancarios(dato) {
     if (this.camposDesactivados != true) {
       if (!this.selectMultipleBancarios) {
-        if(this.tarjetaBancarios == '3'){
           var enviarDatos = null;
           if (dato && dato.length > 0) {
             enviarDatos = dato[0];
             sessionStorage.setItem("idCuenta", dato[0].idCuenta);
             //sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
 
-            if (dato[0].fechaBaja != null) {
+            if (dato[0].fechaBaja != null || this.tarjetaBancarios == '2') {
               sessionStorage.setItem("permisos", "false");
             } else {
               sessionStorage.setItem("permisos", "true");
@@ -3086,7 +3085,6 @@ export class FichaColegialComponent implements OnInit {
           }
 
           this.router.navigate(["/consultarDatosBancarios"]);
-        } 
       }else {
         this.numSelectedBancarios = this.selectedDatosBancarios.length;
       }

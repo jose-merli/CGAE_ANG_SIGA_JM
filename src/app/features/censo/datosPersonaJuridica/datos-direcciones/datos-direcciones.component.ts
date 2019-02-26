@@ -294,6 +294,9 @@ export class DatosDireccionesComponent implements OnInit {
         } else {
           sessionStorage.setItem("editar", "false");
         }
+
+        sessionStorage.setItem("permisoTarjeta", this.tarjeta);
+
         this.router.navigate(["/consultarDatosDirecciones"]);
       } else {
         this.numSelected = this.selectedDatos.length;
