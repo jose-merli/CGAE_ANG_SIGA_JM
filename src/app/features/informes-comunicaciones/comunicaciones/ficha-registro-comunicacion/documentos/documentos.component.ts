@@ -171,12 +171,13 @@ export class DocumentosComponent implements OnInit {
 
   downloadDocumento(dato) {
     let objDownload = {
-      rutaDocumento: dato[0].pathDocumento,
-      nombreDocumento: dato[0].nombreDocumento
+      rutaDocumento: dato.pathDocumento,
+      nombreDocumento: dato.nombreDocumento,
+      idEnvio: this.body.idEnvio
     };
-
+   this.progressSpinner = true;
     this.sigaServices
-      .postDownloadFiles("enviosMasivos_descargarDocumento", objDownload)
+      .postDownloadFiles("comunicaciones_descargarDocumento", objDownload)
       .subscribe(data => {
         const blob = new Blob([data], { type: "application/octet-stream" });
         if (blob.size == 0) {
@@ -186,9 +187,16 @@ export class DocumentosComponent implements OnInit {
             )
           );
         } else {
-          saveAs(data, dato[0].nombreDocumento);
+          saveAs(data, dato.nombreDocumento);
         }
         this.selectedDatos = [];
+      },
+      err => {
+        console.log(err);
+        this.showFail(this.translateService.instant("messages.general.error.ficheroNoExiste")
+        );
+      }, () =>{
+        this.progressSpinner=false
       });
   }
 

@@ -654,18 +654,10 @@ export class PlantillaDocumentoComponent implements OnInit {
       }
     });
 
-    let condicional = this.datos.map(e => {
-      if (e.idConsulta != "" && e.idObjetivo == "3") {
-        return true;
-      } else {
-        return false;
-      }
-    });
-
-    if (destinatarios.indexOf(true) != -1 && condicional.indexOf(true) != -1) {
+    if (destinatarios.indexOf(true) != -1) {
       this.guardarConsultasOk();
     } else {
-      this.showFail("Seleccione una consulta para destinatarios y condicional");
+      this.showFail("Seleccione una consulta para destinatarios");
     }
   }
 

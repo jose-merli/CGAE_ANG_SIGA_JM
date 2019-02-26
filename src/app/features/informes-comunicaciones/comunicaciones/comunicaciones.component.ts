@@ -87,7 +87,7 @@ export class ComunicacionesComponent implements OnInit {
     this.getClasesComunicaciones();
 
     this.cols = [
-      { field: "claseComunicaciones", header: "Clases de comunicaciones" },
+      { field: "claseComunicacion", header: "Clases de comunicaciones" },
       { field: "descripcion", header: "Descripción" },
       { field: "fechaCreacion", header: "Fecha creación" },
       { field: "fechaProgramada", header: "Fecha programación" },
@@ -355,13 +355,15 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   navigateTo(dato) {
     this.estado = dato[0].idEstado;
-    if (!this.selectMultiple && this.estado == 4) {
+    if (!this.selectMultiple && this.estado != 5) {
       // this.body.estado = dato[0].estado;
       this.router.navigate(["/fichaRegistroComunicacion"]);
       sessionStorage.setItem("comunicacionesSearch", JSON.stringify(dato[0]));
       sessionStorage.setItem("filtrosCom", JSON.stringify(this.bodySearch));
-    } else if (!this.selectMultiple && this.estado != 4) {
-      this.showInfo("La comunicación está en proceso, no puede editarse");
+    } else if (!this.selectMultiple && this.estado == 5) {
+      //this.showInfo("La comunicación está en proceso, no puede editarse");
+      this.showInfo(this.translateService.instant("informesycomunicaciones.comunicaciones.envioProcess"));
+      this.selectedDatos = [];
     }
   }
 

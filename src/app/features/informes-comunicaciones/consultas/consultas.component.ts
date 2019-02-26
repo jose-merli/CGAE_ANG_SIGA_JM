@@ -415,7 +415,10 @@ export class ConsultasComponent implements OnInit {
   }
 
   isButtonDisabled() {
-    if (this.bodySearch.idModulo != null && this.bodySearch.idModulo != "") {
+    if ((this.bodySearch.idModulo != null && this.bodySearch.idModulo != "") || (this.bodySearch.nombre != null && this.bodySearch.nombre !="")
+          || (this.bodySearch.descripcion != null && this.bodySearch.descripcion !=""
+          || (this.bodySearch.idObjetivo != null && this.bodySearch.idObjetivo !="")
+          || (this.bodySearch.idClaseComunicacion != null && this.bodySearch.idClaseComunicacion !=""))) {
       return false;
     }
     return true;

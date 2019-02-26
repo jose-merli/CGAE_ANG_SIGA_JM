@@ -11,12 +11,12 @@
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha">{{
-              " enviosMasivos.literal.documentos" | translate
+              "enviosMasivos.literal.documentos" | translate
             }}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label
-              >{{ " enviosMasivos.literal.documentos" | translate }}:
+              >{{ "enviosMasivos.literal.documentos" | translate }}:
               <span *ngIf="datos">{{ datos.length }}</span>
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
@@ -31,7 +31,7 @@
           <i class="fas fa-file icon-ficha"></i>
         </div>
         <label class="title-ficha">{{
-          " enviosMasivos.literal.documentos" | translate
+          "enviosMasivos.literal.documentos" | translate
         }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
@@ -48,10 +48,8 @@
         [paginator]="true"
         [rows]="selectedItem"
         [first]="first"
-        [ngClass]="{ customCursor: selectMultiple }"
-        selectionMode="multiple"
+        selectionMode="single"
         paginatorPosition="both"
-        (onRowSelect)="navigateTo(selectedDatos)"
       >
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
@@ -91,7 +89,7 @@
               <span *ngIf="col.field != 'pathDocumento'">
                 {{ dato[col.field] }}</span
               >
-              <span *ngIf="col.field == 'pathDocumento'">
+              <span (click)="downloadDocumento(dato)" *ngIf="col.field == 'pathDocumento'">
                 <i class="fa fa-download"></i>
               </span>
             </td>
@@ -133,20 +131,7 @@
           </div>
         </ng-template>
       </p-table>
-    </div>
-    <div *ngIf="openFicha" class="card-footer">
-      <div class="text-right main-button">
-        <button
-          (click)="eliminar(selectedDatos)"
-          *ngIf="selectedDatos && selectedDatos != ''"
-          pButton
-          type="button"
-          icon="far fa-times-circle"
-          iconPos="left"
-          label="Eliminar"
-        ></button>
-      </div>
-    </div>
+    </div>    
   </div>
 </div>
 

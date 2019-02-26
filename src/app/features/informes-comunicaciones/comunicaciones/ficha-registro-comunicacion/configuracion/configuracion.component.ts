@@ -29,6 +29,8 @@ export class ConfiguracionComponent implements OnInit {
   plantilla: string;
   modelosComunicacion: any = [];
   arrayClases: any = [];
+  reenviar: boolean = false;
+  cancelar: boolean = false;
 
   fichasPosibles = [
     {
@@ -168,8 +170,15 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   getDatos() {
     if (sessionStorage.getItem("comunicacionesSearch") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("comunicacionesSearch"));
-      this.editar = true;
+      this.body = JSON.parse(sessionStorage.getItem("comunicacionesSearch"));      
+      if (this.body.idEstado != '4') {
+        this.editar = true;
+      }else{
+        this.cancelar = true;
+      }
+      if(this.body.idEstado == '3' || this.body.idEstado == '6'){
+        this.reenviar = true;
+      }
       this.getPlantillas();
     } else {
       this.editar = false;
@@ -222,7 +231,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     );
   }
 
-  cancelar() {
+  onCancelar() {
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
       message: this.translateService.instant(
