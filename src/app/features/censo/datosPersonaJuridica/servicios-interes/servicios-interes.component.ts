@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
+import { ControlAccesoDto } from "../../../../models/ControlAccesoDto";
+import { SigaServices } from "../../../../_services/siga.service";
 
 @Component({
   selector: "app-servicios-interes",
@@ -12,9 +14,13 @@ export class ServiciosInteresComponent implements OnInit {
   msgs: any[];
   @ViewChild("table") table;
 
-  constructor(private router: Router) {}
+  tarjeta: string;
 
-  ngOnInit() {}
+  constructor(private router: Router, private sigaServices: SigaServices) {}
+
+  ngOnInit() {
+    this.checkAcceso();
+  }
 
   irFacturacion() {
     this.router.navigate(["/facturas"]);
@@ -25,5 +31,22 @@ export class ServiciosInteresComponent implements OnInit {
   }
   irComunicaciones() {
     this.router.navigate(["/informesGenericos"]);
+  }
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "234";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjeta = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {}
+    );
   }
 }

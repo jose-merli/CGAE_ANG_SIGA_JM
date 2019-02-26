@@ -66,6 +66,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   tooltipFechaMod: any;
   poblacionBuscada: any;
   permisos: boolean = true; //true
+
+  permisoTarjeta : string;
+
   constructor(
     private location: Location,
     private sigaServices: SigaServices,
@@ -231,6 +234,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     this.checkBody = JSON.parse(JSON.stringify(this.body));
     this.checkBody.idPais = "191";
     this.progressSpinner = false;
+
+    this.permisoTarjeta = JSON.parse(sessionStorage.getItem("permisoTarjeta"));
+    sessionStorage.removeItem("permisoTarjeta");
   }
 
   ngAfterViewChecked() {

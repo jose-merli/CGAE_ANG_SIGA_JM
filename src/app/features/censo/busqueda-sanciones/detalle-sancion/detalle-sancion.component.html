@@ -85,7 +85,7 @@
                   [options]="tipoSancion"
                   [(ngModel)]="body.tipoSancion"
                   (onChange)="disableFields()"
-                  [(disabled)]="disabledField"
+                  [disabled]="disabledField || permisoTarjeta == '2'"
                 ></p-dropdown>
               </div>
               <div class="form-group col-lg-12 col-md-12">
@@ -98,7 +98,7 @@
                   class="form-control"
                   pInputText
                   [(ngModel)]="body.refColegio"
-                  [disabled]="disableFields() || disabledField"
+                  [disabled]="disableFields() || disabledField || permisoTarjeta == '2'"
                 />
               </div>
             </div>
@@ -116,7 +116,7 @@
                   icon="far fa-calendar-alt"
                   (onSelect)="deshabilitarFechas()"
                   (onInput)="detectDateInput()"
-                  [(disabled)]="disabledFechaAcuerdo"
+                  [disabled]="disabledFechaAcuerdo || permisoTarjeta == '2'"
                   showIcon="true"
                   dateFormat="dd/mm/yy"
                   [(ngModel)]="body.fechaAcuerdoDate"
@@ -134,7 +134,7 @@
                 <p-calendar
                   [keepInvalid]="true"
                   [locale]="es"
-                  [(disabled)]="disabledFechaFirme"
+                  [disabled]="disabledFechaFirme || permisoTarjeta == '2'"
                   (onSelect)="deshabilitarFechas()"
                   (onInput)="detectDateInput()"
                   icon="far fa-calendar-alt"
@@ -158,7 +158,7 @@
                   [(ngModel)]="body.chkFirmeza"
                   (onChange)="deshabilitarFechas()"
                   binary="true"
-                  [disabled]="disabledChkFirmeza"
+                  [disabled]="disabledChkFirmeza || permisoTarjeta == '2'"
                 ></p-checkbox>
               </div>
               <div class="form-group col-lg-6 col-md-6">
@@ -169,7 +169,7 @@
                   [keepInvalid]="true"
                   [locale]="es"
                   icon="far fa-calendar-alt"
-                  [(disabled)]="disabledPeriodoDesde"
+                  [disabled]="disabledPeriodoDesde || permisoTarjeta == '2'"
                   (onInput)="detectDateInput()"
                   (onSelect)="deshabilitarFechas()"
                   showIcon="true"
@@ -186,7 +186,7 @@
                   [keepInvalid]="true"
                   [locale]="es"
                   icon="far fa-calendar-alt"
-                  [(disabled)]="disabledPeriodoHasta"
+                  [disabled]="disabledPeriodoHasta || permisoTarjeta == '2'"
                   (onInput)="detectDateInput()"
                   (onSelect)="deshabilitarFechas()"
                   showIcon="true"
@@ -206,7 +206,7 @@
                   [keepInvalid]="true"
                   [locale]="es"
                   icon="far fa-calendar-alt"
-                  [(disabled)]="disabledRehabilitado"
+                  [disabled]="disabledRehabilitado || permisoTarjeta == '2'"
                   (onSelect)="deshabilitarFechas()"
                   (onInput)="detectDateInput()"
                   showIcon="true"
@@ -230,7 +230,7 @@
                     (onChange)="deshabilitarFechas()"
                     [(ngModel)]="body.chkRehabilitado"
                     binary="true"
-                    [disabled]="disabledChkRehabilitado"
+                    [disabled]="disabledChkRehabilitado || permisoTarjeta == '2'"
                   ></p-checkbox>
                 </label>
               </div>
@@ -243,7 +243,7 @@
                   [keepInvalid]="true"
                   [locale]="es"
                   icon="far fa-calendar-alt"
-                  [(disabled)]="disabledFechaArchivada"
+                  [disabled]="disabledFechaArchivada || permisoTarjeta == '2'"
                   (onSelect)="deshabilitarFechas()"
                   showIcon="true"
                   dateFormat="dd/mm/yy"
@@ -263,7 +263,7 @@
                   [(ngModel)]="body.chkArchivadas"
                   (onChange)="deshabilitarFechas()"
                   binary="true"
-                  [disabled]="disabledChkArchivada"
+                  [disabled]="disabledChkArchivada || permisoTarjeta == '2'"
                 ></p-checkbox>
               </div>
             </div>
@@ -335,7 +335,7 @@
                   [cols]="10"
                   pInputTextarea
                   [(ngModel)]="body.texto"
-                  [disabled]="disableFields() || disabledField"
+                  [disabled]="disableFields() || disabledField || permisoTarjeta == '2'"
                 ></textarea>
               </div>
             </div>
@@ -351,7 +351,7 @@
                   [cols]="10"
                   pInputTextarea
                   [(ngModel)]="body.observaciones"
-                  [disabled]="disableFields() || disabledField"
+                  [disabled]="disableFields() || disabledField || permisoTarjeta == '2'"
                 ></textarea>
               </div>
             </div>
@@ -367,7 +367,7 @@
             icon="far fa-save" 
             iconPos="left"
             label="{{ 'general.boton.guardar' | translate}}"
-            [(disabled)] = "disabledGuardar"
+            [disabled] = "disabledGuardar || permisoTarjeta == '2'"
           ></button>
           <button
             (click)="restore()"

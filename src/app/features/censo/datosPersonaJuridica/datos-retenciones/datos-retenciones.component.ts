@@ -22,6 +22,7 @@ import { DatosRetencionesItem } from "../../../../../app/models/DatosRetenciones
 import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
 import { DataTable } from "../../../../../../node_modules/primeng/primeng";
+import { ControlAccesoDto } from "../../../../models/ControlAccesoDto";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -87,6 +88,8 @@ export class DatosRetencionesComponent implements OnInit {
   ultimaFechaInicio: any;
   dateParts: any;
 
+  tarjeta: string;
+
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
   constructor(
     private formBuilder: FormBuilder,
@@ -106,7 +109,7 @@ export class DatosRetencionesComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.checkAcceso();
+    this.checkAcceso();
     this.persona = "f";
     this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
       id => {
@@ -715,4 +718,21 @@ export class DatosRetencionesComponent implements OnInit {
   //     this.ultimaFechaInicio = new Date(this.dateParts[2], this.dateParts[1] - 1, dia);
   //   }
   // }
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "233";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjeta = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {}
+    );
+  }
 }

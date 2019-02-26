@@ -2,7 +2,7 @@
 
 <div class="busqueda-container">
     <!--DATOS REGISTRALES-->
-    <div class="card">
+    <div *ngIf="tarjeta == '3' || tarjeta == '2'" class="card">
         <div class="card-header header-ficha" (click)="abrirFicha()">
             <div *ngIf="!openFicha" class="form-row">
                 <div class="col-lg-1 col-md-2">
@@ -99,10 +99,10 @@
         <div *ngIf="openFicha" class="card-footer">
             <div class="text-right main-button">
                 <button (click)="volver()" [(disabled)]="isVolver" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-                <button (click)="confirmEdit()" [disabled]="activaGuardar()" pButton type="button" icon="	far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-                <button (click)="confirmarBorrar()" [(disabled)]="isEliminar || disabledAction" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
+                <button (click)="confirmEdit()" [disabled]="activaGuardar() || tarjeta == '2'" pButton type="button" icon="	far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                <button (click)="confirmarBorrar()" [disabled]="isEliminar || disabledAction || tarjeta == '2'" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
                     label="{{'general.boton.eliminar'  | translate}}"></button>
-                <button (click)="crear()" [(disabled)]="isCrear || disabledAction" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+                <button (click)="crear()" [disabled]="isCrear || disabledAction || tarjeta == '2'" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
             </div>
         </div>
 
