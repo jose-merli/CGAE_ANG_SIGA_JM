@@ -163,7 +163,6 @@ para poder filtrar el dato con o sin estos caracteres*/
       data => {
         this.estados = data.combooItems;
         this.estados.unshift({ label: "Seleccionar", value: "" });
-        console.log(this.estados);
       },
       err => {
         console.log(err);
