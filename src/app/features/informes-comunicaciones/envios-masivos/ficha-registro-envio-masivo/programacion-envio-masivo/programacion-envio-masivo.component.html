@@ -37,7 +37,7 @@
           <!-- <input disabled type="text" class="form-control" [(ngModel)]="body.fechaCreacion" pInputText> -->
           <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [minDate]="currentDate"
             [locale]="es" showTime="true" [(ngModel)]="body.fechaCreacion" dateFormat="dd/mm/yy"
-            icon="far fa-calendar-alt" showIcon="true" [utc]="true" disabled="true"></p-calendar>
+            icon="far fa-calendar-alt" showIcon="true" disabled="true"></p-calendar>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{'enviosMasivos.literal.estado' | translate}}:</label>
@@ -48,7 +48,7 @@
           <label>{{'enviosMasivos.literal.fechaProgramacion' | translate}} *</label>
           <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [minDate]="currentDate"
             [locale]="es" showTime="true" [(ngModel)]="body.fechaProgramada" dateFormat="dd/mm/yy"
-            icon="far fa-calendar-alt" showIcon="true" [utc]="true" [disabled]="noEditar"></p-calendar>
+            icon="far fa-calendar-alt" showIcon="true" [disabled]="noEditar"></p-calendar>
         </div>
       </div>
     </div>

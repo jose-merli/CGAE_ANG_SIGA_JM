@@ -21,14 +21,14 @@
         <div class="form-group col-lg-4 col-md-4">
           <label>{{'enviosMasivos.literal.fechaCreacion' | translate}} *</label>
           <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"
-            [(ngModel)]="bodySearch.fechaCreacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
-            [utc]="true"></p-calendar>
+            [(ngModel)]="bodySearch.fechaCreacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true">
+          </p-calendar>
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>{{'enviosMasivos.literal.fechaProgramacion' | translate}}</label>
           <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"
-            [(ngModel)]="bodySearch.fechaProgramacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
-            [utc]="true"></p-calendar>
+            [(ngModel)]="bodySearch.fechaProgramacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true">
+          </p-calendar>
         </div>
       </div>
       <div class="form-row d-flex align-items-end">
@@ -81,13 +81,11 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
               <span *ngIf="col.field !='fechaCreacion'  && col.field !='fechaProgramada'"> {{dato[col.field]}}</span>
-              <span *ngIf="
-                col.field=='fechaCreacion'">{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
               <span
-                *ngIf="
-                col.field=='fechaProgramada' && dato.fechaProgramada!=null">{{ dato[col.field] | date: 'd/M/yyyy, H:mm '}}</span>
-              <span *ngIf="
-                dato[col.field]==null ||dato[col.field]==''">-</span>
+                *ngIf="col.field=='fechaCreacion' && dato.fechaCreacion != null">{{ dato[col.field] | date: 'd/M/yyyy, H:mm '}}</span>
+              <span
+                *ngIf="col.field=='fechaProgramada' && dato.fechaProgramada!=null">{{ dato[col.field] | date: 'd/M/yyyy, H:mm '}}</span>
+              <span *ngIf="dato[col.field]==null ||dato[col.field]==''">-</span>
             </td>
 
           </tr>
@@ -153,7 +151,7 @@
       <label>{{"envio.programar" | translate}}</label>
       <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" showTime="true"
         [minDate]="currentDate" [(ngModel)]="bodyProgramar.fechaProgramada" dateFormat="dd/mm/yy"
-        icon="far fa-calendar-alt" showIcon="true" [utc]="true"></p-calendar>
+        icon="far fa-calendar-alt" showIcon="true"></p-calendar>
     </div>
   </div>
   <p-footer>

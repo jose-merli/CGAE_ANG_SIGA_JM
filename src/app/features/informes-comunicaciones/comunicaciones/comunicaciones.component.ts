@@ -64,7 +64,7 @@ export class ComunicacionesComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.selectedItem = 10;
@@ -88,7 +88,7 @@ export class ComunicacionesComponent implements OnInit {
 
     this.cols = [
       { field: "claseComunicacion", header: "Clases de comunicaciones" },
-      { field: "descripcion", header: "Descripción" },
+      { field: "destinatario", header: "Destinatario" },
       { field: "fechaCreacion", header: "Fecha creación" },
       { field: "fechaProgramada", header: "Fecha programación" },
       { field: "tipoEnvio", header: "Tipo envío" },
