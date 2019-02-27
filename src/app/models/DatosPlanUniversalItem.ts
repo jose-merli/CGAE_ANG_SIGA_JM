@@ -37,6 +37,7 @@ export class DatosPlanUniversalItem {
 	estadoCivil: String;
 	numHijos: number;
 	idPais: String;
+	idpais: String;
 	idProvincia: String;
 	idPoblacion: String;
 	domicilio: String;
@@ -58,5 +59,6 @@ export class DatosPlanUniversalItem {
 	nombrePoblacion: String;
 	bic: String;
 	idBeneficiarios: String;
-	constructor() {}
+	dc: String;
+	constructor() { }
 }
