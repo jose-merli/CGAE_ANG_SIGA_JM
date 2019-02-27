@@ -140,7 +140,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.progressSpinner = true;
@@ -415,6 +415,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           "messages.censo.direcciones.facturacion"
         ) {
           this.eliminarItem();
+          this.progressSpinner = false;
         }
       },
       () => {
@@ -574,21 +575,38 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   igualInicio() {
     let validarTipoCuenta = [];
-    this.selectedTipo.forEach(element => {
-      validarTipoCuenta.push(element.code);
-    });
+    if (this.selectedTipo.length > 0) {
+      this.selectedTipo.forEach(element => {
+        validarTipoCuenta.push(element.code);
+      });
 
-    if (JSON.stringify(this.body) == JSON.stringify(this.checkBody)) {
-      if (
-        JSON.stringify(validarTipoCuenta.sort()) ==
-        JSON.stringify(this.checkBody.tipoCuenta.sort())
-      ) {
-        return true;
+      if (JSON.stringify(this.body) == JSON.stringify(this.checkBody)) {
+        if (this.checkBody.tipoCuenta == null || this.checkBody.tipoCuenta == undefined) {
+          if (validarTipoCuenta.length > 0) {
+            return false;
+          } else {
+            return true;
+          }
+        } else {
+          if (
+            JSON.stringify(validarTipoCuenta.sort()) ==
+            JSON.stringify(this.checkBody.tipoCuenta.sort())
+          ) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+
       } else {
         return false;
       }
     } else {
-      return false;
+      if (JSON.stringify(this.body) == JSON.stringify(this.checkBody)) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 
@@ -686,7 +704,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
   checkTypeCIF(value: String): boolean {
@@ -794,7 +812,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         data => {
           this.lengthCountryCode = JSON.parse(data["body"]);
         },
-        error => {},
+        error => { },
         () => {
           if (this.isValidIbanExt()) {
             this.ibanValido = true;
@@ -816,9 +834,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
                 } else {
                   if (
                     this.body.bic.charAt(4) !=
-                      this.iban.substring(0, 2).charAt(0) &&
+                    this.iban.substring(0, 2).charAt(0) &&
                     this.body.bic.charAt(5) !=
-                      this.iban.substring(0, 2).charAt(1)
+                    this.iban.substring(0, 2).charAt(1)
                   ) {
                     this.body.bic = "";
                   }
@@ -1087,7 +1105,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   filtrarItemsComboEsquema(comboEsquema, buscarElemento) {
-    return comboEsquema.filter(function(obj) {
+    return comboEsquema.filter(function (obj) {
       return obj.value == buscarElemento;
     });
   }

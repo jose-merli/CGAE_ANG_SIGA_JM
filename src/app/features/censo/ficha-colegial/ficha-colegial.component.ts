@@ -331,7 +331,7 @@ export class FichaColegialComponent implements OnInit {
   ];
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
-  tarjetaInteres: string ;
+  tarjetaInteres: string;
   tarjetaGenerales: string;
   tarjetaColegiales: string;
   tarjetaOtrasColegiaciones: string;
@@ -722,7 +722,7 @@ export class FichaColegialComponent implements OnInit {
     ];
 
 
-    
+
   }
 
   //CONTROL DE PERMISOS
@@ -1030,7 +1030,7 @@ export class FichaColegialComponent implements OnInit {
         let tratamiento = this.generalTratamiento.find(
           item => item.value === this.generalBody.idTratamiento
         );
-        if(tratamiento != undefined && tratamiento.label != undefined){
+        if (tratamiento != undefined && tratamiento.label != undefined) {
           this.tratamientoDesc = tratamiento.label;
         }
       },
@@ -2386,9 +2386,9 @@ export class FichaColegialComponent implements OnInit {
   }
 
   redireccionarSociedades(datos) {
-      // this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
-      sessionStorage.setItem("usuarioBody", JSON.stringify(datos));
-      this.router.navigate(["/fichaPersonaJuridica"]);
+    // this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    sessionStorage.setItem("usuarioBody", JSON.stringify(datos));
+    this.router.navigate(["/fichaPersonaJuridica"]);
   }
 
   onChangeRowsPerPagesRegtel(event) {
@@ -2873,31 +2873,31 @@ export class FichaColegialComponent implements OnInit {
   redireccionarDireccion(dato) {
     if (this.camposDesactivados != true) {
       if (!this.selectMultipleDirecciones) {
-          if (dato[0].fechaBaja != null) {
-            sessionStorage.setItem("historicoDir", "true");
-          }
-          var enviarDatos = null;
-          if (dato && dato.length > 0) {
-            enviarDatos = dato[0];
-            sessionStorage.setItem("idDireccion", enviarDatos.idDireccion);
-            sessionStorage.setItem("direccion", JSON.stringify(enviarDatos));
-            sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
-            sessionStorage.setItem("fichaColegial", "true");
-            sessionStorage.removeItem("editarDireccion");
+        if (dato[0].fechaBaja != null) {
+          sessionStorage.setItem("historicoDir", "true");
+        }
+        var enviarDatos = null;
+        if (dato && dato.length > 0) {
+          enviarDatos = dato[0];
+          sessionStorage.setItem("idDireccion", enviarDatos.idDireccion);
+          sessionStorage.setItem("direccion", JSON.stringify(enviarDatos));
+          sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
+          sessionStorage.setItem("fichaColegial", "true");
+          sessionStorage.removeItem("editarDireccion");
 
-            sessionStorage.setItem("editarDireccion", "true");
+          sessionStorage.setItem("editarDireccion", "true");
 
-            sessionStorage.setItem("usuarioBody", JSON.stringify(this.idPersona));
-            sessionStorage.setItem(
-              "esColegiado",
-              sessionStorage.getItem("esColegiado")
-            );
-          } else {
-            sessionStorage.setItem("editar", "false");
-          }
+          sessionStorage.setItem("usuarioBody", JSON.stringify(this.idPersona));
+          sessionStorage.setItem(
+            "esColegiado",
+            sessionStorage.getItem("esColegiado")
+          );
+        } else {
+          sessionStorage.setItem("editar", "false");
+        }
 
-          sessionStorage.setItem("permisoTarjeta", this.tarjetaDirecciones);
-          this.router.navigate(["/consultarDatosDirecciones"]);
+        sessionStorage.setItem("permisoTarjeta", this.tarjetaDirecciones);
+        this.router.navigate(["/consultarDatosDirecciones"]);
       } else {
         this.numSelectedDirecciones = this.selectedDatosDirecciones.length;
       }
@@ -3061,31 +3061,31 @@ export class FichaColegialComponent implements OnInit {
   redireccionarDatosBancarios(dato) {
     if (this.camposDesactivados != true) {
       if (!this.selectMultipleBancarios) {
-          var enviarDatos = null;
-          if (dato && dato.length > 0) {
-            enviarDatos = dato[0];
-            sessionStorage.setItem("idCuenta", dato[0].idCuenta);
-            //sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
+        var enviarDatos = null;
+        if (dato && dato.length > 0) {
+          enviarDatos = dato[0];
+          sessionStorage.setItem("idCuenta", dato[0].idCuenta);
+          //sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
 
-            if (dato[0].fechaBaja != null || this.tarjetaBancarios == '2') {
-              sessionStorage.setItem("permisos", "false");
-            } else {
-              sessionStorage.setItem("permisos", "true");
-            }
-
-            sessionStorage.setItem("editar", "true");
-            sessionStorage.setItem("idPersona", this.idPersona);
-            sessionStorage.setItem("fichaColegial", "true");
-            sessionStorage.setItem("datosCuenta", JSON.stringify(dato[0]));
-            sessionStorage.setItem("usuarioBody", JSON.stringify(dato[0]));
-            sessionStorage.setItem("historico", JSON.stringify(this.bodyDatosBancarios.historico));
-
+          if (dato[0].fechaBaja != null || this.tarjetaBancarios == '2') {
+            sessionStorage.setItem("permisos", "false");
           } else {
-            sessionStorage.setItem("editar", "false");
+            sessionStorage.setItem("permisos", "true");
           }
 
-          this.router.navigate(["/consultarDatosBancarios"]);
-      }else {
+          sessionStorage.setItem("editar", "true");
+          sessionStorage.setItem("idPersona", this.idPersona);
+          sessionStorage.setItem("fichaColegial", "true");
+          sessionStorage.setItem("datosCuenta", JSON.stringify(dato[0]));
+          sessionStorage.setItem("usuarioBody", JSON.stringify(dato[0]));
+          sessionStorage.setItem("historico", JSON.stringify(this.bodyDatosBancarios.historico));
+
+        } else {
+          sessionStorage.setItem("editar", "false");
+        }
+
+        this.router.navigate(["/consultarDatosBancarios"]);
+      } else {
         this.numSelectedBancarios = this.selectedDatosBancarios.length;
       }
     }
@@ -3230,14 +3230,14 @@ export class FichaColegialComponent implements OnInit {
   }
 
   onRowSelectSanciones(selectedDatos) {
-      // Guardamos los filtros
-      sessionStorage.setItem("saveFilters", JSON.stringify(this.bodySanciones));
+    // Guardamos los filtros
+    sessionStorage.setItem("saveFilters", JSON.stringify(this.bodySanciones));
 
-      // Guardamos los datos seleccionados para pasarlos a la otra pantalla
-      sessionStorage.setItem("rowData", JSON.stringify(selectedDatos));
-      sessionStorage.setItem("permisoTarjeta", this.tarjetaSanciones);
+    // Guardamos los datos seleccionados para pasarlos a la otra pantalla
+    sessionStorage.setItem("rowData", JSON.stringify(selectedDatos));
+    sessionStorage.setItem("permisoTarjeta", this.tarjetaSanciones);
 
-      this.router.navigate(["/detalleSancion"]);
+    this.router.navigate(["/detalleSancion"]);
   }
 
   searchSanciones() {
@@ -3409,7 +3409,7 @@ export class FichaColegialComponent implements OnInit {
     }
   }
   onRowSelectedRegTel(selectedDatosRegtel) {
-    if(this.tarjetaRegtel == '3'){
+    if (this.tarjetaRegtel == '3') {
       this.selectedDatosRegtel = selectedDatosRegtel;
       if (this.selectedDatosRegtel.tipo == "0") {
         this.buttonVisibleRegtelCarpeta = false;
@@ -3727,12 +3727,27 @@ export class FichaColegialComponent implements OnInit {
     this.solicitudEditar.estadoCivil = this.generalBody.idEstadoCivil;
     this.solicitudEditar.fechaNacimiento = this.generalBody.fechaNacimientoDate;
     this.solicitudEditar.tratamiento = this.tratamientoDesc;
-    sessionStorage.setItem(
-      "datosSolicitud",
-      JSON.stringify(this.solicitudEditar)
-    );
-    sessionStorage.setItem("tipoPropuesta", "RETA");
-    this.router.navigate(["/alterMutuaReta"]);
+    this.sigaServices
+      .get("solicitudIncorporacion_tipoIdentificacion")
+      .subscribe(
+        result => {
+          let tipos = result.combooItems;
+          this.progressSpinner = false;
+          let identificacion = tipos.find(
+            item => item.value === this.solicitudEditar.idTipoIdentificacion
+          );
+          this.solicitudEditar.tipoIdentificacion = identificacion.label;
+          sessionStorage.setItem(
+            "datosSolicitud",
+            JSON.stringify(this.solicitudEditar)
+          );
+          sessionStorage.setItem("tipoPropuesta", "RETA");
+          this.router.navigate(["/alterMutuaReta"]);
+        },
+        error => {
+          console.log(error);
+        }
+      );
   }
 
   irOfertas() {
@@ -3879,6 +3894,7 @@ export class FichaColegialComponent implements OnInit {
     if (this.generalBody.nif == undefined || this.generalBody.nif == "" || this.generalBody.fechaNacimientoDate == undefined || this.generalBody.fechaNacimientoDate == null) {
       this.showFailDetalle("Asegurese de que el NIF y la fecha de nacimiento son correctos");
     } else {
+      this.progressSpinner = true;
       let mutualidadRequest = new DatosSolicitudMutualidadItem();
       mutualidadRequest.numeroidentificador = this.generalBody.nif;
       this.sigaServices
@@ -3926,9 +3942,12 @@ export class FichaColegialComponent implements OnInit {
                         this.showInfo(prueba.valorRespuesta);
                       }
                     }
+                    this.progressSpinner = false;
                   },
                   error => {
                     console.log(error);
+                  }, () => {
+                    this.progressSpinner = false;
                   }
                 );
             } else {
@@ -3960,19 +3979,32 @@ export class FichaColegialComponent implements OnInit {
                       );
                       this.router.navigate(["/mutualidadSeguroAccidentes"]);
                     } else {
-                      this.showInfo(prueba.valorRespuesta);
+                      //  this.modoLectura = true;
+                      if (prueba.valorRespuesta == undefined || prueba.valorRespuesta == null || prueba.valorRespuesta == "") {
+                        this.showInfo("No se ha podido comprobar si tiene ya un Plan Universal");
+
+                      } else {
+                        this.showInfo(prueba.valorRespuesta);
+                      }
                     }
                   },
                   error => {
                     console.log(error);
+                  }, () => {
+                    this.progressSpinner = false;
                   }
                 );
             }
           }, error => {
             console.log(error);
-          });
+          }, () => {
+            this.progressSpinner = false;
+          }
+        );
     }
   }
+
+
 
   filterTopics(event) {
     if (
