@@ -293,19 +293,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   restablecer() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-  }
-
-  duplicar() {
-    this.sigaServices.post("enviosMasivos_duplicar", this.body).subscribe(
-      data => {
-        this.showSuccess(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.correctDuplicado"));
-      },
-      err => {
-        this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorDuplicarEnvio"));
-        console.log(err);
-      }
-    );
-  }
+  } 
 
 
   isGuardarDisabled() {

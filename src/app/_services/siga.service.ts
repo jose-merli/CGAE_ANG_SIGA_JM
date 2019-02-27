@@ -567,7 +567,7 @@ export class SigaServices {
     enviosMasivos_plantillas: "enviosMasivos/detalle/plantillas",
     enviosMasivos_guardarConf: "enviosMasivos/detalle/guardarConfiguracion",
     enviosMasivos_documentos: "enviosMasivos/detalle/documentosEnvio",
-    enviosMasivos_duplicar: "enviosMasivos/detalle/duplicarEnvio ",
+    enviosMasivos_duplicar: "enviosMasivos/duplicarEnvio ",
     enviosMasivos_etiquetas: "enviosMasivos/detalle/etiquetas",
     enviosMasivos_etiquetasEnvio: "enviosMasivos/detalle/etiquetasEnvio ",
     enviosMasivos_guardarEtiquetas: "enviosMasivos/detalle/guardarEtiquetas",
