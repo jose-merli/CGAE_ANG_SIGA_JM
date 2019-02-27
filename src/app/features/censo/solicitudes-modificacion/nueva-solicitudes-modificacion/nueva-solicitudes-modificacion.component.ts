@@ -798,4 +798,8 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+
+  fillFechaAlta(event) {
+    this.body.fechaAlta = event;
+  }
 }

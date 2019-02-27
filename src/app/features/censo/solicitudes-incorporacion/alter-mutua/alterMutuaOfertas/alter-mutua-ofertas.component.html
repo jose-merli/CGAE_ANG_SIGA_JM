@@ -45,14 +45,14 @@
         <div class="form-row">
             <div class="form-group col-lg-3 col-md-3">
                 <label>Modalidad de contratación</label>
-                <p-dropdown class="select-form" [(ngModel)]='modContratacionSelected' [options]="comboModContratacion"
-                    (onChange)="onchangeModalidad($event)" optionLabel="label" dataKey="value">
+                <p-dropdown class="select-form" [(ngModel)]='modContratacionSelected' [options]="comboModContratacion" (onChange)="onchangeModalidad($event)"
+                    optionLabel="label" dataKey="value">
                 </p-dropdown>
             </div>
             <div class="form-group col-lg-2 col-md-2">
                 <br>
-                <i *ngIf="modContratacionSelected != undefined && modContratacionSelected.label != ''" (click)="mostarPopUp()"
-                    class="fas fa-info-circle" style="cursor:pointer"></i>
+                <i *ngIf="modContratacionSelected != undefined && modContratacionSelected.label != ''" (click)="mostarPopUp()" class="fas fa-info-circle"
+                    style="cursor:pointer"></i>
             </div>
             <div class="form-group col-lg-3 col-md-3">
                 <label>Tarífa(€)</label>
@@ -106,8 +106,7 @@
         <div class="form-row">
             <div class="form-group col-lg-3 col-md-3">
                 <label>Identificador</label>
-                <input [disabled]="true" type="text" class="form-control" [(ngModel)]="asegurado.identificador"
-                    pInputText>
+                <input [disabled]="true" type="text" class="form-control" [(ngModel)]="asegurado.identificador" pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-3">
                 <label>Nombre</label>
@@ -119,28 +118,27 @@
             </div>
             <div class="form-group col-lg-3 col-md-3">
                 <label>fecha de nacimiento</label>
-                <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true"
-                    icon="far fa-calendar-alt" [disabled]="true" dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="asegurado.fechaNacimiento"></p-calendar>
+                <app-fecha [(value)]="asegurado.fechaNacimiento" [disabled]="true" [utc]="false" (valueChangeSelected)="fillFechaNacimientoAsegurado($event)"
+                    (valueChangeInput)="fillFechaNacimientoAsegurado($event)"></app-fecha>
             </div>
             <div class="form-group col-lg-3 col-md-3">
                 <label>Sexo</label>
-                <p-dropdown class="select-form" [(ngModel)]="sexoSelected" [options]="comboSexo" optionLabel="label"
-                    dataKey="value" [disabled]="true"></p-dropdown>
+                <p-dropdown class="select-form" [(ngModel)]="sexoSelected" [options]="comboSexo" optionLabel="label" dataKey="value" [disabled]="true"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3">
                 <label>Estado civil</label>
-                <p-dropdown class="select-form" [disabled]="true" [(ngModel)]="estadoCivilSelected" [options]="comboEstadoCivil"
-                    optionLabel="label" dataKey="value"></p-dropdown>
+                <p-dropdown class="select-form" [disabled]="true" [(ngModel)]="estadoCivilSelected" [options]="comboEstadoCivil" optionLabel="label"
+                    dataKey="value"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3">
                 <label>Colegio</label>
-                <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="ColegioSelected" [options]="comboColegios"
-                    optionLabel="label" dataKey="value"></p-dropdown>
+                <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="ColegioSelected" [options]="comboColegios" optionLabel="label"
+                    dataKey="value"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3">
                 <label>Situación del ejercicio</label>
-                <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="tipoEjercicioSelected" [options]="comboTiposSolicitud"
-                    optionLabel="label" dataKey="value"></p-dropdown>
+                <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="tipoEjercicioSelected" [options]="comboTiposSolicitud" optionLabel="label"
+                    dataKey="value"></p-dropdown>
             </div>
         </div>
     </div>
@@ -188,13 +186,11 @@
                 <div class="form-row">
                     <div class="form-group col-lg-4 col-md-4">
                         <label>Medio de Comunicación</label>
-                        <p-dropdown class="select-form" [(ngModel)]='comunicacionSelected' [options]="comboComunicacion"
-                            optionLabel="label" dataKey="value"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='comunicacionSelected' [options]="comboComunicacion" optionLabel="label" dataKey="value"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
                         <label>Idioma</label>
-                        <p-dropdown class="select-form" [(ngModel)]='idiomaSelected' [options]="comboIdioma"
-                            optionLabel="label" dataKey="value"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='idiomaSelected' [options]="comboIdioma" optionLabel="label" dataKey="value"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
                         <label>Teléfono</label>
@@ -230,8 +226,7 @@
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
                         <label>País</label>
-                        <p-dropdown class="select-form" [(ngModel)]="paisSelected" [options]="paises" optionLabel="label"
-                            dataKey="value" (onChange)="onChangePais($event)"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]="paisSelected" [options]="paises" optionLabel="label" dataKey="value" (onChange)="onChangePais($event)"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
                         <label>CP</label>
@@ -239,18 +234,16 @@
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
                         <label>Provincia</label>
-                        <p-dropdown [disabled]="deshabilitarDireccion" class="select-form" [(ngModel)]="provinciaSelected"
-                            [options]="provincias" optionLabel="label" dataKey="value"></p-dropdown>
+                        <p-dropdown [disabled]="deshabilitarDireccion" class="select-form" [(ngModel)]="provinciaSelected" [options]="provincias"
+                            optionLabel="label" dataKey="value"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
                         <label>Población</label>
-                        <input [disabled]="deshabilitarDireccion" type="text" class="form-control" [(ngModel)]="asegurado.poblacion"
-                            pInputText>
+                        <input [disabled]="deshabilitarDireccion" type="text" class="form-control" [(ngModel)]="asegurado.poblacion" pInputText>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
                         <label>Tipo Dirección</label>
-                        <p-dropdown class="select-form" [(ngModel)]="tipoDirSelected" [options]="TipoDireccion"
-                            optionLabel="label" dataKey="value"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]="tipoDirSelected" [options]="TipoDireccion" optionLabel="label" dataKey="value"></p-dropdown>
                     </div>
                 </div>
             </div>
@@ -288,7 +281,8 @@
                 <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
             </div>
             <label class="title-ficha">Datos bancarios
-                <!--{{ "general.message.datos.generales" | translate}}--></label>
+                <!--{{ "general.message.datos.generales" | translate}}-->
+            </label>
             <i class="fa fa-angle-up ml-auto"></i>
         </div>
     </div>
@@ -337,26 +331,25 @@
                 <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
             </div>
             <label class="title-ficha">Familiares
-                <!--{{ "general.message.datos.generales" | translate}}--></label>
+                <!--{{ "general.message.datos.generales" | translate}}-->
+            </label>
             <i class="fa fa-angle-up ml-auto"></i>
         </div>
     </div>
     <div [hidden]="!datosFamiliares" class="card-body card-body-ficha">
         <div class="form-row">
 
-            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos"
-                (onRowSelect)="irDatosFamiliar(selectedDatos)" dataKey="idFamiliar" selectionMode="multiple"
-                [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="1" sortField="nombre"
-                [paginator]="true" paginatorPosition="both" [rows]="selectedItem" pageLinks="4" [editable]="true"
-                [sortField]="sortF" [sortOrder]="sortO" (onSort)="changeSort($event)">
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" (onRowSelect)="irDatosFamiliar(selectedDatos)"
+                dataKey="idFamiliar" selectionMode="multiple" [responsive]="true" #table class="tabla-listado" [value]="datos"
+                [sortOrder]="1" sortField="nombre" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" pageLinks="4"
+                [editable]="true" [sortField]="sortF" [sortOrder]="sortO" (onSort)="changeSort($event)">
 
-                <p-column field="idParentesco" filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[0].header"
-                    [filter]="true" filterMatchMode="contains">
+                <p-column field="idParentesco" filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[0].header" [filter]="true"
+                    filterMatchMode="contains">
                     <ng-template let-col let-car="rowData" pTemplate="body">
                         <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
-                        <p-dropdown *ngIf="car[col.field] == ''" class="select-form" [(ngModel)]="datosFamiliar.idParentesco"
-                            [options]="comboParentesco" (onChange)="onchangeParentesco($event)" optionLabel="label"
-                            dataKey="value">
+                        <p-dropdown *ngIf="car[col.field] == ''" class="select-form" [(ngModel)]="datosFamiliar.idParentesco" [options]="comboParentesco"
+                            (onChange)="onchangeParentesco($event)" optionLabel="label" dataKey="value">
                         </p-dropdown>
                     </ng-template>
 
@@ -365,8 +358,8 @@
                     filterMatchMode="contains">
                     <ng-template let-col let-car="rowData" pTemplate="body">
                         <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
-                        <p-dropdown *ngIf="car[col.field] == ''" class="select-form" [(ngModel)]="datosFamiliar.idSexo"
-                            [options]="comboSexo" optionLabel="label" dataKey="value" (onChange)="onchangeSexo($event)"></p-dropdown>
+                        <p-dropdown *ngIf="car[col.field] == ''" class="select-form" [(ngModel)]="datosFamiliar.idSexo" [options]="comboSexo" optionLabel="label"
+                            dataKey="value" (onChange)="onchangeSexo($event)"></p-dropdown>
                     </ng-template>
                 </p-column>
 
@@ -374,18 +367,16 @@
                     filterMatchMode="contains">
                     <ng-template let-col let-car="rowData" pTemplate="body">
                         <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
-                        <input *ngIf="car[col.field] == ''" type="text" class="form-control" [(ngModel)]="datosFamiliar.nombre"
-                            pInputText>
+                        <input *ngIf="car[col.field] == ''" type="text" class="form-control" [(ngModel)]="datosFamiliar.nombre" pInputText>
                     </ng-template>
 
                 </p-column>
 
-                <p-column [sortable]="true" field="apellidos" [header]="cols[3].header" [filter]="true"
-                    filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+                <p-column [sortable]="true" field="apellidos" [header]="cols[3].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    filterMatchMode="contains">
                     <ng-template let-col let-car="rowData" pTemplate="body">
                         <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
-                        <input *ngIf="car[col.field] == ''" type="text" class="form-control" [(ngModel)]="datosFamiliar.apellidos"
-                            pInputText>
+                        <input *ngIf="car[col.field] == ''" type="text" class="form-control" [(ngModel)]="datosFamiliar.apellidos" pInputText>
                     </ng-template>
 
                 </p-column>
@@ -394,54 +385,48 @@
                     filterMatchMode="contains">
                     <ng-template let-col let-car="rowData" pTemplate="body">
                         <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
-                        <p-dropdown *ngIf="car[col.field] == ''" class="select-form" [(ngModel)]="datosFamiliar.idTipoIdentificacion"
-                            [options]="comboTipoIdentificacion" optionLabel="label" dataKey="value" (onChange)="onchangeIdentificacion($event)"></p-dropdown>
+                        <p-dropdown *ngIf="car[col.field] == ''" class="select-form" [(ngModel)]="datosFamiliar.idTipoIdentificacion" [options]="comboTipoIdentificacion"
+                            optionLabel="label" dataKey="value" (onChange)="onchangeIdentificacion($event)"></p-dropdown>
                     </ng-template>
 
                 </p-column>
 
-                <p-column [sortable]="true" field="nIdentificacion" [header]="cols[5].header" [filter]="true"
-                    filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+                <p-column [sortable]="true" field="nIdentificacion" [header]="cols[5].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    filterMatchMode="contains">
                     <ng-template let-col let-car="rowData" pTemplate="body">
                         <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
-                        <input *ngIf="car[col.field] == ''" type="text" class="form-control" [(ngModel)]="datosFamiliar.nIdentificacion"
-                            pInputText>
+                        <input *ngIf="car[col.field] == ''" type="text" class="form-control" [(ngModel)]="datosFamiliar.nIdentificacion" pInputText>
                     </ng-template>
                 </p-column>
 
-                <p-column [sortable]="true" field="fechaNacimiento" [header]="cols[6].header" [filter]="true"
-                    filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+                <p-column [sortable]="true" field="fechaNacimiento" [header]="cols[6].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    filterMatchMode="contains">
                     <ng-template let-col let-car="rowData" pTemplate="body">
                         <span *ngIf="car[col.field] != ''">{{car[col.field] | date: 'dd/MM/yyyy'}}</span>
-                        <p-calendar *ngIf="car[col.field] == undefined" [(ngModel)]="datosFamiliar.fechaNacimiento"
-                            dateFormat="dd/mm/yy" [utc]="true" [locale]="es" [showIcon]="true"
-                            [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050">
-                        </p-calendar>
+                        <app-fecha *ngIf="car[col.field] == undefined" [(value)]="datosFamiliar.fechaNacimiento" [utc]="false" (valueChangeSelected)="fillFechaNacimientoFamiliar($event)"
+                            (valueChangeInput)="fillFechaNacimientoFamiliar($event)"></app-fecha>
                     </ng-template>
 
                 </p-column>
 
                 <ng-template pTemplate="paginatorLeft">
                     <div class="mostrar">
-                        <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}}
-                            al
-                            {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                        <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
                         <label>{{ "general.message.mostrar" | translate}}</label>
                         <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                        <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" |
-                            translate}}</label>
+                        <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}
+                        </label>
                     </div>
                 </ng-template>
                 <p-footer>
                     <div class="text-right main-button">
                         <!--<button (click)="volver();" [(disabled)]="isVolver" pButton type="button" icon="fa fa-undo"
                                                     iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>-->
-                        <button (click)="confirmEdit()" [disabled]="!isCrear || isInvalidFamiliar()" pButton type="button"
-                            icon="far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                        <button (click)="confirmEdit()" [disabled]="!isCrear || isInvalidFamiliar()" pButton type="button" icon="far fa-save " iconPos="left"
+                            label="{{ 'general.boton.guardar' | translate}}"></button>
                         <!--<button (click)="confirmarBorrar()" [(disabled)]="isEliminar" pButton type="button" icon="fa fa-trash-alt"
                                                     iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>-->
-                        <button (click)="crear()" [disabled]="isCrear" pButton type="button" icon="fa fa-plus" iconPos="left"
-                            label="{{ 'general.boton.new' | translate}}"></button>
+                        <button (click)="crear()" [disabled]="isCrear" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
                     </div>
                 </p-footer>
             </p-dataTable>
@@ -480,7 +465,8 @@
                 <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
             </div>
             <label class="title-ficha">Beneficiarios
-                <!--{{ "general.message.datos.generales" | translate}}--></label>
+                <!--{{ "general.message.datos.generales" | translate}}-->
+            </label>
             <i class="fa fa-angle-up ml-auto"></i>
         </div>
     </div>
@@ -488,23 +474,21 @@
         <div class="form-row">
             <div class="col-lg-3 col-md-3">
                 <label>Tipo beneficiario</label>
-                <p-dropdown class="select-form" [options]="comboBeneficiario" [(ngModel)]="beneficiarioSelected"
-                    optionLabel="label" dataKey="value" (onChange)="onChangeTipoBenef($event)"></p-dropdown>
+                <p-dropdown class="select-form" [options]="comboBeneficiario" [(ngModel)]="beneficiarioSelected" optionLabel="label" dataKey="value"
+                    (onChange)="onChangeTipoBenef($event)"></p-dropdown>
             </div>
             <div *ngIf="beneficiarioSelected != undefined && beneficiarioSelected.value == '3'" class="col-lg-12 col-md-12">
-                <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosB"
-                    (onRowSelect)="irDatosHeredero(selectedDatos)" dataKey="idHeredero" selectionMode="multiple"
-                    [responsive]="true" #tableB class="tabla-listado" [value]="datosB" [sortOrder]="1" sortField="nombre"
-                    [paginator]="true" paginatorPosition="both" [rows]="selectedItem" pageLinks="4" [editable]="true"
-                    [sortField]="sortF" [sortOrder]="sortO" (onSort)="changeSort($event)">
+                <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosB" (onRowSelect)="irDatosHeredero(selectedDatos)"
+                    dataKey="idHeredero" selectionMode="multiple" [responsive]="true" #tableB class="tabla-listado" [value]="datosB"
+                    [sortOrder]="1" sortField="nombre" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" pageLinks="4"
+                    [editable]="true" [sortField]="sortF" [sortOrder]="sortO" (onSort)="changeSort($event)">
 
-                    <p-column field="idParentesco" filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[0].header"
-                        [filter]="true" filterMatchMode="contains">
+                    <p-column field="idParentesco" filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[0].header" [filter]="true"
+                        filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
-                            <p-dropdown *ngIf="car[col.field] == ''" class="select-form" [(ngModel)]="datosHeredero.idParentesco"
-                                [options]="comboParentesco" (onChange)="onchangeParentesco($event)" optionLabel="label"
-                                dataKey="value">
+                            <p-dropdown *ngIf="car[col.field] == ''" class="select-form" [(ngModel)]="datosHeredero.idParentesco" [options]="comboParentesco"
+                                (onChange)="onchangeParentesco($event)" optionLabel="label" dataKey="value">
                             </p-dropdown>
                         </ng-template>
 
@@ -513,27 +497,25 @@
                         filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
-                            <p-dropdown *ngIf="car[col.field] == ''" class="select-form" [(ngModel)]="datosHeredero.idSexo"
-                                [options]="comboSexo" optionLabel="label" dataKey="value" (onChange)="onchangeSexo($event)"></p-dropdown>
+                            <p-dropdown *ngIf="car[col.field] == ''" class="select-form" [(ngModel)]="datosHeredero.idSexo" [options]="comboSexo" optionLabel="label"
+                                dataKey="value" (onChange)="onchangeSexo($event)"></p-dropdown>
                         </ng-template>
                     </p-column>
 
-                    <p-column [sortable]="true" field="nombre" [header]="cols[2].header" [filter]="true"
-                        filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+                    <p-column [sortable]="true" field="nombre" [header]="cols[2].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                        filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
-                            <input *ngIf="car[col.field] == ''" type="text" class="form-control" [(ngModel)]="datosHeredero.nombre"
-                                pInputText>
+                            <input *ngIf="car[col.field] == ''" type="text" class="form-control" [(ngModel)]="datosHeredero.nombre" pInputText>
                         </ng-template>
 
                     </p-column>
 
-                    <p-column [sortable]="true" field="apellidos" [header]="cols[3].header" [filter]="true"
-                        filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+                    <p-column [sortable]="true" field="apellidos" [header]="cols[3].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                        filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
-                            <input *ngIf="car[col.field] == ''" type="text" class="form-control" [(ngModel)]="datosHeredero.apellidos"
-                                pInputText>
+                            <input *ngIf="car[col.field] == ''" type="text" class="form-control" [(ngModel)]="datosHeredero.apellidos" pInputText>
                         </ng-template>
 
                     </p-column>
@@ -542,55 +524,48 @@
                         filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
-                            <p-dropdown *ngIf="car[col.field] == ''" class="select-form" [(ngModel)]="datosHeredero.idTipoIdentificacion"
-                                [options]="comboTipoIdentificacion" optionLabel="label" dataKey="value" (onChange)="onchangeIdentificacion($event)"></p-dropdown>
+                            <p-dropdown *ngIf="car[col.field] == ''" class="select-form" [(ngModel)]="datosHeredero.idTipoIdentificacion" [options]="comboTipoIdentificacion"
+                                optionLabel="label" dataKey="value" (onChange)="onchangeIdentificacion($event)"></p-dropdown>
                         </ng-template>
 
                     </p-column>
 
-                    <p-column [sortable]="true" field="nIdentificacion" [header]="cols[5].header" [filter]="true"
-                        filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+                    <p-column [sortable]="true" field="nIdentificacion" [header]="cols[5].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                        filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
-                            <input *ngIf="car[col.field] == ''" type="text" class="form-control" [(ngModel)]="datosHeredero.nIdentificacion"
-                                pInputText>
+                            <input *ngIf="car[col.field] == ''" type="text" class="form-control" [(ngModel)]="datosHeredero.nIdentificacion" pInputText>
                         </ng-template>
                     </p-column>
 
-                    <p-column [sortable]="true" field="fechaNacimiento" [header]="cols[6].header" [filter]="true"
-                        filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+                    <p-column [sortable]="true" field="fechaNacimiento" [header]="cols[6].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                        filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span *ngIf="car[col.field] != ''">{{car[col.field] | date: 'dd/MM/yyyy'}}</span>
-                            <p-calendar *ngIf="car[col.field] == undefined" [(ngModel)]="datosHeredero.fechaNacimiento"
-                                dateFormat="dd/mm/yy" [utc]="true" [locale]="es" [showIcon]="true"
-                                [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050">
-                            </p-calendar>
+                            <app-fecha *ngIf="car[col.field] == undefined" [(value)]="datosHeredero.fechaNacimiento" [utc]="false" (valueChangeSelected)="fillFechaNacimientoHeredero($event)"
+                                (valueChangeInput)="fillFechaNacimientoHeredero($event)"></app-fecha>
                         </ng-template>
 
                     </p-column>
 
                     <ng-template pTemplate="paginatorLeft">
                         <div class="mostrar">
-                            <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first +
-                                1}}
-                                al
-                                {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                            <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
                             <label>{{ "general.message.mostrar" | translate}}</label>
                             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" |
-                                translate}}</label>
+                            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}
+                            </label>
                         </div>
                     </ng-template>
                     <p-footer>
                         <div class="text-right main-button">
                             <!--<button (click)="volver();" [(disabled)]="isVolver" pButton type="button" icon="fa fa-undo"
                                                     iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>-->
-                            <button (click)="confirmEditB()" [disabled]="!isCrear || isInvalidHeredero()" pButton type="button"
-                                icon="far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                            <button (click)="confirmEditB()" [disabled]="!isCrear || isInvalidHeredero()" pButton type="button" icon="far fa-save " iconPos="left"
+                                label="{{ 'general.boton.guardar' | translate}}"></button>
                             <!--<button (click)="confirmarBorrar()" [(disabled)]="isEliminar" pButton type="button" icon="fa fa-trash-alt"
                                                     iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>-->
-                            <button (click)="crearB()" [(disabled)]="isCrear" pButton type="button" icon="fa fa-plus"
-                                iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+                            <button (click)="crearB()" [(disabled)]="isCrear" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
                         </div>
                     </p-footer>
                 </p-dataTable>
@@ -627,7 +602,8 @@
                 <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
             </div>
             <label class="title-ficha">Observaciones
-                <!--{{ "general.message.datos.generales" | translate}}--></label>
+                <!--{{ "general.message.datos.generales" | translate}}-->
+            </label>
             <i class="fa fa-angle-up ml-auto"></i>
         </div>
     </div>
@@ -643,8 +619,7 @@
 
 
 <div class="mt-3 text-right main-button ">
-    <button (click)="enviarDatosAlter()" [disabled]="!isEnviar()" pButton type="button " icon="fa fa-save" iconPos="left"
-        label="Solicitar"></button>
+    <button (click)="enviarDatosAlter()" [disabled]="!isEnviar()" pButton type="button " icon="fa fa-save" iconPos="left" label="Solicitar"></button>
     <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
 </div>
 
@@ -652,17 +627,21 @@
 
 <p-dialog [(visible)]="mostrarInfo" responsive="true" [draggable]="false" modal="modal" resizable="false" [width]="680">
     <p-header class="title">
-        <label *ngIf="modContratacionSelected != undefined"><strong>{{modContratacionSelected.label}}</strong></label>
+        <label *ngIf="modContratacionSelected != undefined">
+            <strong>{{modContratacionSelected.label}}</strong>
+        </label>
     </p-header>
     <div [innerHTML]="infoPropuesta.breve" *ngIf="modContratacionSelected != undefined" class="col-lg-12 col-md-12 alterMutuaInfo">
     </div>
     <div [innerHTML]="infoPropuesta.descripcion" *ngIf="modContratacionSelected != undefined" class="col-lg-12 col-md-12 alterMutuaInfo"></div>
 </p-dialog>
 
-<p-dialog [(visible)]="!tienePropuesta" [closable]="false" responsive="true" [draggable]="false" modal="modal"
-    resizable="false" [width]="680">
+<p-dialog [(visible)]="!tienePropuesta" [closable]="false" responsive="true" [draggable]="false" modal="modal" resizable="false"
+    [width]="680">
     <p-header class="title">
-        <label><strong>Sin propuestas disponibles</strong></label>
+        <label>
+            <strong>Sin propuestas disponibles</strong>
+        </label>
     </p-header>
     <div *ngIf="propuestas != null" [innerHTML]="propuestas.mensaje" class="col-lg-12 col-md-12 ">
     </div>
@@ -673,10 +652,12 @@
     </p-footer>
 </p-dialog>
 
-<p-dialog [(visible)]="showSolicitarSeguro" [closable]="false" responsive="true" [draggable]="false" modal="modal"
-    resizable="false" [width]="680">
+<p-dialog [(visible)]="showSolicitarSeguro" [closable]="false" responsive="true" [draggable]="false" modal="modal" resizable="false"
+    [width]="680">
     <p-header class="title">
-        <label><strong>Solicitar seguro</strong></label>
+        <label>
+            <strong>Solicitar seguro</strong>
+        </label>
     </p-header>
     <div *ngIf="estadoSolicitudResponse != null" [innerHTML]="estadoSolicitudResponse.mensaje" class="col-lg-12 col-md-12 ">
     </div>
@@ -691,7 +672,9 @@
 <p-dialog [(visible)]="tieneSolicitud" [closable]="false" responsive="true" [draggable]="false" modal="modal" resizable="false"
     [width]="680">
     <p-header class="title">
-        <label><strong>Estado de la solicitud</strong></label>
+        <label>
+            <strong>Estado de la solicitud</strong>
+        </label>
     </p-header>
     <div *ngIf="estadoSolicitudResponse != null" [innerHTML]="estadoSolicitudResponse.mensaje" class="col-lg-12 col-md-12 ">
     </div>

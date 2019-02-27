@@ -6,7 +6,7 @@ import {
   AfterViewInit
 } from "@angular/core";
 import { AutoComplete, Dialog, Calendar } from "primeng/primeng";
-import { esCalendar } from "../../../utils/calendar";
+import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../utils/calendar';
 import { Location } from "@angular/common";
 import { DatePipe } from "@angular/common";
 import { ConfirmationService, Message } from "primeng/components/common/api";
@@ -54,6 +54,7 @@ import { DocushareObject } from "../../../models/DocushareObject";
 import { DocushareItem } from "../../../models/DocushareItem";
 import { FichaDatosCurricularesObject } from "../../../models/FichaDatosCurricularesObject";
 import { DatosSolicitudMutualidadItem } from "../../../models/DatosSolicitudMutualidadItem";
+import * as moment from 'moment';
 
 @Component({
   selector: "app-ficha-colegial",
@@ -230,6 +231,17 @@ export class FichaColegialComponent implements OnInit {
   @ViewChild("tableRegTel")
   tableRegTel: DataTable;
 
+  @ViewChild("calendarFechaNacimiento") calendarFechaNacimiento: Calendar;
+  fechaNacimientoSelected: boolean = true;
+  @ViewChild("calendarFechaIncorporacion") calendarFechaIncorporacion: Calendar;
+  fechaIncorporacionSelected: boolean = true;
+  @ViewChild("calendarFechaPresentacion") calendarFechaPresentacion: Calendar;
+  fechaPresentacionSelected: boolean = true;
+  @ViewChild("calendarFechaJura") calendarFechaJura: Calendar;
+  fechaJuraSelected: boolean = true;
+  @ViewChild("calendarFechaTitulacion") calendarFechaTitulacion: Calendar;
+  fechaTitulacionSelected: boolean = true;
+
   selectedDatosCertificados;
   selectedDatosSociedades;
   selectedDatosCurriculares;
@@ -257,6 +269,8 @@ export class FichaColegialComponent implements OnInit {
   resultsService: any[] = [];
   resultsTopics: any[] = [];
   backgroundColor;
+
+  yearRange: string;
 
   @ViewChild("auto")
   autoComplete: AutoComplete;
@@ -340,6 +354,10 @@ export class FichaColegialComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    this.getYearRange();
+    this.getLenguage();
+
     if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.disabledNif = true;
     } else {
@@ -1525,6 +1543,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   activacionGuardarGenerales() {
+
     this.comisionesAString();
     this.getInscrito();
     this.generalBody.etiquetas = this.etiquetasPersonaJuridicaSelecionados;
@@ -1572,19 +1591,29 @@ export class FichaColegialComponent implements OnInit {
   }
 
   onChangeCalendar(event) {
+
+    this.fechaNacimientoSelected = true;
     // console.log(new Date(event));
     var hoy = new Date();
     var cumpleanos = new Date(event); //
 
-    // var cumpleanos = new Date(fecha);
-    var edad = hoy.getFullYear() - cumpleanos.getFullYear();
-    var m = hoy.getMonth() - cumpleanos.getMonth();
+    if (this.comprobarFecha(cumpleanos, this.calendarFechaNacimiento.minDate)) {
 
-    if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
-      edad--;
+      // var cumpleanos = new Date(fecha);
+      var edad = hoy.getFullYear() - cumpleanos.getFullYear();
+      var m = hoy.getMonth() - cumpleanos.getMonth();
+
+      if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+        edad--;
+      }
+
+      this.edadCalculada = edad;
+      this.fechaNacimiento = cumpleanos;
+      this.calendarFechaNacimiento.overlayVisible = false;
+
+    } else {
+      this.edadCalculada = 0;
     }
-
-    this.edadCalculada = edad;
   }
 
   onWriteCalendar() {
@@ -1801,7 +1830,7 @@ export class FichaColegialComponent implements OnInit {
     if (event.keyCode == 13) {
       event.currentTarget.value = "";
     }
-    
+
   }
 
   activarPaginacionRegTel() {
@@ -3963,5 +3992,295 @@ export class FichaColegialComponent implements OnInit {
         }
       }
     });
+  }
+
+  comprobarFecha(newValue, minDate) {
+    let hoy = new Date();
+    let fecha = moment(newValue, 'DD/MM/YYYY').toDate();
+    let year = hoy.getFullYear();
+    let yearFecha = fecha.getFullYear();
+    if (yearFecha >= year - 80 && yearFecha <= year + 20) {
+      if (minDate) {
+        if (fecha >= minDate) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  blurFechaNacimiento(e) {
+
+    let REGEX = /[a-zA-Z]/;
+    //evento necesario para informar de las fechas que metan manualmente (escribiendo o pegando)
+    if (!this.fechaNacimientoSelected) {
+      let newValue = e.target.value;
+      if (newValue != null && newValue != '') {
+        if (!REGEX.test(newValue) && newValue.length < 11) {
+          let fecha = moment(newValue, 'DD/MM/YYYY').toDate();
+          this.calendarFechaNacimiento.onSelect.emit(fecha);
+        } else {
+          this.calendarFechaNacimiento.overlayVisible = false;
+          this.fechaNacimiento = null;
+          this.edadCalculada = 0;
+        }
+      }
+    }
+  }
+
+  inputFechaNacimiento(e) {
+    this.fechaNacimientoSelected = false;
+
+    //evento necesario para informar de las fechas que borren manualmente (teclado)
+    if (e.inputType == 'deleteContentBackward') {
+      this.borrarFechaNacimiento();
+    }
+  }
+
+  borrarFechaNacimiento() {
+    this.fechaNacimiento = null;
+    this.fechaNacimientoSelected = true;
+    this.edadCalculada = 0;
+  }
+
+  fechaHoyFechaNacimiento() {
+    this.fechaNacimiento = new Date();
+    this.calendarFechaNacimiento.overlayVisible = false;
+    this.fechaNacimientoSelected = true;
+    this.calendarFechaNacimiento.onSelect.emit(this.fechaNacimiento);
+  }
+
+  blurFechaIncorporacion(e) {
+
+    let REGEX = /[a-zA-Z]/;
+    //evento necesario para informar de las fechas que metan manualmente (escribiendo o pegando)
+    if (!this.fechaIncorporacionSelected) {
+      let newValue = e.target.value;
+      if (newValue != null && newValue != '') {
+        if (!REGEX.test(newValue) && newValue.length < 11) {
+          if (this.comprobarFecha(newValue, this.calendarFechaIncorporacion.minDate)) {
+            let fecha = moment(newValue, 'DD/MM/YYYY').toDate();
+            this.colegialesBody.incorporacion = fecha;
+            this.calendarFechaIncorporacion.onSelect.emit();
+          } else {
+            this.calendarFechaIncorporacion.overlayVisible = false;
+            this.colegialesBody.incorporacion = null;
+          }
+        } else {
+          this.calendarFechaIncorporacion.overlayVisible = false;
+          this.colegialesBody.incorporacion = null;
+        }
+      }
+    }
+  }
+
+  inputFechaIncorporacion(e) {
+    this.fechaIncorporacionSelected = false;
+
+    //evento necesario para informar de las fechas que borren manualmente (teclado)
+    if (e.inputType == 'deleteContentBackward') {
+      this.borrarFechaIncorporacion();
+    }
+  }
+
+  borrarFechaIncorporacion() {
+    this.colegialesBody.incorporacion = null;
+    this.fechaIncorporacionSelected = true;
+  }
+
+  fechaHoyFechaIncorporacion() {
+    this.colegialesBody.incorporacion = new Date();
+    this.calendarFechaIncorporacion.overlayVisible = false;
+    this.fechaIncorporacionSelected = true;
+    this.calendarFechaIncorporacion.onSelect.emit();
+
+  }
+
+  blurFechaPresentacion(e) {
+
+    let REGEX = /[a-zA-Z]/;
+    //evento necesario para informar de las fechas que metan manualmente (escribiendo o pegando)
+    if (!this.fechaPresentacionSelected) {
+      let newValue = e.target.value;
+      if (newValue != null && newValue != '') {
+        if (!REGEX.test(newValue) && newValue.length < 11) {
+          if (this.comprobarFecha(newValue, this.calendarFechaPresentacion.minDate)) {
+            let fecha = moment(newValue, 'DD/MM/YYYY').toDate();
+            this.colegialesBody.fechapresentacion = fecha;
+            this.calendarFechaPresentacion.onSelect.emit();
+          } else {
+            this.calendarFechaPresentacion.overlayVisible = false;
+            this.colegialesBody.fechapresentacion = null;
+          }
+        } else {
+          this.calendarFechaPresentacion.overlayVisible = false;
+          this.colegialesBody.fechapresentacion = null;
+        }
+      }
+    }
+  }
+
+  inputFechaPresentacion(e) {
+    this.fechaPresentacionSelected = false;
+
+    //evento necesario para informar de las fechas que borren manualmente (teclado)
+    if (e.inputType == 'deleteContentBackward') {
+      this.borrarFechaPresentacion();
+    }
+  }
+
+  borrarFechaPresentacion() {
+    this.colegialesBody.fechapresentacion = null;
+    this.fechaPresentacionSelected = true;
+  }
+
+  fechaHoyFechaPresentacion() {
+    this.colegialesBody.fechapresentacion = new Date();
+    this.calendarFechaPresentacion.overlayVisible = false;
+    this.fechaPresentacionSelected = true;
+    this.calendarFechaPresentacion.onSelect.emit();
+
+  }
+
+  blurFechaJura(e) {
+
+    let REGEX = /[a-zA-Z]/;
+    //evento necesario para informar de las fechas que metan manualmente (escribiendo o pegando)
+    if (!this.fechaJuraSelected) {
+      let newValue = e.target.value;
+      if (newValue != null && newValue != '') {
+        if (!REGEX.test(newValue) && newValue.length < 11) {
+          if (this.comprobarFecha(newValue, this.calendarFechaJura.minDate)) {
+            let fecha = moment(newValue, 'DD/MM/YYYY').toDate();
+            this.colegialesBody.fechaJura = fecha;
+            this.calendarFechaJura.onSelect.emit();
+          } else {
+            this.calendarFechaJura.overlayVisible = false;
+            this.colegialesBody.fechaJura = null;
+          }
+        } else {
+          this.calendarFechaJura.overlayVisible = false;
+          this.colegialesBody.fechaJura = null;
+        }
+      }
+    }
+  }
+
+  inputFechaJura(e) {
+    this.fechaJuraSelected = false;
+
+    //evento necesario para informar de las fechas que borren manualmente (teclado)
+    if (e.inputType == 'deleteContentBackward') {
+      this.borrarFechaJura();
+    }
+  }
+
+  borrarFechaJura() {
+    this.colegialesBody.fechaJura = null;
+    this.fechaJuraSelected = true;
+  }
+
+  fechaHoyFechaJura() {
+    this.colegialesBody.fechaJura = new Date();
+    this.calendarFechaJura.overlayVisible = false;
+    this.fechaJuraSelected = true;
+    this.calendarFechaJura.onSelect.emit();
+
+  }
+
+  blurFechaTitulacion(e) {
+
+    let REGEX = /[a-zA-Z]/;
+    //evento necesario para informar de las fechas que metan manualmente (escribiendo o pegando)
+    if (!this.fechaTitulacionSelected) {
+      let newValue = e.target.value;
+      if (newValue != null && newValue != '') {
+        if (!REGEX.test(newValue) && newValue.length < 11) {
+          if (this.comprobarFecha(newValue, this.calendarFechaTitulacion.minDate)) {
+            let fecha = moment(newValue, 'DD/MM/YYYY').toDate();
+            this.colegialesBody.fechaTitulacion = fecha;
+            this.calendarFechaTitulacion.onSelect.emit();
+          } else {
+            this.calendarFechaTitulacion.overlayVisible = false;
+            this.colegialesBody.fechaTitulacion = null;
+          }
+        } else {
+          this.calendarFechaTitulacion.overlayVisible = false;
+          this.colegialesBody.fechaTitulacion = null;
+        }
+      }
+    }
+  }
+
+  inputFechaTitulacion(e) {
+    this.fechaTitulacionSelected = false;
+
+    //evento necesario para informar de las fechas que borren manualmente (teclado)
+    if (e.inputType == 'deleteContentBackward') {
+      this.borrarFechaTitulacion();
+    }
+  }
+
+  borrarFechaTitulacion() {
+    this.colegialesBody.fechaTitulacion = null;
+    this.fechaTitulacionSelected = true;
+  }
+
+  fechaHoyFechaTitulacion() {
+    this.colegialesBody.fechaTitulacion = new Date();
+    this.calendarFechaTitulacion.overlayVisible = false;
+    this.fechaTitulacionSelected = true;
+    this.calendarFechaTitulacion.onSelect.emit();
+
+  }
+
+  getYearRange() {
+    let today = new Date();
+    let year = today.getFullYear();
+    this.yearRange = (year - 80) + ":" + (year + 20);
+  }
+
+  getLenguage() {
+    this.sigaServices.get("usuario").subscribe(response => {
+      let currentLang = response.usuarioItem[0].idLenguaje;
+
+      switch (currentLang) {
+        case "1":
+          this.es = esCalendar;
+          break;
+        case "2":
+          this.es = catCalendar;
+          break;
+        case "3":
+          this.es = euCalendar;
+          break;
+        case "4":
+          this.es = glCalendar;
+          break;
+        default:
+          this.es = esCalendar;
+          break;
+      }
+    });
+  }
+
+  fillFechaAlta(event) {
+    this.fechaAlta = event;
+    this.activacionGuardarGenerales();
+  }
+
+  fillFechaInicio(event) {
+    this.item.fechaInicio = event;
+    this.validateFields();
+  }
+
+  fillFechaBaja(event) {
+    this.item.fechaBaja = event;
+    this.validateFields();
   }
 }

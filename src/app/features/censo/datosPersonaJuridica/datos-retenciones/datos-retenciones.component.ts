@@ -187,6 +187,7 @@ export class DatosRetencionesComponent implements OnInit {
   }
 
   onChangeCalendar(event) {
+    this.nuevafecha = event;
     this.isVolver = false;
     if (this.datos.length > 1) {
       this.datos.forEach((value: any, key: number) => {
@@ -253,7 +254,7 @@ export class DatosRetencionesComponent implements OnInit {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
   isValidIBAN(iban: String): boolean {
@@ -470,7 +471,7 @@ export class DatosRetencionesComponent implements OnInit {
         datosDelete
       )
       .subscribe(
-        data => {},
+        data => { },
         err => {
           console.log(err);
         },
@@ -520,9 +521,9 @@ export class DatosRetencionesComponent implements OnInit {
                 (value: any, key: number) => {
                   if (
                     this.searchRetenciones.retencionesItemList[key].fechaFin ==
-                      null ||
+                    null ||
                     this.searchRetenciones.retencionesItemList[key].fechaFin ==
-                      undefined
+                    undefined
                   ) {
                     unorderedDate = JSON.stringify(
                       this.searchRetenciones.retencionesItemList[key]

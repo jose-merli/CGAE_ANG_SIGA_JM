@@ -195,4 +195,12 @@ export class ProgramacionComponent implements OnInit {
     return true;
   }
 
+  fillFechaCreacion(event) {
+    this.body.fechaCreacion = event;
+  }
+
+  fillFechaProgramada(event) {
+    this.body.fechaProgramada = event;
+  }
+
 }

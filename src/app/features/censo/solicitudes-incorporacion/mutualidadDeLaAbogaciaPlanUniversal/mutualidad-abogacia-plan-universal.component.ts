@@ -77,7 +77,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private location: Location
-  ) {}
+  ) { }
 
   @ViewChild("poblacion") dropdown: Dropdown;
 
@@ -374,7 +374,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
           this.getLabelbyFilter(this.poblaciones);
           this.dropdown.filterViewChild.nativeElement.value = poblacionBuscada;
         },
-        error => {},
+        error => { },
         () => {
           // this.isDisabledPoblacion = false;
           this.progressSpinner = false;
@@ -559,7 +559,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.showFailMensaje(error.valorRespuesta);
           this.progressSpinner = true;
         },
-        () => {}
+        () => { }
       );
   }
 
@@ -617,5 +617,9 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   backTo() {
     this.location.back();
+  }
+
+  fillFechaNacimientoConyuge(event) {
+    this.body.fechaNacConyuge = event;
   }
 }

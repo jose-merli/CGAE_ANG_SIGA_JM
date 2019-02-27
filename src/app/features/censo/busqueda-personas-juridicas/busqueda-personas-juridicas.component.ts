@@ -328,7 +328,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {}
+        () => { }
       );
   }
 
@@ -592,5 +592,9 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  fillFechaConstitucion(event) {
+    this.fechaConstitucion = event;
   }
 }

@@ -64,13 +64,13 @@
                         </div>
                         <div class="form-group col-lg-4 col-md-5">
                             <label>{{"censo.nuevaSolicitud.fechaEstado" | translate }} (*)</label>
-                            <p-calendar [disabled]="consulta" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true"
-                                icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="solicitudEditar.fechaEstado"></p-calendar>
+                            <app-fecha [(value)]="solicitudEditar.fechaEstado" [disabled]="consulta" [utc]="false" (valueChangeSelected)="fillFechaEstado($event)"
+                                (valueChangeInput)="fillFechaEstado($event)"></app-fecha>
                         </div>
                         <div class="form-group col-lg-4 col-md-5" style="float:right">
                             <label>{{"censo.nuevaSolicitud.fechaSolicitud" | translate }} (*)</label>
-                            <p-calendar [disabled]="consulta" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true"
-                                icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="solicitudEditar.fechaSolicitud"></p-calendar>
+                            <app-fecha [(value)]="solicitudEditar.fechaSolicitud" [disabled]="consulta" [utc]="false" (valueChangeSelected)="fillFechaSolicitud($event)"
+                                (valueChangeInput)="fillFechaSolicitud($event)"></app-fecha>
                         </div>
                     </div>
                 </div>
@@ -138,8 +138,8 @@
                 </div>
                 <div class="form-group col-lg-3 col-md-4">
                     <label>{{"censo.nuevaSolicitud.fechaincorporacion" | translate}} (*)</label>
-                    <p-calendar [disabled]="consulta" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true"
-                        icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="solicitudEditar.fechaIncorporacion"></p-calendar>
+                    <app-fecha [(value)]="solicitudEditar.fechaIncorporacion" [disabled]="consulta" [utc]="false" (valueChangeSelected)="fillFechaIncorporacion($event)"
+                        (valueChangeInput)="fillFechaIncorporacion($event)"></app-fecha>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>{{"censo.nuevaSolicitud.numColegiado" | translate}}</label>
@@ -207,7 +207,7 @@
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
                         {{"censo.SolicitudIncorporacion.literal.tipoIdentificacion" | translate}} (*)</label>
-                    <p-dropdown disabled class="select-form" [(ngModel)]="tipoIdentificacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}"
+                    <p-dropdown disabled="true" class="select-form" [(ngModel)]="tipoIdentificacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}"
                         [options]="tipoIdentificacion"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
@@ -258,8 +258,8 @@
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
                         {{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}} (*)</label>
-                    <p-calendar [disabled]="consulta" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [utc]="true"
-                        icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" [(ngModel)]="solicitudEditar.fechaNacimiento"></p-calendar>
+                    <app-fecha [(value)]="solicitudEditar.fechaNacimiento" [disabled]="consulta" [utc]="false" (valueChangeSelected)="fillFechaNacimiento($event)"
+                        (valueChangeInput)="fillFechaNacimiento($event)"></app-fecha>
                 </div>
             </div>
         </div>

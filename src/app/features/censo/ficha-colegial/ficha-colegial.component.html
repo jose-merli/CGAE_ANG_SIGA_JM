@@ -202,9 +202,17 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}
               </label>
-              <p-calendar [monthNavigator]="true" [yearNavigator]="true" (onSelect)="onChangeCalendar($event)" (onInput)="onWriteCalendar(fechaNacimiento)"
-                yearRange="1930:2050" [locale]="es" [(ngModel)]="fechaNacimiento" (onSelect)="activacionGuardarGenerales()"
-                [(disabled)]="isLetrado || disabledAction" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" [utc]="true" showIcon="true"></p-calendar>
+              <p-calendar #calendarFechaNacimiento [monthNavigator]="true" [yearNavigator]="true" (onSelect)="onChangeCalendar($event); activacionGuardarGenerales()"
+                (onInput)="inputFechaNacimiento($event)" [yearRange]="yearRange" [locale]="es" [(ngModel)]="fechaNacimiento"
+                (onBlur)="blurFechaNacimiento($event)" [(disabled)]="isLetrado || disabledAction" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
+                [utc]="false" showIcon="true">
+                <p-footer>
+                  <div class="main-button d-flex justify-content-end">
+                    <button (click)="fechaHoyFechaNacimiento()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
+                    <button (click)="borrarFechaNacimiento()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
+                  </div>
+                </p-footer>
+              </p-calendar>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.consultaDatosGenerales.literal.edad" | translate }}
@@ -304,8 +312,8 @@
             <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
               <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }} (*)
               </label>
-              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(disabled)]="!esNewColegiado || isLetrado || disabledAction"
-                [(ngModel)]="fechaAlta" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true" (onSelect)="activacionGuardarGenerales()"></p-calendar>
+              <app-fecha [(value)]="fechaAlta" (valueChangeInput)="fillFechaAlta($event)" [disabled]="!esNewColegiado || isLetrado || disabledAction"
+                (valueChangeSelected)="fillFechaAlta($event)" [utc]="false"></app-fecha>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{ "censo.fichaCliente.situacion.idiomaPref" | translate }} (*)
@@ -475,28 +483,59 @@
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.consultaDatosGenerales.literal.fechaIncorporacion" | translate }} (*)</label>
-              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(disabled)]="isLetrado || disabledAction"
-                (onSelect)="activacionGuardarColegiales()" [(ngModel)]="colegialesBody.incorporacion" dateFormat="dd/mm/yy"
-                icon="far fa-calendar-alt" showIcon="true" [utc]="true"></p-calendar>
+              <p-calendar [monthNavigator]="true" #calendarFechaIncorporacion [yearNavigator]="true" [yearRange]="yearRange" [locale]="es"
+                [(disabled)]="isLetrado || disabledAction" (onSelect)="activacionGuardarColegiales(); fechaIncorporacionSelected=true"
+                (onInput)="inputFechaIncorporacion($event)" (onBlur)="blurFechaIncorporacion($event)" [(ngModel)]="colegialesBody.incorporacion"
+                dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
+                <p-footer>
+                  <div class="main-button d-flex justify-content-end">
+                    <button (click)="fechaHoyFechaIncorporacion()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
+                    <button (click)="borrarFechaIncorporacion()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
+                  </div>
+                </p-footer>
+              </p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.consultaDatosGenerales.literal.fechaPresentacion" | translate }} (*)</label>
-              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(disabled)]="isLetrado || disabledAction"
-                [(ngModel)]="colegialesBody.fechapresentacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
-                [utc]="true" (ngModelChange)="activacionGuardarColegiales()"></p-calendar>
+              <p-calendar [monthNavigator]="true" #calendarFechaPresentacion [yearNavigator]="true" [yearRange]="yearRange" [locale]="es"
+                (onSelect)="activacionGuardarColegiales(); fechaPresentacionSelected=true" (onInput)="inputFechaPresentacion($event)"
+                (onBlur)="blurFechaPresentacion($event)" [(disabled)]="isLetrado || disabledAction" [(ngModel)]="colegialesBody.fechapresentacion"
+                dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
+                <p-footer>
+                  <div class="main-button d-flex justify-content-end">
+                    <button (click)="fechaHoyFechaPresentacion()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
+                    <button (click)="borrarFechaPresentacion()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
+                  </div>
+                </p-footer>
+              </p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.consultaDatosGenerales.literal.fechaJura" | translate }} (*)</label>
-              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(disabled)]="isLetrado || disabledAction"
-                [(ngModel)]="colegialesBody.fechaJura" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="true"
-                (ngModelChange)="activacionGuardarColegiales()"></p-calendar>
+              <p-calendar [monthNavigator]="true" #calendarFechaJura [yearNavigator]="true" [yearRange]="yearRange" [locale]="es" [(disabled)]="isLetrado || disabledAction"
+                (onSelect)="activacionGuardarColegiales(); fechaJuraSelected=true" (onInput)="inputFechaJura($event)" (onBlur)="blurFechaJura($event)"
+                [(ngModel)]="colegialesBody.fechaJura" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
+                <p-footer>
+                  <div class="main-button d-flex justify-content-end">
+                    <button (click)="fechaHoyFechaJura()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
+                    <button (click)="borrarFechaJura()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
+                  </div>
+                </p-footer>
+              </p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.consultaDatosColegiales.literal.fechaTitulacion" | translate }}
               </label>
-              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(disabled)]="isLetrado || disabledAction"
-                [(ngModel)]="colegialesBody.fechaTitulacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
-                [utc]="true" (ngModelChange)="activacionGuardarColegiales()"></p-calendar>
+              <p-calendar [monthNavigator]="true" #calendarFechaTitulacion [yearNavigator]="true" [yearRange]="yearRange" [locale]="es"
+                [(disabled)]="isLetrado || disabledAction" (onSelect)="activacionGuardarColegiales(); fechaTitulacionSelected=true"
+                (onInput)="inputFechaTitulacion($event)" (onBlur)="blurFechaTitulacion($event)" [(ngModel)]="colegialesBody.fechaTitulacion"
+                dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
+                <p-footer>
+                  <div class="main-button d-flex justify-content-end">
+                    <button (click)="fechaHoyFechaTitulacion()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
+                    <button (click)="borrarFechaTitulacion()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
+                  </div>
+                </p-footer>
+              </p-calendar>
             </div>
           </div>
         </div>
@@ -1297,8 +1336,7 @@
         </label>
         <label *ngIf="!historico">{{ "administracion.auditoriaUsuarios.fechaDesde" | translate }} (*)
         </label>
-        <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="item.fechaInicio" [locale]="es"
-          [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (onSelect)="validateFields()" [(disabled)]="historico"></p-calendar>
+        <app-fecha [(value)]="item.fechaInicio" (valueChangeInput)="fillFechaInicio($event)" [disabled]="historico" (valueChangeSelected)="fillFechaInicio($event)"></app-fecha>
       </div>
 
       <div class="form-group col-lg-6 col-md-6 form-group-date">
@@ -1306,9 +1344,8 @@
         </label>
         <label *ngIf="!historico">{{ "administracion.auditoriaUsuarios.fechaHasta" | translate }}
         </label>
-        <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="item.fechaBaja" [locale]="es"
-          [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (onSelect)="validateFields()" [(disabled)]="historico"
-          [(minDate)]="fechaHoy"></p-calendar>
+        <app-fecha [(value)]="item.fechaBaja" (valueChangeInput)="fillFechaBaja($event)" [disabled]="historico" (valueChangeSelected)="fillFechaBaja($event)"
+          [minDate]="fechaHoy"></app-fecha>
         <!-- <div
             *ngIf="item.fechaBaja != null && !isFechaBajaCorrect && !historico"
           >

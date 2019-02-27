@@ -63,7 +63,7 @@ export class DatosCvComponent implements OnInit {
     private datePipe: DatePipe,
     private domSanitizer: DomSanitizer,
     private changeDetectorRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getInfo();
@@ -184,7 +184,7 @@ export class DatosCvComponent implements OnInit {
     }
   }
 
-  showFailUploadedImage() {}
+  showFailUploadedImage() { }
 
   isBuscar() {
     this.buscar = true;
@@ -357,6 +357,15 @@ export class DatosCvComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+
+  fillFechaCarga(event) {
+    this.fechaCargaSelect = event;
+  }
+
+  detectFechaCargaInput(event) {
+    this.fechaCargaSelect = event;
+  }
+
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {

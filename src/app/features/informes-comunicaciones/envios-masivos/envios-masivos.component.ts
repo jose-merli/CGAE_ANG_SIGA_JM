@@ -66,7 +66,7 @@ export class EnviosMasivosComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     sessionStorage.removeItem("crearNuevoEnvio");
@@ -256,7 +256,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {}
+        () => { }
       );
   }
   getResultadosComunicacionDuplicada() {
@@ -279,7 +279,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             console.log(err);
             this.progressSpinner = false;
           },
-          () => {}
+          () => { }
         );
     }
   }
@@ -338,7 +338,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.showFail("Error al procesar el envio");
         console.log(err);
       },
-      () => {}
+      () => { }
     );
   }
 
@@ -467,5 +467,17 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   abreCierraFicha() {
     this.fichaBusqueda = !this.fichaBusqueda;
+  }
+
+  fillFechaCreacion(event) {
+    this.bodySearch.fechaCreacion = event;
+  }
+
+  fillFechaProgramacion(event) {
+    this.bodySearch.fechaProgramacion = event;
+  }
+
+  fillFechaProgramada(event) {
+    this.bodyProgramar.fechaProgramada = event;
   }
 }

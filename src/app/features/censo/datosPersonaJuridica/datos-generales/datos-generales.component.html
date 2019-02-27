@@ -93,8 +93,8 @@
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"administracion.usuarios.literal.fechaAlta" | translate}} (*)</label>
-              <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="body.fechaConstitucion"
-                (ngModelChange)="onChangeForm()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(disabled)]="!editar || disabledAction"></p-calendar>
+              <app-fecha [(value)]="body.fechaConstitucion" [disabled]="!editar || disabledAction" (valueChangeSelected)="fillFechaConstitucion($event)"
+                (valueChangeInput)="detectFechaConstitucionInput($event)"></app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}</label>
@@ -203,17 +203,15 @@
         <div class="form-group col-lg-6 col-md-6">
           <label *ngIf="historico">{{"administracion.auditoriaUsuarios.fechaDesde" | translate}}</label>
           <label *ngIf="!historico">{{"administracion.auditoriaUsuarios.fechaDesde" | translate}} (*)</label>
-          <p-calendar [monthNavigator]="true" [yearNavigator]="true" [(ngModel)]="item.fechaInicio" [locale]="es" [utc]="true" icon="far fa-calendar-alt"
-            yearRange="1930:2050" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="validateFields()" [(disabled)]="historico"></p-calendar>
+          <app-fecha [(value)]="item.fechaInicio" [disabled]="historico" (valueChangeSelected)="fillFechaInicio($event)" (valueChangeInput)="detectFechaInicioInput($event)"></app-fecha>
         </div>
 
         <div class="form-group col-lg-6 col-md-6 form-group-date">
           <label *ngIf="historico">{{"administracion.auditoriaUsuarios.fechaHasta" | translate}}</label>
           <label *ngIf="!historico">{{"administracion.auditoriaUsuarios.fechaHasta" | translate}}
           </label>
-          <p-calendar [monthNavigator]="true" [yearNavigator]="true" [(ngModel)]="item.fechaBaja" [locale]="es" [utc]="true" icon="far fa-calendar-alt"
-            yearRange="1930:2050" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="validateFields()" [(minDate)]="fechaHoy"
-            [(disabled)]="historico"></p-calendar>
+          <app-fecha [(value)]="item.fechaBaja" [disabled]="historico" [minDate]="fechaHoy" (valueChangeSelected)="fillFechaBaja($event)"
+            (valueChangeInput)="detectFechaBajaInput($event)"></app-fecha>
           <!-- <div *ngIf="item.fechaBaja != null && !isFechaBajaCorrect && !historico">
             <label class="labelError">{{"gratuita.altaTurnos.error.fechaBajaPosteriorInicio" | translate}}</label>
           </div> -->

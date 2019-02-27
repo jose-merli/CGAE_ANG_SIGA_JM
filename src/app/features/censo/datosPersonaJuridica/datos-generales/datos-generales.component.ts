@@ -128,7 +128,7 @@ export class DatosGenerales implements OnInit {
   updateItems: Map<String, ComboEtiquetasItem> = new Map<
     String,
     ComboEtiquetasItem
-  >();
+    >();
 
   @ViewChild("auto")
   autoComplete: AutoComplete;
@@ -236,7 +236,7 @@ export class DatosGenerales implements OnInit {
       n => {
         this.comboIdentificacion = n.combooItems;
       },
-      error => {}
+      error => { }
     );
 
     this.comboTipo.push(this.tipoPersonaJuridica);
@@ -502,7 +502,7 @@ export class DatosGenerales implements OnInit {
       this.body.motivo = "registro actualizado";
 
       this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
-        data => {},
+        data => { },
         error => {
           this.personaSearch = JSON.parse(error["error"]);
           this.showFail(JSON.stringify(this.personaSearch.error.description));
@@ -1155,5 +1155,35 @@ export class DatosGenerales implements OnInit {
 
   ngAfterViewChecked() {
     this.changeDetectorRef.detectChanges();
+  }
+
+  fillFechaConstitucion(event) {
+    this.body.fechaConstitucion = event;
+    this.onChangeForm();
+  }
+
+  detectFechaConstitucionInput(event) {
+    this.body.fechaConstitucion = event;
+    this.onChangeForm();
+  }
+
+  fillFechaBaja(event) {
+    this.item.fechaBaja = event;
+    this.validateFields();
+  }
+
+  detectFechaBajaInput(event) {
+    this.item.fechaBaja = event;
+    this.validateFields();
+  }
+
+  fillFechaInicio(event) {
+    this.item.fechaInicio = event;
+    this.validateFields();
+  }
+
+  detectFechaInicioInput(event) {
+    this.item.fechaInicio = event;
+    this.validateFields();
   }
 }

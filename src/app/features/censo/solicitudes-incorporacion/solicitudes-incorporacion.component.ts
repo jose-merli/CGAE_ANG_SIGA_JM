@@ -3,7 +3,8 @@ import {
   OnInit,
   ViewChild,
   ChangeDetectorRef,
-  HostListener
+  HostListener,
+  Input
 } from "@angular/core";
 import {
   FormGroup,
@@ -61,7 +62,6 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     private router: Router
   ) {
     this.formBusqueda = this.formBuilder.group({
-      fechaDesde: new FormControl(null, Validators.required),
       nombre: new FormControl(null, Validators.minLength(3)),
       apellidos: new FormControl(null, Validators.minLength(3))
     });
@@ -165,7 +165,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   isBuscar() {
     if (
       !this.formBusqueda.invalid &&
-      this.checkIdentificacion(this.body.numeroIdentificacion)
+      this.checkIdentificacion(this.body.numeroIdentificacion) && (this.body.fechaDesde != undefined && this.body.fechaDesde != null)
     ) {
       return false;
     } else {
@@ -305,10 +305,10 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-			if (!(this.body.fechaDesde === undefined || this.body.fechaDesde === null)) {
-				this.buscarSolicitudes();
-			}
-		}
+      if (!(this.body.fechaDesde === undefined || this.body.fechaDesde === null)) {
+        this.buscarSolicitudes();
+      }
+    }
   }
 
   clear() {
@@ -317,5 +317,13 @@ export class SolicitudesIncorporacionComponent implements OnInit {
 
   onHideCard() {
     this.showCard = !this.showCard;
+  }
+
+  fillFechaDesde(event) {
+    this.body.fechaDesde = event;
+  }
+
+  fillFechaHasta(event) {
+    this.body.fechaHasta = event;
   }
 }

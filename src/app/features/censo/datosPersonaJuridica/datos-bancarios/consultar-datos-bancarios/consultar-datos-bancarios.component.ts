@@ -140,7 +140,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.progressSpinner = true;
@@ -686,7 +686,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
   checkTypeCIF(value: String): boolean {
@@ -794,7 +794,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         data => {
           this.lengthCountryCode = JSON.parse(data["body"]);
         },
-        error => {},
+        error => { },
         () => {
           if (this.isValidIbanExt()) {
             this.ibanValido = true;
@@ -816,9 +816,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
                 } else {
                   if (
                     this.body.bic.charAt(4) !=
-                      this.iban.substring(0, 2).charAt(0) &&
+                    this.iban.substring(0, 2).charAt(0) &&
                     this.body.bic.charAt(5) !=
-                      this.iban.substring(0, 2).charAt(1)
+                    this.iban.substring(0, 2).charAt(1)
                   ) {
                     this.body.bic = "";
                   }
@@ -1087,7 +1087,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   filtrarItemsComboEsquema(comboEsquema, buscarElemento) {
-    return comboEsquema.filter(function(obj) {
+    return comboEsquema.filter(function (obj) {
       return obj.value == buscarElemento;
     });
   }
@@ -1673,5 +1673,21 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   onEnviarComunicacion() {
     this.showComunicar = false;
+  }
+
+  fillFechaFirmada(event) {
+    this.firmaFechaDate = event;
+  }
+
+  detectFechaFirmadaInput(event) {
+    this.firmaFechaDate = event;
+  }
+
+  fillFechaUso(event) {
+    this.datefechaUso = event;
+  }
+
+  detectFechaUsoInput(event) {
+    this.datefechaUso = event;
   }
 }

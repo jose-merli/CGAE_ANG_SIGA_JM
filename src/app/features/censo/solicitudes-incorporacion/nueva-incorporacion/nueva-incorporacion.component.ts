@@ -145,9 +145,9 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.dniDisponible = false;
     }
 
-    if(this.solicitudEditar.apellido2 != undefined){
-      this.solicitudEditar.apellidos = this.solicitudEditar.apellido1 + " " + this.solicitudEditar.apellido2; 
-    }else{
+    if (this.solicitudEditar.apellido2 != undefined) {
+      this.solicitudEditar.apellidos = this.solicitudEditar.apellido1 + " " + this.solicitudEditar.apellido2;
+    } else {
       this.solicitudEditar.apellidos = this.solicitudEditar.apellido1;
     }
 
@@ -155,7 +155,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     if (this.solicitudEditar.titular == null || this.solicitudEditar.titular == undefined || this.solicitudEditar.titular == "") {
       this.solicitudEditar.titular = this.solicitudEditar.nombre + " " + this.solicitudEditar.apellidos;
     }
-    
+
     if (this.isValidIBAN()) {
       this.recuperarBicBanco();
       this.checkSolicitudInicio = JSON.parse(JSON.stringify(this.solicitudEditar)
@@ -1127,6 +1127,22 @@ para poder filtrar el dato con o sin estos caracteres*/
   ngOnDestroy() {
     sessionStorage.removeItem("solicitudIncorporacion");
     sessionStorage.removeItem("nuevaIncorporacion");
+  }
+
+  fillFechaEstado(event) {
+    this.solicitudEditar.fechaEstado = event;
+  }
+
+  fillFechaSolicitud(event) {
+    this.solicitudEditar.fechaSolicitud = event;
+  }
+
+  fillFechaIncorporacion(event) {
+    this.solicitudEditar.fechaIncorporacion = event;
+  }
+
+  fillFechaNacimiento(event) {
+    this.solicitudEditar.fechaNacimiento = event;
   }
 
   //búsqueda con enter

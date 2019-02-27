@@ -86,13 +86,13 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   fechaNacimientoDesdeSelect: Date;
 
   //Diálogo de comunicación
-  bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();  
-  first: number = 0;  
+  bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
+  first: number = 0;
   clasesComunicaciones: any = [];
-  currentRoute: String;  
+  currentRoute: String;
   idClasesComunicacionArray: string[] = [];
   idClaseComunicacion: String;
-  keys: any []= [];
+  keys: any[] = [];
 
   constructor(
     private sigaServices: SigaServices,
@@ -748,14 +748,14 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     }
   }
 
-  navigateComunicar(dato){
-    sessionStorage.setItem("rutaComunicacion",this.currentRoute.toString());
-    this.getDatosComunicar();    
+  navigateComunicar(dato) {
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    this.getDatosComunicar();
   }
 
   onRowSelectModelos() { }
 
-  getKeysClaseComunicacion(){
+  getKeysClaseComunicacion() {
     this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
       data => {
         this.keys = JSON.parse(data['body']);
@@ -766,7 +766,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     );
   }
 
-  getDatosComunicar(){
+  getDatosComunicar() {
     let datosSeleccionados = [];
     let rutaClaseComunicacion = this.currentRoute.toString();
 
@@ -778,26 +778,43 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
             this.keys = JSON.parse(data['body']).keysItem;
             this.selectedDatos.forEach(element => {
               let keysValues = [];
-              this.keys.forEach(key =>{
-                if(element[key.nombre] != undefined){
+              this.keys.forEach(key => {
+                if (element[key.nombre] != undefined) {
                   keysValues.push(element[key.nombre]);
-                }            
+                }
               })
               datosSeleccionados.push(keysValues);
             });
-    
+
             sessionStorage.setItem("datosComunicar", JSON.stringify(datosSeleccionados));
             this.router.navigate(["/dialogoComunicaciones"]);
           },
           err => {
             console.log(err);
           }
-        );   
+        );
       },
       err => {
         console.log(err);
       }
-    );    
-  
+    );
+
   }
+
+  fillFechaIncorporacionDesde(event) {
+    this.fechaIncorporacionDesdeSelect = event;
+  }
+
+  fillFechaIncorporacionHasta(event) {
+    this.fechaIncorporacionHastaSelect = event;
+  }
+
+  fillFechaNacimientoDesde(event) {
+    this.fechaNacimientoDesdeSelect = event;
+  }
+
+  fillFechaNacimientoHasta(event) {
+    this.fechaNacimientoHastaSelect = event;
+  }
+
 }
