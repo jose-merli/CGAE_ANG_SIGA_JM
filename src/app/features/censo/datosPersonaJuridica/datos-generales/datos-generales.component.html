@@ -1,7 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
   <!--DATOS GENERALES-->
-  <div class="card">
+  <div *ngIf="tarjeta == '3' || tarjeta == '2'" class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha()">
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
@@ -56,7 +56,7 @@
             <i *ngIf="!existeImagen" class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
             <img *ngIf="existeImagen" [src]="imagenPersonaJuridica">
             <p-fileUpload #fubauto chooseLabel="" class="edit my-0 mx-auto main-button" mode="basic" name="file" auto="true" accept="image/*"
-              (onSelect)="uploadImage($event)" auto="true">
+              (onSelect)="uploadImage($event)" auto="true" [disabled]="tarjeta == '2'">
             </p-fileUpload>
           </div>
         </div>
@@ -76,7 +76,7 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.fichaCliente.literal.identificacion" | translate}} (*)</label>
-              <input [(ngModel)]="body.nif" type="text" class="form-control" (ngModelChange)="onChangeForm()" [disabled]="!editar || disabledAction"
+              <input [(ngModel)]="body.nif" type="text" class="form-control" (ngModelChange)="onChangeForm()" [disabled]="!editar || disabledAction || tarjeta == '2'"
                 pInputText>
               <div *ngIf="identificacionValida == false">
                 <label class="labelError">{{"El cif es inválido"}}</label>
@@ -93,7 +93,7 @@
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"administracion.usuarios.literal.fechaAlta" | translate}} (*)</label>
-              <app-fecha [(value)]="body.fechaConstitucion" [disabled]="!editar || disabledAction" (valueChangeSelected)="fillFechaConstitucion($event)"
+              <app-fecha [(value)]="body.fechaConstitucion" [disabled]="!editar || disabledAction || tarjeta == '2'" (valueChangeSelected)="fillFechaConstitucion($event)"
                 (valueChangeInput)="detectFechaConstitucionInput($event)"></app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
@@ -105,12 +105,12 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosGenerales.literal.denominacion" | translate}} (*)</label>
-              <input [(ngModel)]="body.denominacion" type="text" class="form-control" (ngModelChange)="onChangeForm()" [(disabled)]="camposDesactivados || disabledAction"
+              <input [(ngModel)]="body.denominacion" type="text" class="form-control" (ngModelChange)="onChangeForm()" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'"
                 [maxLength]="99" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"gratuita.definirTurnosIndex.literal.abreviatura" | translate}} (*)</label>
-              <input [(ngModel)]="body.abreviatura" type="text" class="form-control" (ngModelChange)="onChangeForm()" [(disabled)]="camposDesactivados || disabledAction"
+              <input [(ngModel)]="body.abreviatura" type="text" class="form-control" (ngModelChange)="onChangeForm()" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'"
                 [maxLength]="100" pInputText>
             </div>
             <!--<div class="form-row p-1 col-lg-6 col-md-6">
@@ -137,18 +137,18 @@
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.fichaCliente.situacion.idiomaPref" | translate}} (*)</label>
-              <p-dropdown class="select-form" [options]="idiomas" [(disabled)]="camposDesactivados || disabledAction" [(ngModel)]="idiomaPreferenciaSociedad"
+              <p-dropdown class="select-form" [options]="idiomas" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="idiomaPreferenciaSociedad"
                 [filter]="true" (ngModelChange)="onChangeForm()" filterBy="label"></p-dropdown>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
-              <input type="text " class="form-control " [(disabled)]="camposDesactivados || disabledAction" [(ngModel)]="body.cuentaContable"
+              <input type="text " class="form-control " [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.cuentaContable"
                 [maxLength]="20" (ngModelChange)="onChangeForm()" pInputText>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.general.literal.anotaciones" | translate}}: </label>
-              <textarea pInputTextarea [(ngModel)]="body.anotaciones" [(disabled)]="camposDesactivados || disabledAction" (ngModelChange)="onChangeForm()"
-                [maxLength]="2000"></textarea>
+              <textarea pInputTextarea [(ngModel)]="body.anotaciones" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'"
+                (ngModelChange)="onChangeForm()" [maxLength]="2000"></textarea>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}}
@@ -159,7 +159,7 @@
 
               <p-autoComplete #auto [(ngModel)]="etiquetasPersonaJuridicaSelecionados" [suggestions]="comboEtiquetas" (completeMethod)="filterLabelsMultiple($event)"
                 [minLength]="1" field="label" [multiple]="true" (onBlur)="onBlur($event)" (onKeyUp)="onKeyUp($event)" (onSelect)="onSelect($event)"
-                (onUnselect)="onUnselect($event)" [disabled]="!autocompletar || disabledAction" (click)="disabledAutocomplete()"
+                (onUnselect)="onUnselect($event)" [disabled]="!autocompletar || disabledAction || tarjeta == '2'" (click)="disabledAutocomplete()"
                 [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}">
                 <ng-template let-etiquetasPersonaJuridicaSelecionados pTemplate="selectedItem">
                   <div *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor != ''" class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li"
@@ -178,10 +178,10 @@
     <!--END DATOS GENERALES-->
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="restablecer()" [(disabled)]="camposDesactivados || disabledAction" pButton type="button" icon="fa fa-undo"
-          iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="comprobarAuditoria()" [(disabled)]="!showGuardar || disabledAction" pButton type="button" icon="far fa-save"
-          iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="restablecer()" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" pButton type="button"
+          icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="comprobarAuditoria()" [disabled]="!showGuardar || disabledAction || tarjeta == '2'" pButton type="button"
+          icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

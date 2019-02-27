@@ -1124,6 +1124,25 @@ para poder filtrar el dato con o sin estos caracteres*/
       );
   }
 
+
+  irAlterMutuaReta() {
+    sessionStorage.setItem(
+      "datosSolicitud",
+      JSON.stringify(this.solicitudEditar)
+    );
+    sessionStorage.setItem("tipoPropuesta", "RETA");
+    this.router.navigate(["/alterMutuaReta"]);
+  }
+
+  irOfertas() {
+    sessionStorage.setItem(
+      "datosSolicitud",
+      JSON.stringify(this.solicitudEditar)
+    );
+    sessionStorage.setItem("tipoPropuesta", "Ofertas");
+    this.router.navigate(["/alterMutuaOfertas"]);
+  }
+
   ngOnDestroy() {
     sessionStorage.removeItem("solicitudIncorporacion");
     sessionStorage.removeItem("nuevaIncorporacion");

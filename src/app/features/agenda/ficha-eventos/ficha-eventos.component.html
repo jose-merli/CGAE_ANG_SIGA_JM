@@ -44,12 +44,13 @@
             <div class="col-lg-6 col-md-6">
               <label>{{'agenda.fichaEventos.datosGenerales.calendario' | translate }} (*)</label>
               <p-dropdown class="select-form" [options]="comboCalendars" [filter]="true" filterBy="label,labelSinTilde" placeholder="{{'tablas.literal.seleccionar' | translate}}"
-                name="type" (ngModelChange)="onChangeSelectCalendar($event)" [(ngModel)]="newEvent.idTipoCalendario" [disabled]="modoTipoEventoInscripcion || isFormacionCalendar || modoEdicionEvento  || tipoAccesoLectura"></p-dropdown>
+                name="type" (ngModelChange)="onChangeSelectCalendar($event)" [(ngModel)]="newEvent.idTipoCalendario" [disabled]="modoTipoEventoInscripcion || isFormacionCalendar || modoEdicionEvento  || tipoAccesoLectura"
+                [showClear]="true"></p-dropdown>
             </div>
             <div class="col-lg-6 col-md-6">
               <label>{{'agenda.fichaEventos.datosGenerales.tipoEvento' | translate}}</label>
               <p-dropdown class="select-form" [options]="comboTipoEvento" name="tipoEvento" [(ngModel)]="newEvent.idTipoEvento" placeholder="-"
-                [disabled]="disabledTipoEvento || isFormacionCalendar || tipoAccesoLectura"></p-dropdown>
+                [disabled]="disabledTipoEvento || isFormacionCalendar || tipoAccesoLectura" [showClear]="true"></p-dropdown>
             </div>
           </div>
           <div class="row mb-3">
@@ -59,7 +60,8 @@
             </div>
             <div *ngIf="!selectedTipoLaboral" class="col-lg-6 col-md-6">
               <label>{{ 'form.busquedaCursos.literal.estado' | translate}}</label>
-              <p-dropdown class="select-form" [options]="comboEstados" name="estado" [(ngModel)]="newEvent.idEstadoEvento" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado"></p-dropdown>
+              <p-dropdown class="select-form" [options]="comboEstados" name="estado" [(ngModel)]="newEvent.idEstadoEvento" placeholder="{{'tablas.literal.seleccionar' | translate}}"
+                [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado" [showClear]="true"></p-dropdown>
             </div>
           </div>
           <div class="row mb-3">
@@ -90,7 +92,7 @@
             <div *ngIf="selectedTipoLaboral" class="col-lg-12 col-md-12">
               <label>Partido Judicial</label>
               <p-dropdown class="select-form" [options]="comboPartidoJudicial" name="estado" [(ngModel)]="newEvent.lugar" placeholder="{{'tablas.literal.seleccionar' | translate }}"
-                [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado"></p-dropdown>
+                [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado" [showClear]="true"></p-dropdown>
             </div>
           </div>
           <div class="row mb-3">
@@ -134,7 +136,8 @@
                 </div>
                 <div class="col-lg-8 col-md-8">
                   <p-dropdown (onChange)="isCheckTipoRepeticion()" [options]="comboRepeatEvery" [(ngModel)]="newEvent.tipoRepeticion" placeholder="{{'tablas.literal.seleccionar' | translate }}"
-                    [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"></p-dropdown>
+                    [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"
+                    [showClear]="true"></p-dropdown>
                 </div>
               </div>
             </div>
@@ -393,7 +396,8 @@
 
             <ng-template *ngIf="col.field =='asistencia'" pTemplate="body" let-dato="rowData">
               <p-dropdown class="select-form" [(ngModel)]="dato[col.field]" [options]="comboAsistencia" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate }}"
-                name="type" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado" (onChange)="setAssistanceUpdate(dato)"></p-dropdown>
+                name="type" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado" (onChange)="setAssistanceUpdate(dato)"
+                [showClear]="true"></p-dropdown>
             </ng-template>
 
           </p-column>

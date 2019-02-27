@@ -22,13 +22,13 @@
             <label>{{ 'formacion.fichaCursos.datosGenerales.visibilidad' | translate}}</label>
             <p-dropdown [disabled]="deshabilitarCombVis" placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form"
               [(ngModel)]='body.idVisibilidad' [options]="comboVisibilidad" [filter]="true" filterBy="label,labelSinTilde"
-              (onChange)="onChangeSelectVisibilidad($event)"></p-dropdown>
+              (onChange)="onChangeSelectVisibilidad($event)" [showClear]="true"></p-dropdown>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}</label>
             <p-dropdown [disabled]="deshabilitarCombCol" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
-              [(ngModel)]='body.colegio' [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeSelectColegio($event)"></p-dropdown>
+              [(ngModel)]='body.colegio' [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeSelectColegio($event)" [showClear]="true"></p-dropdown>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
@@ -49,7 +49,7 @@
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'form.busquedaCursos.literal.estado' | translate}}</label>
             <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]='body.idEstado' [options]="comboEstados"
-              [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+              [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
 
           <div [formGroup]="formGroupPrecios" class="form-group col-lg-3 col-md-2">
@@ -73,7 +73,7 @@
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'formacion.fichaCursos.datosDeGestion.plazasDisponibles' | translate}}</label>
             <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.plazasDisponibles'
-              [options]="comboDisponibilidadPlazas" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+              [options]="comboDisponibilidadPlazas" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
@@ -150,7 +150,7 @@
             <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
             <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
             <label>{{ "general.message.mostrar" | translate}}</label>
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)" [showClear]="true"></p-dropdown>
             <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
               <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{'tablas.literal.seleccionarTodo' | translate }}"

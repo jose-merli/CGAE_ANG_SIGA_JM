@@ -482,7 +482,7 @@
 
     <!--FICHA DATOS ALTER MUTUA-->
     <div *ngIf="consulta" class="card">
-        <div class="card-header header-ficha" style="cursor: pointer" (click)="irAlterMutua()">
+        <div class="card-header header-ficha">
             <div *ngIf="!fichaMutua" class="form-row">
                 <div class="col-lg-1 col-md-2">
                     <div class="img-colegiado">
@@ -497,8 +497,18 @@
                         </label>
                         <!--<label class="registros-ficha">(0 registros)</label>-->
                     </div>
-                    <div class="d-flex justify-content-between" style="float:right">
-                        <i *ngIf="!fichaMutua" class="fas fa-arrow-right float-right"></i>
+                    <div class="d-flex justify-content-between">
+                        <label>
+                            <a (click)="irAlterMutuaReta()">
+                                <span style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.alterMutua.alternativa" | translate}}</span>
+                            </a>
+                        </label>
+                        <label>
+                            <a (click)="irOfertas()">
+                                <span style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.alterMutua.oferta" | translate}}</span>
+                            </a>
+                        </label>
+                        <i class="float-right"></i>
                     </div>
                 </div>
             </div>

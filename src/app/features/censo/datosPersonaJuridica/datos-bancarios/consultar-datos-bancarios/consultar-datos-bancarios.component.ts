@@ -415,6 +415,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           "messages.censo.direcciones.facturacion"
         ) {
           this.eliminarItem();
+          this.progressSpinner = false;
         }
       },
       () => {
@@ -574,21 +575,38 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   igualInicio() {
     let validarTipoCuenta = [];
-    this.selectedTipo.forEach(element => {
-      validarTipoCuenta.push(element.code);
-    });
+    if (this.selectedTipo.length > 0) {
+      this.selectedTipo.forEach(element => {
+        validarTipoCuenta.push(element.code);
+      });
 
-    if (JSON.stringify(this.body) == JSON.stringify(this.checkBody)) {
-      if (
-        JSON.stringify(validarTipoCuenta.sort()) ==
-        JSON.stringify(this.checkBody.tipoCuenta.sort())
-      ) {
-        return true;
+      if (JSON.stringify(this.body) == JSON.stringify(this.checkBody)) {
+        if (this.checkBody.tipoCuenta == null || this.checkBody.tipoCuenta == undefined) {
+          if (validarTipoCuenta.length > 0) {
+            return false;
+          } else {
+            return true;
+          }
+        } else {
+          if (
+            JSON.stringify(validarTipoCuenta.sort()) ==
+            JSON.stringify(this.checkBody.tipoCuenta.sort())
+          ) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+
       } else {
         return false;
       }
     } else {
-      return false;
+      if (JSON.stringify(this.body) == JSON.stringify(this.checkBody)) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 

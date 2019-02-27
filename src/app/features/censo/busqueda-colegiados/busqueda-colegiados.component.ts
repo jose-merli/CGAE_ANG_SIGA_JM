@@ -1,27 +1,39 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
-import { ConfirmationService } from 'primeng/api';
-import { DataTable } from 'primeng/datatable';
-import { FormBuilder, FormControl, FormGroup, Validators } from '../../../../../node_modules/@angular/forms';
-import { TranslateService } from '../../../commons/translate/translation.service';
-import { DatosColegiadosItem } from '../../../models/DatosColegiadosItem';
-import { DatosColegiadosObject } from '../../../models/DatosColegiadosObject';
-import { SubtipoCurricularItem } from '../../../models/SubtipoCurricularItem';
-import { USER_VALIDATIONS } from '../../../properties/val-properties';
-import { SigaWrapper } from '../../../wrapper/wrapper.class';
-import { esCalendar } from './../../../utils/calendar';
-import { SigaServices } from './../../../_services/siga.service';
-import { DialogoComunicacionesItem } from '../../../models/DialogoComunicacionItem';
-import { ModelosComunicacionesItem } from '../../../models/ModelosComunicacionesItem';
+import {
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation
+} from "@angular/core";
+import { Router } from "@angular/router";
+import { ConfirmationService } from "primeng/api";
+import { DataTable } from "primeng/datatable";
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators
+} from "../../../../../node_modules/@angular/forms";
+import { TranslateService } from "../../../commons/translate/translation.service";
+import { DatosColegiadosItem } from "../../../models/DatosColegiadosItem";
+import { DatosColegiadosObject } from "../../../models/DatosColegiadosObject";
+import { SubtipoCurricularItem } from "../../../models/SubtipoCurricularItem";
+import { USER_VALIDATIONS } from "../../../properties/val-properties";
+import { SigaWrapper } from "../../../wrapper/wrapper.class";
+import { esCalendar } from "./../../../utils/calendar";
+import { SigaServices } from "./../../../_services/siga.service";
+import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
+import { ModelosComunicacionesItem } from "../../../models/ModelosComunicacionesItem";
 
 export enum KEY_CODE {
   ENTER = 13
 }
 
 @Component({
-  selector: 'app-busqueda-colegiados',
-  templateUrl: './busqueda-colegiados.component.html',
-  styleUrls: ['./busqueda-colegiados.component.scss'],
+  selector: "app-busqueda-colegiados",
+  templateUrl: "./busqueda-colegiados.component.html",
+  styleUrls: ["./busqueda-colegiados.component.scss"],
   encapsulation: ViewEncapsulation.None
 })
 export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
@@ -63,6 +75,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   comboPoblacion: any[];
   comboTiposDireccion: any[];
   comboTipoCV: any[];
+  comboColegios: any[];
 
   textSelected: String = "{0} etiquetas seleccionadas";
   body: DatosColegiadosItem = new DatosColegiadosItem();
@@ -93,6 +106,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   idClasesComunicacionArray: string[] = [];
   idClaseComunicacion: String;
   keys: any[] = [];
+
+  institucionActual: any;
+  deshabilitarCombCol: boolean = false;
+  colegiosSeleccionados: any[] = [];
 
   constructor(
     private sigaServices: SigaServices,
@@ -139,8 +156,6 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       this.body = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial")
       );
-      sessionStorage.removeItem("filtrosBusquedaColegiadosFichaColegial");
-      this.isBuscar();
     }
 
     if (this.body.tipoCV != undefined) {
@@ -327,6 +342,40 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.getComboCategoriaCurricular();
     this.getComboProvincias();
     this.getComboTiposDireccion();
+    this.getComboColegios();
+  }
+
+  getComboColegios() {
+    // obtener colegios
+    this.sigaServices.get("busquedaPer_colegio").subscribe(
+      n => {
+        this.comboColegios = n.combooItems;
+        this.arregloTildesCombo(this.comboColegios);
+
+        this.getInstitucion();
+
+        if (
+          sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial") !=
+          null
+        ) {
+          this.body.colegio.forEach(element => {
+            let labelColegio = this.comboColegios.find(
+              item => item.value === element
+            ).label;
+
+            this.colegiosSeleccionados.push({
+              label: labelColegio,
+              value: element
+            });
+          });
+          this.isBuscar();
+          sessionStorage.removeItem("filtrosBusquedaColegiadosFichaColegial");
+        }
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   getComboEtiquetas() {
@@ -424,9 +473,11 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   onChangeCategoriaCurricular(event) {
-    if (event) {
-      this.getComboSubtipoCurricular(event.value);
-      this.getComboTipoCurricular(event.value);
+    if (event.value != null) {
+      if (event) {
+        this.getComboSubtipoCurricular(event.value);
+        this.getComboTipoCurricular(event.value);
+      }
     }
   }
 
@@ -495,6 +546,11 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       //   this.body.fechaNacimiento = undefined;
       // }
 
+      this.body.colegio = [];
+      this.colegiosSeleccionados.forEach(element => {
+        this.body.colegio.push(element.value);
+      });
+
       this.sigaServices
         .postPaginado(
           "busquedaColegiados_searchColegiado",
@@ -529,9 +585,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         var posIni = element.fechaNacimiento.indexOf("/");
         var posFin = element.fechaNacimiento.lastIndexOf("/");
         var year = element.fechaNacimiento.substring(posFin + 1);
-        var day = element.fechaNacimiento.substring(
-          0, posIni
-        );
+        var day = element.fechaNacimiento.substring(0, posIni);
         var month = element.fechaNacimiento.substring(posIni + 1, posFin);
         element.fechaNacimientoDate = new Date(year, month, day);
         element.fechaNacimiento = day + "/" + month + "/" + year;
@@ -586,6 +640,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   getColsResults() {
     this.cols = [
       {
+        field: "colegioResultado",
+        header: "censo.busquedaClientesAvanzada.literal.colegio"
+      },
+      {
         field: "nif",
         header: "censo.consultaDatosColegiacion.literal.numIden"
       },
@@ -602,7 +660,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         header: "censo.fichaCliente.situacion.cabecera"
       },
       {
-        field: "residenteInscrito",
+        field: "situacionResidente",
         header: "censo.busquedaClientes.noResidente"
       },
       {
@@ -758,7 +816,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   getKeysClaseComunicacion() {
     this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
       data => {
-        this.keys = JSON.parse(data['body']);
+        this.keys = JSON.parse(data["body"]);
       },
       err => {
         console.log(err);
@@ -770,35 +828,59 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     let datosSeleccionados = [];
     let rutaClaseComunicacion = this.currentRoute.toString();
 
-    this.sigaServices.post("dialogo_claseComunicacion", rutaClaseComunicacion).subscribe(
-      data => {
-        this.idClaseComunicacion = JSON.parse(data['body']).clasesComunicaciones[0].idClaseComunicacion;
-        this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
-          data => {
-            this.keys = JSON.parse(data['body']).keysItem;
-            this.selectedDatos.forEach(element => {
-              let keysValues = [];
-              this.keys.forEach(key => {
-                if (element[key.nombre] != undefined) {
-                  keysValues.push(element[key.nombre]);
-                }
-              })
-              datosSeleccionados.push(keysValues);
-            });
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                this.selectedDatos.forEach(element => {
+                  let keysValues = [];
+                  this.keys.forEach(key => {
+                    if (element[key.nombre] != undefined) {
+                      keysValues.push(element[key.nombre]);
+                    }
+                  });
+                  datosSeleccionados.push(keysValues);
+                });
 
-            sessionStorage.setItem("datosComunicar", JSON.stringify(datosSeleccionados));
-            this.router.navigate(["/dialogoComunicaciones"]);
-          },
-          err => {
-            console.log(err);
+                sessionStorage.setItem(
+                  "datosComunicar",
+                  JSON.stringify(datosSeleccionados)
+                );
+                this.router.navigate(["/dialogoComunicaciones"]);
+              },
+              err => {
+                console.log(err);
+              }
+            );
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
+  getInstitucion() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+
+      if (this.institucionActual != "2000") {
+        this.colegiosSeleccionados = [
+          {
+            label: n.label,
+            value: this.institucionActual
           }
-        );
-      },
-      err => {
-        console.log(err);
+        ];
+        this.deshabilitarCombCol = true;
       }
-    );
-
+    });
   }
 
   fillFechaIncorporacionDesde(event) {

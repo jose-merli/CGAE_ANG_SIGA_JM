@@ -68,6 +68,8 @@ export class DatosDireccionesComponent implements OnInit {
 
   isValidate: boolean;
 
+  tarjeta: string;
+
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
@@ -184,31 +186,17 @@ export class DatosDireccionesComponent implements OnInit {
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = "122";
-    let derechoAcceso;
+
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
       data => {
-        let permisosTree = JSON.parse(data.body);
-        let permisosArray = permisosTree.permisoItems;
-        derechoAcceso = permisosArray[0].derechoacceso;
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjeta = permisosArray[0].derechoacceso;
       },
       err => {
         console.log(err);
       },
-      () => {
-        if (derechoAcceso >= 2) {
-          this.activacionEditar = true;
-          if (derechoAcceso == 2) {
-            this.camposDesactivados = true;
-          }
-        } else {
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
-          this.router.navigate(["/errorAcceso"]);
-        }
-      }
+      () => {}
     );
   }
 
@@ -306,6 +294,8 @@ export class DatosDireccionesComponent implements OnInit {
         } else {
           sessionStorage.setItem("editar", "false");
         }
+
+        sessionStorage.setItem("permisoTarjeta", this.tarjeta);
 
         this.router.navigate(["/consultarDatosDirecciones"]);
       } else {

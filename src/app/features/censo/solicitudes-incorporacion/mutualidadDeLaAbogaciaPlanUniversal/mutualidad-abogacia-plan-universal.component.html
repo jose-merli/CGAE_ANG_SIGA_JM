@@ -58,11 +58,11 @@
                     </label>
                     <label>
                         {{"administracion.parametrosGenerales.literal.nombre" | translate}}
-                        <span>{{solicitud.nombre}}</span>
+                        <span>{{body.nombre}}</span>
                     </label>
                     <label>
                         {{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}
-                        <span>{{solicitud.apellidos}}</span>
+                        <span>{{solicitud.apellido1}} {{solicitud.apellido2}}</span>
                     </label>
                     <i *ngIf="!fichaPersonal" class="fa fa-angle-down float-right"></i>
                 </div>
@@ -118,7 +118,8 @@
             <div class="form-group col-lg-3 col-md-3">
                 <label>
                     {{"censo.consultaDatosGenerales.literal.estadoCivil" | translate}} (*)</label>
-                <p-dropdown [disabled]="modoLectura" class="select-form" [(ngModel)]="solicitud.idEstadoCivil" [options]="estadoCivil"></p-dropdown>
+                <p-dropdown [disabled]="modoLectura" class="select-form" [(ngModel)]="solicitud.idEstadoCivil" (ngModelChange)="getEstadoCivilDesc()"
+                    [options]="estadoCivil" filter="true" filterBy="label,labelSinTilde" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3">
                 <label>
@@ -282,16 +283,23 @@
     <div [hidden]="!datosBancarios" class="card-body card-body-ficha">
         <div class="form-row">
             <div class="form-group col-lg-3 col-md-3">
-                <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}}</label>
+                <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}}</label> (*)
                 <input type="text" class="form-control" pInputText [disabled]="modoLectura" [(ngModel)]="body.titular">
             </div>
             <div class="form-group col-lg-3 col-md-3">
-                <label>{{"censo.mutualidad.literal.iban" | translate}}</label>
-                <input type="text" class="form-control" [disabled]="modoLectura" pInputText [(ngModel)]="body.iban">
+                <label>{{"censo.mutualidad.literal.iban" | translate}}</label> (*)
+                <!-- <input (onChange)="autogenerarDatos()" type="text" class="form-control" [disabled]="modoLectura" [(ngModel)]="body.iban"
+                    pInputText> -->
+                <input type="text" class="form-control" [(disabled)]="modoLectura" [(ngModel)]="body.iban" (ngModelChange)="autogenerarDatos()"
+                    pInputText>
+                <!-- ES8321074133977199419022 -->
+                <div *ngIf="ibanValido == false">
+                    <label class="labelError">{{"IBAN incorrecto"}}</label>
+                </div>
             </div>
             <div class="form-group col-lg-3 col-md-3">
                 <label>{{"censo.fichaCliente.datosBancarios.cuentaBancaria.bic" | translate}}</label>
-                <input type="text" class="form-control" [disabled]="modoLectura" pInputText [(ngModel)]="body.bic">
+                <input type="text" class="form-control" [disabled]="modoLectura" pInputText disabled [(ngModel)]="body.bic">
             </div>
             <div class="form-group col-lg-3 col-md-3">
                 <label>{{"censo.mutualidad.literal.periodicidadPago" | translate}}</label>

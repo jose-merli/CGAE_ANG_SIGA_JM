@@ -20,6 +20,6 @@ export class DatosBancariosItem {
   revisionCuentas: boolean;
   motivo: String;
   denominacion: String;
-
-  constructor() {}
+  fechaModificacion: Date;
+  constructor() { }
 }
