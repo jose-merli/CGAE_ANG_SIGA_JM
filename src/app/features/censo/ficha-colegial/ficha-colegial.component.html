@@ -203,7 +203,7 @@
               <label>{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}
               </label>
               <p-calendar [monthNavigator]="true" [yearNavigator]="true" (onSelect)="onChangeCalendar($event)" (onInput)="onWriteCalendar(fechaNacimiento)"
-                yearRange="1930:2050" [locale]="es" [(ngModel)]="fechaNacimiento" (onSelect)="activacionGuardarGenerales()"
+                yearRange="1930:2050" [locale]="es" [(ngModel)]="fechaNacimiento" (onSelect)="activacionGuardarGenerales(); "
                 [(disabled)]="isLetrado || disabledAction" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" [utc]="true" showIcon="true"></p-calendar>
             </div>
             <div class="form-group col-lg-6 col-md-6">
@@ -828,7 +828,6 @@
       <div class="text-right main-button "></div>
     </div>
   </div>
-
   <!-- END FICHA SOCIEDADES -->
 
   <!-- FICHA DATOS CURRICULARES -->
@@ -1244,8 +1243,43 @@
 
 <!-- END FICHA REGTEL-->
 
+
+<!--FICHA DATOS ALTER MUTUA-->
+<!-- <div class="card">
+  <div class="card-header header-ficha">
+    <div *ngIf="!fichaMutua" class="form-row">
+      <div class="col-lg-1 col-md-2">
+        <div class="img-colegiado">
+          <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+          <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+        </div>
+      </div>
+      <div class="col-lg-11 col-md-10">
+        <div class="d-flex justify-content-start mb-1">
+          <label class="mr-auto title-ficha">Alter Mutua
+          </label>
+        </div>
+        <div class="d-flex justify-content-between">
+          <label>
+            <a (click)="irAlterMutuaReta()">
+              <span style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.alterMutua.alternativa" | translate}}</span>
+            </a>
+          </label>
+          <label>
+            <a (click)="irOfertas()">
+              <span style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.alterMutua.oferta" | translate}}</span>
+            </a>
+          </label>
+          <i class="float-right"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
 <!--MUTUALIDAD DE LA ABOGACÍA-->
-<div *ngIf="activacionEditar" class="card">
+<!-- <div *ngIf="activacionEditar" class="card">
   <div class="card-header header-ficha">
     <div class="form-row">
       <div class="col-lg-1 col-md-2">
@@ -1273,7 +1307,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 <div *ngIf="!desactivarVolver" class="mt-3 text-right main-button ">
   <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>

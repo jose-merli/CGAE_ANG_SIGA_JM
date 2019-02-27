@@ -1801,7 +1801,7 @@ export class FichaColegialComponent implements OnInit {
     if (event.keyCode == 13) {
       event.currentTarget.value = "";
     }
-    
+
   }
 
   activarPaginacionRegTel() {
@@ -3638,7 +3638,117 @@ export class FichaColegialComponent implements OnInit {
 
   // MÉTODOS PARA MUTUALIDAD DE LA ABOGACÍA
 
+  prepararDatosMutualidad() {
+    if (this.datosDirecciones.length > 0) {
+      for (let i in this.datosDirecciones) {
+        if ((this.datosDirecciones[i].idTipoDireccion.find(x => x == "3")) != "-1") {
+          let direccion = this.datosDirecciones[i];
+          sessionStorage.setItem(
+            "direcciones",
+            JSON.stringify(direccion)
+          );
+        }
+      }
+
+    }
+    if (this.datosBancarios.length > 0) {
+      let masActual;
+      let tieneCargo;
+      for (let i in this.datosBancarios) {
+        if (masActual == undefined || this.datosBancarios[i].fechaModificacion > masActual.fechaModificacion) {
+          masActual = this.datosBancarios[i];
+        }
+        if (this.datosBancarios[i].uso == "ABONO/CARGO" || this.datosBancarios[i].uso == "CARGO" || this.datosBancarios[i].uso == "PARA TODO") {
+          tieneCargo = this.datosBancarios[i];
+        }
+      }
+      let cuenta = masActual;
+
+      if (tieneCargo != undefined) {
+        cuenta = tieneCargo;
+      } else {
+        cuenta = masActual;
+      }
+      sessionStorage.setItem(
+        "cuentas",
+        JSON.stringify(cuenta)
+      );
+    }
+  }
+  // irPlanUniversal() {
+  //   this.prepararDatosMutualidad();
+  //   this.arreglarFechas();
+  //   if (this.generalBody.nif == undefined || this.generalBody.nif == "" || this.generalBody.fechaNacimientoDate == undefined || this.generalBody.fechaNacimientoDate == null) {
+  //     this.showFailDetalle("Asegurese de que el NIF y la fecha de nacimiento son correctos");
+  //   } else {
+  //     this.progressSpinner = true;
+  //     let mutualidadRequest = new DatosSolicitudMutualidadItem();
+  //     mutualidadRequest.numeroidentificador = this.generalBody.nif;
+  //     this.arreglarFechas();
+  //     this.solicitudEditar = JSON.parse(JSON.stringify(this.generalBody));
+  //     this.solicitudEditar.idPais = "191";
+  //     this.solicitudEditar.identificador = this.generalBody.nif;
+  //     this.solicitudEditar.numeroIdentificacion = this.generalBody.nif;
+  //     this.solicitudEditar.tratamiento = this.generalBody.idTratamiento;
+  //     this.solicitudEditar.apellido1 = this.generalBody.apellidos1;
+  //     this.solicitudEditar.apellido2 = this.generalBody.apellidos2;
+  //     this.solicitudEditar.idEstadoCivil = this.generalBody.idEstadoCivil;
+  //     this.solicitudEditar.estadoCivil = this.generalBody.idEstadoCivil;
+  //     this.solicitudEditar.fechaNacimiento = this.generalBody.fechaNacimientoDate;
+  //     this.solicitudEditar.tratamiento = this.tratamientoDesc;
+  //     this.solicitudEditar.tipoIdentificacion = this.generalBody.idTipoIdentificacion;
+  //     this.solicitudEditar.nombre = this.solicitudEditar.soloNombre;
+  //     sessionStorage.setItem(
+  //       "solicitudEnviada",
+  //       JSON.stringify(this.solicitudEditar));
+  //     this.router.navigate(["/MutualidadAbogaciaPlanUniversal"]);
+  //     this.progressSpinner = false;
+  //   }
+  // }
+
+  irAlterMutuaReta() {
+    this.solicitudEditar = JSON.parse(JSON.stringify(this.generalBody));
+    this.solicitudEditar.idPais = "191";
+    this.solicitudEditar.identificador = this.generalBody.nif;
+    this.solicitudEditar.numeroIdentificacion = this.generalBody.nif;
+    this.solicitudEditar.tratamiento = this.generalBody.idTratamiento;
+    this.solicitudEditar.apellido1 = this.generalBody.apellidos1;
+    this.solicitudEditar.apellido2 = this.generalBody.apellidos2;
+    this.solicitudEditar.idEstadoCivil = this.generalBody.idEstadoCivil;
+    this.solicitudEditar.estadoCivil = this.generalBody.idEstadoCivil;
+    this.solicitudEditar.fechaNacimiento = this.generalBody.fechaNacimientoDate;
+    this.solicitudEditar.tratamiento = this.tratamientoDesc;
+    sessionStorage.setItem(
+      "datosSolicitud",
+      JSON.stringify(this.solicitudEditar)
+    );
+    sessionStorage.setItem("tipoPropuesta", "RETA");
+    this.router.navigate(["/alterMutuaReta"]);
+  }
+
+  irOfertas() {
+    this.solicitudEditar = JSON.parse(JSON.stringify(this.generalBody));
+    this.solicitudEditar.idPais = "191";
+    this.solicitudEditar.identificador = this.generalBody.nif;
+    this.solicitudEditar.numeroIdentificacion = this.generalBody.nif;
+    this.solicitudEditar.tratamiento = this.generalBody.idTratamiento;
+    this.solicitudEditar.apellido1 = this.generalBody.apellidos1;
+    this.solicitudEditar.apellido2 = this.generalBody.apellidos2;
+    this.solicitudEditar.idEstadoCivil = this.generalBody.idEstadoCivil;
+    this.solicitudEditar.estadoCivil = this.generalBody.idEstadoCivil;
+    this.solicitudEditar.fechaNacimiento = this.generalBody.fechaNacimientoDate;
+    this.solicitudEditar.tratamiento = this.tratamientoDesc;
+    sessionStorage.setItem(
+      "datosSolicitud",
+      JSON.stringify(this.solicitudEditar)
+    );
+    sessionStorage.setItem("tipoPropuesta", "Ofertas");
+    this.router.navigate(["/alterMutuaOfertas"]);
+  }
+
+
   irPlanUniversal() {
+    this.prepararDatosMutualidad();
     this.arreglarFechas();
     if (this.generalBody.nif == undefined || this.generalBody.nif == "" || this.generalBody.fechaNacimientoDate == undefined || this.generalBody.fechaNacimientoDate == null) {
       this.showFailDetalle("Asegurese de que el NIF y la fecha de nacimiento son correctos");
@@ -3666,15 +3776,17 @@ export class FichaColegialComponent implements OnInit {
               this.solicitudEditar.idEstadoCivil = this.generalBody.idEstadoCivil;
               this.solicitudEditar.estadoCivil = this.generalBody.idEstadoCivil;
               this.solicitudEditar.fechaNacimiento = this.generalBody.fechaNacimientoDate;
+              this.solicitudEditar.tratamiento = this.tratamientoDesc;
               this.sigaServices
                 .post("mutualidad_estadoMutualista", this.solicitudEditar)
                 .subscribe(
                   result => {
                     let prueba = JSON.parse(result.body);
-                    if ((prueba.valorRespuesta == "1")) {
+                    if ((prueba.valorRespuesta == "1") || (prueba.idSolicitud != "0")) {
                       this.solicitudEditar.idSolicitudMutualidad = prueba.idSolicitud;
                       this.solicitudEditar.estadoMutualidad = prueba.valorRespuesta;
                       this.solicitudEditar.tipoIdentificacion = this.generalBody.idTipoIdentificacion;
+                      this.solicitudEditar.nombre = this.solicitudEditar.soloNombre;
                       sessionStorage.setItem(
                         "solicitudEnviada",
                         JSON.stringify(this.solicitudEditar)
@@ -3682,7 +3794,12 @@ export class FichaColegialComponent implements OnInit {
                       this.router.navigate(["/MutualidadAbogaciaPlanUniversal"]);
                     } else {
                       //  this.modoLectura = true;
-                      this.showInfo(prueba.valorRespuesta);
+                      if (prueba.valorRespuesta == undefined || prueba.valorRespuesta == null || prueba.valorRespuesta == "") {
+                        this.showInfo("No se ha podido comprobar si tiene ya un Plan Universal");
+
+                      } else {
+                        this.showInfo(prueba.valorRespuesta);
+                      }
                     }
                     this.progressSpinner = false;
                   },
@@ -3704,6 +3821,7 @@ export class FichaColegialComponent implements OnInit {
               this.solicitudEditar.idEstadoCivil = this.generalBody.idEstadoCivil;
               this.solicitudEditar.estadoCivil = this.generalBody.idEstadoCivil;
               this.solicitudEditar.fechaNacimiento = this.generalBody.fechaNacimientoDate;
+              this.solicitudEditar.tratamiento = this.tratamientoDesc;
               this.sigaServices
                 .post("mutualidad_estadoMutualista", this.solicitudEditar)
                 .subscribe(
@@ -3713,6 +3831,7 @@ export class FichaColegialComponent implements OnInit {
                       this.solicitudEditar.idSolicitudMutualidad = prueba.idSolicitud;
                       this.solicitudEditar.estadoMutualidad = prueba.valorRespuesta;
                       this.solicitudEditar.tipoIdentificacion = this.generalBody.idTipoIdentificacion;
+                      this.solicitudEditar.nombre = this.solicitudEditar.soloNombre;
                       sessionStorage.setItem(
                         "solicitudEnviada",
                         JSON.stringify(this.solicitudEditar)
@@ -3720,7 +3839,12 @@ export class FichaColegialComponent implements OnInit {
                       this.router.navigate(["/MutualidadAbogaciaPlanUniversal"]);
                     } else {
                       //  this.modoLectura = true;
-                      this.showInfo(prueba.valorRespuesta);
+                      if (prueba.valorRespuesta == undefined || prueba.valorRespuesta == null || prueba.valorRespuesta == "") {
+                        this.showInfo("No se ha podido comprobar si tiene ya un Plan Universal");
+
+                      } else {
+                        this.showInfo(prueba.valorRespuesta);
+                      }
                     }
                   },
                   error => {
@@ -3739,7 +3863,9 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
+
   irSegAccidentes() {
+    this.prepararDatosMutualidad();
     this.arreglarFechas();
     if (this.generalBody.nif == undefined || this.generalBody.nif == "" || this.generalBody.fechaNacimientoDate == undefined || this.generalBody.fechaNacimientoDate == null) {
       this.showFailDetalle("Asegurese de que el NIF y la fecha de nacimiento son correctos");
@@ -3766,15 +3892,17 @@ export class FichaColegialComponent implements OnInit {
               this.solicitudEditar.idEstadoCivil = this.generalBody.idEstadoCivil;
               this.solicitudEditar.estadoCivil = this.generalBody.idEstadoCivil;
               this.solicitudEditar.fechaNacimiento = this.generalBody.fechaNacimientoDate;
+              this.solicitudEditar.tratamiento = this.tratamientoDesc;
               this.sigaServices
                 .post("mutualidad_estadoMutualista", this.solicitudEditar)
                 .subscribe(
                   result => {
                     let prueba = JSON.parse(result.body);
-                    if ((prueba.valorRespuesta == "1")) {
+                    if ((prueba.valorRespuesta == "1") || (prueba.idSolicitud != "0")) {
                       this.solicitudEditar.idSolicitudMutualidad = prueba.idSolicitud;
                       this.solicitudEditar.estadoMutualidad = prueba.valorRespuesta;
                       this.solicitudEditar.tipoIdentificacion = this.generalBody.idTipoIdentificacion;
+                      this.solicitudEditar.nombre = this.solicitudEditar.soloNombre;
                       sessionStorage.setItem(
                         "solicitudEnviada",
                         JSON.stringify(this.solicitudEditar)
@@ -3782,7 +3910,12 @@ export class FichaColegialComponent implements OnInit {
                       this.router.navigate(["/mutualidadSeguroAccidentes"]);
                     } else {
                       //  this.modoLectura = true;
-                      this.showInfo(prueba.valorRespuesta);
+                      if (prueba.valorRespuesta == undefined || prueba.valorRespuesta == null || prueba.valorRespuesta == "") {
+                        this.showInfo("No se ha podido comprobar si tiene ya un Plan Universal");
+
+                      } else {
+                        this.showInfo(prueba.valorRespuesta);
+                      }
                     }
                   },
                   error => {
@@ -3801,6 +3934,7 @@ export class FichaColegialComponent implements OnInit {
               this.solicitudEditar.idEstadoCivil = this.generalBody.idEstadoCivil;
               this.solicitudEditar.estadoCivil = this.generalBody.idEstadoCivil;
               this.solicitudEditar.fechaNacimiento = this.generalBody.fechaNacimientoDate;
+              this.solicitudEditar.tratamiento = this.tratamientoDesc;
               this.sigaServices
                 .post("mutualidad_estadoMutualista", this.solicitudEditar)
                 .subscribe(
@@ -3810,6 +3944,7 @@ export class FichaColegialComponent implements OnInit {
                       this.solicitudEditar.idSolicitudMutualidad = prueba.idSolicitud;
                       this.solicitudEditar.estadoMutualidad = prueba.valorRespuesta;
                       this.solicitudEditar.tipoIdentificacion = this.generalBody.idTipoIdentificacion;
+                      this.solicitudEditar.nombre = this.solicitudEditar.soloNombre;
                       sessionStorage.setItem(
                         "solicitudEnviada",
                         JSON.stringify(this.solicitudEditar)
