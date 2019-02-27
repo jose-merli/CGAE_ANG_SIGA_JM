@@ -21,13 +21,13 @@
             <label>{{ 'formacion.fichaCursos.datosGenerales.visibilidad' | translate}}</label>
             <p-dropdown [disabled]="deshabilitarCombVis" placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form"
               [(ngModel)]='body.idVisibilidad' [options]="comboVisibilidad" [filter]="true" filterBy="label,labelSinTilde"
-              (onChange)="onChangeSelectVisibilidad($event)"></p-dropdown>
+              (onChange)="onChangeSelectVisibilidad($event)" [showClear]="true"></p-dropdown>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}</label>
             <p-dropdown [disabled]="deshabilitarCombCol" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
-              [(ngModel)]='body.colegio' [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeSelectColegio($event)"></p-dropdown>
+              [(ngModel)]='body.colegio' [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeSelectColegio($event)" [showClear]="true"></p-dropdown>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
@@ -43,13 +43,13 @@
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'formacion.busquedaInscripcion.estadoCurso' | translate}}</label>
             <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]='body.idEstadoCurso' [options]="comboEstadosCursos"
-              [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+              [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
               <label>{{ 'formacion.busquedaInscripcion.estadoInscripcion' | translate}}</label>
               <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]='body.idEstadoInscripcion' [options]="comboEstadosInscripciones"
-                [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+                [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
             </div>
  
           <div class="form-group col-lg-3 col-md-2">
@@ -93,19 +93,19 @@
           <div class="form-group col-lg-3 col-md-2">
               <label>{{ 'formacion.busquedaInscripcion.certificadoEmitido' | translate }}</label>
               <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.certificadoEmitido'
-                [options]="comboCertificadoEmitido" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+                [options]="comboCertificadoEmitido" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
               <label>{{ 'formacion.busquedaInscripcion.calificacionEmitida' | translate }}</label>
               <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idCalificacion'
-                [options]="comboCalificacionEmitida" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+                [options]="comboCalificacionEmitida" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
               <label>{{'formacion.busquedaInscripcion.pagada' | translate}}</label>
               <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.pagada'
-                [options]="comboPagada" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+                [options]="comboPagada" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
         </div>
       </div>

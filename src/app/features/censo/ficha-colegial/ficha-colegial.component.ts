@@ -229,6 +229,8 @@ export class FichaColegialComponent implements OnInit {
   tableColegiales: DataTable;
   @ViewChild("tableRegTel")
   tableRegTel: DataTable;
+  @ViewChild("tableColegiaciones")
+  tableColegiaciones: DataTable;
 
   selectedDatosCertificados;
   selectedDatosSociedades;
@@ -245,6 +247,7 @@ export class FichaColegialComponent implements OnInit {
   selectedItemDirecciones: number = 10;
   selectedItemBancarios: number = 10;
   selectedItemRegtel: number = 10;
+  selectedItemColegiaciones: number = 10;
   selectedItem: number = 10;
 
   selectedDatosRegtel: DocushareItem;
@@ -328,6 +331,20 @@ export class FichaColegialComponent implements OnInit {
   ];
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
+  tarjetaInteres: string ;
+  tarjetaGenerales: string;
+  tarjetaColegiales: string;
+  tarjetaOtrasColegiaciones: string;
+  tarjetaCertificados: string;
+  tarjetaSanciones: string;
+  tarjetaSociedades: string;
+  tarjetaCurriculares: string;
+  tarjetaDirecciones: string;
+  tarjetaBancarios: string;
+  tarjetaRegtel: string;
+  tarjetaMutualidad: string;
+  tarjetaAlterMutua: string;
+
   constructor(
     private location: Location,
     private sigaServices: SigaServices,
@@ -340,6 +357,8 @@ export class FichaColegialComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.checkAccesos();
+
     if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.disabledNif = true;
     } else {
@@ -347,7 +366,7 @@ export class FichaColegialComponent implements OnInit {
     }
 
     if (sessionStorage.getItem("disabledAction") == "true") {
-      // Es baja colegial
+      // Es estado baja colegial
       this.disabledAction = true;
     } else {
       this.disabledAction = false;
@@ -477,14 +496,6 @@ export class FichaColegialComponent implements OnInit {
       {
         field: "institucion",
         header: "censo.busquedaClientesAvanzada.literal.colegio"
-      },
-      {
-        field: "nif",
-        header: "censo.consultaDatosColegiacion.literal.numIden"
-      },
-      {
-        field: "nombre",
-        header: "administracion.usuarios.literal.nombre"
       },
       {
         field: "numColegiado",
@@ -709,39 +720,27 @@ export class FichaColegialComponent implements OnInit {
         value: 40
       }
     ];
+
+
+    
   }
 
   //CONTROL DE PERMISOS
 
-  checkAcceso() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "12";
-    let derechoAcceso;
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisosTree = JSON.parse(data.body);
-        let permisosArray = permisosTree.permisoItems;
-        derechoAcceso = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        if (derechoAcceso > 2) {
-          this.permisos = true;
-          if (derechoAcceso == 2) {
-            this.permisos = false;
-          }
-        } else {
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
-          this.router.navigate(["/errorAcceso"]);
-        }
-      }
-    );
+  checkAccesos() {
+    this.checkAccesoDatosGenerales();
+    this.checkAccesoInteres();
+    this.checkAccesoDatosColegiales();
+    this.checkAccesoOtrasColegiaciones();
+    this.checkAccesoCertificados();
+    this.checkAccesoSanciones();
+    this.checkAccesoSociedades();
+    this.checkAccesoDatosCurriculares();
+    this.checkAccesoDirecciones();
+    this.checkAccesoDatosBancarios();
+    this.checkAccesoRegtel();
+    this.checkAccesoMutualidad();
+    this.checkAccesoAlterMutua();
   }
 
   // CONTROL DE PESTAÑAS ABRIR Y CERRAR
@@ -1031,7 +1030,9 @@ export class FichaColegialComponent implements OnInit {
         let tratamiento = this.generalTratamiento.find(
           item => item.value === this.generalBody.idTratamiento
         );
-        this.tratamientoDesc = tratamiento.label;
+        if(tratamiento != undefined && tratamiento.label != undefined){
+          this.tratamientoDesc = tratamiento.label;
+        }
       },
       err => {
         console.log(err);
@@ -2385,9 +2386,9 @@ export class FichaColegialComponent implements OnInit {
   }
 
   redireccionarSociedades(datos) {
-    // this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    sessionStorage.setItem("usuarioBody", JSON.stringify(datos));
-    this.router.navigate(["/fichaPersonaJuridica"]);
+      // this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+      sessionStorage.setItem("usuarioBody", JSON.stringify(datos));
+      this.router.navigate(["/fichaPersonaJuridica"]);
   }
 
   onChangeRowsPerPagesRegtel(event) {
@@ -2429,6 +2430,12 @@ export class FichaColegialComponent implements OnInit {
     this.selectedItemBancarios = event.value;
     this.changeDetectorRef.detectChanges();
     this.tableBancarios.reset();
+  }
+
+  onChangeRowsPerPagesColegiaciones(event) {
+    this.selectedItemColegiaciones = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tableColegiaciones.reset();
   }
 
   // FIN SOCIEDADES
@@ -2531,8 +2538,6 @@ export class FichaColegialComponent implements OnInit {
           this.searchDatosCurriculares();
         }
       );
-    //}
-    //}
   }
 
   redireccionarCurriculares(dato) {
@@ -2540,7 +2545,7 @@ export class FichaColegialComponent implements OnInit {
       // enviarDatos = dato[0];
       sessionStorage.setItem("curriculo", JSON.stringify(dato));
 
-      if (dato[0].fechaBaja != null) {
+      if (dato[0].fechaBaja != null || (this.tarjetaCurriculares == '2')) {
         sessionStorage.setItem("permisos", "false");
       } else {
         sessionStorage.setItem("permisos", "true");
@@ -2868,30 +2873,31 @@ export class FichaColegialComponent implements OnInit {
   redireccionarDireccion(dato) {
     if (this.camposDesactivados != true) {
       if (!this.selectMultipleDirecciones) {
-        if (dato[0].fechaBaja != null) {
-          sessionStorage.setItem("historicoDir", "true");
-        }
-        var enviarDatos = null;
-        if (dato && dato.length > 0) {
-          enviarDatos = dato[0];
-          sessionStorage.setItem("idDireccion", enviarDatos.idDireccion);
-          sessionStorage.setItem("direccion", JSON.stringify(enviarDatos));
-          sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
-          sessionStorage.setItem("fichaColegial", "true");
-          sessionStorage.removeItem("editarDireccion");
+          if (dato[0].fechaBaja != null) {
+            sessionStorage.setItem("historicoDir", "true");
+          }
+          var enviarDatos = null;
+          if (dato && dato.length > 0) {
+            enviarDatos = dato[0];
+            sessionStorage.setItem("idDireccion", enviarDatos.idDireccion);
+            sessionStorage.setItem("direccion", JSON.stringify(enviarDatos));
+            sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
+            sessionStorage.setItem("fichaColegial", "true");
+            sessionStorage.removeItem("editarDireccion");
 
-          sessionStorage.setItem("editarDireccion", "true");
+            sessionStorage.setItem("editarDireccion", "true");
 
-          sessionStorage.setItem("usuarioBody", JSON.stringify(this.idPersona));
-          sessionStorage.setItem(
-            "esColegiado",
-            sessionStorage.getItem("esColegiado")
-          );
-        } else {
-          sessionStorage.setItem("editar", "false");
-        }
+            sessionStorage.setItem("usuarioBody", JSON.stringify(this.idPersona));
+            sessionStorage.setItem(
+              "esColegiado",
+              sessionStorage.getItem("esColegiado")
+            );
+          } else {
+            sessionStorage.setItem("editar", "false");
+          }
 
-        this.router.navigate(["/consultarDatosDirecciones"]);
+          sessionStorage.setItem("permisoTarjeta", this.tarjetaDirecciones);
+          this.router.navigate(["/consultarDatosDirecciones"]);
       } else {
         this.numSelectedDirecciones = this.selectedDatosDirecciones.length;
       }
@@ -3055,31 +3061,31 @@ export class FichaColegialComponent implements OnInit {
   redireccionarDatosBancarios(dato) {
     if (this.camposDesactivados != true) {
       if (!this.selectMultipleBancarios) {
-        var enviarDatos = null;
-        if (dato && dato.length > 0) {
-          enviarDatos = dato[0];
-          sessionStorage.setItem("idCuenta", dato[0].idCuenta);
-          //sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
+          var enviarDatos = null;
+          if (dato && dato.length > 0) {
+            enviarDatos = dato[0];
+            sessionStorage.setItem("idCuenta", dato[0].idCuenta);
+            //sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
 
-          if (dato[0].fechaBaja != null) {
-            sessionStorage.setItem("permisos", "false");
+            if (dato[0].fechaBaja != null || this.tarjetaBancarios == '2') {
+              sessionStorage.setItem("permisos", "false");
+            } else {
+              sessionStorage.setItem("permisos", "true");
+            }
+
+            sessionStorage.setItem("editar", "true");
+            sessionStorage.setItem("idPersona", this.idPersona);
+            sessionStorage.setItem("fichaColegial", "true");
+            sessionStorage.setItem("datosCuenta", JSON.stringify(dato[0]));
+            sessionStorage.setItem("usuarioBody", JSON.stringify(dato[0]));
+            sessionStorage.setItem("historico", JSON.stringify(this.bodyDatosBancarios.historico));
+
           } else {
-            sessionStorage.setItem("permisos", "true");
+            sessionStorage.setItem("editar", "false");
           }
 
-          sessionStorage.setItem("editar", "true");
-          sessionStorage.setItem("idPersona", this.idPersona);
-          sessionStorage.setItem("fichaColegial", "true");
-          sessionStorage.setItem("datosCuenta", JSON.stringify(dato[0]));
-          sessionStorage.setItem("usuarioBody", JSON.stringify(dato[0]));
-          sessionStorage.setItem("historico", JSON.stringify(this.bodyDatosBancarios.historico));
-
-        } else {
-          sessionStorage.setItem("editar", "false");
-        }
-
-        this.router.navigate(["/consultarDatosBancarios"]);
-      } else {
+          this.router.navigate(["/consultarDatosBancarios"]);
+      }else {
         this.numSelectedBancarios = this.selectedDatosBancarios.length;
       }
     }
@@ -3224,13 +3230,14 @@ export class FichaColegialComponent implements OnInit {
   }
 
   onRowSelectSanciones(selectedDatos) {
-    // Guardamos los filtros
-    sessionStorage.setItem("saveFilters", JSON.stringify(this.bodySanciones));
+      // Guardamos los filtros
+      sessionStorage.setItem("saveFilters", JSON.stringify(this.bodySanciones));
 
-    // Guardamos los datos seleccionados para pasarlos a la otra pantalla
-    sessionStorage.setItem("rowData", JSON.stringify(selectedDatos));
+      // Guardamos los datos seleccionados para pasarlos a la otra pantalla
+      sessionStorage.setItem("rowData", JSON.stringify(selectedDatos));
+      sessionStorage.setItem("permisoTarjeta", this.tarjetaSanciones);
 
-    this.router.navigate(["/detalleSancion"]);
+      this.router.navigate(["/detalleSancion"]);
   }
 
   searchSanciones() {
@@ -3402,13 +3409,15 @@ export class FichaColegialComponent implements OnInit {
     }
   }
   onRowSelectedRegTel(selectedDatosRegtel) {
-    this.selectedDatosRegtel = selectedDatosRegtel;
-    if (this.selectedDatosRegtel.tipo == "0") {
-      this.buttonVisibleRegtelCarpeta = false;
-      this.buttonVisibleRegtelDescargar = true;
-    } else {
-      this.buttonVisibleRegtelCarpeta = true;
-      this.buttonVisibleRegtelDescargar = false;
+    if(this.tarjetaRegtel == '3'){
+      this.selectedDatosRegtel = selectedDatosRegtel;
+      if (this.selectedDatosRegtel.tipo == "0") {
+        this.buttonVisibleRegtelCarpeta = false;
+        this.buttonVisibleRegtelDescargar = true;
+      } else {
+        this.buttonVisibleRegtelCarpeta = true;
+        this.buttonVisibleRegtelDescargar = false;
+      }
     }
   }
 
@@ -4106,5 +4115,240 @@ export class FichaColegialComponent implements OnInit {
         }
       }
     });
+  }
+
+
+  checkAccesoDatosGenerales() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "120";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaGenerales = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+      }
+    );
+  }
+
+  checkAccesoInteres() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "234";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaInteres = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+      }
+    );
+  }
+
+  checkAccesoDatosColegiales() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "121";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaColegiales = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+      }
+    );
+  }
+
+  checkAccesoOtrasColegiaciones() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "235";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaOtrasColegiaciones = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+      }
+    );
+  }
+
+  checkAccesoCertificados() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "131";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaCertificados = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+      }
+    );
+  }
+
+  checkAccesoSanciones() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "236";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaSanciones = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+      }
+    );
+  }
+
+  checkAccesoSociedades() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "237";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaSociedades = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+      }
+    );
+  }
+
+  checkAccesoDatosCurriculares() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "124";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaCurriculares = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+      }
+    );
+  }
+
+  checkAccesoDirecciones() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "122";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaDirecciones = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+      }
+    );
+  }
+
+  checkAccesoDatosBancarios() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "123";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaBancarios = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+      }
+    );
+  }
+
+  checkAccesoRegtel() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "222";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaRegtel = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+      }
+    );
+  }
+
+  checkAccesoMutualidad() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "223";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaMutualidad = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+      }
+    );
+  }
+
+  checkAccesoAlterMutua() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "226";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaAlterMutua = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+      }
+    );
   }
 }

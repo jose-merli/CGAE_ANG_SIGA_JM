@@ -168,6 +168,8 @@ export class DatosGenerales implements OnInit {
     }
   ];
 
+  tarjeta : string;
+
   constructor(
     private formBuilder: FormBuilder,
     private translateService: TranslateService,
@@ -263,38 +265,6 @@ export class DatosGenerales implements OnInit {
           console.log(err);
         }
       );
-  }
-
-  checkAcceso() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "120";
-    let derechoAcceso;
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisosTree = JSON.parse(data.body);
-        let permisosArray = permisosTree.permisoItems;
-        derechoAcceso = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        if (derechoAcceso >= 2) {
-          this.activacionEditar = true;
-          if (derechoAcceso == 2) {
-            this.camposDesactivados = true;
-          }
-        } else {
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
-          this.router.navigate(["/errorAcceso"]);
-        }
-        this.continueOnInit();
-      }
-    );
   }
 
   obtenerEtiquetasPersonaJuridicaConcreta() {
@@ -627,7 +597,7 @@ export class DatosGenerales implements OnInit {
 
   abreCierraFicha() {
     // let fichaPosible = this.getFichaPosibleByKey(key);
-    if (this.activacionEditar == true) {
+    if (this.tarjeta == '2' || this.tarjeta == '3') {
       // fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
@@ -1155,5 +1125,24 @@ export class DatosGenerales implements OnInit {
 
   ngAfterViewChecked() {
     this.changeDetectorRef.detectChanges();
+  }
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "226";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjeta = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.continueOnInit();
+      }
+    );
   }
 }

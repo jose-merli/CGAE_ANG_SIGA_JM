@@ -418,7 +418,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     //Rellenamos el array de temas a partir de la estructura del p-multiselect
     this.body.temas = [];
     this.selectedTemas.forEach(element => {
-      this.body.temas.push(element.value);
+      this.body.temas.push(element);
     });
 
     this.sigaServices

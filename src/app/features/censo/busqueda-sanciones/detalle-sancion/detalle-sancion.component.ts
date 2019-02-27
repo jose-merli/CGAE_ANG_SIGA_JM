@@ -56,6 +56,8 @@ export class DetalleSancionComponent implements OnInit {
   fechaMinimaFirmeza: Date;
   fechaMaxAcuerdo: Date;
 
+  permisoTarjeta: string;
+
   constructor(
     private location: Location,
     private authenticationService: AuthenticationService,
@@ -125,6 +127,8 @@ export class DetalleSancionComponent implements OnInit {
 
       this.deshabilitarFechas();
     }
+
+    this.permisoTarjeta = sessionStorage.getItem("permisoTarjeta");
   }
 
   controlFechas() {

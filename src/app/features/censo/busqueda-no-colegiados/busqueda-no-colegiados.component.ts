@@ -47,6 +47,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   comboTipoCV: any;
   comboSubtipoCV: any;
   comboSexo: any;
+  comboColegios: any[];
   progressSpinner: boolean = false;
   resultadosPoblaciones: any;
   sortO: number = 1;
@@ -82,6 +83,10 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   showDatosGeneneralesAvanzado: boolean = false;
   showDatosDireccion: boolean = false;
   showDatosGenerales: boolean = true;
+
+  institucionActual: any;
+  deshabilitarCombCol: boolean = false;
+  colegiosSeleccionados: any[] = [];
 
   @ViewChild("table")
   table: DataTable;
@@ -123,8 +128,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     sessionStorage.removeItem("disabledAction");
 
     this.getLetrado();
-    // Obtener Combos
-    this.getCombos();
+
     this.es = this.translateService.getCalendarLocale();
     // sessionStorage.removeItem("esColegiado");
     if (
@@ -132,19 +136,11 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     ) {
       this.body = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaNoColegiadosFichaColegial")
-      );
-      sessionStorage.removeItem("filtrosBusquedaNoColegiadosFichaColegial");
-
-      if (this.body.historico) {
-        if (this.checkFiltersInit()) {
-          this.isBuscar(true);
-        }
-      } else {
-        if (this.checkFiltersInit()) {
-          this.isBuscar(false);
-        }
-      }
+      );   
     }
+
+    // Obtener Combos
+    this.getCombos();
   }
 
   getFichaPosibleByKey(key): any {
@@ -165,12 +161,52 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     this.getComboSexo();
     this.getComboTipoDireccion();
     this.getComboEtiquetas();
+    this.getComboColegios();
+  }
+
+  getComboColegios() {
+    // obtener colegios
+    this.sigaServices.get("busquedaPer_colegio").subscribe(
+      n => {
+        this.comboColegios = n.combooItems;
+        this.arregloTildesCombo(this.comboColegios);
+
+        this.getInstitucion();
+
+        if (
+          sessionStorage.getItem("filtrosBusquedaNoColegiadosFichaColegial") != null
+        ) {
+          this.body.colegio.forEach(element => {
+            let labelColegio = this.comboColegios.find(
+              item => item.value === element
+            ).label;
+
+            this.colegiosSeleccionados.push({
+              label: labelColegio,
+              value: element
+            });
+          });
+          if (this.body.historico) {
+            if (this.checkFiltersInit()) {
+              this.isBuscar(true);
+            }
+          } else {
+            if (this.checkFiltersInit()) {
+              this.isBuscar(false);
+            }
+          }
+          sessionStorage.removeItem("filtrosBusquedaNoColegiadosFichaColegial");
+        }
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   //Funcion que carga combo del campo sexo
   getComboSexo() {
     this.comboSexo = [
-      { label: "", value: null },
       { label: "Hombre", value: "H" },
       { label: "Mujer", value: "M" }
     ];
@@ -274,9 +310,11 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   //Tipo Curricular
   onChangeCategoriaCurricular(event) {
-    if (event) {
-      this.getComboTipoCurricular(event.value);
-      this.getComboSubtipoCurricular(event.value);
+    if (event.value != null) {
+      if (event) {
+        this.getComboTipoCurricular(event.value);
+        this.getComboSubtipoCurricular(event.value);
+      }
     }
   }
 
@@ -435,6 +473,11 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       this.body.fechaNacimientoRango[0] = this.fechaNacimientoDesdeSelect;
 
       this.progressSpinner = true;
+      
+      this.body.colegio = [];
+      this.colegiosSeleccionados.forEach(element => {
+        this.body.colegio.push(element.value);
+      });
 
       this.sigaServices
         .postPaginado(
@@ -637,6 +680,10 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   getColsResults() {
     this.cols = [
+      {
+        field: "colegioResultado",
+        header: "censo.busquedaClientesAvanzada.literal.colegio"
+      },
       {
         field: "nif",
         header: "censo.consultaDatosColegiacion.literal.numIden"
@@ -858,5 +905,21 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
+  }
+
+  getInstitucion() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+
+      if (this.institucionActual != "2000") {
+        this.colegiosSeleccionados = [
+          {
+            label: n.label,
+            value: this.institucionActual
+          }
+        ];
+        this.deshabilitarCombCol = true;
+      }
+    });
   }
 }
