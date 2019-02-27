@@ -107,6 +107,9 @@
               <textarea [disabled]="editar" style="height:140px" pInputTextarea autoResize="autoResize"
                 [(ngModel)]="body.cuerpo" maxlength="160"></textarea>
             </div>
+            <div *ngIf="body.idTipoEnvios=='5' && (body.csv != null && body.csv != '')" class="form-group col-lg-12 col-md-12">
+              <label (click)="descargarJustificante()">Descargar justificante de recepción BUROSMS</label>
+            </div>
           </div>
         </div>
       </div>

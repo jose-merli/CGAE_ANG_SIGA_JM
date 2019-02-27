@@ -588,6 +588,7 @@ export class SigaServices {
     comunicaciones_guardarConf: "comunicaciones/detalle/configuracion",
     comunicaciones_destinatarios: "comunicaciones/detalle/destinatarios",
     comunicaciones_descargarDocumento: "comunicaciones/detalle/descargarDocumento",
+    comunicaciones_descargarCertificado: "comunicaciones/detalle/descargarCertificado",
     consultas_search: "consultas/search",
     consultas_borrar: "consultas/borrarConsulta",
     consultas_listadoPlantillas: "consultas/plantillasconsulta",

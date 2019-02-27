@@ -14,5 +14,6 @@ export class ConfigComunicacionItem {
   fechaProgramada: Date;
   fechaCreacion: Date;
   caracteresSMS: String;
+  csv: String;
   constructor() { }
 }
