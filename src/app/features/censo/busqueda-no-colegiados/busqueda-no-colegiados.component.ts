@@ -866,6 +866,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   }
 
   navigateComunicar(dato){
+    sessionStorage.setItem("filtrosBusquedaNoColegiadosFichaColegial",JSON.stringify(this.body));
     sessionStorage.setItem("rutaComunicacion",this.currentRoute.toString());
     sessionStorage.setItem("idModulo",'3');
     this.getDatosComunicar();    

@@ -748,6 +748,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
     //IDMODULO de CENSO es 3
     sessionStorage.setItem("idModulo", '3');
+    sessionStorage.setItem("filtrosBusquedaColegiadosFichaColegial", JSON.stringify(this.body));
     this.getDatosComunicar();
   }
 

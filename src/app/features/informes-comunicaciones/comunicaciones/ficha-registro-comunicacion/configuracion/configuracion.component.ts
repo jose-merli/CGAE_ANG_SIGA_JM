@@ -4,6 +4,7 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { Router } from "@angular/router";
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: "app-configuracion",
@@ -29,6 +30,17 @@ export class ConfiguracionComponent implements OnInit {
   plantilla: string;
   modelosComunicacion: any = [];
   arrayClases: any = [];
+  reenviar: boolean = false;
+  cancelar: boolean = false;
+
+  editorConfig: any = {
+    selector: 'textarea',
+    plugins: "autoresize pagebreak table save charmap media contextmenu paste directionality noneditable visualchars nonbreaking spellchecker template searchreplace lists link image insertdatetime textcolor code hr",
+    toolbar: "newdocument | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify formatselect fontselect fontsizeselect | cut copy paste pastetext | searchreplace | bullist numlist | indent blockquote | undo redo | link unlink image code | insertdatetime preview | forecolor backcolor",
+    menubar: false,
+    autoresize_on_init: true,
+    statusbar: false
+  };
 
   fichasPosibles = [
     {
@@ -54,7 +66,7 @@ export class ConfiguracionComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getDatos();
@@ -139,7 +151,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         err => {
           console.log(err);
         },
-        () => {}
+        () => { }
       );
   }
 
@@ -168,8 +180,15 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   getDatos() {
     if (sessionStorage.getItem("comunicacionesSearch") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("comunicacionesSearch"));
-      this.editar = true;
+      this.body = JSON.parse(sessionStorage.getItem("comunicacionesSearch"));      
+      if (this.body.idEstado != '4') {
+        this.editar = true;
+      }else{
+        this.cancelar = true;
+      }
+      if(this.body.idEstado == '3' || this.body.idEstado == '6'){
+        this.reenviar = true;
+      }
       this.getPlantillas();
     } else {
       this.editar = false;
@@ -222,7 +241,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     );
   }
 
-  cancelar() {
+  onCancelar() {
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
       message: this.translateService.instant(
@@ -274,25 +293,61 @@ para poder filtrar el dato con o sin estos caracteres*/
           );
           console.log(err);
         },
-        () => {}
+        () => { }
       );
   }
 
   duplicar() {
-    this.sigaServices.post("enviosMasivos_duplicar", this.body).subscribe(
+    let datoDuplicar = {
+      idEnvio: this.body.idEnvio,
+      idTipoEnvios: this.body.idTipoEnvios,
+      idPlantillaEnvios: this.body.idPlantillaEnvios
+    }
+
+    this.sigaServices.post("enviosMasivos_duplicar", datoDuplicar).subscribe(
       data => {
-        //this.showSuccess('Se ha duplicado el envío correctamente');
+        this.showSuccess(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.correctDuplicado"));
+        
+        let datoDuplicado = JSON.parse(data["body"]).enviosMasivosItem;
+        datoDuplicado.forEach(element => {
+          if (element.fechaProgramada != null) {
+            element.fechaProgramada = new Date(element.fechaProgramada);
+          }
+          element.fechaCreacion = new Date(element.fechaCreacion);
+        });
         sessionStorage.setItem("ComunicacionDuplicada", "true");
-        this.router.navigate(["enviosMasivos"]);
+        sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(datoDuplicado[0]));
+        this.router.navigate(["/fichaRegistroEnvioMasivo"]);       
       },
       err => {
-        this.showFail(
-          this.translateService.instant(
-            "informesycomunicaciones.comunicaciones.mensaje.errorDuplicarEnvio"
-          )
-        );
+        this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorDuplicarEnvio"));
         console.log(err);
       }
     );
   }
+
+  descargarJustificante() {
+    this.progressSpinner = true;
+    this.sigaServices
+      .postDownloadFiles("comunicaciones_descargarCertificado", this.body.csv)
+      .subscribe(data => {
+        const blob = new Blob([data], { type: "application/octet-stream" });
+        if (blob.size == 0) {
+          this.showFail(
+            this.translateService.instant(
+              "messages.general.error.ficheroNoExiste"
+            )
+          );
+        } else {
+          saveAs(data, "Justificante_BUROSMS.pdf");
+        }
+      },
+      err => {
+        console.log(err);
+        this.showFail(this.translateService.instant("messages.general.error.ficheroNoExiste")
+        );
+      }, () =>{
+        this.progressSpinner=false
+      });
+  }  
 }

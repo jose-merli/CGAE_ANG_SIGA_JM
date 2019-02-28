@@ -56,7 +56,7 @@ export class DialogoComunicacionesComponent implements OnInit {
   ngOnInit() {
 
     this.datosSeleccionados = JSON.parse(sessionStorage.getItem("datosComunicar"));
-
+    sessionStorage.removeItem("back");
     this.getClaseComunicaciones();
     this.getInstitucion();
     this.getMaxNumeroModelos();
@@ -237,6 +237,7 @@ export class DialogoComunicacionesComponent implements OnInit {
         .subscribe(
           data => {
             this.showSuccess("Envios generados");
+            this.showValores = false;
           },
           err => {
             console.log(err);
@@ -324,6 +325,7 @@ export class DialogoComunicacionesComponent implements OnInit {
             const blob = new Blob([data], { type: "text/csv" });
             saveAs(blob, "Documentos.zip");
             this.progressSpinner = false;
+            this.showValores = false;
           },
           err => {
             console.log(err);
@@ -331,10 +333,11 @@ export class DialogoComunicacionesComponent implements OnInit {
           },
           () => {
             this.progressSpinner = false;
+
           }
         );
     } else {
-      this.showFail("No se ha seleccionado nigún dato");
+      this.showFail("No se ha seleccionado ningún dato.");
     }
   }
 
@@ -382,6 +385,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 
 
   backTo() {
+    sessionStorage.setItem("back","true");
     this.location.back();
   }
 }

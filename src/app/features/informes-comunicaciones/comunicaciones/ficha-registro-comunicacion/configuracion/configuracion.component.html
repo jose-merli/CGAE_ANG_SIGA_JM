@@ -35,39 +35,48 @@
     <!--cuerpo datos generales-->
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div class="row">
-        <div class="bloque" [ngClass]="{'col-lg-12':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-6':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+        <div class="bloque"
+          [ngClass]="{'col-lg-12':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-6':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
           <div class="form-row">
             <div class="form-group col-lg-12">
               <label>
                 <strong>{{ 'enviosMasivos.literal.datosGlobales' | translate }}</strong>
               </label>
             </div>
-            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+            <div class="form-group"
+              [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label>{{ 'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.configuracion.claseComunicaciones' | translate }}</label>
-              <p-dropdown [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeClase()" [disabled]="editar" [options]="clasesComunicaciones"
-                [(ngModel)]="body.idClaseComunicacion" class="select-form"></p-dropdown>
-            </div>
-            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
-              <label>{{ 'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.configuracion.modeloComunicaciones' | translate }}</label>
-              <p-dropdown [disabled]="editar" [options]="modelosComunicacion" [(ngModel)]="body.idModeloComunicacion" class="select-form"></p-dropdown>
-            </div>
-            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
-              <label class="d-block">{{ 'enviosMasivos.literal.tipoEnvio' | translate }} *</label>
-              <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [disabled]="editar" [options]="tipoEnvios" [(ngModel)]="body.idTipoEnvios"
+              <p-dropdown [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeClase()"
+                [disabled]="true" [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion"
                 class="select-form"></p-dropdown>
             </div>
-            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
-              <label class="d-block">{{ 'enviosMasivos.literal.plantillasEnvio' | translate }} *</label>
-              <p-dropdown [disabled]="editar" [options]="plantillas" [(ngModel)]="body.idPlantillaEnvios" class="select-form"></p-dropdown>
+            <div class="form-group"
+              [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+              <label>{{ 'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.configuracion.modeloComunicaciones' | translate }}</label>
+              <input [disabled]="true" type="text" class="form-control" [(ngModel)]="body.modeloComunicacion" pInputText>
             </div>
-            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+            <div class="form-group"
+              [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+              <label class="d-block">{{ 'enviosMasivos.literal.tipoEnvio' | translate }} *</label>
+              <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [disabled]="true" [options]="tipoEnvios"
+                [(ngModel)]="body.idTipoEnvios" class="select-form"></p-dropdown>
+            </div>
+            <div class="form-group"
+              [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+              <label class="d-block">{{ 'enviosMasivos.literal.plantillasEnvio' | translate }} *</label>
+              <p-dropdown [disabled]="true" [options]="plantillas" [(ngModel)]="body.idPlantillaEnvios"
+                class="select-form"></p-dropdown>
+            </div>
+            <div class="form-group"
+              [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">{{ 'enviosMasivos.literal.descripcion' | translate }} *</label>
-              <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="body.descripcion" pInputText>
+              <input [disabled]="true" type="text" class="form-control" [(ngModel)]="body.descripcion" pInputText>
             </div>
           </div>
         </div>
 
-        <div *ngIf="body.idTipoEnvios== '1' || body.idTipoEnvios== '4' || body.idTipoEnvios== '5'" class="col-lg-6 col-md-12">
+        <div *ngIf="body.idTipoEnvios== '1' || body.idTipoEnvios== '4' || body.idTipoEnvios== '5'"
+          class="col-lg-6 col-md-12">
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
               <label *ngIf="body.idTipoEnvios=='1'">
@@ -82,49 +91,12 @@
             </div>
             <div *ngIf="body.idTipoEnvios=='1'" class="form-group col-lg-12 col-md-12">
               <label>{{ 'enviosMasivos.literal.asunto' | translate }}</label>
-              <input [disabled]="editar" type="text" class="form-control" [(ngModel)]="body.asunto" pInputText>
+              <input [disabled]="true" type="text" class="form-control" [(ngModel)]="body.asunto" pInputText>
             </div>
             <div *ngIf="body.idTipoEnvios=='1'" class="form-group col-lg-12 col-md-12">
               <label>{{ 'enviosMasivos.literal.cuerpo' | translate }}</label>
-              <p-editor [disabled]="editar" [(ngModel)]="body.email" [style]="{'height':'140px','text-align':'left'}">
-                <p-header>
-                  <span class=" ql-formats">
-                    <select class="ql-header">
-                      <option value="1">Heading</option>
-                      <option value="2">Subheading</option>
-                      <option selected>Normal</option>
-                    </select>
-                    <select class="ql-font">
-                      <option selected>Sans Serif</option>
-                      <option value="serif">Serif</option>
-                      <option value="monospace">Monospace</option>
-                    </select>
-                  </span>
-                  <span class="ql-formats">
-                    <button class="ql-bold" aria-label="Bold"></button>
-                    <button class="ql-italic" aria-label="Italic"></button>
-                    <button class="ql-underline" aria-label="Underline"></button>
-                  </span>
-                  <span class="ql-formats">
-                    <button class="ql-list" value="ordered" aria-label="Ordered List"></button>
-                    <button class="ql-list" value="bullet" aria-label="Unordered List"></button>
-                    <select class="ql-align">
-                      <option selected></option>
-                      <option value="center"></option>
-                      <option value="right"></option>
-                      <option value="justify"></option>
-                    </select>
-                  </span>
-                  <span class="ql-formats">
-                    <button class="ql-link" aria-label="Insertar Link"></button>
-                    <button class="ql-image" aria-label="Insertar Imagen"></button>
-                    <button class="ql-code-block" aria-label="Insertar código"></button>
-                  </span>
-                  <span class="ql-formats">
-                    <button class="ql-clean" aria-label="Remove Styles"></button>
-                  </span>
-                </p-header>
-              </p-editor>
+              <editor apiKey="i5n3sixi894luh5sdh6x79pdl7jlumexms8t7fndqqqen15q" [init]="editorConfig"
+                [(ngModel)]="body.cuerpo" [disabled]="true"></editor>
             </div>
             <div *ngIf="body.idTipoEnvios=='4' || body.idTipoEnvios=='5'" class="form-group col-lg-3 col-md-3">
               <label>{{ 'enviosMasivos.literal.numCaracteres' | translate }}: </label>
@@ -132,7 +104,11 @@
             </div>
             <div *ngIf="body.idTipoEnvios=='4' || body.idTipoEnvios=='5'" class="form-group col-lg-12 col-md-12">
               <label>{{ 'enviosMasivos.literal.cuerpo' | translate }}</label>
-              <textarea [disabled]="editar" style="height:140px" pInputTextarea autoResize="autoResize" [(ngModel)]="body.cuerpo" maxlength="160"></textarea>
+              <textarea [disabled]="true" style="height:140px" pInputTextarea autoResize="autoResize"
+                [(ngModel)]="body.cuerpo" maxlength="160"></textarea>
+            </div>
+            <div *ngIf="body.idTipoEnvios=='5' && (body.csv != null && body.csv != '')" class="form-group col-lg-12 col-md-12">
+              <a href="#" (click)="descargarJustificante()"> Descargar justificante de recepción BUROSMS <i class="fa fa-download"></i></a>
             </div>
           </div>
         </div>
@@ -141,8 +117,8 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="cancelar()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
-        <button *ngIf="editar" (click)="duplicar()" pButton type="button" icon="fas fa-share-square" iconPos="left" label="{{ 'general.boton.reenviar' | translate}}"></button>
+        <button *ngIf="cancelar" (click)="onCancelar()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+        <button *ngIf="editar && reenviar" (click)="duplicar()" pButton type="button" icon="fas fa-share-square" iconPos="left" label="{{ 'general.boton.reenviar' | translate}}"></button>
       </div>
     </div>
   </div>

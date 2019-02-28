@@ -13,6 +13,7 @@ export class EnviosMasivosItem {
   idGrupo: String;
   idEnvioDelete: String[] = [];
   estadoEnvio: String;
+  destinatario: String;
 
   constructor() { }
 }

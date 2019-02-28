@@ -459,6 +459,7 @@ export class BusquedaSancionesComponent implements OnInit {
   }
 
   navigateComunicar(dato){
+    sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
     sessionStorage.setItem("rutaComunicacion",this.currentRoute.toString());
     sessionStorage.setItem("idModulo",'3');
     this.getDatosComunicar();    
