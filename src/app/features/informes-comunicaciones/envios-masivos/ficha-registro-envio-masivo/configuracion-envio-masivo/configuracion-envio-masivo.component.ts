@@ -25,6 +25,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   eliminarArray: any[];
   tipoEnvio: string;
   editarPlantilla: boolean = false;
+  apiKey: string = "";
 
   editorConfig: any = {
     selector: 'textarea',
@@ -69,6 +70,10 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
 
   ngOnInit() {
 
+    if(sessionStorage.getItem("tinyApiKey") != null){
+      this.apiKey = sessionStorage.getItem("tinyApiKey")
+    }
+    
     this.editar = false;
     this.getDatos();
     this.getTipoEnvios();

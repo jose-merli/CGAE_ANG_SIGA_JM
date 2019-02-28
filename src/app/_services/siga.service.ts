@@ -31,6 +31,7 @@ export class SigaServices {
     menu: "menu",
     entorno: "getEntorno",
     usuario: "usuario",
+    recuperarApiKey: "recuperarApiKey",
     usuario_logeado: "usuario/logeado",
     instituciones: "instituciones",
     institucionActual: "getInstitucionActual",

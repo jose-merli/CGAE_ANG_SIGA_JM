@@ -18,6 +18,7 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
   msgs: Message[];
   editar: boolean = false;
   nuevo: boolean = false;
+  apiKey: string = "";
 
   editorConfig: any = {
     selector: 'textarea',
@@ -49,6 +50,9 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if(sessionStorage.getItem("tinyApiKey") != null){
+      this.apiKey = sessionStorage.getItem("tinyApiKey")
+    }
     this.getTipoEnvios();
     this.getDatos();
     if (sessionStorage.getItem("crearNuevaPlantilla") != undefined) {

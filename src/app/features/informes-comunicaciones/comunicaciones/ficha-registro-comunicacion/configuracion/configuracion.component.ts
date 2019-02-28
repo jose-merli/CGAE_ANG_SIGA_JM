@@ -32,6 +32,7 @@ export class ConfiguracionComponent implements OnInit {
   arrayClases: any = [];
   reenviar: boolean = false;
   cancelar: boolean = false;
+  apiKey: string = "";
 
   editorConfig: any = {
     selector: 'textarea',
@@ -69,6 +70,10 @@ export class ConfiguracionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if(sessionStorage.getItem("tinyApiKey") != null){
+      this.apiKey = sessionStorage.getItem("tinyApiKey")
+    }
+
     this.getDatos();
     this.getClasesComunicaciones();
     this.getModelosComunicacion();
