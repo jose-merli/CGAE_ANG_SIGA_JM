@@ -369,7 +369,7 @@ export class FichaColegialComponent implements OnInit {
       );
     } else if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.disabledNif = true;
-    } else if (sessionStorage.getItem("destinatarioCom") == "true"){
+    } else if (sessionStorage.getItem("destinatarioCom") != null){
       this.desactivarVolver = false;
     } else {
       //  LLEGA DESDE PUNTO DE MENÚ

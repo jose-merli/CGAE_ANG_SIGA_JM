@@ -56,7 +56,7 @@
               </div>
             </div>
             <div class="col-lg-11 col-md-10">
-              <i (click)="navigateTo()" *ngIf="!destinatario.open" class="fas fa-external-link mt-1 float-right"></i>
+              <i (click)="navigateTo()" *ngIf="!destinatario.open" class="fas fa-external-link-alt mt-1 float-right"></i>
               <div class="d-flex justify-content-start mb-1">
                 <label class="mr-auto title-ficha">{{
                   "informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.destinatarios.singular"
@@ -86,7 +86,9 @@
               "informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.destinatarios.singular"
                 | translate
             }}</label>
-            <i (click)="navigateTo()" class="fas fa-external-link mr-4 float-right"></i>
+            <i (click)="navigateTo()" class="fas fa-external-link-alt  ml-auto"></i>
+          </div>
+          <div *ngIf="destinatario.open" class=" header-ficha-open d-flex justify-content-start align-items-center">
             <i class="fa fa-angle-up ml-auto"></i>
           </div>
         </div>
