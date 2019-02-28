@@ -94,7 +94,7 @@
             </div>
             <div *ngIf="body.idTipoEnvios=='4' || body.idTipoEnvios=='5'" class="form-group col-lg-12 col-md-12">
               <label>{{'enviosMasivos.literal.cuerpo' | translate}}</label>
-              <textarea style="height:140px" autoResize="autoResize" [(ngModel)]="body.cuerpo" maxlength="160"
+              <textarea [disabled]="true" style="height:140px" autoResize="autoResize" [(ngModel)]="body.cuerpo" maxlength="160"
                 pInputTextarea></textarea>
             </div>
           </div>

@@ -108,7 +108,7 @@
                 [(ngModel)]="body.cuerpo" maxlength="160"></textarea>
             </div>
             <div *ngIf="body.idTipoEnvios=='5' && (body.csv != null && body.csv != '')" class="form-group col-lg-12 col-md-12">
-              <a href="#" (click)="descargarJustificante()"> Descargar justificante de recepción BUROSMS <i class="fa fa-download"></i></a>
+              <label (click)="descargarJustificante()"> {{ 'enviosMasivos.literal.certificado' | translate }} <i class="fa fa-download"></i></label>
             </div>
           </div>
         </div>
