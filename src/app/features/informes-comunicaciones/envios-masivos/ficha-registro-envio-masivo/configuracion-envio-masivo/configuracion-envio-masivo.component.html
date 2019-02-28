@@ -46,15 +46,16 @@
             <div class="form-group"
               [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">{{'enviosMasivos.literal.tipoEnvio' | translate}} *</label>
-              <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [disabled]="editar"
+              <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [disabled]="editar || editarPlantilla"
                 (onChange)="onChangeTipoEnvio()" [options]="tipoEnvios" [(ngModel)]="body.idTipoEnvios"
                 class="select-form"></p-dropdown>
             </div>
             <div class="form-group"
               [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">{{'enviosMasivos.literal.plantillasEnvio' | translate}} *</label>
-              <p-dropdown [disabled]="(plantillas && plantillas.length <= 0) || editar" [options]="plantillas"
-                [(ngModel)]="body.idPlantillaEnvios" dataKey="value" class="select-form"></p-dropdown>
+              <p-dropdown [disabled]="(plantillas && plantillas.length <= 0) || editar || editarPlantilla"
+                [options]="plantillas" [(ngModel)]="body.idPlantillaEnvios" dataKey="value" class="select-form"
+                (onChange)="detallePlantilla($event)"></p-dropdown>
             </div>
             <div class="form-group"
               [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
@@ -80,12 +81,12 @@
             </div>
             <div *ngIf="body.idTipoEnvios=='1'" class="form-group col-lg-12 col-md-12">
               <label>{{'enviosMasivos.literal.asunto' | translate}}</label>
-              <input type="text" class="form-control" [(ngModel)]="body.asunto" [disabled]="editar" pInputText>
+              <input type="text" class="form-control" [(ngModel)]="body.asunto" [disabled]="true" pInputText>
             </div>
             <div *ngIf="body.idTipoEnvios=='1'" class="form-group col-lg-12 col-md-12">
               <label>{{'enviosMasivos.literal.cuerpo' | translate}}</label>
               <editor apiKey="i5n3sixi894luh5sdh6x79pdl7jlumexms8t7fndqqqen15q" [init]="editorConfig"
-                [(ngModel)]="body.cuerpo" [disabled]="editar"></editor>
+                [(ngModel)]="body.cuerpo" [disabled]="true"></editor>
             </div>
             <div *ngIf="body.idTipoEnvios=='4' || body.idTipoEnvios=='5'" class="form-group col-lg-3 col-md-3">
               <label>{{'enviosMasivos.literal.numCaracteres' | translate}}: </label>
@@ -108,7 +109,7 @@
         <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button pButton type="button" (click)="enviar()" icon="fas fa-share-square" iconPos="left"
-          label="{{ 'general.boton.reenviar' | translate}}"></button>        
+          label="{{ 'general.boton.reenviar' | translate}}"></button>
         <button (click)="guardar()" [disabled]="isGuardarDisabled()" pButton type="button" icon="far fa-save"
           iconPos="left" label="{{ 'general.boton.guardar' | translate}}" [disabled]="editar"></button>
       </div>

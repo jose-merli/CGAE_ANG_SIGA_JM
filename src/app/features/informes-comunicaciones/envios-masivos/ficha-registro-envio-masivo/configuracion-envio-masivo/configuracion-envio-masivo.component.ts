@@ -24,6 +24,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   msgs: Message[];
   eliminarArray: any[];
   tipoEnvio: string;
+  editarPlantilla: boolean = false;
 
   editorConfig: any = {
     selector: 'textarea',
@@ -94,7 +95,20 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
     this.msgs = [];
   }
 
+  detallePlantilla(event) {
 
+    if (this.body.idTipoEnvios == '1' || this.body.idTipoEnvios == '4' || this.body.idTipoEnvios == '5') {
+      let datosPlantilla = {
+        idPlantillaEnvios: event.value,
+        idTipoEnvios: this.body.idTipoEnvios
+      }
+      this.sigaServices.post("enviosMasivos_detallePlantilla", datosPlantilla).subscribe(data => {
+        let datos = JSON.parse(data["body"]);
+        this.body.asunto = datos.asunto;
+        this.body.cuerpo = datos.cuerpo;
+      });
+    }
+  }
   getTipoEnvios() {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
@@ -165,8 +179,6 @@ para poder filtrar el dato con o sin estos caracteres*/
         if (this.editar) {
           this.body.idPlantillaEnvios = this.body.idPlantillaEnvios.toString();
         }
-
-        console.log(this.plantillas)
       },
       err => {
         console.log(err);
@@ -205,6 +217,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
       this.getPlantillas();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+      this.editarPlantilla = true;
       if (this.bodyInicial.idEstado != '1' && this.bodyInicial.idEstado != '4') {
         this.editar = true;
       }
@@ -277,6 +290,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         sessionStorage.removeItem("crearNuevoEnvio");
         sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(this.body));
         this.showSuccess(this.translateService.instant("informesycomunicaciones.enviosMasivos.ficha.envioCorrect"));
+        this.editarPlantilla = true;
       },
       err => {
         this.showFail(this.translateService.instant("informesycomunicaciones.enviosMasivos.ficha.envioError"));
@@ -293,7 +307,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   restablecer() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-  } 
+  }
 
 
   isGuardarDisabled() {
