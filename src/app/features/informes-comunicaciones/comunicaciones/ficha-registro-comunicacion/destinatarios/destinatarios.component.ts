@@ -109,6 +109,8 @@ export class DestinatariosComponent implements OnInit {
 
   navigateTo() {
     this.router.navigate(['/fichaColegial']);
+    sessionStorage.removeItem("busquedaCensoGeneral")
+    sessionStorage.removeItem("esColegiado")
     sessionStorage.setItem("destinatarioCom", JSON.stringify(this.body));
   }
 
