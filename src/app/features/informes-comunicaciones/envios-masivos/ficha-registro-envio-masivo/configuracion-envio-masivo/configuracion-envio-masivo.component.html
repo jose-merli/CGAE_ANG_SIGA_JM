@@ -85,7 +85,7 @@
             </div>
             <div *ngIf="body.idTipoEnvios=='1'" class="form-group col-lg-12 col-md-12">
               <label>{{'enviosMasivos.literal.cuerpo' | translate}}</label>
-              <editor apiKey="i5n3sixi894luh5sdh6x79pdl7jlumexms8t7fndqqqen15q" [init]="editorConfig"
+              <editor apiKey="{{apiKey}}" [init]="editorConfig"
                 [(ngModel)]="body.cuerpo" [disabled]="true"></editor>
             </div>
             <div *ngIf="body.idTipoEnvios=='4' || body.idTipoEnvios=='5'" class="form-group col-lg-3 col-md-3">

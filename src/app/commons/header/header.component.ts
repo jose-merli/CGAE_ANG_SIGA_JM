@@ -50,6 +50,10 @@ export class HeaderComponent implements OnInit {
       }
     );
 
+    this.sigaServices.get("recuperarApiKey").subscribe(n => {
+      sessionStorage.setItem("tinyApiKey", n.data);
+    });
+
 
     /*this.menuUser = [
       {

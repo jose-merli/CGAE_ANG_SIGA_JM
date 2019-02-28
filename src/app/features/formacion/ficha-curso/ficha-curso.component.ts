@@ -223,7 +223,7 @@ export class FichaCursoComponent implements OnInit {
   activacionEditar: boolean = false;
   otraInstitucion: boolean = false;
   file: File = undefined;
-
+  apiKey: string = "";
 
   editorConfig: any = {
     selector: 'textarea',
@@ -246,6 +246,9 @@ export class FichaCursoComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if(sessionStorage.getItem("tinyApiKey") != null){
+      this.apiKey = sessionStorage.getItem("tinyApiKey")
+    }
     this.progressSpinner = true;
     this.getFichasPosibles();
     this.getCombosDatosGenerales();
