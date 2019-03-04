@@ -71,9 +71,11 @@
     </div>
     <div class="card-footer">
         <div class="text-right main-button ">
-            <button (click)="obtenerCamposDinamicos('comunicar')" pButton type="button" icon="fa fa-send" iconPos="left"
+            <button [disabled]="!selectedModelos || selectedModelos.length == 0"
+                (click)="obtenerCamposDinamicos('comunicar')" pButton type="button" icon="fa fa-send" iconPos="left"
                 label="{{'general.boton.enviar' | translate }}"></button>
-            <button (click)="obtenerCamposDinamicos('descargar')" pButton type="button" icon="fas fa-download"
+            <button [disabled]="!selectedModelos || selectedModelos.length == 0"
+                (click)="obtenerCamposDinamicos('descargar')" pButton type="button" icon="fas fa-download"
                 iconPos="left" label="{{'dialogo.boton.descargar' | translate }}"></button>
             <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
                 label="Volver"></button>
