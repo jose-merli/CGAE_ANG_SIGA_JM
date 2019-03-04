@@ -90,13 +90,12 @@ export class NuevaIncorporacionComponent implements OnInit {
     private location: Location,
     private formBuilder: FormBuilder,
     private router: Router
-  ) { }
+  ) {}
 
   @ViewChild("poblacion")
   dropdown: Dropdown;
 
   ngOnInit() {
-
     if (sessionStorage.getItem("isLetrado")) {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     }
@@ -145,23 +144,30 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.dniDisponible = false;
     }
 
-    if(this.solicitudEditar.apellido2 != undefined){
-      this.solicitudEditar.apellidos = this.solicitudEditar.apellido1 + " " + this.solicitudEditar.apellido2; 
-    }else{
+    if (this.solicitudEditar.apellido2 != undefined) {
+      this.solicitudEditar.apellidos =
+        this.solicitudEditar.apellido1 + " " + this.solicitudEditar.apellido2;
+    } else {
       this.solicitudEditar.apellidos = this.solicitudEditar.apellido1;
     }
 
     // Se añade cambio de que aparezca po defecto el nombre del colegiado como titular de los datos bancarios
-    if (this.solicitudEditar.titular == null || this.solicitudEditar.titular == undefined || this.solicitudEditar.titular == "") {
-      this.solicitudEditar.titular = this.solicitudEditar.nombre + " " + this.solicitudEditar.apellidos;
+    if (
+      this.solicitudEditar.titular == null ||
+      this.solicitudEditar.titular == undefined ||
+      this.solicitudEditar.titular == ""
+    ) {
+      this.solicitudEditar.titular =
+        this.solicitudEditar.nombre + " " + this.solicitudEditar.apellidos;
     }
-    
+
     if (this.isValidIBAN()) {
       this.recuperarBicBanco();
-      this.checkSolicitudInicio = JSON.parse(JSON.stringify(this.solicitudEditar)
+      this.checkSolicitudInicio = JSON.parse(
+        JSON.stringify(this.solicitudEditar)
       );
     }
-    this.onChangeNColegiado();
+    this.onChangeNColegiado(undefined);
     this.onChangeCodigoPostal();
     this.getComboPoblacion(this.solicitudEditar.nombrePoblacion.toString());
   }
@@ -223,26 +229,24 @@ export class NuevaIncorporacionComponent implements OnInit {
       }
     );
 
-    this.sigaServices
-      .get("fichaPersona_tipoIdentificacionCombo")
-      .subscribe(
-        result => {
-          this.tipoIdentificacion = result.combooItems;
-          // 1: {label: "CIF", value: "20"}
-          // 2: {label: "NIE", value: "40"}
-          // 3: {label: "NIF", value: "10"}
-          // 4: {label: "Otro", value: "50"}
-          // 5: {label: "Pasaporte", value: "30"}
-          this.tipoIdentificacion[5].label =
-            this.tipoIdentificacion[5].label +
-            " / " +
-            this.tipoIdentificacion[4].label;
-          this.progressSpinner = false;
-        },
-        error => {
-          console.log(error);
-        }
-      );
+    this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
+      result => {
+        this.tipoIdentificacion = result.combooItems;
+        // 1: {label: "CIF", value: "20"}
+        // 2: {label: "NIE", value: "40"}
+        // 3: {label: "NIF", value: "10"}
+        // 4: {label: "Otro", value: "50"}
+        // 5: {label: "Pasaporte", value: "30"}
+        this.tipoIdentificacion[5].label =
+          this.tipoIdentificacion[5].label +
+          " / " +
+          this.tipoIdentificacion[4].label;
+        this.progressSpinner = false;
+      },
+      error => {
+        console.log(error);
+      }
+    );
 
     this.sigaServices.get("solicitudIncorporacion_tipoColegiacion").subscribe(
       result => {
@@ -415,34 +419,35 @@ export class NuevaIncorporacionComponent implements OnInit {
     }
   }
 
-  onChangeNColegiado() {
+  onChangeNColegiado(event) {
     if (!this.isValidNumColegiado()) {
-      this.solicitudEditar.numColegiado = undefined;
-    } else {
-      if (this.solicitudEditar.numColegiado.length == 4) {
-        this.sigaServices
-          .post(
-            "solicitudIncorporacion_searchNumColegiado",
-            this.solicitudEditar
-          )
-          .subscribe(
-            data => {
-              let resultado = JSON.parse(data["body"]);
-              if (resultado.numColegiado == "disponible") {
-                this.numColegiadoDisponible = true;
-              } else {
-                this.numColegiadoDisponible = false;
-              }
-            },
-            error => {
-              let resultado = JSON.parse(error["error"]);
-              this.showFail(resultado.error.message.toString());
-            }
+      if (event != undefined) {
+        if (this.solicitudEditar != undefined && this.solicitudEditar.numColegiado != undefined) {
+          event.currentTarget.value = this.solicitudEditar.numColegiado.substring(
+            0,
+            this.solicitudEditar.numColegiado.length - 1
           );
-      } else {
-        this.numColegiadoDisponible = undefined;
+        }
       }
-    }
+    } 
+    // else {
+    //   this.sigaServices
+    //     .post("solicitudIncorporacion_searchNumColegiado", this.solicitudEditar)
+    //     .subscribe(
+    //       data => {
+    //         let resultado = JSON.parse(data["body"]);
+    //         if (resultado.numColegiado == "disponible") {
+    //           this.numColegiadoDisponible = true;
+    //         } else {
+    //           this.numColegiadoDisponible = false;
+    //         }
+    //       },
+    //       error => {
+    //         let resultado = JSON.parse(error["error"]);
+    //         this.showFail(resultado.error.message.toString());
+    //       }
+    //     );
+    // }
   }
 
   onChangeNifCif() {
@@ -555,37 +560,57 @@ export class NuevaIncorporacionComponent implements OnInit {
     if (this.isGuardar()) {
       this.guardar(false);
     }
-    this.progressSpinner = true;
+
     this.sigaServices
-      .post(
-        "solicitudIncorporacion_aprobarSolicitud",
-        this.solicitudEditar.idSolicitud
-      )
-      .subscribe(
-        result => {
-          console.log(result);
-          this.progressSpinner = false;
-          this.msgs = [
-            {
-              severity: "success",
-              summary: "Éxito",
-              detail: "Solicitud aprobada."
+        .post("solicitudIncorporacion_searchNumColegiado", this.solicitudEditar)
+        .subscribe(
+          data => {
+            let resultado = JSON.parse(data["body"]);
+            if (resultado.numColegiado == "disponible") {
+              this.sigaServices
+              .post(
+                "solicitudIncorporacion_aprobarSolicitud",
+                  this.solicitudEditar.idSolicitud
+              )
+              .subscribe(
+                result => {
+                  console.log(result);
+                  this.progressSpinner = false;
+                  this.msgs = [
+                    {
+                      severity: "success",
+                      summary: "Éxito",
+                      detail: "Solicitud aprobada."
+                    }
+                  ];
+                  this.location.back();
+                },
+                error => {
+                  console.log(error);
+                  this.msgs = [
+                    {
+                      severity: "error",
+                      summary: "Error",
+                      detail: "Error al aprobar la solicitud."
+                    }
+                  ];
+                  this.progressSpinner = false;
+                }
+              );
+            } else {
+              this.showFail("censo.solicitudIncorporacion.ficha.numColegiadoDuplicado");
             }
-          ];
-          this.location.back();
-        },
-        error => {
-          console.log(error);
-          this.msgs = [
-            {
-              severity: "error",
-              summary: "Error",
-              detail: "Error al aprobar la solicitud."
-            }
-          ];
-          this.progressSpinner = false;
-        }
-      );
+            this.progressSpinner = true;
+          },
+          error => {
+            let resultado = JSON.parse(error["error"]);
+            this.showFail(resultado.error.message.toString());
+          }
+        );
+
+
+    this.progressSpinner = true;
+   
   }
 
   denegarSolicitud() {
@@ -804,9 +829,9 @@ para poder filtrar el dato con o sin estos caracteres*/
       .getParam(
         "direcciones_comboPoblacion",
         "?idProvincia=" +
-        this.solicitudEditar.idProvincia +
-        "&filtro=" +
-        poblacionBuscada
+          this.solicitudEditar.idProvincia +
+          "&filtro=" +
+          poblacionBuscada
       )
       .subscribe(
         n => {
@@ -829,7 +854,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             }
           });
         },
-        error => { },
+        error => {},
         () => {
           // this.isDisabledPoblacion = false;
           this.progressSpinner = false;
@@ -837,14 +862,15 @@ para poder filtrar el dato con o sin estos caracteres*/
       );
   }
 
-
   compruebaDNI() {
     // if (this.generalBody.nif.length > 8) {
     if (this.isValidDNI(this.solicitudEditar.numeroIdentificacion)) {
       this.solicitudEditar.idTipoIdentificacion = "10";
       this.tipoIdentificacionSelected = "10";
       return true;
-    } else if (this.isValidPassport(this.solicitudEditar.numeroIdentificacion)) {
+    } else if (
+      this.isValidPassport(this.solicitudEditar.numeroIdentificacion)
+    ) {
       this.solicitudEditar.idTipoIdentificacion = "30";
       this.tipoIdentificacionSelected = "30";
       return true;
@@ -856,7 +882,11 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.solicitudEditar.idTipoIdentificacion = "20";
       this.tipoIdentificacionSelected = "20";
       return true;
-    } else if (this.solicitudEditar.numeroIdentificacion != undefined && this.solicitudEditar.numeroIdentificacion != null && this.solicitudEditar.numeroIdentificacion != "") {
+    } else if (
+      this.solicitudEditar.numeroIdentificacion != undefined &&
+      this.solicitudEditar.numeroIdentificacion != null &&
+      this.solicitudEditar.numeroIdentificacion != ""
+    ) {
       this.solicitudEditar.idTipoIdentificacion = "30";
       this.tipoIdentificacionSelected = "30";
       return true;
@@ -890,7 +920,11 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.solicitudEditar.idTipo = this.tipoSolicitudSelected;
     this.solicitudEditar.idTipoColegiacion = this.tipoColegiacionSelected;
     this.solicitudEditar.idModalidadDocumentacion = this.modalidadDocumentacionSelected;
-    if (JSON.stringify(this.checkSolicitudInicio) != JSON.stringify(this.solicitudEditar) && !this.isLetrado) {
+    if (
+      JSON.stringify(this.checkSolicitudInicio) !=
+        JSON.stringify(this.solicitudEditar) &&
+      !this.isLetrado
+    ) {
       if (
         this.compruebaDNI() &&
         (this.isValidIBAN() ||
@@ -946,7 +980,6 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else {
       return false;
     }
-
   }
 
   abreCierraFichaColegiacion() {
@@ -1020,7 +1053,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
 
