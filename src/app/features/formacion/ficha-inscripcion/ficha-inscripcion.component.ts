@@ -80,7 +80,7 @@ export class FichaInscripcionComponent implements OnInit {
     private router: Router,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getFichasPosibles();
@@ -1231,4 +1231,10 @@ export class FichaInscripcionComponent implements OnInit {
         }
       );
   }
+
+
+  fillFechaSolicitud(event) {
+    this.inscripcion.fechaSolicitud = event;
+  }
+
 }

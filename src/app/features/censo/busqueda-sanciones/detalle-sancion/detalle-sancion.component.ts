@@ -64,7 +64,7 @@ export class DetalleSancionComponent implements OnInit {
     private sigaServices: SigaServices,
     private router: Router,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   ngOnInit() {
     sessionStorage.removeItem("nuevaSancion");
@@ -390,6 +390,36 @@ export class DetalleSancionComponent implements OnInit {
     }
   }
 
+  fillFechaAcuerdo(event) {
+    this.body.fechaAcuerdoDate = event;
+    this.deshabilitarFechas();
+  }
+
+  fillFechaFirmeza(event) {
+    this.body.fechaFirmezaDate = event;
+    this.deshabilitarFechas();
+  }
+
+  fillFechaDesde(event) {
+    this.body.fechaDesdeDate = event;
+    this.deshabilitarFechas();
+  }
+
+  fillFechaHasta(event) {
+    this.body.fechaHastaDate = event;
+    this.deshabilitarFechas();
+  }
+
+  fillFechaRehabilitado(event) {
+    this.body.fechaRehabilitadoDate = event;
+    this.deshabilitarFechas();
+  }
+
+  fillFechaArchivada(event) {
+    this.body.fechaArchivadaDate = event;
+    this.deshabilitarFechas();
+  }
+
   deshabilitarFechas() {
     this.deshabilitarAcuerdo();
     this.deshabilitarFirmeza();
@@ -397,6 +427,37 @@ export class DetalleSancionComponent implements OnInit {
     this.deshabilitarFechaFin();
     this.deshabilitarFechaRehabilitado();
   }
+
+  detectFechaAcuerdoInput(event) {
+    this.body.fechaAcuerdoDate = event;
+    this.detectDateInput();
+  }
+
+  detectFechaFirmezaInput(event) {
+    this.body.fechaFirmezaDate = event;
+    this.detectDateInput();
+  }
+
+  detectFechaDesdeInput(event) {
+    this.body.fechaDesdeDate = event;
+    this.detectDateInput();
+  }
+
+  detectFechaHastaInput(event) {
+    this.body.fechaHastaDate = event;
+    this.detectDateInput();
+  }
+
+  detectFechaRehabilitadoInput(event) {
+    this.body.fechaRehabilitadoDate = event;
+    this.detectDateInput();
+  }
+
+  detectFechaArchivadaInput(event) {
+    this.body.fechaArchivadaDate = event;
+    this.detectDateInput();
+  }
+
 
   detectDateInput() {
     if (this.body.fechaAcuerdoDate == undefined) {

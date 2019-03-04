@@ -644,4 +644,16 @@ export class EdicionCurricularesComponent implements OnInit {
       }
     });
   }
+
+  fillFechaDesde(event) {
+    this.body.fechaDesde = event;
+  }
+
+  fillFechaHasta(event) {
+    this.body.fechaHasta = event;
+  }
+
+  fillFechaMovimiento(event) {
+    this.body.fechaMovimiento = event;
+  }
 }

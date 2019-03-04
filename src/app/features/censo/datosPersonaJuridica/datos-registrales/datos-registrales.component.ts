@@ -474,7 +474,7 @@ export class DatosRegistralesComponent implements OnInit {
         } else {
           this.showCustomFail(
             "El campo número de registro SIGA no puede ser superior a la longitud del contador: " +
-              this.longitudcontador
+            this.longitudcontador
           );
           this.progressSpinner = false;
         }
@@ -799,4 +799,28 @@ export class DatosRegistralesComponent implements OnInit {
   //     }
   //   }
   // }
+
+
+  fillFechaConstitucion(event) {
+    this.fechaConstitucion = event;
+    this.habilitarCheck();
+    this.compruebaFechaConstitucion();
+  }
+
+  fillFechaFin(event) {
+    this.fechaFin = event;
+    this.compruebaFechaFin();
+  }
+
+  fillFechaInscripcion(event) {
+    this.fechaInscripcion = event;
+    this.habilitarCheck();
+  }
+
+  fillFechaCancelacion(event) {
+    this.fechaCancelacion = event;
+    this.habilitarCheck();
+  }
+
+
 }

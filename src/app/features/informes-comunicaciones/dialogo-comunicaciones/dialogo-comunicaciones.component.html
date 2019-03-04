@@ -11,8 +11,8 @@
             <div class="form-row">
                 <div class="form-group col-lg-6 col-md-6">
                     <label>Fecha programada</label>
-                    <p-calendar [minDate]="currentDate" showTime="true" [locale]="es" [(ngModel)]="bodyComunicacion.fechaProgramacion" dateFormat="dd/mm/yy"
-                        icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                    <app-fecha *ngIf="dato.tipoDato=='D' || dato.tipoDato=='X'" [(value)]="bodyComunicacion.fechaProgramacion" [minDate]="currentDate"
+                        showTime="true"></app-fecha>
                 </div>
             </div>
             <p-table [value]="modelosComunicacion" [columns]="colsModelos" [(selection)]="selectedModelos" [responsive]="true" #tableModelos
@@ -56,13 +56,13 @@
                 </ng-template>
                 <ng-template pTemplate="paginatorleft">
                     <div class="mostrar d-flex text-right justify-content-end">
-                        <label class="pr-3 registros-totales">Mostrando registros del {{tableModelos.first + 1}} al {{tableModelos.first + tableModelos.rows}} de un
-                            total de {{tableModelos.totalRecords}}</label>
+                        <label class="pr-3 registros-totales">Mostrando registros del {{tableModelos.first + 1}} al {{tableModelos.first + tableModelos.rows}}
+                            de un total de {{tableModelos.totalRecords}}</label>
                     </div>
                 </ng-template>
             </p-table>
         </div>
-    </div>  
+    </div>
     <div class="card-footer">
         <div class="text-right main-button ">
             <button (click)="obtenerCamposDinamicos('comunicar')" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'dialogo.boton.comunicar' | translate }}"></button>
@@ -73,35 +73,39 @@
 </div>
 
 <p-dialog [(visible)]="showValores" responsive="true" [draggable]="false" modal="modal" resizable="true" [minWidth]="500">
-  <p-header>
-    <label>Valores</label>
-  </p-header>
-  <div *ngIf="valores">
-    <div class="form-row mt-3" *ngFor="let dato of valores">
-      <div class="form-group col-lg-6 col-md-6">
-        <input [disabled] = "true" type="text" class="form-control" [(ngModel)]="dato.campo" pInputText>
-      </div>
-      <div class="form-group col-lg-3 col-md-3">
-        <p-dropdown *ngIf="dato.tipoDato=='N' || dato.tipoDato=='D' || dato.tipoDato=='MV'" [options]="operadoresNumero" [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
-        <p-dropdown *ngIf="dato.tipoDato=='A'" [options]="operadoresTexto" [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
-      </div>
-      <div class="form-group col-lg-6 col-md-6">
-        <input *ngIf="dato.tipoDato=='A' || dato.tipoDato=='N'" type="text" class="form-control" [(ngModel)]="dato.valor" pInputText>
-        <p-calendar *ngIf="dato.tipoDato=='D' || dato.tipoDato=='X'" [locale]="es" [(ngModel)]="dato.valor" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
-        <p-dropdown *ngIf="dato.tipoDato=='MV' || dato.tipoDato=='E'" [options]="dato.valores" [(ngModel)]="dato.valor" class="select-form" optionLabel="DESCRIPCION"></p-dropdown>
-      </div>
-    </div>
-    <p-footer>
-        <div class="text-right main-button">
-            <!-- <button (click)="ejecutar()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{
-          'general.boton.cancel' | translate}}"></button> -->
-            <button *ngIf="comunicar" (click)="enviarComunicacion()" [disabled]="!validarCamposDinamicos()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'dialogo.boton.enviar' | translate}}"></button>
-            <button *ngIf="!comunicar" (click)="descargarComunicacion()" [disabled]="!validarCamposDinamicos()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'dialogo.boton.descargar' | translate}}"></button>
+    <p-header>
+        <label>Valores</label>
+    </p-header>
+    <div *ngIf="valores">
+        <div class="form-row mt-3" *ngFor="let dato of valores">
+            <div class="form-group col-lg-6 col-md-6">
+                <input [disabled]="true" type="text" class="form-control" [(ngModel)]="dato.campo" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+                <p-dropdown *ngIf="dato.tipoDato=='N' || dato.tipoDato=='D' || dato.tipoDato=='MV'" [options]="operadoresNumero" [(ngModel)]="dato.operacion"
+                    class="select-form"></p-dropdown>
+                <p-dropdown *ngIf="dato.tipoDato=='A'" [options]="operadoresTexto" [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+                <input *ngIf="dato.tipoDato=='A' || dato.tipoDato=='N'" type="text" class="form-control" [(ngModel)]="dato.valor" pInputText>
+                <app-fecha *ngIf="dato.tipoDato=='D' || dato.tipoDato=='X'" [(value)]="dato.valor"></app-fecha>
+                <p-dropdown *ngIf="dato.tipoDato=='MV' || dato.tipoDato=='E'" [options]="dato.valores" [(ngModel)]="dato.valor" class="select-form"
+                    optionLabel="DESCRIPCION"></p-dropdown>
+            </div>
         </div>
-    </p-footer>
-  </div>
+        <p-footer>
+            <div class="text-right main-button">
+                <!-- <button (click)="ejecutar()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{
+          'general.boton.cancel' | translate}}"></button> -->
+                <button *ngIf="comunicar" (click)="enviarComunicacion()" [disabled]="!validarCamposDinamicos()" pButton type="button" icon="fa fa-save"
+                    iconPos="left" label="{{ 'dialogo.boton.enviar' | translate}}"></button>
+                <button *ngIf="!comunicar" (click)="descargarComunicacion()" [disabled]="!validarCamposDinamicos()" pButton type="button"
+                    icon="fa fa-save" iconPos="left" label="{{ 'dialogo.boton.descargar' | translate}}"></button>
+            </div>
+        </p-footer>
+    </div>
 </p-dialog>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
-  <div class="loader"></div>
+    <div class="loader"></div>
 </div>

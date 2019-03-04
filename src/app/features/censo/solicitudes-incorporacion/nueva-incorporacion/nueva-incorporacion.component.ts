@@ -145,8 +145,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     }
 
     if (this.solicitudEditar.apellido2 != undefined) {
-      this.solicitudEditar.apellidos =
-        this.solicitudEditar.apellido1 + " " + this.solicitudEditar.apellido2;
+      this.solicitudEditar.apellidos = this.solicitudEditar.apellido1 + " " + this.solicitudEditar.apellido2;
     } else {
       this.solicitudEditar.apellidos = this.solicitudEditar.apellido1;
     }
@@ -1157,9 +1156,44 @@ para poder filtrar el dato con o sin estos caracteres*/
       );
   }
 
+
+  irAlterMutuaReta() {
+    sessionStorage.setItem(
+      "datosSolicitud",
+      JSON.stringify(this.solicitudEditar)
+    );
+    sessionStorage.setItem("tipoPropuesta", "RETA");
+    this.router.navigate(["/alterMutuaReta"]);
+  }
+
+  irOfertas() {
+    sessionStorage.setItem(
+      "datosSolicitud",
+      JSON.stringify(this.solicitudEditar)
+    );
+    sessionStorage.setItem("tipoPropuesta", "Ofertas");
+    this.router.navigate(["/alterMutuaOfertas"]);
+  }
+
   ngOnDestroy() {
     sessionStorage.removeItem("solicitudIncorporacion");
     sessionStorage.removeItem("nuevaIncorporacion");
+  }
+
+  fillFechaEstado(event) {
+    this.solicitudEditar.fechaEstado = event;
+  }
+
+  fillFechaSolicitud(event) {
+    this.solicitudEditar.fechaSolicitud = event;
+  }
+
+  fillFechaIncorporacion(event) {
+    this.solicitudEditar.fechaIncorporacion = event;
+  }
+
+  fillFechaNacimiento(event) {
+    this.solicitudEditar.fechaNacimiento = event;
   }
 
   //búsqueda con enter

@@ -52,9 +52,7 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
     this.checkAcceso();
     this.itemBody = new HistoricoUsuarioItem();
     this.itemBody = JSON.parse(sessionStorage.getItem("auditoriaUsuarioBody"));
-    sessionStorage.removeItem("auditoriaUsuarioBody");
-
-    console.log(sessionStorage);
+    this.arreglarFechas();
 
     this.motivoSinModificar = this.itemBody.motivo;
 
@@ -201,5 +199,31 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  fillFechaEntrada(event) {
+    this.itemBody.fechaEntrada = event;
+  }
+
+  fillFechaEfectiva(event) {
+    this.itemBody.fechaEfectiva = event;
+  }
+
+  arreglarFechas() {
+    let returnEntrada = JSON.stringify(this.itemBody.fechaEntrada);
+    let returnEfectiva = JSON.stringify(this.itemBody.fechaEfectiva);
+    returnEntrada = returnEntrada.substring(1, 11);
+    returnEfectiva = returnEfectiva.substring(1, 11);
+    let arrayEntrada = returnEntrada.split("-");
+    let arrayEfectiva = returnEfectiva.split("-");
+
+    this.itemBody.fechaEntrada = new Date();
+    this.itemBody.fechaEntrada.setFullYear(parseInt(arrayEntrada[2]), parseInt(arrayEntrada[1]), parseInt(arrayEntrada[0]));
+
+    this.itemBody.fechaEfectiva = new Date(returnEfectiva);
+    this.itemBody.fechaEfectiva.setFullYear(parseInt(arrayEfectiva[2]), parseInt(arrayEfectiva[1]), parseInt(arrayEfectiva[0]));
+
+
+    this
   }
 }

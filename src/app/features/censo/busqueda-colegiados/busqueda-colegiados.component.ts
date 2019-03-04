@@ -273,8 +273,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           this.isDisabledPoblacion = false;
           this.comboPoblacion = n.combooItems;
         },
-        error => {},
-        () => {}
+        error => { },
+        () => { }
       );
   }
 
@@ -493,8 +493,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           this.comboTipoCV = n.combooItems;
           this.arregloTildesCombo(this.comboTipoCV);
         },
-        error => {},
-        () => {}
+        error => { },
+        () => { }
       );
   }
 
@@ -510,8 +510,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           this.comboSubtipoCV = n.combooItems;
           this.arregloTildesCombo(this.comboSubtipoCV);
         },
-        error => {},
-        () => {}
+        error => { },
+        () => { }
       );
   }
 
@@ -811,7 +811,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.getDatosComunicar();
   }
 
-  onRowSelectModelos() {}
+  onRowSelectModelos() { }
 
   getKeysClaseComunicacion() {
     this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
@@ -882,4 +882,21 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       }
     });
   }
+
+  fillFechaIncorporacionDesde(event) {
+    this.fechaIncorporacionDesdeSelect = event;
+  }
+
+  fillFechaIncorporacionHasta(event) {
+    this.fechaIncorporacionHastaSelect = event;
+  }
+
+  fillFechaNacimientoDesde(event) {
+    this.fechaNacimientoDesdeSelect = event;
+  }
+
+  fillFechaNacimientoHasta(event) {
+    this.fechaNacimientoHastaSelect = event;
+  }
+
 }

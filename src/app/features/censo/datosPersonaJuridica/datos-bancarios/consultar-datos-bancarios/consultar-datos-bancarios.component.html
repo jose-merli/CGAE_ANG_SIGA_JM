@@ -402,8 +402,11 @@
         </div>
         <div class="form-group col-lg-6 col-md-6">
           <label>{{"censo.fichaCliente.bancos.mandatos.anexos.fechaFirmada" | translate}} (*)</label>
-          <p-calendar [(ngModel)]="firmaFechaDate" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" [(disabled)]="!permisos || disabledAction"
-            showIcon="true" [style]="{ 'position': 'relative', 'z-index': '1000' }"></p-calendar>
+          <app-fecha [(value)]="firmaFechaDate" [utc]="true" [disabled]="!permisos || disabledAction" (valueChangeSelected)="fillFechaFirmada($event)"
+            (valueChangeInput)="detectFechaFirmadaInput($event)"></app-fecha>
+
+          <!-- <p-calendar [(ngModel)]="firmaFechaDate" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" [(disabled)]="!permisos || disabledAction"
+            showIcon="true" [style]="{ 'position': 'relative', 'z-index': '1000' }"></p-calendar> -->
         </div>
       </div>
       <div class="row">
@@ -448,8 +451,10 @@
         </div>
         <div class="form-group col-lg-6 col-md-6">
           <label>{{"censo.sociedades.datosBancarios.fechaUso" | translate}} (*)</label>
-          <p-calendar [(ngModel)]="datefechaUso" dateFormat="dd/mm/yy" [(disabled)]="!permisos" icon="far fa-calendar-alt" showIcon="true"
-            [required]="true"></p-calendar>
+          <app-fecha [(value)]="datefechaUso" [disabled]="!permisos" (valueChangeSelected)="fillFechaUso($event)" (valueChangeInput)="detectFechaUsoInput($event)"></app-fecha>
+
+          <!-- <p-calendar [(ngModel)]="datefechaUso" dateFormat="dd/mm/yy" [(disabled)]="!permisos" icon="far fa-calendar-alt" showIcon="true"
+            [required]="true"></p-calendar> -->
         </div>
       </div>
       <br>

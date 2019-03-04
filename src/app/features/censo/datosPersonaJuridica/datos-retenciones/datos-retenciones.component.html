@@ -49,11 +49,8 @@
                         [filter]="true" filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span>{{car[col.field]}} </span>
-                            <p-calendar *ngIf="car[col.field] == ''" [(ngModel)]="nuevafecha" dateFormat="dd/mm/yy" [utc]="true" [locale]="es" [showIcon]="true"
-                                [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" (onSelect)="onChangeCalendar($event)"
-                                [minDate]="fechaMinima">
-                            </p-calendar>
-
+                            <app-fecha *ngIf="car[col.field] == ''" [minDate]="fechaMinima" [(value)]="nuevafecha" (valueChangeSelected)="onChangeCalendar($event)"
+                                (valueChangeInput)="onChangeCalendar($event)"></app-fecha>
                         </ng-template>
 
                     </p-column>
@@ -99,10 +96,12 @@
         <div *ngIf="openFicha" class="card-footer">
             <div class="text-right main-button">
                 <button (click)="volver()" [(disabled)]="isVolver" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-                <button (click)="confirmEdit()" [disabled]="activaGuardar() || tarjeta == '2'" pButton type="button" icon="	far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-                <button (click)="confirmarBorrar()" [disabled]="isEliminar || disabledAction || tarjeta == '2'" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
-                    label="{{'general.boton.eliminar'  | translate}}"></button>
-                <button (click)="crear()" [disabled]="isCrear || disabledAction || tarjeta == '2'" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+                <button (click)="confirmEdit()" [disabled]="activaGuardar() || tarjeta == '2'" pButton type="button" icon="	far fa-save "
+                    iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                <button (click)="confirmarBorrar()" [disabled]="isEliminar || disabledAction || tarjeta == '2'" pButton type="button" icon="fa fa-trash-alt"
+                    iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
+                <button (click)="crear()" [disabled]="isCrear || disabledAction || tarjeta == '2'" pButton type="button" icon="fa fa-plus"
+                    iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
             </div>
         </div>
 

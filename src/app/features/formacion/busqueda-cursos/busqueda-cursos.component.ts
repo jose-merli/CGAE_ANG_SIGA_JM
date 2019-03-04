@@ -57,10 +57,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   editar: boolean = true;
 
   isLetrado: boolean = true;
-  //para p-multiselect de temas
-  literalMultiselect = this.translateService.instant(
-    "tablas.literal.seleccionar"
-  );
+
   textSelected: String = this.translateService.instant(
     "general.mensaje.0.etiquetas.seleccionadas"
   );
@@ -357,7 +354,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
         console.log(err);
       },
       () => {
-        this.mySelect.onFilter = function(event) {
+        this.mySelect.onFilter = function (event) {
           this.visibleOptions = [];
           if (this.copiaSg == undefined) {
             this.copiaSg = [];
@@ -995,6 +992,22 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
       summary: summary,
       detail: msg
     });
+  }
+
+  fillFechaInscripcionDesdeDate(event) {
+    this.body.fechaInscripcionDesdeDate = event;
+  }
+
+  fillFechaInscripcionHastaDate(event) {
+    this.body.fechaInscripcionHastaDate = event;
+  }
+
+  fillFechaImparticionDesdeDate(event) {
+    this.body.fechaImparticionDesdeDate = event;
+  }
+
+  fillFechaImparticionHastaDate(event) {
+    this.body.fechaImparticionHastaDate = event;
   }
 
   //búsqueda con enter

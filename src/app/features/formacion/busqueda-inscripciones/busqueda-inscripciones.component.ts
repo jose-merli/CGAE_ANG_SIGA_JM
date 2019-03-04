@@ -359,7 +359,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
         console.log(err);
       },
       () => {
-        this.mySelect.onFilter = function(event) {
+        this.mySelect.onFilter = function (event) {
           this.visibleOptions = [];
           if (this.copiaSg == undefined) {
             this.copiaSg = [];
@@ -994,6 +994,22 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
+  }
+
+  fillFechaInscripcionDesde(event) {
+    this.body.fechaInscripcionDesde = event;
+  }
+
+  fillFechaInscripcionHasta(event) {
+    this.body.fechaInscripcionHasta = event;
+  }
+
+  fillFechaImparticionDesde(event) {
+    this.body.fechaImparticionDesde = event;
+  }
+
+  fillFechaImparticionHasta(event) {
+    this.body.fechaImparticionHasta = event;
   }
 
   //búsqueda con enter

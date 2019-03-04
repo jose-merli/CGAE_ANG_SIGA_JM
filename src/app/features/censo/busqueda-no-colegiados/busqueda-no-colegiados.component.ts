@@ -136,7 +136,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     ) {
       this.body = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaNoColegiadosFichaColegial")
-      );   
+      );
     }
 
     // Obtener Combos
@@ -288,8 +288,8 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           this.isDisabledPoblacion = false;
           this.comboPoblacion = n.combooItems;
         },
-        error => {},
-        () => {}
+        error => { },
+        () => { }
       );
   }
 
@@ -330,8 +330,8 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           this.comboTipoCV = n.combooItems;
           this.arregloTildesCombo(this.comboTipoCV);
         },
-        error => {},
-        () => {}
+        error => { },
+        () => { }
       );
   }
 
@@ -347,8 +347,8 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           this.comboSubtipoCV = n.combooItems;
           this.arregloTildesCombo(this.comboSubtipoCV);
         },
-        error => {},
-        () => {}
+        error => { },
+        () => { }
       );
   }
 
@@ -473,7 +473,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       this.body.fechaNacimientoRango[0] = this.fechaNacimientoDesdeSelect;
 
       this.progressSpinner = true;
-      
+
       this.body.colegio = [];
       this.colegiosSeleccionados.forEach(element => {
         this.body.colegio.push(element.value);
@@ -531,7 +531,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {}
+        () => { }
       );
   }
 
@@ -598,10 +598,10 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           } else {
             this.showSuccess(
               selectedDatos.length +
-                " " +
-                this.translateService.instant(
-                  "messages.deleted.selected.success"
-                )
+              " " +
+              this.translateService.instant(
+                "messages.deleted.selected.success"
+              )
             );
           }
         },
@@ -905,6 +905,14 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
+  }
+
+  fillFechaNacimientoDesde(event) {
+    this.fechaNacimientoDesdeSelect = event;
+  }
+
+  fillFechaNacimientoHasta(event) {
+    this.fechaNacimientoHastaSelect = event;
   }
 
   getInstitucion() {

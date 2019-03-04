@@ -255,4 +255,8 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   clear() {
     this.msgs = [];
   }
+
+  fillFechaReconfiguracion(event) {
+    this.fechareconfiguracion = event;
+  }
 }

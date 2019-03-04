@@ -17,6 +17,7 @@ import { TranslateService } from "../../../../commons/translate";
 import { Location } from "@angular/common";
 import { DatosPlanUniversalItem } from "../../../../models/DatosPlanUniversalItem";
 import { DatosSolicitudGratuitaObject } from "../../../../models/DatosSolicitudGratuitaObject";
+import { DatosDireccionesItem } from "../../../../models/DatosDireccionesItem";
 
 import { SolicitudIncorporacionItem } from "../../../../models/SolicitudIncorporacionItem";
 import { DatosSolicitudMutualidadItem } from "../../../../models/DatosSolicitudMutualidadItem";
@@ -57,6 +58,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
   estadosCiviles: any[];
   formasPago: any[];
   sexos: any[];
+  ibanValido: boolean;
   tiposDireccion: any[];
   tiposDomicilio: any[];
   tiposIdentificador: any[];
@@ -93,6 +95,34 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
     this.body.telefono = this.solicitud.telefono1;
     this.body.cuentaBancaria = this.solicitud.iban;
     this.pagoSelected = "12";
+    if (sessionStorage.getItem("direcciones")) {
+      let direccion = JSON.parse(sessionStorage.getItem("direcciones"));
+      this.body.idPais = direccion.idPais;
+      this.paisSelected = direccion.idPais;
+      this.solicitud.tratamiento = this.solicitud.tratamiento;
+      this.body.domicilio = direccion.domicilio;
+      this.body.codigoPostal = direccion.codigoPostal;
+      this.body.nombrePoblacion = direccion.nombrePoblacion;
+      this.body.pais = direccion.nombrePais;
+      this.body.idPoblacion = direccion.idPoblacion;
+      this.poblacionSelected = direccion.idPoblacion;
+      this.body.telefono = direccion.telefono;
+      this.body.movil = direccion.movil;
+      this.body.correoElectronico = direccion.correoElectronico;
+      this.body.idProvincia = direccion.idProvincia;
+      this.getComboPoblacion(direccion.nombrePoblacion);
+    }
+    if (sessionStorage.getItem("cuentas")) {
+      let cuenta = JSON.parse(sessionStorage.getItem("cuentas"));
+      this.body.titular = cuenta.titular;
+      this.body.iban = cuenta.iban;
+      this.body.cuentaBancaria = cuenta.iban;
+      this.body.dc = cuenta.iban.substring(12, 14);
+      this.body.swift = cuenta.bic;
+      this.body.bic = cuenta.bic;
+      // this.body.digitoControl = cuenta.digitoControl;
+    }
+
     // Buscamos en cen_solicitudMutualidad
     let mutualidadRequest = new DatosSolicitudMutualidadItem();
     mutualidadRequest.numeroidentificador = this.solicitud.numeroIdentificacion;
@@ -101,6 +131,8 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
       .subscribe(
         result => {
           let resultParsed = JSON.parse(result.body);
+
+
           if (
             resultParsed.idsolicitud != null &&
             resultParsed.idsolicitud != undefined
@@ -109,15 +141,17 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
             let body = JSON.parse(result.body);
             solicitud.tipoIdentificacion = this.solicitud.tipoIdentificacion;
             solicitud.numeroIdentificacion = this.solicitud.numeroIdentificacion;
-            solicitud.tratamiento = this.solicitud.tratamiento;
             solicitud.idEstadoCivil = this.solicitud.idEstadoCivil;
             solicitud.naturalDe = this.solicitud.naturalDe;
+            solicitud.tratamiento = this.solicitud.tratamiento;
+            solicitud.idsolicitudincorporacion = this.solicitud.idsolicitudincorporacion;
             solicitud.idpais = this.body.idPais;
             this.solicitud = solicitud;
             body.idpais = this.body.idPais;
             body.codigoPostal = this.body.codigoPostal;
             body.idPoblacion = this.body.idPoblacion;
             body.telefono = this.body.telefono;
+            body.nombrePoblacion = this.body.nombrePoblacion;
             body.correoElectronico = this.body.correoElectronico;
             body.bic = this.body.bic;
             body.titular = this.body.titular;
@@ -140,6 +174,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
                     this.modoLectura = false;
                   } else {
                     this.modoLectura = true;
+                    this.cedeDatos = true;
                   }
                   this.solicitud.idSolicitudMutualidad = estadoMut.idSolicitud;
                   this.solicitud.estadoMutualidad = estadoMut.valorRespuesta;
@@ -154,7 +189,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
           console.log(error);
         },
         () => {
-          this.paisSelected = this.solicitud.idPais;
+          // this.paisSelected = this.solicitud.idPais;
           this.solicitud.duplicado = true;
           this.solicitud.idSolicitud = this.solicitud.idsolicitudincorporacion;
           this.sigaServices
@@ -177,6 +212,9 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
     this.obtenerCuotaYCapObj();
     this.cargarCombos();
     this.onChangeCodigoPostal();
+    if (this.body.titular == "" || this.body.titular == undefined) {
+      this.body.titular = this.solicitud.nombre + " " + this.solicitud.apellido1 + " " + this.solicitud.apellido2;
+    }
     this.provinciaSelected = this.body.idProvincia;
   }
 
@@ -196,7 +234,8 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
     if (
       this.cedeDatos == true &&
       this.modoLectura == false &&
-      (this.solicitud.estadoCivil || this.body.estadoCivil) &&
+      this.solicitud.idEstadoCivil != undefined &&
+      this.solicitud.idEstadoCivil != null &&
       this.body.idPais != "" &&
       this.body.idPais != undefined &&
       this.poblacionSelected != "" &&
@@ -220,6 +259,134 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
     } else {
       return false;
     }
+  }
+
+
+  isValidIBAN(): boolean {
+    this.body.iban = this.body.iban.replace(/\s/g, "");
+
+    // IBAN ESPAÑOL
+    if (this.body.iban.length != 24) {
+      return false;
+    }
+
+    let firstLetters = this.body.iban.substring(0, 1);
+    let secondfirstLetters = this.body.iban.substring(1, 2);
+    let num1 = this.getnumIBAN(firstLetters);
+    let num2 = this.getnumIBAN(secondfirstLetters);
+
+    let isbanaux = String(num1) + String(num2) + this.body.iban.substring(2);
+    // Se mueve los 6 primeros caracteres al final de la cadena.
+    isbanaux = isbanaux.substring(6) + isbanaux.substring(0, 6);
+
+    //Se calcula el resto, llamando a la función modulo97, definida más abajo
+    let resto = this.modulo97(isbanaux);
+    if (resto == "1") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  getnumIBAN(letter) {
+    let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    return letters.search(letter) + 10;
+  }
+
+  modulo97(iban) {
+    var parts = Math.ceil(iban.length / 7);
+    var remainer = "";
+
+    for (var i = 1; i <= parts; i++) {
+      remainer = String(
+        parseFloat(remainer + iban.substr((i - 1) * 7, 7)) % 97
+      );
+    }
+
+    return remainer;
+  }
+  validarIban(): boolean {
+    if (
+      (this.body.iban != null ||
+        this.body.iban != undefined ||
+        this.body.iban != "") &&
+      (this.isValidIBAN() || this.isValidIbanExt())
+    ) {
+      this.ibanValido = true;
+      return true;
+    } else {
+      this.ibanValido = false;
+      return false;
+    }
+  }
+
+  isValidIbanExt(): boolean {
+    return true;
+  }
+
+  validarTitular(): boolean {
+    if (this.body.titular.trim() != "" && this.body.titular != undefined) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  autogenerarDatos() {
+    if (this.body.iban != null && this.body.iban != "") {
+      var ccountry = this.body.iban.substring(0, 2);
+      if (ccountry == "ES") {
+        if (this.isValidIBAN()) {
+          this.recuperarBicBanco();
+
+          this.ibanValido = true;
+        } else {
+          this.body.bic = "";
+
+          this.ibanValido = false;
+        }
+      }
+    } else {
+      this.body.bic = "";
+
+      this.ibanValido = false;
+    }
+  }
+
+  validarBIC(): boolean {
+    var ccountry = this.body.iban.substring(0, 2);
+    if (
+      this.body.bic != null &&
+      this.body.bic != undefined &&
+      this.body.bic != "" &&
+      this.body.bic.length == 11 &&
+      this.body.bic.charAt(4) == ccountry.charAt(0) &&
+      this.body.bic.charAt(5) == ccountry.charAt(1)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  recuperarBicBanco() {
+    this.sigaServices
+      .post("datosCuentaBancaria_BIC_BANCO", this.body)
+      .subscribe(
+        data => {
+          let bodyBancoBicSearch = JSON.parse(data["body"]);
+          let bodyBancoBic = bodyBancoBicSearch.bancoBicItem[0];
+
+          this.body.bic = bodyBancoBic.bic;
+          this.body.iban = this.body.iban.replace(/\s/g, "");
+
+          // this.editar = false;
+        },
+        error => {
+          let bodyBancoBicSearch = JSON.parse(error["error"]);
+          this.showFailMensaje(bodyBancoBicSearch.error.message.toString());
+        }
+      );
   }
 
   obtenerCuotaYCapObj() {
@@ -311,6 +478,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
       result => {
         this.estadoCivil = result.combooItems;
         this.progressSpinner = false;
+        this.getEstadoCivilDesc();
       },
       error => {
         console.log(error);
@@ -324,6 +492,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
         this.paisDesc = this.paises.find(
           item => item.value === this.paisSelected
         );
+        // this.paisSelected = this.body.idpais
       },
       error => {
         console.log(error);
@@ -337,7 +506,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
           let tipos = result.combooItems;
           this.progressSpinner = false;
           let identificacion = tipos.find(
-            item => item.value === this.solicitud.idTipoIdentificacion
+            item => item.value === this.solicitud.tipoIdentificacion
           );
           this.solicitud.tipoIdentificacion = identificacion.label;
         },
@@ -360,6 +529,14 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
     );
   }
 
+  getEstadoCivilDesc() {
+    if (this.solicitud.idEstadoCivil != "undefined" && this.solicitud.idEstadoCivil != null) {
+      let estCivil = this.estadoCivil.find(
+        item => item.value === this.solicitud.idEstadoCivil
+      );
+      this.body.estadoCivil = estCivil.label;
+    }
+  }
   getComboPoblacion(filtro: string) {
     this.progressSpinner = true;
     let poblacionBuscada = filtro;
@@ -410,7 +587,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
 
   getLabelbyFilter(array) {
     /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-para poder filtrar el dato con o sin estos caracteres*/
+  para poder filtrar el dato con o sin estos caracteres*/
     array.map(e => {
       let accents =
         "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
@@ -474,7 +651,6 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   guardar() {
     let solicitud = new DatosSolicitudGratuitaObject();
-
     solicitud.datosPersona = JSON.parse(JSON.stringify(this.solicitud));
     solicitud.datosPersona = JSON.parse(JSON.stringify(this.body));
     if (this.solicitud.apellido2 == null) {
@@ -501,7 +677,9 @@ para poder filtrar el dato con o sin estos caracteres*/
     solicitud.datosDireccion.email = this.body.correoElectronico;
     solicitud.datosDireccion.movil = this.body.movil;
     solicitud.datosDireccion.num = this.body.telefono;
-    solicitud.datosDireccion.poblacion = this.poblacionDesc.label;
+    if (this.poblacionDesc != undefined) {
+      solicitud.datosDireccion.poblacion = this.poblacionDesc.label;
+    }
     solicitud.datosDireccion.provincia = this.provinciaDesc.label;
     solicitud.datosDireccion.pais = this.paisDesc.label;
     solicitud.datosDireccion.telefono = this.body.telefono;
@@ -510,7 +688,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     solicitud.datosBancarios.iban = this.body.iban;
     solicitud.datosBancarios.nCuenta = this.body.iban.substring(14, 24);
     solicitud.datosBancarios.swift = this.solicitud.bic;
-    solicitud.datosBancarios.dc = this.solicitud.digitoControl;
+    solicitud.datosBancarios.dc = this.body.iban.substring(12, 14);
     solicitud.datosBancarios.oficina = this.body.iban.substring(8, 12);
     solicitud.datosBancarios.entidad = this.body.iban.substring(4, 8);
 
@@ -621,5 +799,14 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   backTo() {
     this.location.back();
+  }
+
+  fillFechaNacimientoConyuge(event) {
+    this.body.fechaNacConyuge = event;
+  }
+
+  ngOnDestroy() {
+    sessionStorage.removeItem("direcciones");
+    sessionStorage.removeItem("cuentas");
   }
 }

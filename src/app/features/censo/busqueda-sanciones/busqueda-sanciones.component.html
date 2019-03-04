@@ -34,7 +34,7 @@
                         <input type="text" class="form-control" pInputText [(ngModel)]="body.segundoApellido">
                     </div>
                 </div>
-            </div> 
+            </div>
 
             <!-- Búsqueda por colegio -->
             <p (click)="onHideBusquedaColegio()" class="title-module">{{ "menu.expediente.sanciones.busquedaPorColegio.literal" | translate}}
@@ -46,7 +46,7 @@
                 <div class="form-row">
                     <div class="form-group col-lg-6 col-md-6">
                         <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
-                            <p-multiSelect [defaultLabel]="textFilter" filterBy="label" [(ngModel)]='colegios_seleccionados' [options]="colegios" [disabled]="disabledColegio"
+                        <p-multiSelect [defaultLabel]="textFilter" filterBy="label" [(ngModel)]='colegios_seleccionados' [options]="colegios" [disabled]="disabledColegio"
                             optionLabel="label" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" styleClass="widthAll"
                             [panelStyle]="{width:'100%'}"></p-multiSelect>
                     </div>
@@ -60,7 +60,7 @@
                         <label>{{"menu.expediente.sanciones.busquedaPorColegio.RefColegio.literal" | translate}}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]="body.refColegio">
                     </div>
-                    
+
                 </div>
             </div>
             <!-- Datos Generales Avanzados -->
@@ -74,27 +74,24 @@
 
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "busquedaSanciones.tipoFecha.literal" | translate}}</label>
-                        <p-dropdown  class="select-form" [options]="datesType" [(ngModel)]="body.tipoFecha"></p-dropdown>
+                        <p-dropdown class="select-form" [options]="datesType" [(ngModel)]="body.tipoFecha"></p-dropdown>
                     </div>
 
                     <div class="form-group col-lg-3 col-md-3">
-                            <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate}}</label>
-                            <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" 
-                            [keepInvalid]="true" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy"
-                                [(ngModel)]="body.fechaDesdeDate"></p-calendar>
-                        </div>
-    
-                        <div class="form-group col-lg-3 col-md-3">
-                            <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate}}</label>
-                            <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" 
-                            [keepInvalid]="true" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy"
-                                [(ngModel)]="body.fechaHastaDate" [(minDate)]="body.fechaDesdeDate"></p-calendar>
-                        </div> 
-    
-                        <div class="form-group col-lg-3 col-md-2">
-                            <label class="d-block pb-2">{{"menu.expediente.sanciones.busquedaPorColegio.sancionesRehabilitadas.literal" | translate}}</label>
-                            <p-checkbox name="chkRehabilitado" [(ngModel)]="body.chkRehabilitado" binary="true"></p-checkbox>
-                        </div>
+                        <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate}}</label>
+                        <app-fecha [(value)]="body.fechaDesdeDate" [utc]="false" (valueChangeSelected)="fillFechaDesdeDate($event)" (valueChangeInput)="fillFechaDesdeDate($event)"></app-fecha>
+                    </div>
+
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate}}</label>
+                        <app-fecha [(value)]="body.fechaHastaDate" [utc]="false" [(minDate)]="body.fechaDesdeDate" (valueChangeSelected)="fillFechaHastaDate($event)"
+                            (valueChangeInput)="fillFechaHastaDate($event)"></app-fecha>
+                    </div>
+
+                    <div class="form-group col-lg-3 col-md-2">
+                        <label class="d-block pb-2">{{"menu.expediente.sanciones.busquedaPorColegio.sancionesRehabilitadas.literal" | translate}}</label>
+                        <p-checkbox name="chkRehabilitado" [(ngModel)]="body.chkRehabilitado" binary="true"></p-checkbox>
+                    </div>
 
                     <div class="form-group col-lg-3 col-md-2">
                         <label>{{"menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal" | translate}}</label>
@@ -109,7 +106,8 @@
             <div class="text-right main-button">
                 <button (click)="restore()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear'| translate}}"></button>
                 <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
-                <button (click)="newRecord()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}" [disabled]="isLetrado" ></button>
+                <button (click)="newRecord()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"
+                    [disabled]="isLetrado"></button>
             </div>
         </div>
     </div>
@@ -117,21 +115,21 @@
     <div *ngIf="isSearch" class="card mt-3">
         <div class="card-body p-0">
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-                [(selection)]="selectedDatos" (onRowSelect)="onRowSelect(selectedDatos)" 
-                pageLinks="4" [responsive]="true" selectionMode="single" #table class="tabla-listado" [value]="data"
-                [sortOrder]="sortO" [paginator]="enablePagination()" paginatorPosition="both" [rows]="selectedItem">
+                [(selection)]="selectedDatos" (onRowSelect)="onRowSelect(selectedDatos)" pageLinks="4" [responsive]="true" selectionMode="single"
+                #table class="tabla-listado" [value]="data" [sortOrder]="sortO" [paginator]="enablePagination()" paginatorPosition="both"
+                [rows]="selectedItem">
                 <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
                     [filter]="true" filterMatchMode="contains">
                     <ng-template let-datoH="rowData" pTemplate="body">
                         <div *ngIf="setItalic(datoH)">
-                          <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
+                            <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
                         </div>
                         <div *ngIf="!setItalic(datoH)">
-                          <span>{{datoH[col.field]}}</span>
+                            <span>{{datoH[col.field]}}</span>
                         </div>
-                      </ng-template>
+                    </ng-template>
                 </p-column>
-               
+
                 <ng-template pTemplate="paginatorLeft">
                     <div class="mostrar d-flex text-right justify-content-end">
                         <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
@@ -145,11 +143,13 @@
 
                 <p-footer>
                     <div class="text-right main-button">
-                      <button *ngIf="!hideHistory" (click)="historico()" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-                      <button *ngIf="hideHistory" (click)="hideHistory = false; isHistory = false; search()" pButton type="button" icon="fa fa-undo " iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
-                      <button *ngIf="selectedDatos && selectedDatos != ''" (click)="updateRegistry(selectedDatos)" pButton type="button" icon="	fa fa-undo " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+                        <button *ngIf="!hideHistory" (click)="historico()" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
+                        <button *ngIf="hideHistory" (click)="hideHistory = false; isHistory = false; search()" pButton type="button" icon="fa fa-undo "
+                            iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+                        <button *ngIf="selectedDatos && selectedDatos != ''" (click)="updateRegistry(selectedDatos)" pButton type="button" icon="	fa fa-undo "
+                            iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
                     </div>
-                  </p-footer>
+                </p-footer>
 
             </p-dataTable>
 

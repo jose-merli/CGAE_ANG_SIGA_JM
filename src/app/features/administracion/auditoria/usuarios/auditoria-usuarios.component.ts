@@ -190,6 +190,8 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
       this.selectedDatos = JSON.parse(sessionStorage.getItem("editedUser"));
     }
     sessionStorage.removeItem("editedUser");
+    sessionStorage.removeItem("auditoriaUsuarioBody");
+
   }
 
   volverAFicha() {
@@ -452,5 +454,12 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     this.msgs = [];
   }
 
+  fillFechaDesdeCalendar(event) {
+    this.fechaDesdeCalendar = event;
+  }
+
+  fillFechaHastaCalendar(event) {
+    this.fechaHastaCalendar = event;
+  }
 
 }

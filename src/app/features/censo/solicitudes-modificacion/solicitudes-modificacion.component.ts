@@ -775,6 +775,14 @@ export class SolicitudesModificacionComponent implements OnInit {
     }
   }
 
+  fillFechaDesde(event) {
+    this.body.fechaDesde = event;
+  }
+
+  fillFechaHasta(event) {
+    this.body.fechaHasta = event;
+  }
+
   //búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
