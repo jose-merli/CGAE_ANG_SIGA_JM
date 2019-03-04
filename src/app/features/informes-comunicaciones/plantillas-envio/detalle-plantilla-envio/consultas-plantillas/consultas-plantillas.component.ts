@@ -83,7 +83,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 			},
 			{
 				field: 'objetivo',
-				header: 'administracion.parametrosGenerales.literal.nombre.objetivo'
+				header: 'administracion.parametrosGenerales.literal.objetivo'
 			}
 			// {
 			// 	field: "finalidad",

@@ -435,12 +435,14 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.showProgramar = false;
     let estadoInvalido = false;
     dato.forEach(element => {
-      element.fechaProgramada = new Date(this.bodyProgramar.fechaProgramada);
-      if (element.idEstado != 4 || element.idEstado != 5) {
+      if (element.idEstado == 4 || element.idEstado == 5) {
         estadoInvalido = true;
       }
     });
     if (!estadoInvalido) {
+      dato.forEach(element => {
+        element.fechaProgramada = new Date(this.bodyProgramar.fechaProgramada);
+      });
       this.sigaServices.post("enviosMasivos_programar", dato).subscribe(
         data => {
           this.showSuccess(
@@ -497,7 +499,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices.post("enviosMasivos_duplicar", datoDuplicar).subscribe(
       data => {
         this.showSuccess(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.correctDuplicado"));
-        
+
         let datoDuplicado = JSON.parse(data["body"]).enviosMasivosItem;
         datoDuplicado.forEach(element => {
           if (element.fechaProgramada != null) {

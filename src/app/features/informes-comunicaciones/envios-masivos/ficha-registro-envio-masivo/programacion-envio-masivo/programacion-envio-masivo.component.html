@@ -56,8 +56,8 @@
       <div class="text-right main-button ">
         <button (click)="restablecer() " pButton type="button " icon="fa fa-undo " iconPos="left"
           label="{{'general.boton.restablecer' | translate}} "></button>
-        <button (click)="guardar()" [disabled]="isGuardarDisabled()" pButton type=" button " icon="far fa-save "
-          iconPos="left" label="{{ 'general.boton.guardar' | translate}} "></button>
+        <button (click)="guardar()" [disabled]="isGuardarDisabled() || noEditar" pButton type=" button "
+          icon="far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}} "></button>
       </div>
     </div>
   </div>

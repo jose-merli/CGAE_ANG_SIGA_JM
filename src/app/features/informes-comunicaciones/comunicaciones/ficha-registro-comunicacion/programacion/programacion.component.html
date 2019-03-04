@@ -33,25 +33,29 @@
       <div class="form-row">
         <div class="form-group col-lg-3 col-md-4">
           <label class="d-block mb-1">Creado:</label>
-          <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [disabled]="true" [minDate]="currentDate"
-            [locale]="es" showTime="true" [(ngModel)]="body.fechaCreacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
-            showIcon="true"></p-calendar>
+          <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [disabled]="true"
+            [minDate]="currentDate" [locale]="es" showTime="true" [(ngModel)]="body.fechaCreacion" dateFormat="dd/mm/yy"
+            icon="far fa-calendar-alt" showIcon="true"></p-calendar>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>Estado:</label>
-          <p-dropdown [disabled]="true" [options]="estados" [(ngModel)]="body.idEstado" class="select-form no-edit"></p-dropdown>
+          <p-dropdown [disabled]="true" [options]="estados" [(ngModel)]="body.idEstado" class="select-form no-edit">
+          </p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>Fecha de Programación *</label>
-          <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [minDate]="currentDate" [locale]="es" showTime="true"
-            [(ngModel)]="body.fechaProgramada" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+          <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [minDate]="currentDate"
+            [locale]="es" showTime="true" [(ngModel)]="body.fechaProgramada" dateFormat="dd/mm/yy"
+            icon="far fa-calendar-alt" showIcon="true"></p-calendar>
         </div>
       </div>
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="restablecer() " pButton type="button " icon="fa fa-undo " iconPos="left" label="{{'general.boton.restablecer' | translate}} "></button>
-        <button (click)="guardar()" [disabled]="editar || isGuardarDisabled()" pButton type=" button " icon="far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}} "></button>
+        <button (click)="restablecer() " pButton type="button " icon="fa fa-undo " iconPos="left"
+          label="{{'general.boton.restablecer' | translate}} "></button>
+        <button (click)="guardar()" [disabled]=" noEditar || isGuardarDisabled()" pButton type=" button "
+          icon="far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}} "></button>
       </div>
     </div>
   </div>
