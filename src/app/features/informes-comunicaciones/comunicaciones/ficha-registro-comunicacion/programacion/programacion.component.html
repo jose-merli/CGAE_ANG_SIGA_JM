@@ -11,7 +11,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">Programación</label>
+            <label class="mr-auto title-ficha">{{'enviosMasivos.literal.programacion' | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label>Fecha Programación: {{body.fechaProgramada | date: 'd/M/yyyy, H:mm '}}
@@ -24,7 +24,7 @@
         <div class="img-colegiado">
           <i class="fas fa-calendar-plus icon-ficha"></i>
         </div>
-        <label class="title-ficha">Programación</label>
+        <label class="title-ficha">{{'enviosMasivos.literal.programacion' | translate}}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -32,18 +32,18 @@
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div class="form-row">
         <div class="form-group col-lg-3 col-md-4">
-          <label class="d-block mb-1">Creado:</label>
+          <label class="d-block mb-1">{{'enviosMasivos.literal.creado' | translate}}</label>
           <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [disabled]="true"
             [minDate]="currentDate" [locale]="es" showTime="true" [(ngModel)]="body.fechaCreacion" dateFormat="dd/mm/yy"
             icon="far fa-calendar-alt" showIcon="true"></p-calendar>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>Estado:</label>
+          <label>{{'enviosMasivos.literal.estado' | translate}}</label>
           <p-dropdown [disabled]="true" [options]="estados" [(ngModel)]="body.idEstado" class="select-form no-edit">
           </p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-4">
-          <label>Fecha de Programación *</label>
+          <label>{{'enviosMasivos.literal.fechaProgramacion' | translate}} *</label>
           <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [minDate]="currentDate"
             [locale]="es" showTime="true" [(ngModel)]="body.fechaProgramada" dateFormat="dd/mm/yy"
             icon="far fa-calendar-alt" showIcon="true"></p-calendar>
