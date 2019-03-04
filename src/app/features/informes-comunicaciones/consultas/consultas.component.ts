@@ -61,7 +61,7 @@ export class ConsultasComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     sessionStorage.removeItem("consultasSearch");
@@ -363,9 +363,7 @@ export class ConsultasComponent implements OnInit {
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (
-      event.keyCode === KEY_CODE.ENTER &&
-      this.bodySearch.idModulo != null &&
-      this.bodySearch.idModulo != ""
+      event.keyCode === KEY_CODE.ENTER && !this.isButtonDisabled()
     ) {
       this.buscar();
     }
@@ -415,10 +413,10 @@ export class ConsultasComponent implements OnInit {
   }
 
   isButtonDisabled() {
-    if ((this.bodySearch.idModulo != null && this.bodySearch.idModulo != "") || (this.bodySearch.nombre != null && this.bodySearch.nombre !="")
-          || (this.bodySearch.descripcion != null && this.bodySearch.descripcion !=""
-          || (this.bodySearch.idObjetivo != null && this.bodySearch.idObjetivo !="")
-          || (this.bodySearch.idClaseComunicacion != null && this.bodySearch.idClaseComunicacion !=""))) {
+    if ((this.bodySearch.idModulo != null && this.bodySearch.idModulo != "") || (this.bodySearch.nombre != null && this.bodySearch.nombre != "")
+      || (this.bodySearch.descripcion != null && this.bodySearch.descripcion != ""
+        || (this.bodySearch.idObjetivo != null && this.bodySearch.idObjetivo != "")
+        || (this.bodySearch.idClaseComunicacion != null && this.bodySearch.idClaseComunicacion != ""))) {
       return false;
     }
     return true;
