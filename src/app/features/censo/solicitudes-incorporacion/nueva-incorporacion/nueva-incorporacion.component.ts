@@ -559,7 +559,8 @@ export class NuevaIncorporacionComponent implements OnInit {
     if (this.isGuardar()) {
       this.guardar(false);
     }
-
+    this.progressSpinner = true;
+    
     this.sigaServices
         .post("solicitudIncorporacion_searchNumColegiado", this.solicitudEditar)
         .subscribe(
@@ -582,6 +583,7 @@ export class NuevaIncorporacionComponent implements OnInit {
                       detail: "Solicitud aprobada."
                     }
                   ];
+                  this.progressSpinner = false;
                   this.location.back();
                 },
                 error => {
@@ -599,17 +601,15 @@ export class NuevaIncorporacionComponent implements OnInit {
             } else {
               this.showFail("censo.solicitudIncorporacion.ficha.numColegiadoDuplicado");
             }
-            this.progressSpinner = true;
+            this.progressSpinner = false;
           },
           error => {
             let resultado = JSON.parse(error["error"]);
             this.showFail(resultado.error.message.toString());
+            this.progressSpinner = false;
           }
         );
-
-
     this.progressSpinner = true;
-   
   }
 
   denegarSolicitud() {
@@ -720,14 +720,15 @@ export class NuevaIncorporacionComponent implements OnInit {
           );
           this.tratarDatos();
           this.progressSpinner = false;
-          this.msgs = [
-            {
-              severity: "success",
-              summary: "Éxito",
-              detail: "Solicitud guardada correctamente."
-            }
-          ];
+          
           if (back == true) {
+            this.msgs = [
+              {
+                severity: "success",
+                summary: "Éxito",
+                detail: "Solicitud guardada correctamente."
+              }
+            ];
             sessionStorage.setItem("solicitudInsertadaConExito", "true");
             this.router.navigate(["/solicitudesIncorporacion"]);
           }
