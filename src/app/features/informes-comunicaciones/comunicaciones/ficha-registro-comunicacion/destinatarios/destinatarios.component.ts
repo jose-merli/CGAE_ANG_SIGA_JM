@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DestinatariosEnviosMasivosItem } from '../../../../../models/DestinatariosEnviosMasivosItem';
+import { FichaColegialGeneralesItem } from "../../../../../models/FichaColegialGeneralesItem";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
 import { Router } from '@angular/router';
@@ -16,6 +17,7 @@ export class DestinatariosComponent implements OnInit {
   grupos: any[];
   openDestinatario: boolean;
   destinatarios: any = [];
+  fichaDestinatario: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -107,11 +109,36 @@ export class DestinatariosComponent implements OnInit {
     // );
   }
 
-  navigateTo() {
-    this.router.navigate(['/fichaColegial']);
-    sessionStorage.removeItem("busquedaCensoGeneral")
-    sessionStorage.removeItem("esColegiado")
-    sessionStorage.setItem("destinatarioCom", JSON.stringify(this.body));
+  navigateTo(destinatario) {
+
+    this.sigaServices
+      .post("busquedaPer", destinatario.idPersona)
+      .subscribe(
+        n => {
+          let persona = JSON.parse(n["body"]);
+          if(persona && persona.colegidoItem){
+            this.fichaDestinatario = persona.colegidoItem[0];
+            sessionStorage.setItem("personaBody", JSON.stringify(this.fichaDestinatario));
+            this.router.navigate(['/fichaColegial']);
+            sessionStorage.removeItem("busquedaCensoGeneral")
+            sessionStorage.removeItem("esColegiado")
+            sessionStorage.setItem("destinatarioCom", JSON.stringify(this.body));
+          }else if(persona && persona.noColegidoItem){
+            this.fichaDestinatario = persona.noColegidoItem[0];
+            sessionStorage.setItem("personaBody", JSON.stringify(this.fichaDestinatario));
+            this.router.navigate(['/fichaColegial']);
+            sessionStorage.removeItem("busquedaCensoGeneral")
+            sessionStorage.removeItem("esColegiado")
+            sessionStorage.setItem("destinatarioCom", JSON.stringify(this.body));
+          }else{
+
+          }      
+        },
+        err => {
+          console.log(err);
+        },
+
+      );
   }
 
   getDestinatarios() {

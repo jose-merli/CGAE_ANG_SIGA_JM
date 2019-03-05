@@ -272,7 +272,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 	getConsultas() {
 		this.sigaServices.get("plantillasEnvio_comboConsultas").subscribe(
 			data => {
-				this.consultas = data.combooItems;
+				this.consultas = data.consultas;
 				console.log(this.consultas);
 			},
 			err => {

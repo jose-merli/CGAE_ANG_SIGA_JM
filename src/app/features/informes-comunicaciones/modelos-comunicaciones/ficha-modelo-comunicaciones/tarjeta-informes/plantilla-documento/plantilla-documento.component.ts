@@ -48,6 +48,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   consultasComboDestinatarios: any[];
   consultasComboMulti: any[];
   consultasComboCondicional: any[];
+  consulta: any;
 
   consultas: any = [];
   textSelected: any;
@@ -144,13 +145,15 @@ export class PlantillaDocumentoComponent implements OnInit {
         consulta: "",
         finalidad: "",
         objetivo: "Destinatario",
-        idObjetivo: "1"
+        idObjetivo: "1",
+        idInstitucion: ""
       },
       {
         consulta: "",
         finalidad: "",
         objetivo: "Multidocumento",
-        idObjetivo: "2"
+        idObjetivo: "2",
+        idInstitucion: ""
       },
       { consulta: "", finalidad: "", objetivo: "Datos", idObjetivo: "4" }
     ];
@@ -260,7 +263,8 @@ export class PlantillaDocumentoComponent implements OnInit {
       consulta: null,
       finalidad: null,
       objetivo: "DATOS",
-      idObjetivo: 4
+      idObjetivo: 4,
+      idInstitucion: ""
     };
     this.datos.push(obj);
     this.datos = [...this.datos];
@@ -422,25 +426,29 @@ export class PlantillaDocumentoComponent implements OnInit {
               idConsulta: "",
               finalidad: "",
               objetivo: "Destinatario",
-              idObjetivo: "1"
+              idObjetivo: "1",
+              idInstitucion: ""
             },
             {
               idConsulta: "",
               finalidad: "",
               objetivo: "Condicional",
-              idObjetivo: "3"
+              idObjetivo: "3",
+              idInstitucion: ""
             },
             {
               idConsulta: "",
               finalidad: "",
               objetivo: "Multidocumento",
-              idObjetivo: "2"
+              idObjetivo: "2",
+              idInstitucion: ""
             },
             {
               idConsulta: "",
               finalidad: "",
               objetivo: "Datos",
-              idObjetivo: "4"
+              idObjetivo: "4",
+              idInstitucion: ""
             }
           ];
         } else {
@@ -478,7 +486,8 @@ export class PlantillaDocumentoComponent implements OnInit {
               idConsulta: "",
               finalidad: "",
               objetivo: "Multidocumento",
-              idObjetivo: "2"
+              idObjetivo: "2",
+              idInstitucion: ""              
             });
           }
           if (datos.indexOf(true) == -1) {
@@ -486,7 +495,8 @@ export class PlantillaDocumentoComponent implements OnInit {
               idConsulta: "",
               finalidad: "",
               objetivo: "Datos",
-              idObjetivo: "4"
+              idObjetivo: "4",
+              idInstitucion: ""
             });
           }
           if (dest.indexOf(true) == -1) {
@@ -494,7 +504,8 @@ export class PlantillaDocumentoComponent implements OnInit {
               idConsulta: "",
               finalidad: "",
               objetivo: "Destinatario",
-              idObjetivo: "1"
+              idObjetivo: "1",
+              idInstitucion: ""
             });
           }
           if (condicional.indexOf(true) == -1) {
@@ -502,7 +513,8 @@ export class PlantillaDocumentoComponent implements OnInit {
               idConsulta: "",
               finalidad: "",
               objetivo: "Condicional",
-              idObjetivo: "3"
+              idObjetivo: "3",
+              idInstitucion: ""
             });
           }
         }
@@ -667,7 +679,8 @@ export class PlantillaDocumentoComponent implements OnInit {
       let obj = {
         idConsulta: e.idConsulta,
         idConsultaAnterior: e.idConsultaAnterior,
-        idObjetivo: e.idObjetivo
+        idObjetivo: e.idObjetivo,
+        idInstitucion: e.idInstitucion
       };
       this.body.consultas.push(obj);
     });
@@ -743,17 +756,35 @@ export class PlantillaDocumentoComponent implements OnInit {
     );
   }
 
-  onChangeConsultas(e) {
+  getInstitucion(id, comboConsultas) {
+    for (let dato of this.datos) {
+      if (dato.idConsulta && dato.idConsulta != "" && dato.idConsulta == id) {
+        dato.idConsulta = id;
+        let continua = true;
+        comboConsultas.forEach(element => {
+          if(continua && element.value == id){
+            dato.idInstitucion = element.idInstitucion;
+            continua = false;
+          }
+        });        
+      }
+    }
+    this.datos = [...this.datos];
+  }
+
+  onChangeConsultas(e, comboConsultas) {
     let id = e.value;
     if (id == "") {
       for (let dato of this.datos) {
         if (!dato.idConsulta && dato.idConsulta == id) {
           dato.idConsulta = id;
           dato.finalidad = "";
+          dato.idInstitucion = "";
         }
       }
     } else {
-      this.getFinalidad(id);
+      this.getInstitucion(id, comboConsultas);
+      //this.getFinalidad(id);
     }
   }
 
