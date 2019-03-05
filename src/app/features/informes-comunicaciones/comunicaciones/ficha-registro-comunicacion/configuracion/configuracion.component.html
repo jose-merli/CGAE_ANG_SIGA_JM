@@ -36,7 +36,7 @@
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque"
-          [ngClass]="{'col-lg-12':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-6':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+          [ngClass]="{'col-lg-12':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-3':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
           <div class="form-row">
             <div class="form-group col-lg-12">
               <label>
@@ -46,14 +46,15 @@
             <div class="form-group"
               [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label>{{ 'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.configuracion.claseComunicaciones' | translate }}</label>
-              <p-dropdown [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeClase()"
-                [disabled]="true" [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion"
-                class="select-form"></p-dropdown>
+              <p-dropdown [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeClase()" [disabled]="true"
+                [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion" class="select-form">
+              </p-dropdown>
             </div>
             <div class="form-group"
               [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label>{{ 'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.configuracion.modeloComunicaciones' | translate }}</label>
-              <input [disabled]="true" type="text" class="form-control" [(ngModel)]="body.modeloComunicacion" pInputText>
+              <input [disabled]="true" type="text" class="form-control" [(ngModel)]="body.modeloComunicacion"
+                pInputText>
             </div>
             <div class="form-group"
               [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
@@ -76,7 +77,7 @@
         </div>
 
         <div *ngIf="body.idTipoEnvios== '1' || body.idTipoEnvios== '4' || body.idTipoEnvios== '5'"
-          class="col-lg-6 col-md-12">
+          class="col-lg-9 col-md-12">
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
               <label *ngIf="body.idTipoEnvios=='1'">
@@ -95,8 +96,7 @@
             </div>
             <div *ngIf="body.idTipoEnvios=='1'" class="form-group col-lg-12 col-md-12">
               <label>{{ 'enviosMasivos.literal.cuerpo' | translate }}</label>
-              <editor apiKey="{{apiKey}}" [init]="editorConfig"
-                [(ngModel)]="body.cuerpo" [disabled]="true"></editor>
+              <editor apiKey="{{apiKey}}" [init]="editorConfig" [(ngModel)]="body.cuerpo" [disabled]="true"></editor>
             </div>
             <div *ngIf="body.idTipoEnvios=='4' || body.idTipoEnvios=='5'" class="form-group col-lg-3 col-md-3">
               <label>{{ 'enviosMasivos.literal.numCaracteres' | translate }}: </label>
@@ -107,8 +107,10 @@
               <textarea [disabled]="true" style="height:140px" pInputTextarea autoResize="autoResize"
                 [(ngModel)]="body.cuerpo" maxlength="160"></textarea>
             </div>
-            <div *ngIf="body.idTipoEnvios=='5' && (body.csv != null && body.csv != '')" class="form-group col-lg-12 col-md-12">
-              <label (click)="descargarJustificante()"> {{ 'enviosMasivos.literal.certificado' | translate }} <i class="fa fa-download"></i></label>
+            <div *ngIf="body.idTipoEnvios=='5' && (body.csv != null && body.csv != '')"
+              class="form-group col-lg-12 col-md-12">
+              <label (click)="descargarJustificante()"> {{ 'enviosMasivos.literal.certificado' | translate }} <i
+                  class="fa fa-download"></i></label>
             </div>
           </div>
         </div>
@@ -117,8 +119,10 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button *ngIf="cancelar" (click)="onCancelar()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
-        <button *ngIf="editar && reenviar" (click)="duplicar()" pButton type="button" icon="fas fa-share-square" iconPos="left" label="{{ 'general.boton.reenviar' | translate}}"></button>
+        <button *ngIf="cancelar" (click)="onCancelar()" pButton type="button" icon="fa fa-close" iconPos="left"
+          label="{{ 'general.boton.cancel' | translate}}"></button>
+        <button *ngIf="editar && reenviar" (click)="duplicar()" pButton type="button" icon="fas fa-share-square"
+          iconPos="left" label="{{ 'general.boton.reenviar' | translate}}"></button>
       </div>
     </div>
   </div>

@@ -182,13 +182,10 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
     );
   }
 
-
   isGuardarDisabled() {
     if (this.body.fechaProgramada != null) {
       return false;
     }
     return true;
   }
-
-
 }

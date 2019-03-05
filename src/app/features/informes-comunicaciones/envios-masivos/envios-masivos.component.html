@@ -127,13 +127,14 @@
       <div *ngIf="selectedDatos && selectedDatos != ''" class="card-footer">
         <div class="text-right main-button">
           <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="enviar(selectedDatos)" pButton
-            type="button" icon="fas fa-sign-in-alt" iconPos="left" label="{{ 'general.boton.enviar' |
+            type="button" icon="fa fa-send" iconPos="left" label="{{ 'general.boton.enviar' |
           translate}}"></button>
           <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="onShowProgamar(selectedDatos)" pButton
             type="button" icon="fas fa-cog" iconPos="left" label="{{ 'general.boton.programar' | translate}}"></button>
           <button *ngIf="estado && estado == 4" (click)="cancelar(selectedDatos)" pButton type="button"
             icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
-          <button *ngIf="selectedDatos && selectedDatos.length == 1" (click)="duplicar(selectedDatos)" pButton type="button" icon="fa fa-reply-all" iconPos="left"
+          <button *ngIf="selectedDatos && selectedDatos.length == 1" (click)="duplicar(selectedDatos)" pButton
+            type="button" icon="fa fa-reply-all" iconPos="left"
             label="{{ 'general.boton.duplicar' | translate}}"></button>
         </div>
       </div>

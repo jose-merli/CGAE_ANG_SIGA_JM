@@ -34,7 +34,7 @@ export class ProgramacionComponent implements OnInit {
   arrayProgramar: any[];
   currentDate: Date = new Date();
   estados: any = [];
-  editar: boolean = false;
+  noEditar: boolean = false;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -133,10 +133,10 @@ export class ProgramacionComponent implements OnInit {
       this.body.fechaCreacion = this.body.fechaCreacion ? new Date(this.body.fechaCreacion) : null;
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       if (this.body.idEstado != '1' && this.body.idEstado != '4') {
-        this.editar = true;
+        this.noEditar = true;
       }
-    }else{
-      this.editar = false;
+    } else {
+      this.noEditar = false;
     }
     this.body.fechaProgramada = this.body.fechaProgramada ? new Date(this.body.fechaProgramada) : null;
     this.body.fechaCreacion = this.body.fechaCreacion ? new Date(this.body.fechaCreacion) : null;
