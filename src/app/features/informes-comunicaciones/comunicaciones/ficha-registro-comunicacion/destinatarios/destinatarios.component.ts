@@ -4,6 +4,7 @@ import { FichaColegialGeneralesItem } from "../../../../../models/FichaColegialG
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
 import { Router } from '@angular/router';
+import { Message } from "primeng/components/common/api";
 
 @Component({
   selector: 'app-destinatarios',
@@ -18,9 +19,12 @@ export class DestinatariosComponent implements OnInit {
   openDestinatario: boolean;
   destinatarios: any = [];
   fichaDestinatario: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
-
+  progressSpinner: boolean = false;
+  
   @ViewChild('table') table: DataTable;
   selectedDatos
+
+  msgs: Message[];
 
   fichasPosibles = [
     {
@@ -110,33 +114,35 @@ export class DestinatariosComponent implements OnInit {
   }
 
   navigateTo(destinatario) {
-
+    this.progressSpinner = true;
     this.sigaServices
       .post("busquedaPer", destinatario.idPersona)
       .subscribe(
         n => {
           let persona = JSON.parse(n["body"]);
-          if(persona && persona.colegidoItem){
-            this.fichaDestinatario = persona.colegidoItem[0];
+          if(persona && persona.colegiadoItem){
+            this.fichaDestinatario = persona.colegiadoItem[0];
             sessionStorage.setItem("personaBody", JSON.stringify(this.fichaDestinatario));
             this.router.navigate(['/fichaColegial']);
             sessionStorage.removeItem("busquedaCensoGeneral")
             sessionStorage.removeItem("esColegiado")
             sessionStorage.setItem("destinatarioCom", JSON.stringify(this.body));
-          }else if(persona && persona.noColegidoItem){
-            this.fichaDestinatario = persona.noColegidoItem[0];
+          }else if(persona && persona.noColegiadoItem){
+            this.fichaDestinatario = persona.noColegiadoItem[0];
             sessionStorage.setItem("personaBody", JSON.stringify(this.fichaDestinatario));
             this.router.navigate(['/fichaColegial']);
             sessionStorage.removeItem("busquedaCensoGeneral")
             sessionStorage.removeItem("esColegiado")
             sessionStorage.setItem("destinatarioCom", JSON.stringify(this.body));
           }else{
-
+            this.showFail('Error al cargar el destinatario');
           }      
         },
         err => {
           console.log(err);
-        },
+        },() =>{
+          this.progressSpinner = false;
+        }
 
       );
   }
@@ -155,6 +161,26 @@ export class DestinatariosComponent implements OnInit {
 
       );
 
+  }
+
+  // Mensajes
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showInfo(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 }

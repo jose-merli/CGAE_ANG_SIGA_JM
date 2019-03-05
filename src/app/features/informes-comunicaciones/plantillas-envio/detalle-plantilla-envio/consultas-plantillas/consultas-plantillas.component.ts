@@ -290,7 +290,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 			.getParam("plantillasEnvio_comboConsultas", "?filtro=" + filtro)
 			.subscribe(
 				data => {
-					this.consultas = data.combooItems;
+					this.consultas = data.consultas;
 
 					if (this.consultas != undefined || this.consultas.length == 0) {
 						this.resultadosConsultas = "No hay resultados";
@@ -322,14 +322,33 @@ export class ConsultasPlantillasComponent implements OnInit {
 	onChangeConsultas(e) {
 		let id = e.value;
 		this.getFinalidad(id);
+		this.getConsultaInstitucion(id);
 		console.log(id);
+	}
+
+	getConsultaInstitucion(id) {
+		let comboConsultas = this.consultas;
+		for (let dato of this.datos) {
+			if (dato.idConsulta && dato.idConsulta != "" && dato.idConsulta == id) {
+			dato.idConsulta = id;
+			let continua = true;
+			comboConsultas.forEach(element => {
+				if(continua && element.value == id){
+				dato.idInstitucion = element.idInstitucion;
+				continua = false;
+				}
+			});        
+			}
+		}
+		this.datos = [...this.datos];
 	}
 
 	asociar() {
 		let objAsociar = {
 			idConsulta: this.datos[this.datos.length - 1].idConsulta,
 			idTipoEnvios: this.body.idTipoEnvios,
-			idPlantillaEnvios: this.body.idPlantillaEnvios
+			idPlantillaEnvios: this.body.idPlantillaEnvios,
+			idInstitucion: this.datos[this.datos.length - 1].idInstitucion
 		};
 
 		this.sigaServices
