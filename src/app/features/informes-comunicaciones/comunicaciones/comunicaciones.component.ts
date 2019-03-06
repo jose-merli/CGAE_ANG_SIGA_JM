@@ -395,4 +395,19 @@ función para que no cargue primero las etiquetas de los idiomas*/
   abreCierraFicha() {
     this.fichaBusqueda = !this.fichaBusqueda;
   }
+
+
+  fillFechaCreacion(event) {
+    this.bodySearch.fechaCreacion = event;
+  }
+
+  fillFechaProgramacion(event) {
+    this.bodySearch.fechaProgramacion = event;
+  }
+
+  fillFechaProgramada(event) {
+    this.bodyProgramar.fechaProgramada = event;
+  }
+
+
 }

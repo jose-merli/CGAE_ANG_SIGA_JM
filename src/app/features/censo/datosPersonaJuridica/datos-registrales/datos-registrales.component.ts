@@ -110,6 +110,8 @@ export class DatosRegistralesComponent implements OnInit {
   @ViewChild("table")
   table;
 
+  tarjeta : string;
+
   constructor(
     private formBuilder: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,
@@ -200,30 +202,17 @@ export class DatosRegistralesComponent implements OnInit {
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = "12a";
-    let derechoAcceso;
+
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
       data => {
-        let permisosTree = JSON.parse(data.body);
-        let permisosArray = permisosTree.permisoItems;
-        derechoAcceso = permisosArray[0].derechoacceso;
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjeta = permisosArray[0].derechoacceso;
       },
       err => {
         console.log(err);
       },
       () => {
-        if (derechoAcceso >= 2) {
-          this.activacionEditar = true;
-          if (derechoAcceso == 2) {
-            this.camposDesactivados = true;
-          }
-        } else {
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
-          this.router.navigate(["/errorAcceso"]);
-        }
       }
     );
   }
@@ -485,7 +474,7 @@ export class DatosRegistralesComponent implements OnInit {
         } else {
           this.showCustomFail(
             "El campo número de registro SIGA no puede ser superior a la longitud del contador: " +
-              this.longitudcontador
+            this.longitudcontador
           );
           this.progressSpinner = false;
         }
@@ -687,7 +676,7 @@ export class DatosRegistralesComponent implements OnInit {
     let fichaPosible = this.getFichaPosibleByKey(key);
     // si no se esta creando una nueva sociedad
     if (
-      this.activacionEditar == true &&
+      (this.tarjeta == '2' || this.tarjeta == '3') &&
       sessionStorage.getItem("crearnuevo") == null
     ) {
       fichaPosible.activa = !fichaPosible.activa;
@@ -810,4 +799,28 @@ export class DatosRegistralesComponent implements OnInit {
   //     }
   //   }
   // }
+
+
+  fillFechaConstitucion(event) {
+    this.fechaConstitucion = event;
+    this.habilitarCheck();
+    this.compruebaFechaConstitucion();
+  }
+
+  fillFechaFin(event) {
+    this.fechaFin = event;
+    this.compruebaFechaFin();
+  }
+
+  fillFechaInscripcion(event) {
+    this.fechaInscripcion = event;
+    this.habilitarCheck();
+  }
+
+  fillFechaCancelacion(event) {
+    this.fechaCancelacion = event;
+    this.habilitarCheck();
+  }
+
+
 }

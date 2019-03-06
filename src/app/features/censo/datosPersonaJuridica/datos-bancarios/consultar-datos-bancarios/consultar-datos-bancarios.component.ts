@@ -147,6 +147,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router
+
   ) { }
 
   ngOnInit() {
@@ -424,6 +425,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           "messages.censo.direcciones.facturacion"
         ) {
           this.eliminarItem();
+          this.progressSpinner = false;
         }
       },
       () => {
@@ -465,9 +467,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         data => {
           this.progressSpinner = false;
           this.body = JSON.parse(data["body"]);
-
           this.showSuccess("Se ha presentado correctamente la solicitud");
+
           sessionStorage.setItem("editar", "true");
+          let err = JSON.parse(data["body"]);
+          if (err.error.description != "") {
+            sessionStorage.setItem("solimodifMensaje", err.error.description);
+          }
         },
         error => {
           this.bodySearch = JSON.parse(error["error"]);
@@ -579,21 +585,38 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   igualInicio() {
     let validarTipoCuenta = [];
-    this.selectedTipo.forEach(element => {
-      validarTipoCuenta.push(element.code);
-    });
+    if (this.selectedTipo.length > 0) {
+      this.selectedTipo.forEach(element => {
+        validarTipoCuenta.push(element.code);
+      });
 
-    if (JSON.stringify(this.body) == JSON.stringify(this.checkBody)) {
-      if (
-        JSON.stringify(validarTipoCuenta.sort()) ==
-        JSON.stringify(this.checkBody.tipoCuenta.sort())
-      ) {
-        return true;
+      if (JSON.stringify(this.body) == JSON.stringify(this.checkBody)) {
+        if (this.checkBody.tipoCuenta == null || this.checkBody.tipoCuenta == undefined) {
+          if (validarTipoCuenta.length > 0) {
+            return false;
+          } else {
+            return true;
+          }
+        } else {
+          if (
+            JSON.stringify(validarTipoCuenta.sort()) ==
+            JSON.stringify(this.checkBody.tipoCuenta.sort())
+          ) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+
       } else {
         return false;
       }
     } else {
-      return false;
+      if (JSON.stringify(this.body) == JSON.stringify(this.checkBody)) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 
@@ -1759,5 +1782,21 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   onEnviarComunicacion() {
     this.showComunicar = false;
+  }
+
+  fillFechaFirmada(event) {
+    this.firmaFechaDate = event;
+  }
+
+  detectFechaFirmadaInput(event) {
+    this.firmaFechaDate = event;
+  }
+
+  fillFechaUso(event) {
+    this.datefechaUso = event;
+  }
+
+  detectFechaUsoInput(event) {
+    this.datefechaUso = event;
   }
 }

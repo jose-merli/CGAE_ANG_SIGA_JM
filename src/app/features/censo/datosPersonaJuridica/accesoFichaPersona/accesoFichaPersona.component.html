@@ -1,7 +1,7 @@
 <div class="busqueda-container">
 
     <!--DATOS GENERALES-->
-    <div class="card">
+    <div *ngIf="tarjeta == '3' || tarjeta == '2'" class="card">
         <div class="card-header header-ficha" (click)="abrirFicha()">
             <div *ngIf="!openFicha" class="form-row">
                 <div class="col-lg-1 col-md-2">
@@ -69,16 +69,16 @@
                         <div class="form-group col-lg-6 col-md-6">
                             <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
                             <input [(ngModel)]="body.nombre" (ngModelChange)="activarGuardarNotarioNoExistente($event)" type="text" class="form-control"
-                                [(disabled)]="!editar || disabledAction" pInputText>
+                                [disabled]="!editar || disabledAction || tarjeta == '2'" pInputText>
                         </div>
                         <div class="form-group col-lg-3 col-md-6">
                             <label>{{"censo.busquedaClientes.literal.apellido1" | translate}}</label>
                             <input [(ngModel)]="body.apellido1" (ngModelChange)="activarGuardarNotarioNoExistente($event)" type="text" class="form-control"
-                                [(disabled)]="!editar || disabledAction" pInputText>
+                                [disabled]="!editar || disabledAction || tarjeta == '2'" pInputText>
                         </div>
                         <div class="form-group col-lg-3 col-md-6">
                             <label>{{"censo.busquedaClientes.literal.apellido2" | translate}}</label>
-                            <input [(ngModel)]="body.apellido2" type="text " class="form-control" [(disabled)]="!editar || disabledAction" pInputText>
+                            <input [(ngModel)]="body.apellido2" type="text " class="form-control" [disabled]="!editar || disabledAction || tarjeta == '2'" pInputText>
                         </div>
 
                     </div>
@@ -90,11 +90,11 @@
 
         <div *ngIf="openFicha"  class="card-footer ">
             <div class="text-right main-button ">
-                <button (click)="desasociarPersona()"  [(disabled)]="!desasociar || disabledAction"  pButton type="button"  icon="fa fa-undo"
+                <button (click)="desasociarPersona()"  [disabled]="!desasociar || disabledAction || tarjeta == '2'"  pButton type="button"  icon="fa fa-undo"
                      iconPos="left"  label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate}}"></button>
-                <button (click)="isSearch()"  [(disabled)]="camposDesactivados || disabledAction"  pButton type="button"  icon="fa fa-search"
+                <button (click)="isSearch()"  [disabled]="camposDesactivados || disabledAction || tarjeta == '2'"  pButton type="button"  icon="fa fa-search"
                      iconPos="left"  label="{{ 'general.boton.search' | translate}}"></button>
-                <button (click)="guardar()"  [(disabled)]="!guardarNotario || disabledAction"  pButton type="button"  icon="far fa-save"
+                <button (click)="guardar()"  [disabled]="!guardarNotario || disabledAction || tarjeta == '2'"  pButton type="button"  icon="far fa-save"
                      iconPos="left"  label="{{ 'general.boton.guardar' | translate}}"></button>
             </div>
         </div>

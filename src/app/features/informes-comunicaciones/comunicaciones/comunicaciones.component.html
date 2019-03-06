@@ -22,15 +22,11 @@
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>{{'enviosMasivos.literal.fechaCreacion' | translate}} *</label>
-          <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"
-            [(ngModel)]="bodySearch.fechaCreacion" dateFormat="dd/mm/yy" icon=" far fa-calendar-alt" showIcon="true">
-          </p-calendar>
+          <app-fecha [(value)]="bodySearch.fechaCreacion" [utc]="false" (valueChangeSelected)="fillFechaCreacion($event)" (valueChangeInput)="fillFechaCreacion($event)"></app-fecha>
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>{{'enviosMasivos.literal.fechaProgramacion' | translate}}</label>
-          <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es"
-            [(ngModel)]="bodySearch.fechaProgramacion" dateFormat="dd/mm/yy" icon=" far fa-calendar-alt"
-            showIcon="true"></p-calendar>
+          <app-fecha [(value)]="bodySearch.fechaProgramacion" [utc]="false" (valueChangeSelected)="fillFechaProgramacion($event)" (valueChangeInput)="fillFechaProgramacion($event)"></app-fecha>
         </div>
       </div>
 
@@ -144,9 +140,8 @@
     <div class="form-row">
       <div class="form-group col-lg-12 col-md-12">
         <label>{{"envio.programar" | translate}}</label>
-        <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" showTime="true"
-          [minDate]="currentDate" [(ngModel)]="bodyProgramar.fechaProgramada" dateFormat="dd/mm/yy"
-          icon="far fa-calendar-alt" showIcon="true" [locale]="es"></p-calendar>
+        <app-fecha [(value)]="bodyProgramar.fechaProgramada" [minDate]="currentDate" [utc]="false" showTime="true" (valueChangeSelected)="fillFechaProgramada($event)"
+          (valueChangeInput)="fillFechaProgramada($event)"></app-fecha>
       </div>
     </div>
     <p-footer>

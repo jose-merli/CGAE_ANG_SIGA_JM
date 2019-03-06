@@ -4,7 +4,8 @@ import {
   Component,
   OnInit,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  Input
 } from "@angular/core";
 import { saveAs } from "file-saver/FileSaver";
 import { DomSanitizer } from "../../../../../node_modules/@angular/platform-browser";
@@ -13,7 +14,9 @@ import { ConfirmationService } from "../../../../../node_modules/primeng/api";
 import {
   AutoComplete,
   Dropdown,
-  Editor
+  Editor,
+  Calendar,
+  Button
 } from "../../../../../node_modules/primeng/primeng";
 import { TranslateService } from "../../../commons/translate";
 import { CargaMasivaInscripcionObject } from "../../../models/CargaMasivaInscripcionObject";
@@ -30,6 +33,8 @@ import { CertificadoCursoItem } from "../../../models/CertificadoCursoItem";
 import { CertificadoCursoObject } from "../../../models/CertificadoCursoObject";
 import { EventoObject } from "../../../models/EventoObject";
 import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
+import * as moment from 'moment';
+
 
 @Component({
   selector: "app-ficha-curso",
@@ -52,6 +57,7 @@ export class FichaCursoComponent implements OnInit {
   progressSpinner: boolean = false;
   curso: DatosCursosItem = new DatosCursosItem();
   initCurso: DatosCursosItem;
+  hoy: Date = new Date();
 
   // COMBOS
   comboVisibilidad: any[];
@@ -110,6 +116,11 @@ export class FichaCursoComponent implements OnInit {
   autocompleteTopics: AutoComplete;
 
   persistenciaFichaCurso;
+
+
+  @ViewChild("calendarStartInscription") calendarStartInscription: Calendar;
+  fechaFinInscripcionSelected: boolean = true;
+  @ViewChild("calendarEndInscription") calendarEndInscription: Calendar;
 
   //Generales
   valorEstadoAbierto = "0";
@@ -287,6 +298,9 @@ export class FichaCursoComponent implements OnInit {
       if (this.curso.idCurso != null && this.curso.idCurso != undefined) {
         this.searchCourse(this.curso.idCurso);
         this.modoEdicion = true;
+        this.getMassiveLoadInscriptions();
+        this.getCertificatesCourse();
+        this.getPrices();
       } else {
         //Si no se ha guardado el evento limpiamos la fecha introducida
         if (this.curso.idEventoInicioInscripcion == "undefined") {
@@ -295,13 +309,10 @@ export class FichaCursoComponent implements OnInit {
       }
 
       sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
-
-      this.arreglarFechasEvento();
-      this.getMassiveLoadInscriptions();
-      this.getCertificatesCourse();
       this.configurationInformacionAdicional();
-      this.getPrices();
-      this.getSessions();
+      this.arreglarFechasEvento();
+      this.progressSpinner = false;
+
 
       //2.Proviene de la creacion evento Incripcion Fin
     } else if (
@@ -323,6 +334,9 @@ export class FichaCursoComponent implements OnInit {
       if (this.curso.idCurso != null && this.curso.idCurso != undefined) {
         this.searchCourse(this.curso.idCurso);
         this.modoEdicion = true;
+        this.getCertificatesCourse();
+        this.getMassiveLoadInscriptions();
+        this.getPrices();
       } else {
         //Si no se ha guardado el evento limpiamos la fecha introducida
         if (this.curso.idEventoFinInscripcion == "undefined") {
@@ -331,11 +345,9 @@ export class FichaCursoComponent implements OnInit {
       }
 
       this.arreglarFechasEvento();
-      this.getMassiveLoadInscriptions();
-      this.getCertificatesCourse();
-      this.getPrices();
-      this.getSessions();
       this.configurationInformacionAdicional();
+      this.progressSpinner = false;
+
 
       //3. Estamos en modo edicion
     } else if (sessionStorage.getItem("modoEdicionCurso") == "true") {
@@ -563,6 +575,9 @@ export class FichaCursoComponent implements OnInit {
     } else {
       this.edicionEncuestaSatisfaccion = true;
     }
+
+    this.progressSpinner = false;
+
   }
 
   getCombosDatosGenerales() {
@@ -1079,21 +1094,25 @@ export class FichaCursoComponent implements OnInit {
     });
   }
 
-  selectStartDateInscription(event) {
-    if (this.curso.fechaInscripcionDesdeDate != null) {
-      this.curso.idTipoEvento = this.valorTipoInicioIncripcion;
-    }
+  selectStartDateInscription(value) {
 
-    this.curso.fechaInscripcionDesdeDate = event;
-    this.curso.tipoServicios = this.resultsService;
-    this.curso.temasCombo = this.resultsTopics;
-    sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
-    sessionStorage.setItem("isFormacionCalendarByStartInscripcion", "true");
-    sessionStorage.setItem("curso", JSON.stringify(this.curso));
-    this.router.navigate(["/fichaEventos"]);
+    if (this.comprobarFecha(value)) {
+      if (this.curso.fechaInscripcionDesdeDate != null) {
+        this.curso.idTipoEvento = this.valorTipoInicioIncripcion;
+      }
+
+      this.curso.fechaInscripcionDesdeDate = value;
+      this.curso.tipoServicios = this.resultsService;
+      this.curso.temasCombo = this.resultsTopics;
+      sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
+      sessionStorage.setItem("isFormacionCalendarByStartInscripcion", "true");
+      sessionStorage.setItem("curso", JSON.stringify(this.curso));
+      this.router.navigate(["/fichaEventos"]);
+    }
   }
 
   selectEndDateInscription(event) {
+
     if (this.curso.idEventoFinInscripcion != null) {
       this.curso.idTipoEvento = this.valorTipoFinIncripcion;
     }
@@ -3342,4 +3361,35 @@ export class FichaCursoComponent implements OnInit {
       return false;
     }
   }
+
+  comprobarFecha(newValue) {
+    let hoy = new Date();
+    let fecha = moment(newValue, 'DD/MM/YYYY').toDate();
+    let year = hoy.getFullYear();
+    let yearFecha = fecha.getFullYear();
+    if (yearFecha >= year - 80 && yearFecha <= year + 20) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  comprobarFechaFinInscripcion() {
+
+    if (this.curso.fechaInscripcionDesdeDate < new Date()) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  fillFechaInicioImparticion(event) {
+    this.curso.fechaImparticionDesdeDate = event;
+  }
+
+  fillFechaFinImparticion(event) {
+    this.curso.fechaImparticionHastaDate = event;
+  }
+
+
 }

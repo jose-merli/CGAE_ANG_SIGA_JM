@@ -454,4 +454,12 @@ export class ConsultaComponent implements OnInit {
     ]
   }
 
+  fillFechaValor(event, dato) {
+
+    let id = this.valores.findIndex(
+      x => x.campo === dato.campo
+    );
+    this.valores[id].valor = event;
+  }
+
 }

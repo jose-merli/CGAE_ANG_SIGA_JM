@@ -584,6 +584,13 @@ label {
   width: 100%;
 }
 
+.ui-calendar .ui-widget.ui-button:focus{
+  background: $blue3;
+  color: $grey1;
+  border: 1px solid #c6c7c8;
+  border-left: none;
+}
+
 p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   box-shadow: 0 0 2px $error;
   border-bottom-color: $grey4;

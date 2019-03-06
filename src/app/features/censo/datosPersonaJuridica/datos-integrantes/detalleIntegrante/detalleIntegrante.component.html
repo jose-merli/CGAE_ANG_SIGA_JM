@@ -59,11 +59,13 @@
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.busquedaClientes.literal.apellido1" | translate}} (*)</label>
-          <input type="text" class="form-control" [(ngModel)]="body.apellidos1" [(disabled)]="isDisabledApellidos1 || disabledAction" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.apellidos1" [(disabled)]="isDisabledApellidos1 || disabledAction"
+            pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.busquedaClientes.literal.apellido2" | translate}}</label>
-          <input [(ngModel)]="body.apellidos2" type="text" class="form-control" [(disabled)]="isDisabledApellidos2 || disabledAction" pInputText>
+          <input [(ngModel)]="body.apellidos2" type="text" class="form-control" [(disabled)]="isDisabledApellidos2 || disabledAction"
+            pInputText>
         </div>
       </div>
       <br>
@@ -123,7 +125,8 @@
         </div>
         <div *ngIf="esColegiado" class="form-group col-lg-3 col-md-6">
           <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
-          <p-dropdown [options]="colegios" [(ngModel)]="body.colegio" [(disabled)]="isDisabledColegio || disabledAction" class="select-form" (onChange)="onChangeColegio($event.value)"></p-dropdown>
+          <p-dropdown [options]="colegios" [(ngModel)]="body.colegio" [(disabled)]="isDisabledColegio || disabledAction" class="select-form"
+            (onChange)="onChangeColegio($event.value)"></p-dropdown>
         </div>
         <div *ngIf="!esColegiado" class="form-group col-lg-3 col-md-6">
           <label>{{"censo.datosDireccion.literal.provincia" | translate}}</label>
@@ -132,7 +135,8 @@
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
-          <input type="text" class="form-control" [(ngModel)]="body.numColegiado" [(disabled)]="isDisabledNumColegio || disabledAction" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.numColegiado" [(disabled)]="isDisabledNumColegio || disabledAction"
+            pInputText>
         </div>
       </div>
       <br>
@@ -191,13 +195,13 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaComponentesJuridicos.literal.fechaCargo" | translate}}</label>
-              <p-calendar [(ngModel)]="fechaCarga" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [monthNavigator]="true"
-                [yearNavigator]="true" yearRange="1930:2050" [(disabled)]="historico || disabledAction" [locale]="es" [utc]="true"></p-calendar>
+              <app-fecha [(value)]="fechaCarga" [disabled]="historico || disabledAction" [utc]="false" (valueChangeSelected)="fillFechaCarga($event)"
+                (valueChangeInput)="detectFechaCargaInput($event)"></app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatos.literal.fechaFin" | translate}}</label>
-              <p-calendar [(ngModel)]="fechaBajaCargo" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [monthNavigator]="true"
-                [yearNavigator]="true" yearRange="1930:2050" [(disabled)]="historico || disabledAction" [locale]="es" [utc]="true"></p-calendar>
+              <app-fecha [(value)]="fechaBajaCargo" [disabled]="historico || disabledAction" [utc]="false" (valueChangeSelected)="fillFechaBajaCargo($event)"
+                (valueChangeInput)="detectFechaBajaCargoInput($event)"></app-fecha>
             </div>
           </div>
         </div>
@@ -206,8 +210,8 @@
         </div>
         <div class="form-group col-lg-2 col-md-4">
           <label>{{"censo.consultaComponentesJuridicos.literal.cargo" | translate}}</label>
-          <p-dropdown [(ngModel)]="body.idCargo" (ngModelChange)="actualizarDescripcionCargo()" [(disabled)]="historico || disabledAction" class="select-form"
-            [options]="cargosArray"></p-dropdown>
+          <p-dropdown [(ngModel)]="body.idCargo" (ngModelChange)="actualizarDescripcionCargo()" [(disabled)]="historico || disabledAction"
+            class="select-form" [options]="cargosArray"></p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-8">
           <label>{{"censo.consultaComponentesJuridicos.literal.descripcioncargo" | translate}}</label>
@@ -215,8 +219,8 @@
         </div>
         <div class="form-group col-lg-2 col-md-4">
           <label>{{"censo.consultaComponentesJuridicos.literal.Participacion" | translate}}</label>
-          <input type="text" class="form-control" [(disabled)]="historico || disabledAction" [(ngModel)]="body.capitalSocial" ui-number-mask="3" (ngModelChange)="onChange($event)"
-            pInputText>
+          <input type="text" class="form-control" [(disabled)]="historico || disabledAction" [(ngModel)]="body.capitalSocial" ui-number-mask="3"
+            (ngModelChange)="onChange($event)" pInputText>
         </div>
 
 
@@ -228,8 +232,8 @@
   </div>
   <div class="mt-3 text-right main-button ">
     <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
-    <button *ngIf="editar" (click)="guardar();" pButton type="button" icon="	fa fa-edit " [(disabled)]="historico || disabledAction" iconPos="left"
-      label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+    <button *ngIf="editar" (click)="guardar();" pButton type="button" icon="	fa fa-edit " [(disabled)]="historico || disabledAction"
+      iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
   </div>
 </div>
 

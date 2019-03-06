@@ -14,6 +14,12 @@
             </p>
             <div *ngIf="showDatosGenerales" class="module vista-simple">
                 <div class="form-row">
+                    <div class="form-group col-lg-3 col-md-2">
+                            <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}</label>
+                            <p-multiSelect [disabled]="deshabilitarCombCol" [defaultLabel]="textFilter" filterBy="label" [(ngModel)]='colegiosSeleccionados'
+                                [options]="comboColegios" optionLabel="label" [selectedItemsLabel]="textSelected" maxSelectedLabels="1"
+                                styleClass="widthAll" [panelStyle]="{width:'100%'}"></p-multiSelect>
+                    </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]="body.nif">
@@ -47,36 +53,36 @@
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaClientesAvanzada.literal.sexo" | translate}}</label>
-                        <p-dropdown class="select-form" [options]="comboSexo" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.sexo"></p-dropdown>
+                        <p-dropdown class="select-form" [options]="comboSexo" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.sexo" [showClear]="true" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.consultaDatosGenerales.literal.estadoCivil" | translate}}</label>
-                        <p-dropdown class="select-form" [options]="comboEstadoCivil" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.idEstadoCivil"></p-dropdown>
+                        <p-dropdown class="select-form" [options]="comboEstadoCivil" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.idEstadoCivil" [showClear]="true" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
                     </div>
                     <div class=" form-group col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaColegiados.datosGeneralesAvanzados.fechaNacimientoDesde" | translate}}</label>
-                        <p-calendar [keepInvalid]="true" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy" [(ngModel)]="fechaNacimientoDesdeSelect"></p-calendar>
+                        <app-fecha [(value)]="fechaNacimientoDesdeSelect" (valueChangeSelected)="fillFechaNacimientoDesde($event)" (valueChangeInput)="fillFechaNacimientoDesde($event)"></app-fecha>
                     </div>
                     <div class=" form-group col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaColegiados.datosGeneralesAvanzados.fechaNacimientoHasta" | translate}}</label>
-                        <p-calendar [keepInvalid]="true" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy" [(ngModel)]="fechaNacimientoHastaSelect"></p-calendar>
+                        <app-fecha [(value)]="fechaNacimientoHastaSelect" (valueChangeSelected)="fillFechaNacimientoHasta($event)" (valueChangeInput)="fillFechaNacimientoHasta($event)"></app-fecha>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaClientesAvanzada.literal.categoriaCV" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='body.tipoCV' [options]="comboCategoriaCurricular" placeholder="{{'general.boton.seleccionar' | translate}}"
-                            [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeCategoriaCurricular($event)"></p-dropdown>
+                            [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeCategoriaCurricular($event)" [showClear]="true"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.tipoCurricular.descripcion.literal" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='body.subTipoCV1' [options]="comboTipoCV" placeholder="{{'general.boton.seleccionar' | translate}}"
                             [filter]="true" filterBy="label,labelSinTilde" emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}"
-                            [disabled]="isDisabledCombos()"></p-dropdown>
+                            [disabled]="isDisabledCombos()" [showClear]="true"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{'censo.subtipoCurricular.descripcion.literal' | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='body.subTipoCV2' [options]="comboSubtipoCV" placeholder="{{'general.boton.seleccionar' | translate}}"
                             [filter]="true" filterBy="label,labelSinTilde" emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}"
-                            [disabled]="isDisabledCombos()"></p-dropdown>
+                            [disabled]="isDisabledCombos()" [showClear]="true"></p-dropdown>
                     </div>
                 </div>
             </div>
@@ -93,19 +99,19 @@
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.datosDireccion.literal.provincia" | translate}}</label>
                         <p-dropdown class="select-form" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.idProvincia"
-                            [(disabled)]="isDisabledProvincia"></p-dropdown>
+                            [(disabled)]="isDisabledProvincia" [showClear]="true" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "gratuita.partidosJudiciales.literal.poblaciones" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true" filterMatchMode="contains" [(disabled)]="isDisabledPoblacion"
                             [options]="comboPoblacion" (input)="buscarPoblacion($event)" placeholder="{{'general.boton.seleccionar' | translate}}"
-                            [emptyFilterMessage]="resultadosPoblaciones">
+                            [emptyFilterMessage]="resultadosPoblaciones" [showClear]="true" filterBy="label,labelSinTilde">
                         </p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.datosDireccion.literal.tipo.direccion" | translate}}</label>
                         <p-dropdown class="select-form" [options]="comboTipoDireccion" placeholder="{{'general.boton.seleccionar' | translate}}"
-                            [(ngModel)]='body.tipoDireccion'></p-dropdown>
+                            [(ngModel)]='body.tipoDireccion' [showClear]="true" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.datosDireccion.literal.correo" | translate}}</label>
@@ -150,7 +156,7 @@
                         <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
                         <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
                         <label>{{ "general.message.mostrar" | translate}}</label>
-                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)" [showClear]="true" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
                         <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
                         <div class="ml-3 selectAll">
                             <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
@@ -211,7 +217,7 @@
                         <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
                         <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
                         <label>{{ "general.message.mostrar" | translate}}</label>
-                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)" [showClear]="true" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
                         <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
                         <div class="ml-3 selectAll">
                             <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>

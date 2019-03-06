@@ -8,6 +8,7 @@ import { DatosNotarioItem } from "./../../../../../app/models/DatosNotarioItem";
 import { DatosNotarioObject } from "./../../../../../app/models/DatosNotarioObject";
 import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
+import { ControlAccesoDto } from "../../../../models/ControlAccesoDto";
 
 @Component({
   selector: "app-accesoFichaPersona",
@@ -37,6 +38,9 @@ export class AccesoFichaPersonaComponent implements OnInit {
   disabledAction: boolean = false;
   file: File = undefined;
   isValidate: boolean;
+
+  tarjeta: string;
+
   constructor(
     private router: Router,
     private location: Location,
@@ -126,6 +130,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
     }
 
     this.comprobarValidacion();
+    this.checkAcceso();
   }
 
   search() {
@@ -420,5 +425,22 @@ export class AccesoFichaPersonaComponent implements OnInit {
       });
       console.log(data);
     });
+  }
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "229";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjeta = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {}
+    );
   }
 }

@@ -57,12 +57,11 @@
           <div class="form-group col-lg-2 col-md-2">
             <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}
             </label>
-            <p-calendar [keepInvalid]="true" selectionMode="range" [locale]="es" icon="far fa-calendar-alt" showIcon="true" dateFormat="dd/mm/yy"
-              [(ngModel)]="body.fechaAlta" [disabled]="true"></p-calendar>
+            <app-fecha [(value)]="body.fechaAlta" [disabled]="true" (valueChangeSelected)="fillFechaAlta($event)" (valueChangeInput)="fillFechaAlta($event)"></app-fecha>
           </div>
         </div>
 
-        <div class="card-body p-0">
+        <div *ngIf="!solicitudFoto" class="card-body p-0">
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [responsive]="true" #table class="tabla-listado"
             [value]="data" [sortOrder]="1" paginatorPosition="both" [rows]="selectedItem" [paginator]="enablePagination()">
             <p-column [style]="{ width: col.width }" *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate"
@@ -75,7 +74,8 @@
             <ng-template pTemplate="paginatorLeft">
               <div class="mostrar">
                 <label class="pr-3 registros-totales">Mostrando registros del {{ table.first + 1 }} al {{ table.first + table.rows }} de un total de {{ table.totalRecords
-                  }}</label>
+                  }}
+                </label>
                 <label>{{ "general.message.mostrar" | translate }}</label>
                 <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                 <label>{{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
@@ -84,8 +84,19 @@
             </ng-template>
           </p-dataTable>
         </div>
-
-        <br />
+        <div class="row fotos">
+          <div *ngIf="solicitudFoto" class="col-lg-4 col-md-4 fotovieja">
+            <label>Imagen Actual</label>
+            <img *ngIf="imagenAnterior != undefined" [src]="imagenAnterior" class="imagenCentrada1" />
+            <i *ngIf="imagenAnterior == undefined" class="fa fa-user imagenCentrada1" style="font-size:19rem;color:grey"></i>
+          </div>
+          <div *ngIf="solicitudFoto" class="col-lg-4 col-md-4 fotonueva">
+          </div>
+          <div *ngIf="solicitudFoto" class="col-lg-4 col-md-4 fotonueva">
+            <label>Imagen Nueva</label>
+            <img [src]="bodySolModiChangeFoto.fotografia" class="imagenCentrada2" />
+          </div>
+        </div>
 
         <div>
           <div class="form-group col-lg-12 col-md-12">
@@ -94,15 +105,14 @@
             <textarea pInputTextarea [rows]="4" [cols]="10" [(ngModel)]="body.motivo" [disabled]="true"></textarea>
           </div>
         </div>
-
-        <div class="card-footer">
-          <div class="text-right main-button ">
-            <button (click)="comprobarAuditoria()" pButton type="button" icon="fa fa-gears" iconPos="left" label="{{'modificacionDatos.boton.procesarSolicitud' | translate}}"
-              [(disabled)]="disableButton"></button>
-            <button (click)="denyRequest()" pButton type="button" icon="fa fa-times" iconPos="left" label="{{ 'general.boton.denegarSolicitud' | translate}}"
-              [(disabled)]="disableButton"></button>
-          </div>
-        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="text-right main-button ">
+        <button (click)="comprobarAuditoria()" pButton type="button" icon="fa fa-gears" iconPos="left" label="{{'modificacionDatos.boton.procesarSolicitud' | translate}}"
+          [(disabled)]="disableButton"></button>
+        <button (click)="denyRequest()" pButton type="button" icon="fa fa-times" iconPos="left" label="{{ 'general.boton.denegarSolicitud' | translate}}"
+          [(disabled)]="disableButton"></button>
       </div>
     </div>
   </div>
@@ -112,7 +122,8 @@
   </div>
 
   <!-- AUDITORIA -->
-  <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+  <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500"
+    [minWidth]="500">
     <p-header class="title">
       <label>{{"general.ventana.cgae" | translate}} -{{"censo.consultaHistorico.cabecera" | translate}}</label>
     </p-header>

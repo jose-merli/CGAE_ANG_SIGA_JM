@@ -66,6 +66,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   tooltipFechaMod: any;
   poblacionBuscada: any;
   permisos: boolean = true; //true
+
+  permisoTarjeta : string;
+
   constructor(
     private location: Location,
     private sigaServices: SigaServices,
@@ -231,6 +234,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     this.checkBody = JSON.parse(JSON.stringify(this.body));
     this.checkBody.idPais = "191";
     this.progressSpinner = false;
+
+    this.permisoTarjeta = JSON.parse(sessionStorage.getItem("permisoTarjeta"));
+    sessionStorage.removeItem("permisoTarjeta");
   }
 
   ngAfterViewChecked() {
@@ -727,8 +733,12 @@ para poder filtrar el dato con o sin estos caracteres*/
         data => {
           this.progressSpinner = false;
           this.body = JSON.parse(data["body"]);
-          this.backTo();
+          let err = JSON.parse(data["body"]);
           this.displayAuditoria = false;
+          if (err.error.description != "") {
+            sessionStorage.setItem("solimodifMensaje", err.error.description);
+          }
+          this.backTo();
         },
         error => {
           this.bodySearch = JSON.parse(error["error"]);

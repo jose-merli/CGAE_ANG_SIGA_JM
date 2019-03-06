@@ -66,12 +66,16 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
     this.body = new ContadorItem();
     this.bodyPermanente = new ContadorItem();
     this.body = JSON.parse(sessionStorage.getItem("contadorBody"));
-    this.bodyPermanente = JSON.parse(sessionStorage.getItem("contadorBody"));
+    if (this.body.fechareconfiguracion != undefined) {
+      this.arreglarDate(this.body.fechareconfiguracion);
+    }
+    this.bodyPermanente = JSON.parse(JSON.stringify(this.body));
     this.bodyToModificable();
   }
   checkAcceso() {
+    let proceso = sessionStorage.getItem("permisoContadores");
     this.controlAcceso = new ControlAccesoDto();
-    this.controlAcceso.idProceso = "112";
+    this.controlAcceso.idProceso = proceso;
     this.sigaServices.post("acces_control", this.controlAcceso).subscribe(
       data => {
         this.permisos = JSON.parse(data.body);
@@ -105,6 +109,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   }
 
   checkEditar() {
+    this.body.fechareconfiguracion = this.arreglarDate(this.fechareconfiguracion);
     this.comparacion =
       JSON.stringify(this.bodyPermanente) == JSON.stringify(this.body);
     if (this.editar == true && !this.comparacion) {
@@ -120,6 +125,9 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   }
 
   bodyToModificable() {
+    if (this.body.fechareconfiguracion != undefined) {
+      this.arreglarDate(this.body.fechareconfiguracion);
+    }
     this.fechareconfiguracion = this.body.fechareconfiguracion;
     if (this.body.modificablecontador == "1") {
       this.checkmodificable = true;
@@ -129,8 +137,8 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   }
 
   //Arreglo el fomato de la fecha añadiendole horas, minutos y segundos para que se guarde en el back correctamente, además lo separo para reordenar dia mes y año según debe estar escrito en el update.
-  arreglarDate() {
-    this.jsonDate = JSON.stringify(this.fechareconfiguracion);
+  arreglarDate(fecha) {
+    this.jsonDate = JSON.stringify(fecha);
     this.rawDate = this.jsonDate.slice(1, -1);
     if (this.rawDate.length < 14) {
       this.splitDate = this.rawDate.split("-");
@@ -143,10 +151,11 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
     } else {
       this.body.fechareconfiguracion = new Date(this.rawDate);
     }
+    return this.body.fechareconfiguracion;
   }
 
   modificableToBody() {
-    this.arreglarDate();
+    this.arreglarDate(this.fechareconfiguracion);
     if (this.checkmodificable == true) {
       this.body.modificablecontador = "1";
     } else {
@@ -254,5 +263,9 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  fillFechaReconfiguracion(event) {
+    this.fechareconfiguracion = event;
   }
 }

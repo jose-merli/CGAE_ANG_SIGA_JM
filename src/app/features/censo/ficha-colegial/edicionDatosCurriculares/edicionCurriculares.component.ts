@@ -78,7 +78,7 @@ export class EdicionCurricularesComponent implements OnInit {
     private sigaServices: SigaServices,
     private router: Router,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   ngOnInit() {
     // this.getLetrado();
@@ -233,7 +233,7 @@ export class EdicionCurricularesComponent implements OnInit {
           this.progressSpinner = false;
           this.showFail();
         },
-        () => {}
+        () => { }
       );
   }
 
@@ -334,6 +334,10 @@ export class EdicionCurricularesComponent implements OnInit {
             this.bodyInicial = JSON.parse(JSON.stringify(this.body));
             this.activateGuardar();
             this.showSuccess(); //Debe mostrar "solicitud realizada correctamente"
+            let err = JSON.parse(data["body"]);
+            if (err.error.description != "") {
+              sessionStorage.setItem("solimodifMensaje", err.error.description);
+            }
             this.backTo();
           },
           err => {
@@ -341,7 +345,7 @@ export class EdicionCurricularesComponent implements OnInit {
             this.progressSpinner = false;
             this.showFail();
           },
-          () => {}
+          () => { }
         );
     } else {
       this.sigaServices
@@ -356,6 +360,10 @@ export class EdicionCurricularesComponent implements OnInit {
             this.bodyInicial = JSON.parse(JSON.stringify(this.body));
             this.activateGuardar();
             this.showSuccess(); //Debe mostrar "solicitud realizada correctamente"
+            let err = JSON.parse(data["body"]);
+            if (err.error.description != "") {
+              sessionStorage.setItem("solimodifMensaje", err.error.description);
+            }
             this.backTo();
           },
           err => {
@@ -363,7 +371,7 @@ export class EdicionCurricularesComponent implements OnInit {
             this.progressSpinner = false;
             this.showFail();
           },
-          () => {}
+          () => { }
         );
     }
   }
@@ -397,7 +405,7 @@ export class EdicionCurricularesComponent implements OnInit {
             this.progressSpinner = false;
             this.showFail();
           },
-          () => {}
+          () => { }
         );
     } else {
       this.sigaServices
@@ -419,7 +427,7 @@ export class EdicionCurricularesComponent implements OnInit {
             this.progressSpinner = false;
             this.showFail();
           },
-          () => {}
+          () => { }
         );
     }
   }
@@ -553,8 +561,8 @@ export class EdicionCurricularesComponent implements OnInit {
           this.tipoCurricularCombo = n.combooItems;
           this.arregloTildesCombo(this.tipoCurricularCombo);
         },
-        error => {},
-        () => {}
+        error => { },
+        () => { }
       );
   }
 
@@ -570,8 +578,8 @@ export class EdicionCurricularesComponent implements OnInit {
           this.subtipoCurricularCombo = n.combooItems;
           this.arregloTildesCombo(this.subtipoCurricularCombo);
         },
-        error => {},
-        () => {}
+        error => { },
+        () => { }
       );
   }
 
@@ -635,5 +643,17 @@ export class EdicionCurricularesComponent implements OnInit {
         }
       }
     });
+  }
+
+  fillFechaDesde(event) {
+    this.body.fechaDesde = event;
+  }
+
+  fillFechaHasta(event) {
+    this.body.fechaHasta = event;
+  }
+
+  fillFechaMovimiento(event) {
+    this.body.fechaMovimiento = event;
   }
 }

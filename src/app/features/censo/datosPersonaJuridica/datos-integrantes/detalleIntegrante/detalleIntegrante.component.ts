@@ -94,16 +94,16 @@ export class DetalleIntegranteComponent implements OnInit {
     private sigaServices: SigaServices,
     private router: Router,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (sessionStorage.getItem("historicoInt") != null) {
       this.historico = true;
     }
 
-    if(sessionStorage.getItem("disabledAction") == "true"){
+    if (sessionStorage.getItem("disabledAction") == "true") {
       this.disabledAction = true;
-    }else{
+    } else {
       this.disabledAction = false;
     }
 
@@ -591,7 +591,7 @@ export class DetalleIntegranteComponent implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {}
+        () => { }
       );
   }
 
@@ -1081,5 +1081,21 @@ export class DetalleIntegranteComponent implements OnInit {
   onChange(event) {
     console.log("fo", event.replace(".", ","));
     this.body.capitalSocial = event.replace(",", ".");
+  }
+
+  fillFechaCarga(event) {
+    this.fechaCarga = event;
+  }
+
+  detectFechaCargaInput(event) {
+    this.fechaCarga = event;
+  }
+
+  fillFechaBajaCargo(event) {
+    this.fechaBajaCargo = event;
+  }
+
+  detectFechaBajaCargoInput(event) {
+    this.fechaBajaCargo = event;
   }
 }

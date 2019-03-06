@@ -41,6 +41,8 @@ import { ConfirmDialogComponent } from './commons/dialog/dialog.component';
 import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { TreeModule } from 'primeng/tree';
+import { FechaComponent } from './commons/fecha/fecha.component'
+
 //PRIMENG
 
 import { DropdownModule } from "primeng/dropdown";
@@ -292,6 +294,7 @@ import { ExpedientesComponent } from './features/censo/expedientesCenso/expedien
 import { RegtelComponent } from './features/censo/regtel/regtel.component';
 import { TurnoOficioComponent } from './features/censo/turnoOficioCenso/turnoOficio.component';
 import { BusquedaCensoGeneralComponent } from './features/censo/busqueda-censo-general/busqueda-censo-general.component';
+import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component';
 
 registerLocaleData(es);
 
@@ -327,8 +330,8 @@ import { FichaRegistroEnvioMasivoComponent } from './features/informes-comunicac
 import { ConfiguracionEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/configuracion-envio-masivo/configuracion-envio-masivo.component'
 import { ProgramacionEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/programacion-envio-masivo/programacion-envio-masivo.component'
 import { DocumentosEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/documentos-envio-masivo/documentos-envio-masivo.component'
-import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/destinatarios-envio-masivo/destinatarios-envio-masivo.component'
-import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component'
+import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/destinatarios-envio-masivo/destinatarios-envio-masivo.component';
+
 
 @NgModule({
 	declarations: [
@@ -621,7 +624,8 @@ import { DialogoComunicacionesComponent } from './features/informes-comunicacion
 		ExpedientesComponent,
 		RegtelComponent,
 		TurnoOficioComponent,
-		BusquedaCensoGeneralComponent
+		BusquedaCensoGeneralComponent,
+		FechaComponent
 	],
 	imports: [
 		BrowserModule,

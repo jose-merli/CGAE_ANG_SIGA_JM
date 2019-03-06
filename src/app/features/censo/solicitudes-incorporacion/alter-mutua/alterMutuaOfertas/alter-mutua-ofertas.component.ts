@@ -123,7 +123,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
     private location: Location,
     private domSanitizer: DomSanitizer,
     private confirmationService: ConfirmationService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.progressSpinner = true;
@@ -807,5 +807,17 @@ export class AlterMutuaOfertasComponent implements OnInit {
       this.herederos = false;
       this.datosB = [];
     }
+  }
+
+  fillFechaNacimientoAsegurado(event) {
+    this.asegurado.fechaNacimiento = event;
+  }
+
+  fillFechaNacimientoFamiliar(event) {
+    this.datosFamiliar.fechaNacimiento = event;
+  }
+
+  fillFechaNacimientoHeredero(event) {
+    this.datosHeredero.fechaNacimiento = event;
   }
 }
