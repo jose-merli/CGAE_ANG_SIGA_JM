@@ -55,6 +55,7 @@ import { DocushareItem } from "../../../models/DocushareItem";
 import { FichaDatosCurricularesObject } from "../../../models/FichaDatosCurricularesObject";
 import { DatosSolicitudMutualidadItem } from "../../../models/DatosSolicitudMutualidadItem";
 import * as moment from 'moment';
+import { findIndex } from 'rxjs/operators';
 
 @Component({
   selector: "app-ficha-colegial",
@@ -212,6 +213,19 @@ export class FichaColegialComponent implements OnInit {
   messageRegtel: String;
   datosCurricularesRemove: FichaDatosCurricularesObject = new FichaDatosCurricularesObject();
 
+  valorResidencia: string = "1";
+  valorDespacho: string = "2";
+  valorCensoWeb: string = "3";
+  valorPublica: string = "4";
+  valorGuiaJudicial: string = "5";
+  valorGuardia: string = "6";
+  valorRevista: string = "7";
+  valorFacturacion: string = "8";
+  valorTraspaso: string = "9";
+  valorPreferenteEmail: string = "10";
+  valorPreferenteCorreo: string = "11";
+  valorPreferenteSMS: string = "12";
+
   @ViewChild("autocompleteTopics")
   autocompleteTopics: AutoComplete;
   @ViewChild("tableCertificados")
@@ -274,6 +288,8 @@ export class FichaColegialComponent implements OnInit {
   backgroundColor;
 
   yearRange: string;
+
+  isColegiadoEjerciente: boolean = false;
 
   @ViewChild("auto")
   autoComplete: AutoComplete;
@@ -375,6 +391,8 @@ export class FichaColegialComponent implements OnInit {
     this.getYearRange();
     this.getLenguage();
     this.checkAccesos();
+    sessionStorage.removeItem("direcciones");
+    sessionStorage.removeItem("situacionColegialesBody");
 
     if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.disabledNif = true;
@@ -440,6 +458,14 @@ export class FichaColegialComponent implements OnInit {
         this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
       } else {
         this.esColegiado = true;
+      }
+
+      if (this.esColegiado) {
+        if (this.colegialesBody.situacion == "20") {
+          this.isColegiadoEjerciente = true;
+        } else {
+          this.isColegiadoEjerciente = false;
+        }
       }
 
       this.generalBody.colegiado = this.esColegiado;
@@ -2783,33 +2809,104 @@ export class FichaColegialComponent implements OnInit {
     let deleteDirecciones = new DatosDireccionesObject();
     deleteDirecciones.datosDireccionesItem = selectedItem;
     let datosDelete = [];
-    selectedItem.forEach((value: DatosDireccionesItem, key: number) => {
-      value.idPersona = this.idPersona;
+    // selectedItem.forEach((value: DatosDireccionesItem, key: number) => {
+    //   value.idPersona = this.idPersona;
+    //   datosDelete.push(value);
+    // if (value.idTipoDireccion.includes("2")) {
+    //   if (JSON.parse(sessionStorage.getItem("numDespacho")) > 1) {
+    //     if (!(value.idTipoDireccion.includes("3") || value.idTipoDireccion.includes("9") || value.idTipoDireccion.includes("8") || value.idTipoDireccion.includes("6"))) {
+    //       datosDelete.push(value);
+    //     }
+    //   }
+    // } else {
+    //   if (!(value.idTipoDireccion.includes("3") || value.idTipoDireccion.includes("9") || value.idTipoDireccion.includes("8") || value.idTipoDireccion.includes("6"))) {
+    //     datosDelete.push(value);
+    //   }
+    // }
 
-      if (value.idTipoDireccion.includes("2")) {
-        if (JSON.parse(sessionStorage.getItem("numDespacho")) > 1) {
-          if (!(value.idTipoDireccion.includes("3") || value.idTipoDireccion.includes("9") || value.idTipoDireccion.includes("8") || value.idTipoDireccion.includes("6"))) {
-            datosDelete.push(value);
-          }
-        }
-      } else {
-        if (!(value.idTipoDireccion.includes("3") || value.idTipoDireccion.includes("9") || value.idTipoDireccion.includes("8") || value.idTipoDireccion.includes("6"))) {
-          datosDelete.push(value);
-        }
-      }
+    // });
 
-    });
-
-    this.borrarDireccion(datosDelete);
+    this.borrarDireccion(selectedItem);
 
 
   }
 
   borrarDireccion(datosDelete) {
+
+    if (this.esColegiado) {
+      let dirDelete = JSON.parse(JSON.stringify(datosDelete));
+
+      for (const key in datosDelete) {
+
+        let flag = false;
+        datosDelete[key].idTipoDireccion.forEach(element => {
+
+          if (!flag) {
+
+            if (element == this.valorCensoWeb
+              || element == this.valorTraspaso
+              || element == this.valorFacturacion
+              || element == this.valorGuardia
+              || element == this.valorGuiaJudicial
+              || element == this.valorPreferenteCorreo
+              || element == this.valorPreferenteEmail
+              || element == this.valorPreferenteSMS) {
+
+              dirDelete.splice(key, 1);
+              flag = true;
+            }
+
+            if (this.isColegiadoEjerciente) {
+              let cont = 0;
+
+              if (element == this.valorDespacho) {
+
+                this.datosDirecciones.forEach(dir => {
+                  let idFindDespacho = dir.idTipoDireccion.findIndex(x => x == element);
+
+                  if (idFindDespacho != -1) {
+                    cont = cont + 1;
+                  }
+
+                });
+
+                if (cont == 1) {
+                  dirDelete.splice(key, 1);
+                  flag = true;
+                }
+
+              }
+
+            }
+          }
+        });
+      }
+
+      if (dirDelete.length != datosDelete.length && dirDelete.length > 0) {
+        datosDelete = dirDelete;
+        this.serviceDeleteDirection(datosDelete, false);
+
+      } else if (dirDelete.length == 0) {
+        this.showInfo("No se puede borrar la dirección porque tiene tipos de dirección obligatorios");
+      } else {
+        this.serviceDeleteDirection(datosDelete, true);
+
+      }
+    } else {
+      this.serviceDeleteDirection(datosDelete, true);
+    }
+
+  }
+
+  serviceDeleteDirection(datosDelete, all) {
     this.sigaServices.post("direcciones_remove", datosDelete).subscribe(
       data => {
         this.progressSpinner = false;
         this.showSuccess();
+
+        if (!all) {
+          this.showInfo("No se ha podido borrar todas las direcciones seleccionadas porque tienen tipos de dirección obligatorios");
+        }
       },
       err => {
         this.progressSpinner = false;
@@ -2893,6 +2990,17 @@ export class FichaColegialComponent implements OnInit {
       JSON.stringify(this.generalBody.idPersona)
     );
     sessionStorage.setItem("editarDireccion", "false");
+    sessionStorage.setItem(
+      "direcciones",
+      JSON.stringify(this.datosDirecciones)
+    );
+
+    if (this.colegialesBody != undefined) {
+      sessionStorage.setItem(
+        "situacionColegialesBody",
+        JSON.stringify(this.colegialesBody.situacion)
+      );
+    }
     // CAMBIO INCIDENCIA DIRECCIONES
     //sessionStorage.setItem("numDirecciones", JSON.stringify(this.datosDirecciones.length));
     this.router.navigate(["/consultarDatosDirecciones"]);
@@ -2923,8 +3031,19 @@ export class FichaColegialComponent implements OnInit {
         } else {
           sessionStorage.setItem("editar", "false");
         }
-
+        sessionStorage.setItem(
+          "direcciones",
+          JSON.stringify(this.datosDirecciones)
+        );
         sessionStorage.setItem("permisoTarjeta", this.tarjetaDirecciones);
+
+        if (this.colegialesBody != undefined) {
+          sessionStorage.setItem(
+            "situacionColegialesBody",
+            JSON.stringify(this.colegialesBody.situacion)
+          );
+        }
+
         this.router.navigate(["/consultarDatosDirecciones"]);
       } else {
         this.numSelectedDirecciones = this.selectedDatosDirecciones.length;

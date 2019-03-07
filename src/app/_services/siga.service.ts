@@ -150,6 +150,7 @@ export class SigaServices {
     direcciones_search: "busquedaPerJuridica/datosDireccionesSearch",
     direcciones_update: "tarjetaDirecciones/update",
     direcciones_insert: "tarjetaDirecciones/create",
+    direcciones_duplicate: "tarjetaDirecciones/duplicate",
     direcciones_remove: "tarjetaDirecciones/delete",
     direcciones_codigoPostal: "",
     direcciones_comboPoblacion: "tarjetaDirecciones/poblacion",
@@ -892,11 +893,11 @@ export class SigaServices {
     this.menuToggled.next();
   }
 
-  notifyRefreshConsulta(){
+  notifyRefreshConsulta() {
     this.consultasRefresh.next();
   }
 
-  notifyRefreshEditar(){
+  notifyRefreshEditar() {
     this.deshabilitarEditar.next();
   }
 
