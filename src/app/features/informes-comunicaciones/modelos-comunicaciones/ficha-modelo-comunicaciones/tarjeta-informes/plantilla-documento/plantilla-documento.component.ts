@@ -16,6 +16,8 @@ import { Location } from "@angular/common";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../../commons/translate/translation.service";
 import { MenuItem } from "primeng/api";
+import { Router } from "@angular/router";
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: "app-plantilla-documento",
@@ -76,6 +78,8 @@ export class PlantillaDocumentoComponent implements OnInit {
   selectedSufijosInicial: any = [];
   docsInicial: any = [];
   formatoAccept: string;
+  institucionActual: number;
+  consultasGuardadas: boolean = true;
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -88,10 +92,12 @@ export class PlantillaDocumentoComponent implements OnInit {
     private location: Location,
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private router: Router
   ) { }
 
   ngOnInit() {
+    this.getInstitucionActual();
     this.textFilter = "Elegir";
     this.textSelected = "{0} ficheros seleccionadas";
     this.firstDocs = 0;
@@ -219,10 +225,10 @@ export class PlantillaDocumentoComponent implements OnInit {
     }
   }
 
-  onSelectConsulta(dato) {
+  onSelectConsulta(event, dato) {
     console.log(dato);
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
+    if (!this.selectMultiple && event.originalEvent.target != null && event.originalEvent.target.className.indexOf("dropdown") == -1){
+      this.navigateTo(dato);
     } else if (this.selectMultiple && dato[0].idObjetivo != "4") {
       this.eliminarDisabled = true;
     } else if (
@@ -698,6 +704,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         },
         () => {
           this.getResultados();
+          this.consultasGuardadas = true;
         }
       );
   }
@@ -786,6 +793,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       this.getInstitucion(id, comboConsultas);
       //this.getFinalidad(id);
     }
+    this.consultasGuardadas = false;
   }
 
   onShowDatosGenerales() {
@@ -793,7 +801,6 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   onShowConsultas() {
-    debugger;
     if (sessionStorage.getItem("crearNuevaPlantillaDocumento") == null) {
       this.showConsultas = !this.showConsultas;
     }
@@ -1001,5 +1008,120 @@ export class PlantillaDocumentoComponent implements OnInit {
       summary: summary,
       detail: msg
     });
+  }
+
+  navigateTo(dato){
+    if(this.consultasGuardadas){
+      this.confirmarNavegar(dato);
+    }else{
+      this.confirmationService.confirm({
+        // message: this.translateService.instant("messages.deleteConfirmation"),
+        message:
+          "Si continúa perderá los datos no guardados. ¿Desea continuar?",
+        icon: "fa fa-trash-alt",
+        accept: () => {
+          this.confirmarNavegar(dato);
+        },
+        reject: () => {
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "info",
+              detail: this.translateService.instant(
+                "general.message.accion.cancelada"
+              )
+            }
+          ];
+        }
+      });
+    }    
+  }
+
+  confirmarNavegar(dato) {
+		let idConsulta = dato[0].idConsulta;
+		console.log(dato);
+		if (!this.selectMultiple && idConsulta) {
+      if(!dato[0].sentencia || dato[0].sentencia == null || dato[0].sentencia == ""){
+        // Obtenemos la consulta para ir a ella
+        this.getConsulta(dato[0]);
+      }else{
+        if (
+          dato[0].generica == "No" ||
+          (this.institucionActual == 2000 && dato[0].generica == "Si")
+        ) {
+          sessionStorage.setItem("consultaEditable", "S");
+        } else {
+          sessionStorage.setItem("consultaEditable", "N");
+        }
+        sessionStorage.setItem("consultasSearch", JSON.stringify(dato[0]));
+        this.router.navigate(["/fichaConsulta"]);
+      }		
+		}
+		this.numSelected = this.selectedDatos.length;
+  }
+
+  getConsulta(consulta){
+    this.progressSpinner = true;
+    let objConsulta = {
+      idConsulta : consulta.idConsulta,
+      idInstitucion : consulta.idInstitucion
+    }
+    this.sigaServices
+      .post("plantillasDoc_consulta", objConsulta)
+      .subscribe(
+        data => {
+          let consultaNavegar = JSON.parse(data["body"]).consultaItem[0];
+
+          if (consultaNavegar.generica == "No" || (this.institucionActual == 2000 && consultaNavegar.generica == "Si")) {
+            sessionStorage.setItem("consultaEditable", "S");
+          } else {
+            sessionStorage.setItem("consultaEditable", "N");
+          }
+          sessionStorage.setItem("consultasSearch", JSON.stringify(consultaNavegar));
+          this.router.navigate(["/fichaConsulta"]);
+        },
+        err => {
+          this.showFail("Error al ir a la consulta");
+          console.log(err);
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+  
+  getInstitucionActual() {
+		this.sigaServices.get("institucionActual").subscribe(n => {
+			this.institucionActual = n.value;
+		});
+  }
+  
+  downloadDocumento(dato) {
+    let objDownload = {
+      idPlantillaDocumento: dato[0].idPlantillaDocumento
+    };
+   this.progressSpinner = true;
+    this.sigaServices
+      .postDownloadFiles("plantillasDoc_descargarPlantilla", objDownload)
+      .subscribe(data => {
+        const blob = new Blob([data], { type: "application/octet-stream" });
+        if (blob.size == 0) {
+          this.showFail(
+            this.translateService.instant(
+              "messages.general.error.ficheroNoExiste"
+            )
+          );
+        } else {
+          saveAs(data, dato[0].nombreDocumento);
+        }
+        this.selectedDatos = [];
+      },
+      err => {
+        console.log(err);
+        this.showFail(this.translateService.instant("messages.general.error.ficheroNoExiste")
+        );
+      }, () =>{
+        this.progressSpinner=false
+      });
   }
 }

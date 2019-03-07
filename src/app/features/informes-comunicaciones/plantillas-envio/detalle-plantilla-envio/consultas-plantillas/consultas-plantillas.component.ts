@@ -71,6 +71,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 	ngOnInit() {
 		// this.getDatos();
 		//sessionStorage.removeItem('consultasSearch');
+		this.getInstitucion();
 		this.textFilter = "Elegir";
 
 		this.selectedItem = 10;

@@ -642,6 +642,7 @@ export class SigaServices {
     plantillasDoc_consultas_guardar: "plantillasDoc/consultas/guardar",
     plantillasDoc_consultas_borrar: "plantillasDoc/consultas/borrar",
     plantillasDoc_consultas: "plantillasDoc/consultas",
+    plantillasDoc_consulta: "plantillasDoc/consulta",
     plantillasDoc_consultas_historico: "plantillasDoc/consultas/historico",
     plantillasDoc_plantillas: "plantillasDoc/plantillas",
     plantillasDoc_guardar: "plantillasDoc/guardar",
@@ -649,6 +650,7 @@ export class SigaServices {
     plantillasDoc_insertarPlantilla: "plantillasDoc/insertarPlantilla",
     plantillasDoc_subirPlantilla: "plantillasDoc/subirPlantilla",
     plantillasDoc_plantillas_borrar: "plantillasDoc/borrar",
+    plantillasDoc_descargarPlantilla: "plantillasDoc/descargarPlantilla",
 
     //Diálogo comunicación
     dialogo_claseComunicaciones: 'dialogoComunicacion/clasesComunicacion',
