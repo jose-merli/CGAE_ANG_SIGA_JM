@@ -311,6 +311,13 @@ para poder filtrar el dato con o sin estos caracteres*/
     sessionStorage.removeItem("first");
     sessionStorage.setItem("first", JSON.stringify(this.table.first));
     sessionStorage.setItem("editedUser", JSON.stringify(this.selectedDatos));
+    if (this.idModulo == "0" || this.idModulo == "") {
+      sessionStorage.setItem("permisoContadores", "320");
+    } else if (this.idModulo == "3") {
+      sessionStorage.setItem("permisoContadores", "112");
+    } else if (this.idModulo == "11") {
+      sessionStorage.setItem("permisoContadores", "20C");
+    }
     this.router.navigate(["/gestionContadores"]);
   }
 
