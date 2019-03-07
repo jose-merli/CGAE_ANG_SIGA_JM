@@ -127,6 +127,8 @@
       </p-table>
       <div *ngIf="selectedDatos && selectedDatos != ''" class="card-footer">
         <div class="text-right main-button">
+          <button *ngIf="selectedDatos.length == 1 && estado && (estado == 3 || estado == 6)" (click)="duplicar(selectedDatos)" pButton type="button" icon="fas fa-share-square"
+          iconPos="left" label="{{ 'general.boton.reenviar' | translate}}"></button>
           <button *ngIf="estado && estado == 4" (click)="onShowProgamar(selectedDatos)" pButton type="button"
             icon="fas fa-cog" iconPos="left" label="{{ 'general.boton.programar' | translate}}"></button>
           <button *ngIf="estado && estado == 4" (click)="cancelar(selectedDatos)" pButton type="button"

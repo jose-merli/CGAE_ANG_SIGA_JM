@@ -152,28 +152,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   onChangeTipoEnvio() {
     this.getPlantillas();
-  }
-
-
-  enviar() {
-    let envios = [];
-    let objEnvio = {
-      idEnvio: this.body.idEnvio
-    };
-    envios.push(objEnvio);
-
-    this.sigaServices.post("enviosMasivos_enviar", envios).subscribe(
-      data => {
-        this.showSuccess('Se ha lanzado el envio correctamente');
-      },
-      err => {
-        this.showFail('Error al procesar el envio');
-        console.log(err);
-      },
-      () => {
-      }
-    );
-  }
+  } 
 
   getPlantillas() {
     this.sigaServices.post("enviosMasivos_plantillas", this.body.idTipoEnvios).subscribe(

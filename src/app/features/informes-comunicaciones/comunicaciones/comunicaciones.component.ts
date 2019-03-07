@@ -395,4 +395,35 @@ función para que no cargue primero las etiquetas de los idiomas*/
   abreCierraFicha() {
     this.fichaBusqueda = !this.fichaBusqueda;
   }
+
+  duplicar(dato) {
+    let envioDuplicar = dato[0];
+
+    let datoDuplicar = {
+      idEnvio: envioDuplicar.idEnvio,
+      idTipoEnvios: envioDuplicar.idTipoEnvios,
+      idPlantillaEnvios: envioDuplicar.idPlantillaEnvios
+    }
+
+    this.sigaServices.post("enviosMasivos_duplicar", datoDuplicar).subscribe(
+      data => {
+        this.showSuccess(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.correctDuplicado"));
+        
+        let datoDuplicado = JSON.parse(data["body"]).enviosMasivosItem;
+        datoDuplicado.forEach(element => {
+          if (element.fechaProgramada != null) {
+            element.fechaProgramada = new Date(element.fechaProgramada);
+          }
+          element.fechaCreacion = new Date(element.fechaCreacion);
+        });
+        sessionStorage.setItem("ComunicacionDuplicada", "true");
+        sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(datoDuplicado[0]));
+        this.router.navigate(["/fichaRegistroEnvioMasivo"]);       
+      },
+      err => {
+        this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorDuplicarEnvio"));
+        console.log(err);
+      }
+    );
+  }
 }
