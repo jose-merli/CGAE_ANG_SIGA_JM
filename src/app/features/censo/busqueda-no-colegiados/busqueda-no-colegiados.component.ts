@@ -979,3 +979,4 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   }
 
+}

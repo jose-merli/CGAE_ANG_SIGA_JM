@@ -3,7 +3,8 @@ import {
   OnInit,
   ViewChild,
   ChangeDetectorRef,
-  AfterViewInit
+  AfterViewInit,
+	ViewEncapsulation
 } from "@angular/core";
 import { AutoComplete, Dialog, Calendar } from "primeng/primeng";
 import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../utils/calendar';
@@ -59,7 +60,8 @@ import * as moment from 'moment';
 @Component({
   selector: "app-ficha-colegial",
   templateUrl: "./ficha-colegial.component.html",
-  styleUrls: ["./ficha-colegial.component.scss"]
+  styleUrls: ["./ficha-colegial.component.scss"],
+	encapsulation: ViewEncapsulation.None
 })
 export class FichaColegialComponent implements OnInit {
   //fichasPosibles: any[];

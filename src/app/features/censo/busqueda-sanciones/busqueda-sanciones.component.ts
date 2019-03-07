@@ -509,3 +509,4 @@ export class BusquedaSancionesComponent implements OnInit {
     this.body.fechaHastaDate = event;
   }
 
+}

@@ -201,7 +201,7 @@
               </div>
             -->
 
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-6 col-md-6 ">
               <label>{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}
               </label>
               <p-calendar #calendarFechaNacimiento [monthNavigator]="true" [yearNavigator]="true" (onSelect)="onChangeCalendar($event); activacionGuardarGenerales()"
@@ -209,7 +209,7 @@
                 (onBlur)="blurFechaNacimiento($event)" [(disabled)]="isLetrado || disabledAction" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
                 [utc]="false" showIcon="true">
                 <p-footer>
-                  <div class="main-button d-flex justify-content-end">
+                  <div class="main-button d-flex justify-content-end arreglo-fecha">
                     <button (click)="fechaHoyFechaNacimiento()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
                     <button (click)="borrarFechaNacimiento()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
                   </div>
@@ -491,7 +491,7 @@
                 (onInput)="inputFechaIncorporacion($event)" (onBlur)="blurFechaIncorporacion($event)" [(ngModel)]="colegialesBody.incorporacion"
                 dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
                 <p-footer>
-                  <div class="main-button d-flex justify-content-end">
+                  <div class="main-button d-flex justify-content-end arreglo-fecha">
                     <button (click)="fechaHoyFechaIncorporacion()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
                     <button (click)="borrarFechaIncorporacion()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
                   </div>
@@ -505,7 +505,7 @@
                 (onBlur)="blurFechaPresentacion($event)" [(disabled)]="isLetrado || disabledAction" [(ngModel)]="colegialesBody.fechapresentacion"
                 dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
                 <p-footer>
-                  <div class="main-button d-flex justify-content-end">
+                  <div class="main-button d-flex justify-content-end arreglo-fecha">
                     <button (click)="fechaHoyFechaPresentacion()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
                     <button (click)="borrarFechaPresentacion()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
                   </div>
@@ -518,7 +518,7 @@
                 (onSelect)="activacionGuardarColegiales(); fechaJuraSelected=true" (onInput)="inputFechaJura($event)" (onBlur)="blurFechaJura($event)"
                 [(ngModel)]="colegialesBody.fechaJura" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
                 <p-footer>
-                  <div class="main-button d-flex justify-content-end">
+                  <div class="main-button d-flex justify-content-end arreglo-fecha">
                     <button (click)="fechaHoyFechaJura()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
                     <button (click)="borrarFechaJura()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
                   </div>
@@ -533,7 +533,7 @@
                 (onInput)="inputFechaTitulacion($event)" (onBlur)="blurFechaTitulacion($event)" [(ngModel)]="colegialesBody.fechaTitulacion"
                 dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
                 <p-footer>
-                  <div class="main-button d-flex justify-content-end">
+                  <div class="main-button d-flex justify-content-end arreglo-fecha">
                     <button (click)="fechaHoyFechaTitulacion()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
                     <button (click)="borrarFechaTitulacion()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
                   </div>
