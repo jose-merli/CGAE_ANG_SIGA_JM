@@ -2888,6 +2888,11 @@ export class FichaColegialComponent implements OnInit {
 
       } else if (dirDelete.length == 0) {
         this.showInfo("No se puede borrar la dirección porque tiene tipos de dirección obligatorios");
+
+        this.selectMultipleDirecciones = false;
+        this.selectAllDirecciones = false;
+        this.numSelectedDirecciones = 0;
+
       } else {
         this.serviceDeleteDirection(datosDelete, true);
 
@@ -2906,6 +2911,7 @@ export class FichaColegialComponent implements OnInit {
 
         if (!all) {
           this.showInfo("No se ha podido borrar todas las direcciones seleccionadas porque tienen tipos de dirección obligatorios");
+
         }
       },
       err => {

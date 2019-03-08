@@ -45,7 +45,7 @@ export class AgendaComponent implements OnInit {
   checked: boolean = true;
 
   fechaActual: Date = new Date();
-  constructor(private router: Router, private sigaServices: SigaServices) {}
+  constructor(private router: Router, private sigaServices: SigaServices) { }
 
   ngOnInit() {
     this.listLecturaSelect = [];
@@ -199,6 +199,10 @@ export class AgendaComponent implements OnInit {
       event.calEvent.valoresRepeticionString
     );
     evento.tipoAcceso = event.calEvent.tipoAcceso;
+    evento.estadoEvento = event.calEvent.estadoEvento;
+    evento.tipoCalendario = event.calEvent.tipoCalendario;
+    evento.tipoEvento = event.calEvent.tipoEvento;
+    evento.fechaInicioString = event.calEvent.fechaInicioString;
 
     if (event.calEvent.realEnd) {
       evento.end = event.calEvent.realEnd;

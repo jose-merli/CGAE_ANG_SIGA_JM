@@ -12,8 +12,11 @@ export class EventoItem {
   descripcion: string;
   recursos: string;
   idTipoCalendario: string;
+  tipoCalendario: string;
   idEstadoEvento: string;
+  estado: string;
   idTipoEvento: string;
+  tipoEvento: string;
   fechaBaja: Date;
   usuModificacion: string;
   fechaModificacion: Date;
@@ -29,10 +32,11 @@ export class EventoItem {
   idCurso: string;
 
   estadoEvento: string;
+  fechaInicioString: string;
   fechaHoraInicio: string;
   fechaHoraFin: string;
 
   formadores: string;
 
-  constructor() {}
+  constructor() { }
 }
