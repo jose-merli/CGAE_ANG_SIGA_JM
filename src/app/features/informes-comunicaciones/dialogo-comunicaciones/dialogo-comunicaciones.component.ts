@@ -49,6 +49,7 @@ export class DialogoComunicacionesComponent implements OnInit {
   progressSpinner: boolean = false;
   rutaComunicacion: String;
   fechaProgramada: Date;
+  plantillas: any[] = [];
 
   constructor(public sigaServices: SigaServices, private translateService: TranslateService, private location: Location) {
   }
@@ -61,6 +62,7 @@ export class DialogoComunicacionesComponent implements OnInit {
     this.getInstitucion();
     this.getMaxNumeroModelos();
     this.getFechaProgramada();
+    this.getPlantillas();
 
     this.valores = [];
 
@@ -388,4 +390,17 @@ export class DialogoComunicacionesComponent implements OnInit {
     sessionStorage.setItem("back","true");
     this.location.back();
   }
+
+  getPlantillas() {
+    this.sigaServices.get("modelos_detalle_plantillasComunicacion").subscribe(
+      data => {
+        this.plantillas = data.combooItems;
+        this.plantillas.unshift({ label: "Seleccionar", value: "" });
+      },
+      err => {
+        console.log(err);
+      },
+      () => {}
+    );
+  };
 }

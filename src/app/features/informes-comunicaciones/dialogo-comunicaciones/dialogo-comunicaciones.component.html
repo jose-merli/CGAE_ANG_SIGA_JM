@@ -43,7 +43,7 @@
                         <td *ngFor="let col of columns" pEditableColumn>
                             <!-- <span *ngIf="col.field == 'tipoEnvio'">{{dato[col.field]}}</span> -->
                             <p-dropdown [filter]="true" filterBy="label,labelSinTilde" *ngIf="col.field == 'plantillas'"
-                                [(ngModel)]="dato.idPlantillaEnvio" [options]="dato.plantillas" class="select-form"
+                                [(ngModel)]="dato.idPlantillaEnvio" [options]="plantillas" class="select-form"
                                 (onChange)="onChangePlantillaEnvio(dato)"></p-dropdown>
                             <span *ngIf="col.field=='nombre'">{{dato[col.field]}}</span>
                             <span *ngIf="col.field=='tipoEnvio'">{{dato[col.field]}}</span>

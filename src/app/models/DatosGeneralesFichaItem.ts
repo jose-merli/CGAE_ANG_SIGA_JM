@@ -8,5 +8,8 @@ export class DatosGeneralesFicha {
   orden: String;
   descripcion: String;
   porDefecto: String;
+  idPlantillaEnvio: String;
+  idTipoEnvio: String;
+  tipoEnvio: String;
   constructor() { }
 }

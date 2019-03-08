@@ -351,7 +351,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   habilitarBotones() {
-    if (this.institucionActual != '2000' && this.body.generica == "Si") {
+    if (this.institucionActual != '2000' && (this.body.generica == "Si" || this.body.generica == "1")) {
       this.editar = false;
     } else {
       this.editar = true;
