@@ -376,9 +376,13 @@ para poder filtrar el dato con o sin estos caracteres*/
 
           console.log("poblac1", this.comboPoblacion);
         },
-        error => { },
-        () => {
+        error => {
+          this.progressSpinner = false;
+
+        }, () => {
           // this.isDisabledPoblacion = false;
+          this.progressSpinner = false;
+
         }
       );
   }
@@ -593,16 +597,67 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else {
 
       if (this.isNoColegiado) {
-        this.serviceSaveDirection();
+        if (this.validateCamposObligatorios()) {
+          this.serviceSaveDirection();
+        }
       } else {
         if (
           this.comprobarDirecciones()
         ) {
           this.getMessageTipos();
         } else {
-          this.serviceSaveDirection();
+          if (this.validateCamposObligatorios()) {
+            this.serviceSaveDirection();
+          }
         }
       }
+    }
+  }
+
+  validateCamposObligatorios() {
+
+    let idFindTipoDirSMS = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == this.valorPreferenteSMS);
+    let idFindTipoDirEmail = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == this.valorPreferenteEmail);
+    let idFindTipoDirTel = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == this.valorGuardia);
+    let idFindTipoDirCenso = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == this.valorCensoWeb);
+    let idFindTipoDirFact = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == this.valorFacturacion);
+    let idFindTipoDirDes = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == this.valorDespacho);
+    let idFindTipoDirTras = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == this.valorTraspaso);
+    let idFindTipoDirGuia = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == this.valorGuiaJudicial);
+    let idFindTipoDirCorreo = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == this.valorPreferenteCorreo);
+
+    if (idFindTipoDirSMS != -1 && this.body.movil == undefined) {
+      this.showInfo("Para el tipo Preferente SMS/BuroSMS es necesario rellenar el campo móvil");
+      return false;
+    } else if (idFindTipoDirEmail != -1 && this.body.correoElectronico == undefined) {
+      this.showInfo("Para el tipo Preferente Email es necesario rellenar el campo correo electrónico");
+      return false;
+    } else if (idFindTipoDirTel != -1 && this.body.telefono == undefined) {
+      this.showInfo("Para el tipo Guardia es necesario rellenar el campo teléfono");
+      return false;
+    } else if (idFindTipoDirCenso != -1 || idFindTipoDirFact != -1 || idFindTipoDirDes != -1 || idFindTipoDirTras != -1 || idFindTipoDirGuia != -1 || idFindTipoDirCorreo != -1) {
+
+      if (this.body.idPais == "191" && this.body.idPais != undefined) {
+        if (this.body.domicilio == undefined || this.body.idPoblacion == undefined || this.body.codigoPostal == undefined
+          || this.body.idProvincia == undefined) {
+          this.showInfo("Para el tipo dirección asignado es necesario rellenar el domicilio completo");
+          return false;
+        } else {
+          return true;
+        }
+      } else if (this.body.idPais != "191" && this.body.idPais != undefined) {
+        if (this.body.domicilio == undefined || this.body.idPoblacion == undefined || this.body.codigoPostal == undefined) {
+          this.showInfo("Para el tipo dirección añadido es necesario rellenar el domicilio completo");
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        this.showInfo("Para el tipo dirección añadido es necesario rellenar el domicilio completo");
+        return false;
+      }
+    } else {
+      return true;
     }
   }
 
@@ -750,7 +805,10 @@ para poder filtrar el dato con o sin estos caracteres*/
         message: msg,
         icon: icon,
         accept: () => {
-          this.serviceSaveDirection();
+
+          if (this.validateCamposObligatorios()) {
+            this.serviceSaveDirection();
+          }
         },
         reject: () => {
           this.body.idTipoDireccion = JSON.parse(JSON.stringify(this.checkBody)).idTipoDireccion;
