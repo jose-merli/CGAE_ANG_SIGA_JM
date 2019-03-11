@@ -144,6 +144,12 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   comboAsistencia;
   checkAsistencias: boolean = false;
   asistenciasUpdate = [];
+  archivoDisponible: boolean = false;
+  existeArchivo: boolean = false;
+  file: File = undefined;
+
+  @ViewChild("pUploadFile")
+  pUploadFile;
 
   disabledToday: boolean = true;
 
@@ -1830,6 +1836,72 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.progressSpinner = false;
         }
       );
+  }
+
+  getFile(event: any) {
+    let fileList: FileList = event.files;
+
+    let nombreCompletoArchivo = fileList[0].name;
+    let extensionArchivo = nombreCompletoArchivo.substring(
+      nombreCompletoArchivo.lastIndexOf("."),
+      nombreCompletoArchivo.length
+    );
+
+    if (
+      extensionArchivo == null ||
+      extensionArchivo.trim() == "" ||
+      !/\.(xls)$/i.test(extensionArchivo.trim().toUpperCase())
+    ) {
+      this.file = undefined;
+      this.archivoDisponible = false;
+      this.existeArchivo = false;
+      this.showMessage(
+        "info",
+        this.translateService.instant("general.message.informacion"),
+        this.translateService.instant(
+          "formacion.mensaje.extesion.fichero.erronea"
+        )
+      );
+    } else {
+      // se almacena el archivo para habilitar boton guardar
+      this.file = fileList[0];
+      this.archivoDisponible = true;
+      this.existeArchivo = true;
+
+      this.uploadFile();
+    }
+  }
+
+  uploadFile() {
+    this.progressSpinner = true;
+
+    if (this.file != undefined) {
+      this.sigaServices
+        .postSendContentAndParameter(
+          "fichaEventos_uploadFile",
+          "?idEvento=" + this.newEvent.idEvento,
+          this.file
+        )
+        .subscribe(
+          data => {
+            this.file = null;
+            this.progressSpinner = false;
+
+            this.showSuccess();
+            this.getEntryListCourse();
+          },
+          error => {
+            console.log(error);
+            this.showMessage("error", "Error", error.error.error.description
+            );
+            this.progressSpinner = false;
+          },
+          () => {
+            this.pUploadFile.clear();
+            this.progressSpinner = false;
+          }
+        );
+    }
   }
 
   //FUNCIONES GENERALES
