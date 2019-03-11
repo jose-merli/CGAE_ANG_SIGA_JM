@@ -20,5 +20,8 @@ export class FichaColegialColegialesItem {
   estadoColegial: String;
   situacionResidente: String;
   comunitario: String;
-  constructor() { }
+  idInstitucion: String;
+  idPersona: String;
+
+  constructor() {}
 }
