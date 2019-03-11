@@ -356,6 +356,7 @@ export class SigaServices {
     fichaEventos_saveFormadorEvent: "fichaEventos/saveFormadorEvent",
     fichaEventos_updateFormadorEvent: "fichaEventos/updateFormadorEvent",
     fichaEventos_getTrainersSession: "fichaEventos/getTrainersSession",
+    fichaEventos_uploadFile: "fichaEventos/uploadFile",
 
     datosNotificaciones_getTypeNotifications:
       "datosNotificaciones/getTypeNotifications",

@@ -478,6 +478,9 @@
     </div>
     <div class="card-footer" *ngIf="esFichaActiva('asistencia')">
       <div class="text-right main-button">
+        <p-fileUpload #pUploadFile chooseLabel="{{ 'general.boton.cargar.archivo' | translate }}" name="file" mode="basic" accept=".xls"
+          multiple="multiple" (onSelect)="getFile($event)" auto="true" [disabled]="tipoAccesoLectura || blockAsistencia || isEventoCumplidoOrCancelado">
+        </p-fileUpload>
         <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate }}"
           [disabled]="tipoAccesoLectura || blockAsistencia || isEventoCumplidoOrCancelado"></button>
         <button pButton type="button" (click)="unCheckAsist()" [disabled]="selectedDatosAsistencia == '' || tipoAccesoLectura || blockAsistencia || isEventoCumplidoOrCancelado"
