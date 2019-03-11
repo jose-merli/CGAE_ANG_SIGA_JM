@@ -144,7 +144,9 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
             solicitud.idEstadoCivil = this.solicitud.idEstadoCivil;
             solicitud.naturalDe = this.solicitud.naturalDe;
             solicitud.tratamiento = this.solicitud.tratamiento;
-            solicitud.idsolicitudincorporacion = this.solicitud.idsolicitudincorporacion;
+            if (this.solicitud.idsolicitudincorporacion != undefined) {
+              solicitud.idsolicitudincorporacion = this.solicitud.idsolicitudincorporacion;
+            }
             solicitud.idpais = this.body.idPais;
             this.solicitud = solicitud;
             body.idpais = this.body.idPais;

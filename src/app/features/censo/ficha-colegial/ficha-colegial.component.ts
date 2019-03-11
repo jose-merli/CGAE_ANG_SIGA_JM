@@ -3765,10 +3765,7 @@ export class FichaColegialComponent implements OnInit {
             item => item.value === this.solicitudEditar.idTipoIdentificacion
           );
           this.solicitudEditar.tipoIdentificacion = identificacion.label;
-          sessionStorage.setItem(
-            "datosSolicitud",
-            JSON.stringify(this.solicitudEditar)
-          );
+          sessionStorage.setItem("datosSolicitud", JSON.stringify(this.solicitudEditar));
           sessionStorage.setItem("tipoPropuesta", "RETA");
           this.router.navigate(["/alterMutuaReta"]);
         },
