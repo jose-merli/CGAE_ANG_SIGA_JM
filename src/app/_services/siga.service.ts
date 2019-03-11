@@ -150,6 +150,7 @@ export class SigaServices {
     direcciones_search: "busquedaPerJuridica/datosDireccionesSearch",
     direcciones_update: "tarjetaDirecciones/update",
     direcciones_insert: "tarjetaDirecciones/create",
+    direcciones_duplicate: "tarjetaDirecciones/duplicate",
     direcciones_remove: "tarjetaDirecciones/delete",
     direcciones_codigoPostal: "",
     direcciones_comboPoblacion: "tarjetaDirecciones/poblacion",
@@ -355,6 +356,7 @@ export class SigaServices {
     fichaEventos_saveFormadorEvent: "fichaEventos/saveFormadorEvent",
     fichaEventos_updateFormadorEvent: "fichaEventos/updateFormadorEvent",
     fichaEventos_getTrainersSession: "fichaEventos/getTrainersSession",
+    fichaEventos_uploadFile: "fichaEventos/uploadFile",
 
     datosNotificaciones_getTypeNotifications:
       "datosNotificaciones/getTypeNotifications",

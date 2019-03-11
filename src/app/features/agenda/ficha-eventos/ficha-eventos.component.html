@@ -16,10 +16,30 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mt-2">
+          <div class="d-flex justify-content-start mt-2 mb-1">
             <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate}}</label>
           </div>
-          <i class="fa fa-angle-down float-right"></i>
+          <div class="d-flex justify-content-between col-lg-12 pr-0">
+            <label>{{ 'agenda.fichaEventos.datosGenerales.calendario' | translate }}:
+              <span>{{ newEvent.tipoCalendario }}</span>
+            </label>
+            <label>{{ 'agenda.fichaEventos.datosGenerales.tipoEvento' | translate }}:
+              <span>{{ newEvent.tipoEvento }}</span>
+            </label>
+            <label>{{ 'agenda.fichaEventos.datosGenerales.titulo' | translate }}:
+              <span>{{ newEvent.title }}</span>
+            </label>
+            <label>{{ 'form.busquedaCursos.literal.estado' | translate }}:
+              <span>{{ newEvent.estadoEvento }}</span>
+            </label>
+            <label>{{ 'agenda.fichaEventos.datosGenerales.fechaInicio' | translate }}:
+              <span>{{ newEvent.fechaInicioString }}</span>
+            </label>
+            <label>{{ 'agenda.fichaEventos.datosGenerales.lugar' | translate }}:
+              <span>{{ newEvent.lugar }}</span>
+            </label>
+            <i class="fa fa-angle-down float-right"></i>
+          </div>
         </div>
       </div>
       <div *ngIf="esFichaActiva('generales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -90,7 +110,7 @@
               <input type="text" class="form-control" pInputText name="lugar" [(ngModel)]="newEvent.lugar" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado">
             </div>
             <div *ngIf="selectedTipoLaboral" class="col-lg-12 col-md-12">
-              <label>Partido Judicial</label>
+              <label>{{'agenda.fichaEvento.tarjetaGenerales.partidoJudicial' | translate}}</label>
               <p-dropdown class="select-form" [options]="comboPartidoJudicial" name="estado" [(ngModel)]="newEvent.lugar" placeholder="{{'tablas.literal.seleccionar' | translate }}"
                 [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado" [showClear]="true"></p-dropdown>
             </div>
@@ -196,10 +216,25 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mt-2">
+          <div class="d-flex justify-content-start mt-2 mb-1">
             <label class="mr-auto title-ficha">{{'formacion.fichaCalendario.notificaciones.cabecera' | translate}}</label>
           </div>
-          <i class="fa fa-angle-down float-right"></i>
+          <div *ngIf="datosNotificaciones.length < 5 && datosNotificaciones.length != 0" class="d-flex justify-content-between col-lg-12 pr-0">
+            <label *ngFor="let noti of datosNotificaciones">
+              {{ 'formacion.datosNotificaciones.tipoNotificacion.cabecera' | translate }}:
+              <span>{{ noti.nombreTipoNotificacion }} </span> - {{ 'formacion.datosNotificaciones.cuando.cabecera' | translate
+              }}:
+              <span>{{ noti.descripcionCuando }}</span>
+            </label>
+            <i class="fa fa-angle-down float-right"></i>
+          </div>
+          <div *ngIf="datosNotificaciones.length >= 5" class="d-flex justify-content-between col-lg-12 pr-0">
+            <label>{{ 'agenda.fichaEvento.tarjetaNotificaciones.resumen.numNotificaciones' | translate }}:
+              <span>{{ datosNotificaciones.length }}</span>
+            </label>
+            <i class="fa fa-angle-down float-right"></i>
+          </div>
+          <i *ngIf="datosNotificaciones.length == 0" class="fa fa-angle-down float-right"></i>
         </div>
       </div>
       <div *ngIf="esFichaActiva('notify')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -310,10 +345,23 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mt-2">
+          <div class="d-flex justify-content-start mt-2 mb-1">
             <label class="mr-auto title-ficha">{{'agenda.fichaEventos.datosFormadores.cabecera' | translate}}</label>
           </div>
-          <i class="fa fa-angle-down float-right"></i>
+          <div *ngIf="results.length < 5 && results.length != 0" class="d-flex justify-content-between col-lg-12 pr-0">
+            <label *ngFor="let formador of results">
+              {{ 'administracion.parametrosGenerales.literal.nombre' | translate }}:
+              <span>{{ formador.nombreCompleto }}</span>
+            </label>
+            <i class="fa fa-angle-down float-right"></i>
+          </div>
+          <div *ngIf="results.length >= 5" class="d-flex justify-content-between col-lg-12 pr-0">
+            <label>{{ 'agenda.fichaEvento.tarjetaNotificaciones.resumen.numFormadores' | translate }}:
+              <span>{{ results.length }}</span>
+            </label>
+            <i class="fa fa-angle-down float-right"></i>
+          </div>
+          <i *ngIf="results.length == 0" class="fa fa-angle-down float-right"></i>
         </div>
       </div>
       <div *ngIf="esFichaActiva('formadores')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -372,7 +420,12 @@
           <div class="d-flex justify-content-start mt-2">
             <label class="mr-auto title-ficha">{{'agenda.fichaEventos.datosAsistencia.asistencia' | translate}}</label>
           </div>
-          <i class="fa fa-angle-down float-right"></i>
+          <div class="d-flex justify-content-between col-lg-12 pr-0">
+            <label>{{ 'agenda.fichaEvento.tarjetaNotificaciones.resumen.numAsistentes' | translate }}:
+              <span>{{ datosAsistencia.length }}</span>
+            </label>
+            <i class="fa fa-angle-down float-right"></i>
+          </div>
         </div>
       </div>
       <div *ngIf="esFichaActiva('asistencia')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -425,6 +478,9 @@
     </div>
     <div class="card-footer" *ngIf="esFichaActiva('asistencia')">
       <div class="text-right main-button">
+        <p-fileUpload #pUploadFile chooseLabel="{{ 'general.boton.cargar.archivo' | translate }}" name="file" mode="basic" accept=".xls"
+          multiple="multiple" (onSelect)="getFile($event)" auto="true" [disabled]="tipoAccesoLectura || blockAsistencia || isEventoCumplidoOrCancelado">
+        </p-fileUpload>
         <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate }}"
           [disabled]="tipoAccesoLectura || blockAsistencia || isEventoCumplidoOrCancelado"></button>
         <button pButton type="button" (click)="unCheckAsist()" [disabled]="selectedDatosAsistencia == '' || tipoAccesoLectura || blockAsistencia || isEventoCumplidoOrCancelado"
