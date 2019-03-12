@@ -152,7 +152,7 @@ export class AlterMutuaRetaComponent implements OnInit {
         tipoIdenficador = 1*/
 
       let estadoSolicitud = {
-        identificador: "40919463W",
+        identificador: this.datosSolicitud.numeroIdentificacion,
         idSolicitud: this.datosSolicitud.idSolicitud,
         duplicado: false
       };
@@ -183,31 +183,31 @@ export class AlterMutuaRetaComponent implements OnInit {
     this.colsFisicas = [
       {
         field: "idParentesco",
-        header: "Parentesco"
+        header: "informes.solicitudAsistencia.parentesco"
       },
       {
         field: "idSexo",
-        header: "Sexo"
+        header: "censo.busquedaClientesAvanzada.literal.sexo"
       },
       {
         field: "nombre",
-        header: "Nombre"
+        header: "administracion.parametrosGenerales.literal.nombre"
       },
       {
         field: "apellidos",
-        header: "Apellidos"
+        header: "gratuita.mantenimientoTablasMaestra.literal.apellidos"
       },
       {
         field: "idTipoIdentificacion",
-        header: "Tipo identificación"
+        header: "censo.SolicitudIncorporacion.literal.tipoIdentificacion"
       },
       {
         field: "nIdentificacion",
-        header: "Número identificación"
+        header: "censo.solicitudincorporacion.nIdentificacion"
       },
       {
         field: "fechaNacimiento",
-        header: "Fecha Nacimiento"
+        header: "censo.consultaDatosColegiacion.literal.fechaNac"
       }
     ];
 
@@ -638,7 +638,7 @@ export class AlterMutuaRetaComponent implements OnInit {
     if (this.datosSolicitud.tipoIdentificacion.lastIndexOf("NIF") == 0)
       this.asegurado.tipoIdentificador = 0;
     else this.asegurado.tipoIdentificador = 1;
-    this.asegurado.identificador = "40919463W";
+    // this.asegurado.identificador = "40919463W";
 
     this.datosAlter.asegurado = this.asegurado;
 
