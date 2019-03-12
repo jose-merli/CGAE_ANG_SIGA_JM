@@ -602,8 +602,8 @@
           <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
             <span *ngIf="filaEditable && datosColegiales[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span>
             <span *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) && !datosColegiales[rowIndex].habilitarObs">{{car[col.field]}}</span>
-            <input *ngIf="datosColegiales[rowIndex].nuevoRegistro" [(ngModel)]="nuevoEstadoColegial.observaciones" type="text" pInputText />
-            <input *ngIf="datosColegiales[rowIndex].habilitarObs || (datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable)" [(ngModel)]="car[col.field]" type="text" (onChange)="activacionGuardarColegiales()" pInputText />
+            <input *ngIf="datosColegiales[rowIndex].nuevoRegistro" [(ngModel)]="nuevoEstadoColegial.observaciones" type="text" (input)="isRestablecer = true" pInputText />
+            <input *ngIf="datosColegiales[rowIndex].habilitarObs || (datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable)" [(ngModel)]="car[col.field]" type="text" (input)="isRestablecer = true" pInputText />
           </ng-template>
         </p-column>
 
@@ -623,7 +623,7 @@
       <div class="text-right main-button ">
         <button [disabled]="!activarRestablecerColegiales() || !isRestablecer || disabledAction || tarjetaColegiales=='2'" (click)="restablecerColegiales()"
           pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="eliminarEstadoColegial(selectedDatos)" [disabled]="!isEliminarEstadoColegial || disabledAction || tarjetaColegiales=='2'"
+        <button (click)="confirmarEliminarEstadoColegial(selectedDatos)" [disabled]="!isEliminarEstadoColegial || disabledAction || tarjetaColegiales=='2'"
           pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
         <button (click)="guardarColegiales()" [disabled]="!activarGuardarColegiales || disabledAction || tarjetaColegiales=='2'"
           pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
