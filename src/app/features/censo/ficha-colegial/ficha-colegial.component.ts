@@ -4188,13 +4188,25 @@ export class FichaColegialComponent implements OnInit {
     this.solicitudEditar.estadoCivil = this.generalBody.idEstadoCivil;
     this.solicitudEditar.fechaNacimiento = this.generalBody.fechaNacimientoDate;
     this.solicitudEditar.tratamiento = this.tratamientoDesc;
-    sessionStorage.setItem(
-      "datosSolicitud",
-      JSON.stringify(this.solicitudEditar)
-    );
-    sessionStorage.setItem("tipoPropuesta", "Ofertas");
-    this.router.navigate(["/alterMutuaOfertas"]);
-  }
+    this.sigaServices
+      .get("solicitudIncorporacion_tipoIdentificacion")
+      .subscribe(
+        result => {
+          let tipos = result.combooItems;
+          this.progressSpinner = false;
+          let identificacion = tipos.find(
+            item => item.value === this.solicitudEditar.idTipoIdentificacion
+          );
+          this.solicitudEditar.tipoIdentificacion = identificacion.label;
+          sessionStorage.setItem("datosSolicitud", JSON.stringify(this.solicitudEditar));
+          sessionStorage.setItem("tipoPropuesta", "Ofertas");
+          this.router.navigate(["/alterMutuaOfertas"]);
+        },
+        error => {
+          console.log(error);
+        }
+      );
+      }
 
 
   irPlanUniversal() {
