@@ -40,6 +40,7 @@ export class FichaColegialGeneralesItem {
   fechaBaja: string;
   temasCombo: ComboItem[];
   temas: string[];
+  numColegiado: String;
   
   constructor() {}
 }
