@@ -2284,7 +2284,9 @@ export class FichaColegialComponent implements OnInit {
       this.colegialesBody.situacionResidente = this.nuevoEstadoColegial.situacionResidente;
       this.colegialesBody.fechaEstado = this.arreglarFecha(this.nuevoEstadoColegial.fechaEstadoStr);
       this.colegialesBody.fechaEstadoStr = JSON.stringify(this.nuevoEstadoColegial.fechaEstadoStr);
-      this.colegialesBody.estadoColegial = this.nuevoEstadoColegial.situacion;
+      this.colegialesBody.situacion = this.nuevoEstadoColegial.situacion;
+    }else if(this.filaEditable){
+      this.colegialesBody.situacion = this.datosColegiales[0].idEstado;
     }
 
     this.sigaServices
@@ -2395,6 +2397,7 @@ export class FichaColegialComponent implements OnInit {
     this.checkColegialesBody = JSON.parse(JSON.stringify(this.colegialesBody));
     this.isCrearColegial = false;
     this.filaEditable = false;
+    this.isEliminarEstadoColegial = false;
 
     this.activacionGuardarColegiales();
     this.searchColegiales();
@@ -2530,6 +2533,29 @@ export class FichaColegialComponent implements OnInit {
         selectedDatos.habilitarObs = true;
       }
     }
+  }
+
+  confirmarEliminarEstadoColegial(selectedDatos) {
+    let mess = this.translateService.instant("messages.deleteConfirmation");
+    let icon = "fa fa-trash-alt";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.eliminarEstadoColegial(selectedDatos);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
   }
 
   eliminarEstadoColegial(selectedItem) {

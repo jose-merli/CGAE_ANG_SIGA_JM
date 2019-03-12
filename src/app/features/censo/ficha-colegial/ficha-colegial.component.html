@@ -623,7 +623,7 @@
       <div class="text-right main-button ">
         <button [disabled]="!activarRestablecerColegiales() || !isRestablecer || disabledAction || tarjetaColegiales=='2'" (click)="restablecerColegiales()"
           pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="eliminarEstadoColegial(selectedDatos)" [disabled]="!isEliminarEstadoColegial || disabledAction || tarjetaColegiales=='2'"
+        <button (click)="confirmarEliminarEstadoColegial(selectedDatos)" [disabled]="!isEliminarEstadoColegial || disabledAction || tarjetaColegiales=='2'"
           pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
         <button (click)="guardarColegiales()" [disabled]="!activarGuardarColegiales || disabledAction || tarjetaColegiales=='2'"
           pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
