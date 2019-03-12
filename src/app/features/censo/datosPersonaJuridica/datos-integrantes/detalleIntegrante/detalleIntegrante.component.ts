@@ -94,7 +94,7 @@ export class DetalleIntegranteComponent implements OnInit {
     private sigaServices: SigaServices,
     private router: Router,
     private translateService: TranslateService
-  ) { }
+  ) {}
 
   ngOnInit() {
     if (sessionStorage.getItem("historicoInt") != null) {
@@ -253,6 +253,7 @@ export class DetalleIntegranteComponent implements OnInit {
     this.sigaServices.get("busquedaPer_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
+        this.arregloTildesCombo(this.colegios);
       },
       err => {
         console.log(err);
@@ -296,7 +297,7 @@ export class DetalleIntegranteComponent implements OnInit {
     this.sigaServices.get("integrantes_provincias").subscribe(
       n => {
         this.provinciasArray = n.combooItems;
-
+        this.arregloTildesCombo(this.provinciasArray);
         this.actualizarDescripcionProvincia();
       },
       err => {
@@ -309,12 +310,15 @@ export class DetalleIntegranteComponent implements OnInit {
     this.sigaServices.get("integrantes_tipoColegio").subscribe(
       n => {
         this.colegiosArray = n.combooItems;
+        this.arregloTildesCombo(this.colegiosArray);
 
         // si estamos en un integrante que ya existe
         if (this.body.completo) {
           if (this.esColegiado) {
             // se asigna el tipo de colegio "Abogacias"
-            this.body.idTipoColegio = this.colegiosArray[1].value;
+            this.body.idTipoColegio = this.colegiosArray.find(
+              item => item.value === "1"
+            ).value;
           } else {
             // se quita el tipo de colegio "Abogacias"
             this.colegiosArray.splice(1, 1);
@@ -334,6 +338,7 @@ export class DetalleIntegranteComponent implements OnInit {
     this.sigaServices.get("integrantes_cargos").subscribe(
       n => {
         this.cargosArray = n.combooItems;
+        this.arregloTildesCombo(this.cargosArray);
         this.actualizarDescripcionCargo();
       },
       err => {
@@ -591,7 +596,7 @@ export class DetalleIntegranteComponent implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => { }
+        () => {}
       );
   }
 
@@ -1097,5 +1102,22 @@ export class DetalleIntegranteComponent implements OnInit {
 
   detectFechaBajaCargoInput(event) {
     this.fechaBajaCargo = event;
+  }
+
+  arregloTildesCombo(combo) {
+    combo.map(e => {
+      let accents =
+        "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+      let accentsOut =
+        "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+      let i;
+      let x;
+      for (i = 0; i < e.label.length; i++) {
+        if ((x = accents.indexOf(e.label[i])) != -1) {
+          e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+          return e.labelSinTilde;
+        }
+      }
+    });
   }
 }

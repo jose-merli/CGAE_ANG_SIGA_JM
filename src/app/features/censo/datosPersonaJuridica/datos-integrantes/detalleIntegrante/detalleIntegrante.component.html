@@ -120,18 +120,20 @@
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.busquedaClientesAvanzada.literal.tipoColegio" | translate}} (*)</label>
           <p-dropdown [(ngModel)]="body.idTipoColegio" (ngModelChange)="actualizarDescripcionTipoColegio()" class="select-form" [options]="colegiosArray"
-            [(disabled)]="isDisabledTipoColegio || disabledAction"></p-dropdown>
-
+          [(disabled)]="isDisabledTipoColegio || disabledAction" placeholder="{{'general.boton.seleccionar' | translate}}"
+          [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
         </div>
         <div *ngIf="esColegiado" class="form-group col-lg-3 col-md-6">
           <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
           <p-dropdown [options]="colegios" [(ngModel)]="body.colegio" [(disabled)]="isDisabledColegio || disabledAction" class="select-form"
-            (onChange)="onChangeColegio($event.value)"></p-dropdown>
+            (onChange)="onChangeColegio($event.value)" placeholder="{{'general.boton.seleccionar' | translate}}"
+            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
         </div>
         <div *ngIf="!esColegiado" class="form-group col-lg-3 col-md-6">
           <label>{{"censo.datosDireccion.literal.provincia" | translate}}</label>
           <p-dropdown [(ngModel)]="body.idProvincia" [(disabled)]="isDisabledProvincia || disabledAction" (ngModelChange)="actualizarDescripcionProvincia()"
-            class="select-form" [options]="provinciasArray"></p-dropdown>
+            class="select-form" [options]="provinciasArray" placeholder="{{'general.boton.seleccionar' | translate}}"
+            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-6">
           <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
@@ -211,7 +213,8 @@
         <div class="form-group col-lg-2 col-md-4">
           <label>{{"censo.consultaComponentesJuridicos.literal.cargo" | translate}}</label>
           <p-dropdown [(ngModel)]="body.idCargo" (ngModelChange)="actualizarDescripcionCargo()" [(disabled)]="historico || disabledAction"
-            class="select-form" [options]="cargosArray"></p-dropdown>
+            class="select-form" [options]="cargosArray" placeholder="{{'general.boton.seleccionar' | translate}}"
+            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-8">
           <label>{{"censo.consultaComponentesJuridicos.literal.descripcioncargo" | translate}}</label>
