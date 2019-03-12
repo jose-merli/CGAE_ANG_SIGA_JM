@@ -17,6 +17,7 @@ import { AseguradoItem } from "../../../../../models/AseguradoItem";
 import { Message } from "primeng/components/common/api";
 import { DomSanitizer } from "../../../../../../../node_modules/@angular/platform-browser";
 import { ConfirmationService } from "primeng/api";
+import { DropdownModule, Dropdown } from "primeng/dropdown";
 
 @Component({
   selector: "app-alter-mutua-reta",
@@ -42,8 +43,10 @@ export class AlterMutuaRetaComponent implements OnInit {
   tieneSolicitud: boolean = false;
   showSolicitarSeguro: boolean = false;
   deshabilitarDireccion: boolean = false;
+  poblaciones: any[];
   propuestas: any;
   estadoSolicitudResponse: any;
+  codigoPostalValido: boolean;
 
   @ViewChild("table")
   table;
@@ -66,7 +69,8 @@ export class AlterMutuaRetaComponent implements OnInit {
   datos: any;
   datosB: any;
   numSelected: number = 0;
-  selectedItem: number = 10;
+  selectedItem2: number = 10;
+  selectedItem1: number = 10;
   selectMultiple: boolean = false;
   selectAll: boolean = false;
   sortO: number = 1;
@@ -76,11 +80,12 @@ export class AlterMutuaRetaComponent implements OnInit {
   datosHeredero: DatosFamiliaresItem = new DatosFamiliaresItem();
   nuevaFecha = Date;
   isVolver: boolean = false;
-  isCrear: boolean = false;
+  isCrearA: boolean = false;
+  isCrearB: boolean = false;
   isEliminar: boolean = false;
   tarifa: any;
   infoPropuesta: any;
-
+  resultadosPoblaciones: any;
   comboSexo: any[];
   comboColegios: any[];
   comboEstadoCivil: any[];
@@ -112,7 +117,9 @@ export class AlterMutuaRetaComponent implements OnInit {
   tipoEjercicioSelected: any;
   parentescoSend: any;
   datosSolicitud: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
-
+  ibanValido: boolean;
+  provinciaDesc: any;
+  poblacionDesc: any;
   constructor(
     private translateService: TranslateService,
     private sigaServices: SigaServices,
@@ -123,6 +130,7 @@ export class AlterMutuaRetaComponent implements OnInit {
     private domSanitizer: DomSanitizer,
     private confirmationService: ConfirmationService
   ) { }
+  @ViewChild("poblacion") dropdown: Dropdown;
 
   ngOnInit() {
     this.progressSpinner = true;
@@ -132,6 +140,8 @@ export class AlterMutuaRetaComponent implements OnInit {
       this.datosSolicitud = JSON.parse(
         sessionStorage.getItem("datosSolicitud")
       );
+      this.datosSolicitud.nombre = this.datosSolicitud.soloNombre;
+      this.datosSolicitud.apellidos = this.datosSolicitud.apellido1 + " " + this.datosSolicitud.apellido2;
       //Reta es tipo 1
       this.tipoPropuesta = 1;
       //ofertas es tipo 3
@@ -142,9 +152,12 @@ export class AlterMutuaRetaComponent implements OnInit {
         tipoIdenficador = 1*/
 
       let estadoSolicitud = {
+        identificador: "40919463W",
         idSolicitud: this.datosSolicitud.idSolicitud,
         duplicado: false
       };
+      // estadoSolicitud.identificador = "40919463W";
+
       this.sigaServices
         .post("alterMutua_estadoSolicitud", estadoSolicitud)
         .subscribe(
@@ -159,8 +172,8 @@ export class AlterMutuaRetaComponent implements OnInit {
             if (this.estadoSolicitudResponse.error == false) {
               this.tieneSolicitud = true;
             } else {
-              this.estadoSolicitudResponse.mensaje =
-                "No existe una solicitud de Alter Mutua para este colegiado.";
+              // this.estadoSolicitudResponse.mensaje =
+              //   "No existe una solicitud de Alter Mutua para este colegiado.";
               this.showSolicitarSeguro = true;
             }
           }
@@ -439,13 +452,14 @@ export class AlterMutuaRetaComponent implements OnInit {
       }
     });
   }
+
   isInvalidFamiliar(): boolean {
     if (
       this.datosFamiliar.idSexo != "" &&
       this.datosFamiliar.nombre != "" &&
       this.datosFamiliar.apellidos != "" &&
       this.datosFamiliar.idParentesco != "" &&
-      this.datosFamiliar.idTipoIdentificacion != "" &&
+      this.datosFamiliar.idTipoIdentificacion != "" && this.datosFamiliar.idTipoIdentificacion != undefined &&
       this.datosFamiliar.nIdentificacion != "" &&
       this.datosFamiliar.fechaNacimiento != undefined
     ) {
@@ -454,6 +468,10 @@ export class AlterMutuaRetaComponent implements OnInit {
       return true;
     }
   }
+
+  // isGuardar(){
+  //   if(this)
+  // }
 
   isInvalidHeredero(): boolean {
     if (
@@ -503,7 +521,7 @@ export class AlterMutuaRetaComponent implements OnInit {
   }
 
   crear() {
-    this.isCrear = true;
+    this.isCrearA = true;
     this.datosFamiliar = new DatosFamiliaresItem();
     if (
       this.datos == null ||
@@ -533,7 +551,7 @@ export class AlterMutuaRetaComponent implements OnInit {
   }
 
   crearB() {
-    this.isCrear = true;
+    this.isCrearB = true;
     this.datosHeredero = new DatosFamiliaresItem();
     if (
       this.datosB == null ||
@@ -575,7 +593,7 @@ export class AlterMutuaRetaComponent implements OnInit {
         this.datos[key].fechaNacimiento = this.datosFamiliar.fechaNacimiento;
       }
     });
-    this.isCrear = false;
+    this.isCrearA = false;
 
     this.selectedDatos = [];
     this.selectAll = false;
@@ -594,7 +612,7 @@ export class AlterMutuaRetaComponent implements OnInit {
         this.datosB[key].fechaNacimiento = this.datosHeredero.fechaNacimiento;
       }
     });
-    this.isCrear = false;
+    this.isCrearB = false;
     this.selectedDatosB = [];
     this.selectAll = false;
   }
@@ -609,12 +627,18 @@ export class AlterMutuaRetaComponent implements OnInit {
     this.asegurado.medioComunicacion = this.comunicacionSelected.value;
     this.asegurado.idioma = this.idiomaSelected.value;
     this.asegurado.pais = this.paisSelected.value;
-    this.asegurado.provincia = this.provinciaSelected.value;
+    this.asegurado.provincia = this.provinciaSelected;
+    this.asegurado.idPais = this.paisSelected.value;
+    this.asegurado.idProvincia = this.provinciaSelected;
+    this.asegurado.idPoblacion = this.poblacionDesc.value;
     this.asegurado.tipoDireccion = this.tipoDirSelected.value;
+    this.asegurado.poblacion = this.poblacionDesc.label;
+    this.asegurado.provincia = this.provinciaDesc.label;
     this.asegurado.tipoEjercicio = this.tipoEjercicioSelected.value;
     if (this.datosSolicitud.tipoIdentificacion.lastIndexOf("NIF") == 0)
       this.asegurado.tipoIdentificador = 0;
     else this.asegurado.tipoIdentificador = 1;
+    this.asegurado.identificador = "40919463W";
 
     this.datosAlter.asegurado = this.asegurado;
 
@@ -637,26 +661,26 @@ export class AlterMutuaRetaComponent implements OnInit {
         });
         this.datosAlter.herederos = this.herederosList;
       }
-    } else {
-      if (this.datos != null) {
-        this.datos.forEach(element => {
-          let familiar: FamiliarItem = new FamiliarItem();
-          familiar.nombre = element.nombre;
-          familiar.apellido = element.apellidos;
-          familiar.parentesco = element.idParentesco;
-          if (element.idSexo == "Hombre") {
-            familiar.sexo = 1;
-          } else {
-            familiar.sexo = 2;
-          }
-          familiar.tipoIdentificacion = element.idTipoIdentificacion;
-          familiar.identificacion = element.nIdentificacion;
-          familiar.fechaNacimiento = element.fechaNacimiento;
-          this.familiares.push(familiar);
-        });
-        this.datosAlter.familiares = this.familiares;
-      }
     }
+    if (this.datos != null) {
+      this.datos.forEach(element => {
+        let familiar: FamiliarItem = new FamiliarItem();
+        familiar.nombre = element.nombre;
+        familiar.apellido = element.apellidos;
+        familiar.parentesco = element.idParentesco;
+        if (element.idSexo == "Hombre") {
+          familiar.sexo = 1;
+        } else {
+          familiar.sexo = 2;
+        }
+        familiar.tipoIdentificacion = element.idTipoIdentificacion;
+        familiar.identificacion = element.nIdentificacion;
+        familiar.fechaNacimiento = element.fechaNacimiento;
+        this.familiares.push(familiar);
+      });
+      this.datosAlter.familiares = this.familiares;
+    }
+
 
     this.sigaServices
       .post("alterMutua_solicitudAlter", this.datosAlter)
@@ -668,14 +692,31 @@ export class AlterMutuaRetaComponent implements OnInit {
           console.log(error);
         },
         () => {
-          if (this.propuestas.error == false) {
-            this.showSuccess(
-              "La solicitud se ha enviado correctamente a Alter Mútua"
-            );
+          if (this.propuestas.error == true) {
+            this.tienePropuesta = false;
           } else {
-            this.showFail(
-              "La solicitud no se ha enviado correctamente a Alter Mútua"
-            );
+            this.tienePropuesta = true;
+          }
+          if (this.propuestas.error == false) {
+            if (this.propuestas.mensaje != null) {
+              this.propuestas.mensaje = this.domSanitizer.bypassSecurityTrustHtml(
+                this.propuestas.mensaje
+              );
+            } else {
+              this.showSuccess(
+                "La solicitud se ha enviado correctamente a Alter Mútua"
+              );
+            }
+          } else {
+            if (this.propuestas.mensaje != null) {
+              this.propuestas.mensaje = this.domSanitizer.bypassSecurityTrustHtml(
+                this.propuestas.mensaje
+              );
+            } else {
+              this.showFail(
+                "La solicitud no se ha enviado correctamente a Alter Mútua"
+              );
+            }
           }
           this.progressSpinner = false;
         }
@@ -709,15 +750,24 @@ export class AlterMutuaRetaComponent implements OnInit {
       this.tipoDirSelected != null &&
       this.tipoDirSelected != "" &&
       this.asegurado.mail != null &&
-      this.asegurado.iban != null &&
+      this.asegurado.iban != "" &&
+      this.asegurado.iban != undefined &&
       this.tipoEjercicioSelected != null &&
-      this.tipoEjercicioSelected != "" &&
-      (this.datos != null || this.datosB != null)
+      this.tipoEjercicioSelected != ""
     ) {
       return true;
     } else {
       return false;
     }
+  }
+
+  obtenerProvinciaDesc(e) {
+    // this.provinciaDesc = this.provincias.find(item => item.value === e.value);
+  }
+
+  obtenerPoblacionDesc(e) {
+    this.poblacionDesc = this.poblaciones.find(item => item.value === e.value);
+    if (this.provinciaSelected != undefined) this.provinciaDesc = this.provincias.find(item => item.value === this.provinciaSelected);
   }
 
   onchangeModalidad(event) {
@@ -741,6 +791,190 @@ export class AlterMutuaRetaComponent implements OnInit {
       }
     }
     console.log(this.infoPropuesta.descripcion);
+  }
+
+
+  getComboPoblacion(filtro: string) {
+    this.progressSpinner = true;
+    let poblacionBuscada = filtro;
+    this.sigaServices
+      .getParam(
+        "direcciones_comboPoblacion",
+        "?idProvincia=" + this.asegurado.provincia + "&filtro=" + filtro
+      )
+      .subscribe(
+        n => {
+          this.poblaciones = n.combooItems;
+          this.getLabelbyFilter(this.poblaciones);
+          this.dropdown.filterViewChild.nativeElement.value = poblacionBuscada;
+        },
+        error => { },
+        () => {
+          // this.isDisabledPoblacion = false;
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  isValidCodigoPostal(): boolean {
+    return (
+      this.asegurado.cp &&
+      typeof this.asegurado.cp === "string" &&
+      /^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(this.asegurado.cp)
+    );
+  }
+
+  onChangeCodigoPostal() {
+    if (this.asegurado.pais == "191") {
+      if (this.isValidCodigoPostal() && this.asegurado.cp.length == 5) {
+        let value = this.asegurado.cp.substring(0, 2);
+        this.provinciaSelected = value;
+        let isDisabledPoblacion = false;
+        if (value != this.asegurado.provincia) {
+          this.asegurado.provincia = this.provinciaSelected;
+          this.asegurado.poblacion = "";
+          this.poblaciones = [];
+        }
+        this.codigoPostalValido = true;
+      } else {
+        this.codigoPostalValido = false;
+      }
+    }
+  }
+
+  getLabelbyFilter(array) {
+    /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+  para poder filtrar el dato con o sin estos caracteres*/
+    array.map(e => {
+      let accents =
+        "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+      let accentsOut =
+        "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+      let i;
+      let x;
+      for (i = 0; i < e.label.length; i++) {
+        if ((x = accents.indexOf(e.label[i])) != -1) {
+          e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+          return e.labelSinTilde;
+        }
+      }
+    });
+  }
+
+  buscarPoblacion(e) {
+    if (e.target.value && e.target.value !== null) {
+      if (e.target.value.length >= 3) {
+        this.getComboPoblacion(e.target.value);
+        this.resultadosPoblaciones = "No hay resultados";
+      } else {
+        this.poblaciones = [];
+        this.resultadosPoblaciones = "Debe introducir al menos 3 caracteres";
+      }
+    } else {
+      this.poblaciones = [];
+      this.resultadosPoblaciones = "No hay resultados";
+    }
+  }
+  // obtenerProvinciaDesc(e) {
+  //   this.provinciaDesc = e.label;
+  // }
+  // obtenerPoblacionDesc(e) {
+  //   this.poblacionDesc = this.poblaciones.find(item => item.value === e.value);
+  // }
+
+  deshabilitaDireccion(): boolean {
+    if (this.provinciaSelected == "") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  onChangeProvincia(event) {
+    this.sigaServices
+      .getParam(
+        "direcciones_comboPoblacion",
+        "?idProvincia=" + event.value.value
+      )
+      .subscribe(
+        result => {
+          this.poblaciones = result.combooItems;
+          this.progressSpinner = false;
+          console.log(this.poblaciones);
+        },
+        error => {
+          console.log(error);
+        }
+      );
+  }
+
+
+  autogenerarDatos() {
+    if (this.asegurado.iban != null && this.asegurado.iban != "") {
+      var ccountry = this.asegurado.iban.substring(0, 2);
+      if (ccountry == "ES") {
+        if (this.isValidIBAN()) {
+          this.recuperarBicBanco();
+
+          this.ibanValido = true;
+        } else {
+          this.asegurado.bic = "";
+
+          this.ibanValido = false;
+        }
+      }
+    } else {
+      this.asegurado.bic = "";
+
+      this.ibanValido = false;
+    }
+  }
+
+
+  validarBIC(): boolean {
+    var ccountry = this.asegurado.iban.substring(0, 2);
+    if (
+      this.asegurado.bic != null &&
+      this.asegurado.bic != undefined &&
+      this.asegurado.bic != "" &&
+      this.asegurado.bic.length == 11 &&
+      this.asegurado.bic.charAt(4) == ccountry.charAt(0) &&
+      this.asegurado.bic.charAt(5) == ccountry.charAt(1)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  recuperarBicBanco() {
+    this.sigaServices
+      .post("datosCuentaBancaria_BIC_BANCO", this.asegurado)
+      .subscribe(
+        data => {
+          let bodyBancoBicSearch = JSON.parse(data["body"]);
+          let bodyBancoBic = bodyBancoBicSearch.bancoBicItem[0];
+
+          this.asegurado.banco = bodyBancoBic.banco;
+          this.asegurado.bic = bodyBancoBic.bic;
+          this.asegurado.iban = this.asegurado.iban.replace(/\s/g, "");
+          this.asegurado.dc = this.asegurado.iban.substring(12, 14);
+          this.asegurado.sucursal = this.asegurado.iban.substring(8, 12);
+          // this.editar = false;
+        },
+        error => {
+          let bodyBancoBicSearch = JSON.parse(error["error"]);
+          this.showFailMensaje(bodyBancoBicSearch.error.message.toString());
+        }
+      );
+  }
+
+  showFailMensaje(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "",
+      detail: mensaje
+    });
   }
 
   mostarDatosPropuesta() {

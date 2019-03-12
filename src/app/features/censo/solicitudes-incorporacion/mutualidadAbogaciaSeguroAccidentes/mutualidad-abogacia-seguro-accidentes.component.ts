@@ -128,8 +128,9 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
             solicitud.numeroIdentificacion = this.solicitud.numeroIdentificacion;
             solicitud.tratamiento = this.solicitud.tratamiento;
             solicitud.idEstadoCivil = this.solicitud.idEstadoCivil;
-            solicitud.idsolicitudincorporacion = this.solicitud.idsolicitudincorporacion;
-            solicitud.naturalDe = this.solicitud.naturalDe;
+            if (this.solicitud.idsolicitudincorporacion != undefined) {
+              solicitud.idsolicitudincorporacion = this.solicitud.idsolicitudincorporacion;
+            } solicitud.naturalDe = this.solicitud.naturalDe;
             this.solicitud = solicitud;
             body.idpais = this.body.idPais;
             body.codigoPostal = this.body.codigoPostal;
