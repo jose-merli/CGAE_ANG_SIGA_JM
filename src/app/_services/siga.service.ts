@@ -151,6 +151,7 @@ export class SigaServices {
     direcciones_search: "busquedaPerJuridica/datosDireccionesSearch",
     direcciones_update: "tarjetaDirecciones/update",
     direcciones_insert: "tarjetaDirecciones/create",
+    direcciones_duplicate: "tarjetaDirecciones/duplicate",
     direcciones_remove: "tarjetaDirecciones/delete",
     direcciones_codigoPostal: "",
     direcciones_comboPoblacion: "tarjetaDirecciones/poblacion",
@@ -356,6 +357,7 @@ export class SigaServices {
     fichaEventos_saveFormadorEvent: "fichaEventos/saveFormadorEvent",
     fichaEventos_updateFormadorEvent: "fichaEventos/updateFormadorEvent",
     fichaEventos_getTrainersSession: "fichaEventos/getTrainersSession",
+    fichaEventos_uploadFile: "fichaEventos/uploadFile",
 
     datosNotificaciones_getTypeNotifications:
       "datosNotificaciones/getTypeNotifications",
@@ -553,6 +555,12 @@ export class SigaServices {
       "busquedaPerJuridica/solicitudInsertBanksData",
     fichaDatosColegiales_datosColegialesUpdate:
       "/fichaDatosColegiales/datosColegialesUpdate",
+    fichaDatosColegiales_datosColegialesInsertEstado:
+      "/fichaDatosColegiales/datosColegialesInsertEstado",
+    fichaDatosColegiales_datosColegialesUpdateEstados:
+      "/fichaDatosColegiales/datosColegialesUpdateEstados",
+      fichaDatosColegiales_datosColegialesDeleteEstado:
+      "/fichaDatosColegiales/datosColegialesDeleteEstado",
     fichaColegialRegTel_permisos: "fichaColegialRegTel/permisos",
     fichaColegialRegTel_searchListDoc: "fichaColegialRegTel/searchListDoc",
     fichaColegialRegTel_searchListDir: "fichaColegialRegTel/searchListDir",
@@ -615,7 +623,8 @@ export class SigaServices {
     modelos_borrar: "modelos/borrar",
     modelos_rehabilitar: "modelos/rehabilitar",
     modelos_detalle_datosGenerales: "modelos/detalle/datosGenerales",
-    modelos_detalle_datosGeneralesComprobarNom: "modelos/detalle/datosGenerales/comprobarNom",
+    modelos_detalle_datosGeneralesComprobarNom:
+      "modelos/detalle/datosGenerales/comprobarNom",
     modelos_detalle_perfiles: "modelos/detalle/perfiles",
     modelos_detalle_perfilesModelo: "modelos/detalle/perfilesModelo",
     modelos_detalle_guardarPerfiles: "modelos/detalle/guardarPerfiles",
@@ -656,19 +665,20 @@ export class SigaServices {
     plantillasDoc_plantillas_borrar: "plantillasDoc/borrar",
 
     //Diálogo comunicación
-    dialogo_claseComunicaciones: 'dialogoComunicacion/clasesComunicacion',
-    dialogo_claseComunicacion: 'dialogoComunicacion/claseComunicacion',
-    dialogo_fechaProgramada: 'dialogoComunicacion/fechaProgramada',
-    dialogo_modelosComunicacion: 'dialogoComunicacion/modelosSearch',
-    dialogo_plantillasEnvio: 'dialogoComunicacion/plantillasEnvio',
-    dialogo_tipoEnvios: 'dialogoComunicacion/tipoEnvios',
-    dialogo_enviar: 'dialogoComunicacion/enviar',
-    dialogo_descargar: 'dialogoComunicacion/descargar',
-    dialogo_generarEnvios: 'dialogoComunicacion/generarEnvios',
-    dialogo_keys: 'dialogoComunicacion/keys',
-    dialogo_obtenerCamposDinamicos: 'dialogoComunicacion/obtenerCamposDinamicos',
-    dialogo_envioTest: 'dialogoComunicacion/envioTest',
-    dialogo_maxModelos: 'dialogoComunicacion/maxModelos'
+    dialogo_claseComunicaciones: "dialogoComunicacion/clasesComunicacion",
+    dialogo_claseComunicacion: "dialogoComunicacion/claseComunicacion",
+    dialogo_fechaProgramada: "dialogoComunicacion/fechaProgramada",
+    dialogo_modelosComunicacion: "dialogoComunicacion/modelosSearch",
+    dialogo_plantillasEnvio: "dialogoComunicacion/plantillasEnvio",
+    dialogo_tipoEnvios: "dialogoComunicacion/tipoEnvios",
+    dialogo_enviar: "dialogoComunicacion/enviar",
+    dialogo_descargar: "dialogoComunicacion/descargar",
+    dialogo_generarEnvios: "dialogoComunicacion/generarEnvios",
+    dialogo_keys: "dialogoComunicacion/keys",
+    dialogo_obtenerCamposDinamicos:
+      "dialogoComunicacion/obtenerCamposDinamicos",
+    dialogo_envioTest: "dialogoComunicacion/envioTest",
+    dialogo_maxModelos: "dialogoComunicacion/maxModelos"
   };
 
   private menuToggled = new Subject<any>();
@@ -728,9 +738,9 @@ export class SigaServices {
     return this.httpbackend
       .get(
         environment.newSigaUrl +
-        this.endpoints[service] +
-        "?institucion=" +
-        institucion
+          this.endpoints[service] +
+          "?institucion=" +
+          institucion
       )
       .map(response => {
         return response;
@@ -897,11 +907,11 @@ export class SigaServices {
     this.menuToggled.next();
   }
 
-  notifyRefreshConsulta(){
+  notifyRefreshConsulta() {
     this.consultasRefresh.next();
   }
 
-  notifyRefreshEditar(){
+  notifyRefreshEditar() {
     this.deshabilitarEditar.next();
   }
 

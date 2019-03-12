@@ -20,11 +20,28 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mt-2">
+          <div class="d-flex justify-content-start mt-2 mb-1">
             <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate }}
             </label>
           </div>
-          <i class="fa fa-angle-down float-right"></i>
+          <div class="d-flex justify-content-between col-lg-12 pr-0">
+            <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate }}:
+              <span>{{ curso.nombreCurso }}</span>
+            </label>
+            <label>{{ 'formacion.fichaCursos.datosGenerales.codigo' | translate }}:
+              <span>{{ curso.codigoCurso }}</span>
+            </label>
+            <label>{{ 'form.busquedaCursos.literal.estado' | translate }}:
+              <span>{{ curso.estado }}</span>
+            </label>
+            <label>{{ 'formacion.fichaCursos.datosGenerales.resumen.periodoInscripcion' | translate }}
+              <span>{{ curso.fechaInscripcionDesde }} - {{ curso.fechaInscripcionHasta }}</span>
+            </label>
+            <label>{{ 'formacion.fichaCursos.datosGenerales.resumen.periodoImparticion' | translate }}
+              <span>{{ curso.fechaImparticionDesde }} - {{ curso.fechaImparticionHasta }}</span>
+            </label>
+            <i class="fa fa-angle-down float-right"></i>
+          </div>
         </div>
       </div>
       <div *ngIf="esFichaActiva('generales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -300,19 +317,33 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mt-2">
+          <div class="d-flex justify-content-start mt-2 mb-1">
             <label class="mr-auto title-ficha">{{'formacion.fichaCurso.tarjetaPrecios.precios' | translate}}</label>
           </div>
-          <i class="fa fa-angle-down float-right"></i>
+          <div *ngIf="datosPrices.length < 5 && datosPrices.length != 0" class="d-flex justify-content-between col-lg-12 pr-0">
+            <label *ngFor="let precio of datosPrices">
+              {{ 'formacion.fichaCurso.tarjetaPrecios.importe' | translate }}:
+              <span>{{ precio.importe }} </span> - {{ 'administracion.parametrosGenerales.literal.descripcion' | translate }}:
+              <span>{{ precio.descripcion }}</span>
+            </label>
+            <i class="fa fa-angle-down float-right"></i>
+          </div>
+          <div *ngIf="datosPrices.length >= 5" class="d-flex justify-content-between col-lg-12 pr-0">
+            <label>{{ 'formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros' | translate }}:
+              <span>{{ datosPrices.length }}</span>
+            </label>
+            <i class="fa fa-angle-down float-right"></i>
+          </div>
+          <i *ngIf="datosPrices.length == 0" class="fa fa-angle-down float-right"></i>
         </div>
       </div>
+
       <div *ngIf="esFichaActiva('price')" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado"><i class="fa fa-usd icon-ficha"></i></div>
         <label class="title-ficha">{{'formacion.fichaCurso.tarjetaPrecios.precios' | translate}}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
-
     <!-- Cuerpo -->
     <div class="card-body card-body-ficha" *ngIf="esFichaActiva('price')">
       <div class="row">
@@ -366,10 +397,25 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mt-2">
+          <div class="d-flex justify-content-start mt-2 mb-1">
             <label class="mr-auto title-ficha">{{'agenda.fichaEventos.datosFormadores.cabecera' | translate}}</label>
           </div>
-          <i class="fa fa-angle-down float-right"></i>
+          <div *ngIf="datosFormadores.length < 4 && datosFormadores.length != 0" class="d-flex justify-content-between col-lg-12 pr-0">
+            <label *ngFor="let formador of datosFormadores">
+              {{ 'administracion.parametrosGenerales.literal.nombre' | translate }}:
+              <span>{{ formador.nombre }} {{ formador.apellidos }}</span> - {{ 'administracion.usuarios.literal.rol' | translate
+              }}:
+              <span>{{ formador.rol }}</span>
+            </label>
+            <i class="fa fa-angle-down float-right"></i>
+          </div>
+          <div *ngIf="datosFormadores.length >= 4" class="d-flex justify-content-between col-lg-12 pr-0">
+            <label>{{ 'agenda.fichaEvento.tarjetaNotificaciones.resumen.numFormadores' | translate }}:
+              <span>{{ datosFormadores.length }}</span>
+            </label>
+            <i class="fa fa-angle-down float-right"></i>
+          </div>
+          <i *ngIf="datosFormadores.length == 0" class="fa fa-angle-down float-right"></i>
         </div>
       </div>
 
@@ -726,7 +772,25 @@
           <label
             class="mr-auto title-ficha">{{'formacion.fichaInscripcion.datosCertificados.cabecera' | translate}}</label>
         </div>
-        <i class="fa fa-angle-down float-right"></i>
+        <div *ngIf="datosCertificates.length == 1" class="d-flex justify-content-between col-lg-12 pr-0">
+          <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate }}:
+            <span>{{ datosCertificates[0].nombreCertificado }}</span>
+          </label>
+          <label>{{ 'form.busquedaCursos.literal.precio' | translate }}:
+            <span>{{ datosCertificates[0].precio }}</span>
+          </label>
+          <label>{{ 'formacion.busquedaInscripcion.calificacion' | translate }}:
+            <span>{{ datosCertificates[0].calificacion }}</span>
+          </label>
+          <i class="fa fa-angle-down float-right"></i>
+        </div>
+        <div *ngIf="datosCertificates.length >= 2" class="d-flex justify-content-between col-lg-12 pr-0">
+          <label>{{ 'formacion.fichaCursos.tarjetaCertificados.resumen.numCertificados' | translate }}:
+            <span>{{ datosCertificates.length }}</span>
+          </label>
+          <i class="fa fa-angle-down float-right"></i>
+        </div>
+        <i *ngIf="datosCertificates.length == 0" class="fa fa-angle-down float-right"></i>
       </div>
     </div>
     <div *ngIf="esFichaActiva('certificate')"
@@ -998,7 +1062,23 @@
         <div class="d-flex justify-content-start mt-2">
           <label class="mr-auto title-ficha">{{'formacion.fichaCursos.sesiones.cabecera' | translate}}</label>
         </div>
-        <i class="fa fa-angle-down float-right"></i>
+        <div *ngIf="datosSessions.length >= 1" class="d-flex justify-content-between col-lg-12 pr-0">
+          <label>{{ 'formacion.fichaCursos.tarjetaSesiones.resumen.numSesiones' | translate }}:
+            <span>{{ datosSessions.length }}</span>
+          </label>
+          <label>{{ 'agenda.fichaEventos.datosGenerales.fechaInicio' | translate }}:
+            <span>{{ datosSessions[0].fechaHoraInicio }}</span>
+          </label>
+          <label>{{ 'agenda.fichaEventos.datosGenerales.lugar' | translate }}:
+            <span>{{ datosSessions[0].lugar }}</span>
+          </label>
+          <label>{{ 'agenda.fichaEventos.datosFormadores.cabecera' | translate }}:
+            <span>{{ datosSessions[0].formadores }}</span>
+          </label>
+          <i class="fa fa-angle-down float-right"></i>
+        </div>
+        <i *ngIf="datosSessions.length == 0" class="fa fa-angle-down float-right"></i>
+
       </div>
     </div>
     <div *ngIf="esFichaActiva('session')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -1073,11 +1153,16 @@
         </div>
       </div>
       <div class="col-lg-11 col-md-10">
-        <div class="d-flex justify-content-start mt-2">
-          <label
-            class="mr-auto title-ficha">{{ 'formacion.fichaCurso.cargaMasivaInscripciones.cabecera' | translate }}</label>
+        <div class="d-flex justify-content-start mt-2 mb-1">
+          <label class="mr-auto title-ficha">{{ 'formacion.fichaCurso.cargaMasivaInscripciones.cabecera' | translate }}</label>
+
         </div>
-        <i class="fa fa-angle-down float-right"></i>
+        <div class="d-flex justify-content-between col-lg-12 pr-0">
+          <label>{{ 'formacion.fichaCursos.tarjetaCargasMasivas.resumen.numCargas' | translate }}:
+            <span>{{ datosCargas.length }}</span>
+          </label>
+          <i class="fa fa-angle-down float-right"></i>
+        </div>
       </div>
     </div>
     <div *ngIf="esFichaActiva('carga')" class=" header-ficha-open d-flex justify-content-start align-items-center">
