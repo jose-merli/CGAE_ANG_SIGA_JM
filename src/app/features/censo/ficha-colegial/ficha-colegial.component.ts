@@ -145,6 +145,7 @@ export class FichaColegialComponent implements OnInit {
   searchDireccionIdPersona = new DatosDireccionesObject();
   searchDatosBancariosIdPersona = new DatosBancariosObject();
   datosColegiales: any[] = [];
+  datosColegialesInit: any[] = [];
   checkDatosColegiales: any[] = [];
   datosColegiaciones: any[] = [];
   datosCertificados: any[] = [];
@@ -226,6 +227,7 @@ export class FichaColegialComponent implements OnInit {
   valorPreferenteEmail: string = "10";
   valorPreferenteCorreo: string = "11";
   valorPreferenteSMS: string = "12";
+  msgDir = "";
 
   @ViewChild("autocompleteTopics")
   autocompleteTopics: AutoComplete;
@@ -290,8 +292,8 @@ export class FichaColegialComponent implements OnInit {
 
   yearRange: string;
 
-  nuevaFecha : any;
-  
+  nuevaFecha: any;
+
   isColegiadoEjerciente: boolean = false;
 
   @ViewChild("auto")
@@ -381,14 +383,14 @@ export class FichaColegialComponent implements OnInit {
   tarjetaMutualidad: string;
   tarjetaAlterMutua: string;
 
-  isCrearColegial : boolean = false;
+  isCrearColegial: boolean = false;
   nuevoEstadoColegial: FichaColegialColegialesItem = new FichaColegialColegialesItem();
   fechaMinimaEstadoColegial: Date;
   fechaMinimaEstadoColegialMod: Date;
-  filaEditable : boolean = false;
-  seleccionColegial : string = "single";
-  isRestablecer : boolean = false;
-  isEliminarEstadoColegial : boolean = false;
+  filaEditable: boolean = false;
+  seleccionColegial: string = "single";
+  isRestablecer: boolean = false;
+  isEliminarEstadoColegial: boolean = false;
 
   constructor(
     private location: Location,
@@ -2184,7 +2186,7 @@ export class FichaColegialComponent implements OnInit {
       this.colegialesBody.fechaJura != null
     ) {
 
-      if(this.isCrearColegial == false){
+      if (this.isCrearColegial == false) {
         this.activarGuardarColegiales = true;
       } else {
         if (this.nuevoEstadoColegial.situacion != "" && this.nuevoEstadoColegial.situacion != undefined &&
@@ -2224,7 +2226,7 @@ export class FichaColegialComponent implements OnInit {
           this.nuevoEstadoColegial.situacion != "" && this.nuevoEstadoColegial.situacion != undefined &&
           this.nuevoEstadoColegial.situacionResidente != "" && this.nuevoEstadoColegial.situacionResidente != undefined &&
           this.nuevoEstadoColegial.fechaEstadoStr != "" && this.nuevoEstadoColegial.fechaEstadoStr != undefined) {
-            
+
           this.activarGuardarColegiales = true;
         } else {
           this.activarGuardarColegiales = false;
@@ -2275,17 +2277,215 @@ export class FichaColegialComponent implements OnInit {
   }
 
   guardarColegiales() {
-    this.progressSpinner = true;
     // Meter datos colegiales aquí para guardar y probar.
     this.inscritoAItem();
     this.pasarFechas();
 
-    if(this.isCrearColegial == true){
+    //Si es un nuevo estado
+    if (this.isCrearColegial == true) {
       this.colegialesBody.situacionResidente = this.nuevoEstadoColegial.situacionResidente;
       this.colegialesBody.fechaEstado = this.arreglarFecha(this.nuevoEstadoColegial.fechaEstadoStr);
       this.colegialesBody.fechaEstadoStr = JSON.stringify(this.nuevoEstadoColegial.fechaEstadoStr);
       this.colegialesBody.estadoColegial = this.nuevoEstadoColegial.situacion;
+
+      //Si el cambio es a ejerciente
+      if (this.nuevoEstadoColegial.situacion == "20") {
+        //Se comprueba si le falta alguna direccion
+        //Si no le falta llamamos al servicio para guardar los cambios
+        if (this.comprobarDireccion(true)) {
+          this.callServiceGuardarColegiales();
+          //Si falta se muestra un mensaje indicando que se creara esa direccion que falta automaticamente
+        } else {
+          this.callServiceShowMessageUpdate();
+        }
+        //Si el cambio es de ejerciente a no ejerciente
+      } else if (this.nuevoEstadoColegial.situacion != "20" && this.datosColegiales[1].idEstado == "20") {
+        //Se comprueba si le falta alguna direccion
+        //Si no le falta llamamos al servicio para guardar los cambios
+        if (this.comprobarDireccion(false)) {
+          this.callServiceGuardarColegiales();
+        } else {
+          //Si falta se muestra un mensaje indicando que se creara esa direccion que falta automaticamente
+          this.callServiceShowMessageUpdate();
+        }
+      } else {
+        this.callServiceGuardarColegiales();
+      }
+      //Si es una modificacion de estado
+    } else {
+      //Si el cambio es a ejerciente
+      if (this.datosColegiales[0].idEstado == "20" && this.datosColegiales[0].idEstado != this.datosColegialesInit[0].idEstado) {
+        //Se comprueba si le falta alguna direccion
+        //Si no le falta llamamos al servicio para guardar los cambios
+        if (this.comprobarDireccion(true)) {
+          this.callServiceGuardarColegiales();
+          //Si falta se muestra un mensaje indicando que se creara esa direccion que falta automaticamente
+        } else {
+          this.callServiceShowMessageUpdate();
+        }
+        //Si el cambio es de ejerciente a no ejerciente
+      } else if (this.datosColegiales[0].idEstado != "20" && this.datosColegiales[0].idEstado != this.datosColegialesInit[0].idEstado
+        && this.datosColegialesInit[0].idEstado == "20") {
+        //Se comprueba si le falta alguna direccion
+        //Si no le falta llamamos al servicio para guardar los cambios
+        if (this.comprobarDireccion(false)) {
+          this.callServiceGuardarColegiales();
+          //Si falta se muestra un mensaje indicando que se creara esa direccion que falta automaticamente
+        } else {
+          this.callServiceShowMessageUpdate();
+        }
+        //Si el cambio pertenece a un estado no ejerciente, se guarda sin realizar comprobaciones
+      } else {
+        this.callServiceGuardarColegiales();
+      }
     }
+
+  }
+
+  callServiceShowMessageUpdate() {
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: this.msgDir,
+      icon: icon,
+
+      accept: () => {
+        this.callServiceGuardarColegiales();
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  callServiceShowMessageDelete(selectedItem) {
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: this.msgDir,
+      icon: icon,
+
+      accept: () => {
+        this.callServiceEliminarEstadoColegial(selectedItem);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  comprobarDireccion(isEjerciente) {
+
+    let direcciones = [];
+    this.msgDir = "";
+    let tipos = [];
+
+    //Obtenemos todos los tipos de direcciones del colegiado
+    for (const key in this.datosDirecciones) {
+      this.datosDirecciones[key].idTipoDireccion.forEach(tipoDir => {
+        direcciones.push(tipoDir);
+      });
+    }
+
+    //Se comprueba si estan los tipos obligatorios
+    let idFindTipoDirEmail = direcciones.findIndex(tipoDir => tipoDir == this.valorPreferenteEmail);
+    let idFindTipoDirGuardia = direcciones.findIndex(tipoDir => tipoDir == this.valorGuardia);
+    let idFindTipoDirCenso = direcciones.findIndex(tipoDir => tipoDir == this.valorCensoWeb);
+    let idFindTipoDirFact = direcciones.findIndex(tipoDir => tipoDir == this.valorFacturacion);
+    let idFindTipoDirDes = direcciones.findIndex(tipoDir => tipoDir == this.valorDespacho);
+    let idFindTipoDirTras = direcciones.findIndex(tipoDir => tipoDir == this.valorTraspaso);
+    let idFindTipoDirGuia = direcciones.findIndex(tipoDir => tipoDir == this.valorGuiaJudicial);
+    let idFindTipoDirCorreo = direcciones.findIndex(tipoDir => tipoDir == this.valorPreferenteCorreo);
+    let idFindTipoDirSMS = direcciones.findIndex(tipoDir => tipoDir == this.valorPreferenteSMS);
+
+    //Si no se encuentra, se añaden en un array los nombre de los tipos que faltan
+    if (idFindTipoDirEmail == -1) {
+      tipos.push("Preferente Email");
+    }
+    if (idFindTipoDirGuardia == -1) {
+      tipos.push("Preferente Teléfono");
+    }
+    if (idFindTipoDirFact == -1) {
+      tipos.push("Facturación");
+    }
+    if (idFindTipoDirTras == -1) {
+      tipos.push("Traspaso");
+    }
+    if (idFindTipoDirGuia == -1) {
+      tipos.push("Guía Judicial");
+    }
+    if (idFindTipoDirCorreo == -1) {
+      tipos.push("Preferente Correo");
+    }
+    if (idFindTipoDirSMS == -1) {
+      tipos.push("Preferente SMS");
+    }
+    if (isEjerciente) {
+      if (idFindTipoDirDes == -1) {
+        tipos.push("Despacho");
+      }
+    }
+
+    //Comprobamos si falta alguna dirección
+    if (idFindTipoDirCenso == -1) {
+      if (isEjerciente) {
+        this.msgDir = "Antes de pasar el colegiado a Ejerciente, tendrá que introducir una dirección para el colegiado.";
+        return false;
+      } else {
+        this.msgDir = "Antes de cambiar la situación, tendrá que introducir una dirección para el colegiado.";
+        return false;
+      }
+    } else {
+      this.msgDir = "Para finalizar el cambio a Ejerciente ";
+      if (tipos.length == 0) {
+        return true;
+      } else if (tipos.length == 1) {
+        this.msgDir += "es necesaria una dirección de ";
+        this.msgDir += tipos[0];
+        this.msgDir += ". Se asignará automáticamente el tipo ";
+        this.msgDir += tipos[0];
+        this.msgDir += " a la actual dirección de Censo Web ¿Desea continuar?";
+        return false;
+      } else if (tipos.length > 1) {
+
+        this.msgDir += "son necesarias las direcciones de ";
+        let msgTipos = "";
+        for (const key in tipos) {
+          let x = key;
+          if (+x + 1 == + tipos.length) {
+            msgTipos += " y " + tipos[key];
+          } else if (+x + 1 == + tipos.length - 1) {
+            msgTipos += tipos[key] + " ";
+          } else {
+            msgTipos += tipos[key] + ", ";
+          }
+        }
+
+        this.msgDir += msgTipos;
+        this.msgDir += " .Se asignará automáticamente los tipos ";
+        this.msgDir += msgTipos;
+        this.msgDir += " a la actual dirección de Censo Web ¿Desea continuar?";
+        return false;
+      }
+    }
+  }
+
+  callServiceGuardarColegiales() {
+    this.progressSpinner = true;
 
     this.sigaServices
       .post("fichaDatosColegiales_datosColegialesUpdate", this.colegialesBody)
@@ -2295,67 +2495,70 @@ export class FichaColegialComponent implements OnInit {
           // Siempre realizaremos el update de los registros de la tabla, tanto del registro editable como de los registros que solo se pueden modificar las observaciones
           this.datosColegiales[0].idInstitucion = this.colegialesBody.idInstitucion;
           this.datosColegiales[0].idPersona = this.colegialesBody.idPersona;
+          this.datosColegiales[0].fecha
           this.sigaServices
-              .post("fichaDatosColegiales_datosColegialesUpdateEstados", this.datosColegiales)
-              .subscribe(
-            data => {
-              // En el caso de que se haya insertado un nuevo estado colegial en la tabla, habrá que realizar el insert
-              if (this.isCrearColegial == true) {
-                this.nuevoEstadoColegial.idInstitucion = this.colegialesBody.idInstitucion;
-                this.nuevoEstadoColegial.idPersona = this.colegialesBody.idPersona;
+            .post("fichaDatosColegiales_datosColegialesUpdateEstados", this.datosColegiales)
+            .subscribe(
+              data => {
+                // En el caso de que se haya insertado un nuevo estado colegial en la tabla, habrá que realizar el insert
+                if (this.isCrearColegial == true) {
+                  this.nuevoEstadoColegial.idInstitucion = this.colegialesBody.idInstitucion;
+                  this.nuevoEstadoColegial.idPersona = this.colegialesBody.idPersona;
 
-                this.sigaServices
-                  .post("fichaDatosColegiales_datosColegialesInsertEstado", this.nuevoEstadoColegial)
-                  .subscribe(
-                    data => {
-                      this.checkColegialesBody = new FichaColegialColegialesItem();
+                  this.sigaServices
+                    .post("fichaDatosColegiales_datosColegialesInsertEstado", this.nuevoEstadoColegial)
+                    .subscribe(
+                      data => {
+                        this.checkColegialesBody = new FichaColegialColegialesItem();
 
-                      this.checkColegialesBody = JSON.parse(
-                        JSON.stringify(this.colegialesBody)
-                      );
+                        this.checkColegialesBody = JSON.parse(
+                          JSON.stringify(this.colegialesBody)
+                        );
 
-                      this.nuevoEstadoColegial = new FichaColegialColegialesItem;
-                      this.isCrearColegial = false;
-                      this.isRestablecer = false;
-                      this.filaEditable = false;
-                      this.activarGuardarColegiales = false;
+                        this.nuevoEstadoColegial = new FichaColegialColegialesItem;
+                        this.isCrearColegial = false;
+                        this.isRestablecer = false;
+                        this.filaEditable = false;
+                        this.activarGuardarColegiales = false;
 
-                      this.obtenerEtiquetasPersonaJuridicaConcreta();
-                      this.progressSpinner = false;
-                      this.showSuccess();
-                      this.onInitColegiales();
-                    },
-                    error => {
-                      console.log(error);
-                      this.progressSpinner = false;
-                      this.isCrearColegial = false;
-                      this.isRestablecer = false;
-                      this.filaEditable = false;
-                      this.activarGuardarColegiales = false;
-                      this.showFail();
-                    }
-                  );
-              } else {
-                this.activarGuardarColegiales = false;
-                this.obtenerEtiquetasPersonaJuridicaConcreta();
-                this.progressSpinner = false;
-                this.isCrearColegial = false;
-                this.isRestablecer = false;
-                this.filaEditable = false;
-                this.showSuccess();
-                this.onInitColegiales();
-              }
-                },
-                error => {
-                  console.log(error);
+                        this.obtenerEtiquetasPersonaJuridicaConcreta();
+                        this.progressSpinner = false;
+                        this.showSuccess();
+                        this.onInitColegiales();
+                        this.searchDirecciones();
+                      },
+                      error => {
+                        console.log(error);
+                        this.progressSpinner = false;
+                        this.isCrearColegial = false;
+                        this.isRestablecer = false;
+                        this.filaEditable = false;
+                        this.activarGuardarColegiales = false;
+                        this.showFail();
+                      }
+                    );
+                } else {
+                  this.activarGuardarColegiales = false;
+                  this.obtenerEtiquetasPersonaJuridicaConcreta();
                   this.progressSpinner = false;
                   this.isCrearColegial = false;
                   this.isRestablecer = false;
-                  this.activarGuardarColegiales = false;
                   this.filaEditable = false;
-                  this.showFail();
+                  this.showSuccess();
+                  this.onInitColegiales();
+                  this.searchDirecciones();
                 }
-              );
+              },
+              error => {
+                console.log(error);
+                this.progressSpinner = false;
+                this.isCrearColegial = false;
+                this.isRestablecer = false;
+                this.activarGuardarColegiales = false;
+                this.filaEditable = false;
+                this.showFail();
+              }
+            );
         },
         error => {
           console.log(error);
@@ -2416,27 +2619,28 @@ export class FichaColegialComponent implements OnInit {
           // this.datosColegiales = JSON.parse(data["body"]);
           this.colegialesObject = JSON.parse(data["body"]);
           this.datosColegiales = this.colegialesObject.colegiadoItem;
+          this.datosColegialesInit = JSON.parse(JSON.stringify(this.datosColegiales));
 
-          if(this.datosColegiales.length > 0){
+          if (this.datosColegiales.length > 0) {
             this.fechaMinimaEstadoColegial = this.sumarDia(JSON.parse(this.datosColegiales[0].fechaEstado));
-            
+
             // Asignamos al primer registro la bandera de modificacion, ya que podremos modificar el último estado
             // Al traer la lista ordenada por fechaEstado desc, tendremos en la primera posición el último estado añadido
-            for (let i in this.datosColegiales){
-              if(i == '0'){
+            for (let i in this.datosColegiales) {
+              if (i == '0') {
                 this.datosColegiales[i].isMod = true;
-              }else{
+              } else {
                 this.datosColegiales[i].isMod = false;
               }
 
-              if(this.datosColegiales[i].situacionResidente == 'Si'){
+              if (this.datosColegiales[i].situacionResidente == 'Si') {
                 this.datosColegiales[i].idSituacionResidente = 1;
-              }else{
+              } else {
                 this.datosColegiales[i].idSituacionResidente = 0;
               }
             }
 
-            if(this.datosColegiales.length > 1){
+            if (this.datosColegiales.length > 1) {
               // Siempre podremos editar todos los campos del último estado insertado
               // Si tenemos mas de 1 estado en la tabla, la fecha minima a la que podemos modificar la fechaEstado del último estado será la del anterior estado
               this.fechaMinimaEstadoColegialMod = this.sumarDia(JSON.parse(this.datosColegiales[1].fechaEstado));
@@ -2452,9 +2656,9 @@ export class FichaColegialComponent implements OnInit {
   }
 
   onChangeCalendarTable(event, selectedDatos) {
-    if(this.isCrearColegial){
+    if (this.isCrearColegial) {
       this.nuevoEstadoColegial.fechaEstadoStr = event;
-    }else{
+    } else {
       selectedDatos.fechaEstadoStr = event;
     }
 
@@ -2467,7 +2671,7 @@ export class FichaColegialComponent implements OnInit {
         item => item.value === event.value
       );
 
-      if(selectedDatos.estadoColegial != identificacion.label){
+      if (selectedDatos.estadoColegial != identificacion.label) {
         this.activarGuardarColegiales = false;
       }
       selectedDatos.estadoColegial = identificacion.label;
@@ -2496,7 +2700,7 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
-  nuevoColegial(){
+  nuevoColegial() {
     this.selectedDatos = '';
     this.isCrearColegial = true;
 
@@ -2532,9 +2736,9 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
-  eliminarEstadoColegial(selectedItem) {
+  callServiceEliminarEstadoColegial(selectedItem) {
     this.progressSpinner = true;
-    
+
     selectedItem.idInstitucion = this.colegialesBody.idInstitucion;
     selectedItem.idPersona = this.colegialesBody.idPersona;
 
@@ -2551,6 +2755,7 @@ export class FichaColegialComponent implements OnInit {
           this.isEliminarEstadoColegial = false;
           this.onInitColegiales();
           this.showSuccess();
+          this.searchDirecciones();
         },
         error => {
           console.log(error);
@@ -2564,6 +2769,36 @@ export class FichaColegialComponent implements OnInit {
           this.showFail();
         }
       );
+  }
+
+  eliminarEstadoColegial(selectedItem) {
+
+    if (this.datosColegiales[1].idEstado == "20" && selectedItem.idEstado != "20") {
+      //Se comprueba si le falta alguna direccion
+      //Si no le falta llamamos al servicio para guardar los cambios
+      if (this.comprobarDireccion(true)) {
+        this.callServiceEliminarEstadoColegial(selectedItem);
+        //Si falta se muestra un mensaje indicando que se creara esa direccion que falta automaticamente
+      } else {
+        this.callServiceShowMessageDelete(selectedItem);
+      }
+      //Si el cambio es de ejerciente a no ejerciente
+    } else if (selectedItem.idEstado == "20" && this.datosColegiales[1].idEstado != "20") {
+      //Se comprueba si le falta alguna direccion
+      //Si no le falta llamamos al servicio para guardar los cambios
+      if (this.comprobarDireccion(false)) {
+        this.callServiceEliminarEstadoColegial(selectedItem);
+        //Si falta se muestra un mensaje indicando que se creara esa direccion que falta automaticamente
+      } else {
+        this.callServiceShowMessageDelete(selectedItem);
+      }
+      //Si el cambio pertenece a un estado no ejerciente, se elimina sin realizar comprobaciones
+    } else {
+      this.callServiceEliminarEstadoColegial(selectedItem);
+    }
+
+
+
   }
 
   // FIN DATOS COLEGIALES
@@ -3277,10 +3512,10 @@ export class FichaColegialComponent implements OnInit {
       JSON.stringify(this.datosDirecciones)
     );
 
-    if (this.colegialesBody != undefined) {
+    if (this.datosColegiales.length != 0) {
       sessionStorage.setItem(
         "situacionColegialesBody",
-        JSON.stringify(this.colegialesBody.situacion)
+        JSON.stringify(this.datosColegiales[0].idEstado)
       );
     }
     // CAMBIO INCIDENCIA DIRECCIONES
@@ -3319,10 +3554,10 @@ export class FichaColegialComponent implements OnInit {
         );
         sessionStorage.setItem("permisoTarjeta", this.tarjetaDirecciones);
 
-        if (this.colegialesBody != undefined) {
+        if (this.datosColegiales.length != 0) {
           sessionStorage.setItem(
             "situacionColegialesBody",
-            JSON.stringify(this.colegialesBody.situacion)
+            JSON.stringify(this.datosColegiales[0].idEstado)
           );
         }
 
