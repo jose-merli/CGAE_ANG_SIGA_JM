@@ -27,10 +27,16 @@ export class AseguradoItem {
   poblacion: String;
   tipoDireccion: String;
   iban: String;
+  bic: String;
+  dc: String;
   tipoEjercicio: String;
   familiares: FamiliarItem[];
   beneficiarios: FamiliarItem[];
   Identificador: any;
-
-  constructor() {}
+  banco: String;
+  sucursal: String;
+  idPais: String;
+  idProvincia: String;
+  idPoblacion: String;
+  constructor() { }
 }
