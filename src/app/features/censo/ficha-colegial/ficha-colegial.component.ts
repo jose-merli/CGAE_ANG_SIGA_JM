@@ -2662,6 +2662,7 @@ export class FichaColegialComponent implements OnInit {
       this.nuevoEstadoColegial.fechaEstadoStr = event;
     } else {
       selectedDatos.fechaEstadoStr = event;
+      this.datosColegiales[0].fechaEstadoNueva = event;
     }
     this.isRestablecer = true;
     this.activacionGuardarColegiales();
