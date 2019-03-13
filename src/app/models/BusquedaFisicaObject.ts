@@ -3,5 +3,6 @@ import { ErrorItem } from "./ErrorItem";
 export class BusquedaFisicaObject {
   error: Error;
   busquedaFisicaItems: BusquedaFisicaItem[] = [];
-  constructor() {}
+  onlyNif: Boolean;
+  constructor() { }
 }
