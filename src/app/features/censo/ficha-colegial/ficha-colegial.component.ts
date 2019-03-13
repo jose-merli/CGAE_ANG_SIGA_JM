@@ -2495,7 +2495,6 @@ export class FichaColegialComponent implements OnInit {
           // Siempre realizaremos el update de los registros de la tabla, tanto del registro editable como de los registros que solo se pueden modificar las observaciones
           this.datosColegiales[0].idInstitucion = this.colegialesBody.idInstitucion;
           this.datosColegiales[0].idPersona = this.colegialesBody.idPersona;
-          this.datosColegiales[0].fecha
           this.sigaServices
             .post("fichaDatosColegiales_datosColegialesUpdateEstados", this.datosColegiales)
             .subscribe(
