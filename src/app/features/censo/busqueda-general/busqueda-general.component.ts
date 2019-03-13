@@ -844,7 +844,7 @@ export class BusquedaGeneralComponent {
           ) {
             let formador = new FormadorCursoItem();
             formador.tipoIdentificacion = this.tipoCIF;
-            // formador.nif = this.bodyFisica.nif;
+            formador.nif = this.bodyFisica.nif;
             sessionStorage.removeItem("abrirFormador");
             sessionStorage.setItem("formador", JSON.stringify(formador));
             if (
