@@ -282,7 +282,9 @@
                       background:
                         etiquetasPersonaJuridicaSelecionados.backgroundColor
                     }">
-                    {{ etiquetasPersonaJuridicaSelecionados.label }}
+                    <span *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor == 'white'" style="color:black">{{ etiquetasPersonaJuridicaSelecionados.label }}</span>
+                    <span *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor != undefined && etiquetasPersonaJuridicaSelecionados.backgroundColor != 'white'" style="color:white">{{ etiquetasPersonaJuridicaSelecionados.label }}</span>
+                    <span *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor == undefined" style="color:black">{{ etiquetasPersonaJuridicaSelecionados.label }}</span>
                   </div>
                 </ng-template>
               </p-autoComplete>
@@ -357,7 +359,7 @@
                   <ng-template let-topicsSelecionados pTemplate="selectedItem">
                     <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
                       [ngStyle]="{'background': topicsSelecionados.color, 'margin': marginPx, 'border': bw }">
-                      {{ topicsSelecionados.label }}
+                      <span style="color:white">{{ topicsSelecionados.label }}</span>
                     </div>
                   </ng-template>
                 </p-autoComplete>

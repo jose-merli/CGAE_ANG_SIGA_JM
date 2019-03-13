@@ -383,7 +383,7 @@
             <ng-template let-formadoresSelecionados pTemplate="selectedItem">
               <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
                 [ngStyle]="{'background': formadoresSelecionados.color, 'margin': marginPx, 'border': bw }">
-                {{ formadoresSelecionados.nombreCompleto }}
+                <span style="color: white">{{ formadoresSelecionados.nombreCompleto }}</span>
               </div>
             </ng-template>
           </p-autoComplete>

@@ -646,7 +646,7 @@ export class FichaCursoComponent implements OnInit {
   }
 
   getComboTemas() {
-    this.backgroundColor = this.getRandomColor();
+    this.backgroundColor = "#87CEFA";
     // obtener colegios
     this.sigaServices.get("fichaCursos_getTopicsCourse").subscribe(
       n => {
@@ -712,7 +712,7 @@ export class FichaCursoComponent implements OnInit {
 
           this.resultsService.forEach(e => {
             if (e.color == undefined) {
-              e.color = this.getRandomColor();
+              e.color = "#87CEFA";
             }
           });
           this.progressSpinner = false;
@@ -740,7 +740,7 @@ export class FichaCursoComponent implements OnInit {
 
           this.resultsTopics.forEach(e => {
             if (e.color == undefined) {
-              e.color = this.getRandomColor();
+              e.color = "#87CEFA";
             }
           });
           this.progressSpinner = false;
@@ -1199,7 +1199,7 @@ export class FichaCursoComponent implements OnInit {
 
         this.resultsTopics.forEach(e => {
           if (e.color == undefined) {
-            e.color = this.getRandomColor();
+            e.color = "#87CEFA";
           }
         });
       } else {
@@ -1212,7 +1212,7 @@ export class FichaCursoComponent implements OnInit {
       if (this.autocompleteTopics.highlightOption != undefined) {
         this.resultsTopics.forEach(e => {
           if (e.color == undefined) {
-            e.color = this.getRandomColor();
+            e.color = "#87CEFA";
           }
         });
       }
@@ -1237,7 +1237,7 @@ export class FichaCursoComponent implements OnInit {
 
     this.resultsTopics.forEach(e => {
       if (e.color == undefined) {
-        e.color = this.getRandomColor();
+        e.color = "#87CEFA";
       }
     });
   }
@@ -1248,7 +1248,7 @@ export class FichaCursoComponent implements OnInit {
 
   visiblePanelBlurTopics(event) {
     if (this.autocompleteTopics.highlightOption != undefined) {
-      this.autocompleteTopics.highlightOption.color = this.getRandomColor();
+      this.autocompleteTopics.highlightOption.color = "#87CEFA";
       this.resultsTopics.push(this.autocompleteTopics.highlightOption);
       this.autocompleteTopics.highlightOption = undefined;
     }
@@ -1280,7 +1280,7 @@ export class FichaCursoComponent implements OnInit {
 
         this.resultsService.forEach(e => {
           if (e.color == undefined) {
-            e.color = this.getRandomColor();
+            e.color = "#87CEFA";
           }
         });
       } else {
@@ -1293,7 +1293,7 @@ export class FichaCursoComponent implements OnInit {
       if (this.autocompleteService.highlightOption != undefined) {
         this.resultsService.forEach(e => {
           if (e.color == undefined) {
-            e.color = this.getRandomColor();
+            e.color = "#87CEFA";
           }
         });
       }
@@ -1320,7 +1320,7 @@ export class FichaCursoComponent implements OnInit {
 
     this.resultsService.forEach(e => {
       if (e.color == undefined) {
-        e.color = this.getRandomColor();
+        e.color = "#87CEFA";
       }
     });
   }
@@ -1331,7 +1331,7 @@ export class FichaCursoComponent implements OnInit {
 
   visiblePanelBlur(event) {
     if (this.autocompleteService.highlightOption != undefined) {
-      this.autocompleteService.highlightOption.color = this.getRandomColor();
+      this.autocompleteService.highlightOption.color = "#87CEFA";
       this.resultsService.push(this.autocompleteService.highlightOption);
       this.autocompleteService.highlightOption = undefined;
     }

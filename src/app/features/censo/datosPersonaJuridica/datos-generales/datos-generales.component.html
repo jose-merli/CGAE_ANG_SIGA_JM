@@ -164,7 +164,8 @@
                 <ng-template let-etiquetasPersonaJuridicaSelecionados pTemplate="selectedItem">
                   <div *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor != ''" class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li"
                     [ngStyle]="{'background': etiquetasPersonaJuridicaSelecionados.backgroundColor}">
-                    {{ etiquetasPersonaJuridicaSelecionados.label }}
+                    <span *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor == undefined || etiquetasPersonaJuridicaSelecionados.backgroundColor == white" style="color: black">{{ etiquetasPersonaJuridicaSelecionados.label }}</span>
+                    <span *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor != undefined && etiquetasPersonaJuridicaSelecionados.backgroundColor != white" style="color: white">{{ etiquetasPersonaJuridicaSelecionados.label }}</span>
                   </div>
                 </ng-template>
               </p-autoComplete>

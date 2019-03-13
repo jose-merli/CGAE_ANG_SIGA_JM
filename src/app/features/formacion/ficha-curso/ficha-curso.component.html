@@ -58,7 +58,7 @@
     <!-- Cuerpo -->
     <div class="card-body card-body-ficha" *ngIf="esFichaActiva('generales')">
       <div class="form-row mb-3">
-        <div class="bloque col-lg-5 col-md-5">
+        <div class="bloque col-lg-4 col-md-4">
           <div class="row mb-3">
             <label class="ml-2">
               <strong>{{'censo.consultaDatosGenerales.cabecera' | translate}}</strong>
@@ -104,7 +104,7 @@
                     class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
 
                     [ngStyle]="{'background': servicesSelecionados.color, 'margin': marginPx, 'border': bw }">
-                    {{ servicesSelecionados.label }}
+                    <span style="color: white">{{ servicesSelecionados.label }}</span>
                   </div>
                 </ng-template>
               </p-autoComplete>
@@ -187,7 +187,7 @@
             </div>
           </div>
         </div>
-        <div class="bloque col-lg-3 col-md-3">
+        <div class="bloque col-lg-4 col-md-4">
           <div class="row mb-3">
             <label> <strong> {{'formacion.fichaCursos.datosGenerales.datosAdicionales.cabecera' | translate}}</strong>
             </label>
@@ -220,8 +220,8 @@
                 <ng-template let-topicsSelecionados pTemplate="selectedItem">
                   <div
                     class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
-                    [ngStyle]="{'background': topicsSelecionados.color, 'margin': marginPx, 'border': bw }">
-                    {{ topicsSelecionados.label }}
+                    [ngStyle]="{'background': topicsSelecionados.color, 'margin': marginPx, 'border': bw}">
+                    <span style="color: white">{{ topicsSelecionados.label }}</span>
                   </div>
                 </ng-template>
               </p-autoComplete>

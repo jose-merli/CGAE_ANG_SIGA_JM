@@ -1159,7 +1159,7 @@ export class DatosGenerales implements OnInit {
 
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "226";
+    controlAcceso.idProceso = "120";
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
       data => {
