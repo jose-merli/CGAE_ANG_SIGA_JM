@@ -578,7 +578,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   addFile(dato) {
     this.sigaServices
-      .postSendContent("plantillasDoc_subirPlantilla", this.file)
+      .postSendContentAndParameter("plantillasDoc_subirPlantilla", "?idClaseComunicacion=" + this.body.idClaseComunicacion, this.file)
       .subscribe(
         data => {
           let plantilla = new PlantillaDocumentoItem();
@@ -1098,7 +1098,8 @@ export class PlantillaDocumentoComponent implements OnInit {
   
   downloadDocumento(dato) {
     let objDownload = {
-      idPlantillaDocumento: dato[0].idPlantillaDocumento
+      idPlantillaDocumento: dato[0].idPlantillaDocumento,
+      idClaseComunicacion: this.body.idClaseComunicacion
     };
    this.progressSpinner = true;
     this.sigaServices

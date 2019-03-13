@@ -50,6 +50,40 @@
           <p-dropdown [options]="estados" [(ngModel)]="bodySearch.idEstado" class="select-form"></p-dropdown>
         </div>
       </div>
+      <p (click)="onHideDatosDestinatarios()" class="title-module">
+        {{ "informesycomunicaciones.comunicaciones.busqueda.destinatario" | translate }}
+        <i *ngIf="showDatosDestinatarios" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showDatosDestinatarios" class="fa fa-angle-down float-right"></i>
+      </p>
+      <div *ngIf="showDatosDestinatarios" class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group col-lg-2 col-md-2">
+            <label>{{ "administracion.usuarios.literal.NIF" | translate }}
+            </label>
+            <input [disabled]= "busquedaDestinatarioDisabled" type="text" class="form-control" [attr.maxlength]="20" pInputText [(ngModel)]="bodySearch.nif" />
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}
+            </label>
+            <input [disabled]= "busquedaDestinatarioDisabled" type="text" class="form-control" pInputText [(ngModel)]="bodySearch.apellidos" />
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
+            </label>
+            <input [disabled]= "busquedaDestinatarioDisabled" type="text" class="form-control" pInputText [(ngModel)]="bodySearch.nombre" />
+          </div>          
+          <div class="form-group col-lg-2 col-md-2">
+            <label>{{ "censo.resultadoDuplicados.numeroColegiado" | translate }}
+            </label>
+            <input [disabled]= "busquedaDestinatarioDisabled" type="text" class="form-control" pInputText [(ngModel)]="bodySearch.numColegiado" />
+          </div>
+          <div class="form-group col-lg-2 col-md-2">
+            <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}
+            </label>
+            <p-dropdown [disabled]= "busquedaDestinatarioDisabled" [filter]="true" filterBy="label,labelSinTilde" [options]="colegios" [(ngModel)]="bodySearch.idInstitucion" class="select-form"></p-dropdown>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="card-footer">
       <div class="text-right main-button">
@@ -74,7 +108,7 @@
         <ng-template pTemplate="header" let-columns>
           <tr>
             <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-              {{col.header}}
+              {{col.header | translate}}
               <p-sortIcon [field]="col.field"></p-sortIcon>
               <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
                 type="text" (input)="table.filter($event.target.value,
