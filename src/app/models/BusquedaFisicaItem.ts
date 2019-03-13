@@ -17,5 +17,6 @@ export class BusquedaFisicaItem {
   idActividadProfesional: String;
   domicilio: String;
   fechaEstado: String;
-  constructor() {}
+  onlyNif: Boolean;
+  constructor() { }
 }

@@ -689,6 +689,8 @@ para poder filtrar el dato con o sin estos caracteres*/
 
                 this.tiposChangeUnSelected.push(this.comboTipoDireccion.find(tipoDir => tipoDir.value == tipoSelected));
               }
+            } else {
+              this.tiposChangeUnSelected.push(this.comboTipoDireccion.find(tipoDir => tipoDir.value == tipoSelected));
             }
           });
         }

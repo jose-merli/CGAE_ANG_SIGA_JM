@@ -115,7 +115,7 @@
               </div>
               <div class="form-group col-lg-4 col-md-4">
                 <input [disabled]="noEditable || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.prefijoNumsspp"
-                  type="text" maxlength ="8" class="form-control" [(disabled)]="prefijoBlock" pInputText>
+                  type="text" maxlength="8" class="form-control" [(disabled)]="prefijoBlock" pInputText>
               </div>
               <div class="form-group col-lg-4 col-md-4">
                 <input [disabled]="noEditable || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.contadorNumsspp"
@@ -127,7 +127,7 @@
               </div>
               <div class="form-group col-lg-4 col-md-4">
                 <input [disabled]="noEditable || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.sufijoNumsspp"
-                  type="text" maxlength ="8" class="form-control" pInputText>
+                  type="text" maxlength="8" class="form-control" pInputText>
               </div>
             </div>
 
@@ -150,7 +150,7 @@
             <div class="form-check col-lg-6 col-md-6">
               <br>
               <label class="form-group-label">{{"censo.busquedaClientes.noColegiados.sociedadProfesional" | translate}}</label> &nbsp;&nbsp;
-              <p-checkbox [(ngModel)]='sociedadProfesional' binary="true" (onChange)="onChangeSociedadProfesional()" [disabled]="tarjeta == '2'"></p-checkbox>
+              <p-checkbox [(ngModel)]='sociedadProfesional' binary="true" (onChange)="onChangeSociedadProfesional()" [disabled]="tarjeta == '2' || !habilitarCheck()"></p-checkbox>
             </div>
           </div>
         </div>
