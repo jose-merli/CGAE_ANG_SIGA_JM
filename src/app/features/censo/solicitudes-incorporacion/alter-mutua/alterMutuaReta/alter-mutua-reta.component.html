@@ -4,7 +4,7 @@
     <i class="fa fa-square"></i>
     <p>{{ 'menu.censo' | translate}}
         <i class="fa fa-angle-right"></i>
-        <!--{{'censo.alterMutua.titulo' | translate}}-->Alternativa al RETA
+        {{ 'pestana.fichaCliente.alterMutua.alternativa' | translate}}
     </p>
 </div>
 
@@ -21,10 +21,10 @@
             </div>
             <div class="col-lg-11 col-md-10">
                 <div class="d-flex justify-content-start mb-1">
-                    <label class="mr-auto title-ficha">Datos de colegiación</label>
+                    <label class="mr-auto title-ficha">{{"censo.busquedaClientes.literal.datosColegiacion" | translate}}</label>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <label>Tarífa
+                    <label>{{ "censo.alterMutua.literal.tarifa" | translate}}
                         <span>{{tarifa}}</span>
                     </label>
                     <i [hidden]="fichaColegiacion" class="fa fa-angle-down float-right"></i>
@@ -36,7 +36,7 @@
                 <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
                 <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
             </div>
-            <label class="title-ficha">Datos de colegiación</label>
+            <label class="title-ficha">{{"censo.busquedaClientes.literal.datosColegiacion" | translate}}</label>
             <i class="fa fa-angle-up ml-auto"></i>
         </div>
     </div>
@@ -44,7 +44,7 @@
     <div [hidden]="!datosPropuesta" class="card-body card-body-ficha">
         <div class="form-row">
             <div class="form-group col-lg-3 col-md-3">
-                <label>Modalidad de contratación (*)</label>
+                <label>{{"censo.alterMutua.literal.modalidadContratacion" | translate}} (*)</label>
                 <p-dropdown class="select-form" [(ngModel)]='modContratacionSelected' [options]="comboModContratacion" (onChange)="onchangeModalidad($event)"
                     optionLabel="label" dataKey="value">
                 </p-dropdown>
@@ -55,7 +55,7 @@
                     style="cursor:pointer"></i>
             </div>
             <div class="form-group col-lg-3 col-md-3">
-                <label>Tarífa(€)</label>
+                <label>{{"censo.alterMutua.literal.tarifa" | translate}} (€)</label>
                 <input type="text" disabled="true" class="form-control" [(ngModel)]='tarifa' pInputText>
             </div>
         </div>
@@ -75,16 +75,16 @@
             </div>
             <div class="col-lg-11 col-md-10">
                 <div class="d-flex justify-content-start mb-1">
-                    <label class="mr-auto title-ficha">Datos personales</label>
+                    <label class="mr-auto title-ficha">{{"formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <label>Identificación
+                    <label>{{"censo.fichaCliente.literal.identificacion" | translate}}
                         <span>{{asegurado.identificador}}</span>
                     </label>
-                    <label>Nombre
+                    <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}
                         <span>{{asegurado.nombre}}</span>
                     </label>
-                    <label>Apellidos
+                    <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}
                         <span>{{asegurado.apellidos}}</span>
                     </label>
                     <i [hidden]="fichaColegiacion" class="fa fa-angle-down float-right"></i>
@@ -96,7 +96,7 @@
                 <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
                 <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
             </div>
-            <label class="title-ficha">Datos personales</label>
+            <label class="title-ficha">{{"formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
             <i class="fa fa-angle-up ml-auto"></i>
         </div>
     </div>
@@ -105,38 +105,38 @@
     <div [hidden]="!datosPersonales" class="card-body card-body-ficha">
         <div class="form-row">
             <div class="form-group col-lg-3 col-md-3">
-                <label>Identificador</label>
+                <label>{{"censo.fichaCliente.literal.identificacion" | translate}}</label>
                 <input [disabled]="true" type="text" class="form-control" [(ngModel)]="asegurado.identificador" pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-3">
-                <label>Nombre</label>
+                <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
                 <input type="text" [disabled]="true" class="form-control" [(ngModel)]="asegurado.nombre" pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-3">
-                <label>Apellidos</label>
+                <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}</label>
                 <input type="text" [disabled]="true" class="form-control" [(ngModel)]="asegurado.apellidos" pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-3">
-                <label>fecha de nacimiento</label>
+                <label>{{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}}</label>
                 <app-fecha [(value)]="asegurado.fechaNacimiento" [utc]="false" [disabled]="true" (valueChangeSelected)="fillFechaNacimientoAsegurado($event)"
                     (valueChangeInput)="fillFechaNacimientoAsegurado($event)"></app-fecha>
             </div>
             <div class="form-group col-lg-3 col-md-3">
-                <label>Sexo</label>
+                <label>{{"censo.busquedaClientesAvanzada.literal.sexo" | translate}}</label>
                 <p-dropdown class="select-form" [(ngModel)]="sexoSelected" [options]="comboSexo" optionLabel="label" dataKey="value" [disabled]="true"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3">
-                <label>Estado civil</label>
+                <label>{{"censo.consultaDatosGenerales.literal.estadoCivil" | translate}}</label>
                 <p-dropdown class="select-form" [disabled]="true" [(ngModel)]="estadoCivilSelected" [options]="comboEstadoCivil" optionLabel="label"
                     dataKey="value"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3">
-                <label>Colegio</label>
+                <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
                 <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="ColegioSelected" [options]="comboColegios" optionLabel="label"
                     dataKey="value"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3">
-                <label>Situación del ejercicio</label>
+                <label>{{"censo.alterMutua.literal.situacionEjercicio" | translate}}</label>
                 <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="tipoEjercicioSelected" [options]="comboTiposSolicitud" optionLabel="label"
                     dataKey="value"></p-dropdown>
             </div>
@@ -157,13 +157,13 @@
             </div>
             <div class="col-lg-11 col-md-10">
                 <div class="d-flex justify-content-start mb-1">
-                    <label class="mr-auto title-ficha">Datos de Contacto</label>
+                    <label class="mr-auto title-ficha">{{"censo.datosDireccion.literal.datos.contacto" | translate}}</label>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <label>Móvil
+                    <label>{{"censo.datosDireccion.literal.movil" | translate}}
                         <span>{{asegurado.movil}}</span>
                     </label>
-                    <label>Correo electrónico
+                    <label>{{"censo.datosDireccion.literal.correo" | translate}}
                         <span>{{asegurado.mail}}</span>
                     </label>
                     <i [hidden]="datosContacto" class="fa fa-angle-down float-right"></i>
@@ -175,7 +175,7 @@
                 <i *ngIf="!existeImagen" class="far fa-address-book icon-ficha"></i>
                 <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
             </div>
-            <label class="title-ficha">Datos de Contacto</label>
+            <label class="title-ficha">{{"censo.datosDireccion.literal.datos.contacto" | translate}}</label>
             <i class="fa fa-angle-up ml-auto"></i>
         </div>
     </div>
@@ -185,11 +185,11 @@
             <div class="bloque col-lg-6 col-md-6">
                 <div class="form-row">
                     <div class="form-group col-lg-4 col-md-4">
-                        <label>Idioma (*)</label>
+                        <label>{{"censo.usuario.labelIdioma" | translate}} (*)</label>
                         <p-dropdown class="select-form" [(ngModel)]='idiomaSelected' [options]="comboIdioma" optionLabel="label" dataKey="value"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
-                        <label>Medio de Comunicación (*)</label>
+                        <label>{{"censo.alterMutua.literal.medioComunicacion" | translate}} (*)</label>
                         <p-dropdown class="select-form" [(ngModel)]='comunicacionSelected' [options]="comboComunicacion" optionLabel="label" dataKey="value"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
@@ -197,7 +197,7 @@
                         <input type="text" class="form-control" [(ngModel)]="asegurado.telefono" pInputText>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
-                        <label>Teléfono 2</label>
+                        <label>{{"censo.ws.literal.telefono" | translate}} 2</label>
                         <input type="text" class="form-control" [(ngModel)]="asegurado.telefono2" pInputText>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
@@ -205,7 +205,7 @@
                         <input type="text" class="form-control" [(ngModel)]="asegurado.movil" pInputText>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
-                        <label>Fax</label>
+                        <label>{{"censo.ws.literal.fax" | translate}}</label>
                         <input type="text" class="form-control" [(ngModel)]="asegurado.fax" pInputText>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
@@ -220,27 +220,6 @@
             </div>
             <div class="bloque col-lg-6 col-md-6">
                 <div class="form-row">
-                    <!-- <div class="form-group col-lg-4 col-md-4">
-                        <label>Domicilio (*)</label>
-                        <input type="text" class="form-control" [(ngModel)]="asegurado.domicilio" pInputText>
-                    </div>
-                    <div class="form-group col-lg-4 col-md-4">
-                        <label>País (*)</label>
-                        <p-dropdown class="select-form" [(ngModel)]="paisSelected" [options]="paises" optionLabel="label" dataKey="value" (onChange)="onChangePais($event)"></p-dropdown>
-                    </div>
-                    <div class="form-group col-lg-4 col-md-4">
-                        <label>CP (*)</label>
-                        <input type="text" class="form-control" [(ngModel)]="asegurado.cp" pInputText>
-                    </div>
-                    <div class="form-group col-lg-4 col-md-4">
-                        <label>Provincia (*)</label>
-                        <p-dropdown [disabled]="deshabilitarDireccion" class="select-form" [(ngModel)]="provinciaSelected" [options]="provincias"
-                            optionLabel="label" dataKey="value"></p-dropdown>
-                    </div>
-                    <div class="form-group col-lg-4 col-md-4">
-                        <label>Población (*)</label>
-                        <input [disabled]="deshabilitarDireccion" type="text" class="form-control" [(ngModel)]="asegurado.poblacion" pInputText>
-                    </div> -->
                     <div class="form-group col-lg-4 col-md-4">
                         <label>
                             {{"censo.datosDireccion.literal.pais2" | translate}} (*)
@@ -278,7 +257,7 @@
                             [emptyFilterMessage]="resultadosPoblaciones"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
-                        <label>Tipo Dirección (*)</label>
+                        <label>{{"censo.datosDireccion.literal.tipo.direccion" | translate}} (*)</label>
                         <p-dropdown class="select-form" [(ngModel)]="tipoDirSelected" [options]="TipoDireccion" optionLabel="label" dataKey="value"></p-dropdown>
                     </div>
                 </div>
@@ -299,10 +278,10 @@
             </div>
             <div class="col-lg-11 col-md-10">
                 <div class="d-flex justify-content-start mb-1">
-                    <label class="mr-auto title-ficha">Datos bancarios</label>
+                    <label class="mr-auto title-ficha">{{"censo.consultaDatosBancarios.cabecera" | translate}}</label>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <label>IBAN
+                    <label>{{"censo.mutualidad.literal.iban" | translate}}
                         <span>{{asegurado.iban}}</span>
                     </label>
                     <i [hidden]="datosCuentaBancaria" class="fa fa-angle-down float-right"></i>
@@ -314,8 +293,7 @@
                 <i *ngIf="!existeImagen" class="fa fa-credit-card icon-ficha"></i>
                 <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
             </div>
-            <label class="title-ficha">Datos bancarios
-                <!--{{ "general.message.datos.generales" | translate}}-->
+            <label class="title-ficha">{{"censo.consultaDatosBancarios.cabecera" | translate}}
             </label>
             <i class="fa fa-angle-up ml-auto"></i>
         </div>
@@ -325,7 +303,7 @@
     <div [hidden]="!datosCuentaBancaria" class="card-body card-body-ficha">
         <div class="form-row">
             <div class="form-group col-lg-3 col-md-3">
-                <label>IBAN (*)</label>
+                <label>{{"censo.mutualidad.literal.iban" | translate}} (*)</label>
                 <input type="text" class="form-control" [(ngModel)]="asegurado.iban" (ngModelChange)="autogenerarDatos()" pInputText>
                 <div *ngIf="isValidIBAN() == false">
                     <small class="input-error" *ngIf="!isValidIBAN()">{{"IBAN incorrecto"}}</small>
@@ -354,10 +332,10 @@
             </div>
             <div class="col-lg-11 col-md-10">
                 <div class="d-flex justify-content-start mb-1">
-                    <label class="mr-auto title-ficha">Familiares</label>
+                    <label class="mr-auto title-ficha">{{"censo.alterMutua.literal.familiares" | translate}}</label>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <label>Numero de familiares
+                    <label>{{"censo.alterMutua.literal.familiares" | translate}}:
                         <span *ngIf="datos == null">0</span>
                         <span *ngIf="datos != null">{{datos.length}}</span>
                     </label>
@@ -370,7 +348,7 @@
                 <i *ngIf="!existeImagen" class="fas fa-users icon-ficha"></i>
                 <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
             </div>
-            <label class="title-ficha">Familiares
+            <label class="title-ficha">{{"censo.alterMutua.literal.familiares" | translate}}
                 <!--{{ "general.message.datos.generales" | translate}}-->
             </label>
             <i class="fa fa-angle-up ml-auto"></i>
@@ -384,8 +362,8 @@
                 [sortOrder]="1" sortField="nombre" [paginator]="true" paginatorPosition="both" [rows]="selectedItem1" pageLinks="4"
                 [editable]="true" [sortField]="sortF" [sortOrder]="sortO" (onSort)="changeSort($event)">
 
-                <p-column field="idParentesco" filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[0].header" [filter]="true"
-                    filterMatchMode="contains">
+                <p-column field="idParentesco" filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[0].header | translate"
+                    [filter]="true" filterMatchMode="contains">
                     <ng-template let-col let-card="rowData" pTemplate="body">
                         <span *ngIf="card[col.field] != ''">{{card[col.field]}}</span>
                         <p-dropdown *ngIf="card[col.field] == ''" class="select-form" [(ngModel)]="datosFamiliar.idParentesco" [options]="comboParentesco"
@@ -394,7 +372,7 @@
                     </ng-template>
 
                 </p-column>
-                <p-column field="idSexo" [header]="cols[1].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                <p-column field="idSexo" [header]="cols[1].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                     filterMatchMode="contains">
                     <ng-template let-col let-card="rowData" pTemplate="body">
                         <span *ngIf="card[col.field] != ''">{{card[col.field]}}</span>
@@ -403,7 +381,7 @@
                     </ng-template>
                 </p-column>
 
-                <p-column [sortable]="true" field="nombre" [header]="cols[2].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                <p-column [sortable]="true" field="nombre" [header]="cols[2].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                     filterMatchMode="contains">
                     <ng-template let-col let-card="rowData" pTemplate="body">
                         <span *ngIf="card[col.field] != ''">{{card[col.field]}}</span>
@@ -412,7 +390,7 @@
 
                 </p-column>
 
-                <p-column [sortable]="true" field="apellidos" [header]="cols[3].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                <p-column [sortable]="true" field="apellidos" [header]="cols[3].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                     filterMatchMode="contains">
                     <ng-template let-col let-card="rowData" pTemplate="body">
                         <span *ngIf="card[col.field] != ''">{{card[col.field]}}</span>
@@ -421,7 +399,7 @@
 
                 </p-column>
 
-                <p-column field="idTipoIdentificacion" [header]="cols[4].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                <p-column field="idTipoIdentificacion" [header]="cols[4].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                     filterMatchMode="contains">
                     <ng-template let-col let-card="rowData" pTemplate="body">
                         <span *ngIf="card[col.field] != ''">{{card[col.field]}}</span>
@@ -431,7 +409,7 @@
 
                 </p-column>
 
-                <p-column [sortable]="true" field="nIdentificacion" [header]="cols[5].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                <p-column [sortable]="true" field="nIdentificacion" [header]="cols[5].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                     filterMatchMode="contains">
                     <ng-template let-col let-card="rowData" pTemplate="body">
                         <span *ngIf="card[col.field] != ''">{{card[col.field]}}</span>
@@ -439,7 +417,7 @@
                     </ng-template>
                 </p-column>
 
-                <p-column [sortable]="true" field="fechaNacimiento" [header]="cols[6].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                <p-column [sortable]="true" field="fechaNacimiento" [header]="cols[6].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                     filterMatchMode="contains">
                     <ng-template let-col let-card="rowData" pTemplate="body">
                         <span *ngIf="card[col.field] != ''">{{card[col.field] | date: 'dd/MM/yyyy'}}</span>
@@ -489,10 +467,10 @@
             </div>
             <div class="col-lg-11 col-md-10">
                 <div class="d-flex justify-content-start mb-1">
-                    <label class="mr-auto title-ficha">Beneficiarios</label>
+                    <label class="mr-auto title-ficha">{{"censo.mutualidad.literal.beneficiarios" | translate}}</label>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <label>Beneficiarios
+                    <label>{{"censo.mutualidad.literal.beneficiarios" | translate}}:
                         <span *ngIf="datosB == null">0</span>
                         <span *ngIf="datosB != null">{{datosB.length}}</span>
                     </label>
@@ -505,7 +483,7 @@
                 <i *ngIf="!existeImagen" class="fas fa-users icon-ficha"></i>
                 <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
             </div>
-            <label class="title-ficha">Beneficiarios
+            <label class="title-ficha">{{"censo.mutualidad.literal.beneficiarios" | translate}}
                 <!--{{ "general.message.datos.generales" | translate}}-->
             </label>
             <i class="fa fa-angle-up ml-auto"></i>
@@ -514,7 +492,7 @@
     <div [hidden]="!datosBeneficiarios" class="card-body card-body-ficha">
         <div class="form-row">
             <div class="col-lg-3 col-md-3">
-                <label>Tipo beneficiario</label>
+                <label>{{"censo.alterMutua.literal.tipoBenef" | translate}}</label>
                 <p-dropdown class="select-form" [options]="comboBeneficiario" [(ngModel)]="beneficiarioSelected" optionLabel="label" dataKey="value"
                     (onChange)="onChangeTipoBenef($event)"></p-dropdown>
             </div>
@@ -524,8 +502,8 @@
                     [paginator]="true" paginatorPosition="both" [rows]="selectedItem2" pageLinks="4" [editable]="true" [sortField]="sortF"
                     [sortOrder]="sortO" (onSort)="changeSort($event)">
 
-                    <p-column field="idParentesco" filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[0].header" [filter]="true"
-                        filterMatchMode="contains">
+                    <p-column field="idParentesco" filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[0].header | translate"
+                        [filter]="true" filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
                             <p-dropdown *ngIf="car[col.field] == ''" class="select-form" [(ngModel)]="datosHeredero.idParentesco" [options]="comboParentesco"
@@ -534,7 +512,7 @@
                         </ng-template>
 
                     </p-column>
-                    <p-column field="idSexo" [header]="cols[1].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    <p-column field="idSexo" [header]="cols[1].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                         filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
@@ -543,7 +521,7 @@
                         </ng-template>
                     </p-column>
 
-                    <p-column [sortable]="true" field="nombre" [header]="cols[2].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    <p-column [sortable]="true" field="nombre" [header]="cols[2].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                         filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
@@ -552,7 +530,7 @@
 
                     </p-column>
 
-                    <p-column [sortable]="true" field="apellidos" [header]="cols[3].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    <p-column [sortable]="true" field="apellidos" [header]="cols[3].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                         filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
@@ -561,7 +539,7 @@
 
                     </p-column>
 
-                    <p-column field="idTipoIdentificacion" [header]="cols[4].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    <p-column field="idTipoIdentificacion" [header]="cols[4].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                         filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
@@ -571,7 +549,7 @@
 
                     </p-column>
 
-                    <p-column [sortable]="true" field="nIdentificacion" [header]="cols[5].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    <p-column [sortable]="true" field="nIdentificacion" [header]="cols[5].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                         filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span *ngIf="car[col.field] != ''">{{car[col.field]}}</span>
@@ -579,7 +557,7 @@
                         </ng-template>
                     </p-column>
 
-                    <p-column [sortable]="true" field="fechaNacimiento" [header]="cols[6].header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                    <p-column [sortable]="true" field="fechaNacimiento" [header]="cols[6].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                         filterMatchMode="contains">
                         <ng-template let-col let-car="rowData" pTemplate="body">
                             <span *ngIf="car[col.field] != ''">{{car[col.field] | date: 'dd/MM/yyyy'}}</span>
@@ -628,10 +606,10 @@
             </div>
             <div class="col-lg-11 col-md-10">
                 <div class="d-flex justify-content-start mb-1">
-                    <label class="mr-auto title-ficha">Observaciones</label>
+                    <label class="mr-auto title-ficha">{{"gratuita.mantenimientoLG.literal.observaciones" | translate}}</label>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <label>Observaciones
+                    <label>{{"gratuita.mantenimientoLG.literal.observaciones" | translate}}:
                         <span>{{datosAlter.observaciones}}</span>
                     </label>
                     <i [hidden]="observaciones" class="fa fa-angle-down float-right"></i>
@@ -651,7 +629,7 @@
     </div>
     <div [hidden]="!observaciones" class="card-body card-body-ficha">
         <div class="form-group col-lg-7 col-md-7">
-            <label>Observaciones</label>
+            <label>{{"gratuita.mantenimientoLG.literal.observaciones" | translate}}</label>
             <textarea [rows]="10" [(ngModel)]="datosAlter.observaciones" pInputTextarea></textarea>
         </div>
     </div>
@@ -683,7 +661,7 @@
     [width]="680">
     <p-header class="title">
         <label>
-            <strong>Sin propuestas disponibles</strong>
+            <strong>{{"solicitudes.literal.titulo.sinPropuestas" | translate}}</strong>
         </label>
     </p-header>
     <div *ngIf="propuestas != null" [innerHTML]="propuestas.mensaje" class="col-lg-12 col-md-12 ">
@@ -699,7 +677,7 @@
     [width]="680">
     <p-header class="title">
         <label>
-            <strong>Solicitar seguro</strong>
+            <strong>{{"solicitudes.literal.titulo.solicitarSeguro" | translate}}</strong>
         </label>
     </p-header>
     <div *ngIf="estadoSolicitudResponse != null" [innerHTML]="estadoSolicitudResponse.mensaje" class="col-lg-12 col-md-12 ">
@@ -716,7 +694,7 @@
     [width]="680">
     <p-header class="title">
         <label>
-            <strong>Estado de la solicitud</strong>
+            <strong>{{"solicitudes.literal.titulo.estadosolicitud" | translate}}</strong>
         </label>
     </p-header>
     <div *ngIf="estadoSolicitudResponse != null" [innerHTML]="estadoSolicitudResponse.mensaje" class="col-lg-12 col-md-12 ">

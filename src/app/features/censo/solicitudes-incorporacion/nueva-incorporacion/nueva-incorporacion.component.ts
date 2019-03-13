@@ -90,7 +90,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     private location: Location,
     private formBuilder: FormBuilder,
     private router: Router
-  ) {}
+  ) { }
 
   @ViewChild("poblacion")
   dropdown: Dropdown;
@@ -428,7 +428,7 @@ export class NuevaIncorporacionComponent implements OnInit {
           );
         }
       }
-    } 
+    }
     // else {
     //   this.sigaServices
     //     .post("solicitudIncorporacion_searchNumColegiado", this.solicitudEditar)
@@ -560,17 +560,17 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.guardar(false);
     }
     this.progressSpinner = true;
-    
+
     this.sigaServices
-        .post("solicitudIncorporacion_searchNumColegiado", this.solicitudEditar)
-        .subscribe(
-          data => {
-            let resultado = JSON.parse(data["body"]);
-            if (resultado.numColegiado == "disponible") {
-              this.sigaServices
+      .post("solicitudIncorporacion_searchNumColegiado", this.solicitudEditar)
+      .subscribe(
+        data => {
+          let resultado = JSON.parse(data["body"]);
+          if (resultado.numColegiado == "disponible") {
+            this.sigaServices
               .post(
                 "solicitudIncorporacion_aprobarSolicitud",
-                  this.solicitudEditar.idSolicitud
+                this.solicitudEditar.idSolicitud
               )
               .subscribe(
                 result => {
@@ -598,17 +598,17 @@ export class NuevaIncorporacionComponent implements OnInit {
                   this.progressSpinner = false;
                 }
               );
-            } else {
-              this.showFail("censo.solicitudIncorporacion.ficha.numColegiadoDuplicado");
-            }
-            this.progressSpinner = false;
-          },
-          error => {
-            let resultado = JSON.parse(error["error"]);
-            this.showFail(resultado.error.message.toString());
-            this.progressSpinner = false;
+          } else {
+            this.showFail("censo.solicitudIncorporacion.ficha.numColegiadoDuplicado");
           }
-        );
+          this.progressSpinner = false;
+        },
+        error => {
+          let resultado = JSON.parse(error["error"]);
+          this.showFail(resultado.error.message.toString());
+          this.progressSpinner = false;
+        }
+      );
     this.progressSpinner = true;
   }
 
@@ -720,7 +720,7 @@ export class NuevaIncorporacionComponent implements OnInit {
           );
           this.tratarDatos();
           this.progressSpinner = false;
-          
+
           if (back == true) {
             this.msgs = [
               {
@@ -829,9 +829,9 @@ para poder filtrar el dato con o sin estos caracteres*/
       .getParam(
         "direcciones_comboPoblacion",
         "?idProvincia=" +
-          this.solicitudEditar.idProvincia +
-          "&filtro=" +
-          poblacionBuscada
+        this.solicitudEditar.idProvincia +
+        "&filtro=" +
+        poblacionBuscada
       )
       .subscribe(
         n => {
@@ -854,7 +854,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             }
           });
         },
-        error => {},
+        error => { },
         () => {
           // this.isDisabledPoblacion = false;
           this.progressSpinner = false;
@@ -922,7 +922,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.solicitudEditar.idModalidadDocumentacion = this.modalidadDocumentacionSelected;
     if (
       JSON.stringify(this.checkSolicitudInicio) !=
-        JSON.stringify(this.solicitudEditar) &&
+      JSON.stringify(this.solicitudEditar) &&
       !this.isLetrado
     ) {
       if (
@@ -1053,7 +1053,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
 
@@ -1062,13 +1062,13 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.router.navigate(["/solicitudesIncorporacion"]);
   }
 
-  irAlterMutua() {
-    sessionStorage.setItem(
-      "datosSolicitud",
-      JSON.stringify(this.solicitudEditar)
-    );
-    this.router.navigate(["/alterMutua"]);
-  }
+  // irAlterMutua() {
+  //   sessionStorage.setItem(
+  //     "datosSolicitud",
+  //     JSON.stringify(this.solicitudEditar)
+  //   );
+  //   this.router.navigate(["/alterMutua"]);
+  // }
   clear() {
     this.msgs = [];
   }

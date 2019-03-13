@@ -2167,7 +2167,7 @@ export class FichaColegialComponent implements OnInit {
   activarRestablecerColegiales() {
     if (
       JSON.stringify(this.checkColegialesBody) !=
-      JSON.stringify(this.colegialesBody) || this.isCrearColegial == true
+      JSON.stringify(this.colegialesBody) || this.isCrearColegial == true || this.isRestablecer == true
     ) {
       this.isRestablecer = true;
       return true;
@@ -2402,6 +2402,7 @@ export class FichaColegialComponent implements OnInit {
     this.isCrearColegial = false;
     this.filaEditable = false;
     this.isEliminarEstadoColegial = false;
+    this.isRestablecer = false;
 
     this.activacionGuardarColegiales();
     this.searchColegiales();
@@ -2464,7 +2465,7 @@ export class FichaColegialComponent implements OnInit {
     }else{
       selectedDatos.fechaEstadoStr = event;
     }
-
+    this.isRestablecer = true;
     this.activacionGuardarColegiales();
   }
 
@@ -2479,8 +2480,8 @@ export class FichaColegialComponent implements OnInit {
       }
       selectedDatos.estadoColegial = identificacion.label;
     }
-
-    // this.activacionGuardarColegiales();
+    this.isRestablecer = true;
+    this.activacionGuardarColegiales();
   }
 
   onChangeDropResidenteColegial(event, selectedDatos) {
@@ -2491,7 +2492,7 @@ export class FichaColegialComponent implements OnInit {
         selectedDatos.situacionResidente = 'No';
       }
     }
-
+    this.isRestablecer = true;
     this.activacionGuardarColegiales();
   }
 
@@ -2506,6 +2507,7 @@ export class FichaColegialComponent implements OnInit {
   nuevoColegial(){
     this.selectedDatos = '';
     this.isCrearColegial = true;
+    this.isRestablecer = true;
 
     let dummy = {
       fechaEstadoStr: "",
@@ -4218,13 +4220,25 @@ export class FichaColegialComponent implements OnInit {
     this.solicitudEditar.estadoCivil = this.generalBody.idEstadoCivil;
     this.solicitudEditar.fechaNacimiento = this.generalBody.fechaNacimientoDate;
     this.solicitudEditar.tratamiento = this.tratamientoDesc;
-    sessionStorage.setItem(
-      "datosSolicitud",
-      JSON.stringify(this.solicitudEditar)
-    );
-    sessionStorage.setItem("tipoPropuesta", "Ofertas");
-    this.router.navigate(["/alterMutuaOfertas"]);
-  }
+    this.sigaServices
+      .get("solicitudIncorporacion_tipoIdentificacion")
+      .subscribe(
+        result => {
+          let tipos = result.combooItems;
+          this.progressSpinner = false;
+          let identificacion = tipos.find(
+            item => item.value === this.solicitudEditar.idTipoIdentificacion
+          );
+          this.solicitudEditar.tipoIdentificacion = identificacion.label;
+          sessionStorage.setItem("datosSolicitud", JSON.stringify(this.solicitudEditar));
+          sessionStorage.setItem("tipoPropuesta", "Ofertas");
+          this.router.navigate(["/alterMutuaOfertas"]);
+        },
+        error => {
+          console.log(error);
+        }
+      );
+      }
 
 
   irPlanUniversal() {
