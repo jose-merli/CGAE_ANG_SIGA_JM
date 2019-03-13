@@ -51,10 +51,13 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
       activa: false
     },
     {
-      key: "documentos",
+      key: "destinatariosIndv",
       activa: false
     },
-
+    {
+      key: "documentos",
+      activa: false
+    }
   ];
 
 
@@ -70,10 +73,10 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
 
   ngOnInit() {
 
-    if(sessionStorage.getItem("tinyApiKey") != null){
+    if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey")
     }
-    
+
     this.editar = false;
     this.getDatos();
     this.getTipoEnvios();
@@ -152,7 +155,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   onChangeTipoEnvio() {
     this.getPlantillas();
-  } 
+  }
 
   getPlantillas() {
     this.sigaServices.post("enviosMasivos_plantillas", this.body.idTipoEnvios).subscribe(
