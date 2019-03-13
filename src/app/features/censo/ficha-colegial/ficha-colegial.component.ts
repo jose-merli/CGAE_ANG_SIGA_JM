@@ -393,6 +393,7 @@ export class FichaColegialComponent implements OnInit {
   seleccionColegial: string = "single";
   isRestablecer: boolean = false;
   isEliminarEstadoColegial: boolean = false;
+  disabledToday: boolean = false;
 
   constructor(
     private location: Location,
@@ -2650,6 +2651,7 @@ export class FichaColegialComponent implements OnInit {
               // Si tenemos mas de 1 estado en la tabla, la fecha minima a la que podemos modificar la fechaEstado del último estado será la del anterior estado
               this.fechaMinimaEstadoColegialMod = this.sumarDia(JSON.parse(this.datosColegiales[1].fechaEstado));
             }
+
           }
 
           this.checkDatosColegiales = JSON.parse(JSON.stringify(this.datosColegiales));
@@ -2665,7 +2667,7 @@ export class FichaColegialComponent implements OnInit {
       this.nuevoEstadoColegial.fechaEstadoStr = event;
     } else {
       selectedDatos.fechaEstadoStr = event;
-      this.datosColegiales[0].fechaEstadoNueva = event;
+      this.datosColegiaciones[0].fechaEstadoNueva = event;
     }
     this.isRestablecer = true;
     this.activacionGuardarColegiales();
@@ -2716,10 +2718,22 @@ export class FichaColegialComponent implements OnInit {
       estado: "",
       residente: "",
       observaciones: "",
-      nuevoRegistro: true
+      nuevoRegistro: true,
+      isMod: true
     };
 
     this.datosColegiales = [dummy, ...this.datosColegiales];
+    this.datosColegiales[1].isMod = false;
+
+    let fechaHoy = new Date();
+    let fecha = new Date(this.datosColegiales[1].fechaEstado);
+    if (fecha.getDate() == fechaHoy.getDate() &&
+      fecha.getMonth() == fechaHoy.getMonth() &&
+      fecha.getFullYear() == fechaHoy.getFullYear()) {
+      this.disabledToday = true;
+    }else{
+      this.disabledToday = false;
+    }
 
     this.datosColegiales.forEach(element => {
       element.habilitarObs = false;
