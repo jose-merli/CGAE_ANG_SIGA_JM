@@ -115,6 +115,12 @@ export class FichaCursoComponent implements OnInit {
   @ViewChild("autocompleteTopics")
   autocompleteTopics: AutoComplete;
 
+  @ViewChild("fechaInicioInscripcion")
+  fechaInicioInscripcion;
+
+  @ViewChild("fechaFinInscripcion")
+  fechaFinInscripcion;
+
   persistenciaFichaCurso;
 
 
@@ -257,7 +263,7 @@ export class FichaCursoComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if(sessionStorage.getItem("tinyApiKey") != null){
+    if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey")
     }
     this.progressSpinner = true;
@@ -308,6 +314,10 @@ export class FichaCursoComponent implements OnInit {
         }
       }
 
+      if (!this.modoEdicion) {
+        this.curso.idEstado = this.valorEstadoAbierto;
+      }
+
       sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
       this.configurationInformacionAdicional();
       this.arreglarFechasEvento();
@@ -342,6 +352,10 @@ export class FichaCursoComponent implements OnInit {
         if (this.curso.idEventoFinInscripcion == "undefined") {
           this.curso.fechaInscripcionHastaDate = null;
         }
+      }
+
+      if (!this.modoEdicion) {
+        this.curso.idEstado = this.valorEstadoAbierto;
       }
 
       this.arreglarFechasEvento();
@@ -1094,6 +1108,42 @@ export class FichaCursoComponent implements OnInit {
     });
   }
 
+  showMessageEditInitInscriptionEvent(value) {
+    let mess = "¿Desea acceder a editar la fecha en el evento asociado?";
+
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.selectStartDateInscription(value);
+      },
+      reject: () => {
+        if (this.modoEdicion) {
+          this.fechaInicioInscripcion.calendar.inputFieldValue = this.arreglarFechaString(this.curso.fechaInscripcionDesdeDate);
+          this.fechaInicioInscripcion.calendar.value = this.curso.fechaInscripcionDesdeDate;
+
+        } else if ((!this.modoEdicion && this.curso.idEventoInicioInscripcion != undefined)
+          || (!this.modoEdicion && this.curso.idEventoFinInscripcion != undefined)) {
+          this.fechaInicioInscripcion.calendar.inputFieldValue = this.arreglarFechaString(this.curso.fechaInscripcionDesdeDate);
+          this.fechaInicioInscripcion.calendar.value = this.curso.fechaInscripcionDesdeDate;
+        } else {
+          this.fechaInicioInscripcion.calendar.inputFieldValue = "";
+          this.fechaInicioInscripcion.calendar.value = undefined;
+        }
+        this.msgs = [
+          {
+            severity: "info",
+            summary: this.translateService.instant("general.message.cancelado"),
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
   selectStartDateInscription(value) {
 
     if (this.comprobarFecha(value)) {
@@ -1106,9 +1156,46 @@ export class FichaCursoComponent implements OnInit {
       this.curso.temasCombo = this.resultsTopics;
       sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
       sessionStorage.setItem("isFormacionCalendarByStartInscripcion", "true");
-      sessionStorage.setItem("curso", JSON.stringify(this.curso));
       this.router.navigate(["/fichaEventos"]);
     }
+  }
+
+  showMessageEditEndInscriptionEvent(event) {
+    let mess = "¿Desea acceder a editar la fecha en el evento asociado?";
+
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.selectEndDateInscription(event);
+      },
+      reject: () => {
+
+        if (this.modoEdicion) {
+          this.fechaFinInscripcion.calendar.inputFieldValue = this.arreglarFechaString(this.curso.fechaInscripcionHastaDate);
+          this.fechaFinInscripcion.calendar.value = this.curso.fechaInscripcionHastaDate;
+
+        } else if ((!this.modoEdicion && this.curso.idEventoFinInscripcion != undefined)
+          || (!this.modoEdicion && this.curso.idEventoFinInscripcion != undefined)) {
+          this.fechaFinInscripcion.calendar.inputFieldValue = this.arreglarFechaString(this.curso.fechaInscripcionHastaDate);
+          this.fechaFinInscripcion.calendar.value = this.curso.fechaInscripcionHastaDate;
+        } else {
+          this.fechaFinInscripcion.calendar.inputFieldValue = "";
+          this.fechaFinInscripcion.calendar.value = undefined;
+        }
+
+        this.msgs = [
+          {
+            severity: "info",
+            summary: this.translateService.instant("general.message.cancelado"),
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
   }
 
   selectEndDateInscription(event) {
@@ -1122,7 +1209,6 @@ export class FichaCursoComponent implements OnInit {
     this.curso.temasCombo = this.resultsTopics;
     sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
     sessionStorage.setItem("isFormacionCalendarByEndInscripcion", "true");
-    sessionStorage.setItem("curso", JSON.stringify(this.curso));
     this.router.navigate(["/fichaEventos"]);
   }
 
@@ -3391,5 +3477,13 @@ export class FichaCursoComponent implements OnInit {
     this.curso.fechaImparticionHastaDate = event;
   }
 
-
+  arreglarFechaString(fecha) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -15);
+    let splitDate = rawDate.split("-");
+    let arrayDate = splitDate[2] + "/" + splitDate[1] + "/" + splitDate[0];
+    // fecha = new Date((arrayDate += "T00:00:00.001Z"));
+    // fecha = new Date(rawDate);
+    return arrayDate;
+  }
 }

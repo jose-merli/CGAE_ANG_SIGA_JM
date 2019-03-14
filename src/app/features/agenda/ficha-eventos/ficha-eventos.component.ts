@@ -7,7 +7,7 @@ import {
   ViewChild,
   ViewEncapsulation
 } from "@angular/core";
-import { Router } from "@angular/router";
+import { Router, NavigationEnd } from '@angular/router';
 import { saveAs } from "file-saver/FileSaver";
 import {
   AutoComplete,
@@ -375,20 +375,22 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
       this.path = "formacionInicioInscripcion";
 
-      let curso = JSON.parse(sessionStorage.getItem("curso"));
+      this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
 
-      if (curso.idCurso != undefined && curso.idCurso != null) {
-        this.idCurso = curso.idCurso;
-        curso.idTipoEvento = this.valorTipoEventoInicioInscripcion;
-        this.searchEvent(curso);
+      if (this.curso.idCurso != undefined && this.curso.idCurso != null) {
+        this.idCurso = this.curso.idCurso;
+        this.curso.idTipoEvento = this.valorTipoEventoInicioInscripcion;
+        this.searchEvent(this.curso);
 
+      } else if (this.curso.idEventoInicioInscripcion != undefined && this.curso.idEventoInicioInscripcion != "undefined") {
+        this.searchEventByIdEvento(this.curso.idEventoInicioInscripcion);
       } else {
         this.newEvent = new EventoItem();
         //Obligamos a que sea tipo calendario formacion
         this.newEvent.idTipoCalendario = this.valorTipoFormacion;
 
-        this.newEvent.start = new Date(curso.fechaInscripcionDesdeDate);
-        this.newEvent.end = new Date(curso.fechaInscripcionDesdeDate);
+        this.newEvent.start = new Date(this.curso.fechaInscripcionDesdeDate);
+        this.newEvent.end = new Date(this.curso.fechaInscripcionDesdeDate);
 
         //Indicamos que el limite que puede durar el evento
         this.invalidDateMin = new Date(
@@ -432,20 +434,22 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.path = "formacionFinInscripcion";
       this.disabledToday = false;
 
-      let curso = JSON.parse(sessionStorage.getItem("curso"));
+      this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
 
-      if (curso.idCurso != undefined && curso.idCurso != null) {
-        this.idCurso = curso.idCurso;
-        curso.idTipoEvento = this.valorTipoEventoFinInscripcion;
-        this.searchEvent(curso);
+      if (this.curso.idCurso != undefined && this.curso.idCurso != null) {
+        this.idCurso = this.curso.idCurso;
+        this.curso.idTipoEvento = this.valorTipoEventoFinInscripcion;
+        this.searchEvent(this.curso);
 
+      } else if (this.curso.idEventoFinInscripcion != undefined && this.curso.idEventoFinInscripcion != "undefined") {
+        this.searchEventByIdEvento(this.curso.idEventoFinInscripcion);
       } else {
         this.newEvent = new EventoItem();
         //Obligamos a que sea tipo calendario formacion
         this.newEvent.idTipoCalendario = this.valorTipoFormacion;
 
-        this.newEvent.start = new Date(curso.fechaInscripcionHastaDate);
-        this.newEvent.end = new Date(curso.fechaInscripcionHastaDate);
+        this.newEvent.start = new Date(this.curso.fechaInscripcionHastaDate);
+        this.newEvent.end = new Date(this.curso.fechaInscripcionHastaDate);
 
         //Indicamos que el limite que puede durar el evento
         this.invalidDateMin = new Date(
@@ -837,6 +841,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         url = "fichaEventos_saveEventCalendar";
         this.callSaveEvent(url);
       }
+    } else if (this.newEvent.idEvento != undefined) {
+      url = "fichaEventos_updateEventCalendar";
+      this.callSaveEvent(url);
     } else {
       url = "fichaEventos_saveEventCalendar";
       this.callSaveEvent(url);
@@ -856,6 +863,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.newEvent.idEstadoEvento = JSON.parse(
             JSON.stringify(this.initEvent)
           ).idEstadoEvento;
+
         } else {
           this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
 
@@ -866,21 +874,27 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
             this.modoEdicionEventoByAgenda = true;
             this.createEvent = true;
             sessionStorage.setItem("evento", JSON.stringify(this.newEvent));
-            this.curso = JSON.parse(sessionStorage.getItem("curso"));
+            this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
             if (
               JSON.parse(
                 sessionStorage.getItem("isFormacionCalendarByStartInscripcion")
               )
             ) {
               this.curso.idEventoInicioInscripcion = JSON.parse(data.body).id;
-              this.saveCourse();
+              this.curso.fechaInscripcionDesdeDate = this.newEvent.start;
+              sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
+
+              // this.saveCourse();
             } else if (
               JSON.parse(
                 sessionStorage.getItem("isFormacionCalendarByEndInscripcion")
               )
             ) {
               this.curso.idEventoFinInscripcion = JSON.parse(data.body).id;
-              this.saveCourse();
+              this.curso.fechaInscripcionHastaDate = this.newEvent.end;
+              sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
+
+              // this.saveCourse();
             }
             //Obtenemos las notificaciones del evento del calendario especifico, dentro del id se ha guardado el idEvento creado
             if (JSON.parse(data.body).id != "") {
@@ -1110,6 +1124,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     });
   }
 
+
   validateForm() {
     let validateFormDatos: boolean = false;
     let validateFormRepeticion: boolean = false;
@@ -1301,6 +1316,89 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.progressSpinner = false;
       }
     );
+  }
+
+  searchEventByIdEvento(idEvento) {
+    this.sigaServices
+      .getParam(
+        "fichaEventos_searchEventByIdEvento",
+        "?idEvento=" + idEvento
+      )
+      .subscribe(
+        evento => {
+
+          if (evento != "") {
+            this.newEvent = JSON.parse(JSON.stringify(evento));
+            this.getComboCalendar();
+            this.getEventNotifications();
+
+            this.modoEdicionEvento = true;
+            this.createEvent = true;
+            if (
+              sessionStorage.getItem("isFormacionCalendarByStartInscripcion") ==
+              "true"
+            ) {
+              this.newEvent.start = new Date(this.curso.fechaInscripcionDesdeDate);
+              this.newEvent.end = new Date(this.curso.fechaInscripcionDesdeDate);
+              this.newEvent.idTipoEvento = this.valorTipoEventoInicioInscripcion;
+              this.newEvent.idTipoCalendario = this.valorTipoFormacion;
+
+              //Indicamos que el limite que puede durar el evento
+              this.invalidDateMin = new Date(
+                JSON.parse(JSON.stringify(this.newEvent.start))
+              );
+              this.invalidDateMax = new Date(
+                JSON.parse(JSON.stringify(this.newEvent.start))
+              );
+
+              this.invalidDateMin.setHours(this.newEvent.start.getHours());
+              this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
+              this.invalidDateMax.setHours(23);
+              this.invalidDateMax.setMinutes(59);
+            } else if (
+              sessionStorage.getItem("isFormacionCalendarByEndInscripcion") ==
+              "true"
+            ) {
+              this.newEvent.start = new Date(this.curso.fechaInscripcionHastaDate);
+              this.newEvent.end = new Date(this.curso.fechaInscripcionHastaDate);
+              this.newEvent.idTipoEvento = this.valorTipoEventoFinInscripcion;
+              this.newEvent.idTipoCalendario = this.valorTipoFormacion;
+
+              //Indicamos que el limite que puede durar el evento
+              this.invalidDateMin = new Date(
+                JSON.parse(JSON.stringify(this.newEvent.start))
+              );
+              this.invalidDateMax = new Date(
+                JSON.parse(JSON.stringify(this.newEvent.start))
+              );
+
+              this.invalidDateMin.setHours(this.newEvent.start.getHours());
+              this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
+              this.invalidDateMax.setHours(23);
+              this.invalidDateMax.setMinutes(59);
+            }
+
+            //Se guarda el evento con los valores iniciales para restablecer los valores
+            this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
+            this.initEvent.start = new Date(evento.start);
+            this.initEvent.end = new Date(evento.end);
+
+
+          } else {
+            this.newEvent = new EventoItem();
+            this.createEvent = false;
+            this.getComboCalendar();
+          }
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
   }
 
   formadoresDistintosCheck() {
@@ -1978,19 +2076,18 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         "idEventoInicioInscripcion",
         this.newEvent.idEvento
       );
-      sessionStorage.setItem(
-        "fechaEventoInicioIncripcion",
-        JSON.stringify(this.newEvent.start)
-      );
+      this.curso.fechaInscripcionDesdeDate = this.initEvent.start;
+      sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
+
     } else if (
       this.path == "formacionFinInscripcion" &&
       sessionStorage.getItem("isFormacionCalendarByEndInscripcion") == "true"
     ) {
       sessionStorage.setItem("idEventoFinInscripcion", this.newEvent.idEvento);
-      sessionStorage.setItem(
-        "fechaEventoFinIncripcion",
-        JSON.stringify(this.newEvent.start)
-      );
+      this.curso.fechaInscripcionHastaDate = this.initEvent.end;
+      sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
+      sessionStorage.setItem("modoEdicionCurso", "true");
+
     } else if (sessionStorage.getItem("isSession") == "true") {
       sessionStorage.setItem("modoEdicionCurso", "true");
     }

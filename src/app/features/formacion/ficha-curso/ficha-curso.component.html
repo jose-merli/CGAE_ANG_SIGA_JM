@@ -67,42 +67,39 @@
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
               <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}} (*)</label>
-              <input type="text" class="form-control" pInputText name="nombre" [disabled]="!activacionEditar" [(ngModel)]="curso.nombreCurso" />
+              <input type="text" class="form-control" pInputText name="nombre" [disabled]="!activacionEditar" [(ngModel)]="curso.nombreCurso"
+              />
             </div>
             <div class="col-lg-6 col-md-6">
               <label>{{ 'formacion.fichaCursos.datosGenerales.codigo' | translate }} (*)</label>
-              <input type="text" class="form-control" pInputText name="codigo" [disabled]="fieldNoEditable || !activacionEditar" [(ngModel)]="curso.codigoCurso" />
+              <input type="text" class="form-control" pInputText name="codigo" [disabled]="fieldNoEditable || !activacionEditar" [(ngModel)]="curso.codigoCurso"
+              />
 
             </div>
           </div>
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
               <label>{{ 'formacion.fichaCursos.datosGenerales.visibilidad' | translate}} (*)</label>
-              <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form"
-                [disabled]="!activacionEditar" [(ngModel)]='curso.idVisibilidad' [options]="comboVisibilidad"
-                [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeSelectVisibilidad($event)">
+              <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [disabled]="!activacionEditar"
+                [(ngModel)]='curso.idVisibilidad' [options]="comboVisibilidad" [filter]="true" filterBy="label,labelSinTilde"
+                (onChange)="onChangeSelectVisibilidad($event)">
               </p-dropdown>
             </div>
             <div class="col-lg-6 col-md-6">
               <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}} (*)</label>
-              <p-dropdown #colegio [disabled]="fieldNoEditable || !activacionEditar" class="select-form"
-                placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='curso.colegio'
-                [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde"
-                (onChange)="onChangeSelectColegio($event) "></p-dropdown>
+              <p-dropdown #colegio [disabled]="fieldNoEditable || !activacionEditar" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [(ngModel)]='curso.colegio' [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeSelectColegio($event) "></p-dropdown>
 
             </div>
           </div>
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
               <label>{{'censo.busquedaClientesAvanzada.literal.tipoCliente' | translate}}</label>
-              <p-autoComplete #autocompleteService [(ngModel)]="resultsService" [disabled]="!activacionEditar"
-                [suggestions]="suggestService" [minLength]="1" field="label" [multiple]="true"
-                [style]="{'width':'100%'}" (onFocus)="filterServices($event)" (onBlur)="visiblePanelBlur($event)"
-                (completeMethod)="filterLabelsMultiple($event)">
+              <p-autoComplete #autocompleteService [(ngModel)]="resultsService" [disabled]="!activacionEditar" [suggestions]="suggestService"
+                [minLength]="1" field="label" [multiple]="true" [style]="{'width':'100%'}" (onFocus)="filterServices($event)"
+                (onBlur)="visiblePanelBlur($event)" (completeMethod)="filterLabelsMultiple($event)">
                 <ng-template let-servicesSelecionados pTemplate="selectedItem">
-                  <div
-                    class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
-
+                  <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
                     [ngStyle]="{'background': servicesSelecionados.color, 'margin': marginPx, 'border': bw }">
                     <span style="color: white">{{ servicesSelecionados.label }}</span>
                   </div>
@@ -111,16 +108,15 @@
             </div>
             <div class="col-lg-6 col-md-6">
               <label>{{ 'form.busquedaCursos.literal.estado' | translate}} (*)</label>
-              <p-dropdown placeholder="-" class="select-form" [(ngModel)]='curso.idEstado' [options]="comboEstados"
-                [filter]="true" filterBy="label,labelSinTilde" [disabled]="fieldNoEditable || !activacionEditar">
+              <p-dropdown placeholder="-" class="select-form" [(ngModel)]='curso.idEstado' [options]="comboEstados" [filter]="true" filterBy="label,labelSinTilde"
+                [disabled]="fieldNoEditable || !activacionEditar">
               </p-dropdown>
             </div>
           </div>
           <div class="row mb-4">
             <div class="col-lg-12 col-md-12">
               <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}} (*)</label>
-              <editor apiKey="{{apiKey}}" [init]="editorConfig"
-                [(ngModel)]="curso.descripcionEstado"></editor>
+              <editor apiKey="{{apiKey}}" [init]="editorConfig" [(ngModel)]="curso.descripcionEstado"></editor>
             </div>
           </div>
         </div>
@@ -133,13 +129,13 @@
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
               <label>{{ 'formacion.fichaCurso.datosGenerales.fechaInicioInscripcion' | translate }} (*)</label>
-              <app-fecha [(value)]="curso.fechaInscripcionDesdeDate" [maxDate]="curso.fechaInscripcionHastaDate" (valueChangeInput)="selectStartDateInscription($event)"
-                [disabled]="!activacionEditar" (valueChangeSelected)="selectStartDateInscription($event)"></app-fecha>
+              <app-fecha #fechaInicioInscripcion [(value)]="curso.fechaInscripcionDesdeDate" [maxDate]="curso.fechaInscripcionHastaDate"
+                (valueChangeInput)="showMessageEditInitInscriptionEvent($event)" [disabled]="!activacionEditar" (valueChangeSelected)="showMessageEditInitInscriptionEvent($event)"></app-fecha>
             </div>
             <div class="col-lg-6 col-md-6">
               <label>{{ 'formacion.fichaCurso.datosGenerales.fechaFinInscripcion' | translate }} (*)</label>
-              <app-fecha [(value)]="curso.fechaInscripcionHastaDate" [minDate]="curso.fechaInscripcionDesdeDate" (valueChangeSelected)="selectEndDateInscription($event)"
-                (valueChangeInput)="selectEndDateInscription($event)" [disabled]="!activacionEditar"></app-fecha>
+              <app-fecha #fechaFinInscripcion [(value)]="curso.fechaInscripcionHastaDate" [minDate]="curso.fechaInscripcionDesdeDate" (valueChangeSelected)="showMessageEditEndInscriptionEvent($event)"
+                (valueChangeInput)="showMessageEditEndInscriptionEvent($event)" [disabled]="!activacionEditar"></app-fecha>
 
             </div>
           </div>
@@ -158,16 +154,16 @@
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
               <label>{{ 'formacion.fichaCursos.datosDeGestion.plazasDisponibles' | translate}}</label>
-              <input class="form-control paddingInput" type="number" min="0" name="tipo" [disabled]="!activacionEditar"
-                [(ngModel)]="curso.plazasDisponibles" />
+              <input class="form-control paddingInput" type="number" min="0" name="tipo" [disabled]="!activacionEditar" [(ngModel)]="curso.plazasDisponibles"
+              />
 
             </div>
             <div class="col-lg-6 col-md-6">
               <label>{{ 'formacion.fichaCursos.datosDeGestion.minimoAsistencia' | translate }}</label>
               <i class="fa fa-question" [pTooltip]="sesionesExistentes" tooltipPosition="bottom"></i>
 
-              <input class="form-control paddingInput" type="number" min="0" name="asistencia"
-                [disabled]="!activacionEditar" [(ngModel)]="curso.minimoAsistencia" />
+              <input class="form-control paddingInput" type="number" min="0" name="asistencia" [disabled]="!activacionEditar" [(ngModel)]="curso.minimoAsistencia"
+              />
 
             </div>
             <!-- numero Sesiones  numeroSesiones-->
@@ -175,8 +171,8 @@
           <div class="row mb-4">
             <div class="col-lg-12 col-md-12">
               <label>{{'agenda.fichaEventos.datosGenerales.lugar' | translate}}</label>
-              <input type="text" class="form-control" pInputText name="lugar" [disabled]="!activacionEditar"
-                [(ngModel)]="curso.lugar" />
+              <input type="text" class="form-control" pInputText name="lugar" [disabled]="!activacionEditar" [(ngModel)]="curso.lugar"
+              />
 
             </div>
           </div>
@@ -189,37 +185,33 @@
         </div>
         <div class="bloque col-lg-4 col-md-4">
           <div class="row mb-3">
-            <label> <strong> {{'formacion.fichaCursos.datosGenerales.datosAdicionales.cabecera' | translate}}</strong>
+            <label>
+              <strong> {{'formacion.fichaCursos.datosGenerales.datosAdicionales.cabecera' | translate}}</strong>
             </label>
           </div>
           <div class="row mb-4">
             <div class="col-lg-12 col-md-12">
               <label>{{'formacion.fichaCursos.datosGenerales.datosAdicionales.documentacionAdjunta' | translate}}</label>
               <div *ngIf="edicionDocumentoAdjunto" class="ui-inputgroup">
-                <input type="text" class="form-control" pInputText name="adjunto" [disabled]="!activacionEditar"
-                  [(ngModel)]="curso.adjunto" />
-                <button (click)="editDocumentoAdjunto()" pButton type="button" icon="fas fa-check"
-                  [disabled]="!activacionEditar" class="ui-button-warn"></button>
+                <input type="text" class="form-control" pInputText name="adjunto" [disabled]="!activacionEditar" [(ngModel)]="curso.adjunto"
+                />
+                <button (click)="editDocumentoAdjunto()" pButton type="button" icon="fas fa-check" [disabled]="!activacionEditar" class="ui-button-warn"></button>
               </div>
               <div *ngIf="!edicionDocumentoAdjunto" class="ui-inputgroup">
-                <a *ngIf="curso.adjunto != undefined && curso.adjunto != ''" [href]="curso.adjunto" class="col-11"
-                  target="_blank">{{curso.adjunto}}</a>
+                <a *ngIf="curso.adjunto != undefined && curso.adjunto != ''" [href]="curso.adjunto" class="col-11" target="_blank">{{curso.adjunto}}</a>
                 <span *ngIf="curso.adjunto == undefined || curso.adjunto == ''" class="col-11">{{curso.adjunto}}</span>
-                <button (click)="editDocumentoAdjunto()" pButton type="button" icon="fas fa-pencil-alt"
-                  [disabled]="!activacionEditar" class="ui-button-warn button-edit"></button>
+                <button (click)="editDocumentoAdjunto()" pButton type="button" icon="fas fa-pencil-alt" [disabled]="!activacionEditar" class="ui-button-warn button-edit"></button>
               </div>
             </div>
           </div>
           <div class="row mb-4">
             <div class="col-lg-12 col-md-12">
               <label>{{ 'form.busquedaCursos.literal.temas' | translate}}</label>
-              <p-autoComplete #autocompleteTopics [(ngModel)]="resultsTopics" [suggestions]="suggestTopics"
-                [minLength]="1" field="label" [multiple]="true" [style]="{'width':'100%'}"
-                (onFocus)="filterTopics($event)" (onBlur)="visiblePanelBlurTopics($event)"
+              <p-autoComplete #autocompleteTopics [(ngModel)]="resultsTopics" [suggestions]="suggestTopics" [minLength]="1" field="label"
+                [multiple]="true" [style]="{'width':'100%'}" (onFocus)="filterTopics($event)" (onBlur)="visiblePanelBlurTopics($event)"
                 [disabled]="!activacionEditar" (completeMethod)="filterLabelsMultipleTopics($event)">
                 <ng-template let-topicsSelecionados pTemplate="selectedItem">
-                  <div
-                    class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
+                  <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
                     [ngStyle]="{'background': topicsSelecionados.color, 'margin': marginPx, 'border': bw}">
                     <span style="color: white">{{ topicsSelecionados.label }}</span>
                   </div>
@@ -231,18 +223,15 @@
             <div class="col-lg-12 col-md-12">
               <label>{{'formacion.fichaCursos.datosGenerales.datosAdicionales.informacionAdicional' | translate}}</label>
               <div *ngIf="edicionInformacionAdicional" class="ui-inputgroup">
-                <input type="text" class="form-control" pInputText name="adicional" [disabled]="!activacionEditar"
-                  [(ngModel)]="curso.adicional" />
-                <button (click)="editInformacionAdicional()" pButton type="button" icon="fas  fa-check"
-                  [disabled]="!activacionEditar" class="ui-button-warn"></button>
+                <input type="text" class="form-control" pInputText name="adicional" [disabled]="!activacionEditar" [(ngModel)]="curso.adicional"
+                />
+                <button (click)="editInformacionAdicional()" pButton type="button" icon="fas  fa-check" [disabled]="!activacionEditar" class="ui-button-warn"></button>
               </div>
               <div *ngIf="!edicionInformacionAdicional" class="ui-inputgroup">
-                <a *ngIf="curso.adicional != undefined && curso.adicional != ''" [href]="curso.adicional" class="col-11"
-                  target="_blank">{{curso.adicional}}</a>
-                <span *ngIf="curso.adicional == undefined || curso.adicional == ''"
-                  class="col-11">{{curso.adicional}}</span>
-                <button (click)="editInformacionAdicional()" pButton type="button" icon="fas fa-pencil-alt"
-                  [disabled]="!activacionEditar" class="ui-button-warn button-edit"></button>
+                <a *ngIf="curso.adicional != undefined && curso.adicional != ''" [href]="curso.adicional" class="col-11" target="_blank">{{curso.adicional}}</a>
+                <span *ngIf="curso.adicional == undefined || curso.adicional == ''" class="col-11">{{curso.adicional}}</span>
+                <button (click)="editInformacionAdicional()" pButton type="button" icon="fas fa-pencil-alt" [disabled]="!activacionEditar"
+                  class="ui-button-warn button-edit"></button>
               </div>
             </div>
           </div>
@@ -251,18 +240,15 @@
               <label>{{'formacion.fichaCursos.datosGenerales.datosAdicionales.encuestaSatisfaccion' | translate}}</label>
               <div *ngIf="edicionEncuestaSatisfaccion" class="ui-inputgroup">
 
-                <input type="text" class="form-control" pInputText name="encuesta" [disabled]="!activacionEditar"
-                  [(ngModel)]="curso.encuesta" />
-                <button (click)="editEncuestaSatisfaccion()" pButton type="button" icon="fas  fa-check"
-                  [disabled]="!activacionEditar" class="ui-button-warn"></button>
+                <input type="text" class="form-control" pInputText name="encuesta" [disabled]="!activacionEditar" [(ngModel)]="curso.encuesta"
+                />
+                <button (click)="editEncuestaSatisfaccion()" pButton type="button" icon="fas  fa-check" [disabled]="!activacionEditar" class="ui-button-warn"></button>
               </div>
               <div *ngIf="!edicionEncuestaSatisfaccion" class="ui-inputgroup">
-                <a *ngIf="curso.encuesta != undefined && curso.encuesta != ''" [href]="curso.encuesta" class="col-11"
-                  target="_blank">{{curso.encuesta}}</a>
-                <span *ngIf="curso.encuesta == undefined || curso.encuesta == ''"
-                  class="col-11">{{curso.encuesta}}</span>
-                <button (click)="editEncuestaSatisfaccion()" pButton type="button" icon="fas fa-pencil-alt"
-                  [disabled]="!activacionEditar" class="ui-button-warn button-edit"></button>
+                <a *ngIf="curso.encuesta != undefined && curso.encuesta != ''" [href]="curso.encuesta" class="col-11" target="_blank">{{curso.encuesta}}</a>
+                <span *ngIf="curso.encuesta == undefined || curso.encuesta == ''" class="col-11">{{curso.encuesta}}</span>
+                <button (click)="editEncuestaSatisfaccion()" pButton type="button" icon="fas fa-pencil-alt" [disabled]="!activacionEditar"
+                  class="ui-button-warn button-edit"></button>
               </div>
             </div>
           </div>
@@ -273,35 +259,32 @@
       <div class="text-right main-button">
         <!-- Botón cancelar -->
 
-        <button (click)="cancelCourse()" pButton type="button" icon="fa fa-ban" iconPos="left"
-          label="{{'general.boton.cancel' | translate}}" [disabled]="!controlBotonesEstado('Cancelar')"></button>
+        <button (click)="cancelCourse()" pButton type="button" icon="fa fa-ban" iconPos="left" label="{{'general.boton.cancel' | translate}}"
+          [disabled]="!controlBotonesEstado('Cancelar')"></button>
 
         <!-- Botón finalizar -->
 
-        <button (click)="finishCourse()" pButton type="button" icon="fa fa-stop" iconPos="left"
-          label="{{'general.boton.finalizar' | translate}}" [disabled]="!controlBotonesEstado('Finalizar')"></button>
+        <button (click)="finishCourse()" pButton type="button" icon="fa fa-stop" iconPos="left" label="{{'general.boton.finalizar' | translate}}"
+          [disabled]="!controlBotonesEstado('Finalizar')"></button>
 
         <!-- Botón desanunciar -->
 
-        <button pButton type="button" icon="fa fa-bell-slash" iconPos="left"
-          label="{{'form.busquedaCursos.literal.boton.desanunciar' | translate}}"
+        <button pButton type="button" icon="fa fa-bell-slash" iconPos="left" label="{{'form.busquedaCursos.literal.boton.desanunciar' | translate}}"
           [disabled]="!controlBotonesEstado('Desanunciar')" (click)="releaseCourse()"></button>
 
         <!-- Botón anunciar -->
 
-        <button pButton type="button" icon="fa fa-bell" iconPos="left"
-          label="{{'form.busquedaCursos.literal.boton.anunciar' | translate}}"
+        <button pButton type="button" icon="fa fa-bell" iconPos="left" label="{{'form.busquedaCursos.literal.boton.anunciar' | translate}}"
           [disabled]="!controlBotonesEstado('Anunciar')" (click)="announceCourse()"></button>
 
 
         <!-- Botón inscripción -->
-        <button pButton type="button" icon="fa fa-caret-square-o-up" iconPos="left"
-          label="{{ 'formacion.fichaCurso.boton.inscripcion' | translate }}"
+        <button pButton type="button" icon="fa fa-caret-square-o-up" iconPos="left" label="{{ 'formacion.fichaCurso.boton.inscripcion' | translate }}"
           [disabled]="!controlBotonesEstado('Inscripcion')" (click)="irInscripcion()"></button>
 
         <!-- Botón guardar -->
-        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
-          (click)="saveCourse()" [disabled]="validateCourse() || !activacionEditar"></button>
+        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" (click)="saveCourse()"
+          [disabled]="validateCourse() || !activacionEditar"></button>
       </div>
     </div>
   </div>
@@ -339,7 +322,9 @@
       </div>
 
       <div *ngIf="esFichaActiva('price')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado"><i class="fa fa-usd icon-ficha"></i></div>
+        <div class="img-colegiado">
+          <i class="fa fa-usd icon-ficha"></i>
+        </div>
         <label class="title-ficha">{{'formacion.fichaCurso.tarjetaPrecios.precios' | translate}}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
@@ -347,34 +332,27 @@
     <!-- Cuerpo -->
     <div class="card-body card-body-ficha" *ngIf="esFichaActiva('price')">
       <div class="row">
-        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}"
-          [ngClass]="{ customCursor: selectMultiplePrices }" [(selection)]="selectedDatosPrices"
-          (onRowSelect)="actualizaSeleccionadosPrices(selectedDatosPrices)"
-          (onRowUnselect)="actualizaSeleccionadosPrices(selectedDatosPrices)" pageLinks="4" dataKey="idPrices"
-          [responsive]="true" selectionMode="multiple" #tablePrices class="tabla-listado" [value]="datosPrices"
-          [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedPrices">
+        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{ customCursor: selectMultiplePrices }"
+          [(selection)]="selectedDatosPrices" (onRowSelect)="actualizaSeleccionadosPrices(selectedDatosPrices)" (onRowUnselect)="actualizaSeleccionadosPrices(selectedDatosPrices)"
+          pageLinks="4" dataKey="idPrices" [responsive]="true" selectionMode="multiple" #tablePrices class="tabla-listado"
+          [value]="datosPrices" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedPrices">
 
-          <p-column *ngFor="let col of colsPrices" [sortable]="true" [field]="col.field"
-            [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}" [filter]="true"
-            filterMatchMode="contains">
+          <p-column *ngFor="let col of colsPrices" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+            [filter]="true" filterMatchMode="contains">
           </p-column>
           <ng-template pTemplate="paginatorLeft">
             <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">Mostrando registros del {{ tablePrices.first + 1 }} al
-                {{ tablePrices.first + tablePrices.rows }} de un total de
-                {{ tablePrices.totalRecords }}</label>
+              <label class="pr-3 registros-totales">Mostrando registros del {{ tablePrices.first + 1 }} al {{ tablePrices.first + tablePrices.rows }} de un total
+                de {{ tablePrices.totalRecords }}</label>
               <label class="pr-3 numSeleccionados">Seleccionados: {{ numSelectedPrices }}</label>
               <label>{{ "general.message.mostrar" | translate }}</label>
-              <p-dropdown [(ngModel)]="selectedPrices" [options]="rowsPerPage"
-                (onChange)="onChangeRowsPerPagesPrices($event)"></p-dropdown>
+              <p-dropdown [(ngModel)]="selectedPrices" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesPrices($event)"></p-dropdown>
               <label class="pl-1">
-                {{
-                    "cargaMasivaDatosCurriculares.numRegistros.literal"
-                      | translate
-                  }}</label>
+                {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
+              </label>
               <div class="ml-3 selectAll">
-                <p-checkbox (onChange)="onChangeSelectAllPrices()" [(ngModel)]="selectAllPrices" binary="true"
-                  label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
+                <p-checkbox (onChange)="onChangeSelectAllPrices()" [(ngModel)]="selectAllPrices" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                  name="groupname"></p-checkbox>
               </div>
               <label class="ml-3 seleccionMultiple" [ngClass]="{ 'seleccion-multiple': selectMultiplePrices }" (click)="
                     isSelectMultiplePrices(); selectedDatosPrices = false">
@@ -432,37 +410,29 @@
     <div class="card-body card-body-ficha" *ngIf="esFichaActiva('formadores')">
       <div class="row">
         <div *ngIf="(selectMultipleFormadores || selectAllFormadores || !activacionEditar) && !pressNewFormador">
-          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}"
-            [ngClass]="{ customCursor: selectMultipleFormadores }" dataKey="idPersona" selectionMode="multiple"
-            [(selection)]="selectedDatosFormadores" [responsive]="true" #tableFormadores class="tabla-listado"
-            [paginator]="true" (onRowSelect)="actualizaSeleccionadosFormadores(selectedDatosFormadores)"
-            (onRowUnselect)="actualizaSeleccionadosFormadores(selectedDatosFormadores)" [value]="datosFormadores"
-            [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedFormadores"
-            [editable]="selectMultipleFormadores">
-            <p-column *ngFor="let col of colsFormadores" [sortable]="true" [field]="col.field"
-              [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{ customCursor: selectMultipleFormadores }"
+            dataKey="idPersona" selectionMode="multiple" [(selection)]="selectedDatosFormadores" [responsive]="true" #tableFormadores
+            class="tabla-listado" [paginator]="true" (onRowSelect)="actualizaSeleccionadosFormadores(selectedDatosFormadores)"
+            (onRowUnselect)="actualizaSeleccionadosFormadores(selectedDatosFormadores)" [value]="datosFormadores" [sortOrder]="1"
+            [paginator]="true" paginatorPosition="both" [rows]="selectedFormadores" [editable]="selectMultipleFormadores">
+            <p-column *ngFor="let col of colsFormadores" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
               [filter]="true" filterMatchMode="contains">
             </p-column>
 
             <ng-template pTemplate="paginatorLeft">
               <div class="mostrar d-flex text-right justify-content-end">
 
-                <label class="pr-3 registros-totales">Mostrando registros del
-                  {{ tableFormadores.first + 1 }} al
-                  {{ tableFormadores.first + tableFormadores.rows }} de un
-                  total de {{ tableFormadores.totalRecords }}</label>
+                <label class="pr-3 registros-totales">Mostrando registros del {{ tableFormadores.first + 1 }} al {{ tableFormadores.first + tableFormadores.rows
+                  }} de un total de {{ tableFormadores.totalRecords }}</label>
                 <label class="pr-3 numSeleccionados">Seleccionados: {{ numSelectedFormadores }}</label>
                 <label>{{ "general.message.mostrar" | translate }}</label>
-                <p-dropdown [(ngModel)]="selectedFormadores" [options]="rowsPerPage"
-                  (onChange)="onChangeRowsPerPagesFormadores($event)"></p-dropdown>
+                <p-dropdown [(ngModel)]="selectedFormadores" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesFormadores($event)"></p-dropdown>
                 <label class="pl-1">
-                  {{
-                      "cargaMasivaDatosCurriculares.numRegistros.literal"
-                        | translate
-                    }}</label>
+                  {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
+                </label>
                 <div class="ml-3 selectAll">
-                  <p-checkbox (onChange)="onChangeSelectAllFormadores()" [(ngModel)]="selectAllFormadores" binary="true"
-                    label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
+                  <p-checkbox (onChange)="onChangeSelectAllFormadores()" [(ngModel)]="selectAllFormadores" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                    name="groupname"></p-checkbox>
                 </div>
                 <label class="ml-3 seleccionMultiple" [ngClass]="{
                       ' seleccion-multiple': selectMultipleFormadores
@@ -470,9 +440,8 @@
                       isSelectMultipleFormadores();
                       selectedDatosFormadores = false
                     ">
-                  <i class="pr-2 fa fa-mouse-pointer"></i>{{
-                      "general.message.seleccion.multiple" | translate
-                    }}</label>
+                  <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate }}
+                </label>
               </div>
             </ng-template>
           </p-dataTable>
@@ -480,35 +449,30 @@
 
         <!-- Editar Formador -->
         <div *ngIf="!selectMultipleFormadores && !pressNewFormador && !selectAllFormadores && activacionEditar">
-          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}"
-            [ngClass]="{ customCursor: selectMultipleFormadores }" [paginator]="true" #tableFormadores
-            class="tabla-listado" [value]="datosFormadores" paginatorPosition="both" datakey="idPersona"
+          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{ customCursor: selectMultipleFormadores }"
+            [paginator]="true" #tableFormadores class="tabla-listado" [value]="datosFormadores" paginatorPosition="both" datakey="idPersona"
             [(selection)]="selectedDatosFormadores" [rows]="selectedFormadores" [editable]="!selectMultipleFormadores">
             <p-column [sortable]="true" [field]="colsFormadores[0].field" [header]="
                   'administracion.parametrosGenerales.literal.nombre'
                     | translate
-                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-              filterMatchMode="contains">
+                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
 
             </p-column>
 
             <p-column [sortable]="true" [field]="colsFormadores[1].field" [header]="
                   'gratuita.mantenimientoTablasMaestra.literal.apellidos'
                     | translate
-                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-              filterMatchMode="contains">
+                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
 
             </p-column>
 
             <!-- (onChange)="onChangeEdit($event)" -->
 
-            <p-column [sortable]="true" [field]="colsFormadores[2].select"
-              [header]="'administracion.usuarios.literal.rol' | translate" [filter]="true"
-              filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+            <p-column [sortable]="true" [field]="colsFormadores[2].select" [header]="'administracion.usuarios.literal.rol' | translate"
+              [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
               <ng-template let-dato="rowData" pTemplate="body">
-                <p-dropdown (onChange)="onChangeTutor($event, dato)" class="select-form"
-                  [(ngModel)]="dato[colsFormadores[2].select]" [options]="comboRoles" [filter]="false"
-                  placeholder="{{'general.boton.seleccionar' | translate}}" name="type"></p-dropdown>
+                <p-dropdown (onChange)="onChangeTutor($event, dato)" class="select-form" [(ngModel)]="dato[colsFormadores[2].select]" [options]="comboRoles"
+                  [filter]="false" placeholder="{{'general.boton.seleccionar' | translate}}" name="type"></p-dropdown>
               </ng-template>
             </p-column>
 
@@ -516,22 +480,18 @@
                   'censo.busquedaClientesAvanzada.literal.tipoCliente'
                     | translate
 
-                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-              filterMatchMode="contains">
+                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
               <ng-template pTemplate="body" let-dato="rowData">
-                <p-dropdown (onChange)="onChangeEdit($event, dato)" class="select-form"
-                  [(ngModel)]="dato[colsFormadores[3].select]" [options]="comboTipoCoste" [filter]="false"
-                  placeholder="{{'general.boton.seleccionar' | translate}}" name="type"></p-dropdown>
+                <p-dropdown (onChange)="onChangeEdit($event, dato)" class="select-form" [(ngModel)]="dato[colsFormadores[3].select]" [options]="comboTipoCoste"
+                  [filter]="false" placeholder="{{'general.boton.seleccionar' | translate}}" name="type"></p-dropdown>
               </ng-template>
             </p-column>
 
-            <p-column [sortable]="true" [field]="colsFormadores[4].field"
-              [header]="'censo.alterMutua.literal.tarifa' | translate" [filter]="true"
+            <p-column [sortable]="true" [field]="colsFormadores[4].field" [header]="'censo.alterMutua.literal.tarifa' | translate" [filter]="true"
               filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
               <ng-template let-col let-dato="rowData" pTemplate="body">
-                <input (ngModelChange)="editFormadorTable($event, dato)" [value]="dato[colsFormadores[4].field]"
-                  [(ngModel)]="dato[colsFormadores[4].field]" class="form-control paddingInputTable" type="number"
-                  min="0" />
+                <input (ngModelChange)="editFormadorTable($event, dato)" [value]="dato[colsFormadores[4].field]" [(ngModel)]="dato[colsFormadores[4].field]"
+                  class="form-control paddingInputTable" type="number" min="0" />
               </ng-template>
             </p-column>
 
@@ -558,22 +518,17 @@
 
             <ng-template pTemplate="paginatorLeft">
               <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">Mostrando registros del
-                  {{ tableFormadores.first + 1 }} al
-                  {{ tableFormadores.first + tableFormadores.rows }} de un
-                  total de {{ tableFormadores.totalRecords }}</label>
+                <label class="pr-3 registros-totales">Mostrando registros del {{ tableFormadores.first + 1 }} al {{ tableFormadores.first + tableFormadores.rows
+                  }} de un total de {{ tableFormadores.totalRecords }}</label>
                 <label class="pr-3 numSeleccionados">Seleccionados: {{ numSelectedFormadores }}</label>
                 <label>{{ "general.message.mostrar" | translate }}</label>
-                <p-dropdown [(ngModel)]="selectedFormadores" [options]="rowsPerPage"
-                  (onChange)="onChangeRowsPerPagesFormadores($event)"></p-dropdown>
+                <p-dropdown [(ngModel)]="selectedFormadores" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesFormadores($event)"></p-dropdown>
                 <label class="pl-1">
-                  {{
-                      "cargaMasivaDatosCurriculares.numRegistros.literal"
-                        | translate
-                    }}</label>
+                  {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
+                </label>
                 <div class="ml-3 selectAll">
-                  <p-checkbox (onChange)="onChangeSelectAllFormadores($event)" [(ngModel)]="selectAllFormadores"
-                    binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
+                  <p-checkbox (onChange)="onChangeSelectAllFormadores($event)" [(ngModel)]="selectAllFormadores" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                    name="groupname">
                   </p-checkbox>
                 </div>
                 <label class="ml-3 seleccionMultiple" [ngClass]="{
@@ -582,9 +537,8 @@
                       isSelectMultipleFormadores();
                       selectedDatosFormadores = false
                     ">
-                  <i class="pr-2 fa fa-mouse-pointer"></i>{{
-                      "general.message.seleccion.multiple" | translate
-                    }}</label>
+                  <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate }}
+                </label>
               </div>
             </ng-template>
           </p-dataTable>
@@ -592,46 +546,39 @@
 
         <!-- Nuevo Formador -->
         <div *ngIf="pressNewFormador">
-          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}"
-            [ngClass]="{ customCursor: selectMultipleFormadores }" [paginator]="true" #tableFormadores
-            class="tabla-listado" [value]="datosFormadores" paginatorPosition="both" datakey="idPersona"
-
+          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{ customCursor: selectMultipleFormadores }"
+            [paginator]="true" #tableFormadores class="tabla-listado" [value]="datosFormadores" paginatorPosition="both" datakey="idPersona"
             [rows]="selectedFormadores" [editable]="!pressNewFormador">
             <p-column [sortable]="true" [field]="colsFormadores[0].field" [header]="
                   'administracion.parametrosGenerales.literal.nombre'
                     | translate
-                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-              filterMatchMode="contains">
+                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
               <ng-template let-col let-dato="rowData" pTemplate="body">
                 <span>{{ dato[colsFormadores[0].field] }}</span>
-                <input *ngIf="dato[colsFormadores[0].field] == ''" [value]="dato[colsFormadores[0].field]"
-                  [(ngModel)]="newFormadorCourse.nombre" type="text" class="form-control" pInputText />
+                <input *ngIf="dato[colsFormadores[0].field] == ''" [value]="dato[colsFormadores[0].field]" [(ngModel)]="newFormadorCourse.nombre"
+                  type="text" class="form-control" pInputText />
               </ng-template>
             </p-column>
 
             <p-column [sortable]="true" [field]="colsFormadores[1].field" [header]="
                   'gratuita.mantenimientoTablasMaestra.literal.apellidos'
                     | translate
-                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-              filterMatchMode="contains">
+                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
               <ng-template let-col let-dato="rowData" pTemplate="body">
                 <span>{{ dato[colsFormadores[1].field] }}</span>
-                <input *ngIf="dato[colsFormadores[1].field] == ''" [value]="dato[colsFormadores[1].field]"
-                  [(ngModel)]="newFormadorCourse.apellidos" type="text" class="form-control" pInputText />
+                <input *ngIf="dato[colsFormadores[1].field] == ''" [value]="dato[colsFormadores[1].field]" [(ngModel)]="newFormadorCourse.apellidos"
+                  type="text" class="form-control" pInputText />
               </ng-template>
             </p-column>
 
-            <p-column [sortable]="true" [field]="colsFormadores[2].field"
-              [header]="'administracion.usuarios.literal.rol' | translate" [filter]="true"
-              filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+            <p-column [sortable]="true" [field]="colsFormadores[2].field" [header]="'administracion.usuarios.literal.rol' | translate"
+              [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
               <ng-template let-dato="rowData" pTemplate="body">
-                <span *ngIf="dato[colsFormadores[2].field] != ''">{{
-                    dato[colsFormadores[2].field]
-                  }}</span>
+                <span *ngIf="dato[colsFormadores[2].field] != ''">{{ dato[colsFormadores[2].field] }}
+                </span>
 
-                <p-dropdown *ngIf="dato[colsFormadores[2].field] == ''" class="select-form"
-                  [(ngModel)]="newFormadorCourse.idRol" [options]="comboRoles" [filter]="false"
-                  placeholder="{{'general.boton.seleccionar' | translate}}" name="type" [disabled]="!activacionEditar"
+                <p-dropdown *ngIf="dato[colsFormadores[2].field] == ''" class="select-form" [(ngModel)]="newFormadorCourse.idRol" [options]="comboRoles"
+                  [filter]="false" placeholder="{{'general.boton.seleccionar' | translate}}" name="type" [disabled]="!activacionEditar"
                   (onChange)="onChangeTutor($event, dato)"></p-dropdown>
               </ng-template>
             </p-column>
@@ -639,49 +586,40 @@
             <p-column [sortable]="true" [field]="colsFormadores[3].field" [header]="
                   'censo.busquedaClientesAvanzada.literal.tipoCliente'
                     | translate
-                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-              filterMatchMode="contains">
+                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
               <ng-template pTemplate="body" let-dato="rowData">
-                <span *ngIf="dato[colsFormadores[3].field] != ''">{{
-                    dato[colsFormadores[3].field]
-                  }}</span>
+                <span *ngIf="dato[colsFormadores[3].field] != ''">{{ dato[colsFormadores[3].field] }}
+                </span>
 
-                <p-dropdown *ngIf="dato[colsFormadores[3].field] == ''" class="select-form"
-                  [(ngModel)]="newFormadorCourse.idTipoCoste" [options]="comboTipoCoste" [filter]="false"
-                  [disabled]="!activacionEditar" placeholder="{{'general.boton.seleccionar' | translate}}" name="type">
+                <p-dropdown *ngIf="dato[colsFormadores[3].field] == ''" class="select-form" [(ngModel)]="newFormadorCourse.idTipoCoste" [options]="comboTipoCoste"
+                  [filter]="false" [disabled]="!activacionEditar" placeholder="{{'general.boton.seleccionar' | translate}}"
+                  name="type">
                 </p-dropdown>
               </ng-template>
             </p-column>
 
-            <p-column [sortable]="true" [field]="colsFormadores[4].field"
-              [header]="'censo.alterMutua.literal.tarifa' | translate" [filter]="true"
+            <p-column [sortable]="true" [field]="colsFormadores[4].field" [header]="'censo.alterMutua.literal.tarifa' | translate" [filter]="true"
               filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
               <ng-template let-col let-dato="rowData" pTemplate="body">
-                <span *ngIf="dato[colsFormadores[4].field] != ''">{{
-                    dato[colsFormadores[4].field]
-                  }}</span>
-                <input *ngIf="dato[colsFormadores[4].field] == '' && dato[colsFormadores[4].field] != '0'"
-                  [value]="dato[colsFormadores[4].field]" [(ngModel)]="newFormadorCourse.tarifa"
-                  [disabled]="!activacionEditar" class="form-control paddingInputTable" type="number" min="0" />
+                <span *ngIf="dato[colsFormadores[4].field] != ''">{{ dato[colsFormadores[4].field] }}
+                </span>
+                <input *ngIf="dato[colsFormadores[4].field] == '' && dato[colsFormadores[4].field] != '0'" [value]="dato[colsFormadores[4].field]"
+                  [(ngModel)]="newFormadorCourse.tarifa" [disabled]="!activacionEditar" class="form-control paddingInputTable"
+                  type="number" min="0" />
               </ng-template>
             </p-column>
 
 
             <ng-template pTemplate="paginatorLeft">
               <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">Mostrando registros del
-                  {{ tableFormadores.first + 1 }} al
-                  {{ tableFormadores.first + tableFormadores.rows }} de un
-                  total de {{ tableFormadores.totalRecords }}</label>
+                <label class="pr-3 registros-totales">Mostrando registros del {{ tableFormadores.first + 1 }} al {{ tableFormadores.first + tableFormadores.rows
+                  }} de un total de {{ tableFormadores.totalRecords }}</label>
                 <label class="pr-3 numSeleccionados">Seleccionados: {{ numSelectedFormadores }}</label>
                 <label>{{ "general.message.mostrar" | translate }}</label>
-                <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage"
-                  (onChange)="onChangeRowsPerPagesFormadores($event)"></p-dropdown>
+                <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesFormadores($event)"></p-dropdown>
                 <label class="pl-1">
-                  {{
-                      "cargaMasivaDatñosCurriculares.numRegistros.literal"
-                        | translate
-                    }}</label>
+                  {{ "cargaMasivaDatñosCurriculares.numRegistros.literal" | translate }}
+                </label>
               </div>
             </ng-template>
           </p-dataTable>
@@ -769,8 +707,7 @@
       </div>
       <div class="col-lg-11 col-md-10">
         <div class="d-flex justify-content-start mt-2">
-          <label
-            class="mr-auto title-ficha">{{'formacion.fichaInscripcion.datosCertificados.cabecera' | translate}}</label>
+          <label class="mr-auto title-ficha">{{'formacion.fichaInscripcion.datosCertificados.cabecera' | translate}}</label>
         </div>
         <div *ngIf="datosCertificates.length == 1" class="d-flex justify-content-between col-lg-12 pr-0">
           <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate }}:
@@ -793,8 +730,7 @@
         <i *ngIf="datosCertificates.length == 0" class="fa fa-angle-down float-right"></i>
       </div>
     </div>
-    <div *ngIf="esFichaActiva('certificate')"
-      class=" header-ficha-open d-flex justify-content-start align-items-center">
+    <div *ngIf="esFichaActiva('certificate')" class=" header-ficha-open d-flex justify-content-start align-items-center">
       <div class="img-colegiado">
         <i class="fa fa-certificate icon-ficha"></i>
       </div>
@@ -807,65 +743,52 @@
   <div class="card-body card-body-ficha" *ngIf="esFichaActiva('certificate')">
     <div class="row">
       <div *ngIf="(selectMultipleCertificates || selectAllCertificates  || !activacionEditar) && !pressNewCertificate">
-        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}"
-          [ngClass]="{ customCursor: selectMultipleCertificates }" dataKey="idCertificadoCurso" selectionMode="multiple"
-          [(selection)]="selectedDatosCertificates" [responsive]="true" #tableCertificates class="tabla-listado"
-          [paginator]="true" (onRowSelect)="actualizaSeleccionadosCertificates(selectedDatosCertificates)"
-          (onRoUnselect)="actualizaSeleccionadosCertificates(selectedDatosCertificates)" [value]="datosCertificates"
-          [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedCertificates"
-          [editable]="selectMultipleCertificates">
+        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{ customCursor: selectMultipleCertificates }"
+          dataKey="idCertificadoCurso" selectionMode="multiple" [(selection)]="selectedDatosCertificates" [responsive]="true"
+          #tableCertificates class="tabla-listado" [paginator]="true" (onRowSelect)="actualizaSeleccionadosCertificates(selectedDatosCertificates)"
+          (onRoUnselect)="actualizaSeleccionadosCertificates(selectedDatosCertificates)" [value]="datosCertificates" [sortOrder]="1"
+          [paginator]="true" paginatorPosition="both" [rows]="selectedCertificates" [editable]="selectMultipleCertificates">
           <p-column [sortable]="true" [field]="colsCertificates[0].field" [header]="
                   'menu.certificados'
                     | translate
-                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-            filterMatchMode="contains">
+                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
             <ng-template let-col let-dato="rowData" pTemplate="body">
-              <span *ngIf="dato[colsCertificates[0].field] != ''">{{
-                        dato[colsCertificates[0].value]
-                      }}</span>
+              <span *ngIf="dato[colsCertificates[0].field] != ''">{{ dato[colsCertificates[0].value] }}
+              </span>
             </ng-template>
           </p-column>
 
           <p-column [sortable]="true" [field]="colsCertificates[1].field" [header]="
                   'form.busquedaCursos.literal.precio'
                     | translate
-                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-            filterMatchMode="contains">
+                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
             <ng-template let-col let-dato="rowData" pTemplate="body">
-              <span *ngIf="dato[colsCertificates[1].field] != ''">{{
-                        dato[colsCertificates[1].field]
-                      }}</span>
+              <span *ngIf="dato[colsCertificates[1].field] != ''">{{ dato[colsCertificates[1].field] }}
+              </span>
             </ng-template>
           </p-column>
 
-          <p-column [sortable]="true" [field]="colsCertificates[2].field"
-            [header]="'formacion.busquedaInscripcion.calificacion' | translate" [filter]="true"
-            filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+          <p-column [sortable]="true" [field]="colsCertificates[2].field" [header]="'formacion.busquedaInscripcion.calificacion' | translate"
+            [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
             <ng-template let-dato="rowData" pTemplate="body">
-              <span *ngIf="dato[colsCertificates[2].field] != ''">{{
-                    dato[colsCertificates[2].value]
-                  }}</span>
+              <span *ngIf="dato[colsCertificates[2].field] != ''">{{ dato[colsCertificates[2].value] }}
+              </span>
             </ng-template>
           </p-column>
 
           <ng-template pTemplate="paginatorLeft">
             <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">Mostrando registros del
-                {{ tableCertificates.first + 1 }} al
-                {{ tableCertificates.first + tableCertificates.rows }} de un
-                total de {{ tableCertificates.totalRecords }}</label>
+              <label class="pr-3 registros-totales">Mostrando registros del {{ tableCertificates.first + 1 }} al {{ tableCertificates.first + tableCertificates.rows
+                }} de un total de {{ tableCertificates.totalRecords }}</label>
               <label class="pr-3 numSeleccionados">Seleccionados: {{ numSelectedCertificates }}</label>
               <label>{{ "general.message.mostrar" | translate }}</label>
-              <p-dropdown [(ngModel)]="selectedCertificates" [options]="rowsPerPage"
-                (onChange)="onChangeRowsPerPagesCertificates($event)"></p-dropdown>
+              <p-dropdown [(ngModel)]="selectedCertificates" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesCertificates($event)"></p-dropdown>
               <label class="pl-1">
-                {{
-                      "cargaMasivaDatosCurriculares.numRegistros.literal"
-                        | translate
-                    }}</label>
+                {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
+              </label>
               <div class="ml-3 selectAll">
-                <p-checkbox (onChange)="onChangeSelectAllCertificates()" [(ngModel)]="selectAllCertificates"
-                  binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
+                <p-checkbox (onChange)="onChangeSelectAllCertificates()" [(ngModel)]="selectAllCertificates" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                  name="groupname">
                 </p-checkbox>
               </div>
               <label class="ml-3 seleccionMultiple" [ngClass]="{
@@ -884,62 +807,50 @@
       <!-- Editar Certificate -->
       <div *ngIf="!selectMultipleCertificates && !pressNewCertificate && !selectAllCertificates && activacionEditar">
 
-        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}"
-          [ngClass]="{ customCursor: selectMultipleCertificates }" [paginator]="true" #tableCertificates
-          class="tabla-listado" [value]="datosCertificates" paginatorPosition="both" datakey="idCertificadoCurso"
-          [(selection)]="selectedDatosCertificates" [rows]="selectedCertificates"
-          [editable]="!selectMultipleCertificates" (onEdit)="editCertificateTable($event)">
+        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{ customCursor: selectMultipleCertificates }"
+          [paginator]="true" #tableCertificates class="tabla-listado" [value]="datosCertificates" paginatorPosition="both"
+          datakey="idCertificadoCurso" [(selection)]="selectedDatosCertificates" [rows]="selectedCertificates" [editable]="!selectMultipleCertificates"
+          (onEdit)="editCertificateTable($event)">
           <p-column [sortable]="true" [field]="colsCertificates[0].field" [header]="
                   'menu.certificados'
                     | translate
-                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-            filterMatchMode="contains">
+                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
             <ng-template pTemplate="body" let-dato="rowData">
-              <p-dropdown #dropdownCertificate class="select-form" [(ngModel)]="dato[colsCertificates[0].fieldClave]"
-                [options]="comboCertificates" [filter]="false"
-                placeholder="{{'tablas.literal.seleccionar' | translate}}" [disabled]="!activacionEditar" name="type"
-                (onChange)="selectPriceModeEdit($event, dato)"></p-dropdown>
+              <p-dropdown #dropdownCertificate class="select-form" [(ngModel)]="dato[colsCertificates[0].fieldClave]" [options]="comboCertificates"
+                [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}" [disabled]="!activacionEditar"
+                name="type" (onChange)="selectPriceModeEdit($event, dato)"></p-dropdown>
             </ng-template>
           </p-column>
 
           <p-column [sortable]="true" [field]="colsCertificates[1].field" [header]="
                   'form.busquedaCursos.literal.precio'
                     | translate
-                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-            filterMatchMode="contains">
+                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
           </p-column>
 
           <p-column [sortable]="true" [field]="colsCertificates[2].field" [header]="
                   'formacion.busquedaInscripcion.calificacion'
                     | translate
-                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-            filterMatchMode="contains">
+                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
             <ng-template pTemplate="body" let-dato="rowData">
-              <p-dropdown class="select-form" [(ngModel)]="dato[colsCertificates[2].field]"
-                [options]="comboCalificaciones" [filter]="false"
-                placeholder="{{'tablas.literal.seleccionar' | translate}}" [disabled]="!activacionEditar" name="type"
-                (onChange)="editCertificateTable($event, dato)"></p-dropdown>
+              <p-dropdown class="select-form" [(ngModel)]="dato[colsCertificates[2].field]" [options]="comboCalificaciones" [filter]="false"
+                placeholder="{{'tablas.literal.seleccionar' | translate}}" [disabled]="!activacionEditar" name="type" (onChange)="editCertificateTable($event, dato)"></p-dropdown>
             </ng-template>
           </p-column>
 
           <ng-template pTemplate="paginatorLeft">
             <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">Mostrando registros del
-                {{ tableCertificates.first + 1 }} al
-                {{ tableCertificates.first + tableCertificates.rows }} de un
-                total de {{ tableCertificates.totalRecords }}</label>
+              <label class="pr-3 registros-totales">Mostrando registros del {{ tableCertificates.first + 1 }} al {{ tableCertificates.first + tableCertificates.rows
+                }} de un total de {{ tableCertificates.totalRecords }}</label>
               <label class="pr-3 numSeleccionados">Seleccionados: {{ numSelectedCertificates }}</label>
               <label>{{ "general.message.mostrar" | translate }}</label>
-              <p-dropdown [(ngModel)]="selectedCertificates" [options]="rowsPerPage"
-                (onChange)="onChangeRowsPerPagesCertificates($event)"></p-dropdown>
+              <p-dropdown [(ngModel)]="selectedCertificates" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesCertificates($event)"></p-dropdown>
               <label class="pl-1">
-                {{
-                      "cargaMasivaDatosCurriculares.numRegistros.literal"
-                        | translate
-                    }}</label>
+                {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
+              </label>
               <div class="ml-3 selectAll">
-                <p-checkbox (onChange)="onChangeSelectAllCertificates($event)" [(ngModel)]="selectAllCertificates"
-                  binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate}}" name="groupname"></p-checkbox>
+                <p-checkbox (onChange)="onChangeSelectAllCertificates($event)" [(ngModel)]="selectAllCertificates" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate}}"
+                  name="groupname"></p-checkbox>
               </div>
               <label class="ml-3 seleccionMultiple" [ngClass]="{
                       'seleccion-multiple': selectMultipleCertificates
@@ -948,9 +859,8 @@
                       selectedDatosCertificates = false
                     ">
 
-                <i class="pr-2 fa fa-mouse-pointer"></i>{{
-                      "general.message.seleccion.multiple" | translate
-                    }}</label>
+                <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate }}
+              </label>
             </div>
           </ng-template>
         </p-dataTable>
@@ -959,51 +869,43 @@
       <!-- Nuevo Certificado -->
       <div *ngIf="pressNewCertificate">
 
-        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}"
-          [ngClass]="{ customCursor: selectMultipleCertificates }" [paginator]="true" #tableCertificates
-          class="tabla-listado" [value]="datosCertificates" paginatorPosition="both" datakey="idCertificadoCurso"
-          [rows]="selectedCertificates" [editable]="!pressNewCertificate">
+        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{ customCursor: selectMultipleCertificates }"
+          [paginator]="true" #tableCertificates class="tabla-listado" [value]="datosCertificates" paginatorPosition="both"
+          datakey="idCertificadoCurso" [rows]="selectedCertificates" [editable]="!pressNewCertificate">
           <p-column [sortable]="true" [field]="colsCertificates[0].field" [header]="
                   'menu.certificados'
                     | translate
-                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-            filterMatchMode="contains">
+                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
             <ng-template let-col let-dato="rowData" pTemplate="body">
-              <span *ngIf="dato[colsCertificates[0].field] != ''">{{
-                        dato[colsCertificates[0].value]
-                      }}</span>
+              <span *ngIf="dato[colsCertificates[0].field] != ''">{{ dato[colsCertificates[0].value] }}
+              </span>
 
-              <p-dropdown *ngIf="dato[colsCertificates[0].field] == ''" class="select-form"
-                [(ngModel)]="newCertificate.clave" [options]="comboCertificates" [filter]="false"
-                placeholder="{{'tablas.literal.seleccionar' | translate}}" [disabled]="!activacionEditar" name="type"
-                (onChange)="selectPriceModeNew($event)"></p-dropdown>
+              <p-dropdown *ngIf="dato[colsCertificates[0].field] == ''" class="select-form" [(ngModel)]="newCertificate.clave" [options]="comboCertificates"
+                [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}" [disabled]="!activacionEditar"
+                name="type" (onChange)="selectPriceModeNew($event)"></p-dropdown>
             </ng-template>
           </p-column>
 
           <p-column [sortable]="true" [field]="colsCertificates[1].field" [header]="
                   'form.busquedaCursos.literal.precio'
                     | translate
-                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-            filterMatchMode="contains">
+                " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
             <ng-template let-col let-dato="rowData" pTemplate="body">
-              <span *ngIf="dato[colsCertificates[1].field] != ''">{{
-                        dato[colsCertificates[1].field]
-                      }}</span>
+              <span *ngIf="dato[colsCertificates[1].field] != ''">{{ dato[colsCertificates[1].field] }}
+              </span>
               <span *ngIf="dato[colsCertificates[1].field] == ''">{{ newCertificate.precio }}</span>
             </ng-template>
           </p-column>
 
-          <p-column [sortable]="true" [field]="colsCertificates[2].field"
-            [header]="'formacion.busquedaInscripcion.calificacion' | translate" [filter]="true"
-            filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+          <p-column [sortable]="true" [field]="colsCertificates[2].field" [header]="'formacion.busquedaInscripcion.calificacion' | translate"
+            [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
             <ng-template let-dato="rowData" pTemplate="body">
-              <span *ngIf="dato[colsCertificates[2].field] != ''">{{
-                    dato[colsCertificates[2].value]
-                  }}</span>
+              <span *ngIf="dato[colsCertificates[2].field] != ''">{{ dato[colsCertificates[2].value] }}
+              </span>
 
-              <p-dropdown *ngIf="dato[colsCertificates[2].field] == ''" class="select-form"
-                [(ngModel)]="newCertificate.idCalificacion" [options]="comboCalificaciones" [filter]="false"
-                placeholder="{{'tablas.literal.seleccionar' | translate}}" [disabled]="!activacionEditar" name="type">
+              <p-dropdown *ngIf="dato[colsCertificates[2].field] == ''" class="select-form" [(ngModel)]="newCertificate.idCalificacion"
+                [options]="comboCalificaciones" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}"
+                [disabled]="!activacionEditar" name="type">
               </p-dropdown>
             </ng-template>
           </p-column>
@@ -1011,19 +913,14 @@
 
           <ng-template pTemplate="paginatorLeft">
             <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">Mostrando registros del
-                {{ tableCertificates.first + 1 }} al
-                {{ tableCertificates.first + tableCertificates.rows }} de un
-                total de {{ tableCertificates.totalRecords }}</label>
+              <label class="pr-3 registros-totales">Mostrando registros del {{ tableCertificates.first + 1 }} al {{ tableCertificates.first + tableCertificates.rows
+                }} de un total de {{ tableCertificates.totalRecords }}</label>
               <label class="pr-3 numSeleccionados">Seleccionados: {{ numSelectedCertificates }}</label>
               <label>{{ "general.message.mostrar" | translate }}</label>
-              <p-dropdown [(ngModel)]="selectedItemCertificates" [options]="rowsPerPage"
-                (onChange)="onChangeRowsPerPagesCertificates($event)"></p-dropdown>
+              <p-dropdown [(ngModel)]="selectedItemCertificates" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesCertificates($event)"></p-dropdown>
               <label class="pl-1">
-                {{
-                      "cargaMasivaDatñosCurriculares.numRegistros.literal"
-                        | translate
-                    }}</label>
+                {{ "cargaMasivaDatñosCurriculares.numRegistros.literal" | translate }}
+              </label>
             </div>
           </ng-template>
         </p-dataTable>
@@ -1032,18 +929,14 @@
   </div>
   <div class="card-footer" *ngIf="esFichaActiva('certificate')">
     <div class="text-right main-button">
-      <button [disabled]="!editCertificate && !pressNewCertificate" pButton (click)="restCertificates()" type="button"
-        icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}"></button>
-      <button pButton (click)="saveCertificateCourse()" type="button" icon="far fa-save" iconPos="left"
-        label="{{ 'general.boton.guardar' | translate }}"
+      <button [disabled]="!editCertificate && !pressNewCertificate" pButton (click)="restCertificates()" type="button" icon="fa fa-undo"
+        iconPos="left" label="{{ 'general.boton.restablecer'| translate }}"></button>
+      <button pButton (click)="saveCertificateCourse()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"
         [disabled]="((pressNewCertificate  || !activacionEditar || !editCertificate) && validateCertificate()) || !editCertificate || !activacionEditar"></button>
-      <button [disabled]="selectedDatosCertificates == '' || !activacionEditar" pButton
-        (click)="deleteCertificates(selectedDatosCertificates)" type="button" icon="fa fa-trash-alt" iconPos="left"
-        label="{{ 'general.boton.eliminar'| translate }}"></button>
-      <button
-        [disabled]="selectMultipleCertificates || selectAllCertificates || (editCertificate && !pressNewCertificate) || !activacionEditar"
-        pButton (click)="newCertificates()" type="button" icon="fa fa-plus" iconPos="left"
-        label="{{ 'general.boton.new'| translate }}"></button>
+      <button [disabled]="selectedDatosCertificates == '' || !activacionEditar" pButton (click)="deleteCertificates(selectedDatosCertificates)"
+        type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar'| translate }}"></button>
+      <button [disabled]="selectMultipleCertificates || selectAllCertificates || (editCertificate && !pressNewCertificate) || !activacionEditar"
+        pButton (click)="newCertificates()" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new'| translate }}"></button>
     </div>
   </div>
 </div>
@@ -1082,7 +975,9 @@
       </div>
     </div>
     <div *ngIf="esFichaActiva('session')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-      <div class="img-colegiado"><i class="fa fa-user icon-ficha"></i></div>
+      <div class="img-colegiado">
+        <i class="fa fa-user icon-ficha"></i>
+      </div>
       <label class="title-ficha">{{'formacion.fichaCursos.sesiones.cabecera' | translate}}</label>
       <i class="fa fa-angle-up ml-auto"></i>
     </div>
@@ -1092,32 +987,26 @@
   <div class="card-body card-body-ficha" *ngIf="esFichaActiva('session')">
     <div class="row">
 
-      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}"
-        [ngClass]="{ customCursor: selectMultipleSessions }" [(selection)]="selectedDatosSessions"
-        (onRowSelect)="irEditarSession(selectedDatosSessions)"
-        (onRowUnselect)="actualizaSeleccionadosSessions(selectedDatosSessions)" pageLinks="4" dataKey="idEvento"
-        [responsive]="true" selectionMode="multiple" #tableSessions class="tabla-listado" [value]="datosSessions"
-        [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedSessions">
-        <p-column *ngFor="let col of colsSessions" [sortable]="true" [field]="col.field"
-          [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}" [filter]="true"
-          filterMatchMode="contains">
+      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{ customCursor: selectMultipleSessions }"
+        [(selection)]="selectedDatosSessions" (onRowSelect)="irEditarSession(selectedDatosSessions)" (onRowUnselect)="actualizaSeleccionadosSessions(selectedDatosSessions)"
+        pageLinks="4" dataKey="idEvento" [responsive]="true" selectionMode="multiple" #tableSessions class="tabla-listado"
+        [value]="datosSessions" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedSessions">
+        <p-column *ngFor="let col of colsSessions" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+          [filter]="true" filterMatchMode="contains">
         </p-column>
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">Mostrando registros del {{ tableSessions.first + 1 }} al
-              {{ tableSessions.first + tableSessions.rows }} de un total de
-              {{ tableSessions.totalRecords }}</label>
+            <label class="pr-3 registros-totales">Mostrando registros del {{ tableSessions.first + 1 }} al {{ tableSessions.first + tableSessions.rows }} de un
+              total de {{ tableSessions.totalRecords }}</label>
             <label class="pr-3 numSeleccionados">Seleccionados: {{ numSelectedSessions }}</label>
             <label>{{ "general.message.mostrar" | translate }}</label>
             <p-dropdown [(ngModel)]="selectedSessions" [options]="rowsPerPage"></p-dropdown>
             <label class="pl-1">
-              {{
-                  "cargaMasivaDatosCurriculares.numRegistros.literal"
-                    | translate
-                }}</label>
+              {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
+            </label>
             <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAllSessions()" [(ngModel)]="selectAllSessions" binary="true"
-                label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
+              <p-checkbox (onChange)="onChangeSelectAllSessions()" [(ngModel)]="selectAllSessions" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                name="groupname"></p-checkbox>
             </div>
             <label class="ml-3 seleccionMultiple" [ngClass]="{ 'seleccion-multiple': selectMultipleSessions }" (click)="
                   isSelectMultipleSessions(); selectedDatosSessions = false
@@ -1130,14 +1019,12 @@
   </div>
   <div class="card-footer" *ngIf="esFichaActiva('session')">
     <div class="text-right main-button">
-      <button pButton type="button" icon="fa fa-close" (click)="cancelSessions()" iconPos="left"
-        label="{{ 'general.boton.cancel' | translate}}"
+      <button pButton type="button" icon="fa fa-close" (click)="cancelSessions()" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"
         [disabled]="selectedDatosSessions == '' || !activacionEditar || isLetrado"></button>
-      <button pButton type="button" icon="fa fa-reply-all" (click)="duplicateSession()" iconPos="left"
-        label="{{ 'general.boton.duplicar' | translate}}"
+      <button pButton type="button" icon="fa fa-reply-all" (click)="duplicateSession()" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"
         [disabled]="disabledDuplicate() || !activacionEditar || isLetrado"></button>
-      <button pButton type="button" icon="fa fa-plus" (click)="newSession()" [disabled]="!activacionEditar || isLetrado"
-        iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+      <button pButton type="button" icon="fa fa-plus" (click)="newSession()" [disabled]="!activacionEditar || isLetrado" iconPos="left"
+        label="{{ 'general.boton.new' | translate}}"></button>
     </div>
   </div>
 </div>
@@ -1167,7 +1054,9 @@
     </div>
     <div *ngIf="esFichaActiva('carga')" class=" header-ficha-open d-flex justify-content-start align-items-center">
 
-      <div class="img-colegiado"><i class="fa fa-upload icon-ficha"></i></div>
+      <div class="img-colegiado">
+        <i class="fa fa-upload icon-ficha"></i>
+      </div>
       <label class="title-ficha">{{ 'formacion.fichaCurso.cargaMasivaInscripciones.cabecera' | translate }}</label>
       <i class="fa fa-angle-up ml-auto"></i>
     </div>
@@ -1176,15 +1065,12 @@
   <!-- Cuerpo -->
   <div class="card-body card-body-ficha" *ngIf="esFichaActiva('carga')">
     <div class="row">
-      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}"
-        [ngClass]="{'customCursor': selectMultipleCargas}" [(selection)]="selectedDatosCargas" pageLinks="4"
-        dataKey="idCargaInscripcion" [responsive]="true" selectionMode="multiple" #tableCargas class="tabla-listado"
-        [value]="datosCargas" [sortOrder]="sortO" (onRowSelect)="actualizaSeleccionadosCargas(selectedDatosCargas)"
-        (onRowUnselect)="actualizaSeleccionadosCargas(selectedDatosCargas)" [paginator]="true" paginatorPosition="both"
-        [rows]="selectedCargas">
-        <p-column *ngFor="let col of colsCargas" [sortable]="true " [field]="col.field"
-          [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}" [filter]="true"
-          filterMatchMode="contains">
+      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultipleCargas}"
+        [(selection)]="selectedDatosCargas" pageLinks="4" dataKey="idCargaInscripcion" [responsive]="true" selectionMode="multiple"
+        #tableCargas class="tabla-listado" [value]="datosCargas" [sortOrder]="sortO" (onRowSelect)="actualizaSeleccionadosCargas(selectedDatosCargas)"
+        (onRowUnselect)="actualizaSeleccionadosCargas(selectedDatosCargas)" [paginator]="true" paginatorPosition="both" [rows]="selectedCargas">
+        <p-column *ngFor="let col of colsCargas" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+          [filter]="true" filterMatchMode="contains">
 
           <ng-template *ngIf="col.field == 'numeroLineasTotales'" let-dato="rowData" pTemplate="body">
             <label>
@@ -1196,19 +1082,18 @@
 
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">Mostrando registros del {{tableCargas.first + 1}} al
-              {{tableCargas.first + tableCargas.rows}} de un total de {{tableCargas.totalRecords}}</label>
+            <label class="pr-3 registros-totales">Mostrando registros del {{tableCargas.first + 1}} al {{tableCargas.first + tableCargas.rows}} de un total de
+              {{tableCargas.totalRecords}}
+            </label>
             <label class="pr-3 numSeleccionados">Seleccionados: {{numSelectedCargas}}</label>
             <label>{{ "general.message.mostrar" | translate}}</label>
-            <p-dropdown [(ngModel)]="selectedCargas" [options]="rowsPerPage"
-              (onChange)="onChangeRowsPerPagesCargas($event)"></p-dropdown>
+            <p-dropdown [(ngModel)]="selectedCargas" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesCargas($event)"></p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAllCargas()" [(ngModel)]="selectAllCargas" binary="true"
-                label="{{'tablas.literal.seleccionarTodo' | translate}}" name="groupname"></p-checkbox>
+              <p-checkbox (onChange)="onChangeSelectAllCargas()" [(ngModel)]="selectAllCargas" binary="true" label="{{'tablas.literal.seleccionarTodo' | translate}}"
+                name="groupname"></p-checkbox>
             </div>
-            <label class="ml-3 seleccionMultiple" [ngClass]="{'seleccion-multiple': selectMultipleCargas}"
-              (click)="isSelectMultipleCargas(); selectedDatosCargas=false">
+            <label class="ml-3 seleccionMultiple" [ngClass]="{'seleccion-multiple': selectMultipleCargas}" (click)="isSelectMultipleCargas(); selectedDatosCargas=false">
               <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
           </div>
         </ng-template>
@@ -1219,31 +1104,25 @@
   <div class="card-footer" *ngIf="esFichaActiva('carga')">
     <div class="text-right main-button">
 
-      <button pButton type="button" [disabled]="disabledDownload() || !activacionEditar"
-        (click)="autovalidateInscriptions(selectedDatosCargas)" icon="fa fa-check" iconPos="left"
-        label="{{ 'formacion.boton.autovalidar' | translate }}"></button>
+      <button pButton type="button" [disabled]="disabledDownload() || !activacionEditar" (click)="autovalidateInscriptions(selectedDatosCargas)"
+        icon="fa fa-check" iconPos="left" label="{{ 'formacion.boton.autovalidar' | translate }}"></button>
 
-      <p-fileUpload #pUploadFile chooseLabel="{{ 'general.boton.cargar.archivo' | translate }}" name="file" mode="basic"
-        accept=".xls" multiple="multiple" (onSelect)="getFile($event)" auto="true"
-        [disabled]="!controlBotonesEstado('Inscripcion')"> </p-fileUpload>
+      <p-fileUpload #pUploadFile chooseLabel="{{ 'general.boton.cargar.archivo' | translate }}" name="file" mode="basic" accept=".xls"
+        multiple="multiple" (onSelect)="getFile($event)" auto="true" [disabled]="!controlBotonesEstado('Inscripcion')"> </p-fileUpload>
 
-      <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download"
-        [disabled]="!controlBotonesEstado('DescargarPlantilla')" iconPos="left"
-        label="{{ 'general.boton.descargar.plantilla' | translate }}"></button>
-      <button pButton type="button" [disabled]="disabledDownload() || !activacionEditar"
-        (click)="downloadFile(selectedDatosCargas)" icon="fa fa-download" iconPos="left"
-        label="{{ 'general.boton.descargar.fichero' | translate }}"></button>
-      <button pButton type="button" [disabled]="disabledOthersCargas() || !activacionEditar"
-        (click)="deleteInscriptions(selectedDatosCargas)" icon="fa fa-trash-alt" iconPos="left"
-        label="{{ 'general.boton.eliminar' | translate }}"></button>
+      <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" [disabled]="!controlBotonesEstado('DescargarPlantilla')"
+        iconPos="left" label="{{ 'general.boton.descargar.plantilla' | translate }}"></button>
+      <button pButton type="button" [disabled]="disabledDownload() || !activacionEditar" (click)="downloadFile(selectedDatosCargas)"
+        icon="fa fa-download" iconPos="left" label="{{ 'general.boton.descargar.fichero' | translate }}"></button>
+      <button pButton type="button" [disabled]="disabledOthersCargas() || !activacionEditar" (click)="deleteInscriptions(selectedDatosCargas)"
+        icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
 
     </div>
   </div>
 </div>
 
 <div class="mt-3 text-right main-button ">
-  <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left"
-    label="{{ 'general.boton.volver' | translate}}"></button>
+  <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner ">
