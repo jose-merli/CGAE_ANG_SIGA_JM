@@ -136,9 +136,9 @@ export class FichaCursoComponent implements OnInit {
   desasignarTutor = 0;
   comboTopics: any[] = [];
   comboService: any[] = [];
-  suggestService: any[] = [];
+  // suggestService: any[] = [];
   suggestTopics: any[] = [];
-  resultsService: any[] = [];
+  // resultsService: any[] = [];
   resultsTopics: any[] = [];
   edicionDocumentoAdjunto: boolean = true;
   edicionEncuestaSatisfaccion: boolean = true;
@@ -286,7 +286,7 @@ export class FichaCursoComponent implements OnInit {
       this.curso = new DatosCursosItem();
       this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
 
-      this.resultsService = this.curso.tipoServicios;
+      // this.resultsService = this.curso.tipoServicios;
       this.resultsTopics = this.curso.temasCombo;
 
       this.curso.idEventoInicioInscripcion = sessionStorage.getItem(
@@ -321,7 +321,7 @@ export class FichaCursoComponent implements OnInit {
       this.curso = new DatosCursosItem();
       this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
 
-      this.resultsService = this.curso.tipoServicios;
+      // this.resultsService = this.curso.tipoServicios;
       this.resultsTopics = this.curso.temasCombo;
 
       this.curso.idEventoFinInscripcion = sessionStorage.getItem(
@@ -425,7 +425,7 @@ export class FichaCursoComponent implements OnInit {
       }
 
       this.getPrices();
-      this.getServicesCourse();
+      // this.getServicesCourse();
       this.getCertificatesCourse();
       this.getTopicsCourse();
 
@@ -452,7 +452,7 @@ export class FichaCursoComponent implements OnInit {
       this.curso.fechaImparticionDesdeDate = undefined;
       this.curso.idEstado = this.valorEstadoAbierto;
 
-      this.resultsService = this.curso.tipoServicios;
+      // this.resultsService = this.curso.tipoServicios;
       this.resultsTopics = this.curso.temasCombo;
 
       sessionStorage.removeItem("duplicarCurso");
@@ -699,33 +699,33 @@ export class FichaCursoComponent implements OnInit {
       );
   }
 
-  getServicesCourse() {
-    this.progressSpinner = true;
-    this.sigaServices
-      .getParam(
-        "fichaCursos_getServicesSpecificCourse",
-        "?idCurso=" + this.curso.idCurso
-      )
-      .subscribe(
-        n => {
-          this.resultsService = n.combooItems;
+  // getServicesCourse() {
+  //   this.progressSpinner = true;
+  //   this.sigaServices
+  //     .getParam(
+  //       "fichaCursos_getServicesSpecificCourse",
+  //       "?idCurso=" + this.curso.idCurso
+  //     )
+  //     .subscribe(
+  //       n => {
+  //         this.curso.tipoServicios = n.combooItems[0].value;
 
-          this.resultsService.forEach(e => {
-            if (e.color == undefined) {
-              e.color = "#87CEFA";
-            }
-          });
-          this.progressSpinner = false;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
-        }
-      );
-  }
+  //         // this.resultsService.forEach(e => {
+  //         //   if (e.color == undefined) {
+  //         //     e.color = "#87CEFA";
+  //         //   }
+  //         // });
+  //         this.progressSpinner = false;
+  //       },
+  //       err => {
+  //         console.log(err);
+  //         this.progressSpinner = false;
+  //       },
+  //       () => {
+  //         this.progressSpinner = false;
+  //       }
+  //     );
+  // }
 
   getTopicsCourse() {
     this.progressSpinner = true;
@@ -796,7 +796,7 @@ export class FichaCursoComponent implements OnInit {
       this.curso.autovalidacionInscripcion = "0";
     }
 
-    this.curso.tipoServicios = this.resultsService;
+    // this.curso.tipoServicios = this.resultsService;
     this.curso.temasCombo = this.resultsTopics;
 
     if (this.modoEdicion) {
@@ -1102,7 +1102,7 @@ export class FichaCursoComponent implements OnInit {
       }
 
       this.curso.fechaInscripcionDesdeDate = value;
-      this.curso.tipoServicios = this.resultsService;
+      // this.curso.tipoServicios = this.resultsService;
       this.curso.temasCombo = this.resultsTopics;
       sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
       sessionStorage.setItem("isFormacionCalendarByStartInscripcion", "true");
@@ -1118,7 +1118,7 @@ export class FichaCursoComponent implements OnInit {
     }
 
     this.curso.fechaInscripcionHastaDate = event;
-    this.curso.tipoServicios = this.resultsService;
+    // this.curso.tipoServicios = this.resultsService;
     this.curso.temasCombo = this.resultsTopics;
     sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
     sessionStorage.setItem("isFormacionCalendarByEndInscripcion", "true");
@@ -1164,7 +1164,7 @@ export class FichaCursoComponent implements OnInit {
         }
 
         this.getSessions();
-        this.getServicesCourse();
+        // this.getServicesCourse();
         this.getTopicsCourse();
         this.getCountInscriptions();
         this.initCurso = JSON.parse(JSON.stringify(this.curso));
@@ -1259,84 +1259,84 @@ export class FichaCursoComponent implements OnInit {
     this.autocompleteTopics.panelVisible = false;
   }
 
-  filterServices(event) {
-    let query = event.query;
+  // filterServices(event) {
+  //   let query = event.query;
 
-    if (
-      this.comboService.length > 0 &&
-      this.comboService.length != this.resultsService.length
-    ) {
-      if (this.resultsService.length > 0) {
-        this.suggestService = [];
+  //   if (
+  //     this.comboService.length > 0 &&
+  //     this.comboService.length != this.resultsService.length
+  //   ) {
+  //     if (this.resultsService.length > 0) {
+  //       this.suggestService = [];
 
-        this.comboService.forEach(element => {
-          let findService = this.resultsService.find(
-            x => x.value === element.value
-          );
-          if (findService == undefined) {
-            this.suggestService.push(element);
-          }
-        });
+  //       this.comboService.forEach(element => {
+  //         let findService = this.resultsService.find(
+  //           x => x.value === element.value
+  //         );
+  //         if (findService == undefined) {
+  //           this.suggestService.push(element);
+  //         }
+  //       });
 
-        this.resultsService.forEach(e => {
-          if (e.color == undefined) {
-            e.color = "#87CEFA";
-          }
-        });
-      } else {
-        this.suggestService = JSON.parse(JSON.stringify(this.comboService));
-      }
-      this.autocompleteService.suggestionsUpdated = true;
-      this.autocompleteService.panelVisible = true;
-      this.autocompleteService.focusInput();
-    } else {
-      if (this.autocompleteService.highlightOption != undefined) {
-        this.resultsService.forEach(e => {
-          if (e.color == undefined) {
-            e.color = "#87CEFA";
-          }
-        });
-      }
+  //       this.resultsService.forEach(e => {
+  //         if (e.color == undefined) {
+  //           e.color = "#87CEFA";
+  //         }
+  //       });
+  //     } else {
+  //       this.suggestService = JSON.parse(JSON.stringify(this.comboService));
+  //     }
+  //     this.autocompleteService.suggestionsUpdated = true;
+  //     this.autocompleteService.panelVisible = true;
+  //     this.autocompleteService.focusInput();
+  //   } else {
+  //     if (this.autocompleteService.highlightOption != undefined) {
+  //       this.resultsService.forEach(e => {
+  //         if (e.color == undefined) {
+  //           e.color = "#87CEFA";
+  //         }
+  //       });
+  //     }
 
-      this.autocompleteService.panelVisible = false;
-      this.autocompleteService.focusInput();
-    }
-  }
+  //     this.autocompleteService.panelVisible = false;
+  //     this.autocompleteService.focusInput();
+  //   }
+  // }
 
-  filterLabelsMultiple(event) {
-    let query = event.query;
-    this.suggestService = [];
+  // filterLabelsMultiple(event) {
+  //   let query = event.query;
+  //   this.suggestService = [];
 
-    this.comboService.forEach(element => {
-      if (element.label.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-        let findService = this.resultsService.find(
-          x => x.value === element.value
-        );
-        if (findService == undefined) {
-          this.suggestService.push(element);
-        }
-      }
-    });
+  //   this.comboService.forEach(element => {
+  //     if (element.label.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+  //       let findService = this.resultsService.find(
+  //         x => x.value === element.value
+  //       );
+  //       if (findService == undefined) {
+  //         this.suggestService.push(element);
+  //       }
+  //     }
+  //   });
 
-    this.resultsService.forEach(e => {
-      if (e.color == undefined) {
-        e.color = "#87CEFA";
-      }
-    });
-  }
+  //   this.resultsService.forEach(e => {
+  //     if (e.color == undefined) {
+  //       e.color = "#87CEFA";
+  //     }
+  //   });
+  // }
 
   resetSuggestServices() {
     this.autocompleteService.panelVisible = false;
   }
 
-  visiblePanelBlur(event) {
-    if (this.autocompleteService.highlightOption != undefined) {
-      this.autocompleteService.highlightOption.color = "#87CEFA";
-      this.resultsService.push(this.autocompleteService.highlightOption);
-      this.autocompleteService.highlightOption = undefined;
-    }
-    this.autocompleteService.panelVisible = false;
-  }
+  // visiblePanelBlur(event) {
+  //   if (this.autocompleteService.highlightOption != undefined) {
+  //     this.autocompleteService.highlightOption.color = "#87CEFA";
+  //     this.resultsService.push(this.autocompleteService.highlightOption);
+  //     this.autocompleteService.highlightOption = undefined;
+  //   }
+  //   this.autocompleteService.panelVisible = false;
+  // }
 
   visiblePanelOnSelect() {
     this.autocompleteService.panelVisible = false;
@@ -1381,7 +1381,8 @@ export class FichaCursoComponent implements OnInit {
       this.curso.descripcionEstado == "" ||
       this.curso.idEstado == "" ||
       this.curso.nombreCurso == "" ||
-      this.curso.idVisibilidad == ""
+      this.curso.idVisibilidad == "" ||
+      this.curso.tipoServicios == null || this.curso.tipoServicios == ""
     ) {
       return true;
     } else {
@@ -3390,6 +3391,5 @@ export class FichaCursoComponent implements OnInit {
   fillFechaFinImparticion(event) {
     this.curso.fechaImparticionHastaDate = event;
   }
-
 
 }

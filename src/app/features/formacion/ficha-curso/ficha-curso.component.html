@@ -94,8 +94,8 @@
           </div>
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
-              <label>{{'censo.busquedaClientesAvanzada.literal.tipoCliente' | translate}}</label>
-              <p-autoComplete #autocompleteService [(ngModel)]="resultsService" [disabled]="!activacionEditar"
+              <label>{{'censo.busquedaClientesAvanzada.literal.tipoCliente' | translate}} (*)</label>
+              <!-- <p-autoComplete #autocompleteService [(ngModel)]="resultsService" [disabled]="!activacionEditar"
                 [suggestions]="suggestService" [minLength]="1" field="label" [multiple]="true"
                 [style]="{'width':'100%'}" (onFocus)="filterServices($event)" (onBlur)="visiblePanelBlur($event)"
                 (completeMethod)="filterLabelsMultiple($event)">
@@ -107,7 +107,11 @@
                     <span style="color: white">{{ servicesSelecionados.label }}</span>
                   </div>
                 </ng-template>
-              </p-autoComplete>
+              </p-autoComplete> -->
+
+              <p-dropdown #comboTipo [disabled]="!activacionEditar" class="select-form"
+                placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="curso.tipoServicios"
+                [options]="comboService" [filter]="true" [showClear]="true"></p-dropdown>
             </div>
             <div class="col-lg-6 col-md-6">
               <label>{{ 'form.busquedaCursos.literal.estado' | translate}} (*)</label>
