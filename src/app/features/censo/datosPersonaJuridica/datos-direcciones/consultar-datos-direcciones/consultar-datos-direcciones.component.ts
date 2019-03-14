@@ -685,8 +685,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             if (dir.idDireccion != this.body.idDireccion) {
               let tipoChange = dir.idTipoDireccion.find(tipoDir => tipoDir == tipoSelected);
 
-              if (tipoChange == undefined) {
-
+              if (tipoChange != undefined) {
                 this.tiposChangeUnSelected.push(this.comboTipoDireccion.find(tipoDir => tipoDir.value == tipoSelected));
               }
             } else {
