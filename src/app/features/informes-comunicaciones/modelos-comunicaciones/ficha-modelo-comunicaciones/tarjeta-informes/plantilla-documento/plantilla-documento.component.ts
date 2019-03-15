@@ -525,6 +525,22 @@ export class PlantillaDocumentoComponent implements OnInit {
           }
         }
 
+        this.datos.sort(function (a, b) {
+          if(a.idObjetivo == 3){
+            return -1;
+          }else if(a.idObjetivo == 4){
+            return 1;
+          }else{
+            if(a.idObjetivo > b.idObjetivo){
+              return 1;
+            }
+            if(a.idObjetivo < b.idObjetivo){
+              return -1;
+            }
+            return 0;
+          }
+        });
+
         this.datos.map(e => {
           return (e.idConsultaAnterior = e.idConsulta);
         });
@@ -665,14 +681,14 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   guardarConsultas() {
     let destinatarios = this.datos.map(e => {
-      if (e.idConsulta != "" && e.idObjetivo == "1") {
+      if (typeof e.idConsulta != "undefined" && e.idConsulta != "" && e.idObjetivo == "1") {
         return true;
       } else {
         return false;
       }
     });
 
-    if (destinatarios.indexOf(true) != -1) {
+    if (destinatarios.indexOf(true) != -1 || this.body.idClaseComunicacion == "5") {
       this.guardarConsultasOk();
     } else {
       this.showFail("Seleccione una consulta para destinatarios");
@@ -686,7 +702,8 @@ export class PlantillaDocumentoComponent implements OnInit {
         idConsulta: e.idConsulta,
         idConsultaAnterior: e.idConsultaAnterior,
         idObjetivo: e.idObjetivo,
-        idInstitucion: e.idInstitucion
+        idInstitucion: e.idInstitucion,
+        idClaseComunicacion: this.body.idClaseComunicacion
       };
       this.body.consultas.push(obj);
     });
@@ -857,29 +874,44 @@ export class PlantillaDocumentoComponent implements OnInit {
       );
   }
 
+  isPlantillaUnica(){
+    if(this.body.plantillas != null){
+      this.body.plantillas.forEach(element => {
+        if(element.guardada){
+          return false;
+        }
+      });
+    }
+    return true;
+  }
+
   eliminarPlantilla(dato) {
-    this.confirmationService.confirm({
-      // message: this.translateService.instant("messages.deleteConfirmation"),
-      message:
-        "¿Está seguro de eliminar " +
-        dato.length +
-        " plantillas seleccionadas?",
-      icon: "fa fa-trash-alt",
-      accept: () => {
-        this.confirmarEliminarPlantilla(dato);
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "info",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
-      }
-    });
+    if(this.isPlantillaUnica()){
+      this.showFail("La plantilla de documento ha de tener al menos una plantilla física");
+    }else{
+      this.confirmationService.confirm({
+        // message: this.translateService.instant("messages.deleteConfirmation"),
+        message:
+          "¿Está seguro de eliminar " +
+          dato.length +
+          " plantillas seleccionadas?",
+        icon: "fa fa-trash-alt",
+        accept: () => {
+          this.confirmarEliminarPlantilla(dato);
+        },
+        reject: () => {
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "info",
+              detail: this.translateService.instant(
+                "general.message.accion.cancelada"
+              )
+            }
+          ];
+        }
+      });
+    }    
   }
 
   confirmarEliminarPlantilla(dato) {

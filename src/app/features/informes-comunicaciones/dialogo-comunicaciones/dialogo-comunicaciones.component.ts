@@ -50,6 +50,7 @@ export class DialogoComunicacionesComponent implements OnInit {
   rutaComunicacion: String;
   fechaProgramada: Date;
   plantillas: any[] = [];
+  idConsulta: string;
 
   constructor(public sigaServices: SigaServices, private translateService: TranslateService, private location: Location) {
   }
@@ -143,9 +144,12 @@ export class DialogoComunicacionesComponent implements OnInit {
   getModelosComunicacion() {
 
     this.idModulo = sessionStorage.getItem('idModulo');
+    this.idConsulta = sessionStorage.getItem('idConsulta');
+
     let modeloSearch = {
       idModulo: this.idModulo,
-      idClaseComunicacion: this.idClaseComunicacion
+      idClaseComunicacion: this.idClaseComunicacion,
+      idConsulta: this.idConsulta
     }
 
     this.sigaServices.post("dialogo_modelosComunicacion", modeloSearch).subscribe(
@@ -240,6 +244,7 @@ export class DialogoComunicacionesComponent implements OnInit {
           data => {
             this.showSuccess("Envios generados");
             this.showValores = false;
+            this.backTo();
           },
           err => {
             console.log(err);
@@ -310,37 +315,35 @@ export class DialogoComunicacionesComponent implements OnInit {
       }
     });
 
-    if (this.datosSeleccionados != null && this.datosSeleccionados != undefined) {
-      let datos = {
-        idClaseComunicacion: this.idClaseComunicacion,
-        modelos: this.bodyComunicacion.modelos,
-        selectedDatos: this.datosSeleccionados,
-        idInstitucion: this.idInstitucion,
-        consultas: this.listaConsultas,
-        ruta: this.rutaComunicacion
-      }
-
-      this.sigaServices
-        .postDownloadFiles("dialogo_descargar", datos)
-        .subscribe(
-          data => {
-            const blob = new Blob([data], { type: "text/csv" });
-            saveAs(blob, "Documentos.zip");
-            this.progressSpinner = false;
-            this.showValores = false;
-          },
-          err => {
-            console.log(err);
-            this.progressSpinner = false;
-          },
-          () => {
-            this.progressSpinner = false;
-
-          }
-        );
-    } else {
-      this.showFail("No se ha seleccionado ningún dato.");
+    let datos = {
+      idClaseComunicacion: this.idClaseComunicacion,
+      modelos: this.bodyComunicacion.modelos,
+      selectedDatos: this.datosSeleccionados,
+      idInstitucion: this.idInstitucion,
+      consultas: this.listaConsultas,
+      ruta: this.rutaComunicacion
     }
+
+    this.sigaServices
+      .postDownloadFiles("dialogo_descargar", datos)
+      .subscribe(
+        data => {
+          const blob = new Blob([data], { type: "text/csv" });
+          saveAs(blob, "Documentos.zip");
+          this.progressSpinner = false;
+          this.showValores = false;
+          this.backTo();
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+
+        }
+      );
+    
   }
 
   getInstitucion() {
